@@ -502,7 +502,7 @@ For more detailed information see the specifications for this [view all unfunded
 }
 ```
 
-### View details for a specific 'unfunded mentor'
+### View details of a specific 'unfunded mentor'
 
 <div class="govuk-inset-text">The following endpoint is only available for systems integrated with API v3 onwards. They will not return data for API v1 or v2.</div>
 
