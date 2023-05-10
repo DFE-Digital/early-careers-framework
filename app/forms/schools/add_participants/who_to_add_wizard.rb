@@ -21,6 +21,7 @@ module Schools
           still_cannot_find_their_details
           confirm_transfer
           confirm_mentor_transfer
+          cannot_transfer_no_fip
           need_training_setup
           cannot_add
           cannot_add_mismatch
