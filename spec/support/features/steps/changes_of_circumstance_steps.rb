@@ -149,7 +149,7 @@ module Steps
       end
     end
 
-    def and_lead_provider_withdraws_participant(lead_provider_name, participant_name, participant_type)
+    def and_lead_provider_withdraws_participant(lead_provider_name, participant_name, participant_email, participant_type)
       participant_profile = find_participant_profile participant_name
       course_identifier = participant_type == "ECT" ? "ecf-induction" : "ecf-mentor"
 
@@ -159,7 +159,7 @@ module Steps
         withdraw_endpoint.post_withdraw_notice participant_profile.user.id, course_identifier, "moved-school"
 
         withdraw_endpoint.responded_with_full_name? participant_name
-        withdraw_endpoint.responded_with_obfuscated_email?
+        withdraw_endpoint.responded_with_email? participant_email
         withdraw_endpoint.responded_with_status? "active"
         withdraw_endpoint.responded_with_training_status? "withdrawn"
 
