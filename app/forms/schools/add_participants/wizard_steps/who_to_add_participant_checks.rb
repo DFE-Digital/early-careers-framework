@@ -31,7 +31,7 @@ module Schools
             elsif !wizard.registration_open_for_participant_cohort?
               # we know the cohort at this point (only if induction start date set)
               :cannot_add_registration_not_yet_open
-            elsif wizard.need_training_setup?(must_be_fip: false)
+            elsif wizard.need_training_setup?
               # check that there is a school_cohort to join (can be FIP or CIP)
               :need_training_setup
             else
