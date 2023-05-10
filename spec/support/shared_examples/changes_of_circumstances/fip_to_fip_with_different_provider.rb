@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.shared_examples "FIP to FIP with different provider" do |scenario, participant_status, is_hidden: false|
+RSpec.shared_examples "FIP to FIP with different provider" do |scenario, training_status, is_hidden: false|
   context "Then the Original SIT" do
     subject(:original_sit) { "Original SIT" }
 
@@ -31,12 +31,12 @@ RSpec.shared_examples "FIP to FIP with different provider" do |scenario, partici
   context "Then the Original Lead Provider" do
     subject(:original_lead_provider) { "Original Lead Provider" }
 
-    it Steps::ChangesOfCircumstanceSteps.then_lead_provider_can_see_context(scenario, scenario.prior_declarations, participant_status, see_prior_school: true),
+    it Steps::ChangesOfCircumstanceSteps.then_lead_provider_can_see_context(scenario, scenario.prior_declarations, training_status:, see_prior_school: true),
        :aggregate_failures do
       then_lead_provider_can_see_participant_in_api subject,
                                                     scenario,
                                                     scenario.prior_declarations,
-                                                    participant_status,
+                                                    training_status:,
                                                     see_prior_school: true
     end
 

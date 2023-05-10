@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-# noinspection RubyInstanceMethodNamingConvention
 module Steps
+  # noinspection RubyInstanceMethodNamingConvention, RubyTooManyMethodsInspection, RubyParameterNamingConvention, RubyClassMethodNamingConvention
   module ChangesOfCircumstanceSteps
     include RSpec::Matchers
 
@@ -284,18 +284,19 @@ module Steps
                                                                    "The Participant"
     end
 
-    def self.then_lead_provider_can_see_context(scenario, declarations, participant_status = "active", see_prior_school: false)
+    def self.then_lead_provider_can_see_context(scenario, declarations, participant_status: "active", training_status: "active", see_prior_school: false)
       school_name = see_prior_school ? "Original SIT's School" : "New SIT's School"
       str = "can see \"The Participant\" as a \"#{scenario.participant_type}\"\n"
       str += "          with the participant email as \"#{scenario.participant_email}\"\n"
       str += "          and with the participant trn as \"#{scenario.participant_trn}\"\n"
       str += "          and with the participant status of \"#{participant_status}\"\n"
+      str += "          and with the training status of \"#{training_status}\"\n"
       str += "          and with the participants school as \"#{school_name}\"\n"
       str += "          and with the participants declarations #{declarations}\n"
       str
     end
 
-    def then_lead_provider_can_see_participant_in_api(lead_provider_name, scenario, declarations, participant_status = "active", see_prior_school: false)
+    def then_lead_provider_can_see_participant_in_api(lead_provider_name, scenario, declarations, participant_status: "active", training_status: "active", see_prior_school: false)
       then_ecf_participants_api_has_participant_details lead_provider_name,
                                                         "The Participant",
                                                         scenario.participant_email,
@@ -303,7 +304,7 @@ module Steps
                                                         scenario.participant_type,
                                                         see_prior_school ? "Original SIT's School" : "New SIT's School",
                                                         participant_status,
-                                                        "active"
+                                                        training_status
 
       then_participant_declarations_api_has_declarations lead_provider_name,
                                                          "The Participant",
@@ -398,7 +399,7 @@ module Steps
       when_i_am_on_the_finance_portal
       and_i_view_payment_breakdown_from_the_finance_portal
       and_i_complete_from_the_finance_payment_breakdown_report_wizard lead_provider_name
-      and_i_select_statment_from_the_finance_payment_breakdown_report statement_name
+      and_i_select_statement_from_the_finance_payment_breakdown_report statement_name
 
       report = Pages::FinancePaymentBreakdownReport.loaded
 

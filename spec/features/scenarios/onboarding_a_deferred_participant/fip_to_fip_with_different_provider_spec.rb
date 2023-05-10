@@ -137,7 +137,7 @@ RSpec.feature "FIP to FIP with different provider - Onboard a deferred participa
           and_eligible_training_declarations_are_made_payable
         end
 
-        include_examples "FIP to FIP with different provider", scenario, "withdrawn", is_hidden: true
+        include_examples "FIP to FIP with different provider", scenario, "deferred", is_hidden: true
       end
     end
   end
