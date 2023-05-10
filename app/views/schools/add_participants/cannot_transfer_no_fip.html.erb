@@ -8,6 +8,7 @@
         <p class="govuk-body">Email our support team at
             <%= govuk_mail_to "continuing-professional-development@digital.education.gov.uk" %>
         </p>
+
         <p class="govuk-body">Include their:</p>
         <ul class="govuk-list govuk-list--bullet">
             <li>full name</li>
@@ -17,6 +18,7 @@
             <li>start date at your school</li>
             <li>previous school's name</li>
         </ul>
+
         <p class="govuk-body">Tell us:</p>
         <ul class="govuk-list govuk-list--bullet">
             <li>how <%= @wizard.full_name || "the ECT" %> will continue their ECF-based training at your school - for
@@ -24,6 +26,7 @@
             </li>
             <li>the lead provider and delivery partner you’ve chosen for their training, if applicable</li>
         </ul>
+
         <%= govuk_link_to "View your ECTs and mentors", @wizard.dashboard_path, no_visited_state: true %>
     </div>
 </div>
