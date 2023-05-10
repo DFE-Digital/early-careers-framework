@@ -721,7 +721,9 @@ Previously for API v1 and v2, a replacement mentor could start mentoring an ECT 
 
 A single mentor can be assigned to multiple ECTs, including ECTs who are training with other providers. Mentors may need access to the learning platforms used by their ECTs. 
 
-Providers can view the names and email addresses of ‘unfunded mentors’ (mentors who are registered with other providers) assigned to ECTs who they are funded to train. Providers can then give appropriate access to learning platforms.
+‘Unfunded mentors’ are mentors who are registered with other providers. 
+
+Providers can view the names and email addresses of ‘unfunded mentors’ assigned to ECTs who they are funded to train. Providers can then give appropriate access to learning platforms.
 
 ```
  GET /api/v3/unfunded-mentors/ecf
