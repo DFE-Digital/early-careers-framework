@@ -723,7 +723,7 @@ A single mentor can be assigned to multiple ECTs, including ECTs who are trainin
 
 ‘Unfunded mentors’ are mentors who are registered with other providers. 
 
-Providers can view the names and email addresses of ‘unfunded mentors’ assigned to ECTs who they are funded to train. Providers can then give appropriate access to learning platforms.
+Providers can view the names and email addresses of ‘unfunded mentors’ assigned to ECTs who they are funded to train and give appropriate access to learning platforms.
 
 ```
  GET /api/v3/unfunded-mentors/ecf
