@@ -36,7 +36,7 @@ RSpec.feature "FIP to CIP - Onboard a deferred participant",
   CSV.parse(File.read(fixture_data_path), headers: true).each_with_index do |fixture_data, index|
     next if includes.any? && !includes.include?(index + 2)
 
-    scenario = ChangesOfCircumstanceScenario.new index + 2, fixture_data
+    scenario = ChangesOfCircumstanceScenario.new index + 2, fixture_data, 2021
 
     next unless scenario.original_programme == "FIP" && scenario.new_programme == "CIP"
 
@@ -59,7 +59,7 @@ RSpec.feature "FIP to CIP - Onboard a deferred participant",
       current_cohort
     end
     let!(:schedule) do
-      create(:ecf_schedule, name: "ECF September standard 2021", schedule_identifier: "ecf-standard-september", cohort:)
+      create(:ecf_schedule, name: "ECF September standard #{cohort.start_year}", schedule_identifier: "ecf-standard-september", cohort:)
     end
     let!(:original_cip) { create :core_induction_programme, name: "Original Core Induction Programme" }
     let!(:new_cip) { create :core_induction_programme, name: "New Core Induction Programme" }
@@ -67,18 +67,18 @@ RSpec.feature "FIP to CIP - Onboard a deferred participant",
       create :milestone,
              schedule:,
              name: "Output 1 - Participant Start",
-             start_date: Date.new(2021, 9, 1),
-             milestone_date: Date.new(2021, 11, 30),
-             payment_date: Date.new(2021, 11, 30),
+             start_date: Date.new(cohort.start_year, 9, 1),
+             milestone_date: Date.new(cohort.start_year, 11, 30),
+             payment_date: Date.new(cohort.start_year, 11, 30),
              declaration_type: "started"
     end
     let!(:milestone_retained_1) do
       create :milestone,
              schedule:,
              name: "Output 2 - Retention Point 1",
-             start_date: Date.new(2021, 11, 1),
-             milestone_date: Date.new(2022, 1, 31),
-             payment_date: Date.new(2022, 2, 28),
+             start_date: Date.new(cohort.start_year, 11, 1),
+             milestone_date: Date.new(cohort.start_year + 1, 1, 31),
+             payment_date: Date.new(cohort.start_year + 1, 2, 28),
              declaration_type: "retained-1"
     end
     let!(:privacy_policy) do
@@ -123,6 +123,7 @@ RSpec.feature "FIP to CIP - Onboard a deferred participant",
 
           and_lead_provider_defers_participant "Original Lead Provider",
                                                "The Participant",
+                                               scenario.participant_email,
                                                scenario.participant_type
 
           when_school_uses_the_transfer_participant_wizard "New SIT",

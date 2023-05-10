@@ -6,14 +6,14 @@ module Steps
     include RSpec::Matchers
 
     def given_lead_providers_contracted_to_deliver_ecf(lead_provider_name)
-      next_ideal_time Time.zone.local(2021, 2, 1, 9, 0, 0)
+      next_ideal_time Time.zone.local(Cohort.current.start_year, 2, 1, 9, 0, 0)
       travel_to(@timestamp) do
         lead_provider = create(:lead_provider, name: lead_provider_name)
         cpd_lead_provider = create(:cpd_lead_provider, lead_provider:, name: lead_provider_name)
         create(:call_off_contract, lead_provider:)
 
-        delivery_partner = create(:delivery_partner, name: "#{lead_provider_name}'s Delivery Partner 2021")
-        create :provider_relationship, lead_provider:, delivery_partner:, cohort: Cohort.find_by(start_year: 2021)
+        delivery_partner = create(:delivery_partner, name: "#{lead_provider_name}'s Delivery Partner #{Cohort.current.start_year}")
+        create :provider_relationship, lead_provider:, delivery_partner:, cohort: Cohort.current
 
         user = create(:user, full_name: lead_provider_name)
         create(:lead_provider_profile, user:, lead_provider:)
@@ -25,7 +25,7 @@ module Steps
     end
 
     def and_sit_at_pupil_premium_school_reported_programme(sit_name, programme)
-      next_ideal_time Time.zone.local(2021, 4, 1, 9, 0, 0)
+      next_ideal_time Time.zone.local(Cohort.current.start_year, 4, 1, 9, 0, 0)
       travel_to(@timestamp) do
         school = create(:school, :pupil_premium_uplift, name: "#{sit_name}'s School")
         user = create(:user, full_name: sit_name)
@@ -43,10 +43,10 @@ module Steps
     end
 
     def and_lead_provider_reported_partnership(lead_provider_name, sit_name)
-      delivery_partner = DeliveryPartner.find_by(name: "#{lead_provider_name}'s Delivery Partner 2021")
+      delivery_partner = DeliveryPartner.find_by(name: "#{lead_provider_name}'s Delivery Partner #{Cohort.current.start_year}")
       school = find_school_for_sit(sit_name)
 
-      next_ideal_time Time.zone.local(2021, 5, 1, 9, 0, 0)
+      next_ideal_time Time.zone.local(Cohort.current.start_year, 5, 1, 9, 0, 0)
       travel_to(@timestamp) do
         given_i_sign_in_as_the_user_with_the_full_name lead_provider_name
 
@@ -60,7 +60,7 @@ module Steps
     end
 
     def and_sit_reported_cip_materials(sit_name, core_induction_programme_name)
-      next_ideal_time Time.zone.local(2021, 4, 1, 9, 0, 0)
+      next_ideal_time Time.zone.local(Cohort.current.start_year, 4, 1, 9, 0, 0)
       travel_to(@timestamp) do
         given_i_sign_in_as_the_user_with_the_full_name sit_name
 
@@ -74,14 +74,14 @@ module Steps
     end
 
     def and_sit_reported_participant(sit_name, participant_name, participant_trn, participant_dob, participant_email, participant_type)
-      next_ideal_time Time.zone.local(2021, 6, 1, 9, 0, 0)
+      next_ideal_time Time.zone.local(Cohort.current.start_year, 6, 1, 9, 0, 0)
       travel_to(@timestamp) do
         given_i_sign_in_as_the_user_with_the_full_name sit_name
 
         wizard = Pages::SchoolDashboardPage.loaded
                                            .add_participant_details
                                            .choose_to_add_an_ect_or_mentor
-        participant_start_date = Date.new(2021, 9, 1)
+        participant_start_date = Date.new(Cohort.current.start_year, 9, 1)
 
         allow(DqtRecordCheck).to receive(:call).and_return(
           DqtRecordCheck::CheckResult.new(
