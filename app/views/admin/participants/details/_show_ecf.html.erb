@@ -21,7 +21,7 @@
     end
   end
 
-  if current_user.admin_profile.super_user?
+  if policy(:super_user).show?
     sl.row do |row|
       row.key(text: "Participant identity")
       row.value(text: @participant_presenter.participant_identity.email)
