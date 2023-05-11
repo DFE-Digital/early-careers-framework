@@ -691,29 +691,17 @@ As soon as school induction tutors have entered the information to the DfE servi
 GET /api/v3/participants/ecf/transfers
 ```
 
-An example response body is listed below. Successful requests will return a response body with information about the providers and schools the participants are transferring to and from. 
+An example response body is listed below. Successful requests will return response bodies which can include: 
+
+* the provider name and school URN the participants are transferring to or from
+* the `transfer_type`, which describes whether the participant is transferring to a `new_school` with the same provider, to a new school with a `new_provider`, or if this is yet `unknown`
+* the `status`, which describes whether the transfer has taken place yet (and the dates are in the past)
+
+#### Providers should note:
+
+* Transfer data can appear incomplete as induction tutors can enter transfer information at different times. **For example,** a participant is planning on transferring from school X to school Y. School X’s induction tutor confirms the participant will be leaving, but school Y’s induction tutor has not yet confirmed the participant will be joining. At this stage the only data available via the API is from the school the participant is leaving
 
 For more detailed information see the specifications for this [view participant transfers endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-transfers-get).
-
-An example response body is listed below. Successful requests will return a response body with information including: 
-
-* the `transfer_type` detailing whether the participant will be transferring to a `new_school` with the same provider, or to a new school with a `new_provider`, or if this is yet `unknown`
-* the provider name and school URN the participants are transferring to and from
-* the `status` detailing whether the has taken place
-
-For more detailed information see the specifications for this [view participant transfers endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-transfers-get).
-
-#### Providers should note: 
-
-**A transfer journey can result some incomplete data:** This transfer endpoint is designed to share data with providers as soon as school induction tutors enter information to the DfE service. Induction tutors may enter ECT or mentor transfer information at different times, resulting in some incomplete data. For example: 
-
-* A participant transfers from school X to school Y. School X’s induction tutor confirms the participant is leaving school X
-* School Y’s induction tutor has not yet confirmed the participant is joining school Y. At this stage, the only data available via the API is that the participant is leaving school X. The data is therefore incomplete as the details for their new school are not yet known
-
-**The `status` attribute value will depend on the `leaving` and `joining` dates:** The `status` will be `complete` when all date data available for the transfer are in the past. For example:
-
-* If there is only data from only the school a participant is leaving, the `status` will be `incomplete` if end date in the future; the `status` will be `complete` if end date in the past 
-* If there is data from both the school a participant is leaving and the school they are joining, the `status` will be `incomplete` if either date is in the future; the `status` will be `complete` if both dates in the past
 
 #### Example response body:
 
