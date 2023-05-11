@@ -57,7 +57,7 @@ class SchoolCohort < ApplicationRecord
     last_year = if FeatureFlag.active?(:cohortless_dashboard, for: school)
                   Date.current.year
                 else
-                  Cohort.active_registration_cohort.start_year
+                  Cohort.current.start_year
                 end
 
     joins(:cohort)

@@ -36,8 +36,8 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
       then_i_am_taken_to_the_complete_page
 
       when_i_click_on_the_return_to_your_training_link
-      then_i_am_taken_to_the_manage_your_training_page
-      and_i_see_the_lead_provider
+      click_on(Cohort.next.description)
+      and_i_see_training_provider_to_be_confirmed
       and_i_see_delivery_partner_to_be_confirmed
     end
   end
