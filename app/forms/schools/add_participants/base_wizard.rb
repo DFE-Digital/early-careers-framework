@@ -49,7 +49,7 @@ module Schools
       end
 
       def dashboard_path
-        schools_dashboard_path(school_id: school.slug)
+        schools_participants_path(school_id: school.slug, cohort_id: participant_cohort.start_year)
       end
 
       def previous_step_path
@@ -100,22 +100,26 @@ module Schools
         data_store.get(:known_by_another_name) == "no"
       end
 
-      # has this school got a cohort set up for training that matches the incoming transfer
-      def need_training_setup?(must_be_fip: true)
-        destination_cohort = school.school_cohorts.find_by(cohort: cohort_to_place_participant)
-        return true if destination_cohort.blank?
+      def destination_school_cohort
+        school.school_cohorts.find_by(cohort: cohort_to_place_participant)
+      end
 
-        if must_be_fip
-          !destination_cohort.full_induction_programme?
-        else
-          !(destination_cohort.full_induction_programme? || destination_cohort.core_induction_programme?)
-        end
+      def fip_destination_school_cohort?
+        destination_school_cohort.full_induction_programme?
+      end
+
+      # has this school got a cohort set up for training that matches the incoming transfer
+      def need_training_setup?
+        return true if destination_school_cohort.blank?
+        return false if destination_school_cohort.full_induction_programme?
+
+        !destination_school_cohort.core_induction_programme?
       end
 
       # path to the most appropriate start point to set up training for the transfer
       def need_training_path
         if cohort_to_place_participant == Cohort.active_registration_cohort
-          expect_any_ects_schools_setup_school_cohort_path(school_id: school.slug, cohort_id: cohort_to_place_participant)
+          schools_cohort_setup_start(school_id: school.slug, cohort_id: cohort_to_place_participant)
         else
           schools_choose_programme_path(school_id: school.slug, cohort_id: cohort_to_place_participant)
         end
@@ -352,9 +356,9 @@ module Schools
         if transfer?
           existing_participant_cohort || existing_participant_profile&.schedule&.cohort
         elsif ect_participant? && induction_start_date.present?
-          Cohort.containing_date(date: induction_start_date)
-        elsif Cohort.current == Cohort.active_registration_cohort
-          # true from 1/9 to next cohort registration start date
+          Cohort.containing_date(induction_start_date)
+        elsif ::Cohort.within_automatic_assignment_period?
+          # true from 1/9 to end of automatic assignment period
           Cohort.current
         # elsif mentor_participant? || sit_mentor?
         #   Cohort.current
