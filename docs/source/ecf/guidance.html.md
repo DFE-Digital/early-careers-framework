@@ -682,7 +682,7 @@ For more detailed information see the specifications for this [notify that an EC
 
 <div class="govuk-inset-text">This endpoint is only available for systems integrated with API v3 onwards. They will not return data for API v1 or v2.</div>
 
-Providers can view data for participants who have transferred: 
+As soon as school induction tutors have entered the information to the DfE service, providers can view data for participants who have transferred: 
 
 * **from** schools they are in partnership with 
 * **to** schools they are in partnership with 
