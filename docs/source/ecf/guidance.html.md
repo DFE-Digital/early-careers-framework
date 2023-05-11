@@ -1200,11 +1200,11 @@ For more detailed information see the specifications for this [view all statemen
 
 ### View specific statement payment dates
 
-Providers can find statement IDs within [previously submitted declaration](/api-reference/ecf/guidance/#view-a-specific-previously-submitted-declaration) response bodies.
-
 ```
 GET /api/v3/statements/{id}
 ```
+
+Providers can find statement IDs within [previously submitted declaration](/api-reference/ecf/guidance/#view-a-specific-previously-submitted-declaration) response bodies.
 
 An example response body is listed below. 
 
