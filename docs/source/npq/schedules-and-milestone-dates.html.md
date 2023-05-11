@@ -11,11 +11,11 @@ NPQ courses can vary in length, and so can each have a different number of miles
 
 The API will automatically assign schedules to participants depending on when course applications are accepted by providers. 
 
-Providers should submit declarations in line with terms set out in their contracts. However the API does not apply milestone validation to those on NPQ schedules. The API will accept any declarations submitted after the first milestone period has started for a given schedule. 
+<div class="govuk-inset-text"> Providers should submit declarations in line with terms set out in their contracts. However the API does not apply milestone validation to those on NPQ schedules. The API will accept any declarations submitted after the first milestone period has started for a given schedule.</div>
 
 For example, if a participant is on an npq-leadership-autumn schedule, the API will accept any type of declaration (including `started`, `retention-{x}` or `completed`) after the schedule start date.
 
-Note, we advise providers to keep schedule data independent from any experience logic in their systems. Schedules and cohorts are financial concepts specific to the CPD service and payments. 
+**Note**, we advise providers to keep schedule data independent from any experience logic in their systems. Schedules and cohorts are financial concepts specific to the CPD service and payments. 
 
 ## Key concepts
 
@@ -47,11 +47,9 @@ Participants starting their specialist NPQ course before 31 December should be a
 ```
 #### 2023 cohort
 
-| Milestone      | Start date     | Milestone date      | Declaration type    | Payment date      | 
-| -------- | --------  | -------- | --------  | -------- | 
-| Participant Start      | 1 Oct 2023     | N/A      | `started`    | 1 Nov 2023      | 
-| Retention Point 1      | 1 Oct 2023     | N/A     | `retained-1`    | 1 Nov 2023       | 
-| Participant Completion      | 1 Oct 2023     | N/A      | `completed`    | 1 Nov 2023      | 
+The API will accept declarations submitted from **1 October 2023**.
+
+[View upcoming financial statement payment dates.](/api-reference/npq/guidance/#view-financial-statement-payment-dates)
 
 #### 2022 cohort
 
