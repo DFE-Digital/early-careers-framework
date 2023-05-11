@@ -111,14 +111,6 @@ module NewSeeds
             email = FactoryBot.create(:seed_email, **email_data.compact)
             email.create_association_with(@participant_profile)
           end
-
-        private
-
-          attr_reader :new_user_attributes,
-                      :school_cohort,
-                      :teacher_profile,
-                      :participant_identity,
-                      :user
         end
       end
     end
