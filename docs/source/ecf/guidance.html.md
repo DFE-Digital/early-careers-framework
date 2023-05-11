@@ -687,8 +687,6 @@ As soon as school induction tutors have entered the information to the DfE servi
 * **from** schools they are in partnership with 
 * **to** schools they are in partnership with 
 
-For example, a participant is at a school that is in partnership with a provider X. They then transfer to a school that is partnered with a different provider Y. They then transfer to a third school that is partnered with the original provider X. Provider X will see two transfer records, one where the participant is shown to be leaving the provider, and one where the participant is shown to be joining the provider.
-
 ```
 GET /api/v3/participants/ecf/transfers
 ```
