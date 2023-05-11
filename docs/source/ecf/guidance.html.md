@@ -55,12 +55,12 @@ Providers can also filter results by school URN. For example: `GET /api/v3/partn
 
 An example response body is listed below. Successful requests will return a response body with school details.
 
-For more detailed information see the specifications for this [view school details endpoint](/api-reference/reference-v3.html#api-v3-schools-ecf-get).
-
 #### Providers should note:
 
 * The API will **only** show schools that are eligible for funded ECF-based training programmes within a given cohort. **For example,** if schools are eligible for funding in the 2021 cohort, they will be visible via the API, and can form partnerships with providers
 * The API will **not** show schools that are ineligible for funding in a given cohort. If a school’s eligibility changes from one cohort to the next, results will default according to the latest school eligibility. **For example,** if a school was eligible for funding in the 2021 cohort but becomes ineligible for funding in 2022, the API will **not** show the school in the 2022 cohort
+
+For more detailed information see the specifications for this [view school details endpoint](/api-reference/reference-v3.html#api-v3-schools-ecf-get).
 
 #### Example response body:
 
