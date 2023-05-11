@@ -136,8 +136,7 @@ RSpec.feature "FIP to FIP with same provider - Onboarding a withdrawn participan
           and_eligible_training_declarations_are_made_payable
         end
 
-        include_examples "FIP to FIP with same provider",
-                         scenario, "active", is_hidden: true, see_prior_school: false
+        include_examples "FIP to FIP with same provider", scenario, "active", is_hidden: true, see_prior_school: false
       end
     end
   end

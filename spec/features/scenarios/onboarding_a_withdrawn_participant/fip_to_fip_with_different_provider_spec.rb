@@ -125,7 +125,7 @@ RSpec.feature "FIP to FIP with different provider - Onboarding a withdrawn parti
                                                            scenario.participant_email,
                                                            scenario.participant_trn,
                                                            scenario.participant_dob,
-                                                           same_provider: false
+                                                           same_provider: true # can't change training of withdrawn participant
 
           scenario.new_declarations.each do |declaration_type|
             and_lead_provider_has_made_training_declaration "New Lead Provider",

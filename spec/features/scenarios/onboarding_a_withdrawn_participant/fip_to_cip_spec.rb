@@ -131,7 +131,7 @@ RSpec.feature "FIP to CIP - Onboarding a withdrawn participant",
                                                            scenario.participant_email,
                                                            scenario.participant_trn,
                                                            scenario.participant_dob,
-                                                           same_provider: false
+                                                           same_provider: true # can't change training of withdrawn participant
 
           and_eligible_training_declarations_are_made_payable
         end

@@ -245,7 +245,10 @@ module Pages
     end
 
     def choose_participants_current_training_provider
-      full_stop
+      choose "Yes"
+      click_on "Continue"
+
+      self
     end
 
     def choose_a_new_training_provider
