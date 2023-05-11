@@ -14,7 +14,7 @@
       Our records show this person is already registered on an ECF-based training progamme at a different school.
     </p>
 
-    <%= form_with model: @form, url: url_for(action: :update), scope: @wizard.form_scope, method: :put do |f| %>
+    <%= form_with model: @wizard.form, url: url_for(action: :update), scope: @wizard.form_scope, method: :put do |f| %>
       <%= f.govuk_error_summary %>
       <%= f.hidden_field :transfer_confirmed, value: "yes" %>
       <div class="govuk-button-group">
