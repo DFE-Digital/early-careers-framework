@@ -59,7 +59,6 @@ module NewSeeds
               .with_validation_data
               .with_eligibility
               .with_induction_record(induction_programme:)
-              .with_validation_data
               .participant_profile
           end
 
