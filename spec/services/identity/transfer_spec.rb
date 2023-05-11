@@ -75,5 +75,40 @@ RSpec.describe Identity::Transfer do
         end
       end
     end
+
+    context "when the user has a get_an_identity_id" do
+      let(:get_an_identity_id) { SecureRandom.uuid }
+
+      it "transfers the ID to the new user" do
+        user1.update!(get_an_identity_id:)
+        service.call(from_user: user1, to_user: user2)
+        expect(user1.get_an_identity_id).to be_nil
+        expect(user2.get_an_identity_id).to eq get_an_identity_id
+      end
+
+      context "when the destination user has a get_an_identity_id" do
+        it "does not overwrite it with nil" do
+          user2.update!(get_an_identity_id:)
+          service.call(from_user: user1, to_user: user2)
+          expect(user1.get_an_identity_id).to be_nil
+          expect(user2.get_an_identity_id).to eq get_an_identity_id
+        end
+      end
+
+      context "when both the source and destination users have a get_an_identity_id" do
+        let(:get_an_identity_id_2) { SecureRandom.uuid }
+
+        before do
+          user1.update!(get_an_identity_id:)
+          user2.update!(get_an_identity_id: get_an_identity_id_2)
+        end
+
+        it "raises an error" do
+          expect {
+            service.call(from_user: user1, to_user: user2)
+          }.to raise_error(Identity::TransferError, "Identity ids present on both User records: #{user1.id} -> #{user2.id}")
+        end
+      end
+    end
   end
 end
