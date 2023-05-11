@@ -283,7 +283,12 @@ Rails.application.routes.draw do
       resource :details, only: :show, controller: "participants/details"
       resource :school, only: :show, controller: "participants/school"
       resource :history, only: :show, controller: "participants/history"
-      resource :induction_records, only: :show, controller: "participants/induction_records"
+      resource :induction_records, only: :show, controller: "participants/induction_records" do
+        member do
+          get ":induction_record_id/edit_preferred_email", action: :edit_preferred_email, as: :edit_preferred_email
+          put ":induction_record_id/update_preferred_email", action: :update_preferred_email, as: :update_preferred_email
+        end
+      end
       resource :cohorts, only: :show, controller: "participants/cohorts"
       resource :declaration_history, only: :show, controller: "participants/declaration_history"
       resource :identities, only: :show, controller: "participants/identities"
