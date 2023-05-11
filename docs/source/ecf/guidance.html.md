@@ -59,12 +59,8 @@ For more detailed information see the specifications for this [view school detai
 
 #### Providers should note:
 
-**Results are dependent on funding eligibility and partnership history:** The API will only show schools that are eligible for funded ECF-based training programmes. If a school’s eligibility changes from one cohort to the next, results will default according to the latest school eligibility. For example: 
-
-* A school is eligible for funding, becomes available to view via the API, and goes on to form a partnership with a provider in the 2021 cohort
-* The school then becomes ineligible for funding in 2022, so the API **will** continue to show the school for 2021 (with partnership details) but will **not** return a response for 2022
-* However, if the same school **does not** form a partnership with a provider in the 2021 cohort and then become ineligible in 2022 cohort, the school will **no longer** appear in results for **either** 2021 or 2022 cohort
-
+* The API will **only** show schools that are eligible for funded ECF-based training programmes within a given cohort. **For example,** if schools are eligible for funding in the 2021 cohort, they will be visible via the API, and can form partnerships with providers
+* The API will **not** show schools that are ineligible for funding in a given cohort. If a school’s eligibility changes from one cohort to the next, results will default according to the latest school eligibility. **For example,** if a school was eligible for funding in the 2021 cohort but becomes ineligible for funding in 2022, the API will **not** show the school in the 2022 cohort
 
 #### Example response body:
 
