@@ -18,7 +18,7 @@ module Schools
           if transfer_confirmed?
             if wizard.destination_school_cohort.blank?
               :need_training_setup
-            elsif !destination_school_cohort.full_induction_programme?
+            elsif !wizard.fip_destination_school_cohort?
               :cannot_transfer_no_fip
             else
               :none

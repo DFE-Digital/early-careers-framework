@@ -17,7 +17,7 @@ module Schools
         def next_step
           if !wizard.destination_school_cohort
             :need_training_setup
-          elsif wizard.no_fip_destination_school_cohort?
+          elsif !wizard.fip_destination_school_cohort?
             :cannot_transfer_no_fip
           else
             :none
