@@ -206,7 +206,7 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v3.6.0
         with:
-          node-version: '18.14.x'
+          node-version: '18.16.x'
           cache: 'yarn'
 
       - name: Set up test database
