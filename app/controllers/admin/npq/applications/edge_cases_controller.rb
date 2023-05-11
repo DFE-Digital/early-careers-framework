@@ -12,13 +12,10 @@ module Admin
         before_action :load_npq_application, except: :index
 
         def index
-          results = policy_scope(
-            NPQApplication
-              .does_not_work_in_school
-              .does_not_work_in_childcare
-              .edge_case_statuses
-              .eager_load(:npq_course, participant_identity: :user),
-          ).all.order(created_at: :desc)
+          query_string = params[:query]
+
+          results = Admin::NPQApplications::EdgecaseSearch
+            .new(policy_scope(NPQApplication), query_string:).call
 
           @pagy, @npq_applications = pagy(results, page: params[:page], items: 20)
           @page = @pagy.page
