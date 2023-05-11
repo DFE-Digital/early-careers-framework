@@ -14,7 +14,7 @@ module Admin
         def index
           query_string = params[:query]
 
-          results = Admin::NPQApplications::EdgecaseSearch
+          results = Admin::NPQApplications::EdgeCaseSearch
             .new(policy_scope(NPQApplication), query_string:).call
 
           @pagy, @npq_applications = pagy(results, page: params[:page], items: 20)
