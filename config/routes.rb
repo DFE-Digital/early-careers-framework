@@ -32,9 +32,6 @@ Rails.application.routes.draw do
   direct :guidance_for_manage_ect_training do
     "https://www.gov.uk/guidance/how-to-manage-early-career-teacher-training"
   end
-  direct :guidance_for_making_changes_to_an_existing_programme do
-    "https://www.gov.uk/guidance/guidance-for-schools-how-to-manage-ecf-based-training#making-changes-to-an-existing-training-programme"
-  end
   direct :guidance_for_induction_training_and_support_for_ects do
     "https://www.gov.uk/government/collections/induction-training-and-support-for-early-career-teachers-ects"
   end
