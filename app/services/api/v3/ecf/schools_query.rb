@@ -12,6 +12,7 @@ module Api
           return School.none unless filter[:cohort] && cohort.present?
 
           scope = eligible_schools
+            .not_cip_only
             .or(schools_with_existing_partnerships)
             .includes(partnerships: :cohort, school_cohorts: :cohort)
             .distinct
@@ -46,6 +47,7 @@ module Api
             .where(partnerships: {
               challenged_at: nil,
               challenge_reason: nil,
+              relationship: false,
               cohorts: { start_year: filter[:cohort] },
             })
         end

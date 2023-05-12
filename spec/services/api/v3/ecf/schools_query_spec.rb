@@ -42,8 +42,8 @@ RSpec.describe Api::V3::ECF::SchoolsQuery do
       context "with eligible cip only school" do
         let!(:eligible_cip_only_school) { create(:school, :eligible, :cip_only) }
 
-        it "returns all eligible schools for the specific cohort" do
-          expect(subject.schools).to match_array([eligible_cip_only_school])
+        it "returns no schools" do
+          expect(subject.schools).to be_empty
         end
       end
 
@@ -70,6 +70,15 @@ RSpec.describe Api::V3::ECF::SchoolsQuery do
       context "with ineligible challenged school which was eligible in the current cohort" do
         let(:ineligible_school) { create(:school, :closed) }
         let!(:partnership) { create(:partnership, :challenged, school: ineligible_school, cohort:) }
+
+        it "does not return the school" do
+          expect(subject.schools).to be_empty
+        end
+      end
+
+      context "with ineligible relationship school which was eligible in the current cohort" do
+        let(:ineligible_school) { create(:school, :closed) }
+        let!(:partnership) { create(:partnership, school: ineligible_school, cohort:, relationship: true) }
 
         it "does not return the school" do
           expect(subject.schools).to be_empty
