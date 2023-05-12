@@ -36,6 +36,13 @@ FactoryBot.define do
       school_status_code { 2 }
     end
 
+    trait :eligible do
+      school_status_code { GiasTypes::ELIGIBLE_STATUS_CODES.sample }
+      school_type_code   { GiasTypes::ELIGIBLE_TYPE_CODES.sample }
+      section_41_approved { true }
+      administrative_district_code { "9999" }
+    end
+
     trait :cip_only do
       open
       school_type_code { GiasTypes::CIP_ONLY_TYPE_CODES.sample }
