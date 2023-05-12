@@ -63,6 +63,10 @@ FactoryBot.define do
       funded
     end
 
+    trait :targeted_delivery_funding_eligibility do
+      targeted_delivery_funding_eligibility { true }
+    end
+
     trait :accepted do
       after :create do |npq_application|
         NPQ::Application::Accept.new(npq_application:).call

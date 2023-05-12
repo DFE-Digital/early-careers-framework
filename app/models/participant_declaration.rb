@@ -167,6 +167,10 @@ class ParticipantDeclaration < ApplicationRecord
     false
   end
 
+  def uplift_paid?
+    false
+  end
+
 private
 
   def build_initial_declaration_state

@@ -55,6 +55,13 @@ class ParticipantDeclaration::NPQ < ParticipantDeclaration
     true
   end
 
+  def uplift_paid?
+    !%w[npq-additional-support-offer npq-early-headship-coaching-offer].include?(course_identifier) &&
+      declaration_type == "started" &&
+      %w[paid awaiting_clawback clawed_back].include?(state) &&
+      participant_profile.npq_application.targeted_delivery_funding_eligibility
+  end
+
   def qualification_type
     QUALIFICATION_TYPES.fetch(course_identifier)
   rescue KeyError => e
