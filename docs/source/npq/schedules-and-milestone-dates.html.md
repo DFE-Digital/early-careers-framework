@@ -53,19 +53,15 @@ The API will accept declarations submitted from **1 October 2023**.
 
 #### 2022 cohort
 
-| Milestone      | Start date     | Milestone date      | Declaration type    | Payment date      | 
-| -------- | --------  | -------- | --------  | -------- | 
-| Participant Start      | 1 Oct 2022     | N/A      | `started`    | 1 Nov 2022      | 
-| Retention Point 1      | 1 Oct 2022     | N/A     | `retained-1`    | 1 Nov 2022       | 
-| Participant Completion      | 1 Oct 2022     | N/A      | `completed`    | 1 Nov 2022      | 
+The API will accept declarations submitted from **1 October 2022**.
+
+[View upcoming financial statement payment dates.](/api-reference/npq/guidance/#view-financial-statement-payment-dates)
+
 #### 2021 cohort
 
-| Milestone      | Start date     | Milestone date      | Declaration type    | Payment date      | 
-| -------- | --------  | -------- | --------  | -------- | 
-| Participant Start      | 1 Nov 2021     | N/A      | `started`    | 1 Nov 2021      | 
-| Retention Point 1      | 1 Nov 2021     | N/A     | `retained-1`    | 1 Nov 2021       | 
-| Participant Completion      | 1 Nov 2021     | N/A      | `completed`    | 1 Nov 2021      | 
+The API will accept declarations submitted from **1 November 2021**.
 
+[View upcoming financial statement payment dates.](/api-reference/npq/guidance/#view-financial-statement-payment-dates)
 
 ### Dates for schedules starting in spring 
 
@@ -77,26 +73,21 @@ Participants starting their specialist NPQ course after 1 January should be assi
 
 #### 2023 cohort
 
-| Milestone      | Start date     | Milestone date      | Declaration type    | Payment date      | 
-| -------- | --------  | -------- | --------  | -------- | 
-| Participant Start      | 1 Jan 2024     | N/A      | `started`    | 1 Jan 2024      | 
-| Retention Point 1      | 1 Jan 2024     | N/A     | `retained-1`    | 1 Jan 2024       | 
-| Participant Completion      | 1 Jan 2024     | N/A      | `completed`    | 1 Jan 2024      | 
+The API will accept declarations submitted from **1 January 2024**.
+
+[View upcoming financial statement payment dates.](/api-reference/npq/guidance/#view-financial-statement-payment-dates)
 
 #### 2022 cohort
 
-| Milestone      | Start date     | Milestone date      | Declaration type    | Payment date      | 
-| -------- | --------  | -------- | --------  | -------- | 
-| Participant Start      | 1 Jan 2022     | N/A      | `started`    | 1 Jan 2023      | 
-| Retention Point 1      | 1 Jan 2022     | N/A     | `retained-1`    | 1 Jan 2023       | 
-| Participant Completion      | 1 Jan 2022     | N/A      | `completed`    | 1 Jan 2023      | 
+The API will accept declarations submitted from **1 January 2023**.
+
+[View upcoming financial statement payment dates.](/api-reference/npq/guidance/#view-financial-statement-payment-dates)
+
 #### 2021 cohort
 
-| Milestone      | Start date     | Milestone date      | Declaration type    | Payment date      | 
-| -------- | --------  | -------- | --------  | -------- | 
-| Participant Start      | 1 Jan 2022     | N/A      | `started`    | 1 Jan 2022      | 
-| Retention Point 1      | 1 Jan 2022     | N/A     | `retained-1`    | 1 Jan 2022       | 
-| Participant Completion      | 1 Jan 2022     | N/A      | `completed`    | 1 Jan 2022      | 
+The API will accept declarations submitted from **1 January 2022**.
+
+[View upcoming financial statement payment dates.](/api-reference/npq/guidance/#view-financial-statement-payment-dates)
 
 ## Leadership NPQ schedules
 
@@ -117,29 +108,21 @@ Participants starting their specialist NPQ course before 31 December should be a
 
 #### 2023 cohort
 
-| Milestone      | Start date     | Milestone date      | Declaration type    | Payment date      | 
-| -------- | --------  | -------- | --------  | -------- | 
-| Participant Start      | 1 Oct 2023     | N/A      | `started`    | 1 Nov 2023      | 
-| Retention Point 1      | 1 Oct 2023     | N/A     | `retained-1`    | 1 Nov 2023       | 
-| Retention Point 2      | 1 Oct 2023     | N/A     | `retained-2`    | 1 Nov 2023       |
-| Participant Completion      | 1 Oct 2023     | N/A      | `completed`    | 1 Nov 2023      | 
+The API will accept declarations submitted from **1 October 2023**.
+
+[View upcoming financial statement payment dates.](/api-reference/npq/guidance/#view-financial-statement-payment-dates)
 
 #### 2022 cohort
 
-| Milestone      | Start date     | Milestone date      | Declaration type    | Payment date      | 
-| -------- | --------  | -------- | --------  | -------- | 
-| Participant Start      | 1 Oct 2022     | N/A      | `started`    | 1 Nov 2022      | 
-| Retention Point 1      | 1 Oct 2022     | N/A     | `retained-1`    | 1 Nov 2022       | 
-| Retention Point 2      | 1 Oct 2022     | N/A     | `retained-2`    | 1 Nov 2022       |
-| Participant Completion      | 1 Oct 2022     | N/A      | `completed`    | 1 Nov 2022      | 
+The API will accept declarations submitted from **1 October 2022**.
+
+[View upcoming financial statement payment dates.](/api-reference/npq/guidance/#view-financial-statement-payment-dates)
+
 #### 2021 cohort
 
-| Milestone      | Start date     | Milestone date      | Declaration type    | Payment date      | 
-| -------- | --------  | -------- | --------  | -------- | 
-| Participant Start      | 1 Nov 2021     | N/A      | `started`    | 1 Nov 2021      | 
-| Retention Point 1      | 1 Nov 2021     | N/A     | `retained-1`    | 1 Nov 2021       | 
-| Retention Point 2      | 1 Oct 2021     | N/A     | `retained-2`    | 1 Nov 2021       |
-| Participant Completion      | 1 Nov 2021     | N/A      | `completed`    | 1 Nov 2021      | 
+The API will accept declarations submitted from **1 November 2021**.
+
+[View upcoming financial statement payment dates.](/api-reference/npq/guidance/#view-financial-statement-payment-dates)
 
 ### Dates for schedules starting in spring 
 
@@ -151,31 +134,21 @@ Participants starting their specialist NPQ course after 1 January should be assi
 
 #### 2023 cohort
 
-| Milestone      | Start date     | Milestone date      | Declaration type    | Payment date      | 
-| -------- | --------  | -------- | --------  | -------- | 
-| Participant Start      | 1 Jan 2024     | N/A      | `started`    | 1 Jan 2024      | 
-| Retention Point 1      | 1 Jan 2024     | N/A     | `retained-1`    | 1 Jan 2024       | 
-| Retention Point 2      | 1 Jan 2024     | N/A     | `retained-2`    | 1 Jan 2024       | 
-| Participant Completion      | 1 Jan 2024     | N/A      | `completed`    | 1 Jan 2024      | 
+The API will accept declarations submitted from **1 January 2024**.
+
+[View upcoming financial statement payment dates.](/api-reference/npq/guidance/#view-financial-statement-payment-dates)
 
 #### 2022 cohort
 
-| Milestone      | Start date     | Milestone date      | Declaration type    | Payment date      | 
-| -------- | --------  | -------- | --------  | -------- | 
-| Participant Start      | 1 Jan 2023     | N/A      | `started`    | 1 Jan 2023      | 
-| Retention Point 1      | 1 Jan 2023     | N/A     | `retained-1`    | 1 Jan 2023       | 
-| Retention Point 2      | 1 Jan 2023     | N/A     | `retained-2`    | 1 Jan 2023       | 
-| Participant Completion      | 1 Jan 2023     | N/A      | `completed`    | 1 Jan 2023      | 
+The API will accept declarations submitted from **1 January 2023**.
+
+[View upcoming financial statement payment dates.](/api-reference/npq/guidance/#view-financial-statement-payment-dates)
 
 #### 2021 cohort
 
-| Milestone      | Start date     | Milestone date      | Declaration type    | Payment date      | 
-| -------- | --------  | -------- | --------  | -------- | 
-| Participant Start      | 1 Jan 2022     | N/A      | `started`    | 1 Jan 2022      | 
-| Retention Point 1      | 1 Jan 2022     | N/A     | `retained-1`    | 1 Jan 2022       | 
-| Retention Point 2      | 1 Jan 2022     | N/A     | `retained-2`    | 1 Jan 2022       | 
-| Participant Completion      | 1 Jan 2022     | N/A      | `completed`    | 1 Jan 2022      | 
+The API will accept declarations submitted from **1 January 2022**.
 
+[View upcoming financial statement payment dates.](/api-reference/npq/guidance/#view-financial-statement-payment-dates)
 
 ## Early headship coaching offer (EHCO) schedules 
 
