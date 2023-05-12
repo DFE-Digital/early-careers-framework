@@ -2332,6 +2332,18 @@
             "required": false,
             "example": "page[page]=1&page[per_page]=5",
             "description": "Pagination options to navigate through the list of unfunded mentors."
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/ECFUnfundedMentorsSort"
+            },
+            "style": "form",
+            "explode": false,
+            "required": false,
+            "description": "Sort unfunded mentors being returned.",
+            "example": "sort=-updated_at"
           }
         ],
         "responses": {
@@ -6581,6 +6593,17 @@
           "data": {
             "$ref": "#/components/schemas/UnfundedMentor"
           }
+        }
+      },
+      "ECFUnfundedMentorsSort": {
+        "description": "Sort unfunded mentors being returned.",
+        "type": "array",
+        "items": {
+          "type": "string",
+          "enum": [
+            "updated_at",
+            "-updated_at"
+          ]
         }
       },
       "UnauthorisedResponse": {

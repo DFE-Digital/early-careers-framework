@@ -30,6 +30,13 @@ module UserHelper
   alias_method :given_i_am_logged_in_as_an_admin_user, :given_i_sign_in_as_an_admin_user
   alias_method :and_i_am_signed_in_as_an_admin, :given_i_sign_in_as_an_admin_user
 
+  def given_i_sign_in_as_a_super_user_admin
+    @logged_in_admin_user = FactoryBot.create(:admin_profile, super_user: true).user
+
+    visit users_confirm_sign_in_path(login_token: @logged_in_admin_user.login_token)
+    click_button "Continue"
+  end
+
   def given_i_sign_in_as_a_finance_user
     token = "test-finance-token-#{Time.zone.now.to_f}"
     create :user,

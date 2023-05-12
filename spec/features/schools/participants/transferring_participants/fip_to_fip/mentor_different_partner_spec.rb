@@ -70,7 +70,7 @@ RSpec.describe "Transferring a mentor with a different provider", type: :feature
     and_the_participants_current_provider_is_notified
 
     click_on "View your ECTs and mentors"
-    then_i_am_taken_to_a_dashboard_page
+    then_i_am_taken_to_your_ect_and_mentors_page
   end
 
   scenario "Induction tutor can transfer an Mentor and they can continue their current programme" do
@@ -120,7 +120,7 @@ RSpec.describe "Transferring a mentor with a different provider", type: :feature
     and_the_participants_current_provider_is_notified
 
     click_on "View your ECTs and mentors"
-    then_i_am_taken_to_a_dashboard_page
+    then_i_am_taken_to_your_ect_and_mentors_page
   end
 
   # given

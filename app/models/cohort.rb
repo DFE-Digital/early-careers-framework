@@ -20,7 +20,7 @@ class Cohort < ApplicationRecord
     where(npq_registration_start_date: ..Date.current).order(start_year: :desc).first.presence || current
   end
 
-  def self.containing_date(date:)
+  def self.containing_date(date)
     starting_within(date - 1.year + 1.day, date)
   end
 

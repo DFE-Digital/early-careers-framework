@@ -38,6 +38,12 @@
         sl.row do |row|
           row.key(text: "Preferred email")
           row.value(text: induction_record.participant_email)
+          if policy(induction_record).edit_preferred_email?
+            row.action(
+              href: edit_preferred_email_admin_participant_induction_records_path(@participant_profile, induction_record),
+              visually_hidden_text: "preferred email"
+            )
+          end
         end
 
         sl.row do |row|
