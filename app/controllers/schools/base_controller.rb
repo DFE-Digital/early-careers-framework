@@ -21,9 +21,7 @@ private
 
     max_cohort_year = [
       Cohort.latest&.start_year,
-      Cohort.next&.start_year,
-      Cohort.active_registration_cohort.start_year.to_i +
-        (FeatureFlag.active?(:cohortless_dashboard, for: active_school) ? 1 : 0),
+      (FeatureFlag.active?(:cohortless_dashboard, for: active_school) ? Cohort.next : Cohort.current).start_year,
     ].compact.min
 
     redirect_to schools_dashboard_path if params[:cohort_id].to_i > max_cohort_year
