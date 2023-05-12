@@ -104,13 +104,17 @@ module Schools
         school.school_cohorts.find_by(cohort: cohort_to_place_participant)
       end
 
+      def destination_school_cohort_needs_setup?
+        destination_school_cohort.blank? || destination_school_cohort.no_early_career_teachers?
+      end
+
       def fip_destination_school_cohort?
         destination_school_cohort.full_induction_programme?
       end
 
       # has this school got a cohort set up for training that matches the incoming transfer
       def need_training_setup?
-        return true if destination_school_cohort.blank?
+        return true if destination_school_cohort_needs_setup?
         return false if destination_school_cohort.full_induction_programme?
 
         !destination_school_cohort.core_induction_programme?

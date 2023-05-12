@@ -20,16 +20,16 @@ RSpec.describe Schools::AddParticipants::WizardSteps::ConfirmMentorTransferStep,
         step.transfer_confirmed = "yes"
       end
 
-      context "when no training choice has been made" do
+      context "when no training choice has been made or no ects expected" do
         it "returns :need_training_setup" do
-          allow(wizard).to receive(:destination_school_cohort).and_return(nil)
+          allow(wizard).to receive(:destination_school_cohort_needs_setup?).and_return(true)
           expect(step.next_step).to eql :need_training_setup
         end
       end
 
       context "when a FIP training choice has been made" do
         it "returns :none" do
-          allow(wizard).to receive(:destination_school_cohort).and_return(true)
+          allow(wizard).to receive(:destination_school_cohort_needs_setup?).and_return(false)
           allow(wizard).to receive(:fip_destination_school_cohort?).and_return(true)
           expect(step.next_step).to eql :none
         end
@@ -37,7 +37,7 @@ RSpec.describe Schools::AddParticipants::WizardSteps::ConfirmMentorTransferStep,
 
       context "when a FIP training choice has not been made" do
         it "returns :cannot_transfer_no_fip" do
-          allow(wizard).to receive(:destination_school_cohort).and_return(true)
+          allow(wizard).to receive(:destination_school_cohort_needs_setup?).and_return(false)
           allow(wizard).to receive(:fip_destination_school_cohort?).and_return(false)
           expect(step.next_step).to eql :cannot_transfer_no_fip
         end
@@ -66,7 +66,7 @@ RSpec.describe Schools::AddParticipants::WizardSteps::ConfirmMentorTransferStep,
     context "when there isn't a training programme" do
       it "returns false" do
         step.transfer_confirmed = "yes"
-        allow(wizard).to receive(:destination_school_cohort)
+        allow(wizard).to receive(:destination_school_cohort_needs_setup?).and_return(true)
         expect(step).not_to be_journey_complete
       end
     end
@@ -74,7 +74,7 @@ RSpec.describe Schools::AddParticipants::WizardSteps::ConfirmMentorTransferStep,
     context "when the training programme is not FIP" do
       it "returns false" do
         step.transfer_confirmed = "yes"
-        allow(wizard).to receive(:destination_school_cohort).and_return(true)
+        allow(wizard).to receive(:destination_school_cohort_needs_setup?).and_return(false)
         allow(wizard).to receive(:fip_destination_school_cohort?).and_return(false)
         expect(step).not_to be_journey_complete
       end
@@ -83,7 +83,7 @@ RSpec.describe Schools::AddParticipants::WizardSteps::ConfirmMentorTransferStep,
     context "when the transfer is confirmed and there is a FIP training programme in place" do
       before do
         step.transfer_confirmed = "yes"
-        allow(wizard).to receive(:destination_school_cohort).and_return(true)
+        allow(wizard).to receive(:destination_school_cohort_needs_setup?).and_return(false)
         allow(wizard).to receive(:fip_destination_school_cohort?).and_return(true)
       end
 

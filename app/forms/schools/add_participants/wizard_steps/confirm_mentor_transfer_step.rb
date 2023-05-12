@@ -16,7 +16,7 @@ module Schools
 
         def next_step
           if transfer_confirmed?
-            if wizard.destination_school_cohort.blank?
+            if wizard.destination_school_cohort_needs_setup?
               :need_training_setup
             elsif !wizard.fip_destination_school_cohort?
               :cannot_transfer_no_fip
