@@ -32,12 +32,6 @@ Rails.application.routes.draw do
   direct :guidance_for_manage_ect_training do
     "https://www.gov.uk/guidance/how-to-manage-early-career-teacher-training"
   end
-  direct :guidance_for_induction_training_and_support_for_ects do
-    "https://www.gov.uk/government/collections/induction-training-and-support-for-early-career-teachers-ects"
-  end
-  direct :guidance_for_how_to_manage_ecf_based_training do
-    "https://www.gov.uk/guidance/guidance-for-schools-how-to-manage-ecf-based-training"
-  end
 
   scope :pages, controller: "pages" do
     get "/ect-additional-information", to: redirect("https://www.gov.uk/guidance/guidance-for-early-career-teachers-ects-ecf-based-training")
