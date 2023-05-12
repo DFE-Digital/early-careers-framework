@@ -182,7 +182,6 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_sp
                           pupil_premium_uplift: true,
                           sparsity_uplift: true,
                           schedule_identifier: "ecf-standard-january",
-                          validation_status: "eligible_to_start",
                           delivery_partner_id: "cd3a12347-7308-4879-942a-c4a70ced400a",
                           withdrawal: nil,
                           deferral: {
@@ -328,7 +327,6 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_sp
                           pupil_premium_uplift: true,
                           sparsity_uplift: true,
                           schedule_identifier: "ecf-standard-january",
-                          validation_status: "eligible_to_start",
                           delivery_partner_id: "cd3a12347-7308-4879-942a-c4a70ced400a",
                           withdrawal: {
                             reason: "other",

@@ -2086,7 +2086,6 @@
                               "pupil_premium_uplift": true,
                               "sparsity_uplift": true,
                               "schedule_identifier": "ecf-standard-january",
-                              "validation_status": "eligible_to_start",
                               "delivery_partner_id": "cd3a12347-7308-4879-942a-c4a70ced400a",
                               "withdrawal": null,
                               "deferral": {
@@ -2224,7 +2223,6 @@
                               "pupil_premium_uplift": true,
                               "sparsity_uplift": true,
                               "schedule_identifier": "ecf-standard-january",
-                              "validation_status": "eligible_to_start",
                               "delivery_partner_id": "cd3a12347-7308-4879-942a-c4a70ced400a",
                               "deferral": null,
                               "withdrawal": {
@@ -2769,7 +2767,6 @@
           "pupil_premium_uplift",
           "sparsity_uplift",
           "schedule_identifier",
-          "validation_status",
           "delivery_partner_id",
           "created_at"
         ],
@@ -2858,18 +2855,6 @@
             "description": "The schedule of the ECF participant. For the possible values please refer to the <a href=\"/ecf-usage.html#notifying-of-schedule-change\" class=\"govuk-link\">ECF change schedule guidance</a>.",
             "type": "string",
             "example": "ecf-standard-january"
-          },
-          "validation_status": {
-            "description": "Indicates where a participant is in the DfE’s validation and eligibility process. Same detail shown to SITs and Delivery Partners.",
-            "type": "string",
-            "enum": [
-              "contacted_for_information",
-              "dfe_checking_eligibility",
-              "checking_qts",
-              "not_eligible_for_funded_training",
-              "eligible_to_start"
-            ],
-            "example": "eligible_to_start"
           },
           "delivery_partner_id": {
             "description": "Unique ID of the delivery partner associated with the participant",
