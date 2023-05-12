@@ -11,10 +11,9 @@ RSpec.describe "API ECF schools", :with_default_schedules, type: :request, with_
   let(:cohort) { create(:cohort, start_year: 2022) }
   let(:another_cohort) { create(:cohort, start_year: 2021) }
 
-  let(:school) { create(:school, updated_at: Time.zone.now) }
-  let(:another_school) { create(:school, updated_at: Time.zone.now - 2.days) }
-  let!(:school_cohort) { create(:school_cohort, school:, cohort:) }
-  let!(:another_school_cohort) { create(:school_cohort, school: another_school, cohort: another_cohort) }
+  let!(:school) { create(:school, :eligible) }
+  let(:another_school) { create(:school, :closed) }
+  let!(:another_partnership) { create(:partnership, school: another_school, cohort: another_cohort) }
 
   describe "#index" do
     context "when authorized" do
@@ -45,7 +44,7 @@ RSpec.describe "API ECF schools", :with_default_schedules, type: :request, with_
         context "when there are other schools not in the same cohort" do
           it "returns only those schools in the filtered cohort" do
             expect(parsed_response["data"].size).to eql(1)
-            expect(parsed_response["data"][0]["id"]).to eq(school_cohort.school.id)
+            expect(parsed_response["data"][0]["id"]).to eq(school.id)
           end
         end
 
@@ -66,7 +65,11 @@ RSpec.describe "API ECF schools", :with_default_schedules, type: :request, with_
       end
 
       describe "ordering" do
-        let!(:another_school_cohort) { create(:school_cohort, school: another_school, cohort:) }
+        let!(:another_partnership) do
+          travel_to(Time.zone.now - 2.days) do
+            create(:partnership, school: another_school, cohort:)
+          end
+        end
 
         before { get "/api/v3/schools/ecf", params: { sort: sort_param, filter: { cohort: cohort.display_name } } }
 
@@ -102,8 +105,8 @@ RSpec.describe "API ECF schools", :with_default_schedules, type: :request, with_
         it "returns all schools that match" do
           get "/api/v3/schools/ecf", params: { filter: { cohort: another_cohort.display_name } }
 
-          expect(parsed_response["data"].size).to eql(1)
-          expect(parsed_response.dig("data", 0, "attributes", "urn")).to eql(another_school.urn)
+          expect(parsed_response["data"].size).to eql(2)
+          expect(parsed_response["data"].map { |school| school["attributes"]["urn"] }).to contain_exactly(another_school.urn, school.urn)
         end
 
         it "returns no schools if no matches" do
@@ -184,7 +187,7 @@ RSpec.describe "API ECF schools", :with_default_schedules, type: :request, with_
         before { get "/api/v3/schools/ecf/#{school.id}", params: { filter: { cohort: cohort.start_year } } }
 
         context "when there are other schools not in the same cohort" do
-          let!(:another_school_cohort) { create(:school_cohort, cohort: another_cohort) }
+          let!(:another_partnership) { create(:partnership, cohort: another_cohort) }
 
           it "returns only those schools in the filtered cohort" do
             expect(parsed_response["data"]["id"]).to eq(school.id)

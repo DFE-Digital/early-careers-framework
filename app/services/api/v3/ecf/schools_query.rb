@@ -9,7 +9,7 @@ module Api
         end
 
         def schools
-          return School.none unless filter[:cohort]
+          return School.none unless filter[:cohort] && cohort.present?
 
           scope = eligible_schools
             .or(schools_with_existing_partnerships)
@@ -30,6 +30,10 @@ module Api
 
         def filter
           params[:filter] ||= {}
+        end
+
+        def cohort
+          Cohort.find_by(start_year: filter[:cohort])
         end
 
         def eligible_schools

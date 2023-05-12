@@ -8,7 +8,7 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json", with_feat
   let(:bearer_token) { "Bearer #{token}" }
   let(:Authorization) { bearer_token }
   let(:cohort) { create(:cohort, start_year: 2021) }
-  let!(:school_cohort) { create(:school_cohort, cohort:) }
+  let!(:school) { create(:school, :eligible) }
   let("filter[cohort]") { cohort.start_year }
 
   path "/api/v3/schools/ecf" do
@@ -67,7 +67,7 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json", with_feat
   end
 
   path "/api/v3/schools/ecf/{id}" do
-    let(:id) { school_cohort.school_id }
+    let(:id) { school.id }
 
     get "<b>Note, this endpoint is new.</b><br/>Get a single ECF school scoped to cohort" do
       operationId :school_ecf_get
