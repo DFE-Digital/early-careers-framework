@@ -17,15 +17,15 @@ module Admin
         attr_reader :school_cohort, :cohort
 
         MESSAGES = {
-          design_our_own: "designing own induction course",
-          school_funded_fip: "school funded full induction programme",
-          no_early_career_teachers: "no ECTs this year",
+          design_our_own: "Designing their own training",
+          school_funded_fip: "School funded full induction programme",
+          no_early_career_teachers: "No ECTs this year",
         }.freeze
 
         def message
-          return "No programme" if school_cohort.nil?
+          return "Not assigned" if school_cohort.nil?
 
-          ["Not using service", MESSAGES[school_cohort.induction_programme_choice.to_sym]].compact.join(" - ")
+          [MESSAGES[school_cohort.induction_programme_choice.to_sym]].compact.join(" - ")
         end
       end
     end
