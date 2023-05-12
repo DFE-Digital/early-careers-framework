@@ -11,6 +11,7 @@ weight: 4
 * [View, accept or reject NPQ applications](/api-reference/npq/guidance/#view-accept-or-reject-npq-applications)
 * [View and update participant records](/api-reference/npq/guidance/#view-and-update-participant-data)
 * [Submit, view and void declarations](/api-reference/npq/guidance/#submit-view-and-void-declarations)
+* [View financial statement payment dates](/api-reference/npq/guidance/#view-financial-statement-payment-dates)
 * [Schedules and milestone dates](/api-reference/npq/schedules-and-milestone-dates)
 
 ## Overview 
