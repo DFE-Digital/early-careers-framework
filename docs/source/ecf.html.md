@@ -11,6 +11,7 @@ weight: 3
 * [Confirm, view and update partnerships](/api-reference/ecf/guidance/#view-submit-and-update-partnerships)
 * [View and update participant data](/api-reference/ecf/guidance/#view-and-update-participant-data)
 * [Submit, view and void declarations](/api-reference/ecf/guidance/#submit-view-and-void-declarations)
+* [View financial statement payment dates](/api-reference/ecf/guidance/#view-financial-statement-payment-dates)
 * [Schedules and milestone dates ](/api-reference/ecf/schedules-and-milestone-dates)
 
 ## Overview 
