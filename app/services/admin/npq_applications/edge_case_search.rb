@@ -23,12 +23,11 @@ private
         .where(id: query_string)
         .or(User.full_name_matches(query_string))
         .or(User.email_matches(query_string))
-        .or(ParticipantIdentity.email_matches(query_string))
-        .or(ParticipantIdentity.where(id: query_string))
-        .or(ParticipantProfile.where(id: query_string))
+        .or(TeacherProfile.trn_matches(query_string))
         .or(User.where(id: query_string))
         .or(NPQApplication.where(teacher_reference_number: query_string))
         .or(NPQApplication.where(id: query_string))
+        .or(NPQApplication.where(employer_name: query_string))
     else
       NPQApplication
         .does_not_work_in_school
@@ -42,8 +41,7 @@ private
     [
       :npq_course,
       :participant_identity,
-      { participant_identity: :user },
-      { participant_identity: :participant_profiles },
+      { participant_identity: { user: :teacher_profile } },
     ]
   end
 end
