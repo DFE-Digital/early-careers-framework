@@ -125,6 +125,34 @@ RSpec.describe "NPQ Applications API", :with_default_schedules, type: :request, 
             end
           end
         end
+
+        describe "ordering" do
+          let!(:another_npq_application) { create(:npq_application, :accepted, npq_lead_provider:, school_urn: "123456", npq_course:) }
+
+          before do
+            another_npq_application.update!(updated_at: 10.days.ago)
+
+            get "/api/v3/npq-applications", params: { sort: sort_param }
+          end
+
+          context "when ordering by updated_at ascending" do
+            let(:sort_param) { "updated_at" }
+
+            it "returns an ordered list of npq applications" do
+              expect(parsed_response["data"].size).to eql(4)
+              expect(parsed_response.dig("data", 0, "attributes", "full_name")).to eql(another_npq_application.user.full_name)
+            end
+          end
+
+          context "when ordering by updated_at applications" do
+            let(:sort_param) { "-updated_at" }
+
+            it "returns an ordered list of npq participants" do
+              expect(parsed_response["data"].size).to eql(4)
+              expect(parsed_response.dig("data", 3, "attributes", "full_name")).to eql(another_npq_application.user.full_name)
+            end
+          end
+        end
       end
     end
 
