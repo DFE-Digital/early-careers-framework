@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Cohort < ApplicationRecord
+  has_paper_trail
+
   has_many :call_off_contracts
   has_many :npq_contracts
   has_many :partnerships

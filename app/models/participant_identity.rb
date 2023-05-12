@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ParticipantIdentity < ApplicationRecord
+  has_paper_trail
+
   belongs_to :user, touch: true
   has_many :participant_profiles
   has_many :npq_participant_profiles, class_name: "ParticipantProfile::NPQ"

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class AppropriateBody < ApplicationRecord
+  has_paper_trail
+
   enum body_type: {
     local_authority: "local_authority",
     teaching_school_hub: "teaching_school_hub",

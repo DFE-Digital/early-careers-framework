@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class School < ApplicationRecord
+  has_paper_trail
+
   extend FriendlyId
   include GiasHelpers
 
