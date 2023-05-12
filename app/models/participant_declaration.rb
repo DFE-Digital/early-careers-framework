@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class ParticipantDeclaration < ApplicationRecord
-  has_paper_trail
-
   self.ignored_columns = %w[statement_type statement_id voided_at]
 
   belongs_to :cpd_lead_provider
