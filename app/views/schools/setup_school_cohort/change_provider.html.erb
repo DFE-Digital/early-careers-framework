@@ -25,7 +25,11 @@
             <h2 class="govuk-heading-s govuk-!-margin-bottom-1">Your delivery partner</h2>
             <p class="govuk-body"><%= previous_cohort.delivery_partner&.name %></p>
 
-            <p class="govuk-body">Visit <a href="https://www.gov.uk/guidance/how-to-set-up-training-for-early-career-teachers" target="_blank" class="govuk-link">How to set up training for early career teachers (opens in new tab)</a> to learn more about providers.</p>
+            <p class="govuk-body">Visit <%= govuk_link_to "How to set up training for early career teachers (opens in new tab)",
+              guidance_for_how_to_setup_training_url,
+              target: "_blank",
+              rel: "noopener noreferrer" %>
+            to learn more about providers.</p>
         <% end %>
 
         <%= f.govuk_submit "Continue" %>

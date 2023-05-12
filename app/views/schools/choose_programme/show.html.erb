@@ -19,7 +19,7 @@
             ) do %>
               <p class="govuk-body">To learn more about your training options, visit
                 <%= govuk_link_to "How to set up training for early career teachers (opens in new tab)",
-                                  "https://www.gov.uk/guidance/how-to-set-up-training-for-early-career-teachers",
+                                  guidance_for_how_to_setup_programme_url,
                                   target: :_blank,
                                   rel: "noopener noreferrer",
                                   no_visited_state: true %>
@@ -27,14 +27,14 @@
               <p class="govuk-body">You can also contact your
                 <% unless @school.cip_only? %>
                   <%= govuk_link_to "local teaching school hub (opens in a new tab)",
-                                    "https://www.gov.uk/guidance/teaching-school-hubs",
+                                    guidance_for_teaching_school_hubs_url,
                                     target: :_blank,
                                     rel: "noopener noreferrer",
                                     no_visited_state: true %>
                   or
                 <% end %>
                 <%= govuk_link_to "appropriate body (opens in new tab)",
-                                  "https://www.gov.uk/government/publications/appropriate-bodies-guidance-induction-and-the-early-career-framework",
+                                  guidance_for_appropriate_bodies_url,
                                   target: :_blank,
                                   rel: "noopener noreferrer",
                                   no_visited_state: true %>.
@@ -44,6 +44,5 @@
             <%= f.hidden_field(:add_participant_after_complete) %>
             <%= f.govuk_submit "Continue" %>
         <% end %>
-
     </div>
 </div>
