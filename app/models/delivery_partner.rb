@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class DeliveryPartner < DiscardableRecord
+  has_paper_trail
+
   has_many :provider_relationships
   has_many :lead_providers, through: :provider_relationships
   has_many :partnership_csv_uploads
@@ -18,8 +20,6 @@ class DeliveryPartner < DiscardableRecord
   has_many :users, through: :delivery_partner_profiles
 
   scope :name_order, -> { order("UPPER(name)") }
-
-  has_paper_trail
 
   after_discard do
     provider_relationships.discard_all

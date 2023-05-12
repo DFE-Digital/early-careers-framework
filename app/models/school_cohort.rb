@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class SchoolCohort < ApplicationRecord
+  has_paper_trail
+
   enum induction_programme_choice: {
     full_induction_programme: "full_induction_programme",
     core_induction_programme: "core_induction_programme",
@@ -9,8 +11,6 @@ class SchoolCohort < ApplicationRecord
     no_early_career_teachers: "no_early_career_teachers",
     not_yet_known: "not_yet_known",
   }
-
-  has_paper_trail
 
   belongs_to :cohort
   belongs_to :school
