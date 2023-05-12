@@ -9,15 +9,20 @@ module Api
         end
 
         def schools
-          scope = SchoolCohort.includes(:cohort, school: :partnerships)
-          scope = scope.where(cohort: { start_year: filter[:cohort] })
-          scope = scope.where(schools: { urn: filter[:urn] }) if filter[:urn].present?
-          scope = scope.order("schools.updated_at DESC") if params[:sort].blank?
+          return School.none unless filter[:cohort] && cohort.present?
+
+          scope = eligible_schools
+            .not_cip_only
+            .or(schools_with_existing_partnerships)
+            .includes(partnerships: :cohort, school_cohorts: :cohort)
+            .distinct
+          scope = scope.where(urn: filter[:urn]) if filter[:urn].present?
+          scope = scope.order(updated_at: :desc) if params[:sort].blank?
           scope
         end
 
         def school
-          schools.find_by!(school_id: params[:id])
+          schools.find_by!(id: params[:id])
         end
 
       private
@@ -26,6 +31,25 @@ module Api
 
         def filter
           params[:filter] ||= {}
+        end
+
+        def cohort
+          Cohort.find_by(start_year: filter[:cohort])
+        end
+
+        def eligible_schools
+          School.eligible
+        end
+
+        def schools_with_existing_partnerships
+          School
+            .where.not(partnerships: { id: nil })
+            .where(partnerships: {
+              challenged_at: nil,
+              challenge_reason: nil,
+              relationship: false,
+              cohorts: { start_year: filter[:cohort] },
+            })
         end
       end
     end

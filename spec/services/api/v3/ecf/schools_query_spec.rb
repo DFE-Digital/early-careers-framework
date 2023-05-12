@@ -4,55 +4,95 @@ require "rails_helper"
 
 RSpec.describe Api::V3::ECF::SchoolsQuery do
   let(:cohort) { Cohort.current || create(:cohort, :current) }
-  let!(:school_cohort) { create(:school_cohort, cohort:) }
-  let(:school) { school_cohort.school }
-
   let(:params) { {} }
 
   subject { described_class.new(params:) }
 
   describe "#schools" do
     let(:another_cohort) { Cohort.next || create(:cohort, :next) }
-    let!(:another_school_cohort) { create(:school_cohort, cohort: another_cohort) }
-    let!(:another_school) { another_school_cohort.school }
 
     context "with no cohort filter" do
+      let!(:eligible_school) { create(:school, :eligible) }
+
       it "returns no schools" do
-        expect(subject.schools).to match_array([])
+        expect(subject.schools).to be_empty
       end
 
       context "with any other filter" do
-        let(:params) { { filter: { urn: school.urn } } }
+        let(:params) { { filter: { urn: eligible_school.urn } } }
 
         it "returns no schools" do
-          expect(subject.schools).to match_array([])
+          expect(subject.schools).to be_empty
         end
       end
     end
 
     context "with cohort filter" do
-      context "with correct value" do
-        let(:params) { { filter: { cohort: cohort.display_name } } }
+      let(:params) { { filter: { cohort: cohort.display_name } } }
 
-        it "returns all schools for the specific cohort" do
-          expect(subject.schools).to match_array([school_cohort])
+      context "with eligible school" do
+        let!(:eligible_school) { create(:school, :eligible) }
+        let!(:ineligible_school) { create(:school, :closed) }
+
+        it "returns all eligible schools for the specific cohort" do
+          expect(subject.schools).to match_array([eligible_school])
         end
       end
 
-      context "with incorrect value" do
-        let(:params) { { filter: { cohort: "2017" } } }
+      context "with eligible cip only school" do
+        let!(:eligible_cip_only_school) { create(:school, :eligible, :cip_only) }
 
         it "returns no schools" do
           expect(subject.schools).to be_empty
         end
       end
 
+      context "with ineligible school which was eligible in the current cohort" do
+        let(:ineligible_school) { create(:school, :closed) }
+        let!(:partnership) { create(:partnership, school: ineligible_school, cohort:) }
+
+        let(:another_ineligible_school) { create(:school, :closed) }
+
+        it "returns all schools with partnerships for the specific cohort" do
+          expect(subject.schools).to match_array([ineligible_school])
+        end
+      end
+
+      context "with ineligible school which was eligible in a different cohort" do
+        let(:ineligible_school) { create(:school, :closed) }
+        let!(:partnership) { create(:partnership, school: ineligible_school, cohort: another_cohort) }
+
+        it "does not return the school" do
+          expect(subject.schools).to be_empty
+        end
+      end
+
+      context "with ineligible challenged school which was eligible in the current cohort" do
+        let(:ineligible_school) { create(:school, :closed) }
+        let!(:partnership) { create(:partnership, :challenged, school: ineligible_school, cohort:) }
+
+        it "does not return the school" do
+          expect(subject.schools).to be_empty
+        end
+      end
+
+      context "with ineligible relationship school which was eligible in the current cohort" do
+        let(:ineligible_school) { create(:school, :closed) }
+        let!(:partnership) { create(:partnership, school: ineligible_school, cohort:, relationship: true) }
+
+        it "does not return the school" do
+          expect(subject.schools).to be_empty
+        end
+      end
+
       context "with school urn filter" do
+        let!(:eligible_school) { create(:school, :eligible) }
+
         context "with correct value" do
-          let(:params) { { filter: { cohort: another_cohort.display_name, urn: another_school.urn } } }
+          let(:params) { { filter: { cohort: another_cohort.display_name, urn: eligible_school.urn } } }
 
           it "returns all schools for the specific urn" do
-            expect(subject.schools).to match_array([another_school_cohort])
+            expect(subject.schools).to match_array([eligible_school])
           end
         end
 
@@ -68,13 +108,15 @@ RSpec.describe Api::V3::ECF::SchoolsQuery do
   end
 
   describe "#school" do
+    let!(:eligible_school) { create(:school, :eligible) }
+
     context "with no cohort filter" do
       it "raises an exception" do
         expect { subject.school }.to raise_error(ActiveRecord::RecordNotFound)
       end
 
       context "with any other filter" do
-        let(:params) { { id: school.id } }
+        let(:params) { { id: eligible_school.id } }
 
         it "raises an exception" do
           expect { subject.school }.to raise_error(ActiveRecord::RecordNotFound)
@@ -84,15 +126,15 @@ RSpec.describe Api::V3::ECF::SchoolsQuery do
 
     context "with cohort filter" do
       context "with correct value" do
-        let(:params) { { id: school.id, filter: { cohort: cohort.display_name } } }
+        let(:params) { { id: eligible_school.id, filter: { cohort: cohort.display_name } } }
 
         it "returns the correct school for the specific cohort" do
-          expect(subject.school).to eq(school_cohort)
+          expect(subject.school).to eq(eligible_school)
         end
       end
 
       context "with incorrect value" do
-        let(:params) { { id: school.id, filter: { cohort: "2017" } } }
+        let(:params) { { id: "wrong-id", filter: { cohort: cohort.display_name } } }
 
         it "raises an exception" do
           expect { subject.school }.to raise_error(ActiveRecord::RecordNotFound)

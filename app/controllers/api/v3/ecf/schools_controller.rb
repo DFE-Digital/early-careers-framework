@@ -14,7 +14,7 @@ module Api
         # GET /api/v3/schools/ecf?filter[cohort]=2021&sort=-updated_at
         #
         def index
-          render json: serializer_class.new(paginate(ecf_schools)).serializable_hash.to_json
+          render json: serializer_class.new(paginate(ecf_schools), params: { cohort: }).serializable_hash.to_json
         end
 
         # Retrieve a single ECF school scoped to cohort
@@ -22,7 +22,7 @@ module Api
         # GET /api/v3/schools/ecf/:school_id?filter[cohort]=2021
         #
         def show
-          render json: serializer_class.new(ecf_school).serializable_hash.to_json
+          render json: serializer_class.new(ecf_school, params: { cohort: }).serializable_hash.to_json
         end
 
       private
@@ -46,7 +46,7 @@ module Api
         end
 
         def serializer_class
-          Api::V3::ECF::SchoolCohortSerializer
+          Api::V3::ECF::SchoolSerializer
         end
 
         def required_filter_params
@@ -57,6 +57,10 @@ module Api
           params
             .with_defaults({ filter: { cohort: "", urn: "" } })
             .permit(:id, :sort, filter: %i[cohort urn])
+        end
+
+        def cohort
+          Cohort.find_by(start_year: school_params[:filter][:cohort])
         end
       end
     end
