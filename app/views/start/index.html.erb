@@ -32,10 +32,9 @@
       <nav role="navigation" aria-labelledby="subsection-title">
         <ul class="govuk-list">
           <li>
-            <%= govuk_link_to step_by_step_path, target: :_blank do %>
-              Read our step by step guidance <span class="govuk-visually-hidden">(opens in new tab)</span>
+            <%= govuk_link_to "https://www.gov.uk/guidance/how-to-set-up-training-for-early-career-teachers", target: :_blank, rel: "noopener noreferrer" do %>
+              Find out how to set up training for early career teachers <span class="govuk-visually-hidden">(opens in new tab)</span>
             <% end %>
-            for more information about setting up your training.
           </li>
           <li>
             <%= govuk_link_to "https://www.gov.uk/government/collections/induction-training-and-support-for-early-career-teachers-ects", target: :_blank, rel: "noopener noreferrer" do %>

@@ -12,8 +12,8 @@
     
       <p class="govuk-body">As you’re using a training provider to deliver your training, you must first contact your lead provider <%= @school_cohort.lead_provider&.name %> to discuss any changes.</p>
       <h2 class="govuk-heading-m">Help with making changes</h2>
-      <p class="govuk-body">Read our guidance and the step-by-step instructions for       
-      <%= govuk_link_to "making changes to an existing training programme (opens in new tab)", "https://www.gov.uk/guidance/guidance-for-schools-how-to-manage-ecf-based-training#making-changes-to-an-existing-training-programme", target: "_blank", rel: "noopener noreferrer" %>.</p>    
+      <p class="govuk-body">Visit       
+      <%= govuk_link_to "How to manage early career teacher training (opens in new tab)", "https://www.gov.uk/guidance/how-to-manage-early-career-teacher-training", target: "_blank", rel: "noopener noreferrer" %> to learn more about making changes.</p>    
 
     <% elsif @school_cohort.school_funded_fip? %>
     

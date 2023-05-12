@@ -17,9 +17,9 @@
               :name,
               legend: { text: "How do you want to run your training in #{@induction_choice_form.cohort.start_year} to #{@induction_choice_form.cohort.start_year + 1}?", size: "xl", tag: "h1" }
             ) do %>
-              <p class="govuk-body">If you’re not sure which option to choose,
-                <%= govuk_link_to "check our guidance on statutory changes and new training programmes (opens in new tab)",
-                                  "https://www.gov.uk/government/publications/early-career-framework-reforms-overview/early-career-framework-reforms-overview",
+              <p class="govuk-body">To learn more about your training options, visit
+                <%= govuk_link_to "How to set up training for early career teachers (opens in new tab)",
+                                  "https://www.gov.uk/guidance/how-to-set-up-training-for-early-career-teachers",
                                   target: :_blank,
                                   rel: "noopener noreferrer",
                                   no_visited_state: true %>
@@ -27,7 +27,7 @@
               <p class="govuk-body">You can also contact your
                 <% unless @school.cip_only? %>
                   <%= govuk_link_to "local teaching school hub (opens in a new tab)",
-                                    "https://www.gov.uk/guidance/teaching-school-hubs#find-a-teaching-school-hub",
+                                    "https://www.gov.uk/guidance/teaching-school-hubs",
                                     target: :_blank,
                                     rel: "noopener noreferrer",
                                     no_visited_state: true %>
