@@ -34,6 +34,17 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json", with_feat
                   },
                 }.to_param)
 
+      parameter name: :page,
+                in: :query,
+                schema: {
+                  "$ref": "#/components/schemas/Pagination",
+                },
+                style: :deepObject,
+                explode: true,
+                required: false,
+                example: CGI.unescape({ page: { page: 1, per_page: 5 } }.to_param),
+                description: "Pagination options to navigate through the list of delivery partners."
+
       parameter name: :sort,
                 in: :query,
                 schema: {
