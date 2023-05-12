@@ -33,7 +33,7 @@ Changes can happen during training; some participants may not complete their tra
 
 <div class="govuk-inset-text">The following endpoints are only available for systems integrated with API v3 onwards. They will not return data for API v1 or v2.</div>
 
-Providers must confirm to the DfE that they have agreed to enter into a partnership with a school and delivery partner to deliver ECF-based training.
+Providers must confirm to the DfE that they have agreed to enter into new partnerships with a school and delivery partner to deliver ECF-based training.
 
 **Providers should note:**
 
@@ -83,7 +83,6 @@ For more detailed information see the specifications for this [view school detai
 }
 ```
 
-
 ### View details for specific a school in a given cohort
 
 Providers can view details for a specific school providing ECF-based training in a given cohort. They can check details on the type of training programme the school has chosen to deliver, and whether they have a confirmed partnership in place. 
@@ -113,6 +112,74 @@ For more detailed information see the specifications for this [view a school’s
         "cohort": 2021,
         "in_partnership": "false",
         "induction_programme_choice": "not_yet_known",
+        "updated_at": "2021-05-31T02:22:32.000Z"
+      }
+    }
+  ]
+}
+```
+
+### Find delivery partner IDs 
+
+Delivery partners are assigned a unique ID by DfE. This `delivery_partner_id` is required when [confirming partnerships with a school and delivery partner](/api-reference/ecf/guidance/#update-a-partnership-with-a-new-delivery-partner).
+
+```
+GET /api/v3/delivery-partners
+```
+
+Note, providers can also filter results by adding a `cohort` filter to the parameter. For example: `GET /api/v3/delivery-partners?filter[cohort]=2022`
+
+An example response body is listed below. Successful requests will return a response body including delivery partner details.  
+
+For more detailed information see the specifications for this [find delivery parter IDs endpoint](/api-reference/reference-v3.html#api-v3-delivery-partners-get).
+
+#### Example response body:
+
+```
+{
+  "data": [
+    {
+      "id": "cd3a12347-7308-4879-942a-c4a70ced400a",
+      "type": "delivery-partner",
+      "attributes": {
+        "name": "Awesome Delivery Partner Ltd",
+        "cohort": [
+          "2021",
+          "2022"
+        ],
+        "updated_at": "2021-05-31T02:22:32.000Z"
+      }
+    }
+  ]
+}
+```
+
+### View details for a specific delivery partner
+
+View details for a specific delivery partner to check whether they have been registered to deliver training for a given cohort.  
+
+```
+GET /api/v3/delivery-partners/{id}
+```
+
+An example response body is listed below. Successful requests will return a response body with the delivery partner details. 
+
+For more detailed information see the specifications for this [find a delivery parter ID endpoint](/api-reference/reference-v3.html#api-v3-delivery-partners-id-get).
+
+#### Example response body:
+
+```
+{
+  "data": [
+    {
+      "id": "cd3a12347-7308-4879-942a-c4a70ced400a",
+      "type": "delivery-partner",
+      "attributes": {
+        "name": "Awesome Delivery Partner Ltd",
+        "cohort": [
+          "2021",
+          "2022"
+        ],
         "updated_at": "2021-05-31T02:22:32.000Z"
       }
     }
@@ -284,74 +351,6 @@ For more detailed information see the specifications for this [update an ECF par
       "delivery_partner_id": "db2fbf67-b7b7-454f-a1b7-0020411e2314"
     }
   }
-}
-```
-
-### Find delivery partner IDs 
-
-Delivery partners are assigned a unique ID by DfE. This `delivery_partner_id` is required when [confirming partnerships with a school and delivery partner](/api-reference/ecf/guidance/#update-a-partnership-with-a-new-delivery-partner).
-
-```
-GET /api/v3/delivery-partners
-```
-
-Note, providers can also filter results by adding a `cohort` filter to the parameter. For example: `GET /api/v3/delivery-partners?filter[cohort]=2022`
-
-An example response body is listed below. Successful requests will return a response body including delivery partner details.  
-
-For more detailed information see the specifications for this [find delivery parter IDs endpoint](/api-reference/reference-v3.html#api-v3-delivery-partners-get).
-
-#### Example response body:
-
-```
-{
-  "data": [
-    {
-      "id": "cd3a12347-7308-4879-942a-c4a70ced400a",
-      "type": "delivery-partner",
-      "attributes": {
-        "name": "Awesome Delivery Partner Ltd",
-        "cohort": [
-          "2021",
-          "2022"
-        ],
-        "updated_at": "2021-05-31T02:22:32.000Z"
-      }
-    }
-  ]
-}
-```
-
-### View details for a specific delivery partner
-
-View details for a specific delivery partner to check whether they have been registered to deliver training for a given cohort.  
-
-```
-GET /api/v3/delivery-partners/{id}
-```
-
-An example response body is listed below. Successful requests will return a response body with the delivery partner details. 
-
-For more detailed information see the specifications for this [find a delivery parter ID endpoint](/api-reference/reference-v3.html#api-v3-delivery-partners-id-get).
-
-#### Example response body:
-
-```
-{
-  "data": [
-    {
-      "id": "cd3a12347-7308-4879-942a-c4a70ced400a",
-      "type": "delivery-partner",
-      "attributes": {
-        "name": "Awesome Delivery Partner Ltd",
-        "cohort": [
-          "2021",
-          "2022"
-        ],
-        "updated_at": "2021-05-31T02:22:32.000Z"
-      }
-    }
-  ]
 }
 ```
 
