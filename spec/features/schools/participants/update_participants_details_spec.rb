@@ -7,7 +7,7 @@ RSpec.describe "Changing participant details from check answers", type: :feature
   include ManageTrainingSteps
 
   before do
-    given_there_is_a_school_that_has_chosen_fip_for_2021_and_2022_and_partnered
+    given_there_is_a_school_that_has_chosen_fip_for_two_consecutive_years_and_partnered
     and_i_have_added_an_ect
     and_i_am_signed_in_as_an_induction_coordinator
     when_i_navigate_to_participants_dashboard
@@ -93,7 +93,7 @@ RSpec.describe "Changing participant details from the dashboard", type: :feature
   include ManageTrainingSteps
 
   before do
-    given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
+    given_there_is_a_school_that_has_chosen_fip_and_partnered
     and_i_have_added_an_ect
     and_i_am_signed_in_as_an_induction_coordinator
     when_i_navigate_to_participants_dashboard
@@ -103,7 +103,7 @@ RSpec.describe "Changing participant details from the dashboard", type: :feature
   scenario "withdrawn participants" do
     given_an_ect_has_been_withdrawn_by_the_provider
     when_i_visit_manage_training_dashboard
-    and_i_click("2021 to 2022")
+    and_i_click(Cohort.current.description)
 
     when_i_navigate_to_participants_dashboard
     when_i_click_on_the_participants_name "Sally Teacher"

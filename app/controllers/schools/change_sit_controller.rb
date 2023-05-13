@@ -6,7 +6,7 @@ module Schools
     before_action :set_form
     skip_before_action :ensure_school_user, only: :success
     skip_before_action :authenticate_user!, only: :success
-    skip_before_action :redirect_to_setup_current_cohort, only: :success
+    skip_before_action :redirect_to_setup_cohort, only: :success
 
     helper_method :has_multiple_schools?
 

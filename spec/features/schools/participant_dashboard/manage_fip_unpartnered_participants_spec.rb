@@ -3,11 +3,11 @@
 require "rails_helper"
 require_relative "../training_dashboard/manage_training_steps"
 
-RSpec.describe "Manage FIP unpartnered participants", js: true, with_feature_flags: { eligibility_notifications: "active" } do
+RSpec.describe "Manage FIP unpartnered participants", :with_default_schedules, js: true, with_feature_flags: { eligibility_notifications: "active" } do
   include ManageTrainingSteps
 
   before do
-    given_there_is_a_school_that_has_chosen_fip_for_2021
+    given_there_is_a_school_that_has_chosen_fip
   end
 
   context "Ineligible ECTs with mentor assigned" do
@@ -15,7 +15,7 @@ RSpec.describe "Manage FIP unpartnered participants", js: true, with_feature_fla
       and_i_have_added_a_contacted_for_info_mentor
       and_i_have_added_an_ineligible_ect_with_mentor
       and_i_am_signed_in_as_an_induction_coordinator
-      and_i_click("2021 to 2022")
+      and_i_click(Cohort.current.description)
     end
 
     scenario "Induction coordinators can view and manage participant" do
@@ -31,7 +31,7 @@ RSpec.describe "Manage FIP unpartnered participants", js: true, with_feature_fla
     before do
       and_i_have_added_an_ineligible_ect_without_mentor
       and_i_am_signed_in_as_an_induction_coordinator
-      and_i_click("2021 to 2022")
+      and_i_click(Cohort.current.description)
     end
 
     scenario "Induction coordinators can view and manage participant" do
@@ -47,7 +47,7 @@ RSpec.describe "Manage FIP unpartnered participants", js: true, with_feature_fla
     before do
       and_i_have_added_an_ineligible_mentor
       and_i_am_signed_in_as_an_induction_coordinator
-      and_i_click("2021 to 2022")
+      and_i_click(Cohort.current.description)
     end
 
     scenario "Induction coordinators can view and manage participant" do
@@ -64,7 +64,7 @@ RSpec.describe "Manage FIP unpartnered participants", js: true, with_feature_fla
       and_i_have_added_a_contacted_for_info_mentor
       and_i_have_added_an_eligible_ect_with_mentor
       and_i_am_signed_in_as_an_induction_coordinator
-      and_i_click("2021 to 2022")
+      and_i_click(Cohort.current.description)
     end
 
     scenario "Induction coordinators can view and manage participant" do
@@ -81,7 +81,7 @@ RSpec.describe "Manage FIP unpartnered participants", js: true, with_feature_fla
     before do
       and_i_have_added_an_eligible_ect_without_mentor
       and_i_am_signed_in_as_an_induction_coordinator
-      and_i_click("2021 to 2022")
+      and_i_click(Cohort.current.description)
     end
 
     scenario "Induction coordinators can view and manage participant" do
@@ -99,7 +99,7 @@ RSpec.describe "Manage FIP unpartnered participants", js: true, with_feature_fla
     before do
       and_i_have_added_an_eligible_mentor
       and_i_am_signed_in_as_an_induction_coordinator
-      and_i_click("2021 to 2022")
+      and_i_click(Cohort.current.description)
     end
 
     scenario "Induction coordinators can view and manage participant" do
@@ -117,7 +117,7 @@ RSpec.describe "Manage FIP unpartnered participants", js: true, with_feature_fla
       and_i_have_added_a_mentor
       and_i_have_added_a_contacted_for_info_ect_with_mentor
       and_i_am_signed_in_as_an_induction_coordinator
-      and_i_click("2021 to 2022")
+      and_i_click(Cohort.current.description)
     end
 
     scenario "Induction coordinators can view and manage participant" do
@@ -133,7 +133,7 @@ RSpec.describe "Manage FIP unpartnered participants", js: true, with_feature_fla
     before do
       and_i_have_added_a_contacted_for_info_ect_without_mentor
       and_i_am_signed_in_as_an_induction_coordinator
-      and_i_click("2021 to 2022")
+      and_i_click(Cohort.current.description)
     end
 
     scenario "Induction coordinators can view and manage participant" do
@@ -149,7 +149,7 @@ RSpec.describe "Manage FIP unpartnered participants", js: true, with_feature_fla
     before do
       and_i_have_added_a_contacted_for_info_mentor
       and_i_am_signed_in_as_an_induction_coordinator
-      and_i_click("2021 to 2022")
+      and_i_click(Cohort.current.description)
     end
 
     scenario "Induction coordinators can view and manage participant" do
@@ -166,7 +166,7 @@ RSpec.describe "Manage FIP unpartnered participants", js: true, with_feature_fla
       and_i_have_added_a_contacted_for_info_mentor
       and_i_have_added_a_details_being_checked_ect_with_mentor
       and_i_am_signed_in_as_an_induction_coordinator
-      and_i_click("2021 to 2022")
+      and_i_click(Cohort.current.description)
     end
 
     scenario "Induction coordinators can view and manage participant" do
@@ -182,7 +182,7 @@ RSpec.describe "Manage FIP unpartnered participants", js: true, with_feature_fla
     before do
       and_i_have_added_a_details_being_checked_ect_without_mentor
       and_i_am_signed_in_as_an_induction_coordinator
-      and_i_click("2021 to 2022")
+      and_i_click(Cohort.current.description)
     end
 
     scenario "Induction coordinators can view and manage participant" do
@@ -198,7 +198,7 @@ RSpec.describe "Manage FIP unpartnered participants", js: true, with_feature_fla
     before do
       and_i_have_added_a_details_being_checked_mentor
       and_i_am_signed_in_as_an_induction_coordinator
-      and_i_click("2021 to 2022")
+      and_i_click(Cohort.current.description)
     end
 
     scenario "Induction coordinators can view and manage participant" do
@@ -215,7 +215,7 @@ RSpec.describe "Manage FIP unpartnered participants", js: true, with_feature_fla
       and_i_have_added_a_contacted_for_info_mentor
       and_i_have_added_a_no_qts_ect_with_mentor
       and_i_am_signed_in_as_an_induction_coordinator
-      and_i_click("2021 to 2022")
+      and_i_click(Cohort.current.description)
     end
 
     scenario "Induction coordinators can view and manage participant" do
@@ -231,7 +231,7 @@ RSpec.describe "Manage FIP unpartnered participants", js: true, with_feature_fla
     before do
       and_i_have_added_a_no_qts_ect_without_mentor
       and_i_am_signed_in_as_an_induction_coordinator
-      and_i_click("2021 to 2022")
+      and_i_click(Cohort.current.description)
     end
 
     scenario "Induction coordinators can view and manage participant" do

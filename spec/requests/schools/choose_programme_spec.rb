@@ -2,10 +2,10 @@
 
 require "rails_helper"
 
-RSpec.describe "Schools::ChooseProgramme", type: :request do
+RSpec.describe "Schools::ChooseProgramme", :with_default_schedules, type: :request do
   let(:user) { create(:user, :induction_coordinator) }
   let(:school) { user.induction_coordinator_profile.schools.first }
-  let(:cohort) { create(:cohort, start_year: 2021) }
+  let(:cohort) { Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021) }
 
   before do
     sign_in user
@@ -19,6 +19,8 @@ RSpec.describe "Schools::ChooseProgramme", type: :request do
     end
 
     context "when the school has chosen provision" do
+      let(:cohort) { Cohort.current || create(:cohort, :current) }
+
       before do
         SchoolCohort.create!(school:, cohort:, induction_programme_choice: "full_induction_programme")
       end
@@ -26,7 +28,7 @@ RSpec.describe "Schools::ChooseProgramme", type: :request do
       it "redirects to the dashboard" do
         get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/choose-programme"
         follow_redirect!
-        expect(response).to redirect_to("/schools/#{school.slug}#_2021-to-2022")
+        expect(response).to redirect_to("/schools/#{school.slug}#_#{cohort.description.parameterize}")
       end
     end
   end

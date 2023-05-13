@@ -17,12 +17,31 @@ module ManageTrainingSteps
     @induction_programme.update!(partnership: @partnership)
   end
 
+  def given_there_is_a_school_that_has_chosen_fip
+    @cohort = Cohort.current || create(:cohort, :current)
+    @school = create(:school, name: "Fip School")
+    @school_cohort = create(:school_cohort, school: @school, cohort: @cohort, induction_programme_choice: "full_induction_programme")
+    @induction_programme = create(:induction_programme, :fip, school_cohort: @school_cohort, partnership: nil)
+    @school_cohort.update!(default_induction_programme: @induction_programme)
+  end
+
   def given_there_is_a_school_that_has_chosen_fip_for_2021
     @cohort = Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021)
     @school = create(:school, name: "Fip School")
     @school_cohort = create(:school_cohort, school: @school, cohort: @cohort, induction_programme_choice: "full_induction_programme")
     @induction_programme = create(:induction_programme, :fip, school_cohort: @school_cohort, partnership: nil)
     @school_cohort.update!(default_induction_programme: @induction_programme)
+  end
+
+  def given_there_is_a_school_that_has_chosen_fip_for_two_consecutive_years_and_partnered
+    given_there_is_a_school_that_has_chosen_fip_and_partnered
+    @cohort2 = Cohort.previous || create(:cohort, :previous)
+    @partnership2 = @partnership.dup
+    @partnership2.cohort = @cohort2
+    @partnership2.save!
+    @school_cohort2 = create(:school_cohort, :fip, school: @school, cohort: @cohort2)
+    @induction_programme2 = create(:induction_programme, :fip, school_cohort: @school_cohort2, partnership: @partnership2)
+    @school_cohort2.update!(default_induction_programme: @induction_programme2)
   end
 
   def given_there_is_a_school_that_has_chosen_fip_for_2021_and_2022_and_partnered
@@ -52,9 +71,28 @@ module ManageTrainingSteps
     @induction_programme.update!(partnership: @partnership)
   end
 
-  def given_there_is_a_school_that_has_chosen_cip_for_2021
+  def given_there_is_a_school_that_has_chosen_cip
+    @cip = create(:core_induction_programme, name: "CIP Programme 1")
+    @cohort = Cohort.current || create(:cohort, :current)
+    @school = create(:school, name: "CIP School")
+    @school_cohort = create(:school_cohort, school: @school, cohort: @cohort, induction_programme_choice: "core_induction_programme")
+    @induction_programme = create(:induction_programme, :cip, school_cohort: @school_cohort, core_induction_programme: nil)
+    @school_cohort.update!(default_induction_programme: @induction_programme)
+  end
+
+  def given_there_is_a_school_that_has_chosen_cip_for_2021(pilot: false)
     @cip = create(:core_induction_programme, name: "CIP Programme 1")
     @cohort = Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021)
+    @school = create(:school, name: "CIP School")
+    @school_cohort = create(:school_cohort, school: @school, cohort: @cohort, induction_programme_choice: "core_induction_programme")
+    @induction_programme = create(:induction_programme, :cip, school_cohort: @school_cohort, core_induction_programme: nil)
+    @school_cohort.update!(default_induction_programme: @induction_programme)
+    pilot!(@school) if pilot
+  end
+
+  def given_there_is_a_school_that_has_chosen_cip_for_the_current_year
+    @cip = create(:core_induction_programme, name: "CIP Programme 1")
+    @cohort = Cohort.current || create(:cohort, :current)
     @school = create(:school, name: "CIP School")
     @school_cohort = create(:school_cohort, school: @school, cohort: @cohort, induction_programme_choice: "core_induction_programme")
     @induction_programme = create(:induction_programme, :cip, school_cohort: @school_cohort, core_induction_programme: nil)
@@ -83,6 +121,12 @@ module ManageTrainingSteps
 
     third_school = FactoryBot.create(:school, name: "Test School 3", slug: "111113-test-school-3", urn: "111113")
     create :school_cohort, :cip, school: third_school, cohort:
+  end
+
+  def given_there_is_a_school_that_has_chosen_design_our_own
+    @cohort = Cohort.current || create(:cohort, :current)
+    @school = create(:school, name: "Design Our Own Programme School")
+    @school_cohort = create(:school_cohort, school: @school, cohort: @cohort, induction_programme_choice: "design_our_own")
   end
 
   def given_there_is_a_school_that_has_chosen_design_our_own_for_2021
@@ -881,7 +925,6 @@ module ManageTrainingSteps
 
   def then_i_can_view_the_design_our_own_induction_dashboard
     expect(page).to have_selector("h1", text: "Manage your training")
-    expect(page).to have_text("Design and deliver your own programme")
   end
 
   def then_i_can_view_the_no_ect_induction_dashboard
@@ -1028,7 +1071,7 @@ module ManageTrainingSteps
     then_i_see_the_tab_for_the_cohort(2022)
   end
 
-  def then_i_am_on_the_expect_any_ects_page
+  def then_i_am_on_the_what_we_need_to_know_page
     expect(page).to have_text("Tell us if any new ECTs will start training at your school in the 2022 to 2023 academic year")
   end
 

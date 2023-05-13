@@ -93,17 +93,17 @@ RSpec.describe SchoolCohort, type: :model, with_feature_flag: { cohortless_dashb
     end
 
     it "returns at most 3 cohorts" do
-      expect(described_class.dashboard_for_school(school).count).to be_between(1, 3)
+      expect(described_class.dashboard_for_school(school:, latest_year: 3000).count).to be_between(1, 3)
     end
 
     it "returns cohorts from the current year up to 2 years in the past" do
       Feature.find_or_create_by!(name: :cohortless_dashboard, active: false)
-             .selected_objects.create!(object: school)
-
+      pilot!(school)
       travel_to Date.new(2024, 5, 15)
 
-      described_class.dashboard_for_school(school).each_with_index do |school_cohort, _index|
-        expect(school_cohort.cohort.start_year).to be_between(2022, 2024)
+      described_class.dashboard_for_school(school:, latest_year: Cohort.active_registration_cohort.start_year)
+                     .each_with_index do |school_cohort, _index|
+        expect(school_cohort.cohort.start_year).to be_between(2021, 2023)
       end
     end
   end
