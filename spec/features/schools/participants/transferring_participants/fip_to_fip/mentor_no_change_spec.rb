@@ -7,10 +7,10 @@ RSpec.describe "Transferring a mentor weith matching lead provider and delivery 
     allow_participant_transfer_mailers
     set_participant_data
     set_dqt_validation_result
-    given_there_are_two_schools_that_have_chosen_fip_for_2021_and_partnered
+    given_there_are_two_schools_that_have_chosen_fip_and_partnered
     and_there_is_a_mentor_who_will_be_transferring
     and_i_am_signed_in_as_an_induction_coordinator
-    and_i_click_on("2021 to 2022")
+    and_i_click_on(Cohort.current.description)
     when_i_navigate_to_participants_dashboard
   end
 
@@ -61,9 +61,9 @@ RSpec.describe "Transferring a mentor weith matching lead provider and delivery 
 
   # given
 
-  def given_there_are_two_schools_that_have_chosen_fip_for_2021_and_partnered
-    @cohort = Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021)
-    @cohort_two = Cohort.find_by(start_year: 2022) || create(:cohort, start_year: 2022)
+  def given_there_are_two_schools_that_have_chosen_fip_and_partnered
+    @cohort = Cohort.current || create(:cohort, :current)
+    @cohort_two = Cohort.next || create(:cohort, :next)
     @school_one = create(:school, name: "Fip School 1")
     @school_two = create(:school, name: "Fip School 2")
     @school_cohort_one = create(:school_cohort, school: @school_one, cohort: @cohort, induction_programme_choice: "full_induction_programme")

@@ -5,7 +5,7 @@ class Schools::BaseController < ApplicationController
 
   before_action :authenticate_user!
   before_action :ensure_school_user
-  before_action :redirect_to_setup_current_cohort
+  before_action :redirect_to_setup_cohort
   before_action :check_cohort_year
   before_action :set_paper_trail_whodunnit
   after_action :verify_authorized
@@ -19,22 +19,21 @@ private
   def check_cohort_year
     return if params[:cohort_id].blank?
 
-    max_cohort_year = [
-      Cohort.latest&.start_year,
-      (FeatureFlag.active?(:cohortless_dashboard, for: active_school) ? Cohort.next : Cohort.current).start_year,
-    ].compact.min
-
-    redirect_to schools_dashboard_path if params[:cohort_id].to_i > max_cohort_year
+    if params[:cohort_id].to_i > helpers.latest_manageable_cohort(active_school)&.start_year
+      redirect_to schools_dashboard_path
+    end
   end
 
-  def redirect_to_setup_current_cohort
+  def redirect_to_setup_cohort
     return unless current_user.induction_coordinator?
-    return unless FeatureFlag.active?(:cohortless_dashboard, for: active_school)
+    return unless active_school
+    return if active_school.chosen_programme?(helpers.latest_manageable_cohort(active_school))
 
-    cohort = Cohort.where(registration_start_date: ..Date.current).order(start_year: :desc).first
-    return if active_school.chosen_programme?(cohort)
-
-    redirect_to schools_cohort_setup_start_path(cohort_id: cohort.start_year)
+    if helpers.latest_manageable_cohort(active_school) == ::Cohort.active_registration_cohort
+      redirect_to schools_cohort_setup_start_path(cohort_id: helpers.latest_manageable_cohort(active_school))
+    else
+      redirect_to schools_choose_programme_path(school_id: active_school.slug, cohort_id: active_cohort.id)
+    end
   end
 
   def ensure_school_user

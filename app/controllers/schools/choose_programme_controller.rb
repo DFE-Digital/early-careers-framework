@@ -5,6 +5,8 @@ class Schools::ChooseProgrammeController < Schools::BaseController
 
   skip_after_action :verify_authorized
   skip_after_action :verify_policy_scoped
+  skip_before_action :redirect_to_setup_cohort
+
   before_action :load_programme_form
   before_action :verify_can_choose_programme, only: %i[show]
 
@@ -45,7 +47,6 @@ private
     save_school_choice!
 
     session.delete(:induction_choice_form)
-
     redirect_to success_schools_choose_programme_path(induction_choice_form: { add_participant_after_complete: })
   end
 

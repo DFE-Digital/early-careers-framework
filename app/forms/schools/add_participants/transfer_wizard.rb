@@ -20,6 +20,7 @@ module Schools
 
       def needs_to_confirm_programme?
         return false if withdrawn_participant?
+        return false if [existing_lead_provider, existing_delivery_partner].any?(&:blank?)
 
         lead_provider != existing_lead_provider || delivery_partner != existing_delivery_partner
       end

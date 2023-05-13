@@ -11,14 +11,19 @@ class Schools::ParticipantsController < Schools::BaseController
   helper_method :can_appropriate_body_be_changed?, :participant_has_appropriate_body?
 
   def index
-    @participants = Dashboard::Participants.new(school: @school, user: current_user)
+    @participants = Dashboard::Participants.new(school: @school,
+                                                user: current_user,
+                                                latest_year: helpers.latest_manageable_cohort(@chool).start_year)
   end
 
   def show
     @induction_record = @profile.induction_records.for_school(@school).latest
     @first_induction_record = @profile.induction_records.oldest
     @mentor_profile = @induction_record.mentor_profile
-    @ects = Dashboard::Participants.new(school: @school, user: current_user).mentors[@induction_record]
+    @ects = Dashboard::Participants.new(school: @school,
+                                        user: current_user,
+                                        latest_year: helpers.latest_manageable_cohort(@chool).start_year)
+                                   .mentors[@induction_record]
   end
 
   def edit_name

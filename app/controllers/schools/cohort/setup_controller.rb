@@ -3,7 +3,7 @@
 module Schools
   module Cohort
     class SetupController < BaseController
-      skip_before_action :redirect_to_setup_current_cohort
+      skip_before_action :redirect_to_setup_cohort
 
       def default_step_name
         :what_we_need

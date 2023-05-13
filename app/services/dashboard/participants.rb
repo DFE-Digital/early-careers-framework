@@ -2,9 +2,10 @@
 
 module Dashboard
   class Participants
-    attr_reader :mentors, :orphan_ects, :school, :user
+    attr_reader :mentors, :orphan_ects, :school, :user, :latest_year
 
-    def initialize(school:, user:)
+    def initialize(school:, user:, latest_year:)
+      @latest_year = latest_year
       @orphan_ects = []
       @school = school
       @user = user
@@ -24,7 +25,7 @@ module Dashboard
     end
 
     def dashboard_school_cohorts
-      SchoolCohort.dashboard_for_school(school)
+      SchoolCohort.dashboard_for_school(school:, latest_year:)
     end
 
   private
