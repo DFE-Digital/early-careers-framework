@@ -1184,6 +1184,39 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/MultipleNPQParticipantsResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {
+                      "data": [
+                        {
+                          "id": "ac3d1243-7308-4879-942a-c4a70ced400a",
+                          "type": "npq-participant",
+                          "attributes": {
+                            "full_name": "Isabelle MacDonald",
+                            "teacher_reference_number": "1234567",
+                            "updated_at": "2021-05-31T02:22:32.000Z",
+                            "npq_enrolments": [
+                              {
+                                "email": "isabelle.macdonald2@some-school.example.com",
+                                "course_identifier": "npq-senior-leadership",
+                                "schedule_identifier": "npq-leadership-autumn",
+                                "cohort": "2021",
+                                "npq_application_id": "db3a7848-7308-4879-942a-c4a70ced400a",
+                                "eligible_for_funding": true,
+                                "training_status": "active",
+                                "school_urn": "123456",
+                                "targeted_delivery_funding_eligibility": true,
+                                "withdrawal": null,
+                                "deferral": null,
+                                "created_at": "2021-05-31T02:22:32.000Z"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
                 }
               }
             }
@@ -1234,6 +1267,37 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/NPQParticipantResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {
+                      "data": {
+                        "id": "db3a7848-7308-4879-942a-c4a70ced400a",
+                        "type": "npq-participant",
+                        "attributes": {
+                          "full_name": "Isabelle MacDonald",
+                          "teacher_reference_number": "1234567",
+                          "updated_at": "2021-05-31T02:22:32.000Z",
+                          "npq_enrolments": [
+                            {
+                              "email": "isabelle.macdonald2@some-school.example.com",
+                              "course_identifier": "npq-senior-leadership",
+                              "schedule_identifier": "npq-leadership-autumn",
+                              "cohort": "2021",
+                              "npq_application_id": "db3a7848-7308-4879-942a-c4a70ced400a",
+                              "eligible_for_funding": true,
+                              "training_status": "deferred",
+                              "school_urn": "123456",
+                              "targeted_delivery_funding_eligibility": true,
+                              "withdrawal": null,
+                              "deferral": null,
+                              "created_at": "2021-05-31T02:22:32.000Z"
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -5145,7 +5209,7 @@
           "reason": {
             "description": "The reason a participant was deferred",
             "type": "string",
-            "example": null,
+            "example": "other",
             "enum": [
               "bereavement",
               "long-term-sickness",
