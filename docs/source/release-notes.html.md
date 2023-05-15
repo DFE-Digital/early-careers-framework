@@ -7,6 +7,21 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
+## 15th May 2023
+
+To support providers with their integrations with API v3.0.0.0, the API guidance has been updated.  
+
+Original instruction has been replaced with the following guidance:  
+
+* [About the API](/api-reference) - an overview of the API’s core functionality and version control 
+* [Get started](/api-reference/get-started) - instruction on how to connect to the API  
+* [ECF-based training management](/api-reference/ecf) - an overview key ECF concepts, instruction on new and existing endpoints, and schedule dates  
+* [NPQ course management](/api-reference/npq) - an overview of key NPQ concepts, instruction on new and existing endpoints, and schedule identifiers 
+
+Providers are invited to feedback ahead of the API v3 release to the production environment. Updates to the guidance will be made as needed.  
+
+Note, API v3.0.0.0 is not yet available in either sandbox or production environments.  
+
 ## 13th April 2023
 
 To enable the scenario where a participant needs to be registered as a mentor after having already been trained as an ECT by a given provider, a new `training_record_id` attribute has been added to the [ECF participant schema](/api-reference/reference-v1.html#schema-ecfparticipant).
