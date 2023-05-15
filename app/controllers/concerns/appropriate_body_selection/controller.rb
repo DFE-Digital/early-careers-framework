@@ -78,7 +78,7 @@ module AppropriateBodySelection
       appropriate_body_ask_appointed ? :appropriate_body_appointed : :appropriate_body_type
     end
 
-    def start_appropriate_body_selection(from_path:, submit_action:, school_name:, ask_appointed: true, preconfirmation: false, action_name: :add)
+    def start_appropriate_body_selection(from_path:, submit_action:, school_name:, ask_appointed: true, disable_national_type: false, preconfirmation: false, action_name: :add)
       session.delete(:appropriate_body_selection_form)
 
       session[:appropriate_body_selection] = {
@@ -87,6 +87,7 @@ module AppropriateBodySelection
         submit_action:,
         school_name:,
         ask_appointed:,
+        disable_national_type:,
         preconfirmation:,
       }
 
@@ -133,6 +134,10 @@ module AppropriateBodySelection
     end
 
     def appropriate_body_ask_appointed
+      appropriate_body_session_data[:ask_appointed]
+    end
+
+    def appropriate_body_national_type_disabled?
       appropriate_body_session_data[:ask_appointed]
     end
 

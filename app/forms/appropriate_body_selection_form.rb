@@ -5,7 +5,7 @@ class AppropriateBodySelectionForm
   include ActiveRecord::AttributeAssignment
   include ActiveModel::Serialization
 
-  attr_accessor :body_appointed, :body_type, :body_id
+  attr_accessor :body_appointed, :body_type, :body_id, :disable_national_type
 
   validates :body_appointed,
             inclusion: { in: %w[yes no],
@@ -23,6 +23,7 @@ class AppropriateBodySelectionForm
       body_appointed:,
       body_type:,
       body_id:,
+      disable_national_type:,
     }
   end
 
@@ -34,11 +35,18 @@ class AppropriateBodySelectionForm
   end
 
   def body_type_choices
-    [
-      OpenStruct.new(id: "local_authority", name: "Local authority"),
-      OpenStruct.new(id: "national", name: "National organisation"),
-      OpenStruct.new(id: "teaching_school_hub", name: "Teaching school hub"),
-    ]
+    if disable_national_type
+      [
+        OpenStruct.new(id: "local_authority", name: "Local authority"),
+        OpenStruct.new(id: "teaching_school_hub", name: "Teaching school hub"),
+      ]
+    else
+      [
+        OpenStruct.new(id: "local_authority", name: "Local authority"),
+        OpenStruct.new(id: "national", name: "National organisation"),
+        OpenStruct.new(id: "teaching_school_hub", name: "Teaching school hub"),
+      ]
+    end
   end
 
   def body_choices
