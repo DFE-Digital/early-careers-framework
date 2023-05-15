@@ -27,27 +27,12 @@
     <aside class="app-related-items" role="complementary">
       <h2 class="govuk-heading-m" id="subsection-title">Guidance</h2>
 
-      <p>The following links open in a new tab.</p>
-
       <nav role="navigation" aria-labelledby="subsection-title">
         <ul class="govuk-list">
           <li>
-            <%= govuk_link_to step_by_step_path, target: :_blank do %>
-              Read our step by step guidance <span class="govuk-visually-hidden">(opens in new tab)</span>
+            <%= govuk_link_to guidance_for_how_to_setup_training_url, target: :_blank, rel: "noopener noreferrer" do %>
+              Find out how to set up training for early career teachers (opens in new tab)
             <% end %>
-            for more information about setting up your training.
-          </li>
-          <li>
-            <%= govuk_link_to "https://www.gov.uk/government/collections/induction-training-and-support-for-early-career-teachers-ects", target: :_blank, rel: "noopener noreferrer" do %>
-              Read our guidance for early career teachers <span class="govuk-visually-hidden">(opens in new tab)</span>
-            <% end %>
-            for more information about the programme and your entitlements.
-          </li>
-          <li>
-            <%= govuk_link_to "https://www.gov.uk/guidance/guidance-for-schools-how-to-manage-ecf-based-training", target: :_blank, rel: "noopener noreferrer" do %>
-              Read our guidance for mentors <span class="govuk-visually-hidden">(opens in new tab)</span>
-            <% end %>
-            for more information about how to support early career teachers.
           </li>
         </ul>
       </nav>

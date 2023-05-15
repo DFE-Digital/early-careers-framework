@@ -22,11 +22,11 @@
 
         <p class="govuk-body">This choice will only apply for ECTs and mentors starting in the <%= registration_cohort %> academic year.</p>
         <p class="govuk-body">
-          Read our guidance to
-          <%= govuk_link_to 'check your options (opens in new tab)',
-          "https://www.gov.uk/guidance/guidance-for-schools-how-to-manage-ecf-based-training",
-          target: :_blank,
-          rel: "noopener noreferrer" %>.
+          To learn more about your options, visit
+          <%= govuk_link_to 'How to set up training for early career teachers (opens in new tab)',
+            guidance_for_how_to_setup_training_url,
+            target: :_blank,
+            rel: "noopener noreferrer" %>.
         </p>
 
       <% end %>

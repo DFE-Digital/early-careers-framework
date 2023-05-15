@@ -19,6 +19,20 @@ Rails.application.routes.draw do
     "https://forms.office.com/e/3xCevHRKXx"
   end
 
+  # External guidance URLs
+  direct :guidance_for_how_to_setup_training do
+    "https://www.gov.uk/guidance/how-to-set-up-training-for-early-career-teachers"
+  end
+  direct :guidance_for_teaching_school_hubs do
+    "https://www.gov.uk/guidance/teaching-school-hubs"
+  end
+  direct :guidance_for_appropriate_bodies do
+    "https://www.gov.uk/government/publications/appropriate-bodies-guidance-induction-and-the-early-career-framework"
+  end
+  direct :guidance_for_manage_ect_training do
+    "https://www.gov.uk/guidance/how-to-manage-early-career-teacher-training"
+  end
+
   scope :pages, controller: "pages" do
     get "/ect-additional-information", to: redirect("https://www.gov.uk/guidance/guidance-for-early-career-teachers-ects-ecf-based-training")
     get "/mentor-additional-information", to: redirect("https://www.gov.uk/guidance/guidance-for-mentors-how-to-support-ecf-based-training")
