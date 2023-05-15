@@ -29,7 +29,7 @@ private
     return unless active_school
     return if active_school.chosen_programme?(helpers.latest_manageable_cohort(active_school))
 
-    if helpers.latest_manageable_cohort(active_school) == ::Cohort.active_registration_cohort
+    if helpers.latest_manageable_cohort(active_school) == Cohort.active_registration_cohort
       redirect_to schools_cohort_setup_start_path(cohort_id: helpers.latest_manageable_cohort(active_school))
     else
       redirect_to schools_choose_programme_path(school_id: active_school.slug, cohort_id: active_cohort.id)

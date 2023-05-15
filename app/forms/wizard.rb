@@ -8,7 +8,7 @@ class Wizard
 
   class InvalidStep < StandardError; end
 
-  # Schools::Cohort::SetupWizard and :schools_cohort_setup_wizard
+  # Schools::Cohorts::SetupWizard and :schools_cohorts_setup_wizard
   def self.to_key
     name.underscore.parameterize(separator: "_").to_sym
   end
@@ -91,7 +91,7 @@ class Wizard
     @form_class ||= form_class_for(current_step)
   end
 
-  # Schools::Cohort::SetupWizard and :start => Schools::Cohort::WizardSteps::StartStep
+  # Schools::Cohorts::SetupWizard and :start => Schools::Cohorts::WizardSteps::StartStep
   def form_class_for(step)
     "#{self.class.name.deconstantize}::WizardSteps::#{step.to_s.camelcase}Step".constantize
   end

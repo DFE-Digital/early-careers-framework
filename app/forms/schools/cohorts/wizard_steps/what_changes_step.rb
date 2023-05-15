@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Schools
-  module Cohort
+  module Cohorts
     module WizardSteps
       class WhatChangesStep < ::WizardStep
         attr_accessor :what_changes

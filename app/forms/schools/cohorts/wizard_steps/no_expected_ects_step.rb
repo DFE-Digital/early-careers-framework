@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 module Schools
-  module Cohort
+  module Cohorts
     module WizardSteps
-      class CompleteStep < ::WizardStep
+      class NoExpectedEctsStep < ::WizardStep
         def expected?
-          wizard.no_appropriate_body_appointed? || wizard.appropriate_body_id.present?
+          wizard.no_expect_any_ects?
         end
 
         def next_step

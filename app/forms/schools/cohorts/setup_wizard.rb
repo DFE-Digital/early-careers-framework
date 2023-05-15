@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Schools
-  module Cohort
+  module Cohorts
     class SetupWizard < BaseWizard
       include Success
 
@@ -31,7 +31,7 @@ module Schools
       end
 
       def previous_cohort
-        @previous_cohort ||= ::Cohort.active_registration_cohort.previous
+        @previous_cohort ||= Cohort.active_registration_cohort.previous
       end
 
       def previous_delivery_partner

@@ -34,7 +34,7 @@ module Admin
         end
 
         def set_school_and_cohort
-          @school = School.friendly.find params[:school_id]
+          @school = ::School.friendly.find params[:school_id]
           @cohort = ::Cohort.find_by start_year: params[:id]
         end
 
