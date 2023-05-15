@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Schools
-  module Cohort
+  module Cohorts
     module WizardSteps
       class AppropriateBodyTypeStep < ::WizardStep
         APPROPRIATE_BODY_TYPE_CHOICES = {

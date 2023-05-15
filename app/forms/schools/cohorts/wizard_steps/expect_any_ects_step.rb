@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Schools
-  module Cohort
+  module Cohorts
     module WizardSteps
       class ExpectAnyEctsStep < ::WizardStep
         attr_accessor :expect_any_ects

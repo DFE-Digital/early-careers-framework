@@ -603,9 +603,9 @@ Rails.application.routes.draw do
         get "roles", to: "roles#show", as: :participant_roles
       end
 
-      scope "cohorts/:cohort_id", as: :cohort, module: :cohort do
-        wizard_scope :setup, path: :setup do
-          get "/", to: "setup#show", as: :start, step: :what_we_need
+      scope "cohorts/:cohort_id" do
+        wizard_scope :cohort_setup, path: :setup do
+          get "/", to: "cohort_setup#show", as: :start, step: :what_we_need
         end
       end
 

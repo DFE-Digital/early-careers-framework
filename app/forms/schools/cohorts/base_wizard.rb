@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
 module Schools
-  module Cohort
+  module Cohorts
     class BaseWizard < Wizard
       def self.permitted_params_for(step)
-        "Schools::Cohort::WizardSteps::#{step.to_s.camelcase}Step".constantize.permitted_params
+        "Schools::Cohorts::WizardSteps::#{step.to_s.camelcase}Step".constantize.permitted_params
       end
 
       def self.steps
-        Schools::Cohort::WizardSteps
+        Schools::Cohorts::WizardSteps
           .constants
           .select { |constant| constant.name.end_with?("Step") }
           .map { |constant| constant.name.chomp("Step").underscore.to_sym }

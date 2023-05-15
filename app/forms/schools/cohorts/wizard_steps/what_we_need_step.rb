@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
 module Schools
-  module Cohort
+  module Cohorts
     module WizardSteps
-      class NoExpectedEctsStep < ::WizardStep
+      class WhatWeNeedStep < ::WizardStep
         def expected?
-          wizard.no_expect_any_ects?
+          true
         end
 
         def next_step
-          :none
+          :expect_any_ects
         end
       end
     end

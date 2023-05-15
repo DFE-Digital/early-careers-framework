@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
 module Schools
-  module Cohort
+  module Cohorts
     module WizardSteps
-      class ProgrammeConfirmationStep < ::WizardStep
+      class CompleteStep < ::WizardStep
         def expected?
-          wizard.how_will_you_run_training.present?
+          wizard.no_appropriate_body_appointed? || wizard.appropriate_body_id.present?
         end
 
         def next_step
-          :appropriate_body_appointed
+          :none
         end
       end
     end

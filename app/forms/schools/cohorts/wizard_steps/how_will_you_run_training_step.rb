@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Schools
-  module Cohort
+  module Cohorts
     module WizardSteps
       class HowWillYouRunTrainingStep < ::WizardStep
         CIP_ONLY_SCHOOL_PROGRAMME_CHOICES = %i[

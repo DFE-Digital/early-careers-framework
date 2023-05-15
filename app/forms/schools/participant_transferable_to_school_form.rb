@@ -56,7 +56,7 @@ module Schools
     end
 
     def cohort
-      @cohort ||= ::Cohort.find_by(start_year:)
+      @cohort ||= Cohort.find_by(start_year:)
     end
 
     def cohort_start_date
