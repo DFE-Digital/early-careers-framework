@@ -121,7 +121,7 @@ For more detailed information see the specifications for this [view a school’s
 
 ### Find delivery partner IDs 
 
-Delivery partners are assigned a unique ID by DfE. This `delivery_partner_id` is required when [confirming partnerships with a school and delivery partner](/api-reference/ecf/guidance/#update-a-partnership-with-a-new-delivery-partner).
+Delivery partners are assigned a unique ID by DfE. This `delivery_partner_id` is required when [confirming partnerships with a school and delivery partner](/api-reference/ecf/guidance.html#confirm-a-partnership-with-a-school-and-delivery-partner).
 
 ```
 GET /api/v3/delivery-partners
@@ -294,7 +294,7 @@ GET /api/v3/partnerships/ecf/{id}
 
 An example response body is listed below. 
 
-For more detailed information see the specifications for this [view a single ECF partnership endpoint.](api-reference/reference-v3.html#api-v3-partnerships-ecf-id-get)
+For more detailed information see the specifications for this [view a single ECF partnership endpoint.](/api-reference/reference-v3.html#api-v3-partnerships-ecf-id-get)
 
 #### Example response body:
 
@@ -363,7 +363,7 @@ Providers can view data to find out whether participants:
 * have achieved qualified teacher status (QTS)
 * are eligible for funding
 * have [transferred to or from a school you are partnered with](/api-reference/ecf/guidance/#view-data-for-all-participants-who-have-transferred)
-* have been assigned an [`unfunded mentor`](/api-reference/ecf/guidance/#view-details-for-all-unfunded-mentors)
+* have been assigned [unfunded mentors](/api-reference/ecf/guidance.html#view-all-unfunded-mentor-details)
 
 Note, while participants can enter different email addresses when registering for each training course they apply for, providers will only see the email address associated with a given course registration. For example, a participant may complete their ECF-based training with one associated email address, then register for an NPQ with a different email address, and go on to be an ECT mentor with a third email address. The DfE will share the relevant email address with the relevant course provider.
 
@@ -372,7 +372,7 @@ Providers can then update data to notify DfE that participants have:
 * [deferred training](/api-reference/ecf/guidance/#notify-dfe-a-participant-has-taken-a-break-deferred-from-training ) 
 * [resumed training](/api-reference/ecf/guidance/#notify-dfe-a-participant-has-resumed-training)  
 * [withdrawn from training](/api-reference/ecf/guidance/#notify-dfe-a-participant-has-withdrawn-from-training) 
-* [changed their training schedule](/api-reference/ecf/guidance/#notify-dfe-a-participant-has-changed-their-training-schedule)
+* [changed their training schedule](/api-reference/ecf/guidance.html#notify-dfe-of-a-participant-39-s-training-schedule)
 
 ### View all participant data
 
@@ -658,7 +658,7 @@ Where this occurs, providers should:
 2. change the participant’s training schedule 
 3. resubmit backdated declarations (where declaration_date aligns with the new schedule)
 
-For replacement mentors, view [guidance on updating a replacement mentor’s schedule.](/api-reference/ecf/guidance/#update-a-replacement-mentors-schedule)
+For replacement mentors, view [guidance on updating a replacement mentor’s schedule.](/api-reference/ecf/guidance.html#update-a-replacement-mentor-s-schedule)
 
 For more detailed information see the specifications for this [notify that an ECF participant has changed their training schedule endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-id-change-schedule-put).
 
@@ -791,7 +791,7 @@ For more detailed information see the specifications for this [view a participan
  
 A new mentor can be assigned to an ECT part way through training, replacing the ECT’s original mentor. 
 
-[Providers must notify the DfE of replacement mentors by updating their training schedule.](/api-reference/ecf/guidance/#notify-dfe-of-a-participants-training-schedule)
+[Providers must notify the DfE of replacement mentors by updating their training schedule.](/api-reference/ecf/guidance.html#notify-dfe-of-a-participant-39-s-training-schedule)
 
 Note, if a replacement mentor is already mentoring another ECT and they replace a mentor for a second ECT, the first ECT takes precedence. In this instance, the provider should not change the mentor’s schedule.
 
@@ -1128,7 +1128,7 @@ An example response body is listed below. Successful requests will return a resp
 * `voided` if it had been  `submitted`, `ineligible`, `eligible`, or `payable`
 * `awaiting_clawback` if it had been `paid` 
 
-View more information on [declaration states](/api-reference/ecf/definitions-and-states/#declaration-states) 
+View more information on [declaration states.](/api-reference/ecf/definitions-and-states/#declaration-states)
 
 For more detailed information see the specifications for this [void declarations endpoint.](/api-reference/reference-v3.html#api-v3-participant-declarations-id-void-put)
 
@@ -1173,7 +1173,7 @@ GET /api/v3/statements
 
 An example response body is listed below. 
 
-For more detailed information see the specifications for this [view all statements endpoint.](api-reference/reference-v3.html#api-v3-statements-get)
+For more detailed information see the specifications for this [view all statements endpoint.](/api-reference/reference-v3.html#api-v3-statements-get)
 
 #### Example response body:
 
