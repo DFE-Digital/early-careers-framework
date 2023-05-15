@@ -18,15 +18,18 @@
                 :name,
                 legend: { text: title, tag: 'h1', size: 'xl' }) do %>
 
-                <h2 class="govuk-heading-s govuk-!-margin-bottom-1 govuk-!-margin-top-5">Your DfE-funded lead provider</h2>
+                <h2 class="govuk-heading-s govuk-!-margin-bottom-1 govuk-!-margin-top-5">Your DfE-funded lead
+                    provider</h2>
                 <p class="govuk-body"><%= @wizard.previous_lead_provider&.name %></p>
 
                 <h2 class="govuk-heading-s govuk-!-margin-bottom-1">Your delivery partner</h2>
                 <p class="govuk-body"><%= @wizard.previous_delivery_partner&.name %></p>
 
-                <p class="govuk-body">Read our guidance to
-                    <a href="https://www.gov.uk/guidance/guidance-for-schools-how-to-manage-ecf-based-training" target="_blank" class="govuk-link">check
-                        your options (opens in new tab)</a>.</p>
+                <p class="govuk-body">Visit <%= govuk_link_to "How to set up training for early career teachers (opens in new tab)",
+                                                              guidance_for_how_to_setup_training_url,
+                                                              target: "_blank",
+                                                              rel: "noopener noreferrer" %>
+                    to learn more about providers.</p>
             <% end %>
 
             <%= f.govuk_submit "Continue" %>
