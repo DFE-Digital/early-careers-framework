@@ -20,9 +20,9 @@
                 :name,
                 legend: { text: title, tag: 'h1', size: 'xl' }) do %>
 
-                <p class="govuk-body govuk-!-margin-top-4">If you’re not sure which option to choose, see
-                    <%= govuk_link_to "delivery options for ECF-based training (opens in new tab)",
-                                      "https://www.gov.uk/government/publications/early-career-framework-reforms-overview/early-career-framework-reforms-overview",
+                <p class="govuk-body govuk-!-margin-top-4">To learn more about your training options, visit
+                    <%= govuk_link_to "How to set up training for early career teachers (opens in new tab)",
+                                      guidance_for_how_to_setup_training_url,
                                       target: :_blank,
                                       rel: "noopener noreferrer",
                                       no_visited_state: true %>
@@ -30,14 +30,14 @@
                 <p class="govuk-body">You can also contact your
                     <% unless @school.cip_only? %>
                         <%= govuk_link_to "local teaching school hub (opens in a new tab)",
-                                          "https://www.gov.uk/guidance/teaching-school-hubs#find-a-teaching-school-hub",
+                                          guidance_for_teaching_school_hubs_url,
                                           target: :_blank,
                                           rel: "noopener noreferrer",
                                           no_visited_state: true %>
                         or
                     <% end %>
                     <%= govuk_link_to "appropriate body (opens in new tab)",
-                                      "https://www.gov.uk/government/publications/appropriate-bodies-guidance-induction-and-the-early-career-framework",
+                                      guidance_for_appropriate_bodies_url,
                                       target: :_blank,
                                       rel: "noopener noreferrer",
                                       no_visited_state: true %>.
