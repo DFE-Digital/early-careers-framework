@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class ECFParticipantValidationData < ApplicationRecord
-  has_paper_trail
-
   belongs_to :participant_profile, class_name: "ParticipantProfile", touch: true
   validate :belongs_to_ecf_participant
 
