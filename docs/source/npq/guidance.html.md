@@ -242,7 +242,7 @@ Once a provider has accepted an application, they can view and update data to no
 * [resumed their course](/api-reference/npq/guidance/#notify-dfe-a-participant-has-resumed-training)
 * [withdrawn from their course](/api-reference/npq/guidance/#notify-dfe-a-participant-has-withdrawn-from-training)
 * [changed their course schedule](/api-reference/npq/guidance/#notify-dfe-a-participant-has-changed-their-training-schedule)
-* [an updated course outcome](/api-reference/npq/guidance/#update-a-participants-outcomes)
+* [an updated course outcome](/api-reference/npq/guidance.html#update-a-participant-s-outcomes)
 
 ### View all participant data
 
@@ -408,7 +408,7 @@ Successful requests will return a response body including updates to the `traini
 * The API will **not** allow withdrawals for participants who have not had a `started` declaration submitted against them. If a participant withdraws before a `started` declaration has been submitted, providers should inform their contract manager who can advise
 * DfE will **only** pay for participants who have had, at a minimum, a `started` declaration submitted against them
 * If a participant is withdrawn later in their course, DfE will pay providers for any declarations submitted where the `declaration_date` is before the date of the withdrawal
-* The amount DfE will pay depends on which milestones have been reached with declarations submitted before withdrawal. [View NPQ schedules and milestone dates](/api-reference/npq/schedules_and-milestone-dates)
+* The amount DfE will pay depends on which milestones have been reached with declarations submitted before withdrawal
 
 For more detailed information see the specifications for this [notify DfE that an NPQ participant has withdrawn from training endpoint](/api-reference/reference-v3.html#api-v3-participants-npq-id-withdraw-put).
 
@@ -873,9 +873,9 @@ An example response body is listed below. Successful requests will return a resp
 * `voided` if it had been  `submitted`, `ineligible`, `eligible`, or `payable`
 * `awaiting_clawback` if it had been `paid` 
 
-View more information on [declaration states](/api-reference/npq/definitions-and-states/#declaration-states) 
+View more information on [declaration states.](/api-reference/npq/definitions-and-states/#declaration-states) 
 
-Note, , if a provider voids a `completed` declaration, the outcome (indicating whether they have passed or failed) will be retracted. The `has_passed` value will revert to `null`.
+Note, if a provider voids a `completed` declaration, the outcome (indicating whether they have passed or failed) will be retracted. The `has_passed` value will revert to `null`.
 
 For more detailed information see the specifications for this [void declarations endpoint.](/api-reference/reference-v3.html#api-v3-participant-declarations-id-void-put)
 
