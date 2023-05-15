@@ -260,7 +260,7 @@ RSpec.describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/
 
         before { npq_application.update(lead_provider_approval_status: "rejected") }
 
-        schema({ "$ref": "#/components/schemas/NPQApplicationAcceptErrorResponse" })
+        schema({ "$ref": "#/components/schemas/NPQApplicationRejectErrorResponse" })
 
         run_test!
       end

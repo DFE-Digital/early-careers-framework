@@ -731,6 +731,45 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/NPQApplicationResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {
+                      "data": {
+                        "id": "db3a7848-7308-4879-942a-c4a70ced400a",
+                        "type": "npq_application",
+                        "attributes": {
+                          "course_identifier": "npq-leading-teaching-development",
+                          "email": "isabelle.macdonald2@some-school.example.com",
+                          "email_validated": true,
+                          "employer_name": null,
+                          "employment_role": null,
+                          "full_name": "Isabelle MacDonald",
+                          "funding_choice": null,
+                          "headteacher_status": null,
+                          "ineligible_for_funding_reason": null,
+                          "participant_id": "53847955-7cfg-41eb-a322-96c50adc742b",
+                          "private_childcare_provider_urn": null,
+                          "teacher_reference_number": "0743795",
+                          "teacher_reference_number_validated": true,
+                          "school_urn": "123456",
+                          "school_ukprn": "12345678",
+                          "status": "accepted",
+                          "works_in_school": true,
+                          "created_at": "2022-07-06T10:47:24Z",
+                          "updated_at": "2022-11-24T17:09:37Z",
+                          "cohort": "2022",
+                          "eligible_for_funding": true,
+                          "targeted_delivery_funding_eligibility": false,
+                          "teacher_catchment": true,
+                          "teacher_catchment_iso_country_code": "GBR",
+                          "teacher_catchment_country": "United Kingdom of Great Britain and Northern Ireland",
+                          "itt_provider": null,
+                          "lead_mentor": false
+                        }
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -801,6 +840,45 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/NPQApplicationResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {
+                      "data": {
+                        "id": "db3a7848-7308-4879-942a-c4a70ced400a",
+                        "type": "npq_application",
+                        "attributes": {
+                          "course_identifier": "npq-leading-teaching-development",
+                          "email": "isabelle.macdonald2@some-school.example.com",
+                          "email_validated": true,
+                          "employer_name": null,
+                          "employment_role": null,
+                          "full_name": "Isabelle MacDonald",
+                          "funding_choice": null,
+                          "headteacher_status": null,
+                          "ineligible_for_funding_reason": null,
+                          "participant_id": "53847955-7cfg-41eb-a322-96c50adc742b",
+                          "private_childcare_provider_urn": null,
+                          "teacher_reference_number": "0743795",
+                          "teacher_reference_number_validated": true,
+                          "school_urn": "123456",
+                          "school_ukprn": "12345678",
+                          "status": "rejected",
+                          "works_in_school": true,
+                          "created_at": "2022-07-06T10:47:24Z",
+                          "updated_at": "2022-11-24T17:09:37Z",
+                          "cohort": "2022",
+                          "eligible_for_funding": true,
+                          "targeted_delivery_funding_eligibility": false,
+                          "teacher_catchment": true,
+                          "teacher_catchment_iso_country_code": "GBR",
+                          "teacher_catchment_country": "United Kingdom of Great Britain and Northern Ireland",
+                          "itt_provider": null,
+                          "lead_mentor": false
+                        }
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -830,7 +908,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/NPQApplicationAcceptErrorResponse"
+                  "$ref": "#/components/schemas/NPQApplicationRejectErrorResponse"
                 }
               }
             }
@@ -4540,6 +4618,9 @@
               "anyOf": [
                 {
                   "$ref": "#/components/schemas/NPQApplicationAlreadyAccepted"
+                },
+                {
+                  "$ref": "#/components/schemas/NPQApplicationChangedFromRejected"
                 }
               ]
             }
@@ -4562,6 +4643,25 @@
             "description": "Additional info about the error",
             "type": "string",
             "example": "You cannot accept this NPQ application as it has already been accepted"
+          }
+        }
+      },
+      "NPQApplicationChangedFromRejected": {
+        "description": "Once rejected an application cannot change state",
+        "type": "object",
+        "properties": {
+          "title": {
+            "description": "The title of the error",
+            "type": "string",
+            "enum": [
+              "Once rejected an application cannot change state"
+            ],
+            "example": "Once rejected an application cannot change state"
+          },
+          "detail": {
+            "description": "Additional info about the error",
+            "type": "string",
+            "example": "You cannot accept this NPQ application as it has already been rejected"
           }
         }
       },
@@ -4765,6 +4865,63 @@
             "nullable": true,
             "type": "string",
             "example": "University of Southampton"
+          }
+        }
+      },
+      "NPQApplicationRejectErrorResponse": {
+        "description": "A list of errors",
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "array",
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/NPQApplicationAlreadyRejected"
+                },
+                {
+                  "$ref": "#/components/schemas/NPQApplicationChangedFromAccepted"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "NPQApplicationAlreadyRejected": {
+        "description": "NPQ Application has already been rejected",
+        "type": "object",
+        "properties": {
+          "title": {
+            "description": "The title of the error",
+            "type": "string",
+            "enum": [
+              "NPQ Application has already been rejected"
+            ],
+            "example": "NPQ Application has already been rejected"
+          },
+          "detail": {
+            "description": "Additional info about the error",
+            "type": "string",
+            "example": "You cannot reject this NPQ application as it has already been rejected"
+          }
+        }
+      },
+      "NPQApplicationChangedFromAccepted": {
+        "description": "Once accepted an application cannot change state",
+        "type": "object",
+        "properties": {
+          "title": {
+            "description": "The title of the error",
+            "type": "string",
+            "enum": [
+              "Once accepted an application cannot change state"
+            ],
+            "example": "Once accepted an application cannot change state"
+          },
+          "detail": {
+            "description": "Additional info about the error",
+            "type": "string",
+            "example": "You cannot reject this NPQ application as it has already been accepted"
           }
         }
       },

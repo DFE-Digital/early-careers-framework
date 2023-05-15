@@ -6,3 +6,4 @@ properties:
     items:
       anyOf:
         - $ref: "#/components/schemas/NPQApplicationAlreadyAccepted"
+        - $ref: "#/components/schemas/NPQApplicationChangedFromRejected"
