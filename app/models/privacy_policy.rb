@@ -2,9 +2,9 @@
 
 class PrivacyPolicy < ApplicationRecord
   class Acceptance < ApplicationRecord
-    self.table_name = :privacy_policy_acceptances
-
     has_paper_trail
+
+    self.table_name = :privacy_policy_acceptances
 
     belongs_to :user
     belongs_to :privacy_policy

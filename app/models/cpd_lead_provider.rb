@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class CpdLeadProvider < ApplicationRecord
+  has_paper_trail
+
   has_one :lead_provider
   has_one :npq_lead_provider
   has_many :participant_declarations

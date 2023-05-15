@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Partnership < ApplicationRecord
+  has_paper_trail
+
   CHALLENGE_PERIOD_SINCE_ACADEMIC_YEAR_START = 2.months
 
   enum challenge_reason: {
@@ -17,8 +19,6 @@ class Partnership < ApplicationRecord
   belongs_to :delivery_partner
   has_many :partnership_notification_emails, dependent: :destroy
   has_many :event_logs, as: :owner
-
-  has_paper_trail
 
   after_save do |partnership|
     unless partnership.saved_changes.empty?
