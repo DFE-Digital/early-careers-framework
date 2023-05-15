@@ -85,17 +85,6 @@ properties:
     description: "The schedule of the ECF participant. For the possible values please refer to the <a href=\"/ecf-usage.html#notifying-of-schedule-change\" class=\"govuk-link\">ECF change schedule guidance</a>."
     type: string
     example: ecf-standard-january
-  validation_status:
-    description: Indicates where a participant is in the DfE’s validation and eligibility process. Same detail shown to SITs and Delivery Partners.
-    type: string
-    nullable: true
-    enum:
-      - contacted_for_information
-      - dfe_checking_eligibility
-      - checking_qts
-      - not_eligible_for_funded_training
-      - eligible_to_start
-    example: eligible_to_start
   delivery_partner_id:
     description: Unique ID of the delivery partner associated with the participant
     type: string
