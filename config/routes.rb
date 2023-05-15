@@ -176,7 +176,9 @@ Rails.application.routes.draw do
           post ":participant_id/outcomes", to: "participant_outcomes#create"
         end
       end
-      resources :participant_declarations, only: %i[index], path: "participant-declarations"
+      resources :participant_declarations, only: %i[create index show], path: "participant-declarations" do
+        member { put :void }
+      end
       resources :ecf_schools, path: "schools/ecf", only: %i[index show], controller: "ecf/schools"
       resources :ecf_participants, path: "participants/ecf", only: %i[index show], controller: "ecf/participants" do
         concerns :participant_actions
