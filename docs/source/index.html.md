@@ -1,48 +1,28 @@
 ---
-title: About
+title: About the API
 weight: 1
 ---
 
-# About
+# About the API
 
-This is API documentation for the Department for Education (DfE)’s new Manage teacher continuing professional development service.
+The Department of Education (DfE) has developed an API for the Manage teacher continuing professional development service. 
 
-## What this API is for
+It lets lead providers view, submit and update data associated with Early Career Framework (ECF) based training and national professional qualifications (NPQs). The data submitted is used to facilitate payment from the DfE to providers.
 
-Once a participant has been added by a school induction tutor, the participant record will become available via the API.
+Once an ECF or NPQ participant has been registered to the service, data associated with them becomes available via the API.
 
-Providers can then use the API for:
+Once integrated with the API, providers can, for example, view and update participant details, or notify DfE that they have completed training by submitting a declaration.
 
-- [Retrieving a list of ECF participants](/api-reference/reference-v1#api-v1-participants-ecf-get)
-- [Retrieving a CSV file of ECF participants](/api-reference/reference-v1#api-v1-participants-ecf-csv-get)
-- [Declaring the progress of an ECF or NPQ participant against milestone](/api-reference/reference-v1#api-v1-participant-declarations-post)
-- [Retrieving a list of NPQ applications](/api-reference/reference-v1#api-v1-npq-applications-get)
-- [Retrieving a CSV file of NPQ applications](/api-reference/reference-v1#api-v1-npq-applications-csv-get)
+## API versions and updates
 
-## How do I connect to this API?
+The DfE works to continually improve the API service and new functionality occasionally becomes available. Guidance is reviewed and updated as necessary.
 
-### Authentication and authorisation
+If the API changes in a way that is backwards-incompatible, a new version of the API will be published. This is specified in the URL `/api/v{n}/`. For example, `/api/v1/` or  `/api/v2/` and so on. 
 
-Requests to the API must be accompanied by an authentication token.
+When the DfE publishes a new API version, only one previous version will remain supported. For example, when a `v4` is released then `v2` will be discontinued.
 
-Each token is associated with a single provider. It will grant access to participants for courses offered by that provider. You can get a token by writing to [continuing-professional-development@digital.education.gov.uk](href="mailto:continuing-professional-development@digital.education.gov.uk).
+Note, there will be an exception to this rule for API `v3`. DfE will support `v1` for an extended period whilst working with providers on transition plans.
 
-For instructions on how to authenticate see the [API reference](/api-reference/developing-on-the-api.html#authentication).
+When non-breaking updates (sometimes referred to as backwards compatible updates) are made, the API will not be re-versioned. An example of a non-breaking change would be the introduction of a new attribute without removing an existing attribute. 
 
-### Versioning
-
-The version of the API is specified in the URL `/api/v{n}/`. For example: `/api/v1/`, `/api/v2/`, `/api/v3/`, ...
-
-When the API changes in a way that is backwards-incompatible, a new version number of the API will be published.
-
-When a new version, for example `/api/v2`, is published, both the previous **v1** and the current **v2** versions will be available.
-
-We, however, only support one version back, so if the **v3** is published, the **v1** will be discontinued.
-
-When non-breaking changes are made to the API, this will not result in a version bump. An example of a non-breaking change could be the introduction of a new field without removing an existing field.
-
-Information about deprecations (for instance attributes/endpoints that will be modified/removed) will be included in the API response through a ‘Warning’ header.
-
-## Testing
-
-To get familiar with our system and perform testing, you can use [our sandbox environment](https://ecf-sandbox.london.cloudapps.digital).
+Summaries of all API updates can be found in the [API release notes](/api-reference/release-notes).
