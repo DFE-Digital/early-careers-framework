@@ -52,6 +52,18 @@
             "example": "filter[cohort]=2021"
           },
           {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Pagination"
+            },
+            "style": "deepObject",
+            "explode": true,
+            "required": false,
+            "example": "page[page]=1&page[per_page]=5",
+            "description": "Pagination options to navigate through the list of delivery partners."
+          },
+          {
             "name": "sort",
             "in": "query",
             "schema": {
@@ -175,6 +187,18 @@
             "required": false,
             "description": "Refine partnerships to return.",
             "example": "filter[cohort]=2021,2022"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Pagination"
+            },
+            "style": "deepObject",
+            "explode": true,
+            "required": false,
+            "example": "page[page]=1&page[per_page]=5",
+            "description": "Pagination options to navigate through the list of partnerships."
           },
           {
             "name": "sort",
@@ -462,6 +486,18 @@
             "required": true,
             "description": "Refine schools to return.",
             "example": "filter[cohort]=2021&filter[urn]=106286"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Pagination"
+            },
+            "style": "deepObject",
+            "explode": true,
+            "required": false,
+            "example": "page[page]=1&page[per_page]=5",
+            "description": "Pagination options to navigate through the list of schools."
           },
           {
             "name": "sort",
@@ -2456,6 +2492,18 @@
             "required": false,
             "description": "Refine statements to return.",
             "example": "filter[cohort]=2021,2022&filter[type]=ecf"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Pagination"
+            },
+            "style": "deepObject",
+            "explode": true,
+            "required": false,
+            "example": "page[page]=1&page[per_page]=5",
+            "description": "Pagination options to navigate through the list of statements."
           }
         ],
         "responses": {
