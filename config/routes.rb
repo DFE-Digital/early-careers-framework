@@ -186,6 +186,12 @@ Rails.application.routes.draw do
         end
       end
       resources :ecf_unfunded_mentors, path: "unfunded-mentors/ecf", only: %i[index show], controller: "ecf/unfunded_mentors"
+      resources :npq_applications, only: %i[index show], path: "npq-applications" do
+        member do
+          post :accept
+          post :reject
+        end
+      end
     end
   end
 
