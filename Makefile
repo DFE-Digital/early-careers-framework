@@ -2,9 +2,17 @@ ifndef VERBOSE
 .SILENT:
 endif
 
+.PHONY: aks
+aks:
+	$(eval PLATFORM=aks)
+	$(eval REGION=UK South)
+	$(eval STORAGE_ACCOUNT_SUFFIX=sa)
+	$(eval KEY_VAULT_SECRET_NAME=APPLICATION)
+
 .PHONY: development
 development:
 	$(eval DEPLOY_ENV=development)
+	$(eval include global_config/development_aks.sh)
 
 .PHONY: staging
 staging:
@@ -68,3 +76,10 @@ domains-plan: domains-init  # make dev domains-plan
 
 domains-apply: domains-init # make dev domains-apply
 	terraform -chdir=terraform/custom_domains/environment_domains apply -var-file workspace_variables/${DOMAINS_ID}_${DEPLOY_ENV}.tfvars.json ${AUTO_APPROVE}
+
+arm-deployment: set-azure-account set-azure-template-tag set-azure-resource-group-tags
+	az deployment sub create --name "resourcedeploy-tsc-$(shell date +%Y%m%d%H%M%S)" \
+		-l "${REGION}" --template-uri "https://raw.githubusercontent.com/DFE-Digital/tra-shared-services/${ARM_TEMPLATE_TAG}/azure/resourcedeploy.json" \
+		--parameters "resourceGroupName=${RESOURCE_PREFIX}-${SERVICE_SHORT}-${CONFIG_SHORT}-rg" 'tags=${RG_TAGS}' \
+			"tfStorageAccountName=${RESOURCE_PREFIX}${SERVICE_SHORT}tfstate${CONFIG_SHORT}${STORAGE_ACCOUNT_SUFFIX}" "tfStorageContainerName=${SERVICE_SHORT}-tfstate" \
+			"keyVaultName=${RESOURCE_PREFIX}-${SERVICE_SHORT}-${CONFIG_SHORT}-kv" ${WHAT_IF}
