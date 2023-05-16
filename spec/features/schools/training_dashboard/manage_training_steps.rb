@@ -365,7 +365,7 @@ module ManageTrainingSteps
     click_on "Continue"
     choose "Yes"
     click_on "Continue"
-    choose("Design and deliver you own programme based on the early career framework (ECF)")
+    choose("Design and deliver your own programme based on the early career framework (ECF)")
     click_on "Continue"
     click_on("Confirm")
     choose("No")
