@@ -12,7 +12,7 @@ RSpec.describe Admin::Schools::Cohorts::CipInfo, type: :component do
 
   it "has the correct content" do
     with_request_url "/schools/test-school" do
-      expect(rendered_content).to have_content "Use the DfE accredited materials"
+      expect(rendered_content).to have_content "Using DfE-accredited materials"
       expect(rendered_content).to have_content programme.name
     end
   end

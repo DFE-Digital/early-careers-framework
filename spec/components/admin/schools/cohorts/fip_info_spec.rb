@@ -21,7 +21,7 @@ RSpec.describe Admin::Schools::Cohorts::FipInfo, type: :component do
   end
 
   it "has the correct content" do
-    expect(rendered_content).to have_content "Use an approved training provider"
+    expect(rendered_content).to have_content "Working with a DfE-funded provider"
     expect(rendered_content).to have_content lead_provider.name
     expect(rendered_content).to have_content school_cohort.delivery_partner.name
   end
