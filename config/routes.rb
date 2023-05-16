@@ -252,7 +252,7 @@ Rails.application.routes.draw do
     get "/guidance/release-notes", to: redirect("/api-reference/release-notes")
     get "/guidance/help", to: redirect("/api-reference/help")
 
-    get "/api-docs/v1/api_spec.yml" => "openapi#api_docs", as: :api_docs
+    get "/api-docs/:api_version/api_spec.yml" => "openapi#api_docs", constraints: ValidLeadProviderApiRoute, as: :api_docs
 
     resources :your_schools, path: "/your-schools", only: %i[index create]
     resources :partnerships, only: %i[show] do
