@@ -60,7 +60,7 @@ A participant’s `training_status` value will determine whether a provider can:
 
 Declaration states are defined by the `state` attribute. 
 
-Providers must [submit declarations](/api-reference/ecf/guidance/#submit-view-and-void-declarations) to confirm a participant has engaged in training within a given milestone period. A declaration’s `state` value will reflect if and when the DfE will pay providers for the training delivered.
+Providers must [submit declarations](/api-reference/npq/guidance/#submit-view-and-void-declarations) to confirm a participant has engaged in training within a given milestone period. A declaration’s `state` value will reflect if and when the DfE will pay providers for the training delivered.
 
 | state | Definition | Action |
 | -------- | -------- | -------- |

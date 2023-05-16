@@ -38,7 +38,7 @@ Declarations submitted for participants in standard schedules will be validated 
 
 <div class="govuk-inset-text">Note, all participants will be registered by default to a standard schedule starting in September. </div>
 
-Providers must [notify DfE if the participant is following any other standard or non-standard training schedule](/api-reference/ecf/guidance/#notify-dfe-a-participant-has-changed-their-training-schedule). Contact ECF contract managers via email for additional support or information. 
+Providers must [notify DfE if the participant is following any other standard or non-standard training schedule](/api-reference/ecf/guidance.html#notify-dfe-of-a-participant-39-s-training-schedule). Contact ECF contract managers via email for additional support or information. 
 
 
 
@@ -99,7 +99,7 @@ Participants starting their ECF-based training on or before 30 November 2021, an
 
 ### Dates for standard schedule starting in January
 
-Participants starting their ECF-based training between 1 January and 31 March 2024, and who are expected to complete their training over 2 academic years, [should have their schedule updated](/api-reference/ecf/guidance/#notify-dfe-a-participant-has-changed-their-training-schedule) by providers to: 
+Participants starting their ECF-based training between 1 January and 31 March 2024, and who are expected to complete their training over 2 academic years, [should have their schedule updated](/api-reference/ecf/guidance.html#notify-dfe-of-a-participant-39-s-training-schedule) by providers to: 
 
 ```
  "schedule_identifier": "ecf-standard-january"
@@ -116,7 +116,7 @@ Participants starting their ECF-based training between 1 January and 31 March 20
 
 #### 2022 cohort
 
-Participants starting their ECF-based training between 1 January and 31 March 2023, and who are expected to complete their training over 2 academic years, [should have their schedule updated](/api-reference/ecf/guidance/#notify-dfe-a-participant-has-changed-their-training-schedule) by providers to: 
+Participants starting their ECF-based training between 1 January and 31 March 2023, and who are expected to complete their training over 2 academic years, [should have their schedule updated](/api-reference/ecf/guidance.html#notify-dfe-of-a-participant-39-s-training-schedule) by providers to: 
 
 ```
  "schedule_identifier": "ecf-standard-january"
@@ -133,7 +133,7 @@ Participants starting their ECF-based training between 1 January and 31 March 20
 
 #### 2021 cohort
 
-For participants starting their course on or before 1 December 2021, and who are expected to complete their training over 2 academic years, providers [should have their schedule updated](/api-reference/ecf/guidance/#notify-dfe-a-participant-has-changed-their-training-schedule) by providers to: 
+For participants starting their course on or before 1 December 2021, and who are expected to complete their training over 2 academic years, providers [should have their schedule updated](/api-reference/ecf/guidance.html#notify-dfe-of-a-participant-39-s-training-schedule) by providers to: 
 
 ```
  "schedule_identifier": "ecf-standard-january"
@@ -153,7 +153,7 @@ For participants starting their course on or before 1 December 2021, and who are
 
 #### 2023 cohort
 
-Participants starting their ECF-based training between 1 April and 31 July 2024, and who are expected to complete their training over 2 academic years, [should have their schedule updated](/api-reference/ecf/guidance/#notify-dfe-a-participant-has-changed-their-training-schedule) by providers to: 
+Participants starting their ECF-based training between 1 April and 31 July 2024, and who are expected to complete their training over 2 academic years, [should have their schedule updated](/api-reference/ecf/guidance.html#notify-dfe-of-a-participant-39-s-training-schedule) by providers to: 
 
 ```
  "schedule_identifier": "ecf-standard-april"
@@ -170,7 +170,7 @@ Participants starting their ECF-based training between 1 April and 31 July 2024,
 
 #### 2022 cohort
 
-Participants starting their ECF-based training between 1 April and 31 July 2023, and who are expected to complete their training over 2 academic years, [should have their schedule updated](/api-reference/ecf/guidance/#notify-dfe-a-participant-has-changed-their-training-schedule) by providers to: 
+Participants starting their ECF-based training between 1 April and 31 July 2023, and who are expected to complete their training over 2 academic years, [should have their schedule updated](/api-reference/ecf/guidance.html#notify-dfe-of-a-participant-39-s-training-schedule) by providers to: 
 
 ```
  "schedule_identifier": "ecf-standard-april"
@@ -187,7 +187,7 @@ Participants starting their ECF-based training between 1 April and 31 July 2023,
 
 #### 2021 cohort
 
-For participants starting their course on or before 1 February 2022, and who are expected to complete their training over 2 academic years, providers [should have their schedule updated](/api-reference/ecf/guidance/#notify-dfe-a-participant-has-changed-their-training-schedule) by providers to: 
+For participants starting their course on or before 1 February 2022, and who are expected to complete their training over 2 academic years, providers [should have their schedule updated](/api-reference/ecf/guidance.html#notify-dfe-of-a-participant-39-s-training-schedule) by providers to: 
 
 ```
  "schedule_identifier": "ecf-standard-april"
@@ -213,7 +213,7 @@ The API will perform milestone validation to reject a declaration if:
 
 * it is not submitted for the correct milestone. For example, the API will reject a `retained-1` declaration if it is submitted during the `started` milestone period
 * it is submitted before or after the milestone date. For example, an `ecf-standard-september` schedule allows `started` declarations between 19 November to 30 November. A declaration submitted outside of these dates will be rejected, unless its `declaration_date` is backdated accordingly
-* it corresponds to a participant's [updated schedule](/api-reference/ecf/guidance/#notify-dfe-a-participant-has-changed-their-training-schedule), but the participant has previously submitted declarations corresponding to the former schedule (which have not yet been voided).
+* it corresponds to a participant's [updated schedule](/api-reference/ecf/guidance.html#notify-dfe-of-a-participant-39-s-training-schedule), but the participant has previously submitted declarations corresponding to the former schedule (which have not yet been voided).
 
 ## Non-standard schedules and dates
 
@@ -226,7 +226,7 @@ Declarations submitted for participants in non-standard schedules do not need AP
 **Providers should note:**
 
 * All participants will be registered by default to a standard schedule starting in September
-* Providers must [notify DfE if the participant is following any other standard or non-standard training schedule](/api-reference/ecf/guidance/#notify-dfe-a-participant-has-changed-their-training-schedule)
+* Providers must [notify DfE if the participant is following any other standard or non-standard training schedule](/api-reference/ecf/guidance.html#notify-dfe-of-a-participant-39-s-training-schedule)
 * Providers will need to evidence any declarations and why a participant is following a non-standard induction 
 
 ### Extended schedules
@@ -235,7 +235,7 @@ While the API will accept any declarations submitted after the first milestone s
 
 Contact ECF contract managers via email for more information on exact dates.
 
-Participants who expect to complete their ECF-based training in more than 2 years, should have their [schedule updated](/api-reference/ecf/guidance/#notify-dfe-a-participant-has-changed-their-training-schedule) to one for the following: 
+Participants who expect to complete their ECF-based training in more than 2 years, should have their [schedule updated](/api-reference/ecf/guidance.html#notify-dfe-of-a-participant-39-s-training-schedule) to one for the following: 
 
 ```
  "schedule_identifier": "ecf-extended-september"
@@ -255,7 +255,7 @@ While the API will accept any declarations submitted after the first milestone s
 
 Contact ECF contract managers via email for more information on exact dates.
 
-Participants who expect to complete their ECF-based training in less than 2 years, should have their [schedule updated](/api-reference/ecf/guidance/#notify-dfe-a-participant-has-changed-their-training-schedule) to one for the following: 
+Participants who expect to complete their ECF-based training in less than 2 years, should have their [schedule updated](/api-reference/ecf/guidance.html#notify-dfe-of-a-participant-39-s-training-schedule) to one for the following: 
 
 ```
  "schedule_identifier": "ecf-reduced-september"
@@ -280,7 +280,7 @@ Contact ECF contract managers via email for more information on exact dates.
 * Replacement schedules should only be used where a new mentor takes the place of a previous mentor (in supporting an ECT’s training), but where the new mentor is not also mentoring any other ECTs.
 * Replacement schedules should not be used if a mentor is already mentoring an ECT and takes on an additional role replacing a mentor for a second ECT. A mentor’s first ECT should take precedence in determining their schedule.
 
-Mentors that are not already training ECTs and are replacing a mentor must be should have their [schedule updated](/api-reference/ecf/guidance/#notify-dfe-a-participant-has-changed-their-training-schedule) to one for the following: 
+Mentors that are not already training ECTs and are replacing a mentor must be should have their [schedule updated](/api-reference/ecf/guidance.html#notify-dfe-of-a-participant-39-s-training-schedule) to one for the following: 
 
 ```
  "schedule_identifier": "ecf-replacement-september"
