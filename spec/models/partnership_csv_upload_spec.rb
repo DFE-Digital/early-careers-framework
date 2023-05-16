@@ -96,13 +96,16 @@ RSpec.describe PartnershipCsvUpload, type: :model do
       )
     end
 
-    context "school already recruited by other provider" do
-      it "errors when school is partnered in previous year and hasn't created the following year cohort" do
-        school_cohort = create(:school_cohort, cohort: current_cohort)
-        next_cohort = Cohort.next || create(:cohort, :next)
-        create(:partnership, school: school_cohort.school)
+    context "when a school ran FIP in the last cohort but hasn't made a choice for the following year" do
+      let(:school_cohort) { create(:school_cohort, cohort: current_cohort) }
+      let(:next_cohort) { Cohort.next || create(:cohort, :next) }
 
+      before do
         given_the_csv_contains_urns([school_cohort.school.urn], cohort: next_cohort)
+      end
+
+      it "errors when school is partnered in previous year with a different provider" do
+        create(:partnership, school: school_cohort.school, lead_provider: create(:lead_provider, name: "A Different Provider Ltd"))
 
         expect(@subject.invalid_schools.length).to eql 1
         expect(@subject.invalid_schools).to contain_exactly(
@@ -110,11 +113,27 @@ RSpec.describe PartnershipCsvUpload, type: :model do
             urn: school_cohort.school.urn,
             row_number: 1,
             school_name: school_cohort.school.name,
-            message: "Recruited by other provider",
+            message: "School programme not yet confirmed",
           },
         )
       end
 
+      it "errors when school is partnered in previous year with the same provider" do
+        create(:partnership, school: school_cohort.school, lead_provider: @subject.lead_provider)
+
+        expect(@subject.invalid_schools.length).to eql 1
+        expect(@subject.invalid_schools).to contain_exactly(
+          {
+            urn: school_cohort.school.urn,
+            row_number: 1,
+            school_name: school_cohort.school.name,
+            message: "School programme not yet confirmed",
+          },
+        )
+      end
+    end
+
+    context "school already recruited by other provider" do
       it "errors when school is with a lead provider" do
         partnership = create(:partnership, cohort: current_cohort)
         partnered_school = partnership.school

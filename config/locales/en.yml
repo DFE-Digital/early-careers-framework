@@ -488,6 +488,7 @@ en:
               ineligible_error: "The school you have entered is currently ineligible for DfE funding."
               already_confirmed: "You are already confirmed to be in partnership with the school for the entered cohort."
               recruited_by_other_provider: "Another provider is already confirmed to be in partnership with the school for the entered cohort. Contact the school for more information."
+              school_programme_not_yet_confirmed: "The school you have entered has not yet confirmed they will deliver training using a DfE-funded training provider. Contact the school for more information."
             lead_provider_id:
               blank: "The attribute '#/lead_provider_id' must be included as part of partnership confirmations."
               invalid: "The '#/lead_provider_id' you have entered is invalid. Enter a valid '#/lead_provider_id' attribute in the request body for partnership confirmations."
