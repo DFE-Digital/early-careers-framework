@@ -305,7 +305,7 @@ module ChooseProgrammeSteps
   end
 
   def when_i_choose_design_and_deliver_your_own_material
-    choose("Design and deliver you own programme based on the early career framework (ECF)")
+    choose("Design and deliver your own programme based on the early career framework (ECF)")
   end
 
   def when_i_choose_use_a_training_provider_funded_by_your_school
@@ -325,7 +325,7 @@ module ChooseProgrammeSteps
   end
 
   def when_i_choose_to_design_and_deliver_own_programme
-    choose("Design and deliver you own programme based on the Early Career Framework (ECF)")
+    choose("Design and deliver your own programme based on the Early Career Framework (ECF)")
   end
 
   def when_i_challenge_the_new_cohort_partnership
