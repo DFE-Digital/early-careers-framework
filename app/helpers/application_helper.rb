@@ -27,7 +27,7 @@ module ApplicationHelper
     return schools_dashboard_index_path if user.schools.count > 1
 
     school = user.induction_coordinator_profile.schools.first
-    return schools_choose_programme_path(school_id: school.slug, cohort_id: latest_manageable_cohort(school)) if school.school_cohorts.empty?
+    return schools_choose_programme_path(school_id: school.slug, cohort_id: Dashboard::LatestManageableCohort.call(school)) if school.school_cohorts.empty?
 
     school_dashboard_with_tab_path(school)
   end
@@ -39,21 +39,10 @@ module ApplicationHelper
     induction_coordinator_dashboard_path(user)
   end
 
-  def latest_manageable_cohort(school)
-    [
-      Cohort.latest,
-      pilot?(school) ? Cohort.active_registration_cohort : Cohort.current,
-    ].compact.min_by(&:start_year)
-  end
-
   def participant_start_path(user)
     return participants_no_access_path unless post_2020_ecf_participant?(user)
 
     participants_validation_path
-  end
-
-  def pilot?(object)
-    FeatureFlag.active?(:cohortless_dashboard, for: object)
   end
 
   def service_name
@@ -101,6 +90,6 @@ private
 
   def school_dashboard_with_tab_path(school)
     schools_dashboard_path(school_id: school.slug,
-                           anchor: TabLabelDecorator.new(latest_manageable_cohort(school).description).parameterize)
+                           anchor: TabLabelDecorator.new(Dashboard::LatestManageableCohort.call(school).description).parameterize)
   end
 end

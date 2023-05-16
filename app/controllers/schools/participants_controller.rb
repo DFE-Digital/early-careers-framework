@@ -13,7 +13,7 @@ class Schools::ParticipantsController < Schools::BaseController
   def index
     @participants = Dashboard::Participants.new(school: @school,
                                                 user: current_user,
-                                                latest_year: helpers.latest_manageable_cohort(@chool).start_year)
+                                                latest_year: Dashboard::LatestManageableCohort.call(@school).start_year)
   end
 
   def show
@@ -22,7 +22,7 @@ class Schools::ParticipantsController < Schools::BaseController
     @mentor_profile = @induction_record.mentor_profile
     @ects = Dashboard::Participants.new(school: @school,
                                         user: current_user,
-                                        latest_year: helpers.latest_manageable_cohort(@chool).start_year)
+                                        latest_year: Dashboard::LatestManageableCohort.call(@school).start_year)
                                    .mentors[@induction_record]
   end
 

@@ -41,11 +41,6 @@ class FormData::DataStore
     @session.delete(@form_key)
   end
 
-  def to_s
-    values = []
-    store.map { |k, v| values << "#{k}->#{v}" }.join("\n")
-  end
-
 private
 
   attr_reader :session, :form_key
