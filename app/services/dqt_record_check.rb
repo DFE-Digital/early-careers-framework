@@ -103,7 +103,7 @@ private
 
   # Helpers for tesing in review apps
   def magic_date_criteria_met?
-    (Rails.env.development? || Rails.env.deployed_development?) && magic_date_range.include?(date_of_birth)
+    (!Rails.env.production? && !Rails.env.test?) && magic_date_range.include?(date_of_birth)
   end
 
   def magic_date_range
