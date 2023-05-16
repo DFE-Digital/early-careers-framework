@@ -90,17 +90,18 @@ module Partnerships
         errors.add(:school_id, :ineligible_error)
       elsif school.lead_provider(cohort_record.start_year) == lead_provider
         errors.add(:school_id, :already_confirmed)
-      elsif school.lead_provider(cohort_record.start_year).present? || has_previous_cohort_and_matching_lead_provider?
+      elsif school.lead_provider(cohort_record.start_year).present?
         errors.add(:school_id, :recruited_by_other_provider)
+      elsif cohort_not_setup_and_previously_fip?(school)
+        errors.add(:school_id, :school_programme_not_yet_confirmed)
       end
     end
 
-    def has_previous_cohort_and_matching_lead_provider?
+    def cohort_not_setup_and_previously_fip?(school)
       previous_year_lead_provider = school.lead_provider(cohort_record.start_year - 1)
-
       return false if previous_year_lead_provider.blank?
 
-      previous_year_lead_provider != lead_provider && school.school_cohorts.find_by(cohort: cohort_record).blank?
+      school.school_cohorts.find_by(cohort: cohort_record).blank?
     end
 
     def duplicate_delivery_partner_request?

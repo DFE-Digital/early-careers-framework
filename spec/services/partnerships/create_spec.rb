@@ -152,6 +152,19 @@ RSpec.describe Partnerships::Create do
       end
     end
 
+    context "school has not confirmed their programme" do
+      let(:previous_cohort) { create(:cohort, start_year: cohort.start_year - 1) }
+      let(:lead_provider2) { create :lead_provider }
+      let!(:school_cohort) { create(:school_cohort, :fip, school:, cohort: previous_cohort) }
+      let!(:partnership) { create(:partnership, school:, delivery_partner:, lead_provider: lead_provider2, cohort: previous_cohort) }
+
+      it "returns error" do
+        expect(service).to be_invalid
+
+        expect(service.errors.messages_for(:school_id)).to include("The school you have entered has not yet confirmed they will deliver training using a DfE-funded training provider. Contact the school for more information.")
+      end
+    end
+
     context "with existing challenged partnership" do
       let(:lead_provider2) { create :lead_provider }
       let!(:partnership) { create(:partnership, :challenged, school:, delivery_partner:, lead_provider: lead_provider2, cohort:) }

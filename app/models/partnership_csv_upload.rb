@@ -73,20 +73,21 @@ private
         errors << { urn:, message: "School not eligible for inductions", school_name: school.name, row_number: index + 1 }
       elsif school.lead_provider(cohort.start_year) == lead_provider
         errors << { urn:, message: "Your school - already confirmed", school_name: school.name, row_number: index + 1 }
-      elsif school.lead_provider(cohort.start_year).present? || has_previous_cohort_and_matching_lead_provider?(school)
+      elsif school.lead_provider(cohort.start_year).present?
         errors << { urn:, message: "Recruited by other provider", school_name: school.name, row_number: index + 1 }
+      elsif cohort_not_setup_and_previously_fip?(school)
+        errors << { urn:, message: "School programme not yet confirmed", school_name: school.name, row_number: index + 1 }
       end
     end
 
     errors
   end
 
-  def has_previous_cohort_and_matching_lead_provider?(school)
+  def cohort_not_setup_and_previously_fip?(school)
     previous_year_lead_provider = school.lead_provider(cohort.start_year - 1)
-
     return false if previous_year_lead_provider.blank?
 
-    previous_year_lead_provider != lead_provider && school.school_cohorts.find_by(cohort:).blank?
+    school.school_cohorts.find_by(cohort:).blank?
   end
 
   def strip_bom(string)
