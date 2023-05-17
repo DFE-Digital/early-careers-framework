@@ -334,6 +334,19 @@
             ]
           }
         ],
+        "parameters": [
+          {
+            "name": "id",
+            "description": "The unique ID of the partnership",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "example": "00acafd3-e6f6-41e7-a770-3207be94f755"
+          }
+        ],
         "responses": {
           "200": {
             "description": "A single partnership",
@@ -1785,7 +1798,8 @@
                             "ineligible_for_funding_reason": null,
                             "mentor_id": "907f61ed-5770-4d38-b22c-1a4265939378",
                             "uplift_paid": true,
-                            "evidence_held": "other"
+                            "evidence_held": "other",
+                            "has_passed": null
                           }
                         },
                         {
@@ -1805,7 +1819,8 @@
                             "ineligible_for_funding_reason": null,
                             "mentor_id": null,
                             "uplift_paid": true,
-                            "evidence_held": null
+                            "evidence_held": null,
+                            "has_passed": null
                           }
                         }
                       ]
@@ -6959,7 +6974,7 @@
             "description": "The month which appears on the statement in the DfE portal",
             "type": "string",
             "nullable": false,
-            "example": "5"
+            "example": "May"
           },
           "year": {
             "description": "The calendar year which appears on the statement in the dfe portal",

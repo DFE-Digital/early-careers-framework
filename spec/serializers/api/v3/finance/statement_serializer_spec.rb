@@ -24,11 +24,11 @@ module Api
           end
 
           it "returns the cut off dates" do
-            expect(serialiser.serializable_hash[:data][:attributes][:cut_off_date]).to eq(statement.deadline_date.rfc3339)
+            expect(serialiser.serializable_hash[:data][:attributes][:cut_off_date]).to eq(statement.deadline_date)
           end
 
           it "returns the payment dates" do
-            expect(serialiser.serializable_hash[:data][:attributes][:payment_date]).to eq(statement.payment_date.rfc3339)
+            expect(serialiser.serializable_hash[:data][:attributes][:payment_date]).to eq(statement.payment_date)
           end
 
           context "with an ECF statement" do
