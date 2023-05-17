@@ -1,0 +1,39 @@
+<% title = "Do you want to use the same lead provider and delivery partner for your new ECTs?" %>
+
+<% content_for :title, title %>
+
+<% content_for :before_content, govuk_back_link(text: "Back", href: wizard_back_link_path) %>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        <span class="govuk-caption-xl"><%= @school.name %></span>
+
+        <%= form_with model: @wizard.form, url: url_for(action: :update), scope: @wizard.to_key, method: :put do |f| %>
+            <%= f.govuk_error_summary %>
+            <%= f.govuk_collection_radio_buttons(
+                :keep_providers,
+                simple_yes_no_options,
+                :id,
+                :name,
+                legend: { text: title, tag: 'h1', size: 'xl' }) do %>
+
+                <h2 class="govuk-heading-s govuk-!-margin-bottom-1 govuk-!-margin-top-5">Your DfE-funded lead
+                    provider</h2>
+                <p class="govuk-body"><%= @wizard.previous_lead_provider&.name %></p>
+
+                <h2 class="govuk-heading-s govuk-!-margin-bottom-1">Your delivery partner</h2>
+                <p class="govuk-body"><%= @wizard.previous_delivery_partner&.name %></p>
+
+                <p class="govuk-body">Visit <%= govuk_link_to "How to set up training for early career teachers (opens in new tab)",
+                                                              guidance_for_how_to_setup_training_url,
+                                                              target: "_blank",
+                                                              rel: "noopener noreferrer" %>
+                    to learn more about providers.</p>
+            <% end %>
+
+            <%= f.govuk_submit "Continue" %>
+        <% end %>
+
+    </div>
+</div>

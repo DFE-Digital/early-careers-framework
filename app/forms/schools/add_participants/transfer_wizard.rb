@@ -20,6 +20,7 @@ module Schools
 
       def needs_to_confirm_programme?
         return false if withdrawn_participant?
+        return false if [existing_lead_provider, existing_delivery_partner].any?(&:blank?)
 
         lead_provider != existing_lead_provider || delivery_partner != existing_delivery_partner
       end
@@ -82,7 +83,7 @@ module Schools
       end
 
       def abandon_path
-        schools_participants_path
+        school_participants_path
       end
 
       def change_path_for(step:)
@@ -102,11 +103,10 @@ module Schools
       def transfer_participant!
         profile = existing_participant_profile
         data_store.set(:was_withdrawn_participant, withdrawn_participant?)
-
         new_induction_record = if transfer_has_the_same_provider? || was_withdrawn_participant?
                                  data_store.set(:same_provider, true)
                                  transfer_fip_participant_to_schools_programme(profile)
-                               elsif chose_to_join_school_programme?
+                               elsif !needs_to_confirm_programme? || chose_to_join_school_programme?
                                  transfer_fip_participant_to_schools_programme(profile)
                                else
                                  transfer_fip_participant_and_continue_existing_programme(profile)

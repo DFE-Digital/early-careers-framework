@@ -5,6 +5,8 @@ require "rails_helper"
 RSpec.describe "Schools::ChangeSit", type: :request do
   let(:user) { create(:user, :induction_coordinator) }
   let(:school) { user.induction_coordinator_profile.schools.first }
+  let!(:cohort) { Cohort.current || create(:cohort, :current) }
+  let!(:school_cohort) { create(:school_cohort, school:, cohort:) }
 
   before do
     sign_in user

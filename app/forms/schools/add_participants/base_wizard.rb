@@ -49,7 +49,7 @@ module Schools
       end
 
       def dashboard_path
-        schools_participants_path(school_id: school.slug, cohort_id: participant_cohort.start_year)
+        school_participants_path(school_id: school.slug)
       end
 
       def previous_step_path
@@ -104,13 +104,17 @@ module Schools
         school.school_cohorts.find_by(cohort: cohort_to_place_participant)
       end
 
+      def destination_school_cohort_needs_setup?
+        destination_school_cohort.blank? || destination_school_cohort.no_early_career_teachers?
+      end
+
       def fip_destination_school_cohort?
         destination_school_cohort.full_induction_programme?
       end
 
       # has this school got a cohort set up for training that matches the incoming transfer
       def need_training_setup?
-        return true if destination_school_cohort.blank?
+        return true if destination_school_cohort_needs_setup?
         return false if destination_school_cohort.full_induction_programme?
 
         !destination_school_cohort.core_induction_programme?
@@ -119,7 +123,7 @@ module Schools
       # path to the most appropriate start point to set up training for the transfer
       def need_training_path
         if cohort_to_place_participant == Cohort.active_registration_cohort
-          schools_cohort_setup_start(school_id: school.slug, cohort_id: cohort_to_place_participant)
+          schools_cohort_setup_start_path(school_id: school.slug, cohort_id: cohort_to_place_participant)
         else
           schools_choose_programme_path(school_id: school.slug, cohort_id: cohort_to_place_participant)
         end
@@ -357,11 +361,9 @@ module Schools
           existing_participant_cohort || existing_participant_profile&.schedule&.cohort
         elsif ect_participant? && induction_start_date.present?
           Cohort.containing_date(induction_start_date)
-        elsif ::Cohort.within_automatic_assignment_period?
+        elsif Cohort.within_automatic_assignment_period?
           # true from 1/9 to end of automatic assignment period
           Cohort.current
-        # elsif mentor_participant? || sit_mentor?
-        #   Cohort.current
         elsif start_term == "summer"
           Cohort.current
         # we're in the registration window prior to 1/9

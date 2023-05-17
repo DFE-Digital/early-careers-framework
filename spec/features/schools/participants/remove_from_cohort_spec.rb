@@ -28,25 +28,21 @@ RSpec.describe "SIT removing participants from the cohort", js: true, with_featu
     click_on "Sign out"
 
     sign_in_as sit_profile.user
-    visit schools_participants_path(school_cohort.school, school_cohort.cohort)
-
-    click_on "Mentors"
+    visit school_participants_path(school_cohort.school)
     click_on mentor_profile.user.full_name
+    click_on "Remove #{mentor_profile.user.full_name}"
 
-    click_on "Remove #{mentor_profile.user.full_name} from this cohort"
     expect(page)
       .to have_content("Confirm you want to remove #{mentor_profile.user.full_name}")
       .and be_accessible
-
     expect { click_on "Confirm and remove" }
       .to change { mentor_profile.reload.status }.from("active").to("withdrawn")
       .and change { ect_profile.reload.mentor_profile }.from(mentor_profile).to(nil)
-
     expect(page)
       .to have_content("#{mentor_profile.user.full_name} has been removed from this cohort")
       .and be_accessible
 
-    click_on "Return to your ECTs and mentors"
+    click_on "Return to manage mentors and ECTs"
     expect(page).to have_no_content mentor_profile.user.full_name
     click_on "Sign out"
 
@@ -56,17 +52,16 @@ RSpec.describe "SIT removing participants from the cohort", js: true, with_featu
 
   scenario "removing ineligible participant" do
     sign_in_as sit_profile.user
-    visit schools_participants_path(school_cohort.school, school_cohort.cohort)
+    visit school_participants_path(school_cohort.school)
 
-    click_on "Not training"
     click_on ineligible_user.full_name
-    click_on "Remove #{ineligible_user.full_name} from this cohort"
+    click_on "Remove #{ineligible_user.full_name}"
 
     expect(page).to have_content("Confirm you want to remove #{ineligible_user.full_name}")
     expect { click_on "Confirm and remove" }.to change { ineligible_ect_profile.reload.status }.from("active").to("withdrawn")
     expect(page).to have_content("#{ineligible_user.full_name} has been removed from this cohort")
 
-    click_on "Return to your ECTs and mentor"
+    click_on "Return to manage mentors and ECTs"
     expect(page).to have_no_content ineligible_user.full_name
   end
 end

@@ -7,10 +7,10 @@ RSpec.describe "Transferring a mentor weith matching lead provider and delivery 
     allow_participant_transfer_mailers
     set_participant_data
     set_dqt_validation_result
-    given_there_are_two_schools_that_have_chosen_fip_for_2021_and_partnered
+    given_there_are_two_schools_that_have_chosen_fip_and_partnered
     and_there_is_a_mentor_who_will_be_transferring
     and_i_am_signed_in_as_an_induction_coordinator
-    and_i_click_on("2021 to 2022")
+    and_i_click_on(Cohort.current.description)
     when_i_navigate_to_participants_dashboard
   end
 
@@ -56,14 +56,14 @@ RSpec.describe "Transferring a mentor weith matching lead provider and delivery 
     and_the_schools_current_provider_is_notified
 
     click_on "View your ECTs and mentors"
-    then_i_am_taken_to_your_ect_and_mentors_page
+    then_i_am_taken_to_manage_mentors_and_ects_page
   end
 
   # given
 
-  def given_there_are_two_schools_that_have_chosen_fip_for_2021_and_partnered
-    @cohort = Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021)
-    @cohort_two = Cohort.find_by(start_year: 2022) || create(:cohort, start_year: 2022)
+  def given_there_are_two_schools_that_have_chosen_fip_and_partnered
+    @cohort = Cohort.current || create(:cohort, :current)
+    @cohort_two = Cohort.next || create(:cohort, :next)
     @school_one = create(:school, name: "Fip School 1")
     @school_two = create(:school, name: "Fip School 2")
     @school_cohort_one = create(:school_cohort, school: @school_one, cohort: @cohort, induction_programme_choice: "full_induction_programme")
@@ -85,12 +85,12 @@ RSpec.describe "Transferring a mentor weith matching lead provider and delivery 
   # when
 
   def when_i_click_to_add_a_new_ect_or_mentor
-    click_on "Add an ECT or mentor"
+    click_on "Add ECT or mentor"
   end
 
-  def when_i_navigate_to_participants_dashboard(action: "Manage")
-    when_i_click_on_summary_row_action("ECTs and mentors", action)
-    then_i_am_taken_to_your_ect_and_mentors_page
+  def when_i_navigate_to_participants_dashboard
+    click_on("Manage mentors and ECTs")
+    then_i_am_taken_to_manage_mentors_and_ects_page
   end
 
   def when_i_select_the_mentor_option
@@ -127,9 +127,9 @@ RSpec.describe "Transferring a mentor weith matching lead provider and delivery 
 
   # then
 
-  def then_i_am_taken_to_your_ect_and_mentors_page
-    expect(page).to have_selector("h1", text: "Your ECTs and mentors")
-    expect(page).to have_text("Add an ECT or mentor")
+  def then_i_am_taken_to_manage_mentors_and_ects_page
+    expect(page).to have_selector("h1", text: "Manage mentors and ECTs")
+    expect(page).to have_text("Add ECT or mentor")
   end
 
   def then_i_am_taken_to_a_dashboard_page

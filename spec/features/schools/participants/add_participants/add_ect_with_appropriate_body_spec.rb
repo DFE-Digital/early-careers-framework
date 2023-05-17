@@ -108,8 +108,8 @@ private
   end
 
   def when_i_go_to_add_new_ect_page
-    when_i_click_on_summary_row_action("ECTs and mentors", "Add")
-    click_on "Add an ECT or mentor"
+    click_on "Manage mentors and ECTs"
+    click_on "Add ECT or mentor"
   end
 
   def and_i_go_through_the_who_do_you_want_to_add_page
@@ -152,6 +152,7 @@ private
       "state_name" => "Active",
       "dob" => Date.new(1998, 11, 22),
       "qualified_teacher_status" => { "qts_date" => 1.year.ago },
+      "induction_start_date" => Date.new(2022, 9, 1),
       "induction" => {
         "start_date" => 1.month.ago,
         "status" => "Active",

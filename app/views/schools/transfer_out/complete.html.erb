@@ -26,7 +26,9 @@
         <% else %>
           <p class="govuk-body">You need to assign a new mentor for any ECTs they’ve been working with.</p>
         <% end %>
-        <%= govuk_link_to "View your ECTs and mentors", schools_participants_path, class: "govuk-link govuk-link--no-visited-state" %>
+        <%= govuk_link_to "View your ECTs and mentors",
+                          school_participants_path,
+                          class: "govuk-link govuk-link--no-visited-state" %>
 
     </div>
 </div>

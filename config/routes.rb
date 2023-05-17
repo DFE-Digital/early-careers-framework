@@ -603,6 +603,12 @@ Rails.application.routes.draw do
         get "roles", to: "roles#show", as: :participant_roles
       end
 
+      scope "cohorts/:cohort_id" do
+        wizard_scope :cohort_setup, path: :setup do
+          get "/", to: "cohort_setup#show", as: :start, step: :what_we_need
+        end
+      end
+
       resources :cohorts, only: :show, param: :cohort_id do
         member do
           get "programme-choice", as: :programme_choice
@@ -618,64 +624,6 @@ Rails.application.routes.draw do
 
           resources :partnerships, only: :index
           resource :programme, only: %i[edit], controller: "choose_programme"
-
-          resource :setup_school_cohort, path: "register-programme" do
-            get "does-your-school-expect-any-ects", to: "setup_school_cohort#expect_any_ects", as: :expect_any_ects
-            put "does-your-school-expect-any-ects", to: "setup_school_cohort#expect_any_ects"
-
-            get "no-expected-ects", to: "setup_school_cohort#no_expected_ects"
-            get "how-will-you-run-training", to: "setup_school_cohort#how_will_you_run_training"
-            put "how-will-you-run-training", to: "setup_school_cohort#how_will_you_run_training"
-
-            get "programme-confirmation", to: "setup_school_cohort#programme_confirmation"
-            put "programme-confirmation", to: "setup_school_cohort#programme_confirmation"
-
-            get "training-confirmation", to: "setup_school_cohort#training_confirmation"
-
-            get "change-provider", to: "setup_school_cohort#change_provider"
-            put "change-provider", to: "setup_school_cohort#change_provider"
-
-            get "what-changes", to: "setup_school_cohort#what_changes"
-            put "what-changes", to: "setup_school_cohort#what_changes"
-
-            get "provider-relation-invalid", to: "setup_school_cohort#provider_relation_invalid"
-            put "provider-relation-invalid", to: "setup_school_cohort#provider_relation_invalid"
-
-            get "use-different-delivery-partner", to: "setup_school_cohort#use_different_delivery_partner"
-            put "use-different-delivery-partner", to: "setup_school_cohort#use_different_delivery_partner"
-
-            get "what-changes-confirmation", to: "setup_school_cohort#what_changes_confirmation"
-            put "what-changes-confirmation", to: "setup_school_cohort#what_changes_confirmation"
-
-            get "what-changes-submitted", to: "setup_school_cohort#what_changes_submitted"
-
-            appropriate_body_selection_routes :setup_school_cohort
-
-            get "complete", to: "setup_school_cohort#complete"
-          end
-
-          resources :transfer_out_participant, path: "transfer-out", only: [] do
-            get "is-teacher-transferring", to: "transfer_out#check_transfer", as: :check_transfer
-            get "teacher-end-date", to: "transfer_out#teacher_end_date", as: :teacher_end_date
-            put "teacher-end-date", to: "transfer_out#teacher_end_date"
-            get "check-answers", to: "transfer_out#check_answers", as: :check_answers
-            put "check-answers", to: "transfer_out#check_answers"
-            get "complete", to: "transfer_out#complete", as: :complete
-          end
-
-          resources :participants, only: %i[index show destroy] do
-            get :remove
-            get :edit_name, path: "edit-name"
-            put :update_name, path: "update-name"
-            get :edit_email, path: "edit-email"
-            put :update_email, path: "update-email"
-            get :email_used, path: "email-used"
-            get :edit_mentor, path: "edit-mentor"
-            put :update_mentor, path: "update-mentor"
-            get :add_appropriate_body, path: "add-appropriate-body"
-            get :appropriate_body_confirmation, path: "appropriate-body-confirmation"
-            appropriate_body_selection_routes :participants
-          end
 
           namespace :core_programme, path: "core-programme" do
             resource :materials, only: %i[edit update show] do
@@ -703,6 +651,33 @@ Rails.application.routes.draw do
         get :confirm
         post :confirm, action: :save
         get :success
+      end
+    end
+  end
+
+  resources :schools, only: [] do
+    resources :participants, only: %i[index show destroy], module: :schools do
+      get :remove
+      get :edit_name, path: "edit-name"
+      put :update_name, path: "update-name"
+      get :edit_email, path: "edit-email"
+      put :update_email, path: "update-email"
+      get :email_used, path: "email-used"
+      get :edit_mentor, path: "edit-mentor"
+      put :update_mentor, path: "update-mentor"
+      get :add_appropriate_body, path: "add-appropriate-body"
+      get :appropriate_body_confirmation, path: "appropriate-body-confirmation"
+      appropriate_body_selection_routes :participants
+
+      resource :transfer_out, path: "transfer-out", only: [] do
+        collection do
+          get "is-teacher-transferring", to: "transfer_out#check_transfer", as: :check_transfer
+          get "teacher-end-date", to: "transfer_out#teacher_end_date"
+          put "teacher-end-date", to: "transfer_out#teacher_end_date"
+          get "check-answers", to: "transfer_out#check_answers"
+          put "check-answers", to: "transfer_out#check_answers"
+          get "complete", to: "transfer_out#complete"
+        end
       end
     end
   end

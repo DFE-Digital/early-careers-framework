@@ -1,0 +1,34 @@
+<% content_for :title, "What we need from you" %>
+
+<% content_for :before_content, govuk_back_link(text: "Back", href: schools_dashboard_path) %>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <span class="govuk-caption-xl"><%= @school.name %></span>
+        <h1 class="govuk-heading-xl">What we need to know</h1>
+        <h2 class="govuk-heading-m">Tell us if any new ECTs will start training at your school in
+            the <%= @wizard.cohort.description %> academic year</h2>
+
+        <% if @wizard.previously_fip? %>
+            <p class="govuk-body govuk-!-margin-top-8">We need to know:</p>
+            <ul class="govuk-list--bullet">
+                <li>whether or not your school expects any new ECTs</li>
+                <li>if you plan to change how you run training for any new ECTs</li>
+            </ul>
+        <% else %>
+            <p class="govuk-body">We need to know:</p>
+            <ul class="govuk-list--bullet">
+                <li>whether or not your school expects any new ECTs</li>
+                <li>which training programme you want to use for any new ECTs</li>
+            </ul>
+        <% end %>
+
+        <p class="govuk-body">You can tell us this later if you do not know yet. You can also change your answers if you need to.</p>
+
+        <div class="govuk-inset-text">
+            <p class="govuk-body">Do not include ECTs who started their training in the <%= Cohort.active_registration_cohort.previous.description %> academic year.</p>
+        </div>
+
+        <%= govuk_button_link_to "Continue", @wizard.next_step_path %>
+    </div>
+</div>

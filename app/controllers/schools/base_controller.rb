@@ -5,6 +5,8 @@ class Schools::BaseController < ApplicationController
 
   before_action :authenticate_user!
   before_action :ensure_school_user
+  before_action :redirect_to_setup_cohort
+  before_action :check_cohort_year
   before_action :set_paper_trail_whodunnit
   after_action :verify_authorized
   after_action :verify_policy_scoped
@@ -12,6 +14,27 @@ class Schools::BaseController < ApplicationController
   layout "school_cohort"
 
 private
+
+  # Redirect to school dashboard if the user is requesting an action for a future cohort not for a pilot school.
+  def check_cohort_year
+    return if params[:cohort_id].blank?
+
+    if params[:cohort_id].to_i > Dashboard::LatestManageableCohort.call(active_school)&.start_year
+      redirect_to schools_dashboard_path
+    end
+  end
+
+  def redirect_to_setup_cohort
+    return unless current_user.induction_coordinator?
+    return unless active_school
+    return if active_school.chosen_programme?(Dashboard::LatestManageableCohort.call(active_school))
+
+    if Dashboard::LatestManageableCohort.call(active_school) == Cohort.active_registration_cohort
+      redirect_to schools_cohort_setup_start_path(cohort_id: Dashboard::LatestManageableCohort.call(active_school))
+    else
+      redirect_to schools_choose_programme_path(school_id: active_school.slug, cohort_id: active_cohort.id)
+    end
+  end
 
   def ensure_school_user
     raise Pundit::NotAuthorizedError, I18n.t(:forbidden) unless current_user.induction_coordinator?
@@ -25,6 +48,10 @@ private
 
   def active_cohort
     Cohort.find_by(start_year: params[:cohort_id]) if params[:cohort_id].present?
+  end
+
+  def set_school
+    @school ||= policy_scope(School).friendly.find(params[:school_id]) if params[:school_id].present?
   end
 
   def set_school_cohort(cohort: active_cohort)

@@ -1,12 +1,14 @@
 <% content_for :title, "ECT or mentor details" %>
 
-<% content_for :before_content, govuk_back_link( text: "Back", href: schools_participants_path) %>
+<% content_for :before_content, govuk_back_link(text: "Back", href: school_participants_path) %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
 
     <span class="govuk-caption-xl"><%= @school.name %></span>
     <h1 class="govuk-heading-xl"><%= @profile.full_name %></h1>
+
+    <h2 class="govuk-heading-l"><%= @profile.user_description %></h2>
 
     <dl class="govuk-summary-list govuk-!-margin-bottom-7">
       <div class="govuk-summary-list__row">
@@ -18,12 +20,31 @@
         </dd>
         <dd class="govuk-summary-list__actions">
           <% if @profile.policy_class.new(current_user, @profile).edit_name? %>
-            <%= govuk_link_to schools_participant_edit_name_path(participant_id: @profile) do %>
+            <%= govuk_link_to school_participant_edit_name_path(participant_id: @profile) do %>
               Change <span class="govuk-visually-hidden">name</span>
             <% end %>
           <% end %>
         </dd>
       </div>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          TRN
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <%= @induction_record.trn %>
+        </dd>
+      </div>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Date of birth
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <%= @induction_record.participant_profile.ecf_participant_validation_data&.date_of_birth&.to_s(:govuk) %>
+        </dd>
+      </div>
+
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">
           Email address
@@ -31,78 +52,116 @@
         <dd class="govuk-summary-list__value">
           <%= @induction_record.preferred_identity&.email || @profile.participant_identity&.email %>
         </dd>
-          <dd class="govuk-summary-list__actions">
+        <dd class="govuk-summary-list__actions">
           <% if @profile.policy_class.new(current_user, @profile).edit_email? %>
-            <%= govuk_link_to schools_participant_edit_email_path(participant_id: @profile) do %>
+            <%= govuk_link_to school_participant_edit_email_path(participant_id: @profile) do %>
               Change <span class="govuk-visually-hidden">email address</span>
             <% end %>
           <% end %>
+        </dd>
+      </div>
+
+      <% if @profile.ect? && !@induction_record.training_status_withdrawn? %>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            Mentor
+          </dt>
+          <dd class="govuk-summary-list__value">
+            <% if @mentor_profile %>
+              <%= govuk_link_to @mentor_profile.full_name, school_participant_path(id: @mentor_profile.id) %>
+            <% else %>
+              Not yet assigned
+            <% end %>
           </dd>
-      </div>
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-          Role
-        </dt>
-        <dd class="govuk-summary-list__value">
-          <%= @profile.user_description %>
-        </dd>
-        <dd class="govuk-summary-list__actions">
-        </dd>
-      </div>
-      <% unless @induction_record.training_status_withdrawn? %>
-        <% if @profile.ect? %>
-          <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-              Mentor
-            </dt>
-            <dd class="govuk-summary-list__value">
-              <% if @mentor_profile %>
-                <%= govuk_link_to @mentor_profile.full_name, schools_participant_path(id: @mentor_profile.id) %>
-              <% else %>
-                Not yet assigned
-              <% end %>
-            </dd>
-            <dd class="govuk-summary-list__actions">
-              <% if @mentors_added %>
-                <%= govuk_link_to schools_participant_edit_mentor_path(participant_id: @profile.id) do %>
+          <dd class="govuk-summary-list__actions">
+            <% if @mentors_added %>
+              <% if @profile.policy_class.new(current_user, @profile).update_mentor? %>
+                <%= govuk_link_to school_participant_edit_mentor_path(participant_id: @profile.id) do %>
                   Change <span class="govuk-visually-hidden">mentor</span>
                 <% end %>
               <% end %>
-            </dd>
-          </div>
-        <% end %>
+            <% end %>
+          </dd>
+        </div>
+      <% end %>
 
-        <% if can_appropriate_body_be_changed? %>
-          <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-              Appropriate body
-            </dt>
-            <dd class="govuk-summary-list__value">
-              <%= @induction_record.appropriate_body_name %>
-            </dd>
-            <dd class="govuk-summary-list__actions">
-              <% if @profile.policy_class.new(current_user, @profile).add_appropriate_body? %>
-                <%= govuk_link_to (participant_has_appropriate_body? ? "Change" : "Add"), { action: :add_appropriate_body, participant_id: @profile } %>
-              <% end %>
-            </dd>
-          </div>
-        <% end %>
-
+      <% unless @induction_record.training_status_withdrawn? %>
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key">
             Status
           </dt>
           <dd class="govuk-summary-list__value">
-            <%= render Schools::Participants::Status.new(participant_profile: @profile) %>
+            <%= render StatusTags::SchoolParticipantStatusTag.new(participant_profile: @profile, induction_record: @induction_record) %>
           </dd>
           <dd class="govuk-summary-list__actions"></dd>
         </div>
       <% end %>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Lead provider
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <%= @induction_record.lead_provider_name %>
+        </dd>
+        <dd class="govuk-summary-list__actions"></dd>
+      </div>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Delivery partner
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <%= @induction_record.delivery_partner_name %>
+        </dd>
+        <dd class="govuk-summary-list__actions"></dd>
+      </div>
+
+      <% if can_appropriate_body_be_changed? %>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            Appropriate body
+          </dt>
+          <dd class="govuk-summary-list__value">
+            <%= @induction_record.appropriate_body_name %>
+          </dd>
+          <dd class="govuk-summary-list__actions">
+            <% if @profile.ect? && @profile.policy_class.new(current_user, @profile).add_appropriate_body? %>
+              <%= govuk_link_to(participant_has_appropriate_body? ? "Change" : "Add",
+                                { action: :add_appropriate_body, participant_id: @profile }) %>
+            <% end %>
+          </dd>
+        </div>
+      <% end %>
     </dl>
+
+    <% if @ects.present? %>
+      <h3 class="govuk-heading-m"><%= @induction_record.participant_full_name.split(" ").first %> is mentoring these
+        ECTs</h3>
+
+      <%= govuk_summary_list(classes: ["govuk-!-margin-bottom-7"]) do |list| %>
+        <% @ects.each do |ect| %>
+          <% list.row do |row| %>
+            <% row.key(text: ect.participant_full_name,
+                       classes: ["govuk-!-font-weight-regular"]) %>
+            <% if @mentors_added &&
+                  ect.participant_profile.policy_class.new(current_user, ect.participant_profile).update_mentor? %>
+              <% row.action(text: "Change",
+                            visually_hidden_text: "mentor",
+                            href: school_participant_edit_mentor_path(participant_id: ect.participant_profile_id,
+                                                                       from_mentor: @profile.id)) %>
+            <% end %>
+          <% end %>
+        <% end %>
+      <% end %>
+    <% end %>
 
     <% unless @induction_record.leaving_induction_status? && @induction_record.school_transfer %>
       <h3 class="govuk-heading-m">No longer training?</h3>
-      <p class="govuk-body">Tell us <%= govuk_link_to "#{@profile.user.full_name} is transferring to another school", schools_transfer_out_participant_check_transfer_path(transfer_out_participant_id: @profile.id) %> </p>
+      <p class="govuk-body">
+        Tell us if <%= govuk_link_to "#{@profile.user.full_name} is transferring to another school",
+                                     check_transfer_school_participant_transfer_out_path(participant_id: @profile.id) %>
+      </p>
     <% end %>
 
     <% unless @induction_record.training_status_withdrawn? %>

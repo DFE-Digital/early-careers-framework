@@ -1,0 +1,5 @@
+<% if participant_profile.npq? %>
+  <%= render Admin::Participants::NPQValidationStatusTag.new(profile: participant_profile) %>
+<% else %>
+  <%= govuk_tag(text: label, colour:) %>
+<% end %>

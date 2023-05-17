@@ -5,9 +5,10 @@ require "rails_helper"
 RSpec.describe "Schools::Partnerships", type: :request do
   let(:user) { create(:user, :induction_coordinator) }
   let!(:school) { user.induction_coordinator_profile.schools.first }
-  let(:cohort) { create(:cohort, start_year: 2021) }
+  let(:cohort) { Cohort.current || create(:cohort, :current) }
 
   before do
+    create(:school_cohort, school:, cohort:)
     sign_in user
   end
 

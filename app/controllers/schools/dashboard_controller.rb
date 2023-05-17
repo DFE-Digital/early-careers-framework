@@ -26,6 +26,10 @@ class Schools::DashboardController < Schools::BaseController
 
 private
 
+  def active_registration_cohort_visible?
+    @school_cohorts.map(&:cohort_id).include?(Cohort.active_registration_cohort.id)
+  end
+
   def check_school_cohorts
     if @school_cohorts.empty?
       redirect_to schools_choose_programme_path(cohort_id: Cohort.active_registration_cohort.start_year)
@@ -34,11 +38,12 @@ private
 
   def set_school_cohorts
     @school = active_school
-    @school_cohorts = @school.school_cohorts.dashboard_cohorts
+    @school_cohorts = SchoolCohort.dashboard_for_school(school: @school,
+                                                        latest_year: Dashboard::LatestManageableCohort.call(@school).start_year)
   end
 
   def set_up_new_cohort?
-    @school.school_cohorts.find_by(cohort: Cohort.active_registration_cohort).blank?
+    active_registration_cohort_visible? && !@school.chosen_programme?(Cohort.active_registration_cohort)
   end
 
   def previous_school_cohort

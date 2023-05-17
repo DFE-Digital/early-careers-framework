@@ -75,6 +75,8 @@ class ParticipantProfile < ApplicationRecord
              to: :ecf_participant_eligibility,
              allow_nil: true
 
+    delegate :trn, to: :teacher_profile
+
     alias_method :fundable?, :eligible?
 
     def manual_check_needed?
@@ -93,6 +95,10 @@ class ParticipantProfile < ApplicationRecord
 
     def relevant_induction_record_for(delivery_partner:)
       Induction::FindBy.call(participant_profile: self, delivery_partner:, only_active_partnerships: true) unless delivery_partner.nil?
+    end
+
+    def relevant_induction_record_for_school(school:)
+      Induction::FindBy.call(participant_profile: self, school:) unless delivery_partner.nil?
     end
 
     def schedule_for(cpd_lead_provider:)

@@ -1,0 +1,50 @@
+<% registration_cohort = Cohort.active_registration_cohort.description %>
+<% title = "How do you want to run your training in #{registration_cohort}?" %>
+
+<% content_for :title, title %>
+
+<% content_for :before_content, govuk_back_link(text: "Back", href: wizard_back_link_path) %>
+
+<span class="govuk-caption-xl"><%= @school.name %></span>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        <%= form_with model: @wizard.form, url: url_for(action: :update), scope: @wizard.to_key, method: :put do |f| %>
+            <%= f.govuk_error_summary %>
+
+            <%= f.govuk_collection_radio_buttons(
+                :how_will_you_run_training,
+                @wizard.form.choices,
+                :id,
+                :name,
+                legend: { text: title, tag: 'h1', size: 'xl' }) do %>
+
+                <p class="govuk-body govuk-!-margin-top-4">To learn more about your training options, visit
+                    <%= govuk_link_to "How to set up training for early career teachers (opens in new tab)",
+                                      guidance_for_how_to_setup_training_url,
+                                      target: :_blank,
+                                      rel: "noopener noreferrer",
+                                      no_visited_state: true %>
+                </p>
+                <p class="govuk-body">You can also contact your
+                    <% unless @school.cip_only? %>
+                        <%= govuk_link_to "local teaching school hub (opens in a new tab)",
+                                          guidance_for_teaching_school_hubs_url,
+                                          target: :_blank,
+                                          rel: "noopener noreferrer",
+                                          no_visited_state: true %>
+                        or
+                    <% end %>
+                    <%= govuk_link_to "appropriate body (opens in new tab)",
+                                      guidance_for_appropriate_bodies_url,
+                                      target: :_blank,
+                                      rel: "noopener noreferrer",
+                                      no_visited_state: true %>.
+                </p>
+            <% end %>
+
+            <%= f.govuk_submit "Continue" %>
+        <% end %>
+    </div>
+</div>

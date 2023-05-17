@@ -14,7 +14,7 @@ RSpec.describe Schools::Participants::RemoveFromCohortComponent, :with_default_s
     subject! { render_inline(component) }
 
     it "displays the link to remove the participant" do
-      expect(rendered_content).to have_link(href: schools_participant_remove_path(induction_record.school, school_cohort.cohort, profile))
+      expect(rendered_content).to have_link(href: school_participant_remove_path(induction_record.school, profile))
     end
   end
 
@@ -24,7 +24,7 @@ RSpec.describe Schools::Participants::RemoveFromCohortComponent, :with_default_s
     subject! { render_inline(component) }
 
     it "does not display the removal link" do
-      expect(rendered_content).not_to have_link(href: schools_participant_remove_path(induction_record.school, school_cohort.cohort, profile))
+      expect(rendered_content).not_to have_link(href: school_participant_remove_path(induction_record.school, profile))
     end
 
     context "when the cohort undertakes the full induction programme" do
@@ -39,7 +39,7 @@ RSpec.describe Schools::Participants::RemoveFromCohortComponent, :with_default_s
       end
 
       it "displays the lead_provider name" do
-        expect(rendered_content).to have_content(lead_provider.name)
+        expect(rendered_content).to have_content("Contact your training provider if you wish to remove this participant.")
       end
     end
 

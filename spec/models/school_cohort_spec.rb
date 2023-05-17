@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe SchoolCohort, type: :model do
+RSpec.describe SchoolCohort, type: :model, with_feature_flag: { cohortless_dashboard: "active" } do
   describe "associations" do
     it { is_expected.to belong_to(:cohort) }
     it { is_expected.to belong_to(:school) }
@@ -84,21 +84,26 @@ RSpec.describe SchoolCohort, type: :model do
     end
   end
 
-  describe ".dashboard_cohorts" do
+  describe ".dashboard_for_school" do
+    let(:school) { create(:school) }
+
     before do
       FactoryBot.rewind_sequences
-      create_list(:school_cohort, 5, :consecutive_cohorts)
+      create_list(:school_cohort, 5, :consecutive_cohorts, school:)
     end
 
     it "returns at most 3 cohorts" do
-      expect(described_class.dashboard_cohorts.count).to be_between(1, 3)
+      expect(described_class.dashboard_for_school(school:, latest_year: 3000).count).to be_between(1, 3)
     end
 
     it "returns cohorts from the current year up to 2 years in the past" do
+      Feature.find_or_create_by!(name: :cohortless_dashboard, active: false)
+      pilot!(school)
       travel_to Date.new(2024, 5, 15)
 
-      described_class.dashboard_cohorts.each_with_index do |school_cohort, _index|
-        expect(school_cohort.cohort.start_year).to be_between(2022, 2024)
+      described_class.dashboard_for_school(school:, latest_year: Cohort.active_registration_cohort.start_year)
+                     .each_with_index do |school_cohort, _index|
+        expect(school_cohort.cohort.start_year).to be_between(2021, 2023)
       end
     end
   end

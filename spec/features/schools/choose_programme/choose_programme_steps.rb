@@ -5,16 +5,17 @@ module ChooseProgrammeSteps
 
   # Given steps
 
-  def given_a_school_with_no_chosen_programme_for_next_academic_year(cip_only: false)
+  def given_a_school_with_no_chosen_programme_for_next_academic_year(cip_only: false, pilot: false)
     name = "NoECTsSchool"
     @previous_cohort = Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021)
     @cohort = Cohort.find_by(start_year: 2022) || create(:cohort, start_year: 2022)
     @school = cip_only ? create(:school, :cip_only, name:) : create(:school, name:)
     create(:school_cohort, :cip, school: @school, cohort: @previous_cohort)
+    pilot!(@school) if pilot
   end
 
-  def given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
-    given_there_is_a_school_that_has_chosen_fip_for_2021
+  def given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered(pilot: false)
+    given_there_is_a_school_that_has_chosen_fip_for_2021(pilot:)
     @lead_provider = create(:lead_provider, name: "Big Provider Ltd")
     @delivery_partner = create(:delivery_partner, name: "Amazing Delivery Team")
     @partnership = create(:partnership, school: @school, lead_provider: @lead_provider, delivery_partner: @delivery_partner, cohort: @cohort, challenge_deadline: 2.weeks.ago)
@@ -24,7 +25,7 @@ module ChooseProgrammeSteps
   end
 
   def given_there_is_a_school_that_has_chosen_fip_for_2021_but_partnership_was_challenged
-    given_there_is_a_school_that_has_chosen_fip_for_2021
+    given_there_is_a_school_that_has_chosen_fip_for_2021(pilot: true)
     @lead_provider = create(:lead_provider, name: "Big Provider Ltd")
     @delivery_partner = create(:delivery_partner, name: "Amazing Delivery Team")
     @partnership = create(:partnership, :challenged, school: @school, lead_provider: @lead_provider, delivery_partner: @delivery_partner, cohort: @cohort, challenge_deadline: 2.weeks.ago)
@@ -33,19 +34,25 @@ module ChooseProgrammeSteps
     @lead_provider.users << @lead_provider_user
   end
 
-  def given_there_is_a_school_that_has_chosen_fip_for_2021
+  def given_there_is_a_school_that_has_chosen_fip_for_2021(pilot: false)
     @cohort = @cohort_2022 = Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021)
     @school = create(:school, name: "Fip School")
     @school_cohort = create(:school_cohort, school: @school, cohort: @cohort, induction_programme_choice: "full_induction_programme")
     @induction_programme = create(:induction_programme, :fip, school_cohort: @school_cohort, partnership: nil)
     @school_cohort.update!(default_induction_programme: @induction_programme)
+    pilot!(@school) if pilot
   end
 
   # Then steps
 
+  def then_i_am_taken_to_what_we_need_to_know_to_setup_academic_year
+    expect(page).to have_content(@school.name)
+    expect(page).to have_content("Tell us if any new ECTs will start training at your school in the")
+  end
+
   def then_i_am_taken_to_ects_expected_in_next_academic_year_page
     expect(page).to have_content(@school.name)
-    expect(page).to have_content("Does your school expect any new ECTs in the 2022 to 2023 academic year?")
+    expect(page).to have_content("Does your school expect any new ECTs in the new academic year?")
   end
 
   def then_i_am_taken_to_the_submitted_page
@@ -57,7 +64,11 @@ module ChooseProgrammeSteps
   end
 
   def then_i_am_taken_to_the_how_will_you_run_training_page
-    expect(page).to have_content("How will you run training for new starters")
+    expect(page).to have_content("How do you want to run your training")
+  end
+
+  def then_i_am_taken_to_the_lp_dp_relationship_has_changed_page
+    expect(page).to have_content("The relationship between your lead provider and delivery partner has changed")
   end
 
   def then_i_am_taken_to_the_training_confirmation_page
@@ -68,8 +79,8 @@ module ChooseProgrammeSteps
     expect(page).to have_content("You’ve submitted your training information")
   end
 
-  def then_i_am_taken_to_the_change_provider_page
-    expect(page).to have_content("Are you planning to change your current training provider?")
+  def then_i_am_taken_to_the_keep_providers_page
+    expect(page).to have_content("Do you want to use the same lead provider and delivery partner for your new ECTs?")
   end
 
   def then_i_am_taken_to_the_complete_page
@@ -77,17 +88,11 @@ module ChooseProgrammeSteps
   end
 
   def then_i_am_taken_to_what_changes_page
-    expect(page).to have_content("What change do you plan to make?")
+    expect(page).to have_content("What changes would you like to make?")
   end
 
-  def then_i_am_taken_to_the_change_lead_provider_confirmation_page
-    expect(page).to have_content("Are you sure you want to make this change?")
-    expect(page).to have_content("#{@lead_provider.name} and #{@delivery_partner.name} will not be able to deliver training for ECTs and mentors starting in the 2022 to 2023 academic year.")
-  end
-
-  def then_i_am_taken_to_the_change_delivery_partner_confirmation_page
-    expect(page).to have_content("Are you sure you want to make this change?")
-    expect(page).to have_content("#{@delivery_partner.name} will not be able to deliver training for ECTs and mentors starting in the 2022 to 2023 academic year.")
+  def then_i_am_taken_to_the_form_a_new_partnership_confirmation_page
+    expect(page).to have_content("You are going to form a new partnership with a lead provider")
   end
 
   def then_i_am_taken_to_the_change_to_design_own_programme_confirmation_page
@@ -96,7 +101,7 @@ module ChooseProgrammeSteps
   end
 
   def then_i_am_taken_to_the_change_to_design_and_deliver_own_programme_confirmation_page
-    expect(page).to have_content("Confirm your training programme")
+    expect(page).to have_content("Are you sure you want to run your own training programme?")
     expect(page).to have_content("You’re choosing to design and deliver your own programme based on the early career framework (ECF).")
   end
 
@@ -121,7 +126,7 @@ module ChooseProgrammeSteps
   end
 
   def then_i_see_black_lp_and_dp_names
-    expect(page).to have_summary_row("Training provider", "")
+    expect(page).to have_summary_row("Lead provider", "")
     expect(page).to have_summary_row("Delivery partner", "")
   end
 
@@ -163,6 +168,7 @@ module ChooseProgrammeSteps
   def and_i_click_continue
     click_on("Continue")
   end
+  alias_method :when_i_click_continue, :and_i_click_continue
 
   def and_cohort_2022_is_created
     @cohort_2022 = Cohort.find_by(start_year: 2022) || create(:cohort, start_year: 2022)
@@ -193,11 +199,11 @@ module ChooseProgrammeSteps
   end
 
   def and_i_see_add_ects_link
-    expect(page).to have_link("Add", href: schools_participants_path(cohort_id: @cohort.start_year, school_id: @school))
+    expect(page).to have_link("Add", href: school_participants_path(school_id: @school))
   end
 
   def and_i_see_training_provider_to_be_confirmed
-    expect(page).to have_summary_row("Training provider", "To be confirmed")
+    expect(page).to have_summary_row("Lead provider", "To be confirmed")
   end
 
   def and_i_see_delivery_partner_to_be_confirmed
@@ -211,7 +217,7 @@ module ChooseProgrammeSteps
 
   def and_i_see_training_partner_to_be_the_previous_one
     name = @school_cohort.lead_provider.name
-    expect(page).to have_summary_row("Training provider", name)
+    expect(page).to have_summary_row("Lead provider", name)
   end
 
   def and_i_see_programme_to_dfe_accredited_materials
@@ -238,6 +244,10 @@ module ChooseProgrammeSteps
 
   def and_i_choose_no
     when_i_choose_no
+  end
+
+  def and_i_choose_yes
+    when_i_choose_yes
   end
 
   def and_i_see_no_appropriate_body
@@ -295,15 +305,15 @@ module ChooseProgrammeSteps
   end
 
   def when_i_choose_design_and_deliver_your_own_material
-    choose("Design and deliver you own programme based on the early career framework (ECF)")
+    choose("Design and deliver your own programme based on the early career framework (ECF)")
   end
 
   def when_i_choose_use_a_training_provider_funded_by_your_school
     choose("Use a training provider funded by your school")
   end
 
-  def when_i_choose_to_leave_lead_provider
-    choose("Leave #{@lead_provider.name} and use a different lead provider")
+  def when_i_choose_to_form_a_new_partnership
+    choose("Form new partnership with a lead provider and delivery partner")
   end
 
   def when_i_choose_to_change_delivery_partner
@@ -315,7 +325,7 @@ module ChooseProgrammeSteps
   end
 
   def when_i_choose_to_design_and_deliver_own_programme
-    choose("Design and deliver you own programme based on the Early Career Framework (ECF)")
+    choose("Design and deliver your own programme based on the Early Career Framework (ECF)")
   end
 
   def when_i_challenge_the_new_cohort_partnership
@@ -341,7 +351,7 @@ module ChooseProgrammeSteps
   end
 
   def when_i_fill_appropriate_body_with(value)
-    when_i_fill_in_autocomplete "appropriate-body-selection-form-body-id-field", with: value
+    when_i_fill_in_autocomplete "schools-cohorts-setup-wizard-appropriate-body-id-field", with: value
   end
 
   def when_i_choose_teaching_school_hub

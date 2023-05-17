@@ -1,0 +1,16 @@
+<% content_for :title, "Mentor change confirmation" %>
+
+<% content_for :before_content,
+               govuk_back_link(text: "Back",
+                               href: school_participant_edit_mentor_path(participant_id: @profile.id,
+                                                                          from_mentor: params[:from_mentor])) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl"><%= @message %></h1>
+
+    <br>
+    <%= govuk_button_link_to("Back to manage mentors and ECTs",
+                             school_participants_path(id: @school)) %>
+  </div>
+</div>
