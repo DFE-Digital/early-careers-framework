@@ -39,7 +39,7 @@ module StatusTags
         participant_profile:,
         induction_record:,
         school:,
-      ).record_state
+      )&.record_state || :no_longer_involved
 
       # Schools logic states that we show eligible for CIP participants whether that is correct or not
       if on_cip? && is_ignored_for_cip?(record_state)

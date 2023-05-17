@@ -1,4 +1,3 @@
-CREATE MATERIALIZED VIEW training_record_states AS
 WITH
     mentee_counts AS (
         SELECT

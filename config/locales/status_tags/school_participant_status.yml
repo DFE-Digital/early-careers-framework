@@ -63,7 +63,7 @@ en:
 
       exempt_from_induction:
         label: "EXEMPT"
-        description: "The participant does not need to complete statutory induction. "
+        description: "The participant does not need to complete statutory induction."
         colour: "grey"
 
       not_qualified:
@@ -80,17 +80,17 @@ en:
 
       registered_for_fip_no_partner:
         label: "ELIGIBLE FOR TRAINING"
-        description: "We’ve confirmed the participant is eligible for this programme."
+        description: "We’ve confirmed this person is eligible for this programme. Once you choose a training provider, they’ll contact this person directly."
         colour: "turquoise"
 
       registered_for_fip_training:
         label: "ELIGIBLE FOR TRAINING"
-        description: "We’ve confirmed the participant is eligible for this programme."
+        description: "We’ve confirmed the participant is eligible for this programme. Your training provider will contact them directly."
         colour: "turquoise"
 
       active_fip_training:
         label: "TRAINING"
-        description: "We’ve confirmed the participant is eligible for this programme. "
+        description: "We’ve confirmed the participant is eligible for this programme."
         colour: "turquoise"
 
       # CIP ECTs
@@ -102,7 +102,7 @@ en:
 
       active_cip_training:
         label: "TRAINING"
-        description: "We’ve confirmed the participant is eligible for this programme. "
+        description: "We’ve confirmed the participant is eligible for this programme."
         colour: "turquoise"
 
       # DIY ECTs
@@ -114,7 +114,7 @@ en:
 
       active_diy_training:
         label: "TRAINING"
-        description: "We’ve confirmed the participant is eligible for this programme. "
+        description: "We’ve confirmed the participant is eligible for this programme."
         colour: "turquoise"
 
       # mentor duplicates
