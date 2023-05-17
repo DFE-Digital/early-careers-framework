@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_05_10_225308) do
+ActiveRecord::Schema.define(version: 2023_05_17_101855) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -1231,7 +1231,7 @@ ActiveRecord::Schema.define(version: 2023_05_10_225308) do
               count(*) AS count
              FROM (participant_profiles participant_profiles_1
                JOIN participant_identities participant_identities_1 ON ((participant_identities_1.id = participant_profiles_1.participant_identity_id)))
-            WHERE ((participant_profiles_1.type)::text = ANY ((ARRAY['ParticipantProfile::ECT'::character varying, 'ParticipantProfile::Mentor'::character varying])::text[]))
+            WHERE ((participant_profiles_1.type)::text = ANY (ARRAY[('ParticipantProfile::ECT'::character varying)::text, ('ParticipantProfile::Mentor'::character varying)::text]))
             GROUP BY participant_profiles_1.type, participant_identities_1.user_id) duplicates ON ((duplicates.user_id = participant_identities.user_id)))
        LEFT JOIN teacher_profiles ON ((teacher_profiles.id = participant_profiles.teacher_profile_id)))
        LEFT JOIN schedules ON ((latest_induction_records.schedule_id = schedules.id)))
@@ -1243,9 +1243,9 @@ ActiveRecord::Schema.define(version: 2023_05_10_225308) do
     WHERE ((participant_identities.user_id IN ( SELECT participant_identities_1.user_id
              FROM (participant_profiles participant_profiles_1
                JOIN participant_identities participant_identities_1 ON ((participant_identities_1.id = participant_profiles_1.participant_identity_id)))
-            WHERE ((participant_profiles_1.type)::text = ANY ((ARRAY['ParticipantProfile::ECT'::character varying, 'ParticipantProfile::Mentor'::character varying])::text[]))
+            WHERE ((participant_profiles_1.type)::text = ANY (ARRAY[('ParticipantProfile::ECT'::character varying)::text, ('ParticipantProfile::Mentor'::character varying)::text]))
             GROUP BY participant_profiles_1.type, participant_identities_1.user_id
-           HAVING (count(*) > 1))) AND ((participant_profiles.type)::text = ANY ((ARRAY['ParticipantProfile::ECT'::character varying, 'ParticipantProfile::Mentor'::character varying])::text[])))
+           HAVING (count(*) > 1))) AND ((participant_profiles.type)::text = ANY (ARRAY[('ParticipantProfile::ECT'::character varying)::text, ('ParticipantProfile::Mentor'::character varying)::text])))
     ORDER BY participant_identities.external_identifier, (row_number() OVER (PARTITION BY participant_identities.user_id ORDER BY
           CASE
               WHEN (((latest_induction_records.training_status)::text = 'active'::text) AND ((latest_induction_records.induction_status)::text = 'active'::text)) THEN 1
@@ -1407,4 +1407,15 @@ ActiveRecord::Schema.define(version: 2023_05_10_225308) do
               ELSE individual_training_record_states.training_state
           END;
   SQL
+  add_index "training_record_states", ["fip_funding_eligibility_state"], name: "fip_funding_eligibility_state_index"
+  add_index "training_record_states", ["participant_profile_id", "delivery_partner_id"], name: "participant_profile_delivery_partner_state_index"
+  add_index "training_record_states", ["participant_profile_id", "induction_record_id"], name: "participant_profile_induction_record_state_index"
+  add_index "training_record_states", ["participant_profile_id", "lead_provider_id"], name: "participant_profile_lead_provider_state_index"
+  add_index "training_record_states", ["participant_profile_id", "school_id"], name: "participant_profile_school_state_index"
+  add_index "training_record_states", ["participant_profile_id"], name: "participant_profile_state_index"
+  add_index "training_record_states", ["record_state"], name: "record_state_index"
+  add_index "training_record_states", ["training_eligibility_state"], name: "training_eligibility_state_index"
+  add_index "training_record_states", ["training_state"], name: "training_state_index"
+  add_index "training_record_states", ["validation_state"], name: "validation_state_index"
+
 end

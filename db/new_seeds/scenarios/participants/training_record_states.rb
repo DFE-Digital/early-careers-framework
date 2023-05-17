@@ -343,7 +343,7 @@ module NewSeeds
         def ect_on_fip_leaving
           school_cohort = fip_school.school_cohort
 
-          transfer_date = 1.month.from_now
+          transfer_date = school_cohort.cohort.next.registration_start_date - 1.day
 
           @ect_on_fip_leaving ||= NewSeeds::Scenarios::Participants::Ects::Ect
             .new(school_cohort:, full_name: "ECT on FIP: leaving a FIP school")
@@ -372,7 +372,7 @@ module NewSeeds
           school_cohort = fip_school.school_cohort
           school_cohort_2 = cip_school.school_cohort
 
-          transfer_date = 1.month.from_now
+          transfer_date = school_cohort.cohort.next.registration_start_date - 1.day
 
           @ect_on_fip_transferring ||= NewSeeds::Scenarios::Participants::Ects::Ect
             .new(school_cohort:, full_name: "ECT on FIP: transferring from a FIP school")
@@ -404,7 +404,7 @@ module NewSeeds
           school_cohort = cip_school.school_cohort
           school_cohort_2 = fip_school.school_cohort
 
-          transfer_date = 1.month.from_now
+          transfer_date = school_cohort.cohort.next.registration_start_date - 1.day
 
           @ect_on_fip_joining ||= NewSeeds::Scenarios::Participants::Ects::Ect
             .new(school_cohort:, full_name: "ECT on FIP: joining a FIP school")
