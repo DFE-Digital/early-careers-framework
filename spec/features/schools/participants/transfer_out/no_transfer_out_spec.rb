@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "transfer out participants", type: :feature, js: true, rutabaga: false do
+RSpec.describe "transfer out participants", :with_default_schedules, type: :feature, js: true, rutabaga: false do
   context "An ECT has been transferred in to another school" do
     before do
       set_participant_data
@@ -98,7 +98,7 @@ RSpec.describe "transfer out participants", type: :feature, js: true, rutabaga: 
         trn: "1001000",
         full_name: "Sally Teacher",
         start_date: Time.zone.today.prev_month,
-        end_date: Date.new(2022, 10, 24),
+        end_date: Date.new(2022, 3, 24),
         email: "sally-teacher@example.com",
       }
     end

@@ -3,7 +3,7 @@
 require "rails_helper"
 require_relative "./manage_training_steps"
 
-RSpec.describe "Manage CIP training", js: true do
+RSpec.describe "Manage CIP training", js: true, travel_to: Date.new(2022, 3, 1) do
   include ManageTrainingSteps
 
   scenario "CIP Induction Mentor without materials chosen" do

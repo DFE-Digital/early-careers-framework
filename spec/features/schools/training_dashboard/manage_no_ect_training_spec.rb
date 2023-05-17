@@ -3,7 +3,7 @@
 require "rails_helper"
 require_relative "./manage_training_steps"
 
-RSpec.describe "Manage No ECT training", js: true do
+RSpec.describe "Manage No ECT training", js: true, travel_to: Date.new(2022, 3, 1) do
   include ManageTrainingSteps
 
   scenario "Manage No ECT Induction Coordinator" do
