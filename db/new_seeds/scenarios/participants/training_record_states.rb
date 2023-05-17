@@ -17,6 +17,7 @@ module NewSeeds
           @fip_school ||= NewSeeds::Scenarios::Schools::School
             .new(name: "FIP School for Training Record States")
             .build
+            .with_an_induction_tutor(full_name: "FIP School for Training Record States SIT", email: "fip-training-states@example.com")
             .chosen_fip_and_partnered_in(cohort:)
         end
 
@@ -24,6 +25,7 @@ module NewSeeds
           @fip_school_no_partnership ||= NewSeeds::Scenarios::Schools::School
             .new(name: "FIP School with no Partnership for Training Record States")
             .build
+            .with_an_induction_tutor(full_name: "FIP School with no Partnership for Training Record States SIT", email: "fip-no-partner-training-states@example.com")
             .chosen_fip_but_not_partnered(cohort:)
         end
 
@@ -31,6 +33,7 @@ module NewSeeds
           @cip_school ||= NewSeeds::Scenarios::Schools::School
             .new(name: "CIP School for Training Record States")
             .build
+            .with_an_induction_tutor(full_name: "CIP School for Training Record States SIT", email: "cip-training-states@example.com")
             .chosen_cip_with_materials_in(cohort:)
         end
 

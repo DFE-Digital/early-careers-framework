@@ -35,48 +35,15 @@ module StatusTags
     end
 
     def determine_record_state
-      record_state = DetermineTrainingRecordState.call(
+      DetermineTrainingRecordState.call(
         participant_profile:,
         induction_record:,
         school:,
       )&.record_state || :no_longer_involved
-
-      # Schools logic states that we show eligible for CIP participants whether that is correct or not
-      if on_cip? && is_ignored_for_cip?(record_state)
-        return :active_cip_training
-      end
-
-      record_state
     end
 
     def on_cip?
       @induction_record&.induction_programme&.core_induction_programme? || @participant_profile.school_cohort&.core_induction_programme?
-    end
-
-    def is_ignored_for_cip?(record_state)
-      %i[
-        internal_error
-        tra_record_not_found
-        active_flags
-        different_trn
-        checks_not_complete
-        no_induction_start
-        not_allowed
-        duplicate_profile
-        exempt_from_induction
-        previous_participation
-        previous_induction
-        not_qualified
-        previous_participation_ero
-        registered_for_mentor_training
-        registered_for_mentor_training_ero
-        registered_for_mentor_training_primary
-        registered_for_mentor_training_primary_ero
-        registered_for_mentor_training_secondary
-        registered_for_mentor_training_secondary_ero
-        registered_for_mentor_training_duplicate
-        registered_for_mentor_training_duplicate_ero
-      ].include?(record_state.to_sym)
     end
   end
 end
