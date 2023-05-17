@@ -2,7 +2,7 @@ Feature: Induction tutors choosing programmes - CIP only
 
   Background:
     Given scenario "cip_only_school" has been run
-    And cohort was created with start_year "2021"
+    Given cohort was created as "current"
     And I am logged in as an induction coordinator for created school
     Then I should be on "choose programme" page
 
