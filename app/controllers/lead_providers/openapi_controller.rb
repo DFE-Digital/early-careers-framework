@@ -7,7 +7,13 @@ require "lead_provider_api_specification"
 module LeadProviders
   class OpenapiController < ApplicationController
     def api_docs
-      render plain: LeadProviderApiSpecification.as_yaml, content_type: "text/yaml"
+      render plain: LeadProviderApiSpecification.as_yaml(version_param), content_type: "text/yaml"
+    end
+
+  private
+
+    def version_param
+      params[:api_version] || LeadProviderApiSpecification::CURRENT_VERSION
     end
   end
 end
