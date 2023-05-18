@@ -33,7 +33,7 @@ module Api
       end
 
       def statement_params
-        params.permit(:id, filter: %i[cohort type])
+        params.permit(:id, filter: %i[cohort type updated_since])
       end
     end
   end

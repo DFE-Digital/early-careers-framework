@@ -43,6 +43,7 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json", with_feat
                   filter: {
                     cohort: "2021,2022",
                     type: "ecf",
+                    updated_since: "2020-11-13T11:21:55Z",
                   },
                 }.to_param)
 

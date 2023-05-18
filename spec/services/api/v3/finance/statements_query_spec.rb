@@ -103,6 +103,24 @@ RSpec.describe Api::V3::Finance::StatementsQuery do
         end
       end
 
+      context "with updated_since filter" do
+        let(:params) { { filter: { updated_since: 2.days.ago.iso8601 } } }
+
+        before do
+          ecf_statement_next_cohort.update!(updated_at: 3.days.ago)
+          ecf_statement_current_cohort.update!(updated_at: 1.day.ago)
+          npq_statement_next_cohort.update!(updated_at: 1.day.ago)
+          npq_statement_current_cohort.update!(updated_at: 6.days.ago)
+        end
+
+        it "returns statements for the specific updated time" do
+          expect(subject.statements).to match_array([
+            ecf_statement_current_cohort,
+            npq_statement_next_cohort,
+          ])
+        end
+      end
+
       context "with ecf type filter" do
         let(:params) { { filter: { type: "ecf" } } }
 

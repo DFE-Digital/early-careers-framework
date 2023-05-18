@@ -138,6 +138,32 @@ RSpec.describe "API ECF schools", :with_default_schedules, type: :request, with_
           expect(parsed_response["data"].size).to eql(0)
         end
       end
+
+      context "when filtering by updated_since" do
+        let!(:school2) { create(:school, :eligible) }
+        let!(:school3) { create(:school, :eligible) }
+        let!(:school4) { create(:school, :eligible) }
+
+        let!(:school_cohort3) { create(:school_cohort, school: school3, cohort:) }
+
+        before do
+          school.update!(updated_at: 3.days.ago)
+          school2.update!(updated_at: 1.day.ago)
+
+          school3.update!(updated_at: 10.days.ago)
+          school_cohort3.update!(updated_at: 1.day.ago)
+
+          school4.update!(updated_at: 6.days.ago)
+        end
+
+        it "returns statements updated after updated_since" do
+          get "/api/v3/schools/ecf", params: { filter: { cohort: cohort.display_name, updated_since: 2.days.ago.iso8601 } }
+
+          expect(parsed_response["data"].size).to eql(2)
+          expect(parsed_response.dig("data", 0, "id")).to eql(school2.id)
+          expect(parsed_response.dig("data", 1, "id")).to eql(school3.id)
+        end
+      end
     end
 
     context "when unauthorized" do

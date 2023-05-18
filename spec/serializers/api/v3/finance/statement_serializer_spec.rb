@@ -36,7 +36,7 @@ module Api
           end
 
           it "returns the updated_at of the statement" do
-            expect(serialiser.serializable_hash[:data][:attributes][:updated_at]).to eq(statement.created_at.rfc3339)
+            expect(serialiser.serializable_hash[:data][:attributes][:updated_at]).to eq(statement.updated_at.rfc3339)
           end
 
           context "with an ECF statement" do

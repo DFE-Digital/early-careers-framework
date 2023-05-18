@@ -39,6 +39,17 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json", with_feat
                 description: "Refine schools to return.",
                 example: "filter[urn]=106286"
 
+      parameter name: "filter[updated_since]",
+                schema: {
+                  "$ref": "#/components/schemas/ECFSchoolsFilter",
+                },
+                in: :query,
+                style: :deepObject,
+                explode: true,
+                required: false,
+                description: "Refine schools to return.",
+                example: "filter[updated_since]=2020-11-13T11:21:55Z"
+
       parameter name: :page,
                 in: :query,
                 schema: {

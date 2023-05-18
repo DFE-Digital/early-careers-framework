@@ -16,8 +16,14 @@ module Api
             .or(schools_with_existing_partnerships)
             .includes(partnerships: :cohort, school_cohorts: :cohort)
             .distinct
+
           scope = scope.where(urn: filter[:urn]) if filter[:urn].present?
           scope = scope.order(updated_at: :desc) if params[:sort].blank?
+
+          if updated_since.present?
+            scope = scope.where(updated_at: updated_since..).or(scope.where(school_cohorts: { updated_at: updated_since.. }))
+          end
+
           scope
         end
 
@@ -50,6 +56,18 @@ module Api
               relationship: false,
               cohorts: { start_year: filter[:cohort] },
             })
+        end
+
+        def updated_since
+          return if filter[:updated_since].blank?
+
+          Time.iso8601(filter[:updated_since])
+        rescue ArgumentError
+          begin
+            Time.iso8601(URI.decode_www_form_component(filter[:updated_since]))
+          rescue ArgumentError
+            raise Api::Errors::InvalidDatetimeError, I18n.t(:invalid_updated_since_filter)
+          end
         end
       end
     end
