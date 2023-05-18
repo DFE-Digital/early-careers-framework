@@ -66,7 +66,8 @@ module Dashboard
         .group_by(&:mentor_profile_id)
         .each_with_object({}) do |(mentor_profile_id, ects), hash|
         if mentor_profile_id
-          hash[induction_record_of_profile(mentor_profile_id)] = ects
+          ir = induction_record_of_profile(mentor_profile_id)
+          hash[ir] = ects unless ir.nil?
         else
           @orphan_ects = ects
         end
