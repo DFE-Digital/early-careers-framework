@@ -3,76 +3,59 @@
 <div class="govuk-width-container">
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <h1 class="govuk-heading-xl">Use our sandbox to test Manage teacher CPD</h1>
+      <h1 class="govuk-heading-xl">Use our sandbox environment</h1>
 
-      <p class="govuk-body">The Manage teacher CPD sandbox is a test environment which allows you to experience the
-        service as a school induction tutor, lead provider and software vendor.</p>
+      <p class="govuk-body">Sandbox is a test environment for the Manage teacher CPD service.</p>
+      <p class="govuk-body">Login to sandbox to experience the service as a school induction tutor, lead provider and software vendor.</p>
 
-      <p class="govuk-body"><strong>As a school</strong></p>
-      <p class="govuk-body">You can setup inductions for Early Career Teachers (ECTs) and mentors</p>
+      <h2 class="govuk-heading-l">Test your provider API integrations</h2>
+      <p class="govuk-body">Test ECF and NPQ provider system integrations in sandbox without affecting real data.</p>
 
-      <p class="govuk-body"><strong>As a teacher</strong></p>
-      <p class="govuk-body">You can register for an NPQ course</p>
-
-      <p class="govuk-body"><strong>As a lead provider</strong></p>
-      <p class="govuk-body">You can manage a list of school partnerships and test Manage teacher CPD’s
-        <%= govuk_link_to 'API integrations', "/api-reference" %> to:</p>
-
-      <ul class="govuk-list govuk-list--bullet">
-        <li>retrieve a list of ECF participants or NPQ applications</li>
-        <li>declare a participant’s engagement with the programmes</li>
-      </ul>
-
-      <p class="govuk-body">Throughout, you’ll be able to give us feedback so we can improve the service.</p>
-
-      <h2 class="govuk-heading-l">Get started as an NPQ participant</h2>
-      <p class="govuk-body">You’ll be asked to enter your email address during the NPQ registration process on Teacher
-        CPD sandbox.</p>
-
-      <p class="govuk-body">Please do not use anyone’s real email address, unless it is your own, as the system will
-        record the real email addresses as part of the test.</p>
-
-      <h3 class="govuk-heading-m">A note on email addresses</h3>
-      <p class="govuk-body">The NPQ registration sandbox does not send out emails so to avoid testers having to use the
-        One Time Password emails, we’ve enabled a whitelist of emails ending with your domain and
-        <code>@example.com</code> that will by pass the One Time Password (OTP) email and just provide the OTP code on
-        screen.</p>
-
-      <p class="govuk-body">Any data you enter into sandbox environments should be anonymised or invented.</p>
-
-      <%= govuk_start_button(
-            text: 'Continue as an NPQ participant',
-            href: 'https://npq-registration-sandbox.london.cloudapps.digital',
-            ) %>
-
-      <h2 class="govuk-heading-l">Get started as an ECF lead provider</h2>
-      <p class="govuk-body">To test the service as an ECF lead provider, you’ll need to contact us by email on
-        <%= render MailToSupportComponent.new %>.</p>
-
-      <p class="govuk-body">From the ECF lead provider interface in the sandbox, you’ll be able to sign in as yourself.
-        To avoid testers having to use real users, we’ve enabled fake users with ID references that have been provided
-        to you. You can confirm the start of an applicant’s course using these IDs.</p>
-
-      <%= govuk_start_button(
-            text: 'Continue as an ECF training provider',
-            href: lead_providers_landing_page_url,
-            ) %>
-
-      <h2 class="govuk-heading-l">Get started with the lead provider API</h2>
-      <p class="govuk-body">Our API allows you to integrate your software with our service, whether you are supporting
-        ECF or NPQ.</p>
+      <p class="govuk-body">To avoid the use of real participant data, fake participants and IDs have been made available. </p>
 
       <p class="govuk-body">In the sandbox, you’ll be able to test your integration.</p>
 
+      <p class="govuk-body">Test scenarios such as:</p>
+
+      <ul class="govuk-list govuk-list--bullet">
+        <li>confirming partnerships with schools and delivery partners</li>
+        <li>viewing and updating participant data</li>
+        <li>submitting or voiding declarations to receive appropriate payment</li>
+      </ul>
+
       <%= govuk_start_button(
-            text: "Review our API guidance",
+            text: "View API guidance for lead providers",
             href: "/api-reference",
             ) %>
 
-      <h2 class="govuk-heading-l">Help and support</h2>
+      <h2 class="govuk-heading-l">Impersonate ECF school induction tutors </h2>
+      <p class="govuk-body">Impersonate a school induction tutor to see how they set up ECF-based training programmes and register Early Career Teachers (ECTs) and mentors to the service. </p>
+      
+      <p class="govuk-body">Request induction tutor test access to the sandbox by emailing us on <%= render MailToSupportComponent.new %>.</p>
 
-      <p class="govuk-body">Email us at <%= render MailToSupportComponent.new %> for support using Apply sandbox or any
-        other aspect of the Manage teacher CPD service.</p>
+      <%= govuk_start_button(
+            text: 'Login to sandbox as a school induction tutor',
+            href: lead_providers_landing_page_url,
+            ) %>
+
+
+      <h2 class="govuk-heading-l">Impersonate an NPQ applicant</h2>
+      <p class="govuk-body">Impersonate a teacher applying for an NPQ course.</p>
+
+      <p class="govuk-body">Any data you entered should be anonymised or invented. Do not use anyone’s real email address, unless it is your own, as the service will record the real email addresses as part of the test.</p>
+
+      <p class="govuk-body">Note, the NPQ registration sandbox does not send out emails. To avoid testers having to use the One Time Password (OTP) emails, we’ve enabled a whitelist of emails ending with your domain and <code>@example.com</code>. The OTP emails will be bypassed and you will see the OTP code on screen. </p>
+
+
+      <%= govuk_start_button(
+            text: 'Login to sandbox as an NPQ participant',
+            href: 'https://npq-registration-sandbox.london.cloudapps.digital',
+            ) %>
+
+
+      <h2 class="govuk-heading-l">Get support</h2>
+
+      <p class="govuk-body">Email <%= render MailToSupportComponent.new %> for support using the Manage teacher CPD service.</p>
     </div>
   </div>
 </div>
