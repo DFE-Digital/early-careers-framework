@@ -21,7 +21,7 @@ DfE will send a unique authentication token via secure email.
   <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
   <strong class="govuk-warning-text__text">
     <span class="govuk-warning-text__assistive">Warning</span>
-    Store the authentication tokens securely. Providers must not share tokens in publicly accessible documents or repositories.
+    Providers must not share tokens in publicly accessible documents or repositories.
   </strong>
 </div>
 
@@ -93,8 +93,6 @@ https://ecf-sandbox.london.cloudapps.digital/api/v3
 
 * [Test the ability to submit ECF declarations in sandbox ahead of time](/api-reference/ecf/guidance/#test-the-ability-to-submit-declarations-in-sandbox-ahead-of-time)
 * [Test the ability to submit NPQ declarations in sandbox ahead of time](/api-reference/npq/guidance/#test-the-ability-to-submit-declarations-in-sandbox-ahead-of-time)
-
-
 
 ## Rate limits
 
