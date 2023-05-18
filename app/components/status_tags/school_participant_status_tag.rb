@@ -32,11 +32,7 @@ module StatusTags
     end
 
     def record_state
-      @record_state ||= determine_record_state
-    end
-
-    def determine_record_state
-      DetermineTrainingRecordState.call(participant_profile:, induction_record:, school:).record_state
+      @record_state ||= DetermineTrainingRecordState.call(participant_profile:, induction_record:, school:)&.record_state || :no_longer_involved
     end
   end
 end

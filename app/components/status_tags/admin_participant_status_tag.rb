@@ -13,10 +13,7 @@ module StatusTags
     end
 
     def description
-      Array.wrap(t(:description,
-                   scope: translation_scope,
-                   contact_us: render(MailToSupportComponent.new("contact us"))))
-           .map(&:html_safe)
+      Array.wrap(t(:description, scope: translation_scope, contact_us: render(MailToSupportComponent.new("contact us")))).map(&:html_safe)
     rescue I18n::MissingTranslationData
       []
     end
