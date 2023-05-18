@@ -80,13 +80,14 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
         let!(:partnership) { create(:partnership, school:, cohort:, delivery_partner:, lead_provider:) }
 
         parameter name: :id,
+                  description: "The unique ID of the partnership",
                   in: :path,
                   required: true,
-                  example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
-                  description: "The ID of the ECF participant.",
                   schema: {
-                    type: "string",
-                  }
+                    type: :string,
+                    format: :uuid,
+                  },
+                  example: "00acafd3-e6f6-41e7-a770-3207be94f755"
 
         response "200", "A single partnership" do
           let(:id) { partnership.id }

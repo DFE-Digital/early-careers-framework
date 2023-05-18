@@ -28,13 +28,9 @@ module Api
           statement.cohort.start_year.to_s
         end
 
-        attribute :cut_off_date do |statement|
-          statement.deadline_date.rfc3339
-        end
+        attribute :cut_off_date, &:deadline_date
 
-        attribute :payment_date do |statement|
-          statement.payment_date.rfc3339
-        end
+        attribute :payment_date, &:payment_date
 
         attribute :paid, &:paid?
       end
