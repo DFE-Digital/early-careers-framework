@@ -127,7 +127,7 @@ RSpec.describe "transfer out participants", :with_default_schedules, type: :feat
     end
 
     def then_i_should_still_see_the_transferring_participant
-      expect(page).to have_summary_row(@ect.full_name)
+      expect(page).to have_link(@ect.full_name)
     end
 
     # and
