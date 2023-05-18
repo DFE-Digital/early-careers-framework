@@ -69,7 +69,7 @@ RSpec.describe "Manage FIP partnered participants with change of circumstances",
     end
   end
 
-  scenario "withdrawn partnership shouldn't cause an error" do
+  scenario "withdrawn partnership shouldn't cause an error", travel_to: Date.new(2021, 11, 1) do
     expect {
       given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered_but_challenged
       and_i_have_added_an_ect

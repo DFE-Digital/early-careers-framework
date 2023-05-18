@@ -30,10 +30,6 @@ class Cohort < ApplicationRecord
     starting_within(Date.current - 1.year + 1.day, Date.current)
   end
 
-  def self.latest
-    order(start_year: :desc).first
-  end
-
   def self.next
     starting_within(Date.current + 1.day, Date.current + 1.year)
   end

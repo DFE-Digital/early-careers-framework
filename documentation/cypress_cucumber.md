@@ -154,6 +154,25 @@ it—which resets the state.
 If you do require dangling state, you'll need to either ensure you're focusing
 the last scenario in a file, or comment out all the tests below it.
 
+To run these tests locally:
+- Install the version on Cypress configured in package.json
+```
+yarn add cypres@9.7.4`
+```
+- Run the backend server (our Rails app) in test mode in one terminal:
+```
+  RAILS_ENV=test CYPRESS=1 bin/rails server -p 5017
+```
+- Open Cypress in another terminal console:
+```
+   npm run cypress:open
+```
+or
+```
+   npm run cypress:run
+```
+
+More info:
 [Cypress]: https://docs.cypress.io/guides/overview/why-cypress
 [CypressOnRails]: https://github.com/TheBrainFamily/cypress-cucumber-preprocessor
 [cypress-cucumber-preprocessor]: https://github.com/TheBrainFamily/cypress-cucumber-preprocessor

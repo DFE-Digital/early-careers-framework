@@ -156,7 +156,7 @@ const pagePaths = {
   "2020 check your answers": "/schools/:school_id/year-2020/check-your-answers",
   "2020 success": "/schools/:school_id/year-2020/success",
   "have you appointed an appropriate body":
-    "/schools/:school_id/cohorts/2021/choose-programme/appropriate-body-appointed",
+    "/schools/:school_id/cohorts/:cohort_id/choose-programme/appropriate-body-appointed",
 };
 
 Given("I am on {string} path", (path) => {

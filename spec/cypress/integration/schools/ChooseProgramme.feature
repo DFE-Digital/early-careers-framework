@@ -3,7 +3,7 @@ Feature: Induction tutors choosing programmes
   induction programmes for their school and view cohorts and tasks
 
   Background:
-    Given cohort was created with start_year "2021"
+    Given cohort was created as "current"
     And school was created with name "Test School" and slug "test-school"
     And I am logged in as an induction coordinator for created school
     Then I should be on "choose programme" page

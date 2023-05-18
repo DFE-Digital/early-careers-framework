@@ -9,10 +9,7 @@ module Dashboard
     end
 
     def call
-      [
-        Cohort.latest,
-        pilot? ? Cohort.active_registration_cohort : Cohort.current,
-      ].compact.min_by(&:start_year)
+      pilot? ? Cohort.active_registration_cohort : Cohort.current
     end
 
   private

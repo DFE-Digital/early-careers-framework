@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "Schools::ProgrammeChoice", type: :request do
+RSpec.describe "Schools::ProgrammeChoice", type: :request, travel_to: Date.new(2021, 10, 1) do
   let(:user) { create(:user, :induction_coordinator) }
   let(:school) { user.induction_coordinator_profile.schools.first }
   let(:cohort) { create(:cohort, start_year: 2021) }
