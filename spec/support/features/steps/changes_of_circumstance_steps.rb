@@ -560,11 +560,11 @@ module Steps
       participant_detail.has_primary_heading? participant_name
 
       participant_detail.has_full_name? participant_name
-      participant_detail.has_validation_status? validation_status
+      participant_detail.has_training_record_state? validation_status
 
       # now the school data is on a sibling page, we need to navigate
       # there before checking the school/lead provider contents
-      participant_detail.click_school_link
+      participant_detail.open_training_tab
 
       participant_detail.has_school? school.name
       participant_detail.has_lead_provider? lead_provider_name

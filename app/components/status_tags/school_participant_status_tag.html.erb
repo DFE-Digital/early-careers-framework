@@ -1,8 +1,6 @@
-<% if FeatureFlag.active?(:school_participant_status_language) %>
-  <%= govuk_tag(text: label, colour:) %>
-<% else %>
-  <p class="govuk-body"><%= label %></p>
-<% end %>
-<% description.each do |paragraph| %>
-  <p class="govuk-body"><%= paragraph %></p>
+<%= govuk_tag(text: label, colour:) %>
+<% if display_description %>
+  <% description.each do |paragraph| %>
+    <p class="govuk-body"><%= paragraph %></p>
+  <% end %>
 <% end %>
