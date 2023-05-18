@@ -5,11 +5,11 @@ en:
       # validation
 
       validation_not_started:
-        label: "Contacted for information"
+        label: "Validation not started"
         colour: "grey"
 
       request_for_details_submitted:
-        label: "Contacted for information"
+        label: "Contacting for information"
         colour: "grey"
 
       request_for_details_delivered:
@@ -21,46 +21,46 @@ en:
         colour: "grey"
 
       internal_error:
-        label: "DfE checking eligibility"
+        label: "DQT API Errored"
         colour: "blue"
 
       checks_not_complete:
-        label: "DfE checking eligibility"
+        label: "Checks not complete"
         colour: "blue"
 
       different_trn:
-        label: "DfE checking eligibility"
+        label: "Different TRN found"
         colour: "blue"
 
       tra_record_not_found:
-        label: "DfE checking eligibility"
+        label: "TRA Record not found"
         colour: "blue"
 
       duplicate_profile:
-        label: "Not eligible"
+        label: "Duplicate profile"
         colour: "orange"
 
       # TRA Record checks
 
       active_flags:
-        label: "DfE checking eligibility"
+        label: "Active flags need checking"
         colour: "blue"
 
       not_allowed:
-        label: "Not eligible"
+        label: "Not allowed to be in school"
         colour: "orange"
 
       exempt_from_induction:
-        label: "Not eligible"
+        label: "Exempt from induction"
         colour: "orange"
 
       not_qualified:
-        label: "Not eligible: No QTS"
+        label: "Not qualified"
         colour: "orange"
 
       no_induction_start:
-        label: "DfE checking eligibility"
-        colour: "blue"
+        label: "No induction start date recorded"
+        colour: "grey"
 
       # FIP ECTs
 
@@ -73,7 +73,7 @@ en:
         colour: "turquoise"
 
       active_fip_training:
-        label: "Eligible to start"
+        label: "Training"
         colour: "turquoise"
 
       # CIP ECTs
@@ -83,7 +83,7 @@ en:
         colour: "turquoise"
 
       active_cip_training:
-        label: "Eligible to start"
+        label: "Training"
         colour: "turquoise"
 
       # DIY ECTs
@@ -93,7 +93,7 @@ en:
         colour: "turquoise"
 
       active_diy_training:
-        label: "Eligible to start"
+        label: "Training"
         colour: "turquoise"
 
       # mentor duplicates
@@ -121,67 +121,67 @@ en:
       # FIP mentors
 
       not_yet_mentoring_fip_ero:
-        label: "Eligible to start: ERO"
+        label: "Not yet mentoring: ERO"
         colour: "turquoise"
 
       not_yet_mentoring_fip_no_partner:
-        label: "Eligible to start: No partnership"
+        label: "Not yet mentoring: No partnership"
         colour: "turquoise"
 
       not_yet_mentoring_fip:
-        label: "Eligible to start"
+        label: "Not yet mentoring"
         colour: "turquoise"
 
       active_fip_mentoring_ero:
-        label: "Eligible to start: ERO"
+        label: "Mentoring: ERO"
         colour: "turquoise"
 
       active_fip_mentoring_no_partner:
-        label: "Eligible to start: No partnership"
+        label: "Mentoring: No partnership"
         colour: "turquoise"
 
       active_fip_mentoring:
-        label: "Eligible to start"
+        label: "Mentoring"
         colour: "turquoise"
 
       not_yet_mentoring:
-        label: "Eligible to start"
+        label: "Not yet mentoring"
         colour: "turquoise"
 
       # CIP mentors
 
       not_yet_mentoring_cip_ero:
-        label: "Eligible to start"
+        label: "Not yet mentoring: ERO"
         colour: "turquoise"
 
       active_cip_mentoring_ero:
-        label: "Eligible to start"
+        label: "Mentoring: ERO"
         colour: "turquoise"
 
       not_yet_mentoring_cip:
-        label: "Eligible to start"
+        label: "Not yet mentoring"
         colour: "turquoise"
 
       active_cip_mentoring:
-        label: "Eligible to start"
+        label: "Mentoring"
         colour: "turquoise"
 
       # changes of circumstance
 
       leaving:
-        label: "Eligible to start"
+        label: "Leaving programme"
         colour: "turquoise"
 
       joining:
-        label: "Eligible to start"
+        label: "Joining a school"
         colour: "turquoise"
 
       deferred_training:
-        label: "Eligible to start"
+        label: "Deferred training"
         colour: "turquoise"
 
       withdrawn_programme:
-        label: "No longer being trained"
+        label: "Withdrawn from programme"
         colour: "orange"
 
       withdrawn_training:
@@ -189,11 +189,11 @@ en:
         colour: "orange"
 
       left:
-        label: "No longer being trained"
+        label: "Left school"
         colour: "orange"
 
       no_longer_involved:
-        label: "No longer being trained"
+        label: "No longer involved"
         colour: "orange"
 
       # completion
