@@ -39,3 +39,13 @@ properties:
     type: boolean
     nullable: false
     example: true
+  created_at:
+    description: "The date and time the statement was created"
+    type: string
+    format: date-time
+    example: "2021-05-31T02:22:32.000Z"
+  updated_at:
+    description: "The date the statement was last updated"
+    type: string
+    format: date-time
+    example: "2021-05-31T02:22:32.000Z"
