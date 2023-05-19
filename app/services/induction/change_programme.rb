@@ -10,6 +10,13 @@ class Induction::ChangeProgramme < BaseService
                             start_date:,
                             preferred_email:,
                             mentor_profile:)
+      if participant_profile.mentor?
+        Mentors::ChangeSchool.call(from_school: current_induction_record.school,
+                                   to_school: new_induction_programme.school,
+                                   remove_on_date: start_date,
+                                   mentor_profile: participant_profile,
+                                   preferred_email:)
+      end
     end
   end
 

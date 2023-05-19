@@ -233,6 +233,17 @@ module Steps
         Induction::Enrol.call participant_profile:,
                               induction_programme: school_cohort.default_induction_programme,
                               start_date: 1.day.from_now
+        if participant_profile.mentor?
+          if current_induction_record
+            Mentors::ChangeSchool.call(from_school: participant_profile.current_induction_record.school,
+                                       to_school: school,
+                                       mentor_profile: participant_profile,
+                                       remove_on_date: 1.day.from_now,
+                                       preferred_email: participant_profile.participant_identity.email)
+          else
+            Mentors::AddToSchool.call(mentor_profile: participant_profile, school:)
+          end
+        end
 
         travel_to 2.days.from_now
       end
@@ -262,6 +273,17 @@ module Steps
         Induction::Enrol.call participant_profile:,
                               induction_programme: school_cohort.default_induction_programme,
                               start_date: 1.day.from_now
+        if participant_profile.mentor?
+          if current_induction_record
+            Mentors::ChangeSchool.call(from_school: participant_profile.current_induction_record.school,
+                                       to_school: school,
+                                       mentor_profile: participant_profile,
+                                       remove_on_date: 1.day.from_now,
+                                       preferred_email: participant_profile.participant_identity.email)
+          else
+            Mentors::AddToSchool.call(mentor_profile: participant_profile, school:)
+          end
+        end
 
         travel_to 2.days.from_now
       end
@@ -291,6 +313,17 @@ module Steps
         Induction::Enrol.call participant_profile:,
                               induction_programme: school_cohort.default_induction_programme,
                               start_date: 1.day.from_now
+        if participant_profile.mentor?
+          if current_induction_record
+            Mentors::ChangeSchool.call(from_school: participant_profile.current_induction_record.school,
+                                       to_school: school,
+                                       mentor_profile: participant_profile,
+                                       remove_on_date: 1.day.from_now,
+                                       preferred_email: participant_profile.participant_identity.email)
+          else
+            Mentors::AddToSchool.call(mentor_profile: participant_profile, school:)
+          end
+        end
 
         travel_to 2.days.from_now
       end

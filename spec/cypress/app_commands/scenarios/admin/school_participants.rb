@@ -32,6 +32,7 @@ ect_2 = FactoryBot.create :ect_participant_profile,
     start_date: 2.months.ago,
     mentor_profile: ppt.ect? ? mentor_1 : nil,
   )
+  Mentors::AddToSchool.call(school:, mentor_profile: ppt) if ppt.mentor?
 end
 
 another_school = FactoryBot.create(:school, name: "Some other school", urn: "222222")
