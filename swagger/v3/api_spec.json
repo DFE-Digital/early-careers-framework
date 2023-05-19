@@ -4360,6 +4360,7 @@
           "cohort",
           "in_partnership",
           "induction_programme_choice",
+          "created_at",
           "updated_at"
         ],
         "properties": {
@@ -4395,6 +4396,12 @@
               "no_early_career_teachers",
               "not_yet_known"
             ]
+          },
+          "created_at": {
+            "description": "The date and time the school was created",
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-05-31T02:22:32.000Z"
           },
           "updated_at": {
             "description": "The last time a change was made to this school record by the DfE",
