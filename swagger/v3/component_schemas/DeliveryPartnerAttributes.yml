@@ -2,6 +2,7 @@ description: "The data attributes associated with a delivery partner"
 type: object
 required:
   - name
+  - created_at
   - updated_at
 properties:
   name:
@@ -17,6 +18,11 @@ properties:
     example:
       - "2021"
       - "2022"
+  created_at:
+    description: The date and time the delivery partner was created
+    type: string
+    format: date-time
+    example: "2021-05-31T02:22:32.000Z"
   updated_at:
     description: The date and time the delivery partner was last updated
     type: string

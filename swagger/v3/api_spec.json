@@ -2924,6 +2924,7 @@
         "type": "object",
         "required": [
           "name",
+          "created_at",
           "updated_at"
         ],
         "properties": {
@@ -2943,6 +2944,12 @@
               "2021",
               "2022"
             ]
+          },
+          "created_at": {
+            "description": "The date the delivery partner was created",
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-05-31T02:22:32.000Z"
           },
           "updated_at": {
             "description": "The date the delivery partner was last updated",

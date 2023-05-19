@@ -51,7 +51,7 @@ RSpec.describe "API Delivery Partners", :with_default_schedules, type: :request,
       it "has correct attributes" do
         get "/api/v3/delivery-partners"
 
-        expect(parsed_response["data"][0]).to have_jsonapi_attributes(:name, :updated_at, :cohort).exactly
+        expect(parsed_response["data"][0]).to have_jsonapi_attributes(:name, :created_at, :updated_at, :cohort).exactly
       end
 
       it "returns the right number of delivery partners per page" do
@@ -162,7 +162,7 @@ RSpec.describe "API Delivery Partners", :with_default_schedules, type: :request,
       it "has correct attributes" do
         get "/api/v3/delivery-partners/#{delivery_partner.id}"
 
-        expect(parsed_response["data"]).to have_jsonapi_attributes(:name, :updated_at, :cohort).exactly
+        expect(parsed_response["data"]).to have_jsonapi_attributes(:name, :created_at, :updated_at, :cohort).exactly
       end
     end
 
