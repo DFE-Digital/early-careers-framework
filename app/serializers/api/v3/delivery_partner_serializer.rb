@@ -12,6 +12,10 @@ module Api
       set_type :'delivery-partner'
       attributes :name
 
+      attribute :created_at do |delivery_partner|
+        delivery_partner.created_at.rfc3339
+      end
+
       attribute :updated_at do |delivery_partner|
         delivery_partner.updated_at.rfc3339
       end

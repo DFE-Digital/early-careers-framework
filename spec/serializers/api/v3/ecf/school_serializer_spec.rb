@@ -32,6 +32,10 @@ module Api
             expect(subject.serializable_hash[:data][:attributes][:cohort]).to eq(cohort.start_year.to_s)
           end
 
+          it "returns the created_at of the school" do
+            expect(subject.serializable_hash[:data][:attributes][:created_at]).to eq(school.created_at.rfc3339)
+          end
+
           context "when the school is in partnership" do
             let(:lead_provider) { create(:lead_provider) }
             let!(:school_cohort) { create(:school_cohort, lead_provider:, school:, cohort:) }

@@ -23,6 +23,7 @@ module Api
                    :cohort,
                    :in_partnership,
                    :induction_programme_choice,
+                   :created_at,
                    :updated_at
 
         attribute :name, &:name
@@ -41,6 +42,10 @@ module Api
         attribute :induction_programme_choice do |school, params|
           school_cohort = school_cohort_for(school:, cohort: params[:cohort])
           school_cohort&.induction_programme_choice.presence || "not_yet_known"
+        end
+
+        attribute :created_at do |school|
+          school.created_at.rfc3339
         end
 
         attribute :updated_at do |school, params|

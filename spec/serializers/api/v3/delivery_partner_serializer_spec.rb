@@ -21,6 +21,7 @@ module Api
             type: :'delivery-partner',
             attributes: {
               name: delivery_partner.name,
+              created_at: delivery_partner.created_at.rfc3339,
               updated_at: delivery_partner.updated_at.rfc3339,
               cohort: [cohort.display_name],
             },

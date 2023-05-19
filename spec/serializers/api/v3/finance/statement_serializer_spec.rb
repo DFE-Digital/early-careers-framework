@@ -31,6 +31,14 @@ module Api
             expect(serialiser.serializable_hash[:data][:attributes][:payment_date]).to eq(statement.payment_date)
           end
 
+          it "returns the created_at of the statement" do
+            expect(serialiser.serializable_hash[:data][:attributes][:created_at]).to eq(statement.created_at.rfc3339)
+          end
+
+          it "returns the updated_at of the statement" do
+            expect(serialiser.serializable_hash[:data][:attributes][:updated_at]).to eq(statement.created_at.rfc3339)
+          end
+
           context "with an ECF statement" do
             it "returns the type" do
               expect(serialiser.serializable_hash[:data][:attributes][:type]).to eq("ecf")

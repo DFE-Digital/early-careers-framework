@@ -2924,6 +2924,7 @@
         "type": "object",
         "required": [
           "name",
+          "created_at",
           "updated_at"
         ],
         "properties": {
@@ -2943,6 +2944,12 @@
               "2021",
               "2022"
             ]
+          },
+          "created_at": {
+            "description": "The date the delivery partner was created",
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-05-31T02:22:32.000Z"
           },
           "updated_at": {
             "description": "The date the delivery partner was last updated",
@@ -4353,6 +4360,7 @@
           "cohort",
           "in_partnership",
           "induction_programme_choice",
+          "created_at",
           "updated_at"
         ],
         "properties": {
@@ -4388,6 +4396,12 @@
               "no_early_career_teachers",
               "not_yet_known"
             ]
+          },
+          "created_at": {
+            "description": "The date and time the school was created",
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-05-31T02:22:32.000Z"
           },
           "updated_at": {
             "description": "The last time a change was made to this school record by the DfE",
@@ -5265,7 +5279,8 @@
           "course_identifier",
           "state",
           "completion_date",
-          "created_at"
+          "created_at",
+          "updated_at"
         ],
         "properties": {
           "participant_id": {
@@ -5309,6 +5324,11 @@
           },
           "created_at": {
             "description": "The date you created the participant-outcome record",
+            "type": "string",
+            "example": "2021-05-31T02:21:32.000Z"
+          },
+          "updated_at": {
+            "description": "The date and time the participant-outcome record was last updated",
             "type": "string",
             "example": "2021-05-31T02:21:32.000Z"
           }
@@ -7015,6 +7035,18 @@
             "type": "boolean",
             "nullable": false,
             "example": true
+          },
+          "created_at": {
+            "description": "The date the statement was created",
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-05-31T02:22:32.000Z"
+          },
+          "updated_at": {
+            "description": "The date the statement was last updated",
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-05-31T02:22:32.000Z"
           }
         }
       },

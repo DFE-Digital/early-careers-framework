@@ -59,6 +59,7 @@ RSpec.describe "API ECF schools", :with_default_schedules, type: :request, with_
             :cohort,
             :in_partnership,
             :induction_programme_choice,
+            :created_at,
             :updated_at,
           ).exactly
         end
@@ -205,6 +206,7 @@ RSpec.describe "API ECF schools", :with_default_schedules, type: :request, with_
             :cohort,
             :in_partnership,
             :induction_programme_choice,
+            :created_at,
             :updated_at,
           ).exactly
         end

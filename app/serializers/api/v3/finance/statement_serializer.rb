@@ -33,6 +33,14 @@ module Api
         attribute :payment_date, &:payment_date
 
         attribute :paid, &:paid?
+
+        attribute :created_at do |statement|
+          statement.created_at.rfc3339
+        end
+
+        attribute :updated_at do |statement|
+          statement.updated_at.rfc3339
+        end
       end
     end
   end
