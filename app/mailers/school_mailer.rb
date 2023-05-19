@@ -112,13 +112,15 @@ class SchoolMailer < ApplicationMailer
     school = params[:school]
     start_url = params[:start_url]
     step_by_step_url = params[:step_by_step_url]
+    sit_email_address = sit_profile.user.email
 
     template_mail(
       NOMINATION_CONFIRMATION_EMAIL_TEMPLATE,
-      to: sit_profile.user.email,
+      to: sit_email_address,
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
+        email_address: sit_email_address,
         name: sit_profile.user.full_name,
         school_name: school.name,
         start_page: start_url,
