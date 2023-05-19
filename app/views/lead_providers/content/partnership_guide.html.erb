@@ -28,13 +28,14 @@
 <h2 id="how-to-confirm-partnerships-with-schools-using-csvs" class="govuk-heading-l">How to confirm partnerships with schools using CSVs</h2>
 <p class="govuk-body-m">Note, providers integrated with API v3.0.0. can confirm partnerships using the dedicated partnership endpoint.</p>
 
-<p class="govuk-body-m">Once you have agreed partnerships with schools, you can notify the DfE by uploading a CSV file. This partnership data will enable DfE to process the appropriate provider payments.</p>
-
-<p class="govuk-body-m">When you have login you will see this page (with your organisation’s name).</p>
+<ol class="govuk-list govuk-list--bullet">
+  <li>Once you have agreed partnerships with schools, you can notify the DfE by uploading a CSV file. This partnership data will enable DfE to process the appropriate provider payments</li>
+  <li>When you have login you will see this page (with your organisation’s name)</li>
+</ol>
 
 <p class="govuk-body-m"><img src="/lead-provider/start-page.png" alt="Example of a Lead Provider start page"></p>
 
-<ol class="govuk-list govuk-list--number">
+<ol class="govuk-list govuk-list--bullet">
   <li>Select ‘Confirm your schools’</li>
   <li>Follow instructions to confirm partnerships for the correct cohort</li>
   <li>Choose the delivery partner that these schools will be working with and press ‘Continue’</li>
@@ -42,23 +43,23 @@
 
 <p class="govuk-body-m"><img src="/lead-provider/choose-delivery-partner-page.png" alt="Example of a Choose the delivery partner page"></p>
 
-<ol class="govuk-list govuk-list--number">
+<ol class="govuk-list govuk-list--bullet">
   <li>Upload a CSV list for each delivery partner of the schools they will be working with</li>
-  <li>Make sure that your CSV follows the correct format:
+</ol>
+
+<p class="govuk-body-m">Make sure that your CSV follows the correct format:</p>
     <ul class="govuk-list govuk-list--bullet">
       <li>one column with the school URNs only (Column A)</li>
       <li>every school on a new row, no empty rows in between</li>
       <li>no other delivery partners</li>
       <li>no other data</li>
-    </ul></li>
-</ol>
+    </ul>
 
 <p class="govuk-body-m"><img src="/lead-provider/example-csv.png" alt="Example CSV containing a list of school URNs"></p>
 
 <h2 id="how-to-check-csv-upload-errors" class="govuk-heading-l">How to check CSV upload errors</h2>
-<p class="govuk-body-m">Error messages may appear when you upload CSVs.</p>
 
-<p class="govuk-body-m">You can choose to continue with the schools that do not have any errors, or update the CSV and upload it again.</p>
+<p class="govuk-body-m">Error messages may appear when you upload CSVs. You can choose to continue with the schools that do not have any errors, or update the CSV and upload it again.</p>
 
 <p class="govuk-body-m">When you have confirmed partnerships, the schools will be sent a confirmation email. This includes a link to report if they have been confirmed incorrectly.</p>
 
@@ -91,12 +92,12 @@ end %>
 
 
 <h2 id="how-school-induction-tutors-repirt-incorrect-partnerships" class="govuk-heading-l">How school induction tutors report incorrect partnerships </h2>
-<p class="govuk-body-m">When induction tutors at the schools included in the uploaded CSVs login to the service, they will see a partnership confirmation notification.</p>
 
-<p class="govuk-body-m">As well as being reminded to nominate their induction tutor and/or add their ECTs and mentors, they will also be given a link to report if the partnership is incorrect.</p>
-
-<p class="govuk-body-m">A confirmation email will also be sent to schools:</p>
-
+<ol class="govuk-list govuk-list--bullet">
+  <li>When induction tutors at the schools included in the uploaded CSVs login to the service, they will see a partnership confirmation notification</li>
+  <li>As well as being reminded to nominate their induction tutor and/or add their ECTs and mentors, they will also be given a link to report if the partnership is incorrect</li>
+  <li>A confirmation email will also be sent to schools:</li>
+</ol>
 
 <%= render GovukComponent::InsetTextComponent.new(text: 'Hello,<br/>
     <br/>
@@ -113,9 +114,10 @@ end %>
 
 
 <h3 class="govuk-heading-m">When they report incorrect partnerships</h3>
+
 <p class="govuk-body-m">Note, providers will not receive payment for schools that have reported incorrect partnerships. These issues should be resolved and CSVs re-uploaded.</p>
 
-<ol class="govuk-list govuk-list--number">
+<ol class="govuk-list govuk-list--bullet">
   <li>Induction tutors will submit the form, selecting one of the following reasons:
     <ul class="govuk-list govuk-list--bullet">
       <li>I have already confirmed an agreement with another provider</li>
@@ -129,35 +131,36 @@ end %>
 
 <p class="govuk-body-m"><img src="/lead-provider/email-notification.png" alt="Example email notification of a school rejecting a partnership"></p>
 
-<ol class="govuk-list govuk-list--number">
+<ol class="govuk-list govuk-list--bullet">
   <li>Select ‘Check your schools’ to see a ‘Reported error’ label next to schools that have reported incorrect partnerships.</li>
 </ol>
 
 <p class="govuk-body-m"><img src="/lead-provider/schools-page-with-error.png" alt="Example school listing page showing a partnership error"></p>
 
-<ol class="govuk-list govuk-list--number">
+<ol class="govuk-list govuk-list--bullet">
   <li>Click on that school to see a banner at the top of the page, including the reason they reported this as a mistake.</li>
 </ol>
 
 <p class="govuk-body-m"><img src="/lead-provider/reported-reason.png" alt="Example of a reson being reported"></p>
 
 <h3 class="govuk-heading-m">If you think the school made a mistake in reporting this</h3>
-<p class="govuk-body-m">You should contact the school directly. You do not need to contact the DfE.</p>
 
-<p class="govuk-body-m">If the matter is resolved, upload the school in a CSV again.</p>
+<ol class="govuk-list govuk-list--bullet">
+  <li>You should contact the school directly. You do not need to contact the DfE</li>
+  <li>If the matter is resolved, upload the school in a CSV again</li>
+</ol>
 
 <h2 id="view-ect-mentor-and-induction-tutor-details" class="govuk-heading-l">View ECT, mentor and induction tutor details </h2>
-<p class="govuk-body-m">Login to the service to view schools you have confirmed partnership with, see their details and induction tutor contact information.</p>
 
-<ol class="govuk-list govuk-list--number">
-  <li>Login to the service</li>
-  <li>Select ‘Check your schools’</li>
-  <li>View your list of confirmed schools with their ECT and mentor numbers</li>
+<ol class="govuk-list govuk-list--bullet">
+  <li>Login to the service to view schools you have confirmed partnership with, see their details and induction tutor contact information</li>
 </ol>
 
 <p class="govuk-body-m"><img src="/lead-provider/schools-page.png" alt="Example showing the page of your schools"></p>
 
-<p class="govuk-body-m">Click on any school to see more details. ECT and mentor numbers will be zero (0) until data is entered by schools. DfE will update providers before schools start adding them to the service.</p>
+<ol class="govuk-list govuk-list--bullet">
+  <li>Click on any school to see more details. ECT and mentor numbers will be zero (0) until data is entered by schools. DfE will update providers before schools start adding them to the service</li>
+</ol>
 
 <p class="govuk-body-m"><img src="/lead-provider/school-page.png" alt="Example showing the details known about a school"></p>
 
