@@ -5,8 +5,8 @@ require "rails_helper"
 RSpec.describe Admin::NPQApplications::EdgeCaseSearch, :with_default_schedules do
   let(:search) { Admin::NPQApplications::EdgeCaseSearch }
 
-  let!(:application_1) { create(:npq_application, user: user_1, employer_name: "Salford") }
-  let!(:application_2) { create(:npq_application, user: user_2, employer_name: "Learning") }
+  let!(:application_1) { create(:npq_application, user: user_1, employer_name: "Salford", funding_eligiblity_status_code: "funded", employment_type: "hospital_school") }
+  let!(:application_2) { create(:npq_application, user: user_2, employer_name: "Learning", funding_eligiblity_status_code: "previously_funded", employment_type: "other") }
   let!(:participant_identity_1) { create(:participant_identity, email: "aajohn-doe123@example.com") }
   let!(:participant_identity_2) { create(:participant_identity, email: "bbalaric123@example.com") }
   let!(:teacher_profile_1) { create(:teacher_profile, user: user_1) }
@@ -93,6 +93,49 @@ RSpec.describe Admin::NPQApplications::EdgeCaseSearch, :with_default_schedules d
 
     context "when teacherProfile#trn match" do
       let(:query_string) { teacher_profile_1.trn }
+
+      it "returns the hit" do
+        expect(subject.call).to include(application_1)
+      end
+
+      it "does not return the other applications" do
+        expect(subject.call).not_to include(application_2)
+      end
+    end
+
+    context "when fundingEligibilityStatusCode match" do
+      subject { described_class.new(query_string:, funding_eligiblity_status_code:) }
+      let(:query_string) { user_1.email.split("@").first }
+      let(:funding_eligiblity_status_code) { application_1.funding_eligiblity_status_code }
+
+      it "returns the hit" do
+        expect(subject.call).to include(application_1)
+      end
+
+      it "does not return the other applications" do
+        expect(subject.call).not_to include(application_2)
+      end
+    end
+
+    context "when employmentType match" do
+      subject { described_class.new(query_string:, employment_type:) }
+      let(:query_string) { user_1.email.split("@").first }
+      let(:employment_type) { application_1.employment_type }
+
+      it "returns the hit" do
+        expect(subject.call).to include(application_1)
+      end
+
+      it "does not return the other applications" do
+        expect(subject.call).not_to include(application_2)
+      end
+    end
+
+    context "when createdAt match" do
+      subject { described_class.new(query_string:, start_date:, end_date:) }
+      let(:query_string) { user_1.email.split("@").first }
+      let(:start_date) { application_1.created_at - 1.day }
+      let(:end_date) { application_1.created_at + 1.day }
 
       it "returns the hit" do
         expect(subject.call).to include(application_1)
