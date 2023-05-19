@@ -35,9 +35,9 @@ class AppropriateBodySelectionForm
 
   def body_type_choices
     [
-      OpenStruct.new(id: "local_authority", name: "Local authority"),
-      OpenStruct.new(id: "national", name: "National organisation"),
-      OpenStruct.new(id: "teaching_school_hub", name: "Teaching school hub"),
+      OpenStruct.new(id: "local_authority", name: "Local authority", disable_from_year: 2023),
+      OpenStruct.new(id: "national", name: "National organisation", disable_from_year: nil),
+      OpenStruct.new(id: "teaching_school_hub", name: "Teaching school hub", disable_from_year: nil),
     ]
   end
 

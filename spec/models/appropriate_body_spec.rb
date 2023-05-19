@@ -32,4 +32,14 @@ RSpec.describe AppropriateBody, type: :model do
       appropriate_body.update!(name: "Crispy Code")
     }.to have_enqueued_job(Analytics::UpsertECFAppropriateBodyJob).with(appropriate_body:)
   end
+
+  it "filter appropriate bodies disabled in a given year" do
+    create(:appropriate_body_local_authority, name: "from 2022", disable_from_year: 2022)
+    create(:appropriate_body_local_authority, name: "from 2021", disable_from_year: 2021)
+    create(:appropriate_body_local_authority, name: "enabled", disable_from_year: nil)
+    expect(AppropriateBody.count).to eq(3)
+    expect(AppropriateBody.active_in_year(2020).count).to eq(3)
+    expect(AppropriateBody.active_in_year(2021).count).to eq(2)
+    expect(AppropriateBody.active_in_year(2022).count).to eq(1)
+  end
 end
