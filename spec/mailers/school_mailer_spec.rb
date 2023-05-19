@@ -78,13 +78,14 @@ RSpec.describe SchoolMailer, type: :mailer do
     end
   end
 
-  describe "#nomination_email_confirmation" do
+  describe "#nomination_confirmation_email" do
     let(:school) { create(:school) }
     let(:sit_profile) { create(:induction_coordinator_profile) }
     let(:start_url) { "https://ecf-dev.london.cloudapps" }
 
     let(:nomination_confirmation_email) do
       SchoolMailer.with(
+        email_address: sit_profile.user.email,
         sit_profile:,
         school:,
         start_url:,
