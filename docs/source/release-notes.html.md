@@ -7,20 +7,58 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
+## 19th May 2023
+
+Providers can now test API v3.0.0.0. integrations in the sandbox environment. Additional seed data has been added to sandbox to enable the testing of new scenarios.
+
+Feedback from providers is invited via the usual channels. All feedback will be considered ahead API v3 release to production environment.
+
+Changes to the [API v3 spec](/api-reference/reference-v3.html) have been implemented since the original draft was shared. Based on provider feedback and continual improvement, these include:
+
+* the addition of a URN filter for when providers [find schools delivering ECF-based training in a given cohort](/api-reference/reference-v3.html#api-v3-schools-ecf-get)
+
+* pagination parameter functionality on multiple GET endpoints which, for example, do not include an `{id}` parameter
+
+* the addition of a date attribute which allows providers to view and update when a participant has deferred [from their ECF-based training](/api-reference/reference-v3.html#schema-ecfdeferral) or [from their NPQ course](/api-reference/reference-v3.html#schema-npqdeferral)
+
+* an update on where participant email addresses are included within participant responses to reduce confusion if, for example, a participant uses different email addresses when registering as an ECT and mentor
+
+* the removal of the `validation_status` attribute from the [ECF participant response](/api-reference/reference-v3.html#schema-ecfparticipant). New attribute options will be tested and added at a later stage, to meet provider and delivery partner needs
+
+### Test dynamic scenarios
+
+Providers will also be able to [sign into the sandbox environment](https://ecf-sandbox.london.cloudapps.digital/users/sign_in) as school induction tutors. Scenarios, such as transfers, can be simulated. Providers will be contacted shortly with login instructions.
+
+**Note,** when registering participants in the sandbox environment, providers must use the following dates of birth if they want to the participants to appear as **eligible for funding**:
+
+* ECT, 2022 cohort – date of birth 22/1/1900
+* ECT, 2023 cohort – date of birth 23/1/1900
+* Mentor, 2023 cohort – date of birth 1/1/1900
+
+### Watch video demos
+
+Watch videos on how to test the behaviour of the API in the scenario where:
+
+* [a participant is leaving a school, transferring to another](https://www.loom.com/share/7513dd3980814230bf4221e3976a2033)
+* [a participant is joining a school, transferring from another]( https://www.loom.com/share/d4d8a9f8f7254f0ca36ad63028ba4178)
+* [a school induction tutor assigns an ECT to an ‘unfunded mentor’](https://www.loom.com/share/7c17218248234a23aec5591cc74d0adb)
+* [a school induction tutor confirms a partnership will continue into the next cohort]( https://www.loom.com/share/bfbad349fe2c470d89e6949d78e43fc8)
+* [a school induction tutor challenges an existing partnership]( https://www.loom.com/share/af0ad15980cf434d8361da5633d730c6)
+
 ## 15th May 2023
 
-To support providers with their integrations with API v3.0.0.0, the API guidance has been updated.  
+To support providers with their integrations with API v3.0.0.0, the API guidance has been updated.
 
-Original instruction has been replaced with the following guidance:  
+Original instruction has been replaced with the following guidance:
 
-* [About the API](/api-reference) - an overview of the API’s core functionality and version control 
-* [Get started](/api-reference/get-started) - instruction on how to connect to the API  
-* [ECF-based training management](/api-reference/ecf) - an overview key ECF concepts, instruction on new and existing endpoints, and schedule dates  
-* [NPQ course management](/api-reference/npq) - an overview of key NPQ concepts, instruction on new and existing endpoints, and schedule identifiers 
+* [About the API](/api-reference) - an overview of the API’s core functionality and version control
+* [Get started](/api-reference/get-started) - instruction on how to connect to the API
+* [ECF-based training management](/api-reference/ecf) - an overview key ECF concepts, instruction on new and existing endpoints, and schedule dates
+* [NPQ course management](/api-reference/npq) - an overview of key NPQ concepts, instruction on new and existing endpoints, and schedule identifiers
 
-Providers are invited to feedback ahead of the API v3 release to the production environment. Updates to the guidance will be made as needed.  
+Providers are invited to feedback ahead of the API v3 release to the production environment. Updates to the guidance will be made as needed.
 
-Note, API v3.0.0.0 is not yet available in either sandbox or production environments.  
+Note, API v3.0.0.0 is not yet available in either sandbox or production environments.
 
 ## 13th April 2023
 
