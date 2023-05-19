@@ -5279,7 +5279,8 @@
           "course_identifier",
           "state",
           "completion_date",
-          "created_at"
+          "created_at",
+          "updated_at"
         ],
         "properties": {
           "participant_id": {
@@ -5323,6 +5324,11 @@
           },
           "created_at": {
             "description": "The date you created the participant-outcome record",
+            "type": "string",
+            "example": "2021-05-31T02:21:32.000Z"
+          },
+          "updated_at": {
+            "description": "The date and time the participant-outcome record was last updated",
             "type": "string",
             "example": "2021-05-31T02:21:32.000Z"
           }

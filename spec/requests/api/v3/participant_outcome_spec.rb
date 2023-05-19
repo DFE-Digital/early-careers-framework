@@ -81,6 +81,7 @@ private
         "course_identifier" => course_identifier,
         "state" => outcome.state,
         "participant_id" => profile.npq_application.participant_identity.user_id,
+        "updated_at" => outcome.updated_at.rfc3339,
       },
       "id" => outcome.id,
       "type" => "participant-outcome",
