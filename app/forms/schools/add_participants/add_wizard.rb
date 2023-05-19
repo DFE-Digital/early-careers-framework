@@ -128,10 +128,14 @@ module Schools
       end
 
       def send_added_and_validated_email(profile)
-        ParticipantMailer.with(
-          participant_profile: profile,
-          school_name: school.name,
-        ).sit_has_added_and_validated_participant.deliver_later
+        # appears perhaps the SIT doesn't always choose add mentor profile to self or perhaps
+        # rare occaision where there are multiple SITs and one is adding to another
+        unless profile.user.induction_coordinator?
+          ParticipantMailer.with(
+            participant_profile: profile,
+            school_name: school.name,
+          ).sit_has_added_and_validated_participant.deliver_later
+        end
       end
 
       def participant_create_args

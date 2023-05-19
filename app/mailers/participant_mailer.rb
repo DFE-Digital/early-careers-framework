@@ -163,8 +163,11 @@ class ParticipantMailer < ApplicationMailer
     participant_profile = params[:participant_profile]
     school_name = params[:school_name]
 
+    template_id = PARTICIPANT_TEMPLATES[sit_validation_template participant_profile]
+    return if template_id.blank?
+
     template_mail(
-      PARTICIPANT_TEMPLATES[sit_validation_template participant_profile],
+      template_id,
       to: participant_profile.user.email,
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
