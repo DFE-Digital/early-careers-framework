@@ -78,13 +78,14 @@ RSpec.describe SchoolMailer, type: :mailer do
     end
   end
 
-  describe "#nomination_email_confirmation" do
+  describe "#nomination_confirmation_email" do
     let(:school) { create(:school) }
     let(:sit_profile) { create(:induction_coordinator_profile) }
     let(:start_url) { "https://ecf-dev.london.cloudapps" }
 
     let(:nomination_confirmation_email) do
       SchoolMailer.with(
+        email_address: sit_profile.user.email,
         sit_profile:,
         school:,
         start_url:,
@@ -95,6 +96,10 @@ RSpec.describe SchoolMailer, type: :mailer do
     it "renders the right headers" do
       expect(nomination_confirmation_email.to).to eq([sit_profile.user.email])
       expect(nomination_confirmation_email.from).to eq(["mail@example.com"])
+    end
+
+    it "uses the correct Notify template" do
+      expect(SchoolMailer::NOMINATION_CONFIRMATION_EMAIL_TEMPLATE).to eq("7cc9b459-b088-4d5a-84c8-33a74993a2fc")
     end
   end
 

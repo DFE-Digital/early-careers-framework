@@ -2,7 +2,7 @@
 
 class SchoolMailer < ApplicationMailer
   NOMINATION_EMAIL_TEMPLATE = "a7cc4d19-c0cb-4187-a71b-1b1ea029924f"
-  NOMINATION_CONFIRMATION_EMAIL_TEMPLATE = "2c740b37-bc4e-47eb-8657-1742b9b8eda7"
+  NOMINATION_CONFIRMATION_EMAIL_TEMPLATE = "7cc9b459-b088-4d5a-84c8-33a74993a2fc"
   SCHOOL_REQUESTED_SIGNIN_LINK_FROM_GIAS = "f2764570-ca3c-4e3b-97c3-251a853c9dde"
   SCHOOL_PARTNERSHIP_NOTIFICATION_EMAIL_TEMPLATE = "8cac177e-b094-4a00-9179-94fadde8ced0"
   COORDINATOR_PARTNERSHIP_NOTIFICATION_EMAIL_TEMPLATE = "076e8486-cbcc-44ee-8a6e-d2a721ee1460"
@@ -112,13 +112,15 @@ class SchoolMailer < ApplicationMailer
     school = params[:school]
     start_url = params[:start_url]
     step_by_step_url = params[:step_by_step_url]
+    sit_email_address = sit_profile.user.email
 
     template_mail(
       NOMINATION_CONFIRMATION_EMAIL_TEMPLATE,
-      to: sit_profile.user.email,
+      to: sit_email_address,
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
+        email_address: sit_email_address,
         name: sit_profile.user.full_name,
         school_name: school.name,
         start_page: start_url,
