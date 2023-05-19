@@ -1,41 +1,45 @@
 <div class="search-box">
-  <%= form_with method: :get, class: "search-box__form" do |f| %>
+  <%= form_with method: :get do |f| %>
     
-    <div class="search-box__input">
-      <%= f.govuk_text_field(
-          param_name,
-          value: query,
-          label: { text: title, size: "s" },
-          hint: { text: hint },
-        )
-      %>
-    </div>
-
-    <% filters.each do |filter| %>
-      <div class="search-box__input">
-        <%= f.govuk_collection_select filter[:field],
-          filter[:options],
-          :id,
-          :name,
-          label: { text: "Filter by #{filter[:label] || filter[:field]}" },
-          options: { selected: filter[:value] } %>
+    <div class="w3-container", style="display: flex">
+      <div style="width: calc(100% / 3)">
+        <%= f.govuk_text_field(
+            param_name,
+            value: query,
+            label: { text: title, size: "s" },
+            hint: { text: hint },
+          )
+        %>
       </div>
-    <% end %>
 
-    <div class="search-box__input">
-      <%= f.govuk_date_field :start_date,
-        legend: { text: "Start Date", size: 's' },
-        hint: { text: "" }
-      %>
+      <% filters.each do |filter| %>
+        <div style="width: calc(100% / 3); margin-left: 15px; margin-top: 5%; margin-right: -5%">
+          <%= f.govuk_collection_select filter[:field],
+            filter[:options],
+            :id,
+            :name,
+            label: { text: "Filter by #{filter[:label] || filter[:field]}" },
+            options: { selected: filter[:value] } %>
+        </div>
+      <% end %>
     </div>
 
-    <div class="search-box__input">
-      <%= f.govuk_date_field :end_date,
-        legend: { text: "End Date", size: 's' },
-        hint: { text: "" }
-      %>
+    <div class="w3-container", style="display: flex">
+      <div class="search-box__input", style="flex-grow: 0.22">
+        <%= f.govuk_date_field :start_date,
+          legend: { text: "Start Date", size: 's' },
+          hint: { text: "" }
+        %>
+      </div>
+
+      <div class="search-box__input", style="flex-grow: 0.22">
+        <%= f.govuk_date_field :end_date,
+          legend: { text: "End Date", size: 's' },
+          hint: { text: "" }
+        %>
+      </div>
     </div>
 
-    <%= f.govuk_submit "Search", classes: "search-box__button", "data-test": "search-button" %>
+    <%= f.govuk_submit "Search", class: "search-box__button", style: "margin-left: 0px; margin-top: 15px;", "data-test": "search-button" %>
   <% end %>
 </div>
