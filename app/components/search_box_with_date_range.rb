@@ -10,8 +10,8 @@ class SearchBoxWithDateRange < BaseComponent
     @start_date = start_date
     @end_date = end_date
   end
-  
+
 private
-  
+
   attr_reader :query, :title, :hint, :param_name, :filters, :start_date, :end_date
 end
