@@ -40,7 +40,7 @@ class AppropriateBodySelectionForm
       OpenStruct.new(id: "national", name: "National organisation", disable_from_year: nil),
       OpenStruct.new(id: "teaching_school_hub", name: "Teaching school hub", disable_from_year: nil),
     ]
-    if disable_from_year.present?
+    if cohort_start_year.present?
       types.select { |ab_type| ab_type.disable_from_year.nil? || ab_type.disable_from_year > cohort_start_year }
     else
       types
