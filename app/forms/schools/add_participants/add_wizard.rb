@@ -101,7 +101,11 @@ module Schools
         # Finish enroll process and send notification emails
         profile = nil
         ActiveRecord::Base.transaction do
-          profile = if ect_participant?
+          profile = if ect_mentor?
+                      Mentors::AddProfileToECT.call(ect_profile: existing_participant_profile,
+                                                    school_cohort:,
+                                                    preferred_email: email)
+                    elsif ect_participant?
                       EarlyCareerTeachers::Create.call(**participant_create_args)
                     else
                       Mentors::Create.call(**participant_create_args.except(:induction_start_date, :mentor_profile_id))
