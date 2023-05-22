@@ -37,6 +37,7 @@ RSpec.describe Schools::AddParticipants::WizardSteps::DateOfBirthStep, type: :mo
   describe "#next_step" do
     let(:participant_exists) { false }
     let(:ect) { false }
+    let(:mentor) { false }
     let(:different_type) { false }
     let(:already_at_school) { false }
     let(:different_name) { false }
@@ -49,6 +50,7 @@ RSpec.describe Schools::AddParticipants::WizardSteps::DateOfBirthStep, type: :mo
     before do
       allow(wizard).to receive(:participant_exists?).and_return(participant_exists)
       allow(wizard).to receive(:ect_participant?).and_return(ect)
+      allow(wizard).to receive(:mentor_participant?).and_return(mentor)
       allow(wizard).to receive(:existing_participant_is_a_different_type?).and_return(different_type)
       allow(wizard).to receive(:already_enrolled_at_school?).and_return(already_at_school)
       allow(wizard).to receive(:dqt_record_has_different_name?).and_return(different_name)
@@ -57,6 +59,38 @@ RSpec.describe Schools::AddParticipants::WizardSteps::DateOfBirthStep, type: :mo
       allow(wizard).to receive(:registration_open_for_participant_cohort?).and_return(registration_open)
       allow(wizard).to receive(:need_training_setup?).and_return(need_setup)
       allow(wizard).to receive(:needs_to_confirm_start_term?).and_return(confirm_start_term)
+    end
+
+    shared_examples "cohort and registration checks" do
+      context "when registration is available" do
+        let(:registration_open) { true }
+
+        it "returns :none" do
+          expect(step.next_step).to eql :none
+        end
+
+        context "when the participant will be asked the start_term question" do
+          let(:confirm_start_term) { true }
+
+          it "returns :none" do
+            expect(step.next_step).to eql :none
+          end
+        end
+
+        context "when the cohort needs to be set up" do
+          let(:need_setup) { true }
+
+          it "returns :need_training_setup" do
+            expect(step.next_step).to eql :need_training_setup
+          end
+        end
+      end
+
+      context "when registration is not open" do
+        it "returns :cannot_add_registration_not_yet_open" do
+          expect(step.next_step).to eql :cannot_add_registration_not_yet_open
+        end
+      end
     end
 
     context "when participant already exists" do
@@ -74,8 +108,20 @@ RSpec.describe Schools::AddParticipants::WizardSteps::DateOfBirthStep, type: :mo
         end
 
         context "when the existing participant is an ECT and the SIT tries to add a mentor" do
+          let(:mentor) { true }
+
           it "returns :cannot_add_mentor_because_already_an_ect" do
             expect(step.next_step).to eql :cannot_add_mentor_because_already_an_ect
+          end
+
+          context "when the ECT is already enrolled at the school" do
+            let(:already_at_school) { true }
+
+            before do
+              allow(wizard).to receive(:set_ect_mentor)
+            end
+
+            include_examples "cohort and registration checks"
           end
         end
       end
@@ -118,35 +164,7 @@ RSpec.describe Schools::AddParticipants::WizardSteps::DateOfBirthStep, type: :mo
     context "when a matching DQT record is found with the correct name" do
       let(:found_in_dqt) { true }
 
-      context "when registration is available" do
-        let(:registration_open) { true }
-
-        it "returns :none" do
-          expect(step.next_step).to eql :none
-        end
-
-        context "when the participant will be asked the start_term question" do
-          let(:confirm_start_term) { true }
-
-          it "returns :none" do
-            expect(step.next_step).to eql :none
-          end
-        end
-
-        context "when the cohort needs to be set up" do
-          let(:need_setup) { true }
-
-          it "returns :need_training_setup" do
-            expect(step.next_step).to eql :need_training_setup
-          end
-        end
-      end
-
-      context "when registration is not open" do
-        it "returns :cannot_add_registration_not_yet_open" do
-          expect(step.next_step).to eql :cannot_add_registration_not_yet_open
-        end
-      end
+      include_examples "cohort and registration checks"
     end
 
     context "when no matching DQT record is found" do
