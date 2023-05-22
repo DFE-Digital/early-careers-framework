@@ -30,6 +30,7 @@ class SchoolMailer < ApplicationMailer
   PARTICIPANT_WITHDRAWN_BY_PROVIDER = "29f94916-8c3a-4c5a-9e33-bdf3f5d7249a"
   REMIND_TO_SETUP_MENTOR_TO_ECTS = "604ca80f-b152-4682-9295-9cf1d30f74c1"
   REMIND_GIAS_CONTACT_TO_UPDATE_INDUCTION_TUTOR_DETAILS_TEMPLATE = "88cdad72-386c-40fb-be2e-11d4ae9dcdee"
+  REMIND_SIT_TO_REPORT_SCHOOL_TRAINING_DETAILS_TEMPLATE = "87d4720b-9e3a-46d9-95de-493295dba1dc"
 
   def remind_sit_to_set_mentor_to_ects
     sit = params[:sit]
@@ -546,5 +547,23 @@ class SchoolMailer < ApplicationMailer
       .tag(:sit_fip_provider_has_withdrawn_a_participant)
       .associate_with(induction_coordinator, as: :induction_coordinator)
       .associate_with(withdrawn_participant, as: :participant_profile)
+  end
+
+  # Pilot one-off mailers
+
+  def remind_sit_to_report_school_training_details
+    sit_profile = params[:sit_profile]
+    nomination_link = params[:nomination_link]
+
+    template_mail(
+      REMIND_SIT_TO_REPORT_SCHOOL_TRAINING_DETAILS_TEMPLATE,
+      to: sit_profile.user.email,
+      rails_mailer: mailer_name,
+      rails_mail_template: action_name,
+      personalisation: {
+        sit_name: sit_profile.user.full_name,
+        nomination_link:,
+      },
+    ).tag(:sit_to_report_school_training).associate_with(sit_profile)
   end
 end
