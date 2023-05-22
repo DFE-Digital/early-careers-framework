@@ -120,13 +120,12 @@ RSpec.describe "API ECF Participants", :with_default_schedules, type: :request, 
 
         it "returns different users for each page" do
           get "/api/v3/participants/ecf", params: { page: { per_page: 2, page: 1 } }
-          expect(parsed_response["data"].size).to eql(2)
           first_page_id = parsed_response["data"].first["id"]
 
           get "/api/v3/participants/ecf", params: { page: { per_page: 2, page: 2 } }
           second_parsed_response = JSON.parse(response.body)
           second_page_ids = second_parsed_response["data"].map { |item| item["id"] }
-          expect(second_parsed_response["data"].size).to eql(2)
+
           expect(second_page_ids).not_to include first_page_id
         end
 

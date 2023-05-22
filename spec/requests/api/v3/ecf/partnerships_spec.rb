@@ -97,21 +97,43 @@ RSpec.describe "API ECF Partnerships", :with_default_schedules, type: :request d
         end
       end
 
-      context "when ordering by name" do
-        it "returns an ordered list of partnership" do
-          get "/api/v3/partnerships/ecf", params: { sort: "updated_at" }
+      describe "ordering" do
+        context "when ordering by updated_at ascending" do
+          let(:sort_param) { "updated_at" }
 
-          expect(parsed_response["data"].size).to eql(2)
-          expect(parsed_response.dig("data", 0, "attributes", "delivery_partner_name")).to eql("First Delivery Partner")
-          expect(parsed_response.dig("data", 1, "attributes", "delivery_partner_name")).to eql("Second Delivery Partner")
+          before { get "/api/v3/partnerships/ecf", params: { sort: sort_param, filter: { cohort: [cohort.display_name, another_cohort.display_name].join(",") } } }
+
+          it "returns an ordered list of partnership" do
+            expect(parsed_response["data"].size).to eql(2)
+            expect(parsed_response.dig("data", 0, "attributes", "delivery_partner_name")).to eql("First Delivery Partner")
+            expect(parsed_response.dig("data", 1, "attributes", "delivery_partner_name")).to eql("Second Delivery Partner")
+          end
         end
 
-        it "returns an ordered list of partnership" do
-          get "/api/v3/partnerships/ecf", params: { sort: "-updated_at" }
+        context "when ordering by updated_at descending" do
+          let(:sort_param) { "-updated_at" }
 
-          expect(parsed_response["data"].size).to eql(2)
-          expect(parsed_response.dig("data", 0, "attributes", "delivery_partner_name")).to eql("Second Delivery Partner")
-          expect(parsed_response.dig("data", 1, "attributes", "delivery_partner_name")).to eql("First Delivery Partner")
+          before { get "/api/v3/partnerships/ecf", params: { sort: sort_param, filter: { cohort: [cohort.display_name, another_cohort.display_name].join(",") } } }
+
+          it "returns an ordered list of partnership" do
+            expect(parsed_response["data"].size).to eql(2)
+            expect(parsed_response.dig("data", 0, "attributes", "delivery_partner_name")).to eql("Second Delivery Partner")
+            expect(parsed_response.dig("data", 1, "attributes", "delivery_partner_name")).to eql("First Delivery Partner")
+          end
+        end
+
+        context "when not including sort in the params" do
+          before do
+            partnership.update!(created_at: 10.days.ago)
+
+            get "/api/v3/partnerships/ecf", params: { sort: "", filter: { cohort: [cohort.display_name, another_cohort.display_name].join(",") } }
+          end
+
+          it "returns all records ordered by created_at" do
+            expect(parsed_response["data"].size).to eql(2)
+            expect(parsed_response.dig("data", 0, "attributes", "delivery_partner_name")).to eql("First Delivery Partner")
+            expect(parsed_response.dig("data", 1, "attributes", "delivery_partner_name")).to eql("Second Delivery Partner")
+          end
         end
       end
     end

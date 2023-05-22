@@ -34,7 +34,7 @@ module Api
                     .distinct
 
           scope = updated_since.present? ? scope.where(users: { updated_at: updated_since.. }) : scope
-          params[:sort].blank? ? scope.order("users.updated_at ASC") : scope
+          params[:sort].blank? ? scope.order("participant_profiles_users.created_at ASC") : scope
         end
 
         def participant

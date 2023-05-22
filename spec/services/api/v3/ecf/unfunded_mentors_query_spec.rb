@@ -52,6 +52,16 @@ RSpec.describe Api::V3::ECF::UnfundedMentorsQuery, :with_default_schedules do
         end
       end
     end
+
+    context "sorting" do
+      let(:user) { create(:user, email: "mary.lewis@example.com", created_at: 10.days.ago) }
+      let!(:another_unfunded_mentor_profile) { create(:mentor, :eligible_for_funding, user:) }
+      let!(:another_unfunded_mentor_induction_record) { create(:induction_record, induction_programme:, mentor_profile: another_unfunded_mentor_profile) }
+
+      it "returns all unfunded mentors ordered by users created_at" do
+        expect(subject.unfunded_mentors.map(&:user_id)).to eq([another_unfunded_mentor_profile.user.id, unfunded_mentor_profile_user_id])
+      end
+    end
   end
 
   describe "#unfunded_mentor" do

@@ -18,7 +18,7 @@ module Api
             .distinct
 
           scope = scope.where(urn: filter[:urn]) if filter[:urn].present?
-          scope = scope.order(updated_at: :desc) if params[:sort].blank?
+          scope = scope.order("schools.created_at ASC") if params[:sort].blank?
 
           if updated_since.present?
             scope = scope.where(updated_at: updated_since..).or(scope.where(school_cohorts: { updated_at: updated_since.. }))

@@ -14,9 +14,9 @@ RSpec.describe "API Delivery Partners", :with_default_schedules, type: :request,
 
   describe "#index" do
     before :each do
-      another_delivery_partner = create(:delivery_partner, name: "Second Delivery Partner")
-      another_cohort = create(:cohort, start_year: "2050")
-      create(:provider_relationship, cohort: another_cohort, delivery_partner: another_delivery_partner, lead_provider:)
+      @another_delivery_partner = create(:delivery_partner, name: "Second Delivery Partner")
+      @another_cohort = create(:cohort, start_year: "2050")
+      create(:provider_relationship, cohort: @another_cohort, delivery_partner: @another_delivery_partner, lead_provider:)
     end
 
     context "when authorized" do
@@ -101,6 +101,20 @@ RSpec.describe "API Delivery Partners", :with_default_schedules, type: :request,
         it "returns an ordered list of delivery partners" do
           get "/api/v3/delivery-partners", params: { sort: "-updated_at,name" }
 
+          expect(parsed_response["data"].size).to eql(2)
+          expect(parsed_response.dig("data", 0, "attributes", "name")).to eql("Second Delivery Partner")
+          expect(parsed_response.dig("data", 1, "attributes", "name")).to eql("First Delivery Partner")
+        end
+      end
+
+      context "when not including sort in the params" do
+        before do
+          @another_delivery_partner.update!(created_at: 10.days.ago)
+
+          get "/api/v3/delivery-partners", params: { sort: "" }
+        end
+
+        it "returns all records ordered by npq applications created_at" do
           expect(parsed_response["data"].size).to eql(2)
           expect(parsed_response.dig("data", 0, "attributes", "name")).to eql("Second Delivery Partner")
           expect(parsed_response.dig("data", 1, "attributes", "name")).to eql("First Delivery Partner")

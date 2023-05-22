@@ -56,6 +56,14 @@ RSpec.describe Api::V3::DeliveryPartnersQuery do
         expect(subject.delivery_partners).to match_array([delivery_partner, another_delivery_partner])
       end
     end
+
+    context "sorting" do
+      let!(:another_delivery_partner) { create(:delivery_partner, name: "Second Delivery Partner", created_at: 10.days.ago) }
+
+      it "returns all records ordered by created_at" do
+        expect(subject.delivery_partners).to eq([another_delivery_partner, delivery_partner])
+      end
+    end
   end
 
   describe "#delivery_partner" do
