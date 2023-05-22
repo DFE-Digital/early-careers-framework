@@ -19,6 +19,7 @@ module Schools
                :induction_start_date, :nino, :ect_participant?, :mentor_id, :continue_current_programme?, :participant_profile,
                :sit_mentor?, :mentor_participant?, :appropriate_body_confirmed?, :appropriate_body_id, :known_by_another_name?,
                :same_provider?, :was_withdrawn_participant?, :complete?, :start_date, :start_term, :last_visited_step,
+               :ect_mentor?,
                to: :data_store
 
       def initialize(current_step:, data_store:, current_user:, school:, submitted_params: {})
@@ -89,6 +90,10 @@ module Schools
         else
           data_store.email
         end
+      end
+
+      def set_ect_mentor
+        data_store.set(:ect_mentor, true)
       end
 
       def join_school_programme?
@@ -503,6 +508,7 @@ module Schools
           last_visited_step
           school_cohort_id
           school_id
+          ect_mentor
         ].each do |key|
           data_store.set(key, nil)
         end

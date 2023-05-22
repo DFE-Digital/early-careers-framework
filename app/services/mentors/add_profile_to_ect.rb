@@ -17,7 +17,6 @@ module Mentors
           sparsity_uplift: sparsity_uplift?(start_year),
           pupil_premium_uplift: pupil_premium_uplift?(start_year),
           school_cohort:,
-          start_term:,
         )
 
         ParticipantProfileState.create!(participant_profile: mentor_profile,
@@ -40,12 +39,11 @@ module Mentors
 
   private
 
-    attr_reader :ect_profile, :preferred_email, :start_term, :school_cohort, :start_date
+    attr_reader :ect_profile, :preferred_email, :school_cohort, :start_date
 
-    def initialize(ect_profile:, school_cohort:, preferred_email: nil, start_term: nil, start_date: nil)
+    def initialize(ect_profile:, school_cohort:, preferred_email: nil, start_date: nil)
       @ect_profile = ect_profile
       @preferred_email = preferred_email || ect_profile.participant_identity.email
-      @start_term = start_term || school_cohort.cohort.start_term_options.first
       @start_date = start_date
       @school_cohort = school_cohort
     end
