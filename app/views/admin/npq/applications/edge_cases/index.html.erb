@@ -1,5 +1,19 @@
 <%= render "admin/npq/applications/layout", locals = { page: "applications" } %>
 
+<div class="admin-search-box">
+  <%= form_with method: :get do |f| %>
+    <%= f.govuk_text_field(
+        :query,
+        value: params[:query],
+        label: { text: "Search Applicants", size: "m" },
+        hint: { text: "Enter the Applicant’s ID, Name, Email, Employer's Name, TRN or Application Id", size: "s" },
+      )
+    %>
+
+    <%= f.govuk_submit "Search" %>
+  <% end %>
+</div>
+
 <%=
   govuk_table do |table|
     table.head do |head|
@@ -12,7 +26,7 @@
         row.cell(header: true, text: "Role")
         row.cell(header: true, text: "Created at")
       end
-    end
+    end 
 
     table.body do |body|
       @npq_applications.each do |application|
