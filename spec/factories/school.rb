@@ -14,7 +14,7 @@ FactoryBot.define do
 
     trait :pupil_premium_uplift do
       transient do
-        start_year { 2021 }
+        start_year { build(:cohort, :current).start_year }
       end
 
       pupil_premiums { [build(:pupil_premium, :uplift, start_year:)] }
@@ -22,7 +22,7 @@ FactoryBot.define do
 
     trait :sparsity_uplift do
       transient do
-        start_year { 2021 }
+        start_year { build(:cohort, :current).start_year }
       end
 
       pupil_premiums { [build(:pupil_premium, :sparse, start_year:)] }
@@ -30,7 +30,7 @@ FactoryBot.define do
 
     trait :pupil_premium_and_sparsity_uplift do
       transient do
-        start_year { 2021 }
+        start_year { build(:cohort, :current).start_year }
       end
 
       pupil_premiums { [build(:pupil_premium, :uplift, :sparse, start_year:)] }
