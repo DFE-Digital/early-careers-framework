@@ -13,12 +13,14 @@ module Api
       def scope
         if participant_external_id.nil?
           return ParticipantOutcome::NPQ
+            .includes(participant_declaration: [participant_profile: [:participant_identity]])
             .joins(:participant_declaration)
             .order(:created_at)
             .merge(declarations_scope)
         end
 
         ParticipantOutcome::NPQ
+          .includes(participant_declaration: [participant_profile: [:participant_identity]])
           .joins(participant_declaration: { participant_profile: :participant_identity })
           .order(:created_at)
           .merge(declarations_scope)
