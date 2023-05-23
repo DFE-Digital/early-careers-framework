@@ -9,8 +9,6 @@ module Schools
       class AlreadyInitialised < StandardError; end
       class InvalidStep < StandardError; end
 
-      NPQ_PLUS_1_COHORT_START_YEAR = 2020
-
       attr_reader :current_step, :submitted_params, :data_store, :current_user, :participant_profile, :school
 
       delegate :before_render, to: :form
@@ -363,7 +361,7 @@ module Schools
           existing_participant_cohort || existing_participant_profile&.schedule&.cohort
         elsif ect_participant? && induction_start_date.present?
           Cohort.containing_date(induction_start_date).tap do |cohort|
-            return Cohort.current if cohort.start_year <= NPQ_PLUS_1_COHORT_START_YEAR
+            return Cohort.current if cohort.blank? || cohort.npq_plus_one_or_earlier?
           end
         elsif Cohort.within_automatic_assignment_period?
           # true from 1/9 to end of automatic assignment period
