@@ -106,7 +106,7 @@ Rails.application.configure do
   # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new 'app-name')
 
   # Logging
-  config.log_level = :debug # Debug logging in dev
+  config.log_level = :info
   config.log_tags = [:request_id] # Prepend all log lines with the following tags.
   logger = ActiveSupport::Logger.new($stdout)
   logger.formatter = config.log_formatter
