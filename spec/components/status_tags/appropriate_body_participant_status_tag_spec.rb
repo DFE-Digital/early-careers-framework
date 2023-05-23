@@ -7,7 +7,7 @@ RSpec.describe StatusTags::AppropriateBodyParticipantStatusTag, type: :component
 
   context "The language file" do
     TrainingRecordState.record_states.each_key do |key|
-      it "includes :#{key} as a language entry" do
+      it "includes the record_state :#{key} as a language entry" do
         expect(I18n.t("status_tags.appropriate_body_participant_status").keys).to include key.to_sym
       end
     end
@@ -18,6 +18,10 @@ RSpec.describe StatusTags::AppropriateBodyParticipantStatusTag, type: :component
       before { allow(component).to receive(:record_state).and_return(key) }
       it { is_expected.to have_text value[:label] }
       it { is_expected.to have_text Array.wrap(value[:description]).join(" ") }
+    end
+
+    it "includes :#{key} as a recognised record_state" do
+      expect(TrainingRecordState.record_states.keys).to include key.to_s
     end
   end
 end

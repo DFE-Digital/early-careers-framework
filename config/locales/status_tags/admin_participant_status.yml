@@ -96,29 +96,15 @@ en:
         label: "Training"
         colour: "turquoise"
 
-      # mentor duplicates
-
-      ineligible_ero_secondary:
-        label: "Eligible: ERO Mentor at additional school"
-        colour: "turquoise"
-
-      ineligible_ero_primary:
-        label: "Eligible: ERO Mentor at main school"
-        colour: "turquoise"
-
-      ineligible_ero:
-        label: "Eligible: ERO"
-        colour: "turquoise"
-
-      ineligible_secondary:
-        label: "Eligible: Mentor at additional school"
-        colour: "turquoise"
-
-      ineligible_primary:
-        label: "Eligible: Mentor at main school"
-        colour: "turquoise"
-
       # mentoring
+
+      active_mentoring_ero:
+        label: "Mentoring"
+        colour: "turquoise"
+
+      not_yet_mentoring_ero:
+        label: "Not yet mentoring"
+        colour: "turquoise"
 
       active_mentoring:
         label: "Mentoring"
@@ -126,50 +112,6 @@ en:
 
       not_yet_mentoring:
         label: "Not yet mentoring"
-        colour: "turquoise"
-
-      # FIP mentors
-
-      not_yet_mentoring_fip_ero:
-        label: "Not yet mentoring: ERO"
-        colour: "turquoise"
-
-      not_yet_mentoring_fip_no_partner:
-        label: "Not yet mentoring: No partnership"
-        colour: "turquoise"
-
-      not_yet_mentoring_fip:
-        label: "Not yet mentoring"
-        colour: "turquoise"
-
-      active_fip_mentoring_ero:
-        label: "Mentoring: ERO"
-        colour: "turquoise"
-
-      active_fip_mentoring_no_partner:
-        label: "Mentoring: No partnership"
-        colour: "turquoise"
-
-      active_fip_mentoring:
-        label: "Mentoring"
-        colour: "turquoise"
-
-      # CIP mentors
-
-      not_yet_mentoring_cip_ero:
-        label: "Not yet mentoring: ERO"
-        colour: "turquoise"
-
-      active_cip_mentoring_ero:
-        label: "Mentoring: ERO"
-        colour: "turquoise"
-
-      not_yet_mentoring_cip:
-        label: "Not yet mentoring"
-        colour: "turquoise"
-
-      active_cip_mentoring:
-        label: "Mentoring"
         colour: "turquoise"
 
       # changes of circumstance
@@ -202,6 +144,10 @@ en:
         label: "No longer involved"
         colour: "orange"
 
+      not_registered_for_training:
+        label: "Not registered for training"
+        colour: "grey"
+
       # completion
 
       previous_induction:
@@ -211,8 +157,3 @@ en:
       completed_training:
         label: "Completed training"
         colour: "orange"
-
-      failed_training:
-        label: "Failed induction"
-        colour: "orange"
-

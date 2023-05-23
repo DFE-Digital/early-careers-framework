@@ -139,30 +139,8 @@ WITH
                         WHEN "mentee_counts"."total" > 0
                             THEN
                             CASE
-                                WHEN "induction_programmes"."training_programme" = 'full_induction_programme'
-                                    THEN
-                                    CASE
-                                        WHEN "ecf_participant_eligibilities"."reason" = 'previous_participation'
-                                            THEN 'active_fip_mentoring_ero'
-                                        ELSE
-                                            'active_fip_mentoring'
-                                        END
-                                WHEN "induction_programmes"."training_programme" = 'core_induction_programme'
-                                    THEN
-                                    CASE
-                                        WHEN "ecf_participant_eligibilities"."reason" = 'previous_participation'
-                                            THEN 'active_cip_mentoring_ero'
-                                        ELSE
-                                            'active_cip_mentoring'
-                                        END
-                                WHEN "induction_programmes"."training_programme" = 'design_our_own'
-                                    THEN
-                                    CASE
-                                        WHEN "ecf_participant_eligibilities"."reason" = 'previous_participation'
-                                            THEN 'active_diy_mentoring_ero'
-                                        ELSE
-                                            'active_diy_mentoring'
-                                        END
+                                WHEN "ecf_participant_eligibilities"."reason" = 'previous_participation'
+                                    THEN 'active_mentoring_ero'
                                 ELSE
                                     'active_mentoring'
                                 END
@@ -297,6 +275,7 @@ SELECT
                                                                                                  'eligible_for_fip_funding',
                                                                                                  'ineligible_secondary',
                                                                                                  'ineligible_ero',
+                                                                                                 'ineligible_ero_primary',
                                                                                                  'ineligible_ero_secondary'
                                                                                                 )
             THEN "individual_training_record_states"."fip_funding_eligibility_state"
