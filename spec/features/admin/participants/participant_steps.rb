@@ -156,6 +156,7 @@ module ParticipantSteps
   def and_i_have_added_a_mentor
     @participant_profile_mentor = create(:mentor_participant_profile, user: create(:user, full_name: "Billy Mentor", email: "billy-mentor@example.com"), school_cohort: @school_cohort)
     Induction::Enrol.call(participant_profile: @participant_profile_mentor, induction_programme: @induction_programme)
+    Mentors::AddToSchool.call(school: @school, mentor_profile: @participant_profile_mentor)
   end
 
   def and_the_mentor_is_mentoring_the_ect

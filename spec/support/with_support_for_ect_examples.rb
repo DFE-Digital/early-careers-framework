@@ -37,6 +37,7 @@ RSpec.shared_context "with Support for ECTs example profiles", shared_context: :
     user = create(:user, full_name: "FIP Mentor Only")
     participant_profile = create(:mentor_participant_profile, user:, school_cohort: fip_school_cohort)
     Induction::Enrol.call(participant_profile:, induction_programme: fip_induction_programme)
+    Mentors::AddToSchool.call(mentor_profile: participant_profile, school: fip_school_cohort.school)
     participant_profile
   end
 
@@ -44,6 +45,7 @@ RSpec.shared_context "with Support for ECTs example profiles", shared_context: :
     user = create(:user, full_name: "CIP Mentor Only")
     participant_profile = create(:mentor_participant_profile, user:, school_cohort: cip_school_cohort, core_induction_programme:)
     Induction::Enrol.call(participant_profile:, induction_programme: cip_induction_programme)
+    Mentors::AddToSchool.call(mentor_profile: participant_profile, school: cip_school_cohort.school)
     participant_profile
   end
 
@@ -117,6 +119,7 @@ RSpec.shared_context "with Support for ECTs example profiles", shared_context: :
     mentor_identity = create(:participant_identity, :secondary, user:, email: "mentor_1@example.com")
     mentor_profile = create(:mentor_participant_profile, teacher_profile:, school_cohort: fip_school_cohort, participant_identity: mentor_identity)
     Induction::Enrol.call(participant_profile: mentor_profile, induction_programme: fip_induction_programme, start_date: 3.months.ago)
+    Mentors::AddToSchool.call(mentor_profile:, school: fip_induction_programme.school)
 
     { ect_profile:, mentor_profile: }
   end

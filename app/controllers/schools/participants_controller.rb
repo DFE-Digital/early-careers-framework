@@ -23,7 +23,7 @@ class Schools::ParticipantsController < Schools::BaseController
     @ects = Dashboard::Participants.new(school: @school,
                                         user: current_user,
                                         latest_year: Dashboard::LatestManageableCohort.call(@school).start_year)
-                                   .mentors[@induction_record]
+                                   .ects_mentored_by(@profile)
   end
 
   def edit_name

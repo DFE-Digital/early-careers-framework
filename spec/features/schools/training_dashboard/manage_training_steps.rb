@@ -242,6 +242,7 @@ module ManageTrainingSteps
   def and_i_have_added_an_eligible_mentor
     @eligible_mentor = create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, user: create(:user, full_name: "Eligible mentor"), school_cohort: @school_cohort)
     Induction::Enrol.call(participant_profile: @eligible_mentor, induction_programme: @induction_programme)
+    Mentors::AddToSchool.call(mentor_profile: @eligible_mentor, school: @school)
   end
 
   def and_i_have_added_an_ineligible_ect_with_mentor
@@ -254,6 +255,7 @@ module ManageTrainingSteps
     @ineligible_mentor = create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, user: create(:user, full_name: "Ineligible mentor"), school_cohort: @school_cohort)
     @ineligible_mentor.ecf_participant_eligibility.update!(status: "ineligible", reason: "active_flags")
     Induction::Enrol.call(participant_profile: @ineligible_mentor, induction_programme: @induction_programme)
+    Mentors::AddToSchool.call(mentor_profile: @ineligible_mentor, school: @school)
   end
 
   def and_i_have_added_a_contacted_for_info_ect_with_mentor
@@ -265,6 +267,7 @@ module ManageTrainingSteps
     @ero_mentor = create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, user: create(:user, full_name: "ero mentor"), school_cohort: @school_cohort)
     @ero_mentor.ecf_participant_eligibility.update!(status: "ineligible", reason: "previous_participation")
     Induction::Enrol.call(participant_profile: @ero_mentor, induction_programme: @induction_programme)
+    Mentors::AddToSchool.call(mentor_profile: @ero_mentor, school: @school)
   end
 
   def and_i_have_added_a_contacted_for_info_ect_without_mentor
@@ -435,6 +438,7 @@ module ManageTrainingSteps
   def and_i_have_added_a_contacted_for_info_mentor
     @contacted_for_info_mentor = create(:mentor_participant_profile, :email_sent, request_for_details_sent_at: 5.days.ago, user: create(:user, full_name: "CFI Mentor"), school_cohort: @school_cohort)
     Induction::Enrol.call(participant_profile: @contacted_for_info_mentor, induction_programme: @induction_programme)
+    Mentors::AddToSchool.call(mentor_profile: @contacted_for_info_mentor, school: @school)
   end
 
   def and_i_am_signed_in_as_an_induction_coordinator_for_multiple_schools
@@ -479,6 +483,7 @@ module ManageTrainingSteps
     @details_being_checked_mentor = create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, user: create(:user, full_name: "DBC Mentor"), school_cohort: @school_cohort)
     @details_being_checked_mentor.ecf_participant_eligibility.update!(status: "manual_check", reason: "different_trn")
     Induction::Enrol.call(participant_profile: @details_being_checked_mentor, induction_programme: @induction_programme)
+    Mentors::AddToSchool.call(mentor_profile: @details_being_checked_mentor, school: @school)
   end
 
   def and_i_have_added_a_no_qts_ect_with_mentor
@@ -497,6 +502,7 @@ module ManageTrainingSteps
     @no_qts_mentor = create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, user: create(:user, full_name: "No-qts Mentor"), school_cohort: @school_cohort)
     @no_qts_mentor.ecf_participant_eligibility.update!(status: "manual_check", reason: "no_qts")
     Induction::Enrol.call(participant_profile: @no_qts_mentor, induction_programme: @induction_programme)
+    Mentors::AddToSchool.call(mentor_profile: @no_qts_mentor, school: @school)
   end
 
   def and_it_should_not_allow_a_sit_to_edit_the_participant_details

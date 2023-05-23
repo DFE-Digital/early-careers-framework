@@ -23,6 +23,7 @@ class EnrolSchoolCohortsJob < ApplicationJob
           induction_record.update!(induction_status: profile.status,
                                    training_status: profile.training_status,
                                    mentor_profile_id: profile.mentor_profile_id)
+          Mentors::AddToSchool.call(school: sc.school, mentor_profile: profile) if profile.mentor?
         end
         sc.update!(default_induction_programme: programme)
 
