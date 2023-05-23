@@ -32,6 +32,7 @@ class SchoolMailer < ApplicationMailer
   REMIND_GIAS_CONTACT_TO_UPDATE_INDUCTION_TUTOR_DETAILS_TEMPLATE = "88cdad72-386c-40fb-be2e-11d4ae9dcdee"
   PILOT_ASK_SIT_TO_REPORT_SCHOOL_TRAINING_DETAILS_TEMPLATE = "87d4720b-9e3a-46d9-95de-493295dba1dc"
   PILOT_ASK_GIAS_CONTACT_TO_REPORT_SCHOOL_TRAINING_DETAILS_TEMPLATE = "ae925ff1-edc3-4d5c-a120-baa3a79c73af"
+  LAUNCH_ASK_SIT_TO_REPORT_SCHOOL_TRAINING_DETAILS_TEMPLATE = "1f796f27-9ba4-4705-a7c9-57462bd1e0b7"
 
   def remind_sit_to_set_mentor_to_ects
     sit = params[:sit]
@@ -583,5 +584,21 @@ class SchoolMailer < ApplicationMailer
         nomination_link:,
       },
     ).tag(:pilot_gias_contact_to_report_school_training).associate_with(gias_contact_email)
+  end
+
+  def launch_ask_sit_to_report_school_training_details
+    sit_profile = params[:sit_profile]
+    nomination_link = params[:nomination_link]
+
+    template_mail(
+      LAUNCH_ASK_SIT_TO_REPORT_SCHOOL_TRAINING_DETAILS_TEMPLATE,
+      to: sit_profile.user.email,
+      rails_mailer: mailer_name,
+      rails_mail_template: action_name,
+      personalisation: {
+        sit_name: sit_profile.user.full_name,
+        nomination_link:,
+      },
+    ).tag(:launch_sit_to_report_school_training).associate_with(sit_profile)
   end
 end
