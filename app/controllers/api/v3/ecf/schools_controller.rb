@@ -55,8 +55,8 @@ module Api
 
         def school_params
           params
-            .with_defaults({ filter: { cohort: "", urn: "" } })
-            .permit(:id, :sort, filter: %i[cohort urn])
+            .with_defaults({ filter: { cohort: "", urn: "", updated_since: "" } })
+            .permit(:id, :sort, filter: %i[cohort urn updated_since])
         end
 
         def cohort

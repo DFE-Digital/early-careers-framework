@@ -12,13 +12,19 @@ module Api
         end
 
         def statements
-          statement_class
+          scope = statement_class
             .includes(:cohort)
             .output
             .where(
               cpd_lead_provider:,
               cohort_id: with_cohorts.map(&:id),
-            ).order(payment_date: :asc)
+            )
+
+          if updated_since.present?
+            scope = scope.where(updated_at: updated_since..)
+          end
+
+          scope.order(payment_date: :asc)
         end
 
         def statement
@@ -42,6 +48,18 @@ module Api
           return ::Finance::Statement.none unless ::Finance::Statement::STATEMENT_TYPES.include?(filter[:type])
 
           "::Finance::Statement::#{filter[:type].classify}".constantize
+        end
+
+        def updated_since
+          return if filter[:updated_since].blank?
+
+          Time.iso8601(filter[:updated_since])
+        rescue ArgumentError
+          begin
+            Time.iso8601(URI.decode_www_form_component(filter[:updated_since]))
+          rescue ArgumentError
+            raise Api::Errors::InvalidDatetimeError, I18n.t(:invalid_updated_since_filter)
+          end
         end
       end
     end

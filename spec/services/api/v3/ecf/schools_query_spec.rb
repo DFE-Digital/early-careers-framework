@@ -105,6 +105,33 @@ RSpec.describe Api::V3::ECF::SchoolsQuery do
         end
       end
     end
+
+    context "with updated_since filter" do
+      let(:params) { { filter: { cohort: cohort.display_name, updated_since: 2.days.ago.iso8601 } } }
+      let!(:school1) { create(:school, :eligible) }
+      let!(:school2) { create(:school, :eligible) }
+      let!(:school3) { create(:school, :eligible) }
+      let!(:school4) { create(:school, :eligible) }
+
+      let!(:school_cohort3) { create(:school_cohort, school: school3, cohort:) }
+
+      before do
+        school1.update!(updated_at: 3.days.ago)
+        school2.update!(updated_at: 1.day.ago)
+
+        school3.update!(updated_at: 10.days.ago)
+        school_cohort3.update!(updated_at: 1.day.ago)
+
+        school4.update!(updated_at: 6.days.ago)
+      end
+
+      it "returns schools for the specific updated time" do
+        expect(subject.schools).to match_array([
+          school2,
+          school3,
+        ])
+      end
+    end
   end
 
   describe "#school" do

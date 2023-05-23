@@ -124,6 +124,23 @@ RSpec.describe "statements endpoint spec", type: :request do
         end
       end
 
+      context "with updated_since filter" do
+        before do
+          ecf_statement_next_cohort.update!(updated_at: 3.days.ago)
+          ecf_statement_current_cohort.update!(updated_at: 1.day.ago)
+          npq_statement_next_cohort.update!(updated_at: 1.day.ago)
+          npq_statement_current_cohort.update!(updated_at: 6.days.ago)
+        end
+
+        it "returns statements updated after updated_since" do
+          get "/api/v3/statements", params: { filter: { updated_since: 2.days.ago.iso8601 } }
+
+          expect(parsed_response["data"].size).to eql(2)
+          expect(parsed_response.dig("data", 0, "id")).to eql(ecf_statement_current_cohort.id)
+          expect(parsed_response.dig("data", 1, "id")).to eql(npq_statement_next_cohort.id)
+        end
+      end
+
       context "when unauthorized" do
         let(:token) { "incorrect-token" }
         it "returns 401" do

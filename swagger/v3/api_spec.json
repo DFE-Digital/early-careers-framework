@@ -498,7 +498,7 @@
             "explode": true,
             "required": true,
             "description": "Refine schools to return.",
-            "example": "filter[cohort]=2021&filter[urn]=106286"
+            "example": "filter[cohort]=2021&filter[urn]=106286&filter[updated_since]=2020-11-13T11:21:55Z"
           },
           {
             "name": "page",
@@ -2742,7 +2742,7 @@
             "explode": true,
             "required": false,
             "description": "Refine statements to return.",
-            "example": "filter[cohort]=2021,2022&filter[type]=ecf"
+            "example": "filter[cohort]=2021,2022&filter[type]=ecf&filter[updated_since]=2020-11-13T11:21:55Z"
           },
           {
             "name": "page",
@@ -4439,6 +4439,11 @@
             "description": "Return a school with the specified Unique Reference Number (URN).",
             "type": "string",
             "example": "106286"
+          },
+          "updated_since": {
+            "description": "Return only records that have been updated since this date and time (ISO 8601 date format)",
+            "type": "string",
+            "example": "2021-05-13T11:21:55Z"
           }
         }
       },
@@ -7081,6 +7086,11 @@
               "npq"
             ],
             "example": "ecf"
+          },
+          "updated_since": {
+            "description": "Return only records that have been updated since this date and time (ISO 8601 date format)",
+            "type": "string",
+            "example": "2021-05-13T11:21:55Z"
           }
         }
       },
