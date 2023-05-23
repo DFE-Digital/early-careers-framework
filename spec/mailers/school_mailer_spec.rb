@@ -293,4 +293,25 @@ RSpec.describe SchoolMailer, type: :mailer do
       expect(SchoolMailer::LAUNCH_ASK_SIT_TO_REPORT_SCHOOL_TRAINING_DETAILS_TEMPLATE).to eq("1f796f27-9ba4-4705-a7c9-57462bd1e0b7")
     end
   end
+
+  describe "#launch_ask_gias_contact_to_report_school_training_details" do
+    let(:gias_contact_email) { "contact@example.com" }
+    let(:nomination_link) { "https://ecf-dev.london.cloudapps/nominations/start?token=123" }
+
+    let(:launch_ask_gias_contact_to_report_school_training_details) do
+      SchoolMailer.with(
+        gias_contact_email:,
+        nomination_link:,
+      ).launch_ask_gias_contact_to_report_school_training_details.deliver_now
+    end
+
+    it "renders the right headers" do
+      expect(launch_ask_gias_contact_to_report_school_training_details.to).to eq([gias_contact_email])
+      expect(launch_ask_gias_contact_to_report_school_training_details.from).to eq(["mail@example.com"])
+    end
+
+    it "uses the correct Notify template" do
+      expect(SchoolMailer::LAUNCH_ASK_GIAS_CONTACT_TO_REPORT_SCHOOL_TRAINING_DETAILS_TEMPLATE).to eq("f4dfee2a-2cc3-4d32-97f9-8adca41343bf")
+    end
+  end
 end
