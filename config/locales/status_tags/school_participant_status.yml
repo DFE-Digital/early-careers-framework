@@ -144,6 +144,18 @@ en:
         description: "The participant is not currently mentoring any ECTs."
         colour: "turquoise"
 
+      # Mentoring
+
+      active_mentoring:
+        label: "MENTORING"
+        description: "The participant is currently mentoring ECTs."
+        colour: "turquoise"
+
+      not_yet_mentoring:
+        label: "NOT MENTORING"
+        description: "The participant is not currently mentoring any ECTs."
+        colour: "turquoise"
+
       # FIP mentors
 
       not_yet_mentoring_fip_ero:
@@ -196,11 +208,6 @@ en:
       active_cip_mentoring:
         label: "MENTORING"
         description: "The participant is currently mentoring ECTs."
-        colour: "turquoise"
-
-      not_yet_mentoring:
-        label: "NOT MENTORING"
-        description: "The participant is not currently mentoring any ECTs."
         colour: "turquoise"
 
       # changes of circumstance

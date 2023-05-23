@@ -44,7 +44,7 @@ module NewSeeds
 
           @ect_on_fip_no_validation ||= NewSeeds::Scenarios::Participants::Ects::Ect
             .new(school_cohort:, full_name: "ECT on FIP: no validation")
-            .build(teacher_profile_args: { trn: nil })
+            .build(induction_start_date: nil, teacher_profile_args: { trn: nil })
             .with_induction_record(induction_programme: school_cohort.default_induction_programme)
         end
 
@@ -53,7 +53,7 @@ module NewSeeds
 
           @ect_on_fip_details_request_submitted ||= NewSeeds::Scenarios::Participants::Ects::Ect
             .new(school_cohort:, full_name: "ECT on FIP: details request submitted")
-            .build(teacher_profile_args: { trn: nil })
+            .build(induction_start_date: nil, teacher_profile_args: { trn: nil })
             .with_request_for_details_email
             .with_induction_record(induction_programme: school_cohort.default_induction_programme)
         end
@@ -63,7 +63,7 @@ module NewSeeds
 
           @ect_on_fip_details_request_failed ||= NewSeeds::Scenarios::Participants::Ects::Ect
             .new(school_cohort:, full_name: "ECT on FIP: details request failed")
-            .build(teacher_profile_args: { trn: nil }, request_for_details_sent_at: Time.zone.now)
+            .build(induction_start_date: nil, teacher_profile_args: { trn: nil }, request_for_details_sent_at: Time.zone.now)
             .with_request_for_details_email(status: "temporary-failure")
             .with_induction_record(induction_programme: school_cohort.default_induction_programme)
         end
@@ -73,7 +73,7 @@ module NewSeeds
 
           @ect_on_fip_details_request_delivered ||= NewSeeds::Scenarios::Participants::Ects::Ect
             .new(school_cohort:, full_name: "ECT on FIP: details request delivered")
-            .build(teacher_profile_args: { trn: nil }, request_for_details_sent_at: Time.zone.now)
+            .build(induction_start_date: nil, teacher_profile_args: { trn: nil }, request_for_details_sent_at: Time.zone.now)
             .with_request_for_details_email(status: "delivered")
             .with_induction_record(induction_programme: school_cohort.default_induction_programme)
         end
@@ -83,7 +83,7 @@ module NewSeeds
 
           @ect_on_fip_validation_api_failure ||= NewSeeds::Scenarios::Participants::Ects::Ect
             .new(school_cohort:, full_name: "ECT on FIP: Teacher Qualifications API failure")
-            .build(teacher_profile_args: { trn: nil })
+            .build(induction_start_date: nil, teacher_profile_args: { trn: nil })
             .with_validation_data(api_failure: true)
             .with_induction_record(induction_programme: school_cohort.default_induction_programme)
         end
@@ -93,7 +93,7 @@ module NewSeeds
 
           @ect_on_fip_no_tra_record ||= NewSeeds::Scenarios::Participants::Ects::Ect
             .new(school_cohort:, full_name: "ECT on FIP: No TRA record found")
-            .build(teacher_profile_args: { trn: nil })
+            .build(induction_start_date: nil, teacher_profile_args: { trn: nil })
             .with_validation_data
             .with_induction_record(induction_programme: school_cohort.default_induction_programme)
         end
@@ -158,7 +158,7 @@ module NewSeeds
 
           @ect_on_fip_manual_check_no_induction ||= NewSeeds::Scenarios::Participants::Ects::Ect
             .new(school_cohort:, full_name: "ECT on FIP: with no induction start date recorded")
-            .build
+            .build(induction_start_date: nil)
             .with_validation_data
             .with_eligibility(no_induction: true, status: "manual_check", reason: "no_induction")
             .with_induction_record(induction_programme: school_cohort.default_induction_programme)
@@ -300,7 +300,7 @@ module NewSeeds
 
           @ect_on_fip_withdrawn_no_induction_record ||= NewSeeds::Scenarios::Participants::Ects::Ect
             .new(school_cohort:, full_name: "ECT on FIP: withdrawn by lead provider before induction records")
-            .build(training_status: "withdrawn")
+            .build(induction_start_date: nil, training_status: "withdrawn")
             .with_validation_data
             .with_eligibility
         end
@@ -439,7 +439,7 @@ module NewSeeds
 
           @ect_on_cip_no_validation ||= NewSeeds::Scenarios::Participants::Ects::Ect
             .new(school_cohort:, full_name: "ECT on CIP: no validation")
-            .build(teacher_profile_args: { trn: nil })
+            .build(induction_start_date: nil, teacher_profile_args: { trn: nil })
             .with_induction_record(induction_programme: school_cohort.default_induction_programme)
         end
 
@@ -448,7 +448,7 @@ module NewSeeds
 
           @ect_on_cip_details_request_submitted ||= NewSeeds::Scenarios::Participants::Ects::Ect
             .new(school_cohort:, full_name: "ECT on CIP: details request submitted")
-            .build(teacher_profile_args: { trn: nil })
+            .build(induction_start_date: nil, teacher_profile_args: { trn: nil })
             .with_request_for_details_email
             .with_induction_record(induction_programme: school_cohort.default_induction_programme)
         end
@@ -458,7 +458,7 @@ module NewSeeds
 
           @ect_on_cip_details_request_failed ||= NewSeeds::Scenarios::Participants::Ects::Ect
             .new(school_cohort:, full_name: "ECT on CIP: details request failed")
-            .build(teacher_profile_args: { trn: nil }, request_for_details_sent_at: Time.zone.now)
+            .build(induction_start_date: nil, teacher_profile_args: { trn: nil }, request_for_details_sent_at: Time.zone.now)
             .with_request_for_details_email(status: "temporary-failure")
             .with_induction_record(induction_programme: school_cohort.default_induction_programme)
         end
@@ -468,7 +468,7 @@ module NewSeeds
 
           @ect_on_cip_details_request_delivered ||= NewSeeds::Scenarios::Participants::Ects::Ect
             .new(school_cohort:, full_name: "ECT on CIP: details request delivered")
-            .build(teacher_profile_args: { trn: nil }, request_for_details_sent_at: Time.zone.now)
+            .build(induction_start_date: nil, teacher_profile_args: { trn: nil }, request_for_details_sent_at: Time.zone.now)
             .with_request_for_details_email(status: "delivered")
             .with_induction_record(induction_programme: school_cohort.default_induction_programme)
         end
@@ -478,7 +478,7 @@ module NewSeeds
 
           @ect_on_cip_validation_api_failure ||= NewSeeds::Scenarios::Participants::Ects::Ect
             .new(school_cohort:, full_name: "ECT on CIP: Teacher Qualifications API failure")
-            .build(teacher_profile_args: { trn: nil })
+            .build(induction_start_date: nil, teacher_profile_args: { trn: nil })
             .with_validation_data(api_failure: true)
             .with_induction_record(induction_programme: school_cohort.default_induction_programme)
         end
@@ -488,7 +488,7 @@ module NewSeeds
 
           @ect_on_cip_no_tra_record ||= NewSeeds::Scenarios::Participants::Ects::Ect
             .new(school_cohort:, full_name: "ECT on CIP: No TRA record found")
-            .build(teacher_profile_args: { trn: nil })
+            .build(induction_start_date: nil, teacher_profile_args: { trn: nil })
             .with_validation_data
             .with_induction_record(induction_programme: school_cohort.default_induction_programme)
         end
@@ -531,7 +531,7 @@ module NewSeeds
 
           @ect_on_cip_manual_check_no_induction ||= NewSeeds::Scenarios::Participants::Ects::Ect
             .new(school_cohort:, full_name: "ECT on CIP: with no induction start date recorded")
-            .build
+            .build(induction_start_date: nil)
             .with_validation_data
             .with_eligibility(no_induction: true, status: "manual_check", reason: "no_induction")
             .with_induction_record(induction_programme: school_cohort.default_induction_programme)
@@ -662,7 +662,7 @@ module NewSeeds
 
           @ect_on_cip_withdrawn_no_induction_record ||= NewSeeds::Scenarios::Participants::Ects::Ect
             .new(school_cohort:, full_name: "ECT on CIP: withdrawn by lead provider before induction records")
-            .build(training_status: "withdrawn")
+            .build(induction_start_date: nil, training_status: "withdrawn")
             .with_validation_data
             .with_eligibility
         end
@@ -801,7 +801,7 @@ module NewSeeds
 
           @mentor_on_fip_no_validation ||= NewSeeds::Scenarios::Participants::Mentors::MentorWithSomeEcts
             .new(school_cohort:, full_name: "Mentor on FIP: no validation")
-            .build(teacher_profile_args: { trn: nil })
+            .build(induction_start_date: nil, teacher_profile_args: { trn: nil })
             .with_induction_record(induction_programme: school_cohort.default_induction_programme)
             .add_mentee(induction_programme: school_cohort.default_induction_programme)
         end
@@ -811,7 +811,7 @@ module NewSeeds
 
           @mentor_on_fip_details_request_submitted ||= NewSeeds::Scenarios::Participants::Mentors::MentorWithSomeEcts
             .new(school_cohort:, full_name: "Mentor on FIP: details request submitted")
-            .build(teacher_profile_args: { trn: nil })
+            .build(induction_start_date: nil, teacher_profile_args: { trn: nil })
             .with_request_for_details_email
             .with_induction_record(induction_programme: school_cohort.default_induction_programme)
             .add_mentee(induction_programme: school_cohort.default_induction_programme)
@@ -822,7 +822,7 @@ module NewSeeds
 
           @mentor_on_fip_details_request_failed ||= NewSeeds::Scenarios::Participants::Mentors::MentorWithSomeEcts
             .new(school_cohort:, full_name: "Mentor on FIP: details request failed")
-            .build(teacher_profile_args: { trn: nil }, request_for_details_sent_at: Time.zone.now)
+            .build(induction_start_date: nil, teacher_profile_args: { trn: nil }, request_for_details_sent_at: Time.zone.now)
             .with_request_for_details_email(status: "temporary-failure")
             .with_induction_record(induction_programme: school_cohort.default_induction_programme)
             .add_mentee(induction_programme: school_cohort.default_induction_programme)
@@ -833,7 +833,7 @@ module NewSeeds
 
           @mentor_on_fip_details_request_delivered ||= NewSeeds::Scenarios::Participants::Mentors::MentorWithSomeEcts
             .new(school_cohort:, full_name: "Mentor on FIP: details request delivered")
-            .build(teacher_profile_args: { trn: nil }, request_for_details_sent_at: Time.zone.now)
+            .build(induction_start_date: nil, teacher_profile_args: { trn: nil }, request_for_details_sent_at: Time.zone.now)
             .with_request_for_details_email(status: "delivered")
             .with_induction_record(induction_programme: school_cohort.default_induction_programme)
             .add_mentee(induction_programme: school_cohort.default_induction_programme)
@@ -844,7 +844,7 @@ module NewSeeds
 
           @mentor_on_fip_validation_api_failure ||= NewSeeds::Scenarios::Participants::Mentors::MentorWithSomeEcts
             .new(school_cohort:, full_name: "Mentor on FIP: Teacher Qualifications API failure")
-            .build(teacher_profile_args: { trn: nil })
+            .build(induction_start_date: nil, teacher_profile_args: { trn: nil })
             .with_validation_data(api_failure: true)
             .with_induction_record(induction_programme: school_cohort.default_induction_programme)
             .add_mentee(induction_programme: school_cohort.default_induction_programme)
@@ -855,7 +855,7 @@ module NewSeeds
 
           @mentor_on_fip_no_tra_record ||= NewSeeds::Scenarios::Participants::Mentors::MentorWithSomeEcts
             .new(school_cohort:, full_name: "Mentor on FIP: No TRA record found")
-            .build(teacher_profile_args: { trn: nil })
+            .build(induction_start_date: nil, teacher_profile_args: { trn: nil })
             .with_validation_data
             .with_induction_record(induction_programme: school_cohort.default_induction_programme)
             .add_mentee(induction_programme: school_cohort.default_induction_programme)
@@ -1080,7 +1080,7 @@ module NewSeeds
 
           NewSeeds::Scenarios::Participants::Mentors::MentorWithSomeEcts
             .new(school_cohort:, full_name: "Mentor on FIP: withdrawn by lead provider before induction records")
-            .build(training_status: "withdrawn")
+            .build(induction_start_date: nil, training_status: "withdrawn")
             .with_validation_data
             .with_eligibility
             .add_mentee(induction_programme: school_cohort.default_induction_programme)
@@ -1229,7 +1229,7 @@ module NewSeeds
 
           NewSeeds::Scenarios::Participants::Mentors::MentorWithSomeEcts
             .new(school_cohort:, full_name: "Mentor on CIP: no validation")
-            .build(teacher_profile_args: { trn: nil })
+            .build(induction_start_date: nil, teacher_profile_args: { trn: nil })
             .with_induction_record(induction_programme: school_cohort.default_induction_programme)
             .add_mentee(induction_programme: school_cohort.default_induction_programme)
         end
@@ -1239,7 +1239,7 @@ module NewSeeds
 
           NewSeeds::Scenarios::Participants::Mentors::MentorWithSomeEcts
             .new(school_cohort:, full_name: "Mentor on CIP: details request submitted")
-            .build(teacher_profile_args: { trn: nil })
+            .build(induction_start_date: nil, teacher_profile_args: { trn: nil })
             .with_request_for_details_email
             .with_induction_record(induction_programme: school_cohort.default_induction_programme)
             .add_mentee(induction_programme: school_cohort.default_induction_programme)
@@ -1250,7 +1250,7 @@ module NewSeeds
 
           NewSeeds::Scenarios::Participants::Mentors::MentorWithSomeEcts
             .new(school_cohort:, full_name: "Mentor on CIP: details request failed")
-            .build(teacher_profile_args: { trn: nil }, request_for_details_sent_at: Time.zone.now)
+            .build(induction_start_date: nil, teacher_profile_args: { trn: nil }, request_for_details_sent_at: Time.zone.now)
             .with_request_for_details_email(status: "temporary-failure")
             .with_induction_record(induction_programme: school_cohort.default_induction_programme)
             .add_mentee(induction_programme: school_cohort.default_induction_programme)
@@ -1261,7 +1261,7 @@ module NewSeeds
 
           NewSeeds::Scenarios::Participants::Mentors::MentorWithSomeEcts
             .new(school_cohort:, full_name: "Mentor on CIP: details request delivered")
-            .build(teacher_profile_args: { trn: nil }, request_for_details_sent_at: Time.zone.now)
+            .build(induction_start_date: nil, teacher_profile_args: { trn: nil }, request_for_details_sent_at: Time.zone.now)
             .with_request_for_details_email(status: "delivered")
             .with_induction_record(induction_programme: school_cohort.default_induction_programme)
             .add_mentee(induction_programme: school_cohort.default_induction_programme)
@@ -1272,7 +1272,7 @@ module NewSeeds
 
           NewSeeds::Scenarios::Participants::Mentors::MentorWithSomeEcts
             .new(school_cohort:, full_name: "Mentor on CIP: Teacher Qualifications API failure")
-            .build(teacher_profile_args: { trn: nil })
+            .build(induction_start_date: nil, teacher_profile_args: { trn: nil })
             .with_validation_data(api_failure: true)
             .with_induction_record(induction_programme: school_cohort.default_induction_programme)
             .add_mentee(induction_programme: school_cohort.default_induction_programme)
@@ -1283,7 +1283,7 @@ module NewSeeds
 
           NewSeeds::Scenarios::Participants::Mentors::MentorWithSomeEcts
             .new(school_cohort:, full_name: "Mentor on CIP: No TRA record found")
-            .build(teacher_profile_args: { trn: nil })
+            .build(induction_start_date: nil, teacher_profile_args: { trn: nil })
             .with_validation_data
             .with_induction_record(induction_programme: school_cohort.default_induction_programme)
             .add_mentee(induction_programme: school_cohort.default_induction_programme)
@@ -1496,14 +1496,14 @@ module NewSeeds
 
           NewSeeds::Scenarios::Participants::Mentors::MentorWithSomeEcts
             .new(school_cohort:, full_name: "Mentor on CIP: withdrawn by lead provider before induction records")
-            .build(training_status: "withdrawn")
+            .build(induction_start_date: nil, training_status: "withdrawn")
             .with_validation_data
             .with_eligibility
             .add_mentee(induction_programme: school_cohort.default_induction_programme)
         end
 
         def mentor_on_cip_deferred
-          school_cohort = fip_school.school_cohort
+          school_cohort = cip_school.school_cohort
 
           NewSeeds::Scenarios::Participants::Mentors::MentorWithSomeEcts
             .new(school_cohort:, full_name: "Mentor on CIP: deferred by lead provider")

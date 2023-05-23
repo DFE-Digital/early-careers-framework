@@ -144,6 +144,18 @@ en:
         label: "Not eligible for funded training"
         description: "We’ve checked these people’s details and found they’re not eligible for this programme."
 
+      # mentoring
+
+      active_mentoring:
+        id: "training_or_eligible_for_training"
+        label: "Training or eligible for training"
+        description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
+
+      not_yet_mentoring:
+        id: "training_or_eligible_for_training"
+        label: "Training or eligible for training"
+        description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
+
       # FIP mentors
 
       not_yet_mentoring_fip_ero:
@@ -199,11 +211,6 @@ en:
         description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
 
       active_cip_mentoring:
-        id: "training_or_eligible_for_training"
-        label: "Training or eligible for training"
-        description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
-
-      not_yet_mentoring:
         id: "training_or_eligible_for_training"
         label: "Training or eligible for training"
         description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."

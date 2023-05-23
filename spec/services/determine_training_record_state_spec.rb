@@ -13,7 +13,31 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
     described_class.call(participant_profile:, school: current_school)
   end
 
-  shared_examples "determines states as" do |validation_state, training_eligibility_state, fip_funding_eligibility_state, training_state, record_state|
+  training_record_state_scenarios = []
+
+  after(:all) do
+    file = Rails.root.join("tmp/training_record_state_scenarios.csv")
+
+    headers = %w[
+      participant_scenario
+      validation_state
+      training_eligibility_state
+      fip_funding_eligibility_state
+      mentoring_state
+      training_state
+      record_state
+      admin_label
+      appropriate_body_label
+      delivery_partner_label
+      school_label
+    ]
+
+    CSV.open(file, "w", write_headers: true, headers:) do |writer|
+      training_record_state_scenarios.each { |scenario| writer << scenario }
+    end
+  end
+
+  shared_examples "determines states as" do |validation_state, training_eligibility_state, fip_funding_eligibility_state, mentoring_state, training_state, record_state|
     it "#validation_state is set to \":#{validation_state}\"" do
       expect(determined_state.validation_state).to eq validation_state
     end
@@ -24,6 +48,10 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
 
     it "#fip_funding_eligibility_state is set to \":#{fip_funding_eligibility_state}\"" do
       expect(determined_state.fip_funding_eligibility_state).to eq fip_funding_eligibility_state
+    end
+
+    it "#mentoring_state is set to \":#{mentoring_state}\"" do
+      expect(determined_state.mentoring_state).to eq mentoring_state
     end
 
     it "#training_state is set to \":#{training_state}\"" do
@@ -48,6 +76,20 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
 
     it "StatusTags::SchoolParticipantStatusTag has a language file entry for the record_state of \"#{record_state}\"" do
       expect(I18n.t("status_tags.school_participant_status").keys).to include record_state&.to_sym
+
+      training_record_state_scenarios.push [
+        participant_profile.user.full_name,
+        determined_state.validation_state,
+        determined_state.training_eligibility_state,
+        determined_state.fip_funding_eligibility_state,
+        determined_state.mentoring_state,
+        determined_state.training_state,
+        determined_state.record_state,
+        I18n.t(:label, scope: "status_tags.admin_participant_status.#{determined_state.record_state}"),
+        I18n.t(:label, scope: "status_tags.appropriate_body_participant_status.#{determined_state.record_state}"),
+        I18n.t(:label, scope: "status_tags.delivery_partner_participant_status.#{determined_state.record_state}"),
+        I18n.t(:label, scope: "status_tags.school_participant_status.#{determined_state.record_state}"),
+      ]
     end
 
     it "StatusTags::SchoolParticipantStatusTag has a detailed language file entry for the record_state of \"#{record_state}\"" do
@@ -80,7 +122,8 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "validation_not_started",
                          "checks_not_complete",
                          "checks_not_complete",
-                         "active_fip_training",
+                         "not_a_mentor",
+                         "registered_for_fip_training",
                          "validation_not_started"
       end
 
@@ -91,7 +134,8 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "request_for_details_submitted",
                          "checks_not_complete",
                          "checks_not_complete",
-                         "active_fip_training",
+                         "not_a_mentor",
+                         "registered_for_fip_training",
                          "request_for_details_submitted"
       end
 
@@ -102,7 +146,8 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "request_for_details_failed",
                          "checks_not_complete",
                          "checks_not_complete",
-                         "active_fip_training",
+                         "not_a_mentor",
+                         "registered_for_fip_training",
                          "request_for_details_failed"
       end
 
@@ -113,7 +158,8 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "request_for_details_delivered",
                          "checks_not_complete",
                          "checks_not_complete",
-                         "active_fip_training",
+                         "not_a_mentor",
+                         "registered_for_fip_training",
                          "request_for_details_delivered"
       end
 
@@ -124,7 +170,8 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "internal_error",
                          "checks_not_complete",
                          "checks_not_complete",
-                         "active_fip_training",
+                         "not_a_mentor",
+                         "registered_for_fip_training",
                          "internal_error"
       end
 
@@ -135,7 +182,8 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "tra_record_not_found",
                          "checks_not_complete",
                          "checks_not_complete",
-                         "active_fip_training",
+                         "not_a_mentor",
+                         "registered_for_fip_training",
                          "tra_record_not_found"
       end
 
@@ -146,6 +194,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "valid",
                          "eligible_for_induction_training",
                          "eligible_for_fip_funding",
+                         "not_a_mentor",
                          "active_fip_training",
                          "active_fip_training"
       end
@@ -157,6 +206,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "valid",
                          "eligible_for_induction_training",
                          "eligible_for_fip_funding",
+                         "not_a_mentor",
                          "active_fip_training",
                          "active_fip_training"
       end
@@ -168,6 +218,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "valid",
                          "eligible_for_induction_training",
                          "eligible_for_fip_funding",
+                         "not_a_mentor",
                          "active_fip_training",
                          "active_fip_training"
       end
@@ -179,6 +230,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "valid",
                          "active_flags",
                          "active_flags",
+                         "not_a_mentor",
                          "active_fip_training",
                          "active_flags"
       end
@@ -190,6 +242,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "different_trn",
                          "eligible_for_induction_training",
                          "eligible_for_fip_funding",
+                         "not_a_mentor",
                          "active_fip_training",
                          "different_trn"
       end
@@ -201,6 +254,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "valid",
                          "eligible_for_induction_training",
                          "no_induction_start",
+                         "not_a_mentor",
                          "registered_for_fip_training",
                          "no_induction_start"
       end
@@ -212,6 +266,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "valid",
                          "not_qualified",
                          "not_qualified",
+                         "not_a_mentor",
                          "active_fip_training",
                          "not_qualified"
       end
@@ -223,6 +278,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "valid",
                          "not_allowed",
                          "not_allowed",
+                         "not_a_mentor",
                          "active_fip_training",
                          "not_allowed"
       end
@@ -234,6 +290,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "valid",
                          "eligible_for_induction_training",
                          "eligible_for_fip_funding",
+                         "not_a_mentor",
                          "active_fip_training",
                          "active_fip_training"
       end
@@ -245,6 +302,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "valid",
                          "duplicate_profile",
                          "duplicate_profile",
+                         "not_a_mentor",
                          "active_fip_training",
                          "duplicate_profile"
       end
@@ -256,6 +314,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "valid",
                          "exempt_from_induction",
                          "exempt_from_induction",
+                         "not_a_mentor",
                          "active_fip_training",
                          "exempt_from_induction"
       end
@@ -267,6 +326,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "valid",
                          "previous_induction",
                          "previous_induction",
+                         "not_a_mentor",
                          "active_fip_training",
                          "previous_induction"
       end
@@ -278,6 +338,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "valid",
                          "checks_not_complete",
                          "checks_not_complete",
+                         "not_a_mentor",
                          "active_fip_training",
                          "checks_not_complete"
       end
@@ -289,6 +350,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "valid",
                          "eligible_for_induction_training",
                          "eligible_for_fip_funding",
+                         "not_a_mentor",
                          "active_fip_training",
                          "active_fip_training"
       end
@@ -298,8 +360,9 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
 
         include_examples "determines states as",
                          "valid",
-                         "eligible_for_induction_training_no_partner",
+                         "eligible_for_induction_training",
                          "eligible_for_fip_funding",
+                         "not_a_mentor",
                          "registered_for_fip_no_partner",
                          "registered_for_fip_no_partner"
       end
@@ -311,6 +374,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "valid",
                          "eligible_for_induction_training",
                          "eligible_for_fip_funding",
+                         "not_a_mentor",
                          "active_fip_training",
                          "active_fip_training"
       end
@@ -322,6 +386,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "valid",
                          "eligible_for_induction_training",
                          "eligible_for_fip_funding",
+                         "not_a_mentor",
                          "withdrawn_training",
                          "withdrawn_training"
       end
@@ -333,6 +398,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "valid",
                          "eligible_for_induction_training",
                          "eligible_for_fip_funding",
+                         "not_a_mentor",
                          "active_fip_training",
                          "active_fip_training"
       end
@@ -344,6 +410,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "valid",
                          "eligible_for_induction_training",
                          "eligible_for_fip_funding",
+                         "not_a_mentor",
                          "withdrawn_training",
                          "withdrawn_training"
       end
@@ -355,6 +422,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "valid",
                          "eligible_for_induction_training",
                          "eligible_for_fip_funding",
+                         "not_a_mentor",
                          "deferred_training",
                          "deferred_training"
       end
@@ -366,6 +434,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "valid",
                          "eligible_for_induction_training",
                          "eligible_for_fip_funding",
+                         "not_a_mentor",
                          "withdrawn_programme",
                          "withdrawn_programme"
       end
@@ -377,6 +446,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "valid",
                          "eligible_for_induction_training",
                          "eligible_for_fip_funding",
+                         "not_a_mentor",
                          "completed_training",
                          "completed_training"
       end
@@ -391,6 +461,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                            "valid",
                            "eligible_for_induction_training",
                            "eligible_for_fip_funding",
+                           "not_a_mentor",
                            "leaving",
                            "leaving"
         end
@@ -402,6 +473,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                            "valid",
                            "eligible_for_induction_training",
                            "eligible_for_fip_funding",
+                           "not_a_mentor",
                            "left",
                            "left"
         end
@@ -413,6 +485,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                            "valid",
                            "eligible_for_induction_training",
                            "eligible_for_fip_funding",
+                           "not_a_mentor",
                            "leaving",
                            "leaving"
         end
@@ -424,6 +497,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                            "valid",
                            "eligible_for_induction_training",
                            "eligible_for_fip_funding",
+                           "not_a_mentor",
                            "left",
                            "left"
         end
@@ -435,6 +509,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                            "valid",
                            "eligible_for_induction_training",
                            "eligible_for_fip_funding",
+                           "not_a_mentor",
                            "joining",
                            "joining"
         end
@@ -446,6 +521,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                            "valid",
                            "eligible_for_induction_training",
                            "eligible_for_fip_funding",
+                           "not_a_mentor",
                            "active_fip_training",
                            "active_fip_training"
         end
@@ -460,7 +536,8 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "validation_not_started",
                          "checks_not_complete",
                          "checks_not_complete",
-                         "active_cip_training",
+                         "not_a_mentor",
+                         "registered_for_cip_training",
                          "validation_not_started"
       end
 
@@ -471,7 +548,8 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "request_for_details_submitted",
                          "checks_not_complete",
                          "checks_not_complete",
-                         "active_cip_training",
+                         "not_a_mentor",
+                         "registered_for_cip_training",
                          "request_for_details_submitted"
       end
 
@@ -482,7 +560,8 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "request_for_details_failed",
                          "checks_not_complete",
                          "checks_not_complete",
-                         "active_cip_training",
+                         "not_a_mentor",
+                         "registered_for_cip_training",
                          "request_for_details_failed"
       end
 
@@ -493,7 +572,8 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "request_for_details_delivered",
                          "checks_not_complete",
                          "checks_not_complete",
-                         "active_cip_training",
+                         "not_a_mentor",
+                         "registered_for_cip_training",
                          "request_for_details_delivered"
       end
 
@@ -504,7 +584,8 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "internal_error",
                          "checks_not_complete",
                          "checks_not_complete",
-                         "active_cip_training",
+                         "not_a_mentor",
+                         "registered_for_cip_training",
                          "internal_error"
       end
 
@@ -515,7 +596,8 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "tra_record_not_found",
                          "checks_not_complete",
                          "checks_not_complete",
-                         "active_cip_training",
+                         "not_a_mentor",
+                         "registered_for_cip_training",
                          "tra_record_not_found"
       end
 
@@ -526,6 +608,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "valid",
                          "active_flags",
                          "active_flags",
+                         "not_a_mentor",
                          "active_cip_training",
                          "active_flags"
       end
@@ -537,6 +620,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "different_trn",
                          "eligible_for_induction_training",
                          "eligible_for_fip_funding",
+                         "not_a_mentor",
                          "active_cip_training",
                          "different_trn"
       end
@@ -548,6 +632,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "valid",
                          "eligible_for_induction_training",
                          "no_induction_start",
+                         "not_a_mentor",
                          "registered_for_cip_training",
                          "registered_for_cip_training"
       end
@@ -559,6 +644,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "valid",
                          "not_qualified",
                          "not_qualified",
+                         "not_a_mentor",
                          "active_cip_training",
                          "not_qualified"
       end
@@ -570,6 +656,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "valid",
                          "not_allowed",
                          "not_allowed",
+                         "not_a_mentor",
                          "active_cip_training",
                          "not_allowed"
       end
@@ -581,6 +668,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "valid",
                          "eligible_for_induction_training",
                          "eligible_for_fip_funding",
+                         "not_a_mentor",
                          "active_cip_training",
                          "active_cip_training"
       end
@@ -592,6 +680,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "valid",
                          "duplicate_profile",
                          "duplicate_profile",
+                         "not_a_mentor",
                          "active_cip_training",
                          "duplicate_profile"
       end
@@ -603,6 +692,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "valid",
                          "exempt_from_induction",
                          "exempt_from_induction",
+                         "not_a_mentor",
                          "active_cip_training",
                          "exempt_from_induction"
       end
@@ -614,6 +704,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "valid",
                          "previous_induction",
                          "previous_induction",
+                         "not_a_mentor",
                          "active_cip_training",
                          "previous_induction"
       end
@@ -625,6 +716,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "valid",
                          "checks_not_complete",
                          "checks_not_complete",
+                         "not_a_mentor",
                          "active_cip_training",
                          "checks_not_complete"
       end
@@ -636,6 +728,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "valid",
                          "eligible_for_induction_training",
                          "eligible_for_fip_funding",
+                         "not_a_mentor",
                          "active_cip_training",
                          "active_cip_training"
       end
@@ -647,6 +740,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "valid",
                          "eligible_for_induction_training",
                          "eligible_for_fip_funding",
+                         "not_a_mentor",
                          "active_cip_training",
                          "active_cip_training"
       end
@@ -658,6 +752,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "valid",
                          "eligible_for_induction_training",
                          "eligible_for_fip_funding",
+                         "not_a_mentor",
                          "withdrawn_training",
                          "withdrawn_training"
       end
@@ -669,6 +764,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "valid",
                          "eligible_for_induction_training",
                          "eligible_for_fip_funding",
+                         "not_a_mentor",
                          "active_cip_training",
                          "active_cip_training"
       end
@@ -680,6 +776,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "valid",
                          "eligible_for_induction_training",
                          "eligible_for_fip_funding",
+                         "not_a_mentor",
                          "withdrawn_training",
                          "withdrawn_training"
       end
@@ -691,6 +788,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "valid",
                          "eligible_for_induction_training",
                          "eligible_for_fip_funding",
+                         "not_a_mentor",
                          "deferred_training",
                          "deferred_training"
       end
@@ -702,6 +800,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "valid",
                          "eligible_for_induction_training",
                          "eligible_for_fip_funding",
+                         "not_a_mentor",
                          "withdrawn_programme",
                          "withdrawn_programme"
       end
@@ -713,6 +812,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "valid",
                          "eligible_for_induction_training",
                          "eligible_for_fip_funding",
+                         "not_a_mentor",
                          "completed_training",
                          "completed_training"
       end
@@ -727,6 +827,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                            "valid",
                            "eligible_for_induction_training",
                            "eligible_for_fip_funding",
+                           "not_a_mentor",
                            "leaving",
                            "leaving"
         end
@@ -738,6 +839,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                            "valid",
                            "eligible_for_induction_training",
                            "eligible_for_fip_funding",
+                           "not_a_mentor",
                            "left",
                            "left"
         end
@@ -749,6 +851,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                            "valid",
                            "eligible_for_induction_training",
                            "eligible_for_fip_funding",
+                           "not_a_mentor",
                            "leaving",
                            "leaving"
         end
@@ -760,6 +863,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                            "valid",
                            "eligible_for_induction_training",
                            "eligible_for_fip_funding",
+                           "not_a_mentor",
                            "left",
                            "left"
         end
@@ -771,6 +875,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                            "valid",
                            "eligible_for_induction_training",
                            "eligible_for_fip_funding",
+                           "not_a_mentor",
                            "joining",
                            "joining"
         end
@@ -782,6 +887,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                            "valid",
                            "eligible_for_induction_training",
                            "eligible_for_fip_funding",
+                           "not_a_mentor",
                            "active_cip_training",
                            "active_cip_training"
         end
@@ -797,6 +903,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "eligible_for_mentor_training",
                          "eligible_for_mentor_funding",
                          "active_fip_mentoring",
+                         "registered_for_fip_training",
                          "validation_not_started"
       end
 
@@ -808,6 +915,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "eligible_for_mentor_training",
                          "eligible_for_mentor_funding",
                          "active_fip_mentoring",
+                         "registered_for_fip_training",
                          "request_for_details_submitted"
       end
 
@@ -819,6 +927,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "eligible_for_mentor_training",
                          "eligible_for_mentor_funding",
                          "active_fip_mentoring",
+                         "registered_for_fip_training",
                          "request_for_details_failed"
       end
 
@@ -830,6 +939,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "eligible_for_mentor_training",
                          "eligible_for_mentor_funding",
                          "active_fip_mentoring",
+                         "registered_for_fip_training",
                          "request_for_details_delivered"
       end
 
@@ -841,6 +951,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "eligible_for_mentor_training",
                          "eligible_for_mentor_funding",
                          "active_fip_mentoring",
+                         "registered_for_fip_training",
                          "internal_error"
       end
 
@@ -852,6 +963,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "eligible_for_mentor_training",
                          "eligible_for_mentor_funding",
                          "active_fip_mentoring",
+                         "registered_for_fip_training",
                          "tra_record_not_found"
       end
 
@@ -863,6 +975,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "active_flags",
                          "active_flags",
                          "active_fip_mentoring",
+                         "registered_for_fip_training",
                          "active_flags"
       end
 
@@ -874,6 +987,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "eligible_for_mentor_training",
                          "eligible_for_mentor_funding",
                          "active_fip_mentoring",
+                         "registered_for_fip_training",
                          "different_trn"
       end
 
@@ -885,6 +999,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "eligible_for_mentor_training",
                          "eligible_for_mentor_funding",
                          "active_fip_mentoring",
+                         "registered_for_fip_training",
                          "active_fip_mentoring"
       end
 
@@ -896,6 +1011,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "eligible_for_mentor_training",
                          "eligible_for_mentor_funding",
                          "active_fip_mentoring",
+                         "registered_for_fip_training",
                          "active_fip_mentoring"
       end
 
@@ -907,6 +1023,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "not_allowed",
                          "not_allowed",
                          "active_fip_mentoring",
+                         "registered_for_fip_training",
                          "not_allowed"
       end
 
@@ -918,6 +1035,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "eligible_for_mentor_training",
                          "eligible_for_mentor_funding",
                          "active_fip_mentoring",
+                         "registered_for_fip_training",
                          "active_fip_mentoring"
       end
 
@@ -929,7 +1047,8 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "eligible_for_mentor_training",
                          "ineligible_secondary",
                          "active_fip_mentoring",
-                         "ineligible_secondary"
+                         "registered_for_fip_training",
+                         "active_fip_mentoring"
       end
 
       context "and they have a previous participation recorded" do
@@ -940,7 +1059,8 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "eligible_for_mentor_training",
                          "ineligible_ero",
                          "active_fip_mentoring_ero",
-                         "ineligible_ero"
+                         "registered_for_fip_training",
+                         "active_fip_mentoring_ero"
       end
 
       context "and they have a previous participation recorded and have been made eligible by DfE" do
@@ -951,6 +1071,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "eligible_for_mentor_training",
                          "eligible_for_mentor_funding",
                          "active_fip_mentoring_ero",
+                         "registered_for_fip_training",
                          "active_fip_mentoring_ero"
       end
 
@@ -962,6 +1083,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "checks_not_complete",
                          "checks_not_complete",
                          "active_fip_mentoring",
+                         "registered_for_fip_training",
                          "checks_not_complete"
       end
 
@@ -973,6 +1095,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "eligible_for_mentor_training",
                          "eligible_for_mentor_funding",
                          "active_fip_mentoring",
+                         "registered_for_fip_training",
                          "active_fip_mentoring"
       end
 
@@ -984,6 +1107,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "eligible_for_mentor_training",
                          "eligible_for_mentor_funding_primary",
                          "active_fip_mentoring",
+                         "registered_for_fip_training",
                          "active_fip_mentoring"
       end
 
@@ -995,7 +1119,8 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "eligible_for_mentor_training",
                          "ineligible_secondary",
                          "active_fip_mentoring",
-                         "ineligible_secondary"
+                         "registered_for_fip_training",
+                         "active_fip_mentoring"
       end
 
       context "and the school has not yet reported the training providers" do
@@ -1003,10 +1128,11 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
 
         include_examples "determines states as",
                          "valid",
-                         "eligible_for_mentor_training_no_partner",
+                         "eligible_for_mentor_training",
                          "eligible_for_mentor_funding",
-                         "active_fip_mentoring_no_partner",
-                         "active_fip_mentoring_no_partner"
+                         "active_fip_mentoring",
+                         "registered_for_fip_no_partner",
+                         "active_fip_mentoring"
       end
 
       context "and they are active" do
@@ -1017,6 +1143,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "eligible_for_mentor_training",
                          "eligible_for_mentor_funding",
                          "active_fip_mentoring",
+                         "registered_for_fip_training",
                          "active_fip_mentoring"
       end
 
@@ -1027,8 +1154,9 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "valid",
                          "not_yet_mentoring",
                          "eligible_for_mentor_funding",
-                         "not_yet_mentoring_fip",
-                         "not_yet_mentoring_fip"
+                         "not_yet_mentoring",
+                         "registered_for_fip_training",
+                         "not_yet_mentoring"
       end
 
       context "and they have been withdrawn by a training provider through the API" do
@@ -1038,8 +1166,9 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "valid",
                          "eligible_for_mentor_training",
                          "eligible_for_mentor_funding",
+                         "active_fip_mentoring",
                          "withdrawn_training",
-                         "withdrawn_training"
+                         "active_fip_mentoring"
       end
 
       context "and they have been re-enrolled after being withdrawn by a training provider through the API" do
@@ -1050,6 +1179,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "eligible_for_mentor_training",
                          "eligible_for_mentor_funding",
                          "active_fip_mentoring",
+                         "registered_for_fip_training",
                          "active_fip_mentoring"
       end
 
@@ -1060,8 +1190,9 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "valid",
                          "eligible_for_mentor_training",
                          "eligible_for_mentor_funding",
+                         "active_mentoring",
                          "withdrawn_training",
-                         "withdrawn_training"
+                         "active_mentoring"
       end
 
       context "and their training has been deferred" do
@@ -1071,8 +1202,9 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "valid",
                          "eligible_for_mentor_training",
                          "eligible_for_mentor_funding",
+                         "active_fip_mentoring",
                          "deferred_training",
-                         "deferred_training"
+                         "active_fip_mentoring"
       end
 
       context "and they have been withdrawn from the programme" do
@@ -1082,19 +1214,21 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "valid",
                          "eligible_for_mentor_training",
                          "eligible_for_mentor_funding",
+                         "active_fip_mentoring",
                          "withdrawn_programme",
                          "withdrawn_programme"
       end
 
-      context "and they have completed their induction training" do
+      context "and they have completed their mentor training" do
         let!(:participant_profile) { scenarios.mentor_on_fip_completed.participant_profile }
 
         include_examples "determines states as",
                          "valid",
                          "eligible_for_mentor_training",
                          "eligible_for_mentor_funding",
+                         "active_fip_mentoring",
                          "completed_training",
-                         "completed_training"
+                         "active_fip_mentoring"
       end
 
       context "in transfer scenario" do
@@ -1107,6 +1241,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                            "valid",
                            "eligible_for_mentor_training",
                            "eligible_for_mentor_funding",
+                           "active_fip_mentoring",
                            "leaving",
                            "leaving"
         end
@@ -1118,6 +1253,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                            "valid",
                            "eligible_for_mentor_training",
                            "eligible_for_mentor_funding",
+                           "active_fip_mentoring",
                            "left",
                            "left"
         end
@@ -1129,6 +1265,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                            "valid",
                            "eligible_for_mentor_training",
                            "eligible_for_mentor_funding",
+                           "active_fip_mentoring",
                            "leaving",
                            "leaving"
         end
@@ -1140,6 +1277,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                            "valid",
                            "eligible_for_mentor_training",
                            "eligible_for_mentor_funding",
+                           "active_fip_mentoring",
                            "left",
                            "left"
         end
@@ -1151,6 +1289,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                            "valid",
                            "eligible_for_mentor_training",
                            "eligible_for_mentor_funding",
+                           "active_fip_mentoring",
                            "joining",
                            "joining"
         end
@@ -1163,6 +1302,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                            "eligible_for_mentor_training",
                            "eligible_for_mentor_funding",
                            "active_fip_mentoring",
+                           "registered_for_fip_training",
                            "active_fip_mentoring"
         end
       end
@@ -1177,6 +1317,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "eligible_for_mentor_training",
                          "eligible_for_mentor_funding",
                          "active_cip_mentoring",
+                         "registered_for_cip_training",
                          "validation_not_started"
       end
 
@@ -1188,6 +1329,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "eligible_for_mentor_training",
                          "eligible_for_mentor_funding",
                          "active_cip_mentoring",
+                         "registered_for_cip_training",
                          "request_for_details_submitted"
       end
 
@@ -1199,6 +1341,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "eligible_for_mentor_training",
                          "eligible_for_mentor_funding",
                          "active_cip_mentoring",
+                         "registered_for_cip_training",
                          "request_for_details_failed"
       end
 
@@ -1210,6 +1353,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "eligible_for_mentor_training",
                          "eligible_for_mentor_funding",
                          "active_cip_mentoring",
+                         "registered_for_cip_training",
                          "request_for_details_delivered"
       end
 
@@ -1221,6 +1365,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "eligible_for_mentor_training",
                          "eligible_for_mentor_funding",
                          "active_cip_mentoring",
+                         "registered_for_cip_training",
                          "internal_error"
       end
 
@@ -1232,6 +1377,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "eligible_for_mentor_training",
                          "eligible_for_mentor_funding",
                          "active_cip_mentoring",
+                         "registered_for_cip_training",
                          "tra_record_not_found"
       end
 
@@ -1243,6 +1389,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "active_flags",
                          "active_flags",
                          "active_cip_mentoring",
+                         "registered_for_cip_training",
                          "active_flags"
       end
 
@@ -1254,6 +1401,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "eligible_for_mentor_training",
                          "eligible_for_mentor_funding",
                          "active_cip_mentoring",
+                         "registered_for_cip_training",
                          "different_trn"
       end
 
@@ -1265,6 +1413,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "eligible_for_mentor_training",
                          "eligible_for_mentor_funding",
                          "active_cip_mentoring",
+                         "registered_for_cip_training",
                          "active_cip_mentoring"
       end
 
@@ -1276,6 +1425,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "eligible_for_mentor_training",
                          "eligible_for_mentor_funding",
                          "active_cip_mentoring",
+                         "registered_for_cip_training",
                          "active_cip_mentoring"
       end
 
@@ -1287,6 +1437,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "not_allowed",
                          "not_allowed",
                          "active_cip_mentoring",
+                         "registered_for_cip_training",
                          "not_allowed"
       end
 
@@ -1298,6 +1449,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "eligible_for_mentor_training",
                          "eligible_for_mentor_funding",
                          "active_cip_mentoring",
+                         "registered_for_cip_training",
                          "active_cip_mentoring"
       end
 
@@ -1309,6 +1461,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "eligible_for_mentor_training",
                          "ineligible_secondary",
                          "active_cip_mentoring",
+                         "registered_for_cip_training",
                          "active_cip_mentoring"
       end
 
@@ -1320,6 +1473,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "eligible_for_mentor_training",
                          "ineligible_ero",
                          "active_cip_mentoring_ero",
+                         "registered_for_cip_training",
                          "active_cip_mentoring_ero"
       end
 
@@ -1331,6 +1485,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "eligible_for_mentor_training",
                          "eligible_for_mentor_funding",
                          "active_cip_mentoring_ero",
+                         "registered_for_cip_training",
                          "active_cip_mentoring_ero"
       end
 
@@ -1342,6 +1497,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "checks_not_complete",
                          "checks_not_complete",
                          "active_cip_mentoring",
+                         "registered_for_cip_training",
                          "checks_not_complete"
       end
 
@@ -1353,6 +1509,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "eligible_for_mentor_training",
                          "eligible_for_mentor_funding",
                          "active_cip_mentoring",
+                         "registered_for_cip_training",
                          "active_cip_mentoring"
       end
 
@@ -1364,6 +1521,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "eligible_for_mentor_training",
                          "eligible_for_mentor_funding_primary",
                          "active_cip_mentoring",
+                         "registered_for_cip_training",
                          "active_cip_mentoring"
       end
 
@@ -1375,6 +1533,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "eligible_for_mentor_training",
                          "ineligible_secondary",
                          "active_cip_mentoring",
+                         "registered_for_cip_training",
                          "active_cip_mentoring"
       end
 
@@ -1386,6 +1545,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "eligible_for_mentor_training",
                          "eligible_for_mentor_funding",
                          "active_cip_mentoring",
+                         "registered_for_cip_training",
                          "active_cip_mentoring"
       end
 
@@ -1396,8 +1556,9 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "valid",
                          "not_yet_mentoring",
                          "eligible_for_mentor_funding",
-                         "not_yet_mentoring_cip",
-                         "not_yet_mentoring_cip"
+                         "not_yet_mentoring",
+                         "registered_for_cip_training",
+                         "not_yet_mentoring"
       end
 
       context "and they have been withdrawn by a training provider through the API" do
@@ -1407,8 +1568,9 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "valid",
                          "eligible_for_mentor_training",
                          "eligible_for_mentor_funding",
+                         "active_cip_mentoring",
                          "withdrawn_training",
-                         "withdrawn_training"
+                         "active_cip_mentoring"
       end
 
       context "and they have been re-enrolled after being withdrawn by a training provider through the API" do
@@ -1419,6 +1581,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "eligible_for_mentor_training",
                          "eligible_for_mentor_funding",
                          "active_cip_mentoring",
+                         "registered_for_cip_training",
                          "active_cip_mentoring"
       end
 
@@ -1429,8 +1592,9 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "valid",
                          "eligible_for_mentor_training",
                          "eligible_for_mentor_funding",
+                         "active_mentoring",
                          "withdrawn_training",
-                         "withdrawn_training"
+                         "active_mentoring"
       end
 
       context "and their training has been deferred" do
@@ -1440,8 +1604,9 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "valid",
                          "eligible_for_mentor_training",
                          "eligible_for_mentor_funding",
+                         "active_cip_mentoring",
                          "deferred_training",
-                         "deferred_training"
+                         "active_cip_mentoring"
       end
 
       context "and they have been withdrawn from the programme" do
@@ -1451,6 +1616,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "valid",
                          "eligible_for_mentor_training",
                          "eligible_for_mentor_funding",
+                         "active_cip_mentoring",
                          "withdrawn_programme",
                          "withdrawn_programme"
       end
@@ -1462,8 +1628,9 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "valid",
                          "eligible_for_mentor_training",
                          "eligible_for_mentor_funding",
+                         "active_cip_mentoring",
                          "completed_training",
-                         "completed_training"
+                         "active_cip_mentoring"
       end
 
       context "in transfer scenario" do
@@ -1476,6 +1643,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                            "valid",
                            "eligible_for_mentor_training",
                            "eligible_for_mentor_funding",
+                           "active_cip_mentoring",
                            "leaving",
                            "leaving"
         end
@@ -1487,6 +1655,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                            "valid",
                            "eligible_for_mentor_training",
                            "eligible_for_mentor_funding",
+                           "active_cip_mentoring",
                            "left",
                            "left"
         end
@@ -1498,6 +1667,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                            "valid",
                            "eligible_for_mentor_training",
                            "eligible_for_mentor_funding",
+                           "active_cip_mentoring",
                            "leaving",
                            "leaving"
         end
@@ -1509,6 +1679,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                            "valid",
                            "eligible_for_mentor_training",
                            "eligible_for_mentor_funding",
+                           "active_cip_mentoring",
                            "left",
                            "left"
         end
@@ -1520,6 +1691,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                            "valid",
                            "eligible_for_mentor_training",
                            "eligible_for_mentor_funding",
+                           "active_cip_mentoring",
                            "joining",
                            "joining"
         end
@@ -1532,6 +1704,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                            "eligible_for_mentor_training",
                            "eligible_for_mentor_funding",
                            "active_cip_mentoring",
+                           "registered_for_cip_training",
                            "active_cip_mentoring"
         end
       end
