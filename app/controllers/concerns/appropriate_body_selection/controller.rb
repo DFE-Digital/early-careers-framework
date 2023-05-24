@@ -125,7 +125,7 @@ module AppropriateBodySelection
     end
 
     def appropriate_body_session_data
-      session[:appropriate_body_selection]
+      session[:appropriate_body_selection] || {}
     end
 
     def appropriate_body_from_path

@@ -5,7 +5,6 @@ require "rails_helper"
 RSpec.describe "Add a school cohort appropriate body", type: :feature, js: true,
                with_feature_flags: { cohortless_dashboard: "active" },
                travel_to: Time.zone.local(2023, 6, 5, 16, 15, 0) do
-
   context "When appropriate body setup was not done for the cohort" do
     scenario "The appropriate body can be added" do
       given_there_is_a_school_and_an_induction_coordinator
