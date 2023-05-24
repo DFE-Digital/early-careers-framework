@@ -43,7 +43,11 @@ RSpec.describe Api::V3::NPQParticipantsQuery, :with_default_schedules do
     end
 
     context "sorting" do
-      let!(:another_participant_profile) { create(:npq_participant_profile, npq_lead_provider:, npq_course:, created_at: 10.days.ago) }
+      let!(:another_participant_profile) do
+        travel_to(10.days.ago) do
+          create(:npq_participant_profile, npq_lead_provider:, npq_course:)
+        end
+      end
 
       it "returns all records ordered by participant profile created_at" do
         expect(subject.participants.map(&:id)).to eq([another_participant_profile.user_id, participant_profile.user_id])

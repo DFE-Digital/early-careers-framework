@@ -100,7 +100,11 @@ RSpec.describe Api::V3::ECF::PartnershipsQuery do
     end
 
     context "sorting" do
-      let!(:another_partnership) { create(:partnership, cohort: another_cohort, lead_provider:, created_at: 2.days.ago.iso8601) }
+      let!(:another_partnership) do
+        travel_to(2.days.ago) do
+          create(:partnership, cohort: another_cohort, lead_provider:)
+        end
+      end
 
       it "returns all partnerships ordered by created_at" do
         expect(subject.partnerships).to eq([another_partnership, partnership])

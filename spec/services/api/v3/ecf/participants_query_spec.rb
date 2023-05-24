@@ -104,7 +104,12 @@ RSpec.describe Api::V3::ECF::ParticipantsQuery do
     context "sorting" do
       let(:another_cohort) { create(:cohort, start_year: "2050") }
       let!(:another_partnership) { create(:partnership, cohort: another_cohort, lead_provider:) }
-      let(:another_participant_profile) { create(:ect_participant_profile, created_at: 10.days.ago) }
+      let(:another_participant_profile) do
+        travel_to(10.days.ago) do
+          create(:ect_participant_profile)
+        end
+      end
+
       let(:another_induction_programme) { create(:induction_programme, :fip, partnership: another_partnership) }
       let(:another_induction_record) { create(:induction_record, induction_programme: another_induction_programme, participant_profile: another_participant_profile) }
       let!(:another_user) { another_induction_record.user }

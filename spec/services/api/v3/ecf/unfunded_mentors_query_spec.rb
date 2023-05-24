@@ -54,7 +54,11 @@ RSpec.describe Api::V3::ECF::UnfundedMentorsQuery, :with_default_schedules do
     end
 
     context "sorting" do
-      let(:user) { create(:user, email: "mary.lewis@example.com", created_at: 10.days.ago) }
+      let(:user) do
+        travel_to(10.days.ago) do
+          create(:user, email: "mary.lewis@example.com")
+        end
+      end
       let!(:another_unfunded_mentor_profile) { create(:mentor, :eligible_for_funding, user:) }
       let!(:another_unfunded_mentor_induction_record) { create(:induction_record, induction_programme:, mentor_profile: another_unfunded_mentor_profile) }
 
