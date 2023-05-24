@@ -75,7 +75,7 @@ RSpec.describe "Manage CIP participants", :with_default_schedules, js: true, wit
       when_i_navigate_to_participants_dashboard
       when_i_click_on_the_participants_name "ero mentor"
       then_i_am_taken_to_view_details_page
-      then_i_can_view_participant_with_status(:not_yet_mentoring_cip_ero)
+      then_i_can_view_participant_with_status(:not_yet_mentoring_ero)
     end
   end
 
@@ -127,7 +127,7 @@ RSpec.describe "Manage CIP participants", :with_default_schedules, js: true, wit
       when_i_navigate_to_participants_dashboard
       when_i_click_on_the_participants_name "Eligible mentor"
       then_i_am_taken_to_view_details_page
-      then_i_can_view_participant_with_status(:not_yet_mentoring_cip)
+      then_i_can_view_participant_with_status(:not_yet_mentoring)
     end
   end
 

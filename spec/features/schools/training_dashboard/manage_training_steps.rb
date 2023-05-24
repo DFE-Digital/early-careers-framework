@@ -981,10 +981,11 @@ module ManageTrainingSteps
   end
 
   def then_i_can_view_participant_with_status(status_key)
-    expect(I18n.t("status_tags.school_participant_status").keys).to include status_key
-    status = I18n.t("status_tags.school_participant_status.#{status_key}")
-    expect(page).to have_text(status[:label].upcase)
-    expect(page).to have_text(Array.wrap(status[:description]).first)
+    label = I18n.t(:label, scope: "status_tags.school_participant_status.#{status_key}")
+    description = I18n.t(:description, scope: "status_tags.school_participant_status.#{status_key}")
+
+    expect(page).to have_text(label.upcase)
+    expect(page).to have_text(Array.wrap(description).first)
   end
 
   def then_i_am_taken_to_cip_induction_dashboard
