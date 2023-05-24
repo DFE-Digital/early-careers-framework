@@ -8,7 +8,7 @@ RSpec.describe "Lead Provider landing page", type: :request do
       get lead_providers_landing_page_path
 
       expect(response).to render_template :index
-      expect(response.body).to include("Manage your records quickly and easily")
+      expect(response.body).to include("Manage data quickly and easily")
     end
 
     it "should sign post visitors to the partnership guide" do

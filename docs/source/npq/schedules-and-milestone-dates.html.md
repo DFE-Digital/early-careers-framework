@@ -22,7 +22,7 @@ For example, if a participant is on an npq-leadership-autumn schedule, the API w
 | Concept      | Definition| 
 | -------- | --------  |
 | Schedule    | The timeframe in which a participant starts a particular NPQ course, which determines milestone dates      |
-| Milestone   | Contractual retention periods during which providers must submit relevant declarations evidencing ECF-based training delivery and participant retention     |
+| Milestone   | Contractual retention periods during which providers must submit relevant declarations evidencing training delivery and participant retention     |
 | Milestone dates    | The deadline date a valid declaration can be made for a given milestone in order for the DfE to be liable to make a payment the following month. Milestone dates are dependent on the participant’s schedule       |
 | Milestone period    | The period of time between the milestone start date and deadline date       |
 | Output payment    | The sum of money paid by DfE to providers per valid declaration     |

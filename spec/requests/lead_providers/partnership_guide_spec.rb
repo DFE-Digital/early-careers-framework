@@ -13,25 +13,25 @@ RSpec.describe "Lead Provider partnership guide", type: :request do
     it "should explain how to confirm the schools you have recruited" do
       get lead_providers_partnership_guide_path
 
-      expect(response.body).to include("How to confirm the schools you have recruited")
+      expect(response.body).to include("How to confirm partnerships with schools using CSVs")
     end
 
     it "should explain how to check errors and update their CSV" do
       get lead_providers_partnership_guide_path
 
-      expect(response.body).to include("Checking errors and updating your CSV")
+      expect(response.body).to include("How to check CSV upload errors")
     end
 
     it "should explain what to do when a school reports they have been confirmed incorrectly" do
       get lead_providers_partnership_guide_path
 
-      expect(response.body).to include("When a school reports they have been confirmed incorrectly")
+      expect(response.body).to include("How school induction tutors report incorrect partnerships")
     end
 
     it "should explain how to check the schools they have recruited" do
       get lead_providers_partnership_guide_path
 
-      expect(response.body).to include("When a school reports they have been confirmed incorrectly")
+      expect(response.body).to include("View ECT, mentor and induction tutor details")
     end
   end
 end

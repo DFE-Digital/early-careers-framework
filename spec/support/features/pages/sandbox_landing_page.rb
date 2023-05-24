@@ -5,7 +5,7 @@ require_relative "./base_page"
 module Pages
   class SandboxLandingPage < ::Pages::BasePage
     set_url "/sandbox"
-    set_primary_heading "Use our sandbox to test Manage teacher CPD"
+    set_primary_heading "Use our sandbox environment"
 
     def continue_as_an_npq_participant
       click_on "Continue as an NPQ participant"
@@ -14,7 +14,7 @@ module Pages
     end
 
     def continue_as_an_ecf_training_provider
-      click_on "Continue as an ECF training provider"
+      click_on "Login to sandbox as a school induction tutor"
 
       Pages::LeadProviderLandingPage.loaded
     end

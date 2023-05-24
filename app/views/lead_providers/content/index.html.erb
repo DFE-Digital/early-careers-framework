@@ -4,12 +4,12 @@
   <div class="govuk-width-container">
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
-        <h1 class="app-masthead__title govuk-heading-xl">Manage your records quickly and easily</h1>
+        <h1 class="app-masthead__title govuk-heading-xl">Manage data quickly and easily</h1>
         <div class="app-masthead__description">
-          <p class="govuk-body-l">Try our new service to see how easy it is to use. It’s available to all lead providers.</p>
+          <p class="govuk-body-l">Login to the service to manage or test ECF and NPQ integrations and see school details</p>
         </div>
         <%= govuk_start_button(
-          text: 'Get started',
+          text: 'Login',
           href: :dashboard,
           classes: 'govuk-!-margin-bottom-0 app-button--inverted',
         ) %>
@@ -27,19 +27,22 @@
   <section class="app-section">
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-one-half">
-        <h2 class="govuk-heading-m">Manage partnerships for the Early Career Framework</h2>
-        <p class="govuk-body">Confirm all the schools you have recruited.</p>
-        <p class="govuk-body">List your confirmed schools with their ECT and mentor numbers.</p>
-        <p class="govuk-body">See school details including their induction tutor contact.</p>
+        <h2 class="govuk-heading-m">Manage ECF partnerships with schools and delivery partners</h2>
+        <p class="govuk-body">Providers with system integrations with API versions 1.0.0 or 2.0.0 can login to confirm partnerships with the schools and see school details including induction tutor contacts.</p>
+
 
         <%= govuk_start_button(
-          text: 'Learn to manage ECF partnerships',
+          text: 'How to manage ECF partnerships',
           href: :lead_providers_partnership_guide,
           classes: 'govuk-!-margin-bottom-0',
         ) %>
       </div>
       <div class="govuk-grid-column-one-half">
         <img src="/lead-provider/schools.png" alt="A screenshot of the service showing a list of applications and their statuses.">
+      </div>
+      <div class="govuk-grid-column-full">
+        <h2 class="govuk-heading-l">Get support</h2>
+        <p class="govuk-body">Email <%= render MailToSupportComponent.new %> for support using the Manage teacher CPD service.</p>
       </div>
     </div>
   </section>
