@@ -13,7 +13,7 @@ module Schools
         end
 
         def choices(cohort_start_year = nil)
-          AppropriateBodySelectionForm.body_type_choices_for_year(cohort_start_year)
+          AppropriateBodySelectionForm.body_type_choices_for_year(wizard.cohort_start_year)
         end
 
         def expected?
