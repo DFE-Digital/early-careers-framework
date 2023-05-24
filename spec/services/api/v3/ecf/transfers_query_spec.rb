@@ -172,6 +172,33 @@ RSpec.describe Api::V3::ECF::TransfersQuery do
         end
       end
     end
+
+    context "default order" do
+      let!(:induction_record) do
+        NewSeeds::Scenarios::Participants::Transfers::FipToFipKeepingOriginalTrainingProvider
+          .new(lead_provider_from: lead_provider)
+          .build
+      end
+      let!(:user) { induction_record.preferred_identity.user }
+
+      let!(:another_transfer_induction_record) do
+        NewSeeds::Scenarios::Participants::Transfers::FipToFipKeepingOriginalTrainingProvider
+          .new(lead_provider_from: lead_provider)
+          .build
+      end
+      let!(:another_user) { another_transfer_induction_record.preferred_identity.user }
+
+      before do
+        teacher_profile = TeacherProfile.find_by!(user_id: another_user.id)
+        teacher_pp = ParticipantProfile.find_by!(teacher_profile_id: teacher_profile.id)
+        teacher_ir = InductionRecord.find_by!(participant_profile_id: teacher_pp.id)
+        teacher_ir.update!(created_at: 4.days.ago.iso8601)
+      end
+
+      it "returns results in induction_records.created_at asc order" do
+        expect(subject.users.to_a).to eq([another_user, user])
+      end
+    end
   end
 
   describe "#user" do

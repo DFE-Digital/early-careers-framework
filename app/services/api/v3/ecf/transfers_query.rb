@@ -14,6 +14,7 @@ module Api
 
           scope = User
             .includes(user_includes)
+            .select("users.*", "induction_records.created_at")
             .distinct
             .joins("JOIN teacher_profiles ON users.id = teacher_profiles.user_id")
             .joins("JOIN (#{scope.to_sql}) AS participant_profiles ON participant_profiles.teacher_profile_id = teacher_profiles.id")
@@ -27,10 +28,10 @@ module Api
             )
 
           if updated_since.present?
-            scope.where(updated_at: updated_since..).order(:updated_at)
-          else
-            scope.order(:created_at)
+            scope = scope.where(updated_at: updated_since..)
           end
+
+          scope.order("induction_records.created_at ASC")
         end
 
         def user
