@@ -48,7 +48,11 @@ class AppropriateBodySelectionForm
   end
 
   def body_choices
-    AppropriateBody.where(body_type:)
+    if cohort_start_year.present?
+      AppropriateBody.where(body_type:).active_in_year(cohort_start_year)
+    else
+      AppropriateBody.where(body_type:)
+    end
   end
 
   def body_appointed?

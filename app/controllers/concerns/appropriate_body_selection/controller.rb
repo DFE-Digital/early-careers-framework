@@ -102,6 +102,7 @@ module AppropriateBodySelection
 
     def load_appropriate_body_form
       @appropriate_body_form = AppropriateBodySelectionForm.new(session[:appropriate_body_selection_form])
+      @appropriate_body_form.cohort_start_year = appropriate_body_session_data[:cohort_start_year]
       @appropriate_body_form.assign_attributes(appropriate_body_form_params)
       @appropriate_body_form
     end
