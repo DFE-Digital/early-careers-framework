@@ -25,28 +25,8 @@
     end
 
     sl.row do |row|
-      row.key(text: "Training record")
+      row.key(text: "Training record status")
       row.value(text: render(StatusTags::SchoolParticipantStatusTag.new(participant_profile: @participant_presenter.participant_profile, school: @participant_presenter.school)))
-    end
-
-    sl.row do |row|
-      row.key(text: "Validation status")
-      row.value(text: states.validation_state)
-    end
-
-    sl.row do |row|
-      row.key(text: "Training eligibility status")
-      row.value(text: states.training_eligibility_state)
-    end
-
-    sl.row do |row|
-      row.key(text: "FIP funding eligibility status")
-      row.value(text: states.fip_funding_eligibility_state)
-    end
-
-    sl.row do |row|
-      row.key(text: "Training status")
-      row.value(text: states.training_state)
     end
   end %>
 <% end %>
@@ -87,7 +67,7 @@
 
 <h2 class="govuk-heading-m">Appropriate body</h2>
 <% if @participant_presenter.appropriate_body_name.blank? %>
-  <p>No delivery partner details for <%= @participant_presenter.full_name %>.</p>
+  <p>No appropriate body details for <%= @participant_presenter.full_name %>.</p>
 <% else %>
   <%= govuk_summary_list(actions: true) do |sl|
     sl.row do |row|
@@ -97,7 +77,35 @@
 
     sl.row do |row|
       row.key(text: "Training record state")
-      row.value(text: render(StatusTags::AppropriateBodyParticipantStatusTag.new(participant_profile: @participant_presenter.participant_profile, induction_record: @participant_presenter.relevant_induction_record)))
+      row.value(text: render(StatusTags::AppropriateBodyParticipantStatusTag.new(participant_profile: @participant_presenter.participant_profile, appropriate_body: @participant_presenter.school_cohort&.appropriate_body)))
     end
   end %>
 <% end %>
+
+<h2 class="govuk-heading-m">Training record states</h2>
+<%= govuk_summary_list(actions: true) do |sl|
+  sl.row do |row|
+    row.key(text: "Validation status")
+    row.value(text: states.validation_state)
+  end
+
+  sl.row do |row|
+    row.key(text: "Training eligibility status")
+    row.value(text: states.training_eligibility_state)
+  end
+
+  sl.row do |row|
+    row.key(text: "FIP funding eligibility status")
+    row.value(text: states.fip_funding_eligibility_state)
+  end
+
+  sl.row do |row|
+    row.key(text: "Mentoring status")
+    row.value(text: states.mentoring_state)
+  end
+
+  sl.row do |row|
+    row.key(text: "Training status")
+    row.value(text: states.training_state)
+  end
+end %>

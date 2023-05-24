@@ -3,7 +3,7 @@
 # noinspection RubyTooManyMethodsInspection, RubyTooManyInstanceVariablesInspection, RubyInstanceMethodNamingConvention
 class DetermineTrainingRecordState < BaseService
   def call
-    @participant_profile.training_record_states.latest_for(participant_profile: @participant_profile, induction_record: @induction_record, delivery_partner: @delivery_partner, school: @school)
+    @participant_profile.training_record_states.latest_for(participant_profile: @participant_profile, induction_record: @induction_record, delivery_partner: @delivery_partner, appropriate_body: @appropriate_body, school: @school)
   end
 
   def is_record_state?(state)
@@ -12,7 +12,7 @@ class DetermineTrainingRecordState < BaseService
 
 private
 
-  def initialize(participant_profile:, induction_record: nil, delivery_partner: nil, school: nil)
+  def initialize(participant_profile:, induction_record: nil, delivery_partner: nil, appropriate_body: nil, school: nil)
     unless participant_profile.is_a? ParticipantProfile
       raise ArgumentError, "Expected a ParticipantProfile, got #{participant_profile.class}"
     end
@@ -28,17 +28,18 @@ private
         raise ArgumentError, "Expected a DeliveryPartner, got #{delivery_partner.class}"
       end
 
-      unless school.nil? || school.is_a?(School)
-        raise ArgumentError, "Expected a School, got #{school.class}"
+      unless appropriate_body.nil? || appropriate_body.is_a?(AppropriateBody)
+        raise ArgumentError, "Expected a AppropriateBody, got #{appropriate_body.class}"
       end
 
-      if delivery_partner.present? && school.present?
-        raise InvalidArgumentError "It is not possible to determine a status for both a school and a delivery partner"
+      unless school.nil? || school.is_a?(School)
+        raise ArgumentError, "Expected a School, got #{school.class}"
       end
     end
 
     @induction_record = induction_record
     @delivery_partner = delivery_partner
+    @appropriate_body = appropriate_body
     @school = school
   end
 end

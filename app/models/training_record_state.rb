@@ -121,13 +121,15 @@ class TrainingRecordState < ApplicationRecord
     Scenic.database.refresh_materialized_view(table_name, concurrently: false, cascade: false)
   end
 
-  def self.for(participant_profile:, induction_record: nil, lead_provider: nil, delivery_partner: nil, school: nil)
+  def self.for(participant_profile:, induction_record: nil, lead_provider: nil, delivery_partner: nil, appropriate_body: nil, school: nil)
     if school.present?
       where(participant_profile:, school:)
     elsif lead_provider.present?
       where(participant_profile:, lead_provider:)
     elsif delivery_partner.present?
       where(participant_profile:, delivery_partner:)
+    elsif appropriate_body.present?
+      where(participant_profile:, appropriate_body:)
     elsif induction_record.present?
       where(participant_profile:, induction_record:)
     else
@@ -135,8 +137,8 @@ class TrainingRecordState < ApplicationRecord
     end
   end
 
-  def self.latest_for(participant_profile:, induction_record: nil, lead_provider: nil, delivery_partner: nil, school: nil)
-    self.for(participant_profile:, induction_record:, lead_provider:, delivery_partner:, school:).latest
+  def self.latest_for(participant_profile:, induction_record: nil, lead_provider: nil, delivery_partner: nil, appropriate_body: nil, school: nil)
+    self.for(participant_profile:, induction_record:, lead_provider:, delivery_partner:, appropriate_body:, school:).latest
   end
 
   def self.latest
