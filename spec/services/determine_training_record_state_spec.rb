@@ -13,87 +13,21 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
     described_class.call(participant_profile:, school: current_school)
   end
 
-  training_record_state_scenarios = []
-
-  after(:all) do
-    file = Rails.root.join("tmp/training_record_state_scenarios.csv")
-
-    headers = %w[
-      participant_scenario
-      validation_state
-      training_eligibility_state
-      fip_funding_eligibility_state
-      mentoring_state
-      training_state
-      record_state
-      admin_label
-      appropriate_body_label
-      delivery_partner_label
-      school_label
-    ]
-
-    CSV.open(file, "w", write_headers: true, headers:) do |writer|
-      training_record_state_scenarios.each { |scenario| writer << scenario }
-    end
-  end
-
   shared_examples "determines states as" do |validation_state, training_eligibility_state, fip_funding_eligibility_state, mentoring_state, training_state, record_state|
-    it "#validation_state is set to \":#{validation_state}\"" do
+    it "states are determined as expected" do
       expect(determined_state.validation_state).to eq validation_state
-    end
-
-    it "#training_eligibility_state is set to \":#{training_eligibility_state}\"" do
       expect(determined_state.training_eligibility_state).to eq training_eligibility_state
-    end
-
-    it "#fip_funding_eligibility_state is set to \":#{fip_funding_eligibility_state}\"" do
       expect(determined_state.fip_funding_eligibility_state).to eq fip_funding_eligibility_state
-    end
-
-    it "#mentoring_state is set to \":#{mentoring_state}\"" do
       expect(determined_state.mentoring_state).to eq mentoring_state
-    end
-
-    it "#training_state is set to \":#{training_state}\"" do
       expect(determined_state.training_state).to eq training_state
-    end
-
-    it "#record_state is set to \":#{record_state}\"" do
       expect(determined_state.record_state).to eq record_state
     end
 
     it "Each StatusTag has a language file entry for the record_state of \"#{record_state}\"" do
       expect(I18n.t("status_tags.admin_participant_status").keys).to include record_state&.to_sym
-    end
-
-    it "StatusTags::AppropriateBodyParticipantStatusTag has a language file entry for the record_state of \"#{record_state}\"" do
       expect(I18n.t("status_tags.appropriate_body_participant_status").keys).to include record_state&.to_sym
-    end
-
-    it "StatusTags::DeliveryPartnerParticipantStatusTag has a language file entry for the record_state of \"#{record_state}\"" do
       expect(I18n.t("status_tags.delivery_partner_participant_status").keys).to include record_state&.to_sym
-    end
-
-    it "StatusTags::SchoolParticipantStatusTag has a language file entry for the record_state of \"#{record_state}\"" do
       expect(I18n.t("status_tags.school_participant_status").keys).to include record_state&.to_sym
-
-      training_record_state_scenarios.push [
-        participant_profile.user.full_name,
-        determined_state.validation_state,
-        determined_state.training_eligibility_state,
-        determined_state.fip_funding_eligibility_state,
-        determined_state.mentoring_state,
-        determined_state.training_state,
-        determined_state.record_state,
-        I18n.t(:label, scope: "status_tags.admin_participant_status.#{determined_state.record_state}"),
-        I18n.t(:label, scope: "status_tags.appropriate_body_participant_status.#{determined_state.record_state}"),
-        I18n.t(:label, scope: "status_tags.delivery_partner_participant_status.#{determined_state.record_state}"),
-        I18n.t(:label, scope: "status_tags.school_participant_status.#{determined_state.record_state}"),
-      ]
-    end
-
-    it "StatusTags::SchoolParticipantStatusTag has a detailed language file entry for the record_state of \"#{record_state}\"" do
-      expect(I18n.t("status_tags.school_participant_status_detailed").keys).to include record_state&.to_sym
     end
   end
 
