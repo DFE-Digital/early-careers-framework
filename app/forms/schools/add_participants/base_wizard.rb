@@ -149,7 +149,14 @@ module Schools
 
       def email_in_use?
         @email_owner ||= Identity.find_user_by(email: data_store.email)
-        return false if @email_owner.nil? || !@email_owner.participant?
+        return false if @email_owner.nil?
+
+        if ect_mentor?
+          # email_owner must be the same as existing ECT user
+          return @email_owner != existing_user
+        end
+
+        return false unless @email_owner.participant?
         return true unless transfer?
 
         @email_owner != existing_user

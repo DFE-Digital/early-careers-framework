@@ -102,6 +102,11 @@ class ParticipantProfile < ApplicationRecord
       ParticipantProfile::NPQPolicy
     end
 
+    def role
+      # not sure what this should be but incase it's needed in the dashboard it won't break
+      "NPQ"
+    end
+
   private
 
     def push_profile_to_big_query
