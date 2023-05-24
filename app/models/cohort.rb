@@ -11,7 +11,7 @@ class Cohort < ApplicationRecord
 
   scope :between_years, ->(lower, upper) { where(start_year: lower..upper) }
   scope :between_2021_and, ->(upper) { between_years(2021, upper) }
-  scope :ordered_by_year, -> { order(start_year: :asc) }
+  scope :ordered_by_start_year, -> { order(start_year: :asc) }
 
   # Class Methods
 

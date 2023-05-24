@@ -9,7 +9,7 @@
         legend: nil,
         hint: { text: "What cohort/academic year are they working with?" },
         ) do %>
-        <% lead_provider.cohorts.each do |cohort| %>
+        <% lead_provider.cohorts.ordered_by_start_year.each do |cohort| %>
           <%= f.govuk_check_box(
                 :provider_relationship_hashes,
                 DeliveryPartnerForm.provider_relationship_value(lead_provider, cohort),
