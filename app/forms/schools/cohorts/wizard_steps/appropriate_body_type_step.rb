@@ -12,7 +12,7 @@ module Schools
           %i[appropriate_body_type]
         end
 
-        def choices(cohort_start_year = nil)
+        def choices
           AppropriateBodySelectionForm.body_type_choices_for_year(wizard.cohort_start_year)
         end
 
