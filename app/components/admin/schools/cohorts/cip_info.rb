@@ -4,6 +4,8 @@ module Admin
   module Schools
     module Cohorts
       class CipInfo < BaseComponent
+        renders_one :summary_list_rows
+
         attr_accessor :school
 
         def initialize(school_cohort:)

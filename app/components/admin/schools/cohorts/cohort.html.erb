@@ -2,22 +2,21 @@
   <%= cohort.display_name %> partnership
 </h2>
 
-<%= render cohort_info do %>
+<%= render cohort_info do |ci| %>
   <% if partnership %>
-    <%# TODO: include these values in the outer summary list %>
-    <%=
-      govuk_summary_list do |sl|
-        sl.row do |row|
+    <% ci.summary_list_rows do %>
+      <%=
+        render(GovukComponent::SummaryListComponent::RowComponent.new) do |row|
           row.key(text: "Lead provider")
           row.value(text: partnership.lead_provider.name)
         end
 
-        sl.row do |row|
+        render(GovukComponent::SummaryListComponent::RowComponent.new) do |row|
           row.key(text: "Delivery partner")
           row.value(text: partnership.delivery_partner.name)
         end
-      end
-    %>
+      %>
+    <% end %>
 
     <%= govuk_button_link_to(new_admin_school_partnership_challenge_partnership_path(school_cohort.school, partnership), secondary: true) do %>
       Challenge <%= tag.span("partnership", class: "govuk-visually-hidden") %>
