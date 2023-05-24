@@ -131,12 +131,14 @@ RSpec.describe "NPQ Applications API", :with_default_schedules, type: :request, 
 
           before do
             another_npq_application.update!(updated_at: 10.days.ago)
-
-            get "/api/v3/npq-applications", params: { sort: sort_param }
           end
 
           context "when ordering by updated_at ascending" do
             let(:sort_param) { "updated_at" }
+
+            before do
+              get "/api/v3/npq-applications", params: { sort: sort_param }
+            end
 
             it "returns an ordered list of npq applications" do
               expect(parsed_response["data"].size).to eql(4)
@@ -147,9 +149,28 @@ RSpec.describe "NPQ Applications API", :with_default_schedules, type: :request, 
           context "when ordering by updated_at applications" do
             let(:sort_param) { "-updated_at" }
 
+            before do
+              get "/api/v3/npq-applications", params: { sort: sort_param }
+            end
+
             it "returns an ordered list of npq participants" do
               expect(parsed_response["data"].size).to eql(4)
               expect(parsed_response.dig("data", 3, "attributes", "full_name")).to eql(another_npq_application.user.full_name)
+            end
+          end
+
+          context "when not including sort in the params" do
+            let(:sort_param) { "" }
+
+            before do
+              another_npq_application.update!(created_at: 10.days.ago)
+
+              get "/api/v3/npq-applications", params: { sort: sort_param }
+            end
+
+            it "returns all records ordered by npq applications created_at" do
+              expect(parsed_response["data"].size).to eql(4)
+              expect(parsed_response.dig("data", 0, "attributes", "full_name")).to eql(another_npq_application.user.full_name)
             end
           end
         end

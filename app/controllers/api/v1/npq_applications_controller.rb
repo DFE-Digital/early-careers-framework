@@ -57,7 +57,7 @@ module Api
                   .includes(:cohort, :npq_course, :profile, participant_identity: [:user])
                   .where(cohort: with_cohorts)
         scope = scope.where("updated_at > ?", updated_since) if updated_since.present?
-        scope
+        params[:sort].blank? ? scope.order("npq_applications.created_at ASC") : scope
       end
 
       def access_scope

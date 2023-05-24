@@ -36,7 +36,7 @@ module Api
                    .where("induction_records.mentor_profile_id not in (select distinct participant_profile_id from (#{join.to_sql}) AS latest_induction_records)")
 
           scope = updated_since.present? ? scope.where(users: { updated_at: updated_since.. }) : scope
-          params[:sort].blank? ? scope.order("users.updated_at DESC") : scope
+          params[:sort].blank? ? scope.order("users.created_at ASC") : scope
         end
 
         def unfunded_mentor
