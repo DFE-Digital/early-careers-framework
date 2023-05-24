@@ -9,7 +9,7 @@
             <%= f.govuk_error_summary %>
             <%= f.govuk_collection_radio_buttons(
                 :appropriate_body_type,
-                @wizard.form.choices,
+                @wizard.form.choices(@cohort.start_year),
                 :id,
                 :name,
                 legend: { text: title, tag: :h1, size: 'xl' },

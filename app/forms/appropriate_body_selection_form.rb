@@ -5,6 +5,12 @@ class AppropriateBodySelectionForm
   include ActiveRecord::AttributeAssignment
   include ActiveModel::Serialization
 
+  TYPES = [
+    OpenStruct.new(id: "local_authority", name: "Local authority", disable_from_year: 2023),
+    OpenStruct.new(id: "national", name: "National organisation", disable_from_year: nil),
+    OpenStruct.new(id: "teaching_school_hub", name: "Teaching school hub", disable_from_year: nil),
+  ].freeze
+
   attr_accessor :body_appointed, :body_type, :body_id, :cohort_start_year
 
   validates :body_appointed,
@@ -35,15 +41,14 @@ class AppropriateBodySelectionForm
   end
 
   def body_type_choices
-    types = [
-      OpenStruct.new(id: "local_authority", name: "Local authority", disable_from_year: 2023),
-      OpenStruct.new(id: "national", name: "National organisation", disable_from_year: nil),
-      OpenStruct.new(id: "teaching_school_hub", name: "Teaching school hub", disable_from_year: nil),
-    ]
+    self.class.body_type_choices_for_year(cohort_start_year)
+  end
+
+  def self.body_type_choices_for_year(cohort_start_year)
     if cohort_start_year.present?
-      types.select { |ab_type| ab_type.disable_from_year.nil? || ab_type.disable_from_year > cohort_start_year }
+      TYPES.select { |ab_type| ab_type.disable_from_year.nil? || ab_type.disable_from_year > cohort_start_year }
     else
-      types
+      TYPES
     end
   end
 

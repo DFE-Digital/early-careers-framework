@@ -4,12 +4,6 @@ module Schools
   module Cohorts
     module WizardSteps
       class AppropriateBodyTypeStep < ::WizardStep
-        APPROPRIATE_BODY_TYPE_CHOICES = {
-          local_authority: "Local authority",
-          national: "National organisation",
-          teaching_school_hub: "Teaching school hub",
-        }.freeze
-
         attr_accessor :appropriate_body_type
 
         validates :appropriate_body_type, inclusion: { in: ->(form) { form.choices.map(&:id).map(&:to_s) } }
@@ -18,8 +12,8 @@ module Schools
           %i[appropriate_body_type]
         end
 
-        def choices
-          APPROPRIATE_BODY_TYPE_CHOICES.map { |id, name| OpenStruct.new(id:, name:) }
+        def choices(cohort_start_year = nil)
+          AppropriateBodySelectionForm.body_type_choices_for_year(cohort_start_year)
         end
 
         def expected?
