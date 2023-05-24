@@ -17,7 +17,7 @@ module Api
           scope = scope.where("partnerships.updated_at > ?", updated_since) if updated_since.present?
           scope = scope.where(partnerships: { delivery_partner: [delivery_partner_id_filter] }) if delivery_partner_id_filter.present?
           scope = scope.order("partnerships.updated_at DESC") if params[:sort].blank?
-          scope
+          scope.distinct
         end
 
         def partnership

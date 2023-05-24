@@ -29,7 +29,7 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_sp
                 explode: true,
                 required: false,
                 description: "Refine NPQ participants to return.",
-                example: CGI.unescape({ updated_since: "2020-11-13T11:21:55Z" }.to_param)
+                example: CGI.unescape({ filter: { updated_since: "2020-11-13T11:21:55Z" } }.to_param)
 
       parameter name: :page,
                 in: :query,
