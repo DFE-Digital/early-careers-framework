@@ -53,12 +53,7 @@ class TrainingRecordState < ApplicationRecord
   }, _prefix: "fip_funding_eligibility_status"
 
   enum mentoring_state: {
-    active_fip_mentoring_ero: "active_fip_mentoring_ero",
-    active_fip_mentoring: "active_fip_mentoring",
-    active_cip_mentoring_ero: "active_cip_mentoring_ero",
-    active_cip_mentoring: "active_cip_mentoring",
-    active_diy_mentoring_ero: "active_diy_mentoring_ero",
-    active_diy_mentoring: "active_diy_mentoring",
+    active_mentoring_ero: "active_mentoring_ero",
     active_mentoring: "active_mentoring",
     not_yet_mentoring_ero: "not_yet_mentoring_ero",
     not_yet_mentoring: "not_yet_mentoring",
