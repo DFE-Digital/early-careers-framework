@@ -515,7 +515,7 @@ module Schools
         if current_step.in? %i[participant_type]
           reset_form if submitted_params.empty?
         elsif data_store.store.empty?
-          raise InvalidStep, "Datastore is empty at [#{step}]"
+          raise InvalidStep, "Datastore is empty at [#{current_step}]"
         end
       end
 
