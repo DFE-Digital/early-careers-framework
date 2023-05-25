@@ -122,6 +122,23 @@ module Api
                 })
               end
             end
+
+            context "when the user is built by a query" do
+              let(:latest_induction_record) { ect_profile.induction_records.latest }
+              let(:participant_from_query) { OpenStruct.new(results) }
+              let(:results) do
+                {
+                  latest_induction_records: [latest_induction_record.id],
+                  participant_profiles: [ect_profile],
+                  participant_identities: participant.participant_identities,
+                }.merge(participant.attributes)
+              end
+              subject { described_class.new([participant_from_query], params: { cpd_lead_provider: }) }
+
+              it "selects the latest induction record correctly" do
+                expect(result[:data][0][:attributes][:ecf_enrolments][0][:email]).to eq(latest_induction_record.preferred_identity.email)
+              end
+            end
           end
         end
       end

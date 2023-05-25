@@ -68,6 +68,20 @@ module Api
               end
             end
           end
+
+          def latest_induction_record(user:, profile:, lead_provider:)
+            return unless lead_provider
+
+            if user.respond_to?(:latest_induction_records)
+              profile.induction_records.detect { |induction_record| user.latest_induction_records.include?(induction_record.id) }
+            else
+              profile
+                .induction_records
+                .includes(:preferred_identity, :schedule, :delivery_partner, :participant_profile, mentor_profile: :participant_identity, induction_programme: [partnership: [lead_provider: :cpd_lead_provider], school_cohort: %i[school cohort]])
+                .where(induction_programme: { partnerships: { lead_provider:, challenged_at: nil, challenge_reason: nil } })
+                .latest
+            end
+          end
         end
 
         set_id :id
@@ -91,7 +105,7 @@ module Api
 
         attribute(:ecf_enrolments) do |object, params|
           ecf_participant_profiles(object).map { |profile|
-            latest_induction_record = profile.induction_records.includes(:preferred_identity, :schedule, :delivery_partner, :participant_profile, mentor_profile: :participant_identity, induction_programme: [partnership: [lead_provider: :cpd_lead_provider], school_cohort: %i[school cohort]]).where(induction_programme: { partnerships: { lead_provider: params[:cpd_lead_provider].lead_provider, challenged_at: nil, challenge_reason: nil } }).latest
+            latest_induction_record = latest_induction_record(user: object, profile:, lead_provider: params[:cpd_lead_provider]&.lead_provider)
 
             next unless params[:cpd_lead_provider] && latest_induction_record.present?
 
