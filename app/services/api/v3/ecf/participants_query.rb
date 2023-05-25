@@ -36,7 +36,7 @@ module Api
             .from("(#{sub_query.to_sql}) as users")
             .distinct
 
-          params[:sort].blank? ? scope.order("teacher_profiles_participant_profiles.created_at ASC") : scope
+          params[:sort].blank? ? scope.order("participant_profiles_induction_records.created_at ASC") : scope
         end
 
         def participant
