@@ -10,14 +10,13 @@ module Api
         end
 
         def users
-          scope = participants_with_school_transfer.or(leaving_participants)
+          pp_scope = participants_with_school_transfer.or(leaving_participants)
 
-          scope = User
+          sub_query = User
             .includes(user_includes)
-            .select("users.*", "induction_records.created_at")
-            .distinct
+            .select("users.*", "induction_records.created_at AS induction_records_created_at")
             .joins("JOIN teacher_profiles ON users.id = teacher_profiles.user_id")
-            .joins("JOIN (#{scope.to_sql}) AS participant_profiles ON participant_profiles.teacher_profile_id = teacher_profiles.id")
+            .joins("JOIN (#{pp_scope.to_sql}) AS participant_profiles ON participant_profiles.teacher_profile_id = teacher_profiles.id")
             .joins("JOIN induction_records ON participant_profiles.profile_id = induction_records.participant_profile_id")
             .where(
               participant_profiles: {
@@ -25,13 +24,18 @@ module Api
                   induction_status: "leaving",
                 },
               },
-            )
+            ).order("induction_records_created_at ASC")
+
+          scope = User
+            .includes(user_includes)
+            .joins("JOIN (#{sub_query.to_sql}) AS sub_query ON sub_query.id = users.id")
+            .distinct
 
           if updated_since.present?
             scope = scope.where(updated_at: updated_since..)
           end
 
-          scope.order("induction_records.created_at ASC")
+          scope
         end
 
         def user
