@@ -65,6 +65,6 @@ private
   end
 
   def update_analytics
-    Analytics::UpsertECFPartnershipJob.perform_later(partnership: self) if saved_changes?
+    # Analytics::UpsertECFPartnershipJob.perform_later(partnership: self) if saved_changes?
   end
 end

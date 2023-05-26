@@ -155,7 +155,7 @@ private
 
     Participants::DetermineEligibilityStatus.call(ecf_participant_eligibility: @participant_eligibility)
 
-    Analytics::UpsertECFParticipantProfileJob.perform_later(participant_profile:)
+    # Analytics::UpsertECFParticipantProfileJob.perform_later(participant_profile:)
   end
 
   def default_eligibility_flags

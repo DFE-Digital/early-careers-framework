@@ -20,8 +20,6 @@ school = NewSeeds::Scenarios::Schools::School.new(urn: "116780", name: "Abberley
                                              .build
                                              .with_an_induction_tutor(full_name: "Induction Tutor",
                                                                       email: "inductiontutor@ambition.org.uk")
-                                             .school
-
 lead_provider = ambition
 delivery_partner = hampshire
 
@@ -32,7 +30,7 @@ delivery_partner = hampshire
                                   lead_provider:,
                                   delivery_partner:,
                                   cohort:,
-                                  school:)
+                                  school: school.school)
   school.chosen_fip_and_partnered_in(cohort:, partnership:)
 end
 
@@ -41,8 +39,6 @@ school = NewSeeds::Scenarios::Schools::School.new(urn: "144181", name: "Abbeyfie
                                              .build
                                              .with_an_induction_tutor(full_name: "ambition tutor",
                                                                       email: "ambition-induction-tutor@example.com")
-                                             .school
-
 lead_provider = ambition
 delivery_partner = five_counties
 
@@ -53,7 +49,7 @@ delivery_partner = five_counties
                                   lead_provider:,
                                   delivery_partner:,
                                   cohort:,
-                                  school:)
+                                  school: school.school)
   school.chosen_fip_and_partnered_in(cohort:, partnership:)
 end
 

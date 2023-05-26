@@ -5,29 +5,33 @@ module NPQ
     queue_as :big_query
 
     def perform(profile_id:)
-      bigquery = Google::Cloud::Bigquery.new
-      dataset = bigquery.dataset "npq_registration", skip_lookup: true
-      table = dataset.table "profiles_#{Rails.env.downcase}", skip_lookup: true
-      profile = ParticipantProfile::NPQ
-        .includes(:npq_application, :schedule, :npq_course, :participant_identity)
-        .find(profile_id)
+      ActiveRecord::Base.transaction do
+        bigquery = Google::Cloud::Bigquery.new
+        dataset = bigquery.dataset "npq_registration", skip_lookup: true
+        table = dataset.table "profiles_#{Rails.env.downcase}", skip_lookup: true
+        profile = ParticipantProfile::NPQ
+          .includes(:npq_application, :schedule, :npq_course, :participant_identity)
+          .find(profile_id)
 
-      rows = [
-        {
-          profile_id: profile.id,
-          user_id: profile.participant_identity.user_id,
-          external_id: profile.participant_identity.external_identifier,
-          application_ecf_id: profile.npq_application&.id,
-          status: profile.status,
-          training_status: profile.training_status,
-          schedule_identifier: profile.schedule&.schedule_identifier,
-          course_identifier: profile.npq_course&.identifier,
-          created_at: profile.created_at,
-          updated_at: profile.updated_at,
-        }.stringify_keys,
-      ]
+        rows = [
+          {
+            profile_id: profile.id,
+            user_id: profile.participant_identity.user_id,
+            external_id: profile.participant_identity.external_identifier,
+            application_ecf_id: profile.npq_application&.id,
+            status: profile.status,
+            training_status: profile.training_status,
+            schedule_identifier: profile.schedule&.schedule_identifier,
+            course_identifier: profile.npq_course&.identifier,
+            created_at: profile.created_at,
+            updated_at: profile.updated_at,
+          }.stringify_keys,
+        ]
 
-      table.insert(rows, ignore_unknown: true)
+        table.insert(rows, ignore_unknown: true)
+      rescue StandardError
+        true
+      end
     end
   end
 end

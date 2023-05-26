@@ -174,12 +174,12 @@ module Participants
     end
 
     def store_analytics!
-      Analytics::RecordValidationJob.perform_later(
-        participant_profile:,
-        real_time_attempts: attempts,
-        real_time_success: dqt_response.present?,
-        nino_entered: nino.present?,
-      )
+      # Analytics::RecordValidationJob.perform_later(
+      #   participant_profile:,
+      #   real_time_attempts: attempts,
+      #   real_time_success: dqt_response.present?,
+      #   nino_entered: nino.present?,
+      # )
     end
 
     def participant_profile

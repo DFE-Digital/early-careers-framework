@@ -25,6 +25,6 @@ class AppropriateBody < ApplicationRecord
 private
 
   def update_analytics
-    Analytics::UpsertECFAppropriateBodyJob.perform_later(appropriate_body: self) if saved_changes?
+    # Analytics::UpsertECFAppropriateBodyJob.perform_later(appropriate_body: self) if saved_changes?
   end
 end
