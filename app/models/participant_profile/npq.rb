@@ -110,7 +110,7 @@ class ParticipantProfile < ApplicationRecord
   private
 
     def push_profile_to_big_query
-      ::NPQ::StreamBigQueryProfileJob.perform_later(profile_id: id)
+      # ::NPQ::StreamBigQueryProfileJob.perform_later(profile_id: id)
     end
   end
 end
