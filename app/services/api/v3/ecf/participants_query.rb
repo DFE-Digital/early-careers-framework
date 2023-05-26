@@ -9,36 +9,38 @@ module Api
           @params = params
         end
 
-        def participants
-          join = InductionRecord
-                   .select(Arel.sql("DISTINCT FIRST_VALUE(induction_records.id) OVER (#{latest_induction_record_order}) AS latest_id, induction_records.training_status"))
-                   .joins(:participant_profile, :schedule, { induction_programme: :partnership })
-                   .where(
-                     schedule: { cohort_id: with_cohorts.map(&:id) },
-                     induction_programme: {
-                       partnerships: {
-                         lead_provider_id: lead_provider.id,
-                         challenged_at: nil,
-                         challenge_reason: nil,
-                       },
-                     },
-                   )
+        def participants_for_pagination
+          scope = User
+                    .select(:id)
+                    .joins(participant_profiles: :induction_records)
+                    .joins("JOIN (#{latest_induction_records_join.to_sql}) AS latest_induction_records_join ON latest_induction_records_join.latest_id = induction_records.id")
+                    .distinct
+          updated_since.present? ? scope.where(users: { updated_at: updated_since.. }) : scope
+        end
+
+        def participants_from(paginated_join)
+          # add subquery to allow grouping by user, to calculate latest induction records for multiple profiles correctly
+          sub_query = User
+                  .select("users.*", "COALESCE(jsonb_agg(DISTINCT latest_induction_records.latest_id), '[]') AS latest_induction_records")
+                  .joins(left_outer_join_teacher_profiles)
+                  .joins(left_outer_join_participant_profiles)
+                  .joins(left_outer_join_induction_records)
+                  .joins("JOIN (#{latest_induction_records_join.to_sql}) AS latest_induction_records ON latest_induction_records.latest_id = induction_records.id")
+                  .joins("INNER JOIN (#{paginated_join.to_sql}) as tmp on tmp.id = users.id")
+                  .group("users.id")
+                  .distinct
 
           scope = User
-                    .includes(:participant_identities, :teacher_profile, participant_profiles: %i[participant_profile_states schedule teacher_profile ecf_participant_eligibility ecf_participant_validation_data])
-                    .eager_load(participant_profiles: :induction_records)
-                    .joins(left_outer_join_participant_profiles)
-                    .joins(left_outer_join_participant_identities)
-                    .joins("JOIN (#{join.to_sql}) AS latest_induction_records ON latest_induction_records.latest_id = induction_records.id")
-                    .joins(left_outer_join_participant_profile_states)
-                    .distinct
+            .select("users.*")
+            .includes(:participant_identities, :teacher_profile, participant_profiles: [:participant_profile_states, :schedule, :teacher_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, { induction_records: [:preferred_identity, :schedule, :delivery_partner, :participant_profile, { mentor_profile: :participant_identity, induction_programme: [school_cohort: %i[school cohort]] }] }])
+            .from("(#{sub_query.to_sql}) as users")
+            .distinct
 
-          scope = updated_since.present? ? scope.where(users: { updated_at: updated_since.. }) : scope
-          params[:sort].blank? ? scope.order("teacher_profiles_participant_profiles.created_at ASC") : scope
+          params[:sort].blank? ? scope.order("participant_profiles_induction_records.created_at ASC") : scope
         end
 
         def participant
-          participants.find(params[:id])
+          participants_from(participants_for_pagination).find(params[:id])
         end
 
       private
@@ -47,6 +49,22 @@ module Api
 
         def filter
           params[:filter] ||= {}
+        end
+
+        def latest_induction_records_join
+          InductionRecord
+          .select(Arel.sql("DISTINCT FIRST_VALUE(induction_records.id) OVER (#{latest_induction_record_order}) AS latest_id"))
+          .joins(:participant_profile, :schedule, { induction_programme: :partnership })
+          .where(
+            schedule: { cohort_id: with_cohorts.map(&:id) },
+            induction_programme: {
+              partnerships: {
+                lead_provider_id: lead_provider.id,
+                challenged_at: nil,
+                challenge_reason: nil,
+              },
+            },
+          )
         end
 
         def with_cohorts
@@ -80,16 +98,16 @@ module Api
           SQL
         end
 
+        def left_outer_join_teacher_profiles
+          "LEFT OUTER JOIN teacher_profiles ON users.id = teacher_profiles.user_id"
+        end
+
         def left_outer_join_participant_profiles
-          "LEFT OUTER JOIN participant_profiles ON participant_profiles.id = induction_records.participant_profile_id"
+          "LEFT OUTER JOIN participant_profiles ON participant_profiles.teacher_profile_id = teacher_profiles.id"
         end
 
-        def left_outer_join_participant_identities
-          "LEFT OUTER JOIN participant_identities ON participant_identities.id = participant_profiles.participant_identity_id"
-        end
-
-        def left_outer_join_participant_profile_states
-          "LEFT OUTER JOIN participant_profile_states pps on participant_profiles.id = pps.participant_profile_id"
+        def left_outer_join_induction_records
+          "LEFT OUTER JOIN induction_records ON participant_profiles.id = induction_records.participant_profile_id"
         end
       end
     end
