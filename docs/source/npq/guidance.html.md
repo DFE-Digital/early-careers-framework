@@ -91,6 +91,56 @@ For more detailed information see the specifications for this [view multiple NPQ
 }
 ```
 
+### View a specific application
+
+```
+ GET /api/v3/npq-applications/{id}
+```
+
+An example response body is listed below. 
+
+For more detailed information see the specifications for this [view a specific NPQ application endpoint](/api-reference/reference-v3.html#api-v3-npq-applications-id-get).
+
+#### Example response body:
+
+```
+{
+  "data": {
+    "id": "db3a7848-7308-4879-942a-c4a70ced400a",
+    "type": "npq_application",
+    "attributes": {
+      "participant_id": "7a8fef46-3c43-42c0-b3d5-1ba5904ba562",
+      "full_name": "Isabelle MacDonald",
+      "email": "isabelle.macdonald2@some-school.example.com",
+      "email_validated": true,
+      "teacher_reference_number": "1234567",
+      "teacher_reference_number_validated": true,
+      "works_in_school": true,
+      "employer_name": "Some Company Ltd",
+      "employment_role": "Director",
+      "school_urn": "106286",
+      "private_childcare_provider_urn": "EY944860",
+      "school_ukprn": "10079319",
+      "headteacher_status": "no",
+      "eligible_for_funding": true,
+      "funding_choice": "trust",
+      "course_identifier": "npq-leading-teaching",
+      "status": "pending",
+      "created_at": "2021-05-31T02:21:32.000Z",
+      "updated_at": "2021-05-31T02:22:32.000Z",
+      "ineligible_for_funding_reason": "establishment-ineligible",
+      "cohort": "2022",
+      "targeted_delivery_funding_eligibility": true,
+      "teacher_catchment": true,
+      "teacher_catchment_country": "France",
+      "teacher_catchment_iso_country_code": "FRA",
+      "lead_mentor": true,
+      "itt_provider": "University of Southampton"
+    }
+  }
+}
+```
+
 ### Accept an application 
 
 Providers should accept applications for those they want to enrol onto a course. Providers must inform applicants of the outcome of their successful NPQ application. 
