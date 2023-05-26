@@ -42,6 +42,7 @@ end
   "add_ects_becoming_mentors.rb",
   "add_schools_for_cohortless_testing.rb",
   "add_environment_specific_data.rb",
+  "add_schools_and_participants_for_end_to_end_testing",
 ].each do |file|
   Rails.logger.info("seeding #{file}")
   load_base_file(file)
