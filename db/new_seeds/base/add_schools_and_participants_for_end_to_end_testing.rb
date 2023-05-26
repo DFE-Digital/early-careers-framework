@@ -32,7 +32,7 @@ delivery_partner = hampshire
                                   lead_provider:,
                                   delivery_partner:,
                                   cohort:,
-                                  school:,)
+                                  school:)
   school.chosen_fip_and_partnered_in(cohort:, partnership:)
 end
 
@@ -53,7 +53,7 @@ delivery_partner = five_counties
                                   lead_provider:,
                                   delivery_partner:,
                                   cohort:,
-                                  school:,)
+                                  school:)
   school.chosen_fip_and_partnered_in(cohort:, partnership:)
 end
 
@@ -61,15 +61,13 @@ end
 NewSeeds::Scenarios::Schools::School.new(urn: "123780", name: "West Pennard Church of England Primary School")
                                     .build
 
-# Participants
-urn_to_cohort = [["116780", 2021], ["116780", 2022], ["144181", 2021], ["144181", 2022]]
-
 # Create ECTs
+urn_to_cohort = [["116780", 2021], ["116780", 2022], ["144181", 2021], ["144181", 2022]]
 urn_to_cohort.each do |c|
   cohort = Cohort.find_by(start_year: c.second)
   school_cohort = School.find_by(urn: c.first).school_cohorts.where(cohort:).first
   if school_cohort.nil?
-    puts "could not find cohort #{c.second} for urn #{c.first}"
+    Rails.logger.debug "could not find cohort #{c.second} for urn #{c.first}"
     next
   end
 
@@ -121,7 +119,7 @@ urn_to_cohort.each do |c|
       declaration_date: (ect.schedule.milestones.where(declaration_type: "retained-1").first.start_date + 1.day).rfc3339,
       cpd_lead_provider: ect.induction_records.latest.induction_programme.partnership.lead_provider.cpd_lead_provider,
       declaration_type: "retained-1",
-      evidence_held: "other"
+      evidence_held: "other",
     ).call
 
     RecordDeclaration.new(
@@ -130,17 +128,18 @@ urn_to_cohort.each do |c|
       declaration_date: (ect.schedule.milestones.where(declaration_type: "retained-2").first.start_date + 1.day).rfc3339,
       cpd_lead_provider: ect.induction_records.latest.induction_programme.partnership.lead_provider.cpd_lead_provider,
       declaration_type: "retained-2",
-      evidence_held: "other"
+      evidence_held: "other",
     ).call
   end
 end
 
 # Create Mentors
+urn_to_cohort = [["116780", 2021], ["116780", 2022], ["144181", 2021], ["144181", 2022]]
 urn_to_cohort.each do |c|
   cohort = Cohort.find_by(start_year: c.second)
   school_cohort = School.find_by(urn: c.first).school_cohorts.where(cohort:).first
   if school_cohort.nil?
-    puts "could not find cohort #{c.second} for urn #{c.first}"
+    Rails.logger.debug "could not find cohort #{c.second} for urn #{c.first}"
     next
   end
 
@@ -149,7 +148,7 @@ urn_to_cohort.each do |c|
     full_name = ::Faker::Name.name
     email = Faker::Internet.email(name: full_name)
     trn = rand(100_000..999_999).to_s
-    date_of_birth =  rand(25..50).years.ago + rand(0..365).days
+    date_of_birth = rand(25..50).years.ago + rand(0..365).days
     nino = SecureRandom.hex
 
     mentor = Mentors::Create.call(
@@ -157,7 +156,7 @@ urn_to_cohort.each do |c|
       email:,
       school_cohort:,
       sit_validation: true,
-      )
+    )
 
     StoreValidationResult.new(
       participant_profile: mentor,
@@ -175,7 +174,7 @@ urn_to_cohort.each do |c|
         previous_induction: false,
       },
       deduplicate: true,
-      ).call
+    ).call
 
     RecordDeclaration.new(
       participant_id: mentor.user.id,
@@ -183,7 +182,7 @@ urn_to_cohort.each do |c|
       declaration_date: (mentor.schedule.milestones.where(declaration_type: "started").first.start_date + 1.day).rfc3339,
       cpd_lead_provider: mentor.induction_records.latest.induction_programme.partnership.lead_provider.cpd_lead_provider,
       declaration_type: "started",
-      ).call
+    ).call
 
     RecordDeclaration.new(
       participant_id: mentor.user.id,
@@ -191,7 +190,7 @@ urn_to_cohort.each do |c|
       declaration_date: (mentor.schedule.milestones.where(declaration_type: "retained-1").first.start_date + 1.day).rfc3339,
       cpd_lead_provider: mentor.induction_records.latest.induction_programme.partnership.lead_provider.cpd_lead_provider,
       declaration_type: "retained-1",
-      evidence_held: "other"
+      evidence_held: "other",
     ).call
     RecordDeclaration.new(
       participant_id: mentor.user.id,
@@ -199,20 +198,18 @@ urn_to_cohort.each do |c|
       declaration_date: (mentor.schedule.milestones.where(declaration_type: "retained-2").first.start_date + 1.day).rfc3339,
       cpd_lead_provider: mentor.induction_records.latest.induction_programme.partnership.lead_provider.cpd_lead_provider,
       declaration_type: "retained-2",
-      evidence_held: "other"
+      evidence_held: "other",
     ).call
   end
 end
 
 # Create ECTs becoming Mentors
-urns = ["116780", "123780"]
-
-urns.each do |urn|
+%w[116780 123780].each do |urn|
   school_cohort_1 = School.find_by(urn:).school_cohorts.where(cohort: cohort_2021).first
   school_cohort_2 = School.find_by(urn:).school_cohorts.where(cohort: cohort_2022).first
 
   if school_cohort_1.nil? && school_cohort_2.nil?
-    puts "could not find school #{urn}"
+    Rails.logger.debug "could not find school #{urn}"
     next
   end
 
@@ -220,7 +217,7 @@ urns.each do |urn|
     full_name = ::Faker::Name.name
     email = Faker::Internet.email(name: full_name)
     trn = rand(100_000..999_999).to_s
-    date_of_birth =  rand(25..50).years.ago + rand(0..365).days
+    date_of_birth = rand(25..50).years.ago + rand(0..365).days
     nino = SecureRandom.hex
 
     ect = EarlyCareerTeachers::Create.call(
@@ -229,7 +226,7 @@ urns.each do |urn|
       school_cohort: school_cohort_1,
       mentor_profile_id: nil,
       sit_validation: true,
-      )
+    )
 
     StoreValidationResult.new(
       participant_profile: ect,
@@ -247,7 +244,7 @@ urns.each do |urn|
         previous_induction: false,
       },
       deduplicate: true,
-      ).call
+    ).call
 
     preferred_email = ect.participant_identity.email
 
@@ -258,7 +255,7 @@ urns.each do |urn|
       sparsity_uplift: false,
       pupil_premium_uplift: false,
       school_cohort: school_cohort_2,
-      )
+    )
 
     ParticipantProfileState.create!(participant_profile: mentor_profile,
                                     cpd_lead_provider: school_cohort_2&.default_induction_programme&.lead_provider&.cpd_lead_provider)
@@ -266,7 +263,7 @@ urns.each do |urn|
     if school_cohort_2.default_induction_programme.present?
       Induction::Enrol.call(participant_profile: mentor_profile,
                             induction_programme: school_cohort_2.default_induction_programme,
-                            preferred_email: ,
+                            preferred_email:,
                             start_date: mentor_profile.schedule.milestones.where(declaration_type: "started").first.start_date - 1.day)
     end
 
@@ -288,6 +285,6 @@ urns.each do |urn|
         previous_induction: false,
       },
       deduplicate: true,
-      ).call
+    ).call
   end
 end
