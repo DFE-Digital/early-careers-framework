@@ -60,18 +60,22 @@ module Api
 
       attribute :mentor_id do |declaration|
         if declaration.participant_profile.ect?
-          latest_induction_record = declaration.participant_profile.induction_records.includes(
-            induction_programme: [:partnership],
-          ).where(
-            induction_programme: {
-              partnerships: {
-                lead_provider_id: declaration.cpd_lead_provider.lead_provider_id,
-                # We've not filtered out challenged as we want to return everything
+          if declaration.respond_to?(:mentor_user_id)
+            declaration.mentor_user_id
+          else
+            latest_induction_record = declaration.participant_profile.induction_records.includes(
+              induction_programme: [:partnership],
+            ).where(
+              induction_programme: {
+                partnerships: {
+                  lead_provider_id: declaration.cpd_lead_provider.lead_provider_id,
+                  # We've not filtered out challenged as we want to return everything
+                },
               },
-            },
-          ).latest
+            ).latest
 
-          latest_induction_record&.mentor_profile&.participant_identity&.user_id
+            latest_induction_record&.mentor_profile&.participant_identity&.user_id
+          end
         end
       end
 
