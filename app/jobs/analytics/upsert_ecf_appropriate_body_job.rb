@@ -2,6 +2,6 @@
 
 class Analytics::UpsertECFAppropriateBodyJob < ApplicationJob
   def perform(appropriate_body:)
-    Analytics::ECFAppropriateBodyService.upsert_record(appropriate_body)
+    # Analytics::ECFAppropriateBodyService.upsert_record(appropriate_body)
   end
 end

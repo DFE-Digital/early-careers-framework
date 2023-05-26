@@ -37,7 +37,7 @@ module Importers
         lead_providers_with_ecf_contracts_for(cohort: statement_data.cohort).each do |lead_provider|
           cpd_lead_provider = lead_provider.cpd_lead_provider
 
-          logger.info "CreateStatement: Creating #{statement_data.cohort.start_year} cohort ECF statements for #{cpd_lead_provider.name}"
+          # logger.info "CreateStatement: Creating #{statement_data.cohort.start_year} cohort ECF statements for #{cpd_lead_provider.name}"
 
           statement = Finance::Statement::ECF.find_by(
             name: statement_data.name,
@@ -58,7 +58,7 @@ module Importers
             contract_version: "0.0.1",
           )
 
-          logger.info "CreateStatement: #{statement_data.cohort.start_year} cohort ECF statements for #{cpd_lead_provider.name} successfully created!"
+          # logger.info "CreateStatement: #{statement_data.cohort.start_year} cohort ECF statements for #{cpd_lead_provider.name} successfully created!"
         end
       end
     end
@@ -68,7 +68,7 @@ module Importers
         npq_lead_providers_with_contracts_for(cohort: statement_data.cohort).each do |npq_lead_provider|
           cpd_lead_provider = npq_lead_provider.cpd_lead_provider
 
-          logger.info "CreateStatement: Creating #{statement_data.cohort.start_year} cohort NPQ statements for #{cpd_lead_provider.name}"
+          # logger.info "CreateStatement: Creating #{statement_data.cohort.start_year} cohort NPQ statements for #{cpd_lead_provider.name}"
 
           statement = Finance::Statement::NPQ.find_by(
             name: statement_data.name,
@@ -89,7 +89,7 @@ module Importers
             contract_version: "0.0.1",
           )
 
-          logger.info "CreateStatement: #{statement_data.cohort.start_year} cohort NPQ statements for #{cpd_lead_provider.name} successfully created!"
+          # logger.info "CreateStatement: #{statement_data.cohort.start_year} cohort NPQ statements for #{cpd_lead_provider.name} successfully created!"
         end
       end
     end

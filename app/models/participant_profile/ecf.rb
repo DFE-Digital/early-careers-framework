@@ -120,7 +120,7 @@ class ParticipantProfile < ApplicationRecord
   private
 
     def update_analytics
-      Analytics::UpsertECFParticipantProfileJob.perform_later(participant_profile: self) if saved_changes?
+      # Analytics::UpsertECFParticipantProfileJob.perform_later(participant_profile: self) if saved_changes?
     end
 
     def sync_status_with_induction_record

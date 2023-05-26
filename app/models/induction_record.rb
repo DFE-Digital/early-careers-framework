@@ -205,6 +205,6 @@ private
   end
 
   def update_analytics
-    Analytics::UpsertECFInductionJob.perform_later(induction_record: self) if saved_changes?
+    # Analytics::UpsertECFInductionJob.perform_later(induction_record: self) if saved_changes?
   end
 end

@@ -76,7 +76,7 @@ module NewSeeds
             Rails.logger.info("seeding #{number} mentees with eligibility: #{with_eligibility}, validation_data: #{with_validation_data}")
             @mentees = number.times.map do
               build_mentee(with_eligibility:, with_validation_data:).participant_profile.tap do |mentee|
-                Rails.logger.info("seeded induction record where #{mentor.full_name} is mentoring #{mentee.full_name}")
+                # Rails.logger.info("seeded induction record where #{mentor.full_name} is mentoring #{mentee.full_name}")
               end
             end
 

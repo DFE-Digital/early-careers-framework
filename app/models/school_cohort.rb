@@ -99,6 +99,6 @@ class SchoolCohort < ApplicationRecord
 private
 
   def update_analytics
-    Analytics::UpsertECFSchoolCohortJob.perform_later(school_cohort: self) if saved_changes?
+    # Analytics::UpsertECFSchoolCohortJob.perform_later(school_cohort: self) if saved_changes?
   end
 end
