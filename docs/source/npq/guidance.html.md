@@ -16,7 +16,7 @@ The focus of the following guidance is on business logic only. Critical details 
 4. Providers accept or reject applications via the API and onboarding participants onto their systems
 5. Providers train participants as per details set out in the contract
 6. Providers submit `started` declarations via the API to notify DfE that participants have started their courses
-7. DfE pay providers output payments for `started` declarations
+7. DfE pays providers output payments for `started` declarations
 8. Providers continue to train participants as per details set out in the contract
 9. Providers submit `retained` declarations via the API to notify DfE participants have continued in training for a given milestone
 10. DfE pays providers output payments for `retained` declarations
