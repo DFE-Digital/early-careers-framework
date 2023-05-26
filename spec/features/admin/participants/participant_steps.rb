@@ -216,6 +216,9 @@ module ParticipantSteps
 
   def and_i_should_see_the_participant_cohorts
     expect(page).to have_text("Cohort")
+  end
+
+  def and_i_should_see_the_change_cohort_action
     expect(page).to have_link("Change cohort")
   end
 

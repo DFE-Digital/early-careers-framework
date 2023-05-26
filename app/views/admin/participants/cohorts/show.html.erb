@@ -23,4 +23,6 @@
   end
 end %>
 
-<%= govuk_button_link_to("Change cohort", edit_admin_participant_change_cohort_path(@participant_presenter.participant_profile), secondary: true) %>
+<% if policy(@participant_profile).edit_cohort? %>
+  <%= govuk_button_link_to("Change cohort", edit_admin_participant_change_cohort_path(@participant_presenter.participant_profile), secondary: true) %>
+<% end %>
