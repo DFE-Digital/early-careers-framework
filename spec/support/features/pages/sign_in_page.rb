@@ -10,6 +10,7 @@ module Pages
     def continue
       click_on "Continue"
 
+      # TODO: It is not always the same, it depends on the user type and the previous data reported
       # Pages::ParticipantPrivacyPolicyPage.loaded
     end
   end

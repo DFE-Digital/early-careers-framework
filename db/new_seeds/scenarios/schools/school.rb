@@ -88,6 +88,29 @@ module NewSeeds
         end
 
         ###
+        # adds a school_cohort and a default induction programme (DesignYourOwn) for the given cohort
+        ###
+        def chosen_diy_in(cohort:)
+          school_cohorts[cohort.start_year] = NewSeeds::Scenarios::SchoolCohorts::DesignYourOwn
+                                                .new(cohort:, school:)
+                                                .build
+                                                .with_programme
+                                                .school_cohort
+          self
+        end
+
+        ###
+        # adds a school_cohort with no_early_career_teachers for the given cohort
+        ###
+        def chosen_no_ects_in(cohort:)
+          school_cohorts[cohort.start_year] = NewSeeds::Scenarios::SchoolCohorts::NoEarlyCareerTeachers
+                                                .new(cohort:, school:)
+                                                .build
+                                                .school_cohort
+          self
+        end
+
+        ###
         # add a partnership for the cohort
         ###
         def with_partnership_in(cohort:, lead_provider: nil, delivery_partner: nil)

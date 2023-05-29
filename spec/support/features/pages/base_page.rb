@@ -79,10 +79,14 @@ module Pages
 
     def accept_cookies
       cookie_banner.accept
+
+      self
     end
 
     def reject_cookies
       cookie_banner.reject
+
+      self
     end
 
     delegate :hide_success_message, to: :cookie_banner
@@ -91,41 +95,49 @@ module Pages
 
     def confirm_cookie_preferences_rejected
       element_has_content? cookie_banner, "You’ve rejected analytics cookies. You can change your cookie settings at any time."
+
+      self
     end
 
     def confirm_cookie_preferences_accepted
       element_has_content? cookie_banner, "You’ve accepted analytics cookies. You can change your cookie settings at any time."
+
+      self
     end
 
     def confirm_cookie_banner_not_displayed
       expect(cookie_banner).to_not be_visible
+
+      self
     end
 
     def confirm_cookie_banner_displayed
       expect(cookie_banner).to be_visible
+
+      self
     end
 
     def go_back
       click_on "Back"
+
+      self
     end
 
     # helpers that can show what capybara sees
 
     def show_html
-      puts page.html
+      show(html: true)
     end
 
     def show_all_content
-      puts page.text
+      show(html: false, all: true)
     end
 
     def show_main_content
-      puts page.find("main").text
+      show(html: false, all: false)
     end
 
-    # helper whilst debugging scenarios with --fail-fast
-
-    def full_stop(html: false)
+    def show(html: false, all: false)
       links = page.all("main a").map { |link| "  -  #{link.text} href: #{link['href']}" }
 
       puts "==="
@@ -133,12 +145,22 @@ module Pages
       puts "---"
       if html
         puts page.html
+      elsif all
+        puts page.text
       else
         puts page.find("main").text
       end
       puts "---\nLinks:"
       puts links
       puts "==="
+
+      self
+    end
+
+    # helper whilst debugging scenarios with --fail-fast
+
+    def full_stop(html: false)
+      show(html:)
       raise
     end
 
