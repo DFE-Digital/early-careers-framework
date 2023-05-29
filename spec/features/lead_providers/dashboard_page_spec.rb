@@ -16,6 +16,11 @@ RSpec.feature "Lead Provider Dashboard", type: :feature, js: true, rutabaga: fal
     ecf_lead_provider
   end
 
+  before do
+    allow(Cohort).to receive(:current).and_return(cohort)
+    allow(Cohort).to receive(:next).and_return(cohort_next)
+  end
+
   scenario "Lead provider dashboard is accessible" do
     given_i_sign_in_as_the_user_with_the_email email_address
     and_i_confirm_lead_provider_name_on_the_lead_provider_dashboard lead_provider_name
