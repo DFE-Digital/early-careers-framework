@@ -4,63 +4,9 @@ require "rails_helper"
 
 RSpec.feature "Setting up the Second Academic Year for a School", type: :feature,
               with_feature_flags: { eligibility_notifications: "active" } do
-  let!(:previous_cohort) do
-    previous_cohort = NewSeeds::Scenarios::Cohort.new(2021)
-                                                 .with_standard_schedule_and_first_milestone
-                                                 .build
-                                                 .cohort
-
-    allow(Cohort).to receive(:previous).and_return(previous_cohort)
-
-    previous_cohort
-  end
-  let!(:current_cohort) do
-    allow(Cohort).to receive(:within_automatic_assignment_period?).and_return(false)
-    allow(Cohort).to receive(:within_next_registration_period?).and_return(false)
-
-    current_cohort = NewSeeds::Scenarios::Cohort.new(2022)
-                                                .with_standard_schedule_and_first_milestone
-                                                .build
-                                                .cohort
-
-    allow(Cohort).to receive(:current).and_return(current_cohort)
-
-    current_cohort
-  end
-
-  let!(:privacy_policy) do
-    privacy_policy = FactoryBot.create(:seed_privacy_policy, :valid)
-    PrivacyPolicy::Publish.call
-    privacy_policy
-  end
-
-  let!(:core_induction_programme) { create :seed_core_induction_programme, :valid }
-  let!(:appropriate_body) { create :seed_appropriate_body, :valid }
-
-  let!(:lead_provider) { create :seed_lead_provider, cohorts: Cohort.all }
-  let!(:lead_provider_user) { create(:seed_lead_provider_profile, :with_user, lead_provider:).user }
-  let!(:delivery_partner) do
-    delivery_partner = create(:seed_delivery_partner)
-    create :seed_provider_relationship, delivery_partner:, lead_provider:, cohort: Cohort.previous
-    create :seed_provider_relationship, delivery_partner:, lead_provider:, cohort: current_cohort
-    delivery_partner
-  end
-
-  let!(:different_lead_provider) { create :seed_lead_provider, cohorts: Cohort.all }
-  let!(:different_lead_provider_user) { create(:seed_lead_provider_profile, :with_user, lead_provider: different_lead_provider).user }
-  let!(:different_delivery_partner) do
-    different_delivery_partner = create(:seed_delivery_partner)
-    create :seed_provider_relationship, delivery_partner: different_delivery_partner, lead_provider:, cohort: current_cohort
-    create :seed_provider_relationship, delivery_partner: different_delivery_partner, lead_provider: different_lead_provider, cohort: current_cohort
-    different_delivery_partner
-  end
-
-  let(:school) { school_builder.school }
-  let(:academic_year) { current_cohort }
-
-  before do
-    travel_to Time.zone.local(academic_year.start_year, 6, 1, 9, 0, 0)
-  end
+  include_context "a system that has one academic year configured with a training provider"
+  include_context "a system that has a training provider"
+  include_context "a system that has a different training provider"
 
   context "Given they reported no ects for the first academic year" do
     let(:school_builder) do

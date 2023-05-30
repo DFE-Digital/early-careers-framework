@@ -2,6 +2,83 @@
 
 require "rails_helper"
 
+RSpec.shared_context "a system that has one academic year configured with a training provider" do
+  let!(:previous_cohort) do
+    previous_cohort = NewSeeds::Scenarios::Cohorts::Cohort.new(2021)
+                                                          .with_standard_schedule_and_first_milestone
+                                                          .build
+                                                          .cohort
+
+    allow(Cohort).to receive(:previous).and_return(previous_cohort)
+
+    previous_cohort
+  end
+  let!(:current_cohort) do
+    allow(Cohort).to receive(:within_automatic_assignment_period?).and_return(false)
+    allow(Cohort).to receive(:within_next_registration_period?).and_return(false)
+
+    current_cohort = NewSeeds::Scenarios::Cohorts::Cohort.new(2022)
+                                                         .with_standard_schedule_and_first_milestone
+                                                         .build
+                                                         .cohort
+
+    allow(Cohort).to receive(:current).and_return(current_cohort)
+
+    current_cohort
+  end
+
+  let!(:privacy_policy) do
+    privacy_policy = FactoryBot.create(:seed_privacy_policy, :valid)
+    PrivacyPolicy::Publish.call
+    privacy_policy
+  end
+
+  let!(:core_induction_programme) { create :seed_core_induction_programme, :valid }
+  let!(:appropriate_body) { create :seed_appropriate_body, :valid }
+
+  let(:school_builder) do
+    school = NewSeeds::Scenarios::Schools::School.new
+                                                 .build
+                                                 .with_an_induction_tutor
+
+    PrivacyPolicy.current.accept! school.induction_tutor
+    school
+  end
+
+  let(:school) { school_builder.school }
+  let(:academic_year) { current_cohort }
+
+  before do
+    travel_to Time.zone.local(academic_year.start_year, 6, 1, 9, 0, 0)
+  end
+end
+
+RSpec.shared_context "a system that has a training provider" do
+  let(:lead_provider_builder) do
+    NewSeeds::Scenarios::LeadProviders::LeadProvider.new("A training provider")
+                                                    .with_contracted_cohorts([previous_cohort, current_cohort])
+                                                    .with_user
+                                                    .with_delivery_partner
+                                                    .build
+  end
+  let!(:lead_provider) { lead_provider_builder.lead_provider }
+  let!(:lead_provider_user) { lead_provider_builder.user }
+  let!(:delivery_partner) { lead_provider_builder.delivery_partners.first }
+end
+
+RSpec.shared_context "a system that has a different training provider" do
+  let(:different_lead_provider_builder) do
+    NewSeeds::Scenarios::LeadProviders::LeadProvider.new("A different training provider")
+                                                    .with_contracted_cohorts([previous_cohort, current_cohort])
+                                                    .with_user
+                                                    .with_delivery_partner
+                                                    .build
+  end
+  let!(:different_lead_provider) { different_lead_provider_builder.lead_provider }
+  let!(:different_lead_provider_user) { different_lead_provider_builder.user }
+  let!(:different_delivery_partner) { different_lead_provider_builder.delivery_partners.first }
+end
+
 RSpec.shared_examples "a school record" do
   it "has a school record" do
     expect(school).to be_a School
