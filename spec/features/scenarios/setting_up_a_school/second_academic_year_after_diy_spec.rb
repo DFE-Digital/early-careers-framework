@@ -5,42 +5,25 @@ require "rails_helper"
 RSpec.feature "Setting up the Second Academic Year for a School", type: :feature,
               with_feature_flags: { eligibility_notifications: "active" } do
   let!(:previous_cohort) do
-    previous_cohort = FactoryBot.create(:seed_cohort, start_year: 2021)
+    previous_cohort = NewSeeds::Scenarios::Cohort.new(2021)
+                                                 .with_standard_schedule_and_first_milestone
+                                                 .build
+                                                 .cohort
 
     allow(Cohort).to receive(:previous).and_return(previous_cohort)
-
-    previous_schedule = FactoryBot.create :seed_finance_schedule,
-                                          type: "Finance::Schedule::ECF",
-                                          name: "ECF Standard September",
-                                          schedule_identifier: "ecf-standard-september",
-                                          cohort: previous_cohort.previous
-
-    FactoryBot.create :seed_finance_milestone,
-                      schedule: previous_schedule,
-                      name: "Output 1 - Participant Start",
-                      declaration_type: "started"
 
     previous_cohort
   end
   let!(:current_cohort) do
-    current_cohort = FactoryBot.create(:seed_cohort, start_year: 2022)
-
-    allow(Cohort).to receive(:current).and_return(current_cohort)
-    allow(Cohort).to receive(:active_registration_cohort).and_return(current_cohort)
-
     allow(Cohort).to receive(:within_automatic_assignment_period?).and_return(false)
     allow(Cohort).to receive(:within_next_registration_period?).and_return(false)
 
-    current_schedule = FactoryBot.create :seed_finance_schedule,
-                                         type: "Finance::Schedule::ECF",
-                                         name: "ECF Standard September",
-                                         schedule_identifier: "ecf-standard-september",
-                                         cohort: cohort_current
+    current_cohort = NewSeeds::Scenarios::Cohort.new(2022)
+                                                .with_standard_schedule_and_first_milestone
+                                                .build
+                                                .cohort
 
-    FactoryBot.create :seed_finance_milestone,
-                      schedule: current_schedule,
-                      name: "Output 1 - Participant Start",
-                      declaration_type: "started"
+    allow(Cohort).to receive(:current).and_return(current_cohort)
 
     current_cohort
   end
