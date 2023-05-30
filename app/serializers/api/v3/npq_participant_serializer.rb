@@ -11,7 +11,12 @@ module Api
       class << self
         def withdrawal(profile:, cpd_lead_provider:)
           if profile.withdrawn_for?(cpd_lead_provider:)
-            latest_participant_profile_state = profile.participant_profile_states.withdrawn.for_lead_provider(cpd_lead_provider).most_recent.first
+            # We are doing this in memory to avoid running those as queries on each request
+            latest_participant_profile_state = profile
+              .participant_profile_states.sort_by(&:created_at)
+              .reverse!
+              .find { |pps| pps.state == ParticipantProfileState.states[:withdrawn] && pps.cpd_lead_provider_id == cpd_lead_provider.id }
+
             if latest_participant_profile_state.present?
               {
                 reason: latest_participant_profile_state.reason,
@@ -23,7 +28,13 @@ module Api
 
         def deferral(profile:, cpd_lead_provider:)
           if profile.deferred_for?(cpd_lead_provider:)
-            latest_participant_profile_state = profile.participant_profile_states.deferred.for_lead_provider(cpd_lead_provider).most_recent.first
+            # We are doing this in memory to avoid running those as queries on each request
+            latest_participant_profile_state = profile
+              .participant_profile_states
+              .sort_by(&:created_at)
+              .reverse!
+              .find { |pps| pps.state == ParticipantProfileState.states[:deferred] && pps.cpd_lead_provider_id == cpd_lead_provider.id }
+
             if latest_participant_profile_state.present?
               {
                 reason: latest_participant_profile_state.reason,
