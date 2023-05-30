@@ -140,7 +140,7 @@ GEM
     crass (1.0.6)
     cssbundling-rails (1.1.2)
       railties (>= 6.0.0)
-    cypress-on-rails (1.13.1)
+    cypress-on-rails (1.14.0)
       rack
     database_cleaner-active_record (2.1.0)
       activerecord (>= 5.a)
@@ -626,7 +626,7 @@ DEPENDENCIES
   capybara (~> 3.39)
   countries (~> 5.4)
   cssbundling-rails (~> 1.1)
-  cypress-on-rails (~> 1.13)
+  cypress-on-rails (~> 1.14)
   database_cleaner-active_record
   devise (>= 4.8.0)
   discard (~> 1.2, >= 1.2.0)
