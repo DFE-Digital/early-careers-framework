@@ -43,9 +43,13 @@ Providers must [notify DfE if the participant is following any other standard or
 
 
 ### Dates for standard schedule starting in September
+$Accordion
 
+$Heading
 #### 2023 cohort
+$EndHeading
 
+$Content
 Participants starting their ECF-based training on or before 31 December 2023, and who are expected to complete their training over 2 academic years, should remain on the default schedule:
 
 ```
@@ -61,9 +65,13 @@ Participants starting their ECF-based training on or before 31 December 2023, an
 | Retention Point 4      | 1 Jan 2025     | 31 Mar 2025      | `retained-4`    | 30 Apr 2025     | 
 | Participant Completion      | 1 Apr 2025     | 31 Jul 2025      | `completed`    | 31 Aug 2025      | 
 
+$EndContent
 
+$Heading
 #### 2022 cohort
+$EndHeading
 
+$Content
 Participants starting their ECF-based training on or before 31 December 2022, and who are expected to complete their training over 2 academic years, should remain on the default schedule:
 
 ```
@@ -78,9 +86,13 @@ Participants starting their ECF-based training on or before 31 December 2022, an
 | Retention Point 3      | 1 Aug 2023     | 31 Dec 2023      | `retained-3`    | 31 Jan 2024      | 
 | Retention Point 4      | 1 Jan 2024     | 31 Mar 2024      | `retained-4`    | 30 Apr 2024     | 
 | Participant Completion      | 1 Apr 2024     | 31 Jul 2024      | `completed`    | 31 Aug 2024      | 
+$EndContent
 
+$Heading
 #### 2021 cohort
+$EndHeading
 
+$Content
 Participants starting their ECF-based training on or before 30 November 2021, and who are expected to complete their training over 2 academic years, should remain on the default schedule:
 
 ```
@@ -95,7 +107,10 @@ Participants starting their ECF-based training on or before 30 November 2021, an
 | Retention Point 3      | 1 May 2022     | 30 Sep 2022      | `retained-3`    | 31 Oct 2022      | 
 | Retention Point 4      | 1 Oct 2022     | 31 Jan 2023      | `retained-4`    | 28 Feb 2023      | 
 | Participant Completion      | 1 Feb 2023     | 30 Apr 2023      | `completed`    | 31 May 2023      | 
+$EndContent
 
+
+$EndAccordion
 
 ### Dates for standard schedule starting in January
 
@@ -114,8 +129,13 @@ Participants starting their ECF-based training between 1 January and 31 March 20
 | Retention Point 4      | 1 Apr 2025     | 31 Jul 2025      | `retained-4`    | 31 Aug 2025      | 
 | Participant Completion      | 1 Aug 2025     | 31 Dec 2025      | `completed`    | 31 Jan 2026      | 
 
-#### 2022 cohort
+$Accordion
 
+$Heading
+#### 2022 cohort
+$EndHeading
+
+$Content
 Participants starting their ECF-based training between 1 January and 31 March 2023, and who are expected to complete their training over 2 academic years, [should have their schedule updated](/api-reference/ecf/guidance.html#notify-dfe-of-a-participant-39-s-training-schedule) by providers to: 
 
 ```
@@ -130,9 +150,13 @@ Participants starting their ECF-based training between 1 January and 31 March 20
 | Retention Point 3      | 1 Jan 2024     | 31 Mar 2024      | `retained-3`    | 30 Apr 2024      | 
 | Retention Point 4      | 1 Apr 2024     | 31 Jul 2024      | `retained-4`    | 31 Aug 2024      | 
 | Participant Completion      | 1 Aug 2024     | 31 Dec 2024      | `completed`    | 31 Jan 2025      | 
+$EndContent
 
+$Heading
 #### 2021 cohort
+$EndHeading
 
+$Content
 For participants starting their course on or before 1 December 2021, and who are expected to complete their training over 2 academic years, providers [should have their schedule updated](/api-reference/ecf/guidance.html#notify-dfe-of-a-participant-39-s-training-schedule) by providers to: 
 
 ```
@@ -147,12 +171,19 @@ For participants starting their course on or before 1 December 2021, and who are
 | Retention Point 3      | 1 Oct 2022     | 31 Jan 2023      | `retained-3`    | 28 Feb 2023      | 
 | Retention Point 4      | 1 Feb 2023     | 30 Apr 2023      | `retained-4`    | 31 May 2023      | 
 | Participant Completion      | 1 May 2023     | 31 Oct 2023      | `completed`    | 30 Nov 2023      | 
+$EndContent
 
+$EndAccordion
 
 ### Dates for standard schedule starting in April
 
-#### 2023 cohort
+$Accordion
 
+$Heading
+#### 2023 cohort
+$EndHeading
+
+$Content
 Participants starting their ECF-based training between 1 April and 31 July 2024, and who are expected to complete their training over 2 academic years, [should have their schedule updated](/api-reference/ecf/guidance.html#notify-dfe-of-a-participant-39-s-training-schedule) by providers to: 
 
 ```
@@ -167,9 +198,13 @@ Participants starting their ECF-based training between 1 April and 31 July 2024,
 | Retention Point 3      | 1 Apr 2025    | 31 Jul 2025      | `retained-3`    | 31 Aug 2025      | 
 | Retention Point 4      | 1 Aug 2025     | 31 Dec 2025      | `retained-4`    | 31 Jan 2026      | 
 | Participant Completion      | 1 Jan 2026     | 31 Mar 2026      | `completed`    | 30 Apr 2026      | 
+$EndContent
 
+$Heading
 #### 2022 cohort
+$EndHeading
 
+$Content
 Participants starting their ECF-based training between 1 April and 31 July 2023, and who are expected to complete their training over 2 academic years, [should have their schedule updated](/api-reference/ecf/guidance.html#notify-dfe-of-a-participant-39-s-training-schedule) by providers to: 
 
 ```
@@ -184,9 +219,13 @@ Participants starting their ECF-based training between 1 April and 31 July 2023,
 | Retention Point 3      | 1 Apr 2024    | 31 Jul 2024      | `retained-3`    | 31 Aug 2024      | 
 | Retention Point 4      | 1 Aug 2024     | 31 Dec 2024      | `retained-4`    | 31 Jan 2025      | 
 | Participant Completion      | 1 Jan 2025     | 31 Mar 2025      | `completed`    | 30 Apr 2025      | 
+$EndContent
 
+$Heading
 #### 2021 cohort
+$EndHeading
 
+$Content
 For participants starting their course on or before 1 February 2022, and who are expected to complete their training over 2 academic years, providers [should have their schedule updated](/api-reference/ecf/guidance.html#notify-dfe-of-a-participant-39-s-training-schedule) by providers to: 
 
 ```
@@ -201,7 +240,9 @@ For participants starting their course on or before 1 February 2022, and who are
 | Retention Point 3      | 1 Feb 2023    | 30 Apr 2023      | `retained-3`    | 31 May 2023      | 
 | Retention Point 4      | 1 May 2023     | 31 Oct 2023      | `retained-4`    | 30 Nov 2023      | 
 | Participant Completion      | 1 Nov 2023     | 31 Jan 2024      | `completed`    | 28 Feb 2024      | 
+$EndContent
 
+$EndAccordion
 
 ### Validating declarations against milestones
 

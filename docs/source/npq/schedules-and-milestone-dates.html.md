@@ -45,20 +45,34 @@ Participants starting their specialist NPQ course before 31 December should be a
 ```
  "schedule_identifier": "npq-specialist-autumn"
 ```
-#### 2023 cohort
 
+$Accordion
+
+$Heading
+#### 2023 cohort
+$EndHeading
+
+$Content
 The API will accept declarations submitted from **1 October 2023**.
 
 [View upcoming financial statement payment dates.](/api-reference/npq/guidance/#view-financial-statement-payment-dates)
+$EndContent
 
+$Heading
 #### 2022 cohort
+$EndHeading
 
+$Content
 The API will accept declarations submitted from **1 October 2022**.
 
 [View upcoming financial statement payment dates.](/api-reference/npq/guidance/#view-financial-statement-payment-dates)
+$EndContent
 
+$Heading
 #### 2021 cohort
+$EndHeading
 
+$Content
 The API will accept declarations submitted from **1 November 2021**.
 
 [View upcoming financial statement payment dates.](/api-reference/npq/guidance/#view-financial-statement-payment-dates)
@@ -70,24 +84,35 @@ Participants starting their specialist NPQ course after 1 January should be assi
 ```
  "schedule_identifier": "npq-specialist-spring"
 ```
+$EndContent
 
+$Heading
 #### 2023 cohort
+$EndHeading
 
+$Content
 The API will accept declarations submitted from **1 January 2024**.
 
 [View upcoming financial statement payment dates.](/api-reference/npq/guidance/#view-financial-statement-payment-dates)
+$EndContent
 
+$Heading
 #### 2022 cohort
 
 The API will accept declarations submitted from **1 January 2023**.
 
 [View upcoming financial statement payment dates.](/api-reference/npq/guidance/#view-financial-statement-payment-dates)
+$EndHeading
 
+$Content
 #### 2021 cohort
 
 The API will accept declarations submitted from **1 January 2022**.
 
 [View upcoming financial statement payment dates.](/api-reference/npq/guidance/#view-financial-statement-payment-dates)
+$EndContent
+
+$EndAccordion
 
 ## Leadership NPQ schedules
 
@@ -105,24 +130,39 @@ Participants starting their specialist NPQ course before 31 December should be a
 ```
  "schedule_identifier": "npq-leadership-autumn"
 ```
+$Accordion
 
+$Heading
 #### 2023 cohort
+$EndHeading
 
+$Content
 The API will accept declarations submitted from **1 October 2023**.
 
 [View upcoming financial statement payment dates.](/api-reference/npq/guidance/#view-financial-statement-payment-dates)
+$EndContent
 
+$Heading
 #### 2022 cohort
+$EndHeading
 
+$Content
 The API will accept declarations submitted from **1 October 2022**.
 
 [View upcoming financial statement payment dates.](/api-reference/npq/guidance/#view-financial-statement-payment-dates)
+$EndContent
 
+$Heading
 #### 2021 cohort
+$EndHeading
 
+$Content
 The API will accept declarations submitted from **1 November 2021**.
 
 [View upcoming financial statement payment dates.](/api-reference/npq/guidance/#view-financial-statement-payment-dates)
+$EndContent
+
+$EndAccordion
 
 ### Dates for schedules starting in spring 
 
@@ -132,23 +172,39 @@ Participants starting their specialist NPQ course after 1 January should be assi
  "schedule_identifier": "npq-leadership-spring"
 ```
 
-#### 2023 cohort
+$Accordion
 
+$Heading
+#### 2023 cohort
+$EndHeading
+
+$Content
 The API will accept declarations submitted from **1 January 2024**.
 
 [View upcoming financial statement payment dates.](/api-reference/npq/guidance/#view-financial-statement-payment-dates)
+$EndContent
 
+$Heading
 #### 2022 cohort
+$EndHeading
 
+$Content
 The API will accept declarations submitted from **1 January 2023**.
 
 [View upcoming financial statement payment dates.](/api-reference/npq/guidance/#view-financial-statement-payment-dates)
+$EndContent
 
+$Heading
 #### 2021 cohort
+$EndHeading
 
+$Content
 The API will accept declarations submitted from **1 January 2022**.
 
 [View upcoming financial statement payment dates.](/api-reference/npq/guidance/#view-financial-statement-payment-dates)
+$EndContent
+
+$EndAccordion
 
 ## Early headship coaching offer (EHCO) schedules 
 
