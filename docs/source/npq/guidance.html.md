@@ -50,8 +50,13 @@ To prevent a participant being enrolled onto the same course with more than one 
 
 Note, while participants can enter different email addresses when applying for training courses, providers will only see the email address associated with a given course application or registration. For example, a participant may complete their ECF-based training with one associated email address, then apply for an NPQ with a different email address, and go on to be an ECT mentor with a third email address. The DfE will share the relevant email address with the relevant course provider.
 
-### View all applications
+$Accordion
 
+$Heading
+### View all applications
+$EndHeading
+
+$Content
 ```
  GET /api/v3/npq-applications
 ```
@@ -105,9 +110,13 @@ For more detailed information see the specifications for this [view multiple NPQ
   ]
 }
 ```
+$EndContent
 
+$Heading
 ### View a specific application
+$EndHeading
 
+$Content
 ```
  GET /api/v3/npq-applications/{id}
 ```
@@ -155,9 +164,13 @@ For more detailed information see the specifications for this [view a specific N
   }
 }
 ```
+$EndContent
 
+$Heading
 ### Accept an application 
+$EndHeading
 
+$Content
 Providers should accept applications for those they want to enrol onto a course. Providers must inform applicants of the outcome of their successful NPQ application. 
 
 Reasons to accept applications include (but are not limited to) the participant: 
@@ -217,9 +230,13 @@ For more detailed information see the specifications for this [accept an NPQ app
   }
 }
 ```
+$EndContent
 
+$Heading
 ### Reject an application
+$EndHeading
 
+$Content
 Providers should reject applications for those they do not want to enrol onto a course. Providers must inform applicants of the outcome of their unsuccessful NPQ application.
 
 Reasons to reject applications include (but are not limited to) the participant: 
@@ -278,9 +295,13 @@ For more detailed information see the specifications for this [accept an NPQ app
   }
 }
 ```
+$EndContent
 
+$Heading
 ### Update an application due to a change in circumstance
+$EndHeading
 
+$Content
 There are several reasons why there might be a change in circumstance for an NPQ application, including where a participant:
 
 * made a mistake during their application
@@ -298,6 +319,9 @@ For example, if a participant registers for an NPQ course but then decides to ch
 1. reject that participant’s application
 2. ask the participant to re-register on the NPQ registration service, entering the correct NPQ course details
 3. accept the new application once it is available via the API
+$EndContent
+
+$EndAccordion
 
 ## View and update participant data
 
@@ -309,8 +333,13 @@ Once a provider has accepted an application, they can view and update data to no
 * [changed their course schedule](/api-reference/npq/guidance/#notify-dfe-a-participant-has-changed-their-training-schedule)
 * [an updated course outcome](/api-reference/npq/guidance.html#update-a-participant-s-outcomes)
 
-### View all participant data
+$Accordion
 
+$Heading
+### View all participant data
+$EndHeading
+
+$Content
 ```
 GET /api/v3/participants/npq
 ```
@@ -354,9 +383,13 @@ For more detailed information see the specifications for this [view multiple NPQ
   ]
 }
 ```
+$EndContent
 
+$Heading
 ### View a single participant’s data
+$EndHeading
 
+$Content
 ```
  GET /api/v3/participants/npq/{id}
 ```
@@ -400,9 +433,13 @@ For more detailed information see the specifications for this [view a single NPQ
   ]
 }
 ```
+$EndContent
 
+$Heading
 ### Notify DfE a participant has taken a break (deferred) from training
+$EndHeading
 
+$Content
 A participant can choose to take a break from their NPQ course at any time if they plan to resume training at a later date. Providers must notify DfE of this via the API.
 
 ```
@@ -428,9 +465,13 @@ For more detailed information see the specifications for this [notify DfE that a
   }
 }
 ```
+$EndContent
 
+$Heading
 ### Notify DfE a participant has resumed training
+$EndHeading
 
+$Content
 A participant can choose to resume their NPQ course at any time if they had previously deferred. Providers must notify DfE of this via the API.
 
 ```
@@ -455,9 +496,13 @@ For more detailed information see the specifications for this [notify DfE that a
   }
 }
 ```
+$EndContent
 
+$Heading
 ###  Notify DfE a participant has withdrawn from training
+$EndHeading
 
+$Content
 A participant can choose to withdraw from an NPQ course at any time. Providers must notify DfE of this via the API.
 
 ```
@@ -490,9 +535,13 @@ For more detailed information see the specifications for this [notify DfE that a
   }
 }
 ```
+$EndContent
 
+$Heading
 ### Notify DfE a participant has changed their training schedule
+$EndHeading
 
+$Content
 The API will automatically assign schedules to participants depending on when course applications are accepted by providers. Providers must notify the DfE of any schedule change.
 
 ```
@@ -523,9 +572,13 @@ For more detailed information see the specifications for this [notify that an NP
   }
 }
 ```
+$EndContent
 
+$Heading
 ### View all participant outcomes
+$EndHeading
 
+$Content
 Participants can either pass or fail assessment at the end of their NPQ course. These outcomes are submitted by providers within `completed` declaration submissions.
 
 **Note**, outcomes are sent to the Database of Qualified Teachers (DQT) who issue certificates to participants who have passed.
@@ -560,9 +613,13 @@ For more detailed information see the specifications for this [view NPQ outcomes
   ]
 }
 ```
+$EndContent
 
+$Heading
 ### View a specific participant’s outcome
+$EndHeading
 
+$Content
 A participant can either pass or fail assessment at the end of their NPQ course. Their outcome will be submitted by providers within `completed` declaration submissions.
 
 **Note**, outcomes are sent to the Database of Qualified Teachers (DQT) who issue certificates to participants who have passed.
@@ -597,9 +654,13 @@ For more detailed information see the specifications for this [view NPQ outcome 
   ]
 }
 ```
+$EndContent
 
+$Heading
 ### Update a participant’s outcomes
+$EndHeading
 
+$Content
 Outcomes may need to be updated if previously submitted data was inaccurate. For example, a provider should update a participant’s outcome if:
 
 * the reported outcome was incorrect
@@ -630,6 +691,9 @@ For more detailed information see the specifications for this [update an NPQ out
   }
 }
 ```
+$EndContent
+
+$EndAccordion
 
 ## Submit, view and void declarations
 
@@ -639,8 +703,13 @@ These declarations will trigger payment from DfE to providers.
 
 When providers submit declarations, API response bodies will include data about which financial statement the given declaration applies to. Providers can then [view financial statement payment dates](/api-reference/npq/guidance/#view-financial-statement-payment-dates) to check when the invoicing period, and expected payment date, will be for the given declaration.
 
-### Test the ability to submit declarations in sandbox ahead of time 
+$Accordion
 
+$Heading
+### Test the ability to submit declarations in sandbox ahead of time 
+$EndHeading
+
+$Content
 `X-With-Server-Date` is a custom JSON header supported in the sandbox environment. It lets providers test their integrations and ensure they are able to submit declarations for future milestone dates.
 
 The `X-With-Server-Date` header lets providers simulate future dates, and therefore allows providers to test declaration submissions for future milestone dates. 
@@ -655,9 +724,13 @@ To test declaration submission functionality, include:
 ```
 X-With-Server-Date: 2022-01-10T10:42:00Z
 ```
+$EndContent
 
+$Heading
 ### Notify DfE a participant has started training
+$EndHeading
 
+$Content
 Notify the DfE that a participant has started an NPQ course by submitting a `started` declaration in line with [milestone 1 dates](/api-reference/npq/schedules-and-milestone-dates).
 
 ```
@@ -717,9 +790,13 @@ For more detailed information see the specifications for this [notify DfE that a
   }
 }
 ```
+$EndContent
 
+$Heading
 ### Notify DfE a participant has been retained in training
+$EndHeading
 
+$Content
 Notify the DfE that a participant has reached a given retention point in their course by submitting a `retained` declaration in line with [milestone dates](/api-reference/npq/schedules-and-milestone-dates).
 
 ```
@@ -779,9 +856,13 @@ For more detailed information see the specifications for this [notify DfE that a
   }
 }
 ```
+$EndContent
 
+$Heading
 ### Notify DfE a participant has completed training
+$EndHeading
 
+$Content
 Notify the DfE that a participant has completed their course by submitting a `completed` declaration in line with [milestone dates](/api-reference/npq/schedules-and-milestone-dates).
 
 ```
@@ -842,9 +923,13 @@ For more detailed information see the specifications for this [notify DfE that a
   }
 }
 ```
+$EndContent
 
+$Heading
 ### View all previously submitted declarations 
+$EndHeading
 
+$Content
 View all declarations which have been submitted to date. Check declaration submissions, identify if any are missing, and void or clawback those which have been submitted in error.
 
 ```
@@ -884,9 +969,13 @@ For more detailed information see the specifications for this [view all declarat
   }
 }
 ```
+$EndContent
 
+$Heading
 ### View a specific previously submitted declaration
+$EndHeading
 
+$Content
 View a specific declaration which has been previously submitted. Check declaration details and void or clawback those which have been submitted in error.
 
 ```
@@ -924,9 +1013,13 @@ For more detailed information see the specifications for this [view specific dec
   }
 }
 ```
+$EndContent
 
+$Heading
 ### Void or clawback a declaration
+$EndHeading
 
+$Content
 Void specific declarations which have been submitted in error. 
 
 ```
@@ -971,6 +1064,8 @@ For more detailed information see the specifications for this [void declarations
   }
 }
 ```
+$EndContent
+$EndAccordion
 
 ## View financial statement payment dates  
 
@@ -978,8 +1073,13 @@ For more detailed information see the specifications for this [void declarations
 
 Providers can view up to date payment cut-off dates, upcoming payment dates, and check to see whether output payments have been made by DfE.
 
-### View all statement payment dates
+$Accordion
 
+$Heading
+### View all statement payment dates
+$EndHeading
+
+$Content
 ```
 GET /api/v3/statements
 ```
@@ -1009,9 +1109,13 @@ For more detailed information see the specifications for this [view all statemen
   ]
 }
 ```
+$EndContent
 
+$Heading
 ### View specific statement payment dates
+$EndHeading
 
+$Content
 ```
 GET /api/v3/statements/{id}
 ```
@@ -1041,3 +1145,6 @@ For more detailed information see the specifications for this [view a specific s
   }
 }
 ```
+$EndContent
+
+$EndAccordion
