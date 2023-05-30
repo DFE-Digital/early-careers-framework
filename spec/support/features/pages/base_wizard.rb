@@ -28,6 +28,10 @@ module Pages
     delegate :load, to: :start_page
     delegate :loaded, to: :start_page
 
+    def begin
+      start_page.loaded
+    end
+
   private
 
     def start_page

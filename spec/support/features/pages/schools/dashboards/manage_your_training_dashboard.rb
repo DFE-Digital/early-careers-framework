@@ -9,10 +9,10 @@ module Pages
 
         attr_reader :current_tab_label, :current_tab_element, :current_tab_id
 
-        def manage_mentors_and_ects
+        def switch_to_manage_mentors_and_ects_dashboard
           click_on "Manage mentors and ECTs"
 
-          self
+          ::Pages::Schools::Dashboards::ManageMentorsAndEctsDashboard.loaded
         end
 
         def start_change_induction_tutor_wizard

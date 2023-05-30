@@ -4,6 +4,7 @@ FactoryBot.define do
   factory(:seed_finance_milestone, class: "Finance::Milestone") do
     name { Faker::Lorem.sentence }
 
+    start_date { 7.months.ago.to_date }
     milestone_date { 6.months.ago.to_date }
     payment_date { 5.months.ago.to_date }
 

@@ -147,63 +147,99 @@ RSpec.shared_examples "a school with an appropriate body record" do |start_year:
 end
 
 RSpec.shared_examples "a school that can add a participant" do |start_year:|
-  it "can add a participant", :skip do
-    participant_name = Faker::Name.name
-    participant_trn = Faker::Number.unique.rand_in_range(10_000, 100_000).to_s
-    participant_dob = Faker::Date.between(from: 70.years.ago, to: 21.years.ago)
-    participant_email = "#{participant_name&.parameterize}.#{Faker::Alphanumeric.alpha(number: 5)}@example.com"
+  it "can add a participant" do
+    full_name = Faker::Name.name
+    trn = Faker::Number.unique.rand_in_range(10_000, 100_000).to_s
+    date_of_birth = Faker::Date.between(from: 70.years.ago, to: 21.years.ago)
+    email_address = "#{full_name&.parameterize}.#{Faker::Alphanumeric.alpha(number: 5)}@example.com"
+    start_term = "Summer term #{start_year}"
+
+    dqt_record = DqtRecordPresenter.new({
+      "name" => full_name,
+      "trn" => trn,
+      "state_name" => "Active",
+      "dob" => date_of_birth,
+      "qualified_teacher_status" => { "qts_date" => 1.month.ago },
+    })
+    dqt_response = DqtRecordCheck::CheckResult.new(dqt_record, true, true, true, false, 3)
+    allow(DqtRecordCheck).to receive(:call).and_return(dqt_response)
 
     sign_in_as school.induction_tutor
 
-    wizard = Pages::SchoolDashboardPage.loaded
-                                       .add_participant_details
-                                       .choose_to_add_an_ect_or_mentor
+    wizard = ::Pages::Schools::Dashboards::ManageYourTrainingDashboard.loaded
+    wizard.switch_to_manage_mentors_and_ects_dashboard
+          .start_add_ect_or_mentor_wizard
+          .add_ect(full_name:, trn:, date_of_birth:, email_address:, start_term:)
 
-    participant_start_date = Date.new(start_year, 9, 5)
+    sign_out
+  end
+end
 
-    dqt_response = DqtRecordCheck::CheckResult.new(
-      {
-        "name" => participant_name,
-        "trn" => participant_trn,
-        "state_name" => "Active",
-        "dob" => participant_dob,
-        "qualified_teacher_status" => { "qts_date" => 1.month.ago },
-        "induction" => {
-          "start_date" => participant_start_date,
-          "status" => "Active",
-        },
-      },
-      true,
-      true,
-      true,
-      false,
-      3,
-    )
+RSpec.shared_examples "a school that can add a participant with an appropriate body" do |start_year:|
+  it "can add a participant" do
+    full_name = Faker::Name.name
+    trn = Faker::Number.unique.rand_in_range(10_000, 100_000).to_s
+    date_of_birth = Faker::Date.between(from: 70.years.ago, to: 21.years.ago)
+    email_address = "#{full_name&.parameterize}.#{Faker::Alphanumeric.alpha(number: 5)}@example.com"
+    start_term = "Summer term #{start_year}"
+
+    dqt_record = DqtRecordPresenter.new({
+      "name" => full_name,
+      "trn" => trn,
+      "state_name" => "Active",
+      "dob" => date_of_birth,
+      "qualified_teacher_status" => { "qts_date" => 1.month.ago },
+    })
+    dqt_response = DqtRecordCheck::CheckResult.new(dqt_record, true, true, true, false, 3)
     allow(DqtRecordCheck).to receive(:call).and_return(dqt_response)
 
-    validation_response = {
-      trn: participant_trn,
-      qts: true,
-      active_alert: false,
-      previous_participation: false,
-      previous_induction: false,
-      no_induction: false,
-      exempt_from_induction: false,
-    }
-    allow(ParticipantValidationService).to receive(:validate).and_return(validation_response)
+    sign_in_as school.induction_tutor
 
-    wizard.add_ect participant_name, participant_trn, participant_dob, participant_email, participant_start_date
+    wizard = ::Pages::Schools::Dashboards::ManageYourTrainingDashboard.loaded
+    wizard.switch_to_manage_mentors_and_ects_dashboard
+          .start_add_ect_or_mentor_wizard
+          .add_ect_with_appropriate_body(full_name:, trn:, date_of_birth:, email_address:, start_term:)
+
+    sign_out
+  end
+end
+
+RSpec.shared_examples "a school that cannot add a participant without more information" do |start_year:|
+  it "cannot add a participant" do
+    full_name = Faker::Name.name
+    trn = Faker::Number.unique.rand_in_range(10_000, 100_000).to_s
+    date_of_birth = Faker::Date.between(from: 70.years.ago, to: 21.years.ago)
+    email_address = "#{full_name&.parameterize}.#{Faker::Alphanumeric.alpha(number: 5)}@example.com"
+    start_term = "Summer term #{start_year}"
+
+    dqt_record = DqtRecordPresenter.new({
+      "name" => full_name,
+      "trn" => trn,
+      "state_name" => "Active",
+      "dob" => date_of_birth,
+      "qualified_teacher_status" => { "qts_date" => 1.month.ago },
+    })
+    dqt_response = DqtRecordCheck::CheckResult.new(dqt_record, true, true, true, false, 3)
+    allow(DqtRecordCheck).to receive(:call).and_return(dqt_response)
+
+    sign_in_as school.induction_tutor
+
+    wizard = ::Pages::Schools::Dashboards::ManageYourTrainingDashboard.loaded
+    wizard.switch_to_manage_mentors_and_ects_dashboard
+          .start_add_ect_or_mentor_wizard
+          .add_ect_without_enough_information(full_name:, trn:, date_of_birth:, email_address:, start_term:)
+          .cannot_register_ect?(full_name)
 
     sign_out
   end
 end
 
 RSpec.shared_examples "a school that needs to be setup" do
-  it "needs to be setup", :skip do
-  end
-end
+  it "needs to be setup" do
+    sign_in_as school.induction_tutor
 
-RSpec.shared_examples "a school that cannot add a participant" do
-  it "cannot add a participant", :skip do
+    ::Pages::Schools::Wizards::ChooseProgrammeWizard.loaded
+
+    sign_out
   end
 end

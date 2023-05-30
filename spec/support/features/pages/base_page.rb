@@ -5,6 +5,7 @@ require_relative "../sections/cookie_consent_banner"
 module Pages
   class BasePage < SitePrism::Page
     include RSpec::Matchers
+    include ApplicationHelper
 
     element :header, "h1"
 
@@ -30,6 +31,11 @@ module Pages
       else
         raise "Expected #{page_object.url_matcher} to match #{page_object.current_path}"
       end
+    end
+
+    def self.displayed?(*args)
+      page_object = new
+      page_object.displayed?(*args)
     end
 
     class << self

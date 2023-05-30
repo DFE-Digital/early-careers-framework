@@ -4,32 +4,45 @@ require "rails_helper"
 
 RSpec.feature "Setting up the Second Academic Year for a School", type: :feature,
               with_feature_flags: { eligibility_notifications: "active" } do
-  let!(:current_cohort) do
-    FactoryBot.create(:seed_cohort, start_year: 2020) # NQT+1 cohort
-
+  let!(:previous_cohort) do
     previous_cohort = FactoryBot.create(:seed_cohort, start_year: 2021)
+
+    allow(Cohort).to receive(:previous).and_return(previous_cohort)
+
+    previous_schedule = FactoryBot.create :seed_finance_schedule,
+                                          type: "Finance::Schedule::ECF",
+                                          name: "ECF Standard September",
+                                          schedule_identifier: "ecf-standard-september",
+                                          cohort: previous_cohort.previous
+
+    FactoryBot.create :seed_finance_milestone,
+                      schedule: previous_schedule,
+                      name: "Output 1 - Participant Start",
+                      declaration_type: "started"
+
+    previous_cohort
+  end
+  let!(:current_cohort) do
     current_cohort = FactoryBot.create(:seed_cohort, start_year: 2022)
-    next_cohort = FactoryBot.create(:seed_cohort, start_year: 2023)
 
     allow(Cohort).to receive(:current).and_return(current_cohort)
-    allow(Cohort).to receive(:next).and_return(next_cohort)
-    allow(Cohort).to receive(:previous).and_return(previous_cohort)
     allow(Cohort).to receive(:active_registration_cohort).and_return(current_cohort)
 
     allow(Cohort).to receive(:within_automatic_assignment_period?).and_return(false)
     allow(Cohort).to receive(:within_next_registration_period?).and_return(false)
 
+    current_schedule = FactoryBot.create :seed_finance_schedule,
+                                         type: "Finance::Schedule::ECF",
+                                         name: "ECF Standard September",
+                                         schedule_identifier: "ecf-standard-september",
+                                         cohort: cohort_current
+
+    FactoryBot.create :seed_finance_milestone,
+                      schedule: current_schedule,
+                      name: "Output 1 - Participant Start",
+                      declaration_type: "started"
+
     current_cohort
-  end
-  let!(:finance_schedules) do
-    current_schedule = FactoryBot.create :seed_finance_schedule, type: "Finance::Schedule::ECF", name: "ECF Standard September", schedule_identifier: "ecf-standard-september", cohort: Cohort.current
-    FactoryBot.create :seed_finance_milestone, schedule: current_schedule, name: "Output 1 - Participant Start", declaration_type: "started"
-
-    previous_schedule = FactoryBot.create :seed_finance_schedule, type: "Finance::Schedule::ECF", name: "ECF Standard September", schedule_identifier: "ecf-standard-september", cohort: Cohort.previous
-    FactoryBot.create :seed_finance_milestone, schedule: previous_schedule, name: "Output 1 - Participant Start", declaration_type: "started"
-
-    next_schedule = FactoryBot.create :seed_finance_schedule, type: "Finance::Schedule::ECF", name: "ECF Standard September", schedule_identifier: "ecf-standard-september", cohort: Cohort.next
-    FactoryBot.create :seed_finance_milestone, schedule: next_schedule, name: "Output 1 - Participant Start", declaration_type: "started"
   end
 
   let!(:privacy_policy) do
@@ -128,7 +141,7 @@ RSpec.feature "Setting up the Second Academic Year for a School", type: :feature
         end
 
         it_behaves_like "a school with an appropriate body record", start_year: 2022
-        it_behaves_like "a school that can add a participant", start_year: 2022
+        it_behaves_like "a school that can add a participant with an appropriate body", start_year: 2022
       end
     end
 
@@ -165,7 +178,7 @@ RSpec.feature "Setting up the Second Academic Year for a School", type: :feature
           end
 
           it_behaves_like "a school with an appropriate body record", start_year: 2022
-          it_behaves_like "a school that can add a participant", start_year: 2022
+          it_behaves_like "a school that can add a participant with an appropriate body", start_year: 2022
         end
       end
 
@@ -211,7 +224,7 @@ RSpec.feature "Setting up the Second Academic Year for a School", type: :feature
           end
 
           it_behaves_like "a school with an appropriate body record", start_year: 2022
-          it_behaves_like "a school that can add a participant", start_year: 2022
+          it_behaves_like "a school that can add a participant with an appropriate body", start_year: 2022
         end
       end
     end
@@ -228,7 +241,7 @@ RSpec.feature "Setting up the Second Academic Year for a School", type: :feature
 
       it_behaves_like "a school with an associated school cohort record", start_year: 2022
       it_behaves_like "a school with a default diy induction programme record", start_year: 2022
-      it_behaves_like "a school that cannot add a participant", start_year: 2022
+      it_behaves_like "a school that cannot add a participant without more information", start_year: 2022
 
       context "and an appropriate body has been setup for the second academic year" do
         before do
@@ -243,7 +256,7 @@ RSpec.feature "Setting up the Second Academic Year for a School", type: :feature
         end
 
         it_behaves_like "a school with an appropriate body record", start_year: 2022
-        it_behaves_like "a school that cannot add a participant", start_year: 2022
+        it_behaves_like "a school that cannot add a participant without more information", start_year: 2022
       end
     end
 
@@ -259,7 +272,7 @@ RSpec.feature "Setting up the Second Academic Year for a School", type: :feature
 
       it_behaves_like "a school with an associated school cohort record", start_year: 2022
       it_behaves_like "a school with no induction programme record", start_year: 2022
-      it_behaves_like "a school that cannot add a participant", start_year: 2022
+      it_behaves_like "a school that cannot add a participant without more information", start_year: 2022
     end
   end
 end
