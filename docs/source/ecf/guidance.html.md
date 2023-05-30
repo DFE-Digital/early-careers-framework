@@ -41,12 +41,18 @@ Providers must confirm to the DfE that they have agreed to enter into new partne
 * Not all participants at a given school will be registered to receive training through the (default) partnership. Therefore providers may not receive data for all participants at schools they have partnered with. **For example**, a participant begins training at school 1 which is partnered with provider A and delivery partner B. If the participant transfers to school 2 which is partnered with provider Y and delivery partner Z, the participant can choose to remain with their existing training providers (A and B). In this case, provider Y will not receive data for this participant
 * Providers may receive data for participants at schools which they do not have a partnership with. **For example**, a participant begins training at school 1 which is partnered with provider Y and delivery partner Z. They transfer to school 2 and choose to remain with their existing training providers (Y and Z). Therefore provider Y will continue to receive data for the participant, despite not being partnered with school 2
 
-$Accordion
-$Heading
-### Find schools delivering ECF-based training in a given cohort 
-$EndHeading
+<div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default">
 
-$Content
+<div class="govuk-accordion__section">
+    <div class="govuk-accordion__section-header">
+      <h3 class="govuk-accordion__section-heading">
+        <span class="govuk-accordion__section-button" id="accordion-default-heading-1">
+          Find schools delivering ECF-based training in a given cohort 
+      </span>
+      </h3>
+    </div>
+<div id="accordion-default-content-1" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-1">
+
 View details for schools providing ECF-based training in a given cohort. Check details on the type of training programme schools have chosen to deliver, and whether they have confirmed partnerships in place. 
 
 ```
@@ -86,13 +92,20 @@ For more detailed information see the specifications for this [view school detai
   ]
 }
 ```
-$EndContent
+</div>
+  </div>
+</div>
 
-$Heading
-### View details for specific a school in a given cohort
-$EndHeading
+<div class="govuk-accordion__section">
+    <div class="govuk-accordion__section-header">
+      <h3 class="govuk-accordion__section-heading">
+        <span class="govuk-accordion__section-button" id="accordion-default-heading-2">
+           View details for specific a school in a given cohort
+        </span>
+      </h3>
+    </div>
 
-$Content
+ <div id="accordion-default-content-2" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-2">
 Providers can view details for a specific school providing ECF-based training in a given cohort. They can check details on the type of training programme the school has chosen to deliver, and whether they have a confirmed partnership in place. 
 
 
@@ -126,13 +139,21 @@ For more detailed information see the specifications for this [view a school’s
   ]
 }
 ```
-$EndContent
+ </div>
+  </div>
+</div>
 
-$Heading
-### Find delivery partner IDs 
-$EndHeading
+<div class="govuk-accordion__section">
+    <div class="govuk-accordion__section-header">
+      <h3 class="govuk-accordion__section-heading">
+        <span class="govuk-accordion__section-button" id="accordion-default-heading-3">
+ Find delivery partner IDs 
+</span>
+      </h3>
+    </div>
 
-$Content
+
+  <div id="accordion-default-content-3" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-3">
 Delivery partners are assigned a unique ID by DfE. This `delivery_partner_id` is required when [confirming partnerships with a school and delivery partner](/api-reference/ecf/guidance.html#confirm-a-partnership-with-a-school-and-delivery-partner).
 
 ```
@@ -165,13 +186,20 @@ For more detailed information see the specifications for this [find delivery par
   ]
 }
 ```
-$EndContent
+ </div>
+  </div>
+</div>
 
-$Heading
-### View details for a specific delivery partner
-$EndHeading
+<div class="govuk-accordion__section">
+    <div class="govuk-accordion__section-header">
+      <h3 class="govuk-accordion__section-heading">
+        <span class="govuk-accordion__section-button" id="accordion-default-heading-4">
+ View details for a specific delivery partner
+ </span>
+      </h3>
+    </div>
 
-$Content
+  <div id="accordion-default-content-4" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-4">
 View details for a specific delivery partner to check whether they have been registered to deliver training for a given cohort.  
 
 ```
@@ -202,13 +230,20 @@ For more detailed information see the specifications for this [find a delivery p
   ]
 }
 ```
-$EndContent
+ </div>
+  </div>
+</div>
 
-$Heading
-### Confirm a partnership with a school and delivery partner
-$EndHeading
+<div class="govuk-accordion__section">
+    <div class="govuk-accordion__section-header">
+      <h3 class="govuk-accordion__section-heading">
+        <span class="govuk-accordion__section-button" id="accordion-default-heading-5">
+          Confirm a partnership with a school and delivery partner
+      </span>
+      </h3>
+    </div>
 
-$Content
+<div id="accordion-default-content-5" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-5">
 ```
  POST /api/v3/partnerships/ecf
 ```
@@ -262,13 +297,20 @@ For more detailed information see the specifications for this [confirm an ECF pa
   }
 }
 ```
-$EndContent
+</div>
+  </div>
+</div>
 
-$Heading
-### View all details for all existing partnership
-$EndHeading
+<div class="govuk-accordion__section">
+    <div class="govuk-accordion__section-header">
+      <h3 class="govuk-accordion__section-heading">
+        <span class="govuk-accordion__section-button" id="accordion-default-heading-6">
+          View all details for all existing partnership
+        </span>
+      </h3>
+    </div>
 
-$Content
+<div id="accordion-default-content-6" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-6">
 View details for all existing partnerships to check information is correct and whether any have had their status challenged by schools. [Find out more about partnership statuses.](/api-reference/ecf/definitions-and-states/#partnership-states)
 
 ```
@@ -307,13 +349,20 @@ For more detailed information see the specifications for this [view all ECF part
   ]
 }
 ```
-$EndContent
+</div>
+  </div>
+</div>
 
-$Heading
-### View details for a specific existing partnership
-$EndHeading
+<div class="govuk-accordion__section">
+    <div class="govuk-accordion__section-header">
+      <h3 class="govuk-accordion__section-heading">
+        <span class="govuk-accordion__section-button" id="accordion-default-heading-7">
+           View details for a specific existing partnership
+        </span>
+      </h3>
+    </div>
 
-$Content
+ <div id="accordion-default-content-7" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-7">
 View details for an existing partnership to check information is correct and whether the status has been challenged by the school. [Find out more about partnership statuses.](/api-reference/ecf/definitions-and-states/#partnership-states) 
 
 ```
@@ -350,13 +399,20 @@ For more detailed information see the specifications for this [view a single ECF
   ]
 }
 ```
-$EndContent
+ </div>
+  </div>
+</div>
 
-$Heading
-### Update a partnership with a new delivery partner
-$EndHeading
+<div class="govuk-accordion__section">
+    <div class="govuk-accordion__section-header">
+      <h3 class="govuk-accordion__section-heading">
+        <span class="govuk-accordion__section-button" id="accordion-default-heading-8">
+          Update a partnership with a new delivery partner
+       </span>
+      </h3>
+    </div>
 
-$Content
+<div id="accordion-default-content-1" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-8">
 Update an existing partnership with new delivery partner details for a given cohort.
 
 ```
@@ -385,8 +441,10 @@ For more detailed information see the specifications for this [update an ECF par
   }
 }
 ```
-$EndContent
-$EndAccordion
+   </div>
+  </div>
+  </div>
+</div>
 
 ## View and update participant data
 
@@ -408,13 +466,18 @@ Providers can then update data to notify DfE that participants have:
 * [withdrawn from training](/api-reference/ecf/guidance/#notify-dfe-a-participant-has-withdrawn-from-training) 
 * [changed their training schedule](/api-reference/ecf/guidance.html#notify-dfe-of-a-participant-39-s-training-schedule)
 
-$Accordion
+<div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default">
 
-$Heading
-### View all participant data
-$EndHeading
+<div class="govuk-accordion__section">
+    <div class="govuk-accordion__section-header">
+      <h3 class="govuk-accordion__section-heading">
+        <span class="govuk-accordion__section-button" id="accordion-default-heading-1">
+         View all participant data
+  </span>
+ </h3>
+</div>
 
-$Content
+<div id="accordion-default-content-1" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-1">
 ```
  GET /api/v{n}/participants/ecf
 ```
@@ -463,13 +526,20 @@ For more detailed information see the specifications for this [view multiple ECF
   ]
 }
 ```
-$EndContent
+  </div>
+  </div>
+</div>
 
-$Heading
-### View a single participant's data
-$EndHeading
+<div class="govuk-accordion__section">
+    <div class="govuk-accordion__section-header">
+      <h3 class="govuk-accordion__section-heading">
+        <span class="govuk-accordion__section-button" id="accordion-default-heading-2">
+            View a single participant's data
+   </span>
+  </h3>
+ </div>
 
-$Content
+ <div id="accordion-default-content-2" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-2">
 ```
  GET /api/v{n}/participants/ecf/{id}
 ```
@@ -514,13 +584,20 @@ For more detailed information see the specifications for this [view a single ECF
   }
 }
 ```
-$EndContent
+</div>
+  </div>
+</div>
 
-$Heading
-### View all ‘unfunded mentor’ details 
-$EndHeading
+<div class="govuk-accordion__section">
+    <div class="govuk-accordion__section-header">
+      <h3 class="govuk-accordion__section-heading">
+        <span class="govuk-accordion__section-button" id="accordion-default-heading-3">
+         View all ‘unfunded mentor’ details 
+      </span>
+      </h3>
+    </div>
 
-$Content
+ <div id="accordion-default-content-3" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-3">
 <div class="govuk-inset-text">The following endpoint is only available for systems integrated with API v3 onwards. It will not return data for API v1 or v2.</div>
 
 A single mentor can be assigned to multiple ECTs, including ECTs who are training with other providers. Mentors may need access to the learning platforms used by their ECTs. 
@@ -556,13 +633,20 @@ For more detailed information see the specifications for this [view all unfunded
   ]
 }
 ```
-$EndContent
+ </div>
+  </div>
+</div>
 
-$Heading
-### View details of a specific 'unfunded mentor'
-$EndHeading
+<div class="govuk-accordion__section">
+    <div class="govuk-accordion__section-header">
+      <h3 class="govuk-accordion__section-heading">
+        <span class="govuk-accordion__section-button" id="accordion-default-heading-4">
+         View details of a specific 'unfunded mentor'
+      </span>
+      </h3>
+    </div>
 
-$Content
+<div id="accordion-default-content-1" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-4">
 <div class="govuk-inset-text">The following endpoint is only available for systems integrated with API v3 onwards. It will not return data for API v1 or v2.</div>
 
 If providers do **not** see any details for mentors when using the endpoint `GET /api/v3/participants/ecf` they can check to see whether they are an ‘unfunded mentor’.
@@ -596,13 +680,20 @@ For more detailed information see the specifications for this [view a specific u
   }
 }
 ```
-$EndContent
+  </div>
+  </div>
+</div>
 
-$Heading
+<div class="govuk-accordion__section">
+    <div class="govuk-accordion__section-header">
+      <h3 class="govuk-accordion__section-heading">
+        <span class="govuk-accordion__section-button" id="accordion-default-heading-5">
 ### Notify DfE a participant has taken a break (deferred) from training
-$EndHeading
+</span>
+      </h3>
+    </div>
 
-$Content
+<div id="accordion-default-content-5" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-5">
 A participant can choose to take a break from ECF-based training at any time if they plan to resume training at a later date. Providers must notify DfE of this via the API.
 
 ```
@@ -628,13 +719,20 @@ For more detailed information see the specifications for this [notify DfE that a
   }
 }
 ```
-$EndContent
+</div>
+  </div>
+</div>
 
-$Heading
-### Notify DfE a participant has resumed training
-$EndHeading
+<div class="govuk-accordion__section">
+    <div class="govuk-accordion__section-header">
+      <h3 class="govuk-accordion__section-heading">
+        <span class="govuk-accordion__section-button" id="accordion-default-heading-6">
+ Notify DfE a participant has resumed training
+</span>
+      </h3>
+    </div>
 
-$Content
+  <div id="accordion-default-content-6" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-6">
 A participant can choose to resume their ECF-based training at any time if they had previously deferred. Providers must notify DfE of this via the API.
 
 ```
@@ -659,13 +757,20 @@ For more detailed information see the specifications for this [notify DfE that a
   }
 }
 ```
-$EndContent
+ </div>
+  </div>
+</div>
 
-$Heading
+<div class="govuk-accordion__section">
+    <div class="govuk-accordion__section-header">
+      <h3 class="govuk-accordion__section-heading">
+        <span class="govuk-accordion__section-button" id="accordion-default-heading-7">
 ###  Notify DfE a participant has withdrawn from training
-$EndHeading
+ </span>
+      </h3>
+    </div>
 
-$Content
+<div id="accordion-default-content-7" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-7">
 A participant can choose to withdraw from ECF-based training at any time. Providers must notify DfE of this via the API.
 
 ```
@@ -696,13 +801,20 @@ For more detailed information see the specifications for this [notify DfE that a
 
 * DfE will **only** pay for participants who have had, at a minimum, a `started` declaration submitted against them
 * DfE will pay providers for declarations submitted where the `declaration_date` is before the date of the withdrawal
-$EndContent
+</div>
+  </div>
+</div>
 
-$Heading
-### Notify DfE of a participant's training schedule
-$EndHeading
+<div class="govuk-accordion__section">
+    <div class="govuk-accordion__section-header">
+      <h3 class="govuk-accordion__section-heading">
+        <span class="govuk-accordion__section-button" id="accordion-default-heading-8">
+ Notify DfE of a participant's training schedule
+</span>
+      </h3>
+    </div>
 
-$Content
+<div id="accordion-default-content-1" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-8">
 <div class="govuk-inset-text">All participants will be registered by default to a standard schedule starting in September. Providers must notify the DfE of any other schedule.</div>
 
 Participants can choose to follow standard or non-standard training schedules. 
@@ -743,13 +855,20 @@ For more detailed information see the specifications for this [notify that an EC
   }
 }
 ```
-$EndContent
+ </div>
+  </div>
+</div>
 
-$Heading
-### View data for all participants who have transferred 
-$EndHeading
+<div class="govuk-accordion__section">
+    <div class="govuk-accordion__section-header">
+      <h3 class="govuk-accordion__section-heading">
+        <span class="govuk-accordion__section-button" id="accordion-default-heading-9">
+ View data for all participants who have transferred 
+ </span>
+      </h3>
+    </div>
 
-$Content
+<div id="accordion-default-content-9" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-9">
 <div class="govuk-inset-text">This endpoint is only available for systems integrated with API v3 onwards. They will not return data for API v1 or v2.</div>
 
 As soon as school induction tutors have entered the information to the DfE service, providers can view data for participants who have transferred: 
@@ -806,13 +925,20 @@ For more detailed information see the specifications for this [view participant 
   ]
 }
 ```
-$EndContent
+</div>
+  </div>
+</div>
 
-$Heading
-### View data for a specific participant who has transferred 
-$EndHeading
+<div class="govuk-accordion__section">
+    <div class="govuk-accordion__section-header">
+      <h3 class="govuk-accordion__section-heading">
+        <span class="govuk-accordion__section-button" id="accordion-default-heading-10">
+ View data for a specific participant who has transferred 
+      </span>
+      </h3>
+    </div>
 
-$Content
+<div id="accordion-default-content-10" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-10">
 <div class="govuk-inset-text">This endpoint is only available for systems integrated with API v3 onwards. They will not return data for API v1 or v2.</div>
 
 Providers can view data for a specific participant who has transferred: 
@@ -861,13 +987,20 @@ For more detailed information see the specifications for this [view a participan
   ]
 }
 ```
-$EndContent
+   </div>
+  </div>
+</div>
 
-$Heading
+<div class="govuk-accordion__section">
+    <div class="govuk-accordion__section-header">
+      <h3 class="govuk-accordion__section-heading">
+        <span class="govuk-accordion__section-button" id="accordion-default-heading-11">
 ###  Update a replacement mentor’s schedule
-$EndHeading
+</span>
+      </h3>
+    </div>
 
-$Content 
+<div id="accordion-default-content-11" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-11">
 A new mentor can be assigned to an ECT part way through training, replacing the ECT’s original mentor. 
 
 [Providers must notify the DfE of replacement mentors by updating their training schedule.](/api-reference/ecf/guidance.html#notify-dfe-of-a-participant-39-s-training-schedule)
@@ -883,9 +1016,12 @@ Providers must include a `schedule_identifier` reflecting when the replacement m
 For API v3 onwards, a replacement mentor's schedule, and any associated declaration submissions, do not need to align with the ECT they are mentoring.
 
 Previously for API v1 and v2, a replacement mentor could start mentoring an ECT part way through their training. The provider had already submitted a `start` declaration for the previous mentor (in line with the ECT). If the provider were to submit a `retention-1` declaration for the ECT, then any declaration submitted for the new replacement mentor in the same milestone period would also have to be a retention-1 declaration. This is no longer the case for API v3.
-$EndContent
 
-$EndAccordion
+
+ </div>
+</div>
+</div>
+</div>
 
 ## Submit, view and void declarations
 
@@ -895,13 +1031,18 @@ These declarations will trigger payment from DfE to providers.
 
 When providers submit declarations, API response bodies will include data about which financial statement the given declaration applies to. Providers can then [view financial statement payment dates](/api-reference/ecf/guidance/#view-financial-statement-payment-dates) to check when the invoicing period, and expected payment date, will be for the given declaration.
 
-$Accordion
+<div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default-3">
 
-$Heading
-### Test the ability to submit declarations in sandbox ahead of time 
-$EndHeading
+<div class="govuk-accordion__section">
+    <div class="govuk-accordion__section-header">
+      <h3 class="govuk-accordion__section-heading">
+        <span class="govuk-accordion__section-button" id="accordion-default-heading-1">
+          Test the ability to submit declarations in sandbox ahead of time 
+        </span>
+      </h3>
+    </div>
 
-$Content
+<div id="accordion-default-content-1" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-1">
 `X-With-Server-Date` is a custom JSON header supported in the sandbox environment. It lets providers test their integrations and ensure they are able to submit declarations for future milestone dates.
 
 The `X-With-Server-Date` header lets providers simulate future dates, and therefore allows providers to test declaration submissions for future milestone dates. 
@@ -916,13 +1057,20 @@ To test declaration submission functionality, include:
 ```
 X-With-Server-Date: 2022-01-10T10:42:00Z
 ```
-$EndContent
+</div>
+  </div>
+</div>
 
-$Heading
-### Submit a declaration to notify DfE a participant has started training
-$EndHeading
+<div class="govuk-accordion__section">
+    <div class="govuk-accordion__section-header">
+      <h3 class="govuk-accordion__section-heading">
+        <span class="govuk-accordion__section-button" id="accordion-default-heading-2">
+         Submit a declaration to notify DfE a participant has started training
+        </span>
+      </h3>
+    </div>
 
-$Content
+<div id="accordion-default-content-2" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-2">
 Notify the DfE that a participant has started ECF-based training by submitting a `started` declaration in line with [milestone 1 dates](/api-reference/ecf/schedules-and-milestone-dates).
 
 ```
@@ -981,13 +1129,20 @@ For more detailed information see the specifications for this [notify DfE that a
   }
 }
 ```
-$EndContent
+</div>
+  </div>
+</div>
 
-$Heading
-### Submit a declation to notify DfE a participant has been retained in training
-$EndHeading
+<div class="govuk-accordion__section">
+    <div class="govuk-accordion__section-header">
+      <h3 class="govuk-accordion__section-heading">
+        <span class="govuk-accordion__section-button" id="accordion-default-heading-3">
+         Submit a declation to notify DfE a participant has been retained in training
+        </span>
+      </h3>
+    </div>
 
-$Content
+<div id="accordion-default-content-3" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-3">
 Notify the DfE that a participant has reached a given retention point in their training by submitting a `retained` declaration in line with [milestone dates](/api-reference/ecf/schedules-and-milestone-dates).
 
 ```
@@ -1047,13 +1202,20 @@ For more detailed information see the specifications for this [notify DfE that a
   }
 }
 ```
-$EndContent
+</div>
+  </div>
+</div>
 
-$Heading
+<div class="govuk-accordion__section">
+    <div class="govuk-accordion__section-header">
+      <h3 class="govuk-accordion__section-heading">
+        <span class="govuk-accordion__section-button" id="accordion-default-heading-4">
 ### Submit a declaration to notify DfE a participant has completed training
-$EndHeading
+</span>
+      </h3>
+    </div>
 
-$Content
+<div id="accordion-default-content-4" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-4">
 Notify the DfE that a participant has completed their training by submitting a `completed` declaration in line with [milestone dates](/api-reference/ecf/schedules-and-milestone-dates).
 
 ```
@@ -1112,13 +1274,20 @@ For more detailed information see the specifications for this [notify DfE that a
   }
 }
 ```
-$EndContent
+</div>
+  </div>
+</div>
 
-$Heading
+<div class="govuk-accordion__section">
+    <div class="govuk-accordion__section-header">
+      <h3 class="govuk-accordion__section-heading">
+        <span class="govuk-accordion__section-button" id="accordion-default-heading-5">
 ### View all previously submitted declarations 
-$EndHeading
+</span>
+      </h3>
+    </div>
 
-$Content
+<div id="accordion-default-content-5" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-5">
 View all declarations which have been submitted to date. Check submissions, identify if any are missing, and void or clawback those which have been submitted in error.
 
 ```
@@ -1178,13 +1347,20 @@ For more detailed information see the specifications for this [view all declarat
   ]
 }
 ```
-$EndContent
+</div>
+  </div>
+</div>
 
-$Heading
+<div class="govuk-accordion__section">
+    <div class="govuk-accordion__section-header">
+      <h3 class="govuk-accordion__section-heading">
+        <span class="govuk-accordion__section-button" id="accordion-default-heading-6">
 ### View a specific previously submitted declaration
-$EndHeading
+</span>
+      </h3>
+    </div>
 
-$Content
+<div id="accordion-default-content-6" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-6">
 View a specific declaration which has been previously submitted. Check declaration details and void or clawback those which have been submitted in error.
 
 ```
@@ -1221,13 +1397,20 @@ For more detailed information see the specifications for this [view specific dec
   }
 }
 ```
-$EndContent
+</div>
+  </div>
+</div>
 
-$Heading
+<div class="govuk-accordion__section">
+    <div class="govuk-accordion__section-header">
+      <h3 class="govuk-accordion__section-heading">
+        <span class="govuk-accordion__section-button" id="accordion-default-heading-7">
 ### Void or clawback a declaration
-$EndHeading
+</span>
+      </h3>
+    </div>
 
-$Content
+<div id="accordion-default-content-7" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-7">
 Void specific declarations which have been submitted in error. 
 
 ```
@@ -1269,22 +1452,29 @@ For more detailed information see the specifications for this [void declarations
   }
 }
 ```
-$EndContent
-
-$EndAccordion
+</div>
+  </div>
+</div>
+</div>
 
 ## View financial statement payment dates  
 
 <div class="govuk-inset-text">The following endpoints are only available for systems integrated with API v3 onwards. They will not return data for API v1 or v2.</div>
 
 Providers can view up to date payment cut-off dates, upcoming payment dates, and check to see whether output payments have been made by DfE.
-$Accordion
 
-$Heading
+<div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default-4">
+
+<div class="govuk-accordion__section">
+    <div class="govuk-accordion__section-header">
+      <h3 class="govuk-accordion__section-heading">
+        <span class="govuk-accordion__section-button" id="accordion-default-heading-1">
 ### View all statement payment dates
-$EndHeading
+ </span>
+      </h3>
+    </div>
 
-$Content
+<div id="accordion-default-content-1" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-1">
 ```
 GET /api/v3/statements
 ```
@@ -1314,13 +1504,20 @@ For more detailed information see the specifications for this [view all statemen
   ]
 }
 ```
-$EndContent
+</div>
+  </div>
+</div>
 
-$Heading
-### View specific statement payment dates
-$EndHeading
+<div class="govuk-accordion__section">
+    <div class="govuk-accordion__section-header">
+      <h3 class="govuk-accordion__section-heading">
+        <span class="govuk-accordion__section-button" id="accordion-default-heading-2">
+View specific statement payment dates
+      </span>
+      </h3>
+    </div>  
 
-$Content
+<div id="accordion-default-content-1" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-2">
 ```
 GET /api/v3/statements/{id}
 ```
@@ -1350,6 +1547,7 @@ For more detailed information see the specifications for this [view a specific s
   }
 }
 ```
-$EndContent
-
-$EndAccordion
+ </div>
+  </div>
+</div>
+</div>
