@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe "Adding ECT with appropriate body", type: :feature, js: true do
-  let!(:cohort) { Cohort.current || create(:cohort, :current) }
+  let!(:cohort) { Cohort.current || create(:cohort, start_year: 2022) }
   let!(:school) { create :school, name: "Fip School" }
   let!(:appropriate_body) { create :appropriate_body_national_organisation }
   let!(:school_cohort) { create :school_cohort, school:, cohort:, induction_programme_choice: "full_induction_programme", appropriate_body: }

@@ -2,7 +2,9 @@
 
 require "rails_helper"
 
-RSpec.describe "Add a school cohort appropriate body", type: :feature, js: true do
+RSpec.describe "Add a school cohort appropriate body", type: :feature, js: true,
+               with_feature_flags: { cohortless_dashboard: "active" },
+               travel_to: Time.zone.local(2023, 6, 5, 16, 15, 0) do
   context "When appropriate body setup was not done for the cohort" do
     scenario "The appropriate body can be added" do
       given_there_is_a_school_and_an_induction_coordinator
@@ -44,10 +46,39 @@ RSpec.describe "Add a school cohort appropriate body", type: :feature, js: true 
     end
   end
 
+  context "From 2023 the local authority appropriate bodies can't be selected anymore" do
+    scenario "A local authorities appropriate body can't be added" do
+      given_there_is_a_school_and_an_induction_coordinator
+      and_i_am_signed_in_as_an_induction_coordinator
+      then_i_am_on_the_manage_your_training_page
+
+      when_i_click_on_add_appropriate_body
+      then_i_cant_select_local_authorities
+    end
+  end
+
+  context "When an appropriate body is disabled" do
+    before do
+      create(:appropriate_body_national_organisation, name: "Disabled AB", disable_from_year: 2023)
+      create(:appropriate_body_national_organisation, name: "Enabled AB")
+    end
+
+    scenario "It can't be added" do
+      given_there_is_a_school_and_an_induction_coordinator
+      and_i_am_signed_in_as_an_induction_coordinator
+      then_i_am_on_the_manage_your_training_page
+
+      when_i_click_on_add_appropriate_body
+      and_i_choose_national_organisation
+      then_i_see_the_enabled_appropriate_body
+      and_i_dont_see_the_disabled_appropriate_body
+    end
+  end
+
 private
 
   def given_there_is_a_school_and_an_induction_coordinator
-    @cohort = Cohort.current || create(:cohort, :current)
+    @cohort = Cohort.current || create(:cohort, start_year: 2023)
     @school = create(:school, name: "Fip School")
     @school_cohort = create(:school_cohort, school: @school, cohort: @cohort, induction_programme_choice: "full_induction_programme")
 
@@ -76,6 +107,10 @@ private
     expect(page).to have_content("Manage your training")
   end
 
+  def then_i_cant_select_local_authorities
+    expect(page).to_not have_text("Local authority")
+  end
+
   def and_i_can_add_appropriate_body
     expect(page).to have_summary_row_action("Appropriate body", "Add")
   end
@@ -88,8 +123,12 @@ private
     @school_cohort.update!(appropriate_body:)
   end
 
-  def when_i_choose_appropriate_body(appropriate_body)
+  def when_i_click_on_add_appropriate_body
     when_i_click_on_summary_row_action("Appropriate body", "Add")
+  end
+
+  def when_i_choose_appropriate_body(appropriate_body)
+    when_i_click_on_add_appropriate_body
     choose "National organisation"
     click_on "Continue"
     choose appropriate_body.name
@@ -119,5 +158,18 @@ private
 
   def when_i_go_back_to_manage_your_training_page
     click_on "Return to manage your training"
+  end
+
+  def and_i_choose_national_organisation
+    choose "National organisation"
+    click_on "Continue"
+  end
+
+  def then_i_see_the_enabled_appropriate_body
+    expect(page).to have_content("Enabled AB")
+  end
+
+  def and_i_dont_see_the_disabled_appropriate_body
+    expect(page).to_not have_content("Disabled AB")
   end
 end

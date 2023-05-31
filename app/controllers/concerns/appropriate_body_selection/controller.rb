@@ -78,7 +78,9 @@ module AppropriateBodySelection
       appropriate_body_ask_appointed ? :appropriate_body_appointed : :appropriate_body_type
     end
 
-    def start_appropriate_body_selection(from_path:, submit_action:, school_name:, ask_appointed: true, preconfirmation: false, action_name: :add)
+    # @param [Integer] cohort_start_year When specified the appropriate bodies will be filtered to those that are active [CST-1420]
+    def start_appropriate_body_selection(from_path:, submit_action:, school_name:, ask_appointed: true,
+                                         preconfirmation: false, action_name: :add, cohort_start_year: nil)
       session.delete(:appropriate_body_selection_form)
 
       session[:appropriate_body_selection] = {
@@ -88,6 +90,7 @@ module AppropriateBodySelection
         school_name:,
         ask_appointed:,
         preconfirmation:,
+        cohort_start_year:,
       }
 
       redirect_to action: first_action
@@ -99,6 +102,7 @@ module AppropriateBodySelection
 
     def load_appropriate_body_form
       @appropriate_body_form = AppropriateBodySelectionForm.new(session[:appropriate_body_selection_form])
+      @appropriate_body_form.cohort_start_year = appropriate_body_session_data[:cohort_start_year]
       @appropriate_body_form.assign_attributes(appropriate_body_form_params)
       @appropriate_body_form
     end
@@ -121,7 +125,7 @@ module AppropriateBodySelection
     end
 
     def appropriate_body_session_data
-      session[:appropriate_body_selection]
+      session[:appropriate_body_selection] || {}
     end
 
     def appropriate_body_from_path

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_05_17_101855) do
+ActiveRecord::Schema.define(version: 2023_05_19_123030) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -105,6 +105,7 @@ ActiveRecord::Schema.define(version: 2023_05_17_101855) do
     t.string "body_type", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "disable_from_year"
     t.index ["body_type", "name"], name: "index_appropriate_bodies_on_body_type_and_name", unique: true
   end
 
