@@ -78,13 +78,14 @@ RSpec.describe SchoolMailer, type: :mailer do
     end
   end
 
-  describe "#nomination_email_confirmation" do
+  describe "#nomination_confirmation_email" do
     let(:school) { create(:school) }
     let(:sit_profile) { create(:induction_coordinator_profile) }
     let(:start_url) { "https://ecf-dev.london.cloudapps" }
 
     let(:nomination_confirmation_email) do
       SchoolMailer.with(
+        email_address: sit_profile.user.email,
         sit_profile:,
         school:,
         start_url:,
@@ -95,6 +96,10 @@ RSpec.describe SchoolMailer, type: :mailer do
     it "renders the right headers" do
       expect(nomination_confirmation_email.to).to eq([sit_profile.user.email])
       expect(nomination_confirmation_email.from).to eq(["mail@example.com"])
+    end
+
+    it "uses the correct Notify template" do
+      expect(SchoolMailer::NOMINATION_CONFIRMATION_EMAIL_TEMPLATE).to eq("7cc9b459-b088-4d5a-84c8-33a74993a2fc")
     end
   end
 
@@ -223,6 +228,90 @@ RSpec.describe SchoolMailer, type: :mailer do
         expect(email.from).to eq(["mail@example.com"])
         expect(email.to).to eq([sit_profile.user.email])
       end
+    end
+  end
+
+  describe "#pilot_ask_sit_to_report_school_training_details" do
+    let(:sit_profile) { create(:induction_coordinator_profile) }
+    let(:nomination_link) { "https://ecf-dev.london.cloudapps/nominations/start?token=123" }
+
+    let(:pilot_ask_sit_to_report_school_training_details) do
+      SchoolMailer.with(
+        sit_profile:,
+        nomination_link:,
+      ).pilot_ask_sit_to_report_school_training_details.deliver_now
+    end
+
+    it "renders the right headers" do
+      expect(pilot_ask_sit_to_report_school_training_details.to).to eq([sit_profile.user.email])
+      expect(pilot_ask_sit_to_report_school_training_details.from).to eq(["mail@example.com"])
+    end
+
+    it "uses the correct Notify template" do
+      expect(SchoolMailer::PILOT_ASK_SIT_TO_REPORT_SCHOOL_TRAINING_DETAILS_TEMPLATE).to eq("87d4720b-9e3a-46d9-95de-493295dba1dc")
+    end
+  end
+
+  describe "#pilot_ask_gias_contact_to_report_school_training_details" do
+    let(:gias_contact_email) { "contact@example.com" }
+    let(:nomination_link) { "https://ecf-dev.london.cloudapps/nominations/start?token=123" }
+
+    let(:pilot_ask_gias_contact_to_report_school_training_details) do
+      SchoolMailer.with(
+        gias_contact_email:,
+        nomination_link:,
+      ).pilot_ask_gias_contact_to_report_school_training_details.deliver_now
+    end
+
+    it "renders the right headers" do
+      expect(pilot_ask_gias_contact_to_report_school_training_details.to).to eq([gias_contact_email])
+      expect(pilot_ask_gias_contact_to_report_school_training_details.from).to eq(["mail@example.com"])
+    end
+
+    it "uses the correct Notify template" do
+      expect(SchoolMailer::PILOT_ASK_GIAS_CONTACT_TO_REPORT_SCHOOL_TRAINING_DETAILS_TEMPLATE).to eq("ae925ff1-edc3-4d5c-a120-baa3a79c73af")
+    end
+  end
+
+  describe "#launch_ask_sit_to_report_school_training_details" do
+    let(:sit_profile) { create(:induction_coordinator_profile) }
+    let(:nomination_link) { "https://ecf-dev.london.cloudapps/nominations/start?token=123" }
+
+    let(:launch_ask_sit_to_report_school_training_details) do
+      SchoolMailer.with(
+        sit_profile:,
+        nomination_link:,
+      ).launch_ask_sit_to_report_school_training_details.deliver_now
+    end
+
+    it "renders the right headers" do
+      expect(launch_ask_sit_to_report_school_training_details.to).to eq([sit_profile.user.email])
+      expect(launch_ask_sit_to_report_school_training_details.from).to eq(["mail@example.com"])
+    end
+
+    it "uses the correct Notify template" do
+      expect(SchoolMailer::LAUNCH_ASK_SIT_TO_REPORT_SCHOOL_TRAINING_DETAILS_TEMPLATE).to eq("1f796f27-9ba4-4705-a7c9-57462bd1e0b7")
+    end
+  end
+
+  describe "#launch_ask_gias_contact_to_report_school_training_details" do
+    let(:gias_contact_email) { "contact@example.com" }
+    let(:nomination_link) { "https://ecf-dev.london.cloudapps/nominations/start?token=123" }
+
+    let(:launch_ask_gias_contact_to_report_school_training_details) do
+      SchoolMailer.with(
+        gias_contact_email:,
+        nomination_link:,
+      ).launch_ask_gias_contact_to_report_school_training_details.deliver_now
+    end
+
+    it "renders the right headers" do
+      expect(launch_ask_gias_contact_to_report_school_training_details.to).to eq([gias_contact_email])
+      expect(launch_ask_gias_contact_to_report_school_training_details.from).to eq(["mail@example.com"])
+    end
+
+    it "uses the correct Notify template" do
+      expect(SchoolMailer::LAUNCH_ASK_GIAS_CONTACT_TO_REPORT_SCHOOL_TRAINING_DETAILS_TEMPLATE).to eq("f4dfee2a-2cc3-4d32-97f9-8adca41343bf")
     end
   end
 end

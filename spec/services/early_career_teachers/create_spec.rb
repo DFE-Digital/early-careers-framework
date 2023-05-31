@@ -3,9 +3,10 @@
 RSpec.describe EarlyCareerTeachers::Create, :with_default_schedules do
   let!(:user) { create :user }
   let(:school_cohort) { create :school_cohort }
-  let(:pupil_premium_school) { create :school, :pupil_premium_uplift }
-  let(:sparsity_school) { create :school, :sparsity_uplift }
-  let(:uplift_school) { create :school, :pupil_premium_and_sparsity_uplift }
+  let(:start_year) { school_cohort.cohort.start_year }
+  let(:pupil_premium_school) { create :seed_school, :with_pupil_premium_uplift, start_year: }
+  let(:sparsity_school) { create :seed_school, :with_sparsity_uplift, start_year: }
+  let(:uplift_school) { create :seed_school, :with_uplifts, start_year: }
   let!(:mentor_profile) { create :mentor_participant_profile }
   let!(:npq_participant) { create(:npq_participant_profile).teacher_profile.user }
 

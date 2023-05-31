@@ -7,8 +7,6 @@ $govuk-new-link-styles: true;
 
 @import "notification_banner";
 @import "app_task_list";
-@import "vendor/components/step-by-step-header";
-@import "vendor/components/step-by-step-nav";
 @import "header_overrides";
 @import "lead_providers/dashboard_numbers";
 @import "lead_providers/index_group";

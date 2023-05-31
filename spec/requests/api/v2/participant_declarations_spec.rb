@@ -149,6 +149,37 @@ RSpec.describe "participant-declarations endpoint spec", :with_default_schedules
         end
       end
 
+      context "when the participant is also a mentor" do
+        let(:user) { ect_profile.user }
+        let!(:mentor_profile) { create(:mentor, :eligible_for_funding, lead_provider: cpd_lead_provider.lead_provider, user:) }
+        let(:mentor_valid_params) do
+          {
+            participant_id: user.id,
+            declaration_type: "started",
+            declaration_date: declaration_date.rfc3339,
+            course_identifier: "ecf-mentor",
+          }
+        end
+
+        it "can create declaration records for the ect profile", :aggregate_failures do
+          params = build_params(valid_params)
+          expect { post "/api/v2/participant-declarations", params: }
+            .to change { ect_profile.participant_declarations.count }.by(1)
+            .and change { ParticipantDeclarationAttempt.where(user:).count }.by(1)
+          expect(response.status).to eq 200
+          expect(parsed_response["data"]["id"]).to eq(ect_profile.participant_declarations.order(:created_at).last.id)
+        end
+
+        it "can create declaration records for the mentor profile", :aggregate_failures do
+          params = build_params(mentor_valid_params)
+          expect { post "/api/v2/participant-declarations", params: }
+            .to change { mentor_profile.participant_declarations.count }.by(1)
+            .and change { ParticipantDeclarationAttempt.where(user:).count }.by(1)
+          expect(response.status).to eq 200
+          expect(parsed_response["data"]["id"]).to eq(mentor_profile.participant_declarations.order(:created_at).last.id)
+        end
+      end
+
       it "returns 422 when trying to create for an invalid user id" do
         # Expects the user uuid. Pass the early_career_teacher_profile_id
         invalid_user_id = valid_params.merge({ participant_id: ect_profile.id })

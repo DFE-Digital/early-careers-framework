@@ -40,6 +40,7 @@ en:
   bad_request: "Bad request"
   bad_parameter: "Bad parameter"
   invalid_transition: "Invalid action"
+  invalid_page_parameters: "The '#/page[page]' and '#/page[per_page]' parameter values must be a valid number (equal and more than 1)"
   cannot_change_cohort: "The property '#/cohort' cannot be changed"
   invalid_participant: "The property '#/participant_id' must be a valid Participant ID"
   invalid_identifier: "The property '#/course_identifier' must be an available course to '#/participant_id'"

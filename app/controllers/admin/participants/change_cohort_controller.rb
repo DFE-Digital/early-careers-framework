@@ -2,8 +2,12 @@
 
 module Admin::Participants
   class ChangeCohortController < Admin::BaseController
+    include Pundit::Authorization
+
     def edit
       @participant_profile = retrieve_participant_profile
+      authorize @participant_profile, :edit_cohort?
+
       @latest_induction_record = @participant_profile.latest_induction_record
 
       @amend_participant_cohort = Induction::AmendParticipantCohort.new
@@ -11,6 +15,8 @@ module Admin::Participants
 
     def update
       @participant_profile = retrieve_participant_profile
+      authorize @participant_profile, :update_cohort?
+
       @latest_induction_record = @participant_profile.latest_induction_record
 
       @amend_participant_cohort = Induction::AmendParticipantCohort.new(

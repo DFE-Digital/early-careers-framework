@@ -9,6 +9,13 @@ class ParticipantProfilePolicy < ApplicationPolicy
     admin?
   end
 
+  def change_cohort?
+    super_user_only
+  end
+
+  alias_method :edit_cohort?, :change_cohort?
+  alias_method :update_cohort?, :change_cohort?
+
   alias_method :withdraw_record?, :destroy?
   alias_method :remove?, :destroy?
 

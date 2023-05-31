@@ -132,5 +132,9 @@ module FormData
     def history_stack
       get(:history_stack) || []
     end
+
+    def ect_mentor?
+      get(:ect_mentor) == true
+    end
   end
 end

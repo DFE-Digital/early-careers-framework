@@ -72,10 +72,10 @@ RSpec.describe "API ECF schools", :with_default_schedules, type: :request, with_
           end
         end
 
-        before { get "/api/v3/schools/ecf", params: { sort: sort_param, filter: { cohort: cohort.display_name } } }
-
         context "when ordering by updated_at ascending" do
           let(:sort_param) { "updated_at" }
+
+          before { get "/api/v3/schools/ecf", params: { sort: sort_param, filter: { cohort: cohort.display_name } } }
 
           it "returns an ordered list of schools" do
             expect(parsed_response["data"].size).to eql(2)
@@ -87,10 +87,26 @@ RSpec.describe "API ECF schools", :with_default_schedules, type: :request, with_
         context "when ordering by updated_at descending" do
           let(:sort_param) { "-updated_at" }
 
+          before { get "/api/v3/schools/ecf", params: { sort: sort_param, filter: { cohort: cohort.display_name } } }
+
           it "returns an ordered list of schools" do
             expect(parsed_response["data"].size).to eql(2)
             expect(parsed_response.dig("data", 0, "attributes", "name")).to eql(school.name)
             expect(parsed_response.dig("data", 1, "attributes", "name")).to eql(another_school.name)
+          end
+        end
+
+        context "when not including sort in the params" do
+          before do
+            another_school.update!(created_at: 10.days.ago)
+
+            get "/api/v3/schools/ecf", params: { sort: "", filter: { cohort: cohort.display_name } }
+          end
+
+          it "returns all records ordered by created_at" do
+            expect(parsed_response["data"].size).to eql(2)
+            expect(parsed_response.dig("data", 0, "attributes", "name")).to eql(another_school.name)
+            expect(parsed_response.dig("data", 1, "attributes", "name")).to eql(school.name)
           end
         end
       end

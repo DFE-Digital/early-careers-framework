@@ -13,7 +13,6 @@ import * as GOVUKFrontend from "govuk-frontend";
 
 // Project JS
 import "./admin/supplier-users";
-import "./components/step-by-step-nav";
 import "./cookie-banner";
 import "./nominations";
 import "./autocomplete";

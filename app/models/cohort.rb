@@ -3,6 +3,8 @@
 class Cohort < ApplicationRecord
   has_paper_trail
 
+  NPQ_PLUS_1_YEAR = 2020
+
   has_many :call_off_contracts
   has_many :npq_contracts
   has_many :partnerships
@@ -11,6 +13,7 @@ class Cohort < ApplicationRecord
 
   scope :between_years, ->(lower, upper) { where(start_year: lower..upper) }
   scope :between_2021_and, ->(upper) { between_years(2021, upper) }
+  scope :ordered_by_start_year, -> { order(start_year: :asc) }
 
   # Class Methods
 
@@ -70,6 +73,10 @@ class Cohort < ApplicationRecord
 
   def next
     self.class.find_by(start_year: start_year + 1)
+  end
+
+  def npq_plus_one_or_earlier?
+    start_year <= NPQ_PLUS_1_YEAR
   end
 
   def previous

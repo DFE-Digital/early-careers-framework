@@ -710,7 +710,7 @@ Rails.application.routes.draw do
   get "/ministerial-letter", to: redirect("ECF%20Letter.pdf")
   get "/ecf-leaflet", to: redirect("ECFleaflet2021.pdf")
 
-  get "/how-to-set-up-your-programme", to: "step_by_step#show", as: :step_by_step
+  get "/how-to-set-up-your-programme", to: redirect("https://www.gov.uk/guidance/how-to-set-up-training-for-early-career-teachers", status: 301), as: "step_by_step"
 
   get "/assets/govuk/assets/fonts/:name.:extension", to: redirect("/api-reference/assets/govuk/assets/fonts/%{name}.%{extension}")
   get "/assets/govuk/assets/images/:name.:extension", to: redirect("/api-reference/assets/govuk/assets/images/%{name}.%{extension}")

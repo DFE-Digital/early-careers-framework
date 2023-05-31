@@ -12,7 +12,7 @@ module Api
         # GET /api/v3/participants/ecf?filter[cohort]=2021,2022
         #
         def index
-          render json: serializer_class.new(paginate(participants), params: { cpd_lead_provider: current_user }).serializable_hash.to_json
+          render json: serializer_class.new(participants, params: { cpd_lead_provider: current_user }).serializable_hash.to_json
         end
 
         # Returns a single of ECF participant
@@ -29,8 +29,14 @@ module Api
           Api::V3::ECF::ParticipantSerializer
         end
 
+        def paginated_results
+          paginate(
+            ecf_participant_query.participants_for_pagination,
+          )
+        end
+
         def participants
-          @participants ||= ecf_participant_query.participants.order(sort_params(params, model: User))
+          @participants ||= ecf_participant_query.participants_from(paginated_results).order(sort_params(params, model: User))
         end
 
         def participant

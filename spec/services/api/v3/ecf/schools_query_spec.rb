@@ -104,6 +104,19 @@ RSpec.describe Api::V3::ECF::SchoolsQuery do
           end
         end
       end
+
+      context "sorting" do
+        let!(:eligible_school) { create(:school, :eligible) }
+        let!(:another_eligible_school) do
+          travel_to(10.days.ago) do
+            create(:school, :eligible)
+          end
+        end
+
+        it "returns all records ordered by created_at" do
+          expect(subject.schools).to eq([another_eligible_school, eligible_school])
+        end
+      end
     end
 
     context "with updated_since filter" do

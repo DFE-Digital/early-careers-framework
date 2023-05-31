@@ -170,7 +170,7 @@ module Participants
     end
 
     def change_participant_cohort_and_induction_start_date!
-      Participants::SyncDqtInductionStartDate.call(dqt_response[:induction_start_date], participant_profile)
+      Participants::SyncDqtInductionStartDate.call(dqt_response[:induction_start_date], participant_profile) if dqt_response.present?
     end
 
     def store_analytics!
@@ -199,7 +199,7 @@ module Participants
     def call(save_validation_data_without_match: true)
       check_eligibility!
       store_validation_result!(save_validation_data_without_match:)
-      change_participant_cohort_and_induction_start_date!
+      change_participant_cohort_and_induction_start_date! if dqt_response.present?
     end
   end
 end

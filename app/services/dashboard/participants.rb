@@ -4,8 +4,8 @@ module Dashboard
   class Participants
     attr_reader :mentors, :orphan_ects, :school, :user, :latest_year
 
-    def initialize(school:, user:, latest_year:)
-      @latest_year = latest_year
+    def initialize(school:, user:)
+      @latest_year = Dashboard::LatestManageableCohort.call(school).start_year
       @orphan_ects = []
       @school = school
       @user = user

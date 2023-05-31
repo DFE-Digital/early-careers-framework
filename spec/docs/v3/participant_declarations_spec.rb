@@ -31,8 +31,10 @@ RSpec.describe "Participant Declarations", :with_default_schedules, type: :reque
                 required: false,
                 description: "Refine participant declarations to return.",
                 example: CGI.unescape({
-                  participant_id: "ab3a7848-1208-7679-942a-b4a70eed400a",
-                  updated_since: "2020-11-13T11:21:55Z",
+                  filter: {
+                    participant_id: "ab3a7848-1208-7679-942a-b4a70eed400a",
+                    updated_since: "2020-11-13T11:21:55Z",
+                  },
                 }.to_param)
 
       parameter name: :page,

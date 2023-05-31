@@ -27,6 +27,30 @@ FactoryBot.define do
     trait(:cip_only) { school_type_code { GiasTypes::CIP_ONLY_TYPE_CODES.sample } }
     trait(:ineligible) { school_type_code { 10 } }
 
+    trait(:with_pupil_premium_uplift) do
+      transient do
+        start_year { build(:cohort, :current).start_year }
+      end
+
+      pupil_premiums { [build(:seed_pupil_premium, :with_pupil_premiums, start_year:)] }
+    end
+
+    trait(:with_sparsity_uplift) do
+      transient do
+        start_year { build(:cohort, :current).start_year }
+      end
+
+      pupil_premiums { [build(:seed_pupil_premium, :with_sparsity, start_year:)] }
+    end
+
+    trait(:with_uplifts) do
+      transient do
+        start_year { build(:cohort, :current).start_year }
+      end
+
+      pupil_premiums { [build(:seed_pupil_premium, :with_uplifts, start_year:)] }
+    end
+
     trait(:valid) {}
 
     after(:build) { |s| Rails.logger.debug("seeded school #{s.name}") }

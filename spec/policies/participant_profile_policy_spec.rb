@@ -10,6 +10,7 @@ RSpec.describe ParticipantProfilePolicy, :with_default_schedules, type: :policy 
   context "being an admin" do
     let(:user) { create(:user, :admin) }
     it { is_expected.to permit_action(:show) }
+    it { is_expected.to forbid_actions(%i[edit_cohort update_cohort]) }
 
     context "NPQ" do
       let(:participant_profile) { create(:npq_participant_profile) }
@@ -21,6 +22,14 @@ RSpec.describe ParticipantProfilePolicy, :with_default_schedules, type: :policy 
     let(:user) { create(:user) }
     it { is_expected.to forbid_action(:show) }
     it { is_expected.to forbid_action(:destroy) }
+    it { is_expected.to forbid_actions(%i[edit_cohort update_cohort]) }
+  end
+
+  context "being a super user admin" do
+    let(:scenario) { NewSeeds::Scenarios::Users::AdminUser.new.build.with_super_user }
+    let(:user) { scenario.user }
+
+    it { is_expected.to permit_actions(%i[edit_cohort update_cohort]) }
   end
 
   describe described_class::Scope do

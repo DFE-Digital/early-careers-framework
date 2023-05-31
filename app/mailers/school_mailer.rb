@@ -2,7 +2,7 @@
 
 class SchoolMailer < ApplicationMailer
   NOMINATION_EMAIL_TEMPLATE = "a7cc4d19-c0cb-4187-a71b-1b1ea029924f"
-  NOMINATION_CONFIRMATION_EMAIL_TEMPLATE = "2c740b37-bc4e-47eb-8657-1742b9b8eda7"
+  NOMINATION_CONFIRMATION_EMAIL_TEMPLATE = "7cc9b459-b088-4d5a-84c8-33a74993a2fc"
   SCHOOL_REQUESTED_SIGNIN_LINK_FROM_GIAS = "f2764570-ca3c-4e3b-97c3-251a853c9dde"
   SCHOOL_PARTNERSHIP_NOTIFICATION_EMAIL_TEMPLATE = "8cac177e-b094-4a00-9179-94fadde8ced0"
   COORDINATOR_PARTNERSHIP_NOTIFICATION_EMAIL_TEMPLATE = "076e8486-cbcc-44ee-8a6e-d2a721ee1460"
@@ -30,6 +30,10 @@ class SchoolMailer < ApplicationMailer
   PARTICIPANT_WITHDRAWN_BY_PROVIDER = "29f94916-8c3a-4c5a-9e33-bdf3f5d7249a"
   REMIND_TO_SETUP_MENTOR_TO_ECTS = "604ca80f-b152-4682-9295-9cf1d30f74c1"
   REMIND_GIAS_CONTACT_TO_UPDATE_INDUCTION_TUTOR_DETAILS_TEMPLATE = "88cdad72-386c-40fb-be2e-11d4ae9dcdee"
+  PILOT_ASK_SIT_TO_REPORT_SCHOOL_TRAINING_DETAILS_TEMPLATE = "87d4720b-9e3a-46d9-95de-493295dba1dc"
+  PILOT_ASK_GIAS_CONTACT_TO_REPORT_SCHOOL_TRAINING_DETAILS_TEMPLATE = "ae925ff1-edc3-4d5c-a120-baa3a79c73af"
+  LAUNCH_ASK_SIT_TO_REPORT_SCHOOL_TRAINING_DETAILS_TEMPLATE = "1f796f27-9ba4-4705-a7c9-57462bd1e0b7"
+  LAUNCH_ASK_GIAS_CONTACT_TO_REPORT_SCHOOL_TRAINING_DETAILS_TEMPLATE = "f4dfee2a-2cc3-4d32-97f9-8adca41343bf"
 
   def remind_sit_to_set_mentor_to_ects
     sit = params[:sit]
@@ -112,13 +116,15 @@ class SchoolMailer < ApplicationMailer
     school = params[:school]
     start_url = params[:start_url]
     step_by_step_url = params[:step_by_step_url]
+    sit_email_address = sit_profile.user.email
 
     template_mail(
       NOMINATION_CONFIRMATION_EMAIL_TEMPLATE,
-      to: sit_profile.user.email,
+      to: sit_email_address,
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
+        email_address: sit_email_address,
         name: sit_profile.user.full_name,
         school_name: school.name,
         start_page: start_url,
@@ -546,5 +552,69 @@ class SchoolMailer < ApplicationMailer
       .tag(:sit_fip_provider_has_withdrawn_a_participant)
       .associate_with(induction_coordinator, as: :induction_coordinator)
       .associate_with(withdrawn_participant, as: :participant_profile)
+  end
+
+  # Pilot one-off mailers
+
+  def pilot_ask_sit_to_report_school_training_details
+    sit_profile = params[:sit_profile]
+    nomination_link = params[:nomination_link]
+
+    template_mail(
+      PILOT_ASK_SIT_TO_REPORT_SCHOOL_TRAINING_DETAILS_TEMPLATE,
+      to: sit_profile.user.email,
+      rails_mailer: mailer_name,
+      rails_mail_template: action_name,
+      personalisation: {
+        sit_name: sit_profile.user.full_name,
+        nomination_link:,
+      },
+    ).tag(:pilot_sit_to_report_school_training).associate_with(sit_profile)
+  end
+
+  def pilot_ask_gias_contact_to_report_school_training_details
+    gias_contact_email = params[:gias_contact_email]
+    nomination_link = params[:nomination_link]
+
+    template_mail(
+      PILOT_ASK_GIAS_CONTACT_TO_REPORT_SCHOOL_TRAINING_DETAILS_TEMPLATE,
+      to: gias_contact_email,
+      rails_mailer: mailer_name,
+      rails_mail_template: action_name,
+      personalisation: {
+        nomination_link:,
+      },
+    ).tag(:pilot_gias_contact_to_report_school_training).associate_with(gias_contact_email)
+  end
+
+  def launch_ask_sit_to_report_school_training_details
+    sit_profile = params[:sit_profile]
+    nomination_link = params[:nomination_link]
+
+    template_mail(
+      LAUNCH_ASK_SIT_TO_REPORT_SCHOOL_TRAINING_DETAILS_TEMPLATE,
+      to: sit_profile.user.email,
+      rails_mailer: mailer_name,
+      rails_mail_template: action_name,
+      personalisation: {
+        sit_name: sit_profile.user.full_name,
+        nomination_link:,
+      },
+    ).tag(:launch_sit_to_report_school_training).associate_with(sit_profile)
+  end
+
+  def launch_ask_gias_contact_to_report_school_training_details
+    gias_contact_email = params[:gias_contact_email]
+    nomination_link = params[:nomination_link]
+
+    template_mail(
+      LAUNCH_ASK_GIAS_CONTACT_TO_REPORT_SCHOOL_TRAINING_DETAILS_TEMPLATE,
+      to: gias_contact_email,
+      rails_mailer: mailer_name,
+      rails_mail_template: action_name,
+      personalisation: {
+        nomination_link:,
+      },
+    ).tag(:launch_gias_contact_to_report_school_training).associate_with(gias_contact_email)
   end
 end

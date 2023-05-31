@@ -565,6 +565,17 @@
         ],
         "parameters": [
           {
+            "name": "id",
+            "description": "The unique ID of the school",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75"
+          },
+          {
             "name": "filter",
             "schema": {
               "$ref": "#/components/schemas/ECFSchoolsFilter"
@@ -1163,7 +1174,7 @@
             "explode": true,
             "required": false,
             "description": "Refine NPQ participants to return.",
-            "example": "updated_since=2020-11-13T11:21:55Z"
+            "example": "filter[updated_since]=2020-11-13T11:21:55Z"
           },
           {
             "name": "page",
@@ -1754,7 +1765,7 @@
             "explode": true,
             "required": false,
             "description": "Refine participant declarations to return.",
-            "example": "participant_id=ab3a7848-1208-7679-942a-b4a70eed400a&updated_since=2020-11-13T11:21:55Z"
+            "example": "filter[participant_id]=ab3a7848-1208-7679-942a-b4a70eed400a&filter[updated_since]=2020-11-13T11:21:55Z"
           },
           {
             "name": "page",
@@ -5325,7 +5336,7 @@
           "completion_date": {
             "description": "The date the participant received the assessment outcome for this course",
             "type": "string",
-            "example": "2021-05-31"
+            "example": "2021-05-31T00:00:00+00:00"
           },
           "created_at": {
             "description": "The date you created the participant-outcome record",
