@@ -36,8 +36,8 @@ class SchoolMailer < ApplicationMailer
   LAUNCH_ASK_GIAS_CONTACT_TO_REPORT_SCHOOL_TRAINING_DETAILS_TEMPLATE = "f4dfee2a-2cc3-4d32-97f9-8adca41343bf"
   COHORTLESS_PILOT_2023_SURVEY_TEMPLATE = "5f6dc6bf-62c5-4cf1-8cc8-1440453f4a2d"
 
-  def send_cohortless_pilot_2023_survey_to_sit
-    sit_user = params[:sit]
+  def cohortless_pilot_2023_survey_email
+    sit_user = params[:sit_user]
 
     template_mail(
       COHORTLESS_PILOT_2023_SURVEY_TEMPLATE,
@@ -47,7 +47,7 @@ class SchoolMailer < ApplicationMailer
       personalisation: {
         name: sit_user.full_name,
       },
-    ).tag(:cohortless_pilot_2023_survey).associate_with(sit.induction_coordinator_profile)
+    ).tag(:cohortless_pilot_2023_survey).associate_with(sit_user.induction_coordinator_profile)
   end
 
   def remind_sit_to_set_mentor_to_ects
