@@ -653,7 +653,7 @@ ActiveRecord::Schema.define(version: 2023_05_17_101855) do
     t.boolean "sparsity_uplift"
     t.boolean "pupil_premium_uplift"
     t.uuid "delivery_partner_id"
-    t.index ["cpd_lead_provider_id", "participant_profile_id", "declaration_type", "course_identifier", "state"], name: "unique_declaration_index", unique: true, where: "((state)::text = ANY ((ARRAY['submitted'::character varying, 'eligible'::character varying, 'payable'::character varying, 'paid'::character varying])::text[]))"
+    t.index ["cpd_lead_provider_id", "participant_profile_id", "declaration_type", "course_identifier", "state"], name: "unique_declaration_index", unique: true, where: "((state)::text = ANY (ARRAY[('submitted'::character varying)::text, ('eligible'::character varying)::text, ('payable'::character varying)::text, ('paid'::character varying)::text]))"
     t.index ["cpd_lead_provider_id"], name: "index_participant_declarations_on_cpd_lead_provider_id"
     t.index ["declaration_type"], name: "index_participant_declarations_on_declaration_type"
     t.index ["delivery_partner_id"], name: "index_participant_declarations_on_delivery_partner_id"
@@ -1054,8 +1054,7 @@ ActiveRecord::Schema.define(version: 2023_05_17_101855) do
   end
 
   create_table "versions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "item_type"
-    t.string "{:null=>false}"
+    t.string "item_type", null: false
     t.string "event", null: false
     t.string "whodunnit"
     t.json "object"

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-def create_116780!(lead_provider:, delivery_partner:, cohorts:)
+def create_116780!(lead_provider:, delivery_partner:, cohorts:, another_lead_provider:, another_delivery_partner:)
   NewSeeds::Scenarios::Schools::School
   .new(urn: "116780", name: "Abberley Parochial VC Primary School")
   .build
@@ -16,6 +16,10 @@ def create_116780!(lead_provider:, delivery_partner:, cohorts:)
                                       school: school.school)
       school.chosen_fip_and_partnered_in(cohort:, partnership:)
     end
+    NewSeeds::Scenarios::InductionProgrammes::Fip.new(school_cohort: school.school_cohorts[cohorts.last.start_year])
+                                                 .build(default_induction_programme: false)
+                                                 .with_relationship(lead_provider: another_lead_provider,
+                                                                    delivery_partner: another_delivery_partner)
   end
 end
 
@@ -42,7 +46,7 @@ def create_123780!(cohorts:)
   NewSeeds::Scenarios::Schools::School
   .new(urn: "123780", name: "West Pennard Church of England Primary School")
   .build
-  .with_an_induction_tutor(full_name: "ambition tutor", email: "ambition-induction-tutor@example.com")
+  .with_an_induction_tutor(full_name: "ambition tutor", email: "school-123780-induction-tutor@example.com")
   .tap do |school|
     cohorts.each { |cohort| school.chosen_fip_but_not_partnered(cohort:) }
   end
@@ -165,8 +169,8 @@ def create_mentor!(school_cohort:, start_date: Time.current, **opts)
   end
 end
 
-def create_ect_becoming_mentor!(ect_school_cohort:, mentor_school_cohort:, **_opts)
-  full_name = ::Faker::Name.name
+def create_ect_becoming_mentor!(ect_school_cohort:, mentor_school_cohort:, **opts)
+  full_name = opts[:full_name] || ::Faker::Name.name
   email = Faker::Internet.email(name: full_name)
   trn = rand(100_000..999_999).to_s
   date_of_birth = rand(25..50).years.ago + rand(0..365).days
@@ -249,26 +253,34 @@ cohort_2023 = Cohort.find_by(start_year: 2023) || FactoryBot.create(:seed_cohort
 
 # Lead providers and Delivery partners
 ambition = LeadProvider.find_by_name("Ambition Institute")
+teach_first = LeadProvider.find_by_name("Teach First")
 hampshire = FactoryBot.create(:seed_delivery_partner, name: "Hampshire Local Authority")
 five_counties = FactoryBot.create(:seed_delivery_partner, name: "Five Counties Teaching School Hubs Alliance")
 [cohort_2021, cohort_2022, cohort_2023].each do |cohort|
   FactoryBot.create(:seed_provider_relationship, cohort:, lead_provider: ambition, delivery_partner: hampshire)
   FactoryBot.create(:seed_provider_relationship, cohort:, lead_provider: ambition, delivery_partner: five_counties)
+  FactoryBot.create(:seed_provider_relationship, cohort:, lead_provider: teach_first, delivery_partner: five_counties)
 end
 
 # Schools
 # School 116780 with a FIP partnership ambition/hampshire for 2021, 2022 and 2023 cohorts
-school_116780 = create_116780!(lead_provider: ambition, delivery_partner: hampshire, cohorts: [cohort_2021, cohort_2022, cohort_2023]).school
+school_116780 = create_116780!(lead_provider: ambition,
+                               delivery_partner: hampshire,
+                               cohorts: [cohort_2021, cohort_2022, cohort_2023],
+                               another_lead_provider: teach_first,
+                               another_delivery_partner: five_counties).school
 
 # School 144181 with a FIP partnership ambition/five_counties for 2021 and 2022 cohorts
 school_144181 = create_144181!(lead_provider: ambition, delivery_partner: five_counties, cohorts: [cohort_2021, cohort_2022]).school
 
 # School 123780 with no cohorts or induction tutor setup
-school_123780 = create_123780!.school(cohorts: [cohort_2022]).school
+school_123780 = create_123780!(cohorts: [cohort_2022]).school
 
 # Create ECTs and Mentors
-urn_to_cohort = [[school_116780, cohort_2021], [school_116780, cohort_2022], [school_144181, cohort_2021], [school_144181, cohort_2022]]
-urn_to_cohort.each do |(school, cohort)|
+[[school_116780, cohort_2021],
+ [school_116780, cohort_2022],
+ [school_144181, cohort_2021],
+ [school_144181, cohort_2022]].each do |(school, cohort)|
   school_cohort = school.school_cohorts.where(cohort:).first
   10.times.each { create_ect!(school_cohort:) }
   10.times.each { create_mentor!(school_cohort:) }
@@ -324,3 +336,23 @@ Induction::Enrol.new(participant_profile:, induction_programme:, start_date: Tim
 participant_profile = create_ect!(school_cohort: school_116780_cohort_2022, full_name: "FIP To FIPNoProvider", start_date: 15.days.ago)
 induction_programme = school_123780.school_cohorts.where(cohort: cohort_2022).first.default_induction_programme
 Induction::TransferToSchoolsProgramme.call(participant_profile:, induction_programme:, email: "fiptofipnoprovider@example.com")
+
+# change LP inside same school
+participant_profile = create_ect!(school_cohort: school_116780_cohort_2023, full_name: "FIP To FIPNoProvider", start_date: 15.days.ago)
+new_induction_programme = school_116780_cohort_2023.induction_programmes.joins(partnership: :lead_provider).where(partnerships: { lead_provider_id: teach_first.id }).first
+Induction::ChangeProgramme.call(participant_profile:, end_date: Time.current, new_induction_programme:)
+
+# ECT-Mentor inside same school, same provider
+create_ect_becoming_mentor!(full_name: "ECT Becoming Mentor", ect_school_cohort: school_116780_cohort_2022, mentor_school_cohort: school_116780_cohort_2023)
+
+# Multi-ECT participant
+ect1 = create_ect!(school_cohort: school_116780_cohort_2022, full_name: "Multi ECT")
+ect2 = ParticipantProfile::ECT.create!(
+  teacher_profile: ect1.teacher_profile,
+  schedule: Finance::Schedule::ECF.default_for(cohort: cohort_2023),
+  participant_identity: Identity::Create.call(user: ect1.user),
+  school_cohort_id: school_116780_cohort_2023.id,
+  induction_start_date: cohort_2023.academic_year_start_date,
+)
+ParticipantProfileState.create!(participant_profile: ect2, cpd_lead_provider: school_116780_cohort_2023&.default_induction_programme&.lead_provider&.cpd_lead_provider)
+Induction::Enrol.call(participant_profile: ect2, induction_programme: school_116780_cohort_2023.default_induction_programme)
