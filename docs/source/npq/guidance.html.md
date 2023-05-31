@@ -50,13 +50,18 @@ To prevent a participant being enrolled onto the same course with more than one 
 
 Note, while participants can enter different email addresses when applying for training courses, providers will only see the email address associated with a given course application or registration. For example, a participant may complete their ECF-based training with one associated email address, then apply for an NPQ with a different email address, and go on to be an ECT mentor with a third email address. The DfE will share the relevant email address with the relevant course provider.
 
-$Accordion
+<div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default">
 
-$Heading
-### View all applications
-$EndHeading
+<div class="govuk-accordion__section">
+    <div class="govuk-accordion__section-header">
+      <h3 class="govuk-accordion__section-heading">
+        <span class="govuk-accordion__section-button" id="accordion-default-heading-1">
+           View all applications
+        </span>
+      </h3>
+    </div>
 
-$Content
+<div id="accordion-default-content-1" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-1">
 ```
  GET /api/v3/npq-applications
 ```
@@ -110,13 +115,20 @@ For more detailed information see the specifications for this [view multiple NPQ
   ]
 }
 ```
-$EndContent
+  </div>
+  </div>
+</div>
 
-$Heading
-### View a specific application
-$EndHeading
+<div class="govuk-accordion__section">
+    <div class="govuk-accordion__section-header">
+      <h3 class="govuk-accordion__section-heading">
+        <span class="govuk-accordion__section-button" id="accordion-default-heading-2">
+         View a specific application
+        </span>
+      </h3>
+    </div>
 
-$Content
+<div id="accordion-default-content-2" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-2">
 ```
  GET /api/v3/npq-applications/{id}
 ```
@@ -164,13 +176,20 @@ For more detailed information see the specifications for this [view a specific N
   }
 }
 ```
-$EndContent
+   </div>
+  </div>
+</div>
 
-$Heading
-### Accept an application 
-$EndHeading
+<div class="govuk-accordion__section">
+    <div class="govuk-accordion__section-header">
+      <h3 class="govuk-accordion__section-heading">
+        <span class="govuk-accordion__section-button" id="accordion-default-heading-3">
+         Accept an application 
+        </span>
+      </h3>
+    </div>
 
-$Content
+<div id="accordion-default-content-3" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-3">
 Providers should accept applications for those they want to enrol onto a course. Providers must inform applicants of the outcome of their successful NPQ application. 
 
 Reasons to accept applications include (but are not limited to) the participant: 
@@ -230,13 +249,20 @@ For more detailed information see the specifications for this [accept an NPQ app
   }
 }
 ```
-$EndContent
+ </div>
+  </div>
+</div>
 
-$Heading
-### Reject an application
-$EndHeading
+<div class="govuk-accordion__section">
+    <div class="govuk-accordion__section-header">
+      <h3 class="govuk-accordion__section-heading">
+        <span class="govuk-accordion__section-button" id="accordion-default-heading-4">
+         Reject an application
+        </span>
+      </h3>
+    </div>
 
-$Content
+<div id="accordion-default-content-4" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-4">
 Providers should reject applications for those they do not want to enrol onto a course. Providers must inform applicants of the outcome of their unsuccessful NPQ application.
 
 Reasons to reject applications include (but are not limited to) the participant: 
@@ -295,13 +321,20 @@ For more detailed information see the specifications for this [accept an NPQ app
   }
 }
 ```
-$EndContent
+ </div>
+  </div>
+</div>
 
-$Heading
-### Update an application due to a change in circumstance
-$EndHeading
+<div class="govuk-accordion__section">
+    <div class="govuk-accordion__section-header">
+      <h3 class="govuk-accordion__section-heading">
+        <span class="govuk-accordion__section-button" id="accordion-default-heading-5">
+        Update an application due to a change in circumstance
+        </span>
+      </h3>
+    </div>
 
-$Content
+<div id="accordion-default-content-5" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-5">
 There are several reasons why there might be a change in circumstance for an NPQ application, including where a participant:
 
 * made a mistake during their application
@@ -319,9 +352,11 @@ For example, if a participant registers for an NPQ course but then decides to ch
 1. reject that participant’s application
 2. ask the participant to re-register on the NPQ registration service, entering the correct NPQ course details
 3. accept the new application once it is available via the API
-$EndContent
+</div>
+  </div>
+</div>
+</div>
 
-$EndAccordion
 
 ## View and update participant data
 
@@ -333,13 +368,18 @@ Once a provider has accepted an application, they can view and update data to no
 * [changed their course schedule](/api-reference/npq/guidance/#notify-dfe-a-participant-has-changed-their-training-schedule)
 * [an updated course outcome](/api-reference/npq/guidance.html#update-a-participant-s-outcomes)
 
-$Accordion
+<div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default-2">
 
-$Heading
-### View all participant data
-$EndHeading
+<div class="govuk-accordion__section">
+    <div class="govuk-accordion__section-header">
+      <h3 class="govuk-accordion__section-heading">
+        <span class="govuk-accordion__section-button" id="accordion-default-heading-1">
+         View all participant data
+      </span>
+      </h3>
+    </div>
 
-$Content
+<div id="accordion-default-content-1" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-1">
 ```
 GET /api/v3/participants/npq
 ```
@@ -383,13 +423,20 @@ For more detailed information see the specifications for this [view multiple NPQ
   ]
 }
 ```
-$EndContent
+ </div>
+  </div>
+</div>
 
-$Heading
-### View a single participant’s data
-$EndHeading
+<div class="govuk-accordion__section">
+    <div class="govuk-accordion__section-header">
+      <h3 class="govuk-accordion__section-heading">
+        <span class="govuk-accordion__section-button" id="accordion-default-heading-2">
+         View a single participant’s data
+        </span>
+      </h3>
+    </div>
 
-$Content
+<div id="accordion-default-content-2" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-2">
 ```
  GET /api/v3/participants/npq/{id}
 ```
@@ -433,13 +480,20 @@ For more detailed information see the specifications for this [view a single NPQ
   ]
 }
 ```
-$EndContent
+</div>
+  </div>
+</div>
 
-$Heading
-### Notify DfE a participant has taken a break (deferred) from training
-$EndHeading
+<div class="govuk-accordion__section">
+    <div class="govuk-accordion__section-header">
+      <h3 class="govuk-accordion__section-heading">
+        <span class="govuk-accordion__section-button" id="accordion-default-heading-3">
+          Notify DfE a participant has taken a break (deferred) from training
+        </span>
+      </h3>
+    </div>
 
-$Content
+<div id="accordion-default-content-3" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-3">
 A participant can choose to take a break from their NPQ course at any time if they plan to resume training at a later date. Providers must notify DfE of this via the API.
 
 ```
@@ -465,13 +519,20 @@ For more detailed information see the specifications for this [notify DfE that a
   }
 }
 ```
-$EndContent
+</div>
+  </div>
+</div>
 
-$Heading
-### Notify DfE a participant has resumed training
-$EndHeading
+<div class="govuk-accordion__section">
+    <div class="govuk-accordion__section-header">
+      <h3 class="govuk-accordion__section-heading">
+        <span class="govuk-accordion__section-button" id="accordion-default-heading-4">
+         Notify DfE a participant has resumed training
+        </span>
+      </h3>
+    </div>
 
-$Content
+<div id="accordion-default-content-4" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-4">
 A participant can choose to resume their NPQ course at any time if they had previously deferred. Providers must notify DfE of this via the API.
 
 ```
@@ -496,13 +557,20 @@ For more detailed information see the specifications for this [notify DfE that a
   }
 }
 ```
-$EndContent
+</div>
+  </div>
+</div>
 
-$Heading
-###  Notify DfE a participant has withdrawn from training
-$EndHeading
+<div class="govuk-accordion__section">
+    <div class="govuk-accordion__section-header">
+      <h3 class="govuk-accordion__section-heading">
+        <span class="govuk-accordion__section-button" id="accordion-default-heading-5">
+          Notify DfE a participant has withdrawn from training
+       </span>
+      </h3>
+    </div>
 
-$Content
+<div id="accordion-default-content-5" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-5">
 A participant can choose to withdraw from an NPQ course at any time. Providers must notify DfE of this via the API.
 
 ```
@@ -535,13 +603,20 @@ For more detailed information see the specifications for this [notify DfE that a
   }
 }
 ```
-$EndContent
+</div>
+  </div>
+</div>
 
-$Heading
-### Notify DfE a participant has changed their training schedule
-$EndHeading
+<div class="govuk-accordion__section">
+    <div class="govuk-accordion__section-header">
+      <h3 class="govuk-accordion__section-heading">
+        <span class="govuk-accordion__section-button" id="accordion-default-heading-6">
+         Notify DfE a participant has changed their training schedule
+        </span>
+      </h3>
+    </div>
 
-$Content
+<div id="accordion-default-content-6" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-6">
 The API will automatically assign schedules to participants depending on when course applications are accepted by providers. Providers must notify the DfE of any schedule change.
 
 ```
@@ -572,13 +647,20 @@ For more detailed information see the specifications for this [notify that an NP
   }
 }
 ```
-$EndContent
+</div>
+  </div>
+</div>
 
-$Heading
-### View all participant outcomes
-$EndHeading
+<div class="govuk-accordion__section">
+    <div class="govuk-accordion__section-header">
+      <h3 class="govuk-accordion__section-heading">
+        <span class="govuk-accordion__section-button" id="accordion-default-heading-7">
+         View all participant outcomes
+        </span>
+      </h3>
+    </div>
 
-$Content
+<div id="accordion-default-content-7" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-7">
 Participants can either pass or fail assessment at the end of their NPQ course. These outcomes are submitted by providers within `completed` declaration submissions.
 
 **Note**, outcomes are sent to the Database of Qualified Teachers (DQT) who issue certificates to participants who have passed.
@@ -613,13 +695,20 @@ For more detailed information see the specifications for this [view NPQ outcomes
   ]
 }
 ```
-$EndContent
+ </div>
+  </div>
+</div>
 
-$Heading
-### View a specific participant’s outcome
-$EndHeading
+<div class="govuk-accordion__section">
+    <div class="govuk-accordion__section-header">
+      <h3 class="govuk-accordion__section-heading">
+        <span class="govuk-accordion__section-button" id="accordion-default-heading-8">
+         View a specific participant’s outcome
+        </span>
+      </h3>
+    </div>
 
-$Content
+<div id="accordion-default-content-8" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-8">
 A participant can either pass or fail assessment at the end of their NPQ course. Their outcome will be submitted by providers within `completed` declaration submissions.
 
 **Note**, outcomes are sent to the Database of Qualified Teachers (DQT) who issue certificates to participants who have passed.
@@ -654,13 +743,20 @@ For more detailed information see the specifications for this [view NPQ outcome 
   ]
 }
 ```
-$EndContent
+</div>
+  </div>
+</div>
 
-$Heading
-### Update a participant’s outcomes
-$EndHeading
+<div class="govuk-accordion__section">
+    <div class="govuk-accordion__section-header">
+      <h3 class="govuk-accordion__section-heading">
+        <span class="govuk-accordion__section-button" id="accordion-default-heading-9">
+           Update a participant’s outcomes
+        </span>
+      </h3>
+    </div>
 
-$Content
+<div id="accordion-default-content-9" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-9">
 Outcomes may need to be updated if previously submitted data was inaccurate. For example, a provider should update a participant’s outcome if:
 
 * the reported outcome was incorrect
@@ -691,9 +787,10 @@ For more detailed information see the specifications for this [update an NPQ out
   }
 }
 ```
-$EndContent
-
-$EndAccordion
+</div>
+  </div>
+</div>
+</div>
 
 ## Submit, view and void declarations
 
