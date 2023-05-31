@@ -38,6 +38,16 @@ def create_144181!(lead_provider:, delivery_partner:, cohorts:)
   end
 end
 
+def create_123780!(cohorts:)
+  NewSeeds::Scenarios::Schools::School
+  .new(urn: "123780", name: "West Pennard Church of England Primary School")
+  .build
+  .with_an_induction_tutor(full_name: "ambition tutor", email: "ambition-induction-tutor@example.com")
+  .tap do |school|
+    cohorts.each { |cohort| school.chosen_fip_but_not_partnered(cohort:) }
+  end
+end
+
 def create_ect!(school_cohort:, start_date: Time.current, **opts)
   full_name = opts[:full_name] || ::Faker::Name.name
   email = Faker::Internet.email(name: full_name)
@@ -254,7 +264,7 @@ school_116780 = create_116780!(lead_provider: ambition, delivery_partner: hampsh
 school_144181 = create_144181!(lead_provider: ambition, delivery_partner: five_counties, cohorts: [cohort_2021, cohort_2022]).school
 
 # School 123780 with no cohorts or induction tutor setup
-school_123780 = NewSeeds::Scenarios::Schools::School.new(urn: "123780", name: "West Pennard Church of England Primary School").build.school
+school_123780 = create_123780!.school(cohorts: [cohort_2022]).school
 
 # Create ECTs and Mentors
 urn_to_cohort = [[school_116780, cohort_2021], [school_116780, cohort_2022], [school_144181, cohort_2021], [school_144181, cohort_2022]]
@@ -276,36 +286,41 @@ end
 
 # Testing scenarios
 
-school_cohort_2022 = school_116780.school_cohorts.where(cohort: cohort_2022).first
-school_cohort_2023 = school_116780.school_cohorts.where(cohort: cohort_2023).first
+school_116780_cohort_2022 = school_116780.school_cohorts.where(cohort: cohort_2022).first
+school_116780_cohort_2023 = school_116780.school_cohorts.where(cohort: cohort_2023).first
 
 # ect with an induction record in 2022 and another in 2023.
-participant_profile = create_ect!(school_cohort: school_cohort_2023, full_name: "Two Cohorts")
-induction_programme = school_cohort_2022.default_induction_programme
+participant_profile = create_ect!(school_cohort: school_116780_cohort_2023, full_name: "Two Cohorts", start_date: 10.days.ago)
+induction_programme = school_116780_cohort_2022.default_induction_programme
 participant_profile.latest_induction_record.changing!
 Induction::Enrol.new(participant_profile:, induction_programme:, start_date: Time.current).call
 
 # ect with 2 active induction records, named "Two Active IRs" on 2022 at school 116780
-ect = create_ect!(school_cohort: school_cohort_2022, full_name: "Two Active IRs", start_date: nil)
+ect = create_ect!(school_cohort: school_116780_cohort_2022, full_name: "Two Active IRs", start_date: nil)
 ir1 = ect.latest_induction_record
 InductionRecord.create!(start_date: Time.current,
                         mentor_profile_id: school_116780.mentor_profile_ids.first,
                         **ir1.attributes.except("id", "created_at", "updated_at", "start_date", "mentor_profile_id"))
 
 # ect with a gap in their induction records.
-participant_profile = create_ect!(school_cohort: school_cohort_2022, full_name: "IR Gap", start_date: nil)
+participant_profile = create_ect!(school_cohort: school_116780_cohort_2022, full_name: "Gap IRs", start_date: nil)
 induction_programme = participant_profile.latest_induction_record.induction_programme
 participant_profile.latest_induction_record.changing!(2.days.ago)
 Induction::Enrol.new(participant_profile:, induction_programme:, start_date: Time.current).call
 
 # ect with overlapping induction records.
-participant_profile = create_ect!(school_cohort: school_cohort_2022, full_name: "IR Gap")
+participant_profile = create_ect!(school_cohort: school_116780_cohort_2022, full_name: "Overlapping IRs", start_date: 3.days.ago)
 induction_programme = participant_profile.latest_induction_record.induction_programme
 participant_profile.latest_induction_record.changing!
 Induction::Enrol.new(participant_profile:, induction_programme:, start_date: 2.days.ago).call
 
 # transfer within a school
-participant_profile = create_ect!(school_cohort: school_cohort_2023, full_name: "Transfer Within School")
+participant_profile = create_ect!(school_cohort: school_116780_cohort_2022, full_name: "Transfer Within School", start_date: nil)
 participant_profile.latest_induction_record.leaving!
 induction_programme = participant_profile.latest_induction_record.induction_programme
 Induction::Enrol.new(participant_profile:, induction_programme:, start_date: Time.current, school_transfer: true).call
+
+# transfer FIP to FIP with no partnership
+participant_profile = create_ect!(school_cohort: school_116780_cohort_2022, full_name: "FIP To FIPNoProvider", start_date: 15.days.ago)
+induction_programme = school_123780.school_cohorts.where(cohort: cohort_2022).first.default_induction_programme
+Induction::TransferToSchoolsProgramme.call(participant_profile:, induction_programme:, email: "fiptofipnoprovider@example.com")
