@@ -100,14 +100,30 @@ RSpec.describe Api::V3::ParticipantDeclarationSerializer, :with_default_schedule
     describe "ECF" do
       let(:mentor_participant_profile) { create(:mentor_participant_profile) }
       let(:participant_declaration) { create(:ect_participant_declaration) }
+      let(:mentor_user_id) { mentor_participant_profile.participant_identity.user_id }
 
       before do
         participant_declaration.participant_profile.induction_records.first.update!(mentor_profile_id: mentor_participant_profile.id)
       end
 
-      it "returns mentor_id" do
-        attrs = subject.serializable_hash[:data][:attributes]
-        expect(attrs[:mentor_id]).to eq(mentor_participant_profile.participant_identity.user_id)
+      context "when not using mentor_user_id" do
+        it "returns mentor_id" do
+          attrs = subject.serializable_hash[:data][:attributes]
+          expect(attrs[:mentor_id]).to eq(mentor_user_id)
+        end
+      end
+
+      context "when using mentor_user_id with query" do
+        before do
+          def participant_declaration.mentor_user_id
+            "test123"
+          end
+        end
+
+        it "returns mentor_user_id" do
+          attrs = subject.serializable_hash[:data][:attributes]
+          expect(attrs[:mentor_id]).to eq("test123")
+        end
       end
 
       context "if latest induction record scoped to provider missing" do

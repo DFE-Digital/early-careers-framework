@@ -34,6 +34,11 @@ module Api
           :participant_profile,
           :cpd_lead_provider,
         )
+        .joins(participant_profile: :induction_records)
+        .joins(join_latest_induction_records)
+        .joins(left_outer_join_mentor_profiles)
+        .joins(left_outer_join_mentor_participant_identities)
+        .select("participant_declarations.*", "participant_identities_mentor_profiles.user_id AS mentor_user_id")
 
         scope.order(:created_at)
       end
@@ -41,6 +46,42 @@ module Api
     private
 
       delegate :lead_provider, to: :cpd_lead_provider
+
+      def latest_induction_record_order
+        <<~SQL
+          PARTITION BY induction_records.participant_profile_id ORDER BY
+            CASE
+              WHEN induction_records.end_date IS NULL
+                THEN 1
+              ELSE 2
+            END,
+            induction_records.start_date DESC,
+            induction_records.created_at DESC
+        SQL
+      end
+
+      def join_latest_induction_records
+        join = InductionRecord
+         .select("DISTINCT FIRST_VALUE(induction_records.id) OVER (#{latest_induction_record_order}) AS latest_id")
+         .joins(:participant_profile, :schedule, { induction_programme: :partnership })
+         .where(
+           induction_programme: {
+             partnerships: {
+               lead_provider_id: lead_provider.id,
+             },
+           },
+         )
+
+        "JOIN (#{join.to_sql}) AS latest_induction_records ON latest_induction_records.latest_id = induction_records.id"
+      end
+
+      def left_outer_join_mentor_profiles
+        "LEFT OUTER JOIN participant_profiles mentor_profiles ON mentor_profiles.id = induction_records.mentor_profile_id"
+      end
+
+      def left_outer_join_mentor_participant_identities
+        "LEFT OUTER JOIN participant_identities participant_identities_mentor_profiles ON participant_identities_mentor_profiles.id = mentor_profiles.participant_identity_id"
+      end
 
       def declarations_scope
         scope = with_joins(ParticipantDeclaration.for_lead_provider(cpd_lead_provider))
