@@ -20,19 +20,19 @@
 ---
 default: &default
   local_authorities: 10
-  npq_applications_pending: 10
-  npq_application_with_declarations: 10
-  npq_applications_rejected: 10
-  npq_applications_aso: 10
-  npq_applications_ehco: 10
-  npq_applications_specialist: 10
-  npq_applications_leadership: 10
+  npq_applications_pending: 2
+  npq_application_with_declarations: 2
+  npq_applications_rejected: 2
+  npq_applications_aso: 2
+  npq_applications_ehco: 2
+  npq_applications_specialist: 2
+  npq_applications_leadership: 2
   fip_to_fip_transfers_keeping_original_provider: 2
   fip_to_fip_transfers_changing_provider: 2
-  school_invitations: 10
-  npq_applications_eligible_for_transfer: 10
-  npq_applications_edge_cases: 25
-  ects_becoming_mentors: 10
+  school_invitations: 3
+  npq_applications_eligible_for_transfer: 2
+  npq_applications_edge_cases: 2
+  ects_becoming_mentors: 2
 
 development:
   <<: *default

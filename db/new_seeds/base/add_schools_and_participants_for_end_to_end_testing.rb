@@ -282,15 +282,15 @@ school_123780 = create_123780!(cohorts: [cohort_2022]).school
  [school_144181, cohort_2021],
  [school_144181, cohort_2022]].each do |(school, cohort)|
   school_cohort = school.school_cohorts.where(cohort:).first
-  10.times.each { create_ect!(school_cohort:) }
-  10.times.each { create_mentor!(school_cohort:) }
+  2.times.each { create_ect!(school_cohort:) }
+  2.times.each { create_mentor!(school_cohort:) }
 end
 
 # Create ECTs becoming Mentors
 [school_116780].each do |school|
   school_cohort_1 = school.school_cohorts.where(cohort: cohort_2021).first
   school_cohort_2 = school.school_cohorts.where(cohort: cohort_2022).first
-  10.times.each do
+  2.times.each do
     create_ect_becoming_mentor!(ect_school_cohort: school_cohort_1, mentor_school_cohort: school_cohort_2)
   end
 end
