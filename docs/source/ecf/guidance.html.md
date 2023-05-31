@@ -688,8 +688,8 @@ For more detailed information see the specifications for this [view a specific u
     <div class="govuk-accordion__section-header">
       <h3 class="govuk-accordion__section-heading">
         <span class="govuk-accordion__section-button" id="accordion-default-heading-5">
-### Notify DfE a participant has taken a break (deferred) from training
-</span>
+         Notify DfE a participant has taken a break (deferred) from training
+        </span>
       </h3>
     </div>
 
@@ -727,8 +727,8 @@ For more detailed information see the specifications for this [notify DfE that a
     <div class="govuk-accordion__section-header">
       <h3 class="govuk-accordion__section-heading">
         <span class="govuk-accordion__section-button" id="accordion-default-heading-6">
- Notify DfE a participant has resumed training
-</span>
+          Notify DfE a participant has resumed training
+        </span>
       </h3>
     </div>
 
@@ -765,8 +765,8 @@ For more detailed information see the specifications for this [notify DfE that a
     <div class="govuk-accordion__section-header">
       <h3 class="govuk-accordion__section-heading">
         <span class="govuk-accordion__section-button" id="accordion-default-heading-7">
-###  Notify DfE a participant has withdrawn from training
- </span>
+          Notify DfE a participant has withdrawn from training
+        </span>
       </h3>
     </div>
 
@@ -809,8 +809,8 @@ For more detailed information see the specifications for this [notify DfE that a
     <div class="govuk-accordion__section-header">
       <h3 class="govuk-accordion__section-heading">
         <span class="govuk-accordion__section-button" id="accordion-default-heading-8">
- Notify DfE of a participant's training schedule
-</span>
+          Notify DfE of a participant's training schedule
+        </span>
       </h3>
     </div>
 
@@ -863,8 +863,8 @@ For more detailed information see the specifications for this [notify that an EC
     <div class="govuk-accordion__section-header">
       <h3 class="govuk-accordion__section-heading">
         <span class="govuk-accordion__section-button" id="accordion-default-heading-9">
- View data for all participants who have transferred 
- </span>
+          View data for all participants who have transferred 
+        </span>
       </h3>
     </div>
 
@@ -933,7 +933,7 @@ For more detailed information see the specifications for this [view participant 
     <div class="govuk-accordion__section-header">
       <h3 class="govuk-accordion__section-heading">
         <span class="govuk-accordion__section-button" id="accordion-default-heading-10">
- View data for a specific participant who has transferred 
+          View data for a specific participant who has transferred 
       </span>
       </h3>
     </div>
@@ -995,8 +995,8 @@ For more detailed information see the specifications for this [view a participan
     <div class="govuk-accordion__section-header">
       <h3 class="govuk-accordion__section-heading">
         <span class="govuk-accordion__section-button" id="accordion-default-heading-11">
-###  Update a replacement mentor’s schedule
-</span>
+           Update a replacement mentor’s schedule
+        </span>
       </h3>
     </div>
 
@@ -1210,8 +1210,8 @@ For more detailed information see the specifications for this [notify DfE that a
     <div class="govuk-accordion__section-header">
       <h3 class="govuk-accordion__section-heading">
         <span class="govuk-accordion__section-button" id="accordion-default-heading-4">
-### Submit a declaration to notify DfE a participant has completed training
-</span>
+         Submit a declaration to notify DfE a participant has completed training
+      </span>
       </h3>
     </div>
 
@@ -1282,8 +1282,8 @@ For more detailed information see the specifications for this [notify DfE that a
     <div class="govuk-accordion__section-header">
       <h3 class="govuk-accordion__section-heading">
         <span class="govuk-accordion__section-button" id="accordion-default-heading-5">
-### View all previously submitted declarations 
-</span>
+         View all previously submitted declarations 
+        </span>
       </h3>
     </div>
 
@@ -1355,8 +1355,8 @@ For more detailed information see the specifications for this [view all declarat
     <div class="govuk-accordion__section-header">
       <h3 class="govuk-accordion__section-heading">
         <span class="govuk-accordion__section-button" id="accordion-default-heading-6">
-### View a specific previously submitted declaration
-</span>
+         View a specific previously submitted declaration
+      </span>
       </h3>
     </div>
 
@@ -1405,8 +1405,8 @@ For more detailed information see the specifications for this [view specific dec
     <div class="govuk-accordion__section-header">
       <h3 class="govuk-accordion__section-heading">
         <span class="govuk-accordion__section-button" id="accordion-default-heading-7">
-### Void or clawback a declaration
-</span>
+         Void or clawback a declaration
+      </span>
       </h3>
     </div>
 
@@ -1469,8 +1469,8 @@ Providers can view up to date payment cut-off dates, upcoming payment dates, and
     <div class="govuk-accordion__section-header">
       <h3 class="govuk-accordion__section-heading">
         <span class="govuk-accordion__section-button" id="accordion-default-heading-1">
-### View all statement payment dates
- </span>
+          View all statement payment dates
+        </span>
       </h3>
     </div>
 
@@ -1512,7 +1512,7 @@ For more detailed information see the specifications for this [view all statemen
     <div class="govuk-accordion__section-header">
       <h3 class="govuk-accordion__section-heading">
         <span class="govuk-accordion__section-button" id="accordion-default-heading-2">
-View specific statement payment dates
+          View specific statement payment dates
       </span>
       </h3>
     </div>  
