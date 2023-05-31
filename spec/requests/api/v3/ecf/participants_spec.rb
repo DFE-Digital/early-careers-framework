@@ -127,14 +127,15 @@ RSpec.describe "API ECF Participants", :with_default_schedules, type: :request, 
           second_parsed_response = JSON.parse(response.body)
           second_page_ids = second_parsed_response["data"].map { |item| item["id"] }
           expect(second_parsed_response["data"].size).to eql(2)
+
           expect(second_page_ids).not_to include first_page_id
         end
 
         it "returns users in a consistent order" do
           get "/api/v3/participants/ecf"
 
-          expect(parsed_response["data"].first["id"]).to eq User.order(created_at: :asc).first.id
-          expect(parsed_response["data"].last["id"]).to eq User.order(created_at: :asc).last.id
+          expect(parsed_response["data"].first["id"]).to eq ParticipantProfile.order(created_at: :asc).first.user.id
+          expect(parsed_response["data"].last["id"]).to eq ParticipantProfile.order(created_at: :asc).last.user.id
         end
 
         context "when updated_since parameter is supplied" do

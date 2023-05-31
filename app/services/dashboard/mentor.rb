@@ -4,7 +4,7 @@ module Dashboard
   class Mentor
     attr_reader :induction_record, :participant_profile
 
-    def initialize(induction_record:, participant_profile: induction_record&.participant_profile)
+    def initialize(induction_record:, participant_profile:)
       @induction_record = induction_record
       @participant_profile = participant_profile
     end

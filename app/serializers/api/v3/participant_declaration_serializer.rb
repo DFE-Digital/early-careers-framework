@@ -71,7 +71,7 @@ module Api
             },
           ).latest
 
-          latest_induction_record.mentor_profile&.participant_identity&.user_id
+          latest_induction_record&.mentor_profile&.participant_identity&.user_id
         end
       end
 

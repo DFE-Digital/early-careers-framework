@@ -132,7 +132,7 @@ GEM
       descendants_tracker (~> 0.0.1)
     commonmarker (0.23.9)
     concurrent-ruby (1.2.2)
-    connection_pool (2.4.0)
+    connection_pool (2.4.1)
     countries (5.4.0)
       unaccent (~> 0.3)
     crack (0.4.5)
@@ -140,7 +140,7 @@ GEM
     crass (1.0.6)
     cssbundling-rails (1.1.2)
       railties (>= 6.0.0)
-    cypress-on-rails (1.13.1)
+    cypress-on-rails (1.14.0)
       rack
     database_cleaner-active_record (2.1.0)
       activerecord (>= 5.a)
@@ -183,7 +183,7 @@ GEM
       railties (>= 5.0.0)
     faker (2.23.0)
       i18n (>= 1.8.11, < 2)
-    faraday (2.7.4)
+    faraday (2.7.5)
       faraday-net_http (>= 2.0, < 3.1)
       ruby2_keywords (>= 0.0.4)
     faraday-net_http (3.0.2)
@@ -207,7 +207,7 @@ GEM
       retriable (>= 2.0, < 4.a)
       rexml
       webrick
-    google-apis-drive_v3 (0.39.0)
+    google-apis-drive_v3 (0.40.0)
       google-apis-core (>= 0.11.0, < 2.a)
     google-cloud-bigquery (1.43.1)
       concurrent-ruby (~> 1.0)
@@ -313,7 +313,7 @@ GEM
     net-smtp (0.3.3)
       net-protocol
     nio4r (2.5.8)
-    nokogiri (1.15.1)
+    nokogiri (1.15.2)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
     nori (2.6.0)
@@ -505,7 +505,7 @@ GEM
       sidekiq (>= 3.0)
     shoulda-matchers (5.3.0)
       activesupport (>= 5.2.0)
-    sidekiq (6.5.8)
+    sidekiq (6.5.9)
       connection_pool (>= 2.2.5, < 3)
       rack (~> 2.0)
       redis (>= 4.5.0, < 5)
@@ -626,7 +626,7 @@ DEPENDENCIES
   capybara (~> 3.39)
   countries (~> 5.4)
   cssbundling-rails (~> 1.1)
-  cypress-on-rails (~> 1.13)
+  cypress-on-rails (~> 1.14)
   database_cleaner-active_record
   devise (>= 4.8.0)
   discard (~> 1.2, >= 1.2.0)

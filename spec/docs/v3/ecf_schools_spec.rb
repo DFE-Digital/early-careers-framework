@@ -97,13 +97,14 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json", with_feat
       security [bearerAuth: []]
 
       parameter name: :id,
+                description: "The unique ID of the school",
                 in: :path,
                 required: true,
-                example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
-                description: "The ID of the school.",
                 schema: {
-                  type: "string",
-                }
+                  type: :string,
+                  format: :uuid,
+                },
+                example: "28c461ee-ffc0-4e56-96bd-788579a0ed75"
 
       parameter name: "filter[cohort]",
                 schema: {

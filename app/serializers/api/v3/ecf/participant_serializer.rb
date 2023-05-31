@@ -32,7 +32,12 @@ module Api
 
           def withdrawal(profile:, cpd_lead_provider:, latest_induction_record:)
             if latest_induction_record.training_status_withdrawn?
-              latest_participant_profile_state = profile.participant_profile_states.sort_by(&:created_at).reverse!.find { |pps| pps.state == ParticipantProfileState.states[:withdrawn] && pps.cpd_lead_provider_id == cpd_lead_provider.id }
+              # We are doing this in memory to avoid running those as queries on each request
+              latest_participant_profile_state = profile
+                .participant_profile_states
+                .sort_by(&:created_at)
+                .reverse!
+                .find { |pps| pps.state == ParticipantProfileState.states[:withdrawn] && pps.cpd_lead_provider_id == cpd_lead_provider.id }
               if latest_participant_profile_state.present?
                 {
                   reason: latest_participant_profile_state.reason,
@@ -44,7 +49,12 @@ module Api
 
           def deferral(profile:, cpd_lead_provider:, latest_induction_record:)
             if latest_induction_record.training_status_deferred?
-              latest_participant_profile_state = profile.participant_profile_states.sort_by(&:created_at).reverse!.find { |pps| pps.state == ParticipantProfileState.states[:deferred] && pps.cpd_lead_provider_id == cpd_lead_provider.id }
+              # We are doing this in memory to avoid running those as queries on each request
+              latest_participant_profile_state = profile
+                .participant_profile_states
+                .sort_by(&:created_at)
+                .reverse!
+                .find { |pps| pps.state == ParticipantProfileState.states[:deferred] && pps.cpd_lead_provider_id == cpd_lead_provider.id }
               if latest_participant_profile_state.present?
                 {
                   reason: latest_participant_profile_state.reason,
@@ -66,6 +76,20 @@ module Api
               when "withdrawn", "changed"
                 "withdrawn"
               end
+            end
+          end
+
+          def latest_induction_record(user:, profile:, lead_provider:)
+            return unless lead_provider
+
+            if user.respond_to?(:latest_induction_records)
+              profile.induction_records.detect { |induction_record| user.latest_induction_records.include?(induction_record.id) }
+            else
+              profile
+                .induction_records
+                .includes(:preferred_identity, :schedule, :delivery_partner, :participant_profile, mentor_profile: :participant_identity, induction_programme: [partnership: [lead_provider: :cpd_lead_provider], school_cohort: %i[school cohort]])
+                .where(induction_programme: { partnerships: { lead_provider:, challenged_at: nil, challenge_reason: nil } })
+                .latest
             end
           end
         end
@@ -91,7 +115,7 @@ module Api
 
         attribute(:ecf_enrolments) do |object, params|
           ecf_participant_profiles(object).map { |profile|
-            latest_induction_record = profile.induction_records.includes(:preferred_identity, :schedule, :delivery_partner, :participant_profile, mentor_profile: :participant_identity, induction_programme: [partnership: [lead_provider: :cpd_lead_provider], school_cohort: %i[school cohort]]).where(induction_programme: { partnerships: { lead_provider: params[:cpd_lead_provider].lead_provider, challenged_at: nil, challenge_reason: nil } }).latest
+            latest_induction_record = latest_induction_record(user: object, profile:, lead_provider: params[:cpd_lead_provider]&.lead_provider)
 
             next unless params[:cpd_lead_provider] && latest_induction_record.present?
 

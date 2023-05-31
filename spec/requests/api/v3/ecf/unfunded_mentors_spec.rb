@@ -59,10 +59,10 @@ RSpec.describe "API ECF Unfunded Mentors", :with_default_schedules, type: :reque
         let!(:another_unfunded_mentor_profile) { create(:mentor, :eligible_for_funding) }
         let!(:another_unfunded_mentor_induction_record) { create(:induction_record, induction_programme:, mentor_profile: another_unfunded_mentor_profile) }
 
-        before { get "/api/v3/unfunded-mentors/ecf", params: { sort: sort_param } }
-
         context "when ordering by updated_at ascending" do
           let(:sort_param) { "updated_at" }
+
+          before { get "/api/v3/unfunded-mentors/ecf", params: { sort: sort_param } }
 
           it "returns an ordered list of unfunded mentors" do
             expect(parsed_response["data"].size).to eql(2)
@@ -74,7 +74,23 @@ RSpec.describe "API ECF Unfunded Mentors", :with_default_schedules, type: :reque
         context "when ordering by updated_at descending" do
           let(:sort_param) { "-updated_at" }
 
+          before { get "/api/v3/unfunded-mentors/ecf", params: { sort: sort_param } }
+
           it "returns an ordered list of unfunded mentors" do
+            expect(parsed_response["data"].size).to eql(2)
+            expect(parsed_response.dig("data", 0, "attributes", "full_name")).to eql(another_unfunded_mentor_profile.user.full_name)
+            expect(parsed_response.dig("data", 1, "attributes", "full_name")).to eql(unfunded_mentor_profile.user.full_name)
+          end
+        end
+
+        context "when not including sort in the params" do
+          before do
+            another_unfunded_mentor_profile.user.update!(created_at: 10.days.ago)
+
+            get "/api/v3/unfunded-mentors/ecf", params: { sort: "" }
+          end
+
+          it "returns all records ordered by users created_at" do
             expect(parsed_response["data"].size).to eql(2)
             expect(parsed_response.dig("data", 0, "attributes", "full_name")).to eql(another_unfunded_mentor_profile.user.full_name)
             expect(parsed_response.dig("data", 1, "attributes", "full_name")).to eql(unfunded_mentor_profile.user.full_name)

@@ -102,12 +102,37 @@ RSpec.describe Api::V3::ParticipantDeclarationSerializer, :with_default_schedule
       let(:participant_declaration) { create(:ect_participant_declaration) }
 
       before do
-        participant_declaration.participant_profile.update!(mentor_profile_id: mentor_participant_profile.id)
+        participant_declaration.participant_profile.induction_records.first.update!(mentor_profile_id: mentor_participant_profile.id)
       end
 
       it "returns mentor_id" do
         attrs = subject.serializable_hash[:data][:attributes]
         expect(attrs[:mentor_id]).to eq(mentor_participant_profile.participant_identity.user_id)
+      end
+
+      context "if latest induction record scoped to provider missing" do
+        let(:another_induction_programme) { create(:induction_programme) }
+        let(:participant_declaration) { create(:ect_participant_declaration) }
+
+        before do
+          participant_declaration.participant_profile.induction_records.first.update!(induction_programme: another_induction_programme)
+        end
+
+        it "returns no id" do
+          attrs = subject.serializable_hash[:data][:attributes]
+          expect(attrs[:mentor_id]).to be_nil
+        end
+      end
+
+      context "if latest induction record missing" do
+        before do
+          participant_declaration.participant_profile.induction_records.destroy_all
+        end
+
+        it "returns no mentor_id" do
+          attrs = subject.serializable_hash[:data][:attributes]
+          expect(attrs[:mentor_id]).to be_nil
+        end
       end
     end
   end

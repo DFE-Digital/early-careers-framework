@@ -13,6 +13,7 @@ module Api
     rescue_from ActiveRecord::RecordInvalid, with: :invalid_transition
     rescue_from Api::Errors::InvalidTransitionError, with: :invalid_transition
     rescue_from Api::Errors::InvalidDatetimeError, with: :invalid_updated_since_response
+    rescue_from Pagy::VariableError, with: :invalid_pagination_response
 
     def append_info_to_payload(payload)
       super
@@ -53,6 +54,10 @@ module Api
 
     def invalid_updated_since_response(exception)
       render json: { errors: Api::ParamErrorFactory.new(error: I18n.t(:bad_request), params: exception.message).call }, status: :bad_request
+    end
+
+    def invalid_pagination_response(_exception)
+      render json: { errors: Api::ParamErrorFactory.new(error: I18n.t(:bad_request), params: I18n.t(:invalid_page_parameters)).call }, status: :bad_request
     end
   end
 end
