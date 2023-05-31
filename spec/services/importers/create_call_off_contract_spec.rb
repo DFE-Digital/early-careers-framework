@@ -28,7 +28,7 @@ RSpec.describe Importers::CreateCallOffContract do
         end
 
         it "raises an error and does not create records" do
-          expect { importer.call }.to raise_error
+          expect { importer.call }.to raise_error(RuntimeError, /do not seed default call off contracts in production/i)
           expect(CallOffContract.count).to be_zero
           expect(ParticipantBand.count).to be_zero
         end
