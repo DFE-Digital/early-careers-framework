@@ -232,18 +232,18 @@ RSpec.describe SchoolMailer, type: :mailer do
   end
 
   describe "#pilot_ask_sit_to_report_school_training_details" do
-    let(:sit_profile) { create(:induction_coordinator_profile) }
+    let(:sit_user) { create(:user, :induction_coordinator) }
     let(:nomination_link) { "https://ecf-dev.london.cloudapps/nominations/start?token=123" }
 
     let(:pilot_ask_sit_to_report_school_training_details) do
       SchoolMailer.with(
-        sit_profile:,
+        sit_user:,
         nomination_link:,
       ).pilot_ask_sit_to_report_school_training_details.deliver_now
     end
 
     it "renders the right headers" do
-      expect(pilot_ask_sit_to_report_school_training_details.to).to eq([sit_profile.user.email])
+      expect(pilot_ask_sit_to_report_school_training_details.to).to eq([sit_user.email])
       expect(pilot_ask_sit_to_report_school_training_details.from).to eq(["mail@example.com"])
     end
 
@@ -253,11 +253,13 @@ RSpec.describe SchoolMailer, type: :mailer do
   end
 
   describe "#pilot_ask_gias_contact_to_report_school_training_details" do
-    let(:gias_contact_email) { "contact@example.com" }
+    let(:school) { create(:school) }
+    let(:gias_contact_email) { school.primary_contact_email }
     let(:nomination_link) { "https://ecf-dev.london.cloudapps/nominations/start?token=123" }
 
     let(:pilot_ask_gias_contact_to_report_school_training_details) do
       SchoolMailer.with(
+        school:,
         gias_contact_email:,
         nomination_link:,
       ).pilot_ask_gias_contact_to_report_school_training_details.deliver_now
@@ -274,18 +276,18 @@ RSpec.describe SchoolMailer, type: :mailer do
   end
 
   describe "#launch_ask_sit_to_report_school_training_details" do
-    let(:sit_profile) { create(:induction_coordinator_profile) }
+    let(:sit_user) { create(:user, :induction_coordinator) }
     let(:nomination_link) { "https://ecf-dev.london.cloudapps/nominations/start?token=123" }
 
     let(:launch_ask_sit_to_report_school_training_details) do
       SchoolMailer.with(
-        sit_profile:,
+        sit_user:,
         nomination_link:,
       ).launch_ask_sit_to_report_school_training_details.deliver_now
     end
 
     it "renders the right headers" do
-      expect(launch_ask_sit_to_report_school_training_details.to).to eq([sit_profile.user.email])
+      expect(launch_ask_sit_to_report_school_training_details.to).to eq([sit_user.email])
       expect(launch_ask_sit_to_report_school_training_details.from).to eq(["mail@example.com"])
     end
 
@@ -295,11 +297,13 @@ RSpec.describe SchoolMailer, type: :mailer do
   end
 
   describe "#launch_ask_gias_contact_to_report_school_training_details" do
-    let(:gias_contact_email) { "contact@example.com" }
+    let(:school) { create(:school) }
+    let(:gias_contact_email) { school.primary_contact_email }
     let(:nomination_link) { "https://ecf-dev.london.cloudapps/nominations/start?token=123" }
 
     let(:launch_ask_gias_contact_to_report_school_training_details) do
       SchoolMailer.with(
+        school:,
         gias_contact_email:,
         nomination_link:,
       ).launch_ask_gias_contact_to_report_school_training_details.deliver_now
