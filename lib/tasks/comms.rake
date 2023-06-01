@@ -81,5 +81,5 @@ def create_nomination_token(school, user)
     sent_at: Time.zone.now,
     sent_to: user,
     school:,
-  )
+  ).token
 end
