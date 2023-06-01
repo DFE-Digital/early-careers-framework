@@ -10,7 +10,7 @@ module Api
         @params = params
       end
 
-      def participant_declarations
+      def participant_declarations_for_pagination
         scope = ActiveRecordUnion.new(
           declarations_scope,
           previous_declarations_scope,
@@ -28,17 +28,24 @@ module Api
           scope = scope.where(delivery_partner_id: delivery_partner_ids)
         end
 
-        scope = scope.includes(
-          :statement_line_items,
-          :declaration_states,
-          :participant_profile,
-          :cpd_lead_provider,
-        )
-        .joins(participant_profile: :induction_records)
-        .joins(join_latest_induction_records)
-        .joins(left_outer_join_mentor_profiles)
-        .joins(left_outer_join_mentor_participant_identities)
-        .select("participant_declarations.*", "participant_identities_mentor_profiles.user_id AS mentor_user_id")
+        scope
+      end
+
+      def participant_declarations_from(paginated_join)
+        scope = ParticipantDeclaration
+          .select("participant_declarations.*", "participant_identities_mentor_profiles.user_id AS mentor_user_id")
+          .includes(
+            :statement_line_items,
+            :declaration_states,
+            :participant_profile,
+            :cpd_lead_provider,
+          )
+          .joins("INNER JOIN (#{paginated_join.to_sql}) as tmp on tmp.id = participant_declarations.id")
+          .joins(left_outer_join_participant_profiles)
+          .joins(left_outer_join_induction_records)
+          .joins(join_latest_induction_records)
+          .joins(left_outer_join_mentor_profiles)
+          .joins(left_outer_join_mentor_participant_identities)
 
         scope.order(:created_at)
       end
@@ -73,6 +80,14 @@ module Api
          )
 
         "JOIN (#{join.to_sql}) AS latest_induction_records ON latest_induction_records.latest_id = induction_records.id"
+      end
+
+      def left_outer_join_participant_profiles
+        "LEFT OUTER JOIN participant_profiles ON participant_profiles.id = participant_declarations.participant_profile_id"
+      end
+
+      def left_outer_join_induction_records
+        "LEFT OUTER JOIN induction_records ON participant_profiles.id = induction_records.participant_profile_id"
       end
 
       def left_outer_join_mentor_profiles
