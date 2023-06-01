@@ -16,7 +16,7 @@ The focus of the following guidance is on business logic only. Critical details 
 4. Providers accept or reject applications via the API and onboarding participants onto their systems
 5. Providers train participants as per details set out in the contract
 6. Providers submit `started` declarations via the API to notify DfE that participants have started their courses
-7. DfE pay providers output payments for `started` declarations
+7. DfE pays providers output payments for `started` declarations
 8. Providers continue to train participants as per details set out in the contract
 9. Providers submit `retained` declarations via the API to notify DfE participants have continued in training for a given milestone
 10. DfE pays providers output payments for `retained` declarations
@@ -71,23 +71,86 @@ For more detailed information see the specifications for this [view multiple NPQ
       "id": "db3a7848-7308-4879-942a-c4a70ced400a",
       "type": "npq_application",
       "attributes": {
-        "participant_id": "7a8fef46-3c43-42c0-b3d5-1ba5904ba562",
-        "full_name": "Isabelle MacDonald",
+        "course_identifier": "npq-leading-teaching-development",
         "email": "isabelle.macdonald2@some-school.example.com",
         "email_validated": true,
-        "teacher_reference_number": "1234567",
+        "employer_name": null,
+        "employment_role": null,
+        "full_name": "Isabelle MacDonald",
+        "funding_choice": null,
+        "headteacher_status": null,
+        "ineligible_for_funding_reason": null,
+        "participant_id": "53847955-7cfg-41eb-a322-96c50adc742b",
+        "private_childcare_provider_urn": null,
+        "teacher_reference_number": "0743795",
         "teacher_reference_number_validated": true,
-        "school_urn": "106286",
-        "school_ukprn": "10079319",
-        "headteacher_status": "no",
+        "school_urn": "123456",
+        "school_ukprn": "12345678",
+        "status": "pending",
+        "works_in_school": true,
+        "created_at": "2022-07-06T10:47:24Z",
+        "updated_at": "2022-11-24T17:09:37Z",
+        "cohort": "2022",
         "eligible_for_funding": true,
-        "funding_choice": "trust",
-        "course_identifier": "npq-leading-teaching",
-        "lead_mentor": null,
-        "itt_provider": "University of Southampton"
+        "targeted_delivery_funding_eligibility": false,
+        "teacher_catchment": true,
+        "teacher_catchment_iso_country_code": "GBR",
+        "teacher_catchment_country": "United Kingdom of Great Britain and Northern Ireland",
+        "itt_provider": null,
+        "lead_mentor": false
       }
     }
   ]
+}
+```
+
+### View a specific application
+
+```
+ GET /api/v3/npq-applications/{id}
+```
+
+An example response body is listed below.
+
+For more detailed information see the specifications for this [view a specific NPQ application endpoint](/api-reference/reference-v3.html#api-v3-npq-applications-id-get).
+
+#### Example response body:
+
+```
+{
+  “data”: {
+    “id”: “db3a7848-7308-4879-942a-c4a70ced400a”,
+    “type”: “npq_application”,
+    “attributes”: {
+      “participant_id”: “7a8fef46-3c43-42c0-b3d5-1ba5904ba562",
+      “full_name”: “Isabelle MacDonald”,
+      “email”: “isabelle.macdonald2@some-school.example.com”,
+      “email_validated”: true,
+      “teacher_reference_number”: “1234567”,
+      “teacher_reference_number_validated”: true,
+      “works_in_school”: true,
+      “employer_name”: “Some Company Ltd”,
+      “employment_role”: “Director”,
+      “school_urn”: “106286”,
+      “private_childcare_provider_urn”: “EY944860”,
+      “school_ukprn”: “10079319”,
+      “headteacher_status”: “no”,
+      “eligible_for_funding”: true,
+      “funding_choice”: “trust”,
+      “course_identifier”: “npq-leading-teaching”,
+      “status”: “pending”,
+      “created_at”: “2021-05-31T02:21:32.000Z”,
+      “updated_at”: “2021-05-31T02:22:32.000Z”,
+      “ineligible_for_funding_reason”: “establishment-ineligible”,
+      “cohort”: “2022",
+      “targeted_delivery_funding_eligibility”: true,
+      “teacher_catchment”: true,
+      “teacher_catchment_country”: “France”,
+      “teacher_catchment_iso_country_code”: “FRA”,
+      “lead_mentor”: true,
+      “itt_provider”: “University of Southampton”
+    }
+  }
 }
 ```
 
