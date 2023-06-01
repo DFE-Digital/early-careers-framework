@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_06_01_102239) do
+ActiveRecord::Schema.define(version: 2023_06_01_102942) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -1436,6 +1436,7 @@ ActiveRecord::Schema.define(version: 2023_06_01_102239) do
   add_index "training_record_states", ["fip_funding_eligibility_state"], name: "fip_funding_eligibility_state_index"
   add_index "training_record_states", ["participant_profile_id", "appropriate_body_id"], name: "participant_profile_appropriate_body_state_index"
   add_index "training_record_states", ["participant_profile_id", "delivery_partner_id"], name: "participant_profile_delivery_partner_state_index"
+  add_index "training_record_states", ["participant_profile_id", "induction_record_id", "school_id", "lead_provider_id", "delivery_partner_id", "appropriate_body_id"], name: "unique_training_record_states", unique: true
   add_index "training_record_states", ["participant_profile_id", "induction_record_id"], name: "participant_profile_induction_record_state_index"
   add_index "training_record_states", ["participant_profile_id", "lead_provider_id"], name: "participant_profile_lead_provider_state_index"
   add_index "training_record_states", ["participant_profile_id", "school_id"], name: "participant_profile_school_state_index"
