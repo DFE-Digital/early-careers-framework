@@ -557,19 +557,19 @@ class SchoolMailer < ApplicationMailer
   # Pilot one-off mailers
 
   def pilot_ask_sit_to_report_school_training_details
-    sit_profile = params[:sit_profile]
+    sit_user = params[:sit_user]
     nomination_link = params[:nomination_link]
 
     template_mail(
       PILOT_ASK_SIT_TO_REPORT_SCHOOL_TRAINING_DETAILS_TEMPLATE,
-      to: sit_profile.user.email,
+      to: sit_user.email,
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
-        sit_name: sit_profile.user.full_name,
+        name: sit_user.full_name,
         nomination_link:,
       },
-    ).tag(:pilot_ask_sit_to_report_school_training_details).associate_with(sit_profile)
+    ).tag(:pilot_ask_sit_to_report_school_training_details).associate_with(sit_user)
   end
 
   def pilot_ask_gias_contact_to_report_school_training_details
@@ -589,19 +589,19 @@ class SchoolMailer < ApplicationMailer
   end
 
   def launch_ask_sit_to_report_school_training_details
-    sit_profile = params[:sit_profile]
+    sit_user = params[:sit_user]
     nomination_link = params[:nomination_link]
 
     template_mail(
       LAUNCH_ASK_SIT_TO_REPORT_SCHOOL_TRAINING_DETAILS_TEMPLATE,
-      to: sit_profile.user.email,
+      to: sit_user.email,
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
-        sit_name: sit_profile.user.full_name,
+        name: sit_user.full_name,
         nomination_link:,
       },
-    ).tag(:launch_ask_sit_to_report_school_training_details).associate_with(sit_profile)
+    ).tag(:launch_ask_sit_to_report_school_training_details).associate_with(sit_user)
   end
 
   def launch_ask_gias_contact_to_report_school_training_details
