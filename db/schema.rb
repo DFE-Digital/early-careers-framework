@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_05_19_123030) do
+ActiveRecord::Schema.define(version: 2023_06_01_102239) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -1261,6 +1261,14 @@ ActiveRecord::Schema.define(version: 2023_05_19_123030) do
               count(*) AS total
              FROM induction_records
             GROUP BY induction_records.mentor_profile_id, induction_records.participant_profile_id
+          ), latest_email_status_per_participant AS (
+           SELECT DISTINCT ON (ea.object_id) ea.object_id,
+              e.updated_at,
+              e.status
+             FROM (emails e
+               JOIN email_associations ea ON ((e.id = ea.email_id)))
+            WHERE (('request_for_details'::text = ANY ((e.tags)::text[])) AND ((ea.object_type)::text = 'ParticipantProfile'::text))
+            ORDER BY ea.object_id, e.created_at DESC
           ), individual_training_record_states AS (
            SELECT participant_profiles.id AS participant_profile_id,
               participant_profiles.type AS participant_profile_type,
@@ -1273,14 +1281,14 @@ ActiveRecord::Schema.define(version: 2023_05_19_123030) do
               partnerships.delivery_partner_id,
               induction_records.appropriate_body_id,
               induction_programmes.training_programme,
-              GREATEST(induction_records.start_date, participant_profiles.updated_at, ecf_participant_eligibilities.updated_at, ecf_participant_validation_data.updated_at, teacher_profiles.updated_at, emails.updated_at) AS changed_at,
+              GREATEST(induction_records.start_date, participant_profiles.updated_at, ecf_participant_eligibilities.updated_at, ecf_participant_validation_data.updated_at, teacher_profiles.updated_at, latest_email_status_per_participant.updated_at) AS changed_at,
                   CASE
                       WHEN (((ecf_participant_eligibilities.status)::text = 'manual_check'::text) AND ((ecf_participant_eligibilities.reason)::text = 'different_trn'::text)) THEN 'different_trn'::text
                       WHEN ((teacher_profiles.trn IS NULL) AND (ecf_participant_validation_data.* IS NULL)) THEN
                       CASE
-                          WHEN ((emails.status)::text = 'delivered'::text) THEN 'request_for_details_delivered'::text
-                          WHEN ((emails.status)::text = ANY ((ARRAY['permanent-failure'::character varying, 'technical-failure'::character varying, 'temporary-failure'::character varying])::text[])) THEN 'request_for_details_failed'::text
-                          WHEN ((emails.status)::text = 'submitted'::text) THEN 'request_for_details_submitted'::text
+                          WHEN ((latest_email_status_per_participant.status)::text = 'delivered'::text) THEN 'request_for_details_delivered'::text
+                          WHEN ((latest_email_status_per_participant.status)::text = ANY ((ARRAY['permanent-failure'::character varying, 'technical-failure'::character varying, 'temporary-failure'::character varying])::text[])) THEN 'request_for_details_failed'::text
+                          WHEN ((latest_email_status_per_participant.status)::text = 'submitted'::text) THEN 'request_for_details_submitted'::text
                           ELSE 'validation_not_started'::text
                       END
                       WHEN (ecf_participant_validation_data.api_failure = true) THEN 'internal_error'::text
@@ -1373,7 +1381,7 @@ ActiveRecord::Schema.define(version: 2023_05_19_123030) do
                       END
                       ELSE 'not_registered_for_training'::text
                   END AS training_state
-             FROM ((((((((((participant_profiles
+             FROM (((((((((participant_profiles
                LEFT JOIN induction_records ON ((induction_records.participant_profile_id = participant_profiles.id)))
                LEFT JOIN induction_programmes ON ((induction_programmes.id = induction_records.induction_programme_id)))
                LEFT JOIN partnerships ON ((partnerships.id = induction_programmes.partnership_id)))
@@ -1381,8 +1389,7 @@ ActiveRecord::Schema.define(version: 2023_05_19_123030) do
                LEFT JOIN ecf_participant_validation_data ON ((ecf_participant_validation_data.participant_profile_id = participant_profiles.id)))
                LEFT JOIN ecf_participant_eligibilities ON ((ecf_participant_eligibilities.participant_profile_id = participant_profiles.id)))
                LEFT JOIN teacher_profiles ON ((teacher_profiles.id = participant_profiles.teacher_profile_id)))
-               LEFT JOIN email_associations ON (((email_associations.object_id = participant_profiles.id) AND ((email_associations.object_type)::text = 'ParticipantProfile'::text))))
-               LEFT JOIN emails ON (((emails.id = email_associations.email_id) AND ('request_for_details'::text = ANY ((emails.tags)::text[])))))
+               LEFT JOIN latest_email_status_per_participant ON ((participant_profiles.id = latest_email_status_per_participant.object_id)))
                LEFT JOIN mentee_counts ON ((mentee_counts.mentor_profile_id = participant_profiles.id)))
           )
    SELECT individual_training_record_states.participant_profile_id,
