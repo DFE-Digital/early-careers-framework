@@ -11,14 +11,14 @@ The focus of the following guidance is on business logic only. Critical details 
 
 ## Overview of API requests
 
-1. For a given cohort, providers confirm partnerships with schools via the API, including confirmation who their delivery partners will be. **Note**, this only applies to providers integrated with API v3 onwards 
+1. For a given cohort, providers confirm partnerships with schools via the API, including confirmation who their delivery partners will be. **Note**, this only applies to providers integrated with API v3 onwards
 2. School induction tutors register participants for ECF-based training via the DfE online service
-3. Providers view participant data via the API, using it to onboard participants to their learning management systems. Note, the API will not present any data for participants whose details have not yet been validated by DfE 
+3. Providers view participant data via the API, using it to onboard participants to their learning management systems. Note, the API will not present any data for participants whose details have not yet been validated by DfE
 4. If necessary, providers will update the participant's training schedule via the API
 5. Providers will train participants as per details set out in their contract
-6. Providers will submit a `started` declaration via the API to notify DfE that training has begun 
+6. Providers will submit a `started` declaration via the API to notify DfE that training has begun
 7. DfE will pay providers output payments for `started` declarations
-8. Providers will check via the API to see whether any participants have transferred to or from schools they are in partnership with. **Note**, this only applies to providers integrated with API v3 onwards 
+8. Providers will check via the API to see whether any participants have transferred to or from schools they are in partnership with. **Note**, this only applies to providers integrated with API v3 onwards
 9. Providers continue to train participants as per details set out in the contract
 10. Providers will submit `retained` declarations via the API to notify DfE participants have continued in training for a given milestone
 11. DfE will pay providers output payments for `retained` declarations
@@ -27,7 +27,7 @@ The focus of the following guidance is on business logic only. Critical details 
 14. DfE will pay providers output payments for `completed` declarations
 15. Providers view financial statements via the API
 
-Changes can happen during training; some participants may not complete their training within the standard schedule, or at all. Providers must update relevant data using the API. 
+Changes can happen during training; some participants may not complete their training within the standard schedule, or at all. Providers must update relevant data using the API.
 
 ## Confirm, view and update partnerships
 
@@ -41,17 +41,17 @@ Providers must confirm to the DfE that they have agreed to enter into new partne
 * Not all participants at a given school will be registered to receive training through the (default) partnership. Therefore providers may not receive data for all participants at schools they have partnered with. **For example**, a participant begins training at school 1 which is partnered with provider A and delivery partner B. If the participant transfers to school 2 which is partnered with provider Y and delivery partner Z, the participant can choose to remain with their existing training providers (A and B). In this case, provider Y will not receive data for this participant
 * Providers may receive data for participants at schools which they do not have a partnership with. **For example**, a participant begins training at school 1 which is partnered with provider Y and delivery partner Z. They transfer to school 2 and choose to remain with their existing training providers (Y and Z). Therefore provider Y will continue to receive data for the participant, despite not being partnered with school 2
 
-### Find schools delivering ECF-based training in a given cohort 
+### Find schools delivering ECF-based training in a given cohort
 
-View details for schools providing ECF-based training in a given cohort. Check details on the type of training programme schools have chosen to deliver, and whether they have confirmed partnerships in place. 
+View details for schools providing ECF-based training in a given cohort. Check details on the type of training programme schools have chosen to deliver, and whether they have confirmed partnerships in place.
 
 ```
-GET /api/v3/partnerships/ecf?filter[cohort]={year}`
+GET /api/v3/schools/ecf?filter[cohort]={year}
 ```
 
 <div class="govuk-inset-text"> The `cohort` filter must be included as a parameter. The API will reject requests which do not include the `cohort` filter. </div>
 
-Providers can also filter results by school URN. For example: `GET /api/v3/partnerships/ecf?filter[cohort]=2021&filter[urn]=123456`
+Providers can also filter results by school URN. For example: `GET /api/v3/schools/ecf?filter[cohort]=2021&filter[urn]=123456`
 
 An example response body is listed below. Successful requests will return a response body with school details.
 
@@ -76,6 +76,7 @@ For more detailed information see the specifications for this [view school detai
         "cohort": 2021,
         "in_partnership": "false",
         "induction_programme_choice": "not_yet_known",
+        "created_at": "2021-05-31T02:22:32.000Z",
         "updated_at": "2021-05-31T02:22:32.000Z"
       }
     }
@@ -85,7 +86,7 @@ For more detailed information see the specifications for this [view school detai
 
 ### View details for specific a school in a given cohort
 
-Providers can view details for a specific school providing ECF-based training in a given cohort. They can check details on the type of training programme the school has chosen to deliver, and whether they have a confirmed partnership in place. 
+Providers can view details for a specific school providing ECF-based training in a given cohort. They can check details on the type of training programme the school has chosen to deliver, and whether they have a confirmed partnership in place.
 
 
 ```
@@ -112,6 +113,7 @@ For more detailed information see the specifications for this [view a school’s
         "cohort": 2021,
         "in_partnership": "false",
         "induction_programme_choice": "not_yet_known",
+        "created_at": "2021-05-31T02:22:32.000Z",
         "updated_at": "2021-05-31T02:22:32.000Z"
       }
     }
@@ -119,7 +121,7 @@ For more detailed information see the specifications for this [view a school’s
 }
 ```
 
-### Find delivery partner IDs 
+### Find delivery partner IDs
 
 Delivery partners are assigned a unique ID by DfE. This `delivery_partner_id` is required when [confirming partnerships with a school and delivery partner](/api-reference/ecf/guidance.html#confirm-a-partnership-with-a-school-and-delivery-partner).
 
@@ -129,7 +131,7 @@ GET /api/v3/delivery-partners
 
 Note, providers can also filter results by adding a `cohort` filter to the parameter. For example: `GET /api/v3/delivery-partners?filter[cohort]=2022`
 
-An example response body is listed below. Successful requests will return a response body including delivery partner details.  
+An example response body is listed below. Successful requests will return a response body including delivery partner details.
 
 For more detailed information see the specifications for this [find delivery parter IDs endpoint](/api-reference/reference-v3.html#api-v3-delivery-partners-get).
 
@@ -147,6 +149,7 @@ For more detailed information see the specifications for this [find delivery par
           "2021",
           "2022"
         ],
+        "created_at": "2021-05-31T02:22:32.000Z",
         "updated_at": "2021-05-31T02:22:32.000Z"
       }
     }
@@ -156,13 +159,13 @@ For more detailed information see the specifications for this [find delivery par
 
 ### View details for a specific delivery partner
 
-View details for a specific delivery partner to check whether they have been registered to deliver training for a given cohort.  
+View details for a specific delivery partner to check whether they have been registered to deliver training for a given cohort.
 
 ```
 GET /api/v3/delivery-partners/{id}
 ```
 
-An example response body is listed below. Successful requests will return a response body with the delivery partner details. 
+An example response body is listed below. Successful requests will return a response body with the delivery partner details.
 
 For more detailed information see the specifications for this [find a delivery parter ID endpoint](/api-reference/reference-v3.html#api-v3-delivery-partners-id-get).
 
@@ -180,6 +183,7 @@ For more detailed information see the specifications for this [find a delivery p
           "2021",
           "2022"
         ],
+        "created_at": "2021-05-31T02:22:32.000Z",
         "updated_at": "2021-05-31T02:22:32.000Z"
       }
     }
@@ -193,11 +197,11 @@ For more detailed information see the specifications for this [find a delivery p
  POST /api/v3/partnerships/ecf
 ```
 
-An example request body is listed below. Request bodies must include all necessary data attributes, namely `cohort`, `school_id` and `delivery_partner_id`. 
+An example request body is listed below. Request bodies must include all necessary data attributes, namely `cohort`, `school_id` and `delivery_partner_id`.
 
 An example response body is listed below. Successful requests will return a response body with updates included.
 
-#### Providers should note: 
+#### Providers should note:
 
 * The API assumes schools intend to work with a given provider for consecutive cohorts. School induction tutors will be prompted to confirm existing partnerships with providers **will continue** into the upcoming cohort. Providers do not need take any action to continue existing partnerships with schools from one cohort to the next
 * In order for new providers to confirm partnerships with schools for an upcoming cohorts, school induction tutors must first notify DfE that their schools **will not continue** their former partnerships with existing providers for the upcoming cohort. Until induction tutors have done this, any new partnerships with new providers will be rejected by the API
@@ -253,7 +257,7 @@ GET /api/v3/partnerships/ecf
 
 Note, providers can also filter results by adding a `cohort` filter to the parameter. For example: `GET /api/v3/partnerships/ecf?filter[cohort]=2022`
 
-An example response body is listed below. 
+An example response body is listed below.
 
 For more detailed information see the specifications for this [view all ECF partnerships endpoint.](api-reference/reference-v3.html#api-v3-partnerships-ecf-get)
 
@@ -286,13 +290,13 @@ For more detailed information see the specifications for this [view all ECF part
 
 ### View details for a specific existing partnership
 
-View details for an existing partnership to check information is correct and whether the status has been challenged by the school. [Find out more about partnership statuses.](/api-reference/ecf/definitions-and-states/#partnership-states) 
+View details for an existing partnership to check information is correct and whether the status has been challenged by the school. [Find out more about partnership statuses.](/api-reference/ecf/definitions-and-states/#partnership-states)
 
 ```
 GET /api/v3/partnerships/ecf/{id}
 ```
 
-An example response body is listed below. 
+An example response body is listed below.
 
 For more detailed information see the specifications for this [view a single ECF partnership endpoint.](/api-reference/reference-v3.html#api-v3-partnerships-ecf-id-get)
 
@@ -331,13 +335,13 @@ Update an existing partnership with new delivery partner details for a given coh
  PUT /api/v3/partnerships/ecf/{id}
 ```
 
-An example request body is listed below. Request bodies must include a new value for the `delivery_partner_id` attribute. If unsure, providers can [find delivery partner IDs](/api-reference/ecf/guidance/#find-delivery-partner-ids). 
+An example request body is listed below. Request bodies must include a new value for the `delivery_partner_id` attribute. If unsure, providers can [find delivery partner IDs](/api-reference/ecf/guidance/#find-delivery-partner-ids).
 
 <div class="govuk-inset-text">Note, providers can only update partnerships where the `status` attribute is `active`. Any requests to update `challenged` partnerships will return an error. </div>
 
 [Find out more about partnership statuses.](/api-reference/ecf/definitions-and-states/#partnership-states)
 
-Successful requests will return a response body with updates included. 
+Successful requests will return a response body with updates included.
 
 For more detailed information see the specifications for this [update an ECF partnership endpoint](/api-reference/reference-v3.html#api-v3-partnerships-ecf-id-put).
 
@@ -359,7 +363,7 @@ For more detailed information see the specifications for this [update an ECF par
 Providers can view data to find out whether participants:
 
 * have valid email addresses
-* have valid teacher reference numbers (TRN) 
+* have valid teacher reference numbers (TRN)
 * have achieved qualified teacher status (QTS)
 * are eligible for funding
 * have [transferred to or from a school you are partnered with](/api-reference/ecf/guidance/#view-data-for-all-participants-who-have-transferred)
@@ -367,11 +371,11 @@ Providers can view data to find out whether participants:
 
 Note, while participants can enter different email addresses when registering for each training course they apply for, providers will only see the email address associated with a given course registration. For example, a participant may complete their ECF-based training with one associated email address, then register for an NPQ with a different email address, and go on to be an ECT mentor with a third email address. The DfE will share the relevant email address with the relevant course provider.
 
-Providers can then update data to notify DfE that participants have: 
+Providers can then update data to notify DfE that participants have:
 
-* [deferred training](/api-reference/ecf/guidance/#notify-dfe-a-participant-has-taken-a-break-deferred-from-training ) 
-* [resumed training](/api-reference/ecf/guidance/#notify-dfe-a-participant-has-resumed-training)  
-* [withdrawn from training](/api-reference/ecf/guidance/#notify-dfe-a-participant-has-withdrawn-from-training) 
+* [deferred training](/api-reference/ecf/guidance/#notify-dfe-a-participant-has-taken-a-break-deferred-from-training )
+* [resumed training](/api-reference/ecf/guidance/#notify-dfe-a-participant-has-resumed-training)
+* [withdrawn from training](/api-reference/ecf/guidance/#notify-dfe-a-participant-has-withdrawn-from-training)
 * [changed their training schedule](/api-reference/ecf/guidance.html#notify-dfe-of-a-participant-39-s-training-schedule)
 
 ### View all participant data
@@ -382,7 +386,7 @@ Providers can then update data to notify DfE that participants have:
 
 Note, providers can also filter results by adding `cohort` and `updated_since` filters to the parameter. For example: `GET /api/v{n}/participants/ecf?filter[cohort]=2022&filter[updated_since]=2020-11-13T11:21:55Z`
 
-An example response body is listed below. 
+An example response body is listed below.
 
 For more detailed information see the specifications for this [view multiple ECF participants endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-get).
 
@@ -431,7 +435,7 @@ For more detailed information see the specifications for this [view multiple ECF
  GET /api/v{n}/participants/ecf/{id}
 ```
 
-An example response body is listed below. 
+An example response body is listed below.
 
 For more detailed information see the specifications for this [view a single ECF participant endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-id-get).
 
@@ -472,13 +476,13 @@ For more detailed information see the specifications for this [view a single ECF
 }
 ```
 
-### View all ‘unfunded mentor’ details 
+### View all ‘unfunded mentor’ details
 
 <div class="govuk-inset-text">The following endpoint is only available for systems integrated with API v3 onwards. It will not return data for API v1 or v2.</div>
 
-A single mentor can be assigned to multiple ECTs, including ECTs who are training with other providers. Mentors may need access to the learning platforms used by their ECTs. 
+A single mentor can be assigned to multiple ECTs, including ECTs who are training with other providers. Mentors may need access to the learning platforms used by their ECTs.
 
-‘Unfunded mentors’ are mentors who are registered with other providers. 
+‘Unfunded mentors’ are mentors who are registered with other providers.
 
 Providers can view the names and email addresses of ‘unfunded mentors’ assigned to ECTs, and give these mentors appropriate access to learning platforms.
 
@@ -486,7 +490,7 @@ Providers can view the names and email addresses of ‘unfunded mentors’ assig
  GET /api/v3/unfunded-mentors/ecf
 ```
 
-An example response body is listed below. Successful requests will return a response body with mentor details. 
+An example response body is listed below. Successful requests will return a response body with mentor details.
 
 For more detailed information see the specifications for this [view all unfunded mentors endpoint](/api-reference/reference-v3.html#api-v3-unfunded-mentors-ecf-get).
 
@@ -516,7 +520,7 @@ For more detailed information see the specifications for this [view all unfunded
 
 If providers do **not** see any details for mentors when using the endpoint `GET /api/v3/participants/ecf` they can check to see whether they are an ‘unfunded mentor’.
 
-‘Unfunded mentors’ are mentors who are registered with other providers. 
+‘Unfunded mentors’ are mentors who are registered with other providers.
 
 Providers can view the names and email addresses of ‘unfunded mentors’ assigned to ECTs, and give these mentors appropriate access to learning platforms.
 
@@ -524,7 +528,7 @@ Providers can view the names and email addresses of ‘unfunded mentors’ assig
  GET /api/v3/unfunded-mentors/ecf/{id}
 ```
 
-An example response body is listed below. Successful requests will return a response body with mentor details.  
+An example response body is listed below. Successful requests will return a response body with mentor details.
 
 For more detailed information see the specifications for this [view a specific unfunded mentor endpoint](/api-reference/reference-v3.html#api-v3-unfunded-mentors-ecf-id-get).
 
@@ -554,7 +558,7 @@ A participant can choose to take a break from ECF-based training at any time if 
  PUT /api/v{n}/participants/ecf/{id}/defer
 ```
 
-An example request body is listed below. 
+An example request body is listed below.
 
 Successful requests will return a response body including updates to the `training_status` attribute.
 
@@ -582,7 +586,7 @@ A participant can choose to resume their ECF-based training at any time if they 
  PUT /api/v{n}/participants/ecf/{id}/resume
 ```
 
-An example request body is listed below. 
+An example request body is listed below.
 
 Successful requests will return a response body including updates to the `training_status` attribute.
 
@@ -609,7 +613,7 @@ A participant can choose to withdraw from ECF-based training at any time. Provid
  PUT /api/v{n}/participants/ecf/{id}/withdraw
 ```
 
-An example request body is listed below. 
+An example request body is listed below.
 
 Successful requests will return a response body including updates to the `training_status` attribute.
 
@@ -638,24 +642,24 @@ For more detailed information see the specifications for this [notify DfE that a
 
 <div class="govuk-inset-text">All participants will be registered by default to a standard schedule starting in September. Providers must notify the DfE of any other schedule.</div>
 
-Participants can choose to follow standard or non-standard training schedules. 
+Participants can choose to follow standard or non-standard training schedules.
 
 ```
  PUT /api/v3/participants/ecf/{id}/change-schedule
 ```
 
-An example request body is listed below. 
+An example request body is listed below.
 
 Successful requests will return a response body including updates to the `schedule_identifier` attribute.
 
-#### Providers should note: 
+#### Providers should note:
 
-Milestone validation applies. The API will reject a schedule change if any previously submitted `eligible`, `payable` or `paid` declarations have a `declaration_date` which does not align with the new schedule’s milestone dates. 
+Milestone validation applies. The API will reject a schedule change if any previously submitted `eligible`, `payable` or `paid` declarations have a `declaration_date` which does not align with the new schedule’s milestone dates.
 
 Where this occurs, providers should:
 
 1. void the existing declarations (where declaration_date does not align with the new schedule)
-2. change the participant’s training schedule 
+2. change the participant’s training schedule
 3. resubmit backdated declarations (where declaration_date aligns with the new schedule)
 
 For replacement mentors, view [guidance on updating a replacement mentor’s schedule.](/api-reference/ecf/guidance.html#update-a-replacement-mentor-s-schedule)
@@ -677,20 +681,20 @@ For more detailed information see the specifications for this [notify that an EC
 }
 ```
 
-### View data for all participants who have transferred 
+### View data for all participants who have transferred
 
 <div class="govuk-inset-text">This endpoint is only available for systems integrated with API v3 onwards. They will not return data for API v1 or v2.</div>
 
-As soon as school induction tutors have entered the information to the DfE service, providers can view data for participants who have transferred: 
+As soon as school induction tutors have entered the information to the DfE service, providers can view data for participants who have transferred:
 
-* **from** schools they are in partnership with 
-* **to** schools they are in partnership with 
+* **from** schools they are in partnership with
+* **to** schools they are in partnership with
 
 ```
 GET /api/v3/participants/ecf/transfers
 ```
 
-An example response body is listed below. Successful requests will return response bodies which can include: 
+An example response body is listed below. Successful requests will return response bodies which can include:
 
 * the provider name and school URN the participants are transferring to or from
 * the `transfer_type`, which describes whether the participant is transferring to a `new_school` with the same provider, to a new school with a `new_provider`, or if this is yet `unknown`
@@ -736,14 +740,14 @@ For more detailed information see the specifications for this [view participant 
 }
 ```
 
-### View data for a specific participant who has transferred 
+### View data for a specific participant who has transferred
 
 <div class="govuk-inset-text">This endpoint is only available for systems integrated with API v3 onwards. They will not return data for API v1 or v2.</div>
 
-Providers can view data for a specific participant who has transferred: 
+Providers can view data for a specific participant who has transferred:
 
-* **from** a school they are in partnership with 
-* **to** a school they are in partnership with 
+* **from** a school they are in partnership with
+* **to** a school they are in partnership with
 
 ```
 GET /api/v3/participants/ecf/{id}/transfers
@@ -788,14 +792,14 @@ For more detailed information see the specifications for this [view a participan
 ```
 
 ###  Update a replacement mentor’s schedule
- 
-A new mentor can be assigned to an ECT part way through training, replacing the ECT’s original mentor. 
+
+A new mentor can be assigned to an ECT part way through training, replacing the ECT’s original mentor.
 
 [Providers must notify the DfE of replacement mentors by updating their training schedule.](/api-reference/ecf/guidance.html#notify-dfe-of-a-participant-39-s-training-schedule)
 
 Note, if a replacement mentor is already mentoring another ECT and they replace a mentor for a second ECT, the first ECT takes precedence. In this instance, the provider should not change the mentor’s schedule.
 
-Providers must include a `schedule_identifier` reflecting when the replacement mentor starts. 
+Providers must include a `schedule_identifier` reflecting when the replacement mentor starts.
 
 * `ecf-replacement-september`
 * `ecf-replacement-january`
@@ -807,24 +811,24 @@ Previously for API v1 and v2, a replacement mentor could start mentoring an ECT 
 
 ## Submit, view and void declarations
 
-Providers must submit declarations in line with ECF contractual [schedules and milestone dates](/api-reference/ecf/schedules-and-milestone-dates). 
+Providers must submit declarations in line with ECF contractual [schedules and milestone dates](/api-reference/ecf/schedules-and-milestone-dates).
 
-These declarations will trigger payment from DfE to providers. 
+These declarations will trigger payment from DfE to providers.
 
 When providers submit declarations, API response bodies will include data about which financial statement the given declaration applies to. Providers can then [view financial statement payment dates](/api-reference/ecf/guidance/#view-financial-statement-payment-dates) to check when the invoicing period, and expected payment date, will be for the given declaration.
 
-### Test the ability to submit declarations in sandbox ahead of time 
+### Test the ability to submit declarations in sandbox ahead of time
 
 `X-With-Server-Date` is a custom JSON header supported in the sandbox environment. It lets providers test their integrations and ensure they are able to submit declarations for future milestone dates.
 
-The `X-With-Server-Date` header lets providers simulate future dates, and therefore allows providers to test declaration submissions for future milestone dates. 
+The `X-With-Server-Date` header lets providers simulate future dates, and therefore allows providers to test declaration submissions for future milestone dates.
 
 <div class="govuk-inset-text">It is only valid in the sandbox environment. Attempts to submit future declarations in the production environment (or without this header in sandbox) will be rejected as part of milestone validation.</div>
 
-To test declaration submission functionality, include: 
+To test declaration submission functionality, include:
 
 * the header `X-With-Server-Date` as part of declaration submission request
-* the value of your chosen date in ISO8601 Date with time and Timezone (i.e. RFC3339 format). For example: 
+* the value of your chosen date in ISO8601 Date with time and Timezone (i.e. RFC3339 format). For example:
 
 ```
 X-With-Server-Date: 2022-01-10T10:42:00Z
@@ -838,9 +842,9 @@ Notify the DfE that a participant has started ECF-based training by submitting a
  POST /api/v3/participant-declarations
 ```
 
-An example request body is listed below. Request bodies must include the necessary data attributes, including the `declaration_type` attribute with a `started` value. 
+An example request body is listed below. Request bodies must include the necessary data attributes, including the `declaration_type` attribute with a `started` value.
 
-An example response body is listed below. Successful requests will return a response body with declaration data. 
+An example response body is listed below. Successful requests will return a response body with declaration data.
 
 Any attempts to submit duplicate declarations will return an error message.
 
@@ -899,9 +903,9 @@ Notify the DfE that a participant has reached a given retention point in their t
 POST /api/v{n}/participant-declarations
 ```
 
-An example request body is listed below. Request bodies must include the necessary data attributes, including the appropriate `declaration_type` attribute value, for example `retained-1`. 
+An example request body is listed below. Request bodies must include the necessary data attributes, including the appropriate `declaration_type` attribute value, for example `retained-1`.
 
-An example response body is listed below. Successful requests will return a response body with declaration data. 
+An example response body is listed below. Successful requests will return a response body with declaration data.
 
 Any attempts to submit duplicate declarations will return an error message.
 
@@ -961,9 +965,9 @@ Notify the DfE that a participant has completed their training by submitting a `
 POST /api/v{n}/participant-declarations
 ```
 
-An example request body is listed below. Request bodies must include the necessary data attributes, including the `declaration_type` attribute with a `completed` value. 
+An example request body is listed below. Request bodies must include the necessary data attributes, including the `declaration_type` attribute with a `completed` value.
 
-An example response body is listed below. Successful requests will return a response body with declaration data. 
+An example response body is listed below. Successful requests will return a response body with declaration data.
 
 Any attempts to submit duplicate declarations will return an error message.
 
@@ -1014,7 +1018,7 @@ For more detailed information see the specifications for this [notify DfE that a
 }
 ```
 
-### View all previously submitted declarations 
+### View all previously submitted declarations
 
 View all declarations which have been submitted to date. Check submissions, identify if any are missing, and void or clawback those which have been submitted in error.
 
@@ -1024,7 +1028,7 @@ GET /api/v3/participant-declarations
 
 Note, providers can also filter results by adding filters to the parameter. For example: `GET /api/v3/participant-declarations?filter[participant_id]=ab3a7848-1208-7679-942a-b4a70eed400a` or `GET /api/v3/participant-declarations?filter[cohort]=2022&filter[updated_since]=2020-11-13T11:21:55Z`
 
-An example response body is listed below. 
+An example response body is listed below.
 
 For more detailed information see the specifications for this [view all declarations endpoint.](/api-reference/reference-v3.html#api-v3-participant-declarations-get)
 
@@ -1084,7 +1088,7 @@ View a specific declaration which has been previously submitted. Check declarati
 GET /api/v3/participant-declarations/{id}
 ```
 
-An example response body is listed below. 
+An example response body is listed below.
 
 For more detailed information see the specifications for this [view specific declarations endpoint.](/api-reference/reference-v3.html#api-v3-participant-declarations-id-get)
 
@@ -1117,16 +1121,16 @@ For more detailed information see the specifications for this [view specific dec
 
 ### Void or clawback a declaration
 
-Void specific declarations which have been submitted in error. 
+Void specific declarations which have been submitted in error.
 
 ```
 PUT /api/v3/participant-declarations/{id}/void
 ```
 
-An example response body is listed below. Successful requests will return a response body including updates to the declaration `state`, which will become: 
+An example response body is listed below. Successful requests will return a response body including updates to the declaration `state`, which will become:
 
 * `voided` if it had been  `submitted`, `ineligible`, `eligible`, or `payable`
-* `awaiting_clawback` if it had been `paid` 
+* `awaiting_clawback` if it had been `paid`
 
 View more information on [declaration states.](/api-reference/ecf/definitions-and-states/#declaration-states)
 
@@ -1159,7 +1163,7 @@ For more detailed information see the specifications for this [void declarations
 }
 ```
 
-## View financial statement payment dates  
+## View financial statement payment dates
 
 <div class="govuk-inset-text">The following endpoints are only available for systems integrated with API v3 onwards. They will not return data for API v1 or v2.</div>
 
@@ -1171,7 +1175,7 @@ Providers can view up to date payment cut-off dates, upcoming payment dates, and
 GET /api/v3/statements
 ```
 
-An example response body is listed below. 
+An example response body is listed below.
 
 For more detailed information see the specifications for this [view all statements endpoint.](/api-reference/reference-v3.html#api-v3-statements-get)
 
@@ -1205,7 +1209,7 @@ GET /api/v3/statements/{id}
 
 Providers can find statement IDs within [previously submitted declaration](/api-reference/ecf/guidance/#view-a-specific-previously-submitted-declaration) response bodies.
 
-An example response body is listed below. 
+An example response body is listed below.
 
 For more detailed information see the specifications for this [view a specific statement endpoint.](/api-reference/reference-v3.html#api-v3-statements-id-get)
 
