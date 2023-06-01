@@ -74,7 +74,7 @@ module Schools
                                    current_user:,
                                    default_step_name:,
                                    school:,
-                                   session:,
+                                   data_store:,
                                    submitted_params:)
     end
 
@@ -101,6 +101,10 @@ module Schools
 
     def wizard_class
       Schools::Cohorts::SetupWizard
+    end
+
+    def data_store
+      @data_store ||= FormData::CohortSetupStore.new(session:, form_key: wizard_class)
     end
   end
 end
