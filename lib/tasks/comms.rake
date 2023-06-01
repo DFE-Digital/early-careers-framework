@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'csv'
+require "csv"
 
 namespace :comms do
   desc "Send the comms to the schools in the pilot"
@@ -49,7 +49,7 @@ namespace :comms do
 
         SchoolMailer
           .with(
-            school: school,
+            school:,
             gias_contact_email: school.primary_contact_email,
             nomination_link: get_gias_nomination_url(token: nomination_token),
           )
