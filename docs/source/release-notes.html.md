@@ -7,6 +7,18 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
+## 1st June 2023
+
+School induction tutors are now able to register ECT as mentors at their school. To see how this affects data given via API v3, providers can test this induction tutor functionality in the sandbox.
+
+Note, induction tutors are not yet able to register ECTs as mentors at different schools.
+
+[Watch a demonstration of how to register an ECT as a mentor.](https://www.loom.com/share/7f45563f846a46aba30c713f1b0a7cce)
+
+[View API v3 specifications for the ‘nested’ participant response.](/api-reference/reference-v3.html#api-v3-participants-ecf-get)
+
+See the [13th April 2023 release note](/api-reference/release-notes.html#13th-april-2023) for details on how the API handles ECT-mentors depending on provider integrations with API versions 1 or 2 and version 3.
+
 ## 19th May 2023
 
 Providers can now test API v3.0.0.0. integrations in the sandbox environment. Additional seed data has been added to sandbox to enable the testing of new scenarios.
