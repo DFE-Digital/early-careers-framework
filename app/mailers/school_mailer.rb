@@ -2,17 +2,22 @@
 
 class SchoolMailer < ApplicationMailer
   NOMINATION_EMAIL_TEMPLATE = "a7cc4d19-c0cb-4187-a71b-1b1ea029924f"
+  # replacement for the above template with dynamic academic year
+  NOMINATION_EMAIL_WITH_ACADEMIC_YEAR_TEMPLATE = "bfc43b20-922f-4323-8775-a6e05f06e24a"
+  SCHOOL_PRETERM_REMINDER = "a7cc4d19-c0cb-4187-a71b-1b1ea029924f"
+  UNENGAGED_INVITE_EMAIL_TEMPLATE = "a7cc4d19-c0cb-4187-a71b-1b1ea029924f"
   NOMINATION_CONFIRMATION_EMAIL_TEMPLATE = "7cc9b459-b088-4d5a-84c8-33a74993a2fc"
   SCHOOL_REQUESTED_SIGNIN_LINK_FROM_GIAS = "f2764570-ca3c-4e3b-97c3-251a853c9dde"
   SCHOOL_PARTNERSHIP_NOTIFICATION_EMAIL_TEMPLATE = "8cac177e-b094-4a00-9179-94fadde8ced0"
   COORDINATOR_PARTNERSHIP_NOTIFICATION_EMAIL_TEMPLATE = "076e8486-cbcc-44ee-8a6e-d2a721ee1460"
+  # replacement for the above template with dynamic academic year
+  COORDINATOR_PARTNERSHIP_NOTIFICATION_WITH_ACADEMIC_YEAR_EMAIL_TEMPLATE = "123eb3e6-401f-4c1d-b81e-113cb6580fc9"
   MINISTERIAL_LETTER_EMAIL_TEMPLATE = "f1310917-aa50-4789-b8c2-8cc5e9b91485"
   BETA_INVITE_EMAIL_TEMPLATE = "0ae827de-3caa-4a93-b464-c434cbbd02c0"
   MAT_INVITE_EMAIL_TEMPLATE = "f856f50e-6f49-441e-8018-f8303367eb5c"
   CIP_ONLY_INVITE_EMAIL_TEMPLATE = "ee814b67-52e3-409d-8350-5140e6741124"
   FEDERATION_INVITE_EMAIL_TEMPLATE = "9269c50d-b579-425b-b55b-4c93f67074d4"
   SECTION_41_INVITE_EMAIL_TEMPLATE = "a4ba1de4-e401-47f4-ac77-60c1da17a0e5"
-  UNENGAGED_INVITE_EMAIL_TEMPLATE = "a7cc4d19-c0cb-4187-a71b-1b1ea029924f"
   COORDINATOR_SIGN_IN_CHASER_EMAIL_TEMPLATE = "b5c318a4-2171-4ded-809a-af72dd87e7a7"
   COORDINATOR_REMINDER_TO_CHOOSE_ROUTE_EMAIL_TEMPLATE = "c939c27a-9951-4ac3-817d-56b7bf343fb4"
   UNPARTNERED_FIP_CHASER_EMAIL_TEMPLATE = "41fe132b-d0bd-4b94-8feb-536701d79fc6"
@@ -26,7 +31,6 @@ class SchoolMailer < ApplicationMailer
   UNPARTNERED_CIP_SIT_ADD_PARTICIPANTS_EMAIL_TEMPLATE = "ebc96223-c2ea-416e-8d3e-1f591bbd2f98"
   SIT_NEW_AMBITION_ECTS_AND_MENTORS_ADDED_TEMPLATE = "90d86c1b-2dca-4cca-9dcb-5940e7f28577"
   SIT_FIP_PARTICIPANT_VALIDATION_DEADLINE_REMINDER_TEMPLATE = "48f63205-a8d9-49a2-a76c-93d48ec9b23b"
-  SCHOOL_PRETERM_REMINDER = "a7cc4d19-c0cb-4187-a71b-1b1ea029924f"
   PARTICIPANT_WITHDRAWN_BY_PROVIDER = "29f94916-8c3a-4c5a-9e33-bdf3f5d7249a"
   REMIND_TO_SETUP_MENTOR_TO_ECTS = "604ca80f-b152-4682-9295-9cf1d30f74c1"
   REMIND_GIAS_CONTACT_TO_UPDATE_INDUCTION_TUTOR_DETAILS_TEMPLATE = "88cdad72-386c-40fb-be2e-11d4ae9dcdee"
@@ -76,15 +80,20 @@ class SchoolMailer < ApplicationMailer
     ).tag(:sit_to_complete_steps).associate_with(induction_coordinator_profile)
   end
 
-  # This email is sent to schools to request an appointment of SIT to coordinate their cohorts
   def nomination_email
     recipient = params[:recipient]
     school = params[:school]
     nomination_url = params[:nomination_url]
     expiry_date = params[:expiry_date]
 
+    academic_year = if FeatureFlag.active?(:cohortless_dashboard, for: school)
+                      Cohort.active_registration_cohort.description
+                    else
+                      Cohort.current.description
+                    end
+
     template_mail(
-      NOMINATION_EMAIL_TEMPLATE,
+      NOMINATION_EMAIL_WITH_ACADEMIC_YEAR_TEMPLATE,
       to: recipient,
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
@@ -92,6 +101,7 @@ class SchoolMailer < ApplicationMailer
         school_name: school.name,
         nomination_link: nomination_url,
         expiry_date:,
+        academic_year:,
       },
     ).tag(:request_to_nominate_sit).associate_with(school)
   end
@@ -208,7 +218,7 @@ class SchoolMailer < ApplicationMailer
     challenge_url = params[:challenge_url]
 
     template_mail(
-      COORDINATOR_PARTNERSHIP_NOTIFICATION_EMAIL_TEMPLATE,
+      COORDINATOR_PARTNERSHIP_NOTIFICATION_WITH_ACADEMIC_YEAR_EMAIL_TEMPLATE,
       to: coordinator.email,
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
@@ -221,6 +231,7 @@ class SchoolMailer < ApplicationMailer
         challenge_url:,
         challenge_deadline: partnership.challenge_deadline,
         step_by_step: step_by_step_url,
+        academic_year: partnership.cohort.description,
         subject: "Training provider confirmed: add your ECTs and mentors",
       },
     ).tag(:partnership_created).associate_with(partnership, partnership.school)
@@ -306,6 +317,8 @@ class SchoolMailer < ApplicationMailer
     )
   end
 
+  # Not sure if this is used anymore as it is not referenced
+  # from anywhere else
   def unengaged_schools_email
     template_mail(
       UNENGAGED_INVITE_EMAIL_TEMPLATE,
@@ -507,6 +520,9 @@ class SchoolMailer < ApplicationMailer
     ).tag(:sit_fip_participant_validation_deadline_reminder).associate_with(induction_coordinator_profile, as: :induction_coordinator)
   end
 
+  # Not sure this is used anymore the template doesn't have a 'season' placeholder
+  # This is referenced in InviteEcts which I think was a manually invoked service class
+  # that sent reminders
   def school_preterm_reminder
     school = params[:school]
     season = params[:season]
