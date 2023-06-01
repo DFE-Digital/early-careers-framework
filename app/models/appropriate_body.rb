@@ -21,6 +21,7 @@ class AppropriateBody < ApplicationRecord
   scope :local_authorities, -> { where(body_type: :local_authority) }
   scope :teaching_school_hubs, -> { where(body_type: :teaching_school_hub) }
   scope :nationals, -> { where(body_type: :national) }
+  scope :active_in_year, ->(year) { where("disable_from_year IS NULL OR disable_from_year > ?", year) }
 
   after_save :update_analytics
 

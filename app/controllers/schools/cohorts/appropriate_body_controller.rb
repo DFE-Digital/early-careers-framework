@@ -34,7 +34,8 @@ module Schools
               submit_action: :save_appropriate_body,
               school_name: @school.name,
               ask_appointed: false,
-              preconfirmation:
+              preconfirmation:,
+              cohort_start_year: @cohort.start_year
       end
 
       def save_appropriate_body

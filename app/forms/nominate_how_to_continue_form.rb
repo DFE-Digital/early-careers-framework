@@ -6,6 +6,8 @@ class NominateHowToContinueForm
 
   attr_accessor :how_to_continue, :token, :school, :cohort
 
+  delegate :academic_year_start_date, to: :cohort
+
   def attributes
     { how_to_continue: nil }
   end

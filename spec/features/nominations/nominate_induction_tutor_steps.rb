@@ -61,7 +61,7 @@ module NominateInductionTutorSteps
   end
 
   def then_i_should_be_on_the_choose_how_to_continue_page
-    expect(page).to have_selector("h1", text: "Do you expect any early career teachers to join your school this academic year?")
+    expect(page).to have_selector("h1", text: "Do you expect any new ECTs or mentors to join your school this academic year?")
     expect(page).to have_field("Yes", visible: :all)
     expect(page).to have_field("No", visible: :all)
     expect(page).to have_field("We do not know", visible: :all)
@@ -104,6 +104,11 @@ module NominateInductionTutorSteps
   end
 
   def then_i_should_be_redirected_to_the_choice_saved_page
+    expect(page).to have_text("We will contact #{@nomination_email.school.name} in the next academic year.")
+  end
+
+  def then_i_should_be_redirected_to_the_choice_saved_page_for_academic_year(academic_year_text)
+    expect(page).to have_text(academic_year_text)
     expect(page).to have_text("We will contact #{@nomination_email.school.name} in the next academic year.")
   end
 

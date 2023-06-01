@@ -127,7 +127,8 @@ private
           from_path: school_participant_path(id: @profile.id),
           submit_action: :save_appropriate_body,
           school_name: @profile.user.full_name,
-          ask_appointed: false
+          ask_appointed: false,
+          cohort_start_year: @induction_record.cohort_start_year
   end
 
   def save_appropriate_body
