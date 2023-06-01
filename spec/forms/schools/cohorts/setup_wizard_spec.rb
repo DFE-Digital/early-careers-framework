@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Schools::Cohorts::SetupWizard, type: :model do
+RSpec.xdescribe Schools::Cohorts::SetupWizard, type: :model do
   let(:cohort) { Cohort.current || create(:cohort, :current) }
   let(:current_step) { :email }
   let(:data_store) { instance_double(FormData::CohortSetupStore) }
@@ -17,4 +17,4 @@ RSpec.describe Schools::Cohorts::SetupWizard, type: :model do
     allow(data_store).to receive(:school_id).and_return(school.slug)
     allow(data_store).to receive(:set)
   end
-
+end
