@@ -21,6 +21,21 @@ weight: 1
 
 The API service uses a ‘state’ model to reflect the ECF participant journey, meet contractual requirements for how providers should report participants’ training and how the DfE will pay for this training.
 
+### Partnership states 
+
+Partnership states are defined by the `status` attribute. 
+
+Providers must [confirm their partnerships with schools](/api-reference/ecf/guidance/#confirm-view-and-update-partnerships) for each cohort. Once a partnership has been established the `status` value will become `active` and providers will receive participant information via the API.
+
+Schools can challenge existing partnerships at any time. Once a partnership `status` becomes `challenged`, providers will no longer be able to update partnership details.
+
+| status | Definition | Action |
+| -------- | -------- | -------- |
+| `active`     | A partnership between a provider, school and delivery partner has been agreed and confirmed by the provider    | Providers can view, confirm and update `active` partnerships     |
+| `challenged`     | A partnership between a provider, school and delivery partner has been changed or dissolved by the school     | Providers can **only** view `challenged` partnerships    |
+
+[View more detailed specifications for the partnerships schema](/api-reference/reference-v3.html#schema-ecfpartnershipattributes).
+
 ### Participant states
 
 Participant states are defined by the `training_status` attribute. 
@@ -29,7 +44,6 @@ A participant’s `training_status` value will determine whether a provider can:
 
 * [update their details](/api-reference/ecf/guidance/#view-and-update-participant-data). For example, notifying DfE that a participant has withdrawn from training 
 * [submit a declaration](/api-reference/ecf/guidance/#submit-view-and-void-declarations). For example, notifying DfE that a participant has started their training
-
 
 | training_status | Definition | Action |
 | -------- | -------- | -------- |
@@ -56,21 +70,4 @@ Providers must [submit declarations](/api-reference/ecf/guidance/#submit-view-an
 | `awaiting_clawback`     | A `paid` declaration that has since been voided by a provider    | Providers can **only** view `awaiting_clawback` declarations     |
 | `clawed_back`     | An `awaiting_clawback` declaration that has since had its value deducted from payment by DfE to a provider     | Providers can **only** view `clawed_back` declarations     |
 
-
 [View more detailed specifications for the declaration schema](/api-reference/reference-v3.html#schema-ecfparticipantdeclarationattributes).
-
-
-### Partnership states 
-
-Partnership states are defined by the `status` attribute. 
-
-Providers must [confirm their partnerships with schools](/api-reference/ecf/guidance/#confirm-view-and-update-partnerships) for each cohort. Once a partnership has been established the `status` value will become `active` and providers will receive participant information via the API.
-
-Schools can challenge existing partnerships at any time. Once a partnership `status` becomes `challenged`, providers will no longer be able to update partnership details.
-
-| status | Definition | Action |
-| -------- | -------- | -------- |
-| `active`     | A partnership between a provider, school and delivery partner has been agreed and confirmed by the provider    | Providers can view, confirm and update `active` partnerships     |
-| `challenged`     | A partnership between a provider, school and delivery partner has been changed or dissolved by the school     | Providers can **only** view `challenged` partnerships    |
-
-[View more detailed specifications for the partnerships schema](/api-reference/reference-v3.html#schema-ecfpartnershipattributes).
