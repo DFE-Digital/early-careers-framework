@@ -16,6 +16,13 @@ module Schools
             else
               set_cohort_induction_programme!(how_will_you_run_training)
             end
+
+            if should_send_the_pilot_survey?
+              SchoolMailer
+                .with(sit_user: current_user)
+                .cohortless_pilot_2023_survey_email
+                .deliver_later(wait: 1.hour)
+            end
           end
         end
 
@@ -88,6 +95,11 @@ module Schools
             change_to_core_induction_programme: :core_induction_programme,
             change_to_design_our_own: :design_our_own,
           }[what_changes.to_sym]
+        end
+
+        def should_send_the_pilot_survey?
+          cohort.start_year == 2023 && FeatureFlag.active?(:cohortless_dashboard, for: school) &&
+            expect_any_ects? && current_user.induction_coordinator?
         end
       end
     end
