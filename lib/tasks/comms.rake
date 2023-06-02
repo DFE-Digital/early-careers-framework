@@ -32,6 +32,10 @@ namespace :comms do
         school.induction_coordinators.each do |sit_user|
           logger.info "Sending comms to the school's SIT with user id: #{sit_user.id}"
 
+          if Email.tagged_with(:pilot_ask_sit_to_report_school_training_details).associated_with(sit_user).any?
+            logger.info "The user with id #{sit_user.id} has been already contacted"
+          end
+
           nomination_token = create_nomination_token(school, sit_user.email)
 
           SchoolMailer
@@ -44,6 +48,10 @@ namespace :comms do
         end
       else
         logger.info "Sending comms to the school's primary GIAS contact"
+
+        if Email.tagged_with(:pilot_ask_gias_contact_to_report_school_training_details).associated_with(school).any?
+          logger.info "The school's primary GIAS has been already contacted"
+        end
 
         nomination_token = create_nomination_token(school, school.primary_contact_email)
 
