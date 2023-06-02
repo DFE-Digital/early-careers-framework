@@ -30,7 +30,7 @@ namespace :comms do
 
       if school.induction_coordinators.any?
         school.induction_coordinators.each do |sit_user|
-          logger.info "Sending comms to the school's SIT: #{sit_user.email}"
+          logger.info "Sending comms to the school's SIT with user id: #{sit_user.id}"
 
           nomination_token = create_nomination_token(school, sit_user.email)
 
