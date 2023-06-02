@@ -21,70 +21,64 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery, :with_default_schedules do
 
   let(:delivery_partner1) { create(:delivery_partner) }
   let(:delivery_partner2) { create(:delivery_partner) }
-
-  let(:params) { {} }
-
-  subject { described_class.new(cpd_lead_provider: cpd_lead_provider1, params:) }
-
-  describe "#participant_declarations" do
-    let!(:participant_declaration1) do
+  let!(:participant_declaration1) do
+    travel_to(3.days.ago) do
       create(
         :ect_participant_declaration,
         :paid,
         uplifts: [:sparsity_uplift],
         declaration_type: "started",
         evidence_held: "training-event-attended",
-        created_at: 3.days.ago,
-        updated_at: 3.days.ago,
-
         cpd_lead_provider: cpd_lead_provider1,
         participant_profile: participant_profile1,
         delivery_partner: delivery_partner1,
       )
     end
-    let!(:participant_declaration2) do
+  end
+  let!(:participant_declaration2) do
+    travel_to(1.day.ago) do
       create(
         :ect_participant_declaration,
         :eligible,
         declaration_type: "started",
-        created_at: 1.day.ago,
-        updated_at: 1.day.ago,
-
         cpd_lead_provider: cpd_lead_provider1,
         participant_profile: participant_profile2,
         delivery_partner: delivery_partner2,
       )
     end
-    let!(:participant_declaration3) do
+  end
+  let!(:participant_declaration3) do
+    travel_to(5.days.ago) do
       create(
         :ect_participant_declaration,
         :eligible,
         declaration_type: "started",
-        created_at: 5.days.ago,
-        updated_at: 5.days.ago,
-
         cpd_lead_provider: cpd_lead_provider1,
         participant_profile: participant_profile3,
         delivery_partner: delivery_partner2,
       )
     end
-    let!(:participant_declaration4) do
+  end
+  let!(:participant_declaration4) do
+    travel_to(5.days.ago) do
       create(
         :ect_participant_declaration,
         :eligible,
         declaration_type: "started",
-        created_at: 5.days.ago,
-        updated_at: 5.days.ago,
-
         cpd_lead_provider: cpd_lead_provider2,
         participant_profile: participant_profile4,
         delivery_partner: delivery_partner1,
       )
     end
+  end
+  let(:params) { {} }
 
+  subject { described_class.new(cpd_lead_provider: cpd_lead_provider1, params:) }
+
+  describe "#participant_declarations_for_pagination" do
     context "empty params" do
       it "returns all participant declarations for cpd_lead_provider1" do
-        expect(subject.participant_declarations.to_a).to eq([participant_declaration3, participant_declaration1, participant_declaration2])
+        expect(subject.participant_declarations_for_pagination.to_a).to contain_exactly(participant_declaration3, participant_declaration1, participant_declaration2)
       end
     end
 
@@ -92,7 +86,7 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery, :with_default_schedules do
       let(:params) { { filter: { cohort: cohort2.start_year.to_s } } }
 
       it "returns all participant declarations for the specific cohort" do
-        expect(subject.participant_declarations.to_a).to eq([participant_declaration3])
+        expect(subject.participant_declarations_for_pagination.to_a).to contain_exactly(participant_declaration3)
       end
     end
 
@@ -100,7 +94,7 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery, :with_default_schedules do
       let(:params) { { filter: { cohort: [cohort1.start_year, cohort2.start_year].join(",") } } }
 
       it "returns all participant declarations for the specific cohort" do
-        expect(subject.participant_declarations.to_a).to eq([participant_declaration3, participant_declaration1, participant_declaration2])
+        expect(subject.participant_declarations_for_pagination.to_a).to contain_exactly(participant_declaration3, participant_declaration1, participant_declaration2)
       end
     end
 
@@ -108,7 +102,7 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery, :with_default_schedules do
       let(:params) { { filter: { cohort: "2017" } } }
 
       it "returns no participant declarations" do
-        expect(subject.participant_declarations.to_a).to be_empty
+        expect(subject.participant_declarations_for_pagination.to_a).to be_empty
       end
     end
 
@@ -116,7 +110,7 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery, :with_default_schedules do
       let(:params) { { filter: { participant_id: participant_profile1.user_id } } }
 
       it "returns participant declarations for the specific participant_id" do
-        expect(subject.participant_declarations.to_a).to eq([participant_declaration1])
+        expect(subject.participant_declarations_for_pagination.to_a).to contain_exactly(participant_declaration1)
       end
     end
 
@@ -124,7 +118,7 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery, :with_default_schedules do
       let(:params) { { filter: { participant_id: [participant_profile1.user_id, participant_profile2.user_id].join(",") } } }
 
       it "returns participant declarations for the specific participant_id" do
-        expect(subject.participant_declarations.to_a).to eq([participant_declaration1, participant_declaration2])
+        expect(subject.participant_declarations_for_pagination.to_a).to contain_exactly(participant_declaration1, participant_declaration2)
       end
     end
 
@@ -132,7 +126,7 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery, :with_default_schedules do
       let(:params) { { filter: { participant_id: "madeup" } } }
 
       it "returns no participant declarations" do
-        expect(subject.participant_declarations.to_a).to be_empty
+        expect(subject.participant_declarations_for_pagination.to_a).to be_empty
       end
     end
 
@@ -147,7 +141,7 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery, :with_default_schedules do
       end
 
       it "returns participant declarations for the specific updated time" do
-        expect(subject.participant_declarations.to_a).to eq([participant_declaration2])
+        expect(subject.participant_declarations_for_pagination.to_a).to contain_exactly(participant_declaration2)
       end
     end
 
@@ -155,7 +149,7 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery, :with_default_schedules do
       let(:params) { { filter: { delivery_partner_id: delivery_partner2.id } } }
 
       it "returns participant declarations for the specific delivery_partner_id" do
-        expect(subject.participant_declarations.to_a).to eq([participant_declaration3, participant_declaration2])
+        expect(subject.participant_declarations_for_pagination.to_a).to contain_exactly(participant_declaration3, participant_declaration2)
       end
     end
 
@@ -163,7 +157,7 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery, :with_default_schedules do
       let(:params) { { filter: { delivery_partner_id: [delivery_partner1.id, delivery_partner2.id].join(",") } } }
 
       it "returns participant declarations for the specific delivery_partner_id" do
-        expect(subject.participant_declarations.to_a).to eq([participant_declaration3, participant_declaration1, participant_declaration2])
+        expect(subject.participant_declarations_for_pagination.to_a).to contain_exactly(participant_declaration3, participant_declaration1, participant_declaration2)
       end
     end
 
@@ -171,25 +165,52 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery, :with_default_schedules do
       let(:params) { { filter: { delivery_partner_id: "madeup" } } }
 
       it "returns no participant declarations" do
-        expect(subject.participant_declarations.to_a).to be_empty
+        expect(subject.participant_declarations_for_pagination.to_a).to be_empty
+      end
+    end
+  end
+
+  describe "#participant_declarations" do
+    it "returns all declarations passed in from query in the correct order" do
+      paginated_query = ParticipantDeclaration.where(cpd_lead_provider: cpd_lead_provider1)
+      expect(subject.participant_declarations_from(paginated_query).to_a).to eq([participant_declaration3, participant_declaration1, participant_declaration2])
+    end
+
+    context "with a subset of declarations" do
+      it "returns only the declarations that have been paginated" do
+        paginated_query = ParticipantDeclaration.where(id: participant_declaration1.id)
+        expect(subject.participant_declarations_from(paginated_query).to_a).to eq([participant_declaration1])
       end
     end
 
     context "with mentor_user_id attribute" do
       let!(:mentor_participant_profile) { create(:mentor_participant_profile) }
+      let!(:another_mentor_participant_profile) { create(:mentor_participant_profile) }
+      let!(:another_induction_record) do
+        create(
+          :induction_record,
+          :changed,
+          participant_profile: participant_profile1,
+          preferred_identity: participant_profile1.participant_identity,
+          induction_programme: participant_profile1.induction_records.first.induction_programme,
+          mentor_profile_id: another_mentor_participant_profile.id,
+        )
+      end
       let(:mentor_user_id) { mentor_participant_profile.participant_identity.user_id }
 
       before do
-        latest_induction_record = participant_profile1.induction_records.first
+        latest_induction_record = participant_profile1.induction_records.latest
         latest_induction_record.update!(mentor_profile_id: mentor_participant_profile.id)
       end
 
-      it "returns mentor_user_id in attribute" do
-        declarations = subject.participant_declarations.to_a
+      it "returns mentor_user_id in attribute with no duplicates" do
+        paginated_query = ParticipantDeclaration.where(cpd_lead_provider: cpd_lead_provider1)
+        declarations = subject.participant_declarations_from(paginated_query).to_a
+
         expect(declarations).to eq([participant_declaration3, participant_declaration1, participant_declaration2])
-        expect(declarations[0].mentor_user_id).to eq(nil)
-        expect(declarations[1].mentor_user_id).to eq(mentor_user_id)
-        expect(declarations[2].mentor_user_id).to eq(nil)
+        expect(declarations[0].mentor_user_id).to be_empty
+        expect(declarations[1].mentor_user_id).to contain_exactly(mentor_user_id)
+        expect(declarations[2].mentor_user_id).to be_empty
       end
     end
   end

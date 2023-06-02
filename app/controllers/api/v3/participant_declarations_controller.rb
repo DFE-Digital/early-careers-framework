@@ -13,7 +13,7 @@ module Api
       # GET /api/v3/participant-declarations?filter[cohort]=2021,2022
       #
       def index
-        render json: serializer_class.new(paginate(participant_declarations)).serializable_hash.to_json
+        render json: serializer_class.new(participant_declarations).serializable_hash.to_json
       end
 
       # Creates new participant declaration
@@ -50,8 +50,12 @@ module Api
         current_user
       end
 
+      def paginated_results
+        paginate(participant_declarations_query.participant_declarations_for_pagination)
+      end
+
       def participant_declarations
-        @participant_declarations ||= participant_declarations_query.participant_declarations
+        @participant_declarations ||= participant_declarations_query.participant_declarations_from(paginated_results)
       end
 
       def participant_declarations_query
