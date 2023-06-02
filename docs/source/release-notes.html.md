@@ -7,6 +7,27 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
+## 2nd June 2023
+
+Providers can now make calls to API 3.0.0 in the production environment.
+
+Based on feedback from testing in the sandbox, the following updates have been made:
+
+* API v3 endpoints will order responses by `created_at` by default
+* an `updated_at` attribute has been added to the ECF statement response
+* `updated_since` filter parameters can be used when [viewing ECF statements](/api-reference/ecf/guidance.html#view-financial-statement-payment-dates) and [viewing ECF schools](/api-reference/ecf/guidance.html#find-schools-delivering-ecf-based-training-in-a-given-cohort)
+* an `id` parameter has been added to the [endpoint specifications for ECF schools](/api-reference/reference-v3.html#api-v3-schools-ecf-id-get)
+* the formatting of the `completion_date` attribute has amended to follow ISO 8601 format in the [specifications for NPQ outcomes](/api-reference/reference-v3.html#schema-npqoutcomeattributes)
+
+To improve sandbox performance, queries underpinning key endpoints have been optimised. Providers should notice a reduction in slower response times when testing in the sandbox.
+
+**Note:**
+
+* Providers are not expected to integrate with API v3 if taking part in the upcoming ECF pilot. The DfE will continue to support v1 and v2 of the API until further notice
+* If providers do wish to integrate with v3 and would like to sync historical records, providers must coordinate with the DfE to manage load on the service
+
+Providers are invited to give feedback on the API. Feedback can include, for example, the addition of new filters or functionality.
+
 ## 1st June 2023
 
 School induction tutors are now able to register ECT as mentors at their school. To see how this affects data given via API v3, providers can test this induction tutor functionality in the sandbox.

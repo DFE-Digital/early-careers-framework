@@ -11,8 +11,8 @@ The focus of the following guidance is on business logic only. Critical details 
 
 ## Overview of API requests
 1. A person submits an application for an NPQ course via the DfE online service
-2. Providers view NPQ application data via the API 
-3. Providers complete their own suitability and application processes 
+2. Providers view NPQ application data via the API
+3. Providers complete their own suitability and application processes
 4. Providers accept or reject applications via the API and onboarding participants onto their systems
 5. Providers train participants as per details set out in the contract
 6. Providers submit `started` declarations via the API to notify DfE that participants have started their courses
@@ -25,7 +25,7 @@ The focus of the following guidance is on business logic only. Critical details 
 13. DfE will pay providers output payments for `completed` declarations
 14. Providers view financial statements via the API
 
-Changes can happen during training; some participants may not complete their course within the standard schedule, or at all. Providers must update relevant data using the API. 
+Changes can happen during training; some participants may not complete their course within the standard schedule, or at all. Providers must update relevant data using the API.
 
 <div class="govuk-inset-text"> Note, DfE will only make payments for participants if providers have accepted course applications. Accepting applications is a separate request to submitting a ‘started’ declaration (which notifies DfE a participant has started training). </div>
 
@@ -39,7 +39,7 @@ Providers can view application data to find out whether NPQ applicants:
 
 Providers can then accept or reject applications to NPQ courses.
 
-While people can make multiple applications for the same course, with one or multiple providers, **only** one provider can accept an application from a participant for an NPQ course. 
+While people can make multiple applications for the same course, with one or multiple providers, **only** one provider can accept an application from a participant for an NPQ course.
 
 To prevent a participant being enrolled onto the same course with more than one provider the API will:
 
@@ -58,7 +58,7 @@ Note, while participants can enter different email addresses when applying for t
 
 Note, providers can also filter results to see more specific or up to date data by adding `cohort`, `participant_id` and `updated_since` filters to the parameter. For example: `GET /api/v3/npq-applications?filter[cohort]=2021&filter[participant_id]=7e5bcdbf-c818-4961-8da5-439cab1984e0&filter[updated_since]=2020-11-13T11:21:55Z`
 
-An example response body is listed below. 
+An example response body is listed below.
 
 For more detailed information see the specifications for this [view multiple NPQ applications endpoint](/api-reference/reference-v3.html#api-v3-npq-applications-get).
 
@@ -154,11 +154,11 @@ For more detailed information see the specifications for this [view a specific N
 }
 ```
 
-### Accept an application 
+### Accept an application
 
-Providers should accept applications for those they want to enrol onto a course. Providers must inform applicants of the outcome of their successful NPQ application. 
+Providers should accept applications for those they want to enrol onto a course. Providers must inform applicants of the outcome of their successful NPQ application.
 
-Reasons to accept applications include (but are not limited to) the participant: 
+Reasons to accept applications include (but are not limited to) the participant:
 
 * having funding confirmed
 * being suitable for their chosen NPQ course
@@ -168,9 +168,9 @@ Reasons to accept applications include (but are not limited to) the participant:
 POST /api/v3/npq-applications/{id}/accept
 ```
 
-The request parameter must include the `id` of the corresponding NPQ application. 
+The request parameter must include the `id` of the corresponding NPQ application.
 
-An example response body is listed below. Successful requests will return a response body including updates to the `status` attribute. 
+An example response body is listed below. Successful requests will return a response body including updates to the `status` attribute.
 
 <div class="govuk-inset-text"> Note, the API will prevent more than one provider accepting applications for the same course by automatically updating the application status or returning an error message. </div>
 
@@ -220,20 +220,20 @@ For more detailed information see the specifications for this [accept an NPQ app
 
 Providers should reject applications for those they do not want to enrol onto a course. Providers must inform applicants of the outcome of their unsuccessful NPQ application.
 
-Reasons to reject applications include (but are not limited to) the participant: 
+Reasons to reject applications include (but are not limited to) the participant:
 
 * having been unsuccessful in their application process
 * not having secured funding
 * wanting to use another provider
 * wanting to take on another course
-* no longer wants to take the course 
+* no longer wants to take the course
 
 ```
 POST /api/v3/npq-applications/{id}/reject
 ```
-The request parameter must include the `id` of the corresponding NPQ application. 
+The request parameter must include the `id` of the corresponding NPQ application.
 
-An example response body is listed below. Successful requests will return a response body including updates to the `status` attribute. 
+An example response body is listed below. Successful requests will return a response body including updates to the `status` attribute.
 
 For more detailed information see the specifications for this [accept an NPQ application endpoint](/api-reference/reference-v3.html#api-v3-npq-applications-id-reject-post).
 
@@ -289,9 +289,9 @@ There are several reasons why there might be a change in circumstance for an NPQ
 Where there has been a change in circumstance, providers should:
 
 * reject the application if the application `status` is `pending`
-* contact the DfE if the application `status` is `accepted` 
+* contact the DfE if the application `status` is `accepted`
 
-For example, if a participant registers for an NPQ course but then decides to change to another course, the provider should: 
+For example, if a participant registers for an NPQ course but then decides to change to another course, the provider should:
 
 1. reject that participant’s application
 2. ask the participant to re-register on the NPQ registration service, entering the correct NPQ course details
@@ -299,7 +299,7 @@ For example, if a participant registers for an NPQ course but then decides to ch
 
 ## View and update participant data
 
-Once a provider has accepted an application, they can view and update data to notify DfE that a participant has: 
+Once a provider has accepted an application, they can view and update data to notify DfE that a participant has:
 
 * [deferred their course](/api-reference/npq/guidance/#notify-dfe-a-participant-has-taken-a-break-deferred-from-training)
 * [resumed their course](/api-reference/npq/guidance/#notify-dfe-a-participant-has-resumed-training)
@@ -315,7 +315,7 @@ GET /api/v3/participants/npq
 
 Note, providers can also filter results by adding `updated_since` filters to the parameter. For example: `GET /api/v{n}/participants/ecf?filter[updated_since]=2020-11-13T11:21:55Z`
 
-An example response body is listed below. 
+An example response body is listed below.
 
 For more detailed information see the specifications for this [view multiple NPQ participants endpoint](/api-reference/reference-v3.html#api-v3-participants-npq-get).
 
@@ -359,7 +359,7 @@ For more detailed information see the specifications for this [view multiple NPQ
  GET /api/v3/participants/npq/{id}
 ```
 
-An example response body is listed below. 
+An example response body is listed below.
 
 For more detailed information see the specifications for this [view a single NPQ participant endpoint](/api-reference/reference-v3.html#api-v3-participants-npq-id-get).
 
@@ -407,7 +407,7 @@ A participant can choose to take a break from their NPQ course at any time if th
  PUT /api/v{n}/participants/npq/{id}/defer
 ```
 
-An example request body is listed below. 
+An example request body is listed below.
 
 Successful requests will return a response body including updates to the `training_status` attribute.
 
@@ -435,7 +435,7 @@ A participant can choose to resume their NPQ course at any time if they had prev
  PUT /api/v3/participants/npq/{id}/resume
 ```
 
-An example request body is listed below. 
+An example request body is listed below.
 
 Successful requests will return a response body including updates to the `training_status` attribute.
 
@@ -462,11 +462,11 @@ A participant can choose to withdraw from an NPQ course at any time. Providers m
  PUT /api/v3/participants/npq/{id}/withdraw
 ```
 
-An example request body is listed below. 
+An example request body is listed below.
 
 Successful requests will return a response body including updates to the `training_status` attribute.
 
-#### Providers should note: 
+#### Providers should note:
 
 * The API will **not** allow withdrawals for participants who have not had a `started` declaration submitted against them. If a participant withdraws before a `started` declaration has been submitted, providers should inform their contract manager who can advise
 * DfE will **only** pay for participants who have had, at a minimum, a `started` declaration submitted against them
@@ -497,11 +497,11 @@ The API will automatically assign schedules to participants depending on when co
  PUT /api/v3/participants/npq/{id}/change-schedule
 ```
 
-An example request body is listed below. 
+An example request body is listed below.
 
 Successful requests will return a response body including updates to the `schedule_identifier` attribute.
 
-**Note**, the API will reject a schedule change if any `submitted`, `eligible`, `payable` or `paid` declarations have a `declaration_date` which does not align with the new schedule’s milestone dates. 
+**Note**, the API will reject a schedule change if any `submitted`, `eligible`, `payable` or `paid` declarations have a `declaration_date` which does not align with the new schedule’s milestone dates.
 
 For example, a participant is in the 2022 cohort on an `npq-specialist-autumn` schedule. Their provider has submitted a `started` declaration dated 1 October 2022. The provider tries to change the schedule to `npq-specialist-spring`. The API will reject the change because a spring schedule does not start until January, which is after the declaration date. The API returns an error message with instructions to void existing declarations first.
 
@@ -551,8 +551,9 @@ For more detailed information see the specifications for this [view NPQ outcomes
         "participant_id": "66218835-9430-4d0c-98ef-7caf0bb4a59b",
         "course_identifier": "npq-leading-teaching",
         "state": "passed",
-        "completion_date": "2021-05-31",
-        "created_at": "2021-05-31T02:21:32.000Z"
+        "completion_date": "2021-05-31T00:00:00+00:00",
+        "created_at": "2021-05-31T02:21:32.000Z",
+        "updated_at": "2021-05-31T02:21:32.000Z"
       }
     }
   ]
@@ -588,8 +589,9 @@ For more detailed information see the specifications for this [view NPQ outcome 
         "participant_id": "66218835-9430-4d0c-98ef-7caf0bb4a59b",
         "course_identifier": "npq-leading-teaching",
         "state": "passed",
-        "completion_date": "2021-05-31",
-        "created_at": "2021-05-31T02:21:32.000Z"
+        "completion_date": "2021-05-31T00:00:00+00:00",
+        "created_at": "2021-05-31T02:21:32.000Z",
+        "updated_at": "2021-05-31T02:21:32.000Z"
       }
     }
   ]
@@ -608,13 +610,13 @@ Outcomes may need to be updated if previously submitted data was inaccurate. For
 POST /api/v1/participant/npq/{participant_id}/outcomes
 ```
 
-An example request body is listed below. Request bodies must include a new value for the outcome `state` and `completion_date`. 
+An example request body is listed below. Request bodies must include a new value for the outcome `state` and `completion_date`.
 
-Successful requests will return a response body with updates included. 
+Successful requests will return a response body with updates included.
 
 For more detailed information see the specifications for this [update an NPQ outcome endpoint](/api-reference/reference-v3.html#api-v3-participants-npq-participant_id-outcomes-post).
 
-#### Example request body: 
+#### Example request body:
 
 ```
 {
@@ -631,24 +633,24 @@ For more detailed information see the specifications for this [update an NPQ out
 
 ## Submit, view and void declarations
 
-Providers must submit declarations in line with NPQ contractual [schedules and milestone dates](/api-reference/npq/schedules-and-milestone-dates). 
+Providers must submit declarations in line with NPQ contractual [schedules and milestone dates](/api-reference/npq/schedules-and-milestone-dates).
 
-These declarations will trigger payment from DfE to providers. 
+These declarations will trigger payment from DfE to providers.
 
 When providers submit declarations, API response bodies will include data about which financial statement the given declaration applies to. Providers can then [view financial statement payment dates](/api-reference/npq/guidance/#view-financial-statement-payment-dates) to check when the invoicing period, and expected payment date, will be for the given declaration.
 
-### Test the ability to submit declarations in sandbox ahead of time 
+### Test the ability to submit declarations in sandbox ahead of time
 
 `X-With-Server-Date` is a custom JSON header supported in the sandbox environment. It lets providers test their integrations and ensure they are able to submit declarations for future milestone dates.
 
-The `X-With-Server-Date` header lets providers simulate future dates, and therefore allows providers to test declaration submissions for future milestone dates. 
+The `X-With-Server-Date` header lets providers simulate future dates, and therefore allows providers to test declaration submissions for future milestone dates.
 
 <div class="govuk-inset-text">It is only valid in the sandbox environment. Attempts to submit future declarations in the production environment (or without this header in sandbox) will be rejected as part of milestone validation.</div>
 
-To test declaration submission functionality, include: 
+To test declaration submission functionality, include:
 
 * the header `X-With-Server-Date` as part of declaration submission request
-* the value of your chosen date in ISO8601 Date with time and Timezone (i.e. RFC3339 format). For example: 
+* the value of your chosen date in ISO8601 Date with time and Timezone (i.e. RFC3339 format). For example:
 
 ```
 X-With-Server-Date: 2022-01-10T10:42:00Z
@@ -662,9 +664,9 @@ Notify the DfE that a participant has started an NPQ course by submitting a `sta
  POST /api/v3/participant-declarations
 ```
 
-An example request body is listed below. Request bodies must include the necessary data attributes, including the `declaration_type` attribute with a `started` value. 
+An example request body is listed below. Request bodies must include the necessary data attributes, including the `declaration_type` attribute with a `started` value.
 
-An example response body is listed below. Successful requests will return a response body with declaration data. 
+An example response body is listed below. Successful requests will return a response body with declaration data.
 
 Any attempts to submit duplicate declarations will return an error message.
 
@@ -724,9 +726,9 @@ Notify the DfE that a participant has reached a given retention point in their c
 POST /api/v{n}/participant-declarations
 ```
 
-An example request body is listed below. Request bodies must include the necessary data attributes, including the appropriate `declaration_type` attribute value, for example `retained-1`. 
+An example request body is listed below. Request bodies must include the necessary data attributes, including the appropriate `declaration_type` attribute value, for example `retained-1`.
 
-An example response body is listed below. Successful requests will return a response body with declaration data. 
+An example response body is listed below. Successful requests will return a response body with declaration data.
 
 Any attempts to submit duplicate declarations will return an error message.
 
@@ -788,7 +790,7 @@ POST /api/v{n}/participant-declarations
 
 An example request body is listed below. Request bodies must include the necessary data attributes, including the `declaration_type` attribute with a `completed` value, and the`has_passed` attribute with a `true` or `false` value.
 
-An example response body is listed below. Successful requests will return a response body with declaration data. 
+An example response body is listed below. Successful requests will return a response body with declaration data.
 
 **Note**, any attempts to submit duplicate declarations will return an error message.
 
@@ -841,7 +843,7 @@ For more detailed information see the specifications for this [notify DfE that a
 }
 ```
 
-### View all previously submitted declarations 
+### View all previously submitted declarations
 
 View all declarations which have been submitted to date. Check declaration submissions, identify if any are missing, and void or clawback those which have been submitted in error.
 
@@ -851,7 +853,7 @@ GET /api/v3/participant-declarations
 
 Note, providers can also filter results by adding filters to the parameter. For example: `GET /api/v3/participant-declarations?filter[participant_id]=ab3a7848-1208-7679-942a-b4a70eed400a` or `GET /api/v3/participant-declarations?filter[cohort]=2022&filter[updated_since]=2020-11-13T11:21:55Z`
 
-An example response body is listed below. 
+An example response body is listed below.
 
 For more detailed information see the specifications for this [view all declarations endpoint.](/api-reference/reference-v3.html#api-v3-participant-declarations-get)
 
@@ -891,7 +893,7 @@ View a specific declaration which has been previously submitted. Check declarati
 GET /api/v3/participant-declarations/{id}
 ```
 
-An example response body is listed below. 
+An example response body is listed below.
 
 For more detailed information see the specifications for this [view specific declarations endpoint.](/api-reference/reference-v3.html#api-v3-participant-declarations-id-get)
 
@@ -925,18 +927,18 @@ For more detailed information see the specifications for this [view specific dec
 
 ### Void or clawback a declaration
 
-Void specific declarations which have been submitted in error. 
+Void specific declarations which have been submitted in error.
 
 ```
 PUT /api/v3/participant-declarations/{id}/void
 ```
 
-An example response body is listed below. Successful requests will return a response body including updates to the declaration `state`, which will become: 
+An example response body is listed below. Successful requests will return a response body including updates to the declaration `state`, which will become:
 
 * `voided` if it had been  `submitted`, `ineligible`, `eligible`, or `payable`
-* `awaiting_clawback` if it had been `paid` 
+* `awaiting_clawback` if it had been `paid`
 
-View more information on [declaration states.](/api-reference/npq/definitions-and-states/#declaration-states) 
+View more information on [declaration states.](/api-reference/npq/definitions-and-states/#declaration-states)
 
 Note, if a provider voids a `completed` declaration, the outcome (indicating whether they have passed or failed) will be retracted. The `has_passed` value will revert to `null`.
 
@@ -970,7 +972,7 @@ For more detailed information see the specifications for this [void declarations
 }
 ```
 
-## View financial statement payment dates  
+## View financial statement payment dates
 
 <div class="govuk-inset-text">The following endpoints are only available for systems integrated with API v3 onwards. They will not return data for API v1 or v2.</div>
 
@@ -982,7 +984,7 @@ Providers can view up to date payment cut-off dates, upcoming payment dates, and
 GET /api/v3/statements
 ```
 
-An example response body is listed below. 
+An example response body is listed below.
 
 For more detailed information see the specifications for this [view all statements endpoint.](api-reference/reference-v3.html#api-v3-statements-get)
 
@@ -995,13 +997,15 @@ For more detailed information see the specifications for this [view all statemen
       "id": "cd3a12347-7308-4879-942a-c4a70ced400a",
       "type": "statement",
       "attributes": {
-        "month": "5",
+        "month": "May",
         "year": "2022",
         "type": "npq",
         "cohort": "2021",
         "cut_off_date": "2022-04-30",
         "payment_date": "2022-05-25",
-        "paid": true
+        "paid": true,
+        "created_at": "2021-05-31T02:22:32.000Z",
+        "updated_at": "2021-05-31T02:22:32.000Z"
       }
     }
   ]
@@ -1016,7 +1020,7 @@ GET /api/v3/statements/{id}
 
 Providers can find statement IDs within [previously submitted declaration](/api-reference/npq/guidance/#view-a-specific-previously-submitted-declaration) response bodies.
 
-An example response body is listed below. 
+An example response body is listed below.
 
 For more detailed information see the specifications for this [view a specific statement endpoint.](/api-reference/reference-v3.html#api-v3-statements-id-get)
 
@@ -1028,13 +1032,15 @@ For more detailed information see the specifications for this [view a specific s
     "id": "cd3a12347-7308-4879-942a-c4a70ced400a",
     "type": "statement",
     "attributes": {
-      "month": "5",
+      "month": "May",
       "year": "2022",
       "type": "npq",
       "cohort": "2021",
       "cut_off_date": "2022-04-30",
       "payment_date": "2022-05-25",
-      "paid": true
+      "paid": true,
+      "created_at": "2021-05-31T02:22:32.000Z",
+      "updated_at": "2021-05-31T02:22:32.000Z"
     }
   }
 }

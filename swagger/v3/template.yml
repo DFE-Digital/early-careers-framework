@@ -2,11 +2,11 @@
 openapi: 3.0.1
 info:
   version: 3.0.0
-  title: "Lead provider API - 3.0.0 (Draft)"
+  title: "Lead provider API - 3.0.0"
   contact:
     name: DfE
     email: continuing-professional-development@digital.education.gov.uk
-  description: "The lead provider API for DfE's manage teacher CPD service. You cannot make calls to this version in any environment. We are sharing as a spec only now - your feedback is welcome"
+  description: "The lead provider API for DfE's manage teacher CPD service."
 servers:
   - url: https://ecf-sandbox.london.cloudapps.digital
     description: "Sandbox"
