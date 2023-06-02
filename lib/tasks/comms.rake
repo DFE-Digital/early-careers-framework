@@ -34,6 +34,7 @@ namespace :comms do
 
           if Email.tagged_with(:pilot_ask_sit_to_report_school_training_details).associated_with(sit_user).any?
             logger.info "The user with id #{sit_user.id} has been already contacted"
+            next
           end
 
           nomination_token = create_nomination_token(school, sit_user.email)
@@ -51,6 +52,7 @@ namespace :comms do
 
         if Email.tagged_with(:pilot_ask_gias_contact_to_report_school_training_details).associated_with(school).any?
           logger.info "The school's primary GIAS has been already contacted"
+          next
         end
 
         nomination_token = create_nomination_token(school, school.primary_contact_email)
