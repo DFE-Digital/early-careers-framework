@@ -36,6 +36,11 @@
         end
 
         sl.row do |row|
+          row.key(text: "School record state")
+          row.value(text: render(StatusTags::SchoolParticipantStatusTag.new(participant_profile: induction_record.participant_profile, induction_record: induction_record)))
+        end
+
+        sl.row do |row|
           row.key(text: "Preferred email")
           row.value(text: induction_record.participant_email)
           if policy(induction_record).edit_preferred_email?
@@ -59,6 +64,13 @@
         sl.row do |row|
           row.key(text: "Delivery partner")
           row.value(text: induction_record.delivery_partner_name || "No delivery partner")
+        end
+
+        if induction_record.delivery_partner.present?
+          sl.row do |row|
+            row.key(text: "Delivery partner record state")
+            row.value(text: render(StatusTags::DeliveryPartnerParticipantStatusTag.new(participant_profile: induction_record.participant_profile, induction_record: induction_record)))
+          end
         end
 
         sl.row do |row|
@@ -89,6 +101,13 @@
         sl.row do |row|
           row.key(text: "Appropriate body")
           row.value(text: induction_record.appropriate_body_name)
+        end
+
+        if induction_record.appropriate_body.present?
+          sl.row do |row|
+            row.key(text: "Appropriate body record state")
+            row.value(text: render(StatusTags::AppropriateBodyParticipantStatusTag.new(participant_profile: induction_record.participant_profile, induction_record: induction_record)))
+          end
         end
 
         sl.row do |row|

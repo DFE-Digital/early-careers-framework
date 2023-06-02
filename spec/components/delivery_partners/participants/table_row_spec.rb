@@ -14,7 +14,13 @@ RSpec.describe DeliveryPartners::Participants::TableRow, type: :component do
       pending: false,
     )
   end
-  let(:induction_record) { create :induction_record, participant_profile: }
+  let(:induction_programme) do
+    induction_programme = create(:induction_programme, :fip, school_cohort:, partnership:)
+    school_cohort.update!(default_induction_programme: induction_programme)
+    induction_programme
+  end
+
+  let!(:induction_record) { create :induction_record, participant_profile:, induction_programme: }
 
   let(:component) { described_class.new participant_profile:, delivery_partner: }
 
