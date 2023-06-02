@@ -4,6 +4,7 @@ require "rails_helper"
 
 RSpec.describe SchoolMailer, type: :mailer do
   describe "#nomination_email" do
+    let!(:cohort) { Cohort.current || create(:cohort, :current) }
     let(:school) { instance_double School, name: "Great Ouse Academy" }
     let(:primary_contact_email) { "contact@example.com" }
     let(:nomination_url) { "https://ecf-dev.london.cloudapps/nominations?token=abc123" }
@@ -18,8 +19,19 @@ RSpec.describe SchoolMailer, type: :mailer do
     end
 
     it "renders the right headers" do
+      expect(Cohort).to receive(:current).and_return(cohort).once
       expect(nomination_email.from).to eq(["mail@example.com"])
       expect(nomination_email.to).to eq([primary_contact_email])
+    end
+
+    context "when the pilot is active", with_feature_flags: { cohortless_dashboard: "active" }, travel_to: Date.new(2023, 7, 1) do
+      let!(:cohort_next) { Cohort.next || create(:cohort, :next) }
+
+      it "renders the right headers" do
+        expect(Cohort).to receive(:active_registration_cohort).and_return(cohort_next).once
+        expect(nomination_email.from).to eq(["mail@example.com"])
+        expect(nomination_email.to).to eq([primary_contact_email])
+      end
     end
   end
 
