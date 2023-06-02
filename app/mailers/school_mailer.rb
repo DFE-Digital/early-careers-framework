@@ -38,6 +38,21 @@ class SchoolMailer < ApplicationMailer
   PILOT_ASK_GIAS_CONTACT_TO_REPORT_SCHOOL_TRAINING_DETAILS_TEMPLATE = "ae925ff1-edc3-4d5c-a120-baa3a79c73af"
   LAUNCH_ASK_SIT_TO_REPORT_SCHOOL_TRAINING_DETAILS_TEMPLATE = "1f796f27-9ba4-4705-a7c9-57462bd1e0b7"
   LAUNCH_ASK_GIAS_CONTACT_TO_REPORT_SCHOOL_TRAINING_DETAILS_TEMPLATE = "f4dfee2a-2cc3-4d32-97f9-8adca41343bf"
+  COHORTLESS_PILOT_2023_SURVEY_TEMPLATE = "5f6dc6bf-62c5-4cf1-8cc8-1440453f4a2d"
+
+  def cohortless_pilot_2023_survey_email
+    sit_user = params[:sit_user]
+
+    template_mail(
+      COHORTLESS_PILOT_2023_SURVEY_TEMPLATE,
+      to: sit_user.email,
+      rails_mailer: mailer_name,
+      rails_mail_template: action_name,
+      personalisation: {
+        name: sit_user.full_name,
+      },
+    ).tag(:cohortless_pilot_2023_survey).associate_with(sit_user.induction_coordinator_profile)
+  end
 
   def remind_sit_to_set_mentor_to_ects
     sit = params[:sit]

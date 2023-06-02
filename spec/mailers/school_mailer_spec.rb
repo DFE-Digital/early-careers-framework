@@ -3,6 +3,19 @@
 require "rails_helper"
 
 RSpec.describe SchoolMailer, type: :mailer do
+  describe "#cohortless_pilot_2023_survey_email" do
+    let(:sit_user) { create(:seed_induction_coordinator_profile, :with_user).user }
+
+    let(:email) do
+      SchoolMailer.with(sit_user:).cohortless_pilot_2023_survey_email.deliver_now
+    end
+
+    it "renders the right headers" do
+      expect(email.from).to eq(["mail@example.com"])
+      expect(email.to).to eq [sit_user.email]
+    end
+  end
+
   describe "#nomination_email" do
     let!(:cohort) { Cohort.current || create(:cohort, :current) }
     let(:school) { instance_double School, name: "Great Ouse Academy" }
