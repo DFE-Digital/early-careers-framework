@@ -7,7 +7,7 @@ RSpec.describe Schools::Cohorts::SetupWizard, type: :model do
   let(:school) { create(:seed_school, :with_induction_coordinator) }
   let(:school_cohort) { create(:seed_school_cohort, :fip, cohort:, school:) }
   let(:sit_user) { school.induction_coordinators.first }
-  let(:default_step_name) { :what_we_need } 
+  let(:default_step_name) { :what_we_need }
   let(:submitted_params) { {} }
   let(:start_year) { cohort.start_year }
 
@@ -74,12 +74,10 @@ RSpec.describe Schools::Cohorts::SetupWizard, type: :model do
 
     context "when the SIT chooses to keep providers" do
       let(:expect_any_ects) { true }
-      let(:what_changes) { ["something"] }
-      let(:what_changes_programme) { :fip }
+      let(:what_changes) { "change_lead_provider" }
 
       before do
-        expect(wizard).to receive(:what_changes_programme).and_return(what_changes_programme)
-        expect(wizard).to receive(:set_cohort_induction_programme!).with(what_changes_programme)
+        expect(wizard).to receive(:set_cohort_induction_programme!).with(:full_induction_programme)
         expect(wizard).to receive(:previously_fip?).and_return(false)
       end
 
