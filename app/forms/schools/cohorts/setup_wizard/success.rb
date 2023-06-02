@@ -21,7 +21,7 @@ module Schools
               SchoolMailer
                 .with(sit_user: current_user)
                 .cohortless_pilot_2023_survey_email
-                .deliver_later(wait: 1.hour)
+                .deliver_later(wait: 3.hours)
             end
           end
         end

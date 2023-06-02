@@ -23,7 +23,6 @@ class Wizard
   def initialize(data_store:, current_step:, current_user:, default_step_name:, submitted_params: {}, **opts)
     @current_user = current_user
     @default_step_name = default_step_name
-    # @data_store = data_store_class.new(session:, form_key: to_key)
     @data_store = data_store
     @previous_step = nil
     @return_point = nil
