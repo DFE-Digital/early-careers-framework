@@ -25,67 +25,31 @@ RSpec.describe Participants::FindByTrainingRecordState, :with_default_schedules 
   subject(:results) { Participants::FindByTrainingRecordState.call(ParticipantProfile, record_state).all }
 
   describe "#call" do
-    context "when looking for profiles that have different TRNs" do
-      let(:record_state) { :different_trn }
+    it "finds the correct profile when looking for profiles that have different TRNs" do
+      aggregate_failures do
+        # finds the correct profile
+        expect(described_class.call(ParticipantProfile, :different_trn).all).to match [scenarios.ect_on_fip_manual_check_different_trn.participant_profile]
 
-      it "finds the correct profile" do
-        is_expected.to match [scenarios.ect_on_fip_manual_check_different_trn.participant_profile]
-      end
-    end
+        # when looking for profiles where the request for details email has been submitted to GOV UK Notify
+        expect(described_class.call(ParticipantProfile, :request_for_details_submitted).all).to match [scenarios.ect_on_fip_details_request_submitted.participant_profile]
 
-    context "when looking for profiles where the request for details email has been submitted to GOV UK Notify" do
-      let(:record_state) { :request_for_details_submitted }
+        # when looking for profiles where the request for details email has failed to be delivered to
+        expect(described_class.call(ParticipantProfile, :request_for_details_failed).all).to match [scenarios.ect_on_fip_details_request_failed.participant_profile]
 
-      it "finds the correct profile" do
-        is_expected.to match [scenarios.ect_on_fip_details_request_submitted.participant_profile]
-      end
-    end
+        # when looking for profiles where the request for details email has been delivered to
+        expect(described_class.call(ParticipantProfile, :request_for_details_delivered).all).to match [scenarios.ect_on_fip_details_request_delivered.participant_profile]
 
-    context "when looking for profiles where the request for details email has failed to be delivered to" do
-      let(:record_state) { :request_for_details_failed }
+        # when looking for profiles that are awaiting the validation checks
+        expect(described_class.call(ParticipantProfile, :validation_not_started).all).to match [scenarios.ect_on_fip_no_validation.participant_profile]
 
-      it "finds the correct profile" do
-        is_expected.to match [scenarios.ect_on_fip_details_request_failed.participant_profile]
-      end
-    end
+        # when looking for profiles where the DQT API failed
+        expect(described_class.call(ParticipantProfile, :tra_record_not_found).all).to match [scenarios.ect_on_fip_no_tra_record.participant_profile]
 
-    context "when looking for profiles where the request for details email has been delivered to" do
-      let(:record_state) { :request_for_details_delivered }
+        # when looking for profiles where no TRA record was found
+        expect(described_class.call(ParticipantProfile, :internal_error).all).to match [scenarios.ect_on_fip_validation_api_failure.participant_profile]
 
-      it "finds the correct profile" do
-        is_expected.to match [scenarios.ect_on_fip_details_request_delivered.participant_profile]
-      end
-    end
-
-    context "when looking for profiles that are awaiting the validation checks" do
-      let(:record_state) { :validation_not_started }
-
-      it "finds the correct profile" do
-        is_expected.to match [scenarios.ect_on_fip_no_validation.participant_profile]
-      end
-    end
-
-    context "when looking for profiles where the DQT API failed" do
-      let(:record_state) { :internal_error }
-
-      it "finds the correct profile" do
-        is_expected.to match [scenarios.ect_on_fip_validation_api_failure.participant_profile]
-      end
-    end
-
-    context "when looking for profiles where no TRA record was found" do
-      let(:record_state) { :tra_record_not_found }
-
-      it "finds the correct profile" do
-        is_expected.to match [scenarios.ect_on_fip_no_tra_record.participant_profile]
-      end
-    end
-
-    context "when looking for profiles where the data provided was determined to be valid" do
-      let(:record_state) { :valid }
-
-      it "finds all the profiles that have successfully validated" do
-        is_expected.to_not include [
+        # when looking for profiles where no TRA record was found
+        expect(described_class.call(ParticipantProfile, :valid).all).not_to include([
           scenarios.ect_on_fip_manual_check_different_trn.participant_profile,
           scenarios.ect_on_fip_details_request_submitted.participant_profile,
           scenarios.ect_on_fip_details_request_failed.participant_profile,
@@ -93,29 +57,15 @@ RSpec.describe Participants::FindByTrainingRecordState, :with_default_schedules 
           scenarios.ect_on_fip_no_validation.participant_profile,
           scenarios.ect_on_fip_validation_api_failure.participant_profile,
           scenarios.ect_on_fip_no_tra_record.participant_profile,
-        ]
-      end
-    end
+        ])
 
-    # :checks_not_complete
+        # :checks_not_complete
 
-    context "when looking for profiles where active flags have been found on the TRA record" do
-      let(:record_state) { :active_flags }
+        # when looking for profiles where active flags have been found on the TRA record
+        expect(described_class.call(ParticipantProfile, :active_flags).all).to match [scenarios.ect_on_fip_manual_check_active_flags.participant_profile]
 
-      it "finds the correct profile" do
-        is_expected.to match [
-          scenarios.ect_on_fip_manual_check_active_flags.participant_profile,
-        ]
-      end
-    end
-
-    context "when looking for profiles where active flags have been found on the TRA record" do
-      let(:record_state) { :not_allowed }
-
-      it "finds the correct profile" do
-        is_expected.to match [
-          scenarios.ect_on_fip_ineligible_active_flags.participant_profile,
-        ]
+        # when looking for profiles with ineligible active flags
+        expect(described_class.call(ParticipantProfile, :not_allowed).all).to match [scenarios.ect_on_fip_ineligible_active_flags.participant_profile]
       end
     end
   end
