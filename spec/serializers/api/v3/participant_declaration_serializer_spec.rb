@@ -116,7 +116,7 @@ RSpec.describe Api::V3::ParticipantDeclarationSerializer, :with_default_schedule
       context "when using mentor_user_id with query" do
         before do
           def participant_declaration.mentor_user_id
-            "test123"
+            %w[test123]
           end
         end
 

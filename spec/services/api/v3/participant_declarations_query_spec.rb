@@ -22,58 +22,54 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery, :with_default_schedules do
   let(:delivery_partner1) { create(:delivery_partner) }
   let(:delivery_partner2) { create(:delivery_partner) }
   let!(:participant_declaration1) do
-    create(
-      :ect_participant_declaration,
-      :paid,
-      uplifts: [:sparsity_uplift],
-      declaration_type: "started",
-      evidence_held: "training-event-attended",
-      created_at: 3.days.ago,
-      updated_at: 3.days.ago,
-
-      cpd_lead_provider: cpd_lead_provider1,
-      participant_profile: participant_profile1,
-      delivery_partner: delivery_partner1,
-    )
+    travel_to(3.days.ago) do
+      create(
+        :ect_participant_declaration,
+        :paid,
+        uplifts: [:sparsity_uplift],
+        declaration_type: "started",
+        evidence_held: "training-event-attended",
+        cpd_lead_provider: cpd_lead_provider1,
+        participant_profile: participant_profile1,
+        delivery_partner: delivery_partner1,
+      )
+    end
   end
   let!(:participant_declaration2) do
-    create(
-      :ect_participant_declaration,
-      :eligible,
-      declaration_type: "started",
-      created_at: 1.day.ago,
-      updated_at: 1.day.ago,
-
-      cpd_lead_provider: cpd_lead_provider1,
-      participant_profile: participant_profile2,
-      delivery_partner: delivery_partner2,
-    )
+    travel_to(1.day.ago) do
+      create(
+        :ect_participant_declaration,
+        :eligible,
+        declaration_type: "started",
+        cpd_lead_provider: cpd_lead_provider1,
+        participant_profile: participant_profile2,
+        delivery_partner: delivery_partner2,
+      )
+    end
   end
   let!(:participant_declaration3) do
-    create(
-      :ect_participant_declaration,
-      :eligible,
-      declaration_type: "started",
-      created_at: 5.days.ago,
-      updated_at: 5.days.ago,
-
-      cpd_lead_provider: cpd_lead_provider1,
-      participant_profile: participant_profile3,
-      delivery_partner: delivery_partner2,
-    )
+    travel_to(5.days.ago) do
+      create(
+        :ect_participant_declaration,
+        :eligible,
+        declaration_type: "started",
+        cpd_lead_provider: cpd_lead_provider1,
+        participant_profile: participant_profile3,
+        delivery_partner: delivery_partner2,
+      )
+    end
   end
   let!(:participant_declaration4) do
-    create(
-      :ect_participant_declaration,
-      :eligible,
-      declaration_type: "started",
-      created_at: 5.days.ago,
-      updated_at: 5.days.ago,
-
-      cpd_lead_provider: cpd_lead_provider2,
-      participant_profile: participant_profile4,
-      delivery_partner: delivery_partner1,
-    )
+    travel_to(5.days.ago) do
+      create(
+        :ect_participant_declaration,
+        :eligible,
+        declaration_type: "started",
+        cpd_lead_provider: cpd_lead_provider2,
+        participant_profile: participant_profile4,
+        delivery_partner: delivery_partner1,
+      )
+    end
   end
   let(:params) { {} }
 
@@ -176,30 +172,45 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery, :with_default_schedules do
 
   describe "#participant_declarations" do
     it "returns all declarations passed in from query in the correct order" do
-      expect(subject.participant_declarations_from(ParticipantDeclaration.all).to_a).to eq([participant_declaration3, participant_declaration1, participant_declaration2])
+      paginated_query = ParticipantDeclaration.where(cpd_lead_provider: cpd_lead_provider1)
+      expect(subject.participant_declarations_from(paginated_query).to_a).to eq([participant_declaration3, participant_declaration1, participant_declaration2])
     end
 
     context "with a subset of declarations" do
       it "returns only the declarations that have been paginated" do
-        expect(subject.participant_declarations_from(ParticipantDeclaration.where(id: participant_declaration1.id)).to_a).to eq([participant_declaration1])
+        paginated_query = ParticipantDeclaration.where(id: participant_declaration1.id)
+        expect(subject.participant_declarations_from(paginated_query).to_a).to eq([participant_declaration1])
       end
     end
 
     context "with mentor_user_id attribute" do
       let!(:mentor_participant_profile) { create(:mentor_participant_profile) }
+      let!(:another_mentor_participant_profile) { create(:mentor_participant_profile) }
+      let!(:another_induction_record) do
+        create(
+          :induction_record,
+          :changed,
+          participant_profile: participant_profile1,
+          preferred_identity: participant_profile1.participant_identity,
+          induction_programme: participant_profile1.induction_records.first.induction_programme,
+          mentor_profile_id: another_mentor_participant_profile.id,
+        )
+      end
       let(:mentor_user_id) { mentor_participant_profile.participant_identity.user_id }
 
       before do
-        latest_induction_record = participant_profile1.induction_records.first
+        latest_induction_record = participant_profile1.induction_records.latest
         latest_induction_record.update!(mentor_profile_id: mentor_participant_profile.id)
       end
 
-      it "returns mentor_user_id in attribute" do
-        declarations = subject.participant_declarations_from(ParticipantDeclaration.all).to_a
+      it "returns mentor_user_id in attribute with no duplicates" do
+        paginated_query = ParticipantDeclaration.where(cpd_lead_provider: cpd_lead_provider1)
+        declarations = subject.participant_declarations_from(paginated_query).to_a
+
         expect(declarations).to eq([participant_declaration3, participant_declaration1, participant_declaration2])
-        expect(declarations[0].mentor_user_id).to eq(nil)
-        expect(declarations[1].mentor_user_id).to eq(mentor_user_id)
-        expect(declarations[2].mentor_user_id).to eq(nil)
+        expect(declarations[0].mentor_user_id).to be_empty
+        expect(declarations[1].mentor_user_id).to contain_exactly(mentor_user_id)
+        expect(declarations[2].mentor_user_id).to be_empty
       end
     end
   end
