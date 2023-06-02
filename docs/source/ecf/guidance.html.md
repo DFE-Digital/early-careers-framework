@@ -1188,13 +1188,15 @@ For more detailed information see the specifications for this [view all statemen
       "id": "cd3a12347-7308-4879-942a-c4a70ced400a",
       "type": "statement",
       "attributes": {
-        "month": "5",
+        "month": "May",
         "year": "2022",
         "type": "ecf",
         "cohort": "2021",
         "cut_off_date": "2022-04-30",
         "payment_date": "2022-05-25",
         "paid": true
+        "created_at": "2021-05-31T02:22:32.000Z",
+        "updated_at": "2021-05-31T02:22:32.000Z"
       }
     }
   ]
@@ -1221,13 +1223,15 @@ For more detailed information see the specifications for this [view a specific s
     "id": "cd3a12347-7308-4879-942a-c4a70ced400a",
     "type": "statement",
     "attributes": {
-      "month": "5",
+      "month": "May",
       "year": "2022",
       "type": "ecf",
       "cohort": "2021",
       "cut_off_date": "2022-04-30",
       "payment_date": "2022-05-25",
-      "paid": true
+      "paid": true,
+      "created_at": "2021-05-31T02:22:32.000Z",
+      "updated_at": "2021-05-31T02:22:32.000Z"
     }
   }
 }
