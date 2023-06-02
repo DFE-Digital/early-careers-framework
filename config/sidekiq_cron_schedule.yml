@@ -30,6 +30,6 @@ remove_school_mentor_job:
   class: "RemoveSchoolMentorJob"
   queue: default
 training_record_states_refresh_job:
-  cron: "* * * * *"
+  cron: "*/2 * * * *"
   class: "TrainingRecordStatesRefreshJob"
   queue: default
