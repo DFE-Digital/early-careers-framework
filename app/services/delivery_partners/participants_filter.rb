@@ -73,7 +73,7 @@ module DeliveryPartners
       scoped.each do |participant_profile|
         induction_record = participant_profile.relevant_induction_record_for(delivery_partner: params[:delivery_partner])
 
-        status_tag = StatusTags::DeliveryPartnerParticipantStatusTag.new(participant_profile:, delivery_partner: induction_record.delivery_partner)
+        status_tag = StatusTags::DeliveryPartnerParticipantStatusTag.new(participant_profile:, induction_record:)
         if status_tag.id == status
           ids << participant_profile.id
         end

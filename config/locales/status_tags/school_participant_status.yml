@@ -5,190 +5,203 @@ en:
       # validation
 
       validation_not_started:
-        label: "WAITING FOR TRN"
-        description: "We’re waiting for the school to provide a TRN so we can check the participant is eligible for this programme."
-        colour: "blue"
+        label: "Contacting for information"
+        description: "We’ll ask this person to use our service to provide some information. We need this to check their eligibility with the Teaching Regulation Agency."
 
       request_for_details_submitted:
-        label: "WAITING FOR TRN"
-        description: "We’ve asked this person to use our service to provide their TRN so we can check the participant is eligible for this programme."
-        colour: "blue"
-
-      request_for_details_failed:
-        label: "CHECK EMAIL ADDRESS"
-        description: "We could not send an email to this address. Please check it’s correct."
-        colour: "blue"
+        label: "Contacting for information"
+        description: "We’ll ask this person to use our service to provide some information. We need this to check their eligibility with the Teaching Regulation Agency."
 
       request_for_details_delivered:
-        label: "WAITING FOR TRN"
-        description: "We’ve asked this person to use our service to provide their TRN so we can check the participant is eligible for this programme."
-        colour: "blue"
+        label: "Contacted for information"
+        description:
+          - "We’ve asked this person to use our service to provide some information. We need this to check their eligibility with the Teaching Regulation Agency."
+          - "We suggest you remind them to provide this."
+
+      request_for_details_failed:
+        label: "Check email address"
+        description: "We could not send an email to this address. Please check it’s correct."
 
       internal_error:
-        label: "PENDING"
-        description: "We are doing some manual checks and will contact you for more information."
-        colour: "blue"
+        label: "DfE checking eligibility"
+        description: "We’re checking this person’s details with the Teaching Regulation Agency to make sure they’re eligible for funding. We’ll confirm this soon."
 
       checks_not_complete:
-        label: "PENDING"
-        description: "We are doing some manual checks and will contact you for more information."
-        colour: "blue"
+        label: "DfE checking eligibility"
+        description: "We’re checking this person’s details with the Teaching Regulation Agency to make sure they’re eligible for funding. We’ll confirm this soon."
 
       different_trn:
-        label: "PENDING"
-        description: "We are doing some manual checks and will contact you for more information."
-        colour: "blue"
+        label: "DfE checking eligibility"
+        description: "We’re checking this person’s details with the Teaching Regulation Agency to make sure they’re eligible for funding. We’ll confirm this soon."
 
       tra_record_not_found:
-        label: "PENDING"
-        description: "We are doing some manual checks and will contact you for more information."
-        colour: "blue"
+        label: "DfE checking eligibility"
+        description: "We’re checking this person’s details with the Teaching Regulation Agency to make sure they’re eligible for funding. We’ll confirm this soon."
 
       duplicate_profile:
-        label: "PENDING"
-        description: "We are doing some manual checks and will contact you for more information."
-        colour: "blue"
+        label: "DfE checking eligibility"
+        description: "We’re checking this person’s details with the Teaching Regulation Agency to make sure they’re eligible for funding. We’ll confirm this soon."
 
       # TRA Record checks
 
       active_flags:
-        label: "PENDING"
-        description: "We are doing some manual checks and will contact you for more information."
-        colour: "blue"
+        label: "DfE checking eligibility"
+        description: "We’re checking this person’s details with the Teaching Regulation Agency to make sure they’re eligible for funding. We’ll confirm this soon."
 
       not_allowed:
-        label: "NO LONGER BEING TRAINED"
-        description: "Your provider reported that they’re not training the people listed below. If this is wrong, contact the relevant provider."
-        colour: "grey"
+        label: "Not eligible"
+        description: "This person is not eligible for this programme."
 
       exempt_from_induction:
-        label: "EXEMPT"
-        description: "The participant does not need to complete statutory induction."
-        colour: "grey"
+        label: "Not eligible"
+        description: "This person is not eligible for this programme."
 
       not_qualified:
-        label: "WAITING FOR CONFIRMATION OF QTS"
-        description: "We do not yet have qualified teacher status for the participant. Contact your appropriate body and ask them to send us proof of the participant’s qualified teacher status."
-        colour: "blue"
+        label: "Checking qualified teacher status"
+        description:
+          - "Our checks show this person does not have qualified teacher status (QTS). Their status should be up to date if they completed their ITT in 2021."
+          - "If this person has not completed their ITT, %{contact_us}."
 
       no_induction_start:
-        label: "WAITING FOR INDUCTION TO BE RECORDED"
-        description: "We’re waiting for the school’s appropriate body to record the participant’s induction. Contact your appropriate body and remind them to register the ECT’s induction with the Teaching Regulation Agency (TRA)."
-        colour: "blue"
+        label: "Eligible to start"
+        description: "We’ve confirmed this person is eligible for this programme. Once you choose a training provider, they’ll contact this person directly."
 
       # FIP ECTs
 
       registered_for_fip_no_partner:
-        label: "ELIGIBLE FOR TRAINING"
+        label: "Eligible to start"
         description: "We’ve confirmed this person is eligible for this programme. Once you choose a training provider, they’ll contact this person directly."
-        colour: "turquoise"
 
       registered_for_fip_training:
-        label: "ELIGIBLE FOR TRAINING"
-        description: "We’ve confirmed the participant is eligible for this programme. Your training provider will contact them directly."
-        colour: "turquoise"
+        label: "Eligible to start"
+        description: "We’ve confirmed this person is eligible for this programme. Your training provider will contact them directly."
 
       active_fip_training:
-        label: "TRAINING"
-        description: "We’ve confirmed the participant is eligible for this programme."
-        colour: "turquoise"
+        label: "Eligible to start"
+        description: "We’ve confirmed this person is eligible for this programme. Your training provider will contact them directly."
 
       # CIP ECTs
 
       registered_for_cip_training:
-        label: "ELIGIBLE FOR TRAINING"
-        description: "We’ve confirmed the participant is eligible for this programme."
-        colour: "turquoise"
+        label: "Eligible to start"
+        description: "We’ve confirmed this person is eligible for this programme. They have access to their materials."
 
       active_cip_training:
-        label: "TRAINING"
-        description: "We’ve confirmed the participant is eligible for this programme."
-        colour: "turquoise"
+        label: "Eligible to start"
+        description: "We’ve confirmed this person is eligible for this programme. They have access to their materials."
 
       # DIY ECTs
 
       registered_for_diy_training:
-        label: "ELIGIBLE FOR TRAINING"
-        description: "We’ve confirmed the participant is eligible for this programme."
-        colour: "turquoise"
+        label: "Eligible to start"
+        description: "We’ve confirmed this person is eligible for this programme."
 
       active_diy_training:
-        label: "TRAINING"
-        description: "We’ve confirmed the participant is eligible for this programme."
-        colour: "turquoise"
+        label: "Eligible to start"
+        description: "We’ve confirmed this person is eligible for this programme."
 
-      # Mentoring
+      # mentor duplicates
 
-      active_mentoring:
-        label: "MENTORING"
-        description: "The participant is currently mentoring ECTs."
-        colour: "turquoise"
+      ineligible_ero_secondary:
+        label: "Eligible to start"
+        description: "This person is ready to mentor ECTs this year. Our checks show they’re already receiving funded mentor training as part of the early roll-out of the early career framework (ECF) reforms."
 
-      not_yet_mentoring:
-        label: "NOT MENTORING"
-        description: "The participant is not currently mentoring any ECTs."
-        colour: "turquoise"
+      ineligible_ero_primary:
+        label: "Eligible to start"
+        description: "This person is ready to mentor ECTs this year. Our checks show they’re already receiving funded mentor training as part of the early roll-out of the early career framework (ECF) reforms."
 
-      active_mentoring_ero:
-        label: "MENTORING"
-        description: "The participant is currently mentoring ECTs."
-        colour: "turquoise"
+      ineligible_ero:
+        label: "Eligible to start"
+        description: "This person is ready to mentor ECTs this year. Our checks show they’re already receiving funded mentor training as part of the early roll-out of the early career framework (ECF) reforms."
 
-      not_yet_mentoring_ero:
-        label: "NOT MENTORING"
-        description: "The participant is not currently mentoring any ECTs."
-        colour: "turquoise"
+      ineligible_secondary:
+        label: "Eligible to start"
+        description: "This person is ready to mentor ECTs this year. Our checks show they’re already receiving funded mentor training."
+
+      ineligible_primary:
+        label: "Eligible to start"
+        description: "This person is ready to mentor ECTs this year. Our checks show they’re already receiving funded mentor training."
+
+      # FIP mentors
+
+      not_yet_mentoring_fip_ero:
+        label: "Eligible to start: not_yet_mentoring_ero"
+        description: "This person is ready to mentor ECTs this year. Our checks show they’re already receiving funded mentor training as part of the early roll-out of the early career framework (ECF) reforms."
+
+      not_yet_mentoring_fip_no_partner:
+        label: "Eligible to start"
+        description: "We’ve confirmed this person is eligible for this programme. Once you choose a training provider, they’ll contact this person directly."
+
+      not_yet_mentoring_fip:
+        label: "Eligible to start: not_yet_mentoring"
+        description: "We’ve confirmed this person is eligible for this programme. Your training provider will contact them directly."
+
+      active_fip_mentoring_ero:
+        label: "Eligible to start"
+        description: "We’ve confirmed this person is eligible for this programme. Your training provider will contact them directly."
+
+      active_fip_mentoring_no_partner:
+        label: "Eligible to start"
+        description: "We’ve confirmed this person is eligible for this programme. Once you choose a training provider, they’ll contact this person directly."
+
+      active_fip_mentoring:
+        label: "Eligible to start"
+        description: "We’ve confirmed this person is eligible for this programme. Your training provider will contact them directly."
+
+      # CIP mentors
+
+      not_yet_mentoring_cip_ero:
+        label: "Eligible to start: not_yet_mentoring_ero_cip"
+        description: "We’ve confirmed this person is eligible for this programme. They have access to their materials."
+
+      active_cip_mentoring_ero:
+        label: "Eligible to start"
+        description: "We’ve confirmed this person is eligible for this programme. They have access to their materials."
+
+      not_yet_mentoring_cip:
+        label: "Eligible to start: not_yet_mentoring_cip"
+        description: "We’ve confirmed this person is eligible for this programme. They have access to their materials."
+
+      active_cip_mentoring:
+        label: "Eligible to start"
+        description: "We’ve confirmed this person is eligible for this programme. They have access to their materials."
 
       # changes of circumstance
 
       leaving:
-        label: "LEAVING YOUR SCHOOL"
-        description: "The participant will be leaving your school" #  on xx/xx/xxxx.
-        colour: "grey"
+        label: "Eligible to start"
+        description: "We’ve confirmed this person is eligible for this programme. Your training provider will contact them directly."
 
       joining:
-        label: "JOINING YOUR SCHOOL"
-        description: "The participant is joining your school and will start training. If this is wrong, contact the relevant provider." #  on xx/xx/xxxx.
-        colour: "blue"
+        label: "Eligible to start"
+        description: "We’ve confirmed this person is eligible for this programme. Your training provider will contact them directly."
 
       deferred_training:
-        label: "TRAINING DEFERRED"
-        description: "The participant has deferred their training. This could be for several reasons such as maternity leave, sabbatical leave, sickness etc."
-        colour: "grey"
-
-      withdrawn_training:
-        label: "NO LONGER BEING TRAINED"
-        description: "Your provider reported that they’re not training the people listed below. If this is wrong, contact the relevant provider."
-        colour: "grey"
-
-      left:
-        label: "NO LONGER BEING TRAINED"
-        description: "The participant left your school." # on xx/xx/xxxx."
-        colour: "grey"
+        label: "DfE checking eligibility"
+        description: "We’re checking this person’s details with the Teaching Regulation Agency to make sure they’re eligible for funding. We’ll confirm this soon."
 
       withdrawn_programme:
-        label: "NO LONGER BEING TRAINED"
-        description: "The participant left your school." # on xx/xx/xxxx."
-        colour: "grey"
+        label: "DfE checking eligibility"
+        description: "We’re checking this person’s details with the Teaching Regulation Agency to make sure they’re eligible for funding. We’ll confirm this soon."
 
-      no_longer_involved:
-        label: "NO LONGER BEING TRAINED"
-        description: "The participant left your school." # on xx/xx/xxxx."
-        colour: "grey"
+      withdrawn_training:
+        label: "DfE checking eligibility"
+        description: "We’re checking this person’s details with the Teaching Regulation Agency to make sure they’re eligible for funding. We’ll confirm this soon."
 
-      not_registered_for_training:
-        label: "NO LONGER BEING TRAINED"
-        description: "The participant left your school." # on xx/xx/xxxx."
-        colour: "grey"
+      left:
+        label: "Eligible to start"
+        description: "We’ve confirmed this person is eligible for this programme. Once you choose a training provider, they’ll contact this person directly."
 
       # completion
 
       previous_induction:
-        label: "STATUTORY INDUCTION COMPLETED"
-        description: "The participant has completed their full programme of statutory induction."
-        colour: "grey"
+        label: "Not eligible: induction already started"
+        description: "This is because they started or completed their statutory induction before 1 September 2021."
 
       completed_training:
-        label: "TRAINING COMPLETED"
+        label: "Eligible to start"
         description: "We’ve confirmed this person is eligible for this programme. Once you choose a training provider, they’ll contact this person directly."
-        colour: "grey"
+
+      failed_training:
+        label: "Failed induction"
+        description: "The participant has failed statutory induction and is not eligible for training."

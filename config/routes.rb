@@ -316,8 +316,7 @@ Rails.application.routes.draw do
       resource :cohorts, only: :show, controller: "participants/cohorts"
       resource :declaration_history, only: :show, controller: "participants/declaration_history"
       resource :identities, only: :show, controller: "participants/identities"
-      resource :change_log, only: :show, controller: "participants/change_log"
-      resource :statuses, only: :show, controller: "participants/statuses"
+      resource :event_history, only: :show, controller: "participants/event_history"
 
       resource :validation_data, path: "validation-data", only: :show, controller: "participants/validation_data" do
         member do

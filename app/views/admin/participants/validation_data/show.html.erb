@@ -8,7 +8,6 @@
 <%= render partial: "admin/participants/nav" %>
 
 <% can_be_updated = policy(@participant_profile).update_validation_data? %>
-<% states = DetermineTrainingRecordState.call(participant_profile: @participant_profile) %>
 
 <%= govuk_summary_list(actions: true) do |sl|
   sl.row do |row|
@@ -55,17 +54,17 @@
       )
     end
   end
-
-  sl.row do |row|
-    row.key(text: "Validation state")
-    row.value(text: states.validation_state)
-  end
 end %>
 
-<% unless states.validation_status_valid? %>
-  <% if @participant_presenter.eligibility_data.present? %>
-    <h3 class="govuk-heading-m">Eligibility data</h3>
-    <%= govuk_summary_list(actions: true) do |sl|
+<% if @participant_presenter.eligibility_data.present? %>
+  <h3 class="govuk-heading-m">Eligibility state</h3>
+  <%= govuk_summary_list(actions: true) do |sl|
+    sl.row do |row|
+      row.key(text: "Status")
+      row.value(text: @participant_presenter.eligibility_data.eligibility)
+    end
+
+    unless @participant_presenter.eligibility_status?
       sl.row do |row|
         row.key(text: "Primary reason")
         row.value(text: @participant_presenter.eligibility_data.reason)
@@ -114,12 +113,13 @@ end %>
         row.key(text: "Teacher profile has different TRN")
         row.value(text: @participant_presenter.eligibility_data.different_trn)
       end
-    end %>
 
-    <% button_label = "Revalidate details" %>
-  <% else %>
-    <% button_label = "Validate details" %>
-  <% end %>
+    end
+  end %>
 
-  <%= govuk_button_to button_label, validate_details_admin_participant_validation_data_path(@participant_presenter.validation_data.participant_profile) if can_be_updated %>
+  <% button_label = "Revalidate details" %>
+<% else %>
+  <% button_label = "Validate details" %>
 <% end %>
+
+<%= govuk_button_to button_label, validate_details_admin_participant_validation_data_path(@participant_presenter.validation_data.participant_profile) if can_be_updated %>

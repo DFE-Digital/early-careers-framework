@@ -981,11 +981,9 @@ module ManageTrainingSteps
   end
 
   def then_i_can_view_participant_with_status(status_key)
-    label = I18n.t(:label, scope: "status_tags.school_participant_status.#{status_key}")
-    description = I18n.t(:description, scope: "status_tags.school_participant_status.#{status_key}")
-
-    expect(page).to have_text(label.upcase)
-    expect(page).to have_text(Array.wrap(description).first)
+    status = I18n.t("status_tags.school_participant_status_detailed.#{status_key}")
+    expect(page).to have_text(status[:label].upcase)
+    expect(page).to have_text(Array.wrap(status[:content]).first)
   end
 
   def then_i_am_taken_to_cip_induction_dashboard
@@ -1095,10 +1093,6 @@ module ManageTrainingSteps
     expect(page).to have_summary_row("Appropriate body", appropriate_body.name)
   end
 
-  def and_training_record_states_refreshed
-    TrainingRecordState.refresh
-  end
-
   # Set_steps
 
   def set_participant_data
@@ -1137,14 +1131,14 @@ module ManageTrainingSteps
   def valid_dqt_response(participant_data)
     DqtRecordPresenter.new({
       "name" => participant_data[:full_name],
-                             "trn" => participant_data[:trn],
-                             "state_name" => "Active",
-                             "dob" => participant_data[:date_of_birth],
-                             "qualified_teacher_status" => { "qts_date" => 1.year.ago },
-                             "induction" => {
-                               "start_date" => 1.month.ago,
-                               "status" => "Active",
-                             },
+      "trn" => participant_data[:trn],
+      "state_name" => "Active",
+      "dob" => participant_data[:date_of_birth],
+      "qualified_teacher_status" => { "qts_date" => 1.year.ago },
+      "induction" => {
+        "start_date" => 1.month.ago,
+        "status" => "Active",
+      },
     })
   end
 

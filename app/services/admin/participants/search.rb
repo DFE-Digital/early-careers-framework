@@ -34,11 +34,6 @@ private
         .or(ParticipantProfile.where(id: search_term))
         .or(TeacherProfile.trn_matches(search_term))
         .or(TeacherProfile.where(id: search_term))
-        .or(TrainingRecordState.where(validation_state: search_term))
-        .or(TrainingRecordState.where(training_eligibility_state: search_term))
-        .or(TrainingRecordState.where(fip_funding_eligibility_state: search_term))
-        .or(TrainingRecordState.where(training_eligibility_state: search_term))
-        .or(TrainingRecordState.where(record_state: search_term))
     else
       User.all
     end
@@ -58,7 +53,6 @@ private
       :ecf_participant_eligibility,
       :ecf_participant_validation_data,
       :validation_decisions,
-      :training_record_states,
       { current_induction_records: :school },
       { participant_identity: :user },
       { participant_identity: :npq_applications },

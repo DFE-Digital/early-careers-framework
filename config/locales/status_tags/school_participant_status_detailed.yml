@@ -1,0 +1,248 @@
+en:
+  status_tags:
+    school_participant_status_detailed:
+
+      # validation
+
+      validation_not_started:
+        label: "WAITING FOR TRN"
+        description: "We’re waiting for the school to provide a TRN so we can check the participant is eligible for this programme."
+        colour: "blue"
+
+      request_for_details_submitted:
+        label: "WAITING FOR TRN"
+        description: "We’ve asked this person to use our service to provide their TRN so we can check the participant is eligible for this programme."
+        colour: "blue"
+
+      request_for_details_failed:
+        label: "CHECK EMAIL ADDRESS"
+        description: "We could not send an email to this address. Please check it’s correct."
+        colour: "blue"
+
+      request_for_details_delivered:
+        label: "WAITING FOR TRN"
+        description: "We’ve asked this person to use our service to provide their TRN so we can check the participant is eligible for this programme."
+        colour: "blue"
+
+      internal_error:
+        label: "PENDING"
+        description: "We are doing some manual checks and will contact you for more information."
+        colour: "blue"
+
+      checks_not_complete:
+        label: "PENDING"
+        description: "We are doing some manual checks and will contact you for more information."
+        colour: "blue"
+
+      different_trn:
+        label: "PENDING"
+        description: "We are doing some manual checks and will contact you for more information."
+        colour: "blue"
+
+      tra_record_not_found:
+        label: "PENDING"
+        description: "We are doing some manual checks and will contact you for more information."
+        colour: "blue"
+
+      duplicate_profile:
+        label: "PENDING"
+        description: "We are doing some manual checks and will contact you for more information."
+        colour: "blue"
+
+      # TRA Record checks
+
+      active_flags:
+        label: "PENDING"
+        description: "We are doing some manual checks and will contact you for more information."
+        colour: "blue"
+
+      not_allowed:
+        label: "NO LONGER BEING TRAINED"
+        description: "Your provider reported that they’re not training the people listed below. If this is wrong, contact the relevant provider."
+        colour: "grey"
+
+      exempt_from_induction:
+        label: "EXEMPT"
+        description: "The participant does not need to complete statutory induction. "
+        colour: "grey"
+
+      not_qualified:
+        label: "WAITING FOR CONFIRMATION OF QTS"
+        description: "We do not yet have qualified teacher status for the participant. Contact your appropriate body and ask them to send us proof of the participant’s qualified teacher status."
+        colour: "blue"
+
+      no_induction_start:
+        label: "WAITING FOR INDUCTION TO BE RECORDED"
+        description: "We’re waiting for the school’s appropriate body to record the participant’s induction. Contact your appropriate body and remind them to register the ECT’s induction with the Teaching Regulation Agency (TRA)."
+        colour: "blue"
+
+      # FIP ECTs
+
+      registered_for_fip_no_partner:
+        label: "ELIGIBLE FOR TRAINING"
+        description: "We’ve confirmed the participant is eligible for this programme."
+        colour: "turquoise"
+
+      registered_for_fip_training:
+        label: "ELIGIBLE FOR TRAINING"
+        description: "We’ve confirmed the participant is eligible for this programme."
+        colour: "turquoise"
+
+      active_fip_training:
+        label: "TRAINING"
+        description: "We’ve confirmed the participant is eligible for this programme. "
+        colour: "turquoise"
+
+      # CIP ECTs
+
+      registered_for_cip_training:
+        label: "ELIGIBLE FOR TRAINING"
+        description: "We’ve confirmed the participant is eligible for this programme."
+        colour: "turquoise"
+
+      active_cip_training:
+        label: "TRAINING"
+        description: "We’ve confirmed the participant is eligible for this programme. "
+        colour: "turquoise"
+
+      # DIY ECTs
+
+      registered_for_diy_training:
+        label: "ELIGIBLE FOR TRAINING"
+        description: "We’ve confirmed the participant is eligible for this programme."
+        colour: "turquoise"
+
+      active_diy_training:
+        label: "TRAINING"
+        description: "We’ve confirmed the participant is eligible for this programme. "
+        colour: "turquoise"
+
+      # mentor duplicates
+
+      ineligible_ero_secondary:
+        label: "NOT MENTORING"
+        description: "The participant is not currently mentoring any ECTs."
+        colour: "turquoise"
+
+      ineligible_ero_primary:
+        label: "NOT MENTORING"
+        description: "The participant is not currently mentoring any ECTs."
+        colour: "turquoise"
+
+      ineligible_ero:
+        label: "NOT MENTORING"
+        description: "The participant is not currently mentoring any ECTs."
+        colour: "turquoise"
+
+      ineligible_secondary:
+        label: "NOT MENTORING"
+        description: "The participant is not currently mentoring any ECTs."
+        colour: "turquoise"
+
+      ineligible_primary:
+        label: "NOT MENTORING"
+        description: "The participant is not currently mentoring any ECTs."
+        colour: "turquoise"
+
+      # FIP mentors
+
+      not_yet_mentoring_fip_ero:
+        label: "NOT MENTORING"
+        description: "The participant is not currently mentoring any ECTs."
+        colour: "turquoise"
+
+      not_yet_mentoring_fip_no_partner:
+        label: "NOT MENTORING"
+        description: "The participant is not currently mentoring any ECTs."
+        colour: "turquoise"
+
+      not_yet_mentoring_fip:
+        label: "NOT MENTORING"
+        description: "The participant is not currently mentoring any ECTs."
+        colour: "turquoise"
+
+      active_fip_mentoring_ero:
+        label: "MENTORING"
+        description: "The participant is currently mentoring ECTs."
+        colour: "turquoise"
+
+      active_fip_mentoring_no_partner:
+        label: "MENTORING"
+        description: "The participant is currently mentoring ECTs."
+        colour: "turquoise"
+
+      active_fip_mentoring:
+        label: "MENTORING"
+        description: "The participant is currently mentoring ECTs."
+        colour: "turquoise"
+
+      # CIP mentors
+
+      not_yet_mentoring_cip_ero:
+        label: "NOT MENTORING"
+        description: "The participant is not currently mentoring any ECTs."
+        colour: "turquoise"
+
+      active_cip_mentoring_ero:
+        label: "MENTORING"
+        description: "The participant is currently mentoring ECTs."
+        colour: "turquoise"
+
+      not_yet_mentoring_cip:
+        label: "NOT MENTORING"
+        description: "The participant is not currently mentoring any ECTs."
+        colour: "turquoise"
+
+      active_cip_mentoring:
+        label: "MENTORING"
+        description: "The participant is currently mentoring ECTs."
+        colour: "turquoise"
+
+      # changes of circumstance
+
+      leaving:
+        label: "LEAVING YOUR SCHOOL"
+        description: "The participant will be leaving your school" #  on xx/xx/xxxx.
+        colour: "grey"
+
+      joining:
+        label: "JOINING YOUR SCHOOL"
+        description: "The participant is joining your school and will start training. If this is wrong, contact the relevant provider." #  on xx/xx/xxxx.
+        colour: "blue"
+
+      deferred_training:
+        label: "TRAINING DEFERRED"
+        description: "The participant has deferred their training. This could be for several reasons such as maternity leave, sabbatical leave, sickness etc."
+        colour: "grey"
+
+      withdrawn_programme:
+        label: "NO LONGER BEING TRAINED"
+        description: "The participant left your school." # on xx/xx/xxxx."
+        colour: "grey"
+
+      withdrawn_training:
+        label: "NO LONGER BEING TRAINED"
+        description: "Your provider reported that they’re not training the people listed below. If this is wrong, contact the relevant provider."
+        colour: "grey"
+
+      left:
+        label: "NO LONGER BEING TRAINED"
+        description: "The participant left your school." # on xx/xx/xxxx."
+        colour: "grey"
+
+      # completion
+
+      previous_induction:
+        label: "STATUTORY INDUCTION COMPLETED"
+        description: "The participant has completed their full programme of statutory induction."
+        colour: "grey"
+
+      completed_training:
+        label: "TRAINING COMPLETED"
+        description: "We’ve confirmed this person is eligible for this programme. Once you choose a training provider, they’ll contact this person directly."
+        colour: "grey"
+
+      failed_training:
+        label: "Failed induction"
+        description: "The participant has failed statutory induction and is not eligible for training."
+        colour: "grey"
