@@ -10,6 +10,8 @@ class LeadProvider < ApplicationRecord
   has_many :active_partnerships, -> { active }, class_name: "Partnership"
   has_many :schools, through: :active_partnerships
 
+  has_many :training_record_states, inverse_of: :lead_provider
+
   has_many :ecf_participant_profiles, through: :schools, class_name: "ParticipantProfile::ECF"
   has_many :ecf_participants, through: :ecf_participant_profiles, source: :user
   has_many :active_ecf_participant_profiles, through: :schools

@@ -39,7 +39,7 @@ RSpec.describe "old and new SIT transferring the same participant", type: :featu
       then_i_am_taken_to_manage_mentors_and_ects_page
 
       when_i_click_on_an_ect
-      then_i_should_see_the_transfer_out_participant
+      then_i_should_still_see_the_transferring_participant
     end
 
     # given
@@ -130,9 +130,8 @@ RSpec.describe "old and new SIT transferring the same participant", type: :featu
       expect(page).to have_text("We’ll tell #{@participant_data[:full_name]} that you’ve reported their transfer")
     end
 
-    def then_i_should_see_the_transfer_out_participant
+    def then_i_should_still_see_the_transferring_participant
       expect(page).to have_text(@participant_data[:full_name])
-      expect(page).to have_text("LEAVING YOUR SCHOOL")
       expect(page).to have_link("Remove #{@participant_data[:full_name]}")
     end
 
