@@ -404,7 +404,7 @@ module NewSeeds
           school_cohort = cip_school.school_cohort
           school_cohort_2 = fip_school.school_cohort
 
-          transfer_date = school_cohort.cohort.next.registration_start_date - 1.day
+          transfer_date = school_cohort.cohort.next.registration_start_date + 1.day
 
           @ect_on_fip_joining ||= NewSeeds::Scenarios::Participants::Ects::Ect
             .new(school_cohort:, full_name: "ECT on FIP: joining a FIP school")
