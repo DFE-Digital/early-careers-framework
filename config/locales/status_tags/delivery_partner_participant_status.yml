@@ -117,24 +117,88 @@ en:
         label: "Training or eligible for training"
         description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
 
-      # mentoring
+      # mentor duplicates
 
-      active_mentoring:
+      ineligible_ero_secondary:
         id: "training_or_eligible_for_training"
         label: "Training or eligible for training"
         description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
 
-      not_yet_mentoring:
+      ineligible_ero_primary:
         id: "training_or_eligible_for_training"
         label: "Training or eligible for training"
         description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
 
-      active_mentoring_ero:
+      ineligible_ero:
+        id: "not_eligible_for_funded_training"
+        label: "Not eligible for funded training"
+        description: "We’ve checked these people’s details and found they’re not eligible for this programme."
+
+      ineligible_secondary:
+        id: "not_eligible_for_funded_training"
+        label: "Not eligible for funded training"
+        description: "We’ve checked these people’s details and found they’re not eligible for this programme."
+
+      ineligible_primary:
+        id: "not_eligible_for_funded_training"
+        label: "Not eligible for funded training"
+        description: "We’ve checked these people’s details and found they’re not eligible for this programme."
+
+      # FIP mentors
+
+      not_yet_mentoring_fip_ero:
         id: "training_or_eligible_for_training"
         label: "Training or eligible for training"
         description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
 
-      not_yet_mentoring_ero:
+      not_yet_mentoring_fip_no_partner:
+        id: "training_or_eligible_for_training"
+        label: "Training or eligible for training"
+        description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
+
+      not_yet_mentoring_fip:
+        id: "training_or_eligible_for_training"
+        label: "Training or eligible for training"
+        description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
+
+      active_fip_mentoring_ero:
+        id: "training_or_eligible_for_training"
+        label: "Training or eligible for training"
+        description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
+
+      active_fip_mentoring_no_partner:
+        id: "training_or_eligible_for_training"
+        label: "Training or eligible for training"
+        description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
+
+      active_fip_mentoring:
+        id: "training_or_eligible_for_training"
+        label: "Training or eligible for training"
+        description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
+
+      # CIP mentors
+
+      registered_for_cip_mentor_no_partner:
+        id: "training_or_eligible_for_training"
+        label: "Training or eligible for training"
+        description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
+
+      not_yet_mentoring_cip_ero:
+        id: "training_or_eligible_for_training"
+        label: "Training or eligible for training"
+        description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
+
+      active_cip_mentoring_ero:
+        id: "training_or_eligible_for_training"
+        label: "Training or eligible for training"
+        description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
+
+      not_yet_mentoring_cip:
+        id: "training_or_eligible_for_training"
+        label: "Training or eligible for training"
+        description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
+
+      active_cip_mentoring:
         id: "training_or_eligible_for_training"
         label: "Training or eligible for training"
         description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
@@ -156,6 +220,11 @@ en:
         label: "Training or eligible for training"
         description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
 
+      withdrawn_programme:
+        id: "training_or_eligible_for_training"
+        label: "Training or eligible for training"
+        description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
+
       withdrawn_training:
         id: "no_longer_being_trained"
         label: "No longer being trained"
@@ -166,21 +235,6 @@ en:
         label: "No longer being trained"
         description: "Your provider reported that they’re not training the people listed below. If this is wrong, contact the relevant provider."
 
-      withdrawn_programme:
-        id: "no_longer_being_trained"
-        label: "No longer being trained"
-        description: "You are not responsible for the people listed below. If this is wrong, contact the relevant provider."
-
-      no_longer_involved:
-        id: "no_longer_being_trained"
-        label: "No longer being trained"
-        description: "You are not responsible for the people listed below. If this is wrong, contact the relevant provider."
-
-      not_registered_for_training:
-        id: "no_longer_being_trained"
-        label: "No longer being trained"
-        description: "You are not responsible for the people listed below. If this is wrong, contact the relevant provider."
-
       # completion
 
       previous_induction:
@@ -189,6 +243,11 @@ en:
         description: "We’ve checked these people’s details and found they’re not eligible for this programme."
 
       completed_training:
+        id: "training_or_eligible_for_training"
+        label: "Training or eligible for training"
+        description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
+
+      failed_training:
         id: "training_or_eligible_for_training"
         label: "Training or eligible for training"
         description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."

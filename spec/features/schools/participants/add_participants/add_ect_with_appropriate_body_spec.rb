@@ -7,6 +7,11 @@ RSpec.describe "Adding ECT with appropriate body", type: :feature, js: true do
   let!(:school) { create :school, name: "Fip School" }
   let!(:appropriate_body) { create :appropriate_body_national_organisation }
   let!(:school_cohort) { create :school_cohort, school:, cohort:, induction_programme_choice: "full_induction_programme", appropriate_body: }
+  let!(:induction_programme) do
+    induction_programme = create(:induction_programme, :fip, school_cohort:)
+    school_cohort.update! default_induction_programme: induction_programme
+    induction_programme
+  end
   let!(:partnership) do
     create :partnership,
            school:,
@@ -14,11 +19,6 @@ RSpec.describe "Adding ECT with appropriate body", type: :feature, js: true do
            delivery_partner: create(:delivery_partner, name: "Amazing Delivery Team"),
            cohort:,
            challenge_deadline: 2.weeks.ago
-  end
-  let!(:induction_programme) do
-    induction_programme = create(:induction_programme, :fip, school_cohort:, partnership:)
-    school_cohort.update! default_induction_programme: induction_programme
-    induction_programme
   end
   let!(:user) { create(:user, full_name: "Induction tutor") }
   let!(:privacy_policy) do

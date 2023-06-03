@@ -14,7 +14,6 @@ RSpec.describe "Manage CIP participants", :with_default_schedules, js: true, wit
     before do
       and_i_have_added_a_contacted_for_info_mentor
       and_i_have_added_an_ineligible_ect_with_mentor
-      and_training_record_states_refreshed
       and_i_am_signed_in_as_an_induction_coordinator
     end
 
@@ -24,14 +23,13 @@ RSpec.describe "Manage CIP participants", :with_default_schedules, js: true, wit
       when_i_navigate_to_participants_dashboard
       when_i_click_on_the_participants_name "Ineligible With-mentor"
       then_i_am_taken_to_view_details_page
-      then_i_can_view_participant_with_status(:not_allowed)
+      then_i_can_view_participant_with_status(:active_cip_training)
     end
   end
 
   context "Ineligible ECTs without mentor assigned" do
     before do
       and_i_have_added_an_ineligible_ect_without_mentor
-      and_training_record_states_refreshed
       and_i_am_signed_in_as_an_induction_coordinator
     end
 
@@ -41,14 +39,13 @@ RSpec.describe "Manage CIP participants", :with_default_schedules, js: true, wit
       when_i_navigate_to_participants_dashboard
       when_i_click_on_the_participants_name "Ineligible Without-mentor"
       then_i_am_taken_to_view_details_page
-      then_i_can_view_participant_with_status(:not_allowed)
+      then_i_can_view_participant_with_status(:active_cip_training)
     end
   end
 
   context "Ineligible mentor" do
     before do
       and_i_have_added_an_ineligible_mentor
-      and_training_record_states_refreshed
       and_i_am_signed_in_as_an_induction_coordinator
     end
 
@@ -58,14 +55,13 @@ RSpec.describe "Manage CIP participants", :with_default_schedules, js: true, wit
       when_i_navigate_to_participants_dashboard
       when_i_click_on_the_participants_name "Ineligible mentor"
       then_i_am_taken_to_view_details_page
-      then_i_can_view_participant_with_status(:not_allowed)
+      then_i_can_view_participant_with_status(:active_cip_training)
     end
   end
 
   context "ERO mentor" do
     before do
       and_i_have_added_an_ero_mentor
-      and_training_record_states_refreshed
       and_i_am_signed_in_as_an_induction_coordinator
     end
 
@@ -75,7 +71,7 @@ RSpec.describe "Manage CIP participants", :with_default_schedules, js: true, wit
       when_i_navigate_to_participants_dashboard
       when_i_click_on_the_participants_name "ero mentor"
       then_i_am_taken_to_view_details_page
-      then_i_can_view_participant_with_status(:not_yet_mentoring_ero)
+      then_i_can_view_participant_with_status(:not_yet_mentoring_cip_ero)
     end
   end
 
@@ -83,7 +79,6 @@ RSpec.describe "Manage CIP participants", :with_default_schedules, js: true, wit
     before do
       and_i_have_added_a_contacted_for_info_mentor
       and_i_have_added_an_eligible_ect_with_mentor
-      and_training_record_states_refreshed
       and_i_am_signed_in_as_an_induction_coordinator
     end
 
@@ -100,7 +95,6 @@ RSpec.describe "Manage CIP participants", :with_default_schedules, js: true, wit
   context "Eligible ECTs without a mentor assigned" do
     before do
       and_i_have_added_an_eligible_ect_without_mentor
-      and_training_record_states_refreshed
       and_i_am_signed_in_as_an_induction_coordinator
     end
 
@@ -117,7 +111,6 @@ RSpec.describe "Manage CIP participants", :with_default_schedules, js: true, wit
   context "Eligible mentor" do
     before do
       and_i_have_added_an_eligible_mentor
-      and_training_record_states_refreshed
       and_i_am_signed_in_as_an_induction_coordinator
     end
 
@@ -127,7 +120,7 @@ RSpec.describe "Manage CIP participants", :with_default_schedules, js: true, wit
       when_i_navigate_to_participants_dashboard
       when_i_click_on_the_participants_name "Eligible mentor"
       then_i_am_taken_to_view_details_page
-      then_i_can_view_participant_with_status(:not_yet_mentoring)
+      then_i_can_view_participant_with_status(:not_yet_mentoring_cip)
     end
   end
 
@@ -135,7 +128,6 @@ RSpec.describe "Manage CIP participants", :with_default_schedules, js: true, wit
     before do
       and_i_have_added_a_mentor
       and_i_have_added_a_contacted_for_info_ect_with_mentor
-      and_training_record_states_refreshed
       and_i_am_signed_in_as_an_induction_coordinator
     end
 
@@ -152,7 +144,6 @@ RSpec.describe "Manage CIP participants", :with_default_schedules, js: true, wit
   context "Contacted for info ECTs without mentor assigned" do
     before do
       and_i_have_added_a_contacted_for_info_ect_without_mentor
-      and_training_record_states_refreshed
       and_i_am_signed_in_as_an_induction_coordinator
     end
 
@@ -169,7 +160,6 @@ RSpec.describe "Manage CIP participants", :with_default_schedules, js: true, wit
   context "Contacted for info mentor" do
     before do
       and_i_have_added_a_contacted_for_info_mentor
-      and_training_record_states_refreshed
       and_i_am_signed_in_as_an_induction_coordinator
     end
 
@@ -187,7 +177,6 @@ RSpec.describe "Manage CIP participants", :with_default_schedules, js: true, wit
     before do
       and_i_have_added_a_contacted_for_info_mentor
       and_i_have_added_a_details_being_checked_ect_with_mentor
-      and_training_record_states_refreshed
       and_i_am_signed_in_as_an_induction_coordinator
     end
 
@@ -204,7 +193,6 @@ RSpec.describe "Manage CIP participants", :with_default_schedules, js: true, wit
   context "Details being checked ECT without mentor" do
     before do
       and_i_have_added_a_details_being_checked_ect_without_mentor
-      and_training_record_states_refreshed
       and_i_am_signed_in_as_an_induction_coordinator
     end
 
@@ -214,14 +202,13 @@ RSpec.describe "Manage CIP participants", :with_default_schedules, js: true, wit
       when_i_navigate_to_participants_dashboard
       when_i_click_on_the_participants_name "DBC Without-Mentor"
       then_i_am_taken_to_view_details_page
-      then_i_can_view_participant_with_status(:different_trn)
+      then_i_can_view_participant_with_status(:active_cip_training)
     end
   end
 
   context "Details being checked mentor" do
     before do
       and_i_have_added_a_details_being_checked_mentor
-      and_training_record_states_refreshed
       and_i_am_signed_in_as_an_induction_coordinator
     end
 
@@ -231,7 +218,7 @@ RSpec.describe "Manage CIP participants", :with_default_schedules, js: true, wit
       when_i_navigate_to_participants_dashboard
       when_i_click_on_the_participants_name "DBC Mentor"
       then_i_am_taken_to_view_details_page
-      then_i_can_view_participant_with_status(:different_trn)
+      then_i_can_view_participant_with_status(:active_cip_training)
     end
   end
 end

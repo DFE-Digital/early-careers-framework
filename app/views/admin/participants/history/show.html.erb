@@ -7,26 +7,30 @@
 
 <%= render partial: "admin/participants/nav" %>
 
-<h2 class="govuk-heading-m">Key events</h2>
+<% if @relevant_induction_record.present? %>
+  <h2 class="govuk-heading-m">Key events</h2>
 
-<%= govuk_summary_list(
-  rows: [
-    {
-      key: { text: "Added to the service" },
-      value: { text: @participant_presenter.user_created_at }
-    }
-  ]
-) %>
-
-<%= govuk_table(
-  caption: "School transfers",
-  head: ["School name", "Induction programme", "Start date", "End date"],
-  rows: @participant_presenter.all_induction_records.map do |r|
-    [
-      r.school_cohort.school.name,
-      r.induction_programme.training_programme.humanize,
-      r.start_date.to_date.to_s(:govuk),
-      r.end_date&.to_date&.to_s(:govuk),
+  <%= govuk_summary_list(
+    rows: [
+      {
+        key: { text: "Added to the service" },
+        value: { text: @participant_presenter.user_created_at }
+      }
     ]
-  end,
-) %>
+  ) %>
+
+  <%= govuk_table(
+    caption: "School transfers",
+    head: ["School name", "Induction programme", "Start date", "End date"],
+    rows: @participant_presenter.map do |r|
+      [
+        r.school_cohort.school.name,
+        r.induction_programme.training_programme.humanize,
+        r.start_date.to_date.to_s(:govuk),
+        r.end_date&.to_date&.to_s(:govuk),
+      ]
+    end,
+  ) %>
+<% else %>
+  <p>No key events for <%= @participant_presenter.full_name %>.</p>
+<% end %>

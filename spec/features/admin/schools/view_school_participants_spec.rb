@@ -14,16 +14,15 @@ RSpec.feature "Admin viewing participants", js: true, rutabaga: false do
 private
 
   def given_there_is_a_school_with_current_and_transferring_participants
-    @school = school = create(:school, name: "Test school")
+    @school = create(:school, name: "Test school")
     cohort = create(:cohort, start_year: 2021)
-    school_cohort = create(:school_cohort, :fip, school:, cohort:)
+    school_cohort = create(:school_cohort, :fip, school: @school, cohort:)
 
     charlie = create(:ect_participant_profile, school_cohort:, user: create(:user, full_name: "Charlie Current"))
     theresa = create(:ect_participant_profile, user: create(:user, full_name: "Theresa Transfer-In"))
     linda = create(:ect_participant_profile, school_cohort:, user: create(:user, full_name: "Linda Leaving"))
 
-    partnership = create(:partnership, school:)
-    programme = create(:induction_programme, :fip, school_cohort:, partnership:)
+    programme = create(:induction_programme, :fip, school_cohort:)
     school_cohort.update!(default_induction_programme: programme)
 
     programme2 = create(:induction_programme, :fip, school_cohort: theresa.school_cohort)

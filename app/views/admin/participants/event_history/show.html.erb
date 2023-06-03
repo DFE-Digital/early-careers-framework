@@ -1,15 +1,10 @@
-<%=
-  admin_participant_header_and_title(
-    profile: @participant_profile,
-    section: "Change log"
-  )
-%>
+<%= admin_participant_header_and_title(full_name: @participant_profile.full_name, role: admin_participant_role_name(@participant_profile.class.name), section: "Event history") %>
 
 <%= render partial: "admin/participants/nav" %>
 
 <% if @event_list.present? %>
   <%= govuk_table(
-    caption: "Change log",
+    caption: "Event history",
     head: %w[Description Value Reporter Date],
     rows: @event_list.map do |r|
       [

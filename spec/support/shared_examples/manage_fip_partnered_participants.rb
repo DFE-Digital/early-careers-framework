@@ -14,7 +14,6 @@ RSpec.shared_examples "manage fip participants example", js: true do
     before do
       and_i_have_added_a_contacted_for_info_mentor
       and_i_have_added_an_ineligible_ect_with_mentor
-      and_training_record_states_refreshed
       and_i_am_signed_in_as_an_induction_coordinator
       and_i_click(Cohort.current.description)
     end
@@ -31,7 +30,6 @@ RSpec.shared_examples "manage fip participants example", js: true do
   context "Ineligible ECTs without mentor assigned" do
     before do
       and_i_have_added_an_ineligible_ect_without_mentor
-      and_training_record_states_refreshed
       and_i_am_signed_in_as_an_induction_coordinator
       and_i_click(Cohort.current.description)
     end
@@ -48,7 +46,6 @@ RSpec.shared_examples "manage fip participants example", js: true do
   context "Ineligible mentor" do
     before do
       and_i_have_added_an_ineligible_mentor
-      and_training_record_states_refreshed
       and_i_am_signed_in_as_an_induction_coordinator
       and_i_click(Cohort.current.description)
     end
@@ -65,7 +62,6 @@ RSpec.shared_examples "manage fip participants example", js: true do
   context "ERO mentor" do
     before do
       and_i_have_added_an_ero_mentor
-      and_training_record_states_refreshed
       and_i_am_signed_in_as_an_induction_coordinator
       and_i_click(Cohort.current.description)
     end
@@ -75,7 +71,7 @@ RSpec.shared_examples "manage fip participants example", js: true do
       when_i_navigate_to_participants_dashboard
       when_i_click_on_the_participants_name "ero mentor"
       then_i_am_taken_to_view_details_page
-      then_i_can_view_participant_with_status(:not_yet_mentoring)
+      then_i_can_view_participant_with_status(:ineligible_ero)
     end
   end
 
@@ -83,7 +79,6 @@ RSpec.shared_examples "manage fip participants example", js: true do
     before do
       and_i_have_added_a_contacted_for_info_mentor
       and_i_have_added_an_eligible_ect_with_mentor
-      and_training_record_states_refreshed
       and_i_am_signed_in_as_an_induction_coordinator
       and_i_click(Cohort.current.description)
     end
@@ -101,7 +96,6 @@ RSpec.shared_examples "manage fip participants example", js: true do
   context "Eligible ECTs without a mentor assigned" do
     before do
       and_i_have_added_an_eligible_ect_without_mentor
-      and_training_record_states_refreshed
       and_i_am_signed_in_as_an_induction_coordinator
       and_i_click(Cohort.current.description)
     end
@@ -118,7 +112,6 @@ RSpec.shared_examples "manage fip participants example", js: true do
   context "Eligible mentor" do
     before do
       and_i_have_added_an_eligible_mentor
-      and_training_record_states_refreshed
       and_i_am_signed_in_as_an_induction_coordinator
       and_i_click(Cohort.current.description)
     end
@@ -128,7 +121,7 @@ RSpec.shared_examples "manage fip participants example", js: true do
       when_i_navigate_to_participants_dashboard
       when_i_click_on_the_participants_name "Eligible mentor"
       then_i_am_taken_to_view_details_page
-      then_i_can_view_participant_with_status(:not_yet_mentoring)
+      then_i_can_view_participant_with_status(:not_yet_mentoring_fip)
     end
   end
 
@@ -136,7 +129,6 @@ RSpec.shared_examples "manage fip participants example", js: true do
     before do
       and_i_have_added_a_mentor
       and_i_have_added_a_contacted_for_info_ect_with_mentor
-      and_training_record_states_refreshed
       and_i_am_signed_in_as_an_induction_coordinator
       and_i_click(Cohort.current.description)
     end
@@ -153,7 +145,6 @@ RSpec.shared_examples "manage fip participants example", js: true do
   context "Contacted for info ECTs without mentor assigned" do
     before do
       and_i_have_added_a_contacted_for_info_ect_without_mentor
-      and_training_record_states_refreshed
       and_i_am_signed_in_as_an_induction_coordinator
       and_i_click(Cohort.current.description)
     end
@@ -170,7 +161,6 @@ RSpec.shared_examples "manage fip participants example", js: true do
   context "Contacted for info mentor" do
     before do
       and_i_have_added_a_contacted_for_info_mentor
-      and_training_record_states_refreshed
       and_i_am_signed_in_as_an_induction_coordinator
       and_i_click(Cohort.current.description)
     end
@@ -188,7 +178,6 @@ RSpec.shared_examples "manage fip participants example", js: true do
     before do
       and_i_have_added_a_contacted_for_info_mentor
       and_i_have_added_a_details_being_checked_ect_with_mentor
-      and_training_record_states_refreshed
       and_i_am_signed_in_as_an_induction_coordinator
       and_i_click(Cohort.current.description)
     end
@@ -205,7 +194,6 @@ RSpec.shared_examples "manage fip participants example", js: true do
   context "Details being checked ECT without mentor" do
     before do
       and_i_have_added_a_details_being_checked_ect_without_mentor
-      and_training_record_states_refreshed
       and_i_am_signed_in_as_an_induction_coordinator
       and_i_click(Cohort.current.description)
     end
@@ -222,7 +210,6 @@ RSpec.shared_examples "manage fip participants example", js: true do
   context "Details being checked mentor" do
     before do
       and_i_have_added_a_details_being_checked_mentor
-      and_training_record_states_refreshed
       and_i_am_signed_in_as_an_induction_coordinator
       and_i_click(Cohort.current.description)
     end
