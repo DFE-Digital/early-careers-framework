@@ -118,7 +118,7 @@ class TrainingRecordState < ApplicationRecord
   }, _prefix: "is"
 
   def self.refresh
-    Scenic.database.refresh_materialized_view(table_name, concurrently: false, cascade: false)
+    Scenic.database.refresh_materialized_view(table_name, concurrently: true, cascade: false)
   end
 
   def self.for(participant_profile:, induction_record: nil, lead_provider: nil, delivery_partner: nil, appropriate_body: nil, school: nil)
