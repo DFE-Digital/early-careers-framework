@@ -21,61 +21,70 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery, :with_default_schedules do
 
   let(:delivery_partner1) { create(:delivery_partner) }
   let(:delivery_partner2) { create(:delivery_partner) }
-  let!(:participant_declaration1) do
-    travel_to(3.days.ago) do
-      create(
-        :ect_participant_declaration,
-        :paid,
-        uplifts: [:sparsity_uplift],
-        declaration_type: "started",
-        evidence_held: "training-event-attended",
-        cpd_lead_provider: cpd_lead_provider1,
-        participant_profile: participant_profile1,
-        delivery_partner: delivery_partner1,
-      )
-    end
-  end
-  let!(:participant_declaration2) do
-    travel_to(1.day.ago) do
-      create(
-        :ect_participant_declaration,
-        :eligible,
-        declaration_type: "started",
-        cpd_lead_provider: cpd_lead_provider1,
-        participant_profile: participant_profile2,
-        delivery_partner: delivery_partner2,
-      )
-    end
-  end
-  let!(:participant_declaration3) do
-    travel_to(5.days.ago) do
-      create(
-        :ect_participant_declaration,
-        :eligible,
-        declaration_type: "started",
-        cpd_lead_provider: cpd_lead_provider1,
-        participant_profile: participant_profile3,
-        delivery_partner: delivery_partner2,
-      )
-    end
-  end
-  let!(:participant_declaration4) do
-    travel_to(5.days.ago) do
-      create(
-        :ect_participant_declaration,
-        :eligible,
-        declaration_type: "started",
-        cpd_lead_provider: cpd_lead_provider2,
-        participant_profile: participant_profile4,
-        delivery_partner: delivery_partner1,
-      )
-    end
-  end
   let(:params) { {} }
 
   subject { described_class.new(cpd_lead_provider: cpd_lead_provider1, params:) }
 
   describe "#participant_declarations_for_pagination" do
+    let!(:participant_declaration1) do
+      travel_to(3.days.ago) do
+        declaration = create(
+          :ect_participant_declaration,
+          :paid,
+          uplifts: [:sparsity_uplift],
+          declaration_type: "started",
+          evidence_held: "training-event-attended",
+          cpd_lead_provider: cpd_lead_provider1,
+          participant_profile: participant_profile1,
+          delivery_partner: delivery_partner1,
+        )
+
+        ParticipantDeclaration.where(id: declaration.id).select(:id).first
+      end
+    end
+    let!(:participant_declaration2) do
+      travel_to(1.day.ago) do
+        declaration = create(
+          :ect_participant_declaration,
+          :eligible,
+          declaration_type: "started",
+          cpd_lead_provider: cpd_lead_provider1,
+          participant_profile: participant_profile2,
+          delivery_partner: delivery_partner2,
+        )
+
+        ParticipantDeclaration.where(id: declaration.id).select(:id).first
+      end
+    end
+    let!(:participant_declaration3) do
+      travel_to(5.days.ago) do
+        declaration = create(
+          :ect_participant_declaration,
+          :eligible,
+          declaration_type: "started",
+          cpd_lead_provider: cpd_lead_provider1,
+          participant_profile: participant_profile3,
+          delivery_partner: delivery_partner2,
+        )
+
+        ParticipantDeclaration.where(id: declaration.id).select(:id).first
+      end
+    end
+    let!(:participant_declaration4) do
+      travel_to(5.days.ago) do
+        declaration = create(
+          :ect_participant_declaration,
+          :eligible,
+          declaration_type: "started",
+          cpd_lead_provider: cpd_lead_provider2,
+          participant_profile: participant_profile4,
+          delivery_partner: delivery_partner1,
+        )
+
+        ParticipantDeclaration.where(id: declaration.id).select(:id).first
+      end
+    end
+
     context "empty params" do
       it "returns all participant declarations for cpd_lead_provider1" do
         expect(subject.participant_declarations_for_pagination.to_a).to contain_exactly(participant_declaration3, participant_declaration1, participant_declaration2)
@@ -134,10 +143,10 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery, :with_default_schedules do
       let(:params) { { filter: { updated_since: 2.days.ago.iso8601 } } }
 
       before do
-        participant_declaration1.update!(updated_at: 3.days.ago)
-        participant_declaration2.update!(updated_at: 1.day.ago)
-        participant_declaration3.update!(updated_at: 5.days.ago)
-        participant_declaration4.update!(updated_at: 6.days.ago)
+        ParticipantDeclaration.find(participant_declaration1.id).update!(updated_at: 3.days.ago)
+        ParticipantDeclaration.find(participant_declaration2.id).update!(updated_at: 1.day.ago)
+        ParticipantDeclaration.find(participant_declaration3.id).update!(updated_at: 5.days.ago)
+        ParticipantDeclaration.find(participant_declaration4.id).update!(updated_at: 6.days.ago)
       end
 
       it "returns participant declarations for the specific updated time" do
@@ -171,6 +180,57 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery, :with_default_schedules do
   end
 
   describe "#participant_declarations" do
+    let!(:participant_declaration1) do
+      travel_to(3.days.ago) do
+        create(
+          :ect_participant_declaration,
+          :paid,
+          uplifts: [:sparsity_uplift],
+          declaration_type: "started",
+          evidence_held: "training-event-attended",
+          cpd_lead_provider: cpd_lead_provider1,
+          participant_profile: participant_profile1,
+          delivery_partner: delivery_partner1,
+        )
+      end
+    end
+    let!(:participant_declaration2) do
+      travel_to(1.day.ago) do
+        create(
+          :ect_participant_declaration,
+          :eligible,
+          declaration_type: "started",
+          cpd_lead_provider: cpd_lead_provider1,
+          participant_profile: participant_profile2,
+          delivery_partner: delivery_partner2,
+        )
+      end
+    end
+    let!(:participant_declaration3) do
+      travel_to(5.days.ago) do
+        create(
+          :ect_participant_declaration,
+          :eligible,
+          declaration_type: "started",
+          cpd_lead_provider: cpd_lead_provider1,
+          participant_profile: participant_profile3,
+          delivery_partner: delivery_partner2,
+        )
+      end
+    end
+    let!(:participant_declaration4) do
+      travel_to(5.days.ago) do
+        create(
+          :ect_participant_declaration,
+          :eligible,
+          declaration_type: "started",
+          cpd_lead_provider: cpd_lead_provider2,
+          participant_profile: participant_profile4,
+          delivery_partner: delivery_partner1,
+        )
+      end
+    end
+
     it "returns all declarations passed in from query in the correct order" do
       paginated_query = ParticipantDeclaration.where(cpd_lead_provider: cpd_lead_provider1)
       expect(subject.participant_declarations_from(paginated_query).to_a).to eq([participant_declaration3, participant_declaration1, participant_declaration2])

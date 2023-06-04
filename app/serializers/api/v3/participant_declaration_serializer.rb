@@ -89,7 +89,7 @@ module Api
 
       attribute :has_passed do |declaration|
         if declaration.npq?
-          declaration.outcomes.latest&.has_passed?
+          declaration.outcomes.sort_by(&:created_at).reverse!&.first&.has_passed?
         end
       end
     end
