@@ -110,43 +110,43 @@
 class DetermineTrainingRecordState < BaseService
   attr_reader :participant_profile_id, :school_id, :appropriate_body_id, :delivery_partner_id, :induction_record_id
 
-  RECORD_STATES = {
-    "different_trn" => "different_trn",
-    "request_for_details_delivered" => "request_for_details_delivered",
-    "request_for_details_failed" => "request_for_details_failed",
-    "request_for_details_submitted" => "request_for_details_submitted",
-    "validation_not_started" => "validation_not_started",
-    "internal_error" => "internal_error",
-    "tra_record_not_found" => "tra_record_not_found",
-    "checks_not_complete" => "checks_not_complete",
-    "active_flags" => "active_flags",
-    "not_allowed" => "not_allowed",
-    "duplicate_profile" => "duplicate_profile",
-    "not_qualified" => "not_qualified",
-    "exempt_from_induction" => "exempt_from_induction",
-    "previous_induction" => "previous_induction",
-    "no_induction_start" => "no_induction_start",
-    "active_mentoring_ero" => "active_mentoring_ero",
-    "active_mentoring" => "active_mentoring",
-    "not_yet_mentoring_ero" => "not_yet_mentoring_ero",
-    "not_yet_mentoring" => "not_yet_mentoring",
-    "no_longer_involved" => "no_longer_involved",
-    "leaving" => "leaving",
-    "left" => "left",
-    "joining" => "joining",
-    "withdrawn_programme" => "withdrawn_programme",
-    "withdrawn_training" => "withdrawn_training",
-    "deferred_training" => "deferred_training",
-    "completed_training" => "completed_training",
-    "registered_for_fip_no_partner" => "registered_for_fip_no_partner",
-    "active_fip_training" => "active_fip_training",
-    "registered_for_fip_training" => "registered_for_fip_training",
-    "registered_for_cip_training" => "registered_for_cip_training",
-    "active_cip_training" => "active_cip_training",
-    "active_diy_training" => "active_diy_training",
-    "registered_for_diy_training" => "registered_for_diy_training",
-    "not_registered_for_training" => "not_registered_for_training",
-  }.freeze
+  RECORD_STATES = %w[
+    different_trn
+    request_for_details_delivered
+    request_for_details_failed
+    request_for_details_submitted
+    validation_not_started
+    internal_error
+    tra_record_not_found
+    checks_not_complete
+    active_flags
+    not_allowed
+    duplicate_profile
+    not_qualified
+    exempt_from_induction
+    previous_induction
+    no_induction_start
+    active_mentoring_ero
+    active_mentoring
+    not_yet_mentoring_ero
+    not_yet_mentoring
+    no_longer_involved
+    leaving
+    left
+    joining
+    withdrawn_programme
+    withdrawn_training
+    deferred_training
+    completed_training
+    registered_for_fip_no_partner
+    active_fip_training
+    registered_for_fip_training
+    registered_for_cip_training
+    active_cip_training
+    active_diy_training
+    registered_for_diy_training
+    not_registered_for_training
+  ].each_with_object({}) { |v, h| h[v] = v }.freeze
 
   Record = Struct.new(
     :participant_profile_id,
