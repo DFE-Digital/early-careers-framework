@@ -11,7 +11,10 @@ module Api
       end
 
       def participant_declarations_for_pagination
-        scope = declarations_scope.or(previous_declarations_scope)
+        scope = ActiveRecordUnion.new(
+          declarations_scope,
+          previous_declarations_scope,
+        ).call
 
         if participant_ids.present?
           scope = scope.where(user_id: participant_ids)
