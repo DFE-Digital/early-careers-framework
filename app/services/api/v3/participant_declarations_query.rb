@@ -11,10 +11,7 @@ module Api
       end
 
       def participant_declarations_for_pagination
-        scope = ActiveRecordUnion.new(
-          declarations_scope,
-          previous_declarations_scope,
-        ).call
+        scope = declarations_scope.or(previous_declarations_scope)
 
         if participant_ids.present?
           scope = scope.where(user_id: participant_ids)
@@ -28,7 +25,10 @@ module Api
           scope = scope.where(delivery_partner_id: delivery_partner_ids)
         end
 
-        scope.distinct
+        scope
+          .select(:id, :created_at)
+          .order(:created_at)
+          .distinct
       end
 
       def participant_declarations_from(paginated_join)
@@ -51,9 +51,14 @@ module Api
               :cpd_lead_provider,
             )
             .from("(#{sub_query.to_sql}) as participant_declarations")
+            .order(:created_at)
             .distinct
 
-        scope.order(:created_at)
+        preloader = ActiveRecord::Associations::Preloader.new
+        preloader.preload(scope.select { |p| p.type == "ParticipantDeclaration::NPQ" }, :outcomes)
+        preloader.preload(scope.select { |p| p.type == "ParticipantDeclaration::NPQ" }, participant_profile: :npq_application)
+
+        scope
       end
 
     private
