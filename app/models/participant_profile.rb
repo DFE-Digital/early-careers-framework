@@ -56,9 +56,6 @@ class ParticipantProfile < ApplicationRecord
   scope :mentors, -> { where(type: Mentor.name) }
   scope :npqs, -> { where(type: NPQ.name) }
 
-  # search by validation state
-  scope :validation_state_valid, -> { joins(:training_record_states).where(training_record_states: { validation_state: "valid" }) }
-
   # Instance Methods
   def approved?
     false
