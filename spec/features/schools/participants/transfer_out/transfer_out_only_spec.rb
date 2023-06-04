@@ -151,9 +151,5 @@ RSpec.describe "transfer out participants", :with_default_schedules, type: :feat
     def allow_participant_transfer_mailers
       allow(ParticipantTransferMailer).to receive(:with).and_call_original
     end
-
-    def and_training_record_states_refreshed
-      TrainingRecordState.refresh
-    end
   end
 end

@@ -11,8 +11,6 @@ class AppropriateBody < ApplicationRecord
 
   has_many :appropriate_body_profiles, dependent: :destroy
 
-  has_many :training_record_states, inverse_of: :appropriate_body
-
   validates :name, presence: true, uniqueness: { scope: :body_type }
 
   default_scope { order(:name) }

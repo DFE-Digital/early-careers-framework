@@ -8,8 +8,6 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
   let!(:current_school) { nil }
 
   subject(:determined_state) do
-    TrainingRecordState.refresh
-
     described_class.call(participant_profile:, school: current_school)
   end
 

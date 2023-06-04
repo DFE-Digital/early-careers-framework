@@ -14,7 +14,6 @@ RSpec.describe "Manage FIP unpartnered participants", :with_default_schedules, j
     before do
       and_i_have_added_a_contacted_for_info_mentor
       and_i_have_added_an_ineligible_ect_with_mentor
-      and_training_record_states_refreshed
       and_i_am_signed_in_as_an_induction_coordinator
       and_i_click(Cohort.current.description)
     end
@@ -31,7 +30,6 @@ RSpec.describe "Manage FIP unpartnered participants", :with_default_schedules, j
   context "Ineligible ECTs without mentor assigned" do
     before do
       and_i_have_added_an_ineligible_ect_without_mentor
-      and_training_record_states_refreshed
       and_i_am_signed_in_as_an_induction_coordinator
       and_i_click(Cohort.current.description)
     end
@@ -48,7 +46,6 @@ RSpec.describe "Manage FIP unpartnered participants", :with_default_schedules, j
   context "Ineligible mentor" do
     before do
       and_i_have_added_an_ineligible_mentor
-      and_training_record_states_refreshed
       and_i_am_signed_in_as_an_induction_coordinator
       and_i_click(Cohort.current.description)
     end
@@ -66,7 +63,6 @@ RSpec.describe "Manage FIP unpartnered participants", :with_default_schedules, j
     before do
       and_i_have_added_a_contacted_for_info_mentor
       and_i_have_added_an_eligible_ect_with_mentor
-      and_training_record_states_refreshed
       and_i_am_signed_in_as_an_induction_coordinator
       and_i_click(Cohort.current.description)
     end
@@ -84,7 +80,6 @@ RSpec.describe "Manage FIP unpartnered participants", :with_default_schedules, j
   context "Eligible ECTs without a mentor assigned" do
     before do
       and_i_have_added_an_eligible_ect_without_mentor
-      and_training_record_states_refreshed
       and_i_am_signed_in_as_an_induction_coordinator
       and_i_click(Cohort.current.description)
     end
@@ -103,7 +98,6 @@ RSpec.describe "Manage FIP unpartnered participants", :with_default_schedules, j
   context "Eligible mentor" do
     before do
       and_i_have_added_an_eligible_mentor
-      and_training_record_states_refreshed
       and_i_am_signed_in_as_an_induction_coordinator
       and_i_click(Cohort.current.description)
     end
@@ -122,7 +116,6 @@ RSpec.describe "Manage FIP unpartnered participants", :with_default_schedules, j
     before do
       and_i_have_added_a_mentor
       and_i_have_added_a_contacted_for_info_ect_with_mentor
-      and_training_record_states_refreshed
       and_i_am_signed_in_as_an_induction_coordinator
       and_i_click(Cohort.current.description)
     end
@@ -139,7 +132,6 @@ RSpec.describe "Manage FIP unpartnered participants", :with_default_schedules, j
   context "Contacted for info ECTs without mentor assigned" do
     before do
       and_i_have_added_a_contacted_for_info_ect_without_mentor
-      and_training_record_states_refreshed
       and_i_am_signed_in_as_an_induction_coordinator
       and_i_click(Cohort.current.description)
     end
@@ -156,7 +148,6 @@ RSpec.describe "Manage FIP unpartnered participants", :with_default_schedules, j
   context "Contacted for info mentor" do
     before do
       and_i_have_added_a_contacted_for_info_mentor
-      and_training_record_states_refreshed
       and_i_am_signed_in_as_an_induction_coordinator
       and_i_click(Cohort.current.description)
     end
@@ -174,7 +165,6 @@ RSpec.describe "Manage FIP unpartnered participants", :with_default_schedules, j
     before do
       and_i_have_added_a_contacted_for_info_mentor
       and_i_have_added_a_details_being_checked_ect_with_mentor
-      and_training_record_states_refreshed
       and_i_am_signed_in_as_an_induction_coordinator
       and_i_click(Cohort.current.description)
     end
@@ -191,7 +181,6 @@ RSpec.describe "Manage FIP unpartnered participants", :with_default_schedules, j
   context "Details being checked ECT without mentor" do
     before do
       and_i_have_added_a_details_being_checked_ect_without_mentor
-      and_training_record_states_refreshed
       and_i_am_signed_in_as_an_induction_coordinator
       and_i_click(Cohort.current.description)
     end
@@ -208,7 +197,6 @@ RSpec.describe "Manage FIP unpartnered participants", :with_default_schedules, j
   context "Details being checked mentor" do
     before do
       and_i_have_added_a_details_being_checked_mentor
-      and_training_record_states_refreshed
       and_i_am_signed_in_as_an_induction_coordinator
       and_i_click(Cohort.current.description)
     end
@@ -226,7 +214,6 @@ RSpec.describe "Manage FIP unpartnered participants", :with_default_schedules, j
     before do
       and_i_have_added_a_contacted_for_info_mentor
       and_i_have_added_a_no_qts_ect_with_mentor
-      and_training_record_states_refreshed
       and_i_am_signed_in_as_an_induction_coordinator
       and_i_click(Cohort.current.description)
     end
@@ -243,7 +230,6 @@ RSpec.describe "Manage FIP unpartnered participants", :with_default_schedules, j
   context "Details being checked ECT without mentor" do
     before do
       and_i_have_added_a_no_qts_ect_without_mentor
-      and_training_record_states_refreshed
       and_i_am_signed_in_as_an_induction_coordinator
       and_i_click(Cohort.current.description)
     end

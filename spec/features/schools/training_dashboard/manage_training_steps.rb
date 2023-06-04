@@ -1095,10 +1095,6 @@ module ManageTrainingSteps
     expect(page).to have_summary_row("Appropriate body", appropriate_body.name)
   end
 
-  def and_training_record_states_refreshed
-    TrainingRecordState.refresh
-  end
-
   # Set_steps
 
   def set_participant_data
