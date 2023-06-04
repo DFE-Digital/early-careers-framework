@@ -481,6 +481,7 @@ module Steps
       course_identifier = participant_type == "ECT" ? "ecf-induction" : "ecf-mentor"
 
       and_i_am_on_the_finance_portal
+
       and_i_view_participant_drilldown_from_the_finance_portal
       when_i_find_from_the_finance_participant_drilldown_search participant_name
 
@@ -501,6 +502,7 @@ module Steps
       allow(Finance::Statement::ECF).to receive(:current).and_return(Finance::Statement::ECF.find_by(cohort: Cohort.current, cpd_lead_provider: CpdLeadProvider.find_by(name: lead_provider_name), name: statement_name))
 
       when_i_am_on_the_finance_portal
+
       and_i_view_payment_breakdown_from_the_finance_portal
       and_i_complete_from_the_finance_payment_breakdown_report_wizard lead_provider_name
       and_i_select_statment_from_the_finance_payment_breakdown_report statement_name
@@ -528,6 +530,7 @@ module Steps
       given_i_sign_in_as_an_admin_user
 
       and_i_am_on_the_admin_support_portal
+
       and_i_view_participant_list_from_the_admin_support_portal
       and_i_view_participant_from_the_admin_support_participant_list "The Participant"
 
@@ -547,11 +550,11 @@ module Steps
       participant_detail.has_primary_heading? participant_name
 
       participant_detail.has_full_name? participant_name
-      participant_detail.has_validation_status? validation_status
+      participant_detail.has_training_record_state? validation_status
 
       # now the school data is on a sibling page, we need to navigate
       # there before checking the school/lead provider contents
-      participant_detail.click_school_link
+      participant_detail.open_training_tab
 
       participant_detail.has_school? school.name
       participant_detail.has_lead_provider? lead_provider_name

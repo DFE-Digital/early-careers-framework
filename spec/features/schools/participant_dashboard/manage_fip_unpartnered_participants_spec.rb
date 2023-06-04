@@ -107,7 +107,7 @@ RSpec.describe "Manage FIP unpartnered participants", :with_default_schedules, j
       when_i_navigate_to_participants_dashboard
       when_i_click_on_the_participants_name "Eligible mentor"
       then_i_am_taken_to_view_details_page
-      then_i_can_view_participant_with_status(:not_yet_mentoring_fip_no_partner)
+      then_i_can_view_participant_with_status(:not_yet_mentoring)
       and_the_participant_is_displayed_unpartnered
     end
   end

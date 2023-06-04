@@ -4,8 +4,8 @@ module StatusTags
   class DeliveryPartnerParticipantStatusTag < BaseComponent
     def initialize(participant_profile:, induction_record: nil, delivery_partner: nil)
       @participant_profile = participant_profile
-      @delivery_partner = delivery_partner
       @induction_record = induction_record
+      @delivery_partner = delivery_partner
     end
 
     def label
@@ -35,11 +35,7 @@ module StatusTags
     end
 
     def record_state
-      @record_state ||= DetermineTrainingRecordState.call(
-        participant_profile:,
-        induction_record:,
-        delivery_partner:,
-      ).record_state
+      @record_state ||= DetermineTrainingRecordState.call(participant_profile:, induction_record:, delivery_partner:)&.record_state || :no_longer_involved
     end
   end
 end

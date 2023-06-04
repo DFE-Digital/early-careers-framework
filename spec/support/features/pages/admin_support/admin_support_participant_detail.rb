@@ -8,8 +8,8 @@ module Pages
     # this is a hack as the participants name is the page title
     set_primary_heading(/^.*$/)
 
-    def has_validation_status?(validation_status)
-      element_has_content? self, "Validation status", validation_status
+    def has_training_record_state?(validation_status)
+      element_has_content? self, "Training record state", validation_status
     end
 
     def has_full_name?(full_name)
@@ -26,8 +26,16 @@ module Pages
       # | {school_name} | Full induction programme | 1 September 2021 | 4 September 2021 |
     end
 
-    def click_school_link
-      click_on "School"
+    def open_details_tab
+      click_on "Details"
+    end
+
+    def open_training_tab
+      click_on "Training"
+    end
+
+    def open_statuses_tab
+      click_on "Statuses"
     end
 
     def has_school?(school_name)

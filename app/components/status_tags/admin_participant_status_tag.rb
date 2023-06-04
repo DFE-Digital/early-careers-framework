@@ -13,10 +13,7 @@ module StatusTags
     end
 
     def description
-      Array.wrap(t(:description,
-                   scope: translation_scope,
-                   contact_us: render(MailToSupportComponent.new("contact us"))))
-           .map(&:html_safe)
+      Array.wrap(t(:description, scope: translation_scope, contact_us: render(MailToSupportComponent.new("contact us")))).map(&:html_safe)
     rescue I18n::MissingTranslationData
       []
     end
@@ -34,11 +31,7 @@ module StatusTags
     end
 
     def record_state
-      @record_state ||= DetermineTrainingRecordState.call(
-        participant_profile:,
-        induction_record:,
-        school:,
-      ).record_state
+      @record_state ||= DetermineTrainingRecordState.call(participant_profile:, induction_record:, school:)&.record_state || :no_longer_involved
     end
   end
 end

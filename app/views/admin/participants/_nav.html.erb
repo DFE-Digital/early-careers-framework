@@ -4,11 +4,11 @@
   <% end %>
 
   <%= component.nav_item(path: admin_participant_school_path(@participant_profile)) do %>
-    School
+    Training
   <% end %>
 
-  <%= component.nav_item(path: admin_participant_history_path(@participant_profile)) do %>
-    History
+  <%= component.nav_item(path: admin_participant_statuses_path(@participant_profile)) do %>
+    Statuses
   <% end %>
 
   <%= component.nav_item(path: admin_participant_induction_records_path(@participant_profile)) do %>
@@ -29,5 +29,9 @@
 
   <%= component.nav_item(path: admin_participant_identities_path(@participant_profile)) do %>
     Identities
+  <% end %>
+
+  <%= component.nav_item(path: admin_participant_change_log_path(@participant_profile)) do %>
+    Change log
   <% end %>
 <% end %>

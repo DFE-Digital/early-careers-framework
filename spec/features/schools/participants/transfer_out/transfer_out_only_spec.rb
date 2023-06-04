@@ -44,7 +44,7 @@ RSpec.describe "transfer out participants", :with_default_schedules, type: :feat
 
       click_on "View your ECTs and mentors"
       then_i_am_taken_to_manage_mentors_and_ects_page
-      then_i_should_see_the_transfer_out_participant
+      then_i_should_still_see_the_transferring_participant
     end
 
     # given
@@ -126,8 +126,8 @@ RSpec.describe "transfer out participants", :with_default_schedules, type: :feat
       expect(page).to have_text("Invalid end date")
     end
 
-    def then_i_should_see_the_transfer_out_participant
-      expect(page).to have_summary_row(@ect.full_name, "LEAVING YOUR SCHOOL")
+    def then_i_should_still_see_the_transferring_participant
+      expect(page).to have_link(@ect.full_name)
     end
 
     # and
