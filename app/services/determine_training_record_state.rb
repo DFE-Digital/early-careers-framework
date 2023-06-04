@@ -1,79 +1,114 @@
 # frozen_string_literal: true
 
 # noinspection RubyTooManyMethodsInspection, RubyTooManyInstanceVariablesInspection, RubyInstanceMethodNamingConvention
+#
+# DetermineTrainingRecordState returns a DetermineTrainingRecordState::Record for a given participant that
+# contains the provided IDs along with the following states which can have the nested values:
+#
+# validation_state:
+#   different_trn
+#   internal_error
+#   request_for_details_delivered
+#   request_for_details_failed
+#   request_for_details_submitted
+#   tra_record_not_found
+#   valid
+#   validation_not_started
+#
+# training_eligibility_state:
+#   active_flags
+#   checks_not_complete
+#   duplicate_profile
+#   eligible_for_induction_training
+#   eligible_for_mentor_training
+#   exempt_from_induction
+#   not_allowed
+#   not_qualified
+#   not_yet_mentorin
+#   previous_induction
+#   tra_record_not_found
+#
+# fip_funding_eligibility_state:
+#   active_flags
+#   checks_not_complete
+#   duplicate_profile
+#   eligible_for_fip_funding
+#   eligible_for_mentor_funding
+#   eligible_for_mentor_funding_primary
+#   exempt_from_induction
+#   ineligible_ero
+#   ineligible_ero_primary
+#   ineligible_ero_secondary
+#   ineligible_secondary
+#   no_induction_start
+#   not_allowed
+#   not_qualified
+#   previous_induction
+#   tra_record_not_foun
+#
+# mentoring_state:
+#   active_mentoring
+#   active_mentoring_ero
+#   not_a_mentor
+#   not_yet_mentoring
+#   not_yet_mentoring_ero
+#
+# training_state:
+#   active_cip_training
+#   active_diy_training
+#   active_fip_training
+#   completed_training
+#   deferred_training
+#   joining
+#   leaving
+#   left
+#   no_longer_involved
+#   not_registered_for_training
+#   registered_for_cip_training
+#   registered_for_diy_training
+#   registered_for_fip_no_partner
+#   registered_for_fip_training
+#   withdrawn_programme
+#   withdrawn_training
+#
+# record_state:
+#   active_cip_training
+#   active_diy_training
+#   active_fip_training
+#   active_flags
+#   active_mentoring
+#   active_mentoring_ero
+#   checks_not_complete
+#   completed_training
+#   deferred_training
+#   different_trn
+#   duplicate_profile
+#   exempt_from_induction
+#   internal_error
+#   joining
+#   leaving
+#   left
+#   no_induction_start
+#   no_longer_involved
+#   not_allowed
+#   not_qualified
+#   not_registered_for_training
+#   not_yet_mentoring
+#   not_yet_mentoring_ero
+#   previous_induction
+#   registered_for_cip_training
+#   registered_for_diy_training
+#   registered_for_fip_no_partner
+#   registered_for_fip_training
+#   request_for_details_delivered
+#   request_for_details_failed
+#   request_for_details_submitted
+#   tra_record_not_found
+#   validation_not_started
+#   withdrawn_programme
+#   withdrawn_training
 class DetermineTrainingRecordState < BaseService
   attr_reader :participant_profile_id, :school_id, :appropriate_body_id, :delivery_partner_id, :induction_record_id
-
-  # enum validation_state: {
-  #   different_trn: "different_trn",
-  #   request_for_details_delivered: "request_for_details_delivered",
-  #   request_for_details_failed: "request_for_details_failed",
-  #   request_for_details_submitted: "request_for_details_submitted",
-  #   validation_not_started: "validation_not_started",
-  #   internal_error: "internal_error",
-  #   tra_record_not_found: "tra_record_not_found",
-  #   valid: "valid",
-  # }, _prefix: "validation_status"
-  #
-  # enum training_eligibility_state: {
-  #   checks_not_complete: "checks_not_complete",
-  #   active_flags: "active_flags",
-  #   not_allowed: "not_allowed",
-  #   eligible_for_mentor_training: "eligible_for_mentor_training",
-  #   not_yet_mentoring: "not_yet_mentoring",
-  #   duplicate_profile: "duplicate_profile",
-  #   not_qualified: "not_qualified",
-  #   exempt_from_induction: "exempt_from_induction",
-  #   previous_induction: "previous_induction",
-  #   tra_record_not_found: "tra_record_not_found",
-  #   eligible_for_induction_training: "eligible_for_induction_training",
-  # }, _prefix: "training_eligibility_status"
-  #
-  # enum fip_funding_eligibility_state: {
-  #   checks_not_complete: "checks_not_complete",
-  #   eligible_for_fip_funding: "eligible_for_fip_funding",
-  #   active_flags: "active_flags",
-  #   not_allowed: "not_allowed",
-  #   ineligible_ero_secondary: "ineligible_ero_secondary",
-  #   ineligible_ero_primary: "ineligible_ero_primary",
-  #   ineligible_ero: "ineligible_ero",
-  #   ineligible_secondary: "ineligible_secondary",
-  #   eligible_for_mentor_funding_primary: "eligible_for_mentor_funding_primary",
-  #   eligible_for_mentor_funding: "eligible_for_mentor_funding",
-  #   no_induction_start: "no_induction_start",
-  #   not_qualified: "not_qualified",
-  #   duplicate_profile: "duplicate_profile",
-  #   exempt_from_induction: "exempt_from_induction",
-  #   previous_induction: "previous_induction",
-  #   tra_record_not_found: "tra_record_not_found",
-  # }, _prefix: "fip_funding_eligibility_status"
-  #
-  # enum mentoring_state: {
-  #   active_mentoring_ero: "active_mentoring_ero",
-  #   active_mentoring: "active_mentoring",
-  #   not_yet_mentoring_ero: "not_yet_mentoring_ero",
-  #   not_yet_mentoring: "not_yet_mentoring",
-  #   not_a_mentor: "not_a_mentor",
-  # }, _prefix: "mentoring_status"
-  #
-  # enum training_state: {
-  #   no_longer_involved: "no_longer_involved",
-  #   leaving: "leaving",
-  #   left: "left",
-  #   joining: "joining",
-  #   withdrawn_programme: "withdrawn_programme",
-  #   withdrawn_training: "withdrawn_training",
-  #   deferred_training: "deferred_training",
-  #   completed_training: "completed_training",
-  #   registered_for_fip_no_partner: "registered_for_fip_no_partner",
-  #   active_fip_training: "active_fip_training",
-  #   registered_for_fip_training: "registered_for_fip_training",
-  #   active_cip_training: "active_cip_training",
-  #   registered_for_cip_training: "registered_for_cip_training",
-  #   active_diy_training: "active_diy_training",
-  #   registered_for_diy_training: "registered_for_diy_training",
-  #   not_registered_for_training: "not_registered_for_training",
-  # }, _prefix: "training_status"
 
   RECORD_STATES = {
     "different_trn" => "different_trn",
