@@ -12,16 +12,14 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
   end
 
   shared_examples "determines states as" do |validation_state, training_eligibility_state, fip_funding_eligibility_state, mentoring_state, training_state, record_state|
-    it "states are determined as expected" do
+    it %(states are determined as expected and each StatusTag has a language file entry for the record_state of "#{record_state}") do
       expect(determined_state.validation_state).to eq validation_state
       expect(determined_state.training_eligibility_state).to eq training_eligibility_state
       expect(determined_state.fip_funding_eligibility_state).to eq fip_funding_eligibility_state
       expect(determined_state.mentoring_state).to eq mentoring_state
       expect(determined_state.training_state).to eq training_state
       expect(determined_state.record_state).to eq record_state
-    end
 
-    it "Each StatusTag has a language file entry for the record_state of \"#{record_state}\"" do
       expect(I18n.t("status_tags.admin_participant_status").keys).to include record_state&.to_sym
       expect(I18n.t("status_tags.appropriate_body_participant_status").keys).to include record_state&.to_sym
       expect(I18n.t("status_tags.delivery_partner_participant_status").keys).to include record_state&.to_sym
