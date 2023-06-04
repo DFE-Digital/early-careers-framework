@@ -25,7 +25,10 @@ module Api
           scope = scope.where(delivery_partner_id: delivery_partner_ids)
         end
 
-        scope.select(:id).distinct
+        scope
+          .select(:id, :created_at)
+          .order(:created_at)
+          .distinct
       end
 
       def participant_declarations_from(paginated_join)

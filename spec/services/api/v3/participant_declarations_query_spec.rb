@@ -39,7 +39,7 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery, :with_default_schedules do
           delivery_partner: delivery_partner1,
         )
 
-        ParticipantDeclaration.where(id: declaration.id).select(:id).first
+        ParticipantDeclaration.where(id: declaration.id).select(:id, :created_at).first
       end
     end
     let!(:participant_declaration2) do
@@ -53,7 +53,7 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery, :with_default_schedules do
           delivery_partner: delivery_partner2,
         )
 
-        ParticipantDeclaration.where(id: declaration.id).select(:id).first
+        ParticipantDeclaration.where(id: declaration.id).select(:id, :created_at).first
       end
     end
     let!(:participant_declaration3) do
@@ -67,7 +67,7 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery, :with_default_schedules do
           delivery_partner: delivery_partner2,
         )
 
-        ParticipantDeclaration.where(id: declaration.id).select(:id).first
+        ParticipantDeclaration.where(id: declaration.id).select(:id, :created_at).first
       end
     end
     let!(:participant_declaration4) do
@@ -81,13 +81,13 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery, :with_default_schedules do
           delivery_partner: delivery_partner1,
         )
 
-        ParticipantDeclaration.where(id: declaration.id).select(:id).first
+        ParticipantDeclaration.where(id: declaration.id).select(:id, :created_at).first
       end
     end
 
     context "empty params" do
       it "returns all participant declarations for cpd_lead_provider1" do
-        expect(subject.participant_declarations_for_pagination.to_a).to contain_exactly(participant_declaration3, participant_declaration1, participant_declaration2)
+        expect(subject.participant_declarations_for_pagination.to_a).to eq([participant_declaration3, participant_declaration1, participant_declaration2])
       end
     end
 
@@ -95,7 +95,7 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery, :with_default_schedules do
       let(:params) { { filter: { cohort: cohort2.start_year.to_s } } }
 
       it "returns all participant declarations for the specific cohort" do
-        expect(subject.participant_declarations_for_pagination.to_a).to contain_exactly(participant_declaration3)
+        expect(subject.participant_declarations_for_pagination.to_a).to eq([participant_declaration3])
       end
     end
 
@@ -103,7 +103,7 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery, :with_default_schedules do
       let(:params) { { filter: { cohort: [cohort1.start_year, cohort2.start_year].join(",") } } }
 
       it "returns all participant declarations for the specific cohort" do
-        expect(subject.participant_declarations_for_pagination.to_a).to contain_exactly(participant_declaration3, participant_declaration1, participant_declaration2)
+        expect(subject.participant_declarations_for_pagination.to_a).to eq([participant_declaration3, participant_declaration1, participant_declaration2])
       end
     end
 
@@ -119,7 +119,7 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery, :with_default_schedules do
       let(:params) { { filter: { participant_id: participant_profile1.user_id } } }
 
       it "returns participant declarations for the specific participant_id" do
-        expect(subject.participant_declarations_for_pagination.to_a).to contain_exactly(participant_declaration1)
+        expect(subject.participant_declarations_for_pagination.to_a).to eq([participant_declaration1])
       end
     end
 
@@ -127,7 +127,7 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery, :with_default_schedules do
       let(:params) { { filter: { participant_id: [participant_profile1.user_id, participant_profile2.user_id].join(",") } } }
 
       it "returns participant declarations for the specific participant_id" do
-        expect(subject.participant_declarations_for_pagination.to_a).to contain_exactly(participant_declaration1, participant_declaration2)
+        expect(subject.participant_declarations_for_pagination.to_a).to eq([participant_declaration1, participant_declaration2])
       end
     end
 
@@ -150,7 +150,7 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery, :with_default_schedules do
       end
 
       it "returns participant declarations for the specific updated time" do
-        expect(subject.participant_declarations_for_pagination.to_a).to contain_exactly(participant_declaration2)
+        expect(subject.participant_declarations_for_pagination.to_a).to eq([participant_declaration2])
       end
     end
 
@@ -158,7 +158,7 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery, :with_default_schedules do
       let(:params) { { filter: { delivery_partner_id: delivery_partner2.id } } }
 
       it "returns participant declarations for the specific delivery_partner_id" do
-        expect(subject.participant_declarations_for_pagination.to_a).to contain_exactly(participant_declaration3, participant_declaration2)
+        expect(subject.participant_declarations_for_pagination.to_a).to eq([participant_declaration3, participant_declaration2])
       end
     end
 
@@ -166,7 +166,7 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery, :with_default_schedules do
       let(:params) { { filter: { delivery_partner_id: [delivery_partner1.id, delivery_partner2.id].join(",") } } }
 
       it "returns participant declarations for the specific delivery_partner_id" do
-        expect(subject.participant_declarations_for_pagination.to_a).to contain_exactly(participant_declaration3, participant_declaration1, participant_declaration2)
+        expect(subject.participant_declarations_for_pagination.to_a).to eq([participant_declaration3, participant_declaration1, participant_declaration2])
       end
     end
 
