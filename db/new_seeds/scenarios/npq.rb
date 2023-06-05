@@ -92,7 +92,9 @@ module NewSeeds
                             employment_role: employment_role.sample,
                             employer_name: employer_name.sample,
                             eligible_for_funding: false,
-                            funding_eligiblity_status_code: "no_institution")
+                            funding_eligiblity_status_code: "no_institution",
+                            created_at: rand(60.years.ago.to_date..23.years.ago.to_date)
+                          )
       end
 
       def add_declaration
