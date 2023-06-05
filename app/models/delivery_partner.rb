@@ -18,6 +18,7 @@ class DeliveryPartner < DiscardableRecord
 
   has_many :delivery_partner_profiles, dependent: :destroy
   has_many :users, through: :delivery_partner_profiles
+  has_many :training_record_states
 
   scope :name_order, -> { order("UPPER(name)") }
 

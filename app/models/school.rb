@@ -10,6 +10,7 @@ class School < ApplicationRecord
 
   belongs_to :network, optional: true
 
+  has_many :training_record_states
   has_many :npq_applications, foreign_key: "school_urn", class_name: "NPQApplication"
   has_many :school_links, dependent: :destroy
   has_many :successor_links, -> { successor }, class_name: "SchoolLink"

@@ -108,7 +108,7 @@
 #   withdrawn_programme
 #   withdrawn_training
 class DetermineTrainingRecordState < BaseService
-  attr_reader :participant_profile_id, :school_id, :appropriate_body_id, :delivery_partner_id, :induction_record_id
+  attr_reader :participant_profile_id, :school_id, :appropriate_body_id, :delivery_partner_id
 
   RECORD_STATES = %w[
     different_trn
@@ -150,7 +150,6 @@ class DetermineTrainingRecordState < BaseService
 
   Record = Struct.new(
     :participant_profile_id,
-    :induction_record_id,
     :school_id,
     :lead_provider_id,
     :delivery_partner_id,
@@ -189,6 +188,10 @@ class DetermineTrainingRecordState < BaseService
 
 private
 
+  def execute_query
+    ActiveRecord::Base.connection.execute(query)
+  end
+
   def initialize(participant_profile:, induction_record: nil, delivery_partner: nil, appropriate_body: nil, school: nil)
     unless participant_profile.is_a? ParticipantProfile
       raise ArgumentError, "Expected a ParticipantProfile, got #{participant_profile.class}"
@@ -214,7 +217,6 @@ private
       end
     end
 
-    @induction_record_id = induction_record&.id
     @delivery_partner_id = delivery_partner&.id
     @appropriate_body_id = appropriate_body&.id
     @school_id = school&.id
@@ -271,7 +273,6 @@ private
       SELECT
           "participant_profiles"."id"                 as "participant_profile_id",
           "participant_profiles"."type"               as "participant_profile_type",
-          "induction_records"."id"                    as "induction_record_id",
           CASE
               WHEN "partnerships"."school_id" IS NOT NULL THEN "partnerships"."school_id"
               ELSE "school_cohorts"."school_id"
@@ -494,7 +495,6 @@ private
   def individual_training_record_state_conditions
     conditions = [ParticipantProfile.arel_table[:id].eq(participant_profile_id)].tap do |c|
       c << SchoolCohort.arel_table[:school_id].eq(school_id) if school_id.present?
-      c << InductionRecord.arel_table[:id].eq(induction_record_id) if induction_record_id.present?
       c << SchoolCohort.arel_table[:appropriate_body_id].eq(appropriate_body_id) if appropriate_body_id.present?
       c << Partnership.arel_table[:delivery_partner_id].eq(delivery_partner_id) if delivery_partner_id.present?
     end
@@ -506,7 +506,6 @@ private
     <<~SQL
       SELECT
           "individual_training_record_states"."participant_profile_id",
-          "individual_training_record_states"."induction_record_id",
           "individual_training_record_states"."school_id",
           "individual_training_record_states"."lead_provider_id",
           "individual_training_record_states"."delivery_partner_id",

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_06_04_164057) do
+ActiveRecord::Schema.define(version: 2023_06_05_154522) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -1034,6 +1034,28 @@ ActiveRecord::Schema.define(version: 2023_06_04_164057) do
     t.index ["user_id"], name: "index_teacher_profiles_on_user_id", unique: true
   end
 
+  create_table "training_record_states", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "participant_profile_id", null: false
+    t.uuid "school_id"
+    t.uuid "lead_provider_id"
+    t.uuid "appropriate_body_id"
+    t.uuid "delivery_partner_id"
+    t.datetime "changed_at", null: false
+    t.string "validation_state", null: false
+    t.string "training_eligibility_state", null: false
+    t.string "fip_funding_eligibility_state", null: false
+    t.string "mentoring_state", null: false
+    t.string "training_state", null: false
+    t.string "record_state", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["delivery_partner_id"], name: "index_training_record_states_on_delivery_partner_id"
+    t.index ["lead_provider_id"], name: "index_training_record_states_on_lead_provider_id"
+    t.index ["participant_profile_id", "school_id", "lead_provider_id", "appropriate_body_id", "delivery_partner_id", "changed_at"], name: "index_training_record_states_unique_ids", unique: true
+    t.index ["participant_profile_id"], name: "index_training_record_states_on_participant_profile_id"
+    t.index ["school_id"], name: "index_training_record_states_on_school_id"
+  end
+
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "full_name", null: false
     t.citext "email", default: "", null: false
@@ -1160,6 +1182,11 @@ ActiveRecord::Schema.define(version: 2023_06_04_164057) do
   add_foreign_key "sync_dqt_induction_start_date_errors", "participant_profiles"
   add_foreign_key "teacher_profiles", "schools"
   add_foreign_key "teacher_profiles", "users"
+  add_foreign_key "training_record_states", "appropriate_bodies"
+  add_foreign_key "training_record_states", "delivery_partners"
+  add_foreign_key "training_record_states", "lead_providers"
+  add_foreign_key "training_record_states", "participant_profiles"
+  add_foreign_key "training_record_states", "schools"
 
   create_view "ecf_duplicates", sql_definition: <<-SQL
       SELECT participant_identities.user_id,

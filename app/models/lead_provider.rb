@@ -25,6 +25,7 @@ class LeadProvider < ApplicationRecord
   has_many :partnership_csv_uploads
   has_many :lead_provider_api_tokens
   has_one :call_off_contract
+  has_many :training_record_states
 
   has_many :statements, through: :cpd_lead_provider, class_name: "Finance::Statement::ECF", source: :ecf_statements
   validates :name, presence: { message: "Enter a name" }

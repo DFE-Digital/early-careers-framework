@@ -13,6 +13,7 @@ RSpec.describe ParticipantProfile, type: :model do
       withdrawn: "withdrawn",
     ).with_suffix(:record).backed_by_column_of_type(:text)
   }
+  it { is_expected.to have_many(:training_record_states) }
 
   it "updates the updated_at on the users", :with_default_schedules do
     freeze_time do
