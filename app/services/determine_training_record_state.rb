@@ -569,6 +569,8 @@ private
           "individual_training_record_states"."mentoring_state",
           "individual_training_record_states"."training_state",
           "record_state"
+      ORDER BY
+        "individual_training_record_states"."changed_at"
     SQL
   end
 end
