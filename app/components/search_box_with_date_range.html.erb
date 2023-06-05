@@ -1,4 +1,5 @@
 <div class="search-box">
+  <h1 class="govuk-heading-l"><%= "Search Applicants" %></h1>
   <%= form_with method: :get do |f| %>
     <%= f.govuk_text_field(
       param_name,
@@ -14,7 +15,7 @@
         class: "govuk-form-group"
       }
     ) %>
-    <div style="display: flex">
+    <div style="display: flex; margin-left: -14px">
       <% filters.each do |filter| %>
         <%= f.govuk_collection_select(
           filter[:field],
@@ -22,7 +23,8 @@
           :id,
           :name,
           label: {
-            text: "Filter by #{filter[:label] || filter[:field]}"
+            text: "#{filter[:label] || filter[:field]}",
+            size: "s"
           },
           options: {
             selected: filter[:value]
@@ -33,11 +35,11 @@
         ) %>
       <% end %>
     </div>
-    <div style="display: flex">
+    <div style="display: flex; margin-left: -14px">
       <%= f.govuk_date_field(
         :start_date,
         legend: {
-          text: "Start Date",
+          text: "Earliest date registration submitted",
           size: 's'
         },
         hint: {
@@ -50,7 +52,7 @@
       <%= f.govuk_date_field(
         :end_date,
         legend: {
-          text: "End Date",
+          text: "Latest date registration submitted",
           size: 's'
         },
         hint: {

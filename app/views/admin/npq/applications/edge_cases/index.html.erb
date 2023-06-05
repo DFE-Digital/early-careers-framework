@@ -2,11 +2,10 @@
 
 <%= render SearchBoxWithDateRange.new( 
   query: params[:query],
-  title: "Search Applicants",
-  hint: "Enter the Applicant’s ID, Name, Email, Employer's Name, TRN or Application Id",
+  title: "Enter the Applicant’s ID, Name, Email, Employer's Name, TRN or Application Id",
   filters: [
     {
-      field: :FundingEligiblityStatusCode,
+      field: "Funding eligiblity status code",
       value: params[:FundingEligiblityStatusCode],
       options: [
         OpenStruct.new(id: "", name: ""),
@@ -25,7 +24,7 @@
       ],
     },
     {
-      field: :EmploymentType,
+      field: "Employment type",
       value: params[:EmploymentType],
       options: [
         OpenStruct.new(id: "", name: ""),
@@ -49,7 +48,7 @@
         row.cell(header: true, text: "Employment type")
         row.cell(header: true, text: "Employer name")
         row.cell(header: true, text: "Role")
-        row.cell(header: true, text: "Created at")
+        row.cell(header: true, text: "Registration submitted date")
       end
     end 
 
