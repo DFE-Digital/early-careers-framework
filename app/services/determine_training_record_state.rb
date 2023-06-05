@@ -520,16 +520,16 @@ private
 
           CASE
               WHEN "individual_training_record_states"."training_state" IN (
-                                                                            'withdrawn_programme',
-                                                                            'joining',
-                                                                            'leaving',
-                                                                            'left'
+                                                                            'withdrawn_programme'
                                                                           )
                   THEN "individual_training_record_states"."training_state"
               WHEN "individual_training_record_states"."training_state" IN (
                                                                             'withdrawn_training',
                                                                             'deferred_training',
-                                                                            'completed_training'
+                                                                            'completed_training',
+                                                                            'joining',
+                                                                            'leaving',
+                                                                            'left'
                                                                           )
                   THEN
                   CASE

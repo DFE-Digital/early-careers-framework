@@ -1197,7 +1197,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                            "eligible_for_mentor_funding",
                            "active_mentoring",
                            "leaving",
-                           "leaving"
+                           "active_mentoring"
         end
 
         context "and they have left their current school" do
@@ -1209,7 +1209,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                            "eligible_for_mentor_funding",
                            "active_mentoring",
                            "left",
-                           "left"
+                           "active_mentoring"
         end
 
         context "and they are transferring from their current school" do
@@ -1221,7 +1221,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                            "eligible_for_mentor_funding",
                            "active_mentoring",
                            "leaving",
-                           "leaving"
+                           "active_mentoring"
         end
 
         context "and they have transferred from their current school" do
@@ -1233,7 +1233,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                            "eligible_for_mentor_funding",
                            "active_mentoring",
                            "left",
-                           "left"
+                           "active_mentoring"
         end
 
         context "and they are joining their current school" do
@@ -1245,7 +1245,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                            "eligible_for_mentor_funding",
                            "active_mentoring",
                            "joining",
-                           "joining"
+                           "active_mentoring"
         end
 
         context "and they have joined their current school" do
@@ -1599,7 +1599,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                            "eligible_for_mentor_funding",
                            "active_mentoring",
                            "leaving",
-                           "leaving"
+                           "active_mentoring"
         end
 
         context "and they have left their current school" do
@@ -1611,7 +1611,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                            "eligible_for_mentor_funding",
                            "active_mentoring",
                            "left",
-                           "left"
+                           "active_mentoring"
         end
 
         context "and they are transferring from their current school" do
@@ -1623,7 +1623,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                            "eligible_for_mentor_funding",
                            "active_mentoring",
                            "leaving",
-                           "leaving"
+                           "active_mentoring"
         end
 
         context "and they have transferred from their current school" do
@@ -1635,7 +1635,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                            "eligible_for_mentor_funding",
                            "active_mentoring",
                            "left",
-                           "left"
+                           "active_mentoring"
         end
 
         context "and they are joining their current school" do
@@ -1647,7 +1647,7 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                            "eligible_for_mentor_funding",
                            "active_mentoring",
                            "joining",
-                           "joining"
+                           "active_mentoring"
         end
 
         context "and they have joined their current school" do
