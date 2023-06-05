@@ -1,43 +1,71 @@
 <div class="search-box">
   <%= form_with method: :get do |f| %>
-    
-    <div class="w3-container", style="display: flex">
-      <%= f.govuk_text_field(
-          param_name,
-          value: query,
-          label: { text: title, size: "s" },
-          hint: { text: hint },
-          form_group: { class: "govuk-form-group govuk-!-width-one-third" }
-        )
-      %>
-
+    <%= f.govuk_text_field(
+      param_name,
+      value: query,
+      label: {
+        text: title,
+        size: "s"
+      },
+      hint: {
+        text: hint
+      },
+      form_group: {
+        class: "govuk-form-group"
+      }
+    ) %>
+    <div style="display: flex">
       <% filters.each do |filter| %>
-        <div style="margin-left: 5%; margin-top: 3%">
-          <%= f.govuk_collection_select filter[:field],
-            filter[:options],
-            :id,
-            :name,
-            label: { text: "Filter by #{filter[:label] || filter[:field]}" },
-            options: { selected: filter[:value] },
-            form_group: { class: "govuk-form-group govuk-!-width-one-third" } %>
-        </div>
+        <%= f.govuk_collection_select(
+          filter[:field],
+          filter[:options],
+          :id,
+          :name,
+          label: {
+            text: "Filter by #{filter[:label] || filter[:field]}"
+          },
+          options: {
+            selected: filter[:value]
+          },
+          form_group: {
+            class: "govuk-form-group govuk-grid-column-two-thirds"
+          }
+        ) %>
       <% end %>
     </div>
-
-    <div class="w3-container", style="display: flex">
-      <%= f.govuk_date_field :start_date,
-        legend: { text: "Start Date", size: 's' },
-        hint: { text: "For example, 14 9 2022" },
-        form_group: { class: "govuk-form-group govuk-!-width-one-third" }
-      %>
-
-      <%= f.govuk_date_field :end_date,
-        legend: { text: "End Date", size: 's' },
-        hint: { text: "For example, 14 9 2022" },
-        form_group: { class: "govuk-form-group govuk-!-width-one-third" }
-      %>
+    <div style="display: flex">
+      <%= f.govuk_date_field(
+        :start_date,
+        legend: {
+          text: "Start Date",
+          size: 's'
+        },
+        hint: {
+          text: "For example, 14 9 2022"
+        },
+        form_group: {
+          class: "govuk-form-group govuk-grid-column-two-thirds"
+        }
+      ) %>
+      <%= f.govuk_date_field(
+        :end_date,
+        legend: {
+          text: "End Date",
+          size: 's'
+        },
+        hint: {
+          text: "For example, 14 9 2022"
+        },
+        form_group: {
+          class: "govuk-form-group govuk-grid-column-two-thirds"
+        }
+      ) %>
     </div>
-
-    <%= f.govuk_submit "Search", class: "search-box__button", style: "margin-left: 0px; margin-top: 15px;", "data-test": "search-button" %>
+    <%= f.govuk_submit(
+      "Search",
+      class: "search-box__button",
+      style: "margin-left: 0px; margin-top: 15px;",
+      "data-test": "search-button"
+    ) %>
   <% end %>
 </div>
