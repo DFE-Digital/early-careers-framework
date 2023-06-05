@@ -28,6 +28,7 @@ class Partnership < ApplicationRecord
   end
 
   after_save :update_analytics
+  after_create :set_challenge_deadline_by_cohort
 
   def challenged?
     challenge_reason.present?
@@ -66,5 +67,11 @@ private
 
   def update_analytics
     Analytics::UpsertECFPartnershipJob.perform_later(partnership: self) if saved_changes?
+  end
+
+  def set_challenge_deadline_by_cohort
+    if cohort.start_year == 2023 && created_at < Date.new(2023, 10, 17)
+      update!(challenge_deadline: Date.new(2023, 10, 31))
+    end
   end
 end

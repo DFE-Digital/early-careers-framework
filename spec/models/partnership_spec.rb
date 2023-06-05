@@ -117,4 +117,20 @@ RSpec.describe Partnership, type: :model do
       end
     end
   end
+
+  describe "challenge deadline for cohort 2023" do
+    it "sets the challenge deadline to 31st October 2023 when the date is before 17th October 2023" do
+      travel_to Date.new(2023, 10, 16) do
+        partnership = create(:partnership, cohort: create(:cohort, start_year: 2023))
+        expect(partnership.challenge_deadline).to eq(Date.new(2023, 10, 31))
+      end
+    end
+
+    it "leaves the challenge deadline to the default value when the date is from 17th October 2023" do
+      travel_to Date.new(2023, 10, 17) do
+        partnership = create(:partnership, cohort: create(:cohort, start_year: 2023))
+        expect(partnership.challenge_deadline).to_not eq(Date.new(2023, 10, 31))
+      end
+    end
+  end
 end
