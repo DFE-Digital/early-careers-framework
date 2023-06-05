@@ -500,7 +500,7 @@ private
           "individual_training_record_states"."lead_provider_id",
           "individual_training_record_states"."delivery_partner_id",
           "individual_training_record_states"."appropriate_body_id",
-          MIN("individual_training_record_states"."changed_at") as "changed_at",
+          "individual_training_record_states"."changed_at",
           "individual_training_record_states"."validation_state",
           "individual_training_record_states"."training_eligibility_state",
           "individual_training_record_states"."fip_funding_eligibility_state",
@@ -555,20 +555,6 @@ private
 
       WHERE
           "individual_training_record_states"."participant_profile_id" = '#{participant_profile_id}'
-
-      GROUP BY
-          "individual_training_record_states"."participant_profile_id",
-          "individual_training_record_states"."induction_record_id",
-          "individual_training_record_states"."school_id",
-          "individual_training_record_states"."lead_provider_id",
-          "individual_training_record_states"."delivery_partner_id",
-          "individual_training_record_states"."appropriate_body_id",
-          "individual_training_record_states"."validation_state",
-          "individual_training_record_states"."training_eligibility_state",
-          "individual_training_record_states"."fip_funding_eligibility_state",
-          "individual_training_record_states"."mentoring_state",
-          "individual_training_record_states"."training_state",
-          "record_state"
       ORDER BY
         "individual_training_record_states"."changed_at"
     SQL
