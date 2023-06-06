@@ -179,7 +179,7 @@ private
     value = value.is_a?(Array) ? value[1] : value
 
     if key == "school_cohort_id"
-      school_cohort = SchoolCohort.find value
+      school_cohort = SchoolCohort.find_by(id: value)
 
       unless school_cohort.nil?
         record_school_cohort_events(school_cohort)
@@ -187,7 +187,7 @@ private
     end
 
     if key == "teacher_profile_id"
-      teacher_profile = TeacherProfile.find value
+      teacher_profile = TeacherProfile.find_by(id: value)
 
       unless teacher_profile.nil?
         record_teacher_record_events(teacher_profile)
@@ -209,53 +209,55 @@ private
     @events.push ParticipantEvent.new(@user.id, date, description, actor, value)
   end
 
-  def get_user_label(whodunnit)
-    user = User.find whodunnit unless whodunnit.nil?
-    return whodunnit || "Unknown" if user.nil?
+  def get_user_label(user_id)
+    return "Unknown" if user_id.nil?
+
+    user = User.find_by(id: user_id)
+    return user_id if user.nil?
 
     parts = user.email.split("@")
     parts[1] || parts[0]
   end
 
   def get_lead_provider_label(lead_provider_id)
-    lead_provider = LeadProvider.find lead_provider_id
+    lead_provider = LeadProvider.find_by(id: lead_provider_id)
     return lead_provider_id if lead_provider.nil?
 
     lead_provider.name
   end
 
   def get_delivery_partner_label(delivery_partner_id)
-    delivery_partner = DeliveryPartner.find delivery_partner_id
+    delivery_partner = DeliveryPartner.find_by(id: delivery_partner_id)
     return delivery_partner_id if delivery_partner.nil?
 
     delivery_partner.name
   end
 
   def get_schedule_label(schedule_id)
-    schedule = Finance::Schedule.find schedule_id
+    schedule = Finance::Schedule.find_by(id: schedule_id)
     return schedule_id if schedule.nil?
 
     schedule.schedule_identifier
   end
 
   def get_appropriate_body_label(appropriate_body_id)
-    appropriate_body = AppropriateBody.find appropriate_body_id
+    appropriate_body = AppropriateBody.find_by(id: appropriate_body_id)
     return appropriate_body_id if appropriate_body.nil?
 
     appropriate_body.name
   end
 
   def get_cohort_label(cohort_id)
-    cohort = Cohort.find cohort_id
+    cohort = Cohort.find_by(id: cohort_id)
     return cohort_id if cohort.nil?
 
     cohort.academic_year
   end
 
   def get_induction_programme_label(induction_programme_id)
-    induction_programme = InductionProgramme.find induction_programme_id
+    induction_programme = InductionProgramme.find_by(id: induction_programme_id)
     return induction_programme_id if induction_programme.nil?
 
-    "#{induction_programme.training_programme}|#{induction_programme.lead_provider.name}|#{induction_programme.delivery_partner.name}|#{induction_programme.cohort.academic_year}"
+    "#{induction_programme.training_programme} | #{induction_programme.lead_provider.name} | #{induction_programme.delivery_partner.name} | #{induction_programme.cohort.academic_year}"
   end
 end
