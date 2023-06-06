@@ -108,7 +108,7 @@
 #   withdrawn_programme
 #   withdrawn_training
 class DetermineTrainingRecordState < BaseService
-  attr_reader :participant_profile_id, :school_id, :appropriate_body_id, :delivery_partner_id
+  attr_reader :participant_profile, :school, :appropriate_body, :delivery_partner, :lead_provider
 
   RECORD_STATES = %w[
     different_trn
@@ -148,38 +148,22 @@ class DetermineTrainingRecordState < BaseService
     not_registered_for_training
   ].each_with_object({}) { |v, h| h[v] = v }.freeze
 
-  Record = Struct.new(
-    :participant_profile_id,
-    :school_id,
-    :lead_provider_id,
-    :delivery_partner_id,
-    :appropriate_body_id,
-    :changed_at,
-    :validation_state,
-    :training_eligibility_state,
-    :fip_funding_eligibility_state,
-    :mentoring_state,
-    :training_state,
-    :record_state,
-    keyword_init: true,
-  ) do
-    def validation_status_valid?
-      validation_state == "valid"
-    end
+  # for now, if there is a TrainingRecordState matching our conditions return it, otherwise
+  # perform a sync
+  def call
+    TrainingRecordState.latest_for(**params) || sync
   end
 
-  def call
-    result = ActiveRecord::Base.connection.execute(query)
-
-    Record.new(**result.first)
+  def sync
+    TrainingRecordState.create(**execute_query.first)
   end
 
   def all
-    ActiveRecord::Base.connection.execute(query).map { |record| Record.new(record) }
+    TrainingRecordState.where(**params)
   end
 
   def raw
-    ActiveRecord::Base.connection.execute(query)
+    execute_query
   end
 
   def is_record_state?(state)
@@ -188,22 +172,22 @@ class DetermineTrainingRecordState < BaseService
 
 private
 
+  def params
+    { participant_profile:, school:, appropriate_body:, delivery_partner:, lead_provider: }
+  end
+
   def execute_query
     ActiveRecord::Base.connection.execute(query)
   end
 
-  def initialize(participant_profile:, induction_record: nil, delivery_partner: nil, appropriate_body: nil, school: nil)
+  def initialize(participant_profile:, delivery_partner: nil, appropriate_body: nil, school: nil)
     unless participant_profile.is_a? ParticipantProfile
       raise ArgumentError, "Expected a ParticipantProfile, got #{participant_profile.class}"
     end
 
-    @participant_profile_id = participant_profile.id
+    @participant_profile = participant_profile
 
     if participant_profile.ecf?
-      unless induction_record.nil? || induction_record.is_a?(InductionRecord)
-        raise ArgumentError, "Expected an InductionRecord, got #{induction_record.class}"
-      end
-
       unless delivery_partner.nil? || delivery_partner.is_a?(DeliveryPartner)
         raise ArgumentError, "Expected a DeliveryPartner, got #{delivery_partner.class}"
       end
@@ -217,9 +201,9 @@ private
       end
     end
 
-    @delivery_partner_id = delivery_partner&.id
-    @appropriate_body_id = appropriate_body&.id
-    @school_id = school&.id
+    @delivery_partner = delivery_partner
+    @appropriate_body = appropriate_body
+    @school = school
   end
 
   def query
@@ -239,7 +223,7 @@ private
           count(*) as total
       FROM "induction_records"
       WHERE
-          "induction_records"."mentor_profile_id" = '#{participant_profile_id}'
+          "induction_records"."mentor_profile_id" = '#{participant_profile.id}'
       GROUP BY
           "induction_records"."mentor_profile_id",
           "induction_records"."participant_profile_id"
@@ -261,7 +245,7 @@ private
       AND
           ea.object_type = 'ParticipantProfile'
       AND
-          ea.object_id = '#{participant_profile_id}'
+          ea.object_id = '#{participant_profile.id}'
       ORDER BY
           ea.object_id,
           e.created_at DESC
@@ -493,10 +477,11 @@ private
   end
 
   def individual_training_record_state_conditions
-    conditions = [ParticipantProfile.arel_table[:id].eq(participant_profile_id)].tap do |c|
-      c << SchoolCohort.arel_table[:school_id].eq(school_id) if school_id.present?
-      c << SchoolCohort.arel_table[:appropriate_body_id].eq(appropriate_body_id) if appropriate_body_id.present?
-      c << Partnership.arel_table[:delivery_partner_id].eq(delivery_partner_id) if delivery_partner_id.present?
+    conditions = [ParticipantProfile.arel_table[:id].eq(participant_profile.id)].tap do |c|
+      c << SchoolCohort.arel_table[:school_id].eq(school.id) if school.present?
+      c << SchoolCohort.arel_table[:appropriate_body_id].eq(appropriate_body.id) if appropriate_body.present?
+      c << Partnership.arel_table[:delivery_partner_id].eq(delivery_partner.id) if delivery_partner.present?
+      c << Partnership.arel_table[:lead_provider_id].eq(lead_provider.id) if lead_provider.present?
     end
 
     conditions.inject(&:and).to_sql
@@ -564,7 +549,7 @@ private
       FROM individual_training_record_states
 
       WHERE
-          "individual_training_record_states"."participant_profile_id" = '#{participant_profile_id}'
+          "individual_training_record_states"."participant_profile_id" = '#{participant_profile.id}'
 
       ORDER BY
         "individual_training_record_states"."changed_at" DESC

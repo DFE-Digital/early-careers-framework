@@ -68,6 +68,10 @@ class ParticipantProfile < ApplicationRecord
   # delivery_partner
   delegate :delivery_partner, to: :latest_induction_record, allow_nil: true
 
+  def sync_states
+    DetermineTrainingRecordState.new(participant_profile: self).call
+  end
+
   def duplicate?
     ecf_participant_eligibility&.duplicate_profile_reason?
   end
