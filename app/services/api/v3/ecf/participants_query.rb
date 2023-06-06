@@ -11,11 +11,12 @@ module Api
 
         def participants_for_pagination
           scope = User
-                    .select(:id)
+                    .select(:id, :created_at)
                     .joins(participant_profiles: :induction_records)
                     .joins("JOIN (#{latest_induction_records_join.to_sql}) AS latest_induction_records_join ON latest_induction_records_join.latest_id = induction_records.id")
                     .distinct
-          updated_since.present? ? scope.where(users: { updated_at: updated_since.. }) : scope
+          scope = updated_since.present? ? scope.where(users: { updated_at: updated_since.. }) : scope
+          params[:sort].blank? ? scope.order(:created_at) : scope
         end
 
         def participants_from(paginated_join)
