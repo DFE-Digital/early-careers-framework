@@ -5,6 +5,8 @@ require "rails_helper"
 RSpec.describe Participants::HistoryBuilder, :with_support_for_ect_examples do
   subject { Participants::HistoryBuilder }
 
+  let(:console_user_name) { "Aardvark" }
+
   after do
     # just to make sure that if we turned it on we don't affect other spec tests
     PaperTrail.enabled = false
@@ -97,7 +99,7 @@ RSpec.describe Participants::HistoryBuilder, :with_support_for_ect_examples do
       event_list = described_class.from_participant_profile(fip_ect_only).events
 
       induction_programme_entries = event_list.filter { |ev| ev.predicate == "InductionRecord.induction_programme_id" }
-      expect(induction_programme_entries.first.value).to include "full_induction_programme|Teach First"
+      expect(induction_programme_entries.first.value).to include "full_induction_programme | Teach First"
     end
 
     it "records a name change at the end" do
@@ -145,6 +147,18 @@ RSpec.describe Participants::HistoryBuilder, :with_support_for_ect_examples do
         InductionRecord.schedule_id
         ParticipantProfile::ECT.mentor_profile_id
       ]
+    end
+
+    it "handles whodunnit entries that are names rather than IDs" do
+      travel_to(Time.current - 1.minute) do
+        fip_ect_only
+
+        fip_ect_only.versions.last.update!(whodunnit: console_user_name)
+      end
+
+      event_list = described_class.from_participant_profile(fip_ect_only).events
+      reporters = event_list.map(&:reporter)
+      expect(reporters).to include console_user_name
     end
   end
 end
