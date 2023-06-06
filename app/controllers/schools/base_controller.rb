@@ -34,7 +34,7 @@ private
     if latest_manageable_cohort == Cohort.active_registration_cohort
       redirect_to schools_cohort_setup_start_path(cohort_id: latest_manageable_cohort)
     else
-      cohort_id = (active_cohort || latest_manageable_cohort)&.id
+      cohort_id = (active_cohort || latest_manageable_cohort)&.start_year
       redirect_to schools_choose_programme_path(school_id: active_school.slug, cohort_id:)
     end
   end
