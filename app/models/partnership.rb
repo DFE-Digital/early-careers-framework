@@ -4,6 +4,7 @@ class Partnership < ApplicationRecord
   has_paper_trail
 
   CHALLENGE_PERIOD_SINCE_ACADEMIC_YEAR_START = 2.months
+  CHALLENGE_PERIOD_AFTER_CREATION = 2.weeks
 
   enum challenge_reason: {
     another_provider: "another_provider",
@@ -28,7 +29,7 @@ class Partnership < ApplicationRecord
   end
 
   after_save :update_analytics
-  after_create :set_challenge_deadline_by_cohort
+  before_create :set_challenge_deadline
 
   def challenged?
     challenge_reason.present?
@@ -69,9 +70,12 @@ private
     Analytics::UpsertECFPartnershipJob.perform_later(partnership: self) if saved_changes?
   end
 
-  def set_challenge_deadline_by_cohort
-    if cohort.start_year == 2023 && created_at < Date.new(2023, 10, 17)
-      update!(challenge_deadline: Date.new(2023, 10, 31))
-    end
+  def set_challenge_deadline
+    deadline = Date.new(cohort.start_year, 10, 17)
+    self.challenge_deadline = if created_at < deadline
+                                Date.new(cohort.start_year, 10, 31)
+                              else
+                                created_at + CHALLENGE_PERIOD_AFTER_CREATION
+                              end
   end
 end
