@@ -175,6 +175,14 @@ class DetermineTrainingRecordState < BaseService
     Record.new(**result.first)
   end
 
+  def all
+    ActiveRecord::Base.connection.execute(query).map { |record| Record.new(record) }
+  end
+
+  def raw
+    ActiveRecord::Base.connection.execute(query)
+  end
+
   def is_record_state?(state)
     call.record_state == state
   end
@@ -274,11 +282,14 @@ private
           "induction_programmes"."training_programme" as "training_programme",
 
           GREATEST(
-                  "induction_records"."start_date",
-                  "participant_profiles"."updated_at",
+                  CASE
+                      WHEN "induction_records"."start_date" IS NULL
+                          THEN "participant_profiles"."updated_at"
+                      ELSE
+                          "induction_records"."start_date"
+                  END,
                   "ecf_participant_eligibilities"."updated_at",
                   "ecf_participant_validation_data"."updated_at",
-                  "teacher_profiles"."updated_at",
                   "latest_email_status_per_participant"."updated_at"
               ) AS changed_at,
 
@@ -414,7 +425,7 @@ private
                   THEN 'leaving'
               WHEN "induction_records"."induction_status" = 'leaving' AND "induction_records"."end_date" < CURRENT_DATE
                   THEN 'left'
-              WHEN "induction_records"."induction_status" = 'active' AND "induction_records"."start_date" > CURRENT_DATE
+              WHEN "induction_records"."induction_status" = 'active' AND "induction_records"."school_transfer" = true AND "induction_records"."start_date" > CURRENT_DATE
                   THEN 'joining'
 
               WHEN "induction_records"."induction_status" = 'withdrawn' OR ("induction_records" IS NULL AND "participant_profiles"."status" = 'withdrawn')
@@ -555,8 +566,9 @@ private
 
       WHERE
           "individual_training_record_states"."participant_profile_id" = '#{participant_profile_id}'
+
       ORDER BY
-        "individual_training_record_states"."changed_at"
+        "individual_training_record_states"."changed_at" DESC
     SQL
   end
 end
