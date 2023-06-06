@@ -368,6 +368,31 @@ module NewSeeds
             .with_induction_record(induction_programme: previous_school_cohort.default_induction_programme, induction_status: "active", start_date: Time.zone.now)
         end
 
+        def ect_on_fip_after_mentor_change
+          school_cohort = fip_school.school_cohort
+          induction_programme = school_cohort.default_induction_programme
+
+          mentor_profile = NewSeeds::Scenarios::Participants::Mentors::MentorWithNoEcts
+                             .new(school_cohort:)
+                             .build
+                             .with_validation_data
+                             .with_eligibility
+                             .with_induction_record(induction_programme: school_cohort.default_induction_programme)
+                             .participant_profile
+
+          @ect_on_fip_after_cohort_transfer ||= travel_to(2.days.ago) do
+            NewSeeds::Scenarios::Participants::Ects::Ect
+              .new(school_cohort:, full_name: "ECT on FIP: after mentor change")
+              .build
+              .with_validation_data
+              .with_eligibility
+          end
+
+          @ect_on_fip_after_cohort_transfer
+            .with_induction_record(induction_programme:, mentor_profile: nil, induction_status: "changed", start_date: 1.day.ago, end_date: Time.zone.now)
+            .with_induction_record(induction_programme:, mentor_profile:, induction_status: "active", start_date: Time.zone.now)
+        end
+
         # FIP transfer scenarios
 
         def ect_on_fip_leaving

@@ -393,6 +393,18 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "active_fip_training"
       end
 
+      context "and the mentor has been changed" do
+        let!(:participant_profile) { scenarios.ect_on_fip_after_mentor_change.participant_profile }
+
+        include_examples "determines states as",
+                         "valid",
+                         "eligible_for_induction_training",
+                         "eligible_for_fip_funding",
+                         "not_a_mentor",
+                         "active_fip_training",
+                         "active_fip_training"
+      end
+
       context "in transfer scenario" do
         let!(:current_school) { scenarios.fip_school.school }
 
