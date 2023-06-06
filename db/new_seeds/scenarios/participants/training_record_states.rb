@@ -13,6 +13,10 @@ module NewSeeds
           @cohort ||= Cohort.current || FactoryBot.create(:cohort, :current)
         end
 
+        def previous_cohort
+          @previous_cohort ||= Cohort.previous || FactoryBot.create(:cohort, start_year: cohort.start_year - 1)
+        end
+
         def fip_school
           @fip_school ||= NewSeeds::Scenarios::Schools::School
             .new(name: "FIP School for Training Record States")
@@ -23,10 +27,19 @@ module NewSeeds
 
         def fip_school_no_partnership
           @fip_school_no_partnership ||= NewSeeds::Scenarios::Schools::School
-            .new(name: "FIP School with no Partnership for Training Record States")
-            .build
-            .with_an_induction_tutor(full_name: "FIP School with no Partnership for Training Record States SIT", email: "fip-no-partner-training-states@example.com")
-            .chosen_fip_but_not_partnered(cohort:)
+                                           .new(name: "FIP School with no Partnership for Training Record States")
+                                           .build
+                                           .with_an_induction_tutor(full_name: "FIP School with no Partnership for Training Record States SIT", email: "fip-no-partner-training-states@example.com")
+                                           .chosen_fip_but_not_partnered(cohort:)
+        end
+
+        def fip_school_with_previous_fip_cohort
+          @fip_school_with_previous_fip_cohort ||= NewSeeds::Scenarios::Schools::School
+                                                     .new(name: "FIP School with previous FIP induction programme cohort")
+                                                     .build
+                                                     .with_an_induction_tutor(full_name: "FIP School with previous FIP induction programme cohort SIT", email: "fip-previous-fip-programme-cohort@example.com")
+                                                     .chosen_fip_and_partnered_in(cohort: previous_cohort)
+                                                     .chosen_fip_and_partnered_in(cohort:)
         end
 
         def cip_school
@@ -336,6 +349,48 @@ module NewSeeds
             .with_validation_data
             .with_eligibility
             .with_induction_record(induction_programme: school_cohort.default_induction_programme, induction_status: "completed")
+        end
+
+        def ect_on_fip_after_cohort_transfer
+          current_school_cohort = fip_school_with_previous_fip_cohort.school_cohorts[Cohort.current.start_year]
+          previous_school_cohort = fip_school_with_previous_fip_cohort.school_cohorts[Cohort.previous.start_year]
+
+          @ect_on_fip_after_cohort_transfer ||= travel_to(2.days.ago) do
+            NewSeeds::Scenarios::Participants::Ects::Ect
+                                      .new(school_cohort: current_school_cohort, full_name: "ECT on FIP: after cohort transfer")
+                                      .build
+                                      .with_validation_data
+                                      .with_eligibility
+          end
+
+          @ect_on_fip_after_cohort_transfer
+            .with_induction_record(induction_programme: current_school_cohort.default_induction_programme, induction_status: "changed", start_date: 1.day.ago, end_date: Time.zone.now)
+            .with_induction_record(induction_programme: previous_school_cohort.default_induction_programme, induction_status: "active", start_date: Time.zone.now)
+        end
+
+        def ect_on_fip_after_mentor_change
+          school_cohort = fip_school.school_cohort
+          induction_programme = school_cohort.default_induction_programme
+
+          mentor_profile = NewSeeds::Scenarios::Participants::Mentors::MentorWithNoEcts
+                             .new(school_cohort:)
+                             .build
+                             .with_validation_data
+                             .with_eligibility
+                             .with_induction_record(induction_programme: school_cohort.default_induction_programme)
+                             .participant_profile
+
+          @ect_on_fip_after_cohort_transfer ||= travel_to(2.days.ago) do
+            NewSeeds::Scenarios::Participants::Ects::Ect
+              .new(school_cohort:, full_name: "ECT on FIP: after mentor change")
+              .build
+              .with_validation_data
+              .with_eligibility
+          end
+
+          @ect_on_fip_after_cohort_transfer
+            .with_induction_record(induction_programme:, mentor_profile: nil, induction_status: "changed", start_date: 1.day.ago, end_date: Time.zone.now)
+            .with_induction_record(induction_programme:, mentor_profile:, induction_status: "active", start_date: Time.zone.now)
         end
 
         # FIP transfer scenarios
