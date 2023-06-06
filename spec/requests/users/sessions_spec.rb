@@ -229,7 +229,7 @@ RSpec.describe "Users::Sessions", type: :request do
       it "redirects to correct dashboard" do
         post "/users/sign_in_with_token", params: { login_token: user.login_token }
         follow_redirect!
-        expect(response).to redirect_to(schools_choose_programme_path(school_id: school.slug, cohort_id: cohort.start_year))
+        expect(response).to redirect_to(schools_cohort_setup_start_path(school_id: school.slug, cohort_id: cohort.start_year))
       end
     end
 

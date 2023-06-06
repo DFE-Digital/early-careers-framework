@@ -78,7 +78,7 @@ RSpec.describe Schools::Cohorts::SetupWizard, type: :model do
 
       before do
         expect(wizard).to receive(:set_cohort_induction_programme!).with(:full_induction_programme)
-        expect(wizard).to receive(:previously_fip?).and_return(false)
+        expect(wizard).to receive(:previously_fip_with_active_partnership?).and_return(false)
       end
 
       include_context "sending the pilot survey"
@@ -90,7 +90,7 @@ RSpec.describe Schools::Cohorts::SetupWizard, type: :model do
 
       before do
         expect(wizard).to receive(:set_cohort_induction_programme!).with(:full_induction_programme)
-        expect(wizard).to receive(:previously_fip?).and_return(false)
+        expect(wizard).to receive(:previously_fip_with_active_partnership?).and_return(false)
       end
 
       include_context "sending the pilot survey"

@@ -161,7 +161,8 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
 
       when_i_choose_ects_expected
       and_i_click_continue
-      then_i_am_taken_to_the_lp_dp_relationship_has_changed_page
+      then_i_am_taken_to_the_how_will_you_run_training_page
+      # then_i_am_taken_to_the_lp_dp_relationship_has_changed_page
     end
 
     scenario "A school chooses to keep the same FIP programme in the new cohort" do

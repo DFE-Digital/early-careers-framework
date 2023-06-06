@@ -22,7 +22,7 @@ RSpec.describe "Admin::Participants", type: :request do
     it "redirects to impersonated user start page" do
       when_i_impersonate(induction_coordinator)
       follow_redirect!
-      expect(response).to redirect_to(schools_choose_programme_path(induction_coordinator.school, cohort.start_year))
+      expect(response).to redirect_to(schools_cohort_setup_start_path(induction_coordinator.school, cohort.start_year))
     end
 
     it "errors if you impersonate yourself" do

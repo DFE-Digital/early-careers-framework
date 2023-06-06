@@ -23,7 +23,7 @@ module Schools
         def expected?
           return true if wizard.no_keep_providers?
 
-          wizard.expect_any_ects? && wizard.previously_fip? && !wizard.provider_relationship_is_valid?
+          wizard.expect_any_ects? && wizard.previously_fip_with_active_partnership? && !wizard.provider_relationship_is_valid?
         end
 
         def next_step

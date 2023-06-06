@@ -38,7 +38,7 @@ module Schools
         end
 
         def expected?
-          wizard.expect_any_ects? && !wizard.previously_fip?
+          wizard.expect_any_ects? && !wizard.previously_fip_with_active_partnership?
         end
 
         def next_step

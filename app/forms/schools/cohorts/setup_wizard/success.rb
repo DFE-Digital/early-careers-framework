@@ -12,7 +12,7 @@ module Schools
               active_partnership? ? save_appropriate_body : use_the_same_training_programme!
             elsif what_changes.present?
               set_cohort_induction_programme!(what_changes_programme)
-              send_fip_programme_changed_email! if previously_fip?
+              send_fip_programme_changed_email! if previously_fip_with_active_partnership?
             else
               set_cohort_induction_programme!(how_will_you_run_training)
             end

@@ -9,7 +9,7 @@
         <h2 class="govuk-heading-m">Tell us if any new ECTs will start training at your school in
             the <%= @wizard.cohort.description %> academic year</h2>
 
-        <% if @wizard.previously_fip? %>
+        <% if @wizard.previously_fip_with_active_partnership? %>
             <p class="govuk-body govuk-!-margin-top-8">We need to know:</p>
             <ul class="govuk-list--bullet">
                 <li>whether or not your school expects any new ECTs</li>

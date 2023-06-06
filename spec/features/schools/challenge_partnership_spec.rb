@@ -2,8 +2,9 @@
 
 require "rails_helper"
 
-RSpec.feature "Reporting an error with a partnership", type: :feature, js: true, rutabaga: false, travel_to: Date.new(2022, 3, 1) do
-  let!(:cohort) { create :cohort, start_year: 2021 }
+RSpec.feature "Reporting an error with a partnership", type: :feature, js: true, rutabaga: false, travel_to: Date.new(2023, 3, 1) do
+  let!(:cohort) { Cohort.current || create(:cohort, :current) }
+  let!(:cohort_previous) { Cohort.previous || create(:cohort, :previous) }
 
   let!(:privacy_policy) do
     create :privacy_policy

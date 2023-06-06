@@ -50,6 +50,10 @@ module Schools
         previous_school_cohort&.fip?
       end
 
+      def previously_fip_with_active_partnership?
+        previous_school_cohort&.fip? && previous_lead_provider.present?
+      end
+
       def provider_relationship_is_valid?
         return false unless previous_lead_provider && previous_delivery_partner
 

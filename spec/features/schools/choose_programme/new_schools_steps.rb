@@ -4,8 +4,17 @@ module NewSchoolsSteps
   include Capybara::DSL
 
   def given_a_new_school
-    @cohort = create(:cohort, start_year: 2022)
+    @previous_cohort = Cohort.previous || create(:cohort, :previous)
+    @cohort = Cohort.current || create(:cohort, :current)
     @school = create(:school, name: "New School")
+  end
+
+  def then_i_am_on_the_what_we_need_to_know_page
+    expect(page).to have_content("Tell us if any new ECTs will start training at your school in the #{@cohort.description} academic year")
+  end
+
+  def then_i_am_on_the_do_you_expect_any_ects_page
+    expect(page).to have_content("Does your school expect any new ECTs in the new academic year?")
   end
 
   def then_i_am_on_the_how_you_run_your_training_page
@@ -21,11 +30,16 @@ module NewSchoolsSteps
   end
 
   def then_i_am_on_the_confirm_your_training_page
-    expect(page).to have_content("Confirm your training programme")
+    expect(page).to have_content("Are you sure this is how you want to run your training?")
+    # expect(page).to have_content("Confirm your training programme")
   end
 
   def when_i_click_on_confirm
     click_on("Confirm")
+  end
+
+  def then_i_am_on_the_your_information_has_been_saved_page
+    expect(page).to have_content("Your information has been saved")
   end
 
   def then_i_am_on_the_training_submitted_page
@@ -48,12 +62,16 @@ module NewSchoolsSteps
     click_on("Continue to manage your training")
   end
 
+  def when_i_return_to_manage_your_training_page
+    click_on("Return to manage your training")
+  end
+
   def then_i_see_no_ects_expected_confirmation
     expect(page).to have_content("Your school has told us you do not expect any ECTs")
   end
 
   def when_i_choose_deliver_own_programme
-    choose("Deliver your own programme using DfE accredited materials")
+    choose("Deliver your own programme using DfE-accredited materials")
   end
 
   def then_i_see_appropriate_body_appointed_page
