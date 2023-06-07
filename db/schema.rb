@@ -1049,9 +1049,10 @@ ActiveRecord::Schema.define(version: 2023_06_05_154522) do
     t.string "record_state", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["appropriate_body_id"], name: "index_training_record_states_on_appropriate_body_id"
     t.index ["delivery_partner_id"], name: "index_training_record_states_on_delivery_partner_id"
     t.index ["lead_provider_id"], name: "index_training_record_states_on_lead_provider_id"
-    t.index ["participant_profile_id", "school_id", "lead_provider_id", "appropriate_body_id", "delivery_partner_id", "changed_at"], name: "index_training_record_states_unique_ids", unique: true
+    t.index ["participant_profile_id", "school_id", "lead_provider_id", "appropriate_body_id", "delivery_partner_id"], name: "index_training_record_states_unique_ids", unique: true
     t.index ["participant_profile_id"], name: "index_training_record_states_on_participant_profile_id"
     t.index ["school_id"], name: "index_training_record_states_on_school_id"
   end

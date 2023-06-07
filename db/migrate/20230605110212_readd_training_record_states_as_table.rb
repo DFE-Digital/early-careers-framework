@@ -23,8 +23,9 @@ class ReaddTrainingRecordStatesAsTable < ActiveRecord::Migration[6.1]
     add_index :training_record_states, :school_id
     add_index :training_record_states, :lead_provider_id
     add_index :training_record_states, :delivery_partner_id
+    add_index :training_record_states, :appropriate_body_id
 
-    add_index :training_record_states, %i[participant_profile_id school_id lead_provider_id appropriate_body_id delivery_partner_id changed_at], unique: true, name: "index_training_record_states_unique_ids"
+    add_index :training_record_states, %i[participant_profile_id school_id lead_provider_id appropriate_body_id delivery_partner_id], unique: true, name: "index_training_record_states_unique_ids"
 
     add_foreign_key :training_record_states, :participant_profiles, validate: false
     add_foreign_key :training_record_states, :schools, validate: false
