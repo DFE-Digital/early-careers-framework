@@ -28,6 +28,7 @@ module ApplicationHelper
 
     school = user.induction_coordinator_profile.schools.first
     return schools_cohort_setup_start_path(school_id: school.slug, cohort_id: Dashboard::LatestManageableCohort.call(school)) if school.school_cohorts.empty?
+
     # return schools_choose_programme_path(school_id: school.slug, cohort_id: Dashboard::LatestManageableCohort.call(school)) if school.school_cohorts.empty?
 
     school_dashboard_with_tab_path(school)

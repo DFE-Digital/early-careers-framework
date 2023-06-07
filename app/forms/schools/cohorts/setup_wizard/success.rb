@@ -60,7 +60,7 @@ module Schools
           if previous_partnership.blank?
             msg = "no previous partnership found for cohort #{previous_school_cohort.id}"
             Sentry.capture_message(msg, level: :warning)
-            return Rails.logger.warning(msg)
+            return Rails.logger.warn(msg)
           end
 
           previous_partnership.lead_provider.users.each do |lead_provider_user|

@@ -127,11 +127,7 @@ module Schools
 
       # path to the most appropriate start point to set up training for the transfer
       def need_training_path
-        if cohort_to_place_participant == Cohort.active_registration_cohort
-          schools_cohort_setup_start_path(school_id: school.slug, cohort_id: cohort_to_place_participant)
-        else
-          schools_choose_programme_path(school_id: school.slug, cohort_id: cohort_to_place_participant)
-        end
+        schools_cohort_setup_start_path(school_id: school.slug, cohort_id: cohort_to_place_participant)
       end
 
       def school_cohort

@@ -28,11 +28,8 @@ private
     return unless current_user.induction_coordinator?
     return unless active_school
     return if active_school.chosen_programme?(Dashboard::LatestManageableCohort.call(active_school))
-    # if Dashboard::LatestManageableCohort.call(active_school) == Cohort.active_registration_cohort
-      redirect_to schools_cohort_setup_start_path(cohort_id: Dashboard::LatestManageableCohort.call(active_school))
-    # else
-      # redirect_to schools_choose_programme_path(school_id: active_school.slug, cohort_id: active_cohort.id)
-    # end
+
+    redirect_to schools_cohort_setup_start_path(cohort_id: Dashboard::LatestManageableCohort.call(active_school))
   end
 
   def ensure_school_user
@@ -57,7 +54,7 @@ private
     @cohort = cohort
     @school = active_school
     @school_cohort = policy_scope(SchoolCohort).find_by(cohort: @cohort, school: @school)
-    redirect_to schools_choose_programme_path(cohort_id: @cohort) unless @school_cohort
+    redirect_to schools_cohort_setup_start_path(school_id: @school.slug, cohort_id: @cohort) unless @school_cohort
   end
 
   def start_year
