@@ -224,6 +224,7 @@ private
     <<~SQL
       WITH
         mentee_counts as (#{mentee_counts}),
+        historical_mentee_counts as (#{historical_mentee_counts}),
         latest_email_status_per_participant as (#{latest_email_status_per_participant}),
         individual_training_record_states as (#{individual_training_record_states})
       #{final_grouping}
@@ -231,6 +232,21 @@ private
   end
 
   def mentee_counts
+    <<~SQL
+      SELECT
+          "induction_records"."mentor_profile_id",
+          count(*) as total
+      FROM "induction_records"
+      WHERE
+          "induction_records"."mentor_profile_id" = '#{participant_profile_id}'
+          AND ("induction_records"."induction_status" = 'active' OR "induction_records"."induction_status" = 'leaving')
+      GROUP BY
+          "induction_records"."mentor_profile_id",
+          "induction_records"."participant_profile_id"
+    SQL
+  end
+
+  def historical_mentee_counts
     <<~SQL
       SELECT
           "induction_records"."mentor_profile_id",
@@ -281,17 +297,12 @@ private
           "induction_records"."appropriate_body_id"   as "appropriate_body_id",
           "induction_programmes"."training_programme" as "training_programme",
 
-          GREATEST(
-                  CASE
-                      WHEN "induction_records"."start_date" IS NULL
-                          THEN "participant_profiles"."updated_at"
-                      ELSE
-                          "induction_records"."start_date"
-                  END,
-                  "ecf_participant_eligibilities"."updated_at",
-                  "ecf_participant_validation_data"."updated_at",
-                  "latest_email_status_per_participant"."updated_at"
-              ) AS changed_at,
+          CASE
+              WHEN "induction_records"."start_date" IS NULL
+                  THEN "participant_profiles"."updated_at"
+              ELSE
+                  "induction_records"."start_date"
+          END AS changed_at,
 
           CASE
               WHEN "ecf_participant_eligibilities"."status" = 'manual_check' AND "ecf_participant_eligibilities"."reason" = 'different_trn'
@@ -326,7 +337,7 @@ private
               WHEN "participant_profiles"."type" = 'ParticipantProfile::Mentor'
                   THEN
                   CASE
-                      WHEN "mentee_counts"."total" > 0
+                      WHEN "historical_mentee_counts"."total" > 0
                           THEN 'eligible_for_mentor_training'
                       ELSE
                           'not_yet_mentoring'
@@ -485,6 +496,8 @@ private
                                ON "participant_profiles"."id" = "latest_email_status_per_participant"."object_id"
                LEFT OUTER JOIN "mentee_counts"
                                ON "mentee_counts"."mentor_profile_id" = "participant_profiles"."id"
+               LEFT OUTER JOIN "historical_mentee_counts"
+                               ON "historical_mentee_counts"."mentor_profile_id" = "participant_profiles"."id"
 
       WHERE
         #{individual_training_record_state_conditions}
@@ -511,7 +524,7 @@ private
           "individual_training_record_states"."lead_provider_id",
           "individual_training_record_states"."delivery_partner_id",
           "individual_training_record_states"."appropriate_body_id",
-          "individual_training_record_states"."changed_at",
+          MIN("individual_training_record_states"."changed_at") as "changed_at",
           "individual_training_record_states"."validation_state",
           "individual_training_record_states"."training_eligibility_state",
           "individual_training_record_states"."fip_funding_eligibility_state",
@@ -567,8 +580,22 @@ private
       WHERE
           "individual_training_record_states"."participant_profile_id" = '#{participant_profile_id}'
 
+      GROUP BY
+          "individual_training_record_states"."participant_profile_id",
+          "individual_training_record_states"."induction_record_id",
+          "individual_training_record_states"."school_id",
+          "individual_training_record_states"."lead_provider_id",
+          "individual_training_record_states"."delivery_partner_id",
+          "individual_training_record_states"."appropriate_body_id",
+          "individual_training_record_states"."validation_state",
+          "individual_training_record_states"."training_eligibility_state",
+          "individual_training_record_states"."fip_funding_eligibility_state",
+          "individual_training_record_states"."mentoring_state",
+          "individual_training_record_states"."training_state",
+          "record_state"
+
       ORDER BY
-        "individual_training_record_states"."changed_at" DESC
+        MIN("individual_training_record_states"."changed_at") DESC
     SQL
   end
 end

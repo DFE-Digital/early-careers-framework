@@ -1113,6 +1113,30 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "not_yet_mentoring"
       end
 
+      context "and they are no longer mentoring" do
+        let!(:participant_profile) { scenarios.mentor_on_fip_no_longer_mentoring.participant_profile }
+
+        include_examples "determines states as",
+                         "valid",
+                         "eligible_for_mentor_training",
+                         "eligible_for_mentor_funding",
+                         "not_yet_mentoring",
+                         "registered_for_fip_training",
+                         "not_yet_mentoring"
+      end
+
+      context "and their mentee has been withdrawn" do
+        let!(:participant_profile) { scenarios.mentor_on_fip_withdrawn_mentee.participant_profile }
+
+        include_examples "determines states as",
+                         "valid",
+                         "eligible_for_mentor_training",
+                         "eligible_for_mentor_funding",
+                         "not_yet_mentoring",
+                         "registered_for_fip_training",
+                         "not_yet_mentoring"
+      end
+
       context "and they have been withdrawn by a training provider through the API" do
         let!(:participant_profile) { scenarios.mentor_on_fip_withdrawn.participant_profile }
 

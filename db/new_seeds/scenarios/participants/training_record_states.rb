@@ -369,6 +369,8 @@ module NewSeeds
         end
 
         def ect_on_fip_after_mentor_change
+          return @ect_on_fip_after_cohort_transfer if @ect_on_fip_after_cohort_transfer.present?
+
           school_cohort = fip_school.school_cohort
           induction_programme = school_cohort.default_induction_programme
 
@@ -380,7 +382,7 @@ module NewSeeds
                              .with_induction_record(induction_programme: school_cohort.default_induction_programme)
                              .participant_profile
 
-          @ect_on_fip_after_cohort_transfer ||= travel_to(2.days.ago) do
+          @ect_on_fip_after_cohort_transfer = travel_to(2.days.ago) do
             NewSeeds::Scenarios::Participants::Ects::Ect
               .new(school_cohort:, full_name: "ECT on FIP: after mentor change")
               .build
@@ -1099,11 +1101,59 @@ module NewSeeds
           school_cohort = fip_school.school_cohort
 
           @mentor_on_fip_with_no_mentees ||= NewSeeds::Scenarios::Participants::Mentors::MentorWithNoEcts
-            .new(school_cohort:, full_name: "Mentor on FIP: no mentees")
-            .build
-            .with_validation_data
-            .with_eligibility
-            .with_induction_record(induction_programme: school_cohort.default_induction_programme)
+                                               .new(school_cohort:, full_name: "Mentor on FIP: no mentees")
+                                               .build
+                                               .with_validation_data
+                                               .with_eligibility
+                                               .with_induction_record(induction_programme: school_cohort.default_induction_programme)
+        end
+
+        def mentor_on_fip_no_longer_mentoring
+          school_cohort = fip_school.school_cohort
+          induction_programme = school_cohort.default_induction_programme
+
+          @mentor_on_fip_no_longer_mentoring ||= travel_to(2.days.ago) do
+            builder = NewSeeds::Scenarios::Participants::Mentors::MentorWithNoEcts
+                        .new(school_cohort:)
+                        .build
+                        .with_validation_data
+                        .with_eligibility
+                        .with_induction_record(induction_programme: school_cohort.default_induction_programme)
+
+            NewSeeds::Scenarios::Participants::Ects::Ect
+              .new(school_cohort:, full_name: "ECT on FIP: after mentor change")
+              .build
+              .with_validation_data
+              .with_eligibility
+              .with_induction_record(induction_programme:, mentor_profile: builder.participant_profile, induction_status: "changed", start_date: 1.day.ago, end_date: Time.zone.now)
+              .with_induction_record(induction_programme:, mentor_profile: nil, induction_status: "active", start_date: Time.zone.now)
+
+            builder
+          end
+        end
+
+        def mentor_on_fip_withdrawn_mentee
+          school_cohort = fip_school.school_cohort
+          induction_programme = school_cohort.default_induction_programme
+
+          @mentor_on_fip_withdrawn_mentee ||= travel_to(2.days.ago) do
+            builder = NewSeeds::Scenarios::Participants::Mentors::MentorWithNoEcts
+                        .new(school_cohort:)
+                        .build
+                        .with_validation_data
+                        .with_eligibility
+                        .with_induction_record(induction_programme: school_cohort.default_induction_programme)
+
+            NewSeeds::Scenarios::Participants::Ects::Ect
+              .new(school_cohort:, full_name: "ECT on FIP: after mentor change")
+              .build
+              .with_validation_data
+              .with_eligibility
+              .with_induction_record(induction_programme:, mentor_profile: builder.participant_profile, induction_status: "withdrawn", start_date: 1.day.ago, end_date: Time.zone.now)
+              .with_induction_record(induction_programme:, mentor_profile: builder.participant_profile, induction_status: "withdrawn", start_date: Time.zone.now)
+
+            builder
+          end
         end
 
         def mentor_on_fip_withdrawn
