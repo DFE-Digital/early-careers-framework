@@ -71,7 +71,7 @@ private
   end
 
   def set_challenge_deadline_on_create
-    if self.challenge_deadline.nil?
+    if challenge_deadline.nil?
       deadline = Date.new(cohort.start_year, 10, 17)
       self.challenge_deadline = if created_at < deadline
                                   Date.new(cohort.start_year, 10, 31)
