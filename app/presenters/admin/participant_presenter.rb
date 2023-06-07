@@ -6,8 +6,6 @@ class Admin::ParticipantPresenter
   delegate :id,
            :user,
            :participant_identity,
-           :training_status,
-           :status,
            :notes,
            :notes?,
            :ect?,
@@ -87,6 +85,14 @@ class Admin::ParticipantPresenter
 
   def mentor_profile
     relevant_induction_record&.mentor_profile
+  end
+
+  def training_status
+    relevant_induction_record&.training_status || participant_profile.training_status
+  end
+
+  def status
+    relevant_induction_record&.induction_status || participant_profile.status
   end
 
   def mentor_full_name
