@@ -224,6 +224,7 @@ private
     <<~SQL
       WITH
         mentee_counts as (#{mentee_counts}),
+        historical_mentee_counts as (#{historical_mentee_counts}),
         latest_email_status_per_participant as (#{latest_email_status_per_participant}),
         individual_training_record_states as (#{individual_training_record_states})
       #{final_grouping}
@@ -238,7 +239,21 @@ private
       FROM "induction_records"
       WHERE
           "induction_records"."mentor_profile_id" = '#{participant_profile_id}'
-          AND "induction_records"."induction_status" = 'active'
+          AND ("induction_records"."induction_status" = 'active' OR "induction_records"."induction_status" = 'leaving')
+      GROUP BY
+          "induction_records"."mentor_profile_id",
+          "induction_records"."participant_profile_id"
+    SQL
+  end
+
+  def historical_mentee_counts
+    <<~SQL
+      SELECT
+          "induction_records"."mentor_profile_id",
+          count(*) as total
+      FROM "induction_records"
+      WHERE
+          "induction_records"."mentor_profile_id" = '#{participant_profile_id}'
       GROUP BY
           "induction_records"."mentor_profile_id",
           "induction_records"."participant_profile_id"
@@ -322,7 +337,7 @@ private
               WHEN "participant_profiles"."type" = 'ParticipantProfile::Mentor'
                   THEN
                   CASE
-                      WHEN "mentee_counts"."total" > 0
+                      WHEN "historical_mentee_counts"."total" > 0
                           THEN 'eligible_for_mentor_training'
                       ELSE
                           'not_yet_mentoring'
@@ -481,6 +496,8 @@ private
                                ON "participant_profiles"."id" = "latest_email_status_per_participant"."object_id"
                LEFT OUTER JOIN "mentee_counts"
                                ON "mentee_counts"."mentor_profile_id" = "participant_profiles"."id"
+               LEFT OUTER JOIN "historical_mentee_counts"
+                               ON "historical_mentee_counts"."mentor_profile_id" = "participant_profiles"."id"
 
       WHERE
         #{individual_training_record_state_conditions}
