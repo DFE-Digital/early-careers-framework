@@ -43,7 +43,7 @@
 
     sl.row do |row|
       row.key(text: "Training record state")
-      row.value(text: @participant_presenter.relevant_induction_record&.training_status)
+      row.value(text: govuk_tag(text: @participant_presenter.relevant_induction_record&.training_status, colour: "grey"))
     end
   end %>
 <% end %>
@@ -86,26 +86,54 @@
 <%= govuk_summary_list(actions: true) do |sl|
   sl.row do |row|
     row.key(text: "Validation status")
-    row.value(text: states.validation_state)
+    row.value(text: govuk_tag(text: states.validation_state.humanize, colour: "grey"))
   end
 
   sl.row do |row|
     row.key(text: "Training eligibility status")
-    row.value(text: states.training_eligibility_state)
+    row.value(text: govuk_tag(text: states.training_eligibility_state.humanize, colour: "grey"))
   end
 
   sl.row do |row|
     row.key(text: "FIP funding eligibility status")
-    row.value(text: states.fip_funding_eligibility_state)
+    row.value(text: govuk_tag(text: states.fip_funding_eligibility_state.humanize, colour: "grey"))
   end
 
   sl.row do |row|
     row.key(text: "Mentoring status")
-    row.value(text: states.mentoring_state)
+    row.value(text: govuk_tag(text: states.mentoring_state.humanize, colour: "grey"))
   end
 
   sl.row do |row|
     row.key(text: "Training status")
-    row.value(text: states.training_state)
+    row.value(text: govuk_tag(text: states.training_state.humanize, colour: "grey"))
+  end
+end %>
+
+<h3 class="govuk-heading-m">Relevant induction record statuses</h3>
+<%= govuk_summary_list(actions: true) do |sl|
+  sl.row do |row|
+    row.key(text: "induction status")
+    row.value(text: govuk_tag(text: @participant_presenter.relevant_induction_record&.induction_status, colour: "grey"))
+  end
+
+  sl.row do |row|
+    row.key(text: "training status")
+    row.value(text: govuk_tag(text: @participant_presenter.relevant_induction_record&.training_status, colour: "grey"))
+  end
+end %>
+
+<h3 class="govuk-heading-m">Participant profile statuses</h3>
+<%= govuk_summary_list(actions: true) do |sl|
+  sl.row do |row|
+    row.key(text: "status")
+    row.value(text: govuk_tag(text: @participant_presenter.participant_profile.status, colour: "grey") +
+      "<p class=\"govuk-body-s\">A historical status used if the induction_records induction_status is not set. Note: a status of Withdrawn indicates a 'soft delete' of this record.</p>".html_safe)
+  end
+
+  sl.row do |row|
+    row.key(text: "training status")
+    row.value(text: govuk_tag(text: @participant_presenter.participant_profile.training_status, colour: "grey") +
+      "<p class=\"govuk-body-s\">A historical status used if the induction_records training_status is not set.</p>".html_safe)
   end
 end %>
