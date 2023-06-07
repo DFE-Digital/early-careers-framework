@@ -68,6 +68,18 @@ RSpec.describe Api::V3::ECF::ParticipantsQuery do
         expect(subject.participants_for_pagination).to match_array([user, another_user])
       end
     end
+
+    context "sorting" do
+      let(:another_participant_profile) do
+        travel_to(10.days.ago) do
+          create(:ect_participant_profile)
+        end
+      end
+
+      it "returns all user records ordered by participant profile created_at" do
+        expect(subject.participants_for_pagination).to eq([another_user, user])
+      end
+    end
   end
 
   describe "#participants_from" do
