@@ -461,9 +461,10 @@ module ManageTrainingSteps
     expect(page).to have_text "Does your school expect any new ECTs in the new academic year?"
     expect(page).to be_accessible
 
-    if choice == "No ECTs"
+    if choice == "We do not expect any early career teachers to join"
       choose "No"
       click_on "Continue"
+      expect(page).to have_text "Your information has been saved"
     else
       choose "Yes"
       click_on "Continue"
@@ -475,12 +476,15 @@ module ManageTrainingSteps
       choose choice
       click_on "Continue"
 
-      expect(page).to have_text "Are you sure is how you want to run your training?"
+      expect(page).to have_text "Are you sure this is how you want to run your training?"
       expect(page).to be_accessible
       click_on "Confirm"
-    end
 
-    expect(page).to have_text "Your information has been saved"
+      expect(page).to have_text "Have you appointed an appropriate body?"
+      choose "No"
+      click_on "Continue"
+      expect(page).to have_text "You’ve submitted your training information"
+    end
     expect(page).to be_accessible
   end
 
