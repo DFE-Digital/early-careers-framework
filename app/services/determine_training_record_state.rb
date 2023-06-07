@@ -148,14 +148,14 @@ class DetermineTrainingRecordState < BaseService
     not_registered_for_training
   ].each_with_object({}) { |v, h| h[v] = v }.freeze
 
-  # for now, if there is a TrainingRecordState matching our conditions return it, otherwise
-  # perform a sync
   def call
-    TrainingRecordState.latest_for(**params) || sync
-  end
+    if (training_record_state = TrainingRecordState.find_by(**params))
+      training_record_state.assign_attributes(**execute_query.first)
 
-  def sync
-    TrainingRecordState.create(**execute_query.first)
+      training_record_state.save! if training_record_state.changed?
+    else
+      TrainingRecordState.create!(**execute_query.first)
+    end
   end
 
   def all
@@ -173,7 +173,7 @@ class DetermineTrainingRecordState < BaseService
 private
 
   def params
-    { participant_profile:, school:, appropriate_body:, delivery_partner:, lead_provider: }
+    { participant_profile:, school:, appropriate_body:, delivery_partner:, lead_provider: }.compact
   end
 
   def execute_query
