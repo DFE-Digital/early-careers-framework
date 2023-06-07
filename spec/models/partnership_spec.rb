@@ -75,7 +75,8 @@ RSpec.describe Partnership, type: :model do
     end
 
     it "returns false when the challenge_deadline is blank" do
-      partnership = create(:partnership, challenge_deadline: nil)
+      partnership = create(:partnership)
+      partnership.update!(challenge_deadline: nil)
 
       expect(partnership).not_to be_in_challenge_window
     end
@@ -121,14 +122,14 @@ RSpec.describe Partnership, type: :model do
   describe "challenge deadline to 31st October" do
     it "sets the challenge deadline to 31st October when the partnership is created before the 17th October" do
       travel_to Date.new(2023, 5, 1) do
-        partnership = create(:partnership, cohort: create(:cohort, start_year: 2023))
+        partnership = create(:partnership, :not_challenged, cohort: create(:cohort, start_year: 2023))
         expect(partnership.challenge_deadline).to eq(Date.new(2023, 10, 31))
       end
     end
 
     it "sets the challenge deadline to two weeks when the partnership is created from the 17th October" do
       travel_to Date.new(2023, 10, 25) do
-        partnership = create(:partnership, cohort: create(:cohort, start_year: 2023))
+        partnership = create(:partnership, :not_challenged, cohort: create(:cohort, start_year: 2023))
         expect(partnership.challenge_deadline).to eq(Date.new(2023, 11, 8))
       end
     end

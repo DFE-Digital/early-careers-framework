@@ -16,6 +16,12 @@ FactoryBot.define do
     challenge_reason { "mistake" }
   end
 
+  trait :not_challenged do
+    challenged_at { nil }
+    challenge_reason { nil }
+    challenge_deadline { nil }
+  end
+
   trait :pending do
     pending { true }
   end
