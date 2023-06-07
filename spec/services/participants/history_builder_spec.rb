@@ -150,7 +150,7 @@ RSpec.describe Participants::HistoryBuilder, :with_support_for_ect_examples do
     end
 
     it "handles whodunnit entries that are names rather than IDs" do
-      travel_to(Time.current - 1.minute) do
+      travel_to(Time.zone.now - 1.minute) do
         fip_ect_only
 
         fip_ect_only.versions.last.update!(whodunnit: console_user_name)
