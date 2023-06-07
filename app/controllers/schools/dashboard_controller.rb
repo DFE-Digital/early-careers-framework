@@ -32,8 +32,8 @@ private
 
   def check_school_cohorts
     if @school_cohorts.empty?
-      redirect_to schools_cohort_setup_start_path(school_id: @school.slug, cohort_id: Dashboard::LatestManageableCohort.call(@school))
-      # redirect_to schools_choose_programme_path(cohort_id: Cohort.active_registration_cohort.start_year)
+      redirect_to schools_cohort_setup_start_path(school_id: @school.slug,
+                                                  cohort_id: Dashboard::LatestManageableCohort.call(@school))
     end
   end
 

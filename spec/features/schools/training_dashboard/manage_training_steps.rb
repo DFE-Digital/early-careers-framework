@@ -446,6 +446,44 @@ module ManageTrainingSteps
     sign_in_as induction_coordinator
   end
 
+  def then_i_see_the_change_programme_page
+    expect(page).to have_text "Change how you run your training programme"
+    expect(page).to be_accessible
+    click_on "Check the other options available"
+  end
+
+  def then_i_navigate_the_cohort_setup_wizard_before_choosing(labels:, choice:)
+    expect(page).to have_text "What we need to know"
+    expect(page).to be_accessible
+
+    click_on "Continue"
+
+    expect(page).to have_text "Does your school expect any new ECTs in the new academic year?"
+    expect(page).to be_accessible
+
+    if choice == "No ECTs"
+      choose "No"
+      click_on "Continue"
+    else
+      choose "Yes"
+      click_on "Continue"
+
+      expect(page).to have_text "How do you want to run your training in"
+      labels.each { |label| expect(page).to have_selector(:label, text: label) }
+      expect(page).to be_accessible
+
+      choose choice
+      click_on "Continue"
+
+      expect(page).to have_text "Are you sure is how you want to run your training?"
+      expect(page).to be_accessible
+      click_on "Confirm"
+    end
+
+    expect(page).to have_text "Your information has been saved"
+    expect(page).to be_accessible
+  end
+
   def and_see_the_other_programs_before_choosing(labels:, choice:)
     expect(page).to have_text "Change how you run your training programme"
     expect(page).to be_accessible

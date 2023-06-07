@@ -27,11 +27,12 @@ module ApplicationHelper
     return schools_dashboard_index_path if user.schools.count > 1
 
     school = user.induction_coordinator_profile.schools.first
-    return schools_cohort_setup_start_path(school_id: school.slug, cohort_id: Dashboard::LatestManageableCohort.call(school)) if school.school_cohorts.empty?
-
-    # return schools_choose_programme_path(school_id: school.slug, cohort_id: Dashboard::LatestManageableCohort.call(school)) if school.school_cohorts.empty?
-
-    school_dashboard_with_tab_path(school)
+    if school.school_cohorts.empty?
+      schools_cohort_setup_start_path(school_id: school.slug,
+                                      cohort_id: Dashboard::LatestManageableCohort.call(school))
+    else
+      school_dashboard_with_tab_path(school)
+    end
   end
 
   def induction_coordinator_mentor_path(user)
