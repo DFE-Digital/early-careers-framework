@@ -238,6 +238,7 @@ private
       FROM "induction_records"
       WHERE
           "induction_records"."mentor_profile_id" = '#{participant_profile_id}'
+          AND "induction_records"."induction_status" = 'active'
       GROUP BY
           "induction_records"."mentor_profile_id",
           "induction_records"."participant_profile_id"
