@@ -50,6 +50,7 @@ class NPQApplication < ApplicationRecord
                                                                         marked_ineligible_by_policy
                                                                         marked_funded_by_policy])
                              }
+  scope :created_at_range, ->(start_date, end_date) { where(created_at: start_date..end_date) }
 
   validates :eligible_for_funding_before_type_cast, inclusion: { in: [true, false, "true", "false"] }
 

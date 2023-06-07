@@ -13,9 +13,15 @@ module Admin
 
         def index
           query_string = params[:query]
+          funding_eligiblity_status_code = params[:FundingEligiblityStatusCode]
+          employment_type = params[:EmploymentType]
+          # Currently the component used is set up to build date parameters in the following manner
+          # date(3i) = day, date(2i) = month, date(1i) = year
+          start_date = convert_date(params["start_date(3i)"], params["start_date(2i)"], params["start_date(1i)"])
+          end_date = convert_date(params["end_date(3i)"], params["end_date(2i)"], params["end_date(1i)"])
 
           results = Admin::NPQApplications::EdgeCaseSearch
-            .new(policy_scope(NPQApplication), query_string:).call
+            .new(policy_scope(NPQApplication), query_string:, funding_eligiblity_status_code:, employment_type:, start_date:, end_date:).call
 
           @pagy, @npq_applications = pagy(results, page: params[:page], items: 20)
           @page = @pagy.page
@@ -32,6 +38,12 @@ module Admin
           @npq_application = NPQApplication
             .eager_load(:profile, participant_identity: :user)
             .find(params[:id])
+        end
+
+        def convert_date(day, month, year)
+          "#{day}-#{month}-#{year}".to_date
+        rescue StandardError
+          nil
         end
       end
     end

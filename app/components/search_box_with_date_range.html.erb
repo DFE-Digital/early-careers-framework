@@ -1,0 +1,73 @@
+<div class="search-box">
+  <h1 class="govuk-heading-l"><%= "Search Applicants" %></h1>
+  <%= form_with method: :get do |f| %>
+    <%= f.govuk_text_field(
+      param_name,
+      value: query,
+      label: {
+        text: title,
+        size: "s"
+      },
+      hint: {
+        text: hint
+      },
+      form_group: {
+        class: "govuk-form-group"
+      }
+    ) %>
+    <div style="display: flex; margin-left: -14px">
+      <% filters.each do |filter| %>
+        <%= f.govuk_collection_select(
+          filter[:field],
+          filter[:options],
+          :id,
+          :name,
+          label: {
+            text: "#{filter[:label] || filter[:field]}",
+            size: "s"
+          },
+          options: {
+            selected: filter[:value]
+          },
+          form_group: {
+            class: "govuk-form-group govuk-grid-column-two-thirds"
+          }
+        ) %>
+      <% end %>
+    </div>
+    <div style="display: flex; margin-left: -14px">
+      <%= f.govuk_date_field(
+        :start_date,
+        legend: {
+          text: "Earliest date registration submitted",
+          size: 's'
+        },
+        hint: {
+          text: "For example, 14 9 2022"
+        },
+        form_group: {
+          class: "govuk-form-group govuk-grid-column-two-thirds"
+        }
+      ) %>
+      <%= f.govuk_date_field(
+        :end_date,
+        legend: {
+          text: "Latest date registration submitted",
+          size: 's'
+        },
+        hint: {
+          text: "For example, 14 9 2022"
+        },
+        form_group: {
+          class: "govuk-form-group govuk-grid-column-two-thirds"
+        }
+      ) %>
+    </div>
+    <%= f.govuk_submit(
+      "Search",
+      class: "search-box__button",
+      style: "margin-left: 0px; margin-top: 15px;",
+      "data-test": "search-button"
+    ) %>
+  <% end %>
+</div>

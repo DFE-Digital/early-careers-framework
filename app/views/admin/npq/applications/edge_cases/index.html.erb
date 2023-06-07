@@ -1,18 +1,42 @@
 <%= render "admin/npq/applications/layout", locals = { page: "applications" } %>
 
-<div class="admin-search-box">
-  <%= form_with method: :get do |f| %>
-    <%= f.govuk_text_field(
-        :query,
-        value: params[:query],
-        label: { text: "Search Applicants", size: "m" },
-        hint: { text: "Enter the Applicant’s ID, Name, Email, Employer's Name, TRN or Application Id", size: "s" },
-      )
-    %>
-
-    <%= f.govuk_submit "Search" %>
-  <% end %>
-</div>
+<%= render SearchBoxWithDateRange.new( 
+  query: params[:query],
+  title: "Enter the Applicant’s ID, Name, Email, Employer's Name, TRN or Application Id",
+  filters: [
+    {
+      field: "Funding eligiblity status code",
+      value: params[:FundingEligiblityStatusCode],
+      options: [
+        OpenStruct.new(id: "", name: ""),
+        OpenStruct.new(id: "funded", name: "funded"),
+        OpenStruct.new(id: "no_institution", name: "no institution"),
+        OpenStruct.new(id: "ineligible_establishment_type", name: "ineligible establishment type"),
+        OpenStruct.new(id: "ineligible_institution_type", name: "ineligible institution type"),
+        OpenStruct.new(id: "previously_funded", name: "previously funded"),
+        OpenStruct.new(id: "not_new_headteacher_requesting_ehco", name: "not new headteacher requesting ehco"),
+        OpenStruct.new(id: "school_outside_catchment", name: "school outside catchment"),
+        OpenStruct.new(id: "early_years_outside_catchment", name: "early years outside catchment"),
+        OpenStruct.new(id: "not_on_early_years_register", name: "not on early years register"),
+        OpenStruct.new(id: "early_years_invalid_npq", name: "early years invalid npq"),
+        OpenStruct.new(id: "marked_funded_by_policy", name: "marked funded by policy"),
+        OpenStruct.new(id: "marked_ineligible_by_policy", name: "marked ineligible by policy"),
+      ],
+    },
+    {
+      field: "Employment type",
+      value: params[:EmploymentType],
+      options: [
+        OpenStruct.new(id: "", name: ""),
+        OpenStruct.new(id: "hospital_school", name: "Hospital school"),
+        OpenStruct.new(id: "other", name: "Other"),
+        OpenStruct.new(id: "local_authority_virtual_school", name: "Local authority virtual school"),
+        OpenStruct.new(id: "young_offender_institution", name: "Young offender institution"),
+        OpenStruct.new(id: "local_authority_supply_teacher", name: "Local authority supply teacher"),
+      ],
+    },
+  ],
+) %>
 
 <%=
   govuk_table do |table|
@@ -24,7 +48,7 @@
         row.cell(header: true, text: "Employment type")
         row.cell(header: true, text: "Employer name")
         row.cell(header: true, text: "Role")
-        row.cell(header: true, text: "Created at")
+        row.cell(header: true, text: "Registration submitted date")
       end
     end 
 
