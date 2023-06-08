@@ -15,6 +15,8 @@ RSpec.describe Api::V3::ECF::PartnershipsQuery do
   describe "#partnerships" do
     let(:another_cohort) { create(:cohort, start_year: "2050") }
     let!(:another_partnership) { create(:partnership, cohort: another_cohort, lead_provider:) }
+    let(:pre_2021_cohort) { create(:cohort, start_year: 2020) }
+    let!(:pre_2021_partnership) { create(:partnership, cohort: pre_2021_cohort, lead_provider:) }
 
     it "returns all partnerships" do
       expect(subject.partnerships).to match_array([partnership, another_partnership])
@@ -22,10 +24,10 @@ RSpec.describe Api::V3::ECF::PartnershipsQuery do
 
     describe "cohort filter" do
       context "with correct value" do
-        let(:params) { { filter: { cohort: cohort.display_name } } }
+        let(:params) { { filter: { cohort: pre_2021_cohort.display_name } } }
 
         it "returns all partnerships for the specific cohort" do
-          expect(subject.partnerships).to match_array([partnership])
+          expect(subject.partnerships).to match_array([pre_2021_partnership])
         end
       end
 
