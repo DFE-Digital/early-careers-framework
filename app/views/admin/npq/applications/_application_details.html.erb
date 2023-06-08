@@ -57,7 +57,7 @@
 
     sl.row do |row|
       row.key(text: 'TRN validated')
-      row.value(text: application.teacher_reference_number_verified.to_s)
+      row.value { boolean_red_green_tag(application.teacher_reference_number_verified) }
     end
 
     sl.row do |row|

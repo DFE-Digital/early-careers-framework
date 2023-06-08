@@ -13,19 +13,19 @@
 
     sl.row do |row|
       row.key(text: 'Primary establishment')
-      row.value(text: application.primary_establishment.to_s)
+      row.value{ boolean_red_green_tag(application.primary_establishment) }
       row.action
     end
 
     sl.row do |row|
       row.key(text: 'Number of pupils')
-      row.value(text: application.number_of_pupils)
+      row.value(text: application.number_of_pupils.to_i)
       row.action
     end
 
     sl.row do |row|
       row.key(text: 'Targeted support funding primary plus eligibility')
-      row.value(text: application.tsf_primary_plus_eligibility.to_s)
+      row.value{ boolean_red_green_tag(application.tsf_primary_plus_eligibility) }
       row.action
     end
 
@@ -36,7 +36,7 @@
 
     sl.row do |row|
       row.key(text: 'Funding choice')
-      row.value(text: application.funding_choice || "-")
+      row.value(text: application.funding_choice.capitalize || "-")
     end
 
     sl.row do |row|
