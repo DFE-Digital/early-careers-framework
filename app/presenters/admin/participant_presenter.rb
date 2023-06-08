@@ -20,6 +20,7 @@ class Admin::ParticipantPresenter
   delegate :full_name, :email, :participant_identities, to: :user
   delegate :user_id, to: :participant_identity
   delegate :trn, to: :teacher_profile
+  delegate :enrolled_in_fip?, to: :relevant_induction_record
 
   def initialize(participant_profile)
     @participant_profile = participant_profile
