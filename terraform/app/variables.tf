@@ -114,6 +114,12 @@ variable "statuscake_alerts" {
 variable statuscake_api_token {
 }
 
+variable "statuscake_ssl_contact_group" {
+  type        = string
+  default     = null
+  description = "ID of the StatusCake contact group. If empty, SSL check is not enabled"
+}
+
 locals {
   paas_app_env_yml_values = yamldecode(file("${path.module}/../workspace-variables/${var.app_environment}_app_env.yml"))
   paas_app_env_values = merge(
