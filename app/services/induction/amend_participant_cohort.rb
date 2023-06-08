@@ -85,7 +85,6 @@ module Induction
 
         begin
           historical_record.update!(induction_programme: historical_default_induction_programme(historical_record),
-                                    start_date:,
                                     schedule:)
         rescue ActiveRecord::RecordInvalid
           false
