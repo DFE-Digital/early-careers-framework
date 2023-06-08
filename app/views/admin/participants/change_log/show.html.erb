@@ -8,18 +8,38 @@
 <%= render partial: "admin/participants/nav" %>
 
 <% if @event_list.present? %>
-  <%= govuk_table(
-    caption: "Change log",
-    head: %w[Description Value Reporter Date],
-    rows: @event_list.map do |r|
-      [
-        r.predicate,
-        r.value,
-        r.reporter,
-        r.date&.to_s(:govuk),
-      ]
-    end,
-  ) %>
+  <table class="govuk-table">
+    <thead class="govuk-table__head">
+    <tr class="govuk-table__row">
+      <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Time</th>
+      <th scope="col" class="govuk-table__header govuk-!-width-three-quarter">Event</th>
+    </tr>
+    </thead>
+
+    <tbody class="govuk-table__body">
+    <% @event_list.group_by { |event| [event.date, event.type]} .each do |type, events| %>
+      <tr class="govuk-table__row" data-qa="audit-trail-item">
+        <td class="govuk-table__cell" title="<%= events[0].date&.strftime("%e %B %Y %H:%M:%S") %>">
+          <%= events[0].date&.strftime("%e %B %Y") %> <br><%= events[0].date&.strftime("%H:%M") %>
+        </td>
+        <td class="govuk-table__cell">
+          <h2 class="govuk-heading-s govuk-!-margin-bottom-2">
+            <%= events[0].type.to_s.snakecase.humanize %>
+            <span class="govuk-caption-m"><%= events[0].reporter %></span>
+          </h2>
+          <%= govuk_summary_list(classes: 'govuk-!-font-size-16') do |summary_list| %>
+            <% events.each do |event| %>
+              <% summary_list.with_row do |summary_list_row| %>
+                <% summary_list_row.with_key { event.predicate.humanize } %>
+                <% summary_list_row.with_value { event.value } %>
+              <% end %>
+            <% end %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
 <% else %>
   <p>No event history for <%= @participant_profile.full_name %>.</p>
 <% end %>

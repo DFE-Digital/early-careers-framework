@@ -3,10 +3,11 @@
 # noinspection RubyInstanceMethodNamingConvention
 class Participants::HistoryBuilder
   class ParticipantEvent
-    attr_reader :object, :date, :predicate, :reporter, :value
+    attr_reader :id, :date, :type, :predicate, :reporter, :value
 
-    def initialize(id, date, predicate, reporter, value)
-      @object = id
+    def initialize(id, date, type, predicate, reporter, value)
+      @id = id
+      @type = type
       @predicate = predicate
       @value = value
       @date = date
@@ -15,7 +16,8 @@ class Participants::HistoryBuilder
 
     def to_h
       {
-        object:,
+        id:,
+        type:,
         predicate:,
         value:,
         date:,
@@ -96,7 +98,7 @@ private
   end
 
   def record_identity_events(identity)
-    @events.push ParticipantEvent.new(@user.id, identity.created_at, "#{identity.class}.email", "Unknown", "email-hidden")
+    @events.push ParticipantEvent.new(@user.id, identity.created_at, identity.class, "email", "Unknown", identity.email)
   end
 
   def record_induction_record_events(induction_records)
@@ -106,16 +108,16 @@ private
 
   def record_participant_declaration_events(declarations)
     declarations.each do |declaration|
-      description = "#{declaration.declaration_type.capitalize}Declaration.made"
+      type = "#{declaration.declaration_type.capitalize}Declaration"
       actor = declaration.cpd_lead_provider.name
-      @events.push ParticipantEvent.new(@user.id, declaration.declaration_date, description, actor, nil)
+      @events.push ParticipantEvent.new(@user.id, declaration.declaration_date, type, "made", actor, nil)
 
       declaration.declaration_states.each do |declaration_state|
-        description = "#{declaration.declaration_type.capitalize}Declaration.state"
+        type = "#{declaration.declaration_type.capitalize}Declaration"
         actor = declaration.cpd_lead_provider.name
         value = declaration_state.state
 
-        @events.push ParticipantEvent.new(@user.id, declaration_state.created_at, description, actor, value)
+        @events.push ParticipantEvent.new(@user.id, declaration_state.created_at, type, "state", actor, value) if value.present?
       end
     end
   end
@@ -134,15 +136,12 @@ private
 
   def record_validation_events(validation_data)
     validation_data.attributes.each do |key, value|
-      next unless key != "created_at" || key != "updated_at"
+      next if %w[created_at updated_at].include?(key)
 
-      description = "#{validation_data.class}.#{key}"
       actor = "Unknown"
 
-      value = "#{key}-hidden" if %w[full_name date_of_birth nino].include?(key)
-
       # as we don't keep a history the data in this object can only be reliably true from the last updated field
-      @events.push ParticipantEvent.new(@user.id, validation_data.updated_at, description, actor, value)
+      @events.push ParticipantEvent.new(@user.id, validation_data.updated_at, validation_data.class, key, actor, value) if value.present?
     end
 
     # validation_data is not auditable
@@ -175,7 +174,6 @@ private
   def record_event(date, entity, key, value, actor)
     return if value.nil? || %w[created_at updated_at notes school_ukprn start_date end_date login_token login_token_valid_until].include?(key) || (key == "induction_status" && value == "changed")
 
-    description = "#{entity.class}.#{key}"
     value = value.is_a?(Array) ? value[1] : value
 
     if key == "school_cohort_id"
@@ -194,8 +192,7 @@ private
       end
     end
 
-    # hide PII
-    value = "#{key}-hidden" if %w[full_name email date_of_birth nino].include?(key)
+    value = get_school_label(value) if %w[school school_id].include?(key)
     value = get_cohort_label(value) if key == "cohort_id"
     value = get_schedule_label(value) if key == "schedule_id"
     value = get_lead_provider_label(value) if key == "lead_provider_id"
@@ -206,7 +203,7 @@ private
       value = get_induction_programme_label(value)
     end
 
-    @events.push ParticipantEvent.new(@user.id, date, description, actor, value)
+    @events.push ParticipantEvent.new(@user.id, date, entity.class, key, actor, value) if value.present?
   end
 
   def get_user_label(user_id)
@@ -247,6 +244,13 @@ private
     appropriate_body.name
   end
 
+  def get_school_label(school_id)
+    school = School.find_by(id: school_id)
+    return school_id if school.nil?
+
+    school.name
+  end
+
   def get_cohort_label(cohort_id)
     cohort = Cohort.find_by(id: cohort_id)
     return cohort_id if cohort.nil?
@@ -258,6 +262,11 @@ private
     induction_programme = InductionProgramme.find_by(id: induction_programme_id)
     return induction_programme_id if induction_programme.nil?
 
-    "#{induction_programme.training_programme} | #{induction_programme.lead_provider.name} | #{induction_programme.delivery_partner.name} | #{induction_programme.cohort.academic_year}"
+    [
+      induction_programme.training_programme,
+      induction_programme.lead_provider&.name,
+      induction_programme.delivery_partner&.name,
+      induction_programme.cohort.academic_year,
+    ].filter(&present?).join(" | ")
   end
 end
