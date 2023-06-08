@@ -119,7 +119,7 @@ RSpec.describe Partnership, type: :model do
     end
   end
 
-  describe "challenge deadline to 31st October" do
+  describe "challenge deadline to 31st October from 2023" do
     it "sets the challenge deadline to 31st October when the partnership is created before the 17th October" do
       travel_to Date.new(2023, 5, 1) do
         partnership = create(:partnership, :not_challenged, cohort: create(:cohort, start_year: 2023))
@@ -131,6 +131,22 @@ RSpec.describe Partnership, type: :model do
       travel_to Date.new(2023, 10, 25) do
         partnership = create(:partnership, :not_challenged, cohort: create(:cohort, start_year: 2023))
         expect(partnership.challenge_deadline).to eq(Date.new(2023, 11, 8))
+      end
+    end
+  end
+
+  describe "challenge deadline to 31st October until 2022" do
+    it "sets the challenge deadline to 31st October when the partnership is created before the 17th October" do
+      travel_to Date.new(2023, 5, 1) do
+        partnership = create(:partnership, :not_challenged, cohort: create(:cohort, start_year: 2022))
+        expect(partnership.challenge_deadline).to be_nil
+      end
+    end
+
+    it "sets the challenge deadline to two weeks when the partnership is created from the 17th October" do
+      travel_to Date.new(2023, 10, 25) do
+        partnership = create(:partnership, :not_challenged, cohort: create(:cohort, start_year: 2022))
+        expect(partnership.challenge_deadline).to be_nil
       end
     end
   end
