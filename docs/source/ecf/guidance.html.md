@@ -619,6 +619,13 @@ Successful requests will return a response body including updates to the `traini
 
 For more detailed information see the specifications for this [notify DfE that an ECF participant has withdrawn from training endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-id-withdraw-put).
 
+#### Providers should note:
+
+* DfE will **only** pay for participants who have had, at a minimum, a `started` declaration submitted against them
+* DfE will pay providers for declarations submitted where the `declaration_date` is before the date of the withdrawal
+
+Providers may see instances where a participant’s `training_status` and `participant_status` do not match. Providers are required to check the `participant_status` is accurate before notifying the DFE that the participant has withdrawn from ECF-based training with them altogether. **For example,** a participant has `"training_status": "active"` while their `"participant_status": "withdrawn"`. This would indicate an induction tutor has entered the DfE service to inform DfE that the participant has withdrawn from training at their school. However, the provider in partnership with that school has not yet withdrawn the participant via the API.  The participant’s `training_status` will remain `active` until the provider investigates (to see if the participant has withdrawn or has transferred to a new school) and notifies DfE a participant has withdrawn from training (`"training_status": "withdrawn"`).
+
 #### Example request body:
 
 ```
@@ -632,11 +639,6 @@ For more detailed information see the specifications for this [notify DfE that a
   }
 }
 ```
-
-#### Providers should note:
-
-* DfE will **only** pay for participants who have had, at a minimum, a `started` declaration submitted against them
-* DfE will pay providers for declarations submitted where the `declaration_date` is before the date of the withdrawal
 
 ### Notify DfE of a participant's training schedule
 
@@ -702,7 +704,8 @@ An example response body is listed below. Successful requests will return respon
 
 #### Providers should note:
 
-* Transfer data can appear incomplete as induction tutors can enter transfer information at different times. **For example,** a participant is planning on transferring from school X to school Y. School X’s induction tutor confirms the participant will be leaving, but school Y’s induction tutor has not yet confirmed the participant will be joining. At this stage the only data available via the API is from the school the participant is leaving
+* transfer data can appear incomplete as induction tutors can enter transfer information at different times. **For example,** a participant is planning on transferring from school X to school Y. School X’s induction tutor confirms the participant will be leaving, but school Y’s induction tutor has not yet confirmed the participant will be joining. At this stage the only data available via the API is from the school the participant is leaving
+* where a participant’s transfer from one provider to another is complete, the original provider should maintain data accuracy and [notify DfE that the participant has withdrawn from training](/api-reference/ecf/guidance/#notify-dfe-a-participant-has-withdrawn-from-training). **For example,** a participant has transferred from provider X to provider Y. The relevant school induction tutors have confirmed that the participant has left one school and joined the other. At this stage provider X will [view the participant’s data](/api-reference/ecf/guidance.html#view-a-single-participant-39-s-data) to see `“participant_status”: “left”`. They can then [notify DfE a participant has withdrawn from training with them](/api-reference/ecf/guidance/#notify-dfe-a-participant-has-withdrawn-from-training). This will update the participant’s `training_status`  to `withdrawn`
 
 For more detailed information see the specifications for this [view participant transfers endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-transfers-get).
 
@@ -753,7 +756,16 @@ Providers can view data for a specific participant who has transferred:
 GET /api/v3/participants/ecf/{id}/transfers
 ```
 
-An example response body is listed below. Successful requests will return a response body with information about the provider and school the participant is transferring to and from.
+An example response body is listed below. Successful requests will return response bodies which can include:
+
+* the provider name and school URN the participants are transferring to or from
+* the `transfer_type`, which describes whether the participant is transferring to a `new_school` with the same provider, to a new school with a `new_provider`, or if this is yet `unknown`
+* the `status`, which describes whether the transfer has taken place yet (and the dates are in the past)
+
+#### Providers should note:
+
+* transfer data can appear incomplete as induction tutors can enter transfer information at different times. **For example,** a participant is planning on transferring from school X to school Y. School X’s induction tutor confirms the participant will be leaving, but school Y’s induction tutor has not yet confirmed the participant will be joining. At this stage the only data available via the API is from the school the participant is leaving
+* where a participant’s transfer from one provider to another is complete, the original provider should maintain data accuracy and [notify DfE that the participant has withdrawn from training](/api-reference/ecf/guidance/#notify-dfe-a-participant-has-withdrawn-from-training). **For example,** a participant has transferred from provider X to provider Y. The relevant school induction tutors have confirmed that the participant has left one school and joined the other. At this stage provider X will [view the participant’s data](/api-reference/ecf/guidance.html#view-a-single-participant-39-s-data) to see `“participant_status”: “left”`. They should then [notify DfE a participant has withdrawn from training with them](/api-reference/ecf/guidance/#notify-dfe-a-participant-has-withdrawn-from-training). This will update the participant’s `training_status`  to `withdrawn`
 
 For more detailed information see the specifications for this [view a participant transfer endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-id-transfers-get).
 

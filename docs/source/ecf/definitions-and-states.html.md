@@ -53,6 +53,12 @@ A participant’s `training_status` value will determine whether a provider can:
 
 [View more detailed specifications for the ECF participant schema](/api-reference/reference-v3.html#schema-ecfparticipantattributes).
 
+#### Providers should note:
+
+A participant's `training_status` highlights data entered **by providers** via the API. It then determines what onward actions providers can take via the API. Providers should also consider supplementary data available via the API, including the `participant_status`.
+
+A participant's `participant_status` highlights information given **by school induction tutors** via the DfE service. Values include `active`, `joining`, `leaving`, `left` and `withdrawn`, and will update according to the associated transfer or withdrawal dates induction tutors have given. For example, the `participant_status` will change from `leaving` to `left` after the date an induction tutor has given for when a participant is leaving their school. Note, values can occasionally be inaccurate due to induction tutor human error.
+
 ### Declaration states
 
 Declaration states are defined by the `state` attribute. 

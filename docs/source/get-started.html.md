@@ -9,7 +9,11 @@ weight: 2
 
 Connect to the API by integrating local provider CRM systems with it.
 
-A unique authentication token is needed to connect to the API. Each token is associated with a single provider and will give providers access to CPD participant data.
+A unique authentication token is needed to connect to the API.
+
+Each token is associated with a single provider and will give providers access to appropriate CPD participant data. 
+
+Authentication tokens do not expire.
 
 ### Request an authentication token
 

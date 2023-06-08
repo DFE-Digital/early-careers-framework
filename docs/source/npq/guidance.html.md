@@ -464,7 +464,7 @@ A participant can choose to withdraw from an NPQ course at any time. Providers m
 
 An example request body is listed below.
 
-Successful requests will return a response body including updates to the `training_status` attribute.
+Successful requests will return a response body including updates to the `training_status` attribute, and a withdrawal `date` reflecting the time the provider submitted the withdrawal API request.
 
 #### Providers should note:
 
