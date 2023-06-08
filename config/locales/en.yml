@@ -288,7 +288,7 @@ en:
               school_cohort_not_setup: "%{start_academic_year} academic year not setup by school %{school_name}"
             participant_declarations:
               exist: "The participant must have no declarations"
-              billable_or_submitted: "The participant has billable or submitted declarations in the current cohort"
+              billable_or_submitted: "The participant has billable or submitted declarations"
               completed: "The participant has not not had a 'completed' declaration submitted against them. Therefore you cannot update their outcome"
             participant_profile:
               blank: "Not registered"

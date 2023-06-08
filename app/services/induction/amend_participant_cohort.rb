@@ -148,7 +148,6 @@ module Induction
       @participant_declarations ||= participant_profile
                                       .participant_declarations
                                       .billable_or_changeable
-                                      .declared_as_between(source_cohort_start_date, source_cohort_end_date)
                                       .exists?
     end
 
@@ -158,14 +157,6 @@ module Induction
 
     def source_cohort
       @source_cohort ||= Cohort.find_by(start_year: source_cohort_start_year)
-    end
-
-    def source_cohort_start_date
-      @source_cohort_start_date ||= source_cohort.academic_year_start_date
-    end
-
-    def source_cohort_end_date
-      @source_cohort_end_date ||= source_cohort_start_date + 1.year - 1.day
     end
 
     def start_date
