@@ -14,22 +14,20 @@ RSpec.describe Participants::HistoryBuilder, :with_support_for_ect_examples do
 
   describe "without paper_trail enabled" do
     it "has the correct attributes listed when a FIP ECT is created" do
-      travel_to(Time.current - 1.minute) do
+      travel_to(Time.zone.now - 1.minute) do
         fip_ect_only
       end
 
       event_list = described_class.from_participant_profile(fip_ect_only).events
 
-      attributes_changed = event_list.map(&:predicate)
+      attributes_changed = event_list.map { |event| "#{event.type}.#{event.predicate}" }
       expect(attributes_changed).to match_array %w[
         ParticipantIdentity.email
         ParticipantProfile::ECT.id
         ParticipantProfile::ECT.participant_identity_id
         ParticipantProfile::ECT.profile_duplicity
-        ParticipantProfile::ECT.pupil_premium_uplift
         ParticipantProfile::ECT.schedule_id
         ParticipantProfile::ECT.school_cohort_id
-        ParticipantProfile::ECT.sparsity_uplift
         ParticipantProfile::ECT.status
         ParticipantProfile::ECT.teacher_profile_id
         ParticipantProfile::ECT.training_status
@@ -37,7 +35,6 @@ RSpec.describe Participants::HistoryBuilder, :with_support_for_ect_examples do
         SchoolCohort.cohort_id
         SchoolCohort.id
         SchoolCohort.induction_programme_choice
-        SchoolCohort.opt_out_of_updates
         SchoolCohort.school_id
         TeacherProfile.id
         TeacherProfile.school_id
@@ -57,12 +54,12 @@ RSpec.describe Participants::HistoryBuilder, :with_support_for_ect_examples do
     end
 
     it "has the correct attributes listed when a FIP ECT is created" do
-      travel_to(Time.current - 1.minute) do
+      travel_to(Time.zone.now - 1.minute) do
         fip_ect_only
       end
 
       event_list = described_class.from_participant_profile(fip_ect_only).events
-      attributes_changed = event_list.map(&:predicate)
+      attributes_changed = event_list.map { |event| "#{event.type}.#{event.predicate}" }
       expect(attributes_changed).to match_array %w[
         InductionRecord.id
         InductionRecord.induction_programme_id
@@ -92,30 +89,32 @@ RSpec.describe Participants::HistoryBuilder, :with_support_for_ect_examples do
     end
 
     it "has the correct lead provider induction programme when a FIP ECT is created" do
-      travel_to(Time.current - 1.minute) do
+      travel_to(Time.zone.now - 1.minute) do
         fip_ect_only
       end
 
       event_list = described_class.from_participant_profile(fip_ect_only).events
 
-      induction_programme_entries = event_list.filter { |ev| ev.predicate == "InductionRecord.induction_programme_id" }
+      induction_programme_entries = event_list.filter { |ev| ev.type.to_s == "InductionRecord" and ev.predicate == "induction_programme_id" }
       expect(induction_programme_entries.first.value).to include "full_induction_programme | Teach First"
     end
 
     it "records a name change at the end" do
-      travel_to(Time.current - 1.minute) do
+      travel_to(Time.zone.now - 1.minute) do
         fip_ect_only
       end
 
-      fip_ect_only.user.update! full_name: "Martin Luthor"
+      fip_ect_only.user.update! full_name: "Martin Luther"
 
       event_list = described_class.from_participant_profile(fip_ect_only).events
 
-      expect(event_list.last.predicate).to eq "User.full_name"
+      expect(event_list.last.type).to eq User
+      expect(event_list.last.predicate).to eq "full_name"
+      expect(event_list.last.value).to eq "Martin Luther"
     end
 
     it "records a trn change at the end" do
-      travel_to(Time.current - 1.minute) do
+      travel_to(Time.zone.now - 1.minute) do
         fip_ect_only
       end
 
@@ -123,11 +122,13 @@ RSpec.describe Participants::HistoryBuilder, :with_support_for_ect_examples do
 
       event_list = described_class.from_participant_profile(fip_ect_only).events
 
-      expect(event_list.last.predicate).to eq "TeacherProfile.trn"
+      expect(event_list.last.type).to eq TeacherProfile
+      expect(event_list.last.predicate).to eq "trn"
+      expect(event_list.last.value).to eq "0123456"
     end
 
     it "records Mentor change at the end" do
-      travel_to(Time.current - 1.minute) do
+      travel_to(Time.zone.now - 1.minute) do
         fip_ect_only
       end
 
@@ -136,7 +137,7 @@ RSpec.describe Participants::HistoryBuilder, :with_support_for_ect_examples do
 
       event_list = described_class.from_participant_profile(fip_ect_only).events
 
-      attributes_changed = event_list.map(&:predicate)
+      attributes_changed = event_list.map { |event| "#{event.type}.#{event.predicate}" }
       expect(attributes_changed.last(8)).to match_array %w[
         InductionRecord.id
         InductionRecord.induction_programme_id

@@ -266,7 +266,7 @@ private
       induction_programme.training_programme,
       induction_programme.lead_provider&.name,
       induction_programme.delivery_partner&.name,
-      induction_programme.cohort.academic_year,
-    ].filter(&present?).join(" | ")
+      induction_programme.cohort&.academic_year,
+    ].filter(&:present?).join(" | ")
   end
 end
