@@ -175,7 +175,7 @@ private
     entity.versions&.each do |version|
       # TODO: if the version is of type "created" then we need to record the default values that were not overridden
 
-      user = User.find_by(id: version.whodunnit)
+      user = User.find_by(id: version.whodunnit) || version.whodunnit
 
       version.object_changes&.each do |key, value|
         record_event(version.created_at, version.event, entity, key, value, user)

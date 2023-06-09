@@ -22,6 +22,13 @@ RSpec.describe Participants::HistoryBuilder, :with_support_for_ect_examples do
 
       attributes_changed = event_list.map { |event| "#{event.type}.#{event.predicate}" }
       expect(attributes_changed).to match_array %w[
+        InductionRecord.id
+        InductionRecord.induction_programme_id
+        InductionRecord.induction_status
+        InductionRecord.training_status
+        InductionRecord.participant_profile_id
+        InductionRecord.preferred_identity_id
+        InductionRecord.schedule_id
         ParticipantIdentity.email
         ParticipantProfile::ECT.id
         ParticipantProfile::ECT.participant_identity_id
@@ -96,7 +103,7 @@ RSpec.describe Participants::HistoryBuilder, :with_support_for_ect_examples do
       event_list = described_class.from_participant_profile(fip_ect_only).events
 
       induction_programme_entries = event_list.filter { |ev| ev.type.to_s == "InductionRecord" and ev.predicate == "induction_programme_id" }
-      expect(induction_programme_entries.first.value).to include "full_induction_programme | Teach First"
+      expect(induction_programme_entries.first.value).to include "Teach First TF Delivery Partner (2022/23)"
     end
 
     it "records a name change at the end" do
@@ -154,11 +161,12 @@ RSpec.describe Participants::HistoryBuilder, :with_support_for_ect_examples do
       travel_to(Time.zone.now - 1.minute) do
         fip_ect_only
 
-        fip_ect_only.versions.last.update!(whodunnit: console_user_name)
+        fip_ect_only.versions.each { |version| version.update!(whodunnit: console_user_name) }
       end
 
       event_list = described_class.from_participant_profile(fip_ect_only).events
-      reporters = event_list.map(&:reporter)
+      reporters = event_list.map(&:user)
+
       expect(reporters).to include console_user_name
     end
   end

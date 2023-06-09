@@ -5,12 +5,13 @@ RSpec.shared_context "with Support for ECTs example profiles", shared_context: :
 
   let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider, name: "Teach First") }
   let(:lead_provider) { cpd_lead_provider.lead_provider }
+  let(:delivery_partner) { create :delivery_partner, name: "TF Delivery Partner" }
 
   let(:core_induction_programme) { create(:core_induction_programme, name: lead_provider.name) }
   let(:cip_school_cohort) { create :school_cohort, induction_programme_choice: "core_induction_programme" }
   let(:cip_induction_programme) { create(:induction_programme, core_induction_programme:, training_programme: "core_induction_programme", school_cohort: cip_school_cohort) }
 
-  let(:fip_partnership) { create :partnership, lead_provider: }
+  let(:fip_partnership) { create :partnership, lead_provider:, delivery_partner: }
   let(:fip_school_cohort) { create :school_cohort, lead_provider:, induction_programme_choice: "full_induction_programme" }
   let(:fip_induction_programme) { create(:induction_programme, partnership: fip_partnership, training_programme: "full_induction_programme", school_cohort: fip_school_cohort) }
 
