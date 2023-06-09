@@ -149,6 +149,12 @@ private
     }
   end
 
+  def mentor_id
+    return nil unless participant_profile.ect?
+
+    latest_induction_record&.mentor_profile&.participant_identity&.user_id
+  end
+
   def declaration_parameters
     {
       course_identifier:,
@@ -156,12 +162,17 @@ private
       declaration_type:,
       cpd_lead_provider:,
       delivery_partner:,
+      mentor_id:,
       user: participant_identity.user,
     }
   end
 
-  def delivery_partner
+  def latest_induction_record
     Induction::FindBy.call(participant_profile:, lead_provider: cpd_lead_provider.lead_provider)
+  end
+
+  def delivery_partner
+    latest_induction_record
       &.induction_programme
       &.partnership
       &.delivery_partner
