@@ -11,7 +11,7 @@ module Api
       set_id :id
       set_type :'participant-declaration'
 
-      attributes :participant_id, :declaration_type, :course_identifier
+      attributes :participant_id, :declaration_type, :course_identifier, :mentor_id
 
       attribute :declaration_date do |declaration|
         declaration.declaration_date.rfc3339
@@ -54,27 +54,6 @@ module Api
             "duplicate_declaration"
           else
             reason
-          end
-        end
-      end
-
-      attribute :mentor_id do |declaration|
-        if declaration.participant_profile.ect?
-          if declaration.respond_to?(:mentor_user_id)
-            declaration.mentor_user_id&.first
-          else
-            latest_induction_record = declaration.participant_profile.induction_records.includes(
-              induction_programme: [:partnership],
-            ).where(
-              induction_programme: {
-                partnerships: {
-                  lead_provider_id: declaration.cpd_lead_provider.lead_provider_id,
-                  # We've not filtered out challenged as we want to return everything
-                },
-              },
-            ).latest
-
-            latest_induction_record&.mentor_profile&.participant_identity&.user_id
           end
         end
       end
