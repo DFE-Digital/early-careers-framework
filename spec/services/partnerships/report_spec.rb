@@ -2,7 +2,7 @@
 
 RSpec.describe Partnerships::Report do
   let(:school) { create :school }
-  let(:cohort) { create :cohort }
+  let(:cohort) { Cohort.current || create(:cohort, :current) }
   let(:lead_provider) { create :lead_provider }
   let(:delivery_partner) { create :delivery_partner }
 
@@ -148,6 +148,38 @@ RSpec.describe Partnerships::Report do
 
     it "does not create a school cohort" do
       expect { result }.not_to change { school.school_cohorts.count }
+    end
+  end
+
+  context "challenge deadline to 31st October from 2023" do
+    let(:cohort) { create(:cohort, start_year: 2023) }
+
+    it "sets the challenge deadline to 31st October when the partnership is created before the 17th October" do
+      travel_to Date.new(2023, 5, 1)
+
+      expect(result.challenge_deadline).to eq(Date.new(2023, 10, 31))
+
+      travel_back
+    end
+
+    it "sets the challenge deadline to two weeks when the partnership is created from the 17th October" do
+      travel_to Date.new(2023, 10, 25)
+
+      expect(result.challenge_deadline).to eq(Date.new(2023, 11, 8))
+
+      travel_back
+    end
+  end
+
+  context "challenge deadline to 31st October until 2022" do
+    let(:cohort) { create(:cohort, start_year: 2022) }
+
+    it "sets the challenge deadline to two weeks when the partnership is created from the 17th October" do
+      travel_to Date.new(2023, 5, 1)
+
+      expect(result.challenge_deadline).to eq(Date.new(2023, 5, 15))
+
+      travel_back
     end
   end
 end

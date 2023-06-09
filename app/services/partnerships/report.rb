@@ -23,7 +23,7 @@ module Partnerships
         partnership.challenge_reason = partnership.challenged_at = nil
         partnership.delivery_partner_id = delivery_partner_id
         partnership.pending = false
-        partnership.challenge_deadline = CHALLENGE_WINDOW.from_now
+        partnership.challenge_deadline = challenge_deadline
         partnership.report_id = SecureRandom.uuid
         partnership.save!
 
@@ -63,6 +63,19 @@ module Partnerships
         cohort_id:,
         induction_programme_choice: "full_induction_programme",
       )
+    end
+
+    def cohort
+      @cohort ||= Cohort.find_by(id: cohort_id)
+    end
+
+    def challenge_deadline
+      deadline = Date.new(cohort.start_year, 10, 17)
+      if Time.zone.now < deadline
+        Date.new(cohort.start_year, 10, 31)
+      else
+        Time.zone.now + CHALLENGE_WINDOW
+      end
     end
   end
 end
