@@ -1,0 +1,20 @@
+<tr class="govuk-table__row" data-qa="audit-trail-item">
+  <td class="govuk-table__cell" title="<%= l(audit.created_at, format: "%e %B %Y %H:%M:%S") %>">
+    <%= l(audit.created_at.to_date, format: "%e %B %Y") %> <br><%= l(audit.created_at, format: "%H:%M") %>
+  </td>
+  <td class="govuk-table__cell">
+    <h2 class="govuk-heading-s govuk-!-margin-bottom-2">
+      <%= audit_entry_event_label %>
+      <span class="govuk-caption-m"><%= audit_entry_user_label %></span>
+    </h2>
+
+    <%= govuk_summary_list(classes: 'govuk-!-font-size-16') do |summary_list| %>
+      <% changes.each do |change| %>
+        <% summary_list.with_row do |summary_list_row| %>
+          <% summary_list_row.with_key { change.attribute.humanize } %>
+          <% summary_list_row.with_value { change.formatted_values } %>
+        <% end %>
+      <% end %>
+    <% end %>
+  </td>
+</tr>

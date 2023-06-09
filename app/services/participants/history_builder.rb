@@ -3,10 +3,11 @@
 # noinspection RubyInstanceMethodNamingConvention
 class Participants::HistoryBuilder
   class ParticipantEvent
-    attr_reader :id, :date, :type, :predicate, :reporter, :value
+    attr_reader :id, :action, :date, :type, :predicate, :reporter, :value
 
-    def initialize(id, date, type, predicate, reporter, value)
+    def initialize(id, action, date, type, predicate, reporter, value)
       @id = id
+      @action = action
       @type = type
       @predicate = predicate
       @value = value
@@ -17,6 +18,7 @@ class Participants::HistoryBuilder
     def to_h
       {
         id:,
+        action:,
         type:,
         predicate:,
         value:,
@@ -98,7 +100,7 @@ private
   end
 
   def record_identity_events(identity)
-    @events.push ParticipantEvent.new(@user.id, identity.created_at, identity.class, "email", "Unknown", identity.email)
+    @events.push ParticipantEvent.new(identity.id, "create", identity.created_at, identity.class, "email", "Unknown", identity.email)
   end
 
   def record_induction_record_events(induction_records)
@@ -110,14 +112,14 @@ private
     declarations.each do |declaration|
       type = "#{declaration.declaration_type.capitalize}Declaration"
       actor = declaration.cpd_lead_provider.name
-      @events.push ParticipantEvent.new(@user.id, declaration.declaration_date, type, "made", actor, nil)
+      @events.push ParticipantEvent.new(declaration.id, "create", declaration.declaration_date, type, "made", actor, nil)
 
       declaration.declaration_states.each do |declaration_state|
         type = "#{declaration.declaration_type.capitalize}Declaration"
         actor = declaration.cpd_lead_provider.name
         value = declaration_state.state
 
-        @events.push ParticipantEvent.new(@user.id, declaration_state.created_at, type, "state", actor, value) if value.present?
+        @events.push ParticipantEvent.new(declaration.id, "update", declaration_state.created_at, type, "state", actor, value) if value.present?
       end
     end
   end
@@ -141,7 +143,7 @@ private
       actor = "Unknown"
 
       # as we don't keep a history the data in this object can only be reliably true from the last updated field
-      @events.push ParticipantEvent.new(@user.id, validation_data.updated_at, validation_data.class, key, actor, value) if value.present?
+      @events.push ParticipantEvent.new(validation_data.id, "updated", validation_data.updated_at, validation_data.class, key, actor, value) if value.present?
     end
 
     # validation_data is not auditable
@@ -157,7 +159,7 @@ private
 
   def record_created_event(entity, actor)
     entity.attributes&.each do |key, value|
-      record_event(entity.updated_at, entity, key, value, actor)
+      record_event(entity.updated_at, "created", entity, key, value, actor)
     end
   end
 
@@ -166,12 +168,12 @@ private
       # TODO: if the version is of type "created" then we need to record the default values that were not overridden
 
       version.object_changes&.each do |key, value|
-        record_event(version.created_at, entity, key, value, get_user_label(version.whodunnit))
+        record_event(version.created_at, version.event, entity, key, value, get_user_label(version.whodunnit))
       end
     end
   end
 
-  def record_event(date, entity, key, value, actor)
+  def record_event(date, action, entity, key, value, actor)
     return if value.nil? || %w[created_at updated_at notes school_ukprn start_date end_date login_token login_token_valid_until].include?(key) || (key == "induction_status" && value == "changed")
 
     value = value.is_a?(Array) ? value[1] : value
@@ -203,7 +205,7 @@ private
       value = get_induction_programme_label(value)
     end
 
-    @events.push ParticipantEvent.new(@user.id, date, entity.class, key, actor, value) if value.present?
+    @events.push ParticipantEvent.new(entity.id, action, date, entity.class, key, actor, value) if value.present?
   end
 
   def get_user_label(user_id)
