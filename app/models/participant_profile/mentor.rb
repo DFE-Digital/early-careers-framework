@@ -14,6 +14,8 @@ class ParticipantProfile < ApplicationRecord
 
     has_many :school_mentors, dependent: :destroy, foreign_key: :participant_profile_id
     has_many :schools, through: :school_mentors
+    # TODO: causes a validation error, not sure why
+    # has_many :participant_declarations
 
     def mentor?
       true

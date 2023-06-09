@@ -5,6 +5,7 @@ class ParticipantDeclaration < ApplicationRecord
 
   belongs_to :cpd_lead_provider
   belongs_to :user
+  belongs_to :mentor, class_name: "ParticipantProfile::Mentor", optional: true
   belongs_to :participant_profile
   belongs_to :superseded_by, class_name: "ParticipantDeclaration", optional: true
   belongs_to :delivery_partner, optional: true
