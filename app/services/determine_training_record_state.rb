@@ -153,6 +153,7 @@ class DetermineTrainingRecordState < BaseService
       training_record_state.assign_attributes(**execute_query.first)
 
       training_record_state.save! if training_record_state.changed?
+      training_record_state
     else
       TrainingRecordState.create!(**execute_query.first)
     end
