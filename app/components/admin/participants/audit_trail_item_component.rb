@@ -5,27 +5,39 @@
 module Admin
   module Participants
     class AuditTrailItemComponent < ViewComponent::Base
+      include AdminHelper
+
       def initialize(audit:)
         @audit = audit
       end
 
       def audit_entry_event_label
-        "#{audit.action.capitalize} #{audit.type.to_s.titlecase} ##{audit.id}"
+        type = admin_participant_role_name(audit.type.to_s)
+        type = audit.type.to_s.titlecase if type == "unknown"
+
+        "#{audit.action.capitalize} #{type} ##{audit.id}"
       end
 
       def audit_entry_user_label
-        if audit.user_type == "ApiUser"
-          "#{audit.user.email_address} (Vendor API)"
-        elsif audit.user_type == "SupportUser"
-          "#{audit.user.email_address} (Support user)"
-        elsif audit.user_type == "LeadProviderUser"
-          "#{audit.user.email_address} (Provider user)"
-        elsif audit.user_type == "SchoolUser"
-          "#{audit.user.email_address} (School user)"
-        elsif audit.username.present?
-          audit.username
+        user = audit.user
+
+        return "(Unknown User)" if user.nil?
+        return user if user.is_a?(String)
+
+        if user.induction_coordinator?
+          "#{user.email_address} (SIT user)"
+        elsif audit.admin?
+          "#{user.email_address} (Support user)"
+        elsif audit.finance?
+          "#{user.email_address} (Finance user)"
+        elsif audit.delivery_partner?
+          "#{user.email_address} (DP user)"
+        elsif audit.appropriate_body?
+          "#{user.email_address} (AB user)"
+        elsif audit.lead_provider?
+          "#{user.supplier_name} (LP user)"
         else
-          "(Unknown User)"
+          audit.user.email_address
         end
       end
 

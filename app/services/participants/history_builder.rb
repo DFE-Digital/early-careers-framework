@@ -2,17 +2,19 @@
 
 # noinspection RubyInstanceMethodNamingConvention
 class Participants::HistoryBuilder
-  class ParticipantEvent
-    attr_reader :id, :action, :date, :type, :predicate, :reporter, :value
+  include AdminHelper
 
-    def initialize(id, action, date, type, predicate, reporter, value)
+  class ParticipantEvent
+    attr_reader :id, :action, :date, :type, :predicate, :user, :value
+
+    def initialize(id, action, date, type, predicate, user, value)
       @id = id
       @action = action
       @type = type
       @predicate = predicate
       @value = value
       @date = date
-      @reporter = reporter
+      @user = user
     end
 
     def to_h
@@ -23,7 +25,7 @@ class Participants::HistoryBuilder
         predicate:,
         value:,
         date:,
-        reporter:,
+        user:,
       }
     end
   end
@@ -77,7 +79,7 @@ private
 
   def record_user_events(user)
     if user.versions.empty?
-      record_created_event(user, user.school&.name)
+      record_created_event(user)
     else
       record_paper_trail_events(user)
     end
@@ -85,7 +87,7 @@ private
 
   def record_teacher_record_events(teacher_record)
     if teacher_record.versions.empty?
-      record_created_event(teacher_record, teacher_record.user.school&.name)
+      record_created_event(teacher_record)
     else
       record_paper_trail_events(teacher_record)
     end
@@ -93,19 +95,25 @@ private
 
   def record_profile_events(participant_profile)
     if participant_profile.versions.empty?
-      record_created_event(participant_profile, participant_profile.school&.name)
+      record_created_event(participant_profile)
     else
       record_paper_trail_events(participant_profile)
     end
   end
 
   def record_identity_events(identity)
-    @events.push ParticipantEvent.new(identity.id, "create", identity.created_at, identity.class, "email", "Unknown", identity.email)
+    @events.push ParticipantEvent.new(identity.id, "create", identity.created_at, identity.class, "email", nil, identity.email)
   end
 
   def record_induction_record_events(induction_records)
     # TODO: induction_record versions might create duplicate events in the log
-    induction_records.each { |record| record_paper_trail_events(record) }
+    induction_records.each do |record|
+      if record.versions.empty?
+        record_created_event(record)
+      else
+        record_paper_trail_events(record)
+      end
+    end
   end
 
   def record_participant_declaration_events(declarations)
@@ -126,7 +134,7 @@ private
 
   def record_school_cohort_events(school_cohort)
     if school_cohort.versions.empty?
-      record_created_event(school_cohort, school_cohort.school&.name)
+      record_created_event(school_cohort)
     else
       record_paper_trail_events(school_cohort)
     end
@@ -157,9 +165,9 @@ private
     decisions.each { |decision| record_paper_trail_events(decision) }
   end
 
-  def record_created_event(entity, actor)
+  def record_created_event(entity)
     entity.attributes&.each do |key, value|
-      record_event(entity.updated_at, "created", entity, key, value, actor)
+      record_event(entity.updated_at, "created", entity, key, value, nil)
     end
   end
 
@@ -167,8 +175,10 @@ private
     entity.versions&.each do |version|
       # TODO: if the version is of type "created" then we need to record the default values that were not overridden
 
+      user = User.find_by(id: version.whodunnit)
+
       version.object_changes&.each do |key, value|
-        record_event(version.created_at, version.event, entity, key, value, get_user_label(version.whodunnit))
+        record_event(version.created_at, version.event, entity, key, value, user)
       end
     end
   end
@@ -208,16 +218,6 @@ private
     @events.push ParticipantEvent.new(entity.id, action, date, entity.class, key, actor, value) if value.present?
   end
 
-  def get_user_label(user_id)
-    return "Unknown" if user_id.nil?
-
-    user = User.find_by(id: user_id)
-    return user_id if user.nil?
-
-    parts = user.email.split("@")
-    parts[1] || parts[0]
-  end
-
   def get_lead_provider_label(lead_provider_id)
     lead_provider = LeadProvider.find_by(id: lead_provider_id)
     return lead_provider_id if lead_provider.nil?
@@ -236,7 +236,7 @@ private
     schedule = Finance::Schedule.find_by(id: schedule_id)
     return schedule_id if schedule.nil?
 
-    schedule.schedule_identifier
+    "#{schedule.name} (#{schedule.schedule_identifier}) #{schedule.cohort.academic_year}"
   end
 
   def get_appropriate_body_label(appropriate_body_id)
@@ -257,7 +257,7 @@ private
     cohort = Cohort.find_by(id: cohort_id)
     return cohort_id if cohort.nil?
 
-    cohort.academic_year
+    cohort.description
   end
 
   def get_induction_programme_label(induction_programme_id)
@@ -265,10 +265,10 @@ private
     return induction_programme_id if induction_programme.nil?
 
     [
-      induction_programme.training_programme,
       induction_programme.lead_provider&.name,
       induction_programme.delivery_partner&.name,
-      induction_programme.cohort&.academic_year,
-    ].filter(&:present?).join(" | ")
+      induction_programme.core_induction_programme&.name,
+      "(#{induction_programme.cohort&.academic_year})",
+    ].filter(&:present?).join(" ")
   end
 end

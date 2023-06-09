@@ -14,7 +14,7 @@ module Admin
         :action,
         :created_at,
         :type,
-        :username,
+        :user,
         :user_type,
         :audited_changes,
         keyword_init: true,
@@ -27,7 +27,7 @@ module Admin
             action: event.action,
             date: event.date,
             type: event.type,
-            reporter: event.reporter,
+            user: event.user,
           }
         end
 
@@ -39,7 +39,7 @@ module Admin
             action: event[:action],
             created_at: event[:date],
             type: event[:type],
-            username: event[:reporter],
+            user: event[:user],
             user_type: nil,
             audited_changes:,
           )
