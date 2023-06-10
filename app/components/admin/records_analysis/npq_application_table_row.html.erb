@@ -1,12 +1,10 @@
-<% declaration = application.profile.participant_declarations.where(state: %w[paid payable]).first %>
-
 <tr class="govuk-table__row nhsuk-table__row">
   <td class="govuk-table__cell nhsuk-table__cell">
     <span class="nhsuk-table-responsive__heading">Full name</span>
     <%= govuk_link_to application.user.full_name, admin_participant_path(application.profile) %>
   </td>
   <td class="govuk-table__cell nhsuk-table__cell">
-    <span class="nhsuk-table-responsive__heading">Application Status</span>
+    <span class="nhsuk-table-responsive__heading">Application status</span>
     <%= application.lead_provider_approval_status %>
   </td>
   <td class="govuk-table__cell nhsuk-table__cell">
@@ -14,19 +12,19 @@
     <%= application.npq_course.name %>
   </td>
   <td class="govuk-table__cell nhsuk-table__cell">
-    <span class="nhsuk-table-responsive__heading">Last Declaration</span>
-    <%= declaration.declaration_type %>
-  </td>
-  <td class="govuk-table__cell nhsuk-table__cell">
-    <span class="nhsuk-table-responsive__heading">Lead Provider</span>
+    <span class="nhsuk-table-responsive__heading">Lead provider</span>
     <%= declaration.cpd_lead_provider.name %>
   </td>
   <td class="govuk-table__cell nhsuk-table__cell">
-    <span class="nhsuk-table-responsive__heading">Status</span>
+    <span class="nhsuk-table-responsive__heading">Last declaration</span>
+    <%= last_declaration.declaration_type %>
+  </td>
+  <td class="govuk-table__cell nhsuk-table__cell">
+    <span class="nhsuk-table-responsive__heading">Current state</span>
     <%= declaration.state %>
   </td>
   <td class="govuk-table__cell nhsuk-table__cell">
-    <span class="nhsuk-table-responsive__heading">Date</span>
+    <span class="nhsuk-table-responsive__heading">Created date</span>
     <%= declaration.created_at.to_date.to_s(:govuk_short) %>
   </td>
 </tr>

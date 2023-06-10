@@ -1,0 +1,28 @@
+<% %>
+
+<tr class="govuk-table__row nhsuk-table__row">
+  <td class="govuk-table__cell nhsuk-table__cell">
+    <span class="nhsuk-table-responsive__heading">Full name</span>
+    <%= govuk_link_to user.full_name, admin_participant_path(participant_profile) %>
+  </td>
+  <td class="govuk-table__cell nhsuk-table__cell">
+    <span class="nhsuk-table-responsive__heading">Participant type</span>
+    <%= admin_participant_role_name(participant_profile.type) %>
+  </td>
+  <td class="govuk-table__cell nhsuk-table__cell">
+    <span class="nhsuk-table-responsive__heading">Induciton programme</span>
+    <%= induction_programme_friendly_name(induction_programme.training_programme) %>
+  </td>
+  <td class="govuk-table__cell nhsuk-table__cell">
+    <span class="nhsuk-table-responsive__heading">Lead provider</span>
+    <%= induction_programme.lead_provider&.name %>
+  </td>
+  <td class="govuk-table__cell nhsuk-table__cell">
+    <span class="nhsuk-table-responsive__heading">Training record state</span>
+    <%= render StatusTags::AdminParticipantStatusTag.new(participant_profile:) %>
+  </td>
+  <td class="govuk-table__cell nhsuk-table__cell">
+    <span class="nhsuk-table-responsive__heading">Date</span>
+    <%= user.created_at.to_date.to_s(:govuk_short) %>
+  </td>
+</tr>

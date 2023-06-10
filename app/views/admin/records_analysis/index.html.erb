@@ -1,0 +1,19 @@
+<% content_for :title, "Applications Analysis" %>
+
+<h1 class="govuk-heading-l">Application Analysis</h1>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-one-quarter">
+    <div class="app-card app-card--blue">
+      <span class="app-card__secondary-count"><%= @badly_formed_timeline_count %></span>
+      <%= govuk_link_to 'badly formed timelines', "./badly-formed-timeline", { inverse: true } %>
+    </div>
+  </div>
+
+  <div class="govuk-grid-column-one-quarter">
+    <div class="app-card app-card--blue">
+      <span class="app-card__secondary-count"><%= @invalid_payments_analysis_count %></span>
+      <%= govuk_link_to 'possible incorrect payments', "./invalid-payments-analysis", { inverse: true } %>
+    </div>
+  </div>
+</div>

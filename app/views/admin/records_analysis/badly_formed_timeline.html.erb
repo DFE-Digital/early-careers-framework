@@ -1,0 +1,11 @@
+<% content_for :title, "Induction records with a badly formed timeline" %>
+
+<h1 class="govuk-heading-l">Induction records with a badly formed timeline</h1>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <p class="govuk-body-l">Induction records that do not form a coherent timeline which could cause logic to fail for the respective training records.</p>
+
+    <%= render Admin::RecordsAnalysis::ECFParticipantTable.new(participant_profiles: @badly_formed_timeline, page: params.fetch(:page, 1)) %>
+  </div>
+</div>

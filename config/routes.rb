@@ -472,7 +472,6 @@ Rails.application.routes.draw do
     namespace :npq do
       resource :applications, only: [] do
         get "/eligibility_imports/example", to: "applications/eligibility_imports#example", as: :example_csv_file
-        get "/analysis", to: "applications/analysis#invalid_payments_analysis", as: :analysis
 
         resources :change_name, controller: "applications/change_name", only: %i[edit update]
         resources :change_email, controller: "applications/change_email", only: %i[edit update]
@@ -487,6 +486,14 @@ Rails.application.routes.draw do
     end
 
     resource :super_user, only: %i[show], path: "super-user"
+
+    resources :records_analysis, only: [], path: "records-analysis" do
+      collection do
+        get "invalid-payments-analysis", action: :invalid_payments_analysis
+        get "badly-formed-timeline", action: :badly_formed_timeline
+        get "/", action: :index
+      end
+    end
   end
 
   namespace :finance do
