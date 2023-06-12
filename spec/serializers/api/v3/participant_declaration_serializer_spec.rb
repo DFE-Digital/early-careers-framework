@@ -106,21 +106,21 @@ RSpec.describe Api::V3::ParticipantDeclarationSerializer, :with_default_schedule
         participant_declaration.participant_profile.induction_records.first.update!(mentor_profile_id: mentor_participant_profile.id)
       end
 
-      context "when not using mentor_user_id" do
+      context "when not using transient_mentor_user_id" do
         it "returns mentor_id" do
           attrs = subject.serializable_hash[:data][:attributes]
           expect(attrs[:mentor_id]).to eq(mentor_user_id)
         end
       end
 
-      context "when using mentor_user_id with query" do
+      context "when using transient_mentor_user_id with query" do
         before do
-          def participant_declaration.mentor_user_id
+          def participant_declaration.transient_mentor_user_id
             %w[test123]
           end
         end
 
-        it "returns mentor_user_id" do
+        it "returns transient_mentor_user_id" do
           attrs = subject.serializable_hash[:data][:attributes]
           expect(attrs[:mentor_id]).to eq("test123")
         end

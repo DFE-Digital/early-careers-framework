@@ -23,6 +23,8 @@ class User < ApplicationRecord
   has_many :appropriate_body_profiles, dependent: :destroy
   has_many :appropriate_bodies, through: :appropriate_body_profiles
 
+  has_many :mentee_participant_declarations, class_name: "ParticipantDeclaration", foreign_key: :mentor_user_id
+
   # TODO: Legacy associations, to be removed
   has_many :participant_profiles, through: :teacher_profile
   has_one :early_career_teacher_profile, through: :teacher_profile

@@ -60,8 +60,8 @@ module Api
 
       attribute :mentor_id do |declaration|
         if declaration.participant_profile.ect?
-          if declaration.respond_to?(:mentor_user_id)
-            declaration.mentor_user_id&.first
+          if declaration.respond_to?(:transient_mentor_user_id)
+            declaration.transient_mentor_user_id&.first
           else
             latest_induction_record = declaration.participant_profile.induction_records.includes(
               induction_programme: [:partnership],
