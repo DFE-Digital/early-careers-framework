@@ -14,13 +14,13 @@ RSpec.describe Admin::Schools::Cohorts::OtherInfo, type: :component do
   context "without school cohort" do
     let(:school_cohort) { nil }
 
-    it { is_expected.to have_content "No programme" }
+    it { is_expected.to have_content "Not assigned" }
   end
 
   context "with design your own school cohort" do
     let(:school_cohort) { build :school_cohort, induction_programme_choice: "design_our_own" }
 
-    it { is_expected.to have_content "Not using service - designing own induction course" }
+    it { is_expected.to have_content "Not using service - designing their own training" }
   end
 
   context "with school funded fip school cohort" do
