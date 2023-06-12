@@ -114,6 +114,12 @@ variable "statuscake_alerts" {
 variable statuscake_api_token {
 }
 
+variable statuscake_domain {
+  type        = string
+  default     = null
+  description = "Domain for SSL check"
+}
+
 variable "statuscake_ssl_contact_group" {
   type        = string
   default     = null
