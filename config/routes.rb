@@ -340,6 +340,12 @@ Rails.application.routes.draw do
           get ":step", action: :show, as: :validation_step
           post ":step", action: :update
         end
+
+        scope "participants", module: :participants do
+          wizard_scope :change_relationship, path: "change-relationship" do
+            get "/", to: "change_relationship#show", as: :start, step: "reason-for-change"
+          end
+        end
       end
 
       resource :change_cohort, only: %i[edit update], controller: "participants/change_cohort"
