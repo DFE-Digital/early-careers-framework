@@ -22,10 +22,11 @@ class Induction::ChangeProgramme < BaseService
 
 private
 
-  attr_reader :participant_profile, :new_induction_programme, :start_date, :end_date, :mentor_profile
+  attr_reader :participant_profile, :current_induction_record, :new_induction_programme, :start_date, :end_date, :mentor_profile
 
   def initialize(participant_profile:, end_date:, new_induction_programme:, start_date: Time.zone.now, mentor_profile: nil)
     @participant_profile = participant_profile
+    @current_induction_record = participant_profile.current_induction_record
     @new_induction_programme = new_induction_programme
     @start_date = start_date
     @end_date = end_date
@@ -41,10 +42,6 @@ private
     return true if participant_profile.schedule.nil?
 
     new_induction_programme.cohort_id == participant_profile.schedule.cohort_id
-  end
-
-  def current_induction_record
-    participant_profile.current_induction_record
   end
 
   def preferred_email
