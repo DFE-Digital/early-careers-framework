@@ -12,7 +12,7 @@ module Api
 
       def delivery_partners
         scope = lead_provider.delivery_partners
-        scope = scope.where("provider_relationships.cohort_id IN (?)", with_cohorts.map(&:id)) if filter[:cohort].present?
+        scope = scope.where("provider_relationships.cohort_id IN (?)", with_cohorts.map(&:id))
         scope = scope.order("delivery_partners.created_at ASC") if params[:sort].blank?
         scope.distinct
       end

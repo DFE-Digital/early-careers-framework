@@ -6,27 +6,39 @@ RSpec.describe Api::V3::DeliveryPartnersQuery do
   let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
   let(:lead_provider) { cpd_lead_provider.lead_provider }
   let(:cohort) { Cohort.current || create(:cohort, :current) }
-  let(:delivery_partner) { create(:delivery_partner, name: "First Delivery Partner") }
-  let!(:provider_relationship) { create(:provider_relationship, cohort:, delivery_partner:, lead_provider:) }
+  let!(:delivery_partner) do
+    create(:delivery_partner, name: "First Delivery Partner").tap do |delivery_partner|
+      create(:provider_relationship, cohort:, delivery_partner:, lead_provider:)
+    end
+  end
 
   let(:params) { {} }
 
   subject { described_class.new(lead_provider:, params:) }
 
   describe "#delivery_partners" do
-    let(:another_delivery_partner) { create(:delivery_partner, name: "Second Delivery Partner") }
     let(:another_cohort) { create(:cohort, start_year: "2050") }
-    let!(:another_provider_relationship) { create(:provider_relationship, cohort: another_cohort, delivery_partner: another_delivery_partner, lead_provider:) }
+    let!(:another_delivery_partner) do
+      create(:delivery_partner, name: "Second Delivery Partner").tap do |delivery_partner|
+        create(:provider_relationship, cohort: another_cohort, delivery_partner:, lead_provider:)
+      end
+    end
+    let(:pre_2021_cohort) { create(:cohort, start_year: 2020) }
+    let!(:pre_2021_delivery_partner) do
+      create(:delivery_partner, name: "Pre-2021 Delivery Partner").tap do |delivery_partner|
+        create(:provider_relationship, cohort: pre_2021_cohort, delivery_partner:, lead_provider:)
+      end
+    end
 
     it "returns all delivery partners" do
       expect(subject.delivery_partners).to match_array([delivery_partner, another_delivery_partner])
     end
 
     context "with correct cohort filter" do
-      let(:params) { { filter: { cohort: cohort.display_name } } }
+      let(:params) { { filter: { cohort: pre_2021_cohort.display_name } } }
 
       it "returns all delivery partners for the specific cohort" do
-        expect(subject.delivery_partners).to match_array([delivery_partner])
+        expect(subject.delivery_partners).to match_array([pre_2021_delivery_partner])
       end
     end
 
@@ -58,11 +70,7 @@ RSpec.describe Api::V3::DeliveryPartnersQuery do
     end
 
     context "sorting" do
-      let!(:another_delivery_partner) do
-        travel_to(10.days.ago) do
-          create(:delivery_partner, name: "Second Delivery Partner")
-        end
-      end
+      before { another_delivery_partner.update!(created_at: 1.month.ago) }
 
       it "returns all records ordered by created_at" do
         expect(subject.delivery_partners).to eq([another_delivery_partner, delivery_partner])

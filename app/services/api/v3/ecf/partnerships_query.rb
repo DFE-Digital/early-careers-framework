@@ -13,7 +13,7 @@ module Api
 
         def partnerships
           scope = partnership_scope
-          scope = scope.where(partnerships: { cohort:  with_cohorts }) if filter[:cohort].present?
+          scope = scope.where(partnerships: { cohort:  with_cohorts })
           scope = scope.where("partnerships.updated_at > ?", updated_since) if updated_since.present?
           scope = scope.where(partnerships: { delivery_partner: [delivery_partner_id_filter] }) if delivery_partner_id_filter.present?
           scope = scope.order("partnerships.created_at ASC") if params[:sort].blank?
