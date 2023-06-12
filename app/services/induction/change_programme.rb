@@ -10,7 +10,8 @@ class Induction::ChangeProgramme < BaseService
                             start_date:,
                             preferred_email:,
                             mentor_profile:)
-      if participant_profile.mentor?
+
+      if participant_profile.mentor? && participant_is_moving_schools?
         Mentors::ChangeSchool.call(from_school: current_induction_record.school,
                                    to_school: new_induction_programme.school,
                                    remove_on_date: start_date,
@@ -46,5 +47,9 @@ private
 
   def preferred_email
     current_induction_record&.preferred_identity&.email || participant_profile.participant_identity.email
+  end
+
+  def participant_is_moving_schools?
+    current_induction_record.school != new_induction_programme.school
   end
 end
