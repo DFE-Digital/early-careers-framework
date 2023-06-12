@@ -75,8 +75,7 @@ RSpec.describe Partnership, type: :model do
     end
 
     it "returns false when the challenge_deadline is blank" do
-      partnership = create(:partnership)
-      partnership.update!(challenge_deadline: nil)
+      partnership = create(:partnership, challenge_deadline: nil)
 
       expect(partnership).not_to be_in_challenge_window
     end
