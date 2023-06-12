@@ -126,6 +126,16 @@ RSpec.describe "NPQ Applications API", :with_default_schedules, type: :request d
             end
           end
         end
+
+        describe "ordering" do
+          let!(:oldest_npq_application) { travel_to(1.month.ago) { create(:npq_application, :accepted, npq_lead_provider:, school_urn: "123456", npq_course:) } }
+
+          it "returns all records ordered by npq applications created_at ascending" do
+            get "/api/v1/npq-applications"
+            expect(parsed_response["data"].size).to eql(4)
+            expect(parsed_response.dig("data", 0, "id")).to eql(oldest_npq_application.id)
+          end
+        end
       end
 
       describe "CSV API" do

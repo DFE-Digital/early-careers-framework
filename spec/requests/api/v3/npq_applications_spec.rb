@@ -124,6 +124,19 @@ RSpec.describe "NPQ Applications API", :with_default_schedules, type: :request, 
               expect(parsed_response["data"].pluck("id")).to match_array(@npq_applications_list.pluck("id"))
             end
           end
+
+          context "with filter[participant_id]" do
+            let(:user) { create(:user) }
+            let!(:participant_applications) do
+              create_list(:npq_application, 3, npq_lead_provider:, school_urn: "123456", user:)
+            end
+
+            it "returns applications for the given participant" do
+              get "/api/v3/npq-applications", params: { filter: { participant_id: user.id } }
+              expect(parsed_response["data"].size).to eql(participant_applications.size)
+              expect(parsed_response["data"].pluck("id")).to match_array(participant_applications.pluck("id"))
+            end
+          end
         end
 
         describe "ordering" do
