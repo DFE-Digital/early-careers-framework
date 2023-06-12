@@ -64,7 +64,9 @@ module paas {
 module "statuscake" {
   source = "./modules/statuscake"
 
-  environment       = var.environment
-  service_name      = local.service_name
-  statuscake_alerts = var.statuscake_alerts
+  environment                  = var.environment
+  service_name                 = local.service_name
+  statuscake_alerts            = var.statuscake_alerts
+  statuscake_ssl_contact_group = var.statuscake_ssl_contact_group
+  statuscake_domain            = var.statuscake_domain
 }

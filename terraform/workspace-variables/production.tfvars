@@ -17,6 +17,9 @@ paas_sidekiq_worker_app_start_command = "bundle exec sidekiq -C config/sidekiq.y
 paas_redis_service_plan = "tiny-ha-6_x"
 govuk_hostnames = ["manage-training-for-early-career-teachers"]
 
+statuscake_ssl_contact_group = 249142
+statuscake_domain = "manage-training-for-early-career-teachers.education.gov.uk"
+
 statuscake_alerts = {
   "prod" = {
     website_name  = "manage-training-for-early-career-teachers-production"
