@@ -4,7 +4,6 @@ class Partnership < ApplicationRecord
   has_paper_trail
 
   CHALLENGE_PERIOD_SINCE_ACADEMIC_YEAR_START = 2.months
-  CHALLENGE_PERIOD_AFTER_CREATION = 2.weeks
 
   enum challenge_reason: {
     another_provider: "another_provider",
