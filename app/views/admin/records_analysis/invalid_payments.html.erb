@@ -6,6 +6,10 @@
   <div class="govuk-grid-column-full">
     <p class="govuk-body-l">Paid or Payable declarations made against a rejected or pending NPQ Application which could indicate that they should not have been paid or that the training record needs updating.</p>
 
-    <%= render Admin::RecordsAnalysis::NPQApplicationTable.new(applications: @invalid_payments_analysis, page: params.fetch(:page, 1)) %>
+    <% if @npq_applications.present? %>
+      <%= render Admin::RecordsAnalysis::NPQApplicationTable.new(applications: @npq_applications, page: params.fetch(:page, 1)) %>
+    <% else %>
+      <p class="govuk-body-l">No records found.</p>
+    <% end %>
   </div>
 </div>

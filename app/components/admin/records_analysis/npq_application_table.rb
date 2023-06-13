@@ -4,6 +4,7 @@ module Admin
   module RecordsAnalysis
     class NPQApplicationTable < BaseComponent
       include Pagy::Backend
+
       def initialize(applications:, page:)
         @pagy, @applications = pagy(applications, page:, items: 10)
       end

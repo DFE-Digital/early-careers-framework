@@ -6,6 +6,10 @@
   <div class="govuk-grid-column-full">
     <p class="govuk-body-l">Induction records that do not form a coherent timeline which could cause logic to fail for the respective training records.</p>
 
-    <%= render Admin::RecordsAnalysis::ECFParticipantTable.new(participant_profiles: @badly_formed_timeline, page: params.fetch(:page, 1)) %>
+    <% if @participant_profiles.present? %>
+      <%= render Admin::RecordsAnalysis::ECFParticipantTable.new(participant_profiles: @participant_profiles, page: params.fetch(:page, 1)) %>
+    <% else %>
+      <p class="govuk-body-l">No records found.</p>
+    <% end %>
   </div>
 </div>

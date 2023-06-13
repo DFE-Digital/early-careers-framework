@@ -6,36 +6,31 @@ module Admin
     skip_after_action :verify_policy_scoped
 
     def index
-      @invalid_payments_analysis_count = invalid_payments_analysis.count
-      @badly_formed_timeline_count = badly_formed_timeline.count
+      @invalid_payment_counts = invalid_payments.count
+      @bad_timeline_counts = bad_timelines.count
     end
 
-    def invalid_payments_analysis
-      @invalid_payments_analysis ||= unaccepted_npq_applications_that_are_payable
-    end
+    def show
+      case params[:id]
+      when "invalid-payments"
+        @npq_applications = invalid_payments
+      when "bad-timelines"
+        @participant_profiles = bad_timelines
+      else
+        return redirect_to admin_records_analysis_path
+      end
 
-    def badly_formed_timeline
-      @badly_formed_timeline ||= induction_records_with_backwards_dates
+      render params[:id].humanize.underscore
     end
 
   private
 
-    def induction_records_with_backwards_dates
-      policy_scope(ParticipantProfile)
-        .left_outer_joins(:induction_records)
-        .where("induction_records.end_date < induction_records.start_date")
-        .distinct
+    def invalid_payments
+      Admin::RecordsAnalysis::IneligibleNPQPaymentsQueryService.call(policy_scope(NPQApplication))
     end
 
-    def unaccepted_npq_applications_that_are_payable
-      policy_scope(NPQApplication)
-        .left_outer_joins(profile: [:participant_declarations])
-        .where.not(participant_profiles: { id: nil })
-        .where(lead_provider_approval_status: %w[pending rejected],
-               participant_profiles: {
-                 participant_declarations: { state: %w[paid payable] },
-               })
-        .distinct
+    def bad_timelines
+      Admin::RecordsAnalysis::BadTimelinesQueryService.call(policy_scope(ParticipantProfile))
     end
   end
 end

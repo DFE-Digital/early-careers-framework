@@ -486,14 +486,7 @@ Rails.application.routes.draw do
     end
 
     resource :super_user, only: %i[show], path: "super-user"
-
-    resources :records_analysis, only: [], path: "records-analysis" do
-      collection do
-        get "invalid-payments-analysis", action: :invalid_payments_analysis
-        get "badly-formed-timeline", action: :badly_formed_timeline
-        get "/", action: :index
-      end
-    end
+    resources :records_analysis, only: %i[index show], path: "records-analysis"
   end
 
   namespace :finance do

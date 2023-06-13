@@ -13,7 +13,7 @@
   </td>
   <td class="govuk-table__cell nhsuk-table__cell">
     <span class="nhsuk-table-responsive__heading">Lead provider</span>
-    <%= declaration.cpd_lead_provider.name %>
+    <%= last_declaration.cpd_lead_provider.name %>
   </td>
   <td class="govuk-table__cell nhsuk-table__cell">
     <span class="nhsuk-table-responsive__heading">Last declaration</span>
@@ -21,10 +21,10 @@
   </td>
   <td class="govuk-table__cell nhsuk-table__cell">
     <span class="nhsuk-table-responsive__heading">Current state</span>
-    <%= declaration.state %>
+    <%= last_declaration.state %>
   </td>
   <td class="govuk-table__cell nhsuk-table__cell">
     <span class="nhsuk-table-responsive__heading">Created date</span>
-    <%= declaration.created_at.to_date.to_s(:govuk_short) %>
+    <%= last_declaration.created_at.to_date.to_s(:govuk_short) %>
   </td>
 </tr>

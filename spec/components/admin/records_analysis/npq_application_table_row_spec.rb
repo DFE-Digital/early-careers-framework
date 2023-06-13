@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Admin::NPQ::Applications::Analysis::TableRow, :with_default_schedules, type: :component do
+RSpec.describe Admin::RecordsAnalysis::NPQApplicationTableRow, :with_default_schedules, type: :component do
   let(:npq_lead_provider) { create(:cpd_lead_provider, :with_npq_lead_provider).npq_lead_provider }
   let(:user) { create(:user, full_name: "John Doe") }
   let(:npq_application) do
