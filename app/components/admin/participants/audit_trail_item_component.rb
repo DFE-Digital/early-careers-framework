@@ -25,19 +25,19 @@ module Admin
         return user if user.is_a?(String)
 
         if user.induction_coordinator?
-          "#{user.email_address} (SIT user)"
+          "#{user.email} (SIT user)"
         elsif audit.admin?
-          "#{user.email_address} (Support user)"
+          "#{user.email} (Support user)"
         elsif audit.finance?
-          "#{user.email_address} (Finance user)"
+          "#{user.email} (Finance user)"
         elsif audit.delivery_partner?
-          "#{user.email_address} (DP user)"
+          "#{user.email} (DP user)"
         elsif audit.appropriate_body?
-          "#{user.email_address} (AB user)"
+          "#{user.email} (AB user)"
         elsif audit.lead_provider?
           "#{user.supplier_name} (LP user)"
         else
-          audit.user.email_address
+          audit.user.email
         end
       end
 
