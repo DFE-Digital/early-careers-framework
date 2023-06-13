@@ -49,7 +49,7 @@
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-no-only-tests": "^2.6.0",
     "prettier": "^2.8.8",
-    "webpack-dev-server": "^4.15.0"
+    "webpack-dev-server": "^4.15.1"
   },
   "browserslist": [
     "defaults"
