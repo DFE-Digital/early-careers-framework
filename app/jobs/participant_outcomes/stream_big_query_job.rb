@@ -18,6 +18,8 @@ module ParticipantOutcomes
           participant_declaration_id: outcome.participant_declaration_id,
           created_at: outcome.created_at,
           updated_at: outcome.updated_at,
+          qualified_teachers_api_request_successful: outcome.qualified_teachers_api_request_successful,
+          sent_to_qualified_teachers_api_at: outcome.sent_to_qualified_teachers_api_at,
         }.stringify_keys,
       ]
 
