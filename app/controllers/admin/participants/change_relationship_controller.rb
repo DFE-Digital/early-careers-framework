@@ -5,16 +5,17 @@ module Admin
     class ChangeRelationshipController < Admin::BaseController
       include Wizard::Controller
       before_action :initialize_wizard
+      skip_after_action :verify_policy_scoped
 
     private
 
       def wizard
-        @wizard ||=  wizard_class.new(participant_profile:,
-                                      current_user:,
-                                      data_store:,
-                                      current_step: step_name,
-                                      default_step_name:,
-                                      submitted_params:)
+        @wizard ||= wizard_class.new(participant_profile:,
+                                     current_user:,
+                                     data_store:,
+                                     current_step: step_name,
+                                     default_step_name:,
+                                     submitted_params:)
       end
 
       def data_store
@@ -22,14 +23,24 @@ module Admin
       end
 
       def wizard_class
-        ChangeRelationshipWizard
+        ::Admin::Participants::ChangeRelationship::ChangeRelationshipWizard
       end
 
       def default_step_name
-        "reason-for-change"
+       :reason_for_change
       end
 
       def abort_path
+        if participant_profile.present?
+          admin_participant_path(participant_id: participant_profile)
+        else
+          admin_participants_path
+        end
+      end
+
+      def participant_profile
+        @participant_profile ||= ParticipantProfile.find(params[:id])
+        authorize @participant_profile, policy_class: @participant_profile.policy_class
       end
     end
   end

@@ -2,7 +2,7 @@
 
 module Schools
   module Cohorts
-    class BaseWizard < Wizard
+    class BaseWizard < Wizard::Form
       def self.permitted_params_for(step)
         "Schools::Cohorts::WizardSteps::#{step.to_s.camelcase}Step".constantize.permitted_params
       end

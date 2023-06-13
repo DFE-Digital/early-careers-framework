@@ -442,6 +442,11 @@ en:
               blank: "Choose an appropriate body type"
             appropriate_body:
               blank: "Choose an appropriate body"
+        admin/participants/change_relationship/wizard_steps/reason_for_change_step:
+          attributes:
+            reason_for_change:
+              blank: "Choose the reason for the change"
+
         finance/ecf/change_training_status_form:
           attributes:
             training_status:

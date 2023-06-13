@@ -9,7 +9,7 @@
 
         <span class="govuk-caption-xl"><%= @school.name %></span>
 
-        <%= form_with model: @wizard.form, url: url_for(action: :update), scope: @wizard.to_key, method: :put do |f| %>
+        <%= form_with model: @wizard.form, url: url_for(action: :update), scope: @wizard.session_key, method: :put do |f| %>
             <%= f.govuk_error_summary %>
             <%= f.govuk_collection_radio_buttons(
                 :keep_providers,

@@ -9,19 +9,19 @@ module Wizard
     end
 
     def show
-      @wizard.before_render
+      wizard.before_render
 
-      render @wizard.view_name
+      render wizard.view_name
 
-      @wizard.after_render
+      wizard.after_render
     end
 
     def update
-      if @form.valid?
-        @wizard.save!
-        redirect_to @wizard.next_step_path
+      if wizard.form.valid?
+        wizard.save!
+        redirect_to wizard.next_step_path
       else
-        render @wizard.current_step
+        render wizard.current_step
       end
     end
 
@@ -30,8 +30,10 @@ module Wizard
         wizard.changing_answer(params["changing_answer"] == "1")
         wizard.update_history
       end
-      wizard
-    rescue BaseWizard::AlreadyInitialised, BaseWizard::InvalidStep
+
+      wizard.validate_state!
+
+    rescue Wizard::Form::AlreadyInitialised, Wizard::Form::InvalidStep
       remove_session_data
       redirect_to abort_path
     end

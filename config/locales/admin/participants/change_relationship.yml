@@ -1,0 +1,8 @@
+en:
+  admin:
+    participants:
+      change_relationship:
+        reason_for_change:
+          options:
+            wrong_programme: "The participant was placed in the wrong training programme."
+            change_of_circumstances: "The participant was originally placed in the right training programme, but their circumstances have changed."
