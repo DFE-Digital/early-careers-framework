@@ -10,7 +10,8 @@ class Induction::ChangeProgramme < BaseService
                             start_date:,
                             preferred_email:,
                             mentor_profile:)
-      if participant_profile.mentor?
+
+      if participant_profile.mentor? && participant_is_moving_schools?
         Mentors::ChangeSchool.call(from_school: current_induction_record.school,
                                    to_school: new_induction_programme.school,
                                    remove_on_date: start_date,
@@ -22,10 +23,11 @@ class Induction::ChangeProgramme < BaseService
 
 private
 
-  attr_reader :participant_profile, :new_induction_programme, :start_date, :end_date, :mentor_profile
+  attr_reader :participant_profile, :current_induction_record, :new_induction_programme, :start_date, :end_date, :mentor_profile
 
   def initialize(participant_profile:, end_date:, new_induction_programme:, start_date: Time.zone.now, mentor_profile: nil)
     @participant_profile = participant_profile
+    @current_induction_record = participant_profile.current_induction_record
     @new_induction_programme = new_induction_programme
     @start_date = start_date
     @end_date = end_date
@@ -43,11 +45,11 @@ private
     new_induction_programme.cohort_id == participant_profile.schedule.cohort_id
   end
 
-  def current_induction_record
-    participant_profile.current_induction_record
-  end
-
   def preferred_email
     current_induction_record&.preferred_identity&.email || participant_profile.participant_identity.email
+  end
+
+  def participant_is_moving_schools?
+    current_induction_record.school != new_induction_programme.school
   end
 end
