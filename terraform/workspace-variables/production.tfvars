@@ -17,31 +17,31 @@ paas_sidekiq_worker_app_start_command = "bundle exec sidekiq -C config/sidekiq.y
 paas_redis_service_plan = "tiny-ha-6_x"
 govuk_hostnames = ["manage-training-for-early-career-teachers"]
 
-statuscake_ssl_contact_group = 249142
+statuscake_ssl_contact_group = 291418
 statuscake_domain = "manage-training-for-early-career-teachers.education.gov.uk"
 
 statuscake_alerts = {
   "prod" = {
     website_name  = "manage-training-for-early-career-teachers-production"
     website_url   = "https://manage-training-for-early-career-teachers.education.gov.uk/check"
-    contact_group = [206487]
+    contact_group = [291418]
   }
   "stringmatch" = {
     website_name  = "manage-training-for-early-career-teachers-production"
     website_url   = "https://manage-training-for-early-career-teachers.education.gov.uk"
-    contact_group = [206487]
+    contact_group = [291418]
     find_string   = "Manage training for early career teachers"
   }
   "alertmanager-prod" = {
     website_name  = "alertmanager-cpd-monitoring-prod"
     website_url   = "https://alertmanager-cpd-monitoring-prod.london.cloudapps.digital/-/healthy"
-    contact_group = [206487]
+    contact_group = [291418]
     find_string   = "OK"
   }
   "PaaS500String" = {
     website_name  = "manage-training-for-early-career-teachers-production"
     website_url   = "https://manage-training-for-early-career-teachers.education.gov.uk"
-    contact_group = [206487]
+    contact_group = [291418]
     find_string   = "500 Internal Server Error"
     do_not_find   = true
   }
