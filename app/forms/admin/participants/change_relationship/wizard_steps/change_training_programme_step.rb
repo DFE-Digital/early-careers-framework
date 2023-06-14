@@ -41,9 +41,9 @@ module Admin
         private
 
           def selected_partnership_is_permitted
-            errors.add(:selected_partnership, :blank) and return if selected_programme.blank?
+            errors.add(:selected_partnership, :blank) and return if selected_partnership.blank?
 
-            errors.add(:selected_partnership, :inclusion) unless options.map(&:id).include? selected_programme
+            errors.add(:selected_partnership, :inclusion) unless options.map(&:id).include? selected_partnership
           end
 
           def mistake?

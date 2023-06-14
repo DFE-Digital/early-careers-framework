@@ -446,7 +446,11 @@ en:
           attributes:
             reason_for_change:
               blank: "Choose the reason for the change"
-
+        admin/participants/change_relationship/wizard_steps/change_training_programme_step:
+          attributes:
+            selected_partnership:
+              blank: "Choose a programme"
+              inclusion: "Choose a programme"
         finance/ecf/change_training_status_form:
           attributes:
             training_status:
