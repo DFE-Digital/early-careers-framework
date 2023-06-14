@@ -53,15 +53,17 @@ module Dashboard
     # the school in the cohorts displayed by the dashboard
     def induction_records
       @induction_records ||= dashboard_school_cohorts.flat_map do |school_cohort|
-        InductionRecordPolicy::Scope.new(
-          user,
-          school_cohort
-            .induction_records
-            .current_or_transferring_in_or_transferred
-            .eager_load(induction_programme: %i[school core_induction_programme lead_provider delivery_partner],
-                        participant_profile: %i[user ecf_participant_eligibility ecf_participant_validation_data])
-            .order("users.full_name"),
-        ).resolve.to_a
+        InductionRecordPolicy::Scope
+          .new(user,
+               school_cohort
+                 .induction_records
+                 .current_or_transferring_in_or_transferred
+                 .eager_load(induction_programme: %i[school core_induction_programme lead_provider delivery_partner],
+                             participant_profile: %i[user ecf_participant_eligibility ecf_participant_validation_data])
+                 .order("users.full_name"))
+          .resolve
+          .order(start_date: :desc, created_at: :desc)
+          .uniq(&:participant_profile_id)
       end
     end
 
