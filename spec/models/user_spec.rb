@@ -8,6 +8,7 @@ RSpec.describe User, type: :model do
   end
 
   describe "associations" do
+    it { is_expected.to have_many(:mentee_participant_declarations).class_name("ParticipantDeclaration").with_foreign_key(:mentor_user_id) }
     it { is_expected.to have_many(:participant_profiles) }
     it { is_expected.to have_one(:admin_profile) }
     it { is_expected.to have_one(:finance_profile) }

@@ -8,6 +8,7 @@ class ParticipantDeclaration < ApplicationRecord
   belongs_to :participant_profile
   belongs_to :superseded_by, class_name: "ParticipantDeclaration", optional: true
   belongs_to :delivery_partner, optional: true
+  belongs_to :mentor_user, class_name: "User", optional: true
 
   has_many :declaration_states
   has_many :participant_declaration_attempts, dependent: :destroy

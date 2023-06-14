@@ -243,7 +243,7 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery, :with_default_schedules do
       end
     end
 
-    context "with mentor_user_id attribute" do
+    context "with transient_mentor_user_id attribute" do
       let!(:mentor_participant_profile) { create(:mentor_participant_profile) }
       let!(:another_mentor_participant_profile) { create(:mentor_participant_profile) }
       let!(:another_induction_record) do
@@ -263,14 +263,14 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery, :with_default_schedules do
         latest_induction_record.update!(mentor_profile_id: mentor_participant_profile.id)
       end
 
-      it "returns mentor_user_id in attribute with no duplicates" do
+      it "returns transient_mentor_user_id in attribute with no duplicates" do
         paginated_query = ParticipantDeclaration.where(cpd_lead_provider: cpd_lead_provider1)
         declarations = subject.participant_declarations_from(paginated_query).to_a
 
         expect(declarations).to eq([participant_declaration3, participant_declaration1, participant_declaration2])
-        expect(declarations[0].mentor_user_id).to be_empty
-        expect(declarations[1].mentor_user_id).to contain_exactly(mentor_user_id)
-        expect(declarations[2].mentor_user_id).to be_empty
+        expect(declarations[0].transient_mentor_user_id).to be_empty
+        expect(declarations[1].transient_mentor_user_id).to contain_exactly(mentor_user_id)
+        expect(declarations[2].transient_mentor_user_id).to be_empty
       end
     end
   end
