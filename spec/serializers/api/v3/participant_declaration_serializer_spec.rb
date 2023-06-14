@@ -32,6 +32,19 @@ RSpec.describe Api::V3::ParticipantDeclarationSerializer, :with_default_schedule
         expect(attrs[:evidence_held]).to eq(nil)
         expect(attrs[:has_passed]).to eq(nil)
       end
+
+      context "when the declaration has a mentor_user_id" do
+        let(:mentor_profile) { create(:mentor_participant_profile) }
+        let(:mentor_user_id) { mentor_profile.participant_identity.user_id }
+
+        before { participant_declaration.update!(mentor_user_id:) }
+
+        it "populates the mentor_id" do
+          data = subject.serializable_hash[:data]
+          attrs = data[:attributes]
+          expect(attrs[:mentor_id]).to eq(mentor_user_id)
+        end
+      end
     end
 
     describe "NPQ" do
@@ -56,6 +69,7 @@ RSpec.describe Api::V3::ParticipantDeclarationSerializer, :with_default_schedule
 
         expect(attrs[:declaration_type]).to eq("started")
         expect(attrs[:declaration_date]).to eq(participant_declaration.declaration_date.rfc3339)
+        expect(attrs[:mentor_id]).to be_nil
         expect(attrs[:course_identifier]).to eq("npq-leading-teaching")
         expect(attrs[:state]).to eq("paid")
         expect(attrs[:updated_at]).to eq(participant_declaration.updated_at.rfc3339)
@@ -92,63 +106,6 @@ RSpec.describe Api::V3::ParticipantDeclarationSerializer, :with_default_schedule
       it "returns state reason" do
         attrs = subject.serializable_hash[:data][:attributes]
         expect(attrs[:ineligible_for_funding_reason]).to eq("duplicate_declaration")
-      end
-    end
-  end
-
-  describe "#mentor_id" do
-    describe "ECF" do
-      let(:mentor_participant_profile) { create(:mentor_participant_profile) }
-      let(:participant_declaration) { create(:ect_participant_declaration) }
-      let(:mentor_user_id) { mentor_participant_profile.participant_identity.user_id }
-
-      before do
-        participant_declaration.participant_profile.induction_records.first.update!(mentor_profile_id: mentor_participant_profile.id)
-      end
-
-      context "when not using transient_mentor_user_id" do
-        it "returns mentor_id" do
-          attrs = subject.serializable_hash[:data][:attributes]
-          expect(attrs[:mentor_id]).to eq(mentor_user_id)
-        end
-      end
-
-      context "when using transient_mentor_user_id with query" do
-        before do
-          def participant_declaration.transient_mentor_user_id
-            %w[test123]
-          end
-        end
-
-        it "returns transient_mentor_user_id" do
-          attrs = subject.serializable_hash[:data][:attributes]
-          expect(attrs[:mentor_id]).to eq("test123")
-        end
-      end
-
-      context "if latest induction record scoped to provider missing" do
-        let(:another_induction_programme) { create(:induction_programme) }
-        let(:participant_declaration) { create(:ect_participant_declaration) }
-
-        before do
-          participant_declaration.participant_profile.induction_records.first.update!(induction_programme: another_induction_programme)
-        end
-
-        it "returns no id" do
-          attrs = subject.serializable_hash[:data][:attributes]
-          expect(attrs[:mentor_id]).to be_nil
-        end
-      end
-
-      context "if latest induction record missing" do
-        before do
-          participant_declaration.participant_profile.induction_records.destroy_all
-        end
-
-        it "returns no mentor_id" do
-          attrs = subject.serializable_hash[:data][:attributes]
-          expect(attrs[:mentor_id]).to be_nil
-        end
       end
     end
   end
