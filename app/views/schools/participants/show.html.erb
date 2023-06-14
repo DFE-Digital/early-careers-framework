@@ -142,7 +142,7 @@
       <%= govuk_summary_list(classes: ["govuk-!-margin-bottom-7"]) do |list| %>
         <% @ects.each do |ect| %>
           <% list.row do |row| %>
-            <% row.key(text: ect.participant_full_name,
+            <% row.key(text: ect.full_name,
                        classes: ["govuk-!-font-weight-regular"]) %>
             <% if @mentors_added &&
                   ect.participant_profile.policy_class.new(current_user, ect.participant_profile).update_mentor? %>

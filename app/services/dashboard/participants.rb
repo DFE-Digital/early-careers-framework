@@ -5,6 +5,7 @@ module Dashboard
     attr_reader :mentors, :orphan_ects, :school, :user, :latest_year
 
     def initialize(school:, user:)
+      @deferred_ects = []
       @latest_year = Dashboard::LatestManageableCohort.call(school).start_year
       @orphan_ects = []
       @school = school
@@ -21,32 +22,37 @@ module Dashboard
     end
 
     def ects_mentored_by(mentor)
-      mentors[dashboard_mentoring_mentor(mentor)]
+      mentors[dashboard_mentor(mentor)]
     end
 
     def no_qts
       @no_qts ||= induction_records.select { |induction_record| no_qts?(induction_record) }
     end
 
-    def orphan_mentors
-      @orphan_mentors ||= school_mentors_not_mentoring.map do |school_mentor|
-        dashboard_mentor(school_mentor.participant_profile_id)
-      end
+    def not_mentoring_or_being_mentored
+      @not_mentoring_or_being_mentored ||= (orphan_mentors + deferred_ects).sort_by(&:full_name)
     end
 
   private
 
-    def dashboard_mentoring_mentor(mentor)
-      return mentor if mentor.is_a?(Dashboard::Mentor)
+    attr_reader :deferred_ects
 
-      mentors.keys.detect { |dashboard_mentor| dashboard_mentor.participant_profile_id == mentor.id }
+    def dashboard_mentor(mentor)
+      return mentor if mentor.is_a?(Dashboard::Participant)
+
+      mentors.keys.detect { |dashboard_participant| dashboard_participant.participant_profile_id == mentor.id }
     end
 
-    def dashboard_mentor(profile_id)
-      induction_record = induction_records.detect { |ir| ir.participant_profile_id == profile_id }
-      participant_profile = ParticipantProfile.find(profile_id)
+    def dashboard_participants(induction_records)
+      induction_records.map do |induction_record|
+        dashboard_participant(induction_record.participant_profile_id, induction_record:)
+      end
+    end
 
-      Dashboard::Mentor.new(induction_record:, participant_profile:)
+    def dashboard_participant(participant_profile_id, induction_record: nil)
+      induction_record ||= induction_records.detect { |ir| ir.participant_profile_id == participant_profile_id }
+
+      Dashboard::Participant.new(induction_record:, participant_profile_id:)
     end
 
     # List of relevant (current or transferring_in or transferred) induction record of each of the participant of
@@ -75,6 +81,18 @@ module Dashboard
         induction_record.participant_no_qts?
     end
 
+    def orphan_and_deferred_ects(ects)
+      @deferred_ects, @orphan_ects = ects.partition(&:training_status_deferred?).map do |ects_subset|
+        dashboard_participants(ects_subset)
+      end
+    end
+
+    def orphan_mentors
+      @orphan_mentors ||= school_mentors_not_mentoring.map do |school_mentor|
+        dashboard_participant(school_mentor.participant_profile_id)
+      end
+    end
+
     def profile_ids_of_mentors_mentoring
       mentors.keys.map(&:participant_profile_id)
     end
@@ -85,9 +103,9 @@ module Dashboard
         .group_by(&:mentor_profile_id)
         .each_with_object({}) do |(mentor_profile_id, ects), hash|
         if mentor_profile_id
-          hash[dashboard_mentor(mentor_profile_id)] = ects
+          hash[dashboard_participant(mentor_profile_id)] = dashboard_participants(ects)
         else
-          @orphan_ects = ects
+          orphan_and_deferred_ects(ects)
         end
       end
     end
