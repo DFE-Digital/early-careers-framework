@@ -7,7 +7,7 @@ FactoryBot.define do
 
   factory :cohort do
     start_year { Faker::Number.unique.between(from: 2022, to: 2100) }
-    registration_start_date { Date.new(start_year.to_i, 6, 15) }
+    registration_start_date { Date.new(start_year.to_i, 6, 5) }
     academic_year_start_date { Date.new(start_year.to_i, 9, 1) }
     automatic_assignment_period_end_date { Date.new(start_year.to_i + 1, 3, 31) }
 
