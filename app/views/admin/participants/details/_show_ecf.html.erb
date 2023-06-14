@@ -39,7 +39,7 @@
       row.value(text: @participant_presenter.lead_provider_name)
       if policy(:super_user).show?
         row.action(
-          href: "#", #FIXME: when we have the path built
+          href: start_admin_change_relationship_participant_path(@participant_profile),
           visually_hidden_text: "provider"
         )
       end

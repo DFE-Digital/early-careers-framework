@@ -1,0 +1,16 @@
+<% title = "You cannot change the programme for #{@wizard.participant_name}" %>
+<% content_for :title, title %>
+
+<% content_for :before_content, govuk_back_link( text: "Back", href: wizard_back_link_path) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <span class="govuk-caption-xl"><%= @wizard.participant_role_and_name %></span>
+    <h1 class="govuk-heading-xl"><%= title %></h1>
+
+    <p class="govuk-body">This person has already received declarations from their provider.</p>
+    <p class="govuk-body">Changing this participant’s programme will need to be handled manually.</p>
+
+    <%= govuk_link_to "Return to participant details", @wizard.abort_path, no_visited_state: true %>
+  </div>
+</div>

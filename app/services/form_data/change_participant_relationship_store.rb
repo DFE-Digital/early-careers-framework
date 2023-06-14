@@ -23,6 +23,14 @@ module FormData
       get(:participant_profile)
     end
 
+    def reason_for_change_mistake?
+      get(:reason_for_change) == "wrong_programme"
+    end
+
+    def reason_for_change_circumstances?
+      get(:reason_for_change) == "change_of_circumstances"
+    end
+
     def complete?
       get(:complete) == true
     end

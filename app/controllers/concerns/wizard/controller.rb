@@ -28,11 +28,11 @@ module Wizard
     def initialize_wizard
       if request.get? || request.head?
         wizard.changing_answer(params["changing_answer"] == "1")
+        wizard.validate_state!
         wizard.update_history
+      else
+        wizard.validate_state!
       end
-
-      wizard.validate_state!
-
     rescue Wizard::Form::AlreadyInitialised, Wizard::Form::InvalidStep
       remove_session_data
       redirect_to abort_path

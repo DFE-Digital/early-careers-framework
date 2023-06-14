@@ -341,10 +341,8 @@ Rails.application.routes.draw do
           post ":step", action: :update
         end
 
-        scope "participants", module: :participants do
-          wizard_scope :change_relationship, path: "change-relationship" do
-            get "/", to: "change_relationship#show", as: :start, step: "reason-for-change"
-          end
+        wizard_scope :change_relationship, path: "change-relationship", module: :participants do
+          get "/", to: "change_relationship#show", as: :start, step: "reason-for-change"
         end
       end
 

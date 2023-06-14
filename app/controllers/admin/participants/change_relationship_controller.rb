@@ -27,7 +27,7 @@ module Admin
       end
 
       def default_step_name
-       :reason_for_change
+        :reason_for_change
       end
 
       def abort_path

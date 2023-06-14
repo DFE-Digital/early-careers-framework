@@ -163,7 +163,7 @@ module Wizard
     end
 
     def starting_journey_not_from_the_start?
-      history_stack.first != default_step_name.to_sym
+      history_stack.first != default_step_name
     end
 
     def store_current_user!
