@@ -152,10 +152,6 @@ private
     raise "Participant profile id missing" if participant_profile_id.blank?
   end
 
-  def induction_record_present
-    raise "Participant Induction Record missing" if latest_induction_record.blank?
-  end
-
   def partnership_details(induction_programme)
     if induction_programme.partnership.present?
       "with #{induction_programme.lead_provider.name}/#{induction_programme.delivery_partner&.name || 'no delivery partner'}"
