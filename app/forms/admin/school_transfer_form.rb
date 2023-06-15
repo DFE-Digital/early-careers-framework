@@ -10,6 +10,7 @@ class Admin::SchoolTransferForm
   STEPS = %i[select_school transfer_options start_date email check_answers].freeze
 
   validate :participant_profile_present
+  validates :latest_induction_record, presence: { message: "Participant must have induction record to proceed" }
   validates :new_school_urn, presence: true, on: :select_school
   validate :new_school_exists, on: :select_school
   validate :moving_to_new_school, on: :select_school
@@ -149,6 +150,10 @@ private
 
   def participant_profile_present
     raise "Participant profile id missing" if participant_profile_id.blank?
+  end
+
+  def induction_record_present
+    raise "Participant Induction Record missing" if latest_induction_record.blank?
   end
 
   def partnership_details(induction_programme)
