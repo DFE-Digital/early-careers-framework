@@ -36,7 +36,7 @@
 
     sl.row do |row|
       row.key(text: 'Funding choice')
-      row.value(text: application.funding_choice.capitalize || "-")
+      row.value(text: application.funding_choice&.capitalize || "-")
     end
 
     sl.row do |row|
