@@ -166,6 +166,12 @@ RSpec.describe Admin::SchoolTransferForm, type: :model do
         form.new_school_urn = participant_profile.school.urn
         expect(form.valid?(:select_school)).to be false
       end
+
+      it "checks that the participant has a induction record" do
+        participant_profile.induction_records.destroy_all
+        expect(form.valid?(:select_school)).to be false
+        expect(form.errors[:latest_induction_record]).to be_present
+      end
     end
 
     context "when :start_date step" do
@@ -175,6 +181,12 @@ RSpec.describe Admin::SchoolTransferForm, type: :model do
         form.start_date = 2.days.ago
         expect(form.valid?(:start_date)).to be false
         expect(form.errors[:start_date]).to be_present
+      end
+
+      it "checks that the participant has a induction record" do
+        participant_profile.induction_records.destroy_all
+        expect(form.valid?(:start_date)).to be false
+        expect(form.errors[:latest_induction_record]).to be_present
       end
     end
 
@@ -209,6 +221,18 @@ RSpec.describe Admin::SchoolTransferForm, type: :model do
           form.email = user.email
           expect(form.valid?(:email)).to be false
           expect(form.errors[:email]).to be_present
+        end
+      end
+
+      context "when participant is missing their induction record" do
+        before do
+          participant_profile.induction_records.destroy_all
+        end
+
+        it "returns false" do
+          form.email = "jackmiller@example.com"
+          expect(form.valid?(:email)).to be false
+          expect(form.errors[:latest_induction_record]).to be_present
         end
       end
     end
