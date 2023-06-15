@@ -72,13 +72,19 @@ module Admin::Participants
 
     def step_valid?
       @school_transfer_form.valid? action_name.to_sym
-    rescue StandardError
+    end
+
+    def handle_form_error(error)
       clear_session_data
+      Sentry.capture_exception(error)
+      flash[:alert] = "There was a problem processing your request. If this problem persists please contact an administrator."
       redirect_to admin_participants_path
     end
 
     def validate_request_or_render
       render unless (request.put? || request.post?) && step_valid?
+    rescue StandardError => e
+      handle_form_error(e)
     end
 
     def validate_and_proceed_or_render
@@ -87,6 +93,8 @@ module Admin::Participants
       else
         render
       end
+    rescue StandardError => e
+      handle_form_error(e)
     end
 
     def should_restart_process?
