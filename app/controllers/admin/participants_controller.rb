@@ -48,7 +48,7 @@ module Admin
     end
 
     def historical_induction_records
-      @historical_induction_records ||= induction_records[1..]
+      @historical_induction_records ||= induction_records[1..].presence || []
     end
 
     def latest_induction_record
