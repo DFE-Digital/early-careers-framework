@@ -43,7 +43,7 @@
 
     sl.row do |row|
       row.key(text: "Training record state")
-      row.value(text: govuk_tag(text: @participant_presenter.relevant_induction_record&.training_status, colour: "grey"))
+      row.value(text: govuk_tag(text: @participant_presenter.relevant_induction_record&.training_status || "No Induction Record Found", colour: "grey"))
     end
   end %>
 <% end %>
@@ -114,12 +114,12 @@ end %>
 <%= govuk_summary_list(actions: true) do |sl|
   sl.row do |row|
     row.key(text: "induction status")
-    row.value(text: govuk_tag(text: @participant_presenter.relevant_induction_record&.induction_status, colour: "grey"))
+    row.value(text: govuk_tag(text: @participant_presenter.relevant_induction_record&.induction_status || "No Induction Record Found", colour: "grey"))
   end
 
   sl.row do |row|
     row.key(text: "training status")
-    row.value(text: govuk_tag(text: @participant_presenter.relevant_induction_record&.training_status, colour: "grey"))
+    row.value(text: govuk_tag(text: @participant_presenter.relevant_induction_record&.training_status || "No Induction Record Found", colour: "grey"))
   end
 end %>
 

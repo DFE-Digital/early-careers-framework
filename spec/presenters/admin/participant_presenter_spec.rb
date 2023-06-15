@@ -144,6 +144,14 @@ RSpec.describe(Admin::ParticipantPresenter, :with_default_schedules) do
 
           expect(subject.historical_induction_records.pluck(:id)).to match_array(expected.map(&:id))
         end
+
+        context "when participant is missing their induction records" do
+          before { participant_profile.induction_records.destroy_all }
+
+          it "returns an empty array" do
+            expect(subject.historical_induction_records).to be_empty
+          end
+        end
       end
     end
 

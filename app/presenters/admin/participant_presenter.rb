@@ -70,7 +70,7 @@ class Admin::ParticipantPresenter
   end
 
   def historical_induction_records
-    induction_records[1..]
+    induction_records[1..].presence || []
   end
 
   def all_induction_records
