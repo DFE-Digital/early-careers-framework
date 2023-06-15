@@ -20,19 +20,19 @@ RSpec.describe Admin::Schools::Cohorts::OtherInfo, type: :component do
   context "with design your own school cohort" do
     let(:school_cohort) { build :school_cohort, induction_programme_choice: "design_our_own" }
 
-    it { is_expected.to have_content "Not using service - designing their own training" }
+    it { is_expected.to have_content "Designing their own training" }
   end
 
   context "with school funded fip school cohort" do
     let(:school_cohort) { build :school_cohort, induction_programme_choice: "school_funded_fip" }
 
-    it { is_expected.to have_content "Not using service - school funded full induction programme" }
+    it { is_expected.to have_content "School-funded full induction programme" }
   end
 
   context "with no_early_career_teachers school cohort" do
     let(:school_cohort) { build :school_cohort, induction_programme_choice: "no_early_career_teachers" }
 
-    it { is_expected.to have_content "Not using service - no ECTs this year" }
+    it { is_expected.to have_content "No ECTs this year" }
   end
 
   context "with school cohort of unknown type" do
