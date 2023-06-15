@@ -190,5 +190,5 @@ en:
 
       completed_training:
         label: "TRAINING COMPLETED"
-        description: "We’ve confirmed this person is eligible for this programme. Once you choose a training provider, they’ll contact this person directly."
+        description: "The participant has completed the training element of their statutory induction."
         colour: "grey"
