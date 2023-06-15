@@ -8,7 +8,7 @@ RSpec.describe Importers::CreateNPQContract do
 
   let!(:cpd_lead_provider) { create(:cpd_lead_provider, :with_npq_lead_provider, name: "Ambition Institute") }
   let!(:npq_lead_provider) { cpd_lead_provider.npq_lead_provider }
-  let!(:cohort) { Cohort.find_by(start_year: 2022) || create(:cohort, start_year: 2022) }
+  let!(:cohort) { FactoryBot.create :cohort }
   let!(:npq_specialist_course) { create(:npq_specialist_course, name: "NPQ Leading Teaching (npq-leading-teaching)", identifier: "npq-leading-teaching") }
   let!(:npq_leadership_course) { create(:npq_leadership_course, name: "NPQ for Headship (npq-headship)", identifier: "npq-headship") }
   let!(:npq_ehco_course)       { create(:npq_ehco_course, name: "The Early Headship Coaching Offer", identifier: "npq-early-headship-coaching-offer") }
@@ -32,7 +32,7 @@ RSpec.describe Importers::CreateNPQContract do
       before do
         csv.write "provider_name,cohort_year,course_identifier,recruitment_target,per_participant,service_fee_installments"
         csv.write "\n"
-        csv.write "Ambition Institute,2022,npq-leading-teaching,123,456.78,13"
+        csv.write "Ambition Institute,#{cohort.start_year},npq-leading-teaching,123,456.78,13"
         csv.write "\n"
         csv.close
       end
@@ -59,7 +59,7 @@ RSpec.describe Importers::CreateNPQContract do
       before do
         csv.write "provider_name,cohort_year,course_identifier,recruitment_target,per_participant,service_fee_installments"
         csv.write "\n"
-        csv.write "Ambition Institute,2022,npq-leading-teaching,123,456.78,13"
+        csv.write "Ambition Institute,#{cohort.start_year},npq-leading-teaching,123,456.78,13"
         csv.write "\n"
         csv.close
       end
@@ -76,7 +76,7 @@ RSpec.describe Importers::CreateNPQContract do
       before do
         csv.write "provider_name,cohort_year,course_identifier,recruitment_target,per_participant,service_fee_installments"
         csv.write "\n"
-        csv.write "Ambition Institute,2022,npq-leading-teaching,123,456.78,13"
+        csv.write "Ambition Institute,#{cohort.start_year},npq-leading-teaching,123,456.78,13"
         csv.write "\n"
         csv.close
 
@@ -109,7 +109,7 @@ RSpec.describe Importers::CreateNPQContract do
       before do
         csv.write "provider_name,cohort_year,course_identifier,recruitment_target,per_participant,service_fee_installments"
         csv.write "\n"
-        csv.write "Ambition Institute,2022,npq-headship,321,654.87,14"
+        csv.write "Ambition Institute,#{cohort.start_year},npq-headship,321,654.87,14"
         csv.write "\n"
         csv.close
       end
@@ -135,7 +135,7 @@ RSpec.describe Importers::CreateNPQContract do
       before do
         csv.write "provider_name,cohort_year,course_identifier,recruitment_target,per_participant,service_fee_installments"
         csv.write "\n"
-        csv.write "Ambition Institute,2022,npq-early-headship-coaching-offer,789,111.22,15"
+        csv.write "Ambition Institute,#{cohort.start_year},npq-early-headship-coaching-offer,789,111.22,15"
         csv.write "\n"
         csv.close
       end
