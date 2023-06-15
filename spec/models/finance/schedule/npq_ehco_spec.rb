@@ -77,7 +77,8 @@ RSpec.describe Finance::Schedule::NPQEhco, type: :model do
     end
 
     context "when no schedule exists for the cohort" do
-      let(:cohort) { create(:cohort, start_year: 2020) }
+      let(:start_year) { Cohort.ordered_by_start_year.last.start_year + 128 }
+      let(:cohort) { FactoryBot.create :seed_cohort, start_year: }
 
       it "raises an error" do
         expect { described_class.schedule_for(cohort:) }.to raise_error(ActiveRecord::RecordNotFound)
