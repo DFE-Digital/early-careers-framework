@@ -10,7 +10,7 @@ RSpec.describe Finance::Schedule::NPQSpecialist, type: :model do
   it "seeds from csv" do
     schedule = described_class.find_by(schedule_identifier: "npq-specialist-spring")
     expect(schedule).to be_present
-    expect(schedule.milestones.count).to eql(3)
+    expect(schedule.milestones.count).to eql(4)
   end
 
   describe ".default_for" do
