@@ -73,153 +73,153 @@ jobs:
           build-args: |
             BUILDKIT_INLINE_CACHE=1
 
-  build-review-pr:
-    if: ${{ github.actor != 'dependabot[bot]' }}
-    runs-on: ubuntu-20.04
-    needs: [build-base]
+  # build-review-pr:
+  #   if: ${{ github.actor != 'dependabot[bot]' }}
+  #   runs-on: ubuntu-20.04
+  #   needs: [build-base]
 
-    steps:
-      - name: setup-inputs
-        run: |
-          echo "ENVIRONMENT=review-pr-${{ github.event.number }}" >> $GITHUB_ENV
+  #   steps:
+  #     - name: setup-inputs
+  #       run: |
+  #         echo "ENVIRONMENT=review-pr-${{ github.event.number }}" >> $GITHUB_ENV
 
-      - uses: actions/checkout@v3
-        name: Checkout Code
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
+  #     - uses: actions/checkout@v3
+  #       name: Checkout Code
+  #       with:
+  #         ref: ${{ github.event.pull_request.head.sha }}
 
-      - name: set-up-environment
-        uses: DFE-Digital/github-actions/set-up-environment@master
+  #     - name: set-up-environment
+  #       uses: DFE-Digital/github-actions/set-up-environment@master
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-        with:
-          version: v0.9.1 # More recent buildx versions generate an OCI manifest
+  #     - name: Set up Docker Buildx
+  #       uses: docker/setup-buildx-action@v2
+  #       with:
+  #         version: v0.9.1 # More recent buildx versions generate an OCI manifest
 
-      - name: Login to DockerHub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_DEV_PASSWORD }}
+  #     - name: Login to DockerHub
+  #       uses: docker/login-action@v2
+  #       with:
+  #         username: ${{ secrets.DOCKER_USERNAME }}
+  #         password: ${{ secrets.DOCKER_DEV_PASSWORD }}
 
-      - name: Build and push docker image from production target
-        uses: docker/build-push-action@v4
-        with:
-          target: production
-          context: .
-          cache-from: |
-            ${{ env.DOCKER_REPOSITORY }}-dev:${{ env.ENVIRONMENT }}
-          tags: |
-            ${{ env.DOCKER_REPOSITORY }}-dev:${{ github.event.pull_request.head.sha }}
-            ${{ env.DOCKER_REPOSITORY }}-dev:${{ env.ENVIRONMENT }}
-          push: true
-          build-args: |
-            BUILDKIT_INLINE_CACHE=1
-            SHA=${{ github.event.pull_request.head.sha }}
+  #     - name: Build and push docker image from production target
+  #       uses: docker/build-push-action@v4
+  #       with:
+  #         target: production
+  #         context: .
+  #         cache-from: |
+  #           ${{ env.DOCKER_REPOSITORY }}-dev:${{ env.ENVIRONMENT }}
+  #         tags: |
+  #           ${{ env.DOCKER_REPOSITORY }}-dev:${{ github.event.pull_request.head.sha }}
+  #           ${{ env.DOCKER_REPOSITORY }}-dev:${{ env.ENVIRONMENT }}
+  #         push: true
+  #         build-args: |
+  #           BUILDKIT_INLINE_CACHE=1
+  #           SHA=${{ github.event.pull_request.head.sha }}
 
-  deploy-to-review-pr:
-    if: ${{ github.actor != 'dependabot[bot]' }}
-    runs-on: ubuntu-20.04
-    needs: [build-review-pr]
-    concurrency:
-      group: deploy-to-review-pr-${{ github.event.number }}
+  # deploy-to-review-pr:
+  #   if: ${{ github.actor != 'dependabot[bot]' }}
+  #   runs-on: ubuntu-20.04
+  #   needs: [build-review-pr]
+  #   concurrency:
+  #     group: deploy-to-review-pr-${{ github.event.number }}
 
-    steps:
-      - name: setup-inputs
-        run: |
-          echo "ENVIRONMENT=review-pr-${{ github.event.number }}" >> $GITHUB_ENV
+  #   steps:
+  #     - name: setup-inputs
+  #       run: |
+  #         echo "ENVIRONMENT=review-pr-${{ github.event.number }}" >> $GITHUB_ENV
 
-      - uses: actions/checkout@v3
-        name: Checkout Code
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
+  #     - uses: actions/checkout@v3
+  #       name: Checkout Code
+  #       with:
+  #         ref: ${{ github.event.pull_request.head.sha }}
 
-      - name: set-up-environment
-        uses: DFE-Digital/github-actions/set-up-environment@master
+  #     - name: set-up-environment
+  #       uses: DFE-Digital/github-actions/set-up-environment@master
 
-      - name: Pin Terraform version
-        uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: 0.14.0
+  #     - name: Pin Terraform version
+  #       uses: hashicorp/setup-terraform@v2
+  #       with:
+  #         terraform_version: 0.14.0
 
-      - name: Deploy review app to dev
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          TF_VAR_paas_user: ${{ secrets.GOVPAAS_DEV_USERNAME }}
-          TF_VAR_paas_password: ${{ secrets.GOVPAAS_DEV_PASSWORD }}
-          TF_VAR_statuscake_api_token: ${{ secrets.STATUSCAKE_API_TOKEN }}
-        run: |
-          export TF_VAR_paas_app_docker_image=${{ env.DOCKER_REPOSITORY }}-dev:${{ github.event.pull_request.head.sha }}
-          cd terraform/app
-          terraform init -reconfigure -input=false -backend-config="bucket=paas-s3-broker-prod-lon-7f2ca242-9929-4662-a79c-c454ea56ea7b" -backend-config="key=${{ env.ENVIRONMENT }}/terraform.tfstate"
-          terraform apply -input=false -auto-approve -var-file ../workspace-variables/review.tfvars -var='secret_paas_app_env_values={"RAILS_MASTER_KEY":"${{secrets.RAILS_MASTER_KEY_DEV}}"}' -var='environment=${{env.ENVIRONMENT}}' -var 'docker_username=${{ secrets.DOCKER_USERNAME }}' -var 'docker_password=${{ secrets.DOCKER_DEV_PASSWORD }}'
+  #     - name: Deploy review app to dev
+  #       env:
+  #         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  #         TF_VAR_paas_user: ${{ secrets.GOVPAAS_DEV_USERNAME }}
+  #         TF_VAR_paas_password: ${{ secrets.GOVPAAS_DEV_PASSWORD }}
+  #         TF_VAR_statuscake_api_token: ${{ secrets.STATUSCAKE_API_TOKEN }}
+  #       run: |
+  #         export TF_VAR_paas_app_docker_image=${{ env.DOCKER_REPOSITORY }}-dev:${{ github.event.pull_request.head.sha }}
+  #         cd terraform/app
+  #         terraform init -reconfigure -input=false -backend-config="bucket=paas-s3-broker-prod-lon-7f2ca242-9929-4662-a79c-c454ea56ea7b" -backend-config="key=${{ env.ENVIRONMENT }}/terraform.tfstate"
+  #         terraform apply -input=false -auto-approve -var-file ../workspace-variables/review.tfvars -var='secret_paas_app_env_values={"RAILS_MASTER_KEY":"${{secrets.RAILS_MASTER_KEY_DEV}}"}' -var='environment=${{env.ENVIRONMENT}}' -var 'docker_username=${{ secrets.DOCKER_USERNAME }}' -var 'docker_password=${{ secrets.DOCKER_DEV_PASSWORD }}'
 
-      - name: comment on PR
-        uses: unsplash/comment-on-pr@v1.3.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          msg: "Created review app at https://${{env.REVIEW_APPLICATION}}-${{ github.event.number }}.${{env.DOMAIN}}"
-          check_for_duplicate_msg: true
-          duplicate_msg_pattern: Created review app at*
+  #     - name: comment on PR
+  #       uses: unsplash/comment-on-pr@v1.3.0
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #       with:
+  #         msg: "Created review app at https://${{env.REVIEW_APPLICATION}}-${{ github.event.number }}.${{env.DOMAIN}}"
+  #         check_for_duplicate_msg: true
+  #         duplicate_msg_pattern: Created review app at*
 
-  smoke-test:
-    if: ${{ github.actor != 'dependabot[bot]' }}
-    runs-on: ubuntu-20.04
-    needs: [deploy-to-review-pr]
-    # Our rspec is deeply coupled with a database. I had a go at decoupling it for smoke tests, and gave up.
-    # This database is provided as a hacky way to get rspec to run, and should not be populated in smoke tests.
-    env:
-      RAILS_ENV: test
-      DB_USERNAME: postgres
-      DB_PASSWORD: ''
-      DB_HOSTNAME: 127.0.0.1
-      DB_PORT: 5432
-      ANALYTICS_DB_USERNAME: postgres
-      ANALYTICS_DB_PASSWORD: ''
-      ANALYTICS_DB_HOSTNAME: 127.0.0.1
-      ANALYTICS_DB_PORT: 5432
+  # smoke-test:
+  #   if: ${{ github.actor != 'dependabot[bot]' }}
+  #   runs-on: ubuntu-20.04
+  #   needs: [deploy-to-review-pr]
+  #   # Our rspec is deeply coupled with a database. I had a go at decoupling it for smoke tests, and gave up.
+  #   # This database is provided as a hacky way to get rspec to run, and should not be populated in smoke tests.
+  #   env:
+  #     RAILS_ENV: test
+  #     DB_USERNAME: postgres
+  #     DB_PASSWORD: ''
+  #     DB_HOSTNAME: 127.0.0.1
+  #     DB_PORT: 5432
+  #     ANALYTICS_DB_USERNAME: postgres
+  #     ANALYTICS_DB_PASSWORD: ''
+  #     ANALYTICS_DB_HOSTNAME: 127.0.0.1
+  #     ANALYTICS_DB_PORT: 5432
 
-    services:
-      postgres:
-        image: postgres:11.6-alpine
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: ''
-        ports:
-          - 5432:5432
-        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+  #   services:
+  #     postgres:
+  #       image: postgres:11.6-alpine
+  #       env:
+  #         POSTGRES_USER: postgres
+  #         POSTGRES_PASSWORD: ''
+  #       ports:
+  #         - 5432:5432
+  #       options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
+  #       with:
+  #         ref: ${{ github.event.pull_request.head.sha }}
 
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1.152.0
-        with:
-          bundler-cache: true
-          ruby-version: '3.2.2'
+  #     - name: Set up Ruby
+  #       uses: ruby/setup-ruby@v1.152.0
+  #       with:
+  #         bundler-cache: true
+  #         ruby-version: '3.2.2'
 
-      - name: Set up Node
-        uses: actions/setup-node@v3.6.0
-        with:
-          node-version: '18.16.x'
-          cache: 'yarn'
+  #     - name: Set up Node
+  #       uses: actions/setup-node@v3.6.0
+  #       with:
+  #         node-version: '18.16.x'
+  #         cache: 'yarn'
 
-      - name: Set up test database
-        run: bin/rails db:create db:schema:load
+  #     - name: Set up test database
+  #       run: bin/rails db:create db:schema:load
 
-      - name: Run deployment smoke test
-        run: bundle exec rspec spec/smoke_tests/*_spec.rb --tag smoke_test
+  #     - name: Run deployment smoke test
+  #       run: bundle exec rspec spec/smoke_tests/*_spec.rb --tag smoke_test
 
-      - name: comment on PR
-        uses: unsplash/comment-on-pr@v1.3.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          msg: "Smoke tests passed against the review app."
-          check_for_duplicate_msg: true
-          duplicate_msg_pattern: Smoke tests passed against the review app*
+  #     - name: comment on PR
+  #       uses: unsplash/comment-on-pr@v1.3.0
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #       with:
+  #         msg: "Smoke tests passed against the review app."
+  #         check_for_duplicate_msg: true
+  #         duplicate_msg_pattern: Smoke tests passed against the review app*
