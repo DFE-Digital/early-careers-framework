@@ -156,8 +156,21 @@ private
       declaration_type:,
       cpd_lead_provider:,
       delivery_partner:,
+      mentor_user_id:,
       user: participant_identity.user,
     }
+  end
+
+  def mentor_user_id
+    return nil unless participant_profile.ect?
+
+    induction_record = Induction::FindBy.call(
+      participant_profile:,
+      lead_provider: cpd_lead_provider.lead_provider,
+      date_range: ..declaration_date,
+    )
+
+    induction_record&.mentor_profile&.participant_identity&.user_id
   end
 
   def delivery_partner

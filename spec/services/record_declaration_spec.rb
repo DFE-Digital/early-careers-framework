@@ -290,12 +290,32 @@ RSpec.describe RecordDeclaration, :with_default_schedules do
         expect { service.call }.to change { ParticipantDeclaration.count }.by(1)
       end
 
-      it "stores the known delivery partner" do
-        service.call
+      describe "attributes inferred from induction records" do
+        let(:latest_induction_record) { nil }
+        subject(:created_declaration) do
+          service.call
+          ParticipantDeclaration.last
+        end
 
-        declaration = ParticipantDeclaration.last
+        before do
+          allow(Induction::FindBy).to receive(:call).and_call_original
+          allow(Induction::FindBy).to receive(:call).with(
+            participant_profile:,
+            lead_provider: cpd_lead_provider.lead_provider,
+            date_range: ..declaration_date,
+          ) { latest_induction_record }
+        end
 
-        expect(declaration.delivery_partner).to eql(delivery_partner)
+        it { is_expected.to have_attributes(delivery_partner:, mentor_user_id: nil) }
+
+        context "when the latest induction record has a mentor_profile" do
+          let(:mentor_user) { create(:user, full_name: "Mentor User 1") }
+          let(:mentor_profile) { create(:mentor_participant_profile, user: mentor_user) }
+          let(:opts) { { mentor_profile: } }
+          let(:latest_induction_record) { participant_profile.induction_records.latest }
+
+          it { is_expected.to have_attributes(mentor_user_id: mentor_user.id) }
+        end
       end
 
       it_behaves_like "validates the declaration for a withdrawn participant"
@@ -317,7 +337,6 @@ RSpec.describe RecordDeclaration, :with_default_schedules do
       it_behaves_like "validates the course_identifier, cpd_lead_provider, participant_id"
       it_behaves_like "validates existing declarations"
       it_behaves_like "validates the participant milestone"
-
       it_behaves_like "creates participant declaration attempt"
     end
   end
