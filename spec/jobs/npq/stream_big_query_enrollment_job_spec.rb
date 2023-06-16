@@ -39,7 +39,7 @@ RSpec.describe NPQ::StreamBigQueryEnrollmentJob do
 
         expect(table).to have_received(:insert).with([{
           "application_ecf_id" => npq_application.id,
-          "cohort" => nil,
+          "cohort" => Cohort.current.start_year,
           "status" => "pending",
           "updated_at" => npq_application.updated_at,
           "employer_name" => employer_name,
