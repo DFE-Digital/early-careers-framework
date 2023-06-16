@@ -183,6 +183,10 @@ class InductionRecord < ApplicationRecord
     leaving_induction_status? && end_date.present? && end_date.past?
   end
 
+  def deferred_or_transferred?
+    training_status_deferred? || transferred?
+  end
+
   def transferring_in?
     active_induction_status? && start_date.future? && school_transfer
   end
