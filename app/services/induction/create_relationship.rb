@@ -30,7 +30,7 @@ private
 
   def challenge_deadline
     if treat_as_partnership
-      Partnerships::Report::CHALLENGE_WINDOW.from_now
+      Partnerships::Report::DEFAULT_CHALLENGE_WINDOW.from_now
     else
       Time.zone.now
     end

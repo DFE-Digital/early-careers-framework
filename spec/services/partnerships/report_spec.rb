@@ -2,7 +2,7 @@
 
 RSpec.describe Partnerships::Report do
   let(:school) { create :school }
-  let(:cohort) { create :cohort }
+  let(:cohort) { Cohort.current || create(:cohort, :current) }
   let(:lead_provider) { create :lead_provider }
   let(:delivery_partner) { create :delivery_partner }
 
@@ -29,7 +29,7 @@ RSpec.describe Partnerships::Report do
       lead_provider_id: lead_provider.id,
       delivery_partner_id: delivery_partner.id,
       pending: false,
-      challenge_deadline: described_class::CHALLENGE_WINDOW.from_now,
+      challenge_deadline: described_class::DEFAULT_CHALLENGE_WINDOW.from_now,
     )
   end
 
@@ -126,7 +126,7 @@ RSpec.describe Partnerships::Report do
         lead_provider_id: lead_provider.id,
         delivery_partner_id: delivery_partner.id,
         pending: false,
-        challenge_deadline: described_class::CHALLENGE_WINDOW.from_now,
+        challenge_deadline: described_class::DEFAULT_CHALLENGE_WINDOW.from_now,
       )
     end
 
@@ -148,6 +148,26 @@ RSpec.describe Partnerships::Report do
 
     it "does not create a school cohort" do
       expect { result }.not_to change { school.school_cohorts.count }
+    end
+  end
+
+  context "challenge deadline to 31st October from 2023" do
+    let(:cohort) { create(:cohort, start_year: 2023) }
+
+    it "sets the challenge deadline to 31st October when the partnership is created before the 17th October", travel_to: Date.new(2023, 5, 1) do
+      expect(result.challenge_deadline).to eq(Date.new(2023, 10, 31))
+    end
+
+    it "sets the challenge deadline to two weeks when the partnership is created from the 17th October", travel_to: Date.new(2023, 10, 25) do
+      expect(result.challenge_deadline).to eq(Date.new(2023, 11, 8))
+    end
+  end
+
+  context "challenge deadline to 31st October until 2022" do
+    let(:cohort) { create(:cohort, start_year: 2022) }
+
+    it "sets the challenge deadline to two weeks when the partnership is created from the 17th October", travel_to: Date.new(2023, 5, 1) do
+      expect(result.challenge_deadline).to eq(Date.new(2023, 5, 15))
     end
   end
 end

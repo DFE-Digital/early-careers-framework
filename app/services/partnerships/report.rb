@@ -2,7 +2,8 @@
 
 module Partnerships
   class Report < BaseService
-    CHALLENGE_WINDOW = 14.days.freeze
+    EARLY_ACADEMIC_YEAR_CHALLENGE_WINDOW = (2.months - 1.day).freeze
+    DEFAULT_CHALLENGE_WINDOW = 14.days.freeze
     REMINDER_EMAIL_DELAY = 7.days.freeze
 
     def initialize(cohort_id:, school_id:, lead_provider_id:, delivery_partner_id:)
@@ -23,7 +24,7 @@ module Partnerships
         partnership.challenge_reason = partnership.challenged_at = nil
         partnership.delivery_partner_id = delivery_partner_id
         partnership.pending = false
-        partnership.challenge_deadline = CHALLENGE_WINDOW.from_now
+        partnership.challenge_deadline = challenge_deadline
         partnership.report_id = SecureRandom.uuid
         partnership.save!
 
@@ -63,6 +64,22 @@ module Partnerships
         cohort_id:,
         induction_programme_choice: "full_induction_programme",
       )
+    end
+
+    def cohort
+      @cohort ||= Cohort.find_by(id: cohort_id)
+    end
+
+    def challenge_deadline
+      [early_academic_year_challenge_deadline, default_challenge_deadline].max
+    end
+
+    def early_academic_year_challenge_deadline
+      cohort.academic_year_start_date + EARLY_ACADEMIC_YEAR_CHALLENGE_WINDOW
+    end
+
+    def default_challenge_deadline
+      Time.current + DEFAULT_CHALLENGE_WINDOW
     end
   end
 end
