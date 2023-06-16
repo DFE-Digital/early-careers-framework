@@ -6,8 +6,8 @@ RSpec.feature "Lead Provider Dashboard", type: :feature, js: true, rutabaga: fal
   let(:email_address) { "test-lead-provider@example.com" }
   let(:lead_provider_name) { "Test Lead Provider" }
 
-  let!(:cohort) { create :cohort, start_year: 2021, registration_start_date: 1.day.ago }
-  let!(:cohort_next) { create :cohort, start_year: 2022, registration_start_date: 1.day.from_now }
+  let!(:cohort) { Cohort.find_by start_year: 2021 }
+  let!(:cohort_next) { Cohort.find_by start_year: 2022 }
   let!(:ecf_lead_provider) do
     ecf_lead_provider = create(:lead_provider, name: lead_provider_name)
     create :cpd_lead_provider, lead_provider: ecf_lead_provider, name: lead_provider_name
@@ -31,6 +31,7 @@ RSpec.feature "Lead Provider Dashboard", type: :feature, js: true, rutabaga: fal
   end
 
   scenario "Confirming schools" do
+    travel_to Date.new(2021, 9, 1)
     given_i_sign_in_as_the_user_with_the_email email_address
     and_i_am_on_the_lead_provider_dashboard
     and_i_do_not_see_next_cohort_schools_confirmation
