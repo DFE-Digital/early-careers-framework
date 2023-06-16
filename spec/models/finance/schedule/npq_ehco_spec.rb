@@ -88,10 +88,10 @@ RSpec.describe Finance::Schedule::NPQEhco, type: :model do
     context "when selected cohort is before multiple schedules existed for EHCO" do
       let(:cohort) { Cohort.find_by!(start_year: 2021) }
 
-      it "returns NPQ EHCO June schedule" do
-        expected_schedule = described_class.find_by(cohort:, schedule_identifier: "npq-ehco-june")
+      it "returns NPQ EHCO November schedule" do
+        expected_schedule = described_class.find_by(cohort:, schedule_identifier: "npq-ehco-november")
 
-        expect(described_class.schedule_for(cohort:)).to eq(expected_schedule)
+        expect(described_class.schedule_for(cohort:)).to eql(expected_schedule)
       end
     end
   end
