@@ -7,7 +7,6 @@ RSpec.describe ParticipantOutcomes::BatchSendLatestOutcomesJob do
   let(:outcome_2) { double(id: 2) }
   let(:outcomes) { [outcome_1, outcome_2] }
   let(:default_batch_size) { described_class::DEFAULT_BATCH_SIZE }
-  let(:default_delay) { described_class::DEFAULT_REQUEUE_DELAY }
   let(:queue_double) { double(detect: nil) }
 
   before do
@@ -16,22 +15,8 @@ RSpec.describe ParticipantOutcomes::BatchSendLatestOutcomesJob do
   end
 
   describe "#perform" do
-    context "when there are already instances of SendToQualifiedTeachersApiJob in the job queue" do
-      before do
-        allow(queue_double).to receive(:detect).and_yield(double(display_class: "ParticipantOutcomes::SendToQualifiedTeachersApiJob"))
-      end
-
-      it "requeues itself" do
-        expect { described_class.perform_now }.to have_enqueued_job(described_class).with(default_batch_size, default_delay)
-      end
-    end
-
     context "when there are no more than batch_size records" do
       let(:batch_size) { 2 }
-
-      it "does not requeue itself" do
-        expect { described_class.perform_now(batch_size) }.not_to have_enqueued_job(described_class)
-      end
 
       it "enqueues the send job for each record" do
         described_class.perform_now
@@ -44,16 +29,16 @@ RSpec.describe ParticipantOutcomes::BatchSendLatestOutcomesJob do
     context "when there are more than batch_size records" do
       let(:batch_size) { 1 }
 
-      it "requeues itself" do
-        expect { described_class.perform_now(batch_size) }.to have_enqueued_job(described_class).with(batch_size, default_delay)
-      end
-
       it "only enqueues the send job for the first records up to the batch_size" do
         described_class.perform_now(batch_size)
 
         expect(ParticipantOutcomes::SendToQualifiedTeachersApiJob).to have_been_enqueued.exactly(:once).with(participant_outcome_id: 1)
         expect(ParticipantOutcomes::SendToQualifiedTeachersApiJob).not_to have_been_enqueued.with(participant_outcome_id: 2)
       end
+    end
+
+    it "does not requeue itself" do
+      expect { described_class.perform_now(default_batch_size) }.not_to have_enqueued_job(described_class)
     end
   end
 

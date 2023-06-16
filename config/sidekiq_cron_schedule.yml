@@ -29,3 +29,7 @@ remove_school_mentor_job:
   cron: "45 4 * * *"
   class: "RemoveSchoolMentorJob"
   queue: default
+send_outcomes_to_qualified_teachers_api:
+  cron: "*/10 * * * *"
+  class: "ParticipantOutcomes::BatchSendLatestOutcomesJob"
+  queue: default
