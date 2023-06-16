@@ -78,7 +78,7 @@ RSpec.describe "Add a school cohort appropriate body", type: :feature, js: true,
 private
 
   def given_there_is_a_school_and_an_induction_coordinator
-    @cohort = Cohort.current || create(:cohort, start_year: 2023)
+    @cohort = Cohort.find_by(start_year: 2023)
     @school = create(:school, name: "Fip School")
     @school_cohort = create(:school_cohort, school: @school, cohort: @cohort, induction_programme_choice: "full_induction_programme")
 
