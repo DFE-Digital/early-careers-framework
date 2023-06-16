@@ -2,7 +2,8 @@
 
 module Partnerships
   class Report < BaseService
-    CHALLENGE_WINDOW = 14.days.freeze
+    EARLY_ACADEMIC_YEAR_CHALLENGE_WINDOW = (2.months - 1.day).freeze
+    DEFAULT_CHALLENGE_WINDOW = 14.days.freeze
     REMINDER_EMAIL_DELAY = 7.days.freeze
 
     def initialize(cohort_id:, school_id:, lead_provider_id:, delivery_partner_id:)
@@ -70,12 +71,15 @@ module Partnerships
     end
 
     def challenge_deadline
-      deadline = Date.new(cohort.start_year, 10, 17)
-      if Time.zone.now < deadline
-        Date.new(cohort.start_year, 10, 31)
-      else
-        Time.zone.now + CHALLENGE_WINDOW
-      end
+      [early_academic_year_challenge_deadline, default_challenge_deadline].max
+    end
+
+    def early_academic_year_challenge_deadline
+      cohort.academic_year_start_date + EARLY_ACADEMIC_YEAR_CHALLENGE_WINDOW
+    end
+
+    def default_challenge_deadline
+      Time.current + DEFAULT_CHALLENGE_WINDOW
     end
   end
 end

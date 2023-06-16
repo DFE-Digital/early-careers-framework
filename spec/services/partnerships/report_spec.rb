@@ -29,7 +29,7 @@ RSpec.describe Partnerships::Report do
       lead_provider_id: lead_provider.id,
       delivery_partner_id: delivery_partner.id,
       pending: false,
-      challenge_deadline: described_class::CHALLENGE_WINDOW.from_now,
+      challenge_deadline: described_class::DEFAULT_CHALLENGE_WINDOW.from_now,
     )
   end
 
@@ -126,7 +126,7 @@ RSpec.describe Partnerships::Report do
         lead_provider_id: lead_provider.id,
         delivery_partner_id: delivery_partner.id,
         pending: false,
-        challenge_deadline: described_class::CHALLENGE_WINDOW.from_now,
+        challenge_deadline: described_class::DEFAULT_CHALLENGE_WINDOW.from_now,
       )
     end
 
