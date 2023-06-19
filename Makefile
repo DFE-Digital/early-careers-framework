@@ -2,6 +2,13 @@ ifndef VERBOSE
 .SILENT:
 endif
 
+aks:  ## Sets environment variables for aks deployment
+	$(eval PLATFORM=aks)
+	$(eval REGION=UK South)
+	$(eval STORAGE_ACCOUNT_SUFFIX=sa)
+	$(eval KEY_VAULT_SECRET_NAME=APPLICATION)
+	$(eval KEY_VAULT_PURGE_PROTECTION=false)
+
 .PHONY: development
 development:
 	$(eval DEPLOY_ENV=development)
@@ -14,6 +21,16 @@ staging:
 .PHONY: sandbox
 sandbox:
 	$(eval DEPLOY_ENV=sandbox)
+
+.PHONY: review
+review: aks
+	# PULL_REQUEST_NUMBER is set by the GitHub action
+	$(if $(PULL_REQUEST_NUMBER), , $(error Missing environment variable "PULL_REQUEST_NUMBER"))
+	$(eval DEPLOY_ENV=review)
+	$(eval include global_config/review_aks.sh)
+	$(eval backend_config=-backend-config="key=terraform-$(PULL_REQUEST_NUMBER).tfstate")
+	$(eval export TF_VAR_app_suffix=-$(PULL_REQUEST_NUMBER))
+	$(eval export TF_VAR_uploads_storage_account_name=$(AZURE_RESOURCE_PREFIX)cpdecfrv$(PULL_REQUEST_NUMBER)sa)
 
 .PHONY: production
 production:
