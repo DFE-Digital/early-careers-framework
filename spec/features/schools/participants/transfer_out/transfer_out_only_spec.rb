@@ -23,7 +23,7 @@ RSpec.describe "transfer out participants", :with_default_schedules, type: :feat
       when_i_click_to_transfer_out_a_participant
       then_i_should_be_on_the_check_transfer_page
 
-      click_on "Confirm"
+      click_on "Continue"
       then_i_should_be_on_the_teacher_end_date_page
 
       click_on "Continue"
@@ -115,7 +115,7 @@ RSpec.describe "transfer out participants", :with_default_schedules, type: :feat
     end
 
     def then_i_should_be_on_the_check_transfer_page
-      expect(page).to have_selector("h1", text: "Is #{@ect.full_name} transferring to another school to continue training?")
+      expect(page).to have_selector("h1", text: "Is #{@ect.full_name} transferring to another school where they’ll continue their induction?")
     end
 
     def then_i_should_see_enter_end_date_error_message
