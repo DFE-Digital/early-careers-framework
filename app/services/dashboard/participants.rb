@@ -5,7 +5,7 @@ module Dashboard
     attr_reader :mentors, :orphan_ects, :school, :user, :latest_year
 
     def initialize(school:, user:)
-      @deferred_ects = []
+      @deferred_or_transferred_ects = []
       @latest_year = Dashboard::LatestManageableCohort.call(school).start_year
       @orphan_ects = []
       @school = school
@@ -30,12 +30,12 @@ module Dashboard
     end
 
     def not_mentoring_or_being_mentored
-      @not_mentoring_or_being_mentored ||= (orphan_mentors + deferred_ects).sort_by(&:full_name)
+      @not_mentoring_or_being_mentored ||= (orphan_mentors + deferred_or_transferred_ects).sort_by(&:full_name)
     end
 
   private
 
-    attr_reader :deferred_ects
+    attr_reader :deferred_or_transferred_ects
 
     def dashboard_mentor(mentor)
       return mentor if mentor.is_a?(Dashboard::Participant)
@@ -81,8 +81,8 @@ module Dashboard
         induction_record.participant_no_qts?
     end
 
-    def orphan_and_deferred_ects(ects)
-      @deferred_ects, @orphan_ects = ects.partition(&:training_status_deferred?).map do |ects_subset|
+    def orphan_and_deferred_or_transferred_ects(ects)
+      @deferred_or_transferred_ects, @orphan_ects = ects.partition(&:deferred_or_transferred?).map do |ects_subset|
         dashboard_participants(ects_subset)
       end
     end
@@ -105,7 +105,7 @@ module Dashboard
         if mentor_profile_id
           hash[dashboard_participant(mentor_profile_id)] = dashboard_participants(ects)
         else
-          orphan_and_deferred_ects(ects)
+          orphan_and_deferred_or_transferred_ects(ects)
         end
       end
     end
