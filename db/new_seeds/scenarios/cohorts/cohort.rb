@@ -6,7 +6,7 @@ module NewSeeds
       class Cohort
         attr_reader :cohort, :schedules, :start_year
 
-        def initialize(start_year = Time.zone.now.year)
+        def initialize(start_year: Time.zone.now.year.to_i)
           @start_year = start_year
           @schedules = []
         end
@@ -25,9 +25,9 @@ module NewSeeds
         end
 
         def build
-          @cohort ||= FactoryBot.create(:seed_cohort, start_year: @start_year)
+          @cohort = FactoryBot.create(:seed_cohort, start_year: @start_year)
 
-          add_standard_schedule(@cohort, @create_first_milestone) if @create_standard_schedule
+          add_standard_schedule(cohort, @create_first_milestone) if @create_standard_schedule
 
           self
         end
