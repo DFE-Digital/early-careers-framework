@@ -23,10 +23,12 @@ module NewSeeds
         ###
         # adds a user with an induction coordinator profile for the school
         ###
-        def with_an_induction_tutor(full_name: nil, email: nil)
+        def with_an_induction_tutor(full_name: nil, email: nil, accepted_privacy_policy: nil)
           @induction_tutor = FactoryBot.create(:seed_user, **{ full_name:, email: }.compact)
           induction_coordinator_profile = FactoryBot.create(:seed_induction_coordinator_profile, user: induction_tutor)
           FactoryBot.create(:seed_induction_coordinator_profiles_school, induction_coordinator_profile:, school:)
+
+          accepted_privacy_policy.accept! @induction_tutor if accepted_privacy_policy.present?
 
           self
         end

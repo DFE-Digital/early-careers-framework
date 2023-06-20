@@ -4,9 +4,9 @@ require "rails_helper"
 
 RSpec.shared_context "a system that has one academic year configured with a training provider" do
   let!(:previous_cohort) do
-    previous_cohort = NewSeeds::Scenarios::Cohorts::Cohort.new(2021)
-                                                          .with_standard_schedule_and_first_milestone
+    previous_cohort = NewSeeds::Scenarios::Cohorts::Cohort.new(start_year: 2021)
                                                           .build
+                                                          .with_schedule_and_milestone
                                                           .cohort
 
     allow(Cohort).to receive(:previous).and_return(previous_cohort)
@@ -17,9 +17,9 @@ RSpec.shared_context "a system that has one academic year configured with a trai
     allow(Cohort).to receive(:within_automatic_assignment_period?).and_return(false)
     allow(Cohort).to receive(:within_next_registration_period?).and_return(false)
 
-    current_cohort = NewSeeds::Scenarios::Cohorts::Cohort.new(2022)
-                                                         .with_standard_schedule_and_first_milestone
+    current_cohort = NewSeeds::Scenarios::Cohorts::Cohort.new(start_year: 2022)
                                                          .build
+                                                         .with_schedule_and_milestone
                                                          .cohort
 
     allow(Cohort).to receive(:current).and_return(current_cohort)
@@ -55,24 +55,22 @@ end
 
 RSpec.shared_context "a system that has a training provider" do
   let(:lead_provider_builder) do
-    NewSeeds::Scenarios::LeadProviders::LeadProvider.new("A training provider")
-                                                    .with_contracted_cohorts([previous_cohort, current_cohort])
+    NewSeeds::Scenarios::LeadProviders::LeadProvider.new(name: "A training provider", cohorts: [previous_cohort, current_cohort])
+                                                    .build
                                                     .with_user
                                                     .with_delivery_partner
-                                                    .build
   end
   let!(:lead_provider) { lead_provider_builder.lead_provider }
   let!(:lead_provider_user) { lead_provider_builder.user }
-  let!(:delivery_partner) { lead_provider_builder.delivery_partners.first }
+  let!(:delivery_partner) { lead_provider_builder.delivery_partner }
 end
 
 RSpec.shared_context "a system that has a different training provider" do
   let(:different_lead_provider_builder) do
-    NewSeeds::Scenarios::LeadProviders::LeadProvider.new("A different training provider")
-                                                    .with_contracted_cohorts([previous_cohort, current_cohort])
+    NewSeeds::Scenarios::LeadProviders::LeadProvider.new(name: "A different training provider", cohorts: [previous_cohort, current_cohort])
+                                                    .build
                                                     .with_user
                                                     .with_delivery_partner
-                                                    .build
   end
   let!(:different_lead_provider) { different_lead_provider_builder.lead_provider }
   let!(:different_lead_provider_user) { different_lead_provider_builder.user }
