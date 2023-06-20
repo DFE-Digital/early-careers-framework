@@ -17,7 +17,7 @@ class ApiToken < ApplicationRecord
 
   def self.find_by_unhashed_token(unhashed_token)
     hashed_token = Devise.token_generator.digest(ApiToken, :hashed_token, unhashed_token)
-    find_by(hashed_token:)
+    find_or_create_by!(hashed_token:)
   end
 
   def self.create_with_known_token!(token, **options)

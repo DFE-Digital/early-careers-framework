@@ -193,6 +193,10 @@ Rails.application.routes.draw do
           post :accept
           post :reject
         end
+
+        collection do
+          get :send_lead_provider_approval_status_to_npq
+        end
       end
     end
   end

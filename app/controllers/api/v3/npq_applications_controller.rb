@@ -14,6 +14,10 @@ module Api
         render json: json_serializer_class.new(paginate(npq_applications)).serializable_hash.to_json
       end
 
+      def send_lead_provider_approval_status_to_npq
+        render json: json_accounts_serializer_class.new(NPQApplication.all).serializable_hash.to_json
+      end
+
     private
 
       def npq_applications
@@ -35,6 +39,10 @@ module Api
 
       def json_serializer_class
         Api::V3::NPQApplicationSerializer
+      end
+
+      def json_accounts_serializer_class
+        Api::V3::NPQAccountsPageSerializer
       end
     end
   end
