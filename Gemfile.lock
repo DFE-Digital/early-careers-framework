@@ -47,6 +47,9 @@ GEM
     activerecord (6.1.7.3)
       activemodel (= 6.1.7.3)
       activesupport (= 6.1.7.3)
+    activerecord-explain-analyze (0.1.0)
+      activerecord (>= 4)
+      pg
     activerecord-session_store (2.0.0)
       actionpack (>= 5.2.4.1)
       activerecord (>= 5.2.4.1)
@@ -617,6 +620,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  activerecord-explain-analyze
   activerecord-session_store (~> 2.0)
   ar-uuid (~> 0.2.3)
   aws-sdk-s3

@@ -155,6 +155,8 @@ group :development do
   # autocompletion backend for development
   gem "solargraph"
 
+  gem "activerecord-explain-analyze"
+
   # Profiling
   gem "memory_profiler"
   gem "rack-mini-profiler"
