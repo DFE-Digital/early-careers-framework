@@ -35,25 +35,14 @@ module Api
       end
 
       def participant_declarations_from(paginated_join)
-        sub_query = ParticipantDeclaration
-          .select("participant_declarations.*", "COALESCE(jsonb_agg(DISTINCT participant_identities_mentor_profiles.user_id) FILTER (WHERE participant_identities_mentor_profiles.user_id IS NOT NULL), '[]') AS transient_mentor_user_id")
-          .joins("INNER JOIN (#{paginated_join.to_sql}) as tmp on tmp.id = participant_declarations.id")
-          .joins(left_outer_join_participant_profiles)
-          .joins(left_outer_join_induction_records)
-          .joins(left_outer_join_latest_induction_records)
-          .joins(left_outer_join_mentor_profiles)
-          .joins(left_outer_join_mentor_participant_identities)
-          .group("participant_declarations.id")
-
         scope = ParticipantDeclaration
-            .select("participant_declarations.*")
             .includes(
               :statement_line_items,
               :declaration_states,
               :participant_profile,
               :cpd_lead_provider,
             )
-            .from("(#{sub_query.to_sql}) as participant_declarations")
+            .joins("INNER JOIN (#{paginated_join.to_sql}) as tmp on tmp.id = participant_declarations.id")
             .order(:created_at)
             .distinct
 
@@ -67,50 +56,6 @@ module Api
     private
 
       delegate :lead_provider, to: :cpd_lead_provider
-
-      def latest_induction_record_order
-        <<~SQL
-          PARTITION BY induction_records.participant_profile_id ORDER BY
-            CASE
-              WHEN induction_records.end_date IS NULL
-                THEN 1
-              ELSE 2
-            END,
-            induction_records.start_date DESC,
-            induction_records.created_at DESC
-        SQL
-      end
-
-      def left_outer_join_latest_induction_records
-        join = InductionRecord
-         .select("DISTINCT FIRST_VALUE(induction_records.id) OVER (#{latest_induction_record_order}) AS latest_id")
-         .joins(:participant_profile, :schedule, { induction_programme: :partnership })
-         .where(
-           induction_programme: {
-             partnerships: {
-               lead_provider_id: lead_provider.id,
-             },
-           },
-         )
-
-        "LEFT OUTER JOIN (#{join.to_sql}) AS latest_induction_records ON latest_induction_records.latest_id = induction_records.id"
-      end
-
-      def left_outer_join_participant_profiles
-        "LEFT OUTER JOIN participant_profiles ON participant_profiles.id = participant_declarations.participant_profile_id"
-      end
-
-      def left_outer_join_induction_records
-        "LEFT OUTER JOIN induction_records ON participant_profiles.id = induction_records.participant_profile_id"
-      end
-
-      def left_outer_join_mentor_profiles
-        "LEFT OUTER JOIN participant_profiles mentor_profiles ON mentor_profiles.id = induction_records.mentor_profile_id AND latest_induction_records.latest_id = induction_records.id"
-      end
-
-      def left_outer_join_mentor_participant_identities
-        "LEFT OUTER JOIN participant_identities participant_identities_mentor_profiles ON participant_identities_mentor_profiles.id = mentor_profiles.participant_identity_id"
-      end
 
       def declarations_scope
         scope = with_joins(ParticipantDeclaration.for_lead_provider(cpd_lead_provider))
