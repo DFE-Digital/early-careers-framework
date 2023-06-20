@@ -36,8 +36,8 @@ private
   end
 
   def set_sent_to_qualified_teachers_api_at
-    participant_outcome.update_column(
-      :sent_to_qualified_teachers_api_at, Time.zone.now
+    participant_outcome.update(
+      sent_to_qualified_teachers_api_at: Time.zone.now,
     )
   end
 
@@ -56,8 +56,8 @@ private
   end
 
   def set_qualified_teachers_api_request_successful
-    participant_outcome.update_column(
-      :qualified_teachers_api_request_successful, SUCCESS_CODES.include?(api_response.response.code)
+    participant_outcome.update(
+      qualified_teachers_api_request_successful: SUCCESS_CODES.include?(api_response.response.code),
     )
   end
 
