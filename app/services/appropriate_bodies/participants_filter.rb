@@ -70,9 +70,10 @@ module AppropriateBodies
       ids = []
       scoped.each do |induction_record|
         participant_profile = induction_record.participant_profile
+        appropriate_body = induction_record.appropriate_body
         next unless participant_profile
 
-        status_tag = StatusTags::AppropriateBodyParticipantStatusTag.new(participant_profile:)
+        status_tag = StatusTags::AppropriateBodyParticipantStatusTag.new(participant_profile:, appropriate_body:)
         if status_tag.id == status
           ids << induction_record.id
         end

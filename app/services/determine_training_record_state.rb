@@ -170,9 +170,11 @@ class DetermineTrainingRecordState < BaseService
   end
 
   def call
-    result = ActiveRecord::Base.connection.execute(query)
+    result = ActiveRecord::Base.connection.execute(query).first
 
-    Record.new(**result.first)
+    return Record.new(**result) if result.present?
+
+    Record.new
   end
 
   def all
@@ -189,7 +191,7 @@ class DetermineTrainingRecordState < BaseService
 
 private
 
-  def initialize(participant_profile:, induction_record: nil, delivery_partner: nil, appropriate_body: nil, school: nil)
+  def initialize(participant_profile:, delivery_partner: nil, appropriate_body: nil, school: nil)
     unless participant_profile.is_a? ParticipantProfile
       raise ArgumentError, "Expected a ParticipantProfile, got #{participant_profile.class}"
     end
@@ -197,10 +199,6 @@ private
     @participant_profile_id = participant_profile.id
 
     if participant_profile.ecf?
-      unless induction_record.nil? || induction_record.is_a?(InductionRecord)
-        raise ArgumentError, "Expected an InductionRecord, got #{induction_record.class}"
-      end
-
       unless delivery_partner.nil? || delivery_partner.is_a?(DeliveryPartner)
         raise ArgumentError, "Expected a DeliveryPartner, got #{delivery_partner.class}"
       end
@@ -214,7 +212,6 @@ private
       end
     end
 
-    @induction_record_id = induction_record&.id
     @delivery_partner_id = delivery_partner&.id
     @appropriate_body_id = appropriate_body&.id
     @school_id = school&.id
@@ -507,7 +504,6 @@ private
   def individual_training_record_state_conditions
     conditions = [ParticipantProfile.arel_table[:id].eq(participant_profile_id)].tap do |c|
       c << SchoolCohort.arel_table[:school_id].eq(school_id) if school_id.present?
-      c << InductionRecord.arel_table[:id].eq(induction_record_id) if induction_record_id.present?
       c << SchoolCohort.arel_table[:appropriate_body_id].eq(appropriate_body_id) if appropriate_body_id.present?
       c << Partnership.arel_table[:delivery_partner_id].eq(delivery_partner_id) if delivery_partner_id.present?
     end

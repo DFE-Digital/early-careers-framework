@@ -45,7 +45,7 @@ module AppropriateBodies
     attribute :training_status, &:training_status
 
     attribute :status do |induction_record|
-      StatusTags::AppropriateBodyParticipantStatusTag.new(participant_profile: induction_record.participant_profile, induction_record:).label
+      StatusTags::AppropriateBodyParticipantStatusTag.new(participant_profile: induction_record.participant_profile, appropriate_body: induction_record.appropriate_body).label
     end
   end
 end

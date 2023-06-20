@@ -2,9 +2,9 @@
 
 module StatusTags
   class AppropriateBodyParticipantStatusTag < BaseComponent
-    def initialize(participant_profile:, induction_record: nil, appropriate_body: nil)
+    def initialize(participant_profile:, appropriate_body: nil, display_description: true)
       @participant_profile = participant_profile
-      @induction_record = induction_record
+      @display_description = display_description
       @appropriate_body = appropriate_body
     end
 
@@ -28,14 +28,14 @@ module StatusTags
 
   private
 
-    attr_reader :participant_profile, :induction_record, :appropriate_body
+    attr_reader :participant_profile, :appropriate_body, :display_description
 
     def translation_scope
       @translation_scope ||= "status_tags.appropriate_body_participant_status.#{record_state}"
     end
 
     def record_state
-      @record_state ||= DetermineTrainingRecordState.call(participant_profile:, induction_record:, appropriate_body:)&.record_state || :no_longer_involved
+      @record_state ||= DetermineTrainingRecordState.call(participant_profile:, appropriate_body:)&.record_state || :no_longer_involved
     end
   end
 end

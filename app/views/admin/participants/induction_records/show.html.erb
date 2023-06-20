@@ -37,7 +37,7 @@
 
         sl.row do |row|
           row.key(text: "School record state")
-          row.value(text: render(StatusTags::SchoolParticipantStatusTag.new(participant_profile: induction_record.participant_profile, induction_record: induction_record)))
+          row.value(text: render(StatusTags::SchoolParticipantStatusTag.new(participant_profile: induction_record.participant_profile, school: induction_record.school)))
         end
 
         sl.row do |row|
@@ -69,7 +69,7 @@
         if induction_record.delivery_partner.present?
           sl.row do |row|
             row.key(text: "Delivery partner record state")
-            row.value(text: render(StatusTags::DeliveryPartnerParticipantStatusTag.new(participant_profile: induction_record.participant_profile, induction_record: induction_record)))
+            row.value(text: render(StatusTags::DeliveryPartnerParticipantStatusTag.new(participant_profile: induction_record.participant_profile, delivery_partner: induction_record.delivery_partner)))
           end
         end
 
@@ -106,7 +106,7 @@
         if induction_record.appropriate_body.present?
           sl.row do |row|
             row.key(text: "Appropriate body record state")
-            row.value(text: render(StatusTags::AppropriateBodyParticipantStatusTag.new(participant_profile: induction_record.participant_profile, induction_record: induction_record)))
+            row.value(text: render(StatusTags::AppropriateBodyParticipantStatusTag.new(participant_profile: induction_record.participant_profile, appropriate_body: induction_record.appropriate_body)))
           end
         end
 

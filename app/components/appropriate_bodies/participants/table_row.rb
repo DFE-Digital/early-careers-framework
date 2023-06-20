@@ -24,8 +24,9 @@ module AppropriateBodies
                to: :induction_record,
                allow_nil: true
 
-      def initialize(induction_record:)
+      def initialize(induction_record:, appropriate_body:)
         @induction_record = induction_record
+        @appropriate_body = appropriate_body
       end
 
       def email

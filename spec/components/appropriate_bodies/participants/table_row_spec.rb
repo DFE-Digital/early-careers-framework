@@ -2,9 +2,10 @@
 
 RSpec.describe AppropriateBodies::Participants::TableRow, type: :component do
   let(:school_cohort) { create(:school_cohort) }
-  let!(:induction_record) { create :induction_record, participant_profile: }
+  let(:appropriate_body) { create :appropriate_body_teaching_school_hub }
+  let!(:induction_record) { create :induction_record, participant_profile:, appropriate_body: }
 
-  let(:component) { described_class.new induction_record: }
+  let(:component) { described_class.new induction_record:, appropriate_body: }
 
   subject { render_inline(component) }
 
