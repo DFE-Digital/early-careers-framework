@@ -12,10 +12,10 @@ module Api
       end
 
       def scope
-        scope = ActiveRecordUnion.new(
+        scope = ParticipantDeclaration.union(
           declarations_scope,
           previous_declarations_scope,
-        ).call
+        )
 
         scope = scope.where("user_id = ?", participant_id) if participant_id.present?
         scope = scope.where("updated_at > ?", updated_since) if updated_since.present?

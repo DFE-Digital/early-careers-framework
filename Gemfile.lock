@@ -39,6 +39,9 @@ GEM
       erubi (~> 1.4)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.1, >= 1.2.0)
+    active_record_extended (3.2.1)
+      activerecord (>= 5.2, < 7.2.0)
+      pg (< 3.0)
     activejob (6.1.7.3)
       activesupport (= 6.1.7.3)
       globalid (>= 0.3.6)
@@ -620,6 +623,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  active_record_extended
   activerecord-explain-analyze
   activerecord-session_store (~> 2.0)
   ar-uuid (~> 0.2.3)
