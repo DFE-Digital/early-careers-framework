@@ -15,21 +15,21 @@ module Admin
             ]
           end
 
-          # first step
           def expected?
             wizard.programme_can_be_changed?
           end
 
           def next_step
-            if mistake? && !wizard.programme_can_be_changed?
-              # if there are declarations then we cannot proceed with the journey
-              :cannot_change_programme
+            if wizard.create_new_partnership?
+              :choose_lead_provider
+            else
+              :confirm_selected_partnership
             end
           end
 
           def options
             list = [
-              OpenStruct.new(id: :new, name: "<strong>Create new relationship</strong>".html_safe),
+              OpenStruct.new(id: "create_new", name: "<strong>Create new relationship</strong>".html_safe),
             ]
             available = wizard.school_partnerships - [wizard.current_partnership, wizard.school_default_partnership]
             list << available.map do |partnership|
@@ -42,12 +42,7 @@ module Admin
 
           def selected_partnership_is_permitted
             errors.add(:selected_partnership, :blank) and return if selected_partnership.blank?
-
             errors.add(:selected_partnership, :inclusion) unless options.map(&:id).include? selected_partnership
-          end
-
-          def mistake?
-            reason_for_change == "wrong_programme"
           end
 
           def partnership_label(partnership)

@@ -5,6 +5,8 @@ module Admin
     module ChangeRelationship
       class ChangeRelationshipWizard < Wizard::Form
         delegate :reason_for_change_mistake?, :reason_for_change_circumstances?,
+                  :create_new_partnership?, :selected_partnership_id,
+                  :lead_provider_id, :delivery_partner_id,
                  to: :data_store
 
         def self.permitted_params_for(step)
@@ -30,6 +32,10 @@ module Admin
           @induction_record ||= Induction::FindBy.call(participant_profile:)
         end
 
+        def cohort
+          @cohort ||= induction_record.cohort
+        end
+
         def current_partnership
           induction_record.induction_programme.partnership
         end
@@ -40,6 +46,47 @@ module Admin
 
         def school_partnerships
           induction_record.school.active_partnerships.in_year(induction_record.cohort.start_year).order(relationship: :asc)
+        end
+
+        def default_partnership_selected?
+          selected_partnership.id == school_default_partnership&.id
+        end
+        
+        def selected_partnership
+          @selected_partnership ||= Partnership.find(selected_partnership_id)
+        end
+
+        def selected_lead_provider
+          @selected_lead_provider ||= if create_new_partnership?
+                                        LeadProvider.find(lead_provider_id)
+                                      else
+                                        selected_partnership.lead_provider
+                                      end
+        end
+
+        def selected_delivery_partner
+          @selected_delivery_partner ||= if create_new_partnership?
+                                           DeliveryPartner.find(delivery_partner_id)
+                                         else
+                                           selected_partnership.delivery_partner
+                                         end
+        end
+
+
+        def selected_lead_provider_name
+          selected_lead_provider&.name
+        end
+
+        def selected_delivery_partner_name
+          selected_delivery_partner&.name
+        end
+
+        def available_providers_for_participant_cohort
+          LeadProvider.joins(:provider_relationships).where(provider_relationships: { cohort: }).distinct
+        end
+
+        def available_delivery_partners_for_provider
+          DeliveryPartner.where(id: ProviderRelationship.where(lead_provider_id: lead_provider_id, cohort:).select(:delivery_partner_id))
         end
 
         def abort_path
@@ -59,8 +106,11 @@ module Admin
         end
 
         def programme_can_be_changed?
-          # determine whether the programme can be changed for the participant in this journey
+          # TODO: logic to determine whether the programme can be changed for the participant in this journey
           true
+        end
+
+        def create_a_new_programme?
         end
 
         def show_path_for(step:)

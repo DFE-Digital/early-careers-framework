@@ -451,6 +451,14 @@ en:
             selected_partnership:
               blank: "Choose a programme"
               inclusion: "Choose a programme"
+        admin/participants/change_relationship/wizard_steps/choose_lead_provider_step:
+          attributes:
+            lead_provider_id:
+              blank: "Choose a lead provider"
+        admin/participants/change_relationship/wizard_steps/choose_delivery_partner_step:
+          attributes:
+            delivery_partner_id:
+              blank: "Choose a delivery partner"
         finance/ecf/change_training_status_form:
           attributes:
             training_status:
