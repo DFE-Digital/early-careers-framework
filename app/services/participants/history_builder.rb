@@ -167,13 +167,13 @@ private
 
   def record_created_event(entity)
     entity.attributes&.each do |key, value|
-      record_event(entity.updated_at, "created", entity, key, value, nil)
+      record_event(entity.updated_at, "create", entity, key, value, nil)
     end
   end
 
   def record_paper_trail_events(entity)
     entity.versions&.each do |version|
-      # TODO: if the version is of type "created" then we need to record the default values that were not overridden
+      # TODO: if the version is of type "create" then we need to record the default values that were not overridden
 
       user = User.find_by(id: version.whodunnit) || version.whodunnit
 

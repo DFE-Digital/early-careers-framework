@@ -5,9 +5,7 @@
 module Admin
   module Participants
     class AuditTrailComponent < ViewComponent::Base
-      def initialize(audited_thing:)
-        @audited_thing = audited_thing
-      end
+      renders_many :audit_table_rows, "Admin::Participants::AuditTrailItemComponent"
 
       Changes = Struct.new(
         :id,
@@ -20,33 +18,29 @@ module Admin
         keyword_init: true,
       )
 
-      def audits
-        audits = audited_thing.group_by do |event|
-          {
-            id: event.id,
-            action: event.action,
-            date: event.date,
-            type: event.type,
-            user: event.user,
-          }
-        end
-
-        audits.map do |event, changes|
-          audited_changes = changes.map { |change| { attribute: change.predicate, values: change.value } }
-
-          Changes.new(
-            id: event[:id],
-            action: event[:action],
-            created_at: event[:date],
-            type: event[:type],
-            user: event[:user],
-            user_type: nil,
-            audited_changes:,
-          )
-        end
+      def initialize(audited_thing:)
+        audits(audited_thing).each { |audit| with_audit_table_row(audit:) }
       end
 
-      attr_reader :audited_thing
+    private
+
+      def audits(audited_thing)
+        audited_thing
+          .group_by { |event| { id: event.id, action: event.action, date: event.date, type: event.type, user: event.user } }
+          .map do |event, changes|
+            audited_changes = changes.map { |change| { attribute: change.predicate, values: change.value } }
+
+            Changes.new(
+              id: event[:id],
+              action: event[:action],
+              created_at: event[:date],
+              type: event[:type],
+              user: event[:user],
+              user_type: nil,
+              audited_changes:,
+            )
+          end
+      end
     end
   end
 end
