@@ -13,7 +13,7 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
   let(:Authorization) { bearer_token }
   let!(:provider_relationship) { create(:provider_relationship, lead_provider:, delivery_partner:, cohort:) }
 
-  context "with API V3 feature flag enabled", with_feature_flags: { api_v3: "active" } do
+  context "with API V3 feature flag enabled" do
     path "/api/v3/partnerships/ecf" do
       get "<b>Note, this endpoint is new.</b><br/>Retrieve multiple ECF partnerships" do
         operationId :partnerships_ecf_get

@@ -107,8 +107,6 @@ RSpec.configure do |config|
   config.extend WithModel
 
   config.bisect_runner = :shell
-
-  config.filter_run_excluding api_v3: true
 end
 
 RSpec::Matchers.define_negated_matcher :not_change, :change

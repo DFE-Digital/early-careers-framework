@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "API ECF Participants", :with_default_schedules, type: :request, with_feature_flags: { api_v3: "active" } do
+RSpec.describe "API ECF Participants", :with_default_schedules, type: :request do
   let(:cohort_2021) { Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021) }
   let(:cpd_lead_provider) { create(:cpd_lead_provider, lead_provider:) }
   let(:lead_provider)     { create(:lead_provider) }

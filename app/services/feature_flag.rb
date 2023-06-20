@@ -17,7 +17,6 @@ class FeatureFlag
   # Short-lived feature flags
   TEMPORARY_FEATURE_FLAGS = %i[
     eligibility_notifications
-    api_v3
     appropriate_bodies
     prevent_2023_ect_registrations
     cohortless_dashboard
