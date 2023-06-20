@@ -138,7 +138,7 @@ GEM
     crack (0.4.5)
       rexml
     crass (1.0.6)
-    cssbundling-rails (1.1.2)
+    cssbundling-rails (1.2.0)
       railties (>= 6.0.0)
     cypress-on-rails (1.14.0)
       rack
@@ -626,7 +626,7 @@ DEPENDENCIES
   canonical-rails (~> 0.2.14)
   capybara (~> 3.39)
   countries (~> 5.5)
-  cssbundling-rails (~> 1.1)
+  cssbundling-rails (~> 1.2)
   cypress-on-rails (~> 1.14)
   database_cleaner-active_record
   devise (>= 4.8.0)
