@@ -46,9 +46,10 @@ module Api
             .order(:created_at)
             .distinct
 
-        preloader = ActiveRecord::Associations::Preloader.new
-        preloader.preload(scope.select { |p| p.type == "ParticipantDeclaration::NPQ" }, :outcomes)
-        preloader.preload(scope.select { |p| p.type == "ParticipantDeclaration::NPQ" }, participant_profile: :npq_application)
+        ActiveRecord::Associations::Preloader.new(
+          records: scope.select { |p| p.type == "ParticipantDeclaration::NPQ" },
+          associations: [:outcomes, { participant_profile: :npq_application }],
+        )
 
         scope
       end
