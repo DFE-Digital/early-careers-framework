@@ -21,23 +21,23 @@ module Admin
       def audit_entry_user_label
         user = audit.user
 
-        return "(Unknown User)" if user.nil?
-        return user if user.is_a?(String)
+        return "(Unknown user)" if user.nil?
+        return "#{user} (Unknown user)" if user.is_a?(String)
 
         if user.induction_coordinator?
           "#{user.email} (SIT user)"
-        elsif audit.admin?
-          "#{user.email} (Support user)"
-        elsif audit.finance?
+        elsif user.delivery_partner?
+          "#{user.email} (Delivery Partner user)"
+        elsif user.appropriate_body?
+          "#{user.email} (Appropriate Body user)"
+        elsif user.lead_provider?
+          "#{user.supplier_name} (Lead Provider user)"
+        elsif user.finance?
           "#{user.email} (Finance user)"
-        elsif audit.delivery_partner?
-          "#{user.email} (DP user)"
-        elsif audit.appropriate_body?
-          "#{user.email} (AB user)"
-        elsif audit.lead_provider?
-          "#{user.supplier_name} (LP user)"
+        elsif user.admin?
+          "#{user.email} (Support user)"
         else
-          audit.user.email
+          user.email
         end
       end
 
