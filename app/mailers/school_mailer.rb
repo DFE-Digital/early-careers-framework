@@ -34,8 +34,8 @@ class SchoolMailer < ApplicationMailer
   PARTICIPANT_WITHDRAWN_BY_PROVIDER = "29f94916-8c3a-4c5a-9e33-bdf3f5d7249a"
   REMIND_TO_SETUP_MENTOR_TO_ECTS = "604ca80f-b152-4682-9295-9cf1d30f74c1"
   REMIND_GIAS_CONTACT_TO_UPDATE_INDUCTION_TUTOR_DETAILS_TEMPLATE = "88cdad72-386c-40fb-be2e-11d4ae9dcdee"
-  PILOT_ASK_SIT_TO_REPORT_SCHOOL_TRAINING_DETAILS_TEMPLATE = "87d4720b-9e3a-46d9-95de-493295dba1dc"
-  PILOT_ASK_GIAS_CONTACT_TO_REPORT_SCHOOL_TRAINING_DETAILS_TEMPLATE = "ae925ff1-edc3-4d5c-a120-baa3a79c73af"
+  PILOT_CHASE_SIT_TO_REPORT_SCHOOL_TRAINING_DETAILS_TEMPLATE = "87d4720b-9e3a-46d9-95de-493295dba1dc"
+  PILOT_CHASE_GIAS_CONTACT_TO_REPORT_SCHOOL_TRAINING_DETAILS_TEMPLATE = "ae925ff1-edc3-4d5c-a120-baa3a79c73af"
   LAUNCH_ASK_SIT_TO_REPORT_SCHOOL_TRAINING_DETAILS_TEMPLATE = "1f796f27-9ba4-4705-a7c9-57462bd1e0b7"
   LAUNCH_ASK_GIAS_CONTACT_TO_REPORT_SCHOOL_TRAINING_DETAILS_TEMPLATE = "f4dfee2a-2cc3-4d32-97f9-8adca41343bf"
   COHORTLESS_PILOT_2023_SURVEY_TEMPLATE = "5f6dc6bf-62c5-4cf1-8cc8-1440453f4a2d"
@@ -587,36 +587,37 @@ class SchoolMailer < ApplicationMailer
 
   # Pilot one-off mailers
 
-  def pilot_ask_sit_to_report_school_training_details
+  def pilot_chase_sit_to_report_school_training_details
     sit_user = params[:sit_user]
     nomination_link = params[:nomination_link]
 
     template_mail(
-      PILOT_ASK_SIT_TO_REPORT_SCHOOL_TRAINING_DETAILS_TEMPLATE,
+      PILOT_CHASE_SIT_TO_REPORT_SCHOOL_TRAINING_DETAILS_TEMPLATE,
       to: sit_user.email,
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
         name: sit_user.full_name,
         nomination_link:,
+        email_address: sit_user.email,
       },
-    ).tag(:pilot_ask_sit_to_report_school_training_details).associate_with(sit_user)
+    ).tag(:pilot_chase_sit_to_report_school_training_details).associate_with(sit_user)
   end
 
-  def pilot_ask_gias_contact_to_report_school_training_details
+  def pilot_chase_gias_contact_to_report_school_training_details
     school = params[:school]
     gias_contact_email = params[:gias_contact_email]
     nomination_link = params[:nomination_link]
 
     template_mail(
-      PILOT_ASK_GIAS_CONTACT_TO_REPORT_SCHOOL_TRAINING_DETAILS_TEMPLATE,
+      PILOT_CHASE_GIAS_CONTACT_TO_REPORT_SCHOOL_TRAINING_DETAILS_TEMPLATE,
       to: gias_contact_email,
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
         nomination_link:,
       },
-    ).tag(:pilot_ask_gias_contact_to_report_school_training_details).associate_with(school)
+    ).tag(:pilot_chase_gias_contact_to_report_school_training_details).associate_with(school)
   end
 
   def launch_ask_sit_to_report_school_training_details
