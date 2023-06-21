@@ -2,7 +2,7 @@
 
 require "swagger_helper"
 
-RSpec.describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_spec.json", with_feature_flags: { api_v3: "active" } do
+RSpec.describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_spec.json" do
   let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
   let(:lead_provider) { cpd_lead_provider.lead_provider }
   let(:cohort) { Cohort.current || create(:cohort, :current) }

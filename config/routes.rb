@@ -164,7 +164,7 @@ Rails.application.routes.draw do
       end
     end
 
-    namespace :v3, constraints: ->(_request) { FeatureFlag.active?(:api_v3) } do
+    namespace :v3 do
       resources :statements, only: %i[index show], controller: "finance/statements"
       resources :delivery_partners, only: %i[index show], path: "delivery-partners"
       resources :partnerships, path: "partnerships/ecf", only: %i[show index create update], controller: "ecf/partnerships"
