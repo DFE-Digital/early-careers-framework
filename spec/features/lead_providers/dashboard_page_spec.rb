@@ -31,7 +31,8 @@ RSpec.feature "Lead Provider Dashboard", type: :feature, js: true, rutabaga: fal
   end
 
   scenario "Confirming schools" do
-    travel_to Date.new(2021, 9, 1)
+    travel_to cohort.registration_start_date + 1.day
+
     given_i_sign_in_as_the_user_with_the_email email_address
     and_i_am_on_the_lead_provider_dashboard
     and_i_do_not_see_next_cohort_schools_confirmation
