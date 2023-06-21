@@ -4,7 +4,7 @@ require "csv"
 
 namespace :comms do
   desc "Chase pilot schools"
-  task :send_pilot_chaser, [:from_date, :to_date] => :environment do |_task, args|
+  task :send_pilot_chaser, %i[from_date to_date] => :environment do |_task, args|
     logger = Logger.new($stdout)
 
     from_date = Time.zone.parse(args.from_date).beginning_of_day
