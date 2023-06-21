@@ -4,7 +4,7 @@ require "tempfile"
 
 RSpec.describe Importers::CreateNewECFCohort do
   describe "#call" do
-    let(:start_year) { Cohort.ordered_by_start_year.last.start_year + 65 }
+    let(:start_year) { Cohort.ordered_by_start_year.last.start_year + 1 }
 
     let(:cohort_csv) do
       csv = Tempfile.new("cohort_csv_data.csv")
@@ -73,7 +73,7 @@ RSpec.describe Importers::CreateNewECFCohort do
 
     context "create new ECF cohort" do
       it "creates cohort" do
-        expect { subject.call }.to change Cohort, :count
+        expect { subject.call }.to change { Cohort.count }.by(1)
       end
 
       it "adds lead provider to cohort" do
@@ -91,14 +91,12 @@ RSpec.describe Importers::CreateNewECFCohort do
       end
 
       it "creates schedule" do
-        expect { subject.call }.to change Finance::Schedule::ECF, :count
+        expect { subject.call }.to change { Finance::Schedule::ECF.count }.by(1)
         expect(Finance::Schedule::ECF.order(created_at: :asc).last.name).to eql("ECF Standard September")
       end
 
       it "creates statement" do
-        expect(Finance::Statement::ECF.count).to eql(0)
-        subject.call
-        expect(Finance::Statement::ECF.count).to eql(1)
+        expect { subject.call }.to change { Finance::Statement::ECF.count }.by(1)
         expect(Finance::Statement::ECF.first.name).to eql("September #{start_year}")
       end
     end
