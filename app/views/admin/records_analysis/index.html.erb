@@ -6,14 +6,14 @@
   <div class="govuk-grid-column-one-quarter">
     <div class="app-card app-card--blue">
       <span class="app-card__secondary-count"><%= @bad_timeline_counts %></span>
-      <%= govuk_link_to 'badly formed timelines', admin_records_analysis_path("bad_timelines"), { inverse: true } %>
+      <%= govuk_link_to 'badly formed timelines', admin_records_analysis_path("bad-timelines"), { inverse: true } %>
     </div>
   </div>
 
   <div class="govuk-grid-column-one-quarter">
     <div class="app-card app-card--blue">
       <span class="app-card__secondary-count"><%= @invalid_payment_counts %></span>
-      <%= govuk_link_to 'possible incorrect payments', admin_records_analysis_path("invalid_payments"), { inverse: true } %>
+      <%= govuk_link_to 'possible incorrect payments', admin_records_analysis_path("invalid-payments"), { inverse: true } %>
     </div>
   </div>
 </div>
