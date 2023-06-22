@@ -45,7 +45,7 @@ set-azure-resource-group-tags: ##Tags that will be added to resource group on it
 	$(eval RG_TAGS=$(shell echo '{"Portfolio": "Teacher Continuing Professional Development", "Parent Business":"Teacher Training and Qualifications", "Product" : "Early Careers Framework", "Service Line": "Teaching Workforce", "Service": "Teacher services", "Service Offering": "Manage training for early career teachers", "Environment" : "$(ENV_TAG)"}' | jq . ))
 
 set-azure-template-tag:
-	$(eval ARM_TEMPLATE_TAG=1.1.0)
+	$(eval ARM_TEMPLATE_TAG=1.1.6)
 
 set-production-subscription:
 	$(eval AZURE_SUBSCRIPTION=s189-teacher-services-cloud-production)
