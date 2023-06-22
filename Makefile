@@ -5,7 +5,6 @@ endif
 aks:  ## Sets environment variables for aks deployment
 	$(eval PLATFORM=aks)
 	$(eval REGION=UK South)
-	$(eval STORAGE_ACCOUNT_SUFFIX=sa)
 	$(eval KEY_VAULT_SECRET_NAME=APPLICATION)
 	$(eval KEY_VAULT_PURGE_PROTECTION=false)
 
