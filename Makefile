@@ -2,6 +2,8 @@ ifndef VERBOSE
 .SILENT:
 endif
 
+SERVICE_SHORT=cpdecf
+
 aks:  ## Sets environment variables for aks deployment
 	$(eval PLATFORM=aks)
 	$(eval REGION=UK South)
