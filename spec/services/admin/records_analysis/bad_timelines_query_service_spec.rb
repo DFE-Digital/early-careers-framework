@@ -21,5 +21,17 @@ RSpec.describe Admin::RecordsAnalysis::BadTimelinesQueryService, :with_default_s
         expect(subject).not_to include record_with_post_start_date_changes
       end
     end
+
+    context "and changes are made to another record after the participant has left their school" do
+      let!(:record_with_pre_end_date_changes) { scenarios.ect_on_fip_withdrawn_after_leaving.participant_profile }
+
+      it "includes records with invalid timelines" do
+        expect(subject).to include record_with_pre_end_date_changes
+      end
+
+      it "does not include records with valid timelines" do
+        expect(subject).not_to include record_with_post_start_date_changes
+      end
+    end
   end
 end

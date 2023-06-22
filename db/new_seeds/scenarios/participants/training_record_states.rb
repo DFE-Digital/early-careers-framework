@@ -492,6 +492,59 @@ module NewSeeds
           end
         end
 
+        def ect_on_fip_withdrawn_after_leaving
+          return @ect_on_fip_withdrawn_after_leaving if @ect_on_fip_withdrawn_after_leaving.present?
+
+          school_cohort = fip_school.school_cohort
+
+          reported_date = Date.new(2022, 7, 10)
+          induction_start_date = Date.new(2022, 7, 1)
+          leaving_date = Date.new(2022, 12, 22)
+
+          @ect_on_fip_withdrawn_after_leaving = travel_to(reported_date) do
+            NewSeeds::Scenarios::Participants::Ects::Ect
+              .new(school_cohort:, full_name: "ECT on FIP: withdrawn after leaving")
+              .build
+              .with_validation_data
+              .with_eligibility
+              .with_induction_record(
+                induction_programme: school_cohort.default_induction_programme,
+                training_status: "active",
+                induction_status: "changed",
+                start_date: induction_start_date,
+                end_date: leaving_date,
+              )
+          end
+
+          withdrawn_reported_date = Date.new(2023, 2, 28)
+
+          travel_to(leaving_date) do
+            @ect_on_fip_withdrawn_after_leaving
+              .with_induction_record(
+                induction_programme: school_cohort.default_induction_programme,
+                training_status: "active",
+                induction_status: "changed",
+                start_date: leaving_date,
+                end_date: withdrawn_reported_date,
+                school_transfer: true,
+              )
+          end
+
+          actual_withdrawn_date = Date.new(2023, 2, 20)
+
+          travel_to(withdrawn_reported_date) do
+            @ect_on_fip_withdrawn_after_leaving
+              .with_induction_record(
+                induction_programme: school_cohort.default_induction_programme,
+                training_status: "withdrawn",
+                induction_status: "leaving",
+                start_date: withdrawn_reported_date,
+                end_date: actual_withdrawn_date,
+                school_transfer: false,
+              )
+          end
+        end
+
         def ect_on_fip_joining
           school_cohort = cip_school.school_cohort
           school_cohort_2 = fip_school.school_cohort
