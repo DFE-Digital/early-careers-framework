@@ -2,9 +2,11 @@
   <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-heading-xl">Manage training for early career teachers</h1>
 
-    <p>Use this service to set up ECF-based training for your early career teachers (ECTs) or tell us about a change at your school.</p>
+    <p class="govuk-body">Use this service to set up ECF-based training for your early career teachers (ECTs) or tell us about a change at your school.</p>
 
-    <p>You need to tell us:</p>
+    <h2 class="govuk-heading-m">Set up and manage your training</h2>
+
+    <p class="govuk-body">Tell us:</p>
 
     <ul class="govuk-list govuk-list--bullet">
       <li>how you want to run your training</li>
@@ -12,11 +14,13 @@
       <li>which ECTs and mentors will take part</li>
     </ul>
 
-    <p>Your school must complete these steps before your ECTs can start their statutory induction programme.</p>
+    <p class="govuk-body">Your school must complete these steps before your ECTs can start their statutory induction programme.</p>
 
-    <p>Tell us about any changes, for example, nominating a new Induction tutor.</p>
+    <h2 class="govuk-heading-m">Tell us about changes at your school</h2>
 
-    <div class="govuk-button-group">
+    <p class="govuk-body">Tell us about any changes, for example, nominating a new Induction tutor.</p>
+
+    <div class="govuk-button-group govuk-!-margin-top-7">
       <%= govuk_button_link_to "Sign in", new_user_session_path %>
       <span class="govuk-!-margin-right-2">or</span>
       <%= govuk_link_to "request access to the service", resend_email_request_nomination_invite_path, class: " govuk-link--no-visited-state" %>
