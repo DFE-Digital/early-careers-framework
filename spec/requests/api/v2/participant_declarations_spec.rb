@@ -211,7 +211,7 @@ RSpec.describe "participant-declarations endpoint spec", :with_default_schedules
         post "/api/v2/participant-declarations", params: build_params(valid_params.merge(evidence_held: "test"))
 
         expect(response.status).to eq 200
-        expect(ParticipantDeclaration.order(created_at: :desc).first.evidence_held).to be_nil
+        expect(ParticipantDeclaration.order(created_at: :desc).first.evidence_held).to eq("test")
       end
 
       it "returns 422 when supplied an incorrect course type" do
