@@ -124,6 +124,11 @@ Rails.application.routes.draw do
         resources :users, only: %i[show create update]
         resource :previous_funding, only: [:show]
       end
+      resources :npq_synchronisation, only: [] do
+        collection do
+          get :send_lead_provider_approval_status_to_npq
+        end
+      end
     end
 
     namespace :v2 do
@@ -192,10 +197,6 @@ Rails.application.routes.draw do
         member do
           post :accept
           post :reject
-        end
-
-        collection do
-          get :send_lead_provider_approval_status_to_npq
         end
       end
     end
