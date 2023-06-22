@@ -38,8 +38,8 @@ load-domain-config:
 	$(eval include global_config/cpd_ecf_domain.sh)
 
 set-azure-account:
-	echo "Logging on to ${AZ_SUBSCRIPTION}"
-	az account set -s $(AZ_SUBSCRIPTION)
+	echo "Logging on to ${AZURE_SUBSCRIPTION}"
+	az account set -s $(AZURE_SUBSCRIPTION)
 
 set-azure-resource-group-tags: ##Tags that will be added to resource group on its creation in ARM template
 	$(eval RG_TAGS=$(shell echo '{"Portfolio": "Teacher Continuing Professional Development", "Parent Business":"Teacher Training and Qualifications", "Product" : "Early Careers Framework", "Service Line": "Teaching Workforce", "Service": "Teacher services", "Service Offering": "Manage training for early career teachers", "Environment" : "$(ENV_TAG)"}' | jq . ))
@@ -48,18 +48,24 @@ set-azure-template-tag:
 	$(eval ARM_TEMPLATE_TAG=1.1.0)
 
 set-production-subscription:
-	$(eval AZ_SUBSCRIPTION=s189-teacher-services-cloud-production)
+	$(eval AZURE_SUBSCRIPTION=s189-teacher-services-cloud-production)
 
 set-what-if:
 	$(eval WHAT_IF=--what-if)
+
+.PHONY: deploy-azure-resources
+deploy-azure-resources: check-auto-approve arm-deployment # make dev deploy-azure-resources AUTO_APPROVE=1
+
+.PHONY: validate-azure-resources
+validate-azure-resources: set-what-if arm-deployment # make dev validate-azure-resources
 
 check-auto-approve:
 	$(if $(AUTO_APPROVE), , $(error can only run with AUTO_APPROVE))
 
 domain-azure-resources: load-domain-config set-azure-account set-azure-template-tag set-azure-resource-group-tags
 	az deployment sub create -l "UK South" --template-uri "https://raw.githubusercontent.com/DFE-Digital/tra-shared-services/${ARM_TEMPLATE_TAG}/azure/resourcedeploy.json" \
-		--name "${DNS_ZONE}domains-$(shell date +%Y%m%d%H%M%S)" --parameters "resourceGroupName=${RESOURCE_PREFIX}-${DNS_ZONE}domains-rg" 'tags=${RG_TAGS}' \
-			"tfStorageAccountName=${RESOURCE_PREFIX}${DNS_ZONE}domainstf" "tfStorageContainerName=${DNS_ZONE}domains-tf"  "keyVaultName=${RESOURCE_PREFIX}-${DNS_ZONE}domains-kv" ${WHAT_IF}
+		--name "${DNS_ZONE}domains-$(shell date +%Y%m%d%H%M%S)" --parameters "resourceGroupName=${AZURE_RESOURCE_PREFIX}-${DNS_ZONE}domains-rg" 'tags=${RG_TAGS}' \
+		"tfStorageAccountName=${AZURE_RESOURCE_PREFIX}${DNS_ZONE}domainstf" "tfStorageContainerName=${DNS_ZONE}domains-tf"  "keyVaultName=${AZURE_RESOURCE_PREFIX}-${DNS_ZONE}domains-kv" ${WHAT_IF}
 
 validate-domain-resources: set-what-if domain-azure-resources # make validate-domain-resources AUTO_APPROVE=1
 
@@ -87,6 +93,7 @@ domains-apply: domains-init # make dev domains-apply
 arm-deployment: set-azure-account set-azure-template-tag set-azure-resource-group-tags
 	az deployment sub create --name "resourcedeploy-tsc-$(shell date +%Y%m%d%H%M%S)" \
 		-l "UK South" --template-uri "https://raw.githubusercontent.com/DFE-Digital/tra-shared-services/${ARM_TEMPLATE_TAG}/azure/resourcedeploy.json" \
-		--parameters "resourceGroupName=${RESOURCE_PREFIX}-${SERVICE_SHORT}-${CONFIG_SHORT}-rg" 'tags=${RG_TAGS}' \
-			"tfStorageAccountName=${RESOURCE_PREFIX}${SERVICE_SHORT}tfstate${CONFIG_SHORT}sa" "tfStorageContainerName=${SERVICE_SHORT}-tfstate" \
-			"keyVaultName=${RESOURCE_PREFIX}-${SERVICE_SHORT}-${CONFIG_SHORT}-kv" ${WHAT_IF}
+		--parameters "resourceGroupName=${AZURE_RESOURCE_PREFIX}-${SERVICE_SHORT}-${CONFIG_SHORT}-rg" 'tags=${RG_TAGS}' \
+			"tfStorageAccountName=${AZURE_RESOURCE_PREFIX}${SERVICE_SHORT}tfstate${CONFIG_SHORT}sa" "tfStorageContainerName=${SERVICE_SHORT}-tfstate" \
+			"keyVaultName=${AZURE_RESOURCE_PREFIX}-${SERVICE_SHORT}-${CONFIG_SHORT}-kv" "enableKVPurgeProtection=false" ${WHAT_IF}
+
