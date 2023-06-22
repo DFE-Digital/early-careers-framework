@@ -30,7 +30,7 @@ module Admin
     end
 
     def bad_timelines
-      Admin::RecordsAnalysis::BadTimelinesQueryService.call(policy_scope(ParticipantProfile))
+      Admin::RecordsAnalysis::BadTimelinesQueryService.call(policy_scope(ParticipantProfile::ECF))
     end
   end
 end
