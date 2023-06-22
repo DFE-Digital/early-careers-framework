@@ -99,3 +99,26 @@ arm-deployment: set-azure-account set-azure-template-tag set-azure-resource-grou
 			"tfStorageAccountName=${AZURE_RESOURCE_PREFIX}${SERVICE_SHORT}tfstate${CONFIG_SHORT}sa" "tfStorageContainerName=${SERVICE_SHORT}-tfstate" \
 			"keyVaultName=${AZURE_RESOURCE_PREFIX}-${SERVICE_SHORT}-${CONFIG_SHORT}-kv" "enableKVPurgeProtection=false" ${WHAT_IF}
 
+.PHONY: ci
+ci:	## Run in automation environment
+	$(eval SP_AUTH=true)
+	# $(eval DISABLE_PASSCODE=true)
+	# $(eval AUTO_APPROVE=-auto-approve)
+	# $(eval CONFIRM_PRODUCTION=true)
+
+.PHONY: terraform-init
+terraform-init:
+	$(if $(DOCKER_IMAGE), , $(error Missing environment variable "DOCKER_IMAGE"))
+
+	$(eval export TF_VAR_docker_image=$(DOCKER_IMAGE))
+
+	$(eval export TF_VAR_config_short=$(CONFIG_SHORT))
+	$(eval export TF_VAR_service_short=$(SERVICE_SHORT))
+	$(eval export TF_VAR_azure_resource_prefix=$(AZURE_RESOURCE_PREFIX))
+
+	[[ "${SP_AUTH}" != "true" ]] && az account show && az account set -s $(AZURE_SUBSCRIPTION) || true
+	terraform -chdir=terraform/aks init -backend-config workspace_variables/${CONFIG}_backend.tfvars $(backend_config) -upgrade -reconfigure
+
+.PHONY: terraform-apply
+terraform-apply: terraform-init
+	terraform -chdir=terraform/aks apply -var-file workspace_variables/${DEPLOY_ENV}.tfvars.json ${AUTO_APPROVE}
