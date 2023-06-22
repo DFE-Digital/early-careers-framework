@@ -424,7 +424,7 @@ RSpec.describe "API Participant Declarations", type: :request do
         expect(parsed_response["errors"])
           .to include(
             "title" => "participant_id",
-            "detail" => "The property '#/participant_id' must be a valid Participant ID",
+            "detail" => "Your update cannot be made as the '#/participant_id' is not recognised. Check participant details and try again.",
           )
       end
 
@@ -450,7 +450,7 @@ RSpec.describe "API Participant Declarations", type: :request do
         expect(parsed_response["errors"])
           .to include(
             "title" => "course_identifier",
-            "detail" => "The property '#/course_identifier' must be an available course to '#/participant_id'",
+            "detail" => "The entered '#/course_identifier' is not recognised for the given participant. Check details and try again.",
           )
       end
 
@@ -463,8 +463,8 @@ RSpec.describe "API Participant Declarations", type: :request do
             [
               { "title" => "declaration_date", "detail" => "The property '#/declaration_date' must be present" },
               { "title" => "declaration_type", "detail" => "The property '#/declaration_type' must be present" },
-              { "title" => "participant_id", "detail" => "The property '#/participant_id' must be a valid Participant ID" },
-              { "title" => "course_identifier", "detail" => "The property '#/course_identifier' must be an available course to '#/participant_id'" },
+              { "title" => "participant_id", "detail" => "Your update cannot be made as the '#/participant_id' is not recognised. Check participant details and try again." },
+              { "title" => "course_identifier", "detail" => "The entered '#/course_identifier' is not recognised for the given participant. Check details and try again." },
             ],
           )
       end

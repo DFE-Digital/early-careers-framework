@@ -9,7 +9,7 @@ RSpec.shared_examples "validating resuming a participant attributes" do
     it "is invalid returning a meaningful error message" do
       is_expected.to be_invalid
 
-      expect(service.errors.messages_for(:course_identifier)).to include("The property '#/course_identifier' must be an available course to '#/participant_id'")
+      expect(service.errors.messages_for(:course_identifier)).to include("The entered '#/course_identifier' is not recognised for the given participant. Check details and try again.")
     end
   end
 
@@ -19,7 +19,7 @@ RSpec.shared_examples "validating resuming a participant attributes" do
     it "is invalid returning a meaningful error message" do
       is_expected.to be_invalid
 
-      expect(service.errors.messages_for(:course_identifier)).to include("The property '#/course_identifier' must be an available course to '#/participant_id'")
+      expect(service.errors.messages_for(:course_identifier)).to include("The entered '#/course_identifier' is not recognised for the given participant. Check details and try again.")
     end
   end
 
@@ -29,7 +29,7 @@ RSpec.shared_examples "validating resuming a participant attributes" do
     it "is invalid returning a meaningful error message" do
       is_expected.to be_invalid
 
-      expect(service.errors.messages_for(:participant_id)).to include("The property '#/participant_id' must be a valid Participant ID")
+      expect(service.errors.messages_for(:participant_id)).to include("Your update cannot be made as the '#/participant_id' is not recognised. Check participant details and try again.")
     end
   end
 
@@ -39,7 +39,7 @@ RSpec.shared_examples "validating resuming a participant attributes" do
     it "is invalid returning a meaningful error message" do
       is_expected.to be_invalid
 
-      expect(service.errors.messages_for(:participant_id)).to include("The property '#/participant_id' must be a valid Participant ID")
+      expect(service.errors.messages_for(:participant_id)).to include("Your update cannot be made as the '#/participant_id' is not recognised. Check participant details and try again.")
     end
   end
 
@@ -49,7 +49,7 @@ RSpec.shared_examples "validating resuming a participant attributes" do
     it "is invalid returning a meaningful error message" do
       is_expected.to be_invalid
 
-      expect(service.errors.messages_for(:participant_id)).to include("The property '#/participant_id' must be a valid Participant ID")
+      expect(service.errors.messages_for(:participant_id)).to include("Your update cannot be made as the '#/participant_id' is not recognised. Check participant details and try again.")
     end
   end
 end

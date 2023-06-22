@@ -32,7 +32,7 @@ RSpec.describe NPQ::CreateParticipantOutcome do
       it "is invalid returning a meaningful error message" do
         is_expected.to be_invalid
 
-        expect(service.errors.messages_for(:completion_date)).to include("The property '#/completion_date' must be present")
+        expect(service.errors.messages_for(:completion_date)).to include("The '#/completion_date' is missing from your request. Please include a completion_date value and try again.")
       end
     end
 
@@ -42,7 +42,7 @@ RSpec.describe NPQ::CreateParticipantOutcome do
       it "is invalid returning a meaningful error message" do
         is_expected.to be_invalid
 
-        expect(service.errors.messages_for(:completion_date)).to include("The property '#/completion_date' must be in the following format: '2021-05-31'")
+        expect(service.errors.messages_for(:completion_date)).to include("The '#/completion_date' value must be in the following format: 'yyyy-mm-dd'")
       end
     end
 
@@ -52,7 +52,7 @@ RSpec.describe NPQ::CreateParticipantOutcome do
       it "is invalid returning a meaningful error message" do
         is_expected.to be_invalid
 
-        expect(service.errors.messages_for(:course_identifier)).to include("The property '#/course_identifier' must be present")
+        expect(service.errors.messages_for(:course_identifier)).to include("The  '#/course_identifier' is missing from your request. Please include a course_identifier value and try again.")
       end
     end
 
@@ -62,7 +62,7 @@ RSpec.describe NPQ::CreateParticipantOutcome do
       it "is invalid returning a meaningful error message" do
         is_expected.to be_invalid
 
-        expect(service.errors.messages_for(:course_identifier)).to include("The property '#/course_identifier' must be an available course to '#/participant_id'")
+        expect(service.errors.messages_for(:course_identifier)).to include("The entered '#/course_identifier' is not recognised for the given participant. Check details and try again.")
       end
     end
 
@@ -72,7 +72,7 @@ RSpec.describe NPQ::CreateParticipantOutcome do
       it "is invalid returning a meaningful error message" do
         is_expected.to be_invalid
 
-        expect(service.errors.messages_for(:state)).to include("The property '#/state' must be present")
+        expect(service.errors.messages_for(:state)).to include("The '#/state' is missing from your request. Please include a 'passed' or 'failed' value and try again.")
       end
     end
 
@@ -82,7 +82,7 @@ RSpec.describe NPQ::CreateParticipantOutcome do
       it "is invalid returning a meaningful error message" do
         is_expected.to be_invalid
 
-        expect(service.errors.messages_for(:state)).to include("The attribute '#/state' can only include 'passed' or 'failed' values. If you need to void an outcome, you will need to void the associated 'completed' declaration")
+        expect(service.errors.messages_for(:state)).to include("The attribute '#/state' can only include 'passed' or 'failed' values. If you need to void an outcome, you will need to void the associated 'completed' declaration.")
       end
     end
 
@@ -90,7 +90,7 @@ RSpec.describe NPQ::CreateParticipantOutcome do
       it "is invalid returning a meaningful error message" do
         is_expected.to be_invalid
 
-        expect(service.errors.full_messages).to include("The participant has not not had a 'completed' declaration submitted against them. Therefore you cannot update their outcome")
+        expect(service.errors.full_messages).to include("The participant has not had a 'completed' declaration submitted for them. Therefore you cannot update their outcome.")
       end
     end
 

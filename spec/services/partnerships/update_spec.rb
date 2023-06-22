@@ -50,7 +50,7 @@ RSpec.describe Partnerships::Update do
       it "returns errors" do
         expect(service).to be_invalid
 
-        expect(service.errors.messages_for(:delivery_partner_id)).to include("The '#/delivery_partner_id' you have entered is invalid. Enter a valid '#/delivery_partner_id' attribute in the request body for partnership confirmations.")
+        expect(service.errors.messages_for(:delivery_partner_id)).to include("The '#/delivery_partner_id' you have entered is invalid. Check delivery partner details and try again.")
       end
     end
 
@@ -93,7 +93,7 @@ RSpec.describe Partnerships::Update do
         it "returns errors" do
           expect(service).to be_invalid
 
-          expect(service.errors.messages_for(:delivery_partner_id)).to include("The delivery partner that has been specified is not recognised to be working in partnership with you for the given cohort. Contact the DfE for more information.")
+          expect(service.errors.messages_for(:delivery_partner_id)).to include("The entered delivery partner is not recognised to be working in partnership with you for the given cohort. Contact the DfE for more information.")
         end
       end
     end
@@ -104,7 +104,7 @@ RSpec.describe Partnerships::Update do
       it "returns errors" do
         expect(service).to be_invalid
 
-        expect(service.errors.messages_for(:delivery_partner_id)).to include("Your update cannot be made as this partnership has been challenged by the school. If this partnership has been challenged in error, you can submit a new confirmation of partnership using the endpoint POST /api/v3/partnerships/ecf.")
+        expect(service.errors.messages_for(:delivery_partner_id)).to include("Your update cannot be made as this partnership has been challenged by the school. If this partnership has been challenged in error, submit a new partnership confirmation using the endpoint POST /api/v3/partnerships/ecf.")
       end
     end
 

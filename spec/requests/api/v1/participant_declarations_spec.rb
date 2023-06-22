@@ -378,7 +378,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
             expect(response).not_to be_successful
             expect(response).to have_http_status(:unprocessable_entity)
             expect(parsed_response["errors"])
-              .to include({ "title" => "participant_id", "detail" => "The property '#/participant_id' must be a valid Participant ID" })
+              .to include({ "title" => "participant_id", "detail" => "Your update cannot be made as the '#/participant_id' is not recognised. Check participant details and try again." })
           end
         end
         context "with unpermitted parameter" do
@@ -409,7 +409,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
 
             expect(response).not_to be_successful
             expect(response).to have_http_status(:unprocessable_entity)
-            expect(parsed_response["errors"]).to include({ "title" => "course_identifier", "detail" => "The property '#/course_identifier' must be an available course to '#/participant_id'" })
+            expect(parsed_response["errors"]).to include({ "title" => "course_identifier", "detail" => "The entered '#/course_identifier' is not recognised for the given participant. Check details and try again." })
           end
         end
 
@@ -423,8 +423,8 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
               [
                 { "title" => "declaration_date",  "detail" => "The property '#/declaration_date' must be present" },
                 { "title" => "declaration_type",  "detail" => "The property '#/declaration_type' must be present" },
-                { "title" => "participant_id",    "detail" => "The property '#/participant_id' must be a valid Participant ID" },
-                { "title" => "course_identifier", "detail" => "The property '#/course_identifier' must be an available course to '#/participant_id'" },
+                { "title" => "participant_id",    "detail" => "Your update cannot be made as the '#/participant_id' is not recognised. Check participant details and try again." },
+                { "title" => "course_identifier", "detail" => "The entered '#/course_identifier' is not recognised for the given participant. Check details and try again." },
               ],
             )
         end

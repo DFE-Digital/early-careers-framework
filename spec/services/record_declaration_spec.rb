@@ -47,7 +47,7 @@ RSpec.shared_examples "validates the course_identifier, cpd_lead_provider, parti
 
     it "has meaningful error message", :aggregate_failures do
       expect(service).to be_invalid
-      expect(service.errors.messages_for(:participant_id)).to eq(["The property '#/participant_id' must be a valid Participant ID"])
+      expect(service.errors.messages_for(:participant_id)).to eq(["Your update cannot be made as the '#/participant_id' is not recognised. Check participant details and try again."])
     end
 
     context "when validating evidence held" do
@@ -55,7 +55,7 @@ RSpec.shared_examples "validates the course_identifier, cpd_lead_provider, parti
 
       it "has meaningful error message", :aggregate_failures do
         expect(service).to be_invalid
-        expect(service.errors.messages_for(:participant_id)).to eq(["The property '#/participant_id' must be a valid Participant ID"])
+        expect(service.errors.messages_for(:participant_id)).to eq(["Your update cannot be made as the '#/participant_id' is not recognised. Check participant details and try again."])
       end
     end
   end
@@ -65,7 +65,7 @@ RSpec.shared_examples "validates the course_identifier, cpd_lead_provider, parti
 
     it "has a meaningful error", :aggregate_failures do
       expect(service).to be_invalid
-      expect(service.errors.messages_for(:participant_id)).to eq(["The property '#/participant_id' must be a valid Participant ID"])
+      expect(service.errors.messages_for(:participant_id)).to eq(["Your update cannot be made as the '#/participant_id' is not recognised. Check participant details and try again."])
     end
   end
 
@@ -74,7 +74,7 @@ RSpec.shared_examples "validates the course_identifier, cpd_lead_provider, parti
 
     it "has a meaningful error", :aggregate_failures do
       expect(service).to be_invalid
-      expect(service.errors.messages_for(:course_identifier)).to eq(["The property '#/course_identifier' must be an available course to '#/participant_id'"])
+      expect(service.errors.messages_for(:course_identifier)).to eq(["The entered '#/course_identifier' is not recognised for the given participant. Check details and try again."])
     end
   end
 

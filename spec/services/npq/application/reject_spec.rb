@@ -24,7 +24,7 @@ RSpec.describe NPQ::Application::Reject do
         it "is invalid and returns an error message" do
           is_expected.to be_invalid
 
-          expect(service.errors.messages_for(:npq_application)).to include("The property '#/npq_application' must be present")
+          expect(service.errors.messages_for(:npq_application)).to include("The '#/npq_application' is missing from your request. Check details and try again.")
         end
       end
 

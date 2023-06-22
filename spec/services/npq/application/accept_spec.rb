@@ -41,7 +41,7 @@ RSpec.describe NPQ::Application::Accept do
         it "is invalid and returns an error message" do
           is_expected.to be_invalid
 
-          expect(service.errors.messages_for(:npq_application)).to include("The property '#/npq_application' must be present")
+          expect(service.errors.messages_for(:npq_application)).to include("The '#/npq_application' is missing from your request. Check details and try again.")
         end
       end
 
@@ -158,7 +158,7 @@ RSpec.describe NPQ::Application::Accept do
         it "attaches errors to the object" do
           service = described_class.new(npq_application: other_npq_application).call
 
-          expect(service.errors.messages_for(:npq_application)).to include("The participant already has an accepted application for this course")
+          expect(service.errors.messages_for(:npq_application)).to include("The participant has already had an application accepted for this course.")
         end
       end
 
@@ -191,7 +191,7 @@ RSpec.describe NPQ::Application::Accept do
         it "attaches errors to the object" do
           service = described_class.new(npq_application: other_npq_application).call
 
-          expect(service.errors.messages_for(:npq_application)).to include("The participant already has an accepted application for this course")
+          expect(service.errors.messages_for(:npq_application)).to include("The participant has already had an application accepted for this course.")
         end
       end
     end
