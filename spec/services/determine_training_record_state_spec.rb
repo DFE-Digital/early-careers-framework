@@ -405,6 +405,19 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "active_fip_training"
       end
 
+      context "with bad timeline before induction start date",
+              skip: "logic doesn't currently work for this scenario" do
+        let!(:participant_profile) { scenarios.ect_on_fip_bad_timeline_before_records_start.participant_profile }
+
+        include_examples "determines states as",
+                         "valid",
+                         "eligible_for_induction_training",
+                         "eligible_for_fip_funding",
+                         "not_a_mentor",
+                         "active_fip_training",
+                         "active_fip_training"
+      end
+
       context "in transfer scenario" do
         let!(:current_school) { scenarios.fip_school.school }
 

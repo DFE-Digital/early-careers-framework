@@ -369,7 +369,7 @@ module NewSeeds
         end
 
         def ect_on_fip_after_mentor_change
-          return @ect_on_fip_after_cohort_transfer if @ect_on_fip_after_cohort_transfer.present?
+          return @ect_on_fip_after_mentor_change if @ect_on_fip_after_mentor_change.present?
 
           school_cohort = fip_school.school_cohort
           induction_programme = school_cohort.default_induction_programme
@@ -382,7 +382,7 @@ module NewSeeds
                              .with_induction_record(induction_programme: school_cohort.default_induction_programme)
                              .participant_profile
 
-          @ect_on_fip_after_cohort_transfer = travel_to(2.days.ago) do
+          @ect_on_fip_after_mentor_change = travel_to(2.days.ago) do
             NewSeeds::Scenarios::Participants::Ects::Ect
               .new(school_cohort:, full_name: "ECT on FIP: after mentor change")
               .build
@@ -390,9 +390,44 @@ module NewSeeds
               .with_eligibility
           end
 
-          @ect_on_fip_after_cohort_transfer
+          @ect_on_fip_after_mentor_change
             .with_induction_record(induction_programme:, mentor_profile: nil, induction_status: "changed", start_date: 1.day.ago, end_date: Time.zone.now)
             .with_induction_record(induction_programme:, mentor_profile:, induction_status: "active", start_date: Time.zone.now)
+        end
+
+        def ect_on_fip_bad_timeline_before_records_start
+          return @ect_on_fip_bad_timeline_before_records_start if @ect_on_fip_bad_timeline_before_records_start.present?
+
+          school_cohort = fip_school.school_cohort
+          induction_programme = school_cohort.default_induction_programme
+
+          mentor_profile = NewSeeds::Scenarios::Participants::Mentors::MentorWithNoEcts
+                             .new(school_cohort:)
+                             .build
+                             .with_validation_data
+                             .with_eligibility
+                             .with_induction_record(induction_programme: school_cohort.default_induction_programme)
+                             .participant_profile
+
+          reported_date = Time.zone.local(2022, 7, 26, 15, 8, 0).to_date
+
+          @ect_on_fip_bad_timeline_before_records_start = travel_to(reported_date) do
+            NewSeeds::Scenarios::Participants::Ects::Ect
+              .new(school_cohort:, full_name: "ECT on FIP: with bad timeline before induction start date")
+              .build
+              .with_validation_data
+              .with_eligibility
+          end
+
+          travel_to(reported_date) do
+            @ect_on_fip_bad_timeline_before_records_start
+              .with_induction_record(induction_programme:, mentor_profile: nil, induction_status: "changed", start_date: Date.new(2022, 9, 1), end_date: Time.zone.now)
+          end
+
+          travel_to(reported_date + 2.minutes) do
+            @ect_on_fip_bad_timeline_before_records_start
+              .with_induction_record(induction_programme:, mentor_profile:, induction_status: "active", start_date: Date.new(2022, 9, 1))
+          end
         end
 
         # FIP transfer scenarios
