@@ -10,7 +10,7 @@ namespace :comms do
     rows = CSV.read(args.path_to_csv, headers: true)
 
     rows.each do |school|
-      logger.info "Processing school with URN: #{school["urn"]}"
+      logger.info "Processing school with URN: #{school['urn']}"
 
       school = School.find_by_urn(school["urn"])
 
