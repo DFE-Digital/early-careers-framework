@@ -430,6 +430,39 @@ module NewSeeds
           end
         end
 
+        def ect_on_fip_overlapping_timeline
+          school_cohort = fip_school_with_previous_fip_cohort.school_cohorts[Cohort.current.start_year]
+
+          @ect_on_fip_overlapping_timeline ||= NewSeeds::Scenarios::Participants::Ects::Ect
+                                                 .new(school_cohort:, full_name: "ECT on FIP: with overlapping timeline")
+                                                 .build
+                                                 .with_validation_data
+                                                 .with_eligibility
+                                                 .with_induction_record(
+                                                   induction_programme: current_school_cohort.default_induction_programme,
+                                                   induction_status: "changed",
+                                                   start_date: 1.week.ago,
+                                                   end_date: 1.day.ago,
+                                                 )
+                                                 .with_induction_record(
+                                                   induction_programme: current_school_cohort.default_induction_programme,
+                                                   induction_status: "changed",
+                                                   start_date: 1.day.ago,
+                                                   end_date: Time.zone.now,
+                                                 )
+                                                 .with_induction_record(
+                                                   induction_programme: current_school_cohort.default_induction_programme,
+                                                   induction_status: "changed",
+                                                   start_date: 1.week.ago,
+                                                   end_date: Time.zone.now,
+                                                 )
+                                                 .with_induction_record(
+                                                   induction_programme: previous_school_cohort.default_induction_programme,
+                                                   induction_status: "active",
+                                                   start_date: Time.zone.now,
+                                                 )
+        end
+
         # FIP transfer scenarios
 
         def ect_on_fip_leaving
