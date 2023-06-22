@@ -4,9 +4,7 @@
 
     <p>Use this service to set up ECF-based training for your early career teachers (ECTs) or tell us about a change at your school.</p>
 
-    <h2 class="govuk-heading-m">Set up and manage your training</h2>
-
-    <p>Sign in to tell us:</p>
+    <p>You need to tell us:</p>
 
     <ul class="govuk-list govuk-list--bullet">
       <li>how you want to run your training</li>
@@ -16,11 +14,13 @@
 
     <p>Your school must complete these steps before your ECTs can start their statutory induction programme.</p>
 
-    <h2 class="govuk-heading-m">Tell us about changes at your school</h2>
-
     <p>Tell us about any changes, for example, nominating a new Induction tutor.</p>
 
-    <%= govuk_start_button text: "Sign in", href: new_user_session_path %>
+    <div class="govuk-button-group">
+      <%= govuk_button_link_to "Sign in", new_user_session_path %>
+      <span class="govuk-!-margin-right-2">or</span>
+      <%= govuk_link_to "request a link to use the service", resend_email_request_nomination_invite_path, class: " govuk-link--no-visited-state" %>
+    </div>
   </div>
 
   <div class="govuk-grid-column-one-third">
