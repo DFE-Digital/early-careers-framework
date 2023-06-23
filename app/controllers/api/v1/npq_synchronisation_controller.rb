@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Api
   module V1
     class NPQSynchronisationController < Api::ApiController
@@ -5,7 +7,8 @@ module Api
         render json: json_accounts_serializer_class.new(NPQApplication.all).serializable_hash.to_json
       end
 
-      private
+    private
+
       def json_accounts_serializer_class
         Api::V1::NPQAccountsPageSerializer
       end
