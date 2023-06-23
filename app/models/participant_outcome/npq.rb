@@ -17,6 +17,8 @@ class ParticipantOutcome::NPQ < ApplicationRecord
 
   after_commit :push_outcome_to_big_query
 
+  scope :participant_outcome_of_user, ->(user_id) { where(participant_declaration_id: ParticipantDeclaration.where(user_id: user_id))&.order("completion_date desc")&.limit(1) }
+
   class << self
     def latest
       order(created_at: :desc).first

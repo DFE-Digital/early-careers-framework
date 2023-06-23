@@ -123,11 +123,7 @@ Rails.application.routes.draw do
       namespace :npq do
         resources :users, only: %i[show create update]
         resource :previous_funding, only: [:show]
-      end
-      resources :npq_synchronisation, only: [] do
-        collection do
-          get :send_lead_provider_approval_status_to_npq
-        end
+        resources :application_synchronizations, only: [:index]
       end
     end
 
