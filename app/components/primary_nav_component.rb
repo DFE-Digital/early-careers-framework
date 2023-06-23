@@ -20,6 +20,7 @@ class PrimaryNavComponent < ViewComponent::Base
 
     def current_section?(path)
       return request.path.include?(path) if @selected.nil?
+
       @selected
     end
   end
