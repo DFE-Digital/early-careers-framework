@@ -52,9 +52,6 @@ RSpec.shared_examples "validates the course_identifier, cpd_lead_provider, parti
 
     context "when validating evidence held" do
       let(:declaration_type) { "retained-1" }
-      before do
-        params[:evidence_held] = "other"
-      end
 
       it "has meaningful error message", :aggregate_failures do
         expect(service).to be_invalid
@@ -213,10 +210,39 @@ RSpec.shared_examples "validates the participant milestone" do
   end
 end
 
+RSpec.shared_examples "creates a participant declaration" do
+  it "creates a participant declaration" do
+    expect { service.call }.to change { ParticipantDeclaration.count }.by(1)
+  end
+
+  it "stores the correct data" do
+    subject.call
+
+    declaration = ParticipantDeclaration.last
+
+    expect(declaration.declaration_type).to eq(declaration_type)
+    expect(declaration.user_id).to eq(participant_profile.user_id)
+    expect(declaration.course_identifier).to eq(course_identifier)
+    expect(declaration.evidence_held).to eq("other")
+    expect(declaration.cpd_lead_provider).to eq(cpd_lead_provider)
+  end
+end
+
 RSpec.shared_examples "creates participant declaration attempt" do
   context "when user has same ID as participant external ID" do
     it "creates the relevant participant declaration" do
       expect { subject.call }.to change(ParticipantDeclarationAttempt, :count).by(1)
+    end
+
+    it "stores the correct data" do
+      subject.call
+
+      declaration_attempt = ParticipantDeclarationAttempt.last
+      expect(declaration_attempt.declaration_type).to eq(declaration_type)
+      expect(declaration_attempt.user_id).to eq(participant_profile.user_id)
+      expect(declaration_attempt.course_identifier).to eq(course_identifier)
+      expect(declaration_attempt.evidence_held).to eq("other")
+      expect(declaration_attempt.cpd_lead_provider).to eq(cpd_lead_provider)
     end
   end
 
@@ -245,6 +271,7 @@ RSpec.describe RecordDeclaration, :with_default_schedules do
   let(:declaration_type)      { "started" }
   let(:participant_id) { participant_profile.participant_identity.external_identifier }
   let(:has_passed) { false }
+  let(:evidence_held) { "other" }
   let(:params) do
     {
       participant_id:,
@@ -253,6 +280,7 @@ RSpec.describe RecordDeclaration, :with_default_schedules do
       course_identifier:,
       cpd_lead_provider:,
       has_passed:,
+      evidence_held:,
     }
   end
 
@@ -286,10 +314,6 @@ RSpec.describe RecordDeclaration, :with_default_schedules do
       let(:course_identifier) { "ecf-induction" }
       let(:delivery_partner) { participant_profile.induction_records[0].induction_programme.partnership.delivery_partner }
 
-      it "creates a participant declaration" do
-        expect { service.call }.to change { ParticipantDeclaration.count }.by(1)
-      end
-
       describe "attributes inferred from induction records" do
         let(:latest_induction_record) { nil }
         subject(:created_declaration) do
@@ -322,6 +346,7 @@ RSpec.describe RecordDeclaration, :with_default_schedules do
       it_behaves_like "validates the course_identifier, cpd_lead_provider, participant_id"
       it_behaves_like "validates existing declarations"
       it_behaves_like "validates the participant milestone"
+      it_behaves_like "creates a participant declaration"
       it_behaves_like "creates participant declaration attempt"
     end
 
@@ -329,14 +354,11 @@ RSpec.describe RecordDeclaration, :with_default_schedules do
       let(:participant_type) { :mentor }
       let(:course_identifier) { "ecf-mentor" }
 
-      it "creates a participant declaration" do
-        expect { service.call }.to change { ParticipantDeclaration.count }.by(1)
-      end
-
       it_behaves_like "validates the declaration for a withdrawn participant"
       it_behaves_like "validates the course_identifier, cpd_lead_provider, participant_id"
       it_behaves_like "validates existing declarations"
       it_behaves_like "validates the participant milestone"
+      it_behaves_like "creates a participant declaration"
       it_behaves_like "creates participant declaration attempt"
     end
   end
@@ -355,10 +377,6 @@ RSpec.describe RecordDeclaration, :with_default_schedules do
       create(:npq_statement, :output_fee, deadline_date: 6.weeks.from_now, cpd_lead_provider:)
     end
 
-    it "creates a participant declaration" do
-      expect { service.call }.to change { ParticipantDeclaration.count }.by(1)
-    end
-
     context "when submitting a retained-1" do
       let(:declaration_type) { "retained-1" }
 
@@ -371,6 +389,7 @@ RSpec.describe RecordDeclaration, :with_default_schedules do
     it_behaves_like "validates the course_identifier, cpd_lead_provider, participant_id"
     it_behaves_like "validates existing declarations"
     it_behaves_like "validates the participant milestone"
+    it_behaves_like "creates a participant declaration"
     it_behaves_like "creates participant declaration attempt"
 
     context "for next cohort", :with_default_schedules do
