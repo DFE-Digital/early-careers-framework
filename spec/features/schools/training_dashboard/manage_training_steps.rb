@@ -516,7 +516,7 @@ module ManageTrainingSteps
   end
 
   def and_they_have_an_end_date
-    expect(page).to have_text(@induction_record.end_date.to_date.to_s(:govuk))
+    expect(page).to have_text(@induction_record.end_date.to_date.to_fs(:govuk))
   end
 
   def and_the_action_required_is_remove

@@ -19,7 +19,7 @@
                 legend: { text: title, tag: 'h1', size: 'xl' }) do %>
                 <p class="govuk-body govuk-!-margin-top-4">ECTs are teachers who have finished their initial teacher training.</p>
                 <p class="govuk-body">Do not include ECTs who started training before
-                    <%= @wizard.cohort.academic_year_start_date.to_date.to_s(:govuk) %>.</p>
+                    <%= @wizard.cohort.academic_year_start_date.to_date.to_fs(:govuk) %>.</p>
             <% end %>
 
             <%= f.govuk_submit "Continue" %>

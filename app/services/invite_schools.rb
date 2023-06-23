@@ -137,7 +137,7 @@ private
   end
 
   def email_expiry_date
-    NominationEmail::NOMINATION_EXPIRY_TIME.from_now.to_date.to_s(:govuk)
+    NominationEmail::NOMINATION_EXPIRY_TIME.from_now.to_date.to_fs(:govuk)
   end
 
   def logger

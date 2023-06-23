@@ -17,15 +17,15 @@ module Finance
         end
 
         def completion_date(outcome)
-          outcome.completion_date.to_s(:govuk)
+          outcome.completion_date.to_fs(:govuk)
         end
 
         def changed_date(outcome)
-          outcome.created_at.to_s(:govuk)
+          outcome.created_at.to_fs(:govuk)
         end
 
         def sent_to_tra(outcome)
-          outcome.sent_to_qualified_teachers_api_at&.to_s(:govuk)
+          outcome.sent_to_qualified_teachers_api_at&.to_fs(:govuk)
         end
       end
     end

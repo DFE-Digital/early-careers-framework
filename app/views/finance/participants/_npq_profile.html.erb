@@ -73,13 +73,13 @@
 
   <% summary_list.row do |row| %>
     <% row.key { "Created at" } %>
-    <% row.value { pp.created_at.to_s(:govuk) } %>
+    <% row.value { pp.created_at.to_fs(:govuk) } %>
     <% row.action(text: :none) %>
   <% end %>
 
   <% summary_list.row do |row| %>
     <% row.key { "Updated at" } %>
-    <% row.value { pp.updated_at.to_s(:govuk) } %>
+    <% row.value { pp.updated_at.to_fs(:govuk) } %>
     <% row.action(text: :none) %>
   <% end %>
 <% end %>

@@ -181,7 +181,7 @@ private
 
     within ".finance-panel__summary" do
       expect(page).to have_content("Milestone cut off date")
-      expect(page).to have_content(january_statement.deadline_date.to_s(:govuk))
+      expect(page).to have_content(january_statement.deadline_date.to_fs(:govuk))
     end
   end
 

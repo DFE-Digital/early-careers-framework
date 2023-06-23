@@ -9,7 +9,7 @@ RSpec.describe Admin::Participants::TableRow, type: :component do
 
   it { is_expected.to have_link participant_profile.user.full_name, href: admin_participant_path(participant_profile) }
   it { is_expected.to have_content I18n.t(participant_profile.participant_type, scope: "schools.participants.type") }
-  it { is_expected.to have_content participant_profile.created_at.to_date.to_s(:govuk_short) }
+  it { is_expected.to have_content participant_profile.created_at.to_date.to_fs(:govuk_short) }
 
   context "when profile is associated with the school" do
     let(:school) { create :school }

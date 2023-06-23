@@ -8,7 +8,7 @@ RSpec.describe "Participant outcomes", :with_default_schedules, type: :request, 
   let(:npq_application) { create :npq_application, :accepted, npq_lead_provider: provider.npq_lead_provider }
 
   let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: provider) }
-  let(:date) { Time.zone.today.to_s("Y-m-d") }
+  let(:date) { Time.zone.today.to_fs("Y-m-d") }
   let(:response_headers) { { "test" => "test" } }
   let(:queue_double) { double(detect: nil) }
 
