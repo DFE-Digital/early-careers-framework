@@ -122,3 +122,7 @@ terraform-init:
 .PHONY: terraform-apply
 terraform-apply: terraform-init
 	terraform -chdir=terraform/aks apply -var-file workspace_variables/${DEPLOY_ENV}.tfvars.json ${AUTO_APPROVE}
+
+.PHONY: terraform-plan
+terraform-plan: terraform-init
+	terraform -chdir=terraform/aks plan -var-file workspace_variables/${DEPLOY_ENV}.tfvars.json
