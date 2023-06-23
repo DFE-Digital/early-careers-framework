@@ -3,7 +3,8 @@ module Api
     module NPQ
       class ApplicationSynchronizationsController < ApiController
         def index
-          render json: json_accounts_serializer_class.new(NPQApplication.all).serializable_hash.to_json
+          @npq_applications = NPQApplication.all.select(:lead_provider_approval_status, :id, :participant_identity_id)
+          render json: json_accounts_serializer_class.new(@npq_applications).serializable_hash.to_json
         end
 
         private

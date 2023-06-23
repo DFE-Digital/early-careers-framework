@@ -70,4 +70,8 @@ class ParticipantDeclaration::NPQ < ParticipantDeclaration
 
     nil
   end
+  
+  def latest_outcome_of_declaration
+    self.outcomes.order(completion_date: :desc)&.first
+  end
 end

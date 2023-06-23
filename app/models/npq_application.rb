@@ -90,6 +90,10 @@ class NPQApplication < ApplicationRecord
     UK_CATCHMENT_AREA.include?(teacher_catchment)
   end
 
+  def latest_declaration_of_user
+    ParticipantDeclaration::NPQ.where(user_id: self.participant_identity.user_id).order(created_at: :desc)&.first
+  end
+
 private
 
   def previously_funded?
