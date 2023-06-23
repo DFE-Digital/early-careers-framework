@@ -1,6 +1,6 @@
 <% content_for :nav_bar do %>
   <%= render PrimaryNavComponent.new(wide: true) do |component| %>
-    <%= component.nav_item(path: "/admin", selected: false) do %>
+    <%= component.nav_item(path: "/admin", selected: current_page?('/admin')) do %>
       Overview
     <% end %>
     <%= component.nav_item(path: "/admin/schools") do %>
