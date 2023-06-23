@@ -52,7 +52,7 @@ RSpec.describe NPQ::CreateParticipantOutcome do
       it "is invalid returning a meaningful error message" do
         is_expected.to be_invalid
 
-        expect(service.errors.messages_for(:course_identifier)).to include("The  '#/course_identifier' is missing from your request. Please include a course_identifier value and try again.")
+        expect(service.errors.messages_for(:course_identifier)).to include("The '#/course_identifier' is missing from your request. Please include a course_identifier value and try again.")
       end
     end
 

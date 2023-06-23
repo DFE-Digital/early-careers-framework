@@ -10,6 +10,7 @@ class CourseValidator < ActiveModel::Validator
 private
 
   def has_profile_for_course_given_course_identifier?(record)
+    return if record.errors.any?
     return unless record.participant_identity&.user
 
     record.participant_identity.user.participant_profiles.active_record.any? do |participant_profile|
