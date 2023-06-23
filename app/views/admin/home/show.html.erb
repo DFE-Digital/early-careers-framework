@@ -11,50 +11,31 @@
   <tbody class="govuk-table__body">
     <tr class="govuk-table__row">
       <th scope="row" class="govuk-table__header govuk-!-font-weight-regular">Delivering their training using DfE materials</th>
-      <td class="govuk-table__cell govuk-table__cell--numeric">2</td>
+      <td class="govuk-table__cell govuk-table__cell--numeric"><%= @pilot_stats.cip_total %></td>
     </tr>
     <tr class="govuk-table__row">
       <th scope="row" class="govuk-table__header govuk-!-font-weight-regular">Designing their own programme</th>
-      <td class="govuk-table__cell govuk-table__cell--numeric">0</td>
+      <td class="govuk-table__cell govuk-table__cell--numeric"><%= @pilot_stats.diy_total %></td>
     </tr>
     <tr class="govuk-table__row">
       <th scope="row" class="govuk-table__header govuk-!-font-weight-regular">Using a training provider (full induction programme)</th>
-      <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-regular">115</td>
+      <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-regular"></td>
     </tr>
-    <tr class="govuk-table__row">
-      <th scope="row" class="govuk-table__header govuk-!-font-weight-regular govuk-!-padding-left-5">Ambition</th>
-      <td class="govuk-table__cell govuk-table__cell--numeric">28</td>
-    </tr>
-    <tr class="govuk-table__row">
-      <th scope="row" class="govuk-table__header govuk-!-font-weight-regular govuk-!-padding-left-5">Best Practice Network</th>
-      <td class="govuk-table__cell govuk-table__cell--numeric">15</td>
-    </tr>
-    <tr class="govuk-table__row">
-      <th scope="row" class="govuk-table__header govuk-!-font-weight-regular govuk-!-padding-left-5">Education Development Trust</th>
-      <td class="govuk-table__cell govuk-table__cell--numeric">21</td>
-    </tr>
-    <tr class="govuk-table__row">
-      <th scope="row" class="govuk-table__header govuk-!-font-weight-regular govuk-!-padding-left-5">National Institute of Teaching</th>
-      <td class="govuk-table__cell govuk-table__cell--numeric">0</td>
-    </tr>
-    <tr class="govuk-table__row">
-      <th scope="row" class="govuk-table__header govuk-!-font-weight-regular govuk-!-padding-left-5">Teach First</th>
-      <td class="govuk-table__cell govuk-table__cell--numeric">15</td>
-    </tr>
-    <tr class="govuk-table__row">
-      <th scope="row" class="govuk-table__header govuk-!-font-weight-regular govuk-!-padding-left-5">UCL Institute of Education</th>
-      <td class="govuk-table__cell govuk-table__cell--numeric">15</td>
-    </tr>
+    <% @pilot_stats.partnership_totals.each do |provider| %>
+      <tr class="govuk-table__row">
+        <th scope="row" class="govuk-table__header govuk-!-font-weight-regular govuk-!-padding-left-5"><%= provider[:name] %></th>
+        <td class="govuk-table__cell govuk-table__cell--numeric"><%= provider[:total] %></td>
+      </tr>
+    <% end %>
     <tr class="govuk-table__row">
       <th scope="row" class="govuk-table__header govuk-!-font-weight-regular">Not expecting any early career teachers</th>
-      <td class="govuk-table__cell  govuk-table__cell--numeric">60</td>
+      <td class="govuk-table__cell  govuk-table__cell--numeric"><%= @pilot_stats.no_ects_total %></td>
     </tr>
   </tbody>
   <tfoot>
     <tr class="govuk-table__row">
       <th scope="row" class="govuk-table__header">Total</th>
-      <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold">177</td>
+      <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold"><%= @pilot_stats.total %></td>
     </tr>
-
   </tfoot>
 </table>
