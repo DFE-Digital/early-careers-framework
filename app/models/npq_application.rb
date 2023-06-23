@@ -91,7 +91,7 @@ class NPQApplication < ApplicationRecord
   end
 
   def latest_declaration_of_user
-    ParticipantDeclaration::NPQ.where(user_id: self.participant_identity.user_id).order(created_at: :desc)&.first
+    ParticipantDeclaration::NPQ.where(user_id: participant_identity.user_id).order(created_at: :desc)&.first
   end
 
 private
