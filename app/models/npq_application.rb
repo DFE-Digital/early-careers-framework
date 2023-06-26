@@ -93,13 +93,17 @@ class NPQApplication < ApplicationRecord
 private
 
   def previously_funded?
-    accepted_applications = participant_identity
+    # This is an optimization used by the v3 NPQApplicationsQuery in order
+    # to speed up the bulk-retrieval of NPQ applications.
+    return transient_previously_funded if respond_to?(:transient_previously_funded)
+
+    @previously_funded ||= participant_identity
       .npq_applications
+      .where.not(id:)
       .where(npq_course: npq_course.rebranded_alternative_courses)
       .where(eligible_for_funding: true)
       .accepted
-
-    (accepted_applications - [self]).any?
+      .exists?
   end
 
   def push_enrollment_to_big_query

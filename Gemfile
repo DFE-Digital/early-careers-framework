@@ -91,6 +91,8 @@ gem "aws-sdk-s3", require: false
 
 gem "activerecord-session_store", "~> 2.0"
 
+gem "active_record_extended"
+
 gem "google-apis-drive_v3"
 gem "googleauth"
 gem "google-cloud-bigquery"
@@ -151,6 +153,8 @@ group :development do
 
   # autocompletion backend for development
   gem "solargraph"
+
+  gem "activerecord-explain-analyze"
 
   # Profiling
   gem "memory_profiler"

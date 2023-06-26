@@ -89,6 +89,32 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery, :with_default_schedules do
       it "returns all participant declarations for cpd_lead_provider1" do
         expect(subject.participant_declarations_for_pagination.to_a).to eq([participant_declaration3, participant_declaration1, participant_declaration2])
       end
+
+      context "when declarations have been transferred to to the provider" do
+        let(:transfer_induction_record) do
+          NewSeeds::Scenarios::Participants::Transfers::FipToFipChangingTrainingProvider
+            .new(lead_provider_from: lead_provider2, lead_provider_to: lead_provider1)
+            .build
+        end
+        let!(:transferred_declaration) do
+          travel_to(5.days.ago) do
+            declaration = create(
+              :ect_participant_declaration,
+              :eligible,
+              declaration_type: "started",
+              cpd_lead_provider: cpd_lead_provider2,
+              participant_profile: transfer_induction_record.participant_profile,
+              delivery_partner: delivery_partner1,
+            )
+
+            ParticipantDeclaration.where(id: declaration.id).select(:id, :created_at).first
+          end
+        end
+
+        it "is included in the response" do
+          expect(subject.participant_declarations_for_pagination.to_a).to include(transferred_declaration)
+        end
+      end
     end
 
     context "with cohort filter" do

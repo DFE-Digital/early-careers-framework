@@ -80,6 +80,34 @@ RSpec.describe NPQApplication, :with_default_schedules, type: :model do
       end
     end
 
+    context "when transient_previously_funded is declared on the model" do
+      subject { create(:npq_application, eligible_for_funding: true) }
+
+      before do
+        def subject.transient_previously_funded
+          false
+        end
+      end
+
+      it "does not make a query to determine the previously_funded status" do
+        expect(NPQApplication).not_to receive(:connection)
+        expect(subject.eligible_for_dfe_funding).to be(true)
+      end
+
+      context "when transient_previously_funded is true" do
+        before do
+          def subject.transient_previously_funded
+            true
+          end
+        end
+
+        it "does not make a query to determine the previously_funded status" do
+          expect(NPQApplication).not_to receive(:connection)
+          expect(subject.eligible_for_dfe_funding).to be(false)
+        end
+      end
+    end
+
     context "when second application which is also eligble for funding" do
       subject do
         create(
@@ -236,6 +264,34 @@ RSpec.describe NPQApplication, :with_default_schedules, type: :model do
 
       it "returns previously-funded" do
         expect(subject.ineligible_for_funding_reason).to eql("previously-funded")
+      end
+    end
+
+    context "when transient_previously_funded is declared on the model" do
+      subject { create(:npq_application, eligible_for_funding: false) }
+
+      before do
+        def subject.transient_previously_funded
+          false
+        end
+      end
+
+      it "does not make a query to determine the previously_funded status" do
+        expect(NPQApplication).not_to receive(:connection)
+        expect(subject.ineligible_for_funding_reason).to be("establishment-ineligible")
+      end
+
+      context "when transient_previously_funded is true" do
+        before do
+          def subject.transient_previously_funded
+            true
+          end
+        end
+
+        it "does not make a query to determine the previously_funded status" do
+          expect(NPQApplication).not_to receive(:connection)
+          expect(subject.ineligible_for_funding_reason).to be("previously-funded")
+        end
       end
     end
   end

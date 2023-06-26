@@ -46,6 +46,9 @@ GEM
       erubi (~> 1.4)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.1, >= 1.2.0)
+    active_record_extended (3.2.1)
+      activerecord (>= 5.2, < 7.2.0)
+      pg (< 3.0)
     activejob (7.0.5)
       activesupport (= 7.0.5)
       globalid (>= 0.3.6)
@@ -54,6 +57,9 @@ GEM
     activerecord (7.0.5)
       activemodel (= 7.0.5)
       activesupport (= 7.0.5)
+    activerecord-explain-analyze (0.1.0)
+      activerecord (>= 4)
+      pg
     activerecord-session_store (2.0.0)
       actionpack (>= 5.2.4.1)
       activerecord (>= 5.2.4.1)
@@ -567,7 +573,7 @@ GEM
     thread_safe (0.3.6)
     tilt (2.1.0)
     timecop (0.9.6)
-    timeout (0.3.2)
+    timeout (0.4.0)
     trailblazer-option (0.1.2)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
@@ -619,6 +625,8 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  active_record_extended
+  activerecord-explain-analyze
   activerecord-session_store (~> 2.0)
   ar-uuid (~> 0.2.3)
   aws-sdk-s3
@@ -712,4 +720,4 @@ RUBY VERSION
    ruby 3.2.2p53
 
 BUNDLED WITH
-   2.4.6
+   2.4.14
