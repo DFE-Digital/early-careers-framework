@@ -71,7 +71,7 @@ module Partnerships
       if delivery_partner
         if !delivery_partner_has_provider_relationship?
           errors.add(:delivery_partner_id, :no_relationship)
-        elsif errors.empty? && duplicate_delivery_partner_request?
+        elsif errors.empty? && duplicate_relationship_delivery_partner_request?
           errors.add(:delivery_partner_id, :duplicate_delivery_partner)
         end
       else
@@ -104,8 +104,8 @@ module Partnerships
       school.school_cohorts.find_by(cohort: cohort_record).blank?
     end
 
-    def duplicate_delivery_partner_request?
-      Partnership.where(school:, cohort: cohort_record, lead_provider:, delivery_partner:).exists?
+    def duplicate_relationship_delivery_partner_request?
+      Partnership.where(school:, cohort: cohort_record, lead_provider:, delivery_partner:, relationship: true).exists?
     end
   end
 end
