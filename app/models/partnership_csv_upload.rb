@@ -77,10 +77,16 @@ private
         errors << { urn:, message: "Recruited by other provider", school_name: school.name, row_number: index + 1 }
       elsif cohort_not_setup_and_previously_fip?(school)
         errors << { urn:, message: "School programme not yet confirmed", school_name: school.name, row_number: index + 1 }
+      elsif duplicate_relationship_delivery_partner_request?(school)
+        errors << { urn:, message: "Your school - already in relationship", school_name: school.name, row_number: index + 1 }
       end
     end
 
     errors
+  end
+
+  def duplicate_relationship_delivery_partner_request?(school)
+    Partnership.where(school:, cohort:, lead_provider:, delivery_partner:, relationship: true).exists?
   end
 
   def cohort_not_setup_and_previously_fip?(school)

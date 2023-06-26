@@ -96,6 +96,28 @@ RSpec.describe PartnershipCsvUpload, type: :model do
       )
     end
 
+    it "finds schools already in a relationship partnership with the lead provider" do
+      partnered_school = create(:school)
+      given_the_csv_contains_urns([partnered_school.urn])
+      Partnership.create!(
+        school: partnered_school,
+        lead_provider: @subject.lead_provider,
+        delivery_partner: @subject.delivery_partner,
+        cohort: current_cohort,
+        relationship: true,
+      )
+
+      expect(@subject.invalid_schools.length).to eql 1
+      expect(@subject.invalid_schools).to contain_exactly(
+        {
+          urn: partnered_school.urn,
+          row_number: 1,
+          school_name: partnered_school.name,
+          message: "Your school - already in relationship",
+        },
+      )
+    end
+
     context "when a school ran FIP in the last cohort but hasn't made a choice for the following year" do
       let(:school_cohort) { create(:school_cohort, cohort: current_cohort) }
       let(:next_cohort) { Cohort.next || create(:cohort, :next) }
