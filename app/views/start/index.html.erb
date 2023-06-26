@@ -23,7 +23,7 @@
     <div class="govuk-button-group govuk-!-margin-top-7">
       <%= govuk_button_link_to "Sign in", new_user_session_path %>
       <span class="govuk-!-margin-right-2">or</span>
-      <%= govuk_link_to "request access to the service", resend_email_request_nomination_invite_path, class: " govuk-link--no-visited-state" %>
+      <%= govuk_link_to "request access to the service", resend_email_request_nomination_invite_path, no_visited_state: true %>
     </div>
   </div>
 

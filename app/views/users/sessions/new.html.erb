@@ -14,7 +14,7 @@
             <%= f.govuk_submit "Sign in" %>
         <% end %>
 
-        <p class="govuk-body">Or <%= govuk_link_to "request access to the service", resend_email_request_nomination_invite_path, class: " govuk-link--no-visited-state" %>
+        <p class="govuk-body">Or <%= govuk_link_to "request access to the service", resend_email_request_nomination_invite_path, no_visited_state: true %>
         </p>
     </div>
 </div>
