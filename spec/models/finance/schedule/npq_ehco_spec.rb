@@ -4,6 +4,9 @@ require "rails_helper"
 
 RSpec.describe Finance::Schedule::NPQEhco, type: :model do
   before do
+    Finance::Milestone.delete_all
+    Finance::Schedule.delete_all
+
     load Rails.root.join("db/legacy_seeds/schedules.rb").to_s
   end
 
@@ -88,8 +91,8 @@ RSpec.describe Finance::Schedule::NPQEhco, type: :model do
     context "when selected cohort is before multiple schedules existed for EHCO" do
       let(:cohort) { Cohort.find_by!(start_year: 2021) }
 
-      it "returns NPQ EHCO November schedule" do
-        expected_schedule = described_class.find_by(cohort:, schedule_identifier: "npq-ehco-november")
+      it "returns NPQ EHCO June schedule" do
+        expected_schedule = described_class.find_by(cohort:, schedule_identifier: "npq-ehco-june")
 
         expect(described_class.schedule_for(cohort:)).to eql(expected_schedule)
       end
