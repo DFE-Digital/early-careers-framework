@@ -11,10 +11,11 @@ module Api
       end
 
       def participant_declarations_for_pagination
-        scope = ActiveRecordUnion.new(
-          declarations_scope,
-          previous_declarations_scope,
-        ).call
+        filterable_attributes = %i[id created_at user_id updated_at delivery_partner_id]
+        scope = ParticipantDeclaration.union(
+          declarations_scope.select(*filterable_attributes),
+          previous_declarations_scope.select(*filterable_attributes),
+        )
 
         if participant_ids.present?
           scope = scope.where(user_id: participant_ids)
@@ -29,9 +30,8 @@ module Api
         end
 
         scope
-          .select(:id, :created_at)
-          .order(:created_at)
-          .distinct
+         .select(:id, :created_at)
+         .order(:created_at)
       end
 
       def participant_declarations_from(paginated_join)
@@ -58,9 +58,10 @@ module Api
       delegate :lead_provider, to: :cpd_lead_provider
 
       def declarations_scope
-        scope = with_joins(ParticipantDeclaration.for_lead_provider(cpd_lead_provider))
+        scope = ParticipantDeclaration.for_lead_provider(cpd_lead_provider)
 
         if cohort_start_years.present?
+          scope = with_joins(scope)
           scope = scope.where(participant_profile: { induction_records: { cohorts: { start_year: cohort_start_years } } })
         end
 
@@ -69,7 +70,7 @@ module Api
 
       def previous_declarations_scope
         scope = with_joins(ParticipantDeclaration)
-          .where(participant_profile: { induction_records: { induction_programme: { partnerships: { lead_provider: } } } })
+          .where(participant_profile: { induction_records: { induction_programme: { partnerships: { lead_provider_id: lead_provider.id } } } })
           .where(participant_profile: { induction_records: { induction_status: "active" } }) # only want induction records that are the winning latest ones
           .where(state: %w[submitted eligible payable paid])
 
@@ -113,7 +114,7 @@ module Api
           participant_profile: [
             induction_records: [
               :cohort,
-              { induction_programme: { partnership: [:lead_provider] } },
+              { induction_programme: :partnership },
             ],
           ],
         )
