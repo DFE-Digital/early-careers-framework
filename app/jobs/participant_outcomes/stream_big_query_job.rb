@@ -8,6 +8,7 @@ module ParticipantOutcomes
       bigquery = Google::Cloud::Bigquery.new
       dataset = bigquery.dataset "npq_participant_outcomes", skip_lookup: true
       table = dataset.table "npq_participant_outcomes_#{Rails.env.downcase}"
+
       return if table.nil?
 
       outcome = ParticipantOutcome::NPQ.find(participant_outcome_id)

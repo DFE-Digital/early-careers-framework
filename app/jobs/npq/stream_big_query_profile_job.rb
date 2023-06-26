@@ -7,7 +7,10 @@ module NPQ
     def perform(profile_id:)
       bigquery = Google::Cloud::Bigquery.new
       dataset = bigquery.dataset "npq_registration", skip_lookup: true
-      table = dataset.table "profiles_#{Rails.env.downcase}", skip_lookup: true
+      table = dataset.table "profiles_#{Rails.env.downcase}"
+
+      return if table.nil?
+
       profile = ParticipantProfile::NPQ
         .includes(:npq_application, :schedule, :npq_course, :participant_identity)
         .find(profile_id)

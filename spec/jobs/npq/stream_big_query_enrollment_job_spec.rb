@@ -12,11 +12,9 @@ RSpec.describe NPQ::StreamBigQueryEnrollmentJob do
   let(:table)    { instance_double(Google::Cloud::Bigquery::Table, insert: nil) }
 
   before do
-    expect(Google::Cloud::Bigquery).to receive(:new).and_return(bigquery)
-    expect(bigquery)
-      .to receive(:dataset).with("npq_registration", skip_lookup: true).and_return(dataset)
-    expect(dataset)
-      .to receive(:table).with("enrollments_test", skip_lookup: true).and_return(table)
+    allow(Google::Cloud::Bigquery).to receive(:new).and_return(bigquery)
+    allow(bigquery).to receive(:dataset).and_return(dataset)
+    allow(dataset).to receive(:table).and_return(table)
   end
 
   describe "#perform" do
@@ -47,6 +45,17 @@ RSpec.describe NPQ::StreamBigQueryEnrollmentJob do
           "employer_name" => employer_name,
           "employment_role" => employment_role,
         }], ignore_unknown: true)
+      end
+    end
+
+    context "where the BigQuery table does not exist" do
+      before do
+        allow(dataset).to receive(:table).and_return(nil)
+      end
+
+      it "doesn't attempt to stream" do
+        described_class.perform_now(npq_application_id: npq_application.id)
+        expect(table).not_to have_received(:insert)
       end
     end
   end
