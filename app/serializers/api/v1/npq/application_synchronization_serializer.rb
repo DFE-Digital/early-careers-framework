@@ -11,7 +11,7 @@ module Api
 
         attributes :lead_provider_approval_status, :id, :participant_outcome_state
         attribute(:participant_outcome_state) do |object|
-          object.latest_declaration_of_user&.latest_outcome_of_declaration if object.latest_declaration_of_user.present?
+          object.latest_declaration_of_user&.latest_outcome_of_declaration&.state if object.latest_declaration_of_user.present?
         end
       end
     end
