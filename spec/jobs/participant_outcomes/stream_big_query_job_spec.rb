@@ -39,5 +39,16 @@ RSpec.describe ParticipantOutcomes::StreamBigQueryJob, :with_default_schedules d
         described_class.perform_now(participant_outcome_id: outcome.id)
       }.to have_enqueued_job(described_class).on_queue("big_query")
     end
+
+    context "where the BigQuery table does not exist" do
+      before do
+        allow(dataset).to receive(:table).and_return(nil)
+      end
+
+      it "doesn't attempt to stream" do
+        described_class.perform_now(participant_outcome_id: outcome.id)
+        expect(table).not_to have_received(:insert)
+      end
+    end
   end
 end
