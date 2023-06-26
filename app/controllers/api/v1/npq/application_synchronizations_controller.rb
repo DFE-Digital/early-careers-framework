@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Api
   module V1
     module NPQ
@@ -7,7 +9,7 @@ module Api
           render json: json_accounts_serializer_class.new(@npq_applications).serializable_hash.to_json
         end
 
-        private
+      private
 
         def set_npq_applications
           @npq_applications = NPQApplication.all.select(:lead_provider_approval_status, :id, :participant_identity_id)
