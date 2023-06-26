@@ -101,6 +101,7 @@ private
         declaration_type:,
         cpd_lead_provider:,
         user:,
+        evidence_held:,
       )
     end
   end
@@ -158,6 +159,7 @@ private
       delivery_partner:,
       mentor_user_id:,
       user: participant_identity.user,
+      evidence_held:,
     }
   end
 

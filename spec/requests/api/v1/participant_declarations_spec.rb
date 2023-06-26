@@ -388,7 +388,7 @@ RSpec.describe "participant-declarations endpoint spec", :with_default_schedules
             post "/api/v1/participant-declarations", params: params.to_json
 
             expect(response).to be_successful
-            expect(ParticipantDeclaration.order(created_at: :desc).first.evidence_held).to be_nil
+            expect(ParticipantDeclaration.order(created_at: :desc).first.evidence_held).to eq("test")
           end
         end
 
