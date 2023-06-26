@@ -26,8 +26,7 @@ module Admin
     end
 
     def programme_choices
-      SchoolCohort.where(cohort:).group(:induction_programme_choice).count
-        .reject { |choice| choice.in? %w[school_funded_fip not_yet_known] }
+      SchoolCohort.where(cohort:, induction_programme_choice: valid_choices).group(:induction_programme_choice).count
     end
 
     def partnership_totals
@@ -40,6 +39,10 @@ module Admin
 
     def providers
       LeadProvider.where(id: ProviderRelationship.where(cohort:).select(:lead_provider_id)).order(:name)
+    end
+
+    def valid_choices
+      SchoolCohort.induction_programme_choices.keys - %w[school_funded_fip not_yet_known]
     end
 
     def cohort
