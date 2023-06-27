@@ -40,6 +40,7 @@ class InductionRecord < ApplicationRecord
 
   # Validations
   validates :start_date, presence: true
+  validate :end_date_after_start_date?
 
   # Scopes
   scope :fip, -> { joins(:induction_programme).merge(InductionProgramme.full_induction_programme) }
@@ -210,5 +211,13 @@ private
 
   def update_analytics
     Analytics::UpsertECFInductionJob.perform_later(induction_record: self) if saved_changes?
+  end
+
+  def end_date_after_start_date?
+    return if end_date.blank? || start_date.blank?
+
+    if end_date < start_date
+      errors.add(:end_date, "cannot be before the start date")
+    end
   end
 end
