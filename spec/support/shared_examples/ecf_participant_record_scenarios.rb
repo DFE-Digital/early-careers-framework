@@ -2,87 +2,6 @@
 
 require "rails_helper"
 
-RSpec.shared_context "a system that has the current academic year configured" do |start_year|
-  let(:cohort_details) do
-    NewSeeds::Scenarios::Cohorts::Cohort.new(start_year:)
-                                        .build
-                                        .with_schedule_and_milestone
-  end
-  let(:cohort) do
-    cohort = cohort_details.cohort
-    allow(Cohort).to receive(:current).and_return(cohort)
-    cohort
-  end
-
-  let(:privacy_policy) do
-    privacy_policy = FactoryBot.create(:seed_privacy_policy, :valid)
-    PrivacyPolicy::Publish.call
-    privacy_policy
-  end
-end
-
-RSpec.shared_context "an appropriate body" do |name|
-  let(:appropriate_body) { FactoryBot.create :seed_appropriate_body, :teaching_school_hub, name: }
-  let(:appropriate_body_user_details) { NewSeeds::Scenarios::Users::AppropriateBodyUser.new(appropriate_body:).build }
-  let(:appropriate_body_user) { appropriate_body_user_details.user }
-end
-
-RSpec.shared_context "a lead provider and their delivery partner" do |lead_provider_name, delivery_partner_name|
-  let(:lead_provider_details) do
-    NewSeeds::Scenarios::LeadProviders::LeadProvider.new(name: lead_provider_name, cohorts: [cohort])
-                                                    .build
-                                                    .with_delivery_partner(name: delivery_partner_name)
-  end
-  let(:lead_provider) { lead_provider_details.lead_provider }
-  let(:lead_provider_token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: lead_provider_details.cpd_lead_provider) }
-
-  let(:delivery_partner) { lead_provider_details.delivery_partner }
-  let(:delivery_partner_user_details) { NewSeeds::Scenarios::Users::DeliveryPartnerUser.new(delivery_partner:).build }
-  let(:delivery_partner_user) { delivery_partner_user_details.user }
-end
-
-RSpec.shared_context "a school that has chosen FIP as their default induction programme" do |school_name|
-  let(:school_details) do
-    NewSeeds::Scenarios::Schools::School.new(name: school_name)
-                                        .build
-                                        .with_an_induction_tutor(accepted_privacy_policy: privacy_policy)
-  end
-  let(:school) { school_details.school }
-
-  let(:school_cohort_details) do
-    NewSeeds::Scenarios::SchoolCohorts::Fip.new(cohort:, school:)
-                                           .build
-                                           .with_partnership(lead_provider:, delivery_partner:)
-                                           .with_programme(default_induction_programme: true)
-  end
-  let(:school_cohort) { school_cohort_details.school_cohort }
-end
-
-RSpec.shared_context "a school that has chosen CIP as their default induction programme" do |school_name|
-  let(:school_details) do
-    NewSeeds::Scenarios::Schools::School.new(name: school_name)
-                                        .build
-                                        .with_an_induction_tutor(accepted_privacy_policy: privacy_policy)
-  end
-  let(:school) { school_details.school }
-
-  let(:school_cohort_details) do
-    core_induction_programme = FactoryBot.create :seed_core_induction_programme, name: "Education Development Trust"
-
-    NewSeeds::Scenarios::SchoolCohorts::Cip.new(cohort:, school:)
-                                           .build
-                                           .with_programme(core_induction_programme:, default_induction_programme: true)
-  end
-  let(:school_cohort) { school_cohort_details.school_cohort }
-end
-
-RSpec.shared_context "an ECF participant" do |scenario|
-  let!(:participant_details) { scenario.new(school_cohort:).build(appropriate_body:) }
-  let(:teacher_profile) { participant_details.teacher_profile }
-  let(:participant_profile) { participant_details.participant_profile }
-  let(:preferred_identity) { participant_details.participant_identity }
-end
-
 RSpec.shared_examples "As their current school induction tutor" do
   it "can see the participant listed in the school participants dashboard" do
     sign_in school_details.induction_tutor
@@ -105,6 +24,13 @@ RSpec.shared_examples "As their current school induction tutor" do
 end
 
 RSpec.shared_examples "As their current appropriate body" do
+  let(:appropriate_body_user) do
+    NewSeeds::Scenarios::Users::AppropriateBodyUser
+      .new(appropriate_body:)
+      .build
+      .user
+  end
+
   it "can see the participant listed in the appropriate body participants dashboard" do
     sign_in appropriate_body_user
 
@@ -146,6 +72,8 @@ RSpec.shared_examples "As the support for ECTs service" do |programme_type:, mat
 end
 
 RSpec.shared_examples "As their current lead provider" do
+  let(:lead_provider_token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: lead_provider_details.cpd_lead_provider) }
+
   let(:parsed_response) { JSON.parse(response.body, symbolize_names: true) }
   let(:api_record) { parsed_response[:data][0] }
 
@@ -215,6 +143,13 @@ RSpec.shared_examples "As their current lead provider" do
 end
 
 RSpec.shared_examples "As their current delivery provider" do
+  let(:delivery_partner_user) do
+    NewSeeds::Scenarios::Users::DeliveryPartnerUser
+      .new(delivery_partner:)
+      .build
+      .user
+  end
+
   it "can see the participant listed in the delivery partner participants dashboard" do
     sign_in delivery_partner_user
 
