@@ -21,10 +21,8 @@
     <%= component.nav_item(path: admin_delivery_partners_users_path) do %>
       Delivery partners
     <% end %>
-    <% if FeatureFlag.active?(:appropriate_bodies) %>
-      <%= component.nav_item(path: admin_appropriate_bodies_users_path) do %>
-        Appropriate bodies
-      <% end %>
+    <%= component.nav_item(path: admin_appropriate_bodies_users_path) do %>
+      Appropriate bodies
     <% end %>
     <% if policy(:super_user).show? %>
       <%= component.nav_item(path: admin_super_user_path) do %>
