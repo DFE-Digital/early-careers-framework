@@ -2,11 +2,11 @@
 
 require "rails_helper"
 
-class DummyController < Api::V1::NPQ::ApplicationSynchronizationsController
+class NPQDummyController < Api::V1::NPQ::ApplicationSynchronizationsController
   include ApiTokenAuthenticatable
 end
 
-describe DummyController, type: :controller do
+describe NPQDummyController, type: :controller do
   describe "Get#index" do
     before do
       controller.response              = response
