@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe ParticipantOutcomes::StreamApiRequestsToBigQueryJob, :with_default_schedules do
+RSpec.describe ParticipantOutcomes::StreamApiRequestsToBigQueryJob do
   let(:api_request) { create(:participant_outcome_api_request, :with_trn_success) }
 
   describe "#perform" do

@@ -2,7 +2,7 @@
 
 require "swagger_helper"
 
-describe "API", :with_default_schedules, type: :request, swagger_doc: "v1/api_spec.json" do
+describe "API", type: :request, swagger_doc: "v1/api_spec.json" do
   let(:cpd_lead_provider)       { create(:cpd_lead_provider, :with_lead_provider) }
   let(:mentor_profile)          { create(:mentor, :eligible_for_funding, lead_provider: cpd_lead_provider.lead_provider) }
   let(:deferred_mentor_profile) { create(:mentor, :deferred, lead_provider: cpd_lead_provider.lead_provider) }
@@ -87,8 +87,7 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v1/api_sp
                   "/api/v1/participants/{id}/change-schedule",
                   "#/components/schemas/ECFParticipantChangeScheduleRequest",
                   "#/components/schemas/ECFParticipantResponse",
-                  "ECF Participant",
-                  :with_default_schedules do
+                  "ECF Participant" do
     let(:participant) { mentor_profile }
     let(:attributes) do
       {

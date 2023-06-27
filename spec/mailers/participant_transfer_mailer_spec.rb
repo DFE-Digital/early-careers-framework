@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe ParticipantTransferMailer, :with_default_schedules, type: :mailer do
+RSpec.describe ParticipantTransferMailer, type: :mailer do
   let(:participant_profile)   { create(:ect) }
   let(:induction_record)      { participant_profile.current_induction_record }
   let(:lead_provider_profile) { create(:lead_provider_profile) }

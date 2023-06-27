@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe InductionRecord, :with_default_schedules, type: :model do
+RSpec.describe InductionRecord, type: :model do
   subject(:induction_record) { create(:ect).current_induction_record }
 
   describe "changes" do
@@ -371,7 +371,7 @@ RSpec.describe InductionRecord, :with_default_schedules, type: :model do
   end
 
   describe "callbacks" do
-    it "updates analytics when an induction record is created", :with_default_schedules do
+    it "updates analytics when an induction record is created" do
       induction_programme = create(:induction_programme)
       participant_profile = create(:ect_participant_profile)
 
@@ -380,7 +380,7 @@ RSpec.describe InductionRecord, :with_default_schedules, type: :model do
       }.to change { InductionRecord.count }.by(1).and have_enqueued_job(Analytics::UpsertECFInductionJob)
     end
 
-    it "updates analytics when any attributes changes", :with_default_schedules do
+    it "updates analytics when any attributes changes" do
       induction_record = create(:induction_record)
 
       expect {

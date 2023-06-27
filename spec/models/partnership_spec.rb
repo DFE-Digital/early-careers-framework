@@ -22,7 +22,7 @@ RSpec.describe Partnership, type: :model do
     it { is_expected.to delegate_method(:name).to(:delivery_partner).with_prefix(true).allow_nil }
   end
 
-  it "updates the updated_at on participant profiles and users", :with_default_schedules do
+  it "updates the updated_at on participant profiles and users" do
     freeze_time
     school_cohort = create(:school_cohort)
     partnership = create(:partnership, school: school_cohort.school)
@@ -91,7 +91,7 @@ RSpec.describe Partnership, type: :model do
     end
   end
 
-  it "updates analytics when any attributes changes", :with_default_schedules do
+  it "updates analytics when any attributes changes" do
     partnership = create(:partnership, pending: true)
     partnership.pending = false
     expect {

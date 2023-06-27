@@ -49,7 +49,7 @@ RSpec.describe SchoolCohort, type: :model, with_feature_flag: { cohortless_dashb
     expect(profile.reload.updated_at).to be_within(1.second).of 2.weeks.ago
   end
 
-  it "updates analytics when any attributes changes", :with_default_schedules do
+  it "updates analytics when any attributes changes" do
     school_cohort = create(:school_cohort, opt_out_of_updates: false)
     school_cohort.opt_out_of_updates = true
     expect {

@@ -7,6 +7,7 @@ RSpec.describe "Schools::Dashboard", type: :request do
   let(:school) { user.schools.first }
 
   before do
+    travel_to Date.new(2022, 9, 1)
     sign_in user
   end
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe NPQApplication, :with_default_schedules, type: :model do
+RSpec.describe NPQApplication, type: :model do
   it {
     is_expected.to define_enum_for(:headteacher_status).with_values(
       no: "no",

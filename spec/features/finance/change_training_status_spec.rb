@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.feature "Finance users participant change training status", :with_default_schedules, type: :feature do
+RSpec.feature "Finance users participant change training status", type: :feature do
   let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider) }
 
   before do

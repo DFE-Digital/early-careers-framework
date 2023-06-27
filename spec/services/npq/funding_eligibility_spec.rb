@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe NPQ::FundingEligibility, :with_default_schedules do
+RSpec.describe NPQ::FundingEligibility do
   subject { described_class.new(trn:, get_an_identity_id:, npq_course_identifier: course_for_lookup.identifier) }
 
   let(:course_for_lookup) { npq_course }

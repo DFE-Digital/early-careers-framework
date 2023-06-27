@@ -2,7 +2,7 @@
 
 require "swagger_helper"
 
-RSpec.describe "Participant Declarations", :with_default_schedules, type: :request, swagger_doc: "v1/api_spec.json" do
+RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v1/api_spec.json" do
   let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
   let(:ect_profile)       { create(:ect, lead_provider: cpd_lead_provider.lead_provider) }
   let(:user)              { ect_profile.teacher_profile.user }

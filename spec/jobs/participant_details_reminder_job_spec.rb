@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe ParticipantDetailsReminderJob, :with_default_schedules do
+RSpec.describe ParticipantDetailsReminderJob do
   let(:participant_profile) { create :ect, sit_validation: true }
 
   subject { described_class.perform_now(profile_id: participant_profile.id) }

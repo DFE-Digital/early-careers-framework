@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Finance::StatementLineItem, :with_default_schedules do
+RSpec.describe Finance::StatementLineItem do
   let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
   let!(:statement)        { create(:ecf_statement, :next_output_fee, cpd_lead_provider:) }
 

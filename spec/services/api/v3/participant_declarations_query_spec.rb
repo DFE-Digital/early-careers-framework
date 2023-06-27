@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Api::V3::ParticipantDeclarationsQuery, :with_default_schedules do
+RSpec.describe Api::V3::ParticipantDeclarationsQuery do
   let(:cohort1) { Cohort.current || create(:cohort, :current) }
   let(:cohort2) { Cohort.previous || create(:cohort, :previous) }
 

@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe StoreParticipantEligibility, :with_default_schedules do
+RSpec.describe StoreParticipantEligibility do
   describe ".call" do
     subject(:service) { described_class }
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Finance::ECF::ChangeTrainingStatusForm, :with_default_schedules, type: :model do
+RSpec.describe Finance::ECF::ChangeTrainingStatusForm, type: :model do
   subject(:form) { described_class.new(params) }
 
   let(:cpd_lead_provider)   { create(:cpd_lead_provider, :with_lead_provider) }

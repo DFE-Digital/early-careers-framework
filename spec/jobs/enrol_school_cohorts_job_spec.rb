@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe EnrolSchoolCohortsJob, :with_default_schedules do
+RSpec.describe EnrolSchoolCohortsJob do
   describe "#perform" do
     let(:school_cohort) { create(:school_cohort, :fip) }
     let!(:ect) { create(:ect, school_cohort:) }

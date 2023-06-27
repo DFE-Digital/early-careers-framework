@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Finance::ECF::DuplicateSerializer, :with_default_schedules do
+RSpec.describe Finance::ECF::DuplicateSerializer do
   describe "serialization" do
     let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
     let(:participant_profile) { create(:ect, lead_provider: cpd_lead_provider.lead_provider) }

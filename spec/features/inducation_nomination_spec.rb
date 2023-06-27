@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.feature "Nominating tutors", :with_default_schedules, :js do
+RSpec.feature "Nominating tutors", :js do
   describe "When nominating an induction tutors with details that are not acceptable" do
     let(:cohort)                  { Cohort.find_by(start_year: 2021) || create(:cohort, start_year: "2021") }
     let(:school)                  { create(:school, name: "CIP School") }

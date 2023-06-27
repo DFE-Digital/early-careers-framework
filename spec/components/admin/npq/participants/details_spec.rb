@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Admin::NPQ::Participants::Details, :with_default_schedules, type: :component do
+RSpec.describe Admin::NPQ::Participants::Details, type: :component do
   let(:component) { described_class.new(profile:, school:, user:, npq_application:) }
 
   let(:school) { build(:school) }

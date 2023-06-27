@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Induction::TransferAndContinueExistingFip, :with_default_schedules do
+RSpec.describe Induction::TransferAndContinueExistingFip do
   describe "#call" do
     let(:lead_provider)   { create(:cpd_lead_provider, :with_lead_provider).lead_provider }
     let(:school_1)        { create(:school, name: "Transferring From School") }

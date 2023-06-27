@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Finance::ECF::OutputCalculator, :with_default_schedules do
+RSpec.describe Finance::ECF::OutputCalculator do
   let(:first_statement) { create(:ecf_statement, cpd_lead_provider:, payment_date: 6.months.ago) }
   let(:second_statement) { create(:ecf_statement, cpd_lead_provider:, payment_date: 4.months.ago) }
   let(:third_statement) { create(:ecf_statement, cpd_lead_provider:, payment_date: 2.months.ago) }
@@ -95,7 +95,7 @@ RSpec.describe Finance::ECF::OutputCalculator, :with_default_schedules do
       end
     end
 
-    context "when partially filled bands", :with_default_schedules do
+    context "when partially filled bands" do
       let!(:to_be_paid_participant_declaration) do
         travel_to first_statement.deadline_date - 1.day do
           create(:ect_participant_declaration, :payable, cpd_lead_provider:)

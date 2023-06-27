@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Api::V1::ParticipantOutcomeSerializer, :with_default_schedules do
+RSpec.describe Api::V1::ParticipantOutcomeSerializer do
   describe "#serializable_hash" do
     let(:provider) { create :cpd_lead_provider, :with_npq_lead_provider }
     let(:npq_application) { create :npq_application, :accepted, npq_lead_provider: provider.npq_lead_provider }

@@ -134,7 +134,7 @@ RSpec.shared_examples "deferring an ECF participant" do
   end
 end
 
-RSpec.describe DeferParticipant, :with_default_schedules do
+RSpec.describe DeferParticipant do
   let(:participant_id) { participant_profile.participant_identity.external_identifier }
   let(:reason) { "other" }
   let(:params) do

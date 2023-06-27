@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe StoreValidationResult, :with_default_schedules do
+RSpec.describe StoreValidationResult do
   subject(:result) do
     described_class.call(
       participant_profile:,

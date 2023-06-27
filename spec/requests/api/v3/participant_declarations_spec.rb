@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "API Participant Declarations", :with_default_schedules, type: :request do
+RSpec.describe "API Participant Declarations", type: :request do
   let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
 
   let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }

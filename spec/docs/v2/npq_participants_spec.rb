@@ -2,7 +2,7 @@
 
 require "swagger_helper"
 
-describe "API", :with_default_schedules, type: :request, swagger_doc: "v2/api_spec.json" do
+describe "API", type: :request, swagger_doc: "v2/api_spec.json" do
   let(:cpd_lead_provider) { create(:cpd_lead_provider, npq_lead_provider:) }
   let(:npq_lead_provider) { create(:npq_lead_provider) }
   let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
@@ -92,8 +92,7 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v2/api_sp
                   "/api/v2/participants/npq/{id}/change-schedule",
                   "#/components/schemas/NPQParticipantChangeScheduleRequest",
                   "#/components/schemas/NPQParticipantResponse",
-                  "NPQ Participant",
-                  :with_default_schedules do
+                  "NPQ Participant" do
     let(:participant) { npq_application }
     let(:profile)     { npq_application.profile }
 

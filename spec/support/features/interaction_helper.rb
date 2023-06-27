@@ -7,7 +7,9 @@ module InteractionHelper
   alias_method :and_i_click, :click_on
 
   alias_method :when_i_click_the_link_containing, :click_link
-  alias_method :and_i_click_the_link_containing, :click_link
+  def and_i_click_the_link_containing(text)
+    first(:link, text).click
+  end
 
   alias_method :when_i_fill_in, :fill_in
 

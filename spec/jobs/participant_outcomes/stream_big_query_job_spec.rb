@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe ParticipantOutcomes::StreamBigQueryJob, :with_default_schedules do
+RSpec.describe ParticipantOutcomes::StreamBigQueryJob do
   let(:participant_declaration) { create(:npq_participant_declaration) }
   let(:outcome) { create(:participant_outcome, :sent_to_qualified_teachers_api, participant_declaration:, qualified_teachers_api_request_successful: true) }
 

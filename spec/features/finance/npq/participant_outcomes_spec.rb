@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.feature "Search participant data - participant outcomes", :with_default_schedules, type: :feature do
+RSpec.feature "Search participant data - participant outcomes", type: :feature do
   describe "NPQ user" do
     let(:participant_declaration) { create(:npq_participant_declaration) }
     let(:participant_outcome) { create :participant_outcome, :passed, participant_declaration: }

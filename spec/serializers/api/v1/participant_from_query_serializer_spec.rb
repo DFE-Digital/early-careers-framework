@@ -4,7 +4,7 @@ require "rails_helper"
 
 module Api
   module V1
-    RSpec.describe ParticipantFromQuerySerializer, :with_default_schedules do
+    RSpec.describe ParticipantFromQuerySerializer do
       let(:query_result) { OpenStruct.new(results) }
       let(:results) do
         {

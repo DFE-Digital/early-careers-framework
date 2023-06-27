@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Transfers::NPQParticipants, :with_default_schedules do
+RSpec.describe Transfers::NPQParticipants do
   let!(:new_cpd_lead_provider) { create(:cpd_lead_provider, :with_npq_lead_provider) }
   let(:new_npq_lead_provider_id) { new_cpd_lead_provider.npq_lead_provider.id }
 

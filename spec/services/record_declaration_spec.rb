@@ -265,7 +265,7 @@ RSpec.shared_examples "creates participant declaration attempt" do
   end
 end
 
-RSpec.describe RecordDeclaration, :with_default_schedules do
+RSpec.describe RecordDeclaration do
   let(:cpd_lead_provider)     { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider) }
   let(:another_lead_provider) { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider, name: "Unknown") }
   let(:declaration_type)      { "started" }
@@ -392,7 +392,7 @@ RSpec.describe RecordDeclaration, :with_default_schedules do
     it_behaves_like "creates a participant declaration"
     it_behaves_like "creates participant declaration attempt"
 
-    context "for next cohort", :with_default_schedules do
+    context "for next cohort" do
       let!(:schedule) { create(:npq_specialist_schedule, cohort:) }
       let!(:statement) { create(:npq_statement, :output_fee, deadline_date: 6.weeks.from_now, cpd_lead_provider:, cohort:) }
 

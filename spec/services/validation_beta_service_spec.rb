@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe ValidationBetaService, :with_default_schedules do
+RSpec.describe ValidationBetaService do
   subject(:validation_beta_service) { described_class.new }
 
   describe "#remind_fip_induction_coordinators_to_add_ect_and_mentors" do

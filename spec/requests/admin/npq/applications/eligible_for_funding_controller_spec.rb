@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "Admin::NPQ::Applications::EligibleForFundingController", :with_default_schedules, type: :request do
+RSpec.describe "Admin::NPQ::Applications::EligibleForFundingController", type: :request do
   let(:application) do
     create(:npq_application,
            works_in_school: false,

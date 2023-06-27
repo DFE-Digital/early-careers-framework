@@ -4,7 +4,7 @@ require "rails_helper"
 
 module Api
   module V2
-    RSpec.describe NPQApplicationCsvSerializer, :with_default_schedules do
+    RSpec.describe NPQApplicationCsvSerializer do
       subject { described_class.new([npq_application]).call }
 
       describe "serialization" do

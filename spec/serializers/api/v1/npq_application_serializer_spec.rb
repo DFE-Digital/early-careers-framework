@@ -4,7 +4,7 @@ require "rails_helper"
 
 module Api
   module V1
-    RSpec.describe NPQApplicationSerializer, :with_default_schedules do
+    RSpec.describe NPQApplicationSerializer do
       subject(:result) { described_class.new(npq_application).serializable_hash }
 
       describe "serialization" do

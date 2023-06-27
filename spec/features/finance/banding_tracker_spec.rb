@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.feature "Banding tracker", :with_default_schedules, type: :feature, js: true do
+RSpec.feature "Banding tracker", type: :feature, js: true do
   let!(:cpd_lead_provider) do
     create(:cpd_lead_provider, :with_lead_provider, name: "Lead provider name").tap do |cpd_lead_provider|
       create(:call_off_contract, lead_provider: cpd_lead_provider.lead_provider, revised_target: 65).tap do |call_off_contract|

@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe VoidParticipantDeclaration, :with_default_schedules do
+RSpec.describe VoidParticipantDeclaration do
   let(:cpd_lead_provider)   { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider) }
   let(:participant_profile) { create(:ect, :eligible_for_funding, lead_provider: cpd_lead_provider.lead_provider) }
   let(:lead_provider) { cpd_lead_provider.lead_provider }

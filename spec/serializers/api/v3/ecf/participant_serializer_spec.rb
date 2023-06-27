@@ -6,7 +6,7 @@ module Api
   module V3
     module ECF
       RSpec.describe ParticipantSerializer do
-        describe "serialization", :with_default_schedules do
+        describe "serialization" do
           let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
           let(:school) { create(:school) }
           let(:cohort) { create(:cohort, :current) }

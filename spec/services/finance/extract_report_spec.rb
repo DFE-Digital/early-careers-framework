@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Finance::ExtractReport, :with_default_schedules do
+RSpec.describe Finance::ExtractReport do
   def with_captured_stdout
     original_stdout = $stdout
     $stdout = StringIO.new

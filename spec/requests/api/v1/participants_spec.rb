@@ -3,7 +3,7 @@
 require "rails_helper"
 require "csv"
 
-RSpec.describe "Participants API", :with_default_schedules, type: :request do
+RSpec.describe "Participants API", type: :request do
   describe "GET /api/v1/participants" do
     let(:cohort) { Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021) }
 

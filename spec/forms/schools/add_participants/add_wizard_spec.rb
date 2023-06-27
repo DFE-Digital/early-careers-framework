@@ -75,7 +75,7 @@ RSpec.describe Schools::AddParticipants::AddWizard, type: :model do
       end
     end
 
-    context "when the email is in use by a NPQ registrant", :with_default_schedules do
+    context "when the email is in use by a NPQ registrant" do
       let(:user) { create(:user, email: "ray.clemence@example.com") }
       let(:teacher_profile) { create(:teacher_profile, user:) }
       let!(:npq_profile) { create(:npq_participant_profile, teacher_profile:) }
