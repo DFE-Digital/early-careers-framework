@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe RemoveSchoolMentorJob, :with_default_schedules do
+RSpec.describe RemoveSchoolMentorJob do
   describe "#perform" do
     subject(:job) { described_class }
     let(:school_cohort) { create(:school_cohort, :fip) }

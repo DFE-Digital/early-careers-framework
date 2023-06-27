@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe UpdateInductionTutorReminderJob, :with_default_schedules do
+RSpec.describe UpdateInductionTutorReminderJob do
   let(:school) { FactoryBot.create(:seed_school) }
   let(:fake_reminder) { double(UpdateInductionTutorReminder, send!: true) }
 

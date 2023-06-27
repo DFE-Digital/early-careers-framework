@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Admin::Participants::Search, :with_default_schedules do
+RSpec.describe Admin::Participants::Search do
   let(:search) { Admin::Participants::Search }
 
   describe "searching" do

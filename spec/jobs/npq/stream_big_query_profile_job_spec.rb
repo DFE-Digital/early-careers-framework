@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe NPQ::StreamBigQueryProfileJob, :with_default_schedules do
+RSpec.describe NPQ::StreamBigQueryProfileJob do
   let(:profile) { create(:npq_participant_profile) }
 
   describe "#perform" do

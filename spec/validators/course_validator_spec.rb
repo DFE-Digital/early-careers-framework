@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe CourseValidator, :with_default_schedules do
+RSpec.describe CourseValidator do
   let(:klass) do
     Class.new do
       include ActiveModel::Model

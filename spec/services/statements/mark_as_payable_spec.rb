@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Statements::MarkAsPayable, :with_default_schedules do
+RSpec.describe Statements::MarkAsPayable do
   let(:cpd_lead_provider)              { create(:cpd_lead_provider, :with_npq_lead_provider) }
   let!(:statement)                     { create :npq_statement, :next_output_fee, cpd_lead_provider: }
   let!(:submitted_declaration)         { create(:npq_participant_declaration, :submitted,  cpd_lead_provider:) }

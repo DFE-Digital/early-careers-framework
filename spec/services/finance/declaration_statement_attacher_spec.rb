@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Finance::DeclarationStatementAttacher, :with_default_schedules do
+RSpec.describe Finance::DeclarationStatementAttacher do
   let(:previous_cohort) { Cohort.previous || create(:cohort, :previous) }
   let(:current_cohort) { Cohort.current || create(:cohort, :current) }
 

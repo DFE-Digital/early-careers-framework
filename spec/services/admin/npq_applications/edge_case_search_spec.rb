@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Admin::NPQApplications::EdgeCaseSearch, :with_default_schedules do
+RSpec.describe Admin::NPQApplications::EdgeCaseSearch do
   let(:search) { Admin::NPQApplications::EdgeCaseSearch }
 
   let!(:application_1) { create(:npq_application, user: user_1) }

@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.feature "Finance users payment breakdowns", :with_default_schedules, type: :feature, js: true do
+RSpec.feature "Finance users payment breakdowns", type: :feature, js: true do
   include FinanceHelper
   include ActionView::Helpers::NumberHelper
 

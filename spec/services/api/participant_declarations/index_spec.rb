@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Api::ParticipantDeclarations::Index, :with_default_schedules do
+RSpec.describe Api::ParticipantDeclarations::Index do
   describe "#scope" do
     let(:cohort_2021) { Cohort.find_by(start_year: 2021) }
 

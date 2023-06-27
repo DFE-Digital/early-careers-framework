@@ -3,7 +3,7 @@
 require "rails_helper"
 require_relative "./participant_declaration_steps"
 
-RSpec.feature "Voided declaration in payment breakdown", :with_default_schedules, type: :feature do
+RSpec.feature "Voided declaration in payment breakdown", type: :feature do
   include ParticipantDeclarationSteps
 
   before(:each) { setup }

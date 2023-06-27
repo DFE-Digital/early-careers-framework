@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe ParticipantProfile::ECFPolicy, :with_default_schedules, type: :policy do
+RSpec.describe ParticipantProfile::ECFPolicy, type: :policy do
   subject { described_class.new(user, participant_profile) }
 
   let(:cpd_lead_provider)   { create(:cpd_lead_provider, :with_lead_provider) }

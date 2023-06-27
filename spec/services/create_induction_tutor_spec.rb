@@ -113,7 +113,7 @@ RSpec.describe CreateInductionTutor do
         end
       end
 
-      context "when the induction coordinator is also an npq", :with_default_schedules do
+      context "when the induction coordinator is also an npq" do
         let!(:npq_profile) { create(:npq_participant_profile, user: existing_profile.user, school:) }
 
         it "retains the user but deletes the induction coordinator profile" do

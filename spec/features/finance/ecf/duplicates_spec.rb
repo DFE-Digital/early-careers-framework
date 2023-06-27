@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "Duplicate profile tooling", :with_default_schedules, :js do
+RSpec.describe "Duplicate profile tooling", :js do
   let(:ect_participant_profile)   { create(:ect) }
   let(:mentor_participant_profile) { create(:mentor) }
   let(:duplicate_ect_profiles) do

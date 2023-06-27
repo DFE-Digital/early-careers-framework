@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe ParticipantProfilePolicy, :with_default_schedules, type: :policy do
+RSpec.describe ParticipantProfilePolicy, type: :policy do
   subject { described_class.new(user, participant_profile) }
 
   let(:participant_profile) { create(:ect) }

@@ -3,7 +3,7 @@
 require "rails_helper"
 require_relative "./participant_declaration_steps"
 
-RSpec.feature "Submit participant declarations", :with_default_schedules, type: :feature do
+RSpec.feature "Submit participant declarations", type: :feature do
   include ParticipantDeclarationSteps
 
   before(:each) do

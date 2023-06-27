@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "Admin::Participants", :with_default_schedules, type: :request do
+RSpec.describe "Admin::Participants", type: :request do
   let(:scenario) { NewSeeds::Scenarios::Users::AdminUser.new.build.with_super_user }
 
   let(:admin_user) { scenario.user }

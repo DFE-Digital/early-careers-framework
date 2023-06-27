@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe ParticipantDeclaration::ECF, :with_default_schedules do
+RSpec.describe ParticipantDeclaration::ECF do
   describe "#uplift_paid?" do
     %i[paid awaiting_clawback clawed_back].each do |declaration_state|
       context "started - ecf-induction - #{declaration_state} - sparsity_uplift" do

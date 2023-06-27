@@ -4,7 +4,7 @@ require "rails_helper"
 
 module Api
   module V1
-    RSpec.describe NPQParticipantSerializer, :with_default_schedules do
+    RSpec.describe NPQParticipantSerializer do
       describe "serialization" do
         let(:participant) { create(:user) }
 

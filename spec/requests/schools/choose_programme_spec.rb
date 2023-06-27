@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "Schools::ChooseProgramme", :with_default_schedules, type: :request do
+RSpec.describe "Schools::ChooseProgramme", type: :request do
   let(:user) { create(:user, :induction_coordinator) }
   let(:school) { user.induction_coordinator_profile.schools.first }
   let(:cohort) { Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021) }

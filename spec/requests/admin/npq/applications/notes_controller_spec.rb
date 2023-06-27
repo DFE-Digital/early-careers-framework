@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "Admin::NPQ::Applications::NotesController", :with_default_schedules, type: :request do
+RSpec.describe "Admin::NPQ::Applications::NotesController", type: :request do
   let(:application) do
     create(:npq_application,
            works_in_school: false,

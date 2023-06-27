@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Api::V2::ParticipantDeclarationSerializer, :with_default_schedules do
+RSpec.describe Api::V2::ParticipantDeclarationSerializer do
   describe "#has_passed" do
     let(:declaration_type) { "completed" }
     let(:npq_course) { create(:npq_leadership_course) }

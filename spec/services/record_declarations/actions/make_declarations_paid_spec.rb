@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe RecordDeclarations::Actions::MakeDeclarationsPaid, :with_default_schedules do
+RSpec.describe RecordDeclarations::Actions::MakeDeclarationsPaid do
   describe "#perform" do
     let!(:declaration) { create(:ect_participant_declaration, :payable) }
 

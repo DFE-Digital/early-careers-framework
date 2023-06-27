@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "Admin::NPQ::ApplicationsController", :with_default_schedules, type: :request do
+RSpec.describe "Admin::NPQ::ApplicationsController", type: :request do
   before { create_list(:npq_application, 2) }
 
   let(:application) { NPQApplication.first }

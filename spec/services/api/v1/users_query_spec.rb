@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Api::V1::UsersQuery, :with_default_schedules do
+RSpec.describe Api::V1::UsersQuery do
   let!(:users) { create_list(:user, 3) }
   let(:updated_since) { nil }
   let(:email) { nil }

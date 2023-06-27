@@ -4,7 +4,7 @@ require "rails_helper"
 
 module Api
   module V1
-    RSpec.describe ParticipantFromInductionRecordSerializer, :with_default_schedules do
+    RSpec.describe ParticipantFromInductionRecordSerializer do
       let(:ect) { create(:ect) }
       let(:induction_record) { ect.induction_records.first }
 

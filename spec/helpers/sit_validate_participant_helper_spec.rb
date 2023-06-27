@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe SitValidateParticipantHelper, :with_default_schedules, type: :helper do
+RSpec.describe SitValidateParticipantHelper, type: :helper do
   let!(:ect_profile)    { create(:ect, :eligible_for_funding) }
   let!(:mentor_profile) { create(:mentor, :eligible_for_funding) }
   let(:user) { create(:user) }

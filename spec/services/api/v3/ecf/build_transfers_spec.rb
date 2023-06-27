@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Api::V3::ECF::BuildTransfers, :with_default_schedules do
+RSpec.describe Api::V3::ECF::BuildTransfers do
   describe ".call" do
     let!(:cohort) { Cohort.current || create(:cohort, :current) }
     let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }

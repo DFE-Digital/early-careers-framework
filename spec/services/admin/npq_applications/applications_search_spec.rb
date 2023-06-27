@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Admin::NPQApplications::ApplicationsSearch, :with_default_schedules do
+RSpec.describe Admin::NPQApplications::ApplicationsSearch do
   let(:search) { Admin::NPQApplications::ApplicationsSearch }
 
   let(:school_1) { create(:school, name: "Greendale School", urn: "123456") }

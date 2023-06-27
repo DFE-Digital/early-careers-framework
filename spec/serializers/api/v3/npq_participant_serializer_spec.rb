@@ -5,7 +5,7 @@ require "rails_helper"
 module Api
   module V3
     RSpec.describe NPQParticipantSerializer do
-      describe "serialization", :with_default_schedules do
+      describe "serialization" do
         let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_npq_lead_provider) }
         let(:npq_lead_provider) { cpd_lead_provider.npq_lead_provider }
         let(:user) { create(:user) }

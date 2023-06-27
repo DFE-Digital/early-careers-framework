@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe QualifiedTeachers::Client, :with_default_schedules do
+RSpec.describe QualifiedTeachers::Client do
   let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_npq_lead_provider) }
   let(:npq_lead_provider) { cpd_lead_provider.npq_lead_provider }
   let(:npq_course) { create(:npq_course, identifier: "npq-senior-leadership") }

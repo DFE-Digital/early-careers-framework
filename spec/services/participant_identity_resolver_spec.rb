@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe ParticipantIdentityResolver, :with_default_schedules, :with_support_for_ect_examples do
+RSpec.describe ParticipantIdentityResolver, :with_support_for_ect_examples do
   let(:npq_lead_provider) { create(:npq_lead_provider) }
   let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider, npq_lead_provider:) }
   let(:lead_provider) { cpd_lead_provider.lead_provider }
