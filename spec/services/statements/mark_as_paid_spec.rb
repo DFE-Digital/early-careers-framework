@@ -24,7 +24,7 @@ RSpec.describe Statements::MarkAsPaid, :with_default_schedules do
       Finance::ClawbackDeclaration.new(awaiting_clawback_declaration.reload).call
     end
     Statements::MarkAsPayable.new(statement).call
-    statement.reload
+    Finance::Statement::NPQ::Payable.find(statement.id)
   end
 
   describe "#call" do

@@ -32,9 +32,9 @@ RSpec.describe Finance::Statements::MarkAsPayable, :with_default_schedules do
       travel_to Date.new(2022, 1, 1) do
         described_class.perform_now
       end
-    }.to change(statement.reload.participant_declarations.payable, :count).from(0).to(1)
+    }.to change(Finance::Statement.find(statement.id).participant_declarations.payable, :count).from(0).to(1)
 
-    expect(statement.reload.type).to eq("Finance::Statement::ECF::Payable")
+    expect(Finance::Statement.find(statement.id).type).to eq("Finance::Statement::ECF::Payable")
   end
 
   it "transitions lines items to payable" do
