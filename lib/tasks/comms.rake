@@ -19,6 +19,11 @@ namespace :comms do
         next
       end
 
+      unless FeatureFlag.active?(:cohortless_dashboard, for: school)
+        logger.info "Adding school with urn #{school.urn} to the pilot"
+        FeatureFlag.activate(:cohortless_dashboard, for: school)
+      end
+
       if school.induction_coordinators.any?
         # Do not chase the school if there is a 2023 training programme
         if school.school_cohorts.for_year(2023).first&.induction_programme_choice
