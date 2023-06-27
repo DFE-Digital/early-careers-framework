@@ -4,6 +4,9 @@ require "rails_helper"
 
 RSpec.describe Finance::Schedule::ECF, type: :model do
   before do
+    Finance::Milestone.delete_all
+    Finance::Schedule.delete_all
+
     load Rails.root.join("db/legacy_seeds/schedules.rb").to_s
   end
 

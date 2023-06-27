@@ -113,7 +113,7 @@ RSpec.shared_examples "resuming an ECF participant" do
   end
 end
 
-RSpec.describe ResumeParticipant, :with_default_schedules do
+RSpec.describe ResumeParticipant do
   let(:participant_id) { participant_profile.participant_identity.external_identifier }
   let(:params) do
     {

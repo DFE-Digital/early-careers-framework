@@ -119,7 +119,7 @@ RSpec.shared_examples "changing the schedule of a participant" do
   end
 end
 
-RSpec.describe ChangeSchedule, :with_default_schedules do
+RSpec.describe ChangeSchedule do
   let(:participant_id) { participant_profile.participant_identity.external_identifier }
   let(:params) do
     {

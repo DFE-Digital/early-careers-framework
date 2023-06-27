@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe ParticipantOutcomes::SendToQualifiedTeachersApiJob, :with_default_schedules do
+RSpec.describe ParticipantOutcomes::SendToQualifiedTeachersApiJob do
   describe "#perform" do
     let(:participant_declaration) { create :npq_participant_declaration }
     let(:participant_outcome) { create :participant_outcome, participant_declaration: }

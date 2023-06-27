@@ -47,7 +47,7 @@ RSpec.describe DeliveryPartner, type: :model do
     end
   end
 
-  describe "participant_profiles", :with_default_schedules do
+  describe "participant_profiles" do
     let(:delivery_partner) { create(:delivery_partner) }
     let(:lead_provider)    { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider).lead_provider }
     let(:school_cohort)    { create(:school_cohort, :with_induction_programme, delivery_partner:, lead_provider:) }
@@ -73,7 +73,7 @@ RSpec.describe DeliveryPartner, type: :model do
     end
   end
 
-  describe "active_ecf_participant_profiles", :with_default_schedules do
+  describe "active_ecf_participant_profiles" do
     let(:delivery_partner) { create(:delivery_partner) }
     let(:lead_provider)    { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider).lead_provider }
     let(:school_cohort)    { create(:school_cohort, :with_induction_programme, delivery_partner:, lead_provider:) }

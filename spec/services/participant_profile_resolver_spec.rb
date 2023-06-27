@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe ParticipantProfileResolver, :with_default_schedules do
+RSpec.describe ParticipantProfileResolver do
   describe "#call" do
     context "when participant has both ECT and NPQ profiles" do
       let!(:ect_profile) { create(:ect) }

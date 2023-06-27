@@ -3,44 +3,47 @@
 require "rails_helper"
 
 RSpec.describe "Pages for induction tutor materials for existing CIPs", type: :request do
-  before do
-    seed_path = %w[db legacy_seeds]
+  let(:cip_materials_ambition) { FactoryBot.create :core_induction_programme, name: "Ambition Institute" }
+  let(:cip_materials_edt) { FactoryBot.create :core_induction_programme, name: "Education Development Trust" }
+  let(:cip_materials_tf) { FactoryBot.create :core_induction_programme, name: "Teach First" }
+  let(:cip_materials_ucl) { FactoryBot.create :core_induction_programme, name: "UCL Institute of Education" }
 
-    load Rails.root.join(*seed_path, "initial_seed.rb").to_s
+  describe "GET /induction-tutor-materials/:provider/year-one" do
+    let(:year) { "year-one" }
+
+    %w[
+      ambition-institute
+      education-development-trust
+      teach-first
+      ucl-institute-of-education
+    ].each do |materials_provider_id|
+      it "renders the year one materials template for #{materials_provider_id}" do
+        get induction_tutor_materials_path(provider: materials_provider_id, year:)
+        expect(response.status).to eq 200
+      end
+    end
+
+    it "fails to renders the year one materials template for anything else" do
+      expect { get induction_tutor_materials_path(provider: "harvard-institute", year:) }.to raise_error ActionView::MissingTemplate
+    end
   end
 
-  describe "GET /induction-tutor-materials/:provider/:year" do
-    it "renders the materials template for Ambition" do
-      provider = CoreInductionProgramme.find_by!(name: "Ambition Institute")
-      get induction_tutor_materials_path(provider: provider.name.downcase.tr(" ", "-"), year: "year-one")
-      expect(response.status).to eq 200
+  describe "GET /induction-tutor-materials/:provider/year-two" do
+    let(:year) { "year-two" }
 
-      get induction_tutor_materials_path(provider: provider.name.downcase.tr(" ", "-"), year: "year-two")
-      expect(response.status).to eq 200
+    %w[
+      ambition-institute
+      education-development-trust
+      ucl-institute-of-education
+    ].each do |materials_provider_id|
+      it "renders the year two materials template for #{materials_provider_id}" do
+        get induction_tutor_materials_path(provider: materials_provider_id, year:)
+        expect(response.status).to eq 200
+      end
     end
 
-    it "renders the materials template for EDT" do
-      provider = CoreInductionProgramme.find_by!(name: "Education Development Trust")
-      get induction_tutor_materials_path(provider: provider.name.downcase.tr(" ", "-"), year: "year-one")
-      expect(response.status).to eq 200
-
-      get induction_tutor_materials_path(provider: provider.name.downcase.tr(" ", "-"), year: "year-two")
-      expect(response.status).to eq 200
-    end
-
-    it "renders the materials template for Teach First" do
-      provider = CoreInductionProgramme.find_by!(name: "Teach First")
-      get induction_tutor_materials_path(provider: provider.name.downcase.tr(" ", "-"), year: "year-one")
-      expect(response.status).to eq 200
-    end
-
-    it "renders the materials template for UCL" do
-      provider = CoreInductionProgramme.find_by!(name: "UCL Institute of Education")
-      get induction_tutor_materials_path(provider: provider.name.downcase.tr(" ", "-"), year: "year-one")
-      expect(response.status).to eq 200
-
-      get induction_tutor_materials_path(provider: provider.name.downcase.tr(" ", "-"), year: "year-two")
-      expect(response.status).to eq 200
+    it "fails to renders the year one materials template for anything else" do
+      expect { get induction_tutor_materials_path(provider: "harvard-institute", year:) }.to raise_error ActionView::MissingTemplate
     end
   end
 end

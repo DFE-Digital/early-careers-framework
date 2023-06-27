@@ -5,7 +5,7 @@ require "rails_helper"
 module Api
   module V3
     module ECF
-      RSpec.describe UnfundedMentorSerializer, :with_default_schedules do
+      RSpec.describe UnfundedMentorSerializer do
         let(:query_result) { OpenStruct.new(results) }
         let(:results) do
           {

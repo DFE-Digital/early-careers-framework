@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Dashboard::Participants, :with_default_schedules do
+RSpec.describe Dashboard::Participants do
   let!(:transfer_1) do
     NewSeeds::Scenarios::Participants::Transfers::FipToFipChangingTrainingProvider.new
   end

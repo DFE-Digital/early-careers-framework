@@ -11,7 +11,7 @@ RSpec.describe "NPQ Participants API", type: :request do
 
   before { default_headers[:Authorization] = bearer_token }
 
-  describe "GET /api/v2/participants/npq", :with_default_schedules do
+  describe "GET /api/v2/participants/npq" do
     let!(:npq_applications) do
       create_list(:npq_application, 3, :accepted, :with_started_declaration, npq_lead_provider:, school_urn: "123456")
     end
@@ -171,7 +171,7 @@ RSpec.describe "NPQ Participants API", type: :request do
     end
   end
 
-  describe "GET /api/v2/participants/npq/:id", :with_default_schedules do
+  describe "GET /api/v2/participants/npq/:id" do
     let(:npq_application) { create(:npq_application, :accepted, :with_started_declaration, npq_lead_provider:) }
     let(:npq_participant) { npq_application.profile }
 
@@ -230,7 +230,7 @@ RSpec.describe "NPQ Participants API", type: :request do
     end
   end
 
-  describe "PUT /api/v2/participants/npq/:id/change-schedule", :with_default_schedules do
+  describe "PUT /api/v2/participants/npq/:id/change-schedule" do
     let(:npq_application)         { create(:npq_application, :accepted, npq_lead_provider:) }
     let(:profile)                 { npq_application.profile }
     let(:new_schedule)            do

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Mail::DeliveryRecorder, :with_default_schedules do
+RSpec.describe Mail::DeliveryRecorder do
   let(:mail) do
     Mail::Message.new(to: Faker::Internet.email, from: Faker::Internet.email, personalisation:)
   end

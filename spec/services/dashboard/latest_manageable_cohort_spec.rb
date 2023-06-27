@@ -8,7 +8,7 @@ RSpec.describe Dashboard::LatestManageableCohort do
       described_class.call(school)
     end
 
-    context "when the school is included in the pilot", :with_default_schedules do
+    context "when the school is included in the pilot" do
       before do
         FeatureFlag.activate(:cohortless_dashboard, for: school)
       end
@@ -18,7 +18,7 @@ RSpec.describe Dashboard::LatestManageableCohort do
       end
     end
 
-    context "when the school is not included in the pilot", :with_default_schedules do
+    context "when the school is not included in the pilot" do
       before do
         FeatureFlag.deactivate(:cohortless_dashboard)
       end

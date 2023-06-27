@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.feature "Finance users NPQ application change lead_provider_approval_status", :with_default_schedules, type: :feature do
+RSpec.feature "Finance users NPQ application change lead_provider_approval_status", type: :feature do
   let(:npq_course) { create :npq_course, identifier: "npq-senior-leadership" }
   let(:npq_lead_provider) { create :npq_lead_provider }
 

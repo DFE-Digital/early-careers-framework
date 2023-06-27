@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Importers::NPQManualValidation, :with_default_schedules do
+RSpec.describe Importers::NPQManualValidation do
   let(:npq_course)       { create(:npq_course, identifier: "npq-senior-leadership") }
   let(:npq_application)  { create(:npq_application, :accepted, npq_course:, teacher_reference_number_verified: false) }
   let(:file)             { Tempfile.new("test.csv") }

@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe ParticipantDeclaration, :with_default_schedules, type: :model do
+RSpec.describe ParticipantDeclaration, type: :model do
   let(:user) { create(:user) }
   subject { described_class.new(user:) }
 
@@ -201,7 +201,7 @@ RSpec.describe ParticipantDeclaration, :with_default_schedules, type: :model do
     end
   end
 
-  describe "#duplication_declarations", :with_default_schedules do
+  describe "#duplication_declarations" do
     let(:cpd_lead_provider)   { create(:cpd_lead_provider, :with_lead_provider) }
     let(:lead_provider)       { cpd_lead_provider.lead_provider }
     let(:participant_profile) { create(:ect, :eligible_for_funding, lead_provider:, user:) }

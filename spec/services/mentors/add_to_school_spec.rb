@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Mentors::AddToSchool, :with_default_schedules do
+RSpec.describe Mentors::AddToSchool do
   let(:school_cohort)  { create(:school_cohort, cohort: Cohort.current) }
   let(:school)         { school_cohort.school }
   let(:mentor_profile) { create(:mentor, school_cohort:) }

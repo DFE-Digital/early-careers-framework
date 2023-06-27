@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe ParticipantOutcomes::StreamApiRequestsToBigQueryJob, :with_default_schedules do
+RSpec.describe ParticipantOutcomes::StreamApiRequestsToBigQueryJob do
   let(:api_request) { create(:participant_outcome_api_request, :with_trn_success) }
 
   describe "#perform" do
@@ -37,6 +37,17 @@ RSpec.describe ParticipantOutcomes::StreamApiRequestsToBigQueryJob, :with_defaul
       expect {
         described_class.perform_now(participant_outcome_api_request_id: api_request.id)
       }.to have_enqueued_job(described_class).on_queue("big_query")
+    end
+
+    context "where the BigQuery table does not exist" do
+      before do
+        allow(dataset).to receive(:table).and_return(nil)
+      end
+
+      it "doesn't attempt to stream" do
+        described_class.perform_now(participant_outcome_api_request_id: api_request.id)
+        expect(table).not_to have_received(:insert)
+      end
     end
   end
 end

@@ -200,5 +200,4 @@ end
 
 RSpec.configure do |config|
   config.include_context "with Support for ECTs example profiles", :with_support_for_ect_examples
-  config.include_context "with default schedules", :with_support_for_ect_examples
 end

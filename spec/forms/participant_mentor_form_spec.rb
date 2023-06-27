@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe ParticipantMentorForm, :with_default_schedules, type: :model do
+RSpec.describe ParticipantMentorForm, type: :model do
   describe "#available_mentors" do
     let(:cohort_2021) { Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021) }
     let(:school_cohort) { create(:school_cohort, cohort: cohort_2021) }

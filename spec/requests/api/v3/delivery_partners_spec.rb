@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "API Delivery Partners", :with_default_schedules, type: :request do
+RSpec.describe "API Delivery Partners", type: :request do
   let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
   let(:lead_provider) { cpd_lead_provider.lead_provider }
   let(:cohort) { Cohort.current || create(:cohort, :current) }

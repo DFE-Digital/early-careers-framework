@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :feature, js: true do
+RSpec.feature "NPQ Course payment breakdown", type: :feature, js: true do
   include FinanceHelper
 
   let(:cohort) { Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021) }

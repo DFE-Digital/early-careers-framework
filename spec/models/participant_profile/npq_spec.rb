@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe ParticipantProfile::NPQ, :with_default_schedules, type: :model do
+RSpec.describe ParticipantProfile::NPQ, type: :model do
   let(:npq_application) { create(:npq_application) }
   let(:profile) do
     NPQ::Application::Accept.new(npq_application:).call

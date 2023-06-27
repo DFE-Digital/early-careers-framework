@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe LeadProviders::YourSchools::TableRow, :with_default_schedules, type: :component do
+RSpec.describe LeadProviders::YourSchools::TableRow, type: :component do
   let(:partnership)   { create :partnership }
   let(:school)        { partnership.school }
   let(:cohort)        { partnership.cohort }

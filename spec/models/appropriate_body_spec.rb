@@ -19,13 +19,13 @@ RSpec.describe AppropriateBody, type: :model do
     expect(not_valid_ab).to_not be_valid
   end
 
-  it "updates analytics when a record is created", :with_default_schedules do
+  it "updates analytics when a record is created" do
     expect {
       create(:appropriate_body_local_authority)
     }.to have_enqueued_job(Analytics::UpsertECFAppropriateBodyJob)
   end
 
-  it "updates analytics when any attributes changes", :with_default_schedules do
+  it "updates analytics when any attributes changes" do
     appropriate_body = create(:appropriate_body_local_authority)
 
     expect {

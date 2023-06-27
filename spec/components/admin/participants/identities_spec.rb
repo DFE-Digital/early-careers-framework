@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Admin::Participants::Identities, :with_default_schedules, type: :component do
+RSpec.describe Admin::Participants::Identities, type: :component do
   let(:component) { described_class.new identities: }
 
   context "when it's the original identity" do

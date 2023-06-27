@@ -2,7 +2,7 @@
 
 require "swagger_helper"
 
-RSpec.describe "API", :with_default_schedules, type: :request, swagger_doc: "v1/api_spec.json" do
+RSpec.describe "API", type: :request, swagger_doc: "v1/api_spec.json" do
   let(:token)                { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
   let(:bearer_token)         { "Bearer #{token}" }
   let(:Authorization)     { bearer_token }

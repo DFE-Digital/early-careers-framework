@@ -39,7 +39,7 @@ RSpec.describe LeadProvider, type: :model do
       end
     end
 
-    describe "participant_profiles", :with_default_schedules do
+    describe "participant_profiles" do
       let(:school) { partnership.school }
       let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider) }
       let(:lead_provider) { cpd_lead_provider.lead_provider }
@@ -83,7 +83,7 @@ RSpec.describe LeadProvider, type: :model do
         expect(lead_provider.active_ecf_participant_profiles).not_to include participant_profile
       end
 
-      it "should not include NPQ participants", :with_default_schedules do
+      it "should not include NPQ participants" do
         participant_profile = create(:npq_participant_profile, school:)
         expect(lead_provider.active_ecf_participant_profiles).not_to include participant_profile
       end

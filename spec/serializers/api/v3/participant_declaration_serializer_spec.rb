@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Api::V3::ParticipantDeclarationSerializer, :with_default_schedules do
+RSpec.describe Api::V3::ParticipantDeclarationSerializer do
   subject { described_class.new(participant_declaration) }
 
   describe "#serializable_hash" do

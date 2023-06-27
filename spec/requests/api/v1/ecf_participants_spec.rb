@@ -3,7 +3,7 @@
 require "rails_helper"
 require "csv"
 
-RSpec.describe "Participants API", :with_default_schedules, type: :request do
+RSpec.describe "Participants API", type: :request do
   let(:cohort_2021) { Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021) }
 
   let(:cpd_lead_provider) { create(:cpd_lead_provider, lead_provider:) }
@@ -423,7 +423,7 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
     end
   end
 
-  describe "GET /api/v1/participants/ecf/:id", :with_default_schedules do
+  describe "GET /api/v1/participants/ecf/:id" do
     let(:parsed_response) { JSON.parse(response.body) }
 
     before do

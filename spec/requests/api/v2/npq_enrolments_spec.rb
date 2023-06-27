@@ -39,7 +39,7 @@ RSpec.describe "NPQ Enrolments API", type: :request do
         end
       end
 
-      context "when there is data", :with_default_schedules do
+      context "when there is data" do
         let!(:npq_profile) { create(:npq_participant_profile, npq_lead_provider:) }
 
         it "returns headers" do

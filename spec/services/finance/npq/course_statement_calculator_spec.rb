@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Finance::NPQ::CourseStatementCalculator, :with_default_schedules do
+RSpec.describe Finance::NPQ::CourseStatementCalculator do
   let(:cohort) { Cohort.current || create(:cohort, :current) }
   let!(:npq_leadership_schedule) { create(:npq_leadership_schedule, cohort:) }
   let!(:npq_specialist_schedule) { create(:npq_specialist_schedule, cohort:) }

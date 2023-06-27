@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe AppropriateBodyProfilePolicy, type: :policy, with_feature_flags: { appropriate_bodies: "active" } do
+RSpec.describe AppropriateBodyProfilePolicy, type: :policy do
   subject { described_class.new(user, appropriate_body_profile) }
 
   let(:appropriate_body_profile) { create(:appropriate_body_profile) }

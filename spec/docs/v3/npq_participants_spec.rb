@@ -2,7 +2,7 @@
 
 require "swagger_helper"
 
-describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_spec.json" do
+describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
   let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_npq_lead_provider) }
   let(:npq_lead_provider) { cpd_lead_provider.npq_lead_provider }
   let(:npq_course) { create(:npq_course, identifier: "npq-senior-leadership") }
@@ -115,8 +115,7 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_sp
                   "/api/v3/participants/npq/{id}/change-schedule",
                   "#/components/schemas/NPQParticipantChangeScheduleRequest",
                   "#/components/schemas/NPQParticipantResponse",
-                  "NPQ Participant",
-                  :with_default_schedules do
+                  "NPQ Participant" do
     let(:participant) { npq_application }
     let(:profile)     { npq_application.profile }
     let(:schedule) { create(:npq_leadership_schedule, schedule_identifier: "npq-aso-june", name: "NPQ ASO June") }

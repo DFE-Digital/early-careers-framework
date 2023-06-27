@@ -4,18 +4,19 @@ require "tempfile"
 
 RSpec.describe Importers::CreateNewNPQCohort do
   describe "#call" do
+    let(:start_year) { Cohort.ordered_by_start_year.last.start_year + 1000 }
+
+    let!(:cpd_lead_provider) { create(:cpd_lead_provider, :with_npq_lead_provider, name: "Koala Institute") }
+    let!(:npq_leadership_course) { create(:npq_leadership_course, identifier: "npq-headship") }
+
     let(:cohort_csv) do
       csv = Tempfile.new("cohort_csv_data.csv")
       csv.write "start-year,registration-start-date,academic-year-start-date,npq-registration-start-date"
       csv.write "\n"
-      csv.write "2020,2020/05/10,2020/09/01,"
-      csv.write "\n"
-      csv.write "2021,2021/05/10,2021/09/01,"
-      csv.write "\n"
-      csv.write "2022,2022/05/10,2022/09/01,"
-      csv.write "\n"
-      csv.write "2023,2023/05/10,2023/09/01,"
-      csv.write "\n"
+      4.times.each do |n|
+        csv.write "#{start_year + n},#{start_year + n}/05/10,#{start_year}/09/01,"
+        csv.write "\n"
+      end
       csv.close
       csv.path
     end
@@ -24,7 +25,7 @@ RSpec.describe Importers::CreateNewNPQCohort do
       csv = Tempfile.new("schedule_csv_data.csv")
       csv.write "type,schedule-identifier,schedule-name,schedule-cohort-year,milestone-name,milestone-declaration-type,milestone-start-date,milestone-date,milestone-payment-date"
       csv.write "\n"
-      csv.write "npq_leadership,npq-leadership-autumn,NPQ Leadership Autumn,2022,Output 1 - Participant Start,started,01/11/2022,01/11/2022,01/11/2022"
+      csv.write "npq_leadership,npq-leadership-autumn,NPQ Leadership Autumn,#{start_year},Output 1 - Participant Start,started,01/11/#{start_year},01/11/#{start_year},01/11/#{start_year}"
       csv.close
       csv.path
     end
@@ -33,7 +34,7 @@ RSpec.describe Importers::CreateNewNPQCohort do
       csv = Tempfile.new("contract_csv_data.csv")
       csv.write "provider_name,cohort_year,course_identifier,recruitment_target,per_participant,service_fee_installments"
       csv.write "\n"
-      csv.write "Ambition Institute,2022,npq-headship,321,654.87,14"
+      csv.write "#{cpd_lead_provider.name},#{start_year},npq-headship,321,654.87,14"
       csv.write "\n"
       csv.close
       csv.path
@@ -43,16 +44,13 @@ RSpec.describe Importers::CreateNewNPQCohort do
       csv = Tempfile.new("statement_csv_data.csv")
       csv.write "type,name,cohort,deadline_date,payment_date,output_fee"
       csv.write "\n"
-      csv.write "npq,January 2023,2022,2022-12-25,2023-1-25,false"
+      csv.write "npq,January #{start_year + 3},#{start_year},#{start_year}-12-25,#{start_year + 3}-1-25,false"
       csv.write "\n"
-      csv.write "npq,February 2023,2022,2023-1-25,2023-2-25,true"
+      csv.write "npq,February #{start_year + 3},#{start_year},#{start_year + 3}-1-25,#{start_year + 3}-2-25,true"
       csv.write "\n"
       csv.close
       csv.path
     end
-
-    let!(:cpd_lead_provider) { create(:cpd_lead_provider, :with_npq_lead_provider, name: "Ambition Institute") }
-    let!(:npq_leadership_course) { create(:npq_leadership_course, identifier: "npq-headship") }
 
     subject do
       described_class.new(cohort_csv:, schedule_csv:, contract_csv:, statement_csv:)
@@ -60,17 +58,17 @@ RSpec.describe Importers::CreateNewNPQCohort do
 
     context "create new cohort" do
       it "creates cohort" do
-        expect(Cohort.count).to eql(0)
+        current_cohorts_count = Cohort.count
         subject.call
-        expect(Cohort.count).to eql(4)
-        expect(Cohort.order(:start_year).last.start_year).to eq(2023)
+        expect(Cohort.count).to eql(current_cohorts_count + 4)
+        expect(Cohort.order(:start_year).last.start_year).to eq(start_year + 3)
       end
 
       it "creates schedule" do
-        expect(Finance::Schedule::NPQLeadership.count).to eql(0)
+        current_schedules_count = Finance::Schedule::NPQLeadership.count
         subject.call
-        expect(Finance::Schedule::NPQLeadership.count).to eql(1)
-        expect(Finance::Schedule::NPQLeadership.first.name).to eql("NPQ Leadership Autumn")
+        expect(Finance::Schedule::NPQLeadership.count).to eql(current_schedules_count + 1)
+        expect(Finance::Schedule::NPQLeadership.where(cohort: Cohort.find_by(start_year:)).first.name).to eql("NPQ Leadership Autumn")
       end
 
       it "creates npq contract" do
@@ -84,7 +82,7 @@ RSpec.describe Importers::CreateNewNPQCohort do
         expect(Finance::Statement::NPQ.count).to eql(0)
         subject.call
         expect(Finance::Statement::NPQ.count).to eql(2)
-        expect(Finance::Statement::NPQ.order(:payment_date).first.name).to eql("January 2023")
+        expect(Finance::Statement::NPQ.order(:payment_date).first.name).to eql("January #{start_year + 3}")
       end
     end
   end

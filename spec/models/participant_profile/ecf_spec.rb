@@ -253,7 +253,7 @@ RSpec.describe ParticipantProfile::ECF, type: :model do
     end
   end
 
-  describe "#withdrawn_for", :with_default_schedules do
+  describe "#withdrawn_for" do
     let(:cpd_lead_provider) { subject.induction_records.latest&.cpd_lead_provider }
 
     context "when participant is withdrawn" do
@@ -275,7 +275,7 @@ RSpec.describe ParticipantProfile::ECF, type: :model do
     end
   end
 
-  describe "#active_for", :with_default_schedules do
+  describe "#active_for" do
     let(:cpd_lead_provider) { subject.induction_records.latest&.cpd_lead_provider }
 
     context "when participant is active" do
@@ -297,7 +297,7 @@ RSpec.describe ParticipantProfile::ECF, type: :model do
     end
   end
 
-  describe "#deferred_for", :with_default_schedules do
+  describe "#deferred_for" do
     let(:cpd_lead_provider) { subject.induction_records.latest&.cpd_lead_provider }
 
     context "when participant is deferred" do
@@ -319,7 +319,7 @@ RSpec.describe ParticipantProfile::ECF, type: :model do
     end
   end
 
-  describe "#record_to_serialize_for", :with_default_schedules do
+  describe "#record_to_serialize_for" do
     let(:lead_provider) do
       subject
         .induction_records

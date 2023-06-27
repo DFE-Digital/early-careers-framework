@@ -33,7 +33,7 @@ RSpec.describe Identity::Create do
       end
     end
 
-    context "when the user has existing participant_profiles", :with_default_schedules do
+    context "when the user has existing participant_profiles" do
       context "when no existing identity already exists" do
         let!(:mentor_profile) { create(:mentor, :eligible_for_funding, user:) }
         let!(:npq_profile)    { create(:npq_participant_profile, user:) }
@@ -87,7 +87,7 @@ RSpec.describe Identity::Create do
         expect(new_identity.external_identifier).not_to eq user.id
       end
 
-      context "when the user has existing profiles", :with_default_schedules do
+      context "when the user has existing profiles" do
         let(:teacher_profile) { create(:teacher_profile, user:) }
         let!(:mentor_profile) { create(:mentor, user: teacher_profile.user, participant_identity: identity) }
         let!(:npq_profile) { create(:npq_participant_profile, teacher_profile:, participant_identity: identity) }

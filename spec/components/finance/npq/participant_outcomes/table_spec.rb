@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Finance::NPQ::ParticipantOutcomes::Table, :with_default_schedules, type: :component do
+RSpec.describe Finance::NPQ::ParticipantOutcomes::Table, type: :component do
   let(:participant_declaration) { create :npq_participant_declaration }
   let(:component) { described_class.new participant_declaration: }
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Mentors::AddProfileToECT, :with_default_schedules do
+RSpec.describe Mentors::AddProfileToECT do
   let(:school) { create(:school) }
   let(:pupil_premium_school) { create :school, :pupil_premium_uplift, start_year: 2022 }
   let(:sparsity_school) { create :school, :sparsity_uplift, start_year: 2022 }

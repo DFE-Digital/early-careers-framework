@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Induction::TransferAndContinueExistingProgramme, :with_default_schedules do
+RSpec.describe Induction::TransferAndContinueExistingProgramme do
   describe "#call" do
     let(:lead_provider)   { create(:cpd_lead_provider, :with_lead_provider, name: "Provider 1").lead_provider }
     let(:lead_provider_2) { create(:cpd_lead_provider, :with_lead_provider, name: "Provider 2").lead_provider }

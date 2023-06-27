@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "API Users", :with_default_schedules, type: :request do
+RSpec.describe "API Users", type: :request do
   let(:parsed_response) { JSON.parse(response.body) }
   let(:token)           { NPQRegistrationApiToken.create_with_random_token! }
   let(:bearer_token)    { "Bearer #{token}" }

@@ -14,7 +14,7 @@ RSpec.describe ParticipantProfile, type: :model do
     ).with_suffix(:record).backed_by_column_of_type(:text)
   }
 
-  it "updates the updated_at on the users", :with_default_schedules do
+  it "updates the updated_at on the users" do
     freeze_time do
       user = create(:user, updated_at: 2.weeks.ago)
       profile = create(:ect, user:)
@@ -24,7 +24,7 @@ RSpec.describe ParticipantProfile, type: :model do
     end
   end
 
-  it "updates analytics when any attributes changes", :with_default_schedules do
+  it "updates analytics when any attributes changes" do
     profile = create(:ect)
     profile.training_status = :withdrawn
     expect {

@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Statements::MarkAsPaid, :with_default_schedules do
+RSpec.describe Statements::MarkAsPaid do
   let(:cpd_lead_provider)             { create(:cpd_lead_provider, :with_npq_lead_provider) }
   let(:cohort)                        { Cohort.current }
   let(:eligible_statement)            { create(:npq_statement, cpd_lead_provider:, cohort:, deadline_date: 3.months.ago) }

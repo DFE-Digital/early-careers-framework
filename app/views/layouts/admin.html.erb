@@ -1,5 +1,8 @@
 <% content_for :nav_bar do %>
-  <%= render PrimaryNavComponent.new do |component| %>
+  <%= render PrimaryNavComponent.new(wide: true) do |component| %>
+    <%= component.nav_item(path: "/admin", selected: current_page?('/admin')) do %>
+      Overview
+    <% end %>
     <%= component.nav_item(path: "/admin/schools") do %>
       Schools
     <% end %>
@@ -18,10 +21,8 @@
     <%= component.nav_item(path: admin_delivery_partners_users_path) do %>
       Delivery partners
     <% end %>
-    <% if FeatureFlag.active?(:appropriate_bodies) %>
-      <%= component.nav_item(path: admin_appropriate_bodies_users_path) do %>
-        Appropriate bodies
-      <% end %>
+    <%= component.nav_item(path: admin_appropriate_bodies_users_path) do %>
+      Appropriate bodies
     <% end %>
     <% if policy(:super_user).show? %>
       <%= component.nav_item(path: admin_super_user_path) do %>

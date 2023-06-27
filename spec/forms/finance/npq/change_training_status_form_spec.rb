@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Finance::NPQ::ChangeTrainingStatusForm, :with_default_schedules, type: :model do
+RSpec.describe Finance::NPQ::ChangeTrainingStatusForm, type: :model do
   subject(:form) { described_class.new(params) }
 
   describe "NPQ" do

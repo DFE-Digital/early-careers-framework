@@ -71,10 +71,15 @@ RSpec.describe Induction::AmendParticipantCohort do
     end
 
     context "when the target cohort has not been setup in the service" do
+      let(:source_cohort_start_year) { 2023 }
+      let(:target_cohort_start_year) { 2024 }
+
       it "returns false and set errors" do
+        travel_to Date.new(Cohort.ordered_by_start_year.last.start_year + 2, 9, 1)
+
         expect(form.save).to be_falsey
-        expect(form.errors.first.attribute).to eq(:target_cohort)
-        expect(form.errors.first.message)
+        expect(form.errors[:target_cohort]).to_not be_nil
+        expect(form.errors.messages[:target_cohort].first)
           .to eq("starting on #{target_cohort_start_year} not setup on the service")
       end
     end

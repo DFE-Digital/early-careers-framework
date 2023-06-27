@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe ParticipantNotWithdrawnValidator, :with_default_schedules do
+RSpec.describe ParticipantNotWithdrawnValidator do
   let(:klass) do
     Class.new do
       include ActiveModel::Model

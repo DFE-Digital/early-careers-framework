@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "Participant outcomes", :with_default_schedules, type: :request, end_to_end_scenario: true do
+RSpec.describe "Participant outcomes", type: :request, end_to_end_scenario: true do
   let!(:declaration) { create :npq_participant_declaration, :eligible, declaration_type: "completed", participant_profile: npq_application.profile, cpd_lead_provider: provider }
   let(:provider) { create :cpd_lead_provider, :with_npq_lead_provider }
   let(:npq_application) { create :npq_application, :accepted, npq_lead_provider: provider.npq_lead_provider }

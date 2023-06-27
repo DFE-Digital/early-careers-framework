@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Finance::NPQ::AssuranceReportsController, :with_default_schedules do
+RSpec.describe Finance::NPQ::AssuranceReportsController do
   let(:user)                    { create(:user, :finance) }
   let(:cpd_lead_provider)       { create(:cpd_lead_provider, :with_npq_lead_provider) }
   let(:npq_lead_provider)       { cpd_lead_provider.npq_lead_provider }

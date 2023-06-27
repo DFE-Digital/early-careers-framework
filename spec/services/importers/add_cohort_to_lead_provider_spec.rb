@@ -13,7 +13,7 @@ RSpec.describe Importers::AddCohortToLeadProvider do
       before do
         csv.write "some-other-column,cohort-start-year"
         csv.write "\n"
-        csv.write "Ambition Institute,2021"
+        csv.write "Beaver Institute,2021"
         csv.write "\n"
         csv.close
       end
@@ -24,11 +24,12 @@ RSpec.describe Importers::AddCohortToLeadProvider do
     end
 
     context "when cohort does not exist" do
+      let(:start_year) { Cohort.ordered_by_start_year.last.start_year + 99 }
       let!(:lead_provider) { create(:lead_provider, name: "Ambition Institute", cohorts: []) }
       before do
         csv.write "lead-provider-name,cohort-start-year"
         csv.write "\n"
-        csv.write "Ambition Institute,2021"
+        csv.write "#{lead_provider.name},#{start_year}"
         csv.write "\n"
         csv.close
       end
@@ -43,7 +44,7 @@ RSpec.describe Importers::AddCohortToLeadProvider do
       before do
         csv.write "lead-provider-name,cohort-start-year"
         csv.write "\n"
-        csv.write "Ambition Institute,2021"
+        csv.write "Cuckoo Institute,2021"
         csv.write "\n"
         csv.close
       end
@@ -54,8 +55,8 @@ RSpec.describe Importers::AddCohortToLeadProvider do
     end
 
     context "when csv valid" do
-      let!(:lead_provider_1) { create(:lead_provider, name: "Ambition Institute", cohorts: []) }
-      let!(:lead_provider_2) { create(:lead_provider, name: "Best Practice Network", cohorts: []) }
+      let!(:lead_provider_1) { create(:lead_provider, name: "Lizard Institute", cohorts: []) }
+      let!(:lead_provider_2) { create(:lead_provider, name: "Best Zoo Network", cohorts: []) }
       let!(:cohort_2021) { create(:cohort, start_year: 2021) }
       let!(:cohort_2022) { create(:cohort, start_year: 2022) }
       let!(:cohort_2023) { create(:cohort, start_year: 2023) }
@@ -63,13 +64,13 @@ RSpec.describe Importers::AddCohortToLeadProvider do
       before do
         csv.write "lead-provider-name,cohort-start-year"
         csv.write "\n"
-        csv.write "Ambition Institute,2021"
+        csv.write "#{lead_provider_1.name},2021"
         csv.write "\n"
-        csv.write "Ambition Institute,2022"
+        csv.write "#{lead_provider_1.name},2022"
         csv.write "\n"
-        csv.write "Ambition Institute,2023"
+        csv.write "#{lead_provider_1.name},2023"
         csv.write "\n"
-        csv.write "Best Practice Network,2023"
+        csv.write "#{lead_provider_2.name},2023"
         csv.write "\n"
         csv.close
       end
@@ -86,12 +87,12 @@ RSpec.describe Importers::AddCohortToLeadProvider do
       let!(:cohort_2021) { create(:cohort, start_year: 2021) }
       let!(:cohort_2022) { create(:cohort, start_year: 2022) }
       let!(:cohort_2023) { create(:cohort, start_year: 2023) }
-      let!(:lead_provider_1) { create(:lead_provider, name: "Ambition Institute", cohorts: [cohort_2021, cohort_2023]) }
+      let!(:lead_provider_1) { create(:lead_provider, name: "Lion Institute", cohorts: [cohort_2021, cohort_2023]) }
 
       before do
         csv.write "lead-provider-name,cohort-start-year"
         csv.write "\n"
-        csv.write "Ambition Institute,2022"
+        csv.write "#{lead_provider_1.name},2022"
         csv.write "\n"
         csv.close
       end

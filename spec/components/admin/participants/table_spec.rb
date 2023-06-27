@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Admin::Participants::Table, :with_default_schedules, type: :component do
+RSpec.describe Admin::Participants::Table, type: :component do
   let!(:participant_profiles) { create_list :ect_participant_profile, rand(11..15) }
   let(:page) { rand 1..2 }
 
