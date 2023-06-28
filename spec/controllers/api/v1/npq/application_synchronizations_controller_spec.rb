@@ -22,8 +22,7 @@ describe NPQDummyController, type: :controller do
 
       it "renders JSON response with serialized NPQ applications" do
         @controller = Api::V1::NPQ::ApplicationSynchronizationsController.new
-        @controller.params = { "@npq_applications": npq_application }
-        get :index
+        get :index, params: { ids: npq_application.id.to_s }
         json_response = JSON.parse(response.body)
         expect(json_response["data"]).to be_an(Array)
         expect(json_response["data"].size).to eq(1)
