@@ -633,7 +633,7 @@ class SchoolMailer < ApplicationMailer
         name: sit_user.full_name,
         nomination_link:,
       },
-    ).tag(:launch_ask_sit_to_report_school_training_details).associate_with(sit_user)
+    ).tag(:launch_ask_sit_to_report_school_training_details).associate_with(school, sit_user)
   end
 
   def launch_ask_gias_contact_to_report_school_training_details
