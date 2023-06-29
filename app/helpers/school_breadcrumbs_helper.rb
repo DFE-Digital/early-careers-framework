@@ -9,6 +9,6 @@ module SchoolBreadcrumbsHelper
   end
 
   def base_breadcrumbs
-    current_user.schools.count > 1 ? { "< Manage your schools" => schools_dashboard_index_path } : {}
+    current_user.schools.count > 1 ? { "Manage your schools" => schools_dashboard_index_path } : {}
   end
 end

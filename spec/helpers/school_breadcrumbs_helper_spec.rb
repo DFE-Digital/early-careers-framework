@@ -39,13 +39,13 @@ RSpec.describe SchoolBreadcrumbsHelper, type: :helper do
       let(:induction_coordinator) { create(:user, :induction_coordinator, school_ids: schools.map(&:id)) }
 
       it "returns the schools index page" do
-        expect(helper.breadcrumbs).to eql({ "< Manage your schools" => schools_dashboard_index_path })
+        expect(helper.breadcrumbs).to eql({ "Manage your schools" => schools_dashboard_index_path })
       end
 
       it "returns the school path" do
         expect(helper.breadcrumbs(school)).to(
           eql({
-            "< Manage your schools" => schools_dashboard_index_path,
+            "Manage your schools" => schools_dashboard_index_path,
             school.name => schools_dashboard_path(school_id: school.slug),
           }),
         )
@@ -54,7 +54,7 @@ RSpec.describe SchoolBreadcrumbsHelper, type: :helper do
       it "returns the cohort path" do
         expect(helper.breadcrumbs(school, cohort)).to(
           eql({
-            "< Manage your schools" => schools_dashboard_index_path,
+            "Manage your schools" => schools_dashboard_index_path,
             school.name => schools_dashboard_path(school_id: school.slug),
             "#{cohort.display_name} cohort" => schools_cohort_path(school_id: school.slug, cohort_id: cohort.start_year),
           }),
