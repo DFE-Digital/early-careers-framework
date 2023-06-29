@@ -45,22 +45,22 @@ en:
   invalid_participant: "Your update cannot be made as the '#/participant_id' is not recognised. Check participant details and try again."
   invalid_identifier: "The entered '#/course_identifier' is not recognised for the given participant. Check details and try again."
   invalid_declaration_type: "The property '#/declaration_type' must be available for '#/course_identifier'"
-  invalid_declaration_date: "The property '#/declaration_date' must be a valid RCF3339 date"
+  invalid_declaration_date: "Enter a valid RCF3339 declaration date."
   invalid_completion_date: "The '#/completion_date' value must be in the following format: 'yyyy-mm-dd'"
   invalid_updated_since_filter: "The filter '#/updated_since' must be a valid RCF3339 date"
-  future_date: "The property '#/%{attribute}' can not declare a future date"
+  future_date: "The '#/%{attribute}' value cannot be a future date. Check the date and try again."
   future_date_outcomes: "The attribute '#/%{attribute}' cannot contain a future date. Resubmit the outcome update with a valid date."
   mismatch_declaration_type_for_schedule: "The property '#/declaration_type does not exist for this schedule"
-  missing_declaration_type: "The property '#/declaration_type' must be present"
-  missing_evidence_held: "The property '#/evidence_held' must be present"
-  missing_has_passed: "The attribute '#/has_passed' must be included as part of 'completed' declaration submissions. Values can be 'true' or 'false' to indicate whether the participant has passed or failed their course"
+  missing_declaration_type: "Enter a declaration type."
+  missing_evidence_held: "Enter a '#/evidence_held' value for this participant."
+  missing_has_passed: "Enter 'true' or 'false' in the '#/has_passed' field to indicate whether this participant has passed or failed their course."
   missing_lead_provider: "The lead provider must be present"
-  missing_course_identifier: "The '#/course_identifier' is missing from your request. Please include a course_identifier value and try again."
+  missing_course_identifier: "Enter a '#/course_identifier' value for this participant."
   missing_participant_id: "The property '#/participant_id' must be present"
   missing_cpd_lead_provider: "The property '#/cpd_lead_provider' must be present"
   missing_reason: "The property '#/reason' must be present"
   missing_state: "The '#/state' is missing from your request. Please include a 'passed' or 'failed' value and try again."
-  missing_declaration_date: "The property '#/declaration_date' must be present"
+  missing_declaration_date: "Enter a declaration date."
   missing_completion_date: "The '#/completion_date' is missing from your request. Please include a completion_date value and try again."
   declaration_already_exists: A declaration has already been submitted that will be, or has been, paid for this event
   already_active: The participant is already active
@@ -69,22 +69,22 @@ en:
   invalid_deferral: The participant is already deferred
   invalid_event: "The property '#/declaration_type' must be a valid declaration type"
   invalid_course: "The entered '#/course_identifier' is not recognised for the given participant. Check details and try again."
-  invalid_evidence_type: "The property '#/evidence_held' must be an available type to the event type and course type"
+  invalid_evidence_type: "Enter an available '#/evidence_held' type for this participant's event and course."
   invalid_schedule: "The property '#/schedule_identifier' must be present and correspond to a valid schedule"
   invalid_reason: "The property '#/reason' must be a valid reason"
   invalid_state: "The attribute '#/state' can only include 'passed' or 'failed' values. If you need to void an outcome, you will need to void the associated 'completed' declaration."
-  invalid_has_passed: "The attribute '#/has_passed' can only include 'true' or 'false' values to indicate whether the participant has passed or failed their course"
+  invalid_has_passed: "Enter 'true' or 'false' in the '#/has_passed' field to indicate whether this participant has passed or failed their course."
   no_started_declaration_found: An NPQ participant who has not got a started declaration cannot be withdrawn. Please contact support for assistance
   schedule_already_on_the_profile: Selected schedule is already on the profile
   schedule_invalidates_declaration: Changing schedule would invalidate existing declarations. Please void them first.
   schedule_invalid_for_course: Selected schedule is not valid for the course
   withdrawn_participant: Cannot perform actions on a withdrawn participant
-  declaration_already_voided: "Declaration is already voided"
-  declaration_not_voidable: "Declaration not voidable"
+  declaration_already_voided: "This declaration has already been voided."
+  declaration_not_voidable: "This declaration cannot be voided. Contact the DfE if you have any questions about why you cannot void it."
   schedule_missing: "The participant does not have a schedule"
-  declaration_before_milestone_start: "The property '#/declaration_date' can not be before milestone start"
-  declaration_after_milestone_cutoff: "The property '#/declaration_date' can not be after milestone end"
-  declaration_must_be_before_withdrawal_date: "The property '#/participant_id is invalid. The participant was withdrawn from this course on %{withdrawal_date}. You cannot post a declaration with a declaration date after the withdrawal date."
+  declaration_before_milestone_start: "Enter a declaration date that's on or after the milestone start."
+  declaration_after_milestone_cutoff: "Enter a declaration date that's before the milestone end date."
+  declaration_must_be_before_withdrawal_date: "This participant withdrew from this course on %{withdrawal_date}. Enter a declaration date that's on or before the withdrawal date."
   invalid_data_structure: correct json data structure required. See API docs for reference
   admin_nqt_1_email_used_ect: "A user with this email address is currently participating as an ECT at school with urn %{urn}"
   admin_nqt_1_email_used_nqt: "A user with this email address is currently participating as an NQT+1 at school with urn %{urn}"
@@ -480,30 +480,30 @@ en:
         partnerships/create:
           attributes:
             cohort:
-              blank: "The attribute '#/cohort' must be included as part of partnership confirmations."
+              blank: "Enter a '#/cohort'."
               invalid: "The '#/cohort' you have entered is invalid. Check cohort details and try again."
             school_id:
-              blank: "The attribute '#/school_id' must be included as part of partnership confirmations."
+              blank: "Enter a '#/school_id'."
               invalid: "The '#/school_id' you have entered is invalid. Check school details and try again. Contact the DfE for support if you are unable to find the '#/school_id'."
-              funding_error: "The school you have entered has not registered to deliver DfE-funded training."
-              ineligible_error: "The school you have entered is currently ineligible for DfE funding."
-              already_confirmed: "You are already confirmed to be in partnership with the school for the entered cohort."
-              recruited_by_other_provider: "Another provider is already confirmed to be in partnership with the school for the entered cohort. Contact the school for more information."
+              funding_error: "The school you have entered has not registered to deliver DfE-funded training. Contact the school for more information."
+              ineligible_error: "The school you have entered is currently ineligible for DfE funding. Contact the school for more information."
+              already_confirmed: "You are already in a confirmed partnership with this school for the entered cohort."
+              recruited_by_other_provider: "Another provider is in a confirmed partnership with the school for the cohort you entered. Contact the school for more information."
               school_programme_not_yet_confirmed: "The school you have entered has not yet confirmed they will deliver DfE-funded training. Contact the school for more information."
             lead_provider_id:
-              blank: "The attribute '#/lead_provider_id' must be included as part of partnership confirmations."
-              invalid: "The '#/lead_provider_id' you have entered is invalid. Enter a valid '#/lead_provider_id' attribute in the request body for partnership confirmations."
+              blank: "Enter a '#/lead_provider_id'."
+              invalid: "Enter a valid '#/lead_provider_id'."
             delivery_partner_id:
-              blank: "The attribute '#/delivery_partner_id' must be included as part of partnership confirmations."
+              blank: "Enter a '#/delivery_partner_id'."
               invalid: "The '#/delivery_partner_id' you have entered is invalid. Check delivery partner details and try again."
               no_relationship: "The entered delivery partner is not recognised to be working in partnership with you for the given cohort. Contact the DfE for more information."
-              duplicate_delivery_partner: "We are unable to process this request. You are already confirmed to be in partnership with the entered delivery partner. Contact the DfE for support."
+              duplicate_delivery_partner: "We cannot process this request because you're already confirmed to be in partnership with the entered delivery partner. Contact the DfE for support."
         partnerships/update:
           attributes:
             partnership:
-              blank: "The attribute '#/partnership' must be included as part of partnership confirmations."
+              blank: "Enter a '#/partnership'."
             delivery_partner_id:
-              blank: "The attribute '#/delivery_partner_id' must be included as part of partnership confirmations."
+              blank: "Enter a '#/delivery_partner_id'."
               invalid: "The '#/delivery_partner_id' you have entered is invalid. Check delivery partner details and try again."
               no_relationship: "The entered delivery partner is not recognised to be working in partnership with you for the given cohort. Contact the DfE for more information."
               partnership_challenged: "Your update cannot be made as this partnership has been challenged by the school. If this partnership has been challenged in error, submit a new partnership confirmation using the endpoint POST /api/v3/partnerships/ecf."

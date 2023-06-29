@@ -17,7 +17,7 @@ RSpec.describe FutureDateValidator do
     it "is not valid" do
       declaration = Declaration.new(statement_date: Time.zone.tomorrow)
       expect(declaration).not_to be_valid
-      expect(declaration.errors[:statement_date]).to include("The property '#/statement_date' can not declare a future date")
+      expect(declaration.errors[:statement_date]).to include("The '#/statement_date' value cannot be a future date. Check the date and try again.")
     end
   end
 

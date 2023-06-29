@@ -34,8 +34,8 @@ RSpec.describe Partnerships::Update do
       it "returns errors" do
         expect(service).to be_invalid
 
-        expect(service.errors.messages_for(:partnership)).to include("The attribute '#/partnership' must be included as part of partnership confirmations.")
-        expect(service.errors.messages_for(:delivery_partner_id)).to include("The attribute '#/delivery_partner_id' must be included as part of partnership confirmations.")
+        expect(service.errors.messages_for(:partnership)).to include("Enter a '#/partnership'.")
+        expect(service.errors.messages_for(:delivery_partner_id)).to include("Enter a '#/delivery_partner_id'.")
       end
     end
 

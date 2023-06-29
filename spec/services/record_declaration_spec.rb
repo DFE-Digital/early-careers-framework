@@ -28,7 +28,7 @@ RSpec.shared_examples "validates the declaration for a withdrawn participant" do
       it "has a meaningful error" do
         is_expected.to be_invalid
 
-        expect(service.errors.messages_for(:participant_id)).to eq(["The property '#/participant_id is invalid. The participant was withdrawn from this course on #{withdrawal_time.rfc3339}. You cannot post a declaration with a declaration date after the withdrawal date."])
+        expect(service.errors.messages_for(:participant_id)).to eq(["This participant withdrew from this course on #{withdrawal_time.rfc3339}. Enter a declaration date that's on or before the withdrawal date."])
       end
     end
 
@@ -84,7 +84,7 @@ RSpec.shared_examples "validates the course_identifier, cpd_lead_provider, parti
 
       it "has a meaningful error", :aggregate_failures do
         expect(service).to be_invalid
-        expect(service.errors.messages_for(:declaration_date)).to include("The property '#/declaration_date' must be present")
+        expect(service.errors.messages_for(:declaration_date)).to include("Enter a declaration date.")
       end
     end
 
@@ -93,7 +93,7 @@ RSpec.shared_examples "validates the course_identifier, cpd_lead_provider, parti
 
       it "has a meaningful error", :aggregate_failures do
         expect(service).to be_invalid
-        expect(service.errors.messages_for(:declaration_date)).to include("The property '#\/declaration_date' must be a valid RCF3339 date")
+        expect(service.errors.messages_for(:declaration_date)).to include("Enter a valid RCF3339 declaration date.")
       end
     end
 
@@ -102,7 +102,7 @@ RSpec.shared_examples "validates the course_identifier, cpd_lead_provider, parti
 
       it "has a meaningful error", :aggregate_failures do
         expect(service).to be_invalid
-        expect(service.errors.messages_for(:declaration_date)).to include("The property '#\/declaration_date' must be a valid RCF3339 date")
+        expect(service.errors.messages_for(:declaration_date)).to include("Enter a valid RCF3339 declaration date.")
       end
     end
 
@@ -111,7 +111,7 @@ RSpec.shared_examples "validates the course_identifier, cpd_lead_provider, parti
 
       it "has a meaningful error", :aggregate_failures do
         expect(service).to be_invalid
-        expect(service.errors.messages_for(:declaration_date)).to include("The property '#\/declaration_date' must be a valid RCF3339 date")
+        expect(service.errors.messages_for(:declaration_date)).to include("Enter a valid RCF3339 declaration date.")
       end
     end
   end
@@ -420,7 +420,7 @@ RSpec.describe RecordDeclaration do
 
         it "returns error" do
           expect(service).to be_invalid
-          expect(service.errors.messages_for(:has_passed)).to eq(["The attribute '#/has_passed' must be included as part of 'completed' declaration submissions. Values can be 'true' or 'false' to indicate whether the participant has passed or failed their course"])
+          expect(service.errors.messages_for(:has_passed)).to eq(["Enter 'true' or 'false' in the '#/has_passed' field to indicate whether this participant has passed or failed their course."])
         end
       end
 
@@ -429,7 +429,7 @@ RSpec.describe RecordDeclaration do
 
         it "returns error" do
           expect(service).to be_invalid
-          expect(service.errors.messages_for(:has_passed)).to eq(["The attribute '#/has_passed' can only include 'true' or 'false' values to indicate whether the participant has passed or failed their course"])
+          expect(service.errors.messages_for(:has_passed)).to eq(["Enter 'true' or 'false' in the '#/has_passed' field to indicate whether this participant has passed or failed their course."])
         end
       end
 
