@@ -81,10 +81,9 @@ module Dashboard
         induction_record.participant_no_qts?
     end
 
-    def orphan_and_deferred_or_transferred_ects(ects)
-      @deferred_or_transferred_ects, @orphan_ects = ects.partition(&:deferred_or_transferred?).map do |ects_subset|
-        dashboard_participants(ects_subset)
-      end
+    def orphan_and_deferred_or_transferred_ects(induction_records)
+      @deferred_or_transferred_ects, @orphan_ects = induction_records.partition(&:deferred_or_transferred?)
+                                                                     .map { |subset| dashboard_participants(subset) }
     end
 
     def orphan_mentors

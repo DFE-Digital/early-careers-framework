@@ -105,6 +105,10 @@ class InductionRecord < ApplicationRecord
   # core_induction_programme_name
   delegate :core_induction_programme_name, to: :induction_programme
 
+  def current?
+    active? || transferring_out? || claimed_by_another_school?
+  end
+
   # delivery_partner_name. This will return nil if the partnership is challenged
   delegate :delivery_partner_name, to: :induction_programme
 

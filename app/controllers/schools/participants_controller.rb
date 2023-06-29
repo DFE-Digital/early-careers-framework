@@ -7,6 +7,14 @@ class Schools::ParticipantsController < Schools::BaseController
   before_action :set_participant, except: %i[index email_used]
   before_action :build_mentor_form, only: :edit_mentor
   before_action :set_mentors_added, only: %i[index show]
+  before_action :authorize_induction_record, only: %i[edit_name
+                                                      update_name
+                                                      edit_email
+                                                      update_email
+                                                      edit_mentor
+                                                      update_mentor]
+  before_action :authorize_ab_changes, only: %i[add_appropriate_body
+                                                appropriate_body_confirmation]
 
   helper_method :can_appropriate_body_be_changed?, :participant_has_appropriate_body?
 
@@ -97,6 +105,14 @@ class Schools::ParticipantsController < Schools::BaseController
   end
 
 private
+
+  def authorize_ab_changes
+    authorize @induction_record, :edit_appropriate_body?
+  end
+
+  def authorize_induction_record
+    authorize @induction_record
+  end
 
   def set_mentors_added
     @mentors_added = @school.school_mentors.any?
