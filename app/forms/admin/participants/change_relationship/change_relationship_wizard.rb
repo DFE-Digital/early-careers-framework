@@ -22,6 +22,21 @@ module Admin
 
         def after_initialize(**opts)
           store_participant_profile!(opts[:participant_profile])
+          @request = opts[:request]
+        end
+
+        def perform_goal!
+          begin
+            ActiveRecord::Base.transaction do
+              create_relationship! if create_new_partnership?
+
+              ::Participants::ChangeRelationship.call(induction_record:,
+                                                      partnership: selected_partnership,
+                                                      fixing_mistake: reason_for_change_mistake?)
+            end
+          rescue ArgumentError => e
+            # TODO: report this
+          end
         end
 
         def participant_profile
@@ -36,6 +51,10 @@ module Admin
           @cohort ||= induction_record.cohort
         end
 
+        def school
+          @school ||= induction_record.school
+        end
+
         def current_partnership
           induction_record.induction_programme.partnership
         end
@@ -45,7 +64,7 @@ module Admin
         end
 
         def school_partnerships
-          induction_record.school.active_partnerships.in_year(induction_record.cohort.start_year).order(relationship: :asc)
+          school.active_partnerships.in_year(induction_record.cohort.start_year).order(relationship: :asc)
         end
 
         def default_partnership_selected?
@@ -72,6 +91,12 @@ module Admin
                                          end
         end
 
+        def create_relationship!
+          @selected_partnership = Partnership.find_or_create_by!(lead_provider: selected_lead_provider,
+                                                                 delivery_partner: selected_delivery_partner,
+                                                                 cohort:,
+                                                                 school:)
+        end
 
         def selected_lead_provider_name
           selected_lead_provider&.name
@@ -82,11 +107,11 @@ module Admin
         end
 
         def available_providers_for_participant_cohort
-          LeadProvider.joins(:provider_relationships).where(provider_relationships: { cohort: }).distinct
+          LeadProvider.where(id: ProviderRelationship.where(cohort:).select(:lead_provider_id)).order(:name)
         end
 
         def available_delivery_partners_for_provider
-          DeliveryPartner.where(id: ProviderRelationship.where(lead_provider_id: lead_provider_id, cohort:).select(:delivery_partner_id))
+          DeliveryPartner.where(id: ProviderRelationship.where(lead_provider_id:, cohort:).select(:delivery_partner_id)).order(:name)
         end
 
         def abort_path
@@ -106,15 +131,15 @@ module Admin
         end
 
         def programme_can_be_changed?
-          # TODO: logic to determine whether the programme can be changed for the participant in this journey
-          true
-        end
-
-        def create_a_new_programme?
+          !participant_has_declarations_with_the_current_provider?
         end
 
         def show_path_for(step:)
-          show_admin_change_relationship_participant_path(**path_options(step:))
+          if complete?
+            abort_path
+          else
+            show_admin_change_relationship_participant_path(**path_options(step:))
+          end
         end
 
         def change_path_for(step:)
@@ -134,7 +159,23 @@ module Admin
           I18n.t(key, scope: "admin.participants.change_relationship.#{scope}")
         end
 
+        def redirect_options
+          if complete?
+            { flash: { success: { title: "Success", content: "The relationship has been changed" }}}
+          else
+            {}
+          end
+        end
+
       private
+
+        def participant_has_declarations_with_the_current_provider?
+          ParticipantDeclaration::ECF.where(participant_profile:, cpd_lead_provider:).any?
+        end
+
+        def cpd_lead_provider
+          current_partnership.lead_provider.cpd_lead_provider
+        end
 
         def store_participant_profile!(profile)
           if participant_profile.present? && participant_profile != profile

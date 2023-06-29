@@ -11,6 +11,7 @@ module Admin
 
       def wizard
         @wizard ||= wizard_class.new(participant_profile:,
+                                     request:,
                                      current_user:,
                                      data_store:,
                                      current_step: step_name,

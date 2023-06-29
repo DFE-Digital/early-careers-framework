@@ -9,6 +9,32 @@ module Wizard
 
     class InvalidStep < StandardError; end
 
+    def show_path_for(step:)
+      raise NotImplementedError
+    end
+
+    def change_path_for(step:)
+      raise NotImplementedError
+    end
+
+    def abort_path
+      raise NotImplementedError
+    end
+
+    def next_journey_path
+      raise NotImplementedError
+    end
+
+    def data_store_class
+      raise NotImplementedError
+    end
+
+    ##
+    # Override me to perform the purpose / final objective of your wizard
+    def perform_goal!
+      raise NotImplementedError
+    end
+
     # Schools::Cohorts::SetupWizard and :schools_cohorts_setup_wizard
     def self.session_key
       name.underscore.parameterize(separator: "_").to_sym
@@ -43,15 +69,7 @@ module Wizard
       [nil, :abort].include?(last_visited_step)
     end
 
-    def abort_path
-      raise NotImplementedError
-    end
-
     def after_initialize(*); end
-
-    def change_path_for(step:)
-      raise NotImplementedError
-    end
 
     def changing_answer(boolean)
       data_store.set(:changing_answer, boolean)
@@ -74,10 +92,6 @@ module Wizard
 
     def complete!
       data_store.set(:complete, true)
-    end
-
-    def data_store_class
-      raise NotImplementedError
     end
 
     def default_step?
@@ -113,9 +127,6 @@ module Wizard
       next_step == :next_journey
     end
 
-    def next_journey_path
-      raise NotImplementedError
-    end
 
     def next_step
       @next_step ||= form.next_step
@@ -135,10 +146,18 @@ module Wizard
       show_path_for(step: last_visited_step)
     end
 
+    def success_message
+    end
+
+    def redirect_options
+      {}
+    end
+
     def save!
       save_progress!
       if form.complete?
-        success
+        perform_goal!
+        # success
         complete!
       end
     end
@@ -156,10 +175,6 @@ module Wizard
 
     def set_return_point(step)
       data_store.set(:return_point, step)
-    end
-
-    def show_path_for(step:)
-      raise NotImplementedError
     end
 
     def starting_journey_not_from_the_start?

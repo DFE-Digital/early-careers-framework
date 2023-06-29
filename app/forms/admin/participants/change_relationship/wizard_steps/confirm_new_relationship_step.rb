@@ -18,7 +18,11 @@ module Admin
           end
 
           def next_step
-            :complete
+            :none
+          end
+
+          def complete?
+            true
           end
         end
       end

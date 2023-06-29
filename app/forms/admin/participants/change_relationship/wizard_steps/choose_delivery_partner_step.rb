@@ -9,6 +9,8 @@ module Admin
 
           validates :delivery_partner_id, presence: true
 
+          delegate :cohort, :school, :lead_provider_id, to: :wizard
+
           def self.permitted_params
             %i[
               delivery_partner_id
@@ -20,11 +22,21 @@ module Admin
           end
 
           def next_step
-            :confirm_new_relationship
+            if partnership_exists?
+              :relationship_already_exists
+            else
+              :confirm_new_relationship
+            end
           end
 
           def options
             wizard.available_delivery_partners_for_provider
+          end
+
+        private
+
+          def partnership_exists?
+            Partnership.where(cohort:, school:, lead_provider_id:, delivery_partner_id:).exists?
           end
         end
       end

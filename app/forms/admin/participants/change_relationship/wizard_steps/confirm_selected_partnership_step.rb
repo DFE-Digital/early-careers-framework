@@ -7,8 +7,6 @@ module Admin
         class ConfirmSelectedPartnershipStep < ::WizardStep
           attr_accessor :confirmed
 
-          validate :selected_partnership_is_permitted
-
           def self.permitted_params
             %i[
               confirmed
@@ -19,8 +17,12 @@ module Admin
             wizard.selected_partnership.present? && !wizard.create_new_partnership?
           end
 
+          def complete?
+            true
+          end
+
           def next_step
-            :complete
+            :none
           end
 
           def selected_partnership_title

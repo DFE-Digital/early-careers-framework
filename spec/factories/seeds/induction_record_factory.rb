@@ -9,6 +9,11 @@ FactoryBot.define do
     trait(:with_induction_programme) { association(:induction_programme, factory: %i[seed_induction_programme valid]) }
     trait(:with_schedule) { association(:schedule, factory: %i[seed_finance_schedule valid]) }
 
+    trait(:leaving) do
+      induction_status { "leaving" }
+      end_date { 1.week.ago }
+    end
+
     trait(:valid) do
       with_schedule
       with_participant_profile
