@@ -1,7 +1,7 @@
 <% title = "Test Data" %>
 <% content_for :title, title %>
 
-<span class="govuk-caption-xl">Schools that have chosen FIP for <%= Cohort.current.academic_year %></span>
+<span class="govuk-caption-xl">Schools that have chosen FIP for <%= Cohort.current.academic_year.id %></span>
 <h1 class="govuk-heading-xl"><%= title %></h1>
 
 <%= render partial: "admin/test_data/nav" %>
@@ -30,7 +30,7 @@
           <td class="govuk-table__cell nhsuk-table__cell">
             <span class="nhsuk-table-responsive__heading">Provider</span>
             <% programme = school.school_cohorts.where(cohort: Cohort.current).first.default_induction_programme %>
-            <%= "#{programme&.lead_provider_name} / #{programme&.delivery_partner_name}" %> 
+            <%= "#{programme&.lead_provider_name} / #{programme&.delivery_partner_name}" %>
           </td>
           <td class="govuk-table__cell nhsuk-table__cell">
             <span class="nhsuk-table-responsive__heading">Induction tutor</span>

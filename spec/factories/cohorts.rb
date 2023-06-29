@@ -31,8 +31,10 @@ FactoryBot.define do
       start_year { generate(:base_year) }
     end
 
-    initialize_with do
-      Cohort.find_by(start_year:) || new(**attributes)
+    after(:create) do |cohort|
+      if cohort.academic_year.blank?
+        AcademicYear.create! id: AcademicYear.id_from_year(cohort.start_year), start_year: cohort.start_year, start_date: cohort.academic_year_start_date
+      end
     end
   end
 end

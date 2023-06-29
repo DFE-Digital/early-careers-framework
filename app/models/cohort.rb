@@ -11,15 +11,22 @@ class Cohort < ApplicationRecord
   has_many :schedules, class_name: "Finance::Schedule"
   has_many :statements
 
+  has_one :academic_year
+
   scope :between_years, ->(lower, upper) { where(start_year: lower..upper) }
   scope :between_2021_and, ->(upper) { between_years(2021, upper) }
   scope :ordered_by_start_year, -> { order(start_year: :asc) }
 
   # Class Methods
 
-  def self.active_registration_cohort
-    where(registration_start_date: ..Date.current).order(start_year: :desc).first
+  def self.active_ecf_registration_cohort
+    where(ecf_registration_start_date: ..Date.current).order(start_year: :desc).first
   end
+
+  def self.active_registration_cohort
+    active_ecf_registration_cohort
+  end
+  alias_attribute :ecf_registration_start_date, :registration_start_date
 
   def self.active_npq_registration_cohort
     where(npq_registration_start_date: ..Date.current).order(start_year: :desc).first.presence || current
@@ -55,11 +62,6 @@ class Cohort < ApplicationRecord
   private_class_method :starting_within
 
   # Instance Methods
-
-  # e.g. "2021/22"
-  def academic_year
-    sprintf("#{start_year}/%02d", ((start_year + 1) % 100))
-  end
 
   # e.g. "2021 to 2022"
   def description

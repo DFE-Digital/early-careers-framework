@@ -86,7 +86,7 @@ module Partnerships
     end
 
     def early_academic_year_challenge_deadline
-      cohort.academic_year_start_date + EARLY_ACADEMIC_YEAR_CHALLENGE_WINDOW
+      cohort.academic_year.start_date + EARLY_ACADEMIC_YEAR_CHALLENGE_WINDOW
     end
 
     def default_challenge_deadline

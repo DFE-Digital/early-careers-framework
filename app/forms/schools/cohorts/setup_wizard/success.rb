@@ -68,7 +68,7 @@ module Schools
               LeadProviderMailer.with(
                 partnership: previous_partnership,
                 user: lead_provider_user,
-                cohort_year: school_cohort.academic_year,
+                cohort_year: school_cohort.academic_year.id,
                 what_changes_choice: what_changes,
               ).programme_changed_email.deliver_later
             end

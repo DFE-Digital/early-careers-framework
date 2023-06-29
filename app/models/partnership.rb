@@ -70,7 +70,7 @@ class Partnership < ApplicationRecord
 private
 
   def cohort_challenge_deadline
-    cohort.academic_year_start_date + CHALLENGE_PERIOD_SINCE_ACADEMIC_YEAR_START
+    cohort.academic_year.start_date + CHALLENGE_PERIOD_SINCE_ACADEMIC_YEAR_START
   end
 
   def update_analytics

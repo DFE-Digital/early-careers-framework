@@ -12,7 +12,7 @@
             @induction_choice_form.programme_choices(i18n_scope: "admin.induction_choice_form.options"),
             :id,
             :name,
-            legend: { text: "Change induction programme for #{@school.name} #{@induction_choice_form.cohort.academic_year}", size: "l", tag: "h1" },
+            legend: { text: "Change induction programme for #{@school.name} #{@induction_choice_form.cohort.academic_year.id}", size: "l", tag: "h1" },
           ) %>
       <%= f.govuk_submit "Continue" %>
     <% end %>

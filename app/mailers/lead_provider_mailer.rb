@@ -42,7 +42,7 @@ class LeadProviderMailer < ApplicationMailer
         school_urn: partnership.school.urn,
         delivery_partner_name: partnership.delivery_partner.name,
         lead_provider_name:,
-        cohort_year: partnership.cohort.academic_year,
+        cohort_year: partnership.cohort.academic_year.id,
         reason:,
       },
     ).tag(:partnership_challenged).associate_with(partnership)

@@ -121,9 +121,9 @@ RSpec.describe Cohort, type: :model do
     end
   end
 
-  describe "#academic_year" do
+  describe "#academic_year.id" do
     it "displays the years covered by the academic year" do
-      expect(Cohort.find_by(start_year: 2021).academic_year).to eq("2021/22")
+      expect(Cohort.find_by(start_year: 2021).academic_year.id).to eq("2021/22")
     end
   end
 

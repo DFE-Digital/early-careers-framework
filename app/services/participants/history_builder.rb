@@ -236,7 +236,7 @@ private
     schedule = Finance::Schedule.find_by(id: schedule_id)
     return schedule_id if schedule.nil?
 
-    "#{schedule.name} (#{schedule.schedule_identifier}) #{schedule.cohort.academic_year}"
+    "#{schedule.name} (#{schedule.schedule_identifier}) #{schedule.cohort.academic_year.id}"
   end
 
   def get_appropriate_body_label(appropriate_body_id)
@@ -268,7 +268,7 @@ private
       induction_programme.lead_provider&.name,
       induction_programme.delivery_partner&.name,
       induction_programme.core_induction_programme&.name,
-      "(#{induction_programme.cohort&.academic_year})",
+      "(#{induction_programme.cohort&.academic_year&.id})",
     ].filter(&:present?).join(" ")
   end
 end
