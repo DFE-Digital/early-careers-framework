@@ -107,8 +107,9 @@ RSpec.describe "NPQ Participants API", type: :request do
 
       describe "JSON Participant Withdrawal" do
         let(:url) { "/api/v1/participants/npq/#{npq_application.user.id}/withdraw" }
+        let(:withdrawal_reason) { ParticipantProfile::NPQ::WITHDRAW_REASONS.sample }
         let(:params) do
-          { data: { attributes: { course_identifier: npq_course.identifier, reason: ParticipantProfile::NPQ::WITHDRAW_REASONS.sample } } }
+          { data: { attributes: { course_identifier: npq_course.identifier, reason: withdrawal_reason } } }
         end
 
         context "when there is a started declaration" do
@@ -119,6 +120,17 @@ RSpec.describe "NPQ Participants API", type: :request do
               expect(response).to be_successful
               expect(npq_application.reload.profile.training_status).to eql("withdrawn")
             end
+          end
+        end
+
+        context "when withdrawn reason is expected-commitment-unclear" do
+          let(:withdrawal_reason) { "expected-commitment-unclear" }
+
+          it "withdraws with reason expected-commitment-unclear" do
+            put(url, params:)
+
+            expect(response).to be_successful
+            expect(npq_application.reload.profile.participant_profile_state.reason).to eql(withdrawal_reason)
           end
         end
 
