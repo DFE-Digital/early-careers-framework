@@ -4,6 +4,8 @@ module Api
   module V3
     module ECF
       class UnfundedMentorsQuery
+        include Concerns::FilterUpdatedSince
+
         def initialize(lead_provider:, params:)
           @lead_provider = lead_provider
           @params = params
@@ -35,7 +37,7 @@ module Api
                    .joins("LEFT OUTER JOIN ecf_participant_validation_data on ecf_participant_validation_data.participant_profile_id = induction_records.mentor_profile_id")
                    .where("induction_records.mentor_profile_id not in (select distinct participant_profile_id from (#{join.to_sql}) AS latest_induction_records)")
 
-          scope = updated_since.present? ? scope.where(users: { updated_at: updated_since.. }) : scope
+          scope = updated_since_filter.present? ? scope.where(users: { updated_at: updated_since.. }) : scope
           params[:sort].blank? ? scope.order("users.created_at ASC") : scope
         end
 
@@ -50,22 +52,6 @@ module Api
       private
 
         attr_accessor :lead_provider, :params
-
-        def filter
-          params[:filter] ||= {}
-        end
-
-        def updated_since
-          return if filter[:updated_since].blank?
-
-          Time.iso8601(filter[:updated_since])
-        rescue ArgumentError
-          begin
-            Time.iso8601(URI.decode_www_form_component(filter[:updated_since]))
-          rescue ArgumentError
-            raise Api::Errors::InvalidDatetimeError, I18n.t(:invalid_updated_since_filter)
-          end
-        end
 
         def latest_induction_record_order
           <<~SQL
