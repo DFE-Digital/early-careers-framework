@@ -127,7 +127,6 @@ module Wizard
       next_step == :next_journey
     end
 
-
     def next_step
       @next_step ||= form.next_step
     end
@@ -146,8 +145,7 @@ module Wizard
       show_path_for(step: last_visited_step)
     end
 
-    def success_message
-    end
+    def success_message; end
 
     def redirect_options
       {}

@@ -192,19 +192,19 @@ RSpec.describe Participants::ChangeRelationship do
 
   def setup_school_programme(prefix:, cohort:)
     school_cohort = create(:seed_school_cohort, :fip, :with_school, cohort:)
-    school =  school_cohort.school
+    school = school_cohort.school
     cpd_lead_provider = create(:seed_cpd_lead_provider, name: "#{prefix} CPD Provider")
     provider = create(:seed_lead_provider, cpd_lead_provider:, name: "#{prefix} Provider")
     partnership = create(:seed_partnership,
                          :with_delivery_partner,
                          cohort:,
-                         school: school,
+                         school:,
                          lead_provider: provider)
 
     induction_programme = create(:seed_induction_programme,
                                  :fip,
-                                 partnership: partnership,
-                                 school_cohort: school_cohort)
+                                 partnership:,
+                                 school_cohort:)
 
     school_cohort.update!(default_induction_programme: induction_programme)
 

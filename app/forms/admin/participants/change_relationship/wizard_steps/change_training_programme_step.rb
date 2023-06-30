@@ -7,7 +7,7 @@ module Admin
         class ChangeTrainingProgrammeStep < ::WizardStep
           attr_accessor :selected_partnership
 
-          validate :selected_partnership_is_permitted
+          validates :selected_partnership, inclusion: { in: :permitted_options }
 
           def self.permitted_params
             %i[
@@ -40,9 +40,8 @@ module Admin
 
         private
 
-          def selected_partnership_is_permitted
-            errors.add(:selected_partnership, :blank) and return if selected_partnership.blank?
-            errors.add(:selected_partnership, :inclusion) unless options.map(&:id).include? selected_partnership
+          def permitted_options
+            options.map(&:id)
           end
 
           def partnership_label(partnership)

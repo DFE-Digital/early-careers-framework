@@ -19,9 +19,7 @@ module Wizard
     def update
       if wizard.form.valid?
         wizard.save!
-        # enable flash messages for admin wizards with no "complete" page with redirect_options
-        redirect_to wizard.next_step_path, wizard.redirect_options
-        remove_session_data if wizard.complete?
+        redirect_to wizard.next_step_path
       else
         render wizard.current_step
       end

@@ -2,14 +2,13 @@
 
 module Participants
   class ChangeRelationship < BaseService
-
     def call
       return if already_with_same_partnership?
 
       check_partnership_is_suitable!
 
       ActiveRecord::Base.transaction do
-        create_induction_programme! unless induction_programme.present?
+        create_induction_programme! if induction_programme.blank?
 
         if fixing_mistake
           change_for_mistake!
@@ -85,7 +84,7 @@ module Participants
     end
 
     def create_induction_programme!
-      @induction_programme ||= school_cohort.induction_programmes.full_induction_programme.create!(partnership:)
+      @induction_programme = school_cohort.induction_programmes.full_induction_programme.create!(partnership:)
     end
 
     def participant_profile

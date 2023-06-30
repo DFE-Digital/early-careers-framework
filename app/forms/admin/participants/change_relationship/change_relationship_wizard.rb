@@ -5,9 +5,11 @@ module Admin
     module ChangeRelationship
       class ChangeRelationshipWizard < Wizard::Form
         delegate :reason_for_change_mistake?, :reason_for_change_circumstances?,
-                  :create_new_partnership?, :selected_partnership_id,
-                  :lead_provider_id, :delivery_partner_id,
+                 :create_new_partnership?, :selected_partnership_id,
+                 :lead_provider_id, :delivery_partner_id,
                  to: :data_store
+
+        attr_reader :error_message
 
         def self.permitted_params_for(step)
           "Admin::Participants::ChangeRelationship::WizardSteps::#{step.to_s.camelcase}Step".constantize.permitted_params
@@ -23,20 +25,19 @@ module Admin
         def after_initialize(**opts)
           store_participant_profile!(opts[:participant_profile])
           @request = opts[:request]
+          @error_message = nil
         end
 
         def perform_goal!
-          begin
-            ActiveRecord::Base.transaction do
-              create_relationship! if create_new_partnership?
+          ActiveRecord::Base.transaction do
+            create_relationship! if create_new_partnership?
 
-              ::Participants::ChangeRelationship.call(induction_record:,
-                                                      partnership: selected_partnership,
-                                                      fixing_mistake: reason_for_change_mistake?)
-            end
-          rescue ArgumentError => e
-            # TODO: report this
+            ::Participants::ChangeRelationship.call(induction_record:,
+                                                    partnership: selected_partnership,
+                                                    fixing_mistake: reason_for_change_mistake?)
           end
+        rescue ArgumentError => e
+          @error_message = e.message
         end
 
         def participant_profile
@@ -64,13 +65,17 @@ module Admin
         end
 
         def school_partnerships
-          school.active_partnerships.in_year(induction_record.cohort.start_year).order(relationship: :asc)
+          school
+            .active_partnerships
+            .joins(:lead_provider)
+            .in_year(induction_record.cohort.start_year)
+            .order("partnerships.relationship ASC, lead_providers.name ASC")
         end
 
         def default_partnership_selected?
           selected_partnership.id == school_default_partnership&.id
         end
-        
+
         def selected_partnership
           @selected_partnership ||= Partnership.find(selected_partnership_id)
         end
@@ -95,7 +100,9 @@ module Admin
           @selected_partnership = Partnership.find_or_create_by!(lead_provider: selected_lead_provider,
                                                                  delivery_partner: selected_delivery_partner,
                                                                  cohort:,
-                                                                 school:)
+                                                                 school:) do |record|
+                                                                   record.relationship = true
+                                                                 end
         end
 
         def selected_lead_provider_name
@@ -159,13 +166,17 @@ module Admin
           I18n.t(key, scope: "admin.participants.change_relationship.#{scope}")
         end
 
-        def redirect_options
-          if complete?
-            { flash: { success: { title: "Success", content: "The relationship has been changed" }}}
-          else
-            {}
-          end
-        end
+        # def redirect_options
+        #   if complete?
+        #     if @error_message.present?
+        #       { flash: { alert: @error_message } }
+        #     else
+        #       { flash: { success: { title: "Success", content: "The relationship has been changed" } } }
+        #     end
+        #   else
+        #     {}
+        #   end
+        # end
 
       private
 

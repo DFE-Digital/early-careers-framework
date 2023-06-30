@@ -7,6 +7,25 @@ module Admin
       before_action :initialize_wizard
       skip_after_action :verify_policy_scoped
 
+      # override the basic update to handle flash messages
+      def update
+        if wizard.form.valid?
+          wizard.save!
+          # enable flash messages for admin wizards with no "complete" page
+          if wizard.complete?
+            if wizard.error_message.present?
+              set_important_message(content: wizard.error_message, heading: "The relationship has not been changed")
+            else
+              set_success_message(content: "The relationship has been successfully changed", title: "Success")
+            end
+          end
+          redirect_to wizard.next_step_path
+          remove_session_data if wizard.complete?
+        else
+          render wizard.current_step
+        end
+      end
+
     private
 
       def wizard
