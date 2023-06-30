@@ -121,7 +121,7 @@ RSpec.describe "Admin::Administrators::Administrators", type: :request do
 
       expect(admin.reload.email).to eq email
       expect(response).to redirect_to(:admin_administrators)
-      expect(flash[:notice]).to eq "Changes saved successfully"
+      expect(flash[:success][:content]).to eq "Changes saved successfully"
     end
 
     context "when the user params are invalid" do

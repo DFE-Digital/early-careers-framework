@@ -14,7 +14,8 @@ module Admin
 
     def update
       if @induction_coordinator.update(permitted_attributes(@induction_coordinator))
-        redirect_to :admin_induction_coordinators, notice: "Changes saved successfully"
+        set_success_message(content: "Changes saved successfully", title: "Success")
+        redirect_to :admin_induction_coordinators
       else
         render :edit
       end
