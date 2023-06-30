@@ -7,6 +7,16 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
+## 3rd July 2023
+
+The DfE has added a new possible value to the NPQ withdrawal_reason field.
+
+When submitting a withdrawal request for an NPQ participant, providers may now include the following value:
+
+* `expected-commitment-unclear`
+
+Providers can view details about NPQ participant [withdrawal request schema](/api-reference/reference-v1.html#schema-npqparticipantwithdrawattributes) in the API specification.
+
 ## 2nd June 2023
 
 Providers can now make calls to API 3.0.0 in the production environment.
