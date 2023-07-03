@@ -150,6 +150,26 @@ RSpec.describe ChangeSchedule do
       it_behaves_like "validating a participant is not already withdrawn for a change schedule" do
         let(:participant_profile) { create(:ect, :withdrawn, lead_provider: cpd_lead_provider.lead_provider) }
       end
+
+      context "when the cohort is changing to another year" do
+        let(:new_cohort) { Cohort.previous }
+        let(:new_schedule) { create(:ecf_schedule, cohort: new_cohort) }
+        let(:params) do
+          {
+            cpd_lead_provider:,
+            participant_id:,
+            course_identifier:,
+            schedule_identifier:,
+            cohort: new_cohort.start_year,
+          }
+        end
+
+        it "is invalid and returns an error message" do
+          is_expected.to be_invalid
+
+          expect(service.errors.messages_for(:cohort)).to include("The property '#/cohort' cannot be changed")
+        end
+      end
     end
 
     describe ".call" do
@@ -177,7 +197,7 @@ RSpec.describe ChangeSchedule do
 
   context "Mentor participant profile" do
     let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
-    let(:participant_profile) { create(:mentor, lead_provider: cpd_lead_provider.lead_provider, user:) }
+    let!(:participant_profile) { create(:mentor, lead_provider: cpd_lead_provider.lead_provider, user:) }
     let(:schedule_identifier) { "ecf-extended-april" }
     let(:course_identifier) { "ecf-mentor" }
     let!(:schedule) { create(:ecf_mentor_schedule, schedule_identifier: "ecf-extended-april", name: "Mentor Standard") }
@@ -187,6 +207,26 @@ RSpec.describe ChangeSchedule do
 
       it_behaves_like "validating a participant is not already withdrawn for a change schedule" do
         let(:participant_profile) { create(:mentor, :withdrawn, lead_provider: cpd_lead_provider.lead_provider) }
+      end
+
+      context "when the cohort is changing to another year" do
+        let(:new_cohort) { Cohort.previous }
+        let(:new_schedule) { create(:ecf_schedule, cohort: new_cohort) }
+        let(:params) do
+          {
+            cpd_lead_provider:,
+            participant_id:,
+            course_identifier:,
+            schedule_identifier:,
+            cohort: new_cohort.start_year,
+          }
+        end
+
+        it "is invalid and returns an error message" do
+          is_expected.to be_invalid
+
+          expect(service.errors.messages_for(:cohort)).to include("The property '#/cohort' cannot be changed")
+        end
       end
     end
 
@@ -229,6 +269,60 @@ RSpec.describe ChangeSchedule do
       it_behaves_like "validating a participant is not already withdrawn for a change schedule" do
         let(:participant_profile) { create(:npq_participant_profile, :withdrawn, npq_lead_provider:, npq_course:) }
       end
+
+      context "when the cohort is changing" do
+        let(:new_schedule) { create(:npq_leadership_schedule, cohort: new_cohort) }
+        let(:params) do
+          {
+            cpd_lead_provider:,
+            participant_id:,
+            course_identifier:,
+            schedule_identifier:,
+            cohort: new_cohort.start_year,
+          }
+        end
+
+        %i[submitted eligible payable paid].each do |state|
+          context "when there are #{state} declarations" do
+            before { create(:participant_declaration, participant_profile:, state:, course_identifier:, cpd_lead_provider:) }
+
+            context "when changing to an earlier cohort" do
+              let(:new_cohort) { Cohort.previous }
+
+              it "is invalid and returns an error message" do
+                is_expected.to be_invalid
+
+                expect(service.errors.messages_for(:cohort)).to include("The property '#/cohort' cannot be changed")
+              end
+            end
+          end
+        end
+
+        context "when there are no submitted/eligible/payable/paid declarations" do
+          context "when changing to an earlier cohort" do
+            let(:new_cohort) { Cohort.previous }
+
+            describe ".call" do
+              it_behaves_like "changing the schedule of a participant"
+            end
+
+            it "updates the cohort on the npq application" do
+              service.call
+              expect(participant_profile.npq_application.cohort).to eq(new_cohort)
+            end
+          end
+
+          context "when changing to a future cohort" do
+            let(:new_cohort) { Cohort.next }
+
+            it "is invalid and returns an error message" do
+              is_expected.to be_invalid
+
+              expect(service.errors.messages_for(:cohort)).to include("The property '#/cohort' cannot be changed to a future cohort")
+            end
+          end
+        end
+      end
     end
 
     describe ".call" do
@@ -236,29 +330,6 @@ RSpec.describe ChangeSchedule do
 
       it "does not update the npq application cohort" do
         expect { service.call }.not_to change(participant_profile.npq_application, :cohort)
-      end
-    end
-
-    context "when cohort is changed" do
-      let(:new_cohort) { Cohort.previous }
-      let(:new_schedule) { create(:npq_leadership_schedule, cohort: new_cohort) }
-      let(:params) do
-        {
-          cpd_lead_provider:,
-          participant_id:,
-          course_identifier:,
-          schedule_identifier:,
-          cohort: new_cohort.start_year,
-        }
-      end
-
-      describe ".call" do
-        it_behaves_like "changing the schedule of a participant"
-      end
-
-      it "updates the cohort on the npq application" do
-        service.call
-        expect(participant_profile.npq_application.cohort).to eq(new_cohort)
       end
     end
   end

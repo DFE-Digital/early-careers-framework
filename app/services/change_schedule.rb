@@ -20,7 +20,8 @@ class ChangeSchedule
   validate :validate_new_schedule_valid_with_existing_declarations
   validate :change_with_a_different_schedule
   validate :validate_permitted_schedule_for_course
-  validate :validate_cannot_change_cohort
+  validate :validate_cannot_change_cohort_ecf
+  validate :validate_cannot_change_cohort_npq
 
   def call
     return if invalid?
@@ -118,9 +119,7 @@ private
     return if user.blank? || participant_profile.blank?
     return unless new_schedule
 
-    participant_profile.participant_declarations.each do |declaration|
-      next unless %w[submitted eligible payable paid].include?(declaration.state)
-
+    applicable_declarations.each do |declaration|
       milestone = new_schedule.milestones.find_by!(declaration_type: declaration.declaration_type)
 
       if declaration.declaration_date <= milestone.start_date.beginning_of_day
@@ -133,6 +132,11 @@ private
     end
   end
 
+  def applicable_declarations
+    @applicable_declarations ||= participant_profile.participant_declarations
+      .where(state: %w[submitted eligible payable paid])
+  end
+
   def validate_permitted_schedule_for_course
     return unless new_schedule
 
@@ -141,10 +145,22 @@ private
     end
   end
 
-  def validate_cannot_change_cohort
+  def validate_cannot_change_cohort_ecf
+    return unless participant_profile&.ecf?
+
     if relevant_induction_record &&
         relevant_induction_record.schedule.cohort.start_year != cohort&.start_year
       errors.add(:cohort, I18n.t("cannot_change_cohort"))
+    end
+  end
+
+  def validate_cannot_change_cohort_npq
+    return unless participant_profile&.npq? && new_schedule
+
+    if applicable_declarations.any? && new_schedule.cohort.start_year != schedule.cohort.start_year
+      errors.add(:cohort, I18n.t("cannot_change_cohort"))
+    elsif new_schedule.cohort.start_year > schedule.cohort.start_year
+      errors.add(:cohort, I18n.t("cannot_change_to_future_cohort"))
     end
   end
 
