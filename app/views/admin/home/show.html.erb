@@ -14,31 +14,31 @@
       <tbody class="govuk-table__body">
         <tr class="govuk-table__row">
           <th scope="row" class="govuk-table__header govuk-!-font-weight-regular">Delivering their training using DfE materials</th>
-          <td class="govuk-table__cell govuk-table__cell--numeric"><%= @pilot_stats.cip_total %></td>
+          <td class="govuk-table__cell govuk-table__cell--numeric"><%= number_with_delimiter(@pilot_stats.cip_total) %></td>
         </tr>
         <tr class="govuk-table__row">
           <th scope="row" class="govuk-table__header govuk-!-font-weight-regular">Designing their own programme</th>
-          <td class="govuk-table__cell govuk-table__cell--numeric"><%= @pilot_stats.diy_total %></td>
+          <td class="govuk-table__cell govuk-table__cell--numeric"><%= number_with_delimiter(@pilot_stats.diy_total) %></td>
         </tr>
         <tr class="govuk-table__row">
           <th scope="row" class="govuk-table__header govuk-!-font-weight-regular">Using a training provider (full induction programme)</th>
-          <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-regular"><%= @pilot_stats.fip_total %></td>
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-regular"><%= number_with_delimiter(@pilot_stats.fip_total) %></td>
         </tr>
         <% @pilot_stats.partnership_totals.each do |provider| %>
           <tr class="govuk-table__row">
             <th scope="row" class="govuk-table__header govuk-!-font-weight-regular govuk-!-padding-left-5"><%= provider[:name] %></th>
-            <td class="govuk-table__cell govuk-table__cell--numeric"><%= provider[:total] %></td>
+            <td class="govuk-table__cell govuk-table__cell--numeric"><%= number_with_delimiter(provider[:total]) %></td>
           </tr>
         <% end %>
         <tr class="govuk-table__row">
           <th scope="row" class="govuk-table__header govuk-!-font-weight-regular">Not expecting any early career teachers</th>
-          <td class="govuk-table__cell  govuk-table__cell--numeric"><%= @pilot_stats.no_ects_total %></td>
+          <td class="govuk-table__cell  govuk-table__cell--numeric"><%= number_with_delimiter(@pilot_stats.no_ects_total) %></td>
         </tr>
       </tbody>
       <tfoot>
         <tr class="govuk-table__row">
           <th scope="row" class="govuk-table__header">Total</th>
-          <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold"><%= @pilot_stats.total %></td>
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold"><%=  number_with_delimiter(@pilot_stats.total) %></td>
         </tr>
       </tfoot>
     </table>
@@ -55,17 +55,17 @@
       <tbody class="govuk-table__body">
         <tr class="govuk-table__row">
           <th scope="row" class="govuk-table__header govuk-!-font-weight-regular">Early career teachers</th>
-          <td class="govuk-table__cell govuk-table__cell--numeric">100</td>
+          <td class="govuk-table__cell govuk-table__cell--numeric"><%= number_with_delimiter(100) %></td>
         </tr>
         <tr class="govuk-table__row">
           <th scope="row" class="govuk-table__header govuk-!-font-weight-regular">Mentors</th>
-          <td class="govuk-table__cell govuk-table__cell--numeric">50</td>
+          <td class="govuk-table__cell govuk-table__cell--numeric"><%= number_with_delimiter(500) %></td>
         </tr>
       </tbody>
       <tfoot>
         <tr class="govuk-table__row">
           <th scope="row" class="govuk-table__header">Total</th>
-          <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold">150</td>
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold"><%= number_with_delimiter(1500) %></td>
         </tr>
       </tfoot>
     </table>
