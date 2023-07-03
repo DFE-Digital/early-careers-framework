@@ -1095,6 +1095,18 @@ module ManageTrainingSteps
     expect(page).to have_summary_row("Appropriate body", appropriate_body.name)
   end
 
+  def and_i_see_the_cip_programme
+    expect(page).to have_summary_row("Programme", "DfE accredited materials")
+  end
+
+  def and_i_dont_see_the_lead_provider
+    expect(page).to_not have_content("Lead provider")
+  end
+
+  def and_i_dont_see_the_delivery_partner
+    expect(page).to_not have_content("Delivery partner")
+  end
+
   # Set_steps
 
   def set_participant_data

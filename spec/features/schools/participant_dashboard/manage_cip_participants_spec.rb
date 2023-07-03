@@ -187,6 +187,9 @@ RSpec.describe "Manage CIP participants", js: true, with_feature_flags: { eligib
       when_i_click_on_the_participants_name "CFI Mentor"
       then_i_am_taken_to_view_details_page
       then_i_can_view_participant_with_status(:request_for_details_delivered)
+      and_i_see_the_cip_programme
+      and_i_dont_see_the_lead_provider
+      and_i_dont_see_the_delivery_partner
     end
   end
 
