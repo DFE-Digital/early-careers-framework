@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
+RSpec.describe DetermineTrainingRecordState do
   let(:scenarios) { NewSeeds::Scenarios::Participants::TrainingRecordStates.new }
 
   let!(:current_school) { nil }

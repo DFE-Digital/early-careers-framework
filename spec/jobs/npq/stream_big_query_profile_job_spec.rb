@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe NPQ::StreamBigQueryProfileJob, :with_default_schedules do
+RSpec.describe NPQ::StreamBigQueryProfileJob do
   let(:profile) { create(:npq_participant_profile) }
 
   describe "#perform" do
@@ -31,6 +31,17 @@ RSpec.describe NPQ::StreamBigQueryProfileJob, :with_default_schedules do
         created_at: profile.created_at,
         updated_at: profile.updated_at,
       }.stringify_keys], ignore_unknown: true)
+    end
+
+    context "where the BigQuery table does not exist" do
+      before do
+        allow(dataset).to receive(:table).and_return(nil)
+      end
+
+      it "doesn't attempt to stream" do
+        described_class.perform_now(profile_id: profile.id)
+        expect(table).not_to have_received(:insert)
+      end
     end
   end
 end

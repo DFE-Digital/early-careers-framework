@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe RecordDeclarations::Actions::MakeDeclarationsEligibleForParticipantProfile, :with_default_schedules do
+RSpec.describe RecordDeclarations::Actions::MakeDeclarationsEligibleForParticipantProfile do
   let!(:declaration) { create(:ect_participant_declaration) }
   let!(:participant_profile) { declaration.participant_profile }
 

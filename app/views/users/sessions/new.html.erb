@@ -1,5 +1,5 @@
 <% content_for :title, "Sign in" %>
-<% content_for :before_content %>
+<% content_for :before_content, govuk_back_link(text: "Back", href: root_path) %>
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
@@ -14,7 +14,7 @@
             <%= f.govuk_submit "Sign in" %>
         <% end %>
 
-        <p class="govuk-body"><%= govuk_link_to "Request a link to sign in or change the induction tutor", resend_email_request_nomination_invite_path, class: "govuk-link govuk-link--no-visited-state" %></p>
-
+        <p class="govuk-body">Or <%= govuk_link_to "request access to the service", resend_email_request_nomination_invite_path, no_visited_state: true %>
+        </p>
     </div>
 </div>

@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "participant-declarations endpoint spec", :with_default_schedules, type: :request do
+RSpec.describe "participant-declarations endpoint spec", type: :request do
   let(:cpd_lead_provider)    { create(:cpd_lead_provider, :with_lead_provider) }
   let(:token)                { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
   let(:bearer_token)         { "Bearer #{token}" }
@@ -388,7 +388,7 @@ RSpec.describe "participant-declarations endpoint spec", :with_default_schedules
             post "/api/v1/participant-declarations", params: params.to_json
 
             expect(response).to be_successful
-            expect(ParticipantDeclaration.order(created_at: :desc).first.evidence_held).to be_nil
+            expect(ParticipantDeclaration.order(created_at: :desc).first.evidence_held).to eq("test")
           end
         end
 

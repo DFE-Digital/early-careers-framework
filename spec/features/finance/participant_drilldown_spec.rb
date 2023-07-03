@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.feature "Finance users participant drilldown", :with_default_schedules, type: :feature do
+RSpec.feature "Finance users participant drilldown", type: :feature do
   describe "ECT user" do
     let(:ect_user)        { ect_declaration.user }
     let(:ect_profile)     { ect_declaration.participant_profile }

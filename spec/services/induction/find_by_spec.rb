@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Induction::FindBy, :with_default_schedules do
+RSpec.describe Induction::FindBy do
   let(:cohort) { Cohort.current }
   let(:current_year) { cohort.start_year }
 

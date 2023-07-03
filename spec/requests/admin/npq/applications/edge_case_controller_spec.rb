@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "Admin::NPQ::Applications::EdgeCasesController", :with_default_schedules, type: :request do
+RSpec.describe "Admin::NPQ::Applications::EdgeCasesController", type: :request do
   before do
     # Applications that wont show up
     create(:npq_application,

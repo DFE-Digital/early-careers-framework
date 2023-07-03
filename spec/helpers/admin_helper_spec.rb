@@ -25,7 +25,7 @@ RSpec.describe AdminHelper, type: :helper do
     end
   end
 
-  context "using the induction record for ects and mentors", :with_default_schedules do
+  context "using the induction record for ects and mentors" do
     let(:profile) { create(:ect) }
     let!(:induction_programme) { profile.current_induction_record.induction_programme }
 

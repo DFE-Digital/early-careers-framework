@@ -19,7 +19,8 @@
           <%= @profile.full_name %>
         </dd>
         <dd class="govuk-summary-list__actions">
-          <% if @profile.policy_class.new(current_user, @profile).edit_name? %>
+          <% if @profile.policy_class.new(current_user, @profile).edit_name? &&
+                policy(@induction_record).edit_name? %>
             <%= govuk_link_to school_participant_edit_name_path(participant_id: @profile) do %>
               Change <span class="govuk-visually-hidden">name</span>
             <% end %>
@@ -53,7 +54,8 @@
           <%= @induction_record.preferred_identity&.email || @profile.participant_identity&.email %>
         </dd>
         <dd class="govuk-summary-list__actions">
-          <% if @profile.policy_class.new(current_user, @profile).edit_email? %>
+          <% if @profile.policy_class.new(current_user, @profile).edit_email? &&
+                policy(@induction_record).edit_email? %>
             <%= govuk_link_to school_participant_edit_email_path(participant_id: @profile) do %>
               Change <span class="govuk-visually-hidden">email address</span>
             <% end %>
@@ -75,7 +77,8 @@
           </dd>
           <dd class="govuk-summary-list__actions">
             <% if @mentors_added %>
-              <% if @profile.policy_class.new(current_user, @profile).update_mentor? %>
+              <% if @profile.policy_class.new(current_user, @profile).update_mentor? &&
+                    policy(@induction_record).edit_mentor? %>
                 <%= govuk_link_to school_participant_edit_mentor_path(participant_id: @profile.id) do %>
                   Change <span class="govuk-visually-hidden">mentor</span>
                 <% end %>
@@ -126,7 +129,9 @@
             <%= @induction_record.appropriate_body_name %>
           </dd>
           <dd class="govuk-summary-list__actions">
-            <% if @profile.ect? && @profile.policy_class.new(current_user, @profile).add_appropriate_body? %>
+            <% if @profile.ect? &&
+                  @profile.policy_class.new(current_user, @profile).add_appropriate_body? &&
+                  policy(@induction_record).edit_appropriate_body? %>
               <%= govuk_link_to(participant_has_appropriate_body? ? "Change" : "Add",
                                 { action: :add_appropriate_body, participant_id: @profile }) %>
             <% end %>
@@ -149,7 +154,7 @@
               <% row.action(text: "Change",
                             visually_hidden_text: "mentor",
                             href: school_participant_edit_mentor_path(participant_id: ect.participant_profile_id,
-                                                                       from_mentor: @profile.id)) %>
+                                                                      from_mentor: @profile.id)) %>
             <% end %>
           <% end %>
         <% end %>

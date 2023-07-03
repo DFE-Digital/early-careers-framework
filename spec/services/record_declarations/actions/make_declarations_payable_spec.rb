@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe RecordDeclarations::Actions::MakeDeclarationsPayable, :with_default_schedules do
+RSpec.describe RecordDeclarations::Actions::MakeDeclarationsPayable do
   let(:cpd_lead_provider)                { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider) }
   let(:cutoff_date)                      { Time.zone.local(2021, 11, 1) }
   let(:before_cutoff_date)               { cutoff_date - 1.day }

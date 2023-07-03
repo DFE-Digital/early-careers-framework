@@ -7,10 +7,8 @@ github_sha = ENV['GITHUB_SHA'] || "fake-sha-123"
 tests = Dir["spec/cypress/**/*.feature"].
   sort.
   # Add randomization seed based on SHA of each commit
-  shuffle(random: Random.new(ENV['GITHUB_SHA'].to_i(16))).
+  shuffle(random: Random.new(github_sha.to_i(16))).
   select.
-  with_index do |el, i|
-    i % ENV["CI_NODE_TOTAL"].to_i == ENV["CI_NODE_INDEX"].to_i
-  end
+  with_index { |el, i| i % ci_node_total.to_i == ci_node_index.to_i }
 
 exec "npx cypress run --config video=false,screenshotOnRunFailure=false --project ./spec --config-file cypress.json --env port=5017 --spec #{tests.join(",")}"

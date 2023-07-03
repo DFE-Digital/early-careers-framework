@@ -4,11 +4,13 @@ require "tempfile"
 
 RSpec.describe Importers::CreateNewECFCohort do
   describe "#call" do
+    let(:start_year) { Cohort.ordered_by_start_year.last.start_year + 1 }
+
     let(:cohort_csv) do
       csv = Tempfile.new("cohort_csv_data.csv")
       csv.write "start-year,registration-start-date,academic-year-start-date,npq-registration-start-date"
       csv.write "\n"
-      csv.write "2023,2023/05/10,2023/09/01"
+      csv.write "#{start_year},#{start_year}/05/10,#{start_year}/09/01"
       csv.write "\n"
       csv.close
       csv.path
@@ -18,7 +20,7 @@ RSpec.describe Importers::CreateNewECFCohort do
       csv = Tempfile.new("cohort_lead_provider_csv_data.csv")
       csv.write "lead-provider-name,cohort-start-year"
       csv.write "\n"
-      csv.write "Ambition Institute,2023"
+      csv.write "Ambition Institute,#{start_year}"
       csv.write "\n"
       csv.close
       csv.path
@@ -28,7 +30,7 @@ RSpec.describe Importers::CreateNewECFCohort do
       csv = Tempfile.new("contract_csv_data.csv")
       csv.write "lead-provider-name,cohort-start-year,uplift-target,uplift-amount,recruitment-target,revised-target,set-up-fee,monthly-service-fee,band-a-min,band-a-max,band-a-per-participant,band-b-min,band-b-max,band-b-per-participant,band-c-min,band-c-max,band-c-per-participant,band-d-min,band-d-max,band-d-per-participant"
       csv.write "\n"
-      csv.write "Ambition Institute,2023,0.44,200,4600,4790,0,0,90,895,91,199,700,200,299,600,300,400,500"
+      csv.write "Ambition Institute,#{start_year},0.44,200,4600,4790,0,0,90,895,91,199,700,200,299,600,300,400,500"
       csv.write "\n"
       csv.close
       csv.path
@@ -38,7 +40,7 @@ RSpec.describe Importers::CreateNewECFCohort do
       csv = Tempfile.new("schedule_csv_data.csv")
       csv.write "type,schedule-identifier,schedule-name,schedule-cohort-year,milestone-name,milestone-declaration-type,milestone-start-date,milestone-date,milestone-payment-date"
       csv.write "\n"
-      csv.write "ecf_standard,ecf-standard-september,ECF Standard September,2023,Output 1 - Participant Start,started,2023/09/01,2023/11/30,2023/11/30"
+      csv.write "ecf_standard,ecf-standard-september,ECF Standard September,#{start_year},Output 1 - Participant Start,started,#{start_year}/09/01,#{start_year}/11/30,#{start_year}/11/30"
       csv.write "\n"
       csv.close
       csv.path
@@ -48,7 +50,7 @@ RSpec.describe Importers::CreateNewECFCohort do
       csv = Tempfile.new("statement_csv_data.csv")
       csv.write "type,name,cohort,deadline_date,payment_date,output_fee"
       csv.write "\n"
-      csv.write "ecf,September 2023,2023,2023-09-01,2023-11-25,true"
+      csv.write "ecf,September #{start_year},#{start_year},#{start_year}-09-01,#{start_year}-11-25,true"
       csv.write "\n"
       csv.close
       csv.path
@@ -71,16 +73,13 @@ RSpec.describe Importers::CreateNewECFCohort do
 
     context "create new ECF cohort" do
       it "creates cohort" do
-        expect(Cohort.count).to eql(0)
-        subject.call
-        expect(Cohort.count).to eql(1)
-        expect(Cohort.first.start_year).to eq(2023)
+        expect { subject.call }.to change { Cohort.count }.by(1)
       end
 
       it "adds lead provider to cohort" do
         expect(lead_provider.cohorts).to be_empty
         subject.call
-        expect(lead_provider.reload.cohorts).to contain_exactly(Cohort.find_by(start_year: 2023))
+        expect(lead_provider.reload.cohorts).to contain_exactly(Cohort.find_by(start_year:))
       end
 
       it "creates Call off Contract and bands" do
@@ -92,17 +91,13 @@ RSpec.describe Importers::CreateNewECFCohort do
       end
 
       it "creates schedule" do
-        expect(Finance::Schedule::ECF.count).to eql(0)
-        subject.call
-        expect(Finance::Schedule::ECF.count).to eql(1)
-        expect(Finance::Schedule::ECF.first.name).to eql("ECF Standard September")
+        expect { subject.call }.to change { Finance::Schedule::ECF.count }.by(1)
+        expect(Finance::Schedule::ECF.order(created_at: :asc).last.name).to eql("ECF Standard September")
       end
 
       it "creates statement" do
-        expect(Finance::Statement::ECF.count).to eql(0)
-        subject.call
-        expect(Finance::Statement::ECF.count).to eql(1)
-        expect(Finance::Statement::ECF.first.name).to eql("September 2023")
+        expect { subject.call }.to change { Finance::Statement::ECF.count }.by(1)
+        expect(Finance::Statement::ECF.first.name).to eql("September #{start_year}")
       end
     end
   end

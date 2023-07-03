@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "participant-declarations endpoint spec", :with_default_schedules, type: :request do
+RSpec.describe "participant-declarations endpoint spec", type: :request do
   let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
   let(:started_milestone) { ect_profile.schedule.milestones.find_by(declaration_type: "started") }
   let(:declaration_date)  { started_milestone.start_date }
@@ -211,7 +211,7 @@ RSpec.describe "participant-declarations endpoint spec", :with_default_schedules
         post "/api/v2/participant-declarations", params: build_params(valid_params.merge(evidence_held: "test"))
 
         expect(response.status).to eq 200
-        expect(ParticipantDeclaration.order(created_at: :desc).first.evidence_held).to be_nil
+        expect(ParticipantDeclaration.order(created_at: :desc).first.evidence_held).to eq("test")
       end
 
       it "returns 422 when supplied an incorrect course type" do

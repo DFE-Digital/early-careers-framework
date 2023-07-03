@@ -5,6 +5,8 @@ module ParticipantOutcomes
     queue_as :big_query
 
     def perform(participant_outcome_api_request_id:)
+      return if table.nil?
+
       api_request = ParticipantOutcomeApiRequest.find(participant_outcome_api_request_id)
 
       rows = [
@@ -28,7 +30,7 @@ module ParticipantOutcomes
     def table
       bigquery = Google::Cloud::Bigquery.new
       dataset = bigquery.dataset "npq_participant_outcomes", skip_lookup: true
-      dataset.table "npq_participant_outcome_api_requests_#{Rails.env.downcase}", skip_lookup: true
+      dataset.table "npq_participant_outcome_api_requests_#{Rails.env.downcase}"
     end
   end
 end

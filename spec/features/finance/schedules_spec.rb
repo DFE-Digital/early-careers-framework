@@ -12,7 +12,7 @@ RSpec.feature "Finance users payment breakdowns", type: :feature do
     then_i_see("Schedules")
     and_see_table_with_schedule
 
-    within page.find("table tbody tr", text: /#{schedule.schedule_identifier}/) do
+    within page.first("table tbody tr", text: /#{schedule.schedule_identifier}/) do
       when_i_click(schedule.schedule_identifier)
     end
 
@@ -29,13 +29,13 @@ RSpec.feature "Finance users payment breakdowns", type: :feature do
   end
 
   def and_see_table_with_schedule
-    within("table") do
+    within(first("table")) do
       expect(page).to have_content(schedule.schedule_identifier)
     end
   end
 
   def and_see_table_of_milestones_for_schedule
-    within("table") do
+    within(first("table")) do
       schedule.milestones.each do |milestone|
         expect(page).to have_content(milestone.name)
       end

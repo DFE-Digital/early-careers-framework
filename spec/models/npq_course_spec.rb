@@ -2,7 +2,7 @@
 
 require "rails_helper"
 RSpec.describe NPQCourse do
-  describe "::schedule_for", :with_default_schedules do
+  describe "::schedule_for" do
     let(:npq_course) { build(:npq_course, identifier:) }
     let(:cohort) { Cohort.current }
 

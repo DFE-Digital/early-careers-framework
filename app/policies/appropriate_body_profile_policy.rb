@@ -22,7 +22,7 @@ class AppropriateBodyProfilePolicy < ApplicationPolicy
   end
 
   def admin_only
-    FeatureFlag.active?(:appropriate_bodies) && !!user&.admin?
+    !!user&.admin?
   end
 
   class Scope < Scope

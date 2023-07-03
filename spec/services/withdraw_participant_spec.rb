@@ -151,7 +151,7 @@ RSpec.shared_examples "withdrawing a NPQ participant" do
   end
 end
 
-RSpec.describe WithdrawParticipant, :with_default_schedules do
+RSpec.describe WithdrawParticipant do
   let(:participant_id) { participant_profile.participant_identity.external_identifier }
   let(:induction_record) { participant_profile.induction_records.first }
   let(:reason) { "other" }

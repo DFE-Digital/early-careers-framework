@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe NPQ::AmendParticipantCohort, :with_default_schedules, type: :model do
+RSpec.describe NPQ::AmendParticipantCohort, type: :model do
   let(:npq_application) { create(:npq_application, cohort: cohort_previous) }
   let(:npq_application_id) { npq_application.id }
 

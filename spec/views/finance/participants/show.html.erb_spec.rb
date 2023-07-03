@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "finance/participants/show.html.erb", :with_default_schedules do
+RSpec.describe "finance/participants/show.html.erb" do
   let(:profile) { create(:ect) }
   let(:user)    { profile.user }
 

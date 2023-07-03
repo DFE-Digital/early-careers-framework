@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "Admin::participants::ChangeNameController", :with_default_schedules do
+RSpec.describe "Admin::participants::ChangeNameController" do
   let(:admin_user) { create(:user, :admin) }
 
   let(:user) { create :user, full_name: "Roland Reilly" }

@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Participants::SyncDqtInductionStartDate, :with_default_schedules, with_feature_flags: { cohortless_dashboard: "active" } do
+RSpec.describe Participants::SyncDqtInductionStartDate, with_feature_flags: { cohortless_dashboard: "active" } do
   let(:dqt_induction_start_date) {}
   let(:participant_induction_start_date) {}
   let(:participant_created_at) { Date.new(2023, 6, 1) }

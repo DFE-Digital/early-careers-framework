@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "Admin::TestData", :with_default_schedules, type: :request do
+RSpec.describe "Admin::TestData", type: :request do
   let(:admin_user) { create(:user, :admin) }
 
   let(:cohort) { Cohort.current }

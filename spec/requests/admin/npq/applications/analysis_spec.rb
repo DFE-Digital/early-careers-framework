@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "Admin::NPQ::Applications::Analysis", :with_default_schedules, type: :request do
+RSpec.describe "Admin::NPQ::Applications::Analysis", type: :request do
   let!(:admin_user)                        { create :user, :admin }
   let(:cpd_lead_provider)                  { create(:cpd_lead_provider, :with_npq_lead_provider) }
   let(:npq_lead_provider)                  { cpd_lead_provider.npq_lead_provider }

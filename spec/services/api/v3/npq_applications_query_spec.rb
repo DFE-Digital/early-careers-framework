@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Api::V3::NPQApplicationsQuery, :with_default_schedules do
+RSpec.describe Api::V3::NPQApplicationsQuery do
   let(:school_urn) { "123456" }
   let(:cohort) { Cohort.current || create(:cohort, :current) }
   let(:pre_2021_cohort) { create(:cohort, start_year: 2020) }

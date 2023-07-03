@@ -10,7 +10,8 @@ module Admin
 
       def update
         if @lead_provider_user.update(permitted_attributes(@lead_provider_user))
-          redirect_to :admin_supplier_users, notice: "Changes saved successfully"
+          set_success_message(content: "Changes saved successfully", title: "Success")
+          redirect_to :admin_supplier_users
         else
           render :edit
         end

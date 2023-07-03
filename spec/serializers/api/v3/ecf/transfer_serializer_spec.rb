@@ -59,7 +59,7 @@ module Api
         end
       end
 
-      RSpec.describe TransferSerializer, :with_default_schedules do
+      RSpec.describe TransferSerializer do
         describe "serialization" do
           let!(:cohort) { Cohort.current || create(:cohort, :current) }
           let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }

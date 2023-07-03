@@ -15,6 +15,8 @@ RSpec.describe "Changing participant details from check answers", type: :feature
   end
 
   scenario "Induction tutor can change ECT / mentor email from check details page" do
+    travel_to Cohort.current.academic_year_start_date + 1.day
+
     set_dqt_validation_result
 
     when_i_click_to_add_a_new_ect_or_mentor
@@ -52,6 +54,8 @@ RSpec.describe "Changing participant details from check answers", type: :feature
   end
 
   scenario "Induction tutor can change ECTs mentor from check details page" do
+    travel_to Cohort.current.academic_year_start_date + 1.day
+
     set_dqt_validation_result
 
     when_i_click_to_add_a_new_ect_or_mentor

@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "Admin::Schools::Participants", :with_default_schedules, type: :request do
+RSpec.describe "Admin::Schools::Participants", type: :request do
   let(:current_cohort) { Cohort.current }
   let(:next_cohort) { Cohort.next || create(:cohort, :next) }
   let!(:schedule_next_cohort) { create(:ecf_schedule, cohort: next_cohort) }

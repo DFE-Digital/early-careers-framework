@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "transferring a withdrawn participant", :with_default_schedules, type: :feature, js: true do
+RSpec.describe "transferring a withdrawn participant", type: :feature, js: true do
   before do
     allow_participant_transfer_mailers
     set_participant_data

@@ -1763,6 +1763,5 @@ RSpec.shared_context "with Training Record state examples", shared_context: :met
 end
 
 RSpec.configure do |config|
-  config.include_context "with default schedules", :with_training_record_state_examples
   config.include_context "with Training Record state examples", :with_training_record_state_examples
 end

@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "Admin::Participants::ValidationDataController", :with_default_schedules, type: :request do
+RSpec.describe "Admin::Participants::ValidationDataController", type: :request do
   let(:admin_user) { create(:user, :admin) }
 
   let(:user) { create(:user, full_name: "John Doe") }

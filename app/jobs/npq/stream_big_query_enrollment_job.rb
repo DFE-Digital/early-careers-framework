@@ -7,7 +7,9 @@ module NPQ
     def perform(npq_application_id:)
       bigquery = Google::Cloud::Bigquery.new
       dataset = bigquery.dataset "npq_registration", skip_lookup: true
-      table = dataset.table "enrollments_#{Rails.env.downcase}", skip_lookup: true
+      table = dataset.table "enrollments_#{Rails.env.downcase}"
+      return if table.nil?
+
       npq_application = NPQApplication.includes(:cohort).find(npq_application_id)
 
       rows = [

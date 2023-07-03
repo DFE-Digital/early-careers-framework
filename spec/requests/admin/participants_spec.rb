@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "Admin::Participants", :with_default_schedules, type: :request do
+RSpec.describe "Admin::Participants", type: :request do
   let(:admin_user) { create(:user, :admin) }
 
   let!(:mentor_profile)               { create(:mentor) }

@@ -6,7 +6,7 @@ Dir.glob(Rails.root.join("db/new_seeds/scenarios/**/*.rb")).each do |scenario|
   require scenario
 end
 
-RSpec.describe "transfer out participants", :with_default_schedules, type: :feature, js: true, rutabaga: false, travel_to: Time.zone.local(2022, 10, 21) do
+RSpec.describe "transfer out participants", type: :feature, js: true, rutabaga: false, travel_to: Time.zone.local(2022, 10, 21) do
   context "Transfer out an ECT" do
     before do
       allow_participant_transfer_mailers
@@ -23,7 +23,7 @@ RSpec.describe "transfer out participants", :with_default_schedules, type: :feat
       when_i_click_to_transfer_out_a_participant
       then_i_should_be_on_the_check_transfer_page
 
-      click_on "Continue"
+      click_on "Confirm"
       then_i_should_be_on_the_teacher_end_date_page
 
       click_on "Continue"
@@ -115,7 +115,7 @@ RSpec.describe "transfer out participants", :with_default_schedules, type: :feat
     end
 
     def then_i_should_be_on_the_check_transfer_page
-      expect(page).to have_selector("h1", text: "Is #{@ect.full_name} transferring to another school where they’ll continue their induction?")
+      expect(page).to have_selector("h1", text: "Is #{@ect.full_name} transferring to another school to continue training?")
     end
 
     def then_i_should_see_enter_end_date_error_message

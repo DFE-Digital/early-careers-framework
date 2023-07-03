@@ -71,10 +71,15 @@ RSpec.describe Induction::AmendParticipantCohort do
     end
 
     context "when the target cohort has not been setup in the service" do
+      let(:source_cohort_start_year) { 2023 }
+      let(:target_cohort_start_year) { 2024 }
+
       it "returns false and set errors" do
+        travel_to Date.new(Cohort.ordered_by_start_year.last.start_year + 2, 9, 1)
+
         expect(form.save).to be_falsey
-        expect(form.errors.first.attribute).to eq(:target_cohort)
-        expect(form.errors.first.message)
+        expect(form.errors[:target_cohort]).to_not be_nil
+        expect(form.errors.messages[:target_cohort].first)
           .to eq("starting on #{target_cohort_start_year} not setup on the service")
       end
     end
@@ -186,13 +191,13 @@ RSpec.describe Induction::AmendParticipantCohort do
 
         context "when the cohort change cannot be persisted" do
           before do
-            allow(form).to receive(:start_date)
+            allow(form).to receive(:schedule)
           end
 
           it "returns false and set errors" do
             expect(form.save).to be_falsey
             expect(form.errors.first.attribute).to eq(:induction_record)
-            expect(form.errors.first.message).to eq("Start date can't be blank")
+            expect(form.errors.first.message).to eq("Schedule must exist")
           end
         end
 
@@ -208,7 +213,6 @@ RSpec.describe Induction::AmendParticipantCohort do
             induction_record = participant_profile.reload.induction_records.latest
 
             expect(induction_record.induction_programme).to eq(target_school_cohort.default_induction_programme)
-            expect(induction_record.start_date).to eq(target_cohort.academic_year_start_date)
             expect(induction_record.schedule).to eq(Finance::Schedule::ECF.default_for(cohort: target_cohort))
             expect(participant_profile.school_cohort).to eq(target_school_cohort)
             expect(participant_profile.schedule).to eq(Finance::Schedule::ECF.default_for(cohort: target_cohort))

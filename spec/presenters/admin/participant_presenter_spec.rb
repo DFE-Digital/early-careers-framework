@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe(Admin::ParticipantPresenter, :with_default_schedules) do
+RSpec.describe(Admin::ParticipantPresenter) do
   let(:partnership) { FactoryBot.create(:seed_partnership, :valid) }
   let(:induction_programme) { FactoryBot.create(:seed_induction_programme, :valid, partnership:) }
   let(:school_cohort) { induction_programme.school_cohort }

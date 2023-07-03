@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Admin::ChangeInductionService, :with_default_schedules do
+RSpec.describe Admin::ChangeInductionService do
   let(:cohort) { Cohort.current }
   let(:current_school_cohort) { school.school_cohorts.find_by(cohort:) }
   subject(:service) { Admin::ChangeInductionService.new(school:, cohort:) }

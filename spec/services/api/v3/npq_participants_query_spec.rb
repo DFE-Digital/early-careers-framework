@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Api::V3::NPQParticipantsQuery, :with_default_schedules do
+RSpec.describe Api::V3::NPQParticipantsQuery do
   let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_npq_lead_provider) }
   let(:npq_lead_provider) { cpd_lead_provider.npq_lead_provider }
   let(:npq_course) { create(:npq_course, identifier: "npq-senior-leadership") }

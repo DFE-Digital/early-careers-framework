@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "CreateNewFakeSandboxDataJob", :with_default_schedules do
+RSpec.describe "CreateNewFakeSandboxDataJob" do
   describe "#perform" do
     let!(:npq_course) { create(:npq_course, identifier: "npq-senior-leadership") }
     let!(:cpd_lead_provider) { create(:cpd_lead_provider, name: "Education Development Trust") }

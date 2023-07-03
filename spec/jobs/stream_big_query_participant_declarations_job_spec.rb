@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe StreamBigQueryParticipantDeclarationsJob, :with_default_schedules do
+RSpec.describe StreamBigQueryParticipantDeclarationsJob do
   let!(:streamable_declaration) { travel_to(1.hour.ago) { create(:ect_participant_declaration) } }
   let(:cpd_lead_provider)       { streamable_declaration.cpd_lead_provider }
   before do

@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.feature "Admin appropriate body users", with_feature_flags: { appropriate_bodies: "active" } do
+RSpec.feature "Admin appropriate body users" do
   before do
     given_a_appropriate_body_exists
     and_i_am_signed_in_as_an_admin

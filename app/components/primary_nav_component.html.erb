@@ -1,5 +1,5 @@
 <div class="primary-nav-container">
-  <div class="govuk-width-container">
+  <div class="govuk-width-container <%= "govuk-width-container__wide" if wide %>">
     <div class="primary-nav">
       <% nav_items.each do |item| %>
         <%= item %>

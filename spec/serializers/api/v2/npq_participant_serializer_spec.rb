@@ -5,7 +5,7 @@ require "rails_helper"
 module Api
   module V2
     RSpec.describe NPQParticipantSerializer do
-      describe "serialization", :with_default_schedules do
+      describe "serialization" do
         let(:participant) { create(:user) }
 
         it "includes updated_at" do

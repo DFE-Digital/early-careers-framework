@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe(HandleNotifyCallbackJob, :with_default_schedules) do
+RSpec.describe(HandleNotifyCallbackJob) do
   let(:one_hour_ago) { 1.hour.ago }
   let!(:email) { Email.create(id: notify_email.notify_id) }
 

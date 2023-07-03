@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Mentors::Create, :with_default_schedules do
+RSpec.describe Mentors::Create do
   let!(:user) { create :user }
   let(:school_cohort) { create :school_cohort }
   let(:school) { school_cohort.school }

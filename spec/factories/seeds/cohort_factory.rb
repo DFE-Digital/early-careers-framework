@@ -4,8 +4,8 @@ FactoryBot.define do
   factory(:seed_cohort, class: "Cohort") do
     sequence(:start_year) { Faker::Number.unique.between(from: 2050, to: 3025) }
 
-    registration_start_date { Date.new(start_year, 5) }
-    academic_year_start_date { Date.new(start_year, 9) }
+    registration_start_date { Date.new(start_year, 6, 5) }
+    academic_year_start_date { Date.new(start_year, 9, 1) }
     automatic_assignment_period_end_date { Date.new(start_year + 1, 3, 31) }
 
     initialize_with do

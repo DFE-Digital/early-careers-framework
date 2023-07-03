@@ -11,8 +11,8 @@ RSpec.describe Importers::CreateCallOffContract do
   describe "#call" do
     context "when no csv given" do
       let(:path_to_csv) {}
-      let!(:lead_provider_1) { create(:lead_provider, name: "Ambition Institute") }
-      let!(:lead_provider_2) { create(:lead_provider, name: "Capita") }
+      let!(:lead_provider_1) { create(:lead_provider, name: "Penguin Institute") }
+      let!(:lead_provider_2) { create(:lead_provider, name: "Apples") }
 
       it "creates seed call off contracts for all lead providers in three cohorts" do
         expect { importer.call }.to change(CallOffContract, :count).by(6)
@@ -40,7 +40,7 @@ RSpec.describe Importers::CreateCallOffContract do
         before do
           csv.write "some-other-column,cohort-start-year"
           csv.write "\n"
-          csv.write "Ambition Institute,2021"
+          csv.write "Arctic Wolf Institute,2021"
           csv.write "\n"
           csv.close
         end
@@ -55,7 +55,7 @@ RSpec.describe Importers::CreateCallOffContract do
         before do
           csv.write "lead-provider-name,cohort-start-year,uplift-target,uplift-amount,recruitment-target,revised-target,set-up-fee,monthly-service-fee,band-a-min,band-a-max,band-a-per-participant,band-b-min,band-b-max,band-b-per-participant,band-c-min,band-c-max,band-c-per-participant,band-d-min,band-d-max,band-d-per-participant"
           csv.write "\n"
-          csv.write "Ambition Institute,2021,0.44,200,4600,4790,0,2300,0,90,895,91,199,700,200,299,600,300,400,500"
+          csv.write "Aardvark Institute,2021,0.44,200,4600,4790,0,2300,0,90,895,91,199,700,200,299,600,300,400,500"
           csv.write "\n"
           csv.close
         end
@@ -66,11 +66,12 @@ RSpec.describe Importers::CreateCallOffContract do
       end
 
       context "when cohort does not exist" do
-        let!(:lead_provider) { create(:lead_provider, name: "Ambition Institute") }
+        let(:year_without_cohort) { Cohort.ordered_by_start_year.last.start_year + 2000 }
+        let!(:lead_provider) { create(:lead_provider, name: "Koala Institute") }
         before do
           csv.write "lead-provider-name,cohort-start-year,uplift-target,uplift-amount,recruitment-target,revised-target,set-up-fee,monthly-service-fee,band-a-min,band-a-max,band-a-per-participant,band-b-min,band-b-max,band-b-per-participant,band-c-min,band-c-max,band-c-per-participant,band-d-min,band-d-max,band-d-per-participant"
           csv.write "\n"
-          csv.write "Ambition Institute,2021,0.44,200,4600,4790,0,2300,0,90,895,91,199,700,200,299,600,300,400,500"
+          csv.write "#{lead_provider.name},#{year_without_cohort},0.44,200,4600,4790,0,2300,0,90,895,91,199,700,200,299,600,300,400,500"
           csv.write "\n"
           csv.close
         end
@@ -81,12 +82,12 @@ RSpec.describe Importers::CreateCallOffContract do
       end
 
       context "when lead provider does not belong in supplied cohort" do
-        let!(:lead_provider) { create(:lead_provider, name: "Ambition Institute", cohorts: []) }
-        let!(:cohort_2021) { create(:cohort, start_year: 2021) }
+        let!(:lead_provider) { create(:lead_provider, name: "Kangaroo Institute", cohorts: []) }
+        let!(:cohort) { FactoryBot.create :cohort }
         before do
           csv.write "lead-provider-name,cohort-start-year,uplift-target,uplift-amount,recruitment-target,revised-target,set-up-fee,monthly-service-fee,band-a-min,band-a-max,band-a-per-participant,band-b-min,band-b-max,band-b-per-participant,band-c-min,band-c-max,band-c-per-participant,band-d-min,band-d-max,band-d-per-participant"
           csv.write "\n"
-          csv.write "Ambition Institute,2021,0.44,200,4600,4790,0,2300,0,90,895,91,199,700,200,299,600,300,400,500"
+          csv.write "#{lead_provider.name},#{cohort.start_year},0.44,200,4600,4790,0,2300,0,90,895,91,199,700,200,299,600,300,400,500"
           csv.write "\n"
           csv.close
         end
@@ -97,13 +98,13 @@ RSpec.describe Importers::CreateCallOffContract do
       end
 
       context "when the lead provider has an existing call off contract in the cohort" do
-        let!(:cohort_2021) { create(:cohort, start_year: 2021) }
-        let!(:lead_provider) { create(:lead_provider, name: "Ambition Institute", cohorts: [cohort_2021]) }
-        let!(:call_off_contract) { create(:call_off_contract, cohort: cohort_2021, lead_provider:) }
+        let!(:cohort) { FactoryBot.create :seed_cohort }
+        let!(:lead_provider) { create(:lead_provider, name: "Whale Institute", cohorts: [cohort]) }
+        let!(:call_off_contract) { create(:call_off_contract, cohort:, lead_provider:) }
         before do
           csv.write "lead-provider-name,cohort-start-year,uplift-target,uplift-amount,recruitment-target,revised-target,set-up-fee,monthly-service-fee,band-a-min,band-a-max,band-a-per-participant,band-b-min,band-b-max,band-b-per-participant,band-c-min,band-c-max,band-c-per-participant,band-d-min,band-d-max,band-d-per-participant"
           csv.write "\n"
-          csv.write "Ambition Institute,2021,0.44,200,4600,4790,0,2300,0,90,895,91,199,700,200,299,600,300,400,500"
+          csv.write "#{lead_provider.name},#{cohort.start_year},0.44,200,4600,4790,0,2300,0,90,895,91,199,700,200,299,600,300,400,500"
           csv.write "\n"
           csv.close
         end
@@ -118,12 +119,12 @@ RSpec.describe Importers::CreateCallOffContract do
       end
 
       context "when no call off contract exists for lead provider" do
-        let!(:cohort_2021) { create(:cohort, start_year: 2021) }
-        let!(:lead_provider) { create(:lead_provider, name: "Ambition Institute", cohorts: [cohort_2021]) }
+        let!(:cohort) { FactoryBot.create :cohort }
+        let!(:lead_provider) { create(:lead_provider, name: "Butterfly Institute", cohorts: [cohort]) }
         before do
           csv.write "lead-provider-name,cohort-start-year,uplift-target,uplift-amount,recruitment-target,revised-target,set-up-fee,monthly-service-fee,band-a-min,band-a-max,band-a-per-participant,band-b-min,band-b-max,band-b-per-participant,band-c-min,band-c-max,band-c-per-participant,band-d-min,band-d-max,band-d-per-participant"
           csv.write "\n"
-          csv.write "Ambition Institute,2021,0.44,200,4600,4790,0,2300,0,90,895,91,199,700,200,299,600,300,400,500"
+          csv.write "#{lead_provider.name},#{cohort.start_year},0.44,200,4600,4790,0,2300,0,90,895,91,199,700,200,299,600,300,400,500"
           csv.write "\n"
           csv.close
         end
@@ -140,7 +141,7 @@ RSpec.describe Importers::CreateCallOffContract do
         it "sets the correct values on the call off contract" do
           importer.call
           expect(lead_provider.call_off_contract).to have_attributes(
-            cohort: cohort_2021,
+            cohort:,
             uplift_target: 0.44,
             uplift_amount: 200,
             recruitment_target: 4600,

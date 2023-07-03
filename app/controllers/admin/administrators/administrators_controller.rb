@@ -58,7 +58,8 @@ module Admin
 
       def update
         if @administrator.update(permitted_attributes(@administrator))
-          redirect_to :admin_administrators, notice: "Changes saved successfully"
+          set_success_message(content: "Changes saved successfully", title: "Success")
+          redirect_to :admin_administrators
         else
           render :edit
         end
