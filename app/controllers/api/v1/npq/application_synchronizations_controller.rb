@@ -12,8 +12,7 @@ module Api
       private
 
         def set_npq_applications
-          filtered_ids = params[:ids].split(",")
-          @npq_applications = NPQApplication.where(id: filtered_ids).select(:lead_provider_approval_status, :id, :participant_identity_id)
+          @npq_applications = NPQApplication.where("updated_at >= ?", 1.week.ago).select(:lead_provider_approval_status, :id, :participant_identity_id)
         end
 
         def json_accounts_serializer_class
