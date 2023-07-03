@@ -70,7 +70,7 @@ module Induction
       return true if in_target_cohort?(induction_record)
 
       ActiveRecord::Base.transaction do
-        induction_record.update!(induction_programme:, start_date:, schedule:)
+        induction_record.update!(induction_programme:, schedule:)
         participant_profile.update!(school_cohort: target_school_cohort, schedule:)
       rescue ActiveRecord::RecordInvalid
         errors.add(:induction_record, induction_record.errors.full_messages.first) if induction_record.errors.any?
@@ -156,10 +156,6 @@ module Induction
 
     def source_cohort
       @source_cohort ||= Cohort.find_by(start_year: source_cohort_start_year)
-    end
-
-    def start_date
-      @start_date ||= target_cohort.academic_year_start_date
     end
 
     def target_cohort
