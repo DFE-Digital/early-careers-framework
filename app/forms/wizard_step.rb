@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# TODO: remove this as it has been shifted to JourneyWizard::Step
 class WizardStep
   include ActiveModel::Model
   include ActiveRecord::AttributeAssignment

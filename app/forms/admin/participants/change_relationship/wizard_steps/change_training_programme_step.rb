@@ -4,7 +4,7 @@ module Admin
   module Participants
     module ChangeRelationship
       module WizardSteps
-        class ChangeTrainingProgrammeStep < ::WizardStep
+        class ChangeTrainingProgrammeStep < ::JourneyWizard::Step
           attr_accessor :selected_partnership
 
           validates :selected_partnership, inclusion: { in: :permitted_options }

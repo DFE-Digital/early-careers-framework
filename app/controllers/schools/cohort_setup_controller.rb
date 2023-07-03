@@ -79,7 +79,7 @@ module Schools
     end
 
     def wizard_session_key
-      wizard_class.session_key
+      wizard_class.to_key
     end
 
     def wizard_back_link_path

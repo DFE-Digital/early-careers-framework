@@ -4,7 +4,7 @@ module Admin
   module Participants
     module ChangeRelationship
       module WizardSteps
-        class CannotChangeProgrammeStep < ::WizardStep
+        class CannotChangeProgrammeStep < ::JourneyWizard::Step
           def expected?
             wizard.reason_for_change_mistake? && !wizard.programme_can_be_changed?
           end

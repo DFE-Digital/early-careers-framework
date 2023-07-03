@@ -3,7 +3,8 @@
 module Admin
   module Participants
     class ChangeRelationshipController < Admin::BaseController
-      include Wizard::Controller
+      include JourneyWizard::Controller
+
       before_action :initialize_wizard
       skip_after_action :verify_policy_scoped
 

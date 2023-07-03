@@ -4,7 +4,7 @@ module Admin
   module Participants
     module ChangeRelationship
       module WizardSteps
-        class RelationshipAlreadyExistsStep < ::WizardStep
+        class RelationshipAlreadyExistsStep < ::JourneyWizard::Step
           def expected?
             wizard.create_new_partnership? && wizard.selected_lead_provider.present?
           end

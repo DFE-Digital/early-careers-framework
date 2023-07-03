@@ -42,7 +42,7 @@
             </p>
         <% end %>
 
-        <%= form_with model: @wizard.form, url: url_for(action: :update), scope: @wizard.session_key, method: :put do |f| %>
+        <%= form_with model: @wizard.form, url: url_for(action: :update), scope: @wizard.to_key, method: :put do |f| %>
             <%= f.govuk_submit "Confirm" %>
         <% end %>
     </div>

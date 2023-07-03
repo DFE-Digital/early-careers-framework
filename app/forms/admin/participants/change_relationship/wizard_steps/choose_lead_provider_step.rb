@@ -4,7 +4,7 @@ module Admin
   module Participants
     module ChangeRelationship
       module WizardSteps
-        class ChooseLeadProviderStep < ::WizardStep
+        class ChooseLeadProviderStep < ::JourneyWizard::Step
           attr_accessor :lead_provider_id
 
           validates :lead_provider_id, presence: true

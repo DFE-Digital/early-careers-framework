@@ -2,7 +2,8 @@
 
 module Schools
   module Cohorts
-    class BaseWizard < Wizard::Form
+    # TODO: refactor this to be based on JourneyWizard::Form
+    class BaseWizard < Wizard
       def self.permitted_params_for(step)
         "Schools::Cohorts::WizardSteps::#{step.to_s.camelcase}Step".constantize.permitted_params
       end

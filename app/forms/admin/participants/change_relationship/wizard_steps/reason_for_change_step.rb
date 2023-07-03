@@ -4,7 +4,7 @@ module Admin
   module Participants
     module ChangeRelationship
       module WizardSteps
-        class ReasonForChangeStep < ::WizardStep
+        class ReasonForChangeStep < ::JourneyWizard::Step
           attr_accessor :reason_for_change
 
           VALID_OPTIONS = %w[wrong_programme change_of_circumstances].freeze

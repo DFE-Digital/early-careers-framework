@@ -3,7 +3,7 @@
 module Admin
   module Participants
     module ChangeRelationship
-      class ChangeRelationshipWizard < Wizard::Form
+      class ChangeRelationshipWizard < JourneyWizard::Form
         delegate :reason_for_change_mistake?, :reason_for_change_circumstances?,
                  :create_new_partnership?, :selected_partnership_id,
                  :lead_provider_id, :delivery_partner_id,

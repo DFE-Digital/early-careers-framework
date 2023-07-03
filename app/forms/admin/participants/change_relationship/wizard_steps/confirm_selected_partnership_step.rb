@@ -4,7 +4,7 @@ module Admin
   module Participants
     module ChangeRelationship
       module WizardSteps
-        class ConfirmSelectedPartnershipStep < ::WizardStep
+        class ConfirmSelectedPartnershipStep < ::JourneyWizard::Step
           attr_accessor :confirmed
 
           def self.permitted_params

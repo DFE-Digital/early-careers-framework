@@ -4,7 +4,7 @@ module Admin
   module Participants
     module ChangeRelationship
       module WizardSteps
-        class ChooseDeliveryPartnerStep < ::WizardStep
+        class ChooseDeliveryPartnerStep < ::JourneyWizard::Step
           attr_accessor :delivery_partner_id
 
           validates :delivery_partner_id, presence: true

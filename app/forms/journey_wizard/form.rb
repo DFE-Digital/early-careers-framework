@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Wizard
+module JourneyWizard
   class Form
     include ActiveModel::Model
     include Rails.application.routes.url_helpers
