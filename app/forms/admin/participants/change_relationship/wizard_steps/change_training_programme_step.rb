@@ -31,7 +31,7 @@ module Admin
             list = [
               OpenStruct.new(id: "create_new", name: "<strong>Create new relationship</strong>".html_safe),
             ]
-            available = wizard.school_partnerships - [wizard.current_partnership, wizard.school_default_partnership]
+            available = wizard.school_partnerships - [wizard.current_partnership]
             list << available.map do |partnership|
               OpenStruct.new(id: partnership.id, name: partnership_label(partnership))
             end
