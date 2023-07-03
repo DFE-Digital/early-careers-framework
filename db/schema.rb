@@ -1051,6 +1051,8 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
     t.datetime "updated_at", precision: 6, null: false
     t.datetime "discarded_at"
     t.string "get_an_identity_id"
+    t.string "archived_email"
+    t.datetime "archived_at"
     t.index ["discarded_at"], name: "index_users_on_discarded_at"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["get_an_identity_id"], name: "index_users_on_get_an_identity_id", unique: true
