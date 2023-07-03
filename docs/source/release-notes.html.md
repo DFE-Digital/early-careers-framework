@@ -7,6 +7,10 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
+## 5th July 2023
+
+The DfE has updated error messages for several endpoints. There has been no change to functionality, error codes, or the scenarios which result in an error. The changes only involve an update to the `detail` part of the error message.
+
 ## 3rd July 2023
 
 The DfE has added a new possible value to the NPQ withdrawal_reason field.

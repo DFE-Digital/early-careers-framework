@@ -42,7 +42,7 @@ RSpec.shared_examples "a participant declaration service" do
   context "when declaration date is invalid" do
     it "raises ParameterMissing error" do
       params = given_params.merge({ declaration_date: "2021-06-21 08:46:29" })
-      expected_msg = /Enter a valid RCF3339 declaration date./
+      expected_msg = /Enter a valid RCF3339 '#\/declaration_date'./
       expect { described_class.call(params:) }.to raise_error(ActionController::ParameterMissing, expected_msg)
     end
   end

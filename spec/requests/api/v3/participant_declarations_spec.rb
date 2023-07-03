@@ -462,8 +462,8 @@ RSpec.describe "API Participant Declarations", type: :request do
           .to eq(
             [
               { "title" => "participant_id", "detail" => "Your update cannot be made as the '#/participant_id' is not recognised. Check participant details and try again." },
-              { "title" => "declaration_date", "detail" => "Enter a declaration date." },
-              { "title" => "declaration_type", "detail" => "Enter a declaration type." },
+              { "title" => "declaration_date", "detail" => "Enter a '#/declaration_date'." },
+              { "title" => "declaration_type", "detail" => "Enter a '#/declaration_type'." },
             ],
           )
       end

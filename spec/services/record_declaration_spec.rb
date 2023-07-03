@@ -28,7 +28,7 @@ RSpec.shared_examples "validates the declaration for a withdrawn participant" do
       it "has a meaningful error" do
         is_expected.to be_invalid
 
-        expect(service.errors.messages_for(:participant_id)).to eq(["This participant withdrew from this course on #{withdrawal_time.rfc3339}. Enter a declaration date that's on or before the withdrawal date."])
+        expect(service.errors.messages_for(:participant_id)).to eq(["This participant withdrew from this course on #{withdrawal_time.rfc3339}. Enter a '#/declaration_date' that's on or before the withdrawal date."])
       end
     end
 
@@ -84,7 +84,7 @@ RSpec.shared_examples "validates the course_identifier, cpd_lead_provider, parti
 
       it "has a meaningful error", :aggregate_failures do
         expect(service).to be_invalid
-        expect(service.errors.messages_for(:declaration_date)).to include("Enter a declaration date.")
+        expect(service.errors.messages_for(:declaration_date)).to include("Enter a '#/declaration_date'.")
       end
     end
 
@@ -93,7 +93,7 @@ RSpec.shared_examples "validates the course_identifier, cpd_lead_provider, parti
 
       it "has a meaningful error", :aggregate_failures do
         expect(service).to be_invalid
-        expect(service.errors.messages_for(:declaration_date)).to include("Enter a valid RCF3339 declaration date.")
+        expect(service.errors.messages_for(:declaration_date)).to include("Enter a valid RCF3339 '#/declaration_date'.")
       end
     end
 
@@ -102,7 +102,7 @@ RSpec.shared_examples "validates the course_identifier, cpd_lead_provider, parti
 
       it "has a meaningful error", :aggregate_failures do
         expect(service).to be_invalid
-        expect(service.errors.messages_for(:declaration_date)).to include("Enter a valid RCF3339 declaration date.")
+        expect(service.errors.messages_for(:declaration_date)).to include("Enter a valid RCF3339 '#/declaration_date'.")
       end
     end
 
@@ -111,7 +111,7 @@ RSpec.shared_examples "validates the course_identifier, cpd_lead_provider, parti
 
       it "has a meaningful error", :aggregate_failures do
         expect(service).to be_invalid
-        expect(service.errors.messages_for(:declaration_date)).to include("Enter a valid RCF3339 declaration date.")
+        expect(service.errors.messages_for(:declaration_date)).to include("Enter a valid RCF3339 '#/declaration_date'.")
       end
     end
   end
@@ -205,7 +205,7 @@ RSpec.shared_examples "validates the participant milestone" do
 
     it "returns an error" do
       is_expected.to be_invalid
-      expect(subject.errors.messages_for(:declaration_type)).to eq(["The property '#/declaration_type does not exist for this schedule"])
+      expect(subject.errors.messages_for(:declaration_type)).to eq(["The property '#/declaration_type' does not exist for this schedule."])
     end
   end
 end

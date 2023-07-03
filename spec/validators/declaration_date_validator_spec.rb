@@ -57,7 +57,7 @@ RSpec.describe DeclarationDateValidator do
 
         it "has a meaningful error", :aggregate_failures do
           expect(subject).to be_invalid
-          expect(subject.errors.messages_for(:declaration_date)).to include("Enter a valid RCF3339 declaration date.")
+          expect(subject.errors.messages_for(:declaration_date)).to include("Enter a valid RCF3339 '#/declaration_date'.")
         end
       end
 
@@ -66,7 +66,7 @@ RSpec.describe DeclarationDateValidator do
 
         it "has a meaningful error", :aggregate_failures do
           expect(subject).to be_invalid
-          expect(subject.errors.messages_for(:declaration_date)).to include("Enter a valid RCF3339 declaration date.")
+          expect(subject.errors.messages_for(:declaration_date)).to include("Enter a valid RCF3339 '#/declaration_date'.")
         end
       end
 
@@ -75,7 +75,7 @@ RSpec.describe DeclarationDateValidator do
 
         it "has a meaningful error", :aggregate_failures do
           expect(subject).to be_invalid
-          expect(subject.errors.messages_for(:declaration_date)).to include("Enter a valid RCF3339 declaration date.")
+          expect(subject.errors.messages_for(:declaration_date)).to include("Enter a valid RCF3339 '#/declaration_date'.")
         end
       end
     end
@@ -86,7 +86,7 @@ RSpec.describe DeclarationDateValidator do
 
         it "has a meaningful error", :aggregate_failures do
           expect(subject).to be_invalid
-          expect(subject.errors.messages_for(:declaration_date)).to eq(["Enter a declaration date that's on or after the milestone start."])
+          expect(subject.errors.messages_for(:declaration_date)).to eq(["Enter a '#/declaration_date' that's on or after the milestone start."])
         end
       end
 
@@ -112,7 +112,7 @@ RSpec.describe DeclarationDateValidator do
         it "has a meaningfull error", :aggregate_failures do
           expect(subject).to be_invalid
           expect(subject.errors.messages_for(:declaration_date))
-            .to eq(["Enter a declaration date that's before the milestone end date."])
+            .to eq(["Enter a '#/declaration_date' that's before the milestone end date."])
         end
       end
     end
