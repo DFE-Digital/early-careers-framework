@@ -42,7 +42,6 @@ en:
   invalid_transition: "Invalid action"
   invalid_page_parameters: "The '#/page[page]' and '#/page[per_page]' parameter values must be a valid number (equal and more than 1)"
   cannot_change_cohort: "The property '#/cohort' cannot be changed"
-  cannot_change_to_future_cohort: "The property '#/cohort' cannot be changed to a future cohort"
   invalid_participant: "The property '#/participant_id' must be a valid Participant ID"
   invalid_identifier: "The property '#/course_identifier' must be an available course to '#/participant_id'"
   invalid_declaration_type: "The property '#/declaration_type' must be available for '#/course_identifier'"

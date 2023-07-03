@@ -286,7 +286,7 @@ RSpec.describe ChangeSchedule do
           context "when there are #{state} declarations" do
             before { create(:participant_declaration, participant_profile:, state:, course_identifier:, cpd_lead_provider:) }
 
-            context "when changing to an earlier cohort" do
+            context "when changing to another cohort" do
               let(:new_cohort) { Cohort.previous }
 
               it "is invalid and returns an error message" do
@@ -299,7 +299,7 @@ RSpec.describe ChangeSchedule do
         end
 
         context "when there are no submitted/eligible/payable/paid declarations" do
-          context "when changing to an earlier cohort" do
+          context "when changing to another cohort" do
             let(:new_cohort) { Cohort.previous }
 
             describe ".call" do
@@ -309,16 +309,6 @@ RSpec.describe ChangeSchedule do
             it "updates the cohort on the npq application" do
               service.call
               expect(participant_profile.npq_application.cohort).to eq(new_cohort)
-            end
-          end
-
-          context "when changing to a future cohort" do
-            let(:new_cohort) { Cohort.next }
-
-            it "is invalid and returns an error message" do
-              is_expected.to be_invalid
-
-              expect(service.errors.messages_for(:cohort)).to include("The property '#/cohort' cannot be changed to a future cohort")
             end
           end
         end

@@ -159,8 +159,6 @@ private
 
     if applicable_declarations.any? && new_schedule.cohort.start_year != schedule.cohort.start_year
       errors.add(:cohort, I18n.t("cannot_change_cohort"))
-    elsif new_schedule.cohort.start_year > schedule.cohort.start_year
-      errors.add(:cohort, I18n.t("cannot_change_to_future_cohort"))
     end
   end
 
