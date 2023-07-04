@@ -21,13 +21,24 @@ describe NPQDummyController, type: :controller do
       let(:npq_application) { create(:npq_application) }
 
       it "renders JSON response with serialized NPQ applications" do
+        allow(Api::V1::NPQ::ApplicationStatusQuery).to receive(:new).and_call_original
+        allow_any_instance_of(Api::V1::NPQ::ApplicationStatusQuery).to receive(:call).and_return({
+          "npq_application" => [
+            npq_application.lead_provider_approval_status,
+            npq_application.id.to_s,
+          ],
+          "participant_outcome_state" => NPQApplication.participant_declaration_finder(npq_application)&.latest_outcome_state_of_declaration,
+        })
         @controller = Api::V1::NPQ::ApplicationSynchronizationsController.new
         @controller.params = { "@npq_applications": npq_application }
         get :index
         json_response = JSON.parse(response.body)
-        expect(json_response["data"]).to be_an(Array)
-        expect(json_response["data"].size).to eq(1)
-        expect(json_response["data"].first["id"]).to eq(npq_application.id.to_s)
+        npq_applications = []
+        npq_applications << npq_application
+        expect(json_response).to be_a(Hash)
+        expect(json_response["npq_application"][1]).to eq(npq_application.id.to_s)
+        expect(json_response["npq_application"][0]).to eq(npq_application.lead_provider_approval_status)
+        expect(json_response["participant_outcome_state"]).to eq(NPQApplication.participant_declaration_finder(npq_applications)&.latest_outcome_state_of_declaration)
       end
     end
   end

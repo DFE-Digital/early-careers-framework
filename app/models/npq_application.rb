@@ -90,8 +90,8 @@ class NPQApplication < ApplicationRecord
     UK_CATCHMENT_AREA.include?(teacher_catchment)
   end
 
-  def latest_declaration_of_user
-    ParticipantDeclaration::NPQ.where(user_id: participant_identity.user_id).order(created_at: :desc)&.first
+  def self.participant_declaration_finder(participant_identity_id)
+    ParticipantDeclaration::NPQ&.find_by_participant_profile_id(ParticipantProfile&.find_by_participant_identity_id(participant_identity_id)&.id)
   end
 
 private
