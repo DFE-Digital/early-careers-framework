@@ -166,18 +166,6 @@ module Admin
           I18n.t(key, scope: "admin.participants.change_relationship.#{scope}")
         end
 
-        # def redirect_options
-        #   if complete?
-        #     if @error_message.present?
-        #       { flash: { alert: @error_message } }
-        #     else
-        #       { flash: { success: { title: "Success", content: "The relationship has been changed" } } }
-        #     end
-        #   else
-        #     {}
-        #   end
-        # end
-
       private
 
         def participant_has_declarations_with_the_current_provider?
