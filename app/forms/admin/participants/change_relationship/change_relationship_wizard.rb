@@ -72,6 +72,10 @@ module Admin
             .order("partnerships.relationship ASC, lead_providers.name ASC")
         end
 
+        def partnership_choices_available?
+          (school_partnerships - [current_partnership]).any?
+        end
+
         def default_partnership_selected?
           selected_partnership.id == school_default_partnership&.id
         end
@@ -164,6 +168,10 @@ module Admin
 
         def i18n_text(key:, scope:)
           I18n.t(key, scope: "admin.participants.change_relationship.#{scope}")
+        end
+
+        def set_create_new_partnership_choice!
+          data_store.set(:selected_partnership, "create_new")
         end
 
       private

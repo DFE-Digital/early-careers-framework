@@ -26,9 +26,12 @@ module Admin
             if mistake? && !wizard.programme_can_be_changed?
               # if there are declarations then we cannot proceed with the journey
               :cannot_change_programme
-            else
-              # FIXME: what if there are no options, should we go straight to create a new one?
+            elsif wizard.partnership_choices_available?
               :change_training_programme
+            else
+              # go straight to create a new one when only 1 (or no) partnerships exists
+              wizard.set_create_new_partnership_choice!
+              :choose_lead_provider
             end
           end
 

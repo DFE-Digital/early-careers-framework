@@ -22,9 +22,11 @@ RSpec.describe Admin::Participants::ChangeRelationship::WizardSteps::ReasonForCh
 
   describe "#next_step" do
     let(:can_be_changed) { true }
+    let(:partnership_choices) { true }
 
     before do
       allow(wizard).to receive(:programme_can_be_changed?).and_return(can_be_changed)
+      allow(wizard).to receive(:partnership_choices_available?).and_return(partnership_choices)
     end
 
     context "when the reason for change is to fix a mistake" do
@@ -34,6 +36,15 @@ RSpec.describe Admin::Participants::ChangeRelationship::WizardSteps::ReasonForCh
 
       it "returns :change_training_programme" do
         expect(step.next_step).to eql :change_training_programme
+      end
+
+      context "when there are no other partnership choices available" do
+        let(:partnership_choices) { false }
+
+        it "returns :choose_lead_provider" do
+          allow(wizard).to receive(:set_create_new_partnership_choice!).once
+          expect(step.next_step).to eql :choose_lead_provider
+        end
       end
 
       context "when the programme cannot be changed" do
@@ -52,6 +63,15 @@ RSpec.describe Admin::Participants::ChangeRelationship::WizardSteps::ReasonForCh
 
       it "returns :change_training_programme" do
         expect(step.next_step).to eql :change_training_programme
+      end
+
+      context "when there are no other partnership choices available" do
+        let(:partnership_choices) { false }
+
+        it "returns :choose_lead_provider" do
+          allow(wizard).to receive(:set_create_new_partnership_choice!).once
+          expect(step.next_step).to eql :choose_lead_provider
+        end
       end
     end
   end
