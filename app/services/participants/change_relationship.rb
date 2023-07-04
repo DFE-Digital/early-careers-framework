@@ -30,7 +30,11 @@ module Participants
 
     def change_for_mistake!
       check_participant_does_not_have_declarations_with_current_provider!
+      old_induction_programme = induction_record.induction_programme
+
       induction_record.update!(induction_programme:)
+
+      remove_old_induction_programme_if_possible!(old_induction_programme:)
     end
 
     def change_for_circumstance!
@@ -59,12 +63,12 @@ module Participants
     end
 
     def already_with_same_partnership?
-      current_partnership.lead_provider_id == partnership.lead_provider_id &&
-        current_partnership.delivery_partner_id == partnership.delivery_partner_id
+      current_partnership&.lead_provider_id == partnership.lead_provider_id &&
+        current_partnership&.delivery_partner_id == partnership.delivery_partner_id
     end
 
     def partnership_in_a_different_cohort?
-      current_partnership.cohort != partnership.cohort
+      current_partnership&.cohort != partnership.cohort
     end
 
     def school
@@ -85,6 +89,14 @@ module Participants
 
     def create_induction_programme!
       @induction_programme = school_cohort.induction_programmes.full_induction_programme.create!(partnership:)
+    end
+
+    def remove_old_induction_programme_if_possible!(old_induction_programme:)
+      return if old_induction_programme.induction_records.any?
+      return if old_induction_programme == school_cohort.default_induction_programme
+      return unless old_induction_programme.partnership&.relationship?
+
+      old_induction_programme.destroy!
     end
 
     def participant_profile

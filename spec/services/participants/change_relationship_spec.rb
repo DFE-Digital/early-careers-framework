@@ -92,6 +92,65 @@ RSpec.describe Participants::ChangeRelationship do
           }.to raise_error ArgumentError, "Participant has declarations with current provider!"
         end
       end
+
+      context "handling the old programme" do
+        it "does not remove the old programme" do
+          expect {
+            service_call
+          }.not_to change { InductionProgramme.count }
+        end
+
+        context "when the old programme is not the cohort default and has a relationship partnership and no other induction records" do
+          let(:relationship) { true }
+
+          let(:another_programme) do
+            create(:seed_induction_programme, :fip, partnership: another_partnership, school_cohort: current_school_cohort)
+          end
+
+          let!(:current_induction_record) do
+            create(:seed_induction_record,
+                   participant_profile:,
+                   schedule:,
+                   school_transfer:,
+                   induction_programme: another_programme)
+          end
+
+          let(:another_partnership) do
+            create(:seed_partnership,
+                   :with_lead_provider,
+                   :with_delivery_partner,
+                   cohort:,
+                   school: current_school_cohort.school,
+                   relationship:)
+          end
+
+          it "removes the old programme" do
+            expect {
+              service_call
+            }.to change { InductionProgramme.count }.by(-1)
+          end
+
+          context "when the old programme partnership is not a relationship" do
+            let(:relationship) { false }
+
+            it "does not remove the old programme" do
+              expect {
+                service_call
+              }.not_to change { InductionProgramme.count }
+            end
+          end
+
+          context "when other induction records are associated with the old programme" do
+            let!(:other_induction_record) { create(:seed_induction_record, :valid, induction_programme: another_programme) }
+
+            it "does not remove the old programme" do
+              expect {
+                service_call
+              }.not_to change { InductionProgramme.count }
+            end
+          end
+        end
+      end
     end
 
     context "when changing circumstances" do
