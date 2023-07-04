@@ -20,7 +20,14 @@ module Api
       def query_scope
         ParticipantOutcomesQuery.new(
           cpd_lead_provider:,
+          params: npq_participant_outcome_params,
         ).scope
+      end
+
+      def npq_participant_outcome_params
+        params
+          .with_defaults({ filter: { created_since: "" } })
+          .permit(filter: %i[created_since])
       end
 
       def cpd_lead_provider

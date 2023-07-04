@@ -7,6 +7,14 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
+## 13th July 2023
+
+Providers may now filter outcomes by created_since date. For example:
+
+* GET /api/v1/participants/npq/outcomes?filter[created_since]=2023-04-17T23:11:18Z
+
+The change applies to all API versions.
+
 ## 12th July 2023
 
 DfE has changed functionality around the endpoint `PUT /api/v1/participants/npq/{id}/defer`

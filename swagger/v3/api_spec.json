@@ -1001,7 +1001,7 @@
             "explode": true,
             "required": false,
             "description": "Refine participant outcomes to return.",
-            "example": "filter[cohort]=2022&filter[created_since]=2020-11-13T11:21:55Z"
+            "example": "filter[created_since]=2020-11-13T11:21:55Z"
           },
           {
             "name": "page",
