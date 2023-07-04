@@ -90,6 +90,10 @@ class NPQApplication < ApplicationRecord
     UK_CATCHMENT_AREA.include?(teacher_catchment)
   end
 
+  def self.participant_declaration_finder(participant_identity_id)
+    ParticipantDeclaration::NPQ&.find_by_participant_profile_id(ParticipantProfile&.find_by_participant_identity_id(participant_identity_id)&.id)
+  end
+
 private
 
   def previously_funded?
