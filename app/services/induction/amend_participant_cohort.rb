@@ -10,7 +10,7 @@ module Induction
       end
 
       def active?(participant_profile)
-        participant_profile&.active_record? && participant_profile.training_status_active?
+        participant_profile&.active_record? && participant_profile&.training_status_active?
       end
     end
 

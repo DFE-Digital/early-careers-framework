@@ -111,13 +111,13 @@ RSpec.configure do |config|
   config.before(:suite) do
     # create early rollout cohorts
     cohort = Cohort.find_by(start_year: 2020) || FactoryBot.create(:seed_cohort, start_year: 2020)
-    AcademicYear.create!(id: AcademicYear.id_from_year(cohort.start_year), start_date: cohort.academic_year_start_date, ecf_early_rollout_year: true) if cohort.academic_year.blank?
+    AcademicYear.find_by(start_year: cohort.start_year) || FactoryBot.create(:seed_academic_year, start_year: cohort.start_year, start_date: cohort.academic_year_start_date, ecf_early_rollout_year: true) if cohort.academic_year.blank?
 
     # create national rollout cohorts with default schedules
     end_year = Date.current.month < 9 ? Date.current.year : Date.current.year + 1
     (2021..end_year).each do |start_year|
       cohort = Cohort.find_by(start_year:) || FactoryBot.create(:seed_cohort, start_year:)
-      AcademicYear.create!(id: AcademicYear.id_from_year(cohort.start_year), start_date: cohort.academic_year_start_date) if cohort.academic_year.blank?
+      AcademicYear.find_by(start_year:) || FactoryBot.create(:seed_academic_year, start_year:, start_date: cohort.academic_year_start_date) if cohort.academic_year.blank?
 
       Finance::Schedule::ECF.default_for(cohort:) || FactoryBot.create(:ecf_schedule, cohort:)
 
