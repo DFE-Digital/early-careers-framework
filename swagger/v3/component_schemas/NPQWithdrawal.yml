@@ -24,6 +24,7 @@ properties:
       - quality-of-programme-other
       - programme-not-appropriate-for-role-and-cpd-needs
       - started-in-error
+      - expected-commitment-unclear
       - other
   date:
     description: The date and time the participant was withdrawn
