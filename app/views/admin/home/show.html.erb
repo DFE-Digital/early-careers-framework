@@ -55,17 +55,17 @@
       <tbody class="govuk-table__body">
         <tr class="govuk-table__row">
           <th scope="row" class="govuk-table__header govuk-!-font-weight-regular">Early career teachers</th>
-          <td class="govuk-table__cell govuk-table__cell--numeric"><%= number_with_delimiter(100) %></td>
+          <td class="govuk-table__cell govuk-table__cell--numeric"><%= number_with_delimiter(@pilot_stats.ect_count) %></td>
         </tr>
         <tr class="govuk-table__row">
           <th scope="row" class="govuk-table__header govuk-!-font-weight-regular">Mentors</th>
-          <td class="govuk-table__cell govuk-table__cell--numeric"><%= number_with_delimiter(500) %></td>
+          <td class="govuk-table__cell govuk-table__cell--numeric"><%= number_with_delimiter(@pilot_stats.mentors_count) %></td>
         </tr>
       </tbody>
       <tfoot>
         <tr class="govuk-table__row">
           <th scope="row" class="govuk-table__header">Total</th>
-          <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold"><%= number_with_delimiter(1500) %></td>
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold"><%= number_with_delimiter(@pilot_stats.total_participants) %></td>
         </tr>
       </tfoot>
     </table>
