@@ -22,6 +22,9 @@ module Admin
         no_ects_total: choices.fetch("no_early_career_teachers", 0),
         total: choices.values.sum,
         partnership_totals:,
+        ect_count: participants_registered.ects.count,
+        mentors_count: participants_registered.mentors.count,
+        total_participants: participants_registered.count,
       })
     end
 
@@ -39,6 +42,10 @@ module Admin
 
     def providers
       LeadProvider.where(id: ProviderRelationship.where(cohort:).select(:lead_provider_id)).order(:name)
+    end
+
+    def participants_registered
+      @participants_registered ||= ParticipantProfile::ECF.joins(schedule: :cohort).where(schedule: { cohort: })
     end
 
     def valid_choices
