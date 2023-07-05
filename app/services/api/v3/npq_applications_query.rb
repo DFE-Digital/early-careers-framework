@@ -3,6 +3,9 @@
 module Api
   module V3
     class NPQApplicationsQuery
+      include Concerns::FilterCohorts
+      include Concerns::FilterUpdatedSince
+
       attr_reader :npq_lead_provider, :params
 
       def initialize(npq_lead_provider:, params:)
@@ -45,14 +48,6 @@ module Api
           .to_json
       end
 
-      def filter
-        params[:filter] ||= {}
-      end
-
-      def updated_since_filter
-        filter[:updated_since]
-      end
-
       def apply_default_sort(scope)
         return scope if params[:sort].present?
 
@@ -85,24 +80,7 @@ module Api
       end
 
       def apply_cohorts_filter(scope)
-        cohort_filter = filter[:cohort].to_s
-        cohorts = if cohort_filter.present?
-                    Cohort.where(start_year: cohort_filter.split(","))
-                  else
-                    Cohort.where("start_year > 2020")
-                  end
-
         scope.where(cohort: cohorts)
-      end
-
-      def updated_since
-        Time.iso8601(updated_since_filter)
-      rescue ArgumentError
-        begin
-          Time.iso8601(URI.decode_www_form_component(updated_since_filter))
-        rescue ArgumentError
-          raise Api::Errors::InvalidDatetimeError, I18n.t(:invalid_updated_since_filter)
-        end
       end
     end
   end

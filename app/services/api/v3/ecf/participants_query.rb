@@ -4,6 +4,9 @@ module Api
   module V3
     module ECF
       class ParticipantsQuery
+        include Concerns::FilterCohorts
+        include Concerns::FilterUpdatedSince
+
         def initialize(lead_provider:, params:)
           @lead_provider = lead_provider
           @params = params
@@ -15,7 +18,7 @@ module Api
                     .joins(participant_profiles: :induction_records)
                     .joins("JOIN (#{latest_induction_records_join.to_sql}) AS latest_induction_records_join ON latest_induction_records_join.latest_id = induction_records.id")
                     .distinct
-          scope = updated_since.present? ? scope.where(users: { updated_at: updated_since.. }) : scope
+          scope = updated_since_filter.present? ? scope.where(users: { updated_at: updated_since.. }) : scope
           params[:sort].blank? ? scope.order(:created_at) : scope
         end
 
@@ -48,16 +51,12 @@ module Api
 
         attr_accessor :lead_provider, :params
 
-        def filter
-          params[:filter] ||= {}
-        end
-
         def latest_induction_records_join
           InductionRecord
           .select(Arel.sql("DISTINCT FIRST_VALUE(induction_records.id) OVER (#{latest_induction_record_order}) AS latest_id"))
           .joins(:participant_profile, :schedule, { induction_programme: :partnership })
           .where(
-            schedule: { cohort_id: with_cohorts.map(&:id) },
+            schedule: { cohort_id: cohorts.map(&:id) },
             induction_programme: {
               partnerships: {
                 lead_provider_id: lead_provider.id,
@@ -66,24 +65,6 @@ module Api
               },
             },
           )
-        end
-
-        def with_cohorts
-          return Cohort.where(start_year: filter[:cohort].split(",")) if filter[:cohort].present?
-
-          Cohort.where("start_year > 2020")
-        end
-
-        def updated_since
-          return if filter[:updated_since].blank?
-
-          Time.iso8601(filter[:updated_since])
-        rescue ArgumentError
-          begin
-            Time.iso8601(URI.decode_www_form_component(filter[:updated_since]))
-          rescue ArgumentError
-            raise Api::Errors::InvalidDatetimeError, I18n.t(:invalid_updated_since_filter)
-          end
         end
 
         def latest_induction_record_order
