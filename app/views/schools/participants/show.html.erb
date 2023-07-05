@@ -100,25 +100,36 @@
         </div>
       <% end %>
 
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-          Lead provider
-        </dt>
-        <dd class="govuk-summary-list__value">
-          <%= @induction_record.lead_provider_name %>
-        </dd>
-        <dd class="govuk-summary-list__actions"></dd>
-      </div>
+      <% if @induction_record.enrolled_in_cip? %>
+        <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
+          <dt class="govuk-summary-list__key">
+            Programme
+          </dt>
+          <dd class="govuk-summary-list__value">
+            DfE accredited materials
+          </dd>
+        </div>
+      <% end %>
 
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-          Delivery partner
-        </dt>
-        <dd class="govuk-summary-list__value">
-          <%= @induction_record.delivery_partner_name %>
-        </dd>
-        <dd class="govuk-summary-list__actions"></dd>
-      </div>
+      <% if @induction_record.enrolled_in_fip? %>
+        <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
+          <dt class="govuk-summary-list__key">
+            Lead provider
+          </dt>
+          <dd class="govuk-summary-list__value">
+            <%= @induction_record.lead_provider_name %>
+          </dd>
+        </div>
+
+        <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
+          <dt class="govuk-summary-list__key">
+            Delivery partner
+          </dt>
+          <dd class="govuk-summary-list__value">
+            <%= @induction_record.delivery_partner_name %>
+          </dd>
+        </div>
+      <% end %>
 
       <% if can_appropriate_body_be_changed? %>
         <div class="govuk-summary-list__row">
