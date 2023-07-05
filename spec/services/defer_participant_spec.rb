@@ -29,7 +29,7 @@ RSpec.shared_examples "validating deferring a participant attributes" do
     it "is invalid returning a meaningful error message" do
       is_expected.to be_invalid
 
-      expect(service.errors.messages_for(:course_identifier)).to include("The property '#/course_identifier' must be an available course to '#/participant_id'")
+      expect(service.errors.messages_for(:course_identifier)).to include("The entered '#/course_identifier' is not recognised for the given participant. Check details and try again.")
     end
   end
 
@@ -39,7 +39,7 @@ RSpec.shared_examples "validating deferring a participant attributes" do
     it "is invalid returning a meaningful error message" do
       is_expected.to be_invalid
 
-      expect(service.errors.messages_for(:course_identifier)).to include("The property '#/course_identifier' must be an available course to '#/participant_id'")
+      expect(service.errors.messages_for(:course_identifier)).to include("The entered '#/course_identifier' is not recognised for the given participant. Check details and try again.")
     end
   end
 
@@ -49,7 +49,7 @@ RSpec.shared_examples "validating deferring a participant attributes" do
     it "is invalid returning a meaningful error message" do
       is_expected.to be_invalid
 
-      expect(service.errors.messages_for(:participant_id)).to include("The property '#/participant_id' must be a valid Participant ID")
+      expect(service.errors.messages_for(:participant_id)).to include("Your update cannot be made as the '#/participant_id' is not recognised. Check participant details and try again.")
     end
   end
 
@@ -59,17 +59,7 @@ RSpec.shared_examples "validating deferring a participant attributes" do
     it "is invalid returning a meaningful error message" do
       is_expected.to be_invalid
 
-      expect(service.errors.messages_for(:participant_id)).to include("The property '#/participant_id' must be a valid Participant ID")
-    end
-  end
-
-  context "when the participant does not belong to the CPD lead provider" do
-    let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider) }
-
-    it "is invalid returning a meaningful error message" do
-      is_expected.to be_invalid
-
-      expect(service.errors.messages_for(:participant_id)).to include("The property '#/participant_id' must be a valid Participant ID")
+      expect(service.errors.messages_for(:participant_id)).to include("Your update cannot be made as the '#/participant_id' is not recognised. Check participant details and try again.")
     end
   end
 end
@@ -145,26 +135,39 @@ RSpec.describe DeferParticipant do
       course_identifier:,
     }
   end
+  let(:participant_identity) { create(:participant_identity) }
+  let(:user) { participant_identity.user }
 
   subject(:service) do
     described_class.new(params)
   end
 
   context "ECT participant profile" do
-    let(:cpd_lead_provider) { induction_record.cpd_lead_provider }
-    let(:induction_record) { participant_profile.induction_records.first }
-    let(:participant_profile) { create(:ect) }
+    let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
+    let(:participant_profile) { create(:ect, lead_provider: cpd_lead_provider.lead_provider, user:) }
+    let(:schedule_identifier) { "ecf-extended-april" }
     let(:course_identifier) { "ecf-induction" }
 
     describe "validations" do
       it_behaves_like "validating deferring a participant attributes"
 
       it_behaves_like "validating a participant is not already deferred" do
-        let(:participant_profile) { create(:ect, :deferred) }
+        let(:participant_profile) { create(:ect, :deferred, lead_provider: cpd_lead_provider.lead_provider) }
       end
 
       it_behaves_like "validating a participant is not withdrawn for a defer" do
-        let(:participant_profile) { create(:ect, :withdrawn) }
+        let(:participant_profile) { create(:ect, :withdrawn, lead_provider: cpd_lead_provider.lead_provider) }
+      end
+
+      context "when the participant does not belong to the CPD lead provider" do
+        let(:another_cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
+        let(:participant_profile) { create(:ect, lead_provider: another_cpd_lead_provider.lead_provider, user:) }
+
+        it "is invalid and returns an error message" do
+          is_expected.to be_invalid
+
+          expect(service.errors.messages_for(:participant_id)).to include("Your update cannot be made as the '#/participant_id' is not recognised. Check participant details and try again.")
+        end
       end
     end
 
@@ -174,20 +177,31 @@ RSpec.describe DeferParticipant do
   end
 
   context "Mentor participant profile" do
-    let(:cpd_lead_provider) { induction_record.cpd_lead_provider }
-    let(:induction_record) { participant_profile.induction_records.first }
-    let(:participant_profile) { create(:mentor) }
+    let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
+    let(:participant_profile) { create(:mentor, lead_provider: cpd_lead_provider.lead_provider, user:) }
+    let(:schedule_identifier) { "ecf-extended-april" }
     let(:course_identifier) { "ecf-mentor" }
 
     describe "validations" do
       it_behaves_like "validating deferring a participant attributes"
 
       it_behaves_like "validating a participant is not already deferred" do
-        let(:participant_profile) { create(:mentor, :deferred) }
+        let(:participant_profile) { create(:mentor, :deferred, lead_provider: cpd_lead_provider.lead_provider) }
       end
 
       it_behaves_like "validating a participant is not withdrawn for a defer" do
-        let(:participant_profile) { create(:mentor, :withdrawn) }
+        let(:participant_profile) { create(:mentor, :withdrawn, lead_provider: cpd_lead_provider.lead_provider) }
+      end
+
+      context "when the participant does not belong to the CPD lead provider" do
+        let(:another_cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
+        let(:participant_profile) { create(:mentor, lead_provider: another_cpd_lead_provider.lead_provider, user:) }
+
+        it "is invalid and returns an error message" do
+          is_expected.to be_invalid
+
+          expect(service.errors.messages_for(:participant_id)).to include("Your update cannot be made as the '#/participant_id' is not recognised. Check participant details and try again.")
+        end
       end
     end
 
@@ -197,20 +211,34 @@ RSpec.describe DeferParticipant do
   end
 
   context "NPQ participant profile" do
-    let(:cpd_lead_provider) { npq_application.npq_lead_provider.cpd_lead_provider }
-    let(:npq_application) { participant_profile.npq_application }
-    let(:participant_profile) { create(:npq_participant_profile) }
-    let(:course_identifier) { npq_application.npq_course.identifier }
+    let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_npq_lead_provider) }
+    let(:npq_lead_provider) { cpd_lead_provider.npq_lead_provider }
+    let(:npq_course) { create(:npq_course, identifier: "npq-senior-leadership") }
+    let(:schedule) { create(:npq_specialist_schedule) }
+    let(:participant_profile) { create(:npq_participant_profile, npq_lead_provider:, npq_course:, schedule:, user:) }
+    let(:course_identifier) { npq_course.identifier }
 
     describe "validations" do
       it_behaves_like "validating deferring a participant attributes"
 
       it_behaves_like "validating a participant is not already deferred" do
-        let(:participant_profile) { create(:npq_participant_profile, :deferred) }
+        let(:participant_profile) { create(:npq_participant_profile, :deferred, npq_lead_provider:, npq_course:) }
       end
 
       it_behaves_like "validating a participant is not withdrawn for a defer" do
-        let(:participant_profile) { create(:npq_participant_profile, :withdrawn) }
+        let(:participant_profile) { create(:npq_participant_profile, :withdrawn, npq_lead_provider:, npq_course:) }
+      end
+
+      context "when the participant does not belong to the CPD lead provider" do
+        let(:another_cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider) }
+        let(:another_npq_lead_provider) { another_cpd_lead_provider.npq_lead_provider }
+        let(:participant_profile) { create(:npq_participant_profile, npq_lead_provider: another_npq_lead_provider) }
+
+        it "is invalid and returns an error message" do
+          is_expected.to be_invalid
+
+          expect(service.errors.messages_for(:participant_id)).to include("Your update cannot be made as the '#/participant_id' is not recognised. Check participant details and try again.")
+        end
       end
     end
 

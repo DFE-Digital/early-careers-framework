@@ -19,7 +19,7 @@ RSpec.shared_examples "validating a participant for a change schedule" do
     it "is invalid and returns an error message" do
       is_expected.to be_invalid
 
-      expect(service.errors.messages_for(:course_identifier)).to include("The property '#/course_identifier' must be an available course to '#/participant_id'")
+      expect(service.errors.messages_for(:course_identifier)).to include("The entered '#/course_identifier' is not recognised for the given participant. Check details and try again.")
     end
   end
 
@@ -29,7 +29,7 @@ RSpec.shared_examples "validating a participant for a change schedule" do
     it "is invalid and returns an error message" do
       is_expected.to be_invalid
 
-      expect(service.errors.messages_for(:course_identifier)).to include("The property '#/course_identifier' must be an available course to '#/participant_id'")
+      expect(service.errors.messages_for(:course_identifier)).to include("The entered '#/course_identifier' is not recognised for the given participant. Check details and try again.")
     end
   end
 
@@ -39,7 +39,7 @@ RSpec.shared_examples "validating a participant for a change schedule" do
     it "is invalid and returns an error message" do
       is_expected.to be_invalid
 
-      expect(service.errors.messages_for(:participant_id)).to include("The property '#/participant_id' must be a valid Participant ID")
+      expect(service.errors.messages_for(:participant_id)).to include("Your update cannot be made as the '#/participant_id' is not recognised. Check participant details and try again.")
     end
   end
 
@@ -49,19 +49,7 @@ RSpec.shared_examples "validating a participant for a change schedule" do
     it "is invalid and returns an error message" do
       is_expected.to be_invalid
 
-      expect(service.errors.messages_for(:participant_id)).to include("The property '#/participant_id' must be a valid Participant ID")
-    end
-  end
-
-  context "when the participant does not belong to the CPD lead provider" do
-    let(:another_cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider) }
-    let(:npq_lead_provider) { another_cpd_lead_provider.npq_lead_provider }
-    let(:participant_profile) { create(:npq_participant_profile, npq_lead_provider:) }
-
-    it "is invalid and returns an error message" do
-      is_expected.to be_invalid
-
-      expect(service.errors.messages_for(:participant_id)).to include("The property '#/participant_id' must be a valid Participant ID")
+      expect(service.errors.messages_for(:participant_id)).to include("Your update cannot be made as the '#/participant_id' is not recognised. Check participant details and try again.")
     end
   end
 
@@ -170,6 +158,17 @@ RSpec.describe ChangeSchedule do
           expect(service.errors.messages_for(:cohort)).to include("The property '#/cohort' cannot be changed")
         end
       end
+
+      context "when the participant does not belong to the CPD lead provider" do
+        let(:another_cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
+        let(:participant_profile) { create(:ect, lead_provider: another_cpd_lead_provider.lead_provider, user:) }
+
+        it "is invalid and returns an error message" do
+          is_expected.to be_invalid
+
+          expect(service.errors.messages_for(:participant_id)).to include("Your update cannot be made as the '#/participant_id' is not recognised. Check participant details and try again.")
+        end
+      end
     end
 
     describe ".call" do
@@ -226,6 +225,17 @@ RSpec.describe ChangeSchedule do
           is_expected.to be_invalid
 
           expect(service.errors.messages_for(:cohort)).to include("The property '#/cohort' cannot be changed")
+        end
+      end
+
+      context "when the participant does not belong to the CPD lead provider" do
+        let(:another_cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
+        let(:participant_profile) { create(:mentor, lead_provider: another_cpd_lead_provider.lead_provider, user:) }
+
+        it "is invalid and returns an error message" do
+          is_expected.to be_invalid
+
+          expect(service.errors.messages_for(:participant_id)).to include("Your update cannot be made as the '#/participant_id' is not recognised. Check participant details and try again.")
         end
       end
     end
@@ -311,6 +321,18 @@ RSpec.describe ChangeSchedule do
               expect(participant_profile.npq_application.cohort).to eq(new_cohort)
             end
           end
+        end
+      end
+
+      context "when the participant does not belong to the CPD lead provider" do
+        let(:another_cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider) }
+        let(:another_npq_lead_provider) { another_cpd_lead_provider.npq_lead_provider }
+        let(:participant_profile) { create(:npq_participant_profile, npq_lead_provider: another_npq_lead_provider) }
+
+        it "is invalid and returns an error message" do
+          is_expected.to be_invalid
+
+          expect(service.errors.messages_for(:participant_id)).to include("Your update cannot be made as the '#/participant_id' is not recognised. Check participant details and try again.")
         end
       end
     end

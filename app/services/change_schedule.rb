@@ -13,6 +13,7 @@ class ChangeSchedule
   delegate :participant_profile_state, to: :participant_profile, allow_nil: true
   delegate :lead_provider, to: :cpd_lead_provider, allow_nil: true
 
+  validates :participant_id, participant_identity_presence: true
   validates :course_identifier, course: true, presence: { message: I18n.t(:missing_course_identifier) }
   validates :cpd_lead_provider, induction_record: true
   validates :schedule_identifier, presence: { message: I18n.t(:invalid_schedule) }

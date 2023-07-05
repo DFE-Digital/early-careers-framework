@@ -34,10 +34,10 @@ RSpec.describe Partnerships::Create do
       it "returns errors" do
         expect(service).to be_invalid
 
-        expect(service.errors.messages_for(:cohort)).to include("The attribute '#/cohort' must be included as part of partnership confirmations.")
-        expect(service.errors.messages_for(:school_id)).to include("The attribute '#/school_id' must be included as part of partnership confirmations.")
-        expect(service.errors.messages_for(:lead_provider_id)).to include("The attribute '#/lead_provider_id' must be included as part of partnership confirmations.")
-        expect(service.errors.messages_for(:delivery_partner_id)).to include("The attribute '#/delivery_partner_id' must be included as part of partnership confirmations.")
+        expect(service.errors.messages_for(:cohort)).to include("Enter a '#/cohort'.")
+        expect(service.errors.messages_for(:school_id)).to include("Enter a '#/school_id'.")
+        expect(service.errors.messages_for(:lead_provider_id)).to include("Enter a '#/lead_provider_id'.")
+        expect(service.errors.messages_for(:delivery_partner_id)).to include("Enter a '#/delivery_partner_id'.")
       end
     end
 
@@ -54,10 +54,10 @@ RSpec.describe Partnerships::Create do
       it "returns errors" do
         expect(service).to be_invalid
 
-        expect(service.errors.messages_for(:cohort)).to include("The '#/cohort' you have entered is invalid. Enter a valid '#/cohort' attribute in the request body for partnership confirmations.")
-        expect(service.errors.messages_for(:school_id)).to include("The '#/school_id' you have entered is invalid. Enter a valid '#/school_id' value in the request body for partnership confirmations. Contact the DfE for support if you are unable to find the '#/school_id'.")
-        expect(service.errors.messages_for(:lead_provider_id)).to include("The '#/lead_provider_id' you have entered is invalid. Enter a valid '#/lead_provider_id' attribute in the request body for partnership confirmations.")
-        expect(service.errors.messages_for(:delivery_partner_id)).to include("The '#/delivery_partner_id' you have entered is invalid. Enter a valid '#/delivery_partner_id' attribute in the request body for partnership confirmations.")
+        expect(service.errors.messages_for(:cohort)).to include("The '#/cohort' you have entered is invalid. Check cohort details and try again.")
+        expect(service.errors.messages_for(:school_id)).to include("The '#/school_id' you have entered is invalid. Check school details and try again. Contact the DfE for support if you are unable to find the '#/school_id'.")
+        expect(service.errors.messages_for(:lead_provider_id)).to include("Enter a valid '#/lead_provider_id'.")
+        expect(service.errors.messages_for(:delivery_partner_id)).to include("The '#/delivery_partner_id' you have entered is invalid. Check delivery partner details and try again.")
       end
     end
 
@@ -94,7 +94,7 @@ RSpec.describe Partnerships::Create do
         it "returns errors" do
           expect(service).to be_invalid
 
-          expect(service.errors.messages_for(:delivery_partner_id)).to include("The delivery partner that has been specified is not recognised to be working in partnership with you for the given cohort. Contact the DfE for more information.")
+          expect(service.errors.messages_for(:delivery_partner_id)).to include("The entered delivery partner is not recognised to be working in partnership with you for the given cohort. Contact the DfE for more information.")
         end
       end
     end
@@ -105,7 +105,7 @@ RSpec.describe Partnerships::Create do
       it "returns error" do
         expect(service).to be_invalid
 
-        expect(service.errors.messages_for(:school_id)).to include("The school you have entered has not registered to deliver training using a DfE-funded training provider.")
+        expect(service.errors.messages_for(:school_id)).to include("The school you have entered has not registered to deliver DfE-funded training. Contact the school for more information.")
       end
     end
 
@@ -126,7 +126,7 @@ RSpec.describe Partnerships::Create do
           expect(school).to_not be_eligible
           expect(service).to be_invalid
 
-          expect(service.errors.messages_for(:school_id)).to include("The school you have entered is currently ineligible for DfE funding.")
+          expect(service.errors.messages_for(:school_id)).to include("The school you have entered is currently ineligible for DfE funding. Contact the school for more information.")
         end
       end
     end
@@ -137,7 +137,7 @@ RSpec.describe Partnerships::Create do
       it "returns error" do
         expect(service).to be_invalid
 
-        expect(service.errors.messages_for(:school_id)).to include("You are already confirmed to be in partnership with the school for the entered cohort.")
+        expect(service.errors.messages_for(:school_id)).to include("You are already in a confirmed partnership with this school for the entered cohort.")
       end
     end
 
@@ -148,7 +148,7 @@ RSpec.describe Partnerships::Create do
       it "returns error" do
         expect(service).to be_invalid
 
-        expect(service.errors.messages_for(:school_id)).to include("Another provider is already confirmed to be in partnership with the school for the entered cohort. Contact the school for more information.")
+        expect(service.errors.messages_for(:school_id)).to include("Another provider is in a confirmed partnership with the school for the cohort you entered. Contact the school for more information.")
       end
     end
 
@@ -161,7 +161,7 @@ RSpec.describe Partnerships::Create do
       it "returns error" do
         expect(service).to be_invalid
 
-        expect(service.errors.messages_for(:school_id)).to include("The school you have entered has not yet confirmed they will deliver training using a DfE-funded training provider. Contact the school for more information.")
+        expect(service.errors.messages_for(:school_id)).to include("The school you have entered has not yet confirmed they will deliver DfE-funded training. Contact the school for more information.")
       end
     end
 
@@ -200,7 +200,7 @@ RSpec.describe Partnerships::Create do
         expect(Partnership.count).to eql(1)
         expect(service).to be_invalid
 
-        expect(service.errors.messages_for(:delivery_partner_id)).to include("We are unable to process this request. You are already confirmed to be in partnership with the entered delivery partner. Contact the DfE for support.")
+        expect(service.errors.messages_for(:delivery_partner_id)).to include("We cannot process this request because you're already confirmed to be in partnership with the entered delivery partner. Contact the DfE for support.")
       end
     end
   end
