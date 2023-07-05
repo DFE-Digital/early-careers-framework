@@ -28,7 +28,7 @@ class ChooseRoleForm
     when "change_role"
       helpers.contact_support_choose_role_path
     when "admin"
-      helpers.admin_schools_path
+      helpers.admin_path
     when "finance"
       helpers.finance_landing_page_path
     when "delivery_partner"

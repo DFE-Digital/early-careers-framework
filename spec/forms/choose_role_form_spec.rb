@@ -94,14 +94,14 @@ RSpec.describe ChooseRoleForm, type: :model do
 
       describe "param with admin role" do
         let(:form_role) { "admin" }
-        let(:helpers) { Struct.new(:admin_schools_path).new("/admins") }
+        let(:helpers) { Struct.new(:admin_path).new("/admin") }
 
         it "should be valid" do
           expect(form.valid?).to be true
         end
 
         it "returns correct redirect_path" do
-          expect(form.redirect_path(helpers:)).to be helpers.admin_schools_path
+          expect(form.redirect_path(helpers:)).to be helpers.admin_path
         end
       end
 
