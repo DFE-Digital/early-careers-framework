@@ -22,8 +22,8 @@ staging:
 sandbox:
 	$(eval DEPLOY_ENV=sandbox)
 
-.PHONY: review
-review: aks
+.PHONY: review_aks
+review_aks: aks ## Specify review AKS environment
 	# PULL_REQUEST_NUMBER is set by the GitHub action
 	$(if $(PULL_REQUEST_NUMBER), , $(error Missing environment variable "PULL_REQUEST_NUMBER"))
 	$(eval include global_config/review_aks.sh)
