@@ -65,7 +65,7 @@ gem "rubyzip", "~> 2.3", ">= 2.3.0"
 gem "savon", "~> 2.14"
 
 # Strong migration checker for database migrations
-gem "strong_migrations", "~> 1.4"
+gem "strong_migrations", "~> 1.5"
 
 # Pagination
 gem "pagy", "~> 5.10", ">= 5.10.1"
