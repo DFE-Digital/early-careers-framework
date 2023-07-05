@@ -45,3 +45,7 @@ variable "enable_monitoring" {
   type    = bool
   default = true
 }
+
+variable "db_sslmode" {
+  default = "require"
+}

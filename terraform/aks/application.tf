@@ -16,7 +16,8 @@ module "application_configuration" {
 
   config_variables = {
     HOSTING_ENVIRONMENT = local.environment
-    RAILS_ENV           = "production"
+    RAILS_ENV           = "deployed_development"
+    DB_SSLMODE          = var.db_sslmode
 
     # BIGQUERY_PROJECT_ID = "ecf-bq",
     # BIGQUERY_DATASET    = "events_${var.app_environment}", TODO: work this out
