@@ -45,7 +45,10 @@ module Admin
     end
 
     def participants_registered
-      @participants_registered ||= ParticipantProfile::ECF.joins(schedule: :cohort).where(schedule: { cohort: })
+      @participants_registered ||= ParticipantProfile::ECF.where(id: InductionRecord.active
+                                                                                    .joins(schedule: :cohort)
+                                                                                    .where(schedule: { cohort: })
+                                                                                    .select(:participant_profile_id))
     end
 
     def valid_choices
