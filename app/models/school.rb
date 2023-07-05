@@ -79,6 +79,7 @@ class School < ApplicationRecord
     joins(:school_cohorts).where(school_cohorts: { cohort_id: cohort.id, opt_out_of_updates: true })
   }
 
+  # TODO: only used in test suite
   scope :all_ecf_participants_validated, lambda {
     left_outer_joins(active_ecf_participant_profiles: %i[ecf_participant_eligibility ecf_participant_validation_data])
       .group(:id)

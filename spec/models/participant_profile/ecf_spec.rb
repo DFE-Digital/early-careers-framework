@@ -6,17 +6,20 @@ RSpec.describe ParticipantProfile::ECF, type: :model do
   let(:profile) { create(:ect_participant_profile) }
 
   describe ":current_cohort" do
-    let!(:cohort_2020) { Cohort.find_by(start_year: 2020) || create(:cohort, start_year: 2020) }
-    let!(:current_cohort) { Cohort.current || create(:cohort, :current) }
-    let!(:participant_2020) { create(:ect_participant_profile, school_cohort: create(:school_cohort, cohort: cohort_2020)) }
-    let!(:current_participant) { create(:ect_participant_profile, school_cohort: create(:school_cohort, cohort: current_cohort)) }
+    let!(:ecf_early_rollout_participant) { create(:ect_participant_profile, school_cohort: create(:school_cohort, cohort: last_ecf_early_rollout_cohort)) }
+    let!(:earlier_ecf_national_rollout_participant) { create(:ect_participant_profile, school_cohort: create(:school_cohort, cohort: first_ecf_national_rollout_cohort)) }
+    let!(:current_ecf_national_rollout_participant) { create(:ect_participant_profile, school_cohort: create(:school_cohort, cohort: current_ecf_national_rollout_cohort)) }
 
-    it "does not include 2020 participants" do
-      expect(ParticipantProfile::ECF.current_cohort).not_to include(participant_2020)
+    it "does not include participants from early rollout years" do
+      expect(ParticipantProfile::ECF.current_cohort).not_to include(ecf_early_rollout_participant)
     end
 
-    it "includes participants from the current cohort" do
-      expect(ParticipantProfile::ECF.current_cohort).to include(current_participant)
+    it "does not include participants from earlier national rollout years" do
+      expect(ParticipantProfile::ECF.current_cohort).not_to include(earlier_ecf_national_rollout_participant)
+    end
+
+    it "only includes participants from the current national rollout" do
+      expect(ParticipantProfile::ECF.current_cohort).to include(current_ecf_national_rollout_participant)
       expect(ParticipantProfile::ECF.current_cohort.count).to eql 1
     end
   end
@@ -232,7 +235,7 @@ RSpec.describe ParticipantProfile::ECF, type: :model do
   describe "#relevant_induction_record" do
     let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
     let(:lead_provider) { cpd_lead_provider.lead_provider }
-    let(:cohort) { Cohort.next || create(:cohort, :next) }
+    let(:cohort) { next_ecf_national_rollout_cohort }
     let(:partnership) { create(:partnership, lead_provider:, cohort:) }
     let(:school_cohort) { create(:school_cohort, school: partnership.school, cohort:) }
     let(:induction_programme) { create(:induction_programme, school_cohort:, partnership:) }
@@ -245,7 +248,7 @@ RSpec.describe ParticipantProfile::ECF, type: :model do
     end
 
     context "when participant is in an older cohort" do
-      let(:cohort) { Cohort.current || create(:cohort, :current) }
+      let(:cohort) { current_ecf_national_rollout_cohort }
 
       it "finds the most recent induction record" do
         expect(profile.relevant_induction_record(lead_provider:)).to eq(induction_record_latest)
@@ -338,7 +341,7 @@ RSpec.describe ParticipantProfile::ECF, type: :model do
   describe "#relevant_induction_record_for" do
     let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
     let(:lead_provider) { cpd_lead_provider.lead_provider }
-    let(:cohort) { Cohort.current || create(:cohort, :current) }
+    let(:cohort) { current_ecf_national_rollout_cohort }
     let(:delivery_partner) { create(:delivery_partner) }
     let(:partnership) do
       create(

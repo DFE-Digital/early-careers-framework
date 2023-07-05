@@ -113,6 +113,8 @@ RSpec.configure do |config|
   config.include Capybara::RSpecMatchers, type: :component
   config.include Rails.application.routes.url_helpers
 
+  config.include SignificantPeriodsHelper
+
   config.before(:each, exceptions_app: true) do
     # Make the app behave how it does in non dev/test environments and use the
     # ErrorsController via config.exceptions_app = routes in config/application.rb
