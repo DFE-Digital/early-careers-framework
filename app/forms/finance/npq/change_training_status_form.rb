@@ -17,6 +17,7 @@ module Finance
 
       validates :training_status, inclusion: ParticipantProfile.training_statuses.values
       validates :reason, inclusion: { in: :valid_training_status_reasons }, if: :reason_required?
+      validate :do_not_defer_if_without_declarations
 
       def training_status_options
         ParticipantProfile.training_statuses.except(current_training_status)
@@ -64,6 +65,16 @@ module Finance
 
       def status_unchanged?
         training_status == current_training_status
+      end
+
+      def do_not_defer_if_without_declarations
+        return unless training_status == "deferred"
+        return unless participant_profile&.npq?
+        return unless participant_profile.npq_application.accepted?
+
+        if participant_profile.participant_declarations.empty?
+          errors.add(:training_status, :invalid_deferral_no_declarations)
+        end
       end
     end
   end

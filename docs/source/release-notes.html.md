@@ -7,6 +7,14 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
+## 12th July 2023
+
+DfE has changed functionality around the endpoint `PUT /api/v1/participants/npq/{id}/defer`
+
+Providers may not defer an NPQ participant unless the participant has at least a `started` declaration and which has not been voided. This is in line with the NPQ withdrawal endpoint and contractual requirements. The change applies to all versions of the API.
+
+If a provider wishes to defer a participant without a started declaration then they should contact the DfE which can undo the application.
+
 ## 7th July 2023
 
 Providers can now see the name of the lead provider which submitted a given declaration. Providers can find more detail on the new attribute `lead_provider_name` in the [v3 specification](/api-reference/reference-v3.html#schema-participantdeclarationresponse).
