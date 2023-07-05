@@ -138,6 +138,15 @@ RSpec.describe "API ECF Participants", type: :request do
           expect(parsed_response["data"].last["id"]).to eq ParticipantProfile.order(created_at: :asc).last.user.id
         end
 
+        it "returns matching users when filtering by training_status" do
+          induction_programme = school_cohort.default_induction_programme
+          withdrawn_ect_records = create_list(:induction_record, 2, induction_programme:, training_status: :withdrawn)
+
+          get "/api/v3/participants/ecf", params: { filter: { training_status: :withdrawn } }
+
+          expect(parsed_response["data"].size).to eq(withdrawn_ect_records.count)
+        end
+
         context "when updated_since parameter is supplied" do
           it "returns users changed since the updated_since parameter" do
             get "/api/v3/participants/ecf", params: { filter: { updated_since: 1.day.ago.iso8601 } }

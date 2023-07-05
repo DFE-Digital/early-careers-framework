@@ -46,6 +46,44 @@ RSpec.describe Api::V3::ECF::ParticipantsQuery do
       end
     end
 
+    describe "with training_status filter" do
+      let(:training_status) { :deferred }
+      let(:params) { { filter: { training_status: } } }
+
+      context "when there are no matches" do
+        it { expect(subject.participants_for_pagination).to be_empty }
+      end
+
+      context "when there are matches" do
+        let(:training_status) { :active }
+
+        it { expect(subject.participants_for_pagination).to contain_exactly(user, another_user) }
+      end
+
+      context "when the user has multiple induction records and the latest matches" do
+        before { create(:induction_record, participant_profile:, induction_programme:, training_status: :withdrawn) }
+        let(:training_status) { :withdrawn }
+
+        it { expect(subject.participants_for_pagination).to contain_exactly(user) }
+      end
+
+      context "when the user has multiple induction records and the latest does not match" do
+        before do
+          participant_profile.induction_records.latest.update!(training_status: :deferred)
+          create(:induction_record, participant_profile:, induction_programme:, training_status: :withdrawn)
+        end
+
+        it { expect(subject.participants_for_pagination).to be_empty }
+      end
+
+      context "with an invalid value" do
+        let(:training_status) { :invalid }
+        let(:expected_message) { %(The filter '#/training_status' must be ["active", "deferred", "withdrawn"]) }
+
+        it { expect { subject.participants_for_pagination }.to raise_error(Api::Errors::InvalidTrainingStatusError, expected_message) }
+      end
+    end
+
     context "with updated_since filter" do
       let(:params) { { filter: { updated_since: 1.day.ago.iso8601 } } }
       let(:another_induction_record) do

@@ -1168,13 +1168,13 @@
             "name": "filter",
             "in": "query",
             "schema": {
-              "$ref": "#/components/schemas/ListFilter"
+              "$ref": "#/components/schemas/NPQParticipantFilter"
             },
             "style": "deepObject",
             "explode": true,
             "required": false,
             "description": "Refine NPQ participants to return.",
-            "example": "filter[updated_since]=2020-11-13T11:21:55Z"
+            "example": "filter[updated_since]=2020-11-13T11:21:55Z&training_status=active"
           },
           {
             "name": "page",
@@ -2085,13 +2085,13 @@
             "name": "filter",
             "in": "query",
             "schema": {
-              "$ref": "#/components/schemas/ListFilter"
+              "$ref": "#/components/schemas/ECFParticipantFilter"
             },
             "style": "deepObject",
             "explode": true,
             "required": false,
             "description": "Refine ECF participants to return.",
-            "example": "filter[cohort]=2022&filter[updated_since]=2020-11-13T11:21:55Z"
+            "example": "filter[cohort]=2022&filter[updated_since]=2020-11-13T11:21:55Z&training_status=active"
           },
           {
             "name": "page",
@@ -6910,7 +6910,7 @@
           }
         }
       },
-      "ParticipantListFilter": {
+      "ECFParticipantFilter": {
         "description": "Filter a list of records to return more specific results",
         "type": "object",
         "properties": {
@@ -6923,6 +6923,27 @@
             "description": "Return only records for the given cohort",
             "type": "string",
             "example": "2022"
+          },
+          "training_status": {
+            "description": "Return only records that have this training status",
+            "type": "string",
+            "example": "active"
+          }
+        }
+      },
+      "NPQParticipantFilter": {
+        "description": "Filter a list of records to return more specific results",
+        "type": "object",
+        "properties": {
+          "updated_since": {
+            "description": "Return only records that have been updated since this date and time (ISO 8601 date format)",
+            "type": "string",
+            "example": "2021-05-13T11:21:55Z"
+          },
+          "training_status": {
+            "description": "Return only records that have this training status",
+            "type": "string",
+            "example": "active"
           }
         }
       },

@@ -6,6 +6,7 @@ module Api
       class ParticipantsQuery
         include Concerns::FilterCohorts
         include Concerns::FilterUpdatedSince
+        include Concerns::FilterTrainingStatus
 
         def initialize(lead_provider:, params:)
           @lead_provider = lead_provider
@@ -14,11 +15,12 @@ module Api
 
         def participants_for_pagination
           scope = User
-                    .select(:id, :created_at)
+                    .select("users.id", "users.created_at")
                     .joins(participant_profiles: :induction_records)
                     .joins("JOIN (#{latest_induction_records_join.to_sql}) AS latest_induction_records_join ON latest_induction_records_join.latest_id = induction_records.id")
                     .distinct
-          scope = updated_since_filter.present? ? scope.where(users: { updated_at: updated_since.. }) : scope
+          scope = scope.where(users: { updated_at: updated_since.. }) if updated_since_filter.present?
+          scope = scope.where(induction_records: { training_status: }) if training_status.present?
           params[:sort].blank? ? scope.order(:created_at) : scope
         end
 

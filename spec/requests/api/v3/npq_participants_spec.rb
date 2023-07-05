@@ -70,8 +70,20 @@ RSpec.describe "NPQ Participants API", type: :request do
         context "filtering" do
           before do
             travel_to 10.days.ago do
-              create_list(:npq_application, 3, :accepted, npq_lead_provider:, school_urn: "123456", npq_course:)
+              create_list(:npq_application, 3,
+                          :accepted,
+                          npq_lead_provider:,
+                          school_urn: "123456",
+                          npq_course:).each do |application|
+                application.profile.update!(training_status: :withdrawn)
+              end
             end
+          end
+
+          it "returns correctly when filtering by training_status" do
+            get "/api/v3/participants/npq", params: { filter: { training_status: :withdrawn } }
+
+            expect(parsed_response["data"].size).to eq(3)
           end
 
           it "returns content updated after specified timestamp" do
