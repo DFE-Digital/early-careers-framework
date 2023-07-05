@@ -6,7 +6,7 @@ class AppropriateBodySelectionForm
   include ActiveModel::Serialization
 
   TYPES = [
-    OpenStruct.new(id: "local_authority", name: "Local authority", disable_from_year: 2023),
+    OpenStruct.new(id: "local_authority", name: "Local authority", disable_from_year: Cohort::LAST_LOCAL_AUTHORITY_AB_YEAR),
     OpenStruct.new(id: "national", name: "National organisation", disable_from_year: nil),
     OpenStruct.new(id: "teaching_school_hub", name: "Teaching school hub", disable_from_year: nil),
   ].freeze

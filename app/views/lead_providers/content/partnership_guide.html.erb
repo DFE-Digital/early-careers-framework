@@ -101,9 +101,9 @@ end %>
   <li>A confirmation email will also be sent to schools:</li>
 </ul>
 
-<%= render GovukComponent::InsetTextComponent.new(text: 'Hello,<br/>
+<%= render GovukComponent::InsetTextComponent.new(text: "Hello,<br/>
     <br/>
-    <code>&lt;Delivery partner name&gt;</code>, with <code>&lt;Lead provider name&gt;</code>, has confirmed they will be delivering an induction programme to early career teachers at <code>&lt;School name&gt;</code>, starting in 2021.<br/>
+    <code>&lt;Delivery partner name&gt;</code>, with <code>&lt;Lead provider name&gt;</code>, has confirmed they will be delivering an induction programme to early career teachers at <code>&lt;School name&gt;</code>, starting in #{Cohort::NATIONAL_ROLLOUT_FIRST_YEAR}.<br/>
 
     <h3>If this is a mistake</h3>
 
@@ -111,7 +111,7 @@ end %>
     <br/>
     <code>&lt;URL&gt;</code><br/>
     <br/>
-    This link will expire in 14 days'.html_safe)
+    This link will expire in 14 days".html_safe)
 %>
 
 

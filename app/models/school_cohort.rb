@@ -56,7 +56,7 @@ class SchoolCohort < ApplicationRecord
   def self.dashboard_for_school(school:, latest_year:)
     joins(:cohort)
       .where(school:)
-      .merge(Cohort.between_2021_and(latest_year))
+      .merge(Cohort.in_national_roll_out(latest_year))
       .order(start_year: :desc)
       .limit(3)
   end

@@ -11,8 +11,7 @@ module Admin
           .joins(:school)
           .where(school: @school)
 
-        # We do not display the 2020 cohort, because it is non-standard
-        @cohorts = Cohort.where.not(start_year: 2020).where(start_year: ..Cohort.active_registration_cohort.start_year).order(start_year: :asc)
+        @cohorts = Cohort.current_national_rollout_year.order(start_year: :asc)
       end
 
     private

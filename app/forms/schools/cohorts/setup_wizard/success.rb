@@ -98,7 +98,7 @@ module Schools
         end
 
         def should_send_the_pilot_survey?
-          cohort.start_year == 2023 && FeatureFlag.active?(:cohortless_dashboard, for: school) &&
+          cohort.start_year == Cohort::COHORTLESS_RELEASE_YEAR && FeatureFlag.active?(:cohortless_dashboard, for: school) &&
             expect_any_ects? && current_user.induction_coordinator?
         end
       end

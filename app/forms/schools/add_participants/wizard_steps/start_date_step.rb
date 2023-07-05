@@ -32,7 +32,7 @@ module Schools
           # This could be dynamic based on Cohort.registration_start_date but the ask on the ticket is for
           # a temporary stop to prevent registrations
           if FeatureFlag.active? :prevent_2023_ect_registrations
-            wizard.ect_participant? && start_date >= Date.new(2023, 9, 1)
+            wizard.ect_participant? && start_date >= Cohort::COHORTLESS_RELEASE_DATE
           else
             false
           end
@@ -45,7 +45,7 @@ module Schools
             begin
               @start_date = Date.parse (1..3).map { |n| start_date[n] }.join("/")
 
-              unless start_date.between?(Date.new(2021, 9, 1), Date.current + 1.year)
+              unless Cohort.valid_national_rollout_date?(start_date)
                 errors.add(:start_date, :invalid)
               end
             rescue Date::Error

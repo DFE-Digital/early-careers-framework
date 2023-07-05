@@ -26,7 +26,7 @@ RSpec.describe "Admin::Schools::Cohorts", type: :request do
       get "/admin/schools/#{school.id}/cohorts"
       expect(response).to render_template("admin/schools/cohorts/index")
       expect(assigns(:school_cohorts)).to match_array school.school_cohorts
-      Cohort.where.not(start_year: 2020).each do |cohort|
+      Cohort.national_rollout_year.each do |cohort|
         expect(response.body).to include cohort.start_year.to_s
       end
     end

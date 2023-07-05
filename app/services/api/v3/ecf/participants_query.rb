@@ -71,7 +71,7 @@ module Api
         def with_cohorts
           return Cohort.where(start_year: filter[:cohort].split(",")) if filter[:cohort].present?
 
-          Cohort.where("start_year > 2020")
+          Cohort.national_rollout_year
         end
 
         def updated_since

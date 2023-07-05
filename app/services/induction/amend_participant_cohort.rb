@@ -14,26 +14,24 @@ module Induction
       end
     end
 
-    ECF_FIRST_YEAR = 2020
-
     attr_accessor :participant_profile, :source_cohort_start_year, :target_cohort_start_year
 
     validates :source_cohort_start_year,
               numericality: {
                 only_integer: true,
-                greater_than_or_equal_to: ECF_FIRST_YEAR,
+                greater_than_or_equal_to: Cohort::EARLY_ROLLOUT_LAST_YEAR,
                 less_than_or_equal_to: Date.current.year,
                 message: :invalid,
-                start: ECF_FIRST_YEAR,
+                start: Cohort::EARLY_ROLLOUT_LAST_YEAR,
                 end: Date.current.year,
               }
     validates :target_cohort_start_year,
               numericality: {
                 only_integer: true,
-                greater_than_or_equal_to: ECF_FIRST_YEAR,
+                greater_than_or_equal_to: Cohort::EARLY_ROLLOUT_LAST_YEAR,
                 less_than_or_equal_to: Date.current.year,
                 message: :invalid,
-                start: ECF_FIRST_YEAR,
+                start: Cohort::EARLY_ROLLOUT_LAST_YEAR,
                 end: Date.current.year,
               }
     validates :target_cohort,

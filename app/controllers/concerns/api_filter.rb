@@ -45,6 +45,6 @@ private
   def with_cohorts
     return Cohort.find_by(start_year: filter[:cohort]) if filter[:cohort].present?
 
-    Cohort.where("start_year > 2020")
+    Cohort.national_rollout_year
   end
 end

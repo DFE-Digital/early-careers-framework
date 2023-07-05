@@ -40,7 +40,7 @@ module ApplicationHelper
   end
 
   def participant_start_path(user)
-    return participants_no_access_path unless post_2020_ecf_participant?(user)
+    return participants_no_access_path unless ecf_national_rollout_participant?(user)
 
     participants_validation_path
   end
@@ -84,8 +84,8 @@ module ApplicationHelper
 
 private
 
-  def post_2020_ecf_participant?(user)
-    user.teacher_profile.ecf_profiles.where.not(cohort: Cohort.find_by(start_year: 2020)).any?
+  def ecf_national_rollout_participant?(user)
+    user.teacher_profile.ecf_profiles.where(cohort: Cohort.national_rollout_year).any?
   end
 
   def school_dashboard_with_tab_path(school)

@@ -2,9 +2,6 @@
 
 module Participants
   class SyncDqtInductionStartDate < BaseService
-    FIRST_2021_ACADEMIC_DATE = Date.new(2021, 9, 1)
-    FIRST_2023_REGISTRATION_DATE = Cohort.find_by(start_year: 2023)&.registration_start_date || Date.new(2023, 6, 1)
-
     def initialize(dqt_induction_start_date, participant_profile)
       @dqt_induction_start_date = dqt_induction_start_date
       @participant_profile = participant_profile
@@ -13,7 +10,7 @@ module Participants
     def call
       return false unless FeatureFlag.active?(:cohortless_dashboard)
       return false unless dqt_induction_start_date
-      return update_induction_start_date if mentor? || pre_2021_dqt_induction_start_date? || pre_2023_participant?
+      return update_induction_start_date if mentor? || Cohort.valid_early_rollout_date?(dqt_induction_start_date) || pre_cohortless_registration_participant?
       return cohort_missing unless target_cohort
 
       update_participant
@@ -38,12 +35,8 @@ module Participants
       SyncDqtInductionStartDateError.where(participant_profile:).destroy_all
     end
 
-    def pre_2021_dqt_induction_start_date?
-      dqt_induction_start_date < FIRST_2021_ACADEMIC_DATE
-    end
-
-    def pre_2023_participant?
-      participant_profile.created_at < FIRST_2023_REGISTRATION_DATE
+    def pre_cohortless_registration_participant?
+      participant_profile.created_at < Cohort::COHORTLESS_RELEASE_DATE
     end
 
     def save_errors(*messages)

@@ -9,7 +9,7 @@ RSpec.describe DistrictSparsity, type: :model do
 
   describe ":latest" do
     let!(:current_sparsity) { create(:district_sparsity) }
-    let!(:previous_sparsity) { create(:district_sparsity, start_year: 2019, end_year: 2020) }
+    let!(:previous_sparsity) { create(:district_sparsity, start_year: 3033, end_year: 3033) }
 
     it "includes current sparsity" do
       expect(DistrictSparsity.latest).to include(current_sparsity)

@@ -89,7 +89,7 @@ module Api
         cohorts = if cohort_filter.present?
                     Cohort.where(start_year: cohort_filter.split(","))
                   else
-                    Cohort.where("start_year > 2020")
+                    Cohort.national_rollout_year
                   end
 
         scope.where(cohort: cohorts)

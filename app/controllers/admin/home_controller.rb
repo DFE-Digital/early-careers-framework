@@ -46,7 +46,7 @@ module Admin
     end
 
     def cohort
-      @cohort ||= Cohort.find_by(start_year: 2023)
+      @cohort ||= Cohort.current
     end
   end
 end

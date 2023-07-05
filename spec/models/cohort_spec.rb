@@ -13,10 +13,10 @@ RSpec.describe Cohort, type: :model do
       end
     end
 
-    describe ".between_2021_and" do
+    describe ".in_national_roll_out" do
       it "generates a BETWEEN clause with 2021 and the given year" do
         expected = %(WHERE "cohorts"."start_year" BETWEEN 2021 AND 2030)
-        expect(Cohort.between_2021_and(2030).to_sql).to include(expected)
+        expect(Cohort.in_national_roll_out(2030).to_sql).to include(expected)
       end
     end
 
@@ -107,7 +107,7 @@ RSpec.describe Cohort, type: :model do
     context "when the current time is after the registration start date for then next cohort" do
       it "returns true" do
         Timecop.freeze(Date.new(2023, 7, 1)) do
-          expect(Cohort).to be_within_next_registration_period
+          expect(Cohort).to be_within_next_ecf_registration_period
         end
       end
     end
@@ -115,7 +115,7 @@ RSpec.describe Cohort, type: :model do
     context "when the active_registration_cohort and the current cohort are the same" do
       it "returns false" do
         Timecop.freeze(Date.new(2023, 9, 1)) do
-          expect(Cohort).not_to be_within_next_registration_period
+          expect(Cohort).not_to be_within_next_ecf_registration_period
         end
       end
     end
@@ -149,11 +149,11 @@ RSpec.describe Cohort, type: :model do
     end
   end
 
-  describe ".active_registration_cohort" do
+  describe ".active_ecf_registration_cohort" do
     describe "when the current date matches the registration start date" do
       it "returns the cohort with start_year the current year" do
         Timecop.freeze(Cohort.find_by(start_year: 2022).registration_start_date) do
-          expect(Cohort.active_registration_cohort.start_year).to eq 2022
+          expect(Cohort.active_ecf_registration_cohort.start_year).to eq 2022
         end
       end
     end

@@ -235,7 +235,7 @@ module Schools
       def needs_to_confirm_start_term?
         # are we in the next registration period (or pre-registration period) and the participant does not have
         # an induction start date
-        (mentor_participant? || induction_start_date.blank?) && !Cohort.within_automatic_assignment_period?
+        (mentor_participant? || induction_start_date.blank?) && !Cohort.within_ecf_automatic_assignment_period?
       end
 
       ## appropriate bodies
@@ -375,7 +375,7 @@ module Schools
           Cohort.containing_date(induction_start_date).tap do |cohort|
             return Cohort.current if cohort.blank? || cohort.npq_plus_one_or_earlier?
           end
-        elsif Cohort.within_automatic_assignment_period?
+        elsif Cohort.within_ecf_automatic_assignment_period?
           # true from 1/9 to end of automatic assignment period
           Cohort.current
         elsif start_term == "summer"
