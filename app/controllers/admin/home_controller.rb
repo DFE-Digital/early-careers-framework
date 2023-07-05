@@ -47,7 +47,7 @@ module Admin
     def participants_registered
       @participants_registered ||= ParticipantProfile::ECF.where(id: InductionRecord.active
                                                                                     .joins(schedule: :cohort)
-                                                                                    .where(schedule: { cohort: Cohort.find_by(start_year: 2023) })
+                                                                                    .where(schedule: { cohort: })
                                                                                     .select(:participant_profile_id))
     end
 
