@@ -566,7 +566,7 @@ GEM
       activesupport (>= 5.2)
       sprockets (>= 3.0.0)
     stackprof (0.2.25)
-    strong_migrations (1.4.4)
+    strong_migrations (1.5.0)
       activerecord (>= 5.2)
     thor (1.2.2)
     thread_safe (0.3.6)
@@ -707,7 +707,7 @@ DEPENDENCIES
   sprockets (~> 4.2.0)
   sprockets-rails
   stackprof
-  strong_migrations (~> 1.4)
+  strong_migrations (~> 1.5)
   timecop
   tzinfo-data
   view_component
