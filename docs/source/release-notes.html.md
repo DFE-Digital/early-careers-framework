@@ -7,6 +7,14 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
+## 7th July 2023
+
+Providers can now see the name of the lead provider which submitted a given declaration. Providers can find more detail on the new attribute `lead_provider_name` in the [v3 specification](/api-reference/reference-v3.html#schema-participantdeclarationresponse).
+
+Providers may see declarations submitted by another provider where an ECF participant has transferred. A provider may not void a declaration submitted by another provider.
+
+The change only applies to v3 and will apply to ECF and NPQ declarations.
+
 ## 5th July 2023
 
 The DfE has updated error messages for several endpoints. There has been no change to functionality, error codes, or the scenarios which result in an error. The changes only involve an update to the `detail` part of the error message.

@@ -72,6 +72,10 @@ module Api
           declaration.outcomes.sort_by(&:created_at).reverse!&.first&.has_passed?
         end
       end
+
+      attribute :lead_provider_name do |declaration|
+        declaration.cpd_lead_provider&.name
+      end
     end
   end
 end
