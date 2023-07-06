@@ -8,8 +8,10 @@ class Induction::ChangeInductionRecord < BaseService
       if induction_record.start_date > time_now
         induction_record.update!(changes)
       else
+        new_record_end_date = [time_now, induction_record.end_date].max if induction_record.end_date
         default_attrs = {
           start_date: time_now,
+          end_date: new_record_end_date,
           school_transfer: false,
         }
         new_record = induction_record.dup
