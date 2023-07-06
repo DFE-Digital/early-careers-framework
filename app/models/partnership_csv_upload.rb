@@ -33,15 +33,15 @@ class PartnershipCsvUpload < ApplicationRecord
   # NOTE: this method is intended for short term use while we migrate the urn
   # lists from ActiveStorage to Postgres arrays
   def sync_uploaded_urns
-    uploaded_urns = csv.download
-      .force_encoding("UTF-8")
-      .scrub
-      .lines(chomp: true)
-      .map { |urn| urn.chars.select { |c| c =~ /\w/ }.join }
+    uploaded_urns = clean_uploaded_lines(strip_bom(csv.download).scrub.lines(chomp: true))
 
     return if uploaded_urns.blank?
 
     update!(uploaded_urns:)
+  end
+
+  def clean_uploaded_lines(lines)
+    lines.flat_map { |line| line.split(",").reject(&:blank?).map(&:squish) }
   end
 
 private
