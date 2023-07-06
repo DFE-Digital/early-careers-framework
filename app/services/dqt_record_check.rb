@@ -69,7 +69,7 @@ private
         # If a participant mistypes their TRN and enters someone else's, we should search by NINO instead
         # The API first matches by (mandatory) TRN, then by NINO if it finds no results. This works around that.
         @trn = "0000001"
-        return check_record
+        check_record
       end
     else
       # we found a record but not enough matched
