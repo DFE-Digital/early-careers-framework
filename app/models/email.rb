@@ -15,6 +15,8 @@ class Email < ApplicationRecord
 
   def create_association_with(*objects, as: nil)
     objects.each do |object|
+      next if object.blank?
+
       Association.create!(
         email: self,
         object:,
