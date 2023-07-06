@@ -174,6 +174,14 @@ RSpec.describe DqtRecordCheck do
         it("#nino_matches is true") { expect(subject.call.nino_matches).to be(true) }
       end
 
+      context "when blank" do
+        include_context "build fake DQT response" do
+          let(:nino) { nil }
+        end
+
+        it("#nino_matches is false") { expect(subject.call.nino_matches).to be(false) }
+      end
+
       context "when different" do
         include_context "build fake DQT response" do
           let(:fake_api_response) { default_api_response.merge("ni_number" => "ZZ123456X") }
@@ -194,7 +202,7 @@ RSpec.describe DqtRecordCheck do
 
     context "when there are less than three matches excluding TRN" do
       include_context "build fake DQT response" do
-        let(:fake_api_response) { default_api_response.except("dob").merge("name" => "Jimbo Jones") }
+        let(:fake_api_response) { default_api_response.except("dob").merge("ni_number" => "QQ121212Q") }
       end
 
       before do
@@ -208,6 +216,20 @@ RSpec.describe DqtRecordCheck do
 
         expect(subject.send(:trn)).to eql("0000001")
         expect(subject).to have_received(:check_record).twice
+      end
+
+      context "when the TRN matches and DoB or Nino but the name doesn't match (2 matches)" do
+        include_context "build fake DQT response" do
+          let(:fake_api_response) { default_api_response.except("dob").merge("name" => "Jimbo Jones") }
+        end
+
+        it "returns the record and match results" do
+          result = subject.call
+          expect(result.trn_matches).to be(true)
+          expect(result.name_matches).to be(false)
+          expect(result.dqt_record).to be_present
+          expect(result.total_matched).to eql(2)
+        end
       end
     end
   end

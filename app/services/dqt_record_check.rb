@@ -60,14 +60,21 @@ private
 
     matches = [trn_matches, name_matches, dob_matches, nino_matches].count(true)
 
-    if matches < 3 && (trn_matches && trn != "1")
-      # If a participant mistypes their TRN and enters someone else's, we should search by NINO instead
-      # The API first matches by (mandatory) TRN, then by NINO if it finds no results. This works around that.
-      @trn = "0000001"
-      return check_record
+    if matches >= 3
+      CheckResult.new(dqt_record, trn_matches, name_matches, dob_matches, nino_matches, matches)
+    elsif matches < 3 && (trn_matches && trn != "1")
+      if matches == 2 && !name_matches && check_first_name_only?
+        CheckResult.new(dqt_record, trn_matches, name_matches, dob_matches, nino_matches, matches)
+      else
+        # If a participant mistypes their TRN and enters someone else's, we should search by NINO instead
+        # The API first matches by (mandatory) TRN, then by NINO if it finds no results. This works around that.
+        @trn = "0000001"
+        return check_record
+      end
+    else
+      # we found a record but not enough matched
+      check_failure(:no_match_found)
     end
-
-    CheckResult.new(dqt_record, trn_matches, name_matches, dob_matches, nino_matches, matches)
   end
 
   def name_matches?(dqt_name:)
