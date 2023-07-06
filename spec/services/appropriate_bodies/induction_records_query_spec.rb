@@ -24,5 +24,21 @@ RSpec.describe AppropriateBodies::InductionRecordsQuery do
     it "returns latest induction record for appropriate body" do
       expect(subject.induction_records).to match_array([induction_record])
     end
+
+    context "when there are more induction records for the same appropriate body" do
+      let!(:latest_induction_record) { create(:induction_record, participant_profile:, appropriate_body:, induction_programme:) }
+
+      it "returns latest induction record for appropriate body" do
+        expect(subject.induction_records).to match_array([latest_induction_record])
+      end
+    end
+
+    context "when there are newer induction records for a different appropriate body" do
+      let!(:latest_induction_record) { create(:induction_record, participant_profile:, induction_programme:, training_status: "deferred") }
+
+      it "returns correct induction record for appropriate body" do
+        expect(subject.induction_records).to match_array([induction_record])
+      end
+    end
   end
 end

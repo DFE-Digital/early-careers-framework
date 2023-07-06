@@ -22,7 +22,7 @@ RSpec.feature "Appropriate body users participants", type: :feature do
     )
   end
   let(:induction_programme) { create(:induction_programme, partnership:, school_cohort:) }
-  let!(:induction_record) { create :induction_record, participant_profile:, appropriate_body:, induction_programme:, training_status: "withdrawn" }
+  let!(:induction_record) { create(:induction_record, participant_profile:, appropriate_body:, induction_programme:, training_status: "withdrawn") }
 
   let!(:prev_cohort_year) { create(:cohort, start_year: 2020) }
 
@@ -114,6 +114,18 @@ RSpec.feature "Appropriate body users participants", type: :feature do
     end
   end
 
+  context "when there are newer induction records for a different appropriate body" do
+    let!(:latest_induction_record) { create(:induction_record, participant_profile:, induction_programme:, training_status: "deferred") }
+
+    scenario "Visit participants page" do
+      then_i_see("Participants")
+      and_i_see_participant_details
+      and_i_do_not_see_newer_induction_record_details
+    end
+  end
+
+private
+
   def given_i_am_logged_in_as_a_appropriate_body_user
     sign_in_as(appropriate_body_user)
   end
@@ -162,5 +174,9 @@ RSpec.feature "Appropriate body users participants", type: :feature do
     data = CSV.parse(page.body).transpose
     expect(data[0]).to eq(["full_name", participant_profile.user.full_name])
     expect(data[1]).to eq(["email_address", participant_profile.user.email])
+  end
+
+  def and_i_do_not_see_newer_induction_record_details
+    expect(page).not_to have_content(latest_induction_record.training_status)
   end
 end
