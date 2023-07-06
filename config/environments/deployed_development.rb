@@ -44,7 +44,8 @@ Rails.application.configure do
   config.active_storage.service = :amazon
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
-  config.force_ssl = true
+  config.ssl_options = { exclude: ->(request) { request.path.include?("healthcheck") } }
+
   config.session_store :cookie_store, key: "_early_career_framework_session", secure: true, expire_after: 2.weeks
 
   # Use a different cache store in production.
