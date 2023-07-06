@@ -41,3 +41,9 @@
     </main>
   </div>
 <% end %>
+
+<% if current_user.present? && !Rails.env.test? %>
+  <!-- Start of teachercpdhelp Zendesk Widget script -->
+  <script id="ze-snippet" src="https://static.zdassets.com/ekr/snippet.js?key=3544292a-5b38-4f45-bd16-98efeaa11ae9"> </script>
+  <!-- End of teachercpdhelp Zendesk Widget script -->
+<% end %>
