@@ -16,7 +16,7 @@ gem "pundit"
 
 # Error and performance monitoring
 gem "sentry-rails", "~> 5.5"
-gem "sentry-ruby", "~> 5.7"
+gem "sentry-ruby", "~> 5.10"
 gem "sentry-sidekiq"
 
 gem "secure_headers"
