@@ -4,6 +4,8 @@ module Api
   module V3
     module ECF
       class TransfersQuery
+        include Concerns::FilterUpdatedSince
+
         def initialize(lead_provider:, params:)
           @lead_provider = lead_provider
           @params = params
@@ -26,7 +28,7 @@ module Api
               },
             )
 
-          if updated_since.present?
+          if updated_since_filter.present?
             scope.where(updated_at: updated_since..).order(:updated_at)
           else
             scope.order(:created_at)
@@ -40,10 +42,6 @@ module Api
       private
 
         attr_accessor :lead_provider, :params
-
-        def filter
-          params[:filter] ||= {}
-        end
 
         def user_includes
           {
@@ -90,18 +88,6 @@ module Api
                 induction_programmes: { partnerships: { lead_provider_id: lead_provider.id } },
               },
             )
-        end
-
-        def updated_since
-          return if filter[:updated_since].blank?
-
-          Time.iso8601(filter[:updated_since])
-        rescue ArgumentError
-          begin
-            Time.iso8601(URI.decode_www_form_component(filter[:updated_since]))
-          rescue ArgumentError
-            raise Api::Errors::InvalidDatetimeError, I18n.t(:invalid_updated_since_filter)
-          end
         end
       end
     end

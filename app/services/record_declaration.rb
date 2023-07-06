@@ -15,12 +15,10 @@ class RecordDeclaration
 
   before_validation :declaration_attempt
 
+  validates :participant_id, participant_identity_presence: true, participant_not_withdrawn: true
   validates :declaration_date, presence: { message: I18n.t(:missing_declaration_date) }
   validates :declaration_type, presence: { message: I18n.t(:missing_declaration_type) }
   validates :declaration_date, future_date: true, declaration_date: true, allow_blank: true
-  validates :participant_id, participant_not_withdrawn: true
-  validates :cpd_lead_provider, induction_record: true
-  validates :course_identifier, course: true
   validates :evidence_held,
             presence: { message: I18n.t(:missing_evidence_held), if: :validate_evidence_held? },
             inclusion: {
@@ -31,6 +29,8 @@ class RecordDeclaration
   validate :validate_has_passed_field, if: :validate_has_passed?
   validate :validate_milestone_exists
   validate :validates_billable_slot_available
+  validates :course_identifier, course: true
+  validates :cpd_lead_provider, induction_record: true
 
   attr_reader :raw_declaration_date
 

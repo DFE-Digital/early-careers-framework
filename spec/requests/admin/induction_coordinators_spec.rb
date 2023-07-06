@@ -41,7 +41,7 @@ RSpec.describe "Admin::InductionCoodinators", type: :request do
 
       expect(induction_coordinator.reload.email).to eq email
       expect(response).to redirect_to(:admin_induction_coordinators)
-      expect(flash[:notice]).to eq "Changes saved successfully"
+      expect(flash[:success][:content]).to eq "Changes saved successfully"
     end
 
     context "when the user params are invalid" do

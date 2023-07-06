@@ -3,6 +3,9 @@
 module Api
   module V3
     class ParticipantDeclarationsQuery
+      include Concerns::FilterCohorts
+      include Concerns::FilterUpdatedSince
+
       attr_reader :cpd_lead_provider, :params
 
       def initialize(cpd_lead_provider:, params:)
@@ -21,7 +24,7 @@ module Api
           scope = scope.where(user_id: participant_ids)
         end
 
-        if updated_since.present?
+        if updated_since_filter.present?
           scope = scope.where(updated_at: updated_since..)
         end
 
@@ -61,9 +64,9 @@ module Api
       def declarations_scope
         scope = ParticipantDeclaration.for_lead_provider(cpd_lead_provider)
 
-        if cohort_start_years.present?
+        if cohort_years.present?
           scope = with_joins(scope)
-          scope = scope.where(participant_profile: { induction_records: { cohorts: { start_year: cohort_start_years } } })
+          scope = scope.where(participant_profile: { induction_records: { cohorts: { start_year: cohort_years } } })
         end
 
         scope
@@ -75,15 +78,11 @@ module Api
           .where(participant_profile: { induction_records: { induction_status: "active" } }) # only want induction records that are the winning latest ones
           .where(state: %w[submitted eligible payable paid])
 
-        if cohort_start_years.present?
-          scope = scope.where(participant_profile: { induction_records: { cohorts: { start_year: cohort_start_years } } })
+        if cohort_years.present?
+          scope = scope.where(participant_profile: { induction_records: { cohorts: { start_year: cohort_years } } })
         end
 
         scope
-      end
-
-      def filter
-        params[:filter] ||= {}
       end
 
       def participant_ids
@@ -92,22 +91,6 @@ module Api
 
       def delivery_partner_ids
         filter[:delivery_partner_id]&.split(",")
-      end
-
-      def updated_since
-        return if filter[:updated_since].blank?
-
-        Time.iso8601(filter[:updated_since])
-      rescue ArgumentError
-        begin
-          Time.iso8601(URI.decode_www_form_component(filter[:updated_since]))
-        rescue ArgumentError
-          raise Api::Errors::InvalidDatetimeError, I18n.t(:invalid_updated_since_filter)
-        end
-      end
-
-      def cohort_start_years
-        filter[:cohort]&.split(",")
       end
 
       def with_joins(scope)

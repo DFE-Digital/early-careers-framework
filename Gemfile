@@ -65,7 +65,7 @@ gem "rubyzip", "~> 2.3", ">= 2.3.0"
 gem "savon", "~> 2.14"
 
 # Strong migration checker for database migrations
-gem "strong_migrations", "~> 1.4"
+gem "strong_migrations", "~> 1.5"
 
 # Pagination
 gem "pagy", "~> 5.10", ">= 5.10.1"
@@ -126,7 +126,7 @@ group :development, :test do
   # Testing framework
   gem "rspec-rails", "~> 6.0.1"
 
-  gem "cypress-on-rails", "~> 1.14"
+  gem "cypress-on-rails", "~> 1.15"
   gem "database_cleaner-active_record"
 
   gem "dotenv-rails", "~> 2.8.1"

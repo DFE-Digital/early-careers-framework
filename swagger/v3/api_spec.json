@@ -6465,6 +6465,7 @@
               "quality-of-programme-accessibility",
               "quality-of-programme-other",
               "programme-not-appropriate-for-role-and-cpd-needs",
+              "expected-commitment-unclear",
               "other"
             ],
             "example": "quality-of-programme-other"
@@ -6545,6 +6546,7 @@
               "quality-of-programme-other",
               "programme-not-appropriate-for-role-and-cpd-needs",
               "started-in-error",
+              "expected-commitment-unclear",
               "other"
             ]
           },

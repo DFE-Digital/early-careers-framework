@@ -13,6 +13,18 @@
     <% row.action(text: "Change", href: change_programme_schools_cohort_path(cohort_id: school_cohort.cohort.start_year), visually_hidden_text: "induction programme choice") %>
   <% end %>
 
+  <% if school_cohort.core_induction_programme? %>
+    <% list.row do |row| %>
+      <% row.key(text: "Materials supplier") %>
+      <% row.value(text: school_cohort.default_induction_programme&.core_induction_programme&.name) %>
+      <% if school_cohort.default_induction_programme&.core_induction_programme.blank? %>
+        <% row.action(text: "Choose", href: info_schools_core_programme_materials_path(cohort_id: school_cohort.cohort.start_year), visually_hidden_text: "materials") %>
+      <% else %>
+        <% row.action(text: "Change", href: schools_core_programme_materials_path(cohort_id: school_cohort.cohort.start_year), visually_hidden_text: "materials") %>
+      <% end %>
+    <% end %>
+  <% end %>
+
   <% if school_cohort.appropriate_body.present? %>
     <% list.row do |row| %>
       <% row.key(text: "Appropriate body") %>
@@ -46,16 +58,6 @@
         <% row.value(text: school_cohort_delivery_partner_name(school_cohort)) %>
       <% end %>
       <% row.action(text: :none) %>
-    <% end %>
-  <% elsif school_cohort.core_induction_programme? %>
-    <% list.row do |row| %>
-      <% row.key(text: "Materials supplier") %>
-      <% row.value(text: school_cohort.default_induction_programme&.core_induction_programme&.name) %>
-      <% if school_cohort.default_induction_programme&.core_induction_programme.blank? %>
-        <% row.action(text: "Choose", href: info_schools_core_programme_materials_path(cohort_id: school_cohort.cohort.start_year), visually_hidden_text: "materials") %>
-      <% else %>
-        <% row.action(text: "Change", href: schools_core_programme_materials_path(cohort_id: school_cohort.cohort.start_year), visually_hidden_text: "materials") %>
-      <% end %>
     <% end %>
   <% end %>
 <% end %>

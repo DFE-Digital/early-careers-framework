@@ -205,6 +205,7 @@ An example response body is listed below. Successful requests will return a resp
 
 * The API assumes schools intend to work with a given provider for consecutive cohorts. School induction tutors will be prompted to confirm existing partnerships with providers **will continue** into the upcoming cohort. Providers do not need take any action to continue existing partnerships with schools from one cohort to the next
 * In order for new providers to confirm partnerships with schools for an upcoming cohorts, school induction tutors must first notify DfE that their schools **will not continue** their former partnerships with existing providers for the upcoming cohort. Until induction tutors have done this, any new partnerships with new providers will be rejected by the API
+* You can use POST to create a new partnership once one has been rejected
 
 For more detailed information see the specifications for this [confirm an ECF partnership endpoint.](/api-reference/reference-v3.html#api-v3-partnerships-ecf-post)
 
@@ -337,7 +338,7 @@ Update an existing partnership with new delivery partner details for a given coh
 
 An example request body is listed below. Request bodies must include a new value for the `delivery_partner_id` attribute. If unsure, providers can [find delivery partner IDs](/api-reference/ecf/guidance/#find-delivery-partner-ids).
 
-<div class="govuk-inset-text">Note, providers can only update partnerships where the `status` attribute is `active`. Any requests to update `challenged` partnerships will return an error. </div>
+<div class="govuk-inset-text">Note, providers can only update partnerships where the `status` attribute is `active`. Any requests to update `challenged` partnerships will return an error. If a partnership has been challenged and rejected, use POST to create a new partnership, rather than PUT. </div>
 
 [Find out more about partnership statuses.](/api-reference/ecf/definitions-and-states/#partnership-states)
 

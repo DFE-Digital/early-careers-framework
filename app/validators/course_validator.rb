@@ -2,6 +2,7 @@
 
 class CourseValidator < ActiveModel::Validator
   def validate(record)
+    return if record.errors.any?
     return if has_profile_for_course_given_course_identifier?(record)
 
     record.errors.add(:course_identifier, I18n.t(:invalid_course))

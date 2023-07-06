@@ -216,7 +216,7 @@ These are deployed using terraform. See the documentation for [details on terraf
 
 In addition to a web app, some environments have a worker app for running background jobs. For details, see the terraform code.
 
-The `/heathcheck` endpoint on each deployed app will give details on things like version number, commit SHA, background jobs, and database migrations.
+The `/healthcheck` endpoint on each deployed app will give details on things like version number, commit SHA, background jobs, and database migrations.
 
 ### Creating an initial admin user
 1. Follow the [debugging instructions](./documentation/debugging_in_govpaas.md) to gain SSH access to the instance and cd to the app dir

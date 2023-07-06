@@ -305,9 +305,9 @@ RSpec.describe "API ECF Partnerships", type: :request do
         errors = parsed_response["errors"].each_with_object({}) do |er, sum|
           sum[er["title"]] = er["detail"]
         end
-        expect(errors["cohort"]).to include("The attribute '#/cohort' must be included as part of partnership confirmations.")
-        expect(errors["school_id"]).to include("The attribute '#/school_id' must be included as part of partnership confirmations.")
-        expect(errors["delivery_partner_id"]).to include("The attribute '#/delivery_partner_id' must be included as part of partnership confirmations.")
+        expect(errors["cohort"]).to include("Enter a '#/cohort'.")
+        expect(errors["school_id"]).to include("Enter a '#/school_id'.")
+        expect(errors["delivery_partner_id"]).to include("Enter a '#/delivery_partner_id'.")
         expect(Partnership.count).to eql(0)
       end
     end
@@ -376,7 +376,7 @@ RSpec.describe "API ECF Partnerships", type: :request do
         errors = parsed_response["errors"].each_with_object({}) do |er, sum|
           sum[er["title"]] = er["detail"]
         end
-        expect(errors["delivery_partner_id"]).to include("The attribute '#/delivery_partner_id' must be included as part of partnership confirmations.")
+        expect(errors["delivery_partner_id"]).to include("Enter a '#/delivery_partner_id'.")
         expect(Partnership.count).to eql(1)
       end
     end
