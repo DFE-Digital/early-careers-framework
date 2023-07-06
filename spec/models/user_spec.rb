@@ -437,4 +437,55 @@ RSpec.describe User, type: :model do
       expect(create(:user, :teacher, :induction_coordinator, :delivery_partner).user_roles.sort).to eq(%w[delivery_partner induction_coordinator teacher].sort)
     end
   end
+
+  context "when archiving users" do
+    let(:email) { "user@example.org" }
+    let(:archived_email) { nil }
+    let(:user) { create(:user, :teacher, email:, archived_email:) }
+
+    describe "#archive!" do
+      before do
+        user
+        Timecop.freeze
+      end
+
+      after do
+        Timecop.return
+      end
+
+      it "changes user email" do
+        expect {
+          user.archive!
+        }.to change(user, :email).from(email).to("user#{user.id}@example.org")
+      end
+
+      it "saves user email to archived_email column" do
+        expect {
+          user.archive!
+        }.to change(user, :archived_email).from(nil).to(email)
+      end
+
+      it "saves timestamp to archived_at column" do
+        expect {
+          user.archive!
+        }.to change(user, :archived_at).from(nil).to(Time.zone.now)
+      end
+    end
+
+    describe "#archived?" do
+      context "when archived_email is empty" do
+        it "returns false" do
+          expect(user.archived?).to eq(false)
+        end
+      end
+
+      context "when archived_email is not empty" do
+        let(:archived_email) { "foo@bar.com" }
+
+        it "returns true" do
+          expect(user.archived?).to eq(true)
+        end
+      end
+    end
+  end
 end

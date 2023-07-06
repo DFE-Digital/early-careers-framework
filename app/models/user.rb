@@ -194,6 +194,19 @@ class User < ApplicationRecord
     where("users.email like ?", "%#{search_term}%")
   end
 
+  def archive!
+    ActiveRecord::Base.transaction do
+      self.archived_email = email
+      self.email = "user#{id}@example.org"
+      self.archived_at = Time.zone.now
+      save!
+    end
+  end
+
+  def archived?
+    archived_email.present?
+  end
+
 private
 
   def sync_email_with_identity
