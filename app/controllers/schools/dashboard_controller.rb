@@ -63,7 +63,7 @@ private
     elsif school_cohort.default_induction_programme&.delivery_partner_to_be_confirmed?
       previous_lead_provider(school_cohort)&.name
     else
-      "To be confirmed"
+      "Your lead provider needs to confirm this with us"
     end
   end
 
@@ -71,7 +71,7 @@ private
     if school_cohort.delivery_partner.present?
       school_cohort.delivery_partner.name
     else
-      "To be confirmed"
+      "Your lead provider needs to confirm this with us"
     end
   end
 
