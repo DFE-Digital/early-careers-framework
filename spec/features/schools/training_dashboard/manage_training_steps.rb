@@ -997,7 +997,7 @@ module ManageTrainingSteps
     expect(page).to have_text("Assign mentor")
   end
 
-  def then_i_can_view_the_fip_induction_dashboard_without_partnership_details(displayed_value: "To be confirmed")
+  def then_i_can_view_the_fip_induction_dashboard_without_partnership_details(displayed_value: "Your lead provider needs to confirm this with us")
     expect(page).to have_selector("h1", text: "Manage your training")
     expect(page).to have_summary_row("Delivery partner", displayed_value)
   end

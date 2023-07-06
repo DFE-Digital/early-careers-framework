@@ -203,11 +203,11 @@ module ChooseProgrammeSteps
   end
 
   def and_i_see_training_provider_to_be_confirmed
-    expect(page).to have_summary_row("Lead provider", "To be confirmed")
+    expect(page).to have_summary_row("Lead provider", "Your lead provider needs to confirm this with us")
   end
 
   def and_i_see_delivery_partner_to_be_confirmed
-    expect(page).to have_summary_row("Delivery partner", "To be confirmed")
+    expect(page).to have_summary_row("Delivery partner", "Your lead provider needs to confirm this with us")
   end
 
   def and_i_see_delivery_partner_to_be_the_previous_one
