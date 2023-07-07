@@ -12,7 +12,9 @@ class FeatureFlag
   end
 
   # Long-lived settings that are often environment-specific
-  PERMANENT_SETTINGS = %i[].freeze
+  PERMANENT_SETTINGS = %i[
+    zendesk_widget
+  ].freeze
 
   # Short-lived feature flags
   TEMPORARY_FEATURE_FLAGS = %i[
