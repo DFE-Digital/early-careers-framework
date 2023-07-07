@@ -7,6 +7,7 @@ required:
   - course_identifier
   - state
   - updated_at
+  - lead_provider_name
 properties:
   participant_id:
     description: "The unique id of the participant"
@@ -106,3 +107,7 @@ properties:
     type: boolean
     example: true
     nullable: true
+  lead_provider_name:
+    description: "The name of the provider that submitted the declaration"
+    type: string
+    example: "Example Institute"

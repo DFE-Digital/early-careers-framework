@@ -1675,7 +1675,8 @@
                           "mentor_id": "907f61ed-5770-4d38-b22c-1a4265939378",
                           "uplift_paid": true,
                           "evidence_held": "other",
-                          "has_passed": null
+                          "has_passed": null,
+                          "lead_provider_name": "Example Institute"
                         }
                       }
                     }
@@ -1700,7 +1701,8 @@
                           "mentor_id": null,
                           "uplift_paid": true,
                           "evidence_held": null,
-                          "has_passed": null
+                          "has_passed": null,
+                          "lead_provider_name": "Example Institute"
                         }
                       }
                     }
@@ -1810,7 +1812,8 @@
                             "mentor_id": "907f61ed-5770-4d38-b22c-1a4265939378",
                             "uplift_paid": true,
                             "evidence_held": "other",
-                            "has_passed": null
+                            "has_passed": null,
+                            "lead_provider_name": "Example Institute"
                           }
                         },
                         {
@@ -1831,7 +1834,8 @@
                             "mentor_id": null,
                             "uplift_paid": true,
                             "evidence_held": null,
-                            "has_passed": null
+                            "has_passed": null,
+                            "lead_provider_name": "Example Institute"
                           }
                         }
                       ]
@@ -1909,7 +1913,8 @@
                           "mentor_id": "907f61ed-5770-4d38-b22c-1a4265939378",
                           "uplift_paid": true,
                           "evidence_held": "other",
-                          "has_passed": null
+                          "has_passed": null,
+                          "lead_provider_name": "Example Institute"
                         }
                       }
                     }
@@ -1934,7 +1939,8 @@
                           "mentor_id": null,
                           "uplift_paid": true,
                           "evidence_held": null,
-                          "has_passed": null
+                          "has_passed": null,
+                          "lead_provider_name": "Example Institute"
                         }
                       }
                     }
@@ -2021,7 +2027,8 @@
                           "mentor_id": "907f61ed-5770-4d38-b22c-1a4265939378",
                           "uplift_paid": true,
                           "evidence_held": "other",
-                          "has_passed": null
+                          "has_passed": null,
+                          "lead_provider_name": "Example Institute"
                         }
                       }
                     }
@@ -2046,7 +2053,8 @@
                           "mentor_id": null,
                           "uplift_paid": true,
                           "evidence_held": null,
-                          "has_passed": null
+                          "has_passed": null,
+                          "lead_provider_name": "Example Institute"
                         }
                       }
                     }
@@ -3357,7 +3365,8 @@
           "declaration_date",
           "course_identifier",
           "state",
-          "updated_at"
+          "updated_at",
+          "lead_provider_name"
         ],
         "properties": {
           "participant_id": {
@@ -3474,6 +3483,11 @@
             "description": "Whether the participant has failed or passed",
             "type": "boolean",
             "example": null
+          },
+          "lead_provider_name": {
+            "description": "The name of the provider that submitted the declaration",
+            "type": "string",
+            "example": "Example Institute"
           }
         }
       },
@@ -5633,7 +5647,8 @@
           "course_identifier",
           "state",
           "updated_at",
-          "has_passed"
+          "has_passed",
+          "lead_provider_name"
         ],
         "properties": {
           "participant_id": {
@@ -5739,11 +5754,6 @@
             "type": "boolean",
             "example": true
           },
-          "has_passed": {
-            "description": "Whether the participant has failed or passed",
-            "type": "boolean",
-            "example": true
-          },
           "evidence_held": {
             "description": "The type of evidence that the lead provider holds on their platform to demonstrate that the participant has met the retention criteria for the current milestone period",
             "type": "string",
@@ -5758,6 +5768,11 @@
             "description": "Whether the participant has failed or passed",
             "type": "boolean",
             "example": true
+          },
+          "lead_provider_name": {
+            "description": "The name of the provider that submitted the declaration",
+            "type": "string",
+            "example": "Example Institute"
           }
         }
       },
@@ -6154,7 +6169,8 @@
           "declaration_date",
           "course_identifier",
           "state",
-          "updated_at"
+          "updated_at",
+          "lead_provider_name"
         ],
         "properties": {
           "participant_id": {
@@ -6275,6 +6291,11 @@
             "description": "Whether the participant has failed or passed",
             "type": "boolean",
             "example": null
+          },
+          "lead_provider_name": {
+            "description": "The name of the provider that submitted the declaration",
+            "type": "string",
+            "example": "Example Institute"
           }
         }
       },
@@ -6287,7 +6308,8 @@
           "declaration_date",
           "course_identifier",
           "state",
-          "updated_at"
+          "updated_at",
+          "lead_provider_name"
         ],
         "properties": {
           "participant_id": {
@@ -6407,6 +6429,11 @@
             "description": "Whether the participant has failed or passed",
             "type": "boolean",
             "example": null
+          },
+          "lead_provider_name": {
+            "description": "The name of the provider that submitted the declaration",
+            "type": "string",
+            "example": "Example Institute"
           }
         }
       },
@@ -6720,7 +6747,8 @@
           "declaration_date",
           "course_identifier",
           "state",
-          "updated_at"
+          "updated_at",
+          "lead_provider_name"
         ],
         "properties": {
           "participant_id": {
@@ -6846,6 +6874,11 @@
             "type": "boolean",
             "example": null,
             "nullable": true
+          },
+          "lead_provider_name": {
+            "description": "The name of the provider that submitted the declaration",
+            "type": "string",
+            "example": "Example Institute"
           }
         }
       },

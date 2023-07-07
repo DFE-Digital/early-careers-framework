@@ -31,6 +31,7 @@ RSpec.describe Api::V3::ParticipantDeclarationSerializer do
         expect(attrs[:uplift_paid]).to eq(true)
         expect(attrs[:evidence_held]).to eq(nil)
         expect(attrs[:has_passed]).to eq(nil)
+        expect(attrs[:lead_provider_name]).to eq(participant_declaration.cpd_lead_provider.name)
       end
 
       context "when the declaration has a mentor_user_id" do
@@ -82,6 +83,7 @@ RSpec.describe Api::V3::ParticipantDeclarationSerializer do
         expect(attrs[:uplift_paid]).to eq(true)
         expect(attrs[:evidence_held]).to eq(nil)
         expect(attrs[:has_passed]).to eq(nil)
+        expect(attrs[:lead_provider_name]).to eq(participant_declaration.cpd_lead_provider.name)
       end
     end
   end

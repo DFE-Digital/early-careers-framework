@@ -154,6 +154,7 @@ RSpec.describe "API Participant Declarations", type: :request do
           :uplift_paid,
           :evidence_held,
           :has_passed,
+          :lead_provider_name,
         ).exactly
       end
 
@@ -593,6 +594,7 @@ RSpec.describe "API Participant Declarations", type: :request do
           :uplift_paid,
           :evidence_held,
           :has_passed,
+          :lead_provider_name,
         ).exactly
       end
 
@@ -655,6 +657,7 @@ RSpec.describe "API Participant Declarations", type: :request do
             :uplift_paid,
             :evidence_held,
             :has_passed,
+            :lead_provider_name,
           ).exactly
         end
 
