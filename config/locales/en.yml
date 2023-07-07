@@ -445,20 +445,20 @@ en:
         admin/participants/change_relationship/wizard_steps/reason_for_change_step:
           attributes:
             reason_for_change:
-              blank: "Choose the reason for the change"
+              blank: "Select the reason for the change"
         admin/participants/change_relationship/wizard_steps/change_training_programme_step:
           attributes:
             selected_partnership:
-              blank: "Choose a programme"
-              inclusion: "Choose a programme"
+              blank: "Select a training programme"
+              inclusion: "Select a training programme"
         admin/participants/change_relationship/wizard_steps/choose_lead_provider_step:
           attributes:
             lead_provider_id:
-              blank: "Choose a lead provider"
+              blank: "Select lead provider"
         admin/participants/change_relationship/wizard_steps/choose_delivery_partner_step:
           attributes:
             delivery_partner_id:
-              blank: "Choose a delivery partner"
+              blank: "Select delivery partner"
         finance/ecf/change_training_status_form:
           attributes:
             training_status:

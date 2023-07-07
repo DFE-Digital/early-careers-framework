@@ -6,8 +6,8 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-        <h1 class="govuk-heading-xl"><%= title %></h1>
         <span class="govuk-caption-xl"><%= @wizard.participant_role_and_name %></span>
+        <h1 class="govuk-heading-xl"><%= title %></h1>
 
         <%= form_with model: @wizard.form, url: url_for(action: :update), scope: @wizard.session_key, method: :put do |f| %>
             <%= f.hidden_field :confirmed, value: "yes" %>

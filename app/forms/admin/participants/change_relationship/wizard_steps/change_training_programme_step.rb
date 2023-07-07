@@ -29,7 +29,7 @@ module Admin
 
           def options
             list = [
-              OpenStruct.new(id: "create_new", name: "<strong>Create new relationship</strong>".html_safe),
+              OpenStruct.new(id: "create_new", name: "Create new relationship"),
             ]
             available = wizard.school_partnerships - [wizard.current_partnership]
             list << available.map do |partnership|
@@ -46,9 +46,9 @@ module Admin
 
           def partnership_label(partnership)
             label = []
-            label << "<strong>Default partnership:</strong>" unless partnership.relationship?
+            label << "Default partnership:" unless partnership.relationship?
             label << "#{partnership.lead_provider.name} / #{partnership.delivery_partner&.name}"
-            label.join(" ").html_safe
+            label.join(" ")
           end
         end
       end
