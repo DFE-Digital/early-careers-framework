@@ -65,7 +65,7 @@ namespace :comms do
           .with(
             school:,
             gias_contact_email: school.primary_contact_email,
-            nomination_link: get_gias_nomination_url(token: nomination_token),
+            opt_in_out_link: get_opt_in_out_url(token: nomination_token),
           )
           .pilot_chase_gias_contact_to_report_school_training_details
           .deliver_later
@@ -141,7 +141,7 @@ namespace :comms do
         .with(
           school:,
           gias_contact_email:,
-          nomination_link: get_gias_nomination_url(token: nomination_token),
+          opt_in_out_link: get_opt_in_out_url(token: nomination_token),
         )
         .launch_ask_gias_contact_to_report_school_training_details
         .deliver_later
@@ -157,12 +157,12 @@ def get_sit_nomination_url(token:)
     .start_nominate_induction_coordinator_url(token:, host: Rails.application.config.domain)
 end
 
-def get_gias_nomination_url(token:)
+def get_opt_in_out_url(token:)
   Rails
     .application
     .routes
     .url_helpers
-    .start_nomination_nominate_induction_coordinator_url(token:, host: Rails.application.config.domain)
+    .choose_how_to_continue_url(token:, host: Rails.application.config.domain)
 end
 
 def create_nomination_token(school, email_address)

@@ -281,13 +281,13 @@ RSpec.describe SchoolMailer, type: :mailer do
   describe "#pilot_chase_gias_contact_to_report_school_training_details" do
     let(:school) { create(:school) }
     let(:gias_contact_email) { school.primary_contact_email }
-    let(:nomination_link) { "https://ecf-dev.london.cloudapps/nominations/start?token=123" }
+    let(:opt_in_out_link) { "https://ecf-dev.london.cloudapps/nominations/start?token=123" }
 
     let(:pilot_chase_gias_contact_to_report_school_training_details) do
       SchoolMailer.with(
         school:,
         gias_contact_email:,
-        nomination_link:,
+        opt_in_out_link:,
       ).pilot_chase_gias_contact_to_report_school_training_details.deliver_now
     end
 
@@ -325,13 +325,13 @@ RSpec.describe SchoolMailer, type: :mailer do
   describe "#launch_ask_gias_contact_to_report_school_training_details" do
     let(:school) { create(:school) }
     let(:gias_contact_email) { school.primary_contact_email }
-    let(:nomination_link) { "https://ecf-dev.london.cloudapps/nominations/start?token=123" }
+    let(:opt_in_out_link) { "https://ecf-dev.london.cloudapps/nominations/start?token=123" }
 
     let(:launch_ask_gias_contact_to_report_school_training_details) do
       SchoolMailer.with(
         school:,
         gias_contact_email:,
-        nomination_link:,
+        opt_in_out_link:,
       ).launch_ask_gias_contact_to_report_school_training_details.deliver_now
     end
 
