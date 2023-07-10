@@ -240,23 +240,22 @@ RSpec.describe ChooseRoleForm, type: :model do
     describe "induction_coordinator and mentor roles" do
       let(:user) { create(:user, :induction_coordinator, :mentor) }
 
-      it { is_expected.to validate_inclusion_of(:role).in_array(%w[induction_coordinator_and_mentor]) }
+      it { is_expected.to validate_inclusion_of(:role).in_array(%w[induction_coordinator]) }
 
       it "only_one_role should be false" do
-        expect(form.only_one_role).to be false
+        expect(form.only_one_role).to be true
       end
 
       it "has correct role_options" do
         expect(form.role_options).to have_key("induction_coordinator")
-        expect(form.role_options).to have_key("induction_coordinator_and_mentor")
       end
 
       describe "param with induction_coordinator_and_mentor role" do
-        let(:form_role) { "induction_coordinator_and_mentor" }
+        let(:form_role) { "induction_coordinator" }
         let(:helpers) do
           Struct.new(:induction_coordinator_mentor_path) {
-            def induction_coordinator_mentor_path(_user)
-              "/induction_coordinator_and_mentor"
+            def induction_coordinator_dashboard_path(_user)
+              "/induction_coordinator"
             end
           }.new
         end
@@ -266,7 +265,7 @@ RSpec.describe ChooseRoleForm, type: :model do
         end
 
         it "returns correct redirect_path" do
-          expect(form.redirect_path(helpers:)).to be helpers.induction_coordinator_mentor_path(user)
+          expect(form.redirect_path(helpers:)).to be helpers.induction_coordinator_dashboard_path(user)
         end
       end
 
@@ -298,14 +297,14 @@ RSpec.describe ChooseRoleForm, type: :model do
     describe "teacher, induction_coordinator and delivery_partner roles" do
       let(:user) { create(:user, :teacher, :induction_coordinator, :delivery_partner) }
 
-      it { is_expected.to validate_inclusion_of(:role).in_array(%w[teacher induction_coordinator delivery_partner]) }
+      it { is_expected.to validate_inclusion_of(:role).in_array(%w[induction_coordinator delivery_partner]) }
 
       it "only_one_role should be false" do
         expect(form.only_one_role).to be false
       end
 
       it "has correct role_options" do
-        expect(form.role_options).to have_key("teacher")
+        expect(form.role_options).not_to have_key("teacher")
         expect(form.role_options).to have_key("induction_coordinator")
         expect(form.role_options).to have_key("delivery_partner")
       end
