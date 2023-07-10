@@ -607,7 +607,7 @@ class SchoolMailer < ApplicationMailer
   def pilot_chase_gias_contact_to_report_school_training_details
     school = params[:school]
     gias_contact_email = params[:gias_contact_email]
-    nomination_link = params[:nomination_link]
+    opt_in_out_link = params[:nomination_link]
 
     template_mail(
       PILOT_CHASE_GIAS_CONTACT_TO_REPORT_SCHOOL_TRAINING_DETAILS_TEMPLATE,
@@ -615,7 +615,7 @@ class SchoolMailer < ApplicationMailer
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
-        nomination_link:,
+        opt_in_out_link:,
       },
     ).tag(:pilot_chase_gias_contact_to_report_school_training_details).associate_with(school)
   end
@@ -639,7 +639,7 @@ class SchoolMailer < ApplicationMailer
   def launch_ask_gias_contact_to_report_school_training_details
     school = params[:school]
     gias_contact_email = params[:gias_contact_email]
-    nomination_link = params[:nomination_link]
+    opt_in_out_link = params[:opt_in_out_link]
 
     template_mail(
       LAUNCH_ASK_GIAS_CONTACT_TO_REPORT_SCHOOL_TRAINING_DETAILS_TEMPLATE,
@@ -647,7 +647,7 @@ class SchoolMailer < ApplicationMailer
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
-        nomination_link:,
+        opt_in_out_link:,
       },
     ).tag(:launch_ask_gias_contact_to_report_school_training_details).associate_with(school)
   end
