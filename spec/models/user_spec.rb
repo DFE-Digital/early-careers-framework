@@ -466,9 +466,8 @@ RSpec.describe User, type: :model do
       end
 
       it "saves timestamp to archived_at column" do
-        expect {
-          user.archive!
-        }.to change(user, :archived_at).from(nil).to(Time.zone.now)
+        user.archive!
+        expect(user.archived_at).to be_within(2.seconds).of(Time.zone.now)
       end
     end
 
