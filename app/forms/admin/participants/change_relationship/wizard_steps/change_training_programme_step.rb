@@ -46,8 +46,8 @@ module Admin
 
           def partnership_label(partnership)
             label = []
-            label << "Default partnership:" unless partnership.relationship?
             label << "#{partnership.lead_provider.name} / #{partnership.delivery_partner&.name}"
+            label << "(Default partnership)" unless partnership.relationship?
             label.join(" ")
           end
         end

@@ -48,6 +48,12 @@
     sl.row do |row|
       row.key(text: "Delivery partner")
       row.value(text: @participant_presenter.delivery_partner_name)
+      if policy(:super_user).show?
+        row.action(
+          href: start_admin_change_relationship_participant_path(@participant_profile),
+          visually_hidden_text: "delivery partner"
+        )
+      end
     end
   end
 
