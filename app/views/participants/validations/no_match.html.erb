@@ -34,7 +34,7 @@
 
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">Date of birth</dt>
-        <dd class="govuk-summary-list__value"><%= validation_form.dob.to_s(:govuk) %></dd>
+        <dd class="govuk-summary-list__value"><%= validation_form.dob.to_fs(:govuk) %></dd>
         <dd class="govuk-summary-list__actions">
           <%= govuk_link_to "Change", { action: :show, step: :dob } %>
           <span class="govuk-visually-hidden">your date of birth</span>

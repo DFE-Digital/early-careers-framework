@@ -65,6 +65,14 @@ class SchoolCohort < ApplicationRecord
     find_by(cohort: Cohort.find_by(start_year: Cohort.active_registration_cohort.start_year - 1))
   end
 
+  def self.ransackable_attributes(_auth_object = nil)
+    []
+  end
+
+  def self.ransackable_associations(_auth_object = nil)
+    %w[school]
+  end
+
   def lead_provider
     school.lead_provider(cohort.start_year)
   end

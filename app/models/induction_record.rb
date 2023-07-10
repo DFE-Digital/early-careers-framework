@@ -83,6 +83,14 @@ class InductionRecord < ApplicationRecord
     newest_first.first
   end
 
+  def self.ransackable_attributes(_auth_object = nil)
+    %w[]
+  end
+
+  def self.ransackable_associations(_auth_object = nil)
+    %w[participant_profile user school_cohort induction_programme]
+  end
+
   # Instance Methods
   # appropriate_body_name
   delegate :name, to: :appropriate_body, allow_nil: true, prefix: true

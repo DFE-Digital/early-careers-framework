@@ -1,12 +1,4 @@
 # frozen_string_literal: true
 
-module Finance
-  class Schedule < ApplicationRecord
-    class NPQ < Schedule
-    end
-  end
+class Finance::Schedule::NPQ < Finance::Schedule
 end
-
-require "finance/schedule/npq_leadership"
-require "finance/schedule/npq_specialist"
-require "finance/schedule/npq_support"

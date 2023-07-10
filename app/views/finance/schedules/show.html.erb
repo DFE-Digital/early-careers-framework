@@ -27,15 +27,15 @@
         </td>
 
         <td class="govuk-table__cell">
-          <%= milestone.start_date&.to_s(:govuk) %>
+          <%= milestone.start_date&.to_fs(:govuk) %>
         </td>
 
         <td class="govuk-table__cell">
-          <%= milestone.milestone_date&.to_s(:govuk) %>
+          <%= milestone.milestone_date&.to_fs(:govuk) %>
         </td>
 
         <td class="govuk-table__cell">
-          <%= milestone.payment_date&.to_s(:govuk) %>
+          <%= milestone.payment_date&.to_fs(:govuk) %>
         </td>
       </tr>
     <% end %>

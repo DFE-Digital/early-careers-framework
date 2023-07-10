@@ -16,7 +16,7 @@
 
       <% summary_list.row do |row| %>
         <% row.key { "Leaving date" } %>
-        <% row.value { @transfer_out_form.end_date.to_date.to_s(:govuk) } %>
+        <% row.value { @transfer_out_form.end_date.to_date.to_fs(:govuk) } %>
         <% row.action(text: "Change",
                       visually_hidden_text: "end date",
                       href: url_for({ action: :teacher_end_date})) %>

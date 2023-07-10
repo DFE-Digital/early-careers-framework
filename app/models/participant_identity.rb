@@ -22,6 +22,10 @@ class ParticipantIdentity < ApplicationRecord
 
   self.filter_attributes += [:email]
 
+  def self.ransackable_attributes(_auth_object = nil)
+    %w[email external_identifier]
+  end
+
   def self.email_matches(search_term)
     return none if search_term.blank?
 

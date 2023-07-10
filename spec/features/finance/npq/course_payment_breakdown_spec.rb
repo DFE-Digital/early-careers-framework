@@ -201,7 +201,7 @@ RSpec.feature "NPQ Course payment breakdown", type: :feature, js: true do
 
   def then_i_should_see_correct_cut_off_date
     within(".app-application__panel__summary") do
-      expect(page).to have_content(statement.deadline_date.to_s(:govuk))
+      expect(page).to have_content(statement.deadline_date.to_fs(:govuk))
     end
   end
 

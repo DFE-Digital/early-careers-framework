@@ -25,8 +25,8 @@
     [
       r.school_cohort.school.name,
       r.induction_programme.training_programme.humanize,
-      r.start_date.to_date.to_s(:govuk),
-      r.end_date&.to_date&.to_s(:govuk),
+      r.start_date.to_date.to_fs(:govuk),
+      r.end_date&.to_date&.to_fs(:govuk),
     ]
   end,
 ) %>

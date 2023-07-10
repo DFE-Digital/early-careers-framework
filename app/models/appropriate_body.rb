@@ -23,6 +23,10 @@ class AppropriateBody < ApplicationRecord
 
   after_save :update_analytics
 
+  def self.ransackable_attributes(_auth_object = nil)
+    %w[name]
+  end
+
 private
 
   def update_analytics

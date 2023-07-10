@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :user do
-    email { Faker::Internet.unique.safe_email }
+    email { Faker::Internet.unique.email }
     sequence(:full_name) { |n| "John Doe #{n}" }
     login_token { Faker::Alphanumeric.alpha(number: 10) }
     login_token_valid_until { 12.hours.from_now }

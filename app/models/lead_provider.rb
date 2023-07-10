@@ -29,6 +29,10 @@ class LeadProvider < ApplicationRecord
   has_many :statements, through: :cpd_lead_provider, class_name: "Finance::Statement::ECF", source: :ecf_statements
   validates :name, presence: { message: "Enter a name" }
 
+  def self.ransackable_attributes(_auth_object = nil)
+    %w[name]
+  end
+
   def next_output_fee_statement(cohort)
     statements.next_output_fee_statements.where(cohort:).first
   end

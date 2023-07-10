@@ -28,21 +28,12 @@ Bundler.require(*Rails.groups)
 module EarlyCareerFramework
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 6.0
-    config.autoloader = :zeitwerk
+    config.load_defaults 7.0
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration can go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded after loading
     # the framework and any gems in your application.
-
-    Dir.glob(Rails.root.join("app/decorators/**/*_decorator*.rb")).each do |c|
-      require_dependency(c)
-    end
-
-    Dir.glob(Rails.root.join("app/middlewares/*.rb")).sort.each do |file|
-      require file
-    end
 
     config.exceptions_app = routes
     config.action_dispatch.rescue_responses["Pundit::NotAuthorizedError"] = :forbidden
@@ -54,5 +45,9 @@ module EarlyCareerFramework
     config.i18n.load_path += Dir[Rails.root.join("config/locales/**/*.{rb,yml}")]
 
     config.record_emails = true
+
+    Dir.glob(Rails.root.join("app/middlewares/*.rb")).sort.each do |file|
+      require file
+    end
   end
 end

@@ -106,7 +106,7 @@ RSpec.describe "transfer out participants", type: :feature, js: true, rutabaga: 
     def then_i_should_be_on_the_check_your_answers_page
       expect(page).to have_selector("h1", text: "Check your answers")
       expect(page).to have_selector("dd", text: @ect.full_name)
-      expect(page).to have_selector("dd", text: Date.new(2022, 10, 24).to_s(:govuk))
+      expect(page).to have_selector("dd", text: Date.new(2022, 10, 24).to_fs(:govuk))
     end
 
     def then_i_should_be_on_the_complete_page

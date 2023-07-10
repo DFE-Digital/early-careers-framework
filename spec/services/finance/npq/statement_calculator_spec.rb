@@ -106,8 +106,8 @@ RSpec.describe Finance::NPQ::StatementCalculator do
           create(:npq_participant_declaration, :paid, declaration_type:, cpd_lead_provider:, participant_profile:)
         end
       end
-      let(:previous_statement) { participant_declaration.statements.first }
-      let!(:statement)         { create(:npq_statement, :next_output_fee, deadline_date: previous_statement.deadline_date + 1.month, cpd_lead_provider:) }
+      let!(:previous_statement) { participant_declaration.statement_line_items.first.statement }
+      let!(:statement) { create(:npq_statement, :next_output_fee, deadline_date: previous_statement.deadline_date + 1.month, cpd_lead_provider:) }
       before do
         travel_to statement.deadline_date do
           Finance::ClawbackDeclaration.new(participant_declaration).call
@@ -163,7 +163,7 @@ RSpec.describe Finance::NPQ::StatementCalculator do
           create(:npq_participant_declaration, :paid, declaration_type: "retained-1", cpd_lead_provider:, participant_profile:)
         end
       end
-      let(:previous_statement) { participant_declaration.statements.first }
+      let(:previous_statement) { participant_declaration.statement_line_items.first.statement }
       let!(:statement)         { create(:npq_statement, :next_output_fee, deadline_date: previous_statement.deadline_date + 1.month, cpd_lead_provider:) }
       before do
         travel_to statement.deadline_date do

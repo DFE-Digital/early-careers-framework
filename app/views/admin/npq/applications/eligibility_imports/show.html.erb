@@ -43,7 +43,7 @@
         <%= t(".table.#{attribute}") %>
       </dt>
       <dd class="govuk-summary-list__value">
-        <%= @eligibility_import.send(attribute)&.to_s(:govuk) || "-" %>
+        <%= @eligibility_import.send(attribute)&.to_fs(:govuk) || "-" %>
       </dd>
     </div>
   <% end %>

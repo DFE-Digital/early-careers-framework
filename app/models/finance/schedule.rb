@@ -10,6 +10,3 @@ module Finance
     validates :schedule_identifier, presence: true
   end
 end
-
-require "finance/schedule/ecf"
-require "finance/schedule/npq"

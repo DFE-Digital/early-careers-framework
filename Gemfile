@@ -6,7 +6,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby File.read(Pathname.new(__dir__).join(".ruby-version")).strip
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem "rails", "~> 6.1.7"
+gem "rails", "~> 7.0.5"
 
 # User management and rbac
 gem "devise", ">= 4.8.0"
@@ -124,7 +124,7 @@ group :development, :test do
   gem "pry-byebug"
 
   # Testing framework
-  gem "rspec-rails", "~> 6.0"
+  gem "rspec-rails", "~> 6.0.1"
 
   gem "cypress-on-rails", "~> 1.15"
   gem "database_cleaner-active_record"
@@ -150,9 +150,6 @@ end
 group :development do
   # Access an interactive console on exception pages or by calling 'console' anywhere in the code.
   gem "web-console", "~> 4.2.0"
-  # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
-  gem "spring"
-  gem "spring-watcher-listen", "~> 2.1"
 
   # autocompletion backend for development
   gem "solargraph"

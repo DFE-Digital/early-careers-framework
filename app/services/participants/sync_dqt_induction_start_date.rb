@@ -60,7 +60,7 @@ module Participants
     end
 
     def cohort_missing
-      save_error("Cohort containing date #{dqt_induction_start_date.to_s(:govuk)} not setup in the service!")
+      save_error("Cohort containing date #{dqt_induction_start_date.to_fs(:govuk)} not setup in the service!")
     end
 
     def update_induction_start_date

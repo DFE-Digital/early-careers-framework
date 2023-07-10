@@ -42,7 +42,7 @@
           Date of birth
         </dt>
         <dd class="govuk-summary-list__value">
-          <%= @induction_record.participant_profile.ecf_participant_validation_data&.date_of_birth&.to_s(:govuk) %>
+          <%= @induction_record.participant_profile.ecf_participant_validation_data&.date_of_birth&.to_fs(:govuk) %>
         </dd>
       </div>
 

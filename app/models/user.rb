@@ -33,8 +33,8 @@ class User < ApplicationRecord
   has_many :npq_profiles, through: :teacher_profile
   # end: TODO
 
-  has_many :npq_application_eligibility_imports
-  has_many :npq_application_exports
+  has_many :npq_application_eligibility_imports, class_name: "NPQApplications::EligibilityImport"
+  has_many :npq_application_exports, class_name: "NPQApplications::Export"
 
   before_validation :strip_whitespace
   after_update :sync_email_with_identity
@@ -51,6 +51,14 @@ class User < ApplicationRecord
             if: -> { get_an_identity_id_was.present? }
 
   self.filter_attributes += %i[email full_name]
+
+  def self.ransackable_attributes(_auth_object = nil)
+    %w[id full_name email]
+  end
+
+  def self.ransackable_associations(_auth_object = nil)
+    %w[participant_identities participant_profiles schools lead_provider delivery_partner teacher_profile]
+  end
 
   # changed from has_many :npq_applications as these now live on participant_identities
   # and it is possible that there are applications on one or more of the user's
