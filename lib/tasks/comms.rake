@@ -162,7 +162,7 @@ def get_gias_nomination_url(token:)
     .application
     .routes
     .url_helpers
-    .start_nomination_nominate_induction_coordinator_url(token:, host: Rails.application.config.domain)
+    .choose_how_to_continue_url(token:, host: Rails.application.config.domain)
 end
 
 def create_nomination_token(school, email_address)
