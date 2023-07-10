@@ -191,8 +191,8 @@ RSpec.describe PartnershipCsvUpload, type: :model do
   end
 
   describe "#sync_uploaded_urns" do
-    it "populates the uploaded_urns field with the CSV contents" do
-      urns = [1, 1, 2, 2, 3, 3]
+    it "populates the uploaded_urns field with the CSV contents and maintains duplicates" do
+      urns = %w[1 1 2 2 3]
       given_the_csv_contains_urns(urns, insert_bom: true)
 
       expect(@subject.uploaded_urns).to be_blank
@@ -200,6 +200,39 @@ RSpec.describe PartnershipCsvUpload, type: :model do
       @subject.sync_uploaded_urns
 
       expect(@subject.uploaded_urns).to eql(urns.map(&:to_s))
+    end
+
+    it "removes empty urns" do
+      urns = ["1", "", "2", " ", "3", "4"]
+      given_the_csv_contains_urns(urns, insert_bom: true)
+
+      expect(@subject.uploaded_urns).to be_blank
+
+      @subject.sync_uploaded_urns
+
+      expect(@subject.uploaded_urns).to eql(%w[1 2 3 4])
+    end
+
+    it "flattens multiple urns on one line" do
+      urns = ["1", "2,3,4", "5", ",,,", "6", "7"]
+      given_the_csv_contains_urns(urns, insert_bom: true)
+
+      expect(@subject.uploaded_urns).to be_blank
+
+      @subject.sync_uploaded_urns
+
+      expect(@subject.uploaded_urns).to eql(%w[1 2 3 4 5 6 7])
+    end
+
+    it "removes leading or trailing whitespace and condenses internal whitespace" do
+      urns = ["1", "2,3 ,4 ", "5", " ,,,", "6", "7"]
+      given_the_csv_contains_urns(urns, insert_bom: true)
+
+      expect(@subject.uploaded_urns).to be_blank
+
+      @subject.sync_uploaded_urns
+
+      expect(@subject.uploaded_urns).to eql(%w[1 2 3 4 5 6 7])
     end
   end
 
