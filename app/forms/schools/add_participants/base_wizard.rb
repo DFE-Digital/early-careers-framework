@@ -241,7 +241,7 @@ module Schools
       ## appropriate bodies
       def needs_to_confirm_appropriate_body?
         # Slim possiblity that school_cohort could be nil early on
-        ect_participant? && school_cohort&.appropriate_body&.present?
+        ect_participant? && school_cohort&.appropriate_body.present?
       end
 
       def appropriate_body_confirmed=(confirmed)

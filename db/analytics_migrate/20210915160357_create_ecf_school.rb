@@ -2,7 +2,7 @@
 
 class CreateECFSchool < ActiveRecord::Migration[6.1]
   def change
-    create_table :ecf_schools do |t|
+    create_table :ecf_schools do |t| # rubocop:disable Rails/CreateTableWithTimestamps
       t.string :name
       t.string :urn
       t.datetime :nomination_email_opened_at
