@@ -130,6 +130,26 @@ RSpec.describe Participants::ChangeRelationship do
             }.to change { InductionProgramme.count }.by(-1)
           end
 
+          context "when the old programme can be removed" do
+            it "removes the relationship partnership" do
+              expect {
+                service_call
+              }.to change { Partnership.count }.by(-1)
+            end
+
+            context "when the relationship is used elsewhere" do
+              let!(:another_programme_using_partnership) do
+                create(:seed_induction_programme, :fip, partnership: another_partnership, school_cohort: current_school_cohort)
+              end
+
+              it "does not remove the relationship" do
+                expect {
+                  service_call
+                }.not_to change { Partnership.count }
+              end
+            end
+          end
+
           context "when the old programme partnership is not a relationship" do
             let(:relationship) { false }
 

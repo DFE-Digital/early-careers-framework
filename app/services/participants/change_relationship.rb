@@ -94,9 +94,22 @@ module Participants
     def remove_old_induction_programme_if_possible!(old_induction_programme:)
       return if old_induction_programme.induction_records.any?
       return if old_induction_programme == school_cohort.default_induction_programme
-      return unless old_induction_programme.partnership&.relationship?
+
+      old_partnership = old_induction_programme.partnership
+
+      return unless old_partnership&.relationship?
 
       old_induction_programme.destroy!
+
+      remove_old_partnership_if_possible!(old_partnership:) if old_partnership.present?
+    end
+
+    def remove_old_partnership_if_possible!(old_partnership:)
+      return if old_partnership.blank?
+      return unless old_partnership.relationship?
+      return if InductionProgramme.where(partnership: old_partnership).any?
+
+      old_partnership.destroy!
     end
 
     def participant_profile
