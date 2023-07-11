@@ -10,8 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_02_27_161000) do
-
+ActiveRecord::Schema[7.0].define(version: 2023_02_27_161000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -20,8 +19,8 @@ ActiveRecord::Schema.define(version: 2023_02_27_161000) do
     t.uuid "appropriate_body_id"
     t.string "name"
     t.string "body_type"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "ecf_inductions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -36,27 +35,27 @@ ActiveRecord::Schema.define(version: 2023_02_27_161000) do
     t.uuid "mentor_id"
     t.uuid "appropriate_body_id"
     t.string "appropriate_body_name"
-    t.datetime "start_date"
-    t.datetime "end_date"
+    t.datetime "start_date", precision: nil
+    t.datetime "end_date", precision: nil
     t.string "induction_status"
     t.string "training_status"
     t.boolean "school_transfer"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.uuid "cohort_id"
     t.uuid "user_id"
     t.string "participant_type"
-    t.datetime "induction_record_created_at"
+    t.datetime "induction_record_created_at", precision: nil
     t.uuid "partnership_id"
     t.index ["induction_record_id"], name: "index_ecf_inductions_on_induction_record_id", unique: true
   end
 
   create_table "ecf_participants", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "user_id"
-    t.datetime "user_created_at"
+    t.datetime "user_created_at", precision: nil
     t.integer "real_time_attempts"
     t.boolean "real_time_success"
-    t.datetime "validation_submitted_at"
+    t.datetime "validation_submitted_at", precision: nil
     t.boolean "trn_verified"
     t.string "school_urn"
     t.string "school_name"
@@ -68,8 +67,8 @@ ActiveRecord::Schema.define(version: 2023_02_27_161000) do
     t.boolean "nino_entered"
     t.boolean "manually_validated"
     t.boolean "eligible_for_funding"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.boolean "active", default: true
     t.string "training_status"
     t.boolean "sparsity"
@@ -90,14 +89,14 @@ ActiveRecord::Schema.define(version: 2023_02_27_161000) do
     t.string "cohort"
     t.uuid "delivery_partner_id"
     t.string "delivery_partner_name"
-    t.datetime "challenged_at"
+    t.datetime "challenged_at", precision: nil
     t.string "challenge_reason"
-    t.datetime "challenge_deadline"
+    t.datetime "challenge_deadline", precision: nil
     t.boolean "pending"
     t.uuid "report_id"
     t.boolean "relationship"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "ecf_school_cohorts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -109,21 +108,21 @@ ActiveRecord::Schema.define(version: 2023_02_27_161000) do
     t.string "cohort"
     t.string "induction_programme_choice"
     t.string "default_induction_programme_training_choice"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.uuid "appropriate_body_id"
   end
 
   create_table "ecf_schools", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name"
     t.string "urn"
-    t.datetime "nomination_email_opened_at"
+    t.datetime "nomination_email_opened_at", precision: nil
     t.boolean "induction_tutor_nominated"
-    t.datetime "tutor_nominated_time"
+    t.datetime "tutor_nominated_time", precision: nil
     t.boolean "induction_tutor_signed_in"
     t.string "induction_programme_choice"
     t.boolean "in_partnership"
-    t.datetime "partnership_time"
+    t.datetime "partnership_time", precision: nil
     t.string "partnership_challenge_reason"
     t.string "partnership_challenge_time"
     t.string "lead_provider"

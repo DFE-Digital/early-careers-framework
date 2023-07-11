@@ -10,8 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_07_05_152210) do
-
+ActiveRecord::Schema[7.0].define(version: 2023_07_05_152210) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pgcrypto"
@@ -22,7 +21,7 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
     t.string "record_type", null: false
     t.uuid "record_id", null: false
     t.uuid "blob_id", null: false
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
     t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
   end
@@ -35,7 +34,7 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
     t.string "service_name", null: false
     t.bigint "byte_size", null: false
     t.string "checksum", null: false
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
@@ -48,17 +47,17 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
   create_table "additional_school_emails", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "school_id", null: false
     t.string "email_address", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["email_address", "school_id"], name: "index_additional_school_emails_on_email_address_and_school_id", unique: true
     t.index ["school_id"], name: "index_additional_school_emails_on_school_id"
   end
 
   create_table "admin_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "user_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.datetime "discarded_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "discarded_at", precision: nil
     t.boolean "super_user", default: false
     t.index ["discarded_at"], name: "index_admin_profiles_on_discarded_at"
     t.index ["user_id"], name: "index_admin_profiles_on_user_id"
@@ -67,8 +66,8 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
   create_table "api_request_audits", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "path"
     t.jsonb "body"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "api_requests", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -81,17 +80,17 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
     t.jsonb "response_headers"
     t.uuid "cpd_lead_provider_id"
     t.string "user_description"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["cpd_lead_provider_id"], name: "index_api_requests_on_cpd_lead_provider_id"
   end
 
   create_table "api_tokens", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "lead_provider_id"
     t.string "hashed_token", null: false
-    t.datetime "last_used_at"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "last_used_at", precision: nil
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "type", default: "ApiToken"
     t.boolean "private_api_access", default: false
     t.uuid "cpd_lead_provider_id"
@@ -103,8 +102,8 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
   create_table "appropriate_bodies", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name", null: false
     t.string "body_type", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.integer "disable_from_year"
     t.index ["body_type", "name"], name: "index_appropriate_bodies_on_body_type_and_name", unique: true
   end
@@ -112,8 +111,8 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
   create_table "appropriate_body_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "user_id", null: false
     t.uuid "appropriate_body_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["appropriate_body_id"], name: "index_appropriate_body_profiles_on_appropriate_body_id"
     t.index ["user_id"], name: "index_appropriate_body_profiles_on_user_id"
   end
@@ -125,8 +124,8 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
     t.decimal "uplift_amount"
     t.integer "recruitment_target"
     t.decimal "set_up_fee"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.uuid "lead_provider_id", default: -> { "gen_random_uuid()" }, null: false
     t.integer "revised_target"
     t.uuid "cohort_id", null: false
@@ -136,12 +135,12 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
   end
 
   create_table "cohorts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.integer "start_year", limit: 2, null: false
-    t.datetime "registration_start_date"
-    t.datetime "academic_year_start_date"
-    t.datetime "npq_registration_start_date"
+    t.datetime "registration_start_date", precision: nil
+    t.datetime "academic_year_start_date", precision: nil
+    t.datetime "npq_registration_start_date", precision: nil
     t.date "automatic_assignment_period_end_date"
     t.index ["start_year"], name: "index_cohorts_on_start_year", unique: true
   end
@@ -149,22 +148,22 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
   create_table "cohorts_lead_providers", id: false, force: :cascade do |t|
     t.uuid "lead_provider_id", null: false
     t.uuid "cohort_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["cohort_id", "lead_provider_id"], name: "index_cohorts_lead_providers_on_cohort_id_and_lead_provider_id"
     t.index ["lead_provider_id", "cohort_id"], name: "index_cohorts_lead_providers_on_lead_provider_id_and_cohort_id"
   end
 
   create_table "core_induction_programmes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "cpd_lead_providers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.text "name", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "data_stage_school_changes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -172,8 +171,8 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
     t.json "attribute_changes"
     t.string "status", default: "changed", null: false
     t.boolean "handled", default: false, null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["data_stage_school_id"], name: "index_data_stage_school_changes_on_data_stage_school_id"
     t.index ["status"], name: "index_data_stage_school_changes_on_status"
   end
@@ -182,8 +181,8 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
     t.uuid "data_stage_school_id", null: false
     t.string "link_urn", null: false
     t.string "link_type", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["data_stage_school_id", "link_urn"], name: "data_stage_school_links_uniq_idx", unique: true
     t.index ["data_stage_school_id"], name: "index_data_stage_school_links_on_data_stage_school_id"
   end
@@ -207,8 +206,8 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
     t.string "primary_contact_email"
     t.string "secondary_contact_email"
     t.string "school_website"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.boolean "section_41_approved"
     t.string "la_code"
     t.index ["urn"], name: "index_data_stage_schools_on_urn", unique: true
@@ -217,8 +216,8 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
   create_table "declaration_states", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "participant_declaration_id", null: false
     t.string "state", default: "submitted", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "state_reason"
     t.index ["participant_declaration_id"], name: "index_declaration_states_on_participant_declaration_id"
   end
@@ -226,25 +225,25 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
   create_table "deleted_duplicates", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.jsonb "data"
     t.uuid "primary_participant_profile_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["primary_participant_profile_id"], name: "index_deleted_duplicates_on_primary_participant_profile_id"
   end
 
   create_table "delivery_partner_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "user_id", null: false
     t.uuid "delivery_partner_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["delivery_partner_id"], name: "index_delivery_partner_profiles_on_delivery_partner_id"
     t.index ["user_id"], name: "index_delivery_partner_profiles_on_user_id"
   end
 
   create_table "delivery_partners", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "name", null: false
-    t.datetime "discarded_at"
+    t.datetime "discarded_at", precision: nil
     t.index ["discarded_at"], name: "index_delivery_partners_on_discarded_at"
   end
 
@@ -252,16 +251,16 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
     t.uuid "local_authority_district_id", null: false
     t.integer "start_year", limit: 2, null: false
     t.integer "end_year", limit: 2
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["local_authority_district_id"], name: "index_district_sparsities_on_local_authority_district_id"
   end
 
   create_table "ecf_ineligible_participants", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "trn"
     t.string "reason", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["trn"], name: "index_ecf_ineligible_participants_on_trn", unique: true
   end
 
@@ -273,8 +272,8 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
     t.boolean "previous_induction"
     t.boolean "manually_validated", default: false
     t.string "status", default: "manual_check", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "reason", default: "none", null: false
     t.boolean "different_trn"
     t.boolean "no_induction"
@@ -289,8 +288,8 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
     t.string "trn"
     t.string "nino"
     t.boolean "api_failure", default: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["participant_profile_id"], name: "index_ecf_participant_validation_data_on_participant_profile_id", unique: true
   end
 
@@ -299,8 +298,8 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
     t.string "object_type", null: false
     t.uuid "object_id", null: false
     t.string "name"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["email_id"], name: "index_email_associations_on_email_id"
     t.index ["object_type", "object_id"], name: "index_email_associations_on_object"
   end
@@ -312,10 +311,10 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
     t.integer "template_version"
     t.string "uri"
     t.jsonb "personalisation"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "status", default: "submitted", null: false
-    t.datetime "delivered_at"
+    t.datetime "delivered_at", precision: nil
     t.string "tags", default: [], null: false, array: true
   end
 
@@ -324,8 +323,8 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
     t.uuid "owner_id", null: false
     t.string "event", null: false
     t.json "data", default: {}
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["owner_type", "owner_id"], name: "index_event_logs_on_owner"
   end
 
@@ -333,8 +332,8 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
     t.string "object_type", null: false
     t.uuid "object_id", null: false
     t.uuid "feature_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["feature_id"], name: "index_feature_selected_objects_on_feature_id"
     t.index ["object_id", "feature_id", "object_type"], name: "unique_selected_object", unique: true
     t.index ["object_type", "object_id"], name: "index_feature_selected_objects_on_object"
@@ -343,15 +342,15 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
   create_table "features", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name", null: false
     t.boolean "active", default: false, null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["name"], name: "index_features_on_name", unique: true
   end
 
   create_table "finance_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "user_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_finance_profiles_on_user_id"
   end
 
@@ -360,7 +359,7 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
     t.integer "sluggable_id", null: false
     t.string "sluggable_type", limit: 50
     t.string "scope"
-    t.datetime "created_at"
+    t.datetime "created_at", precision: nil
     t.index ["slug", "sluggable_type", "scope"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type_and_scope", unique: true
     t.index ["slug", "sluggable_type"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type"
     t.index ["sluggable_type", "sluggable_id"], name: "index_friendly_id_slugs_on_sluggable_type_and_sluggable_id"
@@ -368,10 +367,10 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
 
   create_table "induction_coordinator_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "user_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.datetime "discarded_at"
-    t.datetime "reminder_email_sent_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "discarded_at", precision: nil
+    t.datetime "reminder_email_sent_at", precision: nil
     t.index ["discarded_at"], name: "index_induction_coordinator_profiles_on_discarded_at"
     t.index ["user_id"], name: "index_induction_coordinator_profiles_on_user_id"
   end
@@ -379,8 +378,8 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
   create_table "induction_coordinator_profiles_schools", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "induction_coordinator_profile_id", null: false
     t.uuid "school_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["induction_coordinator_profile_id"], name: "index_icp_schools_on_icp"
     t.index ["school_id"], name: "index_icp_schools_on_schools"
   end
@@ -390,8 +389,8 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
     t.uuid "partnership_id"
     t.uuid "core_induction_programme_id"
     t.string "training_programme", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.boolean "delivery_partner_to_be_confirmed", default: false
     t.index ["core_induction_programme_id"], name: "index_induction_programmes_on_core_induction_programme_id"
     t.index ["partnership_id"], name: "index_induction_programmes_on_partnership_id"
@@ -402,10 +401,10 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
     t.uuid "induction_programme_id", null: false
     t.uuid "participant_profile_id", null: false
     t.uuid "schedule_id", null: false
-    t.datetime "start_date", null: false
-    t.datetime "end_date"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "start_date", precision: nil, null: false
+    t.datetime "end_date", precision: nil
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "training_status", default: "active", null: false
     t.uuid "preferred_identity_id"
     t.string "induction_status", default: "active", null: false
@@ -427,8 +426,8 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
     t.uuid "lead_provider_id", null: false
     t.uuid "cohort_id", null: false
     t.uuid "core_induction_programme_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["cohort_id"], name: "index_lead_provider_cips_on_cohort_id"
     t.index ["core_induction_programme_id"], name: "index_lead_provider_cips_on_core_induction_programme_id"
     t.index ["lead_provider_id"], name: "index_lead_provider_cips_on_lead_provider_id"
@@ -437,17 +436,17 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
   create_table "lead_provider_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "user_id", null: false
     t.uuid "lead_provider_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.datetime "discarded_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "discarded_at", precision: nil
     t.index ["discarded_at"], name: "index_lead_provider_profiles_on_discarded_at"
     t.index ["lead_provider_id"], name: "index_lead_provider_profiles_on_lead_provider_id"
     t.index ["user_id"], name: "index_lead_provider_profiles_on_user_id"
   end
 
   create_table "lead_providers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "name", null: false
     t.uuid "cpd_lead_provider_id"
     t.boolean "vat_chargeable", default: true
@@ -455,16 +454,16 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
   end
 
   create_table "local_authorities", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "code"
     t.string "name"
     t.index ["code"], name: "index_local_authorities_on_code", unique: true
   end
 
   create_table "local_authority_districts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "code"
     t.string "name"
     t.index ["code"], name: "index_local_authority_districts_on_code", unique: true
@@ -475,16 +474,16 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
     t.date "milestone_date"
     t.date "payment_date", null: false
     t.uuid "schedule_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.date "start_date"
     t.string "declaration_type"
     t.index ["schedule_id"], name: "index_milestones_on_schedule_id"
   end
 
   create_table "networks", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "name", null: false
     t.string "group_type"
     t.string "group_type_code"
@@ -497,14 +496,14 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
     t.string "token", null: false
     t.string "notify_status"
     t.string "sent_to", null: false
-    t.datetime "sent_at"
-    t.datetime "opened_at"
+    t.datetime "sent_at", precision: nil
+    t.datetime "opened_at", precision: nil
     t.uuid "school_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.uuid "partnership_notification_email_id"
     t.string "notify_id"
-    t.datetime "delivered_at"
+    t.datetime "delivered_at", precision: nil
     t.index ["notify_id"], name: "index_nomination_emails_on_notify_id"
     t.index ["partnership_notification_email_id"], name: "index_nomination_emails_on_partnership_notification_email_id"
     t.index ["school_id"], name: "index_nomination_emails_on_school_id"
@@ -517,9 +516,9 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
     t.string "status", default: "pending"
     t.integer "updated_records"
     t.jsonb "import_errors", default: []
-    t.datetime "processed_at"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "processed_at", precision: nil
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_npq_application_eligibility_imports_on_user_id"
   end
 
@@ -527,8 +526,8 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
     t.date "start_date", null: false
     t.date "end_date", null: false
     t.uuid "user_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_npq_application_exports_on_user_id"
   end
 
@@ -546,8 +545,8 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
     t.text "nino"
     t.text "lead_provider_approval_status", default: "pending", null: false
     t.text "school_ukprn"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.uuid "participant_identity_id"
     t.boolean "works_in_school"
     t.string "employer_name"
@@ -588,8 +587,8 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
     t.decimal "per_participant"
     t.integer "number_of_payment_periods"
     t.integer "output_payment_percentage", default: 60
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.uuid "cohort_id", null: false
     t.decimal "monthly_service_fee"
     t.decimal "targeted_delivery_funding_per_participant", default: "100.0"
@@ -599,15 +598,15 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
 
   create_table "npq_courses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.text "name", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.text "identifier"
   end
 
   create_table "npq_lead_providers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.text "name", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.uuid "cpd_lead_provider_id"
     t.boolean "vat_chargeable", default: true
     t.index ["cpd_lead_provider_id"], name: "index_npq_lead_providers_on_cpd_lead_provider_id"
@@ -618,8 +617,8 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
     t.integer "min"
     t.integer "max"
     t.decimal "per_participant"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.integer "output_payment_percantage", default: 60
     t.integer "service_fee_percentage", default: 40
     t.index ["call_off_contract_id"], name: "index_participant_bands_on_call_off_contract_id"
@@ -627,22 +626,22 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
 
   create_table "participant_declaration_attempts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "declaration_type"
-    t.datetime "declaration_date"
+    t.datetime "declaration_date", precision: nil
     t.uuid "user_id"
     t.string "course_identifier"
     t.string "evidence_held"
     t.uuid "cpd_lead_provider_id"
     t.uuid "participant_declaration_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["participant_declaration_id"], name: "index_declaration_attempts_on_declarations"
   end
 
   create_table "participant_declarations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "declaration_type"
-    t.datetime "declaration_date"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "declaration_date", precision: nil
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.uuid "user_id", null: false
     t.string "course_identifier"
     t.string "evidence_held"
@@ -670,8 +669,8 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
     t.citext "email", null: false
     t.uuid "external_identifier", null: false
     t.string "origin", default: "ecf", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["email"], name: "index_participant_identities_on_email", unique: true
     t.index ["external_identifier"], name: "index_participant_identities_on_external_identifier", unique: true
     t.index ["user_id"], name: "index_participant_identities_on_user_id"
@@ -685,8 +684,8 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
     t.jsonb "response_body"
     t.jsonb "response_headers"
     t.uuid "participant_outcome_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["participant_outcome_id"], name: "index_participant_outcome_api_requests_on_participant_outcome"
   end
 
@@ -694,10 +693,10 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
     t.string "state", null: false
     t.date "completion_date", null: false
     t.uuid "participant_declaration_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.boolean "qualified_teachers_api_request_successful"
-    t.datetime "sent_to_qualified_teachers_api_at"
+    t.datetime "sent_to_qualified_teachers_api_at", precision: nil
     t.index ["created_at"], name: "index_participant_outcomes_on_created_at"
     t.index ["participant_declaration_id"], name: "index_declaration"
     t.index ["sent_to_qualified_teachers_api_at"], name: "index_participant_outcomes_on_sent_to_qualified_teachers_api_at"
@@ -707,8 +706,8 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
   create_table "participant_profile_schedules", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "participant_profile_id", null: false
     t.uuid "schedule_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["participant_profile_id"], name: "index_participant_profile_schedules_on_participant_profile_id"
     t.index ["schedule_id"], name: "index_participant_profile_schedules_on_schedule_id"
   end
@@ -717,8 +716,8 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
     t.uuid "participant_profile_id", null: false
     t.text "state", default: "active"
     t.text "reason"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.uuid "cpd_lead_provider_id"
     t.index ["cpd_lead_provider_id"], name: "index_participant_profile_states_on_cpd_lead_provider_id"
     t.index ["participant_profile_id", "cpd_lead_provider_id"], name: "index_on_profile_and_lead_provider"
@@ -734,8 +733,8 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
     t.uuid "mentor_profile_id"
     t.boolean "sparsity_uplift", default: false, null: false
     t.boolean "pupil_premium_uplift", default: false, null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.text "status", default: "active", null: false
     t.uuid "school_cohort_id"
     t.uuid "teacher_profile_id"
@@ -743,7 +742,7 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
     t.uuid "npq_course_id"
     t.text "school_urn"
     t.text "school_ukprn"
-    t.datetime "request_for_details_sent_at"
+    t.datetime "request_for_details_sent_at", precision: nil
     t.string "training_status", default: "active", null: false
     t.string "profile_duplicity", default: "single", null: false
     t.uuid "participant_identity_id"
@@ -762,8 +761,8 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
 
   create_table "partnership_csv_uploads", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "lead_provider_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.uuid "delivery_partner_id", null: false
     t.uuid "cohort_id"
     t.string "uploaded_urns", array: true
@@ -778,25 +777,25 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
     t.string "email_type", null: false
     t.string "notify_id"
     t.string "notify_status"
-    t.datetime "delivered_at"
+    t.datetime "delivered_at", precision: nil
     t.uuid "partnership_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["notify_id"], name: "index_partnership_notification_emails_on_notify_id"
     t.index ["partnership_id"], name: "index_partnership_notification_emails_on_partnership_id"
     t.index ["token"], name: "index_partnership_notification_emails_on_token", unique: true
   end
 
   create_table "partnerships", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.uuid "school_id", null: false
     t.uuid "lead_provider_id", null: false
     t.uuid "cohort_id", null: false
     t.uuid "delivery_partner_id"
-    t.datetime "challenged_at"
+    t.datetime "challenged_at", precision: nil
     t.string "challenge_reason"
-    t.datetime "challenge_deadline"
+    t.datetime "challenge_deadline", precision: nil
     t.boolean "pending", default: false, null: false
     t.uuid "report_id"
     t.boolean "relationship", default: false, null: false
@@ -812,16 +811,16 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
     t.integer "major_version", null: false
     t.integer "minor_version", null: false
     t.text "html", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["major_version", "minor_version"], name: "index_privacy_policies_on_major_version_and_minor_version", unique: true
   end
 
   create_table "privacy_policy_acceptances", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "privacy_policy_id"
     t.uuid "user_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["privacy_policy_id", "user_id"], name: "single-acceptance", unique: true
   end
 
@@ -830,8 +829,8 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
     t.string "validation_step", null: false
     t.boolean "approved"
     t.text "note"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["participant_profile_id", "validation_step"], name: "unique_validation_step", unique: true
     t.index ["participant_profile_id"], name: "index_profile_validation_decisions_on_participant_profile_id"
   end
@@ -840,9 +839,9 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
     t.uuid "lead_provider_id", null: false
     t.uuid "delivery_partner_id", null: false
     t.uuid "cohort_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.datetime "discarded_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "discarded_at", precision: nil
     t.index ["cohort_id"], name: "index_provider_relationships_on_cohort_id"
     t.index ["delivery_partner_id"], name: "index_provider_relationships_on_delivery_partner_id"
     t.index ["discarded_at"], name: "index_provider_relationships_on_discarded_at"
@@ -852,8 +851,8 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
   create_table "pupil_premiums", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "school_id", null: false
     t.integer "start_year", limit: 2, null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.boolean "pupil_premium_incentive", default: false, null: false
     t.boolean "sparsity_incentive", default: false, null: false
     t.index ["school_id"], name: "index_pupil_premiums_on_school_id"
@@ -864,8 +863,8 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
     t.uuid "schedule_id", null: false
     t.uuid "milestone_id", null: false
     t.string "declaration_type", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["milestone_id", "schedule_id", "declaration_type"], name: "milestones_schedules_schedule_milestone_declaration_type", unique: true
     t.index ["milestone_id"], name: "index_schedule_milestones_on_milestone_id"
     t.index ["schedule_id", "milestone_id", "declaration_type"], name: "schedules_milestones_schedule_milestone_declaration_type", unique: true
@@ -874,8 +873,8 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
 
   create_table "schedules", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.text "name", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "schedule_identifier"
     t.string "type", default: "Finance::Schedule::ECF"
     t.uuid "cohort_id"
@@ -887,8 +886,8 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
     t.string "induction_programme_choice", null: false
     t.uuid "school_id", null: false
     t.uuid "cohort_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.integer "estimated_teacher_count"
     t.integer "estimated_mentor_count"
     t.uuid "core_induction_programme_id"
@@ -909,8 +908,8 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
     t.string "link_urn", null: false
     t.string "link_type", null: false
     t.string "link_reason", default: "simple", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["school_id"], name: "index_school_links_on_school_id"
   end
 
@@ -919,8 +918,8 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
     t.uuid "local_authority_id", null: false
     t.integer "start_year", limit: 2, null: false
     t.integer "end_year", limit: 2
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["local_authority_id"], name: "index_school_local_authorities_on_local_authority_id"
     t.index ["school_id"], name: "index_school_local_authorities_on_school_id"
   end
@@ -930,8 +929,8 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
     t.uuid "local_authority_district_id", null: false
     t.integer "start_year", limit: 2, null: false
     t.integer "end_year", limit: 2
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["local_authority_district_id"], name: "index_schools_lads_on_lad_id"
     t.index ["school_id"], name: "index_school_local_authority_districts_on_school_id"
   end
@@ -940,8 +939,8 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
     t.uuid "participant_profile_id", null: false
     t.uuid "school_id", null: false
     t.uuid "preferred_identity_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.date "remove_from_school_on"
     t.index ["participant_profile_id", "school_id"], name: "index_school_mentors_on_participant_profile_id_and_school_id", unique: true
     t.index ["participant_profile_id"], name: "index_school_mentors_on_participant_profile_id"
@@ -950,8 +949,8 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
   end
 
   create_table "schools", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "urn", null: false
     t.string "name", null: false
     t.integer "school_type_code"
@@ -985,8 +984,8 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
   create_table "sessions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "session_id", null: false
     t.jsonb "data"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["session_id"], name: "index_sessions_on_session_id", unique: true
     t.index ["updated_at"], name: "index_sessions_on_updated_at"
   end
@@ -995,8 +994,8 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
     t.uuid "statement_id", null: false
     t.uuid "participant_declaration_id", null: false
     t.text "state", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["participant_declaration_id", "statement_id", "state"], name: "unique_declaration_statement_state", unique: true
     t.index ["statement_id", "participant_declaration_id", "state"], name: "unique_statement_declaration_state", unique: true
   end
@@ -1007,8 +1006,8 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
     t.uuid "cpd_lead_provider_id", null: false
     t.date "deadline_date"
     t.date "payment_date"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.decimal "original_value"
     t.uuid "cohort_id", null: false
     t.boolean "output_fee", default: true
@@ -1021,8 +1020,8 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
   create_table "sync_dqt_induction_start_date_errors", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "participant_profile_id", null: false
     t.text "message"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["participant_profile_id"], name: "dqt_sync_participant_profile_id"
   end
 
@@ -1030,8 +1029,8 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
     t.string "trn"
     t.uuid "school_id"
     t.uuid "user_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["school_id"], name: "index_teacher_profiles_on_school_id"
     t.index ["user_id"], name: "index_teacher_profiles_on_user_id", unique: true
   end
@@ -1040,19 +1039,19 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
     t.string "full_name", null: false
     t.citext "email", default: "", null: false
     t.string "login_token"
-    t.datetime "login_token_valid_until"
-    t.datetime "remember_created_at"
-    t.datetime "last_sign_in_at"
-    t.datetime "current_sign_in_at"
+    t.datetime "login_token_valid_until", precision: nil
+    t.datetime "remember_created_at", precision: nil
+    t.datetime "last_sign_in_at", precision: nil
+    t.datetime "current_sign_in_at", precision: nil
     t.inet "current_sign_in_ip"
     t.inet "last_sign_in_ip"
     t.integer "sign_in_count", default: 0, null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.datetime "discarded_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "discarded_at", precision: nil
     t.string "get_an_identity_id"
     t.string "archived_email"
-    t.datetime "archived_at"
+    t.datetime "archived_at", precision: nil
     t.index ["discarded_at"], name: "index_users_on_discarded_at"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["get_an_identity_id"], name: "index_users_on_get_an_identity_id", unique: true
@@ -1064,7 +1063,7 @@ ActiveRecord::Schema.define(version: 2023_07_05_152210) do
     t.string "whodunnit"
     t.json "object"
     t.json "object_changes"
-    t.datetime "created_at"
+    t.datetime "created_at", precision: nil
     t.uuid "item_id", default: -> { "gen_random_uuid()" }, null: false
     t.string "reason"
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
