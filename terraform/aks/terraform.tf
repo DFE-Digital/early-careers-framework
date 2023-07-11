@@ -3,9 +3,5 @@ terraform {
 
   backend "azurerm" {}
 
-  required_providers {
-    # statuscake = {
-    #   source = "StatusCakeDev/statuscake"
-    # }
-  }
+  required_providers {}
 }

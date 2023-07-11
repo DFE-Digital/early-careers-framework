@@ -19,26 +19,18 @@ module "application_configuration" {
     RAILS_ENV           = "deployed_development"
     DB_SSLMODE          = var.db_sslmode
 
-    # BIGQUERY_PROJECT_ID = "ecf-bq",
-    # BIGQUERY_DATASET    = "events_${var.app_environment}", TODO: work this out
-    # BIGQUERY_TABLE_NAME = "events",                        TODO: work this out
-    # (copied from terraform/app/modules/paas/variables.tf)
-    # "DOMAIN"             = "ecf-${var.environment}.london.cloudapps.digital"
-    # "GIAS_API_SCHEMA"    = "https://ea-edubase-api-prod.azurewebsites.net/edubase/schema/service.wsdl"
-    # "GIAS_EXTRACT_ID"    = 13904
-    # "GIAS_API_USER"      = "ecftech"
-    # "GOVUK_APP_DOMAIN"   = "ecf-${var.environment}.london.cloudapps.digital"
-    # "GOVUK_WEBSITE_ROOT" = "ecf-${var.environment}.london.cloudapps.digital"
+    BIGQUERY_PROJECT_ID = "ecf-bq",
+    BIGQUERY_DATASET    = "events_${var.app_environment}", TODO: work this out
+    BIGQUERY_TABLE_NAME = "events",                        TODO: work this out
+    GIAS_API_SCHEMA     = "https://ea-edubase-api-prod.azurewebsites.net/edubase/schema/service.wsdl"
+    GIAS_EXTRACT_ID     = 13904
+    GIAS_API_USER       = "ecftech"
   }
 
   secret_key_vault_short = "app"
   secret_variables = {
     DATABASE_URL = module.postgres.url
     REDIS_URL    = module.redis.url
-
-    # AZURE_STORAGE_ACCOUNT_NAME = azurerm_storage_account.uploads.name,
-    # AZURE_STORAGE_ACCESS_KEY   = azurerm_storage_account.uploads.primary_access_key,
-    # AZURE_STORAGE_CONTAINER    = azurerm_storage_container.uploads.name
   }
 }
 
