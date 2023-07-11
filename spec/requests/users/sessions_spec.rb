@@ -235,14 +235,28 @@ RSpec.describe "Users::Sessions", type: :request do
 
     context "when user is an induction coordinator and a non-validated mentor" do
       let(:user) { create(:user, :induction_coordinator) }
+      let(:school) { user.schools.first }
       let(:teacher_profile) { create :teacher_profile, user: }
       let!(:participant_profile) { create :mentor_participant_profile, teacher_profile: }
       let!(:cohort) { participant_profile.cohort }
 
       it "redirects to correct dashboard" do
         post "/users/sign_in_with_token", params: { login_token: user.login_token }
-        # Choose teacher role
-        post "/choose-role", params: { choose_role_form: { role: "teacher" } }
+        # it will treat multiple school roles as one role
+        follow_redirect!
+        expect(response).to redirect_to(schools_choose_programme_path(school_id: school.slug, cohort_id: cohort.start_year))
+      end
+    end
+
+    context "when user is a non-validated mentor" do
+      let(:user) { create(:user) }
+      let(:teacher_profile) { create :teacher_profile, user: }
+      let!(:participant_profile) { create :mentor_participant_profile, teacher_profile: }
+      let!(:cohort) { participant_profile.cohort }
+
+      it "redirects to correct dashboard" do
+        post "/users/sign_in_with_token", params: { login_token: user.login_token }
+        follow_redirect!
         expect(response).to redirect_to(participants_validation_path)
       end
     end
