@@ -3,21 +3,21 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
 
-        <%= form_for @how_to_continue_form, url: choose_how_to_continue_path(token: @how_to_continue_form.token) do |f| %>
-            <%= f.govuk_error_summary %>
-            <span class="govuk-caption-l"><%= @how_to_continue_form.school.name %></span>
-            <%= f.govuk_collection_radio_buttons(
-                :how_to_continue,
-                @how_to_continue_form.choices,
-                :id,
-                :name,
-                legend: { text: title, size: "l", tag: "h1" },
-                hint: { text: "This means teachers who have completed their initial teacher training, but have not started their 2-year induction yet." }
-                )  %>
+      <%= form_for @how_to_continue_form, url: choose_how_to_continue_path(token: @how_to_continue_form.token) do |f| %>
+        <%= f.govuk_error_summary %>
+        <span class="govuk-caption-l"><%= @how_to_continue_form.school.name %></span>
+        <%= f.govuk_collection_radio_buttons(
+          :how_to_continue,
+          @how_to_continue_form.choices,
+          :id,
+          :name,
+          legend: { text: title, size: "l", tag: "h1" },
+          hint: { text: "This means teachers who have completed their initial teacher training, but have not started their 2-year induction yet." }
+        ) %>
 
-            <%= f.hidden_field :token %>
-            <%= f.govuk_submit "Continue" %>
-        <% end %>
+        <%= f.hidden_field :token %>
+        <%= f.govuk_submit "Continue" %>
+      <% end %>
 
     </div>
 </div>
