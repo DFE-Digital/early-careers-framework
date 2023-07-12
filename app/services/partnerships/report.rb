@@ -19,6 +19,7 @@ module Partnerships
           school_id:,
           cohort_id:,
           lead_provider_id:,
+          relationship: false,
         )
 
         partnership.challenge_reason = partnership.challenged_at = nil
