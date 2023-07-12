@@ -147,6 +147,20 @@ RSpec.describe "API ECF Participants", type: :request do
           expect(parsed_response["data"].size).to eq(withdrawn_ect_records.count)
         end
 
+        it "returns an error when the training_status is not valid" do
+          get "/api/v3/participants/ecf", params: { filter: { training_status: :invalid } }
+
+          expect(response).to be_bad_request
+          expect(parsed_response).to eql(HashWithIndifferentAccess.new({
+            "errors": [
+              {
+                "title": "Bad request",
+                "detail": %(The filter '#/training_status' must be ["active", "deferred", "withdrawn"]),
+              },
+            ],
+          }))
+        end
+
         context "when updated_since parameter is supplied" do
           it "returns users changed since the updated_since parameter" do
             get "/api/v3/participants/ecf", params: { filter: { updated_since: 1.day.ago.iso8601 } }

@@ -80,10 +80,24 @@ RSpec.describe "NPQ Participants API", type: :request do
             end
           end
 
-          it "returns correctly when filtering by training_status" do
+          it "returns matching users when filtering by training_status" do
             get "/api/v3/participants/npq", params: { filter: { training_status: :withdrawn } }
 
             expect(parsed_response["data"].size).to eq(3)
+          end
+
+          it "returns an error when the training_status is not valid" do
+            get "/api/v3/participants/npq", params: { filter: { training_status: :invalid } }
+
+            expect(response).to be_bad_request
+            expect(parsed_response).to eql(HashWithIndifferentAccess.new({
+              "errors": [
+                {
+                  "title": "Bad request",
+                  "detail": %(The filter '#/training_status' must be ["active", "deferred", "withdrawn"]),
+                },
+              ],
+            }))
           end
 
           it "returns content updated after specified timestamp" do
