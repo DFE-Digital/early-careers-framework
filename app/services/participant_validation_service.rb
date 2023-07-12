@@ -52,8 +52,6 @@ private
 
   def matching_record
     result = DqtRecordCheck.call(trn:, nino:, full_name:, date_of_birth:, check_first_name_only: check_first_name_only?)
-    return if result.dqt_record.nil?
-
-    return result.dqt_record if result.total_matched >= 3
+    result.dqt_record if result.total_matched >= 3
   end
 end

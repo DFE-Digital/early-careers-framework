@@ -5,7 +5,7 @@ require "rails_helper"
 RSpec.describe Participants::SyncDqtInductionStartDate, with_feature_flags: { cohortless_dashboard: "active" } do
   let(:dqt_induction_start_date) {}
   let(:participant_induction_start_date) {}
-  let(:participant_created_at) { Date.new(2023, 6, 1) }
+  let(:participant_created_at) { described_class::FIRST_2023_REGISTRATION_DATE + 1.hour }
   let(:participant_cohort_start_year) { Cohort.current.start_year }
   let(:cohort) { Cohort.find_by(start_year: participant_cohort_start_year) }
   let(:school_cohort) { create(:seed_school_cohort, :fip, :with_school, cohort:) }
@@ -109,9 +109,7 @@ RSpec.describe Participants::SyncDqtInductionStartDate, with_feature_flags: { co
     end
   end
 
-  context "when the participant was added to the service from 1st Jun 2023" do
-    let(:participant_created_at) { Date.new(2023, 6, 1) }
-
+  context "when the participant was added to the service from registration start 2023" do
     context "when the DQT induction start date related cohort does not exist" do
       let(:dqt_induction_start_date) { Date.new(2090, 9, 1) }
 
