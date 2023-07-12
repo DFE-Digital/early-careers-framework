@@ -60,4 +60,14 @@
     <% row.value { application.updated_at.to_fs(:govuk) } %>
     <% row.action(text: :none) %>
   <% end %>
+
+  <% summary_list.row do |row| %>
+    <% row.key { "Lead Provider API V3" } %>
+    <% row.value do %>
+      <%= govuk_details(summary_text: "See this application as it appears over the Lead Provider API") do %>
+        <%= npq_application_api_response(application) %>
+      <% end %>
+    <% end %>
+    <% row.action(text: :none) %>
+  <% end %>
 <% end %>

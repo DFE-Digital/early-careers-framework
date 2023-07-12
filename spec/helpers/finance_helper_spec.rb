@@ -17,6 +17,52 @@ RSpec.describe FinanceHelper, type: :helper do
     end
   end
 
+  describe "#latest_induction_record_for_provider?" do
+    let(:participant_profile) { create(:ect_participant_profile) }
+    subject { latest_induction_record_for_provider?(induction_record, participant_profile) }
+
+    context "when the induction record is the latest for the provider" do
+      let(:induction_programme) { create(:induction_programme, :fip, school_cohort: participant_profile.school_cohort) }
+      let!(:induction_record) { create(:induction_record, participant_profile:, induction_programme:) }
+
+      it { is_expected.to be(true) }
+    end
+
+    context "when the induction record is not the latest for the provider" do
+      let!(:induction_record) { create(:induction_record, participant_profile:) }
+
+      it { is_expected.to be(false) }
+    end
+  end
+
+  describe "#npq_application_api_response" do
+    let(:npq_application) { create(:npq_application) }
+
+    subject { npq_application_api_response(npq_application) }
+
+    it { is_expected.to match(%r{<pre class="app-json-code-sampe"><code>}) }
+    it { is_expected.to include(npq_application.id) }
+  end
+
+  describe "#npq_participant_api_response" do
+    let(:npq_participant) { create(:npq_participant_profile) }
+
+    subject { npq_participant_api_response(npq_participant) }
+
+    it { is_expected.to match(%r{<pre class="app-json-code-sampe"><code>}) }
+    it { is_expected.to include(npq_participant.id) }
+  end
+
+  describe "#induction_record_participant_api_response" do
+    let(:induction_record) { create(:induction_record) }
+    let(:participant_profile) { induction_record.participant_profile }
+
+    subject { induction_record_participant_api_response(induction_record, participant_profile) }
+
+    it { is_expected.to match(%r{<pre class="app-json-code-sampe"><code>}) }
+    it { is_expected.to include(participant_profile.user.id) }
+  end
+
   describe "#change_induction_record_training_status_button" do
     let(:participant_profile) { create(:ect_participant_profile) }
     let(:row) { double }

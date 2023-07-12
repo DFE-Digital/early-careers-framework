@@ -113,6 +113,18 @@
       <% row.value { ir.schedule.schedule_identifier } %>
       <% row.action(text: :none) %>
     <% end %>
+
+    <% if latest_induction_record_for_provider?(ir, pp) %>
+      <% summary_list.row do |row| %>
+        <% row.key { "Lead Provider API V3" } %>
+        <% row.value do %>
+          <%= govuk_details(summary_text: "See this participant as it appears over the Lead Provider API") do %>
+            <%= induction_record_participant_api_response(ir, pp) %>
+          <% end %>
+        <% end %>
+        <% row.action(text: :none) %>
+      <% end %>
+    <% end %>
   <% end %>
 <% end %>
 

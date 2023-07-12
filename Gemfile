@@ -137,6 +137,9 @@ group :development, :test do
 
   gem "parallel_tests"
 
+  # Code Highlighter
+  gem "rouge"
+
   # Linting
   gem "erb_lint", ">= 0.1.1", require: false
 end
