@@ -16,9 +16,11 @@
                 simple_yes_no_options,
                 :id,
                 :name,
-                legend: { text: title, tag: 'h1', size: 'xl' }) do %>
-                <p class="govuk-body govuk-!-margin-top-4">This means teachers who have completed their initial teacher training, but have not started their 2-year induction yet.</p>
-            <% end %>
+                legend: { text: title, tag: 'h1', size: 'l' },
+                hint: {
+                  text: "This means teachers who have completed their initial teacher training, but have not started their 2-year induction yet."
+                }
+              )  %>
 
             <%= f.govuk_submit "Continue" %>
         <% end %>
