@@ -240,6 +240,25 @@ RSpec.describe DeferParticipant do
           expect(service.errors.messages_for(:participant_id)).to include("Your update cannot be made as the '#/participant_id' is not recognised. Check participant details and try again.")
         end
       end
+
+      describe "without declarations" do
+        it "is invalid returning an error message" do
+          expect(participant_profile.participant_declarations).to be_empty
+          is_expected.to be_invalid
+          expect(service.errors.messages_for(:participant_profile)).to include("You cannot defer an NPQ participant that has no declarations")
+        end
+      end
+
+      describe "with a declaration" do
+        before do
+          create(:npq_participant_declaration, participant_profile:, cpd_lead_provider:)
+        end
+
+        it "should be valid" do
+          is_expected.to be_valid
+          expect(service.errors).to be_blank
+        end
+      end
     end
 
     describe ".call" do
