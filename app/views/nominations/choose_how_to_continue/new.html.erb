@@ -3,10 +3,9 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
 
-        <span class="govuk-caption-l"><%= @how_to_continue_form.school.name %></span>
-
         <%= form_for @how_to_continue_form, url: choose_how_to_continue_path(token: @how_to_continue_form.token) do |f| %>
             <%= f.govuk_error_summary %>
+            <span class="govuk-caption-l"><%= @how_to_continue_form.school.name %></span>
             <%= f.govuk_collection_radio_buttons(
                 :how_to_continue,
                 @how_to_continue_form.choices,
