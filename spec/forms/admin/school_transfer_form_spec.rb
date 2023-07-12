@@ -3,21 +3,43 @@
 require "rails_helper"
 
 RSpec.describe Admin::SchoolTransferForm, type: :model do
-  subject(:form) { described_class.new(participant_profile_id: participant_profile.id) }
+  subject(:form) { described_class.new(participant_profile_id: participant_profile.id, new_school_urn: school_in.urn) }
   let(:participant_profile) { create :ect_participant_profile }
   let(:cohort) { participant_profile.schedule.cohort }
-  let(:induction_programme) { create(:induction_programme, :cip) }
-  let!(:induction_record) { Induction::Enrol.call(participant_profile:, induction_programme:, start_date: 1.day.ago) }
+  let(:induction_programme_out) do
+    NewSeeds::Scenarios::SchoolCohorts::Fip.new(cohort:)
+                                           .build
+                                           .with_programme
+                                           .school_cohort
+                                           .default_induction_programme
+  end
+  let(:lead_provider_out) { induction_programme_out.lead_provider }
+  let(:delivery_partner_out) { induction_programme_out.delivery_partner }
+  let!(:induction_record) do
+    Induction::Enrol.call(participant_profile:,
+                          induction_programme: induction_programme_out,
+                          start_date: 1.day.ago)
+  end
+
+  let(:school_in) { create(:school) }
 
   describe "#perform_transfer!" do
-    let(:school_cohort) { create(:school_cohort, :fip, :with_induction_programme, cohort:) }
-    let(:school) { school_cohort.school }
-    let(:induction_programme_2) { school_cohort.induction_programmes.first }
-    let(:transfer_choice) { induction_programme_2.id }
+    let(:partnership_in) {}
+    let(:school_cohort_in) do
+      NewSeeds::Scenarios::SchoolCohorts::Fip.new(cohort:, school: school_in)
+                                             .build
+                                             .with_programme(partnership: partnership_in)
+                                             .school_cohort
+    end
+    let(:induction_programme_in) { school_cohort_in.induction_programmes.first }
+    let(:transfer_choice) { induction_programme_in.id }
+    let(:lead_provider_in) { induction_programme_in.lead_provider }
+    let(:create_providers_users) { true }
 
     before do
-      school_cohort.update!(default_induction_programme: induction_programme_2)
-      form.new_school_urn = school.urn
+      NewSeeds::Scenarios::Users::LeadProviderUser.new(lead_provider: lead_provider_out).build if create_providers_users
+      NewSeeds::Scenarios::Users::LeadProviderUser.new(lead_provider: lead_provider_in).build  if create_providers_users
+      # school_cohort.update!(default_induction_programme: induction_programme_in)
       form.start_date = 10.days.from_now
       form.email = "ted.jones@example.com"
       form.transfer_choice = transfer_choice
@@ -29,70 +51,82 @@ RSpec.describe Admin::SchoolTransferForm, type: :model do
 
     it "enrols the participant in the selected programme" do
       form.perform_transfer!
-      expect(participant_profile.induction_records.latest.induction_programme).to eq induction_programme_2
+      expect(participant_profile.induction_records.latest.induction_programme).to eq induction_programme_in
+    end
+
+    it "notifies the providers and the participant" do
+      expect {
+        form.perform_transfer!
+      }.to have_enqueued_mail(ParticipantTransferMailer, :provider_transfer_in_notification)
+             .with(params: hash_including(lead_provider_profile: lead_provider_in.lead_provider_profiles.first),
+                   args: [])
+       .and have_enqueued_mail(ParticipantTransferMailer, :provider_transfer_out_notification)
+              .with(params: hash_including(lead_provider_profile: lead_provider_out.lead_provider_profiles.first),
+                    args: [])
+       .and have_enqueued_mail(ParticipantTransferMailer, :participant_transfer_in_notification)
     end
 
     context "when continuing current programme" do
       let(:transfer_choice) { "continue" }
 
-      before do
-        form.new_school_urn = school.urn
-        form.start_date = 10.days.from_now
-        form.email = "ted.jones@example.com"
-        form.transfer_choice = "continue"
-      end
-
-      it "adds a new programme to the school cohort" do
-        expect { form.perform_transfer! }.to change { school_cohort.induction_programmes.core_induction_programme.count }.by(1)
-      end
-
       it "enrols the participant in the selected programme" do
         form.perform_transfer!
-        expect(participant_profile.induction_records.latest.induction_programme).to eq school_cohort.induction_programmes.order(:created_at).last
+        expect(participant_profile.induction_records.latest.induction_programme)
+          .to eq school_cohort_in.induction_programmes.order(:created_at).last
+      end
+
+      it "notifies the provider and the participant" do
+        expect {
+          form.perform_transfer!
+        }.to have_enqueued_mail(ParticipantTransferMailer, :provider_existing_school_transfer_notification)
+               .with(params: hash_including(lead_provider_profile: lead_provider_out.lead_provider_profiles.first),
+                     args: [])
+         .and have_enqueued_mail(ParticipantTransferMailer, :participant_transfer_in_notification)
       end
 
       context "when a matching programme already exists" do
-        let!(:matching_programme) { create(:induction_programme, :cip, school_cohort:, core_induction_programme: induction_programme.core_induction_programme) }
+        let(:partnership_in) do
+          FactoryBot.create(:seed_partnership,
+                            cohort:,
+                            school: school_in,
+                            delivery_partner: delivery_partner_out,
+                            lead_provider: lead_provider_out)
+        end
+
         it "does not create a new programme" do
-          expect { form.perform_transfer! }.not_to change { school_cohort.induction_programmes.count }
+          expect { form.perform_transfer! }.not_to change { school_cohort_in.induction_programmes.count }
         end
 
         it "enrols the participant in the matching programme" do
           form.perform_transfer!
-          expect(participant_profile.induction_records.latest.induction_programme).to eq matching_programme
+          expect(participant_profile.induction_records.latest.induction_programme).to eq induction_programme_in
         end
       end
 
       context "when there is no school cohort at the school" do
-        let(:school) { create(:school) }
+        let(:create_providers_users) { false }
 
         it "creates a new school cohort" do
-          expect { form.perform_transfer! }.to change { school.school_cohorts.count }.by(1)
+          expect { form.perform_transfer! }.to change { school_in.school_cohorts.count }.by(1)
         end
 
         it "sets the induction programme choice on the school cohort" do
           form.perform_transfer!
-          expect(school.school_cohorts.first).to be_core_induction_programme
+          expect(school_in.school_cohorts.first).to be_full_induction_programme
         end
 
         it "sets the default induction programme on the school cohort to be the new programme" do
           form.perform_transfer!
-          expect(school.school_cohorts.first.default_induction_programme).to eq school.school_cohorts.first.induction_programmes.first
+          expect(school_in.school_cohorts.first.default_induction_programme).to eq school_in.school_cohorts.first.induction_programmes.first
         end
       end
     end
   end
 
   describe "#skip_transfer_options?" do
-    let(:school) { create(:school) }
-
-    before do
-      form.new_school_urn = school.urn
-    end
-
     context "when the destination school has more than one programme in the cohort" do
-      let(:school_cohort) { create(:school_cohort, :cip, :with_induction_programme, core_induction_programme: induction_programme.core_induction_programme, school:, cohort:) }
-      let!(:induction_programme_2) { create(:induction_programme, :fip, school_cohort:) }
+      let(:school_cohort) { create(:school_cohort, :fip, :with_induction_programme, school: school_in, cohort:) }
+      let!(:induction_programme_in) { create(:induction_programme, :fip, school_cohort:) }
 
       it "returns false" do
         expect(form.skip_transfer_options?).to be false
@@ -100,7 +134,7 @@ RSpec.describe Admin::SchoolTransferForm, type: :model do
     end
 
     context "when the destination school has a different programme in the cohort" do
-      let!(:school_cohort) { create(:school_cohort, :fip, :with_induction_programme, school:, cohort:) }
+      let!(:school_cohort) { create(:school_cohort, :cip, :with_induction_programme, school: school_in, cohort:) }
 
       it "returns false" do
         expect(form.skip_transfer_options?).to be false
@@ -114,16 +148,33 @@ RSpec.describe Admin::SchoolTransferForm, type: :model do
     end
 
     context "when there is a single programme at the destination school" do
-      let!(:school_cohort) { create(:school_cohort, :cip, :with_induction_programme, core_induction_programme: induction_programme.core_induction_programme, school:, cohort:) }
+      let!(:school_cohort) { create(:school_cohort, :fip, :with_induction_programme, school: school_in, cohort:) }
 
       context "when the programme matches the participants induction programme" do
+        let(:partnership) do
+          FactoryBot.create(:seed_partnership,
+                            cohort:,
+                            school: school_in,
+                            delivery_partner: delivery_partner_out,
+                            lead_provider: lead_provider_out)
+        end
+
+        let!(:school_cohort) do
+          NewSeeds::Scenarios::SchoolCohorts::Fip.new(cohort:, school: school_in)
+                                                 .build
+                                                 .with_programme(partnership:)
+                                                 .school_cohort
+        end
+
         it "returns true" do
           expect(form.skip_transfer_options?).to be true
         end
       end
 
       context "when the participant does not have an induction record" do
-        let!(:induction_record) { nil }
+        before do
+          induction_record.destroy
+        end
 
         it "returns true" do
           expect(form.skip_transfer_options?).to be true
