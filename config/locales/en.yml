@@ -523,7 +523,6 @@ en:
               blank: "Enter a '#/delivery_partner_id'."
               invalid: "The '#/delivery_partner_id' you have entered is invalid. Check delivery partner details and try again."
               no_relationship: "The entered delivery partner is not recognised to be working in partnership with you for the given cohort. Contact the DfE for more information."
-              duplicate_delivery_partner: "We cannot process this request because you're already confirmed to be in partnership with the entered delivery partner. Contact the DfE for support."
         partnerships/update:
           attributes:
             partnership:

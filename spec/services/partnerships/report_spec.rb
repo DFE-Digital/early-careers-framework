@@ -263,4 +263,40 @@ RSpec.describe Partnerships::Report do
       )
     end
   end
+
+  context "with relationship partnership with same delivery partner" do
+    let!(:partnership) do
+      create(
+        :partnership,
+        relationship: true,
+        lead_provider:,
+        school:,
+        cohort:,
+        delivery_partner:,
+      )
+    end
+
+    it "does not create new partnership" do
+      expect { result }.not_to change(Partnership, :count)
+    end
+
+    it "returns the original partnership record" do
+      expect(result).to eq partnership
+    end
+
+    it "sets the existing partnership as the default partnership" do
+      result
+
+      expect(partnership.reload).to have_attributes(
+        school_id: school.id,
+        cohort_id: cohort.id,
+        lead_provider_id: lead_provider.id,
+        delivery_partner_id: delivery_partner.id,
+        pending: false,
+        challenged_at: nil,
+        challenge_reason: nil,
+        relationship: false,
+      )
+    end
+  end
 end
