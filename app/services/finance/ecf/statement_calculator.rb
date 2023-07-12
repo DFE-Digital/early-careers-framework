@@ -142,6 +142,10 @@ module Finance
         -clawback_deductions + uplift_clawback_deductions
       end
 
+      def additional_adjustments_total
+        statement.adjustments.sum(:amount)
+      end
+
       def clawback_deductions
         event_types.sum do |event_type|
           public_send(:"deductions_for_#{event_type}")
@@ -149,7 +153,7 @@ module Finance
       end
 
       def total(with_vat: false)
-        sum = service_fee + output_fee + total_for_uplift + adjustments_total + statement.reconcile_amount
+        sum = service_fee + output_fee + total_for_uplift + adjustments_total + additional_adjustments_total + statement.reconcile_amount
         sum += vat if with_vat
         sum
       end

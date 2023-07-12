@@ -32,7 +32,11 @@
           </p>
 
           <p class="govuk-body-s govuk-!-margin-bottom-2">
-            Adjustments <span><%= number_to_pounds(@calculator.adjustments_total) %></span>
+            Clawbacks <span><%= number_to_pounds(@calculator.adjustments_total) %></span>
+          </p>
+
+          <p class="govuk-body-s govuk-!-margin-bottom-2">
+            Additional adjustments <span><%= number_to_pounds(@calculator.additional_adjustments_total) %></span>
           </p>
 
           <p class="govuk-body-s govuk-!-margin-bottom-2">
@@ -181,12 +185,14 @@
     </div>
 
     <div class="finance-panel finance-panel__adjustments govuk-!-margin-top-5 govuk-!-margin-bottom-5">
+      <h2 class="govuk-heading-m">Adjustments</h2>
+
       <%= govuk_table do |table| %>
-        <% table.caption(size: "m", text: "Adjustments") %>
+        <% table.caption(size: "s", text: "Clawbacks") %>
 
         <% table.head do |head| %>
           <% head.row do |row| %>
-            <% row.cell(header: true, text: "Adjustment type") %>
+            <% row.cell(header: true, text: "Payment type") %>
             <% row.cell(header: true, text: "Number of participants") %>
             <% row.cell(header: true, text: "Fee per participant", numeric: true) %>
             <% row.cell(header: true, text: "Payments", numeric: true) %>
@@ -222,12 +228,14 @@
       <% end %>
 
       <div class="govuk-!-text-align-right govuk-heading-s govuk-!-margin-bottom-0">
-        Adjustments total
+        Total
       </div>
 
       <div class="govuk-!-text-align-right govuk-heading-s">
         <%= number_to_pounds(@calculator.adjustments_total) %>
       </div>
+
+      <%= render Finance::AdditionalAdjustments::Table.new(statement: @statement) %>
     </div>
 
     <%= render Finance::ECF::Contract.new(contract: @calculator.contract) %>
