@@ -55,6 +55,34 @@ RSpec.describe(Admin::ParticipantPresenter) do
         expect(Induction::FindBy).to have_received(:new).with(participant_profile:).once
         expect(fake_findby).to have_received(:call).once
       end
+
+      describe "#lead_provider_name" do
+        let(:dummy_lp) { FactoryBot.build(:seed_lead_provider) }
+        let(:dummy_induction_record) { instance_double(InductionRecord) }
+
+        before do
+          allow(subject).to receive(:relevant_induction_record).and_return(dummy_induction_record)
+          allow(dummy_induction_record).to receive(:lead_provider_name).and_return(dummy_lp.name)
+        end
+
+        it "returns the lead_provider_name via induction record and induction programme" do
+          expect(subject.lead_provider_name).to eql(dummy_lp.name)
+        end
+      end
+
+      describe "#delivery_partner_name" do
+        let(:dummy_dp) { FactoryBot.build(:seed_delivery_partner) }
+        let(:dummy_induction_record) { instance_double(InductionRecord) }
+
+        before do
+          allow(subject).to receive(:relevant_induction_record).and_return(dummy_induction_record)
+          allow(dummy_induction_record).to receive(:delivery_partner_name).and_return(dummy_dp.name)
+        end
+
+        it "returns the delivery_partner_name via induction record and induction programme" do
+          expect(subject.delivery_partner_name).to eql(dummy_dp.name)
+        end
+      end
     end
 
     describe "#school_cohort" do
@@ -98,23 +126,23 @@ RSpec.describe(Admin::ParticipantPresenter) do
         end
       end
 
-      describe "#lead_provider_name" do
+      describe "#school_lead_provider_name" do
         let(:dummy_lp) { FactoryBot.build(:seed_lead_provider) }
 
         before { allow_any_instance_of(SchoolCohort).to receive(:lead_provider).and_return(dummy_lp) }
 
-        it "returns the lead_provider_name via induction record and school cohort" do
-          expect(subject.lead_provider_name).to eql(dummy_lp.name)
+        it "returns the lead_provider_name via school cohort and school" do
+          expect(subject.school_lead_provider_name).to eql(dummy_lp.name)
         end
       end
 
-      describe "#delivery_partner_name" do
+      describe "#school_delivery_partner_name" do
         let(:dummy_dp) { FactoryBot.build(:seed_delivery_partner) }
 
         before { allow_any_instance_of(SchoolCohort).to receive(:delivery_partner).and_return(dummy_dp) }
 
-        it "returns the delivery_partner_name via induction record and school cohort" do
-          expect(subject.delivery_partner_name).to eql(dummy_dp.name)
+        it "returns the delivery_partner_name via school cohort and school" do
+          expect(subject.school_delivery_partner_name).to eql(dummy_dp.name)
         end
       end
 

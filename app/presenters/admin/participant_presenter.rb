@@ -20,6 +20,7 @@ class Admin::ParticipantPresenter
   delegate :full_name, :email, :participant_identities, to: :user
   delegate :user_id, to: :participant_identity
   delegate :trn, to: :teacher_profile
+  delegate :enrolled_in_fip?, to: :relevant_induction_record
 
   def initialize(participant_profile)
     @participant_profile = participant_profile
@@ -57,12 +58,20 @@ class Admin::ParticipantPresenter
     school&.friendly_id
   end
 
-  def lead_provider_name
+  def school_lead_provider_name
     school_cohort&.lead_provider&.name
   end
 
-  def delivery_partner_name
+  def school_delivery_partner_name
     school_cohort&.delivery_partner&.name
+  end
+
+  def lead_provider_name
+    relevant_induction_record&.lead_provider_name
+  end
+
+  def delivery_partner_name
+    relevant_induction_record&.delivery_partner_name
   end
 
   def appropriate_body_name

@@ -441,6 +441,23 @@ en:
               blank: "Choose an appropriate body type"
             appropriate_body:
               blank: "Choose an appropriate body"
+        admin/participants/change_relationship/wizard_steps/reason_for_change_step:
+          attributes:
+            reason_for_change:
+              blank: "Select the reason for the change"
+        admin/participants/change_relationship/wizard_steps/change_training_programme_step:
+          attributes:
+            selected_partnership:
+              blank: "Select a training programme"
+              inclusion: "Select a training programme"
+        admin/participants/change_relationship/wizard_steps/choose_lead_provider_step:
+          attributes:
+            lead_provider_id:
+              blank: "Select lead provider"
+        admin/participants/change_relationship/wizard_steps/choose_delivery_partner_step:
+          attributes:
+            delivery_partner_id:
+              blank: "Select delivery partner"
         finance/ecf/change_training_status_form:
           attributes:
             training_status:
