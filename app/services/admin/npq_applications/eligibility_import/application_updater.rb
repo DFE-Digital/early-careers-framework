@@ -4,21 +4,6 @@ module Admin
   module NPQApplications
     module EligibilityImport
       class ApplicationUpdater
-        VALID_FUNDING_ELIGIBILITY_STATUS_CODES = %w[
-          funded
-          no_institution
-          ineligible_establishment_type
-          ineligible_institution_type
-          previously_funded
-          not_new_headteacher_requesting_ehco
-          school_outside_catchment
-          early_years_outside_catchment
-          not_on_early_years_register
-          early_years_invalid_npq
-          marked_funded_by_policy
-          marked_ineligible_by_policy
-        ].freeze
-
         attr_reader :application_updates, :user, :update_errors, :updated_records, :eligibility_import
 
         def initialize(application_updates:, user:, eligibility_import:)
@@ -36,7 +21,7 @@ module Admin
       private
 
         def valid_status_code?(application_update)
-          VALID_FUNDING_ELIGIBILITY_STATUS_CODES.include?(application_update.funding_eligiblity_status_code)
+          NPQApplication::VALID_FUNDING_ELIGIBILITY_STATUS_CODES.include?(application_update.funding_eligiblity_status_code)
         end
 
         def build_error_message(csv_row:, message:)

@@ -315,4 +315,90 @@ RSpec.describe NPQApplication, type: :model do
       end
     end
   end
+
+  describe "validations" do
+    context "when validating funding_eligibility_status_code" do
+      shared_examples "depending on the state" do
+        let(:participant_declaration) { create(:npq_participant_declaration, state: participant_declaration_state) }
+        let(:npq_application) { participant_declaration.participant_profile.npq_application }
+
+        before do
+          npq_application.update!(eligible_for_funding:)
+        end
+
+        it "is validated properly with admin context admin" do
+          expect(npq_application.valid?(:admin)).to eq(application_valid_with_admin_context)
+        end
+
+        it "is validated properly without context" do
+          expect(npq_application.valid?).to eq(true)
+        end
+      end
+
+      %w[submitted voided ineligible awaiting_clawback clawed_back].each do |state|
+        context "when eligible_for_funding is true" do
+          include_examples "depending on the state" do
+            let(:participant_declaration_state) { state }
+            let(:eligible_for_funding) { true }
+
+            let(:application_valid_with_admin_context) { true }
+          end
+        end
+
+        context "when eligible_for_funding is false" do
+          include_examples "depending on the state" do
+            let(:participant_declaration_state) { state }
+            let(:eligible_for_funding) { false }
+
+            let(:application_valid_with_admin_context) { true }
+          end
+        end
+      end
+
+      # payable states
+      %w[eligible payable paid].each do |state|
+        context "when eligible_for_funding is true" do
+          include_examples "depending on the state" do
+            let(:participant_declaration_state) { state }
+            let(:eligible_for_funding) { true }
+
+            let(:application_valid_with_admin_context) { true }
+          end
+        end
+
+        context "when eligible_for_funding is false" do
+          include_examples "depending on the state" do
+            let(:participant_declaration_state) { state }
+            let(:eligible_for_funding) { false }
+
+            let(:application_valid_with_admin_context) { false }
+          end
+        end
+      end
+    end
+  end
+
+  describe "#declared_as_payable" do
+    %w[submitted voided ineligible awaiting_clawback clawed_back].each do |state|
+      context "when declaration state is #{state}" do
+        let(:participant_declaration) { create(:npq_participant_declaration, state:) }
+        let(:npq_application) { participant_declaration.participant_profile.npq_application }
+
+        it "is false" do
+          expect(npq_application.declared_as_payable?).to eq(false)
+        end
+      end
+    end
+
+    %w[eligible payable paid].each do |state|
+      context "when declaration state is #{state}" do
+        let(:participant_declaration) { create(:npq_participant_declaration, state:) }
+        let(:npq_application) { participant_declaration.participant_profile.npq_application }
+
+        it "is true" do
+          expect(npq_application.declared_as_payable?).to eq(true)
+        end
+      end
+    end
+  end
 end
