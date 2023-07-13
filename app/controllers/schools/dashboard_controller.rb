@@ -12,7 +12,7 @@ class Schools::DashboardController < Schools::BaseController
                       .schools
                       .order(:name),
                            page: params[:page],
-                           items: 10)
+                           items: 20)
   end
 
   def show
