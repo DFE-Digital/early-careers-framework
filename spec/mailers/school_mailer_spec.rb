@@ -3,6 +3,19 @@
 require "rails_helper"
 
 RSpec.describe SchoolMailer, type: :mailer do
+  describe "#remind_sit_to_assign_mentors_to_ects_email" do
+    let(:induction_coordinator) { create(:seed_induction_coordinator_profile, :with_user) }
+
+    let(:email) do
+      SchoolMailer.with(induction_coordinator:).remind_sit_to_assign_mentors_to_ects_email.deliver_now
+    end
+
+    it "renders the right headers" do
+      expect(email.from).to eq(["mail@example.com"])
+      expect(email.to).to eq [induction_coordinator.user.email]
+    end
+  end
+
   describe "#remind_sit_to_add_ects_and_mentors_email" do
     let(:induction_coordinator) { create(:seed_induction_coordinator_profile, :with_user) }
 
