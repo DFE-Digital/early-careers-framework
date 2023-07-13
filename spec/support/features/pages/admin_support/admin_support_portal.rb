@@ -4,8 +4,8 @@ require_relative "../base_page"
 
 module Pages
   class AdminSupportPortal < ::Pages::BasePage
-    set_url "/admin/schools"
-    set_primary_heading "Schools"
+    set_url "/admin"
+    set_primary_heading "Overview"
 
     def view_participant_list
       click_on "Participants"
