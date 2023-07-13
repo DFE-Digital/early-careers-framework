@@ -64,7 +64,7 @@
 
     sl.row do |row|
       row.key(text: "Updated at")
-      row.value { l application.created_at, format: :admin }
+      row.value { l application.updated_at, format: :admin }
     end
   end
 %>
