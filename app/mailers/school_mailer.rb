@@ -39,6 +39,24 @@ class SchoolMailer < ApplicationMailer
   LAUNCH_ASK_SIT_TO_REPORT_SCHOOL_TRAINING_DETAILS_TEMPLATE = "1f796f27-9ba4-4705-a7c9-57462bd1e0b7"
   LAUNCH_ASK_GIAS_CONTACT_TO_REPORT_SCHOOL_TRAINING_DETAILS_TEMPLATE = "f4dfee2a-2cc3-4d32-97f9-8adca41343bf"
   COHORTLESS_PILOT_2023_SURVEY_TEMPLATE = "5f6dc6bf-62c5-4cf1-8cc8-1440453f4a2d"
+  REMIND_SIT_TO_ADD_PARTICIPANTS_TEMPLATE = "19b5a258-e615-4371-9e55-f9cc58187448"
+
+  def remind_sit_to_add_ects_and_mentors_email
+    induction_coordinator = params[:induction_coordinator]
+    email_address = induction_coordinator.user.email
+    name = induction_coordinator.user.full_name
+
+    template_mail(
+      REMIND_SIT_TO_ADD_PARTICIPANTS_TEMPLATE,
+      to: email_address,
+      rails_mailer: mailer_name,
+      rails_mail_template: action_name,
+      personalisation: {
+        name:,
+        email_address:,
+      },
+    ).tag(:remind_sits_to_add_ects_and_mentors).associate_with(induction_coordinator, as: :induction_coordinator_profile)
+  end
 
   def cohortless_pilot_2023_survey_email
     sit_user = params[:sit_user]
