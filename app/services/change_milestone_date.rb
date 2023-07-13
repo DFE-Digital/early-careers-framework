@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class MilestoneDateChange
+class ChangeMilestoneDate
   class DateCannotBeChangedError < RuntimeError; end
 
   DECLARATION_STATES_TO_IGNORE = %i[voided awaiting_clawback clawed_back].freeze

@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
 require "rails_helper"
-require "milestone_date_change"
 
-describe MilestoneDateChange, type: :model do
+describe ChangeMilestoneDate, type: :model do
   let(:schedule) { create(:ecf_schedule, schedule_identifier: "test-schedule") }
   let(:schedule_identifier) { schedule.schedule_identifier }
   let(:milestone_number) { 1 }

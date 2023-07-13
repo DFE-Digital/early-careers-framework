@@ -1,13 +1,12 @@
 # frozen_string_literal: true
 
 require "rake"
-require "milestone_date_change"
 
-namespace :milestone_date_change do
+namespace :change_milestone_date do
   desc "Validate if a milestone date can be changed"
   task :validate, %i[schedule_identifier start_year milestone_number new_start_date new_milestone_date] => :environment do |_task, args|
     args = args.to_h
-    change = MilestoneDateChange.new(args)
+    change = ChangeMilestoneDate.new(args)
 
     if change.valid?
       puts "Milestone date can be changed to #{args.slice(:new_start_date, :new_milestone_date)}"
@@ -20,6 +19,6 @@ namespace :milestone_date_change do
 
   desc "Executes a milestone date change (if valid)"
   task :execute, %i[schedule_identifier start_year milestone_number new_start_date new_milestone_date] => :environment do |_task, args|
-    MilestoneDateChange.new(args.to_h).change_date!
+    ChangeMilestoneDate.new(args.to_h).change_date!
   end
 end
