@@ -4,9 +4,9 @@ module Api
   module V1
     module ECF
       class ParticipantsQuery
-        include Api::V3::Concerns::FilterCohorts
-        include Api::V3::Concerns::FilterUpdatedSince
-        include Api::V3::Concerns::FetchLatestInductionRecords
+        include Concerns::FilterCohorts
+        include Concerns::FilterUpdatedSince
+        include Concerns::FetchLatestInductionRecords
 
         def initialize(lead_provider:, params:)
           @lead_provider = lead_provider

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Api::V3::Concerns::FetchLatestInductionRecords
+module Api::Concerns::FetchLatestInductionRecords
   extend ActiveSupport::Concern
 
 protected
