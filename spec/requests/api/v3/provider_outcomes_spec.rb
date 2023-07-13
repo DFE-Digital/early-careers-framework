@@ -37,6 +37,17 @@ RSpec.describe "participant outcomes endpoint spec", type: :request do
 
           expect(parsed_response).to eq(expected_response)
         end
+
+        context "when filtering by created_since" do
+          before { travel_to(2.weeks.ago) { create(:participant_outcome, participant_declaration: declaration) } }
+
+          it "returns outcomes created since the given date" do
+            created_since = 5.days.ago.iso8601
+            get "/api/v3/participants/npq/outcomes", params: { filter: { created_since: } }
+            expect(response.status).to eq 200
+            expect(parsed_response).to eq(expected_response)
+          end
+        end
       end
 
       it "can return paginated data" do

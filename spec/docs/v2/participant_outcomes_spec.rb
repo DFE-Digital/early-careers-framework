@@ -19,6 +19,17 @@ RSpec.describe "API", type: :request, swagger_doc: "v2/api_spec.json" do
       tags "Participants Outcomes"
       security [bearerAuth: []]
 
+      parameter name: :filter,
+                in: :query,
+                schema: {
+                  "$ref": "#/components/schemas/NPQOutcomeFilter",
+                },
+                style: :deepObject,
+                explode: true,
+                required: false,
+                description: "Refine participant outcomes to return.",
+                example: CGI.unescape({ filter: { created_since: "2020-11-13T11:21:55Z" } }.to_param)
+
       parameter name: :page,
                 in: :query,
                 schema: {
