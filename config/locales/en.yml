@@ -49,6 +49,7 @@ en:
   invalid_completion_date: "The '#/completion_date' value must be in the following format: 'yyyy-mm-dd'"
   invalid_updated_since_filter: "The filter '#/updated_since' must be a valid RCF3339 date"
   invalid_created_since_filter: "The filter '#/created_since' must be a valid RCF3339 date"
+  invalid_training_status: "The filter '#/training_status' must be %{valid_training_status}"
   future_date: "The '#/%{attribute}' value cannot be a future date. Check the date and try again."
   future_date_outcomes: "The attribute '#/%{attribute}' cannot contain a future date. Resubmit the outcome update with a valid date."
   mismatch_declaration_type_for_schedule: "The property '#/declaration_type' does not exist for this schedule."

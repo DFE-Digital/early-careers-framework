@@ -24,8 +24,8 @@ module Api
 
       def npq_participant_params
         params
-          .with_defaults({ sort: "", filter: { updated_since: "" } })
-          .permit(:id, :sort, filter: %i[updated_since])
+          .with_defaults({ sort: "", filter: { updated_since: "", training_status: "" } })
+          .permit(:id, :sort, filter: %i[updated_since training_status])
       end
 
       def serializer_class

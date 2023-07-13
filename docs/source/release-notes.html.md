@@ -15,6 +15,13 @@ Providers may now filter outcomes by created_since date. For example:
 
 The change applies to all API versions.
 
+Providers can now filter ECF and NPQ participants by training_status, for example: 
+
+* GET /api/v3/participants/ecf?filter[training_status]=deferred
+* GET /api/v3/participants/npq?filter[training_status]=active
+
+The filter is optional and only applies to v3 of the API. More detail is available in the [NPQ](/api-reference/reference-v3.html#api-v3-participants-npq-get) and [ECF](/api-reference/reference-v3.html#api-v3-participants-ecf-get) specifications.
+
 ## 12th July 2023
 
 DfE has changed functionality around the endpoint `PUT /api/v1/participants/npq/{id}/defer`

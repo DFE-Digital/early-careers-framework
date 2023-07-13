@@ -11,12 +11,34 @@ RSpec.describe Api::V3::NPQParticipantsQuery do
   let!(:participant_profile) { create(:npq_participant_profile, npq_lead_provider:, npq_course:, teacher_profile:, user:) }
 
   let(:params) { {} }
-
-  subject { described_class.new(npq_lead_provider:, params:) }
+  let(:instance) { described_class.new(npq_lead_provider:, params:) }
 
   describe "#participants" do
-    it "returns all participants" do
-      expect(subject.participants).to match_array([user])
+    subject(:participants) { instance.participants }
+
+    it { is_expected.to contain_exactly(user) }
+
+    describe "training_status filter" do
+      let(:training_status) { :deferred }
+      let(:params) { { filter: { training_status: } } }
+
+      context "when there are no matches" do
+        it { is_expected.to be_empty }
+      end
+
+      context "when there are matches" do
+        let!(:another_participant_profile) { create(:npq_participant_profile, npq_lead_provider:, npq_course:, training_status: :withdrawn) }
+        let(:training_status) { participant_profile.training_status }
+
+        it { is_expected.to contain_exactly(user) }
+      end
+
+      context "with an invalid value" do
+        let(:training_status) { :invalid }
+        let(:expected_message) { %(The filter '#/training_status' must be ["active", "deferred", "withdrawn"]) }
+
+        it { expect { participants }.to raise_error(Api::Errors::InvalidTrainingStatusError, expected_message) }
+      end
     end
 
     describe "updated_since filter" do
@@ -27,18 +49,14 @@ RSpec.describe Api::V3::NPQParticipantsQuery do
 
       context "with correct value" do
         it "returns all records for the specific updated_since filter" do
-          expect(subject.participants).to match_array([user])
+          is_expected.to contain_exactly(user)
         end
       end
 
       context "with incorrect value" do
         let(:params) { { filter: { updated_since: SecureRandom.uuid } } }
 
-        it "raises an error" do
-          expect {
-            subject.participants
-          }.to raise_error(Api::Errors::InvalidDatetimeError)
-        end
+        it { expect { participants }.to raise_error(Api::Errors::InvalidDatetimeError) }
       end
     end
 
@@ -50,32 +68,30 @@ RSpec.describe Api::V3::NPQParticipantsQuery do
       end
 
       it "returns all records ordered by participant profile created_at" do
-        expect(subject.participants.map(&:id)).to eq([another_participant_profile.user_id, participant_profile.user_id])
+        expect(participants.map(&:id)).to eq(
+          [another_participant_profile, participant_profile].map(&:user_id),
+        )
       end
     end
   end
 
   describe "#participant" do
+    subject(:participant) { instance.participant }
+
     context "with correct params" do
       let(:params) { { id: participant_profile.user_id } }
 
-      it "returns a specific participant" do
-        expect(subject.participant).to eq(user)
-      end
+      it { is_expected.to eq(user) }
     end
 
     context "with incorrect params" do
       let(:params) { { id: SecureRandom.uuid } }
 
-      it "returns no participant" do
-        expect { subject.participant }.to raise_error(ActiveRecord::RecordNotFound)
-      end
+      it { expect { participant }.to raise_error(ActiveRecord::RecordNotFound) }
     end
 
     context "with no params" do
-      it "returns no participant" do
-        expect { subject.participant }.to raise_error(ActiveRecord::RecordNotFound)
-      end
+      it { expect { participant }.to raise_error(ActiveRecord::RecordNotFound) }
     end
   end
 end
