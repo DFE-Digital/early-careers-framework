@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class InviteEcts
+class Mailers::InviteEcts
   # This is sent to SITs who were set up in a previous cohort. We request
   # that they choose a programme for the next cohort and add their ECTs, if neccessary.
   def preterm_reminder(conditions: {})
