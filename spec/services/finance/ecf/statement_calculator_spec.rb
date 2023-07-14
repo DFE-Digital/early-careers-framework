@@ -41,6 +41,18 @@ RSpec.describe Finance::ECF::StatementCalculator do
         expect(subject.total(with_vat: true)).to eql((default_total + 1234) * 1.2)
       end
     end
+
+    context "with additional adjustments" do
+      let!(:adjustment1) { create :adjustment, statement:, payment_type: "Big amount", amount: 999.99 }
+      let!(:adjustment2) { create :adjustment, statement:, payment_type: "Negative amount", amount: -500.0 }
+      let!(:adjustment3) { create :adjustment, statement:, payment_type: "Another amount", amount: 300.0 }
+
+      it "returns correct value" do
+        expect(subject.statement.adjustments.count).to eql(3)
+        expect(subject.additional_adjustments_total).to eql(799.99)
+        expect(subject.total(with_vat: true)).to eql((default_total + 799.99) * 1.2)
+      end
+    end
   end
 
   describe "#adjustments_total" do
@@ -264,6 +276,35 @@ RSpec.describe Finance::ECF::StatementCalculator do
 
       it "includes clawback and uplift adjustments" do
         expect(subject.adjustments_total).to eql(-488)
+      end
+    end
+  end
+
+  describe "#additional_adjustments_total" do
+    context "no adjustments" do
+      it "returns correct value" do
+        expect(subject.statement.adjustments.count).to eql(0)
+        expect(subject.additional_adjustments_total).to eql(0.0)
+      end
+    end
+
+    context "one adjustment" do
+      let!(:adjustment) { create :adjustment, statement:, payment_type: "Big amount", amount: 999.99 }
+
+      it "returns correct value" do
+        expect(subject.statement.adjustments.count).to eql(1)
+        expect(subject.additional_adjustments_total).to eql(999.99)
+      end
+    end
+
+    context "multiple adjustments" do
+      let!(:adjustment1) { create :adjustment, statement:, payment_type: "Big amount", amount: 999.99 }
+      let!(:adjustment2) { create :adjustment, statement:, payment_type: "Negative amount", amount: -500.0 }
+      let!(:adjustment3) { create :adjustment, statement:, payment_type: "Another amount", amount: 300.0 }
+
+      it "returns correct value" do
+        expect(subject.statement.adjustments.count).to eql(3)
+        expect(subject.additional_adjustments_total).to eql(799.99)
       end
     end
   end

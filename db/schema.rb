@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_05_152210) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_12_152849) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pgcrypto"
@@ -345,6 +345,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_05_152210) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_features_on_name", unique: true
+  end
+
+  create_table "finance_adjustments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "statement_id", null: false
+    t.string "payment_type", null: false
+    t.decimal "amount", default: "0.0", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["statement_id"], name: "index_finance_adjustments_on_statement_id"
   end
 
   create_table "finance_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -1091,6 +1100,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_05_152210) do
   add_foreign_key "ecf_participant_validation_data", "participant_profiles"
   add_foreign_key "email_associations", "emails"
   add_foreign_key "feature_selected_objects", "features"
+  add_foreign_key "finance_adjustments", "statements"
   add_foreign_key "finance_profiles", "users"
   add_foreign_key "induction_coordinator_profiles", "users"
   add_foreign_key "induction_programmes", "core_induction_programmes"

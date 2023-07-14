@@ -27,6 +27,8 @@ class Finance::Statement < ApplicationRecord
            through: :refundable_statement_line_items,
            source: :participant_declaration
 
+  has_many :adjustments, class_name: "Finance::Adjustment"
+
   scope :payable,                   -> { where(arel_table[:deadline_date].lt(Date.current).and(arel_table[:payment_date].gteq(Date.current))) }
   scope :closed,                    -> { where(arel_table[:payment_date].lt(Date.current)) }
   scope :with_future_deadline_date, -> { where(arel_table[:deadline_date].gteq(Date.current)) }
