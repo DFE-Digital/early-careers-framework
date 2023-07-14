@@ -50,6 +50,7 @@ module "web_application" {
   kubernetes_secret_name     = module.application_configuration.kubernetes_secret_name
 
   docker_image = var.docker_image
+  probe_path = "/check"
 }
 
 module "worker_application" {
