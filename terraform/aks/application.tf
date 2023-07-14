@@ -20,8 +20,8 @@ module "application_configuration" {
     DB_SSLMODE          = var.db_sslmode
 
     BIGQUERY_PROJECT_ID = "ecf-bq",
-    BIGQUERY_DATASET    = "events_${var.app_environment}", TODO: work this out
-    BIGQUERY_TABLE_NAME = "events",                        TODO: work this out
+    BIGQUERY_DATASET    = "events_${var.app_environment}", # TODO: work this out
+    BIGQUERY_TABLE_NAME = "events",                        # TODO: work this out
     GIAS_API_SCHEMA     = "https://ea-edubase-api-prod.azurewebsites.net/edubase/schema/service.wsdl"
     GIAS_EXTRACT_ID     = 13904
     GIAS_API_USER       = "ecftech"
