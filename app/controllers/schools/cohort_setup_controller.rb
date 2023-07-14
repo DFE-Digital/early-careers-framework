@@ -90,15 +90,6 @@ module Schools
       session.delete(wizard_session_key)
     end
 
-    def save_programme_change
-      set_cohort_induction_programme!(@setup_school_cohort_form.programme_choice)
-      if previous_school_cohort.full_induction_programme?
-        send_fip_programme_changed_email!
-      end
-
-      redirect_to action: :what_changes_submitted
-    end
-
     def wizard_class
       Schools::Cohorts::SetupWizard
     end
