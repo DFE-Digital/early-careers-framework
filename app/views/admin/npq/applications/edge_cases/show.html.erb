@@ -40,7 +40,7 @@
       row.action(
         text: 'edit',
         href: edit_admin_npq_applications_eligible_for_funding_path(@npq_application)
-      )
+      ) if @npq_application.declared_as_payable? && !@npq_application.eligible_for_funding
     end
 
     sl.row do |row|
