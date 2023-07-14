@@ -4,26 +4,16 @@ module Api
   module V1
     module ECF
       class ParticipantsQuery
+        include Concerns::FilterCohorts
+        include Concerns::FilterUpdatedSince
+        include Concerns::FetchLatestInductionRecords
+
         def initialize(lead_provider:, params:)
           @lead_provider = lead_provider
           @params = params
         end
 
         def induction_records
-          join = InductionRecord
-                   .select("DISTINCT FIRST_VALUE(induction_records.id) OVER (#{latest_induction_record_order}) AS latest_id")
-                   .joins(:participant_profile, :schedule, { induction_programme: :partnership })
-                   .where(
-                     schedule: { cohort_id: with_cohorts.map(&:id) },
-                     induction_programme: {
-                       partnerships: {
-                         lead_provider_id: lead_provider.id,
-                         challenged_at: nil,
-                         challenge_reason: nil,
-                       },
-                     },
-                   )
-
           scope = InductionRecord
                     .select(*necessary_fields)
                     .eager_load(:schedule)
@@ -36,7 +26,7 @@ module Api
                     .joins(left_outer_join_participant_identities)
                     .joins(left_outer_join_mentor_profiles)
                     .joins(left_outer_join_mentor_participant_identities)
-                    .joins("JOIN (#{join.to_sql}) AS latest_induction_records ON latest_induction_records.latest_id = induction_records.id")
+                    .joins("JOIN (#{latest_induction_records_join.to_sql}) AS latest_induction_records ON latest_induction_records.latest_id = induction_records.id")
 
           if updated_since.present?
             scope.where(users: { updated_at: updated_since.. }).order("users.updated_at ASC")
@@ -57,39 +47,12 @@ module Api
 
         attr_accessor :lead_provider, :params
 
-        def filter
-          params[:filter] ||= {}
-        end
-
-        def with_cohorts
-          return Cohort.where(start_year: filter[:cohort].split(",")) if filter[:cohort].present?
-
-          Cohort.where("start_year > 2020")
-        end
-
-        def updated_since
-          return if filter[:updated_since].blank?
-
-          Time.iso8601(filter[:updated_since])
-        rescue ArgumentError
-          begin
-            Time.iso8601(URI.decode_www_form_component(filter[:updated_since]))
-          rescue ArgumentError
-            raise Api::Errors::InvalidDatetimeError, I18n.t(:invalid_updated_since_filter)
-          end
-        end
-
-        def latest_induction_record_order
-          <<~SQL
-            PARTITION BY induction_records.participant_profile_id ORDER BY
-              CASE
-                WHEN induction_records.end_date IS NULL
-                  THEN 1
-                ELSE 2
-              END,
-              induction_records.start_date DESC,
-              induction_records.created_at DESC
-          SQL
+        def latest_induction_records_join
+          super
+            .joins(:schedule)
+            .where(
+              schedule: { cohort_id: cohorts.map(&:id) },
+            )
         end
 
         def left_outer_join_preferred_identities

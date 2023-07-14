@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Api::V3::Concerns::FilterCohorts
+module Api::Concerns::FilterCohorts
   extend ActiveSupport::Concern
 
 protected

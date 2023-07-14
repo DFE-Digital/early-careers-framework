@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Api::V3::Concerns::FilterUpdatedSince
+module Api::Concerns::FilterUpdatedSince
   extend ActiveSupport::Concern
 
 protected

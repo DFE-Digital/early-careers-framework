@@ -7,6 +7,7 @@ module Api
         include Concerns::FilterCohorts
         include Concerns::FilterUpdatedSince
         include Concerns::FilterTrainingStatus
+        include Concerns::FetchLatestInductionRecords
 
         def initialize(lead_provider:, params:)
           @lead_provider = lead_provider
@@ -54,32 +55,11 @@ module Api
         attr_accessor :lead_provider, :params
 
         def latest_induction_records_join
-          InductionRecord
-          .select(Arel.sql("DISTINCT FIRST_VALUE(induction_records.id) OVER (#{latest_induction_record_order}) AS latest_id"))
-          .joins(:participant_profile, :schedule, { induction_programme: :partnership })
-          .where(
-            schedule: { cohort_id: cohorts.map(&:id) },
-            induction_programme: {
-              partnerships: {
-                lead_provider_id: lead_provider.id,
-                challenged_at: nil,
-                challenge_reason: nil,
-              },
-            },
-          )
-        end
-
-        def latest_induction_record_order
-          <<~SQL
-            PARTITION BY induction_records.participant_profile_id ORDER BY
-              CASE
-                WHEN induction_records.end_date IS NULL
-                  THEN 1
-                ELSE 2
-              END,
-              induction_records.start_date DESC,
-              induction_records.created_at DESC
-          SQL
+          super
+            .joins(:schedule)
+            .where(
+              schedule: { cohort_id: cohorts.map(&:id) },
+            )
         end
 
         def left_outer_join_teacher_profiles

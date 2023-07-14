@@ -5,6 +5,7 @@ module Api
     module ECF
       class UnfundedMentorsQuery
         include Concerns::FilterUpdatedSince
+        include Concerns::FetchLatestInductionRecords
 
         def initialize(lead_provider:, params:)
           @lead_provider = lead_provider
@@ -12,30 +13,17 @@ module Api
         end
 
         def unfunded_mentors
-          join = InductionRecord
-                   .select("DISTINCT FIRST_VALUE(induction_records.id) OVER (#{latest_induction_record_order}) AS latest_id, induction_records.participant_profile_id, induction_records.mentor_profile_id")
-                   .joins(:participant_profile, induction_programme: :partnership)
-                   .where(
-                     induction_programme: {
-                       partnerships: {
-                         lead_provider_id: lead_provider.id,
-                         challenged_at: nil,
-                         challenge_reason: nil,
-                       },
-                     },
-                   )
-
           scope = InductionRecord.distinct
                    .select(*necessary_fields)
                    .joins("JOIN participant_profiles ON participant_profiles.id = induction_records.mentor_profile_id")
-                   .joins("JOIN (#{join.to_sql}) AS latest_induction_records ON latest_induction_records.latest_id = induction_records.id")
+                   .joins("JOIN (#{latest_induction_records_join.to_sql}) AS latest_induction_records ON latest_induction_records.latest_id = induction_records.id")
                    .joins("JOIN induction_programmes on induction_programmes.id = induction_records.induction_programme_id")
                    .joins("JOIN partnerships on partnerships.id = induction_programmes.partnership_id")
                    .joins("JOIN participant_identities ON participant_identities.id = participant_profiles.participant_identity_id")
                    .joins("JOIN users on users.id = participant_identities.user_id")
                    .joins("JOIN teacher_profiles ON teacher_profiles.user_id = users.id")
                    .joins("LEFT OUTER JOIN ecf_participant_validation_data on ecf_participant_validation_data.participant_profile_id = induction_records.mentor_profile_id")
-                   .where("induction_records.mentor_profile_id not in (select distinct participant_profile_id from (#{join.to_sql}) AS latest_induction_records)")
+                   .where("induction_records.mentor_profile_id not in (select distinct participant_profile_id from (#{latest_induction_records_join.to_sql}) AS latest_induction_records)")
 
           scope = updated_since_filter.present? ? scope.where(users: { updated_at: updated_since.. }) : scope
           params[:sort].blank? ? scope.order("users.created_at ASC") : scope
@@ -53,17 +41,9 @@ module Api
 
         attr_accessor :lead_provider, :params
 
-        def latest_induction_record_order
-          <<~SQL
-            PARTITION BY induction_records.participant_profile_id ORDER BY
-              CASE
-                WHEN induction_records.end_date IS NULL
-                  THEN 1
-                ELSE 2
-              END,
-              induction_records.start_date DESC,
-              induction_records.created_at DESC
-          SQL
+        def latest_induction_records_join
+          super
+            .select(Arel.sql("induction_records.participant_profile_id, induction_records.mentor_profile_id"))
         end
 
         def necessary_fields
