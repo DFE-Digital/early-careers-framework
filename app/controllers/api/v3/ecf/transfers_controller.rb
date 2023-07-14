@@ -7,6 +7,7 @@ module Api
         include ApiTokenAuthenticatable
         include ApiPagination
         include ApiFilter
+        include ApiFilterValidation
 
         # Returns a list of ECF participant transfers
         # Providers can see the ECF participant transfers via this endpoint

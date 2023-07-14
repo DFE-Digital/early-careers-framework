@@ -8,6 +8,7 @@ module Api
       include ApiPagination
       include ApiCsv
       include ApiFilter
+      include ApiFilterValidation
 
       def create
         service = RecordDeclaration.new({ cpd_lead_provider: }.merge(permitted_params["attributes"] || {}))

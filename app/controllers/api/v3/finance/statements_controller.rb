@@ -5,7 +5,7 @@ module Api
     class Finance::StatementsController < Api::ApiController
       include ApiTokenAuthenticatable
       include ApiPagination
-      include ApiFilter
+      include ApiFilterValidation
 
       def index
         render json: Finance::StatementSerializer.new(paginate(finance_statements)).serializable_hash.to_json

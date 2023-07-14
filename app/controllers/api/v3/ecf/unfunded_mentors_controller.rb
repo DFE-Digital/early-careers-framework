@@ -6,7 +6,7 @@ module Api
       class UnfundedMentorsController < Api::ApiController
         include ApiTokenAuthenticatable
         include ApiPagination
-        include ApiFilter
+        include ApiFilterValidation
         include ApiOrderable
 
         # Returns a list of ECF Unfunded Mentors

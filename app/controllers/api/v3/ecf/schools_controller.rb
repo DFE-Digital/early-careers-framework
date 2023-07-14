@@ -6,8 +6,10 @@ module Api
       class SchoolsController < Api::ApiController
         include ApiTokenAuthenticatable
         include ApiPagination
-        include ApiFilter
+        include ApiFilterValidation
         include ApiOrderable
+
+        filter_validation required_filters: %i[cohort]
 
         # Retrieve multiple ECF schools scoped to cohort
         #
@@ -47,10 +49,6 @@ module Api
 
         def serializer_class
           Api::V3::ECF::SchoolSerializer
-        end
-
-        def required_filter_params
-          %i[cohort]
         end
 
         def school_params
