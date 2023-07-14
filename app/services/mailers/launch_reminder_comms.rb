@@ -3,9 +3,8 @@
 class Mailers::LaunchReminderComms
   # the school_type_codes of schools we want to send reminder emails to
   SCHOOL_TYPES_TO_INCLUDE = [1, 2, 3, 5, 6, 7, 8, 12, 28, 33, 34, 35, 36, 40, 44].freeze
-  
+
   attr_reader :cohort, :dry_run, :email_count
-  attr_accessor :email_count
 
   def initialize(cohort:, dry_run: false)
     @cohort = cohort
@@ -72,11 +71,11 @@ class Mailers::LaunchReminderComms
         next if gias_contact_email.blank?
 
         @email_count += 1
-        unless dry_run
-          SchoolMailer.with(school:, gias_contact_email:, opt_in_out_link: opt_in_out_url(email: gias_contact_email, school:))
-            .launch_ask_gias_contact_to_report_school_training_details
-            .deliver_later
-        end
+        next if dry_run
+
+        SchoolMailer.with(school:, gias_contact_email:, opt_in_out_link: opt_in_out_url(email: gias_contact_email, school:))
+          .launch_ask_gias_contact_to_report_school_training_details
+          .deliver_later
       end
     self
   end
@@ -91,18 +90,18 @@ class Mailers::LaunchReminderComms
         school.induction_coordinators.each do |sit_user|
           @email_count += 1
 
-          unless dry_run
-            SchoolMailer.with(sit_user:, nomination_link: nomination_url(email: sit_user.email, school:))
-              .launch_ask_sit_to_report_school_training_details
-              .deliver_later
-          end
+          next if dry_run
+
+          SchoolMailer.with(sit_user:, nomination_link: nomination_url(email: sit_user.email, school:))
+            .launch_ask_sit_to_report_school_training_details
+            .deliver_later
         end
       end
     self
   end
 
 private
-  
+
   def schools_to_remind
     School.currently_open.in_england.where(school_type_code: SCHOOL_TYPES_TO_INCLUDE)
   end
