@@ -30,7 +30,7 @@ module Api
       private
 
         def ecf_schools
-          @ecf_schools ||= ecf_schools_query.schools.order(sort_params(params))
+          @ecf_schools ||= ecf_schools_query.schools
         end
 
         def ecf_school
@@ -54,7 +54,8 @@ module Api
         def school_params
           params
             .with_defaults({ filter: { cohort: "", urn: "", updated_since: "" } })
-            .permit(:id, :sort, filter: %i[cohort urn updated_since])
+            .permit(:id, filter: %i[cohort urn updated_since])
+            .merge(sort: sort_params)
         end
 
         def cohort

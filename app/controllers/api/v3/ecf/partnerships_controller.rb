@@ -59,7 +59,7 @@ module Api
         end
 
         def ecf_partnerships
-          @ecf_partnerships ||= ecf_partnerships_query.partnerships.order(sort_params(params))
+          @ecf_partnerships ||= ecf_partnerships_query.partnerships
         end
 
         def ecf_partnership
@@ -75,8 +75,9 @@ module Api
 
         def ecf_partnership_params
           params
-            .with_defaults({ sort: "", filter: { delivery_partner_id: "", updated_since: "", cohort: "" } })
-            .permit(:id, :sort, filter: %i[cohort updated_since delivery_partner_id])
+            .with_defaults({ filter: { delivery_partner_id: "", updated_since: "", cohort: "" } })
+            .permit(:id, filter: %i[cohort updated_since delivery_partner_id])
+            .merge(sort: sort_params)
         end
 
         def access_scope

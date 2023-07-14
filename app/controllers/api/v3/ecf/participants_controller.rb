@@ -36,7 +36,7 @@ module Api
         end
 
         def participants
-          @participants ||= ecf_participant_query.participants_from(paginated_results).order(sort_params(params, model: User))
+          @participants ||= ecf_participant_query.participants_from(paginated_results)
         end
 
         def participant
@@ -45,8 +45,9 @@ module Api
 
         def ecf_participant_params
           params
-            .with_defaults({ sort: "", filter: { cohort: "", updated_since: "", training_status: "" } })
-            .permit(:id, :sort, filter: %i[cohort updated_since training_status])
+            .with_defaults({ filter: { cohort: "", updated_since: "", training_status: "" } })
+            .permit(:id, filter: %i[cohort updated_since training_status])
+            .merge(sort: sort_params(model: User))
         end
 
         def ecf_participant_query

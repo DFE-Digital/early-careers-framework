@@ -24,9 +24,10 @@ module Api
                    .joins("JOIN teacher_profiles ON teacher_profiles.user_id = users.id")
                    .joins("LEFT OUTER JOIN ecf_participant_validation_data on ecf_participant_validation_data.participant_profile_id = induction_records.mentor_profile_id")
                    .where("induction_records.mentor_profile_id not in (select distinct participant_profile_id from (#{latest_induction_records_join.to_sql}) AS latest_induction_records)")
+                   .order(sort_order)
 
-          scope = updated_since_filter.present? ? scope.where(users: { updated_at: updated_since.. }) : scope
-          params[:sort].blank? ? scope.order("users.created_at ASC") : scope
+          scope = scope.where(users: { updated_at: updated_since.. }) if updated_since_filter.present?
+          scope
         end
 
         def unfunded_mentor
@@ -40,6 +41,10 @@ module Api
       private
 
         attr_accessor :lead_provider, :params
+
+        def sort_order
+          params[:sort].presence || "users.created_at ASC"
+        end
 
         def latest_induction_records_join
           super

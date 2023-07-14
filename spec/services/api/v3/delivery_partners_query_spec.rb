@@ -69,11 +69,21 @@ RSpec.describe Api::V3::DeliveryPartnersQuery do
       end
     end
 
-    context "sorting" do
+    describe "sorting" do
       before { another_delivery_partner.update!(created_at: 1.month.ago) }
 
-      it "returns all records ordered by created_at" do
-        expect(subject.delivery_partners).to eq([another_delivery_partner, delivery_partner])
+      context "when no sort parameter is specified" do
+        it "returns all records ordered by created_at ascending by default" do
+          expect(subject.delivery_partners).to eq([another_delivery_partner, delivery_partner])
+        end
+      end
+
+      context "when a sort parameter is specified" do
+        let(:params) { { sort: "created_at DESC" } }
+
+        it "returns records in the correct order" do
+          expect(subject.delivery_partners).to eq([delivery_partner, another_delivery_partner])
+        end
       end
     end
   end

@@ -33,7 +33,7 @@ module Api
         end
 
         def ecf_unfunded_mentors
-          @ecf_unfunded_mentors ||= ecf_unfunded_mentors_query.unfunded_mentors.order(sort_params(params, model: User))
+          @ecf_unfunded_mentors ||= ecf_unfunded_mentors_query.unfunded_mentors
         end
 
         def ecf_unfunded_mentor
@@ -57,8 +57,9 @@ module Api
 
         def unfunded_mentor_params
           params
-            .with_defaults({ sort: "", filter: { updated_since: "" } })
-            .permit(:id, :sort, filter: %i[updated_since])
+            .with_defaults({ filter: { updated_since: "" } })
+            .permit(:id, filter: %i[updated_since])
+            .merge(sort: sort_params(model: User))
         end
       end
     end

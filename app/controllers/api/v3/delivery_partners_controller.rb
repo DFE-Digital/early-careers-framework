@@ -33,7 +33,7 @@ module Api
       end
 
       def delivery_partners
-        @delivery_partners ||= delivery_partners_query.delivery_partners.order(sort_params(params))
+        @delivery_partners ||= delivery_partners_query.delivery_partners
       end
 
       def delivery_partner
@@ -48,7 +48,9 @@ module Api
       end
 
       def delivery_partner_params
-        params.permit(:id, :sort, filter: %i[cohort])
+        params
+          .permit(:id, filter: %i[cohort])
+          .merge(sort: sort_params)
       end
 
       def access_scope

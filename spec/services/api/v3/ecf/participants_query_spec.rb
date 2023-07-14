@@ -107,15 +107,25 @@ RSpec.describe Api::V3::ECF::ParticipantsQuery do
       end
     end
 
-    context "sorting" do
+    describe "sorting" do
       let(:another_participant_profile) do
         travel_to(10.days.ago) do
           create(:ect_participant_profile)
         end
       end
 
-      it "returns all user records ordered by participant profile created_at" do
-        expect(subject.participants_for_pagination).to eq([another_user, user])
+      context "when no sort parameter is specified" do
+        it "returns all records ordered by created_at ascending by default" do
+          expect(subject.participants_for_pagination).to eq([another_user, user])
+        end
+      end
+
+      context "when a sort parameter is specified" do
+        let(:params) { { sort: "created_at DESC" } }
+
+        it "returns records in the correct order" do
+          expect(subject.participants_for_pagination).to eq([user, another_user])
+        end
       end
     end
   end
@@ -185,15 +195,25 @@ RSpec.describe Api::V3::ECF::ParticipantsQuery do
       end
     end
 
-    context "sorting" do
+    describe "sorting" do
       let(:another_participant_profile) do
         travel_to(10.days.ago) do
           create(:ect_participant_profile)
         end
       end
 
-      it "returns all user records ordered by participant profile created_at" do
-        expect(subject.participants_from(User.all)).to eq([another_user, user])
+      context "when no sort parameter is specified" do
+        it "returns all records ordered by participant profile created_at ascending by default" do
+          expect(subject.participants_from(User.all)).to eq([another_user, user])
+        end
+      end
+
+      context "when a sort parameter is specified" do
+        let(:params) { { sort: "created_at DESC" } }
+
+        it "returns records in the correct order" do
+          expect(subject.participants_from(User.all)).to eq([user, another_user])
+        end
       end
     end
 
@@ -254,24 +274,6 @@ RSpec.describe Api::V3::ECF::ParticipantsQuery do
         it "returns no user records" do
           expect(subject.participants_from(User.all)).to be_empty
         end
-      end
-    end
-
-    context "sorting" do
-      let(:another_cohort) { create(:cohort, start_year: "2050") }
-      let!(:another_partnership) { create(:partnership, cohort: another_cohort, lead_provider:) }
-      let(:another_participant_profile) do
-        travel_to(10.days.ago) do
-          create(:ect_participant_profile)
-        end
-      end
-
-      let(:another_induction_programme) { create(:induction_programme, :fip, partnership: another_partnership) }
-      let(:another_induction_record) { create(:induction_record, induction_programme: another_induction_programme, participant_profile: another_participant_profile) }
-      let!(:another_user) { another_induction_record.user }
-
-      it "returns all user records ordered by participant profile created_at" do
-        expect(subject.participants_from(User.all)).to eq([another_user, user])
       end
     end
   end

@@ -17,7 +17,7 @@ module Api
     private
 
       def npq_applications
-        @npq_applications ||= npq_applications_query.applications.order(sort_params(params))
+        @npq_applications ||= npq_applications_query.applications
       end
 
       def npq_applications_query
@@ -29,8 +29,9 @@ module Api
 
       def npq_application_params
         params
-          .with_defaults({ sort: "", filter: { updated_since: "", cohort: "", participant_id: "" } })
-          .permit(:id, :sort, filter: %i[updated_since cohort participant_id])
+          .with_defaults({ filter: { updated_since: "", cohort: "", participant_id: "" } })
+          .permit(:id, filter: %i[updated_since cohort participant_id])
+          .merge(sort: sort_params)
       end
 
       def json_serializer_class

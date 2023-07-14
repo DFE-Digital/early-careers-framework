@@ -68,8 +68,18 @@ RSpec.describe Api::V3::NPQApplicationsQuery do
     end
 
     describe "sorting" do
-      it "orders by application created_at ascending by default" do
-        expect(query_applications.map(&:id)).to eq([oldest_application.id, newest_application.id])
+      context "when no sort parameter is specified" do
+        it "returns all records ordered by created_at ascending" do
+          expect(query_applications.map(&:id)).to eq([oldest_application.id, newest_application.id])
+        end
+      end
+
+      context "when a sort parameter is specified" do
+        let(:params) { { sort: "created_at DESC" } }
+
+        it "returns records in the correct order" do
+          expect(query_applications.map(&:id)).to eq([newest_application.id, oldest_application.id])
+        end
       end
     end
 

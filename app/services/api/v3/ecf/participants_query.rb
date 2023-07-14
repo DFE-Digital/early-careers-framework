@@ -19,10 +19,11 @@ module Api
                     .select("users.id", "users.created_at")
                     .joins(participant_profiles: :induction_records)
                     .joins("JOIN (#{latest_induction_records_join.to_sql}) AS latest_induction_records_join ON latest_induction_records_join.latest_id = induction_records.id")
+                    .order(params[:sort].presence || :created_at)
                     .distinct
           scope = scope.where(users: { updated_at: updated_since.. }) if updated_since_filter.present?
           scope = scope.where(induction_records: { training_status: }) if training_status.present?
-          params[:sort].blank? ? scope.order(:created_at) : scope
+          scope
         end
 
         def participants_from(paginated_join)
@@ -37,13 +38,12 @@ module Api
                   .group("users.id")
                   .distinct
 
-          scope = User
+          User
             .select("users.*")
             .includes(:participant_identities, :teacher_profile, participant_profiles: [:participant_profile_states, :schedule, :teacher_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, { induction_records: [:preferred_identity, :schedule, :delivery_partner, :participant_profile, { mentor_profile: :participant_identity, induction_programme: [school_cohort: %i[school cohort]] }] }])
             .from("(#{sub_query.to_sql}) as users")
+            .order(params[:sort].presence || "participant_profiles_induction_records.created_at ASC")
             .distinct
-
-          params[:sort].blank? ? scope.order("participant_profiles_induction_records.created_at ASC") : scope
         end
 
         def participant

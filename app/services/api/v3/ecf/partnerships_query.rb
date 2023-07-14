@@ -16,11 +16,12 @@ module Api
 
         def partnerships
           scope = partnership_scope
-          scope = scope.where(partnerships: { cohort:  cohorts })
+            .where(partnerships: { cohort: cohorts })
+            .order(sort_order)
+            .distinct
           scope = scope.where("partnerships.updated_at > ?", updated_since) if updated_since_filter.present?
           scope = scope.where(partnerships: { delivery_partner: [delivery_partner_id_filter] }) if delivery_partner_id_filter.present?
-          scope = scope.order("partnerships.created_at ASC") if params[:sort].blank?
-          scope.distinct
+          scope
         end
 
         def partnership
@@ -28,6 +29,10 @@ module Api
         end
 
       private
+
+        def sort_order
+          params[:sort].presence || "partnerships.created_at ASC"
+        end
 
         def partnership_scope
           lead_provider.partnerships

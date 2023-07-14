@@ -36,7 +36,7 @@ module Api
         scope = apply_cohorts_filter(scope)
         scope = apply_updated_since_filter(scope)
         scope = apply_participant_id_filter(scope)
-        apply_default_sort(scope)
+        scope.order(sort_order)
       end
 
     private
@@ -48,10 +48,8 @@ module Api
           .to_json
       end
 
-      def apply_default_sort(scope)
-        return scope if params[:sort].present?
-
-        scope.order("npq_applications.created_at ASC")
+      def sort_order
+        params[:sort].presence || "npq_applications.created_at ASC"
       end
 
       def all_applications

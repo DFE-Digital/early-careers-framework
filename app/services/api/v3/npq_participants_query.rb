@@ -14,15 +14,24 @@ module Api
       end
 
       def participants
-        scope = npq_lead_provider.npq_participants.includes(:teacher_profile, npq_profiles: [:npq_course, :participant_profile_states, :participant_identity, { schedule: [:cohort], npq_application: [npq_lead_provider: :cpd_lead_provider] }])
+        scope = npq_lead_provider
+          .npq_participants
+          .includes(:teacher_profile, npq_profiles: [:npq_course, :participant_profile_states, :participant_identity, { schedule: [:cohort], npq_application: [npq_lead_provider: :cpd_lead_provider] }])
+          .order(sort_order)
+          .distinct
         scope = scope.where("users.updated_at > ?", updated_since) if updated_since_filter.present?
         scope = scope.where(npq_profiles: { training_status: }) if training_status.present?
-        scope = scope.order("npq_profiles.created_at ASC") if params[:sort].blank?
-        scope.distinct
+        scope
       end
 
       def participant
         npq_lead_provider.npq_participants.find(params[:id])
+      end
+
+    private
+
+      def sort_order
+        params[:sort].presence || "npq_profiles.created_at ASC"
       end
     end
   end

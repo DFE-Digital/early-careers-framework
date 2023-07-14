@@ -8,7 +8,7 @@ module Api
     private
 
       def npq_participants
-        @npq_participants ||= npq_participants_query.participants.order(sort_params(params, model: User))
+        @npq_participants ||= npq_participants_query.participants
       end
 
       def npq_participant
@@ -24,8 +24,9 @@ module Api
 
       def npq_participant_params
         params
-          .with_defaults({ sort: "", filter: { updated_since: "", training_status: "" } })
-          .permit(:id, :sort, filter: %i[updated_since training_status])
+          .with_defaults({ filter: { updated_since: "", training_status: "" } })
+          .permit(:id, filter: %i[updated_since training_status])
+          .merge(sort: sort_params(model: User))
       end
 
       def serializer_class
