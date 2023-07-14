@@ -7,10 +7,12 @@ class TestsController < Api::ApiController
 end
 
 class Test < ApplicationRecord; end
+class OtherTest < ApplicationRecord; end
 
 describe "ApiOrderable", type: :controller do
   before do
     allow(Test).to receive(:attribute_names).and_return(%w[id full_name])
+    allow(OtherTest).to receive(:attribute_names).and_return(%w[email])
 
     routes.append do
       get "index" => "tests#index"
@@ -20,32 +22,39 @@ describe "ApiOrderable", type: :controller do
   describe "sort_params" do
     controller TestsController do
       def index
-        render json: { ordering_params: sort_params(params.to_unsafe_h.slice(:sort)) }
+        render json: { ordering_params: sort_params }
       end
     end
 
-    it "returns formatted sort params" do
-      params = { sort: "full_name" }
-      get("index", params:)
-      get_response = JSON.parse(response.body)
-
-      expect(get_response["ordering_params"]).to eq("tests.full_name ASC")
-    end
-
-    it "returns formatted sort params" do
-      params = { sort: "-full_name,id" }
+    it "returns formatted sort params relative to the inferred model" do
+      params = { sort: "-full_name,id,invalid" }
       get("index", params:)
       get_response = JSON.parse(response.body)
 
       expect(get_response["ordering_params"]).to eq("tests.full_name DESC, tests.id ASC")
     end
 
-    it "returns formatted sort params" do
-      params = { sort: "-id,full_name" }
-      get("index", params:)
+    it "returns nil when there are no sort parameters" do
+      get("index")
       get_response = JSON.parse(response.body)
 
-      expect(get_response["ordering_params"]).to eq("tests.id DESC, tests.full_name ASC")
+      expect(get_response["ordering_params"]).to be_nil
+    end
+
+    context "when the model is specified" do
+      controller TestsController do
+        def index
+          render json: { ordering_params: sort_params(model: OtherTest) }
+        end
+      end
+
+      it "returns formatted sort params relative to the specified model" do
+        params = { sort: "-email,-id" }
+        get("index", params:)
+        get_response = JSON.parse(response.body)
+
+        expect(get_response["ordering_params"]).to eq("other_tests.email DESC")
+      end
     end
   end
 end

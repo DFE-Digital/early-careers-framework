@@ -3,22 +3,27 @@
 module ApiOrderable
   extend ActiveSupport::Concern
 
+  SORT_ORDER = { "+" => "ASC", "-" => "DESC" }.freeze
+
 private
 
-  def sort_params(params, model: controller_name.classify.constantize)
-    sort = []
-    if params[:sort]
-      sort_order = { "+" => "ASC", "-" => "DESC" }
+  def sort_params(model: controller_name.classify.constantize)
+    return unless sort_param
 
-      sorted_params = params[:sort].split(",")
-      sorted_params.each do |attr|
-        sort_sign = attr =~ /\A[+-]/ ? attr.slice!(0) : "+"
+    sort_params = sort_param.split(",")
+    sort_params.map { |sp| convert_sort_param(sp, model) }.compact.join(", ")
+  end
 
-        if model.attribute_names.include?(attr)
-          sort << "#{model.table_name}.#{attr} #{sort_order[sort_sign]}"
-        end
-      end
-    end
-    sort.join(", ")
+  def convert_sort_param(sort_param, model)
+    extracted_sort_sign = sort_param =~ /\A[+-]/ ? sort_param.slice!(0) : "+"
+    sort_order = SORT_ORDER[extracted_sort_sign]
+
+    return unless sort_param.in?(model.attribute_names)
+
+    "#{model.table_name}.#{sort_param} #{sort_order}"
+  end
+
+  def sort_param
+    params[:sort]
   end
 end
