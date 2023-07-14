@@ -4,8 +4,9 @@ module Api
   module V3
     module ECF
       class UnfundedMentorsQuery
-        include Concerns::FilterUpdatedSince
-        include Concerns::FetchLatestInductionRecords
+        include Api::Concerns::FilterUpdatedSince
+        include Api::Concerns::FetchLatestInductionRecords
+        include Concerns::Orderable
 
         def initialize(lead_provider:, params:)
           @lead_provider = lead_provider
@@ -24,7 +25,7 @@ module Api
                    .joins("JOIN teacher_profiles ON teacher_profiles.user_id = users.id")
                    .joins("LEFT OUTER JOIN ecf_participant_validation_data on ecf_participant_validation_data.participant_profile_id = induction_records.mentor_profile_id")
                    .where("induction_records.mentor_profile_id not in (select distinct participant_profile_id from (#{latest_induction_records_join.to_sql}) AS latest_induction_records)")
-                   .order(sort_order)
+                   .order(sort_order(default: "users.created_at ASC", model: User))
 
           scope = scope.where(users: { updated_at: updated_since.. }) if updated_since_filter.present?
           scope
@@ -41,10 +42,6 @@ module Api
       private
 
         attr_accessor :lead_provider, :params
-
-        def sort_order
-          params[:sort].presence || "users.created_at ASC"
-        end
 
         def latest_induction_records_join
           super

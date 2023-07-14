@@ -3,8 +3,6 @@
 module Api
   module V3
     class NPQParticipantsController < V1::NPQParticipantsController
-      include ApiOrderable
-
     private
 
       def npq_participants
@@ -24,9 +22,8 @@ module Api
 
       def npq_participant_params
         params
-          .with_defaults({ filter: { updated_since: "", training_status: "" } })
-          .permit(:id, filter: %i[updated_since training_status])
-          .merge(sort: sort_params(model: User))
+          .with_defaults(sort: "", filter: { updated_since: "", training_status: "" })
+          .permit(:id, :sort, filter: %i[updated_since training_status])
       end
 
       def serializer_class

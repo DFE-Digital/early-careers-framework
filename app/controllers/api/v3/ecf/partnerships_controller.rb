@@ -7,7 +7,6 @@ module Api
         include ApiTokenAuthenticatable
         include ApiPagination
         include ApiFilterValidation
-        include ApiOrderable
 
         # Returns a list of partnerships
         # Providers can see their partnerships via this endpoint
@@ -75,9 +74,8 @@ module Api
 
         def ecf_partnership_params
           params
-            .with_defaults({ filter: { delivery_partner_id: "", updated_since: "", cohort: "" } })
-            .permit(:id, filter: %i[cohort updated_since delivery_partner_id])
-            .merge(sort: sort_params)
+            .with_defaults(sort: "", filter: { delivery_partner_id: "", updated_since: "", cohort: "" })
+            .permit(:id, :sort, filter: %i[cohort updated_since delivery_partner_id])
         end
 
         def access_scope

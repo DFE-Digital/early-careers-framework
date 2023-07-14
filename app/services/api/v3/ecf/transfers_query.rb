@@ -4,7 +4,7 @@ module Api
   module V3
     module ECF
       class TransfersQuery
-        include Concerns::FilterUpdatedSince
+        include Api::Concerns::FilterUpdatedSince
 
         def initialize(lead_provider:, params:)
           @lead_provider = lead_provider

@@ -79,7 +79,7 @@ RSpec.describe Api::V3::DeliveryPartnersQuery do
       end
 
       context "when a sort parameter is specified" do
-        let(:params) { { sort: "created_at DESC" } }
+        let(:params) { { sort: "-created_at" } }
 
         it "returns records in the correct order" do
           expect(subject.delivery_partners).to eq([delivery_partner, another_delivery_partner])

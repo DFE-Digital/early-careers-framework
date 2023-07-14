@@ -3,8 +3,9 @@
 module Api
   module V3
     class NPQApplicationsQuery
-      include Concerns::FilterCohorts
-      include Concerns::FilterUpdatedSince
+      include Api::Concerns::FilterCohorts
+      include Api::Concerns::FilterUpdatedSince
+      include Concerns::Orderable
 
       attr_reader :npq_lead_provider, :params
 
@@ -36,7 +37,7 @@ module Api
         scope = apply_cohorts_filter(scope)
         scope = apply_updated_since_filter(scope)
         scope = apply_participant_id_filter(scope)
-        scope.order(sort_order)
+        scope.order(sort_order(default: "npq_applications.created_at ASC", model: NPQApplication))
       end
 
     private
@@ -46,10 +47,6 @@ module Api
           .all
           .each_with_object({}) { |c, h| h[c.id] = c.rebranded_alternative_courses.map(&:id) }
           .to_json
-      end
-
-      def sort_order
-        params[:sort].presence || "npq_applications.created_at ASC"
       end
 
       def all_applications

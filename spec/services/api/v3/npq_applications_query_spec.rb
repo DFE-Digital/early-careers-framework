@@ -75,7 +75,7 @@ RSpec.describe Api::V3::NPQApplicationsQuery do
       end
 
       context "when a sort parameter is specified" do
-        let(:params) { { sort: "created_at DESC" } }
+        let(:params) { { sort: "-created_at" } }
 
         it "returns records in the correct order" do
           expect(query_applications.map(&:id)).to eq([newest_application.id, oldest_application.id])

@@ -4,8 +4,6 @@ module Api
   module V3
     module ECF
       class ParticipantsController < V1::ECFParticipantsController
-        include ApiOrderable
-
         # Returns a list of ECF participants
         # Providers can see their ECF participants and their ECF enrolments via this endpoint
         #
@@ -45,9 +43,8 @@ module Api
 
         def ecf_participant_params
           params
-            .with_defaults({ filter: { cohort: "", updated_since: "", training_status: "" } })
-            .permit(:id, filter: %i[cohort updated_since training_status])
-            .merge(sort: sort_params(model: User))
+            .with_defaults(sort: "", filter: { cohort: "", updated_since: "", training_status: "" })
+            .permit(:id, :sort, filter: %i[cohort updated_since training_status])
         end
 
         def ecf_participant_query

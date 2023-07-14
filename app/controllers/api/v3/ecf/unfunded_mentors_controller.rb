@@ -7,7 +7,6 @@ module Api
         include ApiTokenAuthenticatable
         include ApiPagination
         include ApiFilterValidation
-        include ApiOrderable
 
         # Returns a list of ECF Unfunded Mentors
         # Providers can see their ECF Unfunded Mentors details via this endpoint
@@ -57,9 +56,8 @@ module Api
 
         def unfunded_mentor_params
           params
-            .with_defaults({ filter: { updated_since: "" } })
-            .permit(:id, filter: %i[updated_since])
-            .merge(sort: sort_params(model: User))
+            .with_defaults(sort: "", filter: { updated_since: "" })
+            .permit(:id, :sort, filter: %i[updated_since])
         end
       end
     end

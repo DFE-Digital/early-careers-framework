@@ -7,7 +7,6 @@ module Api
         include ApiTokenAuthenticatable
         include ApiPagination
         include ApiFilterValidation
-        include ApiOrderable
 
         filter_validation required_filters: %i[cohort]
 
@@ -53,9 +52,8 @@ module Api
 
         def school_params
           params
-            .with_defaults({ filter: { cohort: "", urn: "", updated_since: "" } })
-            .permit(:id, filter: %i[cohort urn updated_since])
-            .merge(sort: sort_params)
+            .with_defaults(sort: "", filter: { cohort: "", urn: "", updated_since: "" })
+            .permit(:id, :sort, filter: %i[cohort urn updated_since])
         end
 
         def cohort

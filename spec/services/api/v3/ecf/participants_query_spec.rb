@@ -121,7 +121,7 @@ RSpec.describe Api::V3::ECF::ParticipantsQuery do
       end
 
       context "when a sort parameter is specified" do
-        let(:params) { { sort: "created_at DESC" } }
+        let(:params) { { sort: "-created_at" } }
 
         it "returns records in the correct order" do
           expect(subject.participants_for_pagination).to eq([user, another_user])
@@ -209,7 +209,7 @@ RSpec.describe Api::V3::ECF::ParticipantsQuery do
       end
 
       context "when a sort parameter is specified" do
-        let(:params) { { sort: "created_at DESC" } }
+        let(:params) { { sort: "-created_at" } }
 
         it "returns records in the correct order" do
           expect(subject.participants_from(User.all)).to eq([user, another_user])

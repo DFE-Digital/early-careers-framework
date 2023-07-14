@@ -120,7 +120,7 @@ RSpec.describe Api::V3::ECF::SchoolsQuery do
         end
 
         context "when a sort parameter is specified" do
-          let(:params) { { filter: { cohort: cohort.display_name }, sort: "schools.created_at DESC" } }
+          let(:params) { { filter: { cohort: cohort.display_name }, sort: "-created_at" } }
 
           it "returns records in the correct order" do
             expect(subject.schools).to eq([eligible_school, another_eligible_school])

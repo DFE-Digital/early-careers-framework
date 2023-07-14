@@ -3,7 +3,8 @@
 module Api
   module V3
     class DeliveryPartnersQuery
-      include Concerns::FilterCohorts
+      include Api::Concerns::FilterCohorts
+      include Concerns::Orderable
 
       attr_reader :lead_provider, :params
 
@@ -16,18 +17,12 @@ module Api
         lead_provider
           .delivery_partners
           .where("provider_relationships.cohort_id IN (?)", cohorts.map(&:id))
-          .order(sort_order)
+          .order(sort_order(default: "delivery_partners.created_at ASC", model: DeliveryPartner))
           .distinct
       end
 
       def delivery_partner
         lead_provider.delivery_partners.find(params[:id])
-      end
-
-    private
-
-      def sort_order
-        params[:sort].presence || "delivery_partners.created_at ASC"
       end
     end
   end

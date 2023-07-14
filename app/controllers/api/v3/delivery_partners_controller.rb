@@ -6,7 +6,6 @@ module Api
       include ApiTokenAuthenticatable
       include ApiPagination
       include ApiFilterValidation
-      include ApiOrderable
 
       # Returns a list of delivery partners
       # Providers can see their delivery partners and which cohorts they apply to via this endpoint
@@ -49,8 +48,8 @@ module Api
 
       def delivery_partner_params
         params
-          .permit(:id, filter: %i[cohort])
-          .merge(sort: sort_params)
+          .with_defaults(sort: "", filter: { cohort: "" })
+          .permit(:id, :sort, filter: %i[cohort])
       end
 
       def access_scope
