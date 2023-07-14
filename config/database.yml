@@ -50,7 +50,7 @@ test:
 
 deployed_development:
   <<: *default_primary
-  sslmode: require
+  sslmode: <%= ENV.fetch("DB_SSLMODE") { "require" } %>
 
 staging:
   <<: *default_primary
