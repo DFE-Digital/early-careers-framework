@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class AddParticipantsReminder
+class Mailers::AddParticipantsReminder
   def initialize(cohort:)
     @cohort = cohort
   end
