@@ -30,7 +30,10 @@ class Mailers::LaunchReminderComms
     # ensure SIT is only contacted once regardless of how many schools they manage as email does not mention school
     sits.flatten.uniq.compact.each do |induction_coordinator|
       @email_count += 1
-      SchoolMailer.with(induction_coordinator:).remind_sit_to_add_ects_and_mentors_email.deliver_later unless dry_run
+
+      next if dry_run
+
+      SchoolMailer.with(induction_coordinator:).remind_sit_to_add_ects_and_mentors_email.deliver_later
     end
 
     self
@@ -54,7 +57,10 @@ class Mailers::LaunchReminderComms
     # ensure SIT is only contacted once regardless of how many schools they manage
     sits.flatten.uniq.compact.each do |induction_coordinator|
       @email_count += 1
-      SchoolMailer.with(induction_coordinator:).remind_sit_to_assign_mentors_to_ects_email.deliver_later unless dry_run
+
+      next if dry_run
+
+      SchoolMailer.with(induction_coordinator:).remind_sit_to_assign_mentors_to_ects_email.deliver_later
     end
 
     self
