@@ -36,4 +36,8 @@ class LeadProvider < ApplicationRecord
   def next_output_fee_statement(cohort)
     statements.next_output_fee_statements.where(cohort:).first
   end
+
+  def providing_training?(cohort)
+    provider_relationships.exists?(cohort:)
+  end
 end

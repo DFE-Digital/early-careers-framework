@@ -88,5 +88,26 @@ RSpec.describe LeadProvider, type: :model do
         expect(lead_provider.active_ecf_participant_profiles).not_to include participant_profile
       end
     end
+
+    describe "#providing_training?" do
+      let(:cohort) { Cohort.current || create(:cohort, :current) }
+      let(:lead_provider) { create(:lead_provider) }
+
+      context "when the lead provider has no relationships with any delivery_partner on the cohort" do
+        it "return false" do
+          expect(lead_provider.providing_training?(cohort)).to be_falsey
+        end
+      end
+
+      context "when the lead provider has at least one relationship with a delivery_partner on the cohort" do
+        before do
+          create(:provider_relationship, lead_provider:, cohort:)
+        end
+
+        it "return false" do
+          expect(lead_provider.providing_training?(cohort)).to be_truthy
+        end
+      end
+    end
   end
 end
