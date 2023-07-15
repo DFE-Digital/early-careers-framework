@@ -133,7 +133,7 @@ group :development, :test do
 
   # Swagger generator
   gem "multi_json"
-  gem "rswag-specs", "~> 2.9"
+  gem "rswag-specs", "~> 2.10"
 
   gem "parallel_tests"
 
