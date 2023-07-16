@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Mailers::ContactSchool do
+RSpec.describe BulkMailers::ContactSchool do
   subject { described_class.new }
 
   let!(:school) { create(:school) }

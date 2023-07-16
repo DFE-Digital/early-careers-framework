@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Mailers::AddParticipantsReminder do
+RSpec.describe BulkMailers::AddParticipantsReminder do
   subject(:add_participants_reminder) { described_class.new(cohort:) }
   let!(:cohort) { create(:cohort, :next) }
 

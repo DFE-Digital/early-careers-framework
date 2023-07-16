@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Mailers::InviteEcts do
+RSpec.describe BulkMailers::InviteEcts do
   subject(:invite_ects) { described_class.new }
   let!(:cohort) { create(:cohort, :current) }
 
