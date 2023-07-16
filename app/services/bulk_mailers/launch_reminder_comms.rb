@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Mailers::LaunchReminderComms
+class BulkMailers::LaunchReminderComms
   # the school_type_codes of schools we want to send reminder emails to
   SCHOOL_TYPES_TO_INCLUDE = [1, 2, 3, 5, 6, 7, 8, 12, 28, 33, 34, 35, 36, 40, 44].freeze
 

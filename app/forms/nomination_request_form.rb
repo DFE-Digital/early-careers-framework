@@ -44,7 +44,7 @@ class NominationRequestForm
 private
 
   def invite_schools_service
-    @invite_schools_service ||= InviteSchools.new
+    @invite_schools_service ||= BulkMailers::InviteSchools.new
   end
 end
 

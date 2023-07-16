@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Mailers::InviteSchools do
+RSpec.describe BulkMailers::InviteSchools do
   subject(:invite_schools) { described_class.new }
   let(:primary_contact_email) { Faker::Internet.email }
   let(:secondary_contact_email) { Faker::Internet.email }

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Mailers::InviteSchools
+class BulkMailers::InviteSchools
   include Sidekiq::Worker
 
   EMAIL_LIMITS = [

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Mailers::ContactSchool
+class BulkMailers::ContactSchool
   # We sent school sits an email to remind them to register for a programme in the next cohort
   # Some of these emails bounced because the emails incorrect or no longer in use
   # This is a follow up to contact schools who's SITs email has bounced.
