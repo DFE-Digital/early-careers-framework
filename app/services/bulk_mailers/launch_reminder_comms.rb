@@ -4,12 +4,13 @@ class BulkMailers::LaunchReminderComms
   # the school_type_codes of schools we want to send reminder emails to
   SCHOOL_TYPES_TO_INCLUDE = [1, 2, 3, 5, 6, 7, 8, 12, 28, 33, 34, 35, 36, 40, 44].freeze
 
-  attr_reader :cohort, :dry_run, :email_count
+  attr_reader :cohort, :dry_run, :email_count, :logger
 
-  def initialize(cohort:, dry_run: false)
+  def initialize(cohort:, dry_run: false, logger: Rails.logger)
     @cohort = cohort
     @dry_run = dry_run
     @email_count = 0
+    @logger = logger
   end
 
   # SIT that has told us they will do FIP or CIP but not added participants
@@ -31,6 +32,7 @@ class BulkMailers::LaunchReminderComms
     sits.flatten.uniq.compact.each do |induction_coordinator|
       @email_count += 1
 
+      logger.info "Contacting SIT: #{induction_coordinator.user.email}"
       next if dry_run
 
       SchoolMailer.with(induction_coordinator:).remind_sit_to_add_ects_and_mentors_email.deliver_later
@@ -58,6 +60,7 @@ class BulkMailers::LaunchReminderComms
     sits.flatten.uniq.compact.each do |induction_coordinator|
       @email_count += 1
 
+      logger.info "Contacting SIT: #{induction_coordinator.user.email}"
       next if dry_run
 
       SchoolMailer.with(induction_coordinator:).remind_sit_to_assign_mentors_to_ects_email.deliver_later
@@ -77,6 +80,8 @@ class BulkMailers::LaunchReminderComms
         next if gias_contact_email.blank?
 
         @email_count += 1
+        logger.info "Contacting GIAS contact at: #{school.urn},#{gias_contact_email}"
+
         next if dry_run
 
         SchoolMailer.with(school:, gias_contact_email:, opt_in_out_link: opt_in_out_url(email: gias_contact_email, school:))
@@ -96,6 +101,7 @@ class BulkMailers::LaunchReminderComms
         school.induction_coordinators.each do |sit_user|
           @email_count += 1
 
+          logger.info "Contacting SIT at: #{school.urn},#{sit_user.email}"
           next if dry_run
 
           SchoolMailer.with(sit_user:, nomination_link: nomination_url(email: sit_user.email, school:))
