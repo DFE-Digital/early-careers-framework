@@ -54,5 +54,21 @@ test:
   npq_applications_eligible_for_transfer: 1
   npq_applications_edge_cases: 1
 
+review:
+  local_authorities: 3
+  npq_applications_pending: 3
+  npq_application_with_declarations: 3
+  npq_applications_rejected: 3
+  npq_applications_aso: 3
+  npq_applications_ehco: 3
+  npq_applications_specialist: 3
+  npq_applications_leadership: 3
+  fip_to_fip_transfers_keeping_original_provider: 2
+  fip_to_fip_transfers_changing_provider: 2
+  school_invitations: 3
+  npq_applications_eligible_for_transfer: 3
+  npq_applications_edge_cases: 8
+  ects_becoming_mentors: 3
+
 deployed_development:
   <<: *default

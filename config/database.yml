@@ -31,6 +31,10 @@ development:
     <<: *default_analytics
     database: 'early_careers_framework_analytics_development'
 
+review:
+  <<: *default_primary
+  sslmode: <%= ENV.fetch("DB_SSLMODE") { "require" } %>
+
 sandbox:
   <<: *default_primary
   database: 'early_careers_framework_sandbox'
