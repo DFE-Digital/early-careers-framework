@@ -63,13 +63,15 @@ module Schools
             return Rails.logger.warn(msg)
           end
 
-          previous_partnership.lead_provider.users.each do |lead_provider_user|
-            LeadProviderMailer.with(
-              partnership: previous_partnership,
-              user: lead_provider_user,
-              cohort_year: school_cohort.academic_year,
-              what_changes_choice: what_changes,
-            ).programme_changed_email.deliver_later
+          if previous_partnership.lead_provider.providing_training?(cohort)
+            previous_partnership.lead_provider.users.each do |lead_provider_user|
+              LeadProviderMailer.with(
+                partnership: previous_partnership,
+                user: lead_provider_user,
+                cohort_year: school_cohort.academic_year,
+                what_changes_choice: what_changes,
+              ).programme_changed_email.deliver_later
+            end
           end
         end
 
