@@ -34,13 +34,20 @@
       row.value(text: @npq_application.lead_provider_approval_status)
     end
 
-    sl.row do |row|
-      row.key(text: "Eligible for funding")
-      row.value(text: boolean_red_green_tag(@npq_application.eligible_for_funding))
-      row.action(
-        text: 'edit',
-        href: edit_admin_npq_applications_eligible_for_funding_path(@npq_application)
-      ) if @npq_application.declared_as_payable? && !@npq_application.eligible_for_funding
+    if (@npq_application.declared_as_payable? && @npq_application.eligible_for_funding)
+      sl.row do |row|
+        row.key(text: "Eligible for funding")
+        row.value(text: boolean_red_green_tag(@npq_application.eligible_for_funding))
+      end
+    else
+      sl.row do |row|
+        row.key(text: "Eligible for funding")
+        row.value(text: boolean_red_green_tag(@npq_application.eligible_for_funding))
+        row.action(
+          text: 'edit',
+          href: edit_admin_npq_applications_eligible_for_funding_path(@npq_application)
+        )
+      end
     end
 
     sl.row do |row|
