@@ -10,11 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_12_152849) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_18_020418) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
+  enable_extension "fuzzystrmatch"
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
+  enable_extension "uuid-ossp"
 
   create_table "active_storage_attachments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name", null: false
@@ -874,9 +876,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_12_152849) do
     t.string "declaration_type", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["milestone_id", "schedule_id", "declaration_type"], name: "milestones_schedules_schedule_milestone_declaration_type", unique: true
+    t.index ["milestone_id", "schedule_id"], name: "index_schedule_milestones_on_milestone_id_and_schedule_id"
     t.index ["milestone_id"], name: "index_schedule_milestones_on_milestone_id"
-    t.index ["schedule_id", "milestone_id", "declaration_type"], name: "schedules_milestones_schedule_milestone_declaration_type", unique: true
+    t.index ["schedule_id", "milestone_id"], name: "index_schedule_milestones_on_schedule_id_and_milestone_id"
     t.index ["schedule_id"], name: "index_schedule_milestones_on_schedule_id"
   end
 
@@ -1019,8 +1021,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_12_152849) do
     t.datetime "updated_at", null: false
     t.decimal "original_value"
     t.uuid "cohort_id", null: false
-    t.boolean "output_fee", default: true
     t.string "contract_version", default: "0.0.1"
+    t.boolean "output_fee", default: true
     t.decimal "reconcile_amount", default: "0.0", null: false
     t.index ["cohort_id"], name: "index_statements_on_cohort_id"
     t.index ["cpd_lead_provider_id"], name: "index_statements_on_cpd_lead_provider_id"
@@ -1067,7 +1069,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_12_152849) do
   end
 
   create_table "versions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "item_type"
+    t.string "item_type", null: false
     t.string "event", null: false
     t.string "whodunnit"
     t.json "object"
@@ -1245,7 +1247,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_12_152849) do
               count(*) AS count
              FROM (participant_profiles participant_profiles_1
                JOIN participant_identities participant_identities_1 ON ((participant_identities_1.id = participant_profiles_1.participant_identity_id)))
-            WHERE ((participant_profiles_1.type)::text = ANY (ARRAY[('ParticipantProfile::ECT'::character varying)::text, ('ParticipantProfile::Mentor'::character varying)::text]))
+            WHERE ((participant_profiles_1.type)::text = ANY ((ARRAY['ParticipantProfile::ECT'::character varying, 'ParticipantProfile::Mentor'::character varying])::text[]))
             GROUP BY participant_profiles_1.type, participant_identities_1.user_id) duplicates ON ((duplicates.user_id = participant_identities.user_id)))
        LEFT JOIN teacher_profiles ON ((teacher_profiles.id = participant_profiles.teacher_profile_id)))
        LEFT JOIN schedules ON ((latest_induction_records.schedule_id = schedules.id)))
@@ -1257,9 +1259,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_12_152849) do
     WHERE ((participant_identities.user_id IN ( SELECT participant_identities_1.user_id
              FROM (participant_profiles participant_profiles_1
                JOIN participant_identities participant_identities_1 ON ((participant_identities_1.id = participant_profiles_1.participant_identity_id)))
-            WHERE ((participant_profiles_1.type)::text = ANY (ARRAY[('ParticipantProfile::ECT'::character varying)::text, ('ParticipantProfile::Mentor'::character varying)::text]))
+            WHERE ((participant_profiles_1.type)::text = ANY ((ARRAY['ParticipantProfile::ECT'::character varying, 'ParticipantProfile::Mentor'::character varying])::text[]))
             GROUP BY participant_profiles_1.type, participant_identities_1.user_id
-           HAVING (count(*) > 1))) AND ((participant_profiles.type)::text = ANY (ARRAY[('ParticipantProfile::ECT'::character varying)::text, ('ParticipantProfile::Mentor'::character varying)::text])))
+           HAVING (count(*) > 1))) AND ((participant_profiles.type)::text = ANY ((ARRAY['ParticipantProfile::ECT'::character varying, 'ParticipantProfile::Mentor'::character varying])::text[])))
     ORDER BY participant_identities.external_identifier, (row_number() OVER (PARTITION BY participant_identities.user_id ORDER BY
           CASE
               WHEN (((latest_induction_records.training_status)::text = 'active'::text) AND ((latest_induction_records.induction_status)::text = 'active'::text)) THEN 1

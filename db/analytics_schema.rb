@@ -89,9 +89,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_27_161000) do
     t.string "cohort"
     t.uuid "delivery_partner_id"
     t.string "delivery_partner_name"
-    t.datetime "challenged_at", precision: nil
+    t.datetime "challenged_at"
     t.string "challenge_reason"
-    t.datetime "challenge_deadline", precision: nil
+    t.datetime "challenge_deadline"
     t.boolean "pending"
     t.uuid "report_id"
     t.boolean "relationship"
