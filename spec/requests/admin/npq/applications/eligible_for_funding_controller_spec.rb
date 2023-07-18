@@ -15,8 +15,7 @@ RSpec.describe "Admin::NPQ::Applications::EligibleForFundingController", type: :
            employment_type: "local_authority_supply_teacher",
            employment_role: "Programme Leader",
            employer_name: "University of Newcastle upon Tyne",
-           funding_eligiblity_status_code: "no_institution"
-          )
+           funding_eligiblity_status_code: "no_institution")
   end
 
   let(:admin_user) { create :user, :admin }
@@ -45,7 +44,7 @@ RSpec.describe "Admin::NPQ::Applications::EligibleForFundingController", type: :
     let(:application_id) { application.id }
 
     before do
-      application.profile.participant_declarations.each { |d| d.update!(state: 'submitted') }
+      application.profile.participant_declarations.each { |d| d.update!(state: "submitted") }
     end
 
     it "renders the show template for the application", :aggregate_failures do
