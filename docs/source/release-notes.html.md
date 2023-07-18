@@ -7,6 +7,12 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
+## 20th July 2023
+
+The DfE has released a fix for a bug affecting the POST partnerships endpoint. Previously, providers were unable to report, via the API, a partnership with a delivery partner where a partnership based on the same details had been challenged by the induction tutor. This issue no longer applies.
+
+The DfE has also released a fix to an issue with the user interface lead providers can access to view details on the service about their partnerships. Some lead providers may have seen more than one partnership reported for a school in the same cohort. This issue has also been fixed.
+
 ## 13th July 2023
 
 Providers may now filter outcomes by created_since date. For example:
