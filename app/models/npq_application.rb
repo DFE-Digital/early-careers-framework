@@ -111,9 +111,7 @@ class NPQApplication < ApplicationRecord
   end
 
   def declared_as_payable?
-    profile.participant_declarations.any? do |declaration|
-      %w[eligible payable paid].include? declaration.state
-    end
+    profile.participant_declarations.paid_payable_or_eligible.count.positive?
   end
 
 private
