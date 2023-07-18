@@ -3,6 +3,22 @@
 require "rails_helper"
 
 RSpec.describe SchoolMailer, type: :mailer do
+  describe "#ask_gias_contact_to_validate_sit_details" do
+    let(:school) { create(:seed_school, :valid, primary_contact_email: "mary.gias@example.com") }
+    let(:induction_coordinator) { create(:seed_induction_coordinator_profile, :with_user) }
+    let(:start_page_url) { "https://ecf-dev.london.cloudapps" }
+    let(:nomination_link) { "https://ecf-dev.london.cloudapps/nominations?token=abc123" }
+
+    let(:email) do
+      SchoolMailer.with(school:, induction_coordinator:, start_page_url:, nomination_link:).ask_gias_contact_to_validate_sit_details.deliver_now
+    end
+
+    it "renders the right headers" do
+      expect(email.from).to eq(["mail@example.com"])
+      expect(email.to).to eq(["mary.gias@example.com"])
+    end
+  end
+
   describe "#remind_sit_to_assign_mentors_to_ects_email" do
     let(:induction_coordinator) { create(:seed_induction_coordinator_profile, :with_user) }
 

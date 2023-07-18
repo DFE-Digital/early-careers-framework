@@ -41,6 +41,30 @@ class SchoolMailer < ApplicationMailer
   COHORTLESS_PILOT_2023_SURVEY_TEMPLATE = "5f6dc6bf-62c5-4cf1-8cc8-1440453f4a2d"
   REMIND_SIT_TO_ADD_PARTICIPANTS_TEMPLATE = "19b5a258-e615-4371-9e55-f9cc58187448"
   REMIND_SIT_TO_ASSIGN_MENTORS_TO_ECTS_TEMPLATE = "ae0b1c48-de11-4231-b394-0288bb779987"
+  LAUNCH_ASK_GIAS_CONTACT_TO_VALIDATE_SIT_DETAILS_TEMPLATE = "1a8d24eb-cd08-4836-bfc2-3a9cf33de67e"
+
+  def ask_gias_contact_to_validate_sit_details
+    school = params[:school]
+    start_page_url = params[:start_page_url]
+    nomination_url = params[:nomination_link]
+    induction_coordinator = params[:induction_coordinator]
+
+    email_address = school.primary_contact_email || school.secondary_contact_email
+
+    template_mail(
+      LAUNCH_ASK_GIAS_CONTACT_TO_VALIDATE_SIT_DETAILS_TEMPLATE,
+      to: email_address,
+      rails_mailer: mailer_name,
+      rails_mail_template: action_name,
+      personalisation: {
+        sit_name: induction_coordinator.user.full_name,
+        sit_email_address: induction_coordinator.user.email,
+        email_address:,
+        start_page: start_page_url,
+        nomination_link: nomination_url,
+      },
+    ).tag(:ask_gias_contact_if_sit_details_are_correct).associate_with(school, induction_coordinator)
+  end
 
   def remind_sit_to_assign_mentors_to_ects_email
     induction_coordinator = params[:induction_coordinator]
