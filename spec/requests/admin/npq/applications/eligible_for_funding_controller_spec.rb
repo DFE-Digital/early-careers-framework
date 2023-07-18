@@ -3,18 +3,26 @@
 require "rails_helper"
 
 RSpec.describe "Admin::NPQ::Applications::EligibleForFundingController", type: :request do
+  let(:npq_lead_provider) { create(:npq_lead_provider) }
   let(:application) do
     create(:npq_application,
+           :funded,
+           :accepted,
+           :with_started_declaration,
+           npq_lead_provider:,
            works_in_school: false,
            works_in_childcare: false,
            employment_type: "local_authority_supply_teacher",
            employment_role: "Programme Leader",
            employer_name: "University of Newcastle upon Tyne",
-           funding_eligiblity_status_code: "no_institution")
+           funding_eligiblity_status_code: "no_institution"
+          )
   end
+
   let(:admin_user) { create :user, :admin }
 
   before do
+    application
     sign_in admin_user
   end
 
@@ -36,6 +44,10 @@ RSpec.describe "Admin::NPQ::Applications::EligibleForFundingController", type: :
     let(:params) { { npq_application: { "eligible_for_funding"=>"false" } } }
     let(:application_id) { application.id }
 
+    before do
+      application.profile.participant_declarations.each { |d| d.update!(state: 'submitted') }
+    end
+
     it "renders the show template for the application", :aggregate_failures do
       patch("/admin/npq/applications/eligible_for_funding/#{application.id}", params:)
 
@@ -47,7 +59,7 @@ RSpec.describe "Admin::NPQ::Applications::EligibleForFundingController", type: :
 
     context "when the npq_applciation fails to save" do
       before do
-        allow_any_instance_of(NPQApplication).to receive(:save).and_return(false)
+        allow_any_instance_of(NPQApplication).to receive(:save).with(context: :admin).and_return(false)
       end
 
       it "returns to the edit page", :aggregate_failures do
@@ -56,7 +68,7 @@ RSpec.describe "Admin::NPQ::Applications::EligibleForFundingController", type: :
         expect(response).to redirect_to "/admin/npq/applications/edge_cases/#{application_id}"
         application.reload
         expect(application.funding_eligiblity_status_code).to eq("no_institution")
-        expect(application.eligible_for_funding?).to eq(false)
+        expect(application.eligible_for_funding?).to eq(true)
       end
     end
   end
