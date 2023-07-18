@@ -533,6 +533,14 @@ module ManageTrainingSteps
 
   # When_steps
 
+  def when_i_choose_summer_term_2023
+    choose "Summer term 2023"
+  end
+
+  def when_i_choose_summer_term_2023
+    choose "Summer term 2023"
+  end
+
   def when_i_click_on_back
     click_on("Back")
   end
@@ -646,6 +654,10 @@ module ManageTrainingSteps
 
   def when_i_add_ect_name
     fill_in "What’s this ECT’s full name?", with: @participant_data[:full_name]
+  end
+
+  def when_i_add_mentor_name
+    fill_in "What’s this mentor’s full name?", with: @participant_data[:full_name]
   end
 
   def when_i_add_ect_or_mentor_email
@@ -762,6 +774,18 @@ module ManageTrainingSteps
 
   # Then_steps
 
+  def then_i_am_taken_to_check_answers_page
+    expect(page).to have_text("Check your answers")
+  end
+
+  def then_i_am_taken_to_mentor_added_confirmation_page
+    expect(page).to have_text("#{@participant_data[:full_name]} has been added as a mentor")
+  end
+
+  def then_i_see_the_mentor_name
+    expect(page).to have_text(@participant_data[:full_name])
+  end
+
   def then_i_am_taken_to_roles_page
     expect(page).to have_selector("h1", text: "Check what each person needs to do in the early career teacher training programme")
     expect(page).to have_text("An induction tutor should only assign themself as a mentor in exceptional circumstances")
@@ -799,6 +823,10 @@ module ManageTrainingSteps
 
   def then_i_am_taken_to_add_mentor_name_page
     expect(page).to have_selector("h1", text: "What’s the full name of this mentor?")
+  end
+
+  def then_i_am_taken_to_add_mentor_full_name_page
+    expect(page).to have_selector("h1", text: "What’s this mentor’s full name?")
   end
 
   def then_i_am_taken_to_choose_term_page_as_ect
@@ -1039,6 +1067,10 @@ module ManageTrainingSteps
 
   def then_i_am_taken_to_teacher_start_date_page
     expect(page).to have_selector("h1", text: "When is Sally Teacher moving to your school?")
+  end
+
+  def then_i_am_taken_to_mentor_start_training_page
+    expect(page).to have_selector("h1", text: "When will #{@participant_data[:full_name]} start their mentor training?")
   end
 
   def then_i_am_taken_to_the_cannot_add_page_same_school
