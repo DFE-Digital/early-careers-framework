@@ -5,22 +5,22 @@ default: &default
     variables:
       statement_timeout: 20000
       idle_in_transaction_session_timeout: 10000
-    username: <%= ENV['DB_USERNAME'] %>
-    password: <%= ENV['DB_PASSWORD'] %>
-    host: <%= ENV['DB_HOSTNAME'] %>
-    port: <%= ENV['DB_PORT'] %>
-    database: <%= ENV['DB_DATABASE'] %>
+    username: "<%= ENV['DB_USERNAME'] %>"
+    password: "<%= ENV['DB_PASSWORD'] %>"
+    host: "<%= ENV['DB_HOSTNAME'] %>"
+    port: "<%= ENV['DB_PORT'] %>"
+    database: "<%= ENV['DB_DATABASE'] %>"
   analytics: &default_analytics
     adapter: postgresql
     pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
     variables:
       statement_timeout: 20000
       idle_in_transaction_session_timeout: 10000
-    username: <%= ENV['ANALYTICS_DB_USERNAME'] || Rails.application.credentials.ANALYTICS_DB_USERNAME %>
-    password: <%= ENV['ANALYTICS_DB_PASSWORD'] || Rails.application.credentials.ANALYTICS_DB_PASSWORD %>
-    host: <%= ENV['ANALYTICS_DB_HOSTNAME'] || Rails.application.credentials.ANALYTICS_DB_HOSTNAME %>
-    port: <%= ENV['ANALYTICS_DB_PORT'] || Rails.application.credentials.ANALYTICS_DB_PORT %>
-    database: <%= ENV['ANALYTICS_DB_DATABASE'] || Rails.application.credentials.ANALYTICS_DB_DATABASE %>
+    username: "<%= ENV['ANALYTICS_DB_USERNAME'] || Rails.application.credentials.ANALYTICS_DB_USERNAME %>"
+    password: "<%= ENV['ANALYTICS_DB_PASSWORD'] || Rails.application.credentials.ANALYTICS_DB_PASSWORD %>"
+    host: "<%= ENV['ANALYTICS_DB_HOSTNAME'] || Rails.application.credentials.ANALYTICS_DB_HOSTNAME %>"
+    port: "<%= ENV['ANALYTICS_DB_PORT'] || Rails.application.credentials.ANALYTICS_DB_PORT %>"
+    database: "<%= ENV['ANALYTICS_DB_DATABASE'] || Rails.application.credentials.ANALYTICS_DB_DATABASE %>"
     migrations_paths: db/analytics_migrate
 
 development:
