@@ -29,6 +29,12 @@ class Admin::SchoolTransferForm
     }
   end
 
+  def initialize(*)
+    super
+
+    latest_induction_record
+  end
+
   def next_step
     current_step_index = STEPS.index(current_step)
     STEPS[current_step_index + 1] if current_step_index
@@ -68,13 +74,15 @@ class Admin::SchoolTransferForm
   end
 
   def perform_transfer!
-    if continue_existing_programme?
-      # create a new programme at the school and join
-      Induction::TransferAndContinueExistingProgramme.call(school: new_school, participant_profile:, start_date:, email:)
-    else
-      # join an existing programme at the school
-      Induction::TransferToSchoolsProgramme.call(participant_profile:, induction_programme: chosen_programme, start_date:, email:)
-    end
+    new_induction_record = if continue_existing_programme?
+                             # create a new programme at the school and join
+                             Induction::TransferAndContinueExistingProgramme.call(school: new_school, participant_profile:, start_date:, email:)
+                           else
+                             # join an existing programme at the school
+                             Induction::TransferToSchoolsProgramme.call(participant_profile:, induction_programme: chosen_programme, start_date:, email:)
+                           end
+
+    send_notifications!(new_induction_record)
   end
 
   def cannot_transfer_to_new_school?
@@ -196,6 +204,47 @@ private
 
   def new_school_programme
     new_school_programmes&.first
+  end
+
+  def delivery_partner_in
+    (chosen_programme || latest_induction_record)&.delivery_partner
+  end
+
+  def delivery_partner_out
+    latest_induction_record&.delivery_partner
+  end
+
+  def lead_provider_in
+    (chosen_programme || latest_induction_record)&.lead_provider
+  end
+
+  def lead_provider_out
+    latest_induction_record&.lead_provider
+  end
+
+  def lead_provider_profiles_in
+    Array(lead_provider_in&.lead_provider_profiles)
+  end
+
+  def lead_provider_profiles_out
+    Array(lead_provider_out&.lead_provider_profiles)
+  end
+
+  def was_withdrawn_participant
+    participant_profile.training_status_withdrawn? ||
+      latest_induction_record&.training_status_withdrawn?
+  end
+
+  def send_notifications!(induction_record)
+    Induction::SendTransferNotificationEmails.call(
+      induction_record:,
+      was_withdrawn_participant:,
+      same_delivery_partner: delivery_partner_in == delivery_partner_out,
+      same_provider: lead_provider_in == lead_provider_out,
+      switch_to_schools_programme: !continue_existing_programme?,
+      lead_provider_profiles_in:,
+      lead_provider_profiles_out:,
+    )
   end
 
   def start_date_is_valid
