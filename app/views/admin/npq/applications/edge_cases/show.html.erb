@@ -45,7 +45,8 @@
         row.value(text: boolean_red_green_tag(@npq_application.eligible_for_funding))
         row.action(
           text: 'edit',
-          href: edit_admin_npq_applications_eligible_for_funding_path(@npq_application)
+          href: edit_admin_npq_applications_eligible_for_funding_path(@npq_application),
+          visually_hidden_text: "NPQ application"
         )
       end
     end
