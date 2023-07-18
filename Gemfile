@@ -111,6 +111,9 @@ gem "jsbundling-rails"
 gem "sprockets", "~> 4.2.0"
 gem "sprockets-rails", require: "sprockets/railtie"
 
+# Code Highlighter
+gem "rouge"
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem "byebug", platforms: %i[mri mingw x64_mingw]

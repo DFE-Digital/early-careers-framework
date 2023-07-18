@@ -82,6 +82,16 @@
     <% row.value { pp.updated_at.to_fs(:govuk) } %>
     <% row.action(text: :none) %>
   <% end %>
+
+  <% summary_list.row do |row| %>
+    <% row.key { "Lead Provider API V3" } %>
+    <% row.value do %>
+      <%= govuk_details(summary_text: "See this participant as it appears over the Lead Provider API") do %>
+        <%= npq_participant_api_response(pp) %>
+      <% end %>
+    <% end %>
+    <% row.action(text: :none) %>
+  <% end %>
 <% end %>
 
 <h4>Declarations</h4>
