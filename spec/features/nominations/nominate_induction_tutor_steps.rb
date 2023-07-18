@@ -61,7 +61,7 @@ module NominateInductionTutorSteps
   end
 
   def then_i_should_be_on_the_choose_how_to_continue_page
-    expect(page).to have_selector("h1", text: "Will any ECTs start their induction at your school in the 2023 to 2024 academic year?")
+    expect(page).to have_selector("h1", text: "Will any ECTs start their induction at your school in the #{academic_year_text} academic year?")
     expect(page).to have_field("Yes", visible: :all)
     expect(page).to have_field("No", visible: :all)
     expect(page).to have_field("We do not know", visible: :all)
