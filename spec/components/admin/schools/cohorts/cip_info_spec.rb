@@ -2,7 +2,7 @@
 
 RSpec.describe Admin::Schools::Cohorts::CipInfo, type: :component do
   let(:programme) { FactoryBot.create :core_induction_programme }
-  let(:school_cohort) { FactoryBot.create :school_cohort, :cip, core_induction_programme: programme }
+  let(:school_cohort) { FactoryBot.create :school_cohort, :cip, :with_induction_programme, core_induction_programme: programme }
 
   subject! do
     with_request_url "/schools/test-school" do
@@ -13,7 +13,7 @@ RSpec.describe Admin::Schools::Cohorts::CipInfo, type: :component do
   it "has the correct content" do
     with_request_url "/schools/test-school" do
       expect(rendered_content).to have_content "Using DfE-accredited materials"
-      expect(rendered_content).to have_content programme.name
+      expect(rendered_content).to have_content school_cohort.default_induction_programme.core_induction_programme.name
     end
   end
 
