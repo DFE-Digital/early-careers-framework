@@ -157,6 +157,9 @@ module Schools
         end
 
         return false unless @email_owner.participant?
+
+        return false if participant_type == "mentor" && !@email_owner.teacher_profile.participant_profiles.mentors.exists?
+
         return true unless transfer?
 
         @email_owner != existing_user

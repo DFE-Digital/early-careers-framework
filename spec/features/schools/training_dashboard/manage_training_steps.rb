@@ -200,6 +200,13 @@ module ManageTrainingSteps
     Induction::Enrol.call(participant_profile: @participant_profile_ect, induction_programme: @induction_programme)
   end
 
+  def and_i_have_added_an_ect_with_email(email)
+    user = create(:user, full_name: "Sally Teacher", email:)
+    teacher_profile = create(:teacher_profile, user:)
+    @participant_profile_ect = create(:ect_participant_profile, teacher_profile:, school_cohort: @school_cohort)
+    Induction::Enrol.call(participant_profile: @participant_profile_ect, induction_programme: @induction_programme)
+  end
+
   def and_i_have_added_a_mentor
     user = create(:user, full_name: "Billy Mentor", email: "billy-mentor@example.com")
     teacher_profile = create(:teacher_profile, user:)
