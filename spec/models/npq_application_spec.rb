@@ -317,15 +317,15 @@ RSpec.describe NPQApplication, type: :model do
   end
 
   describe "validations" do
-    context "when validating funding_eligibility_status_code" do
+    context "when validating funding eligibility" do
+      let(:participant_declaration) { create(:npq_participant_declaration, state: participant_declaration_state) }
+      let(:npq_application) { participant_declaration.participant_profile.npq_application }
+
+      before do
+        npq_application.update!(eligible_for_funding:)
+      end
+
       shared_examples "depending on the state" do
-        let(:participant_declaration) { create(:npq_participant_declaration, state: participant_declaration_state) }
-        let(:npq_application) { participant_declaration.participant_profile.npq_application }
-
-        before do
-          npq_application.update!(eligible_for_funding:)
-        end
-
         it "is validated properly with admin context admin" do
           expect(npq_application.valid?(:admin)).to eq(application_valid_with_admin_context)
         end
@@ -355,7 +355,7 @@ RSpec.describe NPQApplication, type: :model do
         end
       end
 
-      # payable states
+      # billable states
       %w[eligible payable paid].each do |state|
         context "when eligible_for_funding is true" do
           include_examples "depending on the state" do
@@ -373,19 +373,30 @@ RSpec.describe NPQApplication, type: :model do
 
             let(:application_valid_with_admin_context) { false }
           end
+
+          context "validation message" do
+            let(:participant_declaration_state) { state }
+            let(:eligible_for_funding) { false }
+
+            it "is correct" do
+              npq_application.valid?(:admin)
+
+              expect(npq_application.errors.where(:base).first.full_message).to eq("Eligibility can not be changed because billable declaration exists")
+            end
+          end
         end
       end
     end
   end
 
-  describe "#declared_as_payable" do
+  describe "#declared_as_billable" do
     %w[submitted voided ineligible awaiting_clawback clawed_back].each do |state|
       context "when declaration state is #{state}" do
         let(:participant_declaration) { create(:npq_participant_declaration, state:) }
         let(:npq_application) { participant_declaration.participant_profile.npq_application }
 
         it "is false" do
-          expect(npq_application.declared_as_payable?).to eq(false)
+          expect(npq_application.declared_as_billable?).to eq(false)
         end
       end
     end
@@ -396,7 +407,7 @@ RSpec.describe NPQApplication, type: :model do
         let(:npq_application) { participant_declaration.participant_profile.npq_application }
 
         it "is true" do
-          expect(npq_application.declared_as_payable?).to eq(true)
+          expect(npq_application.declared_as_billable?).to eq(true)
         end
       end
     end

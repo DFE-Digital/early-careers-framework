@@ -110,8 +110,8 @@ class NPQApplication < ApplicationRecord
     ParticipantDeclaration::NPQ&.find_by_participant_profile_id(ParticipantProfile&.find_by_participant_identity_id(participant_identity_id)&.id)
   end
 
-  def declared_as_payable?
-    profile.participant_declarations.paid_payable_or_eligible.count.positive?
+  def declared_as_billable?
+    profile.participant_declarations.billable.count.positive?
   end
 
 private
@@ -137,8 +137,8 @@ private
   end
 
   def validate_funding_eligiblity_status_code_change
-    if declared_as_payable? && eligible_for_funding == false
-      errors.add(:funding_eligiblity_status_code)
+    if declared_as_billable? && eligible_for_funding == false
+      errors.add(:base, :billable_declaration_exists)
     end
   end
 end

@@ -61,7 +61,6 @@ class ParticipantDeclaration < ApplicationRecord
   scope :mentor, -> { where(participant_profile_id: ParticipantProfile::Mentor.select(:id)) }
   scope :npq, -> { where(participant_profile_id: ParticipantProfile::NPQ.select(:id)) }
 
-  scope :paid_payable_or_eligible, -> { where(state: %w[eligible payable paid]) }
   scope :changeable, -> { where(state: %w[eligible submitted]) }
   scope :unique_id, -> { select(:user_id).distinct }
 
@@ -105,6 +104,7 @@ class ParticipantDeclaration < ApplicationRecord
   scope :paid_uplift_for_lead_provider, ->(lead_provider) { paid_for_lead_provider(lead_provider).uplift }
 
   scope :billable, -> { where(state: %w[eligible payable paid]) }
+  scope :paid_payable_or_eligible, -> { billable }
   scope :billable_or_changeable, -> { billable.or(changeable) }
 
   before_create :build_initial_declaration_state
