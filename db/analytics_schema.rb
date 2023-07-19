@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_02_27_161000) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_20_091500) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -89,9 +89,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_27_161000) do
     t.string "cohort"
     t.uuid "delivery_partner_id"
     t.string "delivery_partner_name"
-    t.datetime "challenged_at"
+    t.datetime "challenged_at", precision: nil
     t.string "challenge_reason"
-    t.datetime "challenge_deadline"
+    t.datetime "challenge_deadline", precision: nil
     t.boolean "pending"
     t.uuid "report_id"
     t.boolean "relationship"
