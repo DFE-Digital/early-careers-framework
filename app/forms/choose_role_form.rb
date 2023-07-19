@@ -83,7 +83,9 @@ private
   end
 
   def teacher_role?
-    user_roles.any? { |r| r.in? %w[early_career_teacher mentor] }
+    # in order to show the correct page we need to use the presence of teacher_profile
+    # because a withdrawn participant will not have any roles
+    user.teacher_profile.present?
   end
 
   def role_values
