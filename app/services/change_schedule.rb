@@ -149,7 +149,8 @@ private
   def validate_cannot_change_cohort_ecf
     return unless participant_profile&.ecf?
 
-    if relevant_induction_record &&
+    if applicable_declarations.any? &&
+        relevant_induction_record &&
         relevant_induction_record.schedule.cohort.start_year != cohort&.start_year
       errors.add(:cohort, I18n.t("cannot_change_cohort"))
     end

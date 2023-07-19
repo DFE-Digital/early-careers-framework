@@ -139,9 +139,8 @@ RSpec.describe ChangeSchedule do
         let(:participant_profile) { create(:ect, :withdrawn, lead_provider: cpd_lead_provider.lead_provider) }
       end
 
-      context "when the cohort is changing to another year" do
-        let(:new_cohort) { Cohort.previous }
-        let(:new_schedule) { create(:ecf_schedule, cohort: new_cohort) }
+      context "when the cohort is changing" do
+        let!(:new_schedule) { create(:ecf_schedule, schedule_identifier: "ecf-extended-april", name: "ECF Standard", cohort: new_cohort) }
         let(:params) do
           {
             cpd_lead_provider:,
@@ -152,10 +151,37 @@ RSpec.describe ChangeSchedule do
           }
         end
 
-        it "is invalid and returns an error message" do
-          is_expected.to be_invalid
+        %i[submitted eligible payable paid].each do |state|
+          context "when there are #{state} declarations" do
+            before { create(:participant_declaration, participant_profile:, state:, course_identifier:, cpd_lead_provider:) }
 
-          expect(service.errors.messages_for(:cohort)).to include("The property '#/cohort' cannot be changed")
+            context "when changing to another cohort" do
+              let(:new_cohort) { Cohort.previous }
+
+              it "is invalid and returns an error message" do
+                is_expected.to be_invalid
+
+                expect(service.errors.messages_for(:cohort)).to include("The property '#/cohort' cannot be changed")
+              end
+            end
+          end
+        end
+
+        context "when there are no submitted/eligible/payable/paid declarations" do
+          context "when changing to another cohort" do
+            let(:new_cohort) { Cohort.previous }
+
+            describe ".call" do
+              it_behaves_like "changing the schedule of a participant"
+            end
+
+            it "updates the schedule on the relevant induction record" do
+              service.call
+              relevant_induction_record = participant_profile.current_induction_record
+
+              expect(relevant_induction_record.schedule).to eq(new_schedule)
+            end
+          end
         end
       end
 
@@ -208,9 +234,8 @@ RSpec.describe ChangeSchedule do
         let(:participant_profile) { create(:mentor, :withdrawn, lead_provider: cpd_lead_provider.lead_provider) }
       end
 
-      context "when the cohort is changing to another year" do
-        let(:new_cohort) { Cohort.previous }
-        let(:new_schedule) { create(:ecf_schedule, cohort: new_cohort) }
+      context "when the cohort is changing" do
+        let!(:new_schedule) { create(:ecf_mentor_schedule, schedule_identifier:, cohort: new_cohort, name: "Mentor Standard") }
         let(:params) do
           {
             cpd_lead_provider:,
@@ -221,10 +246,37 @@ RSpec.describe ChangeSchedule do
           }
         end
 
-        it "is invalid and returns an error message" do
-          is_expected.to be_invalid
+        %i[submitted eligible payable paid].each do |state|
+          context "when there are #{state} declarations" do
+            before { create(:participant_declaration, participant_profile:, state:, course_identifier:, cpd_lead_provider:) }
 
-          expect(service.errors.messages_for(:cohort)).to include("The property '#/cohort' cannot be changed")
+            context "when changing to another cohort" do
+              let(:new_cohort) { Cohort.previous }
+
+              it "is invalid and returns an error message" do
+                is_expected.to be_invalid
+
+                expect(service.errors.messages_for(:cohort)).to include("The property '#/cohort' cannot be changed")
+              end
+            end
+          end
+        end
+
+        context "when there are no submitted/eligible/payable/paid declarations" do
+          context "when changing to another cohort" do
+            let(:new_cohort) { Cohort.previous }
+
+            describe ".call" do
+              it_behaves_like "changing the schedule of a participant"
+            end
+
+            it "updates the schedule on the relevant induction record" do
+              service.call
+              relevant_induction_record = participant_profile.current_induction_record
+
+              expect(relevant_induction_record.schedule).to eq(new_schedule)
+            end
+          end
         end
       end
 
