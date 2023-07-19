@@ -194,7 +194,7 @@ RSpec.describe ChooseRoleForm, type: :model do
     end
 
     describe "teacher role" do
-      let(:user) { create(:user, :teacher) }
+      let(:user) { create(:user, :early_career_teacher) }
 
       it { is_expected.to validate_inclusion_of(:role).in_array(%w[teacher]) }
 
@@ -232,6 +232,40 @@ RSpec.describe ChooseRoleForm, type: :model do
           expect(form.valid?).to be false
           expect(form.errors[:role]).to include "Choose a role"
         end
+      end
+    end
+  end
+
+  describe "NPQ roles" do
+    describe "NPQ applicant" do
+      let(:user) { create(:seed_npq_application, :valid).user }
+
+      it "has no role" do
+        expect(form.has_no_role).to be true
+      end
+
+      it "only_one_role should be false" do
+        expect(form.only_one_role).to be false
+      end
+
+      it "has correct role_options" do
+        expect(form.role_options).to be_empty
+      end
+    end
+
+    describe "NPQ participant" do
+      let(:user) { create(:user, :npq) }
+
+      it "has no role" do
+        expect(form.has_no_role).to be true
+      end
+
+      it "only_one_role should be false" do
+        expect(form.only_one_role).to be false
+      end
+
+      it "has correct role_options" do
+        expect(form.role_options).to be_empty
       end
     end
   end
@@ -295,7 +329,7 @@ RSpec.describe ChooseRoleForm, type: :model do
     end
 
     describe "teacher, induction_coordinator and delivery_partner roles" do
-      let(:user) { create(:user, :teacher, :induction_coordinator, :delivery_partner) }
+      let(:user) { create(:user, :mentor, :induction_coordinator, :delivery_partner) }
 
       it { is_expected.to validate_inclusion_of(:role).in_array(%w[induction_coordinator delivery_partner]) }
 

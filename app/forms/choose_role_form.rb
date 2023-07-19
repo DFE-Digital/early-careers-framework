@@ -59,8 +59,12 @@ class ChooseRoleForm
 
 private
 
+  def rejected_roles
+    %w[induction_coordinator early_career_teacher mentor npq_applicant npq_participant lead_provider].freeze
+  end
+
   def sanitized_user_roles
-    roles = user_roles.reject { |role| role.in? %w[induction_coordinator induction_coordinator_and_mentor teacher] }
+    roles = user_roles.reject { |role| rejected_roles.include?(role) }
 
     if sit_role?
       roles << "induction_coordinator"
@@ -75,11 +79,11 @@ private
   end
 
   def sit_role?
-    user_roles.any?(/induction_coordinator*/)
+    user_roles.include?("induction_coordinator")
   end
 
   def teacher_role?
-    user_roles.include? "teacher"
+    user_roles.any? { |r| r.in? %w[early_career_teacher mentor] }
   end
 
   def role_values
