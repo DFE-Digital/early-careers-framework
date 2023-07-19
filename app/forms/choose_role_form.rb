@@ -83,9 +83,9 @@ private
   end
 
   def teacher_role?
-    # in order to show the correct page we need to use the presence of teacher_profile
-    # because a withdrawn participant will not have any roles
-    user.teacher_profile.present?
+    # in order to show the correct page we need to participant profiles
+    # because a withdrawn participant will not have any roles in user_roles
+    user.participant_profiles.ecf.any?
   end
 
   def role_values
