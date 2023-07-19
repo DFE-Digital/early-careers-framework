@@ -7,6 +7,19 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
+## 21st July 2023
+
+Lead providers can now change the cohort of an ECF participant, providing a participant does not have any declarations which are in the following states:
+
+- submitted
+- eligible
+- payable
+- paid
+
+Providers may change an ECF participant’s cohort using the [change-schedule endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-id-change-schedule-put).
+
+Note, lead providers should ensure they are in partnership with the participant’s school for the new cohort prior to submitting any change via the API. For example, if a lead provider has no partnership with a school for cohort 2022 and changes a participant from 2023 to 2022 cohort, then the lead provider will no longer be able to view or submit information about the participant. Providers can check partnership details via the [partnerships endpoints](/api-reference/reference-v3.html#api-v3-partnerships-ecf-get). Please raise any queries with the DfE directly.
+
 ## 20th July 2023
 
 The DfE has released a fix for a bug affecting the POST partnerships endpoint. Previously, providers were unable to report, via the API, a partnership with a delivery partner where a partnership based on the same details had been challenged by the induction tutor. This issue no longer applies.
@@ -21,7 +34,7 @@ Providers may now filter outcomes by created_since date. For example:
 
 The change applies to all API versions.
 
-Providers can now filter ECF and NPQ participants by training_status, for example: 
+Providers can now filter ECF and NPQ participants by training_status, for example:
 
 * GET /api/v3/participants/ecf?filter[training_status]=deferred
 * GET /api/v3/participants/npq?filter[training_status]=active
