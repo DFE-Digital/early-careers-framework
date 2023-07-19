@@ -313,7 +313,7 @@ module ChooseProgrammeSteps
   end
 
   def when_i_choose_to_form_a_new_partnership
-    choose("Form new partnership with a lead provider and delivery partner")
+    choose("Form a new partnership")
   end
 
   def when_i_choose_to_change_delivery_partner

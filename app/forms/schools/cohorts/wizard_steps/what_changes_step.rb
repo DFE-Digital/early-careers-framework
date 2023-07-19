@@ -14,7 +14,7 @@ module Schools
 
         def choices
           [
-            OpenStruct.new(id: :change_lead_provider,               name: "Form new partnership with a lead provider and delivery partner"),
+            OpenStruct.new(id: :change_lead_provider,               name: "Form a new partnership"),
             OpenStruct.new(id: :change_to_core_induction_programme, name: "Deliver your own programme using DfE-accredited materials"),
             OpenStruct.new(id: :change_to_design_our_own,           name: "Design and deliver your own programme based on the Early Career Framework (ECF)"),
           ]
