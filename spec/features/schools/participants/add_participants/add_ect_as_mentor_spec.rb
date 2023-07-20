@@ -57,5 +57,3 @@ RSpec.describe "Add ECT as mentor", js: true do
     then_i_see_the_mentor_name
   end
 end
-
-

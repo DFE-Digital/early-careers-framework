@@ -544,10 +544,6 @@ module ManageTrainingSteps
     choose "Summer term 2023"
   end
 
-  def when_i_choose_summer_term_2023
-    choose "Summer term 2023"
-  end
-
   def when_i_click_on_back
     click_on("Back")
   end
