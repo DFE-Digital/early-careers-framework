@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-if Rails.env.development? || Rails.env.deployed_development?
+if Rails.env.development? || Rails.env.deployed_development? || Rails.env.review?
   Rails.logger.info("activating permanent feature flags")
 
   FeatureFlag::PERMANENT_SETTINGS.each do |feature|

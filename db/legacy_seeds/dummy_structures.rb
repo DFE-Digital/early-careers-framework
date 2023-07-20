@@ -236,7 +236,7 @@ ActiveRecord::Base.transaction do
   # We clear the database on a regular basis, but we want a stable token that E&L can use in its dev environments
   # Hashed token with the same unhashed version will be different between dev and deployed dev
   # The tokens below have different unhashed version to avoid worrying about clever cryptographic attacks
-  if Rails.env.deployed_development?
+  if Rails.env.deployed_development? || Rails.env.review?
     EngageAndLearnApiToken.find_or_create_by!(hashed_token: "dfce9a34c6f982e8adb4b903f8b6064682e6ad1f7858c41ed8a0a7468abc8896")
     NPQRegistrationApiToken.find_or_create_by!(hashed_token: "1dae3836ed90df4b796eff1f4a4713247ac5bc8a00352ea46eee621d74cd4fcf")
     DataStudioApiToken.find_or_create_by!(hashed_token: "c7123fb0e2aecb17e1089e01849d71665983e200e891fe726341a08f176c1d64")
