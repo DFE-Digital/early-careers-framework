@@ -24,7 +24,9 @@ module Admin
           name = @npq_application.participant_identity.user.full_name
 
           if @npq_application.save(context: :admin)
-
+            if @npq_application.saved_change_to_eligible_for_funding?
+              @npq_application.update_eligibility_information(current_user)
+            end
             flash[:success] = {
               title: "#{name} updated",
               content: "#{name} has been marked '#{@npq_application.funding_eligiblity_status_code.humanize.downcase}'",

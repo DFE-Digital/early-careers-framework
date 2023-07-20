@@ -110,6 +110,13 @@ class NPQApplication < ApplicationRecord
     ParticipantDeclaration::NPQ&.find_by_participant_profile_id(ParticipantProfile&.find_by_participant_identity_id(participant_identity_id)&.id)
   end
 
+  def update_eligibility_information(current_user)
+    if User.admins.include?(current_user)
+      self.updated_by = current_user.full_name
+      self.eligible_for_funding_updated_at = Time.current
+      save
+    end
+  end
   def declared_as_billable?
     profile.present? && profile.participant_declarations.billable.count.positive?
   end
