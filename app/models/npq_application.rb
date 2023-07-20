@@ -1,6 +1,21 @@
 # frozen_string_literal: true
 
 class NPQApplication < ApplicationRecord
+  VALID_FUNDING_ELIGIBILITY_STATUS_CODES = %w[
+    funded
+    no_institution
+    ineligible_establishment_type
+    ineligible_institution_type
+    previously_funded
+    not_new_headteacher_requesting_ehco
+    school_outside_catchment
+    early_years_outside_catchment
+    not_on_early_years_register
+    early_years_invalid_npq
+    marked_funded_by_policy
+    marked_ineligible_by_policy
+  ].freeze
+
   has_paper_trail only: %i[user_id npq_lead_provider_id npq_course_id created_at updated_at lead_provider_approval_status]
 
   self.ignored_columns = %w[user_id]
@@ -53,6 +68,7 @@ class NPQApplication < ApplicationRecord
   scope :created_at_range, ->(start_date, end_date) { where(created_at: start_date..end_date) }
 
   validates :eligible_for_funding_before_type_cast, inclusion: { in: [true, false, "true", "false"] }
+  validate  :validate_funding_eligiblity_status_code_change, on: :admin
 
   delegate :start_year, to: :cohort, prefix: true, allow_nil: true
 
@@ -94,6 +110,10 @@ class NPQApplication < ApplicationRecord
     ParticipantDeclaration::NPQ&.find_by_participant_profile_id(ParticipantProfile&.find_by_participant_identity_id(participant_identity_id)&.id)
   end
 
+  def declared_as_billable?
+    profile.participant_declarations.billable.count.positive?
+  end
+
 private
 
   def previously_funded?
@@ -113,6 +133,12 @@ private
   def push_enrollment_to_big_query
     if (saved_changes.keys & %w[cohort_id id lead_provider_approval_status]).present?
       NPQ::StreamBigQueryEnrollmentJob.perform_later(npq_application_id: id)
+    end
+  end
+
+  def validate_funding_eligiblity_status_code_change
+    if declared_as_billable? && eligible_for_funding == false
+      errors.add(:base, :billable_declaration_exists)
     end
   end
 end

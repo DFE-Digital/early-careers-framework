@@ -23,7 +23,7 @@ module Admin
           set_eligibility_status(eligible_for_funding_params["eligible_for_funding"])
           name = @npq_application.participant_identity.user.full_name
 
-          if @npq_application.save
+          if @npq_application.save(context: :admin)
 
             flash[:success] = {
               title: "#{name} updated",
