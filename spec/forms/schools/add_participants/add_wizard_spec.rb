@@ -24,12 +24,14 @@ RSpec.describe Schools::AddParticipants::AddWizard, type: :model do
     let(:ect_mentor) { false }
     let(:transfer) { false }
     let(:confirmed_trn) { "0012345" }
+    let(:participant_type) { "ect" }
 
     before do
       allow(data_store).to receive(:email).and_return("ray.clemence@example.com")
       allow(data_store).to receive(:ect_mentor?).and_return(ect_mentor)
       allow(data_store).to receive(:transfer?).and_return(transfer)
       allow(data_store).to receive(:confirmed_trn).and_return(confirmed_trn)
+      allow(data_store).to receive(:participant_type).and_return(participant_type)
     end
 
     context "when the email is not already in use" do
