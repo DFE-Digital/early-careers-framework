@@ -55,10 +55,6 @@ Register on [GOV.UK Notify](https://www.notifications.service.gov.uk).
 Ask someone from the team to add you to our service.
 Generate a limited api key for yourself and set it in your `.env` file.
 
-### Set up git hooks
-
-Run `git config core.hooksPath .githooks` to use the included git hooks.
-
 ## Running specs, linter(without auto correct) and annotate models and serializers
 
 ```
@@ -101,10 +97,6 @@ https://github.com/DFE-Digital/early-careers-framework/blob/develop/swagger/v1/a
 ```
 
 Ideally change baseUrl to http://localhost:3000, since sandbox is used for testing. A bearer token is required per request and should be created in each respective environment e.g. development, sandbox
-
-## Linting
-
-The precommit hook will ensure linting passes. See [the hook](./.githooks/pre-commit) for details.
 
 ## End to End Scenario testing
 
