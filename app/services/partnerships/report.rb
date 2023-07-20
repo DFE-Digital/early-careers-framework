@@ -15,11 +15,22 @@ module Partnerships
 
     def call
       ActiveRecord::Base.transaction do
-        partnership = Partnership.find_or_initialize_by(
+        if (partnership = Partnership.find_by(
           school_id:,
           cohort_id:,
           lead_provider_id:,
-        )
+          relationship: true,
+          delivery_partner_id:,
+        ))
+          partnership.relationship = false
+        else
+          partnership = Partnership.find_or_initialize_by(
+            school_id:,
+            cohort_id:,
+            lead_provider_id:,
+            relationship: false,
+          )
+        end
 
         partnership.challenge_reason = partnership.challenged_at = nil
         partnership.delivery_partner_id = delivery_partner_id

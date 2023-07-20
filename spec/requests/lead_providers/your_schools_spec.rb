@@ -29,5 +29,18 @@ RSpec.describe "Your schools", type: :request do
       expect(assigns(:total_provider_schools)).to eq partnerships.size
       expect(assigns(:partnerships)).to match_array partnerships
     end
+
+    context "with relationship partnerships" do
+      let!(:relationship_partnership) do
+        create(:partnership, lead_provider:, cohort: current_cohort, relationship: true)
+      end
+
+      it "does not show any relationship partnerships" do
+        get lead_providers_your_schools_path
+
+        expect(assigns(:total_provider_schools)).to eq partnerships.size
+        expect(assigns(:partnerships)).to match_array partnerships
+      end
+    end
   end
 end

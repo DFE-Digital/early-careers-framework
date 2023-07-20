@@ -170,4 +170,133 @@ RSpec.describe Partnerships::Report do
       expect(result.challenge_deadline).to eq(Date.new(2023, 5, 15))
     end
   end
+
+  context "with relationship partnership and challenged partnership with same delivery partner" do
+    let!(:partnership) do
+      create(
+        :partnership,
+        id: "0afb9b09-5520-4be9-a5bd-ee5806392262",
+        relationship: true,
+        lead_provider:,
+        school:,
+        cohort:,
+      )
+    end
+
+    let!(:challenged_partnership) do
+      create(
+        :partnership,
+        :challenged,
+        id: "1bbcc1be-0135-4bb6-8678-c1da2819ec9b",
+        lead_provider:,
+        school:,
+        cohort:,
+        delivery_partner:,
+      )
+    end
+
+    it "does not create new partnership" do
+      expect { result }.not_to change(Partnership, :count)
+    end
+
+    it "returns the original challenged partnership record" do
+      expect(result).to eq challenged_partnership
+    end
+
+    it "unchallenges the existing partnership" do
+      result
+
+      expect(challenged_partnership.reload).to have_attributes(
+        school_id: school.id,
+        cohort_id: cohort.id,
+        lead_provider_id: lead_provider.id,
+        delivery_partner_id: delivery_partner.id,
+        pending: false,
+        challenged_at: nil,
+        challenge_reason: nil,
+      )
+    end
+  end
+
+  context "with relationship partnership and challenged partnership with different delivery partner" do
+    let!(:partnership) do
+      create(
+        :partnership,
+        id: "0afb9b09-5520-4be9-a5bd-ee5806392262",
+        relationship: true,
+        lead_provider:,
+        school:,
+        cohort:,
+      )
+    end
+
+    let!(:challenged_partnership) do
+      create(
+        :partnership,
+        :challenged,
+        id: "1bbcc1be-0135-4bb6-8678-c1da2819ec9b",
+        lead_provider:,
+        school:,
+        cohort:,
+      )
+    end
+
+    it "does not create new partnership" do
+      expect { result }.not_to change(Partnership, :count)
+    end
+
+    it "returns the original challenged partnership record" do
+      expect(result).to eq challenged_partnership
+    end
+
+    it "unchallenges the existing partnership and updates the delivery_partner" do
+      result
+
+      expect(challenged_partnership.reload).to have_attributes(
+        school_id: school.id,
+        cohort_id: cohort.id,
+        lead_provider_id: lead_provider.id,
+        delivery_partner_id: delivery_partner.id,
+        pending: false,
+        challenged_at: nil,
+        challenge_reason: nil,
+      )
+    end
+  end
+
+  context "with relationship partnership with same delivery partner" do
+    let!(:partnership) do
+      create(
+        :partnership,
+        relationship: true,
+        lead_provider:,
+        school:,
+        cohort:,
+        delivery_partner:,
+      )
+    end
+
+    it "does not create new partnership" do
+      expect { result }.not_to change(Partnership, :count)
+    end
+
+    it "returns the original partnership record" do
+      expect(result).to eq partnership
+    end
+
+    it "sets the existing partnership as the default partnership" do
+      result
+
+      expect(partnership.reload).to have_attributes(
+        school_id: school.id,
+        cohort_id: cohort.id,
+        lead_provider_id: lead_provider.id,
+        delivery_partner_id: delivery_partner.id,
+        pending: false,
+        challenged_at: nil,
+        challenge_reason: nil,
+        relationship: false,
+      )
+    end
+  end
 end

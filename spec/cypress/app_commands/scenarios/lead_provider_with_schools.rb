@@ -12,5 +12,6 @@ delivery_partner = FactoryBot.create(:delivery_partner, name: "Ace Delivery Part
 
 schools.each_with_index do |school, index|
   FactoryBot.create(:partnership, school:, lead_provider:, delivery_partner:, cohort: Cohort.find_by(start_year:))
+  FactoryBot.create(:partnership, school:, lead_provider:, cohort: Cohort.find_by(start_year:), relationship: true)
   FactoryBot.create(:user, :induction_coordinator, schools: [schools[index]], email: "induction.tutor_#{index + 1}@example.com")
 end

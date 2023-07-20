@@ -40,6 +40,7 @@ RSpec.describe "Lead provider partnerships spec", type: :request do
 
     let!(:partnership) { create :partnership, cohort:, lead_provider: user.lead_provider, school:, delivery_partner: }
     let!(:inactive_partnership) { create :partnership, :challenged, cohort:, lead_provider: user.lead_provider }
+    let!(:relationship_partnership) { create :partnership, cohort:, lead_provider: user.lead_provider, relationship: true }
 
     before do
       get "/lead-providers/partnerships/active.csv"
@@ -53,7 +54,7 @@ RSpec.describe "Lead provider partnerships spec", type: :request do
       expect(response.headers["Content-Disposition"]).to include "schools-#{cohort.start_year}.csv"
     end
 
-    it "returns only active partnerships" do
+    it "returns only active partnerships that aren't relationships" do
       expect(parsed_response.length).to eql 1
     end
 
