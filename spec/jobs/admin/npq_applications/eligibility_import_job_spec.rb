@@ -59,8 +59,11 @@ RSpec.describe Admin::NPQApplications::EligibilityImportJob do
         },
       ]
     end
+    let(:user) { create(:user, full_name: Faker::Name.name, email: Faker::Internet.email) }
+    let(:admin_profile) { create(:admin_profile, user_id: user.id, super_user: true) }
 
     before do
+      PaperTrail.request.whodunnit = User.find(user.id.to_s).id
       allow(ENV).to receive(:[]).and_call_original
       allow(ENV).to receive(:[]).with("GOOGLE_CLIENT_ID").and_return("foo")
       allow(ENV).to receive(:[]).with("GOOGLE_CLIENT_EMAIL").and_return("foo")

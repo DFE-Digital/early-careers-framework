@@ -319,9 +319,12 @@ RSpec.describe NPQApplication, type: :model do
   describe "validations" do
     context "when validating funding eligibility" do
       let(:participant_declaration) { create(:npq_participant_declaration, state: participant_declaration_state) }
+      let(:user) { create(:user, full_name: Faker::Name.name, email: Faker::Internet.email) }
+      let(:admin_profile) { create(:admin_profile, user_id: user.id, super_user: true) }
       let(:npq_application) { participant_declaration.participant_profile.npq_application }
 
       before do
+        PaperTrail.request.whodunnit = User.find(user.id.to_s).id
         npq_application.update!(eligible_for_funding:)
       end
 

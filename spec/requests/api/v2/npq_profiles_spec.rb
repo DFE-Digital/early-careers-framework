@@ -40,9 +40,12 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
     before do
       default_headers[:Authorization] = bearer_token
       default_headers["Content-Type"] = "application/vnd.api+json"
+      PaperTrail.request.whodunnit = User.find(user.id.to_s).id
     end
 
     let(:json) { json_hash.to_json }
+    let(:user) { create(:user, full_name: Faker::Name.name, email: Faker::Internet.email) }
+    let(:admin_profile) { create(:admin_profile, user_id: user.id, super_user: true) }
     let(:npq_application) { create(:npq_application, eligible_for_funding: false) }
 
     context "with valid data" do
