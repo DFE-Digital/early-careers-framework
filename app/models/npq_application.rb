@@ -28,6 +28,7 @@ class NPQApplication < ApplicationRecord
   belongs_to :cohort, optional: true
 
   after_commit :push_enrollment_to_big_query
+  after_update :update_eligibility_information, if: :saved_change_to_eligible_for_funding?
 
   UK_CATCHMENT_AREA = %w[jersey_guernsey_isle_of_man england northern_ireland scotland wales].freeze
 
@@ -110,14 +111,6 @@ class NPQApplication < ApplicationRecord
     ParticipantDeclaration::NPQ&.find_by_participant_profile_id(ParticipantProfile&.find_by_participant_identity_id(participant_identity_id)&.id)
   end
 
-  def update_eligibility_information(current_user)
-    if User.admins.include?(current_user)
-      self.updated_by = current_user.full_name
-      self.eligible_for_funding_updated_at = Time.current
-      save
-    end
-  end
-
   def declared_as_billable?
     profile.present? && profile.participant_declarations.billable.count.positive?
   end
@@ -147,6 +140,15 @@ private
   def validate_funding_eligiblity_status_code_change
     if declared_as_billable? && eligible_for_funding == false
       errors.add(:base, :billable_declaration_exists)
+    end
+  end
+
+  def update_eligibility_information
+    current_user = User.find(PaperTrail.request.whodunnit.to_s)
+    if current_user.admin?
+      self.updated_by = current_user.full_name
+      self.eligible_for_funding_updated_at = Time.current
+      save!
     end
   end
 end
