@@ -17,7 +17,7 @@ module LeadProviders
     def active
       @selected_cohort = params[:cohort] ? @lead_provider.cohorts.find_by(start_year: params[:cohort]) : Cohort.current
 
-      @schools = @lead_provider.active_partnerships.where(cohort: @selected_cohort).includes(:school, :delivery_partner)
+      @schools = @lead_provider.active_partnerships.where(relationship: false).where(cohort: @selected_cohort).includes(:school, :delivery_partner)
 
       respond_to do |format|
         format.csv do

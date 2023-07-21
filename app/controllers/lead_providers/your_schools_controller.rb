@@ -21,6 +21,7 @@ module LeadProviders
         .where(
           cohort: @selected_cohort,
           lead_provider: @lead_provider,
+          relationship: false,
         )
 
       @total_provider_schools = @partnerships.count

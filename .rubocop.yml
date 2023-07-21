@@ -34,12 +34,13 @@ Style/MixinUsage:
 
 Rails/UnknownEnv:
   Environments:
-    - production
-    - development
-    - test
     - deployed_development
-    - staging
+    - development
+    - production
+    - review
     - sandbox
+    - staging
+    - test
 
 Naming/VariableNumber:
   EnforcedStyle: snake_case

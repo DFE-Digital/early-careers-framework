@@ -235,6 +235,8 @@ en:
               blank: "enter your expected number of teachers"
         npq_application:
           attributes:
+            base:
+              billable_declaration_exists: "Eligibility can not be changed because billable declaration exists"
             lead_provider_approval_status:
               has_another_accepted_application: The participant already has an accepted application for this course
               has_already_been_accepted: This NPQ application has already been accepted
@@ -523,7 +525,6 @@ en:
               blank: "Enter a '#/delivery_partner_id'."
               invalid: "The '#/delivery_partner_id' you have entered is invalid. Check delivery partner details and try again."
               no_relationship: "The entered delivery partner is not recognised to be working in partnership with you for the given cohort. Contact the DfE for more information."
-              duplicate_delivery_partner: "We cannot process this request because you're already confirmed to be in partnership with the entered delivery partner. Contact the DfE for support."
         partnerships/update:
           attributes:
             partnership:

@@ -196,11 +196,16 @@ RSpec.describe Partnerships::Create do
         }
       end
 
-      it "returns errors" do
-        expect(Partnership.count).to eql(1)
-        expect(service).to be_invalid
+      it "sets the relationship partnership as the default" do
+        expect(service).to be_valid
+        expect { service.call }.not_to change(Partnership, :count)
 
-        expect(service.errors.messages_for(:delivery_partner_id)).to include("We cannot process this request because you're already confirmed to be in partnership with the entered delivery partner. Contact the DfE for support.")
+        partnership = Partnership.first
+        expect(partnership.cohort_id).to eq(cohort.id)
+        expect(partnership.delivery_partner_id).to eq(delivery_partner2.id)
+        expect(partnership.lead_provider_id).to eq(lead_provider.id)
+        expect(partnership.school_id).to eq(school.id)
+        expect(partnership.relationship).to be(false)
       end
     end
   end

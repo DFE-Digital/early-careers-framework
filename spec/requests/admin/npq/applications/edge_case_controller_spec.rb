@@ -6,16 +6,25 @@ RSpec.describe "Admin::NPQ::Applications::EdgeCasesController", type: :request d
   before do
     # Applications that wont show up
     create(:npq_application,
+           :funded,
+           :accepted,
+           :with_started_declaration,
            works_in_school: true,
            works_in_childcare: false,
            funding_eligiblity_status_code: "no_institution")
     create(:npq_application,
+           :funded,
+           :accepted,
+           :with_started_declaration,
            works_in_school: false,
            works_in_childcare: true,
            funding_eligiblity_status_code: "funded")
 
     # Applications that will show up
     create(:npq_application,
+           :funded,
+           :accepted,
+           :with_started_declaration,
            works_in_school: false,
            works_in_childcare: false,
            employment_type: "local_authority_supply_teacher",
@@ -23,12 +32,18 @@ RSpec.describe "Admin::NPQ::Applications::EdgeCasesController", type: :request d
            employer_name: "University of Newcastle upon Tyne",
            funding_eligiblity_status_code: "no_institution")
     create(:npq_application,
+           :funded,
+           :accepted,
+           :with_started_declaration,
            works_in_school: false,
            works_in_childcare: false,
            employment_role: "Music Teacher",
            employer_name: "St Joseph's Specialist Trust",
            funding_eligiblity_status_code: "marked_ineligible_by_policy")
     create(:npq_application,
+           :funded,
+           :accepted,
+           :with_started_declaration,
            works_in_school: false,
            works_in_childcare: false,
            employment_type: "hospital_school",
@@ -36,6 +51,9 @@ RSpec.describe "Admin::NPQ::Applications::EdgeCasesController", type: :request d
            employer_name: "Salford council",
            funding_eligiblity_status_code: "awaiting_more_information")
     create(:npq_application,
+           :funded,
+           :accepted,
+           :with_started_declaration,
            works_in_school: false,
            works_in_childcare: false,
            employment_type: "local_authority_supply_teacher",
