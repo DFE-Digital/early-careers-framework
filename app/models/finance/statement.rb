@@ -73,4 +73,16 @@ class Finance::Statement < ApplicationRecord
       .where(cpd_lead_provider:)
       .where("payment_date < ?", payment_date)
   end
+
+  def adjustment_editable?
+    output_fee && !paid?
+  end
+
+  def ecf?
+    false
+  end
+
+  def npq?
+    false
+  end
 end

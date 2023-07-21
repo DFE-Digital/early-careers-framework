@@ -568,6 +568,14 @@ Rails.application.routes.draw do
 
       resources :contracts, only: %i[show]
     end
+
+    resources :statements, only: [] do
+      resources :adjustments, only: %i[new create index] do
+        collection do
+          post :add_another
+        end
+      end
+    end
   end
 
   get "/finance", to: redirect("/finance/manage-cpd-contracts")

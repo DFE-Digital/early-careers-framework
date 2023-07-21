@@ -248,6 +248,12 @@ en:
           attributes:
             school_id:
               taken: The school is already linked to this cohort
+        finance/adjustment:
+          attributes:
+            payment_type:
+              blank: Enter a name for the adjustment you want to add
+            amount:
+              other_than: Enter the amount of money that needs to be paid
 
   activemodel:
     errors:
@@ -493,6 +499,17 @@ en:
           attributes:
             confirmation:
               inclusion: Choose yes or no
+        finance/create_adjustment_form:
+          attributes:
+            payment_type:
+              blank: Enter a name for the adjustment you want to add
+            amount:
+              not_a_number: Enter the amount of money that needs to be paid
+              other_than: Enter the amount of money that needs to be paid
+        finance/add_another_adjustment_form:
+          attributes:
+            add_another:
+              inclusion: Select if you need to add another adjustment
         choose_role_form:
           attributes:
             role:

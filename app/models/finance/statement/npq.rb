@@ -23,4 +23,8 @@ class Finance::Statement::NPQ < Finance::Statement
   def show_targeted_delivery_funding?
     cohort.start_year >= 2022
   end
+
+  def npq?
+    true
+  end
 end
