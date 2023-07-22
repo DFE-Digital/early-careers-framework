@@ -73,6 +73,16 @@ RSpec.describe "Schools::Partnerships", type: :request do
       end
 
       context "when the school entered a partnership a long time ago" do
+        let(:challenge_deadline) { cohort.academic_year_start_date + 21.days }
+        let!(:partnership) do
+          create(:partnership,
+                 cohort:,
+                 lead_provider:,
+                 school:,
+                 delivery_partner: delivery_partner1,
+                 challenge_deadline:)
+        end
+
         before do
           PartnershipNotificationEmail.create!(
             token: "abc123",
@@ -83,12 +93,13 @@ RSpec.describe "Schools::Partnerships", type: :request do
         end
 
         it "does not show the challenge link" do
-          travel_to 6.weeks.from_now
-          get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/partnerships"
+          travel_to(challenge_deadline + 1.day) do
+            get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/partnerships"
 
-          expect(response.body).not_to include("This link will expire on")
-          expect(response.body).not_to include("?token=abc123")
-          expect(response.body).to include("contact: ")
+            expect(response.body).not_to include("This link will expire on")
+            expect(response.body).not_to include("?token=abc123")
+            expect(response.body).to include("contact: ")
+          end
         end
       end
     end
