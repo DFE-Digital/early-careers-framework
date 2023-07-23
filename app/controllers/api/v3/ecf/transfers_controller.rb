@@ -6,7 +6,6 @@ module Api
       class TransfersController < Api::ApiController
         include ApiTokenAuthenticatable
         include ApiPagination
-        include ApiFilter
         include ApiFilterValidation
 
         # Returns a list of ECF participant transfers
