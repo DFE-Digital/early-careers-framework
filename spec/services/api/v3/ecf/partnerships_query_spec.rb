@@ -114,11 +114,19 @@ RSpec.describe Api::V3::ECF::PartnershipsQuery do
         end
       end
 
-      context "when a sort parameter is specified" do
+      context "when created_at sort parameter is specified" do
         let(:params) { { sort: "-created_at" } }
 
         it "returns records in the correct order" do
           expect(subject.partnerships).to eq([partnership, another_partnership])
+        end
+      end
+
+      context "when updated_at sort parameter is specified" do
+        let(:params) { { sort: "updated_at" } }
+
+        it "returns records in the correct order" do
+          expect(subject.partnerships).to eq([another_partnership, partnership])
         end
       end
     end

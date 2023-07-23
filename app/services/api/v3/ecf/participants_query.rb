@@ -17,7 +17,7 @@ module Api
 
         def participants_for_pagination
           scope = User
-                    .select("users.id", "users.created_at")
+                    .select("users.id", "users.created_at", "users.updated_at")
                     .joins(participant_profiles: :induction_records)
                     .joins("JOIN (#{latest_induction_records_join.to_sql}) AS latest_induction_records_join ON latest_induction_records_join.latest_id = induction_records.id")
                     .order(sort_order(default: :created_at, model: User))

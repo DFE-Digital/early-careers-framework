@@ -68,8 +68,16 @@ RSpec.describe Api::V3::ECF::UnfundedMentorsQuery do
         end
       end
 
-      context "when a sort parameter is specified" do
+      context "when created_at sort parameter is specified" do
         let(:params) { { sort: "-created_at" } }
+
+        it "returns records in the correct order" do
+          expect(subject.unfunded_mentors.map(&:user_id)).to eq([unfunded_mentor_profile_user_id, another_unfunded_mentor_profile.user.id])
+        end
+      end
+
+      context "when updated_at sort parameter is specified" do
+        let(:params) { { sort: "updated_at" } }
 
         it "returns records in the correct order" do
           expect(subject.unfunded_mentors.map(&:user_id)).to eq([unfunded_mentor_profile_user_id, another_unfunded_mentor_profile.user.id])

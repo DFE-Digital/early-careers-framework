@@ -74,11 +74,19 @@ RSpec.describe Api::V3::NPQApplicationsQuery do
         end
       end
 
-      context "when a sort parameter is specified" do
+      context "when created_at sort parameter is specified" do
         let(:params) { { sort: "-created_at" } }
 
         it "returns records in the correct order" do
           expect(query_applications.map(&:id)).to eq([newest_application.id, oldest_application.id])
+        end
+      end
+
+      context "when updated_at sort parameter is specified" do
+        let(:params) { { sort: "updated_at" } }
+
+        it "returns records in the correct order" do
+          expect(query_applications.map(&:id)).to eq([oldest_application.id, newest_application.id])
         end
       end
     end

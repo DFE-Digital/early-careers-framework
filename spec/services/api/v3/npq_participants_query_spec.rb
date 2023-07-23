@@ -75,12 +75,22 @@ RSpec.describe Api::V3::NPQParticipantsQuery do
         end
       end
 
-      context "when a sort parameter is specified" do
+      context "when created_at sort parameter is specified" do
         let(:params) { { sort: "-created_at" } }
 
         it "returns records in the correct order" do
           expect(participants.map(&:id)).to eq(
             [participant_profile, another_participant_profile].map(&:user_id),
+          )
+        end
+      end
+
+      context "when updated_at sort parameter is specified" do
+        let(:params) { { sort: "updated_at" } }
+
+        it "returns records in the correct order" do
+          expect(participants.map(&:id)).to eq(
+            [another_participant_profile, participant_profile].map(&:user_id),
           )
         end
       end
