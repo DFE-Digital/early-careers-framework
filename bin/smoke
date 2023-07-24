@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+url=$1
+
+if [[ -z $url ]]; then
+  echo `date`" - smoke test failed (URL is missing)"
+  exit 1
+fi
+
+response=$(curl -sL $url/healthcheck)
+
+response_sha=$(jq ".sha" <<< $response)
+head_sha=$(git rev-parse HEAD)
+
+if [[ $response_sha == $head_sha ]]; then
+  echo "✅ Correct version deployed"
+else
+  echo "Fail: healthcheck sha is $response_sha but head is $head_sha"
+fi
+
+response_migration=$(jq ".database.migration_version" <<< $response)
+latest_migration=$(ls db/migrate/ | cut -d "_" -f1 | sort -nr | head -n1)
+
+if [[ $response_migration == $latest_migration ]]; then
+  echo "✅ Correct database migration version"
+else
+  echo "Fail: healthcheck migration version is $response_migration but latest is $latest_migration"
+fi
