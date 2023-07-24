@@ -6,7 +6,7 @@ class HealthcheckController < ApplicationController
   def check
     render status: :ok, json: {
       version: release_version,
-      sha: ENV["SHA"],
+      sha:,
       environment: Rails.env,
       database: {
         connected: database_connected?,
@@ -26,6 +26,10 @@ class HealthcheckController < ApplicationController
   end
 
 private
+
+  def sha
+    ENV["SHA"].presence || ENV["COMMIT_SHA"].presence || "none"
+  end
 
   def database_connected?
     ApplicationRecord.connection.select_value("SELECT 1") == 1

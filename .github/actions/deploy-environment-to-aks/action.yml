@@ -18,6 +18,9 @@ inputs:
     description: Whether to run the smoke test with support credentials
     required: false
     default: "true"
+  current-commit-sha:
+    description: The commit sha for the current commit
+    required: true
 
 outputs:
   url:
@@ -58,3 +61,8 @@ runs:
       run: |
         az aks get-credentials --resource-group s189t01-tsc-ts-rg --name s189t01-tsc-test-aks
         kubectl exec -n cpd-development deployment/cpd-ecf-review-${{ inputs.pull-request-number }}-web -- sh -c "cd /app && /usr/local/bin/bundle exec rails db:safe_reset"
+
+    - uses: ./.github/actions/smoke-test
+      with:
+        url: ${{ steps.apply-terraform.outputs.url }}
+        current-commit-sha: ${{ inputs.current-commit-sha }}

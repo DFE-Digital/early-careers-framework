@@ -57,3 +57,4 @@ jobs:
           docker-image: ${{ needs.docker.outputs.image }}
           azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
           pull-request-number: ${{ github.event.pull_request.number }}
+          current-commit-sha: ${{ github.event.pull_request.head.sha }}
