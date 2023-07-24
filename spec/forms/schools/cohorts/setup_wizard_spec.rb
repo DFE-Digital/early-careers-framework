@@ -197,4 +197,24 @@ RSpec.describe Schools::Cohorts::SetupWizard, type: :model do
       include_context "sending the pilot survey"
     end
   end
+
+  describe "#previous_partnership_exists?" do
+    context "when the previous cohort has an active partnership with a lead provider and a delivery partnern" do
+      it "returns true" do
+        allow(wizard).to receive(:previous_delivery_partner).and_return(true)
+        allow(wizard).to receive(:previous_lead_provider).and_return(true)
+
+        expect(wizard.previous_partnership_exists?).to be true
+      end
+    end
+
+    context "when the previous cohort does not have an active partnership" do
+      it "returns false" do
+        allow(wizard).to receive(:previous_delivery_partner).and_return(false)
+        allow(wizard).to receive(:previous_lead_provider).and_return(false)
+
+        expect(wizard.previous_partnership_exists?).to be false
+      end
+    end
+  end
 end

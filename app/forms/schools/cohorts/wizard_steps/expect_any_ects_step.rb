@@ -27,6 +27,7 @@ module Schools
         def next_step
           return :no_expected_ects unless expect_any_ects?
           return :how_will_you_run_training unless wizard.previously_fip?
+          return :what_changes unless wizard.previous_partnership_exists?
           return :keep_providers if wizard.provider_relationship_is_valid?
 
           :providers_relationship_has_changed
