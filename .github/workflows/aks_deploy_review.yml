@@ -1,0 +1,59 @@
+name: "Deploy review"
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Deploy environment"
+        required: true
+        default: review_aks
+        type: environment
+        options:
+          - review_aks
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+    types:
+      - labeled
+      - synchronize
+      - reopened
+      - opened
+
+jobs:
+  docker:
+    name: Build and push Docker image
+    runs-on: ubuntu-latest
+
+    outputs:
+      image: ${{ steps.build-docker-image.outputs.image }}
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: DFE-Digital/github-actions/build-docker-image@master
+        id: build-docker-image
+        with:
+          docker-repository: ghcr.io/dfe-digital/early-careers-framework
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+  deploy_review:
+    name: Deploy to review environment
+    concurrency: deploy_review_${{ github.event.pull_request.number }}
+    if: contains(github.event.pull_request.labels.*.name, 'review-app')
+    needs: [docker]
+    runs-on: ubuntu-latest
+    environment:
+      name: review
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: ./.github/actions/deploy-environment-to-aks
+        id: deploy
+        with:
+          environment: review
+          docker-image: ${{ needs.docker.outputs.image }}
+          azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
+          pull-request-number: ${{ github.event.pull_request.number }}
