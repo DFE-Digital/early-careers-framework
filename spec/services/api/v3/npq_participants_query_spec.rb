@@ -60,17 +60,39 @@ RSpec.describe Api::V3::NPQParticipantsQuery do
       end
     end
 
-    context "sorting" do
+    describe "sorting" do
       let!(:another_participant_profile) do
         travel_to(10.days.ago) do
           create(:npq_participant_profile, npq_lead_provider:, npq_course:)
         end
       end
 
-      it "returns all records ordered by participant profile created_at" do
-        expect(participants.map(&:id)).to eq(
-          [another_participant_profile, participant_profile].map(&:user_id),
-        )
+      context "when no sort parameter is specified" do
+        it "returns all records ordered by participant profile created_at ascending by default" do
+          expect(participants.map(&:id)).to eq(
+            [another_participant_profile, participant_profile].map(&:user_id),
+          )
+        end
+      end
+
+      context "when created_at sort parameter is specified" do
+        let(:params) { { sort: "-created_at" } }
+
+        it "returns records in the correct order" do
+          expect(participants.map(&:id)).to eq(
+            [participant_profile, another_participant_profile].map(&:user_id),
+          )
+        end
+      end
+
+      context "when updated_at sort parameter is specified" do
+        let(:params) { { sort: "updated_at" } }
+
+        it "returns records in the correct order" do
+          expect(participants.map(&:id)).to eq(
+            [another_participant_profile, participant_profile].map(&:user_id),
+          )
+        end
       end
     end
   end

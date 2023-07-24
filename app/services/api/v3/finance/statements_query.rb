@@ -4,8 +4,8 @@ module Api
   module V3
     module Finance
       class StatementsQuery
-        include Concerns::FilterCohorts
-        include Concerns::FilterUpdatedSince
+        include Api::Concerns::FilterCohorts
+        include Api::Concerns::FilterUpdatedSince
 
         attr_reader :cpd_lead_provider, :params
 

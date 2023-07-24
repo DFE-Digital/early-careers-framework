@@ -3,8 +3,6 @@
 module Api
   module V3
     class NPQApplicationsController < V1::NPQApplicationsController
-      include ApiOrderable
-
       # Returns a list of NPQ applications
       # Providers can see their NPQ applications which cohorts they apply to via this endpoint
       #
@@ -17,7 +15,7 @@ module Api
     private
 
       def npq_applications
-        @npq_applications ||= npq_applications_query.applications.order(sort_params(params))
+        @npq_applications ||= npq_applications_query.applications
       end
 
       def npq_applications_query
@@ -29,7 +27,7 @@ module Api
 
       def npq_application_params
         params
-          .with_defaults({ sort: "", filter: { updated_since: "", cohort: "", participant_id: "" } })
+          .with_defaults(sort: "", filter: { updated_since: "", cohort: "", participant_id: "" })
           .permit(:id, :sort, filter: %i[updated_since cohort participant_id])
       end
 

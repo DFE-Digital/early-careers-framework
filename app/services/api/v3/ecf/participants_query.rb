@@ -4,10 +4,11 @@ module Api
   module V3
     module ECF
       class ParticipantsQuery
-        include Concerns::FilterCohorts
-        include Concerns::FilterUpdatedSince
-        include Concerns::FilterTrainingStatus
-        include Concerns::FetchLatestInductionRecords
+        include Api::Concerns::FilterCohorts
+        include Api::Concerns::FilterUpdatedSince
+        include Api::Concerns::FilterTrainingStatus
+        include Api::Concerns::FetchLatestInductionRecords
+        include Concerns::Orderable
 
         def initialize(lead_provider:, params:)
           @lead_provider = lead_provider
@@ -16,13 +17,14 @@ module Api
 
         def participants_for_pagination
           scope = User
-                    .select("users.id", "users.created_at")
+                    .select("users.id", "users.created_at", "users.updated_at")
                     .joins(participant_profiles: :induction_records)
                     .joins("JOIN (#{latest_induction_records_join.to_sql}) AS latest_induction_records_join ON latest_induction_records_join.latest_id = induction_records.id")
+                    .order(sort_order(default: :created_at, model: User))
                     .distinct
           scope = scope.where(users: { updated_at: updated_since.. }) if updated_since_filter.present?
           scope = scope.where(induction_records: { training_status: }) if training_status.present?
-          params[:sort].blank? ? scope.order(:created_at) : scope
+          scope
         end
 
         def participants_from(paginated_join)
@@ -37,13 +39,12 @@ module Api
                   .group("users.id")
                   .distinct
 
-          scope = User
+          User
             .select("users.*")
             .includes(:participant_identities, :teacher_profile, participant_profiles: [:participant_profile_states, :schedule, :teacher_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, { induction_records: [:preferred_identity, :schedule, :delivery_partner, :participant_profile, { mentor_profile: :participant_identity, induction_programme: [school_cohort: %i[school cohort]] }] }])
             .from("(#{sub_query.to_sql}) as users")
+            .order(sort_order(default: "participant_profiles_induction_records.created_at ASC", model: User))
             .distinct
-
-          params[:sort].blank? ? scope.order("participant_profiles_induction_records.created_at ASC") : scope
         end
 
         def participant

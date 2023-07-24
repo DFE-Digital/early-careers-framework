@@ -5,8 +5,7 @@ module Api
     class DeliveryPartnersController < Api::ApiController
       include ApiTokenAuthenticatable
       include ApiPagination
-      include ApiFilter
-      include ApiOrderable
+      include ApiFilterValidation
 
       # Returns a list of delivery partners
       # Providers can see their delivery partners and which cohorts they apply to via this endpoint
@@ -33,7 +32,7 @@ module Api
       end
 
       def delivery_partners
-        @delivery_partners ||= delivery_partners_query.delivery_partners.order(sort_params(params))
+        @delivery_partners ||= delivery_partners_query.delivery_partners
       end
 
       def delivery_partner
@@ -48,7 +47,9 @@ module Api
       end
 
       def delivery_partner_params
-        params.permit(:id, :sort, filter: %i[cohort])
+        params
+          .with_defaults(sort: "", filter: { cohort: "" })
+          .permit(:id, :sort, filter: %i[cohort])
       end
 
       def access_scope

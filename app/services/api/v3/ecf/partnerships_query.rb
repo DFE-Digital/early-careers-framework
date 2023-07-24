@@ -4,8 +4,9 @@ module Api
   module V3
     module ECF
       class PartnershipsQuery
-        include Concerns::FilterCohorts
-        include Concerns::FilterUpdatedSince
+        include Api::Concerns::FilterCohorts
+        include Api::Concerns::FilterUpdatedSince
+        include Concerns::Orderable
 
         attr_reader :lead_provider, :params
 
@@ -16,11 +17,12 @@ module Api
 
         def partnerships
           scope = partnership_scope
-          scope = scope.where(partnerships: { cohort:  cohorts })
+            .where(partnerships: { cohort: cohorts })
+            .order(sort_order(default: "partnerships.created_at ASC", model: Partnership))
+            .distinct
           scope = scope.where("partnerships.updated_at > ?", updated_since) if updated_since_filter.present?
           scope = scope.where(partnerships: { delivery_partner: [delivery_partner_id_filter] }) if delivery_partner_id_filter.present?
-          scope = scope.order("partnerships.created_at ASC") if params[:sort].blank?
-          scope.distinct
+          scope
         end
 
         def partnership

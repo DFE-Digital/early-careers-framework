@@ -101,15 +101,33 @@ RSpec.describe Api::V3::ECF::PartnershipsQuery do
       end
     end
 
-    context "sorting" do
+    describe "sorting" do
       let!(:another_partnership) do
         travel_to(2.days.ago) do
           create(:partnership, cohort: another_cohort, lead_provider:)
         end
       end
 
-      it "returns all partnerships ordered by created_at" do
-        expect(subject.partnerships).to eq([another_partnership, partnership])
+      context "when no sort parameter is specified" do
+        it "returns all records ordered by created_at ascending by default" do
+          expect(subject.partnerships).to eq([another_partnership, partnership])
+        end
+      end
+
+      context "when created_at sort parameter is specified" do
+        let(:params) { { sort: "-created_at" } }
+
+        it "returns records in the correct order" do
+          expect(subject.partnerships).to eq([partnership, another_partnership])
+        end
+      end
+
+      context "when updated_at sort parameter is specified" do
+        let(:params) { { sort: "updated_at" } }
+
+        it "returns records in the correct order" do
+          expect(subject.partnerships).to eq([another_partnership, partnership])
+        end
       end
     end
   end
