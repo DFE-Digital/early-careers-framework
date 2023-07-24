@@ -10,11 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_12_152849) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_14_214306) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
+  enable_extension "fuzzystrmatch"
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
+  enable_extension "uuid-ossp"
 
   create_table "active_storage_attachments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name", null: false
@@ -874,9 +876,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_12_152849) do
     t.string "declaration_type", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["milestone_id", "schedule_id", "declaration_type"], name: "milestones_schedules_schedule_milestone_declaration_type", unique: true
     t.index ["milestone_id"], name: "index_schedule_milestones_on_milestone_id"
-    t.index ["schedule_id", "milestone_id", "declaration_type"], name: "schedules_milestones_schedule_milestone_declaration_type", unique: true
     t.index ["schedule_id"], name: "index_schedule_milestones_on_schedule_id"
   end
 
@@ -1067,7 +1067,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_12_152849) do
   end
 
   create_table "versions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "item_type"
+    t.string "item_type", null: false
     t.string "event", null: false
     t.string "whodunnit"
     t.json "object"
