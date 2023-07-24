@@ -86,26 +86,41 @@ RSpec.describe Schools::Cohorts::WizardSteps::ExpectAnyEctsStep, type: :model do
           allow(wizard).to receive(:previously_fip?).and_return(true)
         end
 
-        context "when the LP and DP have a partnership in the new cohort" do
+        context "when there is no partnership in previous cohort" do
           before do
-            allow(wizard).to receive(:provider_relationship_is_valid?).and_return(true)
+            allow(wizard).to receive(:previous_partnership_exists?).and_return(false)
           end
 
-          it "returns :keep_providers" do
-            expect(step.next_step).to eq :keep_providers
+          it "returns :what_changes" do
+            expect(step.next_step).to eq :what_changes
           end
         end
 
-        context "when the LP and DP do not have a partnership in the new cohort" do
+        context "when there is a partnership in previous cohort" do
           before do
-            allow(wizard).to receive(:provider_relationship_is_valid?).and_return(false)
+            allow(wizard).to receive(:previous_partnership_exists?).and_return(true)
           end
 
-          it "returns :providers_relationship_has_changed" do
-            expect(step.next_step).to eq :providers_relationship_has_changed
+          context "when the LP and DP have a partnership in the new cohort" do
+            before do
+              allow(wizard).to receive(:provider_relationship_is_valid?).and_return(true)
+            end
+
+            it "returns :keep_providers" do
+              expect(step.next_step).to eq :keep_providers
+            end
+          end
+
+          context "when the LP and DP do not have a partnership in the new cohort" do
+            before do
+              allow(wizard).to receive(:provider_relationship_is_valid?).and_return(false)
+            end
+
+            it "returns :providers_relationship_has_changed" do
+              expect(step.next_step).to eq :providers_relationship_has_changed
+            end
           end
         end
-
       end
     end
   end
