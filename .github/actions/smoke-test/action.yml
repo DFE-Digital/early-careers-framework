@@ -10,12 +10,6 @@ runs:
   using: composite
 
   steps:
-    - name: Install jq
-      shell: bash
-      run: |
-        sudo apt-get update
-        sudo apt-get install jq
-
     - name: Run smoke tests
       shell: bash
       run: bin/smoke ${{ inputs.url }}
