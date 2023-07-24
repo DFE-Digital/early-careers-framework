@@ -111,7 +111,7 @@ class NPQApplication < ApplicationRecord
   end
 
   def declared_as_billable?
-    profile.participant_declarations.billable.count.positive?
+    profile.present? && profile.participant_declarations.billable.count.positive?
   end
 
 private
