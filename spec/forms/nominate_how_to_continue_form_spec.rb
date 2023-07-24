@@ -4,7 +4,7 @@ require "rails_helper"
 
 RSpec.describe NominateHowToContinueForm, type: :model do
   describe "validations" do
-    it { is_expected.to validate_presence_of(:how_to_continue).with_message("Tell us whether you expect to have any early career teachers this year") }
+    it { is_expected.to validate_presence_of(:how_to_continue).with_message("Select an answer") }
   end
 
   describe "#choices" do

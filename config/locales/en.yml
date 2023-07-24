@@ -149,7 +149,7 @@ en:
     mentor:
       blank: "Choose one"
     how_to_continue:
-      blank: "Tell us whether you expect to have any early career teachers this year"
+      blank: "Select an answer"
     schools:
       blank: "The details you entered do not match any schools"
     programme_choice:
@@ -360,6 +360,10 @@ en:
               blank: "Enter an email address for your teacher"
             core_induction_programme_id:
               blank: "Select the materials you want to use"
+        schools/cohorts/wizard_steps/expect_any_ects_step:
+          attributes:
+            expect_any_ects:
+              inclusion: Select an answer
         schools/add_participants/wizard_steps/participant_type_step:
           attributes:
             participant_type:

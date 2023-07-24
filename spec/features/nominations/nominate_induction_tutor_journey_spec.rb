@@ -6,6 +6,8 @@ require_relative "./nominate_induction_tutor_steps"
 RSpec.feature "ECT nominate SIT journey", type: :feature, js: true do
   include NominateInductionTutorSteps
 
+  let(:academic_year_text) { Cohort.current.description }
+
   scenario "Valid nomination link was sent" do
     given_a_valid_nomination_email_has_been_created
     when_i_click_the_link_to_nominate_a_sit
