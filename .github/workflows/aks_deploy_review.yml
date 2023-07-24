@@ -42,6 +42,7 @@ jobs:
   deploy_review:
     name: Deploy to review environment
     concurrency: deploy_review_${{ github.event.pull_request.number }}
+    if: contains(github.event.pull_request.labels.*.name, 'review-app')
     needs: [docker]
     runs-on: ubuntu-latest
     environment:
