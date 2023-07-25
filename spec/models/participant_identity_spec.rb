@@ -33,6 +33,15 @@ RSpec.describe ParticipantIdentity, type: :model do
     end
   end
 
+  describe "whitespace stripping" do
+    let(:participant_identity) { create(:participant_identity, email: " \tgordo@example.com \n ") }
+
+    it "strips whitespace from emails" do
+      participant_identity.valid?
+      expect(participant_identity.email).to eq "gordo@example.com"
+    end
+  end
+
   describe "scopes" do
     describe "#email_matches" do
       it "adds a wildcarded condition on email" do

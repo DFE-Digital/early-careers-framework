@@ -72,4 +72,14 @@ RSpec.describe DataStage::School, type: :model do
       end
     end
   end
+
+  describe "whitespace stripping" do
+    let(:school) { create(:staged_school, primary_contact_email: " \tgordo@example.com \n ", secondary_contact_email: " \ttracy@example.com \n ") }
+
+    it "strips whitespace from emails" do
+      school.valid?
+      expect(school.primary_contact_email).to eq "gordo@example.com"
+      expect(school.secondary_contact_email).to eq "tracy@example.com"
+    end
+  end
 end

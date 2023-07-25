@@ -26,6 +26,16 @@ RSpec.describe School, type: :model do
     end
   end
 
+  describe "whitespace stripping" do
+    let(:school) { create(:school, primary_contact_email: " \tgordo@example.com \n ", secondary_contact_email: " \ttracy@example.com \n ") }
+
+    it "strips whitespace from emails" do
+      school.valid?
+      expect(school.primary_contact_email).to eq "gordo@example.com"
+      expect(school.secondary_contact_email).to eq "tracy@example.com"
+    end
+  end
+
   describe "associations" do
     it { is_expected.to have_many(:partnerships) }
     it { is_expected.to have_many(:lead_providers).through(:partnerships) }
