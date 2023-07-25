@@ -7,18 +7,18 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
-## 21st July 2023
+## 26th July 2023
 
-Lead providers can now change the cohort of an ECF participant, providing a participant does not have any declarations which are in the following states:
+Lead Providers can now change the cohort of an ECF participant, providing that:
 
-- submitted
-- eligible
-- payable
-- paid
+- the lead provider has a partnership with the school in the new cohort they want to move the participant into; and
+- any declarations the provider may have made for the participant have been voided or clawed_back
 
-Providers may change an ECF participant’s cohort using the [change-schedule endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-id-change-schedule-put).
+Providers may change an ECF participant's cohort using the [change-schedule endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-id-change-schedule-put).
 
-Note, lead providers should ensure they are in partnership with the participant’s school for the new cohort prior to submitting any change via the API. For example, if a lead provider has no partnership with a school for cohort 2022 and changes a participant from 2023 to 2022 cohort, then the lead provider will no longer be able to view or submit information about the participant. Providers can check partnership details via the [partnerships endpoints](/api-reference/reference-v3.html#api-v3-partnerships-ecf-get). Please raise any queries with the DfE directly.
+If a lead provider has no partnership with a school for cohort 2022 and tries to change a participant from 2023 to 2022 cohort, then the API will return an error: "You cannot change a participant to this cohort as you do not have a partnership with the school for the cohort. Contact the DfE for assistance."
+
+If the participant has any declarations which are in certain states - submitted, eligible, payable, paid - then the API will also return an error: "Changing schedule would invalidate existing declarations. Please void them first."
 
 ## 20th July 2023
 

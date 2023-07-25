@@ -153,11 +153,6 @@ class ParticipantProfile < ApplicationRecord
     participant_profile_states.where("created_at < ?", declaration_date).order(:created_at).last
   end
 
-  def update_schedule!(schedule)
-    # TODO: Do we need to store when this happens outside of papertrail?
-    update!(schedule:)
-  end
-
   def validation_decision(name)
     unless self.class.validation_steps.include?(name.to_sym)
       raise "Unknown validation step: #{name} for #{self.class.name}. Known steps: #{self.class.validation_steps.join(', ')}"
