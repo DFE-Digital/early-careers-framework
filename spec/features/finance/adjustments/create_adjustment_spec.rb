@@ -21,7 +21,7 @@ RSpec.describe "Create adjustment for statement", :js do
     then_i_see("Check your answers")
     and_i_see("Test Payment")
     and_i_see("£999.99")
-    and_i_click_on("Continue")
+    and_i_click_on("Confirm and continue")
 
     then_i_see("You have added an adjustment")
     and_i_see("Test Payment")
