@@ -3,6 +3,7 @@
 module DataStage
   class School < ApplicationRecord
     include GiasHelpers
+    extend AutoStripAttributes
 
     self.table_name = "data_stage_schools"
 
@@ -17,6 +18,9 @@ module DataStage
     has_one :counterpart, class_name: "::School",
                           foreign_key: :urn,
                           primary_key: :urn
+
+    auto_strip_attributes :primary_contact_email, nullify: false
+    auto_strip_attributes :secondary_contact_email, nullify: false
 
     scope :schools_to_add, -> { currently_open.left_joins(:counterpart).where(counterpart: { urn: nil }) }
 

@@ -3,6 +3,8 @@
 class User < ApplicationRecord
   has_paper_trail
 
+  extend AutoStripAttributes
+
   devise :registerable, :trackable, :passwordless_authenticatable
 
   has_many :participant_identities
@@ -36,7 +38,9 @@ class User < ApplicationRecord
   has_many :npq_application_eligibility_imports, class_name: "NPQApplications::EligibilityImport"
   has_many :npq_application_exports, class_name: "NPQApplications::Export"
 
-  before_validation :strip_whitespace
+  auto_strip_attributes :full_name, nullify: false, squish: true
+  auto_strip_attributes :email, nullify: false
+
   after_update :sync_email_with_identity
 
   validates :full_name, presence: true
@@ -221,10 +225,5 @@ private
     if saved_change_to_email? && participant_identities.count == 1
       participant_identities.original.first&.update!(email:)
     end
-  end
-
-  def strip_whitespace
-    full_name&.squish!
-    email&.squish!
   end
 end

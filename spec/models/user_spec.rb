@@ -62,7 +62,7 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe "before_validation" do
+  describe "whitespace stripping" do
     let(:user) { build(:user, full_name: "\t  Gordon \tBanks \n", email: " \tgordo@example.com \n ") }
 
     it "strips whitespace from :full_name" do
