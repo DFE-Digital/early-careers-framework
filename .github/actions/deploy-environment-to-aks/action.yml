@@ -62,3 +62,4 @@ runs:
     - uses: ./.github/actions/smoke-test
       with:
         url: ${{ steps.apply-terraform.outputs.url }}
+        current_commit_sha: ${{ github.sha }}

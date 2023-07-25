@@ -1,21 +1,23 @@
 #!/usr/bin/env bash
 
 url=$1
-
 if [[ -z $url ]]; then
   echo `date`" - smoke test failed (URL is missing)"
   exit 1
 fi
-
 response=$(curl -sL $url/healthcheck)
-
 response_sha=$(jq ".sha" <<< $response)
-head_sha=$(git rev-parse HEAD)
 
-if [[ $response_sha == $head_sha ]]; then
+current_commit_sha=$2
+if [[ -z $current_commit_sha ]]; then
+  echo `date`" - smoke test failed (head sha is missing)"
+  exit 1
+fi
+
+if [[ $response_sha == $current_commit_sha ]]; then
   echo "✅ Correct version deployed"
 else
-  echo "Fail: healthcheck sha is $response_sha but head is $head_sha"
+  echo "Fail: healthcheck sha is $response_sha but current commit is $current_commit_sha"
   exit 1
 fi
 

@@ -6,10 +6,14 @@ inputs:
     description: The URL of the deployed environment.
     required: true
 
+  current_commit_sha:
+    description: The sha of the current commit
+    required: true
+
 runs:
   using: composite
 
   steps:
     - name: Run smoke tests
       shell: bash
-      run: bin/smoke ${{ inputs.url }}
+      run: bin/smoke ${{ inputs.url }} ${{ inputs.current_commit_sha }}
