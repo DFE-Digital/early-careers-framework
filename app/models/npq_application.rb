@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class NPQApplication < ApplicationRecord
+  attr_accessor :current_user
+
   VALID_FUNDING_ELIGIBILITY_STATUS_CODES = %w[
     funded
     no_institution
@@ -144,11 +146,10 @@ private
   end
 
   def update_eligibility_information
-    current_user = User.find(PaperTrail.request.whodunnit.to_s)
-    if current_user.admin?
-      self.updated_by = current_user.full_name
-      self.eligible_for_funding_updated_at = Time.current
-      save!
-    end
+    return unless current_user&.admin?
+
+    self.updated_by = current_user.full_name
+    self.eligible_for_funding_updated_at = updated_at
+    save!
   end
 end

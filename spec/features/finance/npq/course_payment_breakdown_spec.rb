@@ -175,9 +175,8 @@ RSpec.feature "NPQ Course payment breakdown", type: :feature, js: true do
 
   def and_there_are_targeted_delivery_funding_declarations
     user = create(:user)
-    create(:admin_profile, user_id: user.id, super_user: true)
-    PaperTrail.request.whodunnit = User.find(user.id.to_s).id
     npq_application = create_accepted_application(user, npq_course_leading_behaviour_culture, npq_lead_provider)
+    npq_application.current_user = user
     npq_application.eligible_for_funding = true
     npq_application.targeted_delivery_funding_eligibility = true
     npq_application.save!

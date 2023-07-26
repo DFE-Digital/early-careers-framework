@@ -22,6 +22,7 @@ module Admin
 
           set_eligibility_status(eligible_for_funding_params["eligible_for_funding"])
           name = @npq_application.participant_identity.user.full_name
+          @npq_application.current_user = current_user
 
           if @npq_application.save(context: :admin)
             flash[:success] = {

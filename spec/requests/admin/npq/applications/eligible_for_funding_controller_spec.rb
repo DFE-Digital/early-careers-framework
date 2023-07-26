@@ -42,11 +42,8 @@ RSpec.describe "Admin::NPQ::Applications::EligibleForFundingController", type: :
   describe "PATCH (UPDATE) /admin/npq/applications/eligible_for_funding/:id" do
     let(:params) { { npq_application: { "eligible_for_funding"=>"false" } } }
     let(:application_id) { application.id }
-    let(:user) { create(:user, full_name: Faker::Name.name, email: Faker::Internet.email) }
-    let(:admin_profile) { create(:admin_profile, user_id: user.id, super_user: true) }
 
     before do
-      PaperTrail.request.whodunnit = User.find(user.id.to_s).id
       application.profile.participant_declarations.each { |d| d.update!(state: "submitted") }
     end
 

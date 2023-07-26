@@ -319,12 +319,10 @@ RSpec.describe NPQApplication, type: :model do
   describe "validations" do
     context "when validating funding eligibility" do
       let(:participant_declaration) { create(:npq_participant_declaration, state: participant_declaration_state) }
-      let(:user) { create(:user, full_name: Faker::Name.name, email: Faker::Internet.email) }
-      let(:admin_profile) { create(:admin_profile, user_id: user.id, super_user: true) }
       let(:npq_application) { participant_declaration.participant_profile.npq_application }
 
       before do
-        PaperTrail.request.whodunnit = User.find(user.id.to_s).id
+        npq_application.current_user = create(:user, :admin)
         npq_application.update!(eligible_for_funding:)
       end
 
@@ -420,6 +418,37 @@ RSpec.describe NPQApplication, type: :model do
         it "is true" do
           expect(npq_application.declared_as_billable?).to eq(true)
         end
+      end
+    end
+  end
+
+  describe "#update_eligibility_information" do
+    let(:current_user) { create(:user, :admin) }
+    subject(:npq_application) { create(:npq_application, eligible_for_funding: false) }
+    context "when eligible_for_funding attribute is changed" do
+      it "updates eligibility information if the user is an admin" do
+        npq_application.current_user = current_user
+        npq_application.eligible_for_funding = true
+        expect { npq_application.save }.to change {
+          [npq_application.updated_by, npq_application.eligible_for_funding_updated_at]
+        }.and(change { npq_application.updated_by }.to(current_user.full_name)
+          .and(change { npq_application.eligible_for_funding_updated_at }.to(be_within(1.second).of(Time.current))))
+      end
+      it "does not update eligibility information if the user is not an admin" do
+        npq_application.current_user = create(:user)
+        npq_application.eligible_for_funding = true
+        expect { npq_application.save }.not_to change {
+          [npq_application.updated_by, npq_application.eligible_for_funding_updated_at]
+        }
+      end
+    end
+    context "when eligible_for_funding attribute is not changed" do
+      it "does not update eligibility information" do
+        npq_application.current_user = current_user
+        npq_application.eligible_for_funding = false
+        expect { npq_application.save }.not_to change {
+          [npq_application.updated_by, npq_application.eligible_for_funding_updated_at]
+        }
       end
     end
   end
