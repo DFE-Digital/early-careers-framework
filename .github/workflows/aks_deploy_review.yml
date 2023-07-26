@@ -59,3 +59,10 @@ jobs:
           azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
           pull-request-number: ${{ github.event.pull_request.number }}
           current-commit-sha: ${{ github.event.pull_request.head.sha }}
+
+      - name: Post sticky pull request comment
+        if: github.event_name == 'pull_request'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          message: |
+            Review app deployed to ${{ steps.deploy.outputs.url }}
