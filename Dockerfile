@@ -82,8 +82,10 @@ RUN bundle exec rake assets:precompile && \
 FROM ${BASE_RUBY_IMAGE} AS production
 
 ARG SHA
+ARG COMMIT_SHA
 ENV AUTHORISED_HOSTS=127.0.0.1 \
-    SHA=${SHA}
+    SHA=${SHA} \
+    COMMIT_SHA=${COMMIT_SHA}
 
 RUN apk -U upgrade && \
     apk add --update --no-cache tzdata libpq libxml2 libxslt graphviz && \

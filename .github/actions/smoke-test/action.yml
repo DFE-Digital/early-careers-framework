@@ -1,0 +1,19 @@
+name: Smoke test
+description: Run the smoke tests against a live environment.
+
+inputs:
+  url:
+    description: The URL of the deployed environment.
+    required: true
+
+  current-commit-sha:
+    description: The sha of the current commit
+    required: true
+
+runs:
+  using: composite
+
+  steps:
+    - name: Run smoke tests
+      shell: bash
+      run: bin/smoke ${{ inputs.url }} ${{ inputs.current-commit-sha }}
