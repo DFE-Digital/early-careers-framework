@@ -1,0 +1,59 @@
+<% content_for :before_content, govuk_back_link(text: "Back", href: @adjustment.back_link) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= form_for @adjustment, url: finance_statement_adjustments_path(@statement), as: :finance_adjustment do |f| %>
+      <%= f.govuk_error_summary %>
+
+      <% case @adjustment.form_step %>
+      <% when "step1" %>
+        <%= f.govuk_text_field(
+          :payment_type,
+          caption: { text: "Add adjustment", size: "xl"},
+          label: { text: "What is the name of the adjustment", tag: "h1", size: "xl" },
+          hint: { text: "Describe what the adjustment is for. For example 'IT consultant fee'" }
+        ) %>
+      <% when "step2" %>
+        <%= f.govuk_text_field(
+          :amount,
+          caption: { text: "Add adjustment", size: "xl"},
+          label: { text: "How much is the payment?", tag: "h1", size: "xl" }
+        ) %>
+        <%= f.hidden_field(:payment_type) %>
+      <% when "confirm" %>
+        <span class="govuk-caption-xl">Add adjustment</span>
+        <h1 class="govuk-heading-xl">Check your answers</h1>
+
+        <%= govuk_table do |table| %>
+          <% table.head do |head| %>
+            <% table.body do |body| %>
+              <% body.row do |row| %>
+                <% row.cell(header: true, text: "Payment type") %>
+                <% row.cell(text: @adjustment.payment_type) %>
+                <% row.cell(numeric: true) do %>
+                  <%= govuk_link_to "Change", new_finance_statement_adjustment_path(@statement, form_step: "step1") %>
+                <% end %>
+              <% end %>
+              <% body.row do |row| %>
+                <% row.cell(header: true, text: "Payments") %>
+                <% row.cell(text: number_to_pounds(@adjustment.amount)) %>
+                <% row.cell(numeric: true) do %>
+                  <%= govuk_link_to "Change", new_finance_statement_adjustment_path(@statement, form_step: "step2") %>
+                <% end %>
+              <% end %>
+            <% end %>
+          <% end %>
+        <% end %>
+        <br/>
+        <p class="govuk-body">By continuing you are confirming that, to the best of your knowledge, the details you are providing are correct.</p>
+        <br/>
+
+        <%= f.hidden_field(:payment_type) %>
+        <%= f.hidden_field(:amount) %>
+      <% end %>
+
+      <%= f.hidden_field(:form_step) %>
+      <%= f.govuk_submit "Continue" %>
+    <% end %>
+  </div>
+</div>

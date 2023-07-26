@@ -31,4 +31,8 @@ class Finance::Statement::ECF < Finance::Statement
       .where(cpd_lead_provider:)
       .where("payment_date < ?", payment_date)
   end
+
+  def ecf?
+    true
+  end
 end

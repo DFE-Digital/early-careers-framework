@@ -2,7 +2,7 @@
   <div class="govuk-width-container govuk-width-container__wide">
     <%= yield(:before_content) %>
 
-    <%= govuk_breadcrumbs(breadcrumbs:) %>
+    <%= govuk_breadcrumbs(breadcrumbs:) if breadcrumbs.present? %>
 
     <main class="govuk-main-wrapper govuk-body" id="main-content" role="main">
       <% flash.each do |type, msg| %>

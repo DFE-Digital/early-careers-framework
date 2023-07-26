@@ -13,5 +13,6 @@ RSpec.describe Finance::Adjustment, type: :model do
 
   describe "validations" do
     it { is_expected.to validate_presence_of(:payment_type) }
+    it { is_expected.to validate_numericality_of(:amount).is_other_than(0.0) }
   end
 end

@@ -12,6 +12,9 @@ RSpec.describe Finance::AdditionalAdjustments::Table, type: :component do
       is_expected.to have_table_row_count(1)
       is_expected.to have_table_text("", row: 1, col: 1)
       is_expected.to have_table_text("£0.00", row: 1, col: 2)
+
+      is_expected.to have_link("Add adjustment")
+      is_expected.to_not have_link("Change or remove adjustment")
     end
   end
 
@@ -24,6 +27,9 @@ RSpec.describe Finance::AdditionalAdjustments::Table, type: :component do
       is_expected.to have_table_text("Big amount", row: 1, col: 1)
       is_expected.to have_table_text("£999.99", row: 1, col: 2)
       expect(component.total_amount).to eql(999.99)
+
+      is_expected.to have_link("Add adjustment")
+      is_expected.to have_link("Change or remove adjustment")
     end
   end
 
@@ -46,6 +52,35 @@ RSpec.describe Finance::AdditionalAdjustments::Table, type: :component do
       is_expected.to have_table_text("£300.00", row: 3, col: 2)
 
       expect(component.total_amount.to_s).to eql("799.99")
+
+      is_expected.to have_link("Add adjustment")
+      is_expected.to have_link("Change or remove adjustment")
+    end
+  end
+
+  context ".adjustment_editable?" do
+    let!(:adjustment1) { create :adjustment, statement:, payment_type: "Big amount", amount: 999.99 }
+
+    context "non-paid statement" do
+      it "renders links" do
+        is_expected.to have_link("Add adjustment")
+      end
+    end
+
+    context "paid statement" do
+      let(:statement) { create :ecf_paid_statement }
+
+      it "does not render links" do
+        is_expected.to_not have_link("Add adjustment")
+      end
+    end
+
+    context "statement with output_fee=fase" do
+      let(:statement) { create :ecf_statement, output_fee: false }
+
+      it "does not render links" do
+        is_expected.to_not have_link("Add adjustment")
+      end
     end
   end
 

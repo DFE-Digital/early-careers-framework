@@ -42,4 +42,50 @@ RSpec.describe Finance::Statement do
       it { is_expected.to match(%("deadline_date" < '#{a_week_ago}')) }
     end
   end
+
+  context ".adjustment_editable?" do
+    context "paid statement" do
+      subject { create :ecf_paid_statement }
+
+      it "returns false" do
+        subject.output_fee = true
+        expect(subject.adjustment_editable?).to eql(false)
+
+        subject.output_fee = false
+        expect(subject.adjustment_editable?).to eql(false)
+      end
+    end
+
+    context "non-paid statement" do
+      context "output_fee is true" do
+        subject { create :ecf_statement, output_fee: true }
+
+        it "returns true" do
+          expect(subject.adjustment_editable?).to eql(true)
+        end
+      end
+
+      context "output_fee is false" do
+        subject { create :ecf_statement, output_fee: false }
+
+        it "returns false" do
+          expect(subject.adjustment_editable?).to eql(false)
+        end
+      end
+    end
+  end
+
+  context ".ecf?" do
+    subject { build :ecf_statement }
+
+    it { is_expected.to be_ecf }
+    it { is_expected.to_not be_npq }
+  end
+
+  context ".npq?" do
+    subject { build :npq_statement }
+
+    it { is_expected.to_not be_ecf }
+    it { is_expected.to be_npq }
+  end
 end

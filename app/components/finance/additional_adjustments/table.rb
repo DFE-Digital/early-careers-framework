@@ -11,7 +11,8 @@ module Finance
         @statement = statement
       end
 
-      delegate :adjustments, to: :statement
+      delegate :adjustments, :adjustment_editable?,
+               to: :statement
 
       def total_amount
         adjustments.sum(&:amount)
