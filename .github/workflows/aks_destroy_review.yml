@@ -1,0 +1,60 @@
+name: Delete review
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+
+jobs:
+  delete-review-app:
+    name: Delete Review App ${{ github.event.pull_request.number }}
+    concurrency: deploy_review_${{ github.event.pull_request.number }}
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'review-app') }}
+    runs-on: ubuntu-latest
+    environment: review
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: Azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.3
+          terraform_wrapper: false
+
+      - name: Set environment variables
+        run: |
+          state_file_name=terraform-${{ github.event.pull_request.number }}.tfstate
+
+          echo "TF_STATE_FILE=$state_file_name" >> $GITHUB_ENV
+
+          state_file_status=$(az storage blob list -c cpdecf-tfstate \
+            --account-name "s189t01cpdecftfstatervsa" \
+            --prefix $state_file_name --query "[].name" -o tsv)
+
+          if [ -n "$state_file_status" ]; then
+            echo "TF_STATE_EXISTS=true" >> $GITHUB_ENV
+          fi
+
+      - uses: DFE-Digital/github-actions/set-arm-environment-variables@master
+        if: env.TF_STATE_EXISTS == 'true'
+        with:
+          azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Destroy Terraform
+        if: env.TF_STATE_EXISTS == 'true'
+        id: destroy-terraform
+        shell: bash
+        run: make ci review_aks terraform-destroy
+        env:
+          TF_VAR_azure_sp_credentials_json: ${{ secrets.AZURE_CREDENTIALS }}
+          DOCKER_IMAGE: "ghcr.io/dfe-digital/early-careers-framework:no-tag"
+          PULL_REQUEST_NUMBER: ${{ github.event.pull_request.number }}
+
+      - name: Delete Terraform state file
+        if: env.TF_STATE_EXISTS == 'true'
+        run: |
+          az storage blob delete -c cpdecf-tfstate --name ${{ env.TF_STATE_FILE }} \
+            --account-name "s189t01cpdecftfstatervsa"
