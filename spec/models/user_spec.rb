@@ -405,7 +405,7 @@ RSpec.describe User, type: :model do
       expect(create(:user, :delivery_partner).user_roles).to eq(%w[delivery_partner])
     end
 
-    it "returns lead_prpvider role" do
+    it "returns lead_provider role" do
       expect(create(:user, :lead_provider).user_roles).to eq(%w[lead_provider])
     end
 
@@ -426,15 +426,15 @@ RSpec.describe User, type: :model do
     end
 
     it "returns early career teacher role" do
-      expect(create(:user, :early_career_teacher).user_roles).to match_array(%w[early_career_teacher])
+      expect(create(:user, :early_career_teacher).user_roles).to match_array(%w[early_career_teacher teacher])
     end
 
     it "returns mentor role" do
-      expect(create(:user, :mentor).user_roles).to eq(%w[mentor])
+      expect(create(:user, :mentor).user_roles).to eq(%w[mentor teacher])
     end
 
     it "returns npq_participant role" do
-      expect(create(:user, :npq).user_roles).to eq(%w[npq_participant])
+      expect(create(:user, :npq).user_roles).to eq(%w[npq_participant teacher])
     end
 
     it "returns npq_applicant role" do
@@ -442,7 +442,7 @@ RSpec.describe User, type: :model do
     end
 
     it "returns induction_coordinator and mentor roles" do
-      expect(create(:user, :mentor, :induction_coordinator).user_roles).to match_array(%w[induction_coordinator mentor])
+      expect(create(:user, :mentor, :induction_coordinator).user_roles).to match_array(%w[induction_coordinator mentor teacher])
     end
 
     it "returns induction_coordinator and delivery_partner roles" do
@@ -450,7 +450,7 @@ RSpec.describe User, type: :model do
     end
 
     it "returns mentor, induction_coordinator and delivery_partner roles" do
-      expect(create(:user, :mentor, :induction_coordinator, :delivery_partner).user_roles).to match_array(%w[delivery_partner induction_coordinator mentor])
+      expect(create(:user, :mentor, :induction_coordinator, :delivery_partner).user_roles).to match_array(%w[delivery_partner induction_coordinator mentor teacher])
     end
   end
 

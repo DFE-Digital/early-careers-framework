@@ -256,16 +256,16 @@ RSpec.describe ChooseRoleForm, type: :model do
     describe "NPQ participant" do
       let(:user) { create(:user, :npq) }
 
-      it "has no role" do
-        expect(form.has_no_role).to be true
+      it "has a role" do
+        expect(form.has_no_role).to be false
       end
 
-      it "only_one_role should be false" do
-        expect(form.only_one_role).to be false
+      it "only_one_role should be true" do
+        expect(form.only_one_role).to be true
       end
 
       it "has correct role_options" do
-        expect(form.role_options).to be_empty
+        expect(form.role_options).to have_key("teacher")
       end
     end
   end

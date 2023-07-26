@@ -60,12 +60,13 @@ class ChooseRoleForm
 private
 
   def rejected_roles
-    %w[induction_coordinator early_career_teacher mentor npq_applicant npq_participant lead_provider].freeze
+    %w[induction_coordinator early_career_teacher mentor npq_applicant npq_participant teacher lead_provider].freeze
   end
 
   def sanitized_user_roles
     roles = user_roles.reject { |role| rejected_roles.include?(role) }
 
+    # choose either a SIT role or a teacher role to prevent school users from seeing this
     if sit_role?
       roles << "induction_coordinator"
     elsif teacher_role?
@@ -83,9 +84,7 @@ private
   end
 
   def teacher_role?
-    # in order to show the correct page we need to participant profiles
-    # because a withdrawn participant will not have any roles in user_roles
-    user.participant_profiles.ecf.any?
+    user_roles.include?("teacher")
   end
 
   def role_values
