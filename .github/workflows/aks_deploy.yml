@@ -26,7 +26,7 @@ jobs:
   docker:
     name: Build and push Docker image
     runs-on: ubuntu-latest
-    if: contains(github.event.pull_request.labels.*.name, 'review-app')
+    if: contains(github.event.pull_request.labels.*.name, 'review-app') || github.event_name != 'pull_request'
 
     outputs:
       image: ${{ steps.build-docker-image.outputs.image }}
