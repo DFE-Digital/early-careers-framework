@@ -28,3 +28,5 @@ class Finance::Statement::NPQ < Finance::Statement
     true
   end
 end
+require "finance/statement/npq/payable"
+require "finance/statement/npq/paid"

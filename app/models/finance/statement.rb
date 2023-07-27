@@ -86,3 +86,6 @@ class Finance::Statement < ApplicationRecord
     false
   end
 end
+
+require "finance/statement/ecf"
+require "finance/statement/npq"
