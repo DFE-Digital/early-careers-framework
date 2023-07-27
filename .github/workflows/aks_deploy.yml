@@ -66,3 +66,6 @@ jobs:
         with:
           message: |
             Review app deployed to ${{ steps.deploy.outputs.url }}
+
+  test:
+    uses: ./.github/workflows/rspec.yml
