@@ -74,3 +74,6 @@ class Finance::Statement < ApplicationRecord
       .where("payment_date < ?", payment_date)
   end
 end
+
+require "finance/statement/ecf"
+require "finance/statement/npq"

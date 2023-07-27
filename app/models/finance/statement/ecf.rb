@@ -32,3 +32,6 @@ class Finance::Statement::ECF < Finance::Statement
       .where("payment_date < ?", payment_date)
   end
 end
+
+require "finance/statement/ecf/payable"
+require "finance/statement/ecf/paid"

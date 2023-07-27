@@ -24,3 +24,5 @@ class Finance::Statement::NPQ < Finance::Statement
     cohort.start_year >= 2022
   end
 end
+require "finance/statement/npq/payable"
+require "finance/statement/npq/paid"
