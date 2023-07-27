@@ -29,8 +29,8 @@ class NPQApplication < ApplicationRecord
   belongs_to :npq_course
   belongs_to :cohort, optional: true
 
-  after_commit :push_enrollment_to_big_query
   after_update :update_eligibility_information, if: :saved_change_to_eligible_for_funding?
+  after_commit :push_enrollment_to_big_query
 
   UK_CATCHMENT_AREA = %w[jersey_guernsey_isle_of_man england northern_ireland scotland wales].freeze
 
@@ -148,8 +148,8 @@ private
   def update_eligibility_information
     return unless current_user&.admin?
 
-    self.updated_by = current_user.full_name
-    self.eligible_for_funding_updated_at = updated_at
+    self.updated_by = current_user.email
+    touch(:eligible_for_funding_updated_at)
     save!
   end
 end

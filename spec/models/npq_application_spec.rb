@@ -431,7 +431,7 @@ RSpec.describe NPQApplication, type: :model do
         npq_application.eligible_for_funding = true
         expect { npq_application.save }.to change {
           [npq_application.updated_by, npq_application.eligible_for_funding_updated_at]
-        }.and(change { npq_application.updated_by }.to(current_user.full_name)
+        }.and(change { npq_application.updated_by }.to(current_user.email)
           .and(change { npq_application.eligible_for_funding_updated_at }.to(be_within(1.second).of(Time.current))))
       end
       it "does not update eligibility information if the user is not an admin" do
