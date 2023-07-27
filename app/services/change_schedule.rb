@@ -220,17 +220,10 @@ private
   end
 
   def school_default_partnership
-    return if school_partnerships.blank?
-
-    school_partnerships.find_by(relationship: false)
-  end
-
-  def school_partnerships
     return if school.blank?
 
     school
       .active_partnerships
-      .where(lead_provider_id: cpd_lead_provider.lead_provider_id)
-      .in_year(cohort&.start_year)
+      .find_by(cohort:, relationship: false, lead_provider_id: cpd_lead_provider.lead_provider_id)
   end
 end

@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe ParticipantIdentityPresenceValidator, :with_default_schedules do
+RSpec.describe ParticipantIdentityPresenceValidator do
   let(:klass) do
     Class.new do
       include ActiveModel::Model
