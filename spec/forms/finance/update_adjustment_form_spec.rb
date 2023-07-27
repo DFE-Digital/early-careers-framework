@@ -1,19 +1,21 @@
 # frozen_string_literal: true
 
-RSpec.describe Finance::CreateAdjustmentForm, type: :model do
+RSpec.describe Finance::UpdateAdjustmentForm, type: :model do
   let(:statement) { create :ecf_statement }
-  let(:params) { { session: {}, statement: } }
+  let(:adjustment) { create :adjustment, statement:, payment_type: "Big amount", amount: 999.99 }
+  let(:params) { { session: {}, adjustment: } }
 
-  describe "add new adjustment" do
+  describe "change adjustment" do
     context "step through and confirm" do
-      it "creates adjustment" do
+      it "changes adjustment" do
         form = described_class.new(params)
         form.assign_attributes(
           payment_type: "Payment 1",
           form_step: "step1",
         )
         expect(form.save_step).to eql(true)
-        expect(Finance::Adjustment.count).to eql(0)
+        expect(Finance::Adjustment.count).to eql(1)
+        expect(adjustment.reload.payment_type).to eql("Big amount")
 
         form = described_class.new(params)
         form.assign_attributes(
@@ -21,7 +23,8 @@ RSpec.describe Finance::CreateAdjustmentForm, type: :model do
           form_step: "step2",
         )
         expect(form.save_step).to eql(true)
-        expect(Finance::Adjustment.count).to eql(0)
+        expect(Finance::Adjustment.count).to eql(1)
+        expect(adjustment.reload.amount).to eql(999.99)
 
         form = described_class.new(params)
         form.assign_attributes(
@@ -31,6 +34,10 @@ RSpec.describe Finance::CreateAdjustmentForm, type: :model do
         )
         expect(form.save_step).to eql(true)
         expect(Finance::Adjustment.count).to eql(1)
+
+        adjustment.reload
+        expect(adjustment.payment_type).to eql("Payment 1")
+        expect(adjustment.amount).to eql(100.00)
 
         adjustment = Finance::Adjustment.first
         expect(adjustment.payment_type).to eql("Payment 1")
@@ -47,7 +54,7 @@ RSpec.describe Finance::CreateAdjustmentForm, type: :model do
           form_step: "step1",
         )
         expect(form.save_step).to eql(false)
-        expect(Finance::Adjustment.count).to eql(0)
+        expect(Finance::Adjustment.count).to eql(1)
         expect(form.errors.full_messages).to eql(["Payment type Enter a name for the adjustment you want to add"])
       end
     end
@@ -61,7 +68,7 @@ RSpec.describe Finance::CreateAdjustmentForm, type: :model do
           form_step: "step2",
         )
         expect(form.save_step).to eql(false)
-        expect(Finance::Adjustment.count).to eql(0)
+        expect(Finance::Adjustment.count).to eql(1)
         expect(form.errors.full_messages).to eql(["Amount Enter the amount of money that needs to be paid"])
       end
     end
@@ -75,7 +82,7 @@ RSpec.describe Finance::CreateAdjustmentForm, type: :model do
           form_step: "confirm",
         )
         expect(form.save_step).to eql(false)
-        expect(Finance::Adjustment.count).to eql(0)
+        expect(Finance::Adjustment.count).to eql(1)
         expect(form.errors.full_messages.sort).to eql([
           "Amount Enter the amount of money that needs to be paid",
           "Payment type Enter a name for the adjustment you want to add",
@@ -85,14 +92,14 @@ RSpec.describe Finance::CreateAdjustmentForm, type: :model do
   end
 
   describe ".redirect_to" do
-    let(:params) { { session: {}, statement:, form_step: } }
+    let(:params) { { session: {}, adjustment:, form_step: } }
     subject(:form) { described_class.new(params) }
 
     context "step: step1" do
       let(:form_step) { "step1" }
 
-      it "redirects to step2" do
-        expect(form.redirect_to).to eql(new_finance_statement_adjustment_path(statement, form_step: "step2"))
+      it "redirects to confirm" do
+        expect(form.redirect_to).to eql(edit_finance_statement_adjustment_path(statement, adjustment, form_step: "confirm"))
       end
     end
 
@@ -100,7 +107,7 @@ RSpec.describe Finance::CreateAdjustmentForm, type: :model do
       let(:form_step) { "step2" }
 
       it "redirects to confirm" do
-        expect(form.redirect_to).to eql(new_finance_statement_adjustment_path(statement, form_step: "confirm"))
+        expect(form.redirect_to).to eql(edit_finance_statement_adjustment_path(statement, adjustment, form_step: "confirm"))
       end
     end
 
@@ -108,48 +115,36 @@ RSpec.describe Finance::CreateAdjustmentForm, type: :model do
       let(:form_step) { "confirm" }
 
       it "redirects to adjustments page" do
-        expect(form.redirect_to).to eql(finance_statement_adjustments_path(statement, added_new: true))
+        expect(form.redirect_to).to eql(finance_statement_adjustments_path(statement))
       end
     end
   end
 
   describe ".back_link" do
-    let(:params) { { session: {}, statement:, form_step: } }
+    let(:params) { { session: {}, adjustment:, form_step: } }
     subject(:form) { described_class.new(params) }
 
     context "step: step1" do
       let(:form_step) { "step1" }
 
-      context "ECF statement" do
-        let(:statement) { create :ecf_statement }
-
-        it "redirects to ECF statement page" do
-          expect(form.back_link).to eql(finance_ecf_payment_breakdown_statement_path(statement.lead_provider, statement))
-        end
-      end
-
-      context "NPQ statement" do
-        let(:statement) { create :npq_statement }
-
-        it "redirects to NPQ statement page" do
-          expect(form.back_link).to eql(finance_npq_lead_provider_statement_path(statement.npq_lead_provider, statement))
-        end
+      it "redirects to confirm" do
+        expect(form.back_link).to eql(edit_finance_statement_adjustment_path(statement, adjustment, form_step: "confirm"))
       end
     end
 
     context "step: step2" do
       let(:form_step) { "step2" }
 
-      it "redirects to step1" do
-        expect(form.back_link).to eql(new_finance_statement_adjustment_path(statement, form_step: "step1"))
+      it "redirects to confirm" do
+        expect(form.back_link).to eql(edit_finance_statement_adjustment_path(statement, adjustment, form_step: "confirm"))
       end
     end
 
     context "step: confirm" do
       let(:form_step) { "confirm" }
 
-      it "redirects to step2" do
-        expect(form.back_link).to eql(new_finance_statement_adjustment_path(statement, form_step: "step2"))
+      it "redirects to adjustments page" do
+        expect(form.back_link).to eql(finance_statement_adjustments_path(statement))
       end
     end
   end

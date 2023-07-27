@@ -1,0 +1,11 @@
+<% content_for :before_content, govuk_back_link(text: "Back", href: finance_statement_adjustments_path(@statement)) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= form_for @adjustment, url: finance_statement_adjustment_path(@statement, @adjustment), method: :delete do |f| %>
+      <h1 class="govuk-heading-xl">Are you sure you want to remove the '<%= @adjustment.payment_type %>' adjustment?</h1>
+      <%= f.govuk_submit "Confirm and continue" %>
+      <%= govuk_link_to "Cancel", finance_statement_adjustments_path(@statement), class: "govuk-!-margin-left-6", style: "display: inline-block; margin-top: 8px;" %>
+    <% end %>
+  </div>
+</div>

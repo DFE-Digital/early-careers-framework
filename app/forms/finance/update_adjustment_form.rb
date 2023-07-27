@@ -1,19 +1,21 @@
 # frozen_string_literal: true
 
 module Finance
-  class CreateAdjustmentForm
+  class UpdateAdjustmentForm
     include ActiveModel::Model
     include ActiveModel::Attributes
     include Rails.application.routes.url_helpers
 
     attribute :session
-    attribute :statement
+    attribute :adjustment
     attribute :payment_type
     attribute :amount, :float
     attribute :form_step
 
     validates :payment_type, presence: true, if: :validate_payment_type?
     validates :amount, numericality: { other_than: 0.0 }, if: :validate_amount?
+
+    delegate :id, :statement, to: :adjustment
 
     def initialize(*)
       super
@@ -29,7 +31,7 @@ module Finance
       when "step2"
         save_value(:amount, amount)
       when "confirm"
-        statement.adjustments.create!(fetch_values)
+        adjustment.update!(fetch_values)
         clear_values
       end
 
@@ -39,26 +41,22 @@ module Finance
     def redirect_to
       case form_step
       when "step1"
-        new_finance_statement_adjustment_path(statement, form_step: "step2")
+        edit_finance_statement_adjustment_path(statement, adjustment, form_step: "confirm")
       when "step2"
-        new_finance_statement_adjustment_path(statement, form_step: "confirm")
+        edit_finance_statement_adjustment_path(statement, adjustment, form_step: "confirm")
       when "confirm"
-        finance_statement_adjustments_path(statement, added_new: "true")
+        finance_statement_adjustments_path(statement)
       end
     end
 
     def back_link
       case form_step
       when "step1"
-        if statement.ecf?
-          finance_ecf_payment_breakdown_statement_path(statement.lead_provider, statement)
-        elsif statement.npq?
-          finance_npq_lead_provider_statement_path(statement.npq_lead_provider, statement)
-        end
+        edit_finance_statement_adjustment_path(statement, adjustment, form_step: "confirm")
       when "step2"
-        new_finance_statement_adjustment_path(statement, form_step: "step1")
+        edit_finance_statement_adjustment_path(statement, adjustment, form_step: "confirm")
       when "confirm"
-        new_finance_statement_adjustment_path(statement, form_step: "step2")
+        finance_statement_adjustments_path(statement)
       end
     end
 
@@ -86,9 +84,11 @@ module Finance
     end
 
     def fetch_values
-      return {} unless statement
-
-      (session[key_name] || {}).slice(:payment_type, :amount)
+      cached_vals = (session[key_name] || {}).slice(:payment_type, :amount)
+      {
+        payment_type: adjustment.payment_type,
+        amount: adjustment.amount,
+      }.merge(cached_vals)
     end
 
     def save_value(key, val)
@@ -96,7 +96,7 @@ module Finance
     end
 
     def key_name
-      :"create_adjustment_form_#{statement.id}"
+      :"update_adjustment_form_#{adjustment.id}"
     end
   end
 end

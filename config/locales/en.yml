@@ -506,6 +506,13 @@ en:
             amount:
               not_a_number: Enter the amount of money that needs to be paid
               other_than: Enter the amount of money that needs to be paid
+        finance/update_adjustment_form:
+          attributes:
+            payment_type:
+              blank: Enter a name for the adjustment you want to add
+            amount:
+              not_a_number: Enter the amount of money that needs to be paid
+              other_than: Enter the amount of money that needs to be paid
         finance/add_another_adjustment_form:
           attributes:
             add_another:

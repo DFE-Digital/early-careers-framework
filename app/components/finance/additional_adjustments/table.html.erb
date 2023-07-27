@@ -33,7 +33,7 @@
       <% end %>
 
       <% if adjustments.any? %>
-        <%= govuk_link_to '#', class: "govuk-!-margin-left-4" do %>
+        <%= govuk_link_to finance_statement_adjustments_path(statement), class: "govuk-!-margin-left-4" do %>
           Change or remove <span class="govuk-visually-hidden"> adjustment</span>
         <% end %>
       <% end %>
