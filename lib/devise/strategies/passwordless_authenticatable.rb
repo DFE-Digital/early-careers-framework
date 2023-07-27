@@ -6,6 +6,8 @@ require_relative "../../../app/mailers/user_mailer"
 module Devise
   module Strategies
     class PasswordlessAuthenticatable < Authenticatable
+      TOKEN_LIFETIME = 24.hours
+
       class Error < StandardError; end
 
       class EmailNotFoundError < Error; end
@@ -22,7 +24,7 @@ module Devise
 
           user = Identity.find_user_by(email:)
 
-          token_expiry = 24.hours.from_now
+          token_expiry = TOKEN_LIFETIME.from_now
           result = user&.update(
             login_token: SecureRandom.hex(10),
             login_token_valid_until: token_expiry,
