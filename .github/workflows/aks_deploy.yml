@@ -69,3 +69,39 @@ jobs:
 
   test:
     uses: ./.github/workflows/rspec.yml
+
+  deploy_staging:
+    needs: [docker, test]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: ./.github/actions/deploy-environment-to-aks
+        id: deploy
+        with:
+          environment: staging
+          docker-image: ${{ needs.docker.outputs.image }}
+          azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
+          current-commit-sha: ${{ github.sha }}
+
+  deploy_sandbox:
+    needs: [deploy_staging]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - uses: actions/checkout@v3
+      - run: |
+          echo "deploying sandbox"
+
+  deploy_production:
+    needs: [deploy_staging]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - uses: actions/checkout@v3
+      - run: |
+          echo "deploying production"
