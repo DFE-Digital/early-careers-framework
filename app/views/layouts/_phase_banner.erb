@@ -1,22 +1,9 @@
 <%= tag.div(class: class_names("govuk-width-container", "govuk-width-container__wide" => wide_container_view?)) do %>
-  <div class="govuk-phase-banner app-phase-banner--no-border govuk-!-display-none-print">
-    <p class="govuk-phase-banner__content">
-      <strong class="govuk-tag govuk-phase-banner__content__tag">
-        <% if Rails.env.production?  %>
-          Beta
-        <% elsif Rails.env.staging? %>
-          Staging
-        <% elsif Rails.env.sandbox? %>
-          Sandbox
-        <% else %>
-          Development
-        <% end %>
-      </strong>
-      <span class="govuk-phase-banner__text">
-        This is a new service – your
-        <%= govuk_link_to "feedback", feedback_form_url, target: "_blank", rel: "noopener noreferrer" %>
-        will help us to improve it.
-      </span>
-    </p>
-  </div>
+  <%= govuk_phase_banner(
+    tag: { text: phase_banner_tag_text, colour: phase_banner_tag_colour },
+    text: Rails.env) do %>
+      This is a new service – your
+      <%= govuk_link_to "feedback", feedback_form_url, target: "_blank", rel: "noopener noreferrer" %>
+      will help us to improve it.
+  <% end %>
 <% end %>
