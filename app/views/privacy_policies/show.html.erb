@@ -9,7 +9,7 @@
             <% content_for :before_content, govuk_back_link(text: "Back", href: :back) %>
         <% end %>
 
-        <%= @policy.html.html_safe %>
+        <%= h(@policy.html) %>
 
         <% if @policy.acceptance_required?(current_user) %>
             <%= form_tag({action: :update}, method: :put) do %>

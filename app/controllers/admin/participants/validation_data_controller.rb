@@ -113,7 +113,7 @@ module Admin::Participants
         date_of_birth: validation_data.date_of_birth,
         nino: validation_data.nino,
       }
-      attrs.merge!(validation_data_form_params) unless request.get?
+      attrs.merge!(validation_data_form_params) unless request.get? || request.head?
       attrs
     end
 
