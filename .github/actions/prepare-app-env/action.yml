@@ -38,18 +38,18 @@ runs:
         node-version: ${{ inputs.node-version }}
 
     - name: Install yarn
-      if: ${{ inputs.skip-node == 'false' }}
+      if: inputs.skip-node == 'false'
       run: npm install yarn -g
       shell: bash
 
     - name: Yarn cache
-      if: ${{ inputs.skip-node == 'false' }}
+      if: inputs.skip-node == 'false'
       id: yarn-cache
       run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
       shell: bash
 
     - name: Set up yarn cache
-      if: ${{ inputs.skip-node == 'false' }}
+      if: inputs.skip-node == 'false'
       uses: actions/cache@v2.1.7
       with:
         path: ${{ steps.yarn-cache.outputs.dir }}
