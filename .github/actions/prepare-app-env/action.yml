@@ -13,12 +13,20 @@ inputs:
     description: The version of Node.js to install
     required: false
     default: "18.17"
+  prepare-test-database:
+    description: When 'true', sets up a test database
+    required: false
+    default: "false"
+  prepare-assets:
+    description: When 'true', compiles assets for testing
+    required: false
+    default: "false"
 
 runs:
   using: composite
   steps:
     - name: Set up Ruby
-      if: ${{ inputs.skip-ruby == 'false' }}
+      if: inputs.skip-ruby == 'false'
       uses: ruby/setup-ruby@v1
       with:
         bundler-cache: true
@@ -30,18 +38,18 @@ runs:
         node-version: ${{ inputs.node-version }}
 
     - name: Install yarn
-      if: ${{ inputs.skip-node == 'false' }}
+      if: inputs.skip-node == 'false'
       run: npm install yarn -g
       shell: bash
 
     - name: Yarn cache
-      if: ${{ inputs.skip-node == 'false' }}
+      if: inputs.skip-node == 'false'
       id: yarn-cache
       run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
       shell: bash
 
     - name: Set up yarn cache
-      if: ${{ inputs.skip-node == 'false' }}
+      if: inputs.skip-node == 'false'
       uses: actions/cache@v2.1.7
       with:
         path: ${{ steps.yarn-cache.outputs.dir }}
@@ -53,3 +61,13 @@ runs:
       if: ${{ inputs.skip-node == 'false' }}
       run: yarn install
       shell: bash
+
+    - name: Prepare test database
+      if: inputs.prepare-test-database == 'true'
+      shell: bash
+      run: bin/rails db:create db:schema:load
+
+    - name: Prepare assets
+      if: inputs.prepare-assets == 'true'
+      shell: bash
+      run: bin/rails test:prepare
