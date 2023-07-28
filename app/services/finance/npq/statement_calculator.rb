@@ -31,6 +31,8 @@ module Finance
       end
 
       def total_service_fees
+        return 0.0 unless statement.service_fee_enabled
+
         contracts.sum do |contract|
           CourseStatementCalculator.new(statement:, contract:).monthly_service_fees
         end
@@ -53,10 +55,14 @@ module Finance
       end
 
       def overall_vat
+        return 0.0 unless statement.show_total_with_vat
+
         total_payment * vat_rate
       end
 
       def vat
+        return 0.0 unless statement.show_total_with_vat
+
         total_payment * (npq_lead_provider.vat_chargeable ? 0.2 : 0.0)
       end
 
