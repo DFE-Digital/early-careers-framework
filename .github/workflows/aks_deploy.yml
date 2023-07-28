@@ -48,11 +48,17 @@ jobs:
           docker-repository: ghcr.io/dfe-digital/early-careers-framework
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
+  brakeman:
+    name: Run Brakeman vulnerability scanner
+    uses: ./.github/workflows/brakeman.yml
+    with:
+      ruby-version: "3.2.2"
+
   deploy_review:
     name: Deploy to review environment
     concurrency: deploy_review_${{ github.event.pull_request.number }}
     if: contains(github.event.pull_request.labels.*.name, 'review-app') && github.event_name == 'pull_request'
-    needs: [docker]
+    needs: [docker, brakeman]
     runs-on: ubuntu-latest
     environment:
       name: review
@@ -76,7 +82,7 @@ jobs:
             Review app deployed to ${{ steps.deploy.outputs.url }}
 
   deploy_staging:
-    needs: [docker, test, lint]
+    needs: [docker, test, lint, brakeman]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     environment:
