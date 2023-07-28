@@ -405,6 +405,10 @@ RSpec.describe User, type: :model do
       expect(create(:user, :delivery_partner).user_roles).to eq(%w[delivery_partner])
     end
 
+    it "returns lead_provider role" do
+      expect(create(:user, :lead_provider).user_roles).to eq(%w[lead_provider])
+    end
+
     it "returns appropriate_body role" do
       expect(create(:user, :appropriate_body).user_roles).to eq(%w[appropriate_body])
     end
@@ -421,20 +425,32 @@ RSpec.describe User, type: :model do
       expect(build(:user, :induction_coordinator).user_roles).to eq(%w[induction_coordinator])
     end
 
-    it "returns teacher role" do
-      expect(build(:user, :teacher).user_roles).to eq(%w[teacher])
+    it "returns early career teacher role" do
+      expect(create(:user, :early_career_teacher).user_roles).to match_array(%w[early_career_teacher teacher])
     end
 
-    it "returns induction_coordinator_and_mentor role" do
-      expect(create(:user, :mentor, :induction_coordinator).user_roles.sort).to eq(%w[induction_coordinator_and_mentor induction_coordinator teacher].sort)
+    it "returns mentor role" do
+      expect(create(:user, :mentor).user_roles).to eq(%w[mentor teacher])
     end
 
-    it "returns induction_coordinator and delivery_partner role" do
-      expect(create(:user, :induction_coordinator, :delivery_partner).user_roles.sort).to eq(%w[delivery_partner induction_coordinator].sort)
+    it "returns npq_participant role" do
+      expect(create(:user, :npq).user_roles).to eq(%w[npq_participant teacher])
     end
 
-    it "returns teacher, induction_coordinator and delivery_partner role" do
-      expect(create(:user, :teacher, :induction_coordinator, :delivery_partner).user_roles.sort).to eq(%w[delivery_partner induction_coordinator teacher].sort)
+    it "returns npq_applicant role" do
+      expect(create(:seed_npq_application, :valid).user.user_roles).to eq(%w[npq_applicant])
+    end
+
+    it "returns induction_coordinator and mentor roles" do
+      expect(create(:user, :mentor, :induction_coordinator).user_roles).to match_array(%w[induction_coordinator mentor teacher])
+    end
+
+    it "returns induction_coordinator and delivery_partner roles" do
+      expect(create(:user, :induction_coordinator, :delivery_partner).user_roles).to match_array(%w[delivery_partner induction_coordinator])
+    end
+
+    it "returns mentor, induction_coordinator and delivery_partner roles" do
+      expect(create(:user, :mentor, :induction_coordinator, :delivery_partner).user_roles).to match_array(%w[delivery_partner induction_coordinator mentor teacher])
     end
   end
 

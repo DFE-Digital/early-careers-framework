@@ -194,7 +194,7 @@ RSpec.describe ChooseRoleForm, type: :model do
     end
 
     describe "teacher role" do
-      let(:user) { create(:user, :teacher) }
+      let(:user) { create(:user, :early_career_teacher) }
 
       it { is_expected.to validate_inclusion_of(:role).in_array(%w[teacher]) }
 
@@ -236,27 +236,60 @@ RSpec.describe ChooseRoleForm, type: :model do
     end
   end
 
-  describe "Multiple roles" do
-    describe "induction_coordinator and mentor roles" do
-      let(:user) { create(:user, :induction_coordinator, :mentor) }
+  describe "NPQ roles" do
+    describe "NPQ applicant" do
+      let(:user) { create(:seed_npq_application, :valid).user }
 
-      it { is_expected.to validate_inclusion_of(:role).in_array(%w[induction_coordinator_and_mentor]) }
+      it "has no role" do
+        expect(form.has_no_role).to be true
+      end
 
       it "only_one_role should be false" do
         expect(form.only_one_role).to be false
       end
 
       it "has correct role_options" do
+        expect(form.role_options).to be_empty
+      end
+    end
+
+    describe "NPQ participant" do
+      let(:user) { create(:user, :npq) }
+
+      it "has a role" do
+        expect(form.has_no_role).to be false
+      end
+
+      it "only_one_role should be true" do
+        expect(form.only_one_role).to be true
+      end
+
+      it "has correct role_options" do
+        expect(form.role_options).to have_key("teacher")
+      end
+    end
+  end
+
+  describe "Multiple roles" do
+    describe "induction_coordinator and mentor roles" do
+      let(:user) { create(:user, :induction_coordinator, :mentor) }
+
+      it { is_expected.to validate_inclusion_of(:role).in_array(%w[induction_coordinator]) }
+
+      it "only_one_role should be false" do
+        expect(form.only_one_role).to be true
+      end
+
+      it "has correct role_options" do
         expect(form.role_options).to have_key("induction_coordinator")
-        expect(form.role_options).to have_key("induction_coordinator_and_mentor")
       end
 
       describe "param with induction_coordinator_and_mentor role" do
-        let(:form_role) { "induction_coordinator_and_mentor" }
+        let(:form_role) { "induction_coordinator" }
         let(:helpers) do
           Struct.new(:induction_coordinator_mentor_path) {
-            def induction_coordinator_mentor_path(_user)
-              "/induction_coordinator_and_mentor"
+            def induction_coordinator_dashboard_path(_user)
+              "/induction_coordinator"
             end
           }.new
         end
@@ -266,7 +299,7 @@ RSpec.describe ChooseRoleForm, type: :model do
         end
 
         it "returns correct redirect_path" do
-          expect(form.redirect_path(helpers:)).to be helpers.induction_coordinator_mentor_path(user)
+          expect(form.redirect_path(helpers:)).to be helpers.induction_coordinator_dashboard_path(user)
         end
       end
 
@@ -296,16 +329,16 @@ RSpec.describe ChooseRoleForm, type: :model do
     end
 
     describe "teacher, induction_coordinator and delivery_partner roles" do
-      let(:user) { create(:user, :teacher, :induction_coordinator, :delivery_partner) }
+      let(:user) { create(:user, :mentor, :induction_coordinator, :delivery_partner) }
 
-      it { is_expected.to validate_inclusion_of(:role).in_array(%w[teacher induction_coordinator delivery_partner]) }
+      it { is_expected.to validate_inclusion_of(:role).in_array(%w[induction_coordinator delivery_partner]) }
 
       it "only_one_role should be false" do
         expect(form.only_one_role).to be false
       end
 
       it "has correct role_options" do
-        expect(form.role_options).to have_key("teacher")
+        expect(form.role_options).not_to have_key("teacher")
         expect(form.role_options).to have_key("induction_coordinator")
         expect(form.role_options).to have_key("delivery_partner")
       end

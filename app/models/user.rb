@@ -157,12 +157,16 @@ class User < ApplicationRecord
   def user_roles
     @user_roles ||= [
       ("appropriate_body" if appropriate_body?),
+      ("lead_provider" if lead_provider?),
       ("delivery_partner" if delivery_partner?),
       ("admin" if admin?),
       ("finance" if finance?),
       ("induction_coordinator" if induction_coordinator?),
-      ("induction_coordinator_and_mentor" if induction_coordinator_and_mentor?),
-      ("teacher" if teacher?),
+      ("mentor" if mentor?),
+      ("early_career_teacher" if early_career_teacher?),
+      ("npq_participant" if npq?),
+      ("npq_applicant" if npq_applications.any? && !npq?),
+      ("teacher" if teacher?), # presence of teacher profile, could include orphaned de-duped users
     ].compact
   end
 
