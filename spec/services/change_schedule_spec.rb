@@ -271,6 +271,20 @@ RSpec.describe ChangeSchedule do
           expect(relevant_induction_record.schedule).to eq(new_schedule)
         end
       end
+
+      it "does not update the participant cohort" do
+        expect { service.call }.not_to change { participant_profile.reload.current_induction_record.induction_programme.school_cohort.cohort.start_year }
+      end
+
+      context "when participant profile is in a different cohort than the current one" do
+        before do
+          participant_profile.current_induction_record.induction_programme.school_cohort.update!(cohort: Cohort.previous)
+        end
+
+        it "does not update the participant cohort" do
+          expect { service.call }.not_to change { participant_profile.reload.current_induction_record.induction_programme.school_cohort.cohort.start_year }
+        end
+      end
     end
   end
 
@@ -413,6 +427,20 @@ RSpec.describe ChangeSchedule do
           expect(relevant_induction_record.schedule).to eq(new_schedule)
         end
       end
+
+      it "does not update the participant cohort" do
+        expect { service.call }.not_to change { participant_profile.reload.current_induction_record.induction_programme.school_cohort.cohort.start_year }
+      end
+
+      context "when participant profile is in a different cohort than the current one" do
+        before do
+          participant_profile.current_induction_record.induction_programme.school_cohort.update!(cohort: Cohort.previous)
+        end
+
+        it "does not update the participant cohort" do
+          expect { service.call }.not_to change { participant_profile.reload.current_induction_record.induction_programme.school_cohort.cohort.start_year }
+        end
+      end
     end
   end
 
@@ -420,7 +448,7 @@ RSpec.describe ChangeSchedule do
     let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_npq_lead_provider) }
     let(:npq_lead_provider) { cpd_lead_provider.npq_lead_provider }
     let(:npq_course) { create(:npq_course, identifier: "npq-senior-leadership") }
-    let(:schedule) { Finance::Schedule::NPQ.find_by(schedule_identifier: "npq-specialist-spring") }
+    let(:schedule) { Finance::Schedule::NPQ.find_by(cohort: Cohort.current, schedule_identifier: "npq-specialist-spring") }
     let(:participant_profile) { create(:npq_participant_profile, npq_lead_provider:, npq_course:, schedule:, user:) }
     let(:course_identifier) { npq_course.identifier }
     let(:schedule_identifier) { new_schedule.schedule_identifier }
@@ -497,7 +525,17 @@ RSpec.describe ChangeSchedule do
       it_behaves_like "changing the schedule of a participant"
 
       it "does not update the npq application cohort" do
-        expect { service.call }.not_to change(participant_profile.npq_application, :cohort)
+        expect { service.call }.not_to change { participant_profile.reload.npq_application.cohort.start_year }
+      end
+
+      context "when participant profile is in a different cohort than the current one" do
+        before do
+          participant_profile.schedule.update!(cohort: Cohort.previous)
+        end
+
+        it "does not update the participant profile cohort" do
+          expect { service.call }.not_to change { participant_profile.reload.schedule.cohort.start_year }
+        end
       end
     end
   end

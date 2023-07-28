@@ -80,7 +80,13 @@ private
   end
 
   def cohort
-    @cohort ||= super ? Cohort.find_by(start_year: super) : Cohort.current
+    @cohort ||= super ? Cohort.find_by(start_year: super) : fallback_cohort
+  end
+
+  def fallback_cohort
+    relevant_induction_record&.induction_programme&.school_cohort&.cohort.presence ||
+      participant_profile&.schedule&.cohort.presence ||
+      Cohort.current
   end
 
   def target_school_cohort
