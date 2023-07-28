@@ -1079,6 +1079,14 @@ module ManageTrainingSteps
     then_i_see_the_tab_for_the_cohort(2022)
   end
 
+  def then_i_see_the_complete_participants_banner
+    expect(page).to have_text("Do not remove ECTs or mentors who have completed their induction and training.")
+  end
+
+  def then_i_do_not_see_the_complete_participants_banner
+    expect(page).not_to have_text("Do not remove ECTs or mentors who have completed their induction and training.")
+  end
+
   def then_i_am_on_the_what_we_need_to_know_page
     expect(page).to have_text("Tell us if any new ECTs will start training at your school in the 2022 to 2023 academic year")
   end

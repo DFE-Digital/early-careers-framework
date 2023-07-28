@@ -21,5 +21,9 @@ module Schools
     def mentor_count(school_cohorts)
       school_cohorts.sum { |sc| sc.current_induction_records.mentors.count }
     end
+
+    def participants_count(school_cohorts)
+      school_cohorts.sum { |sc| sc.current_induction_records.count }
+    end
   end
 end
