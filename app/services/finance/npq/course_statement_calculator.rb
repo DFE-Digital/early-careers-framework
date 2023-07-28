@@ -107,6 +107,8 @@ module Finance
       end
 
       def monthly_service_fees
+        return 0.0 unless statement.service_fee_enabled
+
         contract.monthly_service_fee || calculated_service_fee
       end
 

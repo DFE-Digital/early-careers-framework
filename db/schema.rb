@@ -603,7 +603,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_16_132809) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.uuid "cohort_id", null: false
-    t.decimal "monthly_service_fee"
+    t.decimal "monthly_service_fee", default: "0.0"
     t.decimal "targeted_delivery_funding_per_participant", default: "100.0"
     t.index ["cohort_id"], name: "index_npq_contracts_on_cohort_id"
     t.index ["npq_lead_provider_id"], name: "index_npq_contracts_on_npq_lead_provider_id"
@@ -667,7 +667,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_16_132809) do
     t.boolean "pupil_premium_uplift"
     t.uuid "delivery_partner_id"
     t.uuid "mentor_user_id"
-    t.index ["cpd_lead_provider_id", "participant_profile_id", "declaration_type", "course_identifier", "state"], name: "unique_declaration_index", unique: true, where: "((state)::text = ANY (ARRAY[('submitted'::character varying)::text, ('eligible'::character varying)::text, ('payable'::character varying)::text, ('paid'::character varying)::text]))"
+    t.index ["cpd_lead_provider_id", "participant_profile_id", "declaration_type", "course_identifier", "state"], name: "unique_declaration_index", unique: true, where: "((state)::text = ANY ((ARRAY['submitted'::character varying, 'eligible'::character varying, 'payable'::character varying, 'paid'::character varying])::text[]))"
     t.index ["cpd_lead_provider_id"], name: "index_participant_declarations_on_cpd_lead_provider_id"
     t.index ["declaration_type"], name: "index_participant_declarations_on_declaration_type"
     t.index ["delivery_partner_id"], name: "index_participant_declarations_on_delivery_partner_id"
@@ -1025,6 +1025,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_16_132809) do
     t.boolean "output_fee", default: true
     t.string "contract_version", default: "0.0.1"
     t.decimal "reconcile_amount", default: "0.0", null: false
+    t.boolean "show_total_with_vat", default: false
+    t.boolean "service_fee_enabled", default: true
     t.index ["cohort_id"], name: "index_statements_on_cohort_id"
     t.index ["cpd_lead_provider_id"], name: "index_statements_on_cpd_lead_provider_id"
   end
@@ -1250,7 +1252,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_16_132809) do
               count(*) AS count
              FROM (participant_profiles participant_profiles_1
                JOIN participant_identities participant_identities_1 ON ((participant_identities_1.id = participant_profiles_1.participant_identity_id)))
-            WHERE ((participant_profiles_1.type)::text = ANY (ARRAY[('ParticipantProfile::ECT'::character varying)::text, ('ParticipantProfile::Mentor'::character varying)::text]))
+            WHERE ((participant_profiles_1.type)::text = ANY ((ARRAY['ParticipantProfile::ECT'::character varying, 'ParticipantProfile::Mentor'::character varying])::text[]))
             GROUP BY participant_profiles_1.type, participant_identities_1.user_id) duplicates ON ((duplicates.user_id = participant_identities.user_id)))
        LEFT JOIN teacher_profiles ON ((teacher_profiles.id = participant_profiles.teacher_profile_id)))
        LEFT JOIN schedules ON ((latest_induction_records.schedule_id = schedules.id)))
@@ -1262,9 +1264,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_16_132809) do
     WHERE ((participant_identities.user_id IN ( SELECT participant_identities_1.user_id
              FROM (participant_profiles participant_profiles_1
                JOIN participant_identities participant_identities_1 ON ((participant_identities_1.id = participant_profiles_1.participant_identity_id)))
-            WHERE ((participant_profiles_1.type)::text = ANY (ARRAY[('ParticipantProfile::ECT'::character varying)::text, ('ParticipantProfile::Mentor'::character varying)::text]))
+            WHERE ((participant_profiles_1.type)::text = ANY ((ARRAY['ParticipantProfile::ECT'::character varying, 'ParticipantProfile::Mentor'::character varying])::text[]))
             GROUP BY participant_profiles_1.type, participant_identities_1.user_id
-           HAVING (count(*) > 1))) AND ((participant_profiles.type)::text = ANY (ARRAY[('ParticipantProfile::ECT'::character varying)::text, ('ParticipantProfile::Mentor'::character varying)::text])))
+           HAVING (count(*) > 1))) AND ((participant_profiles.type)::text = ANY ((ARRAY['ParticipantProfile::ECT'::character varying, 'ParticipantProfile::Mentor'::character varying])::text[])))
     ORDER BY participant_identities.external_identifier, (row_number() OVER (PARTITION BY participant_identities.user_id ORDER BY
           CASE
               WHEN (((latest_induction_records.training_status)::text = 'active'::text) AND ((latest_induction_records.induction_status)::text = 'active'::text)) THEN 1
