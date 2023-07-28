@@ -3,7 +3,7 @@
 
 name: Brakeman Scan
 env:
-  BRAKEMAN_VERSION: "5.4.0"
+  BRAKEMAN_VERSION: "6.0.1"
 
 on:
   workflow_call:
