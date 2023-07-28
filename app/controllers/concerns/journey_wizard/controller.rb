@@ -33,7 +33,7 @@ module JourneyWizard
       else
         wizard.validate_state!
       end
-    rescue Wizard::Form::AlreadyInitialised, Wizard::Form::InvalidStep
+    rescue JourneyWizard::Form::AlreadyInitialised, JourneyWizard::Form::InvalidStep
       remove_session_data
       redirect_to abort_path
     end
