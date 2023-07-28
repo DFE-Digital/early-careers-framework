@@ -7,7 +7,7 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
-## 26th July 2023
+## 31st July 2023
 
 Lead Providers can now change the cohort of an ECF participant, providing that:
 
