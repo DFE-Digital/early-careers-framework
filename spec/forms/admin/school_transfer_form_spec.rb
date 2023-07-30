@@ -23,6 +23,14 @@ RSpec.describe Admin::SchoolTransferForm, type: :model do
 
   let(:school_in) { create(:school) }
 
+  describe "#cannot_transfer_to_new_school?" do
+    context "when new school doesn't have any programmes in participant's cohort" do
+      it "returns true" do
+        expect(form.cannot_transfer_to_new_school?).to be true
+      end
+    end
+  end
+
   describe "#perform_transfer!" do
     let(:partnership_in) {}
     let(:school_cohort_in) do
