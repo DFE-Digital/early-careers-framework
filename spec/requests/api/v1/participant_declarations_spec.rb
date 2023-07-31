@@ -372,7 +372,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         context "when a required parameter is missing" do
           let(:participant_id) {}
 
-          it "returns 422"  do
+          it "returns 422" do
             post "/api/v1/participant-declarations", params: params.to_json
 
             expect(response).not_to be_successful

@@ -206,7 +206,7 @@ RSpec.describe ParticipantDeclaration, type: :model do
     let(:lead_provider)       { cpd_lead_provider.lead_provider }
     let(:participant_profile) { create(:ect, :eligible_for_funding, lead_provider:, user:) }
 
-    before {  create(:ecf_statement, :output_fee, deadline_date: 6.weeks.from_now, cpd_lead_provider:) }
+    before { create(:ecf_statement, :output_fee, deadline_date: 6.weeks.from_now, cpd_lead_provider:) }
 
     context "when a teacher profile exists with the same TRN" do
       let(:deduplicate) { false }
