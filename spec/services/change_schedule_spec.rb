@@ -88,13 +88,20 @@ RSpec.shared_examples "changing the schedule of a participant" do
     expect { service.call }.to change { ParticipantProfileSchedule.count }
   end
 
+  it "sets the correct attributes to the participant profile" do
+    service.call
+
+    expect(participant_profile.reload.schedule_id).to eq(new_schedule.id)
+  end
+
   it "sets the correct attributes to the new participant profile schedule" do
     service.call
+
     latest_participant_profile_schedule = participant_profile.participant_profile_schedules.last
 
     expect(latest_participant_profile_schedule).to have_attributes(
       participant_profile_id: participant_profile.id,
-      schedule_id: Finance::Schedule.where(schedule_identifier:, cohort: new_cohort).first.id,
+      schedule_id: Finance::Schedule.find_by(schedule_identifier:, cohort: new_cohort).id,
     )
   end
 
@@ -117,9 +124,8 @@ RSpec.describe ChangeSchedule do
       schedule_identifier:,
     }
   end
-  let(:new_cohort) { Cohort.current }
   let(:participant_identity) { create(:participant_identity) }
-  let(:user) { participant_identity.user }
+  let!(:user) { participant_identity.user }
 
   subject(:service) do
     described_class.new(params)
@@ -128,9 +134,11 @@ RSpec.describe ChangeSchedule do
   context "ECT participant profile" do
     let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
     let(:participant_profile) { create(:ect, lead_provider: cpd_lead_provider.lead_provider, user:) }
-    let(:schedule_identifier) { "ecf-extended-april" }
+    let(:schedule_identifier) { "ecf-standard-september" }
     let(:course_identifier) { "ecf-induction" }
-    let!(:schedule) { create(:ecf_schedule, schedule_identifier: "ecf-extended-april", name: "ECF Standard") }
+    let!(:schedule) { Finance::Schedule::ECF.find_by(schedule_identifier: "ecf-standard-september") }
+    let(:new_cohort) { Cohort.previous }
+    let!(:new_schedule) { create(:ecf_schedule, cohort: new_cohort, schedule_identifier: "ecf-replacement-april") }
 
     describe "validations" do
       it_behaves_like "validating a participant for a change schedule"
@@ -139,9 +147,9 @@ RSpec.describe ChangeSchedule do
         let(:participant_profile) { create(:ect, :withdrawn, lead_provider: cpd_lead_provider.lead_provider) }
       end
 
-      context "when the cohort is changing to another year" do
-        let(:new_cohort) { Cohort.previous }
-        let(:new_schedule) { create(:ecf_schedule, cohort: new_cohort) }
+      context "when the cohort is changing" do
+        let!(:new_schedule) { Finance::Schedule::ECF.find_by(schedule_identifier:, cohort: new_cohort) }
+        let!(:new_school_cohort) { create(:school_cohort, :cip, :with_induction_programme, cohort: new_cohort, lead_provider: cpd_lead_provider.lead_provider, school: participant_profile.school) }
         let(:params) do
           {
             cpd_lead_provider:,
@@ -152,10 +160,78 @@ RSpec.describe ChangeSchedule do
           }
         end
 
-        it "is invalid and returns an error message" do
-          is_expected.to be_invalid
+        %i[submitted eligible payable paid].each do |state|
+          context "when there are #{state} declarations" do
+            before { create(:participant_declaration, participant_profile:, state:, course_identifier:, cpd_lead_provider:) }
 
-          expect(service.errors.messages_for(:cohort)).to include("The property '#/cohort' cannot be changed")
+            context "when changing to another cohort" do
+              it "is invalid and returns an error message" do
+                is_expected.to be_invalid
+
+                expect(service.errors.messages_for(:cohort)).to include("The property '#/cohort' cannot be changed")
+              end
+            end
+          end
+        end
+
+        context "when there are no submitted/eligible/payable/paid declarations" do
+          context "when changing to another cohort" do
+            describe ".call" do
+              it_behaves_like "changing the schedule of a participant"
+            end
+
+            it "updates the schedule on the relevant induction record" do
+              service.call
+              relevant_induction_record = participant_profile.current_induction_record
+
+              expect(relevant_induction_record.schedule).to eq(new_schedule)
+            end
+
+            it "updates the induction programme on the relevant induction record" do
+              service.call
+              relevant_induction_record = participant_profile.current_induction_record
+
+              expect(relevant_induction_record.induction_programme).to eq(new_school_cohort.default_induction_programme)
+            end
+
+            it "updates the participant profiler school cohort" do
+              expect {
+                service.call
+              }.to change { participant_profile.reload.school_cohort }.to(new_school_cohort)
+            end
+          end
+        end
+
+        context "when the provider does not have a default partnership with the school in the new cohort" do
+          let(:another_lead_provider) { create(:lead_provider) }
+
+          before { participant_profile.school.active_partnerships.find_by(cohort: new_cohort).update(lead_provider: another_lead_provider) }
+
+          it "is invalid and returns an error message" do
+            is_expected.to be_invalid
+
+            expect(service.errors.messages_for(:cohort)).to include("You cannot change a participant to this cohort as you do not have a partnership with the school for the cohort. Contact the DfE for assistance.")
+          end
+        end
+
+        context "when the provider has a challenged partnership with the school in the new cohort" do
+          before { participant_profile.school.active_partnerships.find_by(cohort: new_cohort).update(challenge_reason: "mistake") }
+
+          it "is invalid and returns an error message" do
+            is_expected.to be_invalid
+
+            expect(service.errors.messages_for(:cohort)).to include("You cannot change a participant to this cohort as you do not have a partnership with the school for the cohort. Contact the DfE for assistance.")
+          end
+        end
+
+        context "when the provider has a relationship partnership with the school in the new cohort" do
+          before { participant_profile.school.active_partnerships.find_by(cohort: new_cohort).update(relationship: true) }
+
+          it "is invalid and returns an error message" do
+            is_expected.to be_invalid
+
+            expect(service.errors.messages_for(:cohort)).to include("You cannot change a participant to this cohort as you do not have a partnership with the school for the cohort. Contact the DfE for assistance.")
+          end
         end
       end
 
@@ -172,13 +248,17 @@ RSpec.describe ChangeSchedule do
     end
 
     describe ".call" do
+      let(:new_cohort) { Cohort.current }
+      let(:schedule_identifier) { "ecf-replacement-april" }
+      let!(:new_schedule) { create(:ecf_schedule, schedule_identifier: "ecf-replacement-april", name: "ECF Standard") }
+
       it_behaves_like "changing the schedule of a participant"
 
       it "updates the schedule on the relevant induction record" do
         service.call
         relevant_induction_record = participant_profile.current_induction_record
 
-        expect(relevant_induction_record.schedule).to eq(schedule)
+        expect(relevant_induction_record.schedule).to eq(new_schedule)
       end
 
       context "when profile schedule is not the same as the induction record" do
@@ -188,7 +268,21 @@ RSpec.describe ChangeSchedule do
           service.call
           relevant_induction_record = participant_profile.current_induction_record
 
-          expect(relevant_induction_record.schedule).to eq(schedule)
+          expect(relevant_induction_record.schedule).to eq(new_schedule)
+        end
+      end
+
+      it "does not update the participant cohort" do
+        expect { service.call }.not_to change { participant_profile.reload.current_induction_record.induction_programme.school_cohort.cohort.start_year }
+      end
+
+      context "when participant profile is in a different cohort than the current one" do
+        before do
+          participant_profile.current_induction_record.induction_programme.school_cohort.update!(cohort: Cohort.previous)
+        end
+
+        it "does not update the participant cohort" do
+          expect { service.call }.not_to change { participant_profile.reload.current_induction_record.induction_programme.school_cohort.cohort.start_year }
         end
       end
     end
@@ -199,7 +293,8 @@ RSpec.describe ChangeSchedule do
     let!(:participant_profile) { create(:mentor, lead_provider: cpd_lead_provider.lead_provider, user:) }
     let(:schedule_identifier) { "ecf-extended-april" }
     let(:course_identifier) { "ecf-mentor" }
-    let!(:schedule) { create(:ecf_mentor_schedule, schedule_identifier: "ecf-extended-april", name: "Mentor Standard") }
+    let(:new_cohort) { Cohort.previous }
+    let!(:schedule) { create(:ecf_mentor_schedule, schedule_identifier: "ecf-extended-april") }
 
     describe "validations" do
       it_behaves_like "validating a participant for a change schedule"
@@ -208,9 +303,9 @@ RSpec.describe ChangeSchedule do
         let(:participant_profile) { create(:mentor, :withdrawn, lead_provider: cpd_lead_provider.lead_provider) }
       end
 
-      context "when the cohort is changing to another year" do
-        let(:new_cohort) { Cohort.previous }
-        let(:new_schedule) { create(:ecf_schedule, cohort: new_cohort) }
+      context "when the cohort is changing" do
+        let!(:new_school_cohort) { create(:school_cohort, :cip, :with_induction_programme, cohort: new_cohort, lead_provider: cpd_lead_provider.lead_provider, school: participant_profile.school) }
+        let!(:new_schedule) { create(:ecf_mentor_schedule, schedule_identifier:, cohort: new_cohort) }
         let(:params) do
           {
             cpd_lead_provider:,
@@ -221,10 +316,78 @@ RSpec.describe ChangeSchedule do
           }
         end
 
-        it "is invalid and returns an error message" do
-          is_expected.to be_invalid
+        %i[submitted eligible payable paid].each do |state|
+          context "when there are #{state} declarations" do
+            before { create(:participant_declaration, participant_profile:, state:, course_identifier:, cpd_lead_provider:) }
 
-          expect(service.errors.messages_for(:cohort)).to include("The property '#/cohort' cannot be changed")
+            context "when changing to another cohort" do
+              it "is invalid and returns an error message" do
+                is_expected.to be_invalid
+
+                expect(service.errors.messages_for(:cohort)).to include("The property '#/cohort' cannot be changed")
+              end
+            end
+          end
+        end
+
+        context "when there are no submitted/eligible/payable/paid declarations" do
+          context "when changing to another cohort" do
+            describe ".call" do
+              it_behaves_like "changing the schedule of a participant"
+            end
+
+            it "updates the schedule on the relevant induction record" do
+              service.call
+              relevant_induction_record = participant_profile.current_induction_record
+
+              expect(relevant_induction_record.schedule).to eq(new_schedule)
+            end
+
+            it "updates the induction programme on the relevant induction record" do
+              service.call
+              relevant_induction_record = participant_profile.current_induction_record
+
+              expect(relevant_induction_record.induction_programme).to eq(new_school_cohort.default_induction_programme)
+            end
+
+            it "updates the participant profiler school cohort" do
+              expect {
+                service.call
+              }.to change { participant_profile.reload.school_cohort }.to(new_school_cohort)
+            end
+          end
+        end
+
+        context "when the provider does not have a default partnership with the school in the new cohort" do
+          let(:another_lead_provider) { create(:lead_provider) }
+
+          before { participant_profile.school.active_partnerships.last.update(lead_provider: another_lead_provider) }
+
+          it "is invalid and returns an error message" do
+            is_expected.to be_invalid
+
+            expect(service.errors.messages_for(:cohort)).to include("You cannot change a participant to this cohort as you do not have a partnership with the school for the cohort. Contact the DfE for assistance.")
+          end
+        end
+
+        context "when the provider has a challenged partnership with the school in the new cohort" do
+          before { participant_profile.school.active_partnerships.find_by(cohort: new_cohort).update(challenge_reason: "mistake") }
+
+          it "is invalid and returns an error message" do
+            is_expected.to be_invalid
+
+            expect(service.errors.messages_for(:cohort)).to include("You cannot change a participant to this cohort as you do not have a partnership with the school for the cohort. Contact the DfE for assistance.")
+          end
+        end
+
+        context "when the provider has a relationship partnership with the school in the new cohort" do
+          before { participant_profile.school.active_partnerships.find_by(cohort: new_cohort).update(relationship: true) }
+
+          it "is invalid and returns an error message" do
+            is_expected.to be_invalid
+
+            expect(service.errors.messages_for(:cohort)).to include("You cannot change a participant to this cohort as you do not have a partnership with the school for the cohort. Contact the DfE for assistance.")
+          end
         end
       end
 
@@ -241,13 +404,17 @@ RSpec.describe ChangeSchedule do
     end
 
     describe ".call" do
+      let(:new_cohort) { Cohort.current }
+      let(:schedule_identifier) { "ecf-replacement-april" }
+      let!(:new_schedule) { create(:ecf_mentor_schedule, schedule_identifier: "ecf-replacement-april", name: "Mentor Standard") }
+
       it_behaves_like "changing the schedule of a participant"
 
       it "updates the schedule on the relevant induction record" do
         service.call
         relevant_induction_record = participant_profile.current_induction_record
 
-        expect(relevant_induction_record.schedule).to eq(schedule)
+        expect(relevant_induction_record.schedule).to eq(new_schedule)
       end
 
       context "when profile schedule is not the same as the induction record" do
@@ -257,7 +424,21 @@ RSpec.describe ChangeSchedule do
           service.call
           relevant_induction_record = participant_profile.current_induction_record
 
-          expect(relevant_induction_record.schedule).to eq(schedule)
+          expect(relevant_induction_record.schedule).to eq(new_schedule)
+        end
+      end
+
+      it "does not update the participant cohort" do
+        expect { service.call }.not_to change { participant_profile.reload.current_induction_record.induction_programme.school_cohort.cohort.start_year }
+      end
+
+      context "when participant profile is in a different cohort than the current one" do
+        before do
+          participant_profile.current_induction_record.induction_programme.school_cohort.update!(cohort: Cohort.previous)
+        end
+
+        it "does not update the participant cohort" do
+          expect { service.call }.not_to change { participant_profile.reload.current_induction_record.induction_programme.school_cohort.cohort.start_year }
         end
       end
     end
@@ -267,11 +448,12 @@ RSpec.describe ChangeSchedule do
     let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_npq_lead_provider) }
     let(:npq_lead_provider) { cpd_lead_provider.npq_lead_provider }
     let(:npq_course) { create(:npq_course, identifier: "npq-senior-leadership") }
-    let(:schedule) { create(:npq_specialist_schedule) }
+    let(:schedule) { Finance::Schedule::NPQ.find_by(cohort: Cohort.current, schedule_identifier: "npq-specialist-spring") }
     let(:participant_profile) { create(:npq_participant_profile, npq_lead_provider:, npq_course:, schedule:, user:) }
     let(:course_identifier) { npq_course.identifier }
     let(:schedule_identifier) { new_schedule.schedule_identifier }
-    let(:new_schedule) { create(:npq_leadership_schedule) }
+    let(:new_cohort) { Cohort.previous }
+    let(:new_schedule) { Finance::Schedule::NPQ.find_by(cohort: new_cohort, schedule_identifier: "npq-leadership-spring") }
 
     describe "validations" do
       it_behaves_like "validating a participant for a change schedule"
@@ -281,7 +463,7 @@ RSpec.describe ChangeSchedule do
       end
 
       context "when the cohort is changing" do
-        let(:new_schedule) { create(:npq_leadership_schedule, cohort: new_cohort) }
+        let(:new_schedule) { Finance::Schedule::NPQ.find_by(schedule_identifier: "npq-leadership-spring", cohort: new_cohort) }
         let(:params) do
           {
             cpd_lead_provider:,
@@ -338,10 +520,22 @@ RSpec.describe ChangeSchedule do
     end
 
     describe ".call" do
+      let(:new_cohort) { Cohort.current }
+
       it_behaves_like "changing the schedule of a participant"
 
       it "does not update the npq application cohort" do
-        expect { service.call }.not_to change(participant_profile.npq_application, :cohort)
+        expect { service.call }.not_to change { participant_profile.reload.npq_application.cohort.start_year }
+      end
+
+      context "when participant profile is in a different cohort than the current one" do
+        before do
+          participant_profile.schedule.update!(cohort: Cohort.previous)
+        end
+
+        it "does not update the participant profile cohort" do
+          expect { service.call }.not_to change { participant_profile.reload.schedule.cohort.start_year }
+        end
       end
     end
   end

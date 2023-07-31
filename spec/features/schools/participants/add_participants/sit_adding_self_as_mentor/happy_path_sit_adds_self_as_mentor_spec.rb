@@ -3,7 +3,7 @@
 require "rails_helper"
 require_relative "../../../training_dashboard/manage_training_steps"
 
-RSpec.describe "Add participants", type: :feature, js: true, with_default_schedules: true do
+RSpec.describe "Add participants", type: :feature, js: true do
   include ManageTrainingSteps
 
   before do
