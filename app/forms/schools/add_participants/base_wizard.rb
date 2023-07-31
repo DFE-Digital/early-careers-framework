@@ -158,7 +158,7 @@ module Schools
 
         return false unless @email_owner.participant?
 
-        return false if participant_type == "mentor" && !@email_owner.teacher_profile.participant_profiles.mentors.exists?
+        return false if adding_ect_as_mentor?
 
         return true unless transfer?
 
@@ -541,6 +541,10 @@ module Schools
 
       def data_store_should_not_have_a_different_school!
         raise AlreadyInitialised, "school different" if data_store.school_id.present? && data_store.school_id != school.slug
+      end
+
+      def adding_ect_as_mentor?
+        participant_type == "mentor" && !@email_owner&.teacher_profile&.participant_profiles&.mentors&.exists?
       end
     end
   end
