@@ -14,13 +14,8 @@ module Schools
 
         def existing_participant_checks
           if adding_a_mentor_profile_to_an_ect?
-            if wizard.already_enrolled_at_school?
-              wizard.set_ect_mentor
-              cohort_checks
-            else
-              # FIXME: not the right thing but to enable a happy path to work
-              :cannot_add_mentor_because_already_an_ect
-            end
+            wizard.set_ect_mentor
+            cohort_checks
           elsif adding_an_ect_profile_to_a_mentor?
             :cannot_add_ect_because_already_a_mentor
           elsif wizard.already_enrolled_at_school?

@@ -40,6 +40,7 @@ RSpec.describe Schools::AddParticipants::WizardSteps::NinoStep, type: :model do
       allow(wizard).to receive(:registration_open_for_participant_cohort?).and_return(registration_open)
       allow(wizard).to receive(:need_training_setup?).and_return(need_setup)
       allow(wizard).to receive(:needs_to_confirm_start_term?).and_return(confirm_start_term)
+      allow(wizard).to receive(:set_ect_mentor).and_return(nil)
     end
 
     shared_examples "cohort and registration checks" do
@@ -90,10 +91,6 @@ RSpec.describe Schools::AddParticipants::WizardSteps::NinoStep, type: :model do
 
         context "when the new participant is a mentor" do
           let(:mentor_participant) { true }
-
-          it "returns :cannot_add_mentor_because_already_an_ECT" do
-            expect(step.next_step).to eql :cannot_add_mentor_because_already_an_ect
-          end
 
           context "when the ECT is already enrolled at the school" do
             let(:already_at_school) { true }
