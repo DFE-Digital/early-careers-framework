@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class NPQApplication < ApplicationRecord
-  attr_accessor :current_user
-
   VALID_FUNDING_ELIGIBILITY_STATUS_CODES = %w[
     funded
     no_institution
@@ -29,7 +27,6 @@ class NPQApplication < ApplicationRecord
   belongs_to :npq_course
   belongs_to :cohort, optional: true
 
-  after_update :update_eligibility_information, if: :saved_change_to_eligible_for_funding?
   after_commit :push_enrollment_to_big_query
 
   UK_CATCHMENT_AREA = %w[jersey_guernsey_isle_of_man england northern_ireland scotland wales].freeze
@@ -143,13 +140,5 @@ private
     if declared_as_billable? && eligible_for_funding == false
       errors.add(:base, :billable_declaration_exists)
     end
-  end
-
-  def update_eligibility_information
-    return unless current_user&.admin?
-
-    self.updated_by = current_user.email
-    touch(:eligible_for_funding_updated_at)
-    save!
   end
 end

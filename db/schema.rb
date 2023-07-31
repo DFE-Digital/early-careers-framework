@@ -581,7 +581,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_19_140256) do
     t.integer "number_of_pupils", default: 0
     t.boolean "tsf_primary_eligibility", default: false
     t.boolean "tsf_primary_plus_eligibility", default: false
-    t.string "updated_by"
+    t.string "eligible_for_funding_updated_by"
     t.datetime "eligible_for_funding_updated_at"
     t.index ["cohort_id"], name: "index_npq_applications_on_cohort_id"
     t.index ["npq_course_id"], name: "index_npq_applications_on_npq_course_id"

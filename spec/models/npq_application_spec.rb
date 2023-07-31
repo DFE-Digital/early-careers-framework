@@ -322,7 +322,6 @@ RSpec.describe NPQApplication, type: :model do
       let(:npq_application) { participant_declaration.participant_profile.npq_application }
 
       before do
-        npq_application.current_user = create(:user, :admin)
         npq_application.update!(eligible_for_funding:)
       end
 
@@ -418,37 +417,6 @@ RSpec.describe NPQApplication, type: :model do
         it "is true" do
           expect(npq_application.declared_as_billable?).to eq(true)
         end
-      end
-    end
-  end
-
-  describe "#update_eligibility_information" do
-    let(:current_user) { create(:user, :admin) }
-    subject(:npq_application) { create(:npq_application, eligible_for_funding: false) }
-    context "when eligible_for_funding attribute is changed" do
-      it "updates eligibility information if the user is an admin" do
-        npq_application.current_user = current_user
-        npq_application.eligible_for_funding = true
-        expect { npq_application.save }.to change {
-          [npq_application.updated_by, npq_application.eligible_for_funding_updated_at]
-        }.and(change { npq_application.updated_by }.to(current_user.email)
-          .and(change { npq_application.eligible_for_funding_updated_at }.to(be_within(1.second).of(Time.current))))
-      end
-      it "does not update eligibility information if the user is not an admin" do
-        npq_application.current_user = create(:user)
-        npq_application.eligible_for_funding = true
-        expect { npq_application.save }.not_to change {
-          [npq_application.updated_by, npq_application.eligible_for_funding_updated_at]
-        }
-      end
-    end
-    context "when eligible_for_funding attribute is not changed" do
-      it "does not update eligibility information" do
-        npq_application.current_user = current_user
-        npq_application.eligible_for_funding = false
-        expect { npq_application.save }.not_to change {
-          [npq_application.updated_by, npq_application.eligible_for_funding_updated_at]
-        }
       end
     end
   end
