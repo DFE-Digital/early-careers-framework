@@ -83,6 +83,7 @@ jobs:
 
       - uses: ./.github/actions/deploy-environment-to-aks
         id: deploy
+        continue-on-error: true # temporary while we get staging working
         with:
           environment: staging
           docker-image: ${{ needs.docker.outputs.image }}
