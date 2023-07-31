@@ -14,9 +14,10 @@ development:
 	$(eval DEPLOY_ENV=development)
 	$(eval include global_config/development_aks.sh)
 
-.PHONY: staging
-staging:
+.PHONY: staging_aks
+staging_aks: aks
 	$(eval DEPLOY_ENV=staging)
+	$(eval include global_config/staging_aks.sh)
 
 .PHONY: sandbox
 sandbox:
