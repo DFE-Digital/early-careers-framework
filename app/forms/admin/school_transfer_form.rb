@@ -177,7 +177,7 @@ private
   end
 
   def no_programmes_to_transfer_into_or_continue?
-    latest_induction_record.blank? && (new_school_cohort.blank? || new_school_programmes.where(training_programme: %w[core_induction_programme full_induction_programme]).empty?)
+    new_school_cohort.blank? || new_school_programmes.where(training_programme: %w[core_induction_programme full_induction_programme]).empty?
   end
 
   def make_programme_description(induction_programme)
