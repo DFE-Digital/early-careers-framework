@@ -142,5 +142,40 @@ RSpec.describe Induction::ChangePartnership do
         expect(school_cohort.default_induction_programme).to eq induction_programme
       end
     end
+
+    context "when there are challenged relationships present" do
+      let(:relationship) { create(:partnership, :challenged, relationship: true, school: school_cohort.school, cohort: school_cohort.cohort, lead_provider:) }
+      let(:ect_profile_2) { create(:ect_participant_profile, school_cohort:) }
+      let(:induction_programme_2) { create(:induction_programme, :fip, school_cohort:, partnership: relationship) }
+      let!(:induction_record) { create(:induction_record, induction_programme: induction_programme_2, participant_profile: ect_profile_2, start_date: 2.weeks.ago) }
+
+      it "moves the participants to the new programme" do
+        service.call(school_cohort:, partnership: new_partnership)
+        expect(school_cohort.default_induction_programme.participant_profiles).to include(ect_profile_2)
+      end
+    end
+
+    context "when there are CIP programmes present" do
+      let(:ect_profile_2) { create(:ect_participant_profile, school_cohort:) }
+      let(:induction_programme_2) { create(:induction_programme, :cip, school_cohort:) }
+      let!(:induction_record) { create(:induction_record, induction_programme: induction_programme_2, participant_profile: ect_profile_2, start_date: 2.weeks.ago) }
+
+      it "does not move the participants to the new programme" do
+        service.call(school_cohort:, partnership: new_partnership)
+        expect(school_cohort.default_induction_programme.participant_profiles).not_to include(ect_profile_2)
+      end
+    end
+
+    context "when there are FIP relationships present" do
+      let(:relationship) { create(:partnership, relationship: true, school: school_cohort.school, cohort: school_cohort.cohort, lead_provider:) }
+      let(:ect_profile_2) { create(:ect_participant_profile, school_cohort:) }
+      let(:induction_programme_2) { create(:induction_programme, :fip, school_cohort:, partnership: relationship) }
+      let!(:induction_record) { create(:induction_record, induction_programme: induction_programme_2, participant_profile: ect_profile_2, start_date: 2.weeks.ago) }
+
+      it "does not move the participants to the new programme" do
+        service.call(school_cohort:, partnership: new_partnership)
+        expect(school_cohort.default_induction_programme.participant_profiles).not_to include(ect_profile_2)
+      end
+    end
   end
 end
