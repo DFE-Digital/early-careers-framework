@@ -26,7 +26,7 @@ jobs:
   docker:
     name: Build and push Docker image
     runs-on: ubuntu-latest
-    if: contains(github.event.pull_request.labels.*.name, 'review-app')
+    if: github.actor != 'dependabot[bot]'
 
     outputs:
       image: ${{ steps.build-docker-image.outputs.image }}
