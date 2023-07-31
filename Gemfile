@@ -22,7 +22,7 @@ gem "sentry-sidekiq"
 gem "secure_headers"
 
 # Cleaner logs, one line per request
-gem "lograge", "~> 0.12.0"
+gem "lograge", "~> 0.13.0"
 gem "logstash-event"
 
 # Use postgresql as the database for Active Record
@@ -47,7 +47,7 @@ gem "foreman"
 gem "canonical-rails", "~> 0.2.14"
 
 gem "listen", "~> 3.8"
-gem "rack-attack", "~> 6.6"
+gem "rack-attack", "~> 6.7"
 
 # GOV.UK Notify
 gem "mail-notify", "~> 1.1"
@@ -65,7 +65,7 @@ gem "rubyzip", "~> 2.3", ">= 2.3.0"
 gem "savon", "~> 2.14"
 
 # Strong migration checker for database migrations
-gem "strong_migrations", "~> 1.5"
+gem "strong_migrations", "~> 1.6"
 
 # Pagination
 gem "pagy", "~> 5.10", ">= 5.10.1"
@@ -113,6 +113,8 @@ gem "sprockets-rails", require: "sprockets/railtie"
 
 # Code Highlighter
 gem "rouge"
+
+gem "auto_strip_attributes", "~> 2.6"
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

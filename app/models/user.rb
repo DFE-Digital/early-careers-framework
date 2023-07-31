@@ -3,6 +3,8 @@
 class User < ApplicationRecord
   has_paper_trail
 
+  extend AutoStripAttributes
+
   devise :registerable, :trackable, :passwordless_authenticatable
 
   has_many :participant_identities
@@ -36,7 +38,9 @@ class User < ApplicationRecord
   has_many :npq_application_eligibility_imports, class_name: "NPQApplications::EligibilityImport"
   has_many :npq_application_exports, class_name: "NPQApplications::Export"
 
-  before_validation :strip_whitespace
+  auto_strip_attributes :full_name, nullify: false, squish: true
+  auto_strip_attributes :email, nullify: false
+
   after_update :sync_email_with_identity
 
   validates :full_name, presence: true
@@ -153,12 +157,16 @@ class User < ApplicationRecord
   def user_roles
     @user_roles ||= [
       ("appropriate_body" if appropriate_body?),
+      ("lead_provider" if lead_provider?),
       ("delivery_partner" if delivery_partner?),
       ("admin" if admin?),
       ("finance" if finance?),
       ("induction_coordinator" if induction_coordinator?),
-      ("induction_coordinator_and_mentor" if induction_coordinator_and_mentor?),
-      ("teacher" if teacher?),
+      ("mentor" if mentor?),
+      ("early_career_teacher" if early_career_teacher?),
+      ("npq_participant" if npq?),
+      ("npq_applicant" if npq_applications.any? && !npq?),
+      ("teacher" if teacher?), # presence of teacher profile, could include orphaned de-duped users
     ].compact
   end
 
@@ -221,10 +229,5 @@ private
     if saved_change_to_email? && participant_identities.count == 1
       participant_identities.original.first&.update!(email:)
     end
-  end
-
-  def strip_whitespace
-    full_name&.squish!
-    email&.squish!
   end
 end

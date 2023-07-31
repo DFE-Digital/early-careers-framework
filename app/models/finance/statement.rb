@@ -27,7 +27,7 @@ class Finance::Statement < ApplicationRecord
            through: :refundable_statement_line_items,
            source: :participant_declaration
 
-  has_many :adjustments, class_name: "Finance::Adjustment"
+  has_many :adjustments, -> { order(:created_at) }, class_name: "Finance::Adjustment"
 
   scope :payable,                   -> { where(arel_table[:deadline_date].lt(Date.current).and(arel_table[:payment_date].gteq(Date.current))) }
   scope :closed,                    -> { where(arel_table[:payment_date].lt(Date.current)) }
@@ -73,4 +73,19 @@ class Finance::Statement < ApplicationRecord
       .where(cpd_lead_provider:)
       .where("payment_date < ?", payment_date)
   end
+
+  def adjustment_editable?
+    output_fee && !paid?
+  end
+
+  def ecf?
+    false
+  end
+
+  def npq?
+    false
+  end
 end
+
+require "finance/statement/ecf"
+require "finance/statement/npq"

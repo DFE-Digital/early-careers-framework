@@ -11,3 +11,5 @@ class Finance::Schedule::ECF < Finance::Schedule
     find_by(cohort:, schedule_identifier: "ecf-standard-september")
   end
 end
+
+require "finance/schedule/mentor"

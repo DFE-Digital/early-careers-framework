@@ -390,6 +390,14 @@ RSpec.describe NPQApplication, type: :model do
   end
 
   describe "#declared_as_billable" do
+    context "when application does not have a profile" do
+      subject(:npq_application) { create(:npq_application) }
+
+      it "is false" do
+        expect(npq_application.declared_as_billable?).to eq(false)
+      end
+    end
+
     %w[submitted voided ineligible awaiting_clawback clawed_back].each do |state|
       context "when declaration state is #{state}" do
         let(:participant_declaration) { create(:npq_participant_declaration, state:) }

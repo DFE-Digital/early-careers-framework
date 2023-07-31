@@ -6,7 +6,7 @@ module Api
       include ApiAuditable
       include ApiTokenAuthenticatable
       include ApiPagination
-      include ApiFilter
+      include ApiFilterValidation
 
       # Returns a list of participant declarations
       #

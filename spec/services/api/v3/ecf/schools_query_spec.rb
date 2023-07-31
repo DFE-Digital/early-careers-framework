@@ -105,7 +105,7 @@ RSpec.describe Api::V3::ECF::SchoolsQuery do
         end
       end
 
-      context "sorting" do
+      describe "sorting" do
         let!(:eligible_school) { create(:school, :eligible) }
         let!(:another_eligible_school) do
           travel_to(10.days.ago) do
@@ -113,8 +113,26 @@ RSpec.describe Api::V3::ECF::SchoolsQuery do
           end
         end
 
-        it "returns all records ordered by created_at" do
-          expect(subject.schools).to eq([another_eligible_school, eligible_school])
+        context "when no sort parameter is specified" do
+          it "returns all records ordered by created_at ascending by default" do
+            expect(subject.schools).to eq([another_eligible_school, eligible_school])
+          end
+        end
+
+        context "when created_at sort parameter is specified" do
+          let(:params) { { filter: { cohort: cohort.display_name }, sort: "-created_at" } }
+
+          it "returns records in the correct order" do
+            expect(subject.schools).to eq([eligible_school, another_eligible_school])
+          end
+        end
+
+        context "when updated_at sort parameter is specified" do
+          let(:params) { { filter: { cohort: cohort.display_name }, sort: "updated_at" } }
+
+          it "returns records in the correct order" do
+            expect(subject.schools).to eq([another_eligible_school, eligible_school])
+          end
         end
       end
     end

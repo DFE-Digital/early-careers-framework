@@ -6,6 +6,7 @@ module Api
       include ApiTokenAuthenticatable
       include ApiPagination
       include ApiFilter
+      include ApiFilterValidation
 
       def index
         render json: ECFInductionRecordSerializer.new(paginate(users)).serializable_hash.to_json

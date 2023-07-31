@@ -5,6 +5,7 @@ class School < ApplicationRecord
 
   extend FriendlyId
   include GiasHelpers
+  extend AutoStripAttributes
 
   friendly_id :slug_candidates
 
@@ -49,6 +50,9 @@ class School < ApplicationRecord
   has_many :active_ecf_participants, through: :active_ecf_participant_profiles, source: :user
 
   has_many :additional_school_emails
+
+  auto_strip_attributes :secondary_contact_email, nullify: false
+  auto_strip_attributes :primary_contact_email, nullify: false
 
   scope :with_local_authority, lambda { |local_authority|
     joins(%i[school_local_authorities local_authorities])

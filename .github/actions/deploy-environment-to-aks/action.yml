@@ -1,0 +1,68 @@
+name: Deploy environment to AKS
+description: Deploys an application environment to AKS
+
+inputs:
+  environment:
+    description: The name of the environment
+    required: true
+  docker-image:
+    description: The Docker image to deploy
+    required: true
+  azure-credentials:
+    description: JSON object containing a key for the service principal authorised on the Azure subscription
+    required: true
+  pull-request-number:
+    description: The pull request number which triggered this deploy. If set, this will automatically seed the database.
+    required: false
+  smoke-test-credentials-required:
+    description: Whether to run the smoke test with support credentials
+    required: false
+    default: "true"
+  current-commit-sha:
+    description: The commit sha for the current commit
+    required: true
+
+outputs:
+  url:
+    description: The base URL for the deployed environment
+    value: ${{ steps.apply-terraform.outputs.url }}
+
+runs:
+  using: composite
+
+  steps:
+    - uses: hashicorp/setup-terraform@v1
+      with:
+        terraform_version: 1.5.3
+        terraform_wrapper: false
+
+    - uses: DFE-Digital/github-actions/set-arm-environment-variables@master
+      with:
+        azure-credentials: ${{ inputs.azure-credentials }}
+
+    - name: Apply Terraform
+      id: apply-terraform
+      shell: bash
+      run: |
+        make ci ${{ inputs.environment }}_aks terraform-apply
+        cd terraform/aks && echo "url=$(terraform output -raw url)" >> $GITHUB_OUTPUT
+      env:
+        TF_VAR_azure_sp_credentials_json: ${{ inputs.azure-credentials }}
+        DOCKER_IMAGE: ${{ inputs.docker-image }}
+        PULL_REQUEST_NUMBER: ${{ inputs.pull-request-number }}
+
+    - uses: Azure/login@v1
+      with:
+        creds: ${{ inputs.azure-credentials }}
+
+    - name: Seed database
+      if: ${{ inputs.pull-request-number != '' }}
+      shell: bash
+      run: |
+        az aks get-credentials --resource-group s189t01-tsc-ts-rg --name s189t01-tsc-test-aks
+        kubectl exec -n cpd-development deployment/cpd-ecf-review-${{ inputs.pull-request-number }}-web -- sh -c "cd /app && /usr/local/bin/bundle exec rails db:safe_reset"
+
+    - uses: ./.github/actions/smoke-test
+      with:
+        url: ${{ steps.apply-terraform.outputs.url }}
+        current-commit-sha: ${{ inputs.current-commit-sha }}

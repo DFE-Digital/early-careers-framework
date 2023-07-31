@@ -4,8 +4,9 @@ module Api
   module V3
     module ECF
       class SchoolsQuery
-        include Concerns::FilterCohorts
-        include Concerns::FilterUpdatedSince
+        include Api::Concerns::FilterCohorts
+        include Api::Concerns::FilterUpdatedSince
+        include Concerns::Orderable
 
         def initialize(params:)
           @params = params
@@ -18,15 +19,11 @@ module Api
             .not_cip_only
             .or(schools_with_existing_partnerships)
             .includes(partnerships: :cohort, school_cohorts: :cohort)
+            .order(sort_order(default: "schools.created_at ASC", model: School))
             .distinct
 
           scope = scope.where(urn: filter[:urn]) if filter[:urn].present?
-          scope = scope.order("schools.created_at ASC") if params[:sort].blank?
-
-          if updated_since_filter.present?
-            scope = scope.where(updated_at: updated_since..).or(scope.where(school_cohorts: { updated_at: updated_since.. }))
-          end
-
+          scope = scope.where(updated_at: updated_since..).or(scope.where(school_cohorts: { updated_at: updated_since.. })) if updated_since_filter.present?
           scope
         end
 

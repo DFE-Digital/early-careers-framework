@@ -25,10 +25,25 @@
   <% end %>
 <% end %>
 
-<div class="govuk-!-text-align-right govuk-heading-s govuk-!-margin-bottom-0">
-  Total
-</div>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-one-half">
+    <% if adjustment_editable? %>
+      <%= govuk_link_to new_finance_statement_adjustment_path(statement) do %>
+        Add <span class="govuk-visually-hidden"> adjustment</span>
+      <% end %>
 
-<div class="govuk-!-text-align-right govuk-heading-s">
-  <%= number_to_pounds(total_amount) %>
+      <% if adjustments.any? %>
+        <%= govuk_link_to finance_statement_adjustments_path(statement), class: "govuk-!-margin-left-4" do %>
+          Change or remove <span class="govuk-visually-hidden"> adjustment</span>
+        <% end %>
+      <% end %>
+    <% end %>
+    &nbsp;
+  </div>
+
+  <div class="govuk-grid-column-one-half govuk-!-text-align-right govuk-heading-s">
+    Total
+    <br/>
+    <%= number_to_pounds(total_amount) %>
+  </div>
 </div>

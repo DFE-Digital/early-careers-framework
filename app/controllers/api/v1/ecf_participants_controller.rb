@@ -9,6 +9,7 @@ module Api
       include ApiPagination
       include ApiCsv
       include ApiFilter
+      include ApiFilterValidation
       include ParticipantActions
 
       # Returns a list of ECF participants

@@ -6,8 +6,9 @@ module Api
       class SchoolsController < Api::ApiController
         include ApiTokenAuthenticatable
         include ApiPagination
-        include ApiFilter
-        include ApiOrderable
+        include ApiFilterValidation
+
+        filter_validation required_filters: %i[cohort]
 
         # Retrieve multiple ECF schools scoped to cohort
         #
@@ -28,7 +29,7 @@ module Api
       private
 
         def ecf_schools
-          @ecf_schools ||= ecf_schools_query.schools.order(sort_params(params))
+          @ecf_schools ||= ecf_schools_query.schools
         end
 
         def ecf_school
@@ -49,13 +50,9 @@ module Api
           Api::V3::ECF::SchoolSerializer
         end
 
-        def required_filter_params
-          %i[cohort]
-        end
-
         def school_params
           params
-            .with_defaults({ filter: { cohort: "", urn: "", updated_since: "" } })
+            .with_defaults(sort: "", filter: { cohort: "", urn: "", updated_since: "" })
             .permit(:id, :sort, filter: %i[cohort urn updated_since])
         end
 

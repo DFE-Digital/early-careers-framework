@@ -10,7 +10,6 @@ class ChooseRoleForm
     "admin" => "DfE admin",
     "finance" => "DfE Finance",
     "induction_coordinator" => "Induction tutor",
-    "induction_coordinator_and_mentor" => "Induction tutor and mentor",
     "teacher" => "Teacher",
   }.freeze
 
@@ -20,7 +19,7 @@ class ChooseRoleForm
   validates :role, inclusion: { in: :role_values }
 
   def role_options
-    USER_ROLES.slice(*user.user_roles)
+    USER_ROLES.slice(*sanitized_user_roles)
   end
 
   def redirect_path(helpers:)
@@ -35,8 +34,6 @@ class ChooseRoleForm
       helpers.delivery_partners_path
     when "appropriate_body"
       helpers.appropriate_bodies_path
-    when "induction_coordinator_and_mentor"
-      helpers.induction_coordinator_mentor_path(user)
     when "induction_coordinator"
       helpers.induction_coordinator_dashboard_path(user)
     when "teacher"
@@ -47,20 +44,48 @@ class ChooseRoleForm
   end
 
   def only_one_role
-    return false unless user.user_roles.count == 1
+    return false unless sanitized_user_roles.count == 1
 
-    self.role = user.user_roles.first
+    self.role = sanitized_user_roles.first
     true
   end
 
   def has_no_role
-    return false unless user.user_roles.count.zero?
+    return false unless sanitized_user_roles.empty?
 
     self.role = "no_role"
     true
   end
 
 private
+
+  def rejected_roles
+    %w[induction_coordinator early_career_teacher mentor npq_applicant npq_participant teacher lead_provider].freeze
+  end
+
+  def sanitized_user_roles
+    roles = user_roles.reject { |role| rejected_roles.include?(role) }
+
+    # choose either a SIT role or a teacher role to prevent school users from seeing this
+    if sit_role?
+      roles << "induction_coordinator"
+    elsif teacher_role?
+      roles << "teacher"
+    end
+    roles
+  end
+
+  def user_roles
+    @user_roles ||= user.user_roles
+  end
+
+  def sit_role?
+    user_roles.include?("induction_coordinator")
+  end
+
+  def teacher_role?
+    user_roles.include?("teacher")
+  end
 
   def role_values
     role_options.keys << "change_role"

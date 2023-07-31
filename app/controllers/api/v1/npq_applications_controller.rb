@@ -8,6 +8,7 @@ module Api
       include ApiTokenAuthenticatable
       include ApiPagination
       include ApiFilter
+      include ApiFilterValidation
 
       def index
         respond_to do |format|

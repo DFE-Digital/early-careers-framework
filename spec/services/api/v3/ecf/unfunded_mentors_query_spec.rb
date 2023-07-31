@@ -53,7 +53,7 @@ RSpec.describe Api::V3::ECF::UnfundedMentorsQuery do
       end
     end
 
-    context "sorting" do
+    describe "sorting" do
       let(:user) do
         travel_to(10.days.ago) do
           create(:user, email: "mary.lewis@example.com")
@@ -62,8 +62,26 @@ RSpec.describe Api::V3::ECF::UnfundedMentorsQuery do
       let!(:another_unfunded_mentor_profile) { create(:mentor, :eligible_for_funding, user:) }
       let!(:another_unfunded_mentor_induction_record) { create(:induction_record, induction_programme:, mentor_profile: another_unfunded_mentor_profile) }
 
-      it "returns all unfunded mentors ordered by users created_at" do
-        expect(subject.unfunded_mentors.map(&:user_id)).to eq([another_unfunded_mentor_profile.user.id, unfunded_mentor_profile_user_id])
+      context "when no sort parameter is specified" do
+        it "returns all records ordered by user created_at ascending by default" do
+          expect(subject.unfunded_mentors.map(&:user_id)).to eq([another_unfunded_mentor_profile.user.id, unfunded_mentor_profile_user_id])
+        end
+      end
+
+      context "when created_at sort parameter is specified" do
+        let(:params) { { sort: "-created_at" } }
+
+        it "returns records in the correct order" do
+          expect(subject.unfunded_mentors.map(&:user_id)).to eq([unfunded_mentor_profile_user_id, another_unfunded_mentor_profile.user.id])
+        end
+      end
+
+      context "when updated_at sort parameter is specified" do
+        let(:params) { { sort: "updated_at" } }
+
+        it "returns records in the correct order" do
+          expect(subject.unfunded_mentors.map(&:user_id)).to eq([unfunded_mentor_profile_user_id, another_unfunded_mentor_profile.user.id])
+        end
       end
     end
   end

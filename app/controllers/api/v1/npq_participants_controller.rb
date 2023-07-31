@@ -6,6 +6,7 @@ module Api
       include ApiTokenAuthenticatable
       include ApiPagination
       include ApiFilter
+      include ApiFilterValidation
       include ParticipantActions
 
       # Returns a list of NPQ participants

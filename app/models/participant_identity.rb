@@ -3,6 +3,8 @@
 class ParticipantIdentity < ApplicationRecord
   has_paper_trail
 
+  extend AutoStripAttributes
+
   belongs_to :user, touch: true
   has_many :participant_profiles
   has_many :npq_participant_profiles, class_name: "ParticipantProfile::NPQ"
@@ -11,6 +13,8 @@ class ParticipantIdentity < ApplicationRecord
 
   validates :email, presence: true, uniqueness: true, notify_email: true
   validates :external_identifier, uniqueness: true
+
+  auto_strip_attributes :email, nullify: false
 
   enum origin: {
     ecf: "ecf",

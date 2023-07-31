@@ -6,8 +6,7 @@ module Api
       class UnfundedMentorsController < Api::ApiController
         include ApiTokenAuthenticatable
         include ApiPagination
-        include ApiFilter
-        include ApiOrderable
+        include ApiFilterValidation
 
         # Returns a list of ECF Unfunded Mentors
         # Providers can see their ECF Unfunded Mentors details via this endpoint
@@ -33,7 +32,7 @@ module Api
         end
 
         def ecf_unfunded_mentors
-          @ecf_unfunded_mentors ||= ecf_unfunded_mentors_query.unfunded_mentors.order(sort_params(params, model: User))
+          @ecf_unfunded_mentors ||= ecf_unfunded_mentors_query.unfunded_mentors
         end
 
         def ecf_unfunded_mentor
@@ -57,7 +56,7 @@ module Api
 
         def unfunded_mentor_params
           params
-            .with_defaults({ sort: "", filter: { updated_since: "" } })
+            .with_defaults(sort: "", filter: { updated_since: "" })
             .permit(:id, :sort, filter: %i[updated_since])
         end
       end

@@ -1,0 +1,50 @@
+<% content_for :before_content, govuk_back_link(text: "Back", href: statement_path) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= form_for @add_another_form, url: add_another_finance_statement_adjustments_path(@statement), as: :add_another_form do |f| %>
+      <%= f.govuk_error_summary %>
+
+      <% if params[:added_new].present? %>
+        <h1 class="govuk-heading-xl">You have added an adjustment</h1>
+      <% else %>
+        <span class="govuk-caption-xl">Change or remove an adjustment</span>
+        <h1 class="govuk-heading-xl">Additional adjustments</h1>
+      <% end %>
+
+      <%= govuk_table do |table| %>
+        <% table.head do |head| %>
+          <% head.row do |row| %>
+            <% row.cell(header: true, text: "Payment type") %>
+            <% row.cell(header: true, text: "Payments", numeric: true) %>
+            <% row.cell(header: true, text: "", numeric: true) %>
+          <% end %>
+
+          <% table.body do |body| %>
+            <% @adjustments.each do |adjustment| %>
+              <% body.row do |row| %>
+                <% row.cell(text: adjustment.payment_type) %>
+                <% row.cell(text: number_to_pounds(adjustment.amount), numeric: true) %>
+                <% row.cell(numeric: true) do %>
+                  <%= govuk_link_to "Change", edit_finance_statement_adjustment_path(@statement, adjustment, form_step: "confirm") %>
+                  &nbsp;&nbsp;|&nbsp;&nbsp;
+                  <%= govuk_link_to "Remove", delete_finance_statement_adjustment_path(@statement, adjustment) %>
+                <% end %>
+              <% end %>
+            <% end %>
+          <% end %>
+        <% end %>
+      <% end %>
+
+      <% if params[:added_new].present? %>
+        <br/>
+        <%= f.govuk_radio_buttons_fieldset :add_another, legend: { text: "Do you need to add another adjustment", tag: 'h1', size: 'm' } do %>
+          <%= f.govuk_radio_button :add_another, "yes", label: { text: "Yes" }, link_errors: true %>
+          <%= f.govuk_radio_button :add_another, "no", label: { text: "No" } %>
+        <% end %>
+
+        <%= f.govuk_submit "Continue" %>
+      <% end %>
+    <% end %>
+  </div>
+</div>

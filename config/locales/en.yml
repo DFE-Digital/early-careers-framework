@@ -149,7 +149,7 @@ en:
     mentor:
       blank: "Choose one"
     how_to_continue:
-      blank: "Tell us whether you expect to have any early career teachers this year"
+      blank: "Select an answer"
     schools:
       blank: "The details you entered do not match any schools"
     programme_choice:
@@ -248,6 +248,12 @@ en:
           attributes:
             school_id:
               taken: The school is already linked to this cohort
+        finance/adjustment:
+          attributes:
+            payment_type:
+              blank: Enter a name for the adjustment you want to add
+            amount:
+              other_than: Enter the amount of money that needs to be paid
 
   activemodel:
     errors:
@@ -360,6 +366,10 @@ en:
               blank: "Enter an email address for your teacher"
             core_induction_programme_id:
               blank: "Select the materials you want to use"
+        schools/cohorts/wizard_steps/expect_any_ects_step:
+          attributes:
+            expect_any_ects:
+              inclusion: Select an answer
         schools/add_participants/wizard_steps/participant_type_step:
           attributes:
             participant_type:
@@ -489,6 +499,24 @@ en:
           attributes:
             confirmation:
               inclusion: Choose yes or no
+        finance/create_adjustment_form:
+          attributes:
+            payment_type:
+              blank: Enter a name for the adjustment you want to add
+            amount:
+              not_a_number: Enter the amount of money that needs to be paid
+              other_than: Enter the amount of money that needs to be paid
+        finance/update_adjustment_form:
+          attributes:
+            payment_type:
+              blank: Enter a name for the adjustment you want to add
+            amount:
+              not_a_number: Enter the amount of money that needs to be paid
+              other_than: Enter the amount of money that needs to be paid
+        finance/add_another_adjustment_form:
+          attributes:
+            add_another:
+              inclusion: Select if you need to add another adjustment
         choose_role_form:
           attributes:
             role:
