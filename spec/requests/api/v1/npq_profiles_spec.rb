@@ -247,7 +247,7 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
             "teacher_catchment_iso_country_code" => "GBR",
             "itt_provider" => nil,
             "lead_mentor" => false,
-            "eligible_for_funding_updated_by" => nil,
+            "eligible_for_funding_updated_by_id" => nil,
             "eligible_for_funding_updated_at" => nil,
           })
         end

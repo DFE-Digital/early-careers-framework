@@ -19,7 +19,7 @@ RSpec.describe Admin::NPQ::Applications::UpdateEligibleForFundingRelatedInformat
         expect(service).to respond_to(:call)
         expect { service.call }.not_to raise_error
         updated_npq_application = NPQApplication.find(npq_application.id)
-        expect(updated_npq_application.eligible_for_funding_updated_by).to eq(eligible_for_funding_updated_by.id)
+        expect(updated_npq_application.eligible_for_funding_updated_by).to eq(eligible_for_funding_updated_by)
       end
     end
     context "when eligible_for_funding_updated_by is nil" do

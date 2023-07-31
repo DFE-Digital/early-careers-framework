@@ -26,6 +26,7 @@ class NPQApplication < ApplicationRecord
   belongs_to :npq_lead_provider
   belongs_to :npq_course
   belongs_to :cohort, optional: true
+  belongs_to :eligible_for_funding_updated_by, class_name: "User", optional: true
 
   after_commit :push_enrollment_to_big_query
 

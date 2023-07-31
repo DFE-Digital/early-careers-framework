@@ -15,7 +15,7 @@ module Admin
         def call
           return unless eligible_for_funding_updated_by&.admin?
 
-          npq_application.update!(eligible_for_funding_updated_by: eligible_for_funding_updated_by.id, eligible_for_funding_updated_at:)
+          npq_application.update!(eligible_for_funding_updated_by:, eligible_for_funding_updated_at:)
         end
       end
     end

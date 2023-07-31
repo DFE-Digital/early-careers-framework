@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_19_140256) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_31_153206) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "fuzzystrmatch"
@@ -581,7 +581,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_19_140256) do
     t.integer "number_of_pupils", default: 0
     t.boolean "tsf_primary_eligibility", default: false
     t.boolean "tsf_primary_plus_eligibility", default: false
-    t.string "eligible_for_funding_updated_by"
+    t.uuid "eligible_for_funding_updated_by_id"
     t.datetime "eligible_for_funding_updated_at"
     t.index ["cohort_id"], name: "index_npq_applications_on_cohort_id"
     t.index ["npq_course_id"], name: "index_npq_applications_on_npq_course_id"
@@ -1125,6 +1125,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_19_140256) do
   add_foreign_key "npq_applications", "npq_courses"
   add_foreign_key "npq_applications", "npq_lead_providers"
   add_foreign_key "npq_applications", "participant_identities"
+  add_foreign_key "npq_applications", "users", column: "eligible_for_funding_updated_by_id"
   add_foreign_key "npq_lead_providers", "cpd_lead_providers"
   add_foreign_key "participant_bands", "call_off_contracts"
   add_foreign_key "participant_declaration_attempts", "participant_declarations"
