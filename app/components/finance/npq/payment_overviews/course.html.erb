@@ -63,7 +63,7 @@
         <% end %>
       <% end %>
 
-      <% if statement.service_fee_enabled %>
+      <% unless calculator.monthly_service_fees.zero? %>
         <tr class="gov-table__row">
           <td scope="row" class="govuk-table__cell govuk-body-s"><strong><%= t("finance.service_fee.caption") %></strong></td>
           <td scope="row" class="govuk-table__cell govuk-body-s"><%= calculator.recruitment_target %></td>

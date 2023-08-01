@@ -33,17 +33,19 @@
           <span><%= number_to_pounds(-@calculator.total_clawbacks) %></span>
         </p>
 
-        <% if @statement.service_fee_enabled %>
+        <% unless @calculator.total_service_fees.zero? %>
           <p class="govuk-body-s govuk-!-margin-bottom-2">
             <%= t("finance.service_fee.caption") %>
             <span><%= number_to_pounds(@calculator.total_service_fees) %></span>
           </p>
         <% end %>
 
-        <p class="govuk-body-s govuk-!-margin-bottom-2">
-          <%= t("finance.vat") %>
-          <span><%= number_to_pounds(@calculator.vat) %></span>
-        </p>
+        <% if @statement.show_total_with_vat %>
+          <p class="govuk-body-s govuk-!-margin-bottom-2">
+            <%= t("finance.vat") %>
+            <span><%= number_to_pounds(@calculator.vat) %></span>
+          </p>
+        <% end %>
       </div>
 
       <ul class="first govuk-list govuk-!-margin-bottom-0">
