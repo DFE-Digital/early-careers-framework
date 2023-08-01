@@ -15,15 +15,16 @@ development:
 	$(eval include global_config/development_aks.sh)
 
 .PHONY: staging
-staging:
+staging: aks
 	$(eval DEPLOY_ENV=staging)
+	$(eval include global_config/staging_aks.sh)
 
 .PHONY: sandbox
 sandbox:
 	$(eval DEPLOY_ENV=sandbox)
 
-.PHONY: review_aks
-review_aks: aks ## Specify review AKS environment
+.PHONY: review
+review: aks ## Specify review AKS environment
 	# PULL_REQUEST_NUMBER is set by the GitHub action
 	$(if $(PULL_REQUEST_NUMBER), , $(error Missing environment variable "PULL_REQUEST_NUMBER"))
 	$(eval include global_config/review_aks.sh)

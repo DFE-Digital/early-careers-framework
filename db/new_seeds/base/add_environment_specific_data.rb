@@ -2,7 +2,7 @@
 
 # The following section creates some records that Delivery Partners can use to
 # familiarise themselves with the school user interface.
-if Rails.env.in?(%w[development deployed_development review])
+if Rails.env.in?(%w[development deployed_development staging review])
   delivery_partner_credentials = {
     "Ambition Institute" => "ambition-institute-sit-%d@example.com",
     "Best Practice Network" => "best-practice-network-sit-%d@example.com",

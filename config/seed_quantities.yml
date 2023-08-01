@@ -72,3 +72,6 @@ review:
 
 deployed_development:
   <<: *default
+
+staging:
+  <<: *default

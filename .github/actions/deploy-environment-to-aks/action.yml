@@ -33,7 +33,7 @@ runs:
   steps:
     - uses: hashicorp/setup-terraform@v1
       with:
-        terraform_version: 1.5.3
+        terraform_version: 1.5.4
         terraform_wrapper: false
 
     - uses: DFE-Digital/github-actions/set-arm-environment-variables@master
@@ -44,7 +44,7 @@ runs:
       id: apply-terraform
       shell: bash
       run: |
-        make ci ${{ inputs.environment }}_aks terraform-apply
+        make ci ${{ inputs.environment }} terraform-apply
         cd terraform/aks && echo "url=$(terraform output -raw url)" >> $GITHUB_OUTPUT
       env:
         TF_VAR_azure_sp_credentials_json: ${{ inputs.azure-credentials }}
