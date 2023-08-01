@@ -31,8 +31,6 @@ module Finance
       end
 
       def total_service_fees
-        return 0.0 unless statement.service_fee_enabled
-
         contracts.sum do |contract|
           CourseStatementCalculator.new(statement:, contract:).monthly_service_fees
         end

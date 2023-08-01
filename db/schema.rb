@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_27_151545) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_01_094247) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "fuzzystrmatch"
@@ -601,7 +601,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_27_151545) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.uuid "cohort_id", null: false
-    t.decimal "monthly_service_fee"
+    t.decimal "monthly_service_fee", default: "0.0"
     t.decimal "targeted_delivery_funding_per_participant", default: "100.0"
     t.index ["cohort_id"], name: "index_npq_contracts_on_cohort_id"
     t.index ["npq_lead_provider_id"], name: "index_npq_contracts_on_npq_lead_provider_id"
@@ -1022,7 +1022,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_27_151545) do
     t.boolean "output_fee", default: true
     t.string "contract_version", default: "0.0.1"
     t.decimal "reconcile_amount", default: "0.0", null: false
-    t.boolean "service_fee_enabled", default: true
     t.boolean "show_total_with_vat", default: false
     t.index ["cohort_id"], name: "index_statements_on_cohort_id"
     t.index ["cpd_lead_provider_id"], name: "index_statements_on_cpd_lead_provider_id"
