@@ -195,7 +195,7 @@ private
   end
 
   def moving_to_new_school
-    errors.add(:new_school_urn, :same_school, urn: new_school_urn) if participant_profile.school == new_school
+    errors.add(:new_school_urn, :same_school, urn: new_school_urn) if latest_induction_record&.school == new_school
   end
 
   def new_school_programmes
