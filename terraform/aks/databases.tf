@@ -28,5 +28,5 @@ module "postgres" {
 
   use_azure               = var.deploy_azure_backing_services
   azure_enable_monitoring = var.enable_monitoring
-  azure_extensions        = ["citext", "pg_stat_statements", "pgcrypto", "plpgsql"]
+  azure_extensions        = ["citext", "fuzzystrmatch", "pg_stat_statements", "pgcrypto", "plpgsql", "uuid-ossp"]
 }
