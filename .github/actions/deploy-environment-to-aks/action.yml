@@ -33,7 +33,7 @@ runs:
   steps:
     - uses: hashicorp/setup-terraform@v1
       with:
-        terraform_version: 1.5.3
+        terraform_version: 1.5.4
         terraform_wrapper: false
 
     - uses: DFE-Digital/github-actions/set-arm-environment-variables@master
