@@ -79,7 +79,7 @@ module Finance
             JOIN schedules sch ON sch.id = latest_induction_record.schedule_id
             JOIN schools sc ON sc.id = latest_induction_record.school_id
             LEFT OUTER JOIN ecf_participant_eligibilities epe ON epe.participant_profile_id = pp.id
-            JOIN delivery_partners dp ON dp.id = latest_induction_record.delivery_partner_id
+            JOIN delivery_partners dp ON dp.id = COALESCE(pd.delivery_partner_id, latest_induction_record.delivery_partner_id)
             WHERE pd.type = 'ParticipantDeclaration::ECF' AND #{where_values}
             ORDER BY u.full_name ASC
           EOSQL
