@@ -1,6 +1,30 @@
-<h1><%= @npq_application.user.full_name %></h1>
+
 
 <% content_for :before_content, govuk_back_link(text: "Back", href: admin_npq_applications_edge_case_path(@npq_application)) %>
+
+
+<% if @npq_application.has_submitted_declaration? && !@npq_application.eligible_for_funding %>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <div class="govuk-notification-banner" role="region"
+        aria-labelledby="govuk-notification-banner-title"
+        data-module="govuk-notification-banner">
+        <div class="govuk-notification-banner__header">
+          <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+            Important
+          </h2>
+        </div>
+        <div class="govuk-notification-banner__content">
+          <p class="govuk-notification-banner__heading">
+            This user has existing declarations in a submitted state; you need to inform the Lead Provider that they must void these declarations and resubmit them once funding has been changed.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<h1><%= @npq_application.user.full_name %></h1>
 
 <%= form_for(@npq_application, url: admin_npq_applications_eligible_for_funding_path(@npq_application), method: "PATCH") do |form| %>
   <%= form.govuk_error_summary %>

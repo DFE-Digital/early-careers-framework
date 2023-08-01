@@ -420,4 +420,34 @@ RSpec.describe NPQApplication, type: :model do
       end
     end
   end
+
+  describe "#has_submitted_declaration" do
+    context "when application does not have a profile" do
+      subject(:npq_application) { create(:npq_application) }
+
+      it "is false" do
+        expect(npq_application.has_submitted_declaration?).to eq(false)
+      end
+    end
+
+    context "when declaration state is submitted" do
+      let(:state) { "submitted" }
+      let(:participant_declaration) { create(:npq_participant_declaration, state:) }
+      let(:npq_application) { participant_declaration.participant_profile.npq_application }
+
+      it "is true" do
+        expect(npq_application.has_submitted_declaration?).to eq(true)
+      end
+    end
+
+    context "when declaration state is in other state" do
+      let(:state) { "paid" }
+      let(:participant_declaration) { create(:npq_participant_declaration, state:) }
+      let(:npq_application) { participant_declaration.participant_profile.npq_application }
+
+      it "is false" do
+        expect(npq_application.has_submitted_declaration?).to eq(false)
+      end
+    end
+  end
 end

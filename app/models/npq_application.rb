@@ -114,6 +114,10 @@ class NPQApplication < ApplicationRecord
     profile.present? && profile.participant_declarations.billable.count.positive?
   end
 
+  def has_submitted_declaration?
+    profile.present? && profile.participant_declarations.where(state: "submitted").present?
+  end
+
 private
 
   def previously_funded?
