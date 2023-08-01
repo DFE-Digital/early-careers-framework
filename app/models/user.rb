@@ -21,6 +21,7 @@ class User < ApplicationRecord
 
   has_many :delivery_partner_profiles, dependent: :destroy
   has_many :delivery_partners, through: :delivery_partner_profiles
+  has_many :updated_applications, class_name: "NPQApplication", foreign_key: "eligible_for_funding_updated_by_id", dependent: :nullify
 
   has_many :appropriate_body_profiles, dependent: :destroy
   has_many :appropriate_bodies, through: :appropriate_body_profiles
