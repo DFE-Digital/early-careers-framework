@@ -129,3 +129,25 @@ terraform-plan: terraform-init
 .PHONY: terraform-destroy
 terraform-destroy: terraform-init
 	terraform -chdir=terraform/aks destroy -var-file workspace_variables/${DEPLOY_ENV}.tfvars.json ${AUTO_APPROVE}
+
+enable-maintenance:
+	$(if ${DEPLOY_ENV} == "review_aks", $(eval VARIABLE_FILE_NAME=review), $(eval VARIABLE_FILE_NAME=${DEPLOY_ENV}))
+	$(eval include terraform/workspace-variables/${VARIABLE_FILE_NAME}.tfvars)
+	$(eval SPACE=${paas_space_name})
+
+	cf target -s ${SPACE}
+	cd service_unavailable_page && cf push
+	cf map-route ecf-unavailable london.cloudapps.digital --hostname ${APP_NAME}
+	echo Waiting 5s for route to be registered... && sleep 5
+	cf unmap-route ${APP_NAME} london.cloudapps.digital --hostname ${APP_NAME}
+
+disable-maintenance:
+	$(if ${DEPLOY_ENV} == "review_aks", $(eval VARIABLE_FILE_NAME=review), $(eval VARIABLE_FILE_NAME=${DEPLOY_ENV}))
+	$(eval include terraform/workspace-variables/${VARIABLE_FILE_NAME}.tfvars)
+	$(eval SPACE=${paas_space_name})
+
+	cf target -s ${SPACE}
+	cf map-route ${APP_NAME} london.cloudapps.digital --hostname ${APP_NAME}
+	echo Waiting 5s for route to be registered... && sleep 5
+	cf unmap-route ecf-unavailable london.cloudapps.digital --hostname ${APP_NAME}
+	cf delete -rf ecf-unavailable
