@@ -6,7 +6,7 @@ class SchoolMailer < ApplicationMailer
   NOMINATION_EMAIL_WITH_ACADEMIC_YEAR_TEMPLATE = "bfc43b20-922f-4323-8775-a6e05f06e24a"
   SCHOOL_PRETERM_REMINDER = "a7cc4d19-c0cb-4187-a71b-1b1ea029924f"
   UNENGAGED_INVITE_EMAIL_TEMPLATE = "a7cc4d19-c0cb-4187-a71b-1b1ea029924f"
-  NOMINATION_CONFIRMATION_EMAIL_TEMPLATE = "7cc9b459-b088-4d5a-84c8-33a74993a2fc"
+  NOMINATION_CONFIRMATION_EMAIL_TEMPLATE = "7935cf72-75e9-4d0d-a05f-6f2ccda2b398"
   SCHOOL_REQUESTED_SIGNIN_LINK_FROM_GIAS = "f2764570-ca3c-4e3b-97c3-251a853c9dde"
   SCHOOL_PARTNERSHIP_NOTIFICATION_EMAIL_TEMPLATE = "8cac177e-b094-4a00-9179-94fadde8ced0"
   COORDINATOR_PARTNERSHIP_NOTIFICATION_EMAIL_TEMPLATE = "076e8486-cbcc-44ee-8a6e-d2a721ee1460"
@@ -212,6 +212,9 @@ class SchoolMailer < ApplicationMailer
         email_address: sit_email_address,
         name: sit_profile.user.full_name,
         school_name: school.name,
+        support_email: "continuing-professional-development@digital.education.gov.uk",
+        how_to_manage_training: "https://www.gov.uk/guidance/how-to-manage-early-career-teacher-training",
+        how_to_set_up_training: "https://www.gov.uk/guidance/how-to-set-up-training-for-early-career-teachers",
         start_page: start_url,
         subject: "Sign in to manage induction",
         step_by_step: step_by_step_url,
