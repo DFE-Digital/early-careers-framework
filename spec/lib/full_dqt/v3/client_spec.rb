@@ -4,9 +4,6 @@ RSpec.describe FullDQT::V3::Client do
   subject { described_class.new }
 
   let(:trn) { "1001000" }
-  let(:incorrect_trn) { "1001009" }
-  let(:birthdate) { Date.new(1987, 12, 13) }
-  let(:nino) { "AB123456D" }
 
   let(:response_hash) do
     {
@@ -43,7 +40,7 @@ RSpec.describe FullDQT::V3::Client do
   end
 
   let(:stub_api_404_request) do
-    stub_request(:get, "https://dtqapi.example.com/dqt-crm/v1/teachers/#{trn}?include=induction")
+    stub_request(:get, "https://dtqapi.example.com/dqt-crm/v3/teachers/#{trn}?include=induction")
       .with(
         headers: {
           "Accept" => "*/*",
