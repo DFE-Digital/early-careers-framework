@@ -3,4 +3,5 @@
 module FullDQT
 end
 
-require "full_dqt/client"
+require "full_dqt/v1/client"
+require "full_dqt/v3/client"
