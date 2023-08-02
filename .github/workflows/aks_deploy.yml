@@ -24,7 +24,7 @@ on:
 
 jobs:
   lint:
-    name: Run Ruby, JS, SCSS and ERB linters
+    name: Lint
     uses: ./.github/workflows/lint.yml
 
   test:

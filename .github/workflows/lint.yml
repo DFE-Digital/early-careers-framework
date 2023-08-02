@@ -15,6 +15,7 @@ on:
 
 jobs:
   ruby_linting:
+    name: "Lint ruby"
     env:
       GOVUK_NOTIFY_API_KEY: Test
     runs-on: ubuntu-latest
@@ -47,6 +48,7 @@ jobs:
           path: ${{ github.workspace }}/rubocop-result.json
 
   js_linting:
+    name: "Lint JS"
     env:
       GOVUK_NOTIFY_API_KEY: Test
     runs-on: ubuntu-latest
@@ -69,6 +71,7 @@ jobs:
           yarn lint
 
   scss_linting:
+    name: "Lint SCSS"
     env:
       GOVUK_NOTIFY_API_KEY: Test
     runs-on: ubuntu-latest
@@ -90,6 +93,7 @@ jobs:
           bundle exec rake lint:scss
 
   erb_linting:
+    name: "Lint ERB"
     env:
       GOVUK_NOTIFY_API_KEY: Test
     runs-on: ubuntu-latest
