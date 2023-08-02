@@ -49,12 +49,22 @@ RSpec.describe Finance::Schedule::ECF, type: :model do
       schedule = described_class.find_by(cohort:, schedule_identifier: "ecf-extended-april")
 
       expect(schedule).to be_present
-      expect(schedule.milestones.count).to eql(6)
+      expect(schedule.milestones.count).to eql(9)
 
       schedule = described_class.find_by(cohort:, schedule_identifier: "ecf-replacement-april")
 
       expect(schedule).to be_present
       expect(schedule.milestones.count).to eql(6)
+
+      schedule = described_class.find_by(cohort:, schedule_identifier: "ecf-extended-january")
+
+      expect(schedule).to be_present
+      expect(schedule.milestones.count).to eql(9)
+
+      schedule = described_class.find_by(cohort:, schedule_identifier: "ecf-extended-september")
+
+      expect(schedule).to be_present
+      expect(schedule.milestones.count).to eql(9)
     end
   end
 end
