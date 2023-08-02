@@ -1,4 +1,4 @@
-name: "Deploy review"
+name: "Deploy"
 on:
   workflow_dispatch:
     inputs:
@@ -23,8 +23,13 @@ on:
       - opened
 
 jobs:
+  lint:
+    name: Run Ruby, JS, SCSS and ERB linters
+    uses: ./.github/workflows/lint.yml
+
   docker:
     name: Build and push Docker image
+    needs: [lint]
     runs-on: ubuntu-latest
     if: github.actor != 'dependabot[bot]'
 

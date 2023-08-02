@@ -1,7 +1,17 @@
-name: Run linter
-
+name: "Lint"
 on:
-  push:
+  workflow_call:
+    inputs:
+      ruby-version:
+        description: Ruby version
+        type: string
+        required: false
+        default: "3.2.2"
+      node-version:
+        description: Node version
+        type: string
+        required: false
+        default: "18.17.x"
 
 jobs:
   ruby_linting:
@@ -16,7 +26,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1.152.0
         with:
-          ruby-version: '3.2.2'
+          ruby-version: ${{ inputs.ruby-version }}
 
       - name: Install dependencies
         run: bundle install
@@ -48,8 +58,8 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v3.7.0
         with:
-          node-version: '18.17.x'
-          cache: 'yarn'
+          node-version: ${{ inputs.node-version }}
+          cache: "yarn"
 
       - name: Yarn install
         run: npm i -g yarn && yarn
@@ -57,7 +67,6 @@ jobs:
       - name: Lint JS
         run: |-
           yarn lint
-
 
   scss_linting:
     env:
@@ -71,7 +80,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1.152.0
         with:
-          ruby-version: '3.2.2'
+          ruby-version: ${{ inputs.ruby-version }}
 
       - name: Install dependencies
         run: bundle install
@@ -92,7 +101,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1.152.0
         with:
-          ruby-version: '3.2.2'
+          ruby-version: ${{ inputs.ruby-version }}
 
       - name: Install dependencies
         run: bundle install
