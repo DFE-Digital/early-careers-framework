@@ -27,9 +27,12 @@ jobs:
     name: Run Ruby, JS, SCSS and ERB linters
     uses: ./.github/workflows/lint.yml
 
+  test:
+    name: Run the test suite
+    uses: ./.github/workflows/rspec.yml
+
   docker:
     name: Build and push Docker image
-    needs: [lint]
     runs-on: ubuntu-latest
     if: github.actor != 'dependabot[bot]'
 
@@ -72,12 +75,8 @@ jobs:
           message: |
             Review app deployed to ${{ steps.deploy.outputs.url }}
 
-  test:
-    name: Run the test suite
-    uses: ./.github/workflows/rspec.yml
-
   deploy_staging:
-    needs: [docker, test]
+    needs: [docker, test, lint]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     environment:
