@@ -33,19 +33,7 @@ jobs:
         run: bundle install
 
       - name: Lint Ruby
-        run: bundle exec rubocop --format progress --format json --out=${{ github.workspace }}/rubocop-result.json
-
-      - name: Lint ERB Templates
-        if: false
-        run: |-
-          bundle exec erblint --lint-all
-
-      - name: Keep Rubocop output
-        if: always()
-        uses: actions/upload-artifact@v3
-        with:
-          name: rubocop_results
-          path: ${{ github.workspace }}/rubocop-result.json
+        run: bundle exec rubocop
 
   js_linting:
     name: "Lint JS"
