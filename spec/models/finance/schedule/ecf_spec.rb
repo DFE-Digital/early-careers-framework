@@ -32,39 +32,41 @@ RSpec.describe Finance::Schedule::ECF, type: :model do
     end
   end
 
-  context "for 2021 cohort" do
-    let(:cohort) { Cohort.find_by(start_year: 2021) }
+  Cohort.where.not(start_year: 2020).find_each do |cohort|
+    context "for #{cohort.start_year} cohort" do
+      let(:cohort) { Cohort.find_by(start_year: cohort.start_year) }
 
-    it "seeds ecf schedules and milestones" do
-      schedule = described_class.find_by(cohort:, schedule_identifier: "ecf-standard-april")
+      it "seeds ecf schedules and milestones" do
+        schedule = described_class.find_by(cohort:, schedule_identifier: "ecf-standard-april")
 
-      expect(schedule).to be_present
-      expect(schedule.milestones.count).to eql(6)
+        expect(schedule).to be_present
+        expect(schedule.milestones.count).to eql(6)
 
-      schedule = described_class.find_by(cohort:, schedule_identifier: "ecf-reduced-april")
+        schedule = described_class.find_by(cohort:, schedule_identifier: "ecf-reduced-april")
 
-      expect(schedule).to be_present
-      expect(schedule.milestones.count).to eql(6)
+        expect(schedule).to be_present
+        expect(schedule.milestones.count).to eql(6)
 
-      schedule = described_class.find_by(cohort:, schedule_identifier: "ecf-extended-april")
+        schedule = described_class.find_by(cohort:, schedule_identifier: "ecf-extended-april")
 
-      expect(schedule).to be_present
-      expect(schedule.milestones.count).to eql(9)
+        expect(schedule).to be_present
+        expect(schedule.milestones.count).to eql(9)
 
-      schedule = described_class.find_by(cohort:, schedule_identifier: "ecf-replacement-april")
+        schedule = described_class.find_by(cohort:, schedule_identifier: "ecf-replacement-april")
 
-      expect(schedule).to be_present
-      expect(schedule.milestones.count).to eql(6)
+        expect(schedule).to be_present
+        expect(schedule.milestones.count).to eql(6)
 
-      schedule = described_class.find_by(cohort:, schedule_identifier: "ecf-extended-january")
+        schedule = described_class.find_by(cohort:, schedule_identifier: "ecf-extended-january")
 
-      expect(schedule).to be_present
-      expect(schedule.milestones.count).to eql(9)
+        expect(schedule).to be_present
+        expect(schedule.milestones.count).to eql(9)
 
-      schedule = described_class.find_by(cohort:, schedule_identifier: "ecf-extended-september")
+        schedule = described_class.find_by(cohort:, schedule_identifier: "ecf-extended-september")
 
-      expect(schedule).to be_present
-      expect(schedule.milestones.count).to eql(9)
+        expect(schedule).to be_present
+        expect(schedule.milestones.count).to eql(9)
+      end
     end
   end
 end
