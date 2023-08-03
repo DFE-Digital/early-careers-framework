@@ -166,7 +166,7 @@ RSpec.describe SchoolMailer, type: :mailer do
     end
 
     it "uses the correct Notify template" do
-      expect(SchoolMailer::NOMINATION_CONFIRMATION_EMAIL_TEMPLATE).to eq("7cc9b459-b088-4d5a-84c8-33a74993a2fc")
+      expect(SchoolMailer::NOMINATION_CONFIRMATION_EMAIL_TEMPLATE).to eq("7935cf72-75e9-4d0d-a05f-6f2ccda2b398")
     end
   end
 
