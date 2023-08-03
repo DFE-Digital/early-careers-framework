@@ -1,4 +1,4 @@
-name: "Deploy review"
+name: "Deploy"
 on:
   workflow_dispatch:
     inputs:
@@ -23,6 +23,14 @@ on:
       - opened
 
 jobs:
+  lint:
+    name: Lint
+    uses: ./.github/workflows/lint.yml
+
+  test:
+    name: Run the test suite
+    uses: ./.github/workflows/rspec.yml
+
   docker:
     name: Build and push Docker image
     runs-on: ubuntu-latest
@@ -67,12 +75,8 @@ jobs:
           message: |
             Review app deployed to ${{ steps.deploy.outputs.url }}
 
-  test:
-    name: Run the test suite
-    uses: ./.github/workflows/rspec.yml
-
   deploy_staging:
-    needs: [docker, test]
+    needs: [docker, test, lint]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     environment:

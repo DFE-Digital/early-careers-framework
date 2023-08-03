@@ -1,10 +1,21 @@
-name: Run linter
-
+name: "Lint"
 on:
-  push:
+  workflow_call:
+    inputs:
+      ruby-version:
+        description: Ruby version
+        type: string
+        required: false
+        default: "3.2.2"
+      node-version:
+        description: Node version
+        type: string
+        required: false
+        default: "18.17.x"
 
 jobs:
   ruby_linting:
+    name: "Lint ruby"
     env:
       GOVUK_NOTIFY_API_KEY: Test
     runs-on: ubuntu-latest
@@ -16,27 +27,16 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1.152.0
         with:
-          ruby-version: '3.2.2'
+          ruby-version: ${{ inputs.ruby-version }}
 
       - name: Install dependencies
         run: bundle install
 
       - name: Lint Ruby
-        run: bundle exec rubocop --format progress --format json --out=${{ github.workspace }}/rubocop-result.json
-
-      - name: Lint ERB Templates
-        if: false
-        run: |-
-          bundle exec erblint --lint-all
-
-      - name: Keep Rubocop output
-        if: always()
-        uses: actions/upload-artifact@v3
-        with:
-          name: rubocop_results
-          path: ${{ github.workspace }}/rubocop-result.json
+        run: bundle exec rubocop
 
   js_linting:
+    name: "Lint JS"
     env:
       GOVUK_NOTIFY_API_KEY: Test
     runs-on: ubuntu-latest
@@ -48,8 +48,8 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v3.7.0
         with:
-          node-version: '18.17.x'
-          cache: 'yarn'
+          node-version: ${{ inputs.node-version }}
+          cache: "yarn"
 
       - name: Yarn install
         run: npm i -g yarn && yarn
@@ -58,8 +58,8 @@ jobs:
         run: |-
           yarn lint
 
-
   scss_linting:
+    name: "Lint SCSS"
     env:
       GOVUK_NOTIFY_API_KEY: Test
     runs-on: ubuntu-latest
@@ -71,7 +71,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1.152.0
         with:
-          ruby-version: '3.2.2'
+          ruby-version: ${{ inputs.ruby-version }}
 
       - name: Install dependencies
         run: bundle install
@@ -81,6 +81,7 @@ jobs:
           bundle exec rake lint:scss
 
   erb_linting:
+    name: "Lint ERB"
     env:
       GOVUK_NOTIFY_API_KEY: Test
     runs-on: ubuntu-latest
@@ -92,7 +93,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1.152.0
         with:
-          ruby-version: '3.2.2'
+          ruby-version: ${{ inputs.ruby-version }}
 
       - name: Install dependencies
         run: bundle install
