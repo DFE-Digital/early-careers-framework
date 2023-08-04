@@ -86,7 +86,7 @@
       Address
     </dt>
     <dd class="govuk-summary-list__value">
-      <%= @school.full_address.gsub(/\n/, "<br/>").html_safe %>
+      <%= h(@school.full_address.gsub(/\n/, "<br/>")) %>
     </dd>
   </div>
   <div class="govuk-summary-list__row">
