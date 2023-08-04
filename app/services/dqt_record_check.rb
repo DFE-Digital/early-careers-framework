@@ -39,7 +39,7 @@ private
   end
 
   def full_dqt_client
-    @full_dqt_client ||= FullDQT::Client.new
+    @full_dqt_client ||= FullDQT::V1::Client.new
   end
 
   def check_record
