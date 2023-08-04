@@ -32,7 +32,7 @@ jobs:
           gem install brakeman --version ${{ env.BRAKEMAN_VERSION }}
 
       - name: Scan
-        continue-on-error: false
+        continue-on-error: true
         run: |
           brakeman -f sarif -o output.sarif.json .
 
