@@ -18,7 +18,7 @@ module Banners
     end
 
     def render?
-      date.present? && !date_is_past?
+      date.present? && !date_is_past? && FeatureFlag.active?(:maintenance_banner)
     end
 
     def unavailable_timeframe_string

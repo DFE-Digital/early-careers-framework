@@ -14,6 +14,7 @@ class FeatureFlag
   # Long-lived settings that are often environment-specific
   PERMANENT_SETTINGS = %i[
     zendesk_widget
+    maintenance_banner
   ].freeze
 
   # Short-lived feature flags
