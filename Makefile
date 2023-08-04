@@ -19,7 +19,7 @@ staging: aks
 
 .PHONY: sandbox
 sandbox:
-	$(eval DEPLOY_ENV=sandbox)
+	$(eval include global_config/sandbox_aks.sh)
 
 .PHONY: review
 review: aks ## Specify review AKS environment
@@ -32,7 +32,7 @@ review: aks ## Specify review AKS environment
 
 .PHONY: production
 production:
-	$(eval DEPLOY_ENV=production)
+	$(eval include global_config/production_aks.sh)
 	$(if $(CONFIRM_PRODUCTION), , $(error Production can only run with CONFIRM_PRODUCTION))
 
 load-domain-config:

@@ -1,0 +1,7 @@
+AZURE_RESOURCE_PREFIX=s189p01
+AZURE_SUBSCRIPTION=s189-teacher-services-cloud-production
+CONFIG=production_aks
+CONFIG_SHORT=pd
+DEPLOY_ENV=${CONFIG}
+ENV_TAG=Production
+PLATFORM=aks
