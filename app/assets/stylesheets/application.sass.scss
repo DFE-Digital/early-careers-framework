@@ -52,3 +52,7 @@ $govuk-new-link-styles: true;
     margin-right: auto;
   }
 }
+
+.govuk-notification-banner__content--full-width > * {
+  max-width: 100%;
+}
