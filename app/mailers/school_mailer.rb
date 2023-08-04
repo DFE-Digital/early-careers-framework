@@ -1,11 +1,8 @@
 # frozen_string_literal: true
 
 class SchoolMailer < ApplicationMailer
-  NOMINATION_EMAIL_TEMPLATE = "a7cc4d19-c0cb-4187-a71b-1b1ea029924f"
   # replacement for the above template with dynamic academic year
   NOMINATION_EMAIL_WITH_ACADEMIC_YEAR_TEMPLATE = "bfc43b20-922f-4323-8775-a6e05f06e24a"
-  SCHOOL_PRETERM_REMINDER = "a7cc4d19-c0cb-4187-a71b-1b1ea029924f"
-  UNENGAGED_INVITE_EMAIL_TEMPLATE = "a7cc4d19-c0cb-4187-a71b-1b1ea029924f"
   NOMINATION_CONFIRMATION_EMAIL_TEMPLATE = "7935cf72-75e9-4d0d-a05f-6f2ccda2b398"
   SCHOOL_REQUESTED_SIGNIN_LINK_FROM_GIAS = "f2764570-ca3c-4e3b-97c3-251a853c9dde"
   SCHOOL_PARTNERSHIP_NOTIFICATION_EMAIL_TEMPLATE = "8cac177e-b094-4a00-9179-94fadde8ced0"
@@ -27,7 +24,6 @@ class SchoolMailer < ApplicationMailer
   NQT_PLUS_ONE_SITLESS_EMAIL_TEMPLATE = "c10392e4-9d75-402d-a7fd-47df16fa6082"
   NQT_PLUS_ONE_SIT_EMAIL_TEMPLATE = "9e01b5ac-a94c-4c71-a38d-6502d7c4c2e7"
   DIY_WORDPRESS_NOTIFICATION_TEMPLATE = "e1067a2f-b027-45a6-8e51-668e170090d1"
-  PARTNERED_SCHOOL_INVITE_SIT_EMAIL_TEMPLATE = "8cac177e-b094-4a00-9179-94fadde8ced0"
   UNPARTNERED_CIP_SIT_ADD_PARTICIPANTS_EMAIL_TEMPLATE = "ebc96223-c2ea-416e-8d3e-1f591bbd2f98"
   SIT_NEW_AMBITION_ECTS_AND_MENTORS_ADDED_TEMPLATE = "90d86c1b-2dca-4cca-9dcb-5940e7f28577"
   SIT_FIP_PARTICIPANT_VALIDATION_DEADLINE_REMINDER_TEMPLATE = "48f63205-a8d9-49a2-a76c-93d48ec9b23b"
@@ -264,29 +260,6 @@ class SchoolMailer < ApplicationMailer
     ).tag(:partnership_created, :request_to_nominate_sit).associate_with(partnership, partnership.school)
   end
 
-  def partnered_school_invite_sit_email
-    recipient = params[:recipient]
-    school = params[:school]
-    lead_provider_name = params[:lead_provider_name]
-    delivery_partner_name = params[:delivery_partner_name]
-    challenge_url = params[:challenge_url]
-    nominate_url = params[:nominate_url]
-
-    template_mail(
-      PARTNERED_SCHOOL_INVITE_SIT_EMAIL_TEMPLATE,
-      to: recipient,
-      rails_mailer: mailer_name,
-      rails_mail_template: action_name,
-      personalisation: {
-        school_name: school.name,
-        lead_provider_name:,
-        delivery_partner_name:,
-        nominate_url:,
-        challenge_url:,
-      },
-    ).tag(:partnered_school_invite_sit).associate_with(school)
-  end
-
   # This email is sent to the SIT of the school whe was reported to enter the partnership with lead provider.
   # If given school has no appointed SIT, the `school_partnership_notification_email` should be sent instead
   def coordinator_partnership_notification_email
@@ -393,21 +366,6 @@ class SchoolMailer < ApplicationMailer
         nomination_link: params[:nomination_url],
       },
     )
-  end
-
-  # Not sure if this is used anymore as it is not referenced
-  # from anywhere else
-  def unengaged_schools_email
-    template_mail(
-      UNENGAGED_INVITE_EMAIL_TEMPLATE,
-      to: params[:recipient],
-      rails_mailer: mailer_name,
-      rails_mail_template: action_name,
-      personalisation: {
-        school_name: params[:school].name,
-        nomination_link: params[:nomination_url],
-      },
-    ).tag(:unengaged_school_email).associate_with(school)
   end
 
   def induction_coordinator_sign_in_chaser_email
@@ -596,32 +554,6 @@ class SchoolMailer < ApplicationMailer
         sign_in: params[:sign_in_url],
       },
     ).tag(:sit_fip_participant_validation_deadline_reminder).associate_with(induction_coordinator_profile, as: :induction_coordinator)
-  end
-
-  # Not sure this is used anymore the template doesn't have a 'season' placeholder
-  # This is referenced in InviteEcts which I think was a manually invoked service class
-  # that sent reminders
-  def school_preterm_reminder
-    school = params[:school]
-    season = params[:season]
-
-    nomination_email = NominationEmail.create_nomination_email(
-      sent_at: Time.zone.now,
-      sent_to: school.contact_email,
-      school:,
-    )
-
-    template_mail(
-      SCHOOL_PRETERM_REMINDER,
-      to: school.contact_email,
-      rails_mailer: mailer_name,
-      rails_mail_template: action_name,
-      personalisation: {
-        season:,
-        school_name: school.name,
-        nomination_link: nomination_email.nomination_url,
-      },
-    ).tag(:school_preterm_reminder).associate_with(school)
   end
 
   def fip_provider_has_withdrawn_a_participant

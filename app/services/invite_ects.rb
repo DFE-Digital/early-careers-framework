@@ -19,14 +19,4 @@ class InviteEcts
       end
     end
   end
-
-  # A pre-term reminder to request that a school nominate an induction coordinator.
-  def school_preterm_reminder(season:)
-    cohort = Cohort.current
-    School.includes(:induction_coordinators).eligible.reject { |s| s.chosen_programme?(cohort) }.each do |school|
-      next if school.induction_coordinators.any? || Email.associated_with(school).tagged_with(:school_preterm_reminder).any?
-
-      SchoolMailer.with(school:, season:).school_preterm_reminder.deliver_later
-    end
-  end
 end
