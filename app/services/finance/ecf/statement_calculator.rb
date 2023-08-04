@@ -13,6 +13,20 @@ module Finance
           retained_3
           retained_4
           completed
+          extended_1
+          extended_2
+          extended_3
+        ]
+      end
+
+      def self.event_types_for_display
+        %i[
+          started
+          retained_1
+          retained_2
+          retained_3
+          retained_4
+          completed
         ]
       end
 
@@ -62,6 +76,14 @@ module Finance
           define_method "#{event_type}_band_#{letter}_fee_per_declaration" do
             output_calculator.fee_for_declaration(band_letter: letter, type: event_type)
           end
+
+          define_method "extended_band_#{letter}_additions" do
+            send("extended_1_band_#{letter}_additions") + send("extended_2_band_#{letter}_additions") + send("extended_3_band_#{letter}_additions")
+          end
+
+          define_method "extended_band_#{letter}_fee_per_declaration" do
+            send("extended_1_band_#{letter}_fee_per_declaration")
+          end
         end
 
         define_method "additions_for_#{event_type}" do
@@ -75,6 +97,10 @@ module Finance
             hash[:"#{event_type}_subtractions"] * output_calculator.fee_for_declaration(band_letter: hash[:band], type: event_type)
           end
         end
+      end
+
+      def additions_for_extended
+        additions_for_extended_1 + additions_for_extended_2 + additions_for_extended_3
       end
 
       def fee_for_declaration(band_letter:, type:)
@@ -96,6 +122,12 @@ module Finance
       def completed_count
         output_calculator.banding_breakdown.sum do |hash|
           hash[:completed_additions]
+        end
+      end
+
+      def extended_count
+        output_calculator.banding_breakdown.sum do |hash|
+          hash.select { |k, _| k.match(/extended_\d_additions/) }.values.sum
         end
       end
 
@@ -165,6 +197,12 @@ module Finance
       def output_fee
         event_types.sum do |event_type|
           public_send(:"additions_for_#{event_type}")
+        end
+      end
+
+      def event_types_for_display
+        self.class.event_types_for_display.tap do |types|
+          types << :extended if extended_count.positive?
         end
       end
 

@@ -694,6 +694,7 @@ en:
           retained_3: Retained 3
           retained_4: Retained 4
           completed: Completed
+          extended: Extended
 
     npq:
       payment_breakdown: NPQ Payment Breakdown

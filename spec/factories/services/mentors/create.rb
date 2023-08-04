@@ -87,19 +87,6 @@ FactoryBot.define do
       end
     end
 
-    # trait :ineligible do
-    #   after :create do |mentor, evaluator|
-    #     mentor.secondary_profile!
-    #     StoreParticipantEligibility.call(
-    #       participant_profile: mentor,
-    #       eligibility_options: {
-    #         status: :ineligible,
-    #       },
-    #     )
-    #     mentor.reload
-    #   end
-    # end
-
     trait :deferred do
       transient do
         reason { "bereavement" }
@@ -110,6 +97,18 @@ FactoryBot.define do
           course_identifier: "ecf-mentor",
           cpd_lead_provider: participant_profile.induction_records.latest.cpd_lead_provider,
           reason: evaluator.reason,
+        ).call
+        participant_profile.reload
+      end
+    end
+
+    trait :with_extended_schedule do
+      after(:create) do |participant_profile|
+        ChangeSchedule.new(
+          participant_id: participant_profile.user_id,
+          cpd_lead_provider: participant_profile.induction_records.latest.cpd_lead_provider,
+          course_identifier: "ecf-mentor",
+          schedule_identifier: "ecf-extended-september",
         ).call
         participant_profile.reload
       end

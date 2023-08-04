@@ -3,6 +3,7 @@
 FactoryBot.define do
   factory :participant_declaration do
     declaration_type { "started" }
+
     declaration_date do
       participant_profile.schedule.milestones.find_by!(declaration_type:).start_date
     end
@@ -72,6 +73,11 @@ FactoryBot.define do
 
     trait :eligible do
       profile_traits { [:eligible_for_funding] }
+    end
+
+    trait :extended do
+      declaration_type { "extended-1" }
+      profile_traits { %i[eligible_for_funding with_extended_schedule] }
     end
 
     trait :voided do

@@ -60,6 +60,39 @@ FactoryBot.define do
       end
     end
 
+    trait(:with_ecf_extended_milestones) do
+      after(:create) do |schedule|
+        start_year = schedule.cohort.start_year
+        [
+          {
+            name: "Output 7 - Extended Point 1",
+            start_date: Date.new(start_year, 9, 1),
+            payment_date: Date.new(start_year, 9, 1),
+            declaration_type: "extended-1",
+          },
+          {
+            name: "Output 8 - Extended Point 2",
+            start_date: Date.new(start_year, 9, 1),
+            payment_date: Date.new(start_year, 9, 1),
+            declaration_type: "extended-2",
+          },
+          {
+            name: "Output 9 - Extended Point 3",
+            start_date: Date.new(start_year, 9, 1),
+            payment_date: Date.new(start_year, 9, 1),
+            declaration_type: "extended-3",
+          },
+        ].each do |hash|
+          Finance::Milestone.find_or_create_by!(
+            schedule:,
+            name: hash[:name],
+            start_date: hash[:start_date],
+            payment_date: hash[:payment_date],
+          ).update!(declaration_type: hash[:declaration_type])
+        end
+      end
+    end
+
     trait(:with_npq_milestones) do
       after(:create) do |schedule|
         [
@@ -100,6 +133,14 @@ FactoryBot.define do
         name { "ECF January standard" }
         schedule_identifier { "ecf-standard-january" }
       end
+    end
+
+    factory :ecf_extended_schedule, class: "Finance::Schedule::ECF", parent: :schedule do
+      name                { |schedule| "ECF September extended #{schedule.cohort.start_year}" }
+      schedule_identifier { "ecf-extended-september" }
+
+      with_ecf_milestones
+      with_ecf_extended_milestones
     end
 
     factory :ecf_mentor_schedule, class: "Finance::Schedule::Mentor", parent: :schedule do
