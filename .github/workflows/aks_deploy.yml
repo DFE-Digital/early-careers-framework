@@ -39,10 +39,8 @@ jobs:
     name: Build and push Docker image
     runs-on: ubuntu-latest
     if: github.actor != 'dependabot[bot]'
-
     outputs:
-      image: ${{ steps.build-docker-image.outputs.image }}
-
+      docker-image: ${{ steps.build-docker-image.outputs.image }}
     steps:
       - uses: actions/checkout@v3
 
@@ -73,7 +71,7 @@ jobs:
         id: deploy
         with:
           environment: review
-          docker-image: ${{ needs.docker.outputs.image }}
+          docker-image: ${{ needs.docker.outputs.docker-image }}
           azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
           pull-request-number: ${{ github.event.pull_request.number }}
           current-commit-sha: ${{ github.event.pull_request.head.sha }}
@@ -91,7 +89,8 @@ jobs:
     if: github.ref == 'refs/heads/main'
     environment:
       name: staging
-
+    outputs:
+      docker-image: ${{ needs.docker.outputs.docker-image }}
     steps:
       - uses: actions/checkout@v3
 
@@ -99,7 +98,7 @@ jobs:
         id: deploy
         with:
           environment: staging
-          docker-image: ${{ needs.docker.outputs.image }}
+          docker-image: ${{ needs.docker.outputs.docker-image }}
           azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
           current-commit-sha: ${{ github.sha }}
 
@@ -116,7 +115,7 @@ jobs:
         id: deploy
         with:
           environment: sandbox
-          docker-image: ${{ needs.docker.outputs.image }}
+          docker-image: ${{ needs.deploy_staging.outputs.docker-image }}
           azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
           current-commit-sha: ${{ github.sha }}
 
@@ -133,6 +132,6 @@ jobs:
         id: deploy
         with:
           environment: production
-          docker-image: ${{ needs.docker.outputs.image }}
+          docker-image: ${{ needs.deploy_staging.outputs.docker-image }}
           azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
           current-commit-sha: ${{ github.sha }}
