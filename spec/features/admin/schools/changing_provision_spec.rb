@@ -7,7 +7,7 @@ RSpec.feature "Admin managing school provision", js: true, rutabaga: false do
     given_there_is_a_fip_school_in_2021
     and_i_am_signed_in_as_an_admin
     when_i_visit the_school_cohorts_page
-    and_i_click_the_link_containing "Change"
+    and_i_click_the_change_training_programme_link
     then_i_should_be_on the_change_programme_page
     and_the_page_should_be_accessible
 
@@ -43,5 +43,11 @@ private
 
   def the_confirm_page
     confirm_admin_school_change_programme_path(school_id: @school_cohort.school.slug, id: @school_cohort.cohort.start_year)
+  end
+
+  def and_i_click_the_change_training_programme_link
+    href = admin_school_change_programme_path(@school_cohort.school.slug, @school_cohort.cohort.start_year)
+
+    page.find(%(a[href='#{href}'])).click
   end
 end
