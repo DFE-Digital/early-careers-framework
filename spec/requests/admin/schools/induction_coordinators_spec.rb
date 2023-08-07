@@ -40,7 +40,7 @@ RSpec.describe "Admin::Schools::InductionCoordinators", type: :request do
     context "when an induction tutor already exists with that email address" do
       let!(:existing_induction_coordinator) { create(:user, :induction_coordinator) }
 
-      it "adds the school to their list of school" do
+      it "can't create the induction tutor because the email address is already in use, it rerenders the form" do
         expect {
           post admin_school_induction_coordinators_path(school), params: {
             tutor_details: {
@@ -50,9 +50,9 @@ RSpec.describe "Admin::Schools::InductionCoordinators", type: :request do
           }
         }.not_to change { User.count }
 
-        expect(existing_induction_coordinator.schools.count).to eql 2
-        expect(existing_induction_coordinator.schools).to include school
-        expect(response).to redirect_to admin_school_path(school)
+        expect(existing_induction_coordinator.schools.count).to eql(1)
+        expect(response.body).to include("The email address #{existing_induction_coordinator.email} is already used")
+        expect(response.request.path).to eql(admin_school_induction_coordinators_path(school))
       end
 
       it "renders name_different when the name is different" do
@@ -88,7 +88,7 @@ RSpec.describe "Admin::Schools::InductionCoordinators", type: :request do
     context "when a mentor user already exists with that email address" do
       let!(:existing_user) { create(:mentor_participant_profile).user }
 
-      it "adds an induction tutor profile to the existing user" do
+      it "can't create the mentor because the email address is already in use, it rerenders the form" do
         expect {
           post admin_school_induction_coordinators_path(school), params: {
             tutor_details: {
@@ -98,9 +98,8 @@ RSpec.describe "Admin::Schools::InductionCoordinators", type: :request do
           }
         }.not_to change { User.count }
 
-        expect(existing_user.induction_coordinator_profile).not_to be_nil
-        expect(existing_user.schools).to include school
-        expect(response).to redirect_to admin_school_path(school)
+        expect(existing_user.induction_coordinator_profile).to be_nil
+        expect(response.body).to include("The email address #{existing_user.email} is already in use")
       end
 
       it "does not change the user's name when a different name is used" do
@@ -114,9 +113,7 @@ RSpec.describe "Admin::Schools::InductionCoordinators", type: :request do
         }.to not_change { User.count }
                .and not_change { existing_user.full_name }
 
-        expect(existing_user.induction_coordinator_profile).not_to be_nil
-        expect(existing_user.schools).to include school
-        expect(response).to redirect_to admin_school_path(school)
+        expect(response.body).to include("The email address #{existing_user.email} is already in use")
       end
     end
 
@@ -134,8 +131,7 @@ RSpec.describe "Admin::Schools::InductionCoordinators", type: :request do
           }
         }.not_to change { User.count }
 
-        expect(existing_user.schools).to include school
-        expect(response).to redirect_to admin_school_path(school)
+        expect(response.body).to include("The email address #{existing_user.email} is already in use")
       end
 
       it "does not change the user's name when a different name is used" do
@@ -149,9 +145,7 @@ RSpec.describe "Admin::Schools::InductionCoordinators", type: :request do
         }.to not_change { User.count }
                .and not_change { existing_user.full_name }
 
-        expect(existing_user.induction_coordinator_profile).not_to be_nil
-        expect(existing_user.schools).to include school
-        expect(response).to redirect_to admin_school_path(school)
+        expect(response.body).to include("The email address #{existing_user.email} is already in use")
       end
     end
   end

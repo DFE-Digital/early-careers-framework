@@ -52,11 +52,11 @@ RSpec.feature "Nominating tutors", :js do
 
       and_the_page_should_be_accessible
 
-      fill_in "nominate_induction_tutor_form[email]", with: "john-smith@example.com"
+      fill_in "nominate_induction_tutor_form[email]", with: "a-new-john-smith@example.com"
       click_on "Continue"
 
       expect(page).to have_summary_row("Name", "John Smith")
-      expect(page).to have_summary_row("Email", "john-smith@example.com")
+      expect(page).to have_summary_row("Email", "a-new-john-smith@example.com")
 
       click_on "Confirm and nominate"
 
@@ -67,7 +67,7 @@ RSpec.feature "Nominating tutors", :js do
       expect(SchoolMailer)
         .to have_received(:with)
         .with(
-          sit_profile: User.find_by(email: "john-smith@example.com").induction_coordinator_profile,
+          sit_profile: User.find_by(email: "a-new-john-smith@example.com").induction_coordinator_profile,
           school: nomination_email.school,
           start_url: root_url(
             host: Rails.application.config.domain,
