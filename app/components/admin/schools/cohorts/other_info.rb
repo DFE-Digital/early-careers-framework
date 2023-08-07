@@ -26,9 +26,8 @@ module Admin
 
         def message
           return "Not assigned" if school_cohort.nil?
-          return "Not using service" if school_cohort.induction_programme_choice.blank?
 
-          MESSAGES[school_cohort.induction_programme_choice.to_sym]
+          MESSAGES.fetch(school_cohort.induction_programme_choice.to_sym, "Not using service")
         end
       end
     end
