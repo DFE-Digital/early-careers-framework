@@ -52,14 +52,6 @@ RSpec.shared_examples "validating a participant is not already active" do
   end
 end
 
-RSpec.shared_examples "validating a participant is not withdrawn for a resume" do
-  it "is invalid returning a meaningful error message" do
-    is_expected.to be_invalid
-
-    expect(service.errors.messages_for(:participant_profile)).to include("The participant is already withdrawn")
-  end
-end
-
 RSpec.shared_examples "resuming a participant" do
   it "creates an active participant profile state" do
     expect { service.call }.to change { ParticipantProfileState.count }
@@ -103,6 +95,25 @@ RSpec.shared_examples "resuming an ECF participant" do
   end
 end
 
+RSpec.shared_examples "resuming a withdrawn participant" do
+  it "creates an active participant profile state" do
+    expect { service.call }.to change { ParticipantProfileState.count }
+  end
+
+  it "adds the correct attributes to the new participant profile state" do
+    service.call
+    latest_participant_profile = participant_profile.participant_profile_states.order(created_at: :desc).first
+    expect(latest_participant_profile).to have_attributes(
+      state: "active",
+      cpd_lead_provider:,
+    )
+  end
+
+  it "marks the participant profiles as active" do
+    expect { service.call }.to change { participant_profile.reload.training_status }.from("withdrawn").to("active")
+  end
+end
+
 RSpec.describe ResumeParticipant do
   let(:participant_id) { participant_profile.participant_identity.external_identifier }
   let(:params) do
@@ -132,10 +143,6 @@ RSpec.describe ResumeParticipant do
         let(:participant_profile) { create(:ect, lead_provider: cpd_lead_provider.lead_provider) }
       end
 
-      it_behaves_like "validating a participant is not withdrawn for a resume" do
-        let(:participant_profile) { create(:ect, :withdrawn, lead_provider: cpd_lead_provider.lead_provider) }
-      end
-
       context "when the participant does not belong to the CPD lead provider" do
         let(:another_cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
         let(:participant_profile) { create(:ect, lead_provider: another_cpd_lead_provider.lead_provider, user:) }
@@ -150,6 +157,10 @@ RSpec.describe ResumeParticipant do
 
     describe ".call" do
       it_behaves_like "resuming an ECF participant"
+
+      it_behaves_like "resuming a withdrawn participant" do
+        let(:participant_profile) { create(:ect, :withdrawn, lead_provider: cpd_lead_provider.lead_provider) }
+      end
     end
   end
 
@@ -166,10 +177,6 @@ RSpec.describe ResumeParticipant do
         let(:participant_profile) { create(:mentor, lead_provider: cpd_lead_provider.lead_provider) }
       end
 
-      it_behaves_like "validating a participant is not withdrawn for a resume" do
-        let(:participant_profile) { create(:mentor, :withdrawn, lead_provider: cpd_lead_provider.lead_provider) }
-      end
-
       context "when the participant does not belong to the CPD lead provider" do
         let(:another_cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
         let(:participant_profile) { create(:mentor, lead_provider: another_cpd_lead_provider.lead_provider, user:) }
@@ -184,6 +191,10 @@ RSpec.describe ResumeParticipant do
 
     describe ".call" do
       it_behaves_like "resuming an ECF participant"
+
+      it_behaves_like "resuming a withdrawn participant" do
+        let(:participant_profile) { create(:mentor, :withdrawn, lead_provider: cpd_lead_provider.lead_provider) }
+      end
     end
   end
 
@@ -202,10 +213,6 @@ RSpec.describe ResumeParticipant do
         let(:participant_profile) { create(:npq_participant_profile, npq_lead_provider:, npq_course:) }
       end
 
-      it_behaves_like "validating a participant is not withdrawn for a resume" do
-        let(:participant_profile) { create(:npq_participant_profile, :withdrawn, npq_lead_provider:, npq_course:) }
-      end
-
       context "when the participant does not belong to the CPD lead provider" do
         let(:another_cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider) }
         let(:another_npq_lead_provider) { another_cpd_lead_provider.npq_lead_provider }
@@ -221,6 +228,10 @@ RSpec.describe ResumeParticipant do
 
     describe ".call" do
       it_behaves_like "resuming a participant"
+
+      it_behaves_like "resuming a withdrawn participant" do
+        let(:participant_profile) { create(:npq_participant_profile, :withdrawn, npq_lead_provider:, npq_course:) }
+      end
     end
   end
 end
