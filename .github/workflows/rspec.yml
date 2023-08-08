@@ -3,7 +3,7 @@ on:
   workflow_call:
     inputs:
       run-end-to-end-tests:
-        description: Run the e2e tests
+        description: Run the e2e RSpec tests
         type: boolean
         required: false
         default: true
