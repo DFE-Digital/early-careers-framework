@@ -121,20 +121,6 @@ const pagePaths = {
   "not found": "/404",
   "internal server error": "/500",
   pages: "/pages",
-  "ambition year one induction tutor materials":
-    "/induction-tutor-materials/ambition-institute/year-one",
-  "ambition year two induction tutor materials":
-    "/induction-tutor-materials/ambition-institute/year-two",
-  "edt year one induction tutor materials":
-    "/induction-tutor-materials/education-development-trust/year-one",
-  "edt year two induction tutor materials":
-    "/induction-tutor-materials/education-development-trust/year-two",
-  "teach first year one and two induction tutor materials":
-    "/induction-tutor-materials/teach-first/year-one",
-  "ucl year one induction tutor materials":
-    "/induction-tutor-materials/ucl-institute-of-education/year-one",
-  "ucl year two induction tutor materials":
-    "/induction-tutor-materials/ucl-institute-of-education/year-two",
   forbidden: "/403",
   "lead providers report schools choose delivery partner":
     "/lead-providers/report-schools/delivery-partner",
