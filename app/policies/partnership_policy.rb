@@ -8,6 +8,10 @@ class PartnershipPolicy < ApplicationPolicy
     user.schools.include?(record.school)
   end
 
+  def challenge?
+    super_user?
+  end
+
   class Scope < Scope
     def resolve
       scope.all

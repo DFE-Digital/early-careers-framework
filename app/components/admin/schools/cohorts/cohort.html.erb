@@ -18,8 +18,10 @@
       %>
     <% end %>
 
-    <%= govuk_button_link_to(new_admin_school_partnership_challenge_partnership_path(school_cohort.school, partnership), secondary: true) do %>
-      Challenge <%= tag.span("partnership", class: "govuk-visually-hidden") %>
+    <% if helpers.policy(partnership).challenge? %>
+      <%= govuk_button_link_to(new_admin_school_partnership_challenge_partnership_path(school_cohort.school, partnership), secondary: true) do %>
+        Challenge <%= tag.span("partnership", class: "govuk-visually-hidden") %>
+      <% end %>
     <% end %>
   <% end %>
 
@@ -53,8 +55,10 @@
         end
       %>
 
-      <%= govuk_button_link_to(new_admin_school_partnership_challenge_partnership_path(school_cohort.school, relationship), secondary: true) do %>
-        Challenge <%= tag.span("relationship", class: "govuk-visually-hidden") %>
+      <% if helpers.policy(relationship).challenge? %>
+        <%= govuk_button_link_to(new_admin_school_partnership_challenge_partnership_path(school_cohort.school, relationship), secondary: true) do %>
+          Challenge <%= tag.span("relationship", class: "govuk-visually-hidden") %>
+        <% end %>
       <% end %>
     <% end %>
   <% end %>

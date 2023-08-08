@@ -10,7 +10,7 @@ module Admin
         def new
           school = School.friendly.find params[:school_id]
           partnership = Partnership.find(params[:partnership_id])
-          authorize partnership, :update?
+          authorize partnership, :challenge?
 
           @challenge_partnership_form = ChallengePartnershipForm.new(
             school_name: school.name,
@@ -19,12 +19,12 @@ module Admin
         end
 
         def confirm
-          authorize @challenge_partnership_form.partnership, :update?
+          authorize @challenge_partnership_form.partnership, :challenge?
           render :new unless @challenge_partnership_form.valid?
         end
 
         def create
-          authorize @challenge_partnership_form.partnership, :update?
+          authorize @challenge_partnership_form.partnership, :challenge?
           @challenge_partnership_form.challenge!
           set_success_message heading: "Induction programme has been challenged"
           redirect_to admin_school_cohorts_path
