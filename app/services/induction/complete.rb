@@ -6,7 +6,7 @@ class Induction::Complete < BaseService
       participant_profile.update!(induction_completion_date: completion_date)
 
       Induction::ChangeInductionRecord.call(induction_record: latest_induction_record,
-                                            changes: { induction_status: :completed })
+                                            changes: { induction_status: :completed, mentor_profile: nil })
     end
   end
 
