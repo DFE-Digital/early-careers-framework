@@ -19,7 +19,8 @@ RSpec.describe "SIT adding mentor", js: true do
     ECFParticipantValidationData.create!(
       participant_profile: @mentor,
       trn: @participant_data[:trn],
-      date_of_birth: @participant_data[:date_of_birth])
+      date_of_birth: @participant_data[:date_of_birth],
+    )
 
     set_dqt_validation_result
   end
