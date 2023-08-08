@@ -24,12 +24,14 @@ RSpec.describe Schools::AddParticipants::WizardSteps::EmailStep, type: :model do
     let(:ect_participant) { false }
     let(:confirm_start_term) { false }
     let(:confirm_appropriate_body) { false }
+    let(:adding_yourself_as_mentor) { false }
 
     before do
       allow(wizard).to receive(:email_in_use?).and_return(email_taken)
       allow(wizard).to receive(:transfer?).and_return(transfer)
       allow(wizard).to receive(:needs_to_choose_a_mentor?).and_return(choose_mentor)
       allow(wizard).to receive(:ect_participant?).and_return(ect_participant)
+      allow(wizard).to receive(:adding_yourself_as_mentor?).and_return(adding_yourself_as_mentor)
     end
 
     context "when the email is already in use" do
@@ -102,6 +104,14 @@ RSpec.describe Schools::AddParticipants::WizardSteps::EmailStep, type: :model do
 
         it "returns :confirm_appropriate_body" do
           expect(step.next_step).to eql :confirm_appropriate_body
+        end
+      end
+
+      context "when SIT is adding themself as mentor" do
+        let(:adding_yourself_as_mentor) { true }
+
+        it "returns :yourself" do
+          expect(step.next_step).to eql :yourself
         end
       end
     end
