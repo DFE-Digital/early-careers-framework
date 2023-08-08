@@ -30,3 +30,12 @@ module "postgres" {
   azure_enable_monitoring = var.enable_monitoring
   azure_extensions        = ["citext", "fuzzystrmatch", "pg_stat_statements", "pgcrypto", "plpgsql", "uuid-ossp"]
 }
+
+resource "azurerm_postgresql_flexible_server_database" "analytics" {
+  count = var.deploy_azure_backing_services ? 1 : 0
+
+  name      = "analytics"
+  server_id = module.postgres.azure_server_id
+  collation = "en_US.utf8"
+  charset   = "utf8"
+}
