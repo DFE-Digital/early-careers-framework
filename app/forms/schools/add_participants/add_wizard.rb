@@ -6,6 +6,7 @@ module Schools
       def self.steps
         %i[
           email
+          yourself
           email_already_taken
           start_date
           start_term

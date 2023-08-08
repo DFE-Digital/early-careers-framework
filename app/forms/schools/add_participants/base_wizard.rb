@@ -165,6 +165,10 @@ module Schools
         @email_owner != existing_user
       end
 
+      def adding_yourself_as_mentor?
+        current_user.email == data_store.email
+      end
+
       def email_used_in_the_same_school?
         if email_in_use?
           participant_profile = @email_owner.teacher_profile&.ecf_profiles&.first

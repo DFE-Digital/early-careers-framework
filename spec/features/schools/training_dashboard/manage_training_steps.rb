@@ -700,6 +700,10 @@ module ManageTrainingSteps
     fill_in "What’s #{@participant_data[:full_name]}’s email address?", with: @participant_data[:email]
   end
 
+  def when_i_add_sits_email
+    fill_in "What’s #{@participant_data[:full_name]}’s email address?", with: @induction_coordinator_profile.user.email
+  end
+
   def when_i_add_ect_or_mentor_nino_for(name)
     fill_in "What’s #{name}’s National Insurance number?", with: @participant_data[:nino]
   end

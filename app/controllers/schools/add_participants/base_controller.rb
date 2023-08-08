@@ -65,6 +65,7 @@ module Schools
         end
         @form = @wizard.form
       rescue BaseWizard::AlreadyInitialised, BaseWizard::InvalidStep
+        Rails.logger.error("AddParticipants::BaseController: Invalid step \"#{step_name}\"")
         remove_session_data
         redirect_to abort_path
       end
