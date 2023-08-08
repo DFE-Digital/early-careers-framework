@@ -11,7 +11,7 @@ If you have any questions or comments about these notes, please contact DfE via 
 
 Lead providers can now ‘resume’ participants NPQ and ECF that they have previously withdrawn.
 
-Lead providers should use the relevant [ecf](/api-reference/reference-v3.html#api-v3-participants-ecf-id-resume-put) or [npq](/api-reference/reference-v3.html#api-v3-participants-npq-id-resume-put) resume endpoints to change a given participant’s training_status from withdrawn to active.
+Lead providers should use the relevant [ecf](/api-reference/reference-v3.html#api-v3-participants-ecf-id-resume-put) or [npq](/api-reference/reference-v3.html#api-v3-participants-npq-id-resume-put) resume endpoints to change a given participant’s `training_status` from withdrawn to active.
 
 The DfE will monitor levels of withdrawn participants that have been resumed.
 
