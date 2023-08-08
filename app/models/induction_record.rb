@@ -103,6 +103,10 @@ class InductionRecord < ApplicationRecord
     update!(induction_status: :changed, end_date: date_of_change)
   end
 
+  def completing!(date_of_change = Time.zone.now)
+    update!(induction_status: :completed, end_date: date_of_change)
+  end
+
   def claimed_by_another_school?
     leaving_induction_status? && !school_transfer && end_date.future?
   end
