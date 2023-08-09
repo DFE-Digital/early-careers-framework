@@ -76,14 +76,6 @@ module Finance
           define_method "#{event_type}_band_#{letter}_fee_per_declaration" do
             output_calculator.fee_for_declaration(band_letter: letter, type: event_type)
           end
-
-          define_method "extended_band_#{letter}_additions" do
-            send("extended_1_band_#{letter}_additions") + send("extended_2_band_#{letter}_additions") + send("extended_3_band_#{letter}_additions")
-          end
-
-          define_method "extended_band_#{letter}_fee_per_declaration" do
-            send("extended_1_band_#{letter}_fee_per_declaration")
-          end
         end
 
         define_method "additions_for_#{event_type}" do
@@ -96,6 +88,18 @@ module Finance
           output_calculator.banding_breakdown.sum do |hash|
             hash[:"#{event_type}_subtractions"] * output_calculator.fee_for_declaration(band_letter: hash[:band], type: event_type)
           end
+        end
+      end
+
+      band_mapping.each do |letter, _number|
+        define_method "extended_band_#{letter}_additions" do
+          send("extended_1_band_#{letter}_additions") +
+            send("extended_2_band_#{letter}_additions") +
+            send("extended_3_band_#{letter}_additions")
+        end
+
+        define_method "extended_band_#{letter}_fee_per_declaration" do
+          send("extended_1_band_#{letter}_fee_per_declaration")
         end
       end
 

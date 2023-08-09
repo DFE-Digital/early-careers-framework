@@ -91,7 +91,8 @@ private
 
   def then_i_should_see_the_total_extended
     extended_declarations = ParticipantDeclaration.extended
-    expect(page.find("strong", text: "Total extended")).to have_sibling("div", text: extended_declarations.size)
+    expect(page.find("strong", text: "Total extended")).to have_sibling("div", text: extended_declarations.count)
+    expect(page).to have_content("Extended")
   end
 
   def then_i_see_voided_declarations
@@ -222,6 +223,7 @@ private
     expect(page).to have_content(number_to_pounds(jan_starts_breakdowns[:output_payments][0][:per_participant]))
     expect(page).to have_content(jan_starts_breakdowns[:output_payments][0][:participants])
     expect(page).to have_content(number_to_pounds(jan_starts_breakdowns[:output_payments][0][:subtotal]))
+    expect(page).to_not have_content("Extended")
   end
 
   def then_i_should_see_the_correct_uplift_fee

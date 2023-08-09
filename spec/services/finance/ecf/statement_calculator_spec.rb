@@ -55,6 +55,116 @@ RSpec.describe Finance::ECF::StatementCalculator do
     end
   end
 
+  describe "#output_fee" do
+    context "with extended" do
+      let(:banding_breakdown) do
+        [
+          {
+            band: :a,
+            min: 1,
+            max: 2,
+            started_additions: 0,
+            retained_1_additions: 0,
+            retained_2_additions: 0,
+            retained_3_additions: 0,
+            retained_4_additions: 0,
+            completed_additions: 0,
+            extended_1_additions: 1,
+            extended_2_additions: 2,
+            extended_3_additions: 3,
+          },
+          {
+            band: :b,
+            min: 3,
+            max: 4,
+            started_additions: 0,
+            retained_1_additions: 0,
+            retained_2_additions: 0,
+            retained_3_additions: 0,
+            retained_4_additions: 0,
+            completed_additions: 0,
+            extended_1_additions: 4,
+            extended_2_additions: 5,
+            extended_3_additions: 6,
+          },
+        ]
+      end
+
+      let(:output_calculator) { instance_double("Finance::ECF::OutputCalculator") }
+
+      before do
+        allow(Finance::ECF::OutputCalculator).to receive(:new).and_return(output_calculator)
+
+        allow(output_calculator).to receive(:banding_breakdown).and_return(banding_breakdown)
+
+        allow(output_calculator).to receive(:fee_for_declaration).and_return(48)
+      end
+
+      it "returns correct value across all bands" do
+        output_fee =
+          ((1 * 48) + (4 * 48)) +
+          ((2 * 48) + (5 * 48)) +
+          ((3 * 48) + (6 * 48))
+        expect(subject.output_fee).to eql(output_fee)
+      end
+    end
+  end
+
+  describe "#clawback_deductions" do
+    context "with extended" do
+      let(:banding_breakdown) do
+        [
+          {
+            band: :a,
+            min: 1,
+            max: 2,
+            started_subtractions: 0,
+            retained_1_subtractions: 0,
+            retained_2_subtractions: 0,
+            retained_3_subtractions: 0,
+            retained_4_subtractions: 0,
+            completed_subtractions: 0,
+            extended_1_subtractions: 1,
+            extended_2_subtractions: 2,
+            extended_3_subtractions: 3,
+          },
+          {
+            band: :b,
+            min: 3,
+            max: 4,
+            started_subtractions: 0,
+            retained_1_subtractions: 0,
+            retained_2_subtractions: 0,
+            retained_3_subtractions: 0,
+            retained_4_subtractions: 0,
+            completed_subtractions: 0,
+            extended_1_subtractions: 4,
+            extended_2_subtractions: 5,
+            extended_3_subtractions: 6,
+          },
+        ]
+      end
+
+      let(:output_calculator) { instance_double("Finance::ECF::OutputCalculator") }
+
+      before do
+        allow(Finance::ECF::OutputCalculator).to receive(:new).and_return(output_calculator)
+
+        allow(output_calculator).to receive(:banding_breakdown).and_return(banding_breakdown)
+
+        allow(output_calculator).to receive(:fee_for_declaration).and_return(48)
+      end
+
+      it "returns correct value across all bands" do
+        deductions =
+          ((1 * 48) + (4 * 48)) +
+          ((2 * 48) + (5 * 48)) +
+          ((3 * 48) + (6 * 48))
+        expect(subject.clawback_deductions).to eql(deductions)
+      end
+    end
+  end
+
   describe "#adjustments_total" do
     context "when there are uplifts" do
       let(:uplift_breakdown) do
@@ -408,6 +518,46 @@ RSpec.describe Finance::ECF::StatementCalculator do
     end
   end
 
+  describe "#additions_for_extended" do
+    let(:banding_breakdown) do
+      [
+        {
+          band: :a,
+          min: 1,
+          max: 2,
+          extended_1_additions: 1,
+          extended_2_additions: 2,
+          extended_3_additions: 3,
+        },
+        {
+          band: :b,
+          min: 3,
+          max: 4,
+          extended_1_additions: 4,
+          extended_2_additions: 5,
+          extended_3_additions: 6,
+        },
+      ]
+    end
+
+    let(:output_calculator) { instance_double("Finance::ECF::OutputCalculator") }
+
+    before do
+      allow(Finance::ECF::OutputCalculator).to receive(:new).and_return(output_calculator)
+
+      allow(output_calculator).to receive(:banding_breakdown).and_return(banding_breakdown)
+
+      allow(output_calculator).to receive(:fee_for_declaration).and_return(48)
+    end
+
+    it "returns correct value across all bands" do
+      expect(subject.additions_for_extended_1).to eql((1 * 48) + (4 * 48)) # = 240
+      expect(subject.additions_for_extended_2).to eql((2 * 48) + (5 * 48)) # = 336
+      expect(subject.additions_for_extended_3).to eql((3 * 48) + (6 * 48)) # = 432
+      expect(subject.additions_for_extended).to eql(240 + 336 + 432)
+    end
+  end
+
   describe "#total_for_uplift" do
     context "when there are no uplifts" do
       it "returns zero" do
@@ -596,6 +746,48 @@ RSpec.describe Finance::ECF::StatementCalculator do
 
     it "returns count of all completed across bands" do
       expect(subject.completed_count).to eql(3)
+    end
+  end
+
+  describe "#extended_count" do
+    let(:banding_breakdown) do
+      [
+        {
+          band: :a,
+          min: 1,
+          max: 2,
+          previous_extended_1_count: 1,
+          extended_1_count: 1,
+          extended_1_additions: 1,
+          extended_1_subtractions: 0,
+          previous_started_count: 1,
+          extended_2_count: 1,
+          extended_2_additions: 1,
+          extended_2_subtractions: 0,
+        },
+        {
+          band: :b,
+          min: 3,
+          max: 4,
+          previous_extended_1_count: 0,
+          extended_1_count: 1,
+          extended_1_additions: 2,
+          extended_1_subtractions: 1,
+          previous_extended_2_count: 0,
+          extended_2_count: 1,
+          extended_2_additions: 2,
+          extended_2_subtractions: 1,
+        },
+      ]
+    end
+    let(:output_calculator) { instance_double("Finance::ECF::OutputCalculator", banding_breakdown:) }
+
+    before do
+      allow(Finance::ECF::OutputCalculator).to receive(:new).and_return(output_calculator)
+    end
+
+    it "returns count of all extended across bands" do
+      expect(subject.extended_count).to eql(6)
     end
   end
 
@@ -844,6 +1036,47 @@ RSpec.describe Finance::ECF::StatementCalculator do
 
       it "uses monthly_service_fee" do
         expect(subject.service_fee).to eql(123.45)
+      end
+    end
+  end
+
+  describe "#event_types_for_display" do
+    context "when no extended declarations" do
+      before do
+        allow(subject).to receive(:extended_count).and_return(0)
+      end
+
+      it "should not included extended" do
+        expect(subject.event_types_for_display).to eql(
+          %i[
+            started
+            retained_1
+            retained_2
+            retained_3
+            retained_4
+            completed
+          ],
+        )
+      end
+    end
+
+    context "when there is extended declarations" do
+      before do
+        allow(subject).to receive(:extended_count).and_return(99)
+      end
+
+      it "should include extended" do
+        expect(subject.event_types_for_display).to eql(
+          %i[
+            started
+            retained_1
+            retained_2
+            retained_3
+            retained_4
+            completed
+            extended
+          ],
+        )
       end
     end
   end
