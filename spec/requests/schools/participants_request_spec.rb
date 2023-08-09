@@ -415,11 +415,7 @@ RSpec.describe "Schools::Participants", type: :request, js: true, with_feature_f
         .to change { ect_profile.reload.withdrawn_record? }.from(false).to true
     end
 
-    context "when participant has already received request for details email" do
-      before do
-        ect_profile.update_column(:request_for_details_sent_at, rand(0..100).days.ago)
-      end
-
+    context "when the SIT's name is provided" do
       it "queues 'participant deleted' email" do
         expect {
           delete "/schools/#{school.slug}/participants/#{ect_profile.id}"
@@ -431,18 +427,6 @@ RSpec.describe "Schools::Participants", type: :request, js: true, with_feature_f
             },
             args: [],
           )
-      end
-    end
-
-    context "when participant has not yet received request for details email" do
-      before do
-        ect_profile.update!(request_for_details_sent_at: nil)
-      end
-
-      it "does not queue 'participant deleted' email" do
-        expect {
-          delete "/schools/#{school.slug}/participants/#{ect_profile.id}"
-        }.to_not have_enqueued_mail(ParticipantMailer, :participant_removed_by_sit)
       end
     end
   end

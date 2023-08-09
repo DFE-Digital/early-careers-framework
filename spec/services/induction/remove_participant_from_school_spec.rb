@@ -39,21 +39,9 @@ RSpec.describe Induction::RemoveParticipantFromSchool do
     end
 
     context "when the sit_name is not provided" do
-      before do
-        participant_profile.update!(request_for_details_sent_at: 70.days.ago)
-      end
-
       it "do not notify the participant" do
         expect {
           service.call(participant_profile:)
-        }.not_to have_enqueued_mail(ParticipantMailer, :participant_removed_by_sit)
-      end
-    end
-
-    context "when the participant was not sent the email requesting for details" do
-      it "do not notify the participant" do
-        expect {
-          service.call(participant_profile:, school:, sit_name:)
         }.not_to have_enqueued_mail(ParticipantMailer, :participant_removed_by_sit)
       end
     end

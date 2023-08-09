@@ -3,7 +3,6 @@
 class Induction::RemoveParticipantFromSchool < BaseService
   delegate :current_induction_record,  to: :participant_profile
   delegate :mentor?,                   to: :participant_profile
-  delegate :request_for_details_sent?, to: :participant_profile
   delegate :withdrawn_record!,         to: :participant_profile
 
   def call
@@ -37,7 +36,7 @@ private
   end
 
   def notify?
-    sit_name && request_for_details_sent?
+    sit_name
   end
 
   def remove_mentorship_relations
