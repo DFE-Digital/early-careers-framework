@@ -4,6 +4,6 @@ module Analytics
   class BaseRecord < ApplicationRecord
     self.abstract_class = true
 
-    connects_to database: { writing: :analytics } if %w[test development production].include? Rails.env
+    connects_to database: { writing: :analytics } unless Rails.env.review?
   end
 end
