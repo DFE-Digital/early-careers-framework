@@ -12,6 +12,7 @@ class ParticipantProfile::NPQ < ParticipantProfile
     npq-leading-behaviour-culture
     npq-early-headship-coaching-offer
     npq-leading-literacy
+    npq-leading-primary-mathematics
   ].freeze
 
   VALID_EVIDENCE_HELD = %w[training-event-attended self-study-material-completed other].freeze
