@@ -131,6 +131,21 @@ RSpec.describe Finance::ECF::StatementCalculator do
             completed_count: 1,
             completed_additions: 1,
             completed_subtractions: 0,
+
+            previous_extended_1_count: 0,
+            extended_1_count: 0,
+            extended_1_additions: 0,
+            extended_1_subtractions: 0,
+
+            previous_extended_2_count: 0,
+            extended_2_count: 0,
+            extended_2_additions: 0,
+            extended_2_subtractions: 0,
+
+            previous_extended_3_count: 0,
+            extended_3_count: 0,
+            extended_3_additions: 0,
+            extended_3_subtractions: 0,
           },
           {
             band: :b,
@@ -166,6 +181,21 @@ RSpec.describe Finance::ECF::StatementCalculator do
             completed_count: 1,
             completed_additions: 2,
             completed_subtractions: 1,
+
+            previous_extended_1_count: 0,
+            extended_1_count: 0,
+            extended_1_additions: 0,
+            extended_1_subtractions: 0,
+
+            previous_extended_2_count: 0,
+            extended_2_count: 0,
+            extended_2_additions: 0,
+            extended_2_subtractions: 0,
+
+            previous_extended_3_count: 0,
+            extended_3_count: 0,
+            extended_3_additions: 0,
+            extended_3_subtractions: 0,
           },
         ]
       end
@@ -226,6 +256,21 @@ RSpec.describe Finance::ECF::StatementCalculator do
             completed_count: 1,
             completed_additions: 1,
             completed_subtractions: 0,
+
+            previous_extended_1_count: 0,
+            extended_1_count: 0,
+            extended_1_additions: 0,
+            extended_1_subtractions: 0,
+
+            previous_extended_2_count: 0,
+            extended_2_count: 0,
+            extended_2_additions: 0,
+            extended_2_subtractions: 0,
+
+            previous_extended_3_count: 0,
+            extended_3_count: 0,
+            extended_3_additions: 0,
+            extended_3_subtractions: 0,
           },
           {
             band: :b,
@@ -261,6 +306,21 @@ RSpec.describe Finance::ECF::StatementCalculator do
             completed_count: 1,
             completed_additions: 2,
             completed_subtractions: 1,
+
+            previous_extended_1_count: 0,
+            extended_1_count: 0,
+            extended_1_additions: 0,
+            extended_1_subtractions: 0,
+
+            previous_extended_2_count: 0,
+            extended_2_count: 0,
+            extended_2_additions: 0,
+            extended_2_subtractions: 0,
+
+            previous_extended_3_count: 0,
+            extended_3_count: 0,
+            extended_3_additions: 0,
+            extended_3_subtractions: 0,
           },
         ]
       end
