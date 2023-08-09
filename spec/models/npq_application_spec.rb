@@ -450,4 +450,30 @@ RSpec.describe NPQApplication, type: :model do
       end
     end
   end
+
+  describe "changelog" do
+    before do
+      PaperTrail.config.enabled = true
+    end
+
+    after do
+      PaperTrail.config.enabled = false
+    end
+
+    context "with changes on eligible_for_funding" do
+      subject do
+        create(:npq_application, works_in_school: true, eligible_for_funding: true)
+      end
+
+      it "does not create an entry if attribute is not changed" do
+        expect { subject.update!(works_in_school: false) }
+          .to_not change { subject.versions.where_attribute_changes("eligible_for_funding").count }
+      end
+
+      it "creates an entry if attribute is changed" do
+        expect { subject.update!(eligible_for_funding: false) }
+          .to change { subject.versions.where_attribute_changes("eligible_for_funding").count }.by(1)
+      end
+    end
+  end
 end
