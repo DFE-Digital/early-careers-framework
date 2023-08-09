@@ -6,6 +6,7 @@ class Finance::Schedule::NPQSpecialist < Finance::Schedule::NPQ
     npq-leading-behaviour-culture
     npq-leading-teaching-development
     npq-leading-literacy
+    npq-leading-primary-mathematics
   ].freeze
 
   PERMITTED_COURSE_IDENTIFIERS = IDENTIFIERS

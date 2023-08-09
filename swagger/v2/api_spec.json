@@ -3498,7 +3498,8 @@
               "npq-executive-leadership",
               "npq-early-years-leadership",
               "npq-additional-support-offer",
-              "npq-early-headship-coaching-offer"
+              "npq-early-headship-coaching-offer",
+              "npq-leading-primary-mathematics"
             ]
           },
           "status": {
@@ -3692,7 +3693,8 @@
               "npq-executive-leadership",
               "npq-early-years-leadership",
               "npq-additional-support-offer",
-              "npq-early-headship-coaching-offer"
+              "npq-early-headship-coaching-offer",
+              "npq-leading-primary-mathematics"
             ]
           },
           "status": {
@@ -3769,7 +3771,8 @@
               "npq-executive-leadership",
               "npq-early-years-leadership",
               "npq-additional-support-offer",
-              "npq-early-headship-coaching-offer"
+              "npq-early-headship-coaching-offer",
+              "npq-leading-primary-mathematics"
             ]
           },
           "schedule_identifier": {
@@ -3861,7 +3864,8 @@
               "npq-executive-leadership",
               "npq-early-years-leadership",
               "npq-additional-support-offer",
-              "npq-early-headship-coaching-offer"
+              "npq-early-headship-coaching-offer",
+              "npq-leading-primary-mathematics"
             ]
           },
           "schedule_identifier": {
@@ -3967,7 +3971,8 @@
               "npq-senior-leadership",
               "npq-headship",
               "npq-executive-leadership",
-              "npq-early-years-leadership"
+              "npq-early-years-leadership",
+              "npq-leading-primary-mathematics"
             ],
             "example": "npq-leading-teaching"
           },
@@ -4012,7 +4017,8 @@
               "npq-senior-leadership",
               "npq-headship",
               "npq-executive-leadership",
-              "npq-early-years-leadership"
+              "npq-early-years-leadership",
+              "npq-leading-primary-mathematics"
             ],
             "example": "npq-leading-teaching"
           },
@@ -4230,7 +4236,8 @@
               "npq-executive-leadership",
               "npq-early-years-leadership",
               "npq-additional-support-offer",
-              "npq-early-headship-coaching-offer"
+              "npq-early-headship-coaching-offer",
+              "npq-leading-primary-mathematics"
             ],
             "example": "npq-executive-leadership"
           },
@@ -4319,7 +4326,8 @@
               "npq-executive-leadership",
               "npq-early-years-leadership",
               "npq-additional-support-offer",
-              "npq-early-headship-coaching-offer"
+              "npq-early-headship-coaching-offer",
+              "npq-leading-primary-mathematics"
             ],
             "example": "npq-leading-teaching"
           },
@@ -4442,7 +4450,8 @@
               "npq-executive-leadership",
               "npq-early-years-leadership",
               "npq-additional-support-offer",
-              "npq-early-headship-coaching-offer"
+              "npq-early-headship-coaching-offer",
+              "npq-leading-primary-mathematics"
             ],
             "example": "npq-headship"
           },
@@ -4527,7 +4536,8 @@
               "npq-executive-leadership",
               "npq-early-years-leadership",
               "npq-additional-support-offer",
-              "npq-early-headship-coaching-offer"
+              "npq-early-headship-coaching-offer",
+              "npq-leading-primary-mathematics"
             ],
             "example": "npq-headship"
           }
@@ -4583,7 +4593,8 @@
               "npq-executive-leadership",
               "npq-early-years-leadership",
               "npq-additional-support-offer",
-              "npq-early-headship-coaching-offer"
+              "npq-early-headship-coaching-offer",
+              "npq-leading-primary-mathematics"
             ],
             "example": "npq-headship"
           }
@@ -4655,7 +4666,8 @@
               "npq-executive-leadership",
               "npq-early-years-leadership",
               "npq-additional-support-offer",
-              "npq-early-headship-coaching-offer"
+              "npq-early-headship-coaching-offer",
+              "npq-leading-primary-mathematics"
             ],
             "example": "npq-senior-leadership"
           }
@@ -4736,7 +4748,8 @@
               "npq-executive-leadership",
               "npq-early-years-leadership",
               "npq-additional-support-offer",
-              "npq-early-headship-coaching-offer"
+              "npq-early-headship-coaching-offer",
+              "npq-leading-primary-mathematics"
             ],
             "example": "npq-senior-leadership"
           }
@@ -4827,7 +4840,8 @@
               "npq-executive-leadership",
               "npq-early-years-leadership",
               "npq-additional-support-offer",
-              "npq-early-headship-coaching-offer"
+              "npq-early-headship-coaching-offer",
+              "npq-leading-primary-mathematics"
             ],
             "example": "npq-headship"
           }
@@ -4904,7 +4918,8 @@
               "npq-executive-leadership",
               "npq-early-years-leadership",
               "npq-additional-support-offer",
-              "npq-early-headship-coaching-offer"
+              "npq-early-headship-coaching-offer",
+              "npq-leading-primary-mathematics"
             ],
             "example": "npq-headship"
           }
@@ -4982,7 +4997,8 @@
               "npq-executive-leadership",
               "npq-early-years-leadership",
               "npq-additional-support-offer",
-              "npq-early-headship-coaching-offer"
+              "npq-early-headship-coaching-offer",
+              "npq-leading-primary-mathematics"
             ],
             "example": "npq-leading-teaching-development"
           }
@@ -5120,7 +5136,8 @@
               "npq-executive-leadership",
               "npq-early-years-leadership",
               "npq-additional-support-offer",
-              "npq-early-headship-coaching-offer"
+              "npq-early-headship-coaching-offer",
+              "npq-leading-primary-mathematics"
             ],
             "example": "ecf-induction"
           },
@@ -5209,7 +5226,8 @@
               "npq-executive-leadership",
               "npq-early-years-leadership",
               "npq-additional-support-offer",
-              "npq-early-headship-coaching-offer"
+              "npq-early-headship-coaching-offer",
+              "npq-leading-primary-mathematics"
             ],
             "example": "ecf-induction"
           },
