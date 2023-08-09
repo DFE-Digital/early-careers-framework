@@ -27,9 +27,13 @@ jobs:
     name: Lint
     uses: ./.github/workflows/lint.yml
 
-  test:
-    name: Run the test suite
+  rspec:
+    name: Run the RSpec tests
     uses: ./.github/workflows/rspec.yml
+
+  cypress:
+    name: Run the Cypress tests
+    uses: ./.github/workflows/cypress.yml
 
   docker:
     name: Build and push Docker image
@@ -82,7 +86,7 @@ jobs:
             Review app deployed to ${{ steps.deploy.outputs.url }}
 
   deploy_staging:
-    needs: [docker, test, lint, brakeman]
+    needs: [docker, rspec, cypress, lint, brakeman]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     environment:
