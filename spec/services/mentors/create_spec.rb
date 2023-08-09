@@ -117,54 +117,6 @@ RSpec.describe Mentors::Create do
     end
   end
 
-  it "schedules participant_added email" do
-    expect {
-      described_class.call(
-        email: user.email,
-        full_name: Faker::Name.name,
-        school_cohort:,
-      )
-    }.to have_enqueued_mail(ParticipantMailer, :participant_added)
-  end
-
-  it "scheduled reminder email job" do
-    allow(ParticipantDetailsReminderJob).to receive(:schedule)
-
-    profile = described_class.call(
-      email: user.email,
-      full_name: Faker::Name.name,
-      school_cohort:,
-    )
-
-    expect(ParticipantDetailsReminderJob).to have_received(:schedule).with(profile)
-  end
-
-  context "when a SIT is adding and validating a Mentor" do
-    it "does not schedule participant_added email" do
-      expect {
-        described_class.call(
-          email: user.email,
-          full_name: Faker::Name.name,
-          school_cohort:,
-          sit_validation: true,
-        )
-      }.to_not have_enqueued_mail(ParticipantMailer, :participant_added)
-    end
-  end
-
-  context "when a SIT is adding and cannot validate a Mentor" do
-    it "does schedule participant_added email" do
-      expect {
-        described_class.call(
-          email: user.email,
-          full_name: Faker::Name.name,
-          school_cohort:,
-          sit_validation: false,
-        )
-      }.to have_enqueued_mail(ParticipantMailer, :participant_added)
-    end
-  end
-
   context "when the user has an active participant profile" do
     context "when the profile is attached to teacher_profile" do
       before do

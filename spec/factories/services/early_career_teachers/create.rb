@@ -10,7 +10,6 @@ FactoryBot.define do
 
     user              { create(:user) }
     mentor_profile_id {}
-    sit_validation    { false }
     school_cohort do
       create(:school_cohort, :fip, :with_induction_programme, *uplifts, lead_provider:, cohort:)
     end
@@ -33,7 +32,6 @@ FactoryBot.define do
         full_name: user.full_name,
         mentor_profile_id:,
         school_cohort:,
-        sit_validation:,
       )
     end
 

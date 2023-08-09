@@ -32,26 +32,19 @@ module EarlyCareerTeachers
         end
       end
 
-      unless sit_validation
-        ParticipantMailer.with(participant_profile: profile).participant_added.deliver_later
-        profile.update_column(:request_for_details_sent_at, Time.zone.now)
-        ParticipantDetailsReminderJob.schedule(profile)
-      end
-
       profile
     end
 
   private
 
-    attr_reader :full_name, :email, :school_cohort, :mentor_profile_id, :start_date, :sit_validation, :appropriate_body_id, :induction_start_date
+    attr_reader :full_name, :email, :school_cohort, :mentor_profile_id, :start_date, :appropriate_body_id, :induction_start_date
 
-    def initialize(full_name:, email:, school_cohort:, mentor_profile_id: nil, start_date: nil, sit_validation: false, appropriate_body_id: nil, induction_start_date: nil)
+    def initialize(full_name:, email:, school_cohort:, mentor_profile_id: nil, start_date: nil, appropriate_body_id: nil, induction_start_date: nil)
       @full_name = full_name
       @email = email
       @school_cohort = school_cohort
       @mentor_profile_id = mentor_profile_id
       @start_date = start_date
-      @sit_validation = sit_validation
       @appropriate_body_id = appropriate_body_id
       @induction_start_date = induction_start_date
     end

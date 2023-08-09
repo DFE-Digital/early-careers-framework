@@ -230,7 +230,6 @@ RSpec.xdescribe Schools::AddParticipants::WhoToAddWizard, type: :model do
 
     context "Participant has been added" do
       before do
-        allow(ParticipantMailer).to receive(:participant_added).and_call_original
         allow(ParticipantMailer).to receive(:sit_has_added_and_validated_participant).and_call_original
       end
 
@@ -246,7 +245,6 @@ RSpec.xdescribe Schools::AddParticipants::WhoToAddWizard, type: :model do
         it "sends a participant the added and validated" do
           form.save!
           profile = ECFParticipantValidationData.find_by(trn: form.trn).participant_profile
-          expect(ParticipantMailer).not_to have_received(:participant_added)
           expect(ParticipantMailer).to have_received(:sit_has_added_and_validated_participant)
                                          .with(participant_profile: profile, school_name: school_cohort.school.name)
         end

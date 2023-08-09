@@ -148,7 +148,6 @@ module Schools
           email:,
           school_cohort:,
           mentor_profile_id: mentor_profile&.id,
-          sit_validation: true,
           appropriate_body_id:,
           induction_start_date:,
         }
