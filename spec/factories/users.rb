@@ -11,6 +11,10 @@ FactoryBot.define do
       admin_profile
     end
 
+    trait :super_user do
+      admin_profile { create(:admin_profile, :super_user) }
+    end
+
     trait :induction_coordinator do
       induction_coordinator_profile
 

@@ -8,7 +8,7 @@ RSpec.describe Admin::Schools::Cohorts::Cohort, type: :component do
   let(:component) { described_class.new cohort:, school_cohort:, school: }
   subject { page }
 
-  let(:cohort_content) { "#{cohort.display_name} cohort" }
+  let(:cohort_content) { "#{cohort.display_name} partnership" }
   let(:fip_specific_content) { "Working with a DfE-funded provider" }
   let(:cip_specific_content) { "Using DfE-accredited materials" }
   let(:generic_content) { "Training programme" }

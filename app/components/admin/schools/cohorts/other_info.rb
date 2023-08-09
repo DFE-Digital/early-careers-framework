@@ -4,6 +4,8 @@ module Admin
   module Schools
     module Cohorts
       class OtherInfo < BaseComponent
+        renders_one :summary_list_rows
+
         attr_accessor :school
 
         def initialize(school:, cohort:, school_cohort:)
@@ -17,15 +19,15 @@ module Admin
         attr_reader :school_cohort, :cohort
 
         MESSAGES = {
-          design_our_own: "designing their own training",
-          school_funded_fip: "school funded full induction programme",
-          no_early_career_teachers: "no ECTs this year",
+          design_our_own: "Designing their own training",
+          school_funded_fip: "School-funded full induction programme",
+          no_early_career_teachers: "No ECTs this year",
         }.freeze
 
         def message
           return "Not assigned" if school_cohort.nil?
 
-          ["Not using service", MESSAGES[school_cohort.induction_programme_choice.to_sym]].compact.join(" - ")
+          MESSAGES.fetch(school_cohort.induction_programme_choice.to_sym, "Not using service")
         end
       end
     end
