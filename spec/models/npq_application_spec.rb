@@ -484,5 +484,21 @@ RSpec.describe NPQApplication, type: :model do
           .to_not change { subject.versions.where_attribute_changes("eligible_for_funding").count }
       end
     end
+
+    context "with changes on funding_eligiblity_status_code" do
+      before do
+        subject.update! funding_eligiblity_status_code: "marked_ineligible_by_policy"
+      end
+
+      it "creates an entry if attribute is changed" do
+        expect { subject.update!(funding_eligiblity_status_code: "re_register") }
+          .to change { subject.versions.where_attribute_changes("funding_eligiblity_status_code").count }.by(1)
+      end
+
+      it "does not create an entry if attribute is the same" do
+        expect { subject.update!(funding_eligiblity_status_code: "marked_ineligible_by_policy") }
+          .to_not change { subject.versions.where_attribute_changes("funding_eligiblity_status_code").count }
+      end
+    end
   end
 end
