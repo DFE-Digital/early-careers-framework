@@ -17,7 +17,6 @@ class ResumeParticipant
   validates :cpd_lead_provider,
             induction_record: true
   validate :not_already_active
-  validate :not_already_withdrawn
 
   def call
     ActiveRecord::Base.transaction do
@@ -57,12 +56,6 @@ private
     return unless participant_profile
 
     errors.add(:participant_profile, I18n.t(:already_active)) if participant_profile.active_for?(cpd_lead_provider:)
-  end
-
-  def not_already_withdrawn
-    return unless participant_profile
-
-    errors.add(:participant_profile, I18n.t(:invalid_withdrawal)) if participant_profile.withdrawn_for?(cpd_lead_provider:)
   end
 
   def relevant_induction_record
