@@ -4,6 +4,7 @@ module Analytics
   class BaseRecord < ApplicationRecord
     self.abstract_class = true
 
-    connects_to database: { writing: :analytics } unless Rails.env.review?
+    # FIXME: remove deployed_development when we've switched to Azure
+    connects_to database: { writing: :analytics } unless Rails.env.review? || Rails.env.deployed_development?
   end
 end
