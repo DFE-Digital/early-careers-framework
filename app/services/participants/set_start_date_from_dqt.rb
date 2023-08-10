@@ -6,7 +6,7 @@ class Participants::SetStartDateFromDQT < ::BaseService
     return if trn.blank?
 
     induction = DQT::GetInductionRecord.call(trn:)
-    return unless induction.present?
+    return if induction.blank?
 
     start_date = induction["startDate"]
 
