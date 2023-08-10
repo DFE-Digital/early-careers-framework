@@ -485,7 +485,7 @@ A single mentor can be assigned to multiple ECTs, including ECTs who are trainin
 
 ‘Unfunded mentors’ are mentors who are registered with other providers.
 
-A participant will have the same participant_id throughout the API. 
+A participant will have the same `participant_id` throughout the API. 
 
 If a participant is a mentor and linked to an ECT, then the mentor_id that appears on the response for their ECT will be the mentor’s participant_id. 
 
