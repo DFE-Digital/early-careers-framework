@@ -14,36 +14,50 @@ describe ParticipantProfileDeduplicator do
   describe "#dedup!" do
     subject(:dedup!) { instance.dedup! }
 
+    it { is_expected.to eq(instance.changes) }
+
     context "when dry_run is true" do
       let(:dry_run) { true }
 
       it "does not make any changes, but logs out as if it does" do
         expect { dedup! }.not_to change(ParticipantProfile::ECF, :count)
-        expect(Rails.logger).to have_received(:info).with("~~~ DRY RUN ~~~")
-        expect(Rails.logger).to have_received(:info).with("Destroyed duplicate profile")
+        expect_changes([
+          "~~~ DRY RUN ~~~",
+          "Destroyed duplicate profile.",
+        ])
       end
     end
 
     context "when the lead providers are different" do
       let(:duplicate_profile) { create(:ect) }
 
-      it { expect { dedup! }.to raise_error("Only duplicates with the same lead_provider are supported") }
+      it { expect { dedup! }.to raise_error(described_class::DeduplicationError, "Only duplicates with the same lead_provider are supported.") }
     end
 
     context "when the schedules are different" do
       before { duplicate_profile.latest_induction_record.update(schedule: create(:schedule, name: "other")) }
 
-      it { expect { dedup! }.to raise_error("Only duplicates with the same schedule are supported") }
+      it { expect { dedup! }.to raise_error(described_class::DeduplicationError, "Only duplicates with the same schedule are supported.") }
     end
 
     context "when the training programmes are different" do
       before { create(:induction_record, participant_profile: primary_profile) }
 
-      it { expect { dedup! }.to raise_error("Only duplicates with the same training programme are supported") }
+      it { expect { dedup! }.to raise_error(described_class::DeduplicationError, "Only duplicates with the same training programme are supported.") }
+    end
+
+    context "when duplicate profile is ECT and primary profile is Mentor" do
+      let(:primary_profile) { create(:mentor) }
+
+      it "logs a warning" do
+        dedup!
+
+        expect_changes("WARNING: transition from ECT to Mentor may not indicate a duplication.")
+      end
     end
 
     it "destroys the duplicate profile and associated data" do
-      duplicate_induction_record = create(:induction_record, participant_profile: duplicate_profile)
+      create(:induction_record, participant_profile: duplicate_profile)
       validation_decision = duplicate_profile.validation_decisions.build(validation_step: "test")
       participant_profile_state = create(:participant_profile_state, participant_profile: duplicate_profile)
       schedule = ParticipantProfileSchedule.create!(participant_profile: duplicate_profile, schedule: Finance::Schedule.first)
@@ -60,7 +74,7 @@ describe ParticipantProfileDeduplicator do
       expect { validation_decision.reload }.to raise_error(ActiveRecord::RecordNotFound)
       expect { duplicate_profile.reload }.to raise_error(ActiveRecord::RecordNotFound)
 
-      expect(Rails.logger).to have_received(:info).with("Destroyed duplicate profile")
+      expect_changes("Destroyed duplicate profile.")
     end
 
     context "when the school has changed" do
@@ -92,14 +106,16 @@ describe ParticipantProfileDeduplicator do
           preferred_identity:,
         )
 
-        expect(Rails.logger).to have_received(:info).with("Duplicate profile latest induction record transferred. End date: #{end_date}")
-        expect(Rails.logger).to have_received(:info).with("Preferred identity updated on duplicate profile latest induction record")
+        expect_changes([
+          "Duplicate profile latest induction record transferred. End date: #{end_date}.",
+          "Preferred identity updated on duplicate profile latest induction record.",
+        ])
       end
 
       it "sets school_transfer to true on the primary profile's oldest induction record" do
         expect { dedup! }.to change { primary_oldest_induction_record.reload.school_transfer }.from(false).to(true)
 
-        expect(Rails.logger).to have_received(:info).with("Primary profile oldest induction record set as school transfer")
+        expect_changes("Primary profile oldest induction record set as school transfer.")
       end
 
       context "when the duplicate preferred_identity#user is the same as the primary" do
@@ -110,8 +126,7 @@ describe ParticipantProfileDeduplicator do
 
         it "does not update the preferred identity on the transferred induction record" do
           expect { dedup! }.not_to change { duplicate_induction_record.reload.preferred_identity }
-
-          expect(Rails.logger).not_to have_received(:info).with("Preferred identity updated on duplicate profile induction record")
+          expect(instance.changes).not_to include("Preferred identity updated on duplicate profile induction record.")
         end
       end
     end
@@ -138,7 +153,7 @@ describe ParticipantProfileDeduplicator do
 
       expect { dedup! }.to change { duplicate_validation_data.reload.participant_profile_id }.to(primary_profile.id)
 
-      expect(Rails.logger).to have_received(:info).with("Validation data transferred")
+      expect_changes("Validation data transferred.")
     end
 
     it "transfers ecf_participant_eligibility from the duplicate to the primary" do
@@ -146,7 +161,7 @@ describe ParticipantProfileDeduplicator do
 
       expect { dedup! }.to change { duplicate_eligibility.reload.participant_profile_id }.to(primary_profile.id)
 
-      expect(Rails.logger).to have_received(:info).with("Eligibility transferred")
+      expect_changes("Eligibility transferred.")
     end
 
     context "when there are declarations" do
@@ -177,8 +192,10 @@ describe ParticipantProfileDeduplicator do
           user_id: primary_profile.user_id,
         )
 
-        expect(Rails.logger).to have_received(:info).with("User changed on declaration (#{duplicate_declaration.id})")
-        expect(Rails.logger).to have_received(:info).with("Transferred declaration: retained-1, submitted (#{duplicate_declaration.id})")
+        expect_changes([
+          "User changed on declaration (#{duplicate_declaration.id}).",
+          "Transferred declaration: retained-1, submitted (#{duplicate_declaration.id}).",
+        ])
       end
 
       context "when the user in the duplicate declaration matches the primary profile user" do
@@ -186,14 +203,13 @@ describe ParticipantProfileDeduplicator do
 
         it "does not log out the user change" do
           dedup!
-          expect(Rails.logger).not_to have_received(:info).with("User changed on declaration (#{duplicate_declaration.id})")
+          expect(instance.changes).not_to include("User changed on declaration (#{duplicate_declaration.id}).")
         end
       end
 
       it "voids the later declaration when there are conflicts" do
         expect { dedup! }.to change { conflicting_declaration.reload.state }.to("voided")
-
-        expect(Rails.logger).to have_received(:info).with("Voided conflicting declaration: retained-1, submitted (#{conflicting_declaration.id})")
+        expect_changes("Voided conflicting declaration: retained-1, submitted (#{conflicting_declaration.id}).")
       end
     end
 
@@ -209,6 +225,13 @@ describe ParticipantProfileDeduplicator do
         expect { eligibility.reload }.to raise_error(ActiveRecord::RecordNotFound)
         expect { validation_data.reload }.to raise_error(ActiveRecord::RecordNotFound)
       end
+    end
+  end
+
+  def expect_changes(changes)
+    Array.wrap(changes).each do |change|
+      expect(instance.changes).to include(change)
+      expect(Rails.logger).to have_received(:info).with(change)
     end
   end
 end

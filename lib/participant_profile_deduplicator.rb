@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
 class ParticipantProfileDeduplicator
+  class DeduplicationError < RuntimeError; end
+
   CONFLICTING_DECLARATION_STATES = %w[submitted eligible payable paid].freeze
 
-  attr_reader :primary_profile_id, :duplicate_profile_id, :dry_run
+  attr_reader :primary_profile_id, :duplicate_profile_id, :dry_run, :changes
 
   def initialize(primary_profile_id, duplicate_profile_id, dry_run: true)
     @primary_profile_id = primary_profile_id
@@ -12,8 +14,11 @@ class ParticipantProfileDeduplicator
   end
 
   def dedup!
-    Rails.logger.info("~~~ DRY RUN ~~~") if dry_run
+    @changes = []
 
+    log_info("~~~ DRY RUN ~~~") if dry_run
+
+    warning_ect_mentor_duplicate
     ensure_lead_providers_match
     ensure_schedules_match
     ensure_training_programmes_match
@@ -28,6 +33,8 @@ class ParticipantProfileDeduplicator
 
       raise ActiveRecord::Rollback if dry_run
     end
+
+    @changes
   end
 
 private
@@ -35,20 +42,26 @@ private
   def ensure_lead_providers_match
     return if primary_profile.lead_provider.id == duplicate_profile.lead_provider.id
 
-    raise "Only duplicates with the same lead_provider are supported"
+    raise DeduplicationError, "Only duplicates with the same lead_provider are supported."
   end
 
   def ensure_schedules_match
     return if primary_profile.latest_induction_record.schedule_id == duplicate_profile.latest_induction_record.schedule_id
 
-    raise "Only duplicates with the same schedule are supported"
+    raise DeduplicationError, "Only duplicates with the same schedule are supported."
   end
 
   def ensure_training_programmes_match
     primary_training_programmes = primary_profile.induction_records.map { |ir| ir.induction_programme.training_programme }.flatten
     duplicate_training_programmes = duplicate_profile.induction_records.map { |ir| ir.induction_programme.training_programme }.flatten
 
-    raise "Only duplicates with the same training programme are supported" if primary_training_programmes.difference(duplicate_training_programmes).any?
+    raise DeduplicationError, "Only duplicates with the same training programme are supported." if primary_training_programmes.difference(duplicate_training_programmes).any?
+  end
+
+  def warning_ect_mentor_duplicate
+    return unless duplicate_profile.is_a?(ParticipantProfile::ECT) && primary_profile.is_a?(ParticipantProfile::Mentor)
+
+    log_info("WARNING: transition from ECT to Mentor may not indicate a duplication.")
   end
 
   def handle_school_change!
@@ -56,7 +69,7 @@ private
 
     primary_profile.induction_records.oldest.update!(school_transfer: true)
 
-    log_info("Primary profile oldest induction record set as school transfer")
+    log_info("Primary profile oldest induction record set as school transfer.")
 
     duplicate_induction_record = duplicate_profile.latest_induction_record
     end_date = primary_profile.induction_records.oldest.start_date - 1.minute
@@ -68,8 +81,8 @@ private
       preferred_identity: preferred_identity(duplicate_induction_record),
     )
 
-    log_info("Preferred identity updated on duplicate profile latest induction record") if duplicate_induction_record.saved_change_to_preferred_identity_id?
-    log_info("Duplicate profile latest induction record transferred. End date: #{end_date}")
+    log_info("Preferred identity updated on duplicate profile latest induction record.") if duplicate_induction_record.saved_change_to_preferred_identity_id?
+    log_info("Duplicate profile latest induction record transferred. End date: #{end_date}.")
   end
 
   def reconcile_remaining_induction_records!
@@ -79,15 +92,15 @@ private
         preferred_identity_id: preferred_identity(induction_record).id,
       )
 
-      log_info("Preferred identity updated on duplicate profile induction record") if induction_record.saved_change_to_preferred_identity_id?
-      log_info("Duplicate profile induction record transferred")
+      log_info("Preferred identity updated on duplicate profile induction record.") if induction_record.saved_change_to_preferred_identity_id?
+      log_info("Duplicate profile induction record transferred.")
     end
   end
 
   def transfer_validation_data!
     return if primary_profile.ecf_participant_validation_data.present? || duplicate_profile.ecf_participant_validation_data.nil?
 
-    log_info("Validation data transferred")
+    log_info("Validation data transferred.")
 
     duplicate_profile.ecf_participant_validation_data.update!(participant_profile_id: primary_profile.id)
   end
@@ -97,7 +110,7 @@ private
 
     duplicate_profile.ecf_participant_eligibility.update!(participant_profile_id: primary_profile.id)
 
-    log_info("Eligibility transferred")
+    log_info("Eligibility transferred.")
   end
 
   def reconcile_declarations!
@@ -108,8 +121,8 @@ private
         user_id: primary_profile.user_id,
       )
 
-      log_info("User changed on declaration (#{declaration.id})") if declaration.saved_change_to_user_id?
-      log_info("Transferred declaration: #{declaration.declaration_type}, #{declaration.state} (#{declaration.id})")
+      log_info("User changed on declaration (#{declaration.id}).") if declaration.saved_change_to_user_id?
+      log_info("Transferred declaration: #{declaration.declaration_type}, #{declaration.state} (#{declaration.id}).")
     end
   end
 
@@ -119,7 +132,7 @@ private
     return unless conflicting_declaration
 
     most_recent_declaration = [declaration, conflicting_declaration].max_by(&:created_at)
-    log_info("Voided conflicting declaration: #{most_recent_declaration.declaration_type}, #{most_recent_declaration.state} (#{most_recent_declaration.id})")
+    log_info("Voided conflicting declaration: #{most_recent_declaration.declaration_type}, #{most_recent_declaration.state} (#{most_recent_declaration.id}).")
     VoidParticipantDeclaration.new(most_recent_declaration).call
   end
 
@@ -137,7 +150,7 @@ private
       primary_participant_profile: primary_profile,
     )
 
-    log_info("Destroyed duplicate profile")
+    log_info("Destroyed duplicate profile.")
 
     duplicate_profile.reload
     duplicate_profile.validation_decisions.destroy_all
@@ -169,6 +182,7 @@ private
   end
 
   def log_info(info)
+    changes << info
     Rails.logger.info(info)
   end
 end
