@@ -72,8 +72,8 @@ module Steps
                                            .choose_to_add_an_ect_or_mentor
         participant_start_date = Date.new(2021, 9, 1)
 
-        allow(DqtRecordCheck).to receive(:call).and_return(
-          DqtRecordCheck::CheckResult.new(
+        allow(DQTRecordCheck).to receive(:call).and_return(
+          DQTRecordCheck::CheckResult.new(
             {
               "name" => participant_name,
               "trn" => participant_trn,

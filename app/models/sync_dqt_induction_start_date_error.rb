@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class SyncDqtInductionStartDateError < ApplicationRecord
+class SyncDQTInductionStartDateError < ApplicationRecord
   belongs_to :participant_profile
 
   validates :participant_profile, presence: true

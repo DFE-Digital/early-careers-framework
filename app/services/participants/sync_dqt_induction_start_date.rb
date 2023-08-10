@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Participants
-  class SyncDqtInductionStartDate < BaseService
+  class SyncDQTInductionStartDate < BaseService
     FIRST_2021_ACADEMIC_DATE = Date.new(2021, 9, 1)
     FIRST_2023_REGISTRATION_DATE = Cohort.find_by(start_year: 2023)&.registration_start_date || Date.new(2023, 6, 1)
 
@@ -35,7 +35,7 @@ module Participants
     end
 
     def clear_participant_sync_errors
-      SyncDqtInductionStartDateError.where(participant_profile:).destroy_all
+      SyncDQTInductionStartDateError.where(participant_profile:).destroy_all
     end
 
     def pre_2021_dqt_induction_start_date?
@@ -48,7 +48,7 @@ module Participants
 
     def save_errors(*messages)
       messages.each do |message|
-        SyncDqtInductionStartDateError.find_or_create_by!(participant_profile:, message:)
+        SyncDQTInductionStartDateError.find_or_create_by!(participant_profile:, message:)
       end
 
       false

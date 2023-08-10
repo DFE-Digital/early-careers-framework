@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class DqtRecordPresenter < SimpleDelegator
+class DQTRecordPresenter < SimpleDelegator
   def name
     dqt_record["name"]
   end
