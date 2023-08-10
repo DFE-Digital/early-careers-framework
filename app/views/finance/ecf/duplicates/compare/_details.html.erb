@@ -46,4 +46,5 @@ end %>
 <%=  govuk_tabs(title: "Induction records and declarations") do |c|
   c.tab(label: "Induction records") { render 'finance/ecf/duplicates/compare/induction_records', primary_profile:, duplicate_profile: }
   c.tab(label: "Declarations") { render 'finance/ecf/duplicates/compare/declarations', primary_profile:, duplicate_profile: }
+  c.tab(label: "Deduplicate") { render 'finance/ecf/duplicates/compare/deduplicate', primary_profile:, duplicate_profile: }
 end%>
