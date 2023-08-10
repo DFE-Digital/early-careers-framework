@@ -165,12 +165,16 @@ module Schools
         @email_owner != existing_user
       end
 
+      def using_sit_email?
+        data_store.email == current_user.email
+      end
+
       def adding_yourself_as_mentor?
-        participant_type == "mentor" && current_user.email == data_store.email
+        using_sit_email? && participant_type == "mentor"
       end
 
       def adding_yourself_as_ect?
-        participant_type == "ect" && current_user.email == data_store.email
+        using_sit_email? && participant_type == "ect"
       end
 
       def email_used_in_the_same_school?
