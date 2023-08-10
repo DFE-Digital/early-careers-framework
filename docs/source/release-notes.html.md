@@ -7,7 +7,7 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
-## 10 August 2023 
+## 10 August 2023
 
 Lead providers can now submit ‘extended declarations’ for ECTs that are on extended schedules. Providers may not submit extended declarations for mentors. 
 
@@ -382,7 +382,7 @@ A teacher from a country outside the UK uses the DfE’s digital service to regi
 
 ## 14 September 2022
 
-The API will now return a helpful 422 error message to highlight invalid ECF or NPQ `course_identifier` entries.
+The API will now return a 422 error message to highlight invalid ECF or NPQ `course_identifier` entries.
 
 Invalid entries include: 
 
@@ -434,123 +434,130 @@ Added `targeted_delivery_funding_eligibility` to NPQ applications.
 
 Removed the logic where the API would nullify the `email` field on the ECF and NPQ participant responses where the `status` is withdrawn. Now, where `status` is withdrawn, we will continue to display the participant’s `email`. Generally, the `status` will show withdrawn when a School Induction Tutor has withdrawn or “deleted” a participant in the schools user interface or “portal”. Where `email` was nullified, they will now be visible again.
 
-## 24th June 2022
+## 24 June 2022
 
-Added new declaration states `awaiting-clawback` and `clawed-back`
+Added new declaration states `awaiting-clawback` and `clawed-back`.
 
-## 6th June 2022
+## 6 June 2022
 
-* Added `cohort` to NPQ applications
-* Added ability to filter by `cohort` on NPQ applications
-* Added `ineligible_for_funding_reason` on NPQ applications
-* Updated `eligible_for_funding` on NPQ applications to take previous accepted applications into consideration
+With this release we've:
 
-## 11th May 2022
+* added `cohort` to NPQ applications
+* added ability to filter by `cohort` on NPQ applications
+* added `ineligible_for_funding_reason` on NPQ applications
+* updated `eligible_for_funding` on NPQ applications to take previous accepted applications into consideration
 
-Added `yes_in_first_five_years` and `yes_over_five_years` to `headteacher_status` for NPQ applications
+## 11 May 2022
 
-## 21st April 2022
+Added `yes_in_first_five_years` and `yes_over_five_years` to `headteacher_status` for NPQ applications.
+
+## 21 April 2022
 
 Added `works_in_school`, `employer_name`, and `employment_role` to `NPQApplicationAttributes` API entities. Definitions available at `/api-reference/reference-v1.html#schema-npqapplication`.
 
-## 12th April 2022
+## 12 April 2022
 
 When fetching participant declarations it will now return any declarations made by previous providers. This will allow you to determine what declarations you should be posting next.
 
-## 8th March 2022
+## 8 March 2022
 
-In the documentation `/api-reference/reference.html` has been moved to `/api-reference/reference-v1.html`
+In the documentation `/api-reference/reference.html` has been moved to `/api-reference/reference-v1.html`.
 
-## 12th January 2022
+## 12 January 2022
 
 `change-schedule` API endpoints now accept a `cohort` attribute in the request body. This defaults to the current cohort if it is not specified.
 
-## 11th January 2022
+## 11 January 2022
 
-Added new API endpoint `/api/v1/participants/ecf/{participant_id}/change-schedule`
+Added new API endpoint `/api/v1/participants/ecf/{participant_id}/change-schedule`.
 
-## 7th January 2022
+## 7 January 2022
 
-Added schedule with identifier `ecf-standard-april`
+Added schedule with identifier `ecf-standard-april`.
 
-## 6th January 2022
+## 6 January 2022
 
-* Schedule identifier has been renamed from `ecf-september-standard-2021` to `ecf-standard-september`
-* Schedule identifier has been renamed from `ecf-january-standard-2021` to `ecf-standard-january`
+Schedule identifier has been renamed from `ecf-september-standard-2021` to `ecf-standard-september`.
 
-## 3rd December 2021
+Schedule identifier has been renamed from `ecf-january-standard-2021` to `ecf-standard-january`.
 
-Return JSON responses for 404 and 401 errors rather than `text/plain`
+## 3 December 2021
 
-## 4th November 2021
+Return JSON responses for 404 and 401 errors rather than `text/plain`.
 
-* Added ability to defer an NPQ participant from a given course. `PUT /api/v1/participants/npq/{id}/defer`
-* Added the new endpoint to defer an NPQ participant from a given course. `PUT /api/v1/participants/npq/{id}/defer`
-* Added ability to resume an NPQ participant from a given course. `PUT /api/v1/participants/npq/{id}/resume`
-* Added the new endpoint to resume an NPQ participant from a given course. `PUT /api/v1/participants/npq/{id}/resume`
-* Added updated_at date to NPQ applications, NPQ participants, participants, and participant declarations (GET endpoints).
+## 4 November 2021
 
-## 27th October 2021
+With this release we've:
+
+* added ability to defer an NPQ participant from a given course. `PUT /api/v1/participants/npq/{id}/defer`
+* added the new endpoint to defer an NPQ participant from a given course. `PUT /api/v1/participants/npq/{id}/defer`
+* added ability to resume an NPQ participant from a given course. `PUT /api/v1/participants/npq/{id}/resume`
+* added the new endpoint to resume an NPQ participant from a given course. `PUT /api/v1/participants/npq/{id}/resume`
+* added 'updated_at' date to NPQ applications, NPQ participants, participants, and participant declarations (GET endpoints)
+
+## 27 October 2021
 
 Added created_at date to NPQ applications (GET endpoints).
 
-## 25th October 2021
+## 25 October 2021
 
 Add `employer` as possible option for NPQ `funding_choice`.
 
-## 19th October 2021
+## 19 October 2021
 
-- Added ability to withdraw an NPQ participant from a given course. `PUT /api/v1/participants/npq/{id}/withdraw`
-- Added the new endpoint to withdraw an NPQ participant from a given course. `PUT /api/v1/participants/npq/{id}/withdraw`
+With this release we've: 
 
-The previous endpoint `PUT /api/v1/participants/npq/{id}/withdraw` is deprecated and will be remove in a later version of the API.
+* added ability to withdraw an NPQ participant from a given course. `PUT /api/v1/participants/npq/{id}/withdraw`
+* added the new endpoint to withdraw an NPQ participant from a given course. `PUT /api/v1/participants/npq/{id}/withdraw`
 
-## 5th October 2021
+The previous endpoint `PUT /api/v1/participants/npq/{id}/withdraw` is deprecated and will be removed in a later version of the API.
+
+## 5 October 2021
 
 Update withdrawal and deferral reason codes.
 
 Added created_at date to NPQ applications (GET endpoints).
 
-## 29th September 2021
+## 29 September 2021
 
-Add `GET /api/v1/participants/npq` endpoint.
+Added `GET /api/v1/participants/npq` endpoint.
 
-## 22nd September 2021
+## 22 September 2021
 
 Prevent changing schedule if the new schedule makes existing pending declaration invalid.
 
-## 17th September 2021
+## 17 September 2021
 
 Add `GET /api/v1/participants/ecf` endpoint.
 
-## 16th September 2021
+## 16 September 2021
 
 Share `pupil_premium_uplift` and `sparsity_uplift` values for ECF participants.
 
-## 15th September 2021
+## 15 September 2021
 
 Ability to void participant declarations.
 
-## 10th September 2021
+## 10 September 2021
 
 Ability to resume participants on a course.
 
-## 9th September 2021
+## 9 September 2021
 
 Added new action to retrieve a single participant declaration by ID.
 
-## 8th September 2021
+## 8 September 2021
 
 Ability to defer participants on a course.
 
-## 7th September 2021
+## 7 September 2021
 
-Standardise date filtering parameters between different api endpoints.
+Standardise date filtering parameters between different API endpoints.
 
-## 19th July 2021
+## 19 July 2021
 
 Initial release of the NPQ usage guide.
 
-## 1st July 2021
+## 1 July 2021
 
 Initial release of the API reference documentation.
