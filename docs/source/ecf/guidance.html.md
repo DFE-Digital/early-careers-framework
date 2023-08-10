@@ -489,7 +489,7 @@ A participant will have the same `participant_id` throughout the API.
 
 If a participant is a mentor and linked to an ECT, then the `mentor_id` that appears on the response for their ECT will be the mentor’s `participant_id`. 
 
-If the mentor is an unfunded mentor, then the identifier will be their participant_id.
+If the mentor is an unfunded mentor, then the identifier will be their `participant_id`.
 
 ```
  GET /api/v3/unfunded-mentors/ecf
