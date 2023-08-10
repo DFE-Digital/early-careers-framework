@@ -485,7 +485,11 @@ A single mentor can be assigned to multiple ECTs, including ECTs who are trainin
 
 ‘Unfunded mentors’ are mentors who are registered with other providers.
 
-Providers can view the names and email addresses of ‘unfunded mentors’ assigned to ECTs, and give these mentors appropriate access to learning platforms.
+A participant will have the same `participant_id` throughout the API. 
+
+If a participant is a mentor and linked to an ECT, then the `mentor_id` that appears on the response for their ECT will be the mentor’s `participant_id`. 
+
+If the mentor is an unfunded mentor, then the identifier will be their `participant_id`.
 
 ```
  GET /api/v3/unfunded-mentors/ecf
@@ -519,11 +523,9 @@ For more detailed information see the specifications for this [view all unfunded
 
 <div class="govuk-inset-text">The following endpoint is only available for systems integrated with API v3 onwards. It will not return data for API v1 or v2.</div>
 
-If providers do **not** see any details for mentors when using the endpoint `GET /api/v3/participants/ecf` they can check to see whether they are an ‘unfunded mentor’.
+If providers do not see any details for mentors when using the endpoint `GET /api/v3/participants/ecf` they can check to see whether they are an ‘unfunded mentor’.
 
-‘Unfunded mentors’ are mentors who are registered with other providers.
-
-Providers can view the names and email addresses of ‘unfunded mentors’ assigned to ECTs, and give these mentors appropriate access to learning platforms.
+Using the unfunded mentors endpoints, providers can view the names and email addresses of ‘unfunded mentors’ assigned to ECTs, and give these mentors appropriate access to learning platforms.
 
 ```
  GET /api/v3/unfunded-mentors/ecf/{id}
