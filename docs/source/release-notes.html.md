@@ -6,22 +6,6 @@ weight: 8
 # Release notes
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
-
-## 10 August 2023
-
-Lead providers can now submit ‘extended declarations’ for ECTs that are on extended schedules. Providers may not submit extended declarations for mentors. 
-
-Qualifying ECTs will have had their induction extended as a result of having not yet met the Teachers’ standards, and need additional support to meet the standards. These ECTs must be placed onto one of the available ‘extended schedules’ for ECF. 
-
-Providers may submit an extended declaration (subject to meeting the engagement criteria) for each extended term until the ECT has completed their induction, up to a maximum of three extensions. On completing induction, the provider should submit a completion declaration for the final term.
-
-Providers may submit extended declarations using the following values in the ‘declaration_type’ field on the participant declaration request body:
-
-* extended-1
-* extended-2
-* extended-3
-
-The functionality is live in production and sandbox environments, and applies to all versions of the API.
   
 ## 10 August 2023
 
