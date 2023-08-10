@@ -40,7 +40,7 @@ RSpec.describe FinanceHelper, type: :helper do
 
     subject { npq_application_api_response(npq_application) }
 
-    it { is_expected.to match(%r{<pre class="app-json-code-sampe"><code>}) }
+    it { is_expected.to match(%r{<pre><code>}) }
     it { is_expected.to include(npq_application.id) }
   end
 
@@ -49,7 +49,7 @@ RSpec.describe FinanceHelper, type: :helper do
 
     subject { npq_participant_api_response(npq_participant) }
 
-    it { is_expected.to match(%r{<pre class="app-json-code-sampe"><code>}) }
+    it { is_expected.to match(%r{<pre><code>}) }
     it { is_expected.to include(npq_participant.id) }
   end
 
@@ -59,7 +59,7 @@ RSpec.describe FinanceHelper, type: :helper do
 
     subject { induction_record_participant_api_response(induction_record, participant_profile) }
 
-    it { is_expected.to match(%r{<pre class="app-json-code-sampe"><code>}) }
+    it { is_expected.to match(%r{<pre><code>}) }
     it { is_expected.to include(participant_profile.user.id) }
   end
 
