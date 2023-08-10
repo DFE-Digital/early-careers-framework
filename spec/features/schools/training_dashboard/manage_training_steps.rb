@@ -864,6 +864,10 @@ module ManageTrainingSteps
   end
   alias_method :and_i_see_the_participants_sorted_by_induction_start_date, :then_i_see_the_participants_sorted_by_induction_start_date
 
+  def then_i_see_the_sit_name
+    expect(page).to have_text(@induction_coordinator_profile.user.full_name)
+  end
+
   def then_i_am_taken_to_roles_page
     expect(page).to have_selector("h1", text: "Check what each person needs to do in the early career teacher training programme")
     expect(page).to have_text("An induction tutor should only assign themself as a mentor in exceptional circumstances")

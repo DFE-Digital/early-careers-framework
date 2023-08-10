@@ -9,7 +9,6 @@ RSpec.describe "SIT adding mentor", js: true do
   before do
     given_there_is_a_school_that_has_chosen_cip
     set_participant_data
-    # and_i_have_added_an_ect_with_email(@participant_data[:email])
     given_there_is_a_school_that_has_chosen_fip_and_partnered
     and_i_am_signed_in_as_an_induction_coordinator
     and_i_click_on(Cohort.current.description)
@@ -64,6 +63,6 @@ RSpec.describe "SIT adding mentor", js: true do
     then_i_am_taken_to_mentor_added_confirmation_page
 
     click_on "View your ECTs and mentors"
-    then_i_see_the_mentor_name
+    then_i_see_the_sit_name
   end
 end
