@@ -26,10 +26,10 @@ default: &default
 development:
   primary:
     <<: *default_primary
-    database: 'early_careers_framework_development'
+    database: "early_careers_framework_development"
   analytics:
     <<: *default_analytics
-    database: 'early_careers_framework_analytics_development'
+    database: "early_careers_framework_analytics_development"
 
 review:
   <<: *default_primary
@@ -40,6 +40,7 @@ sandbox:
     <<: *default_primary
     url: <%= ENV["DATABASE_URL"] %>
   analytics:
+    <<: *default_analytics
     migrations_paths: db/analytics_migrate
     pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
     url: <%= ENV["ANALYTICS_DATABASE_URL"] %>
@@ -70,6 +71,7 @@ staging:
     url: <%= ENV["DATABASE_URL"] %>
     pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   analytics:
+    <<: *default_analytics
     migrations_paths: db/analytics_migrate
     pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
     url: <%= ENV["ANALYTICS_DATABASE_URL"] %>
@@ -83,6 +85,7 @@ production:
     url: <%= ENV["DATABASE_URL"] %>
     pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   analytics:
+    <<: *default_analytics
     migrations_paths: db/analytics_migrate
     pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
     url: <%= ENV["ANALYTICS_DATABASE_URL"] %>
