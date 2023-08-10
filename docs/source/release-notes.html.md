@@ -6,8 +6,26 @@ weight: 8
 # Release notes
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
-  
-## 10 August 2023
+
+## 17 August 2023
+
+Lead providers can now submit 'extended declarations' for ECTs that are on extended schedules in the sandbox environment. Providers may not submit extended declarations for mentors.
+
+Qualifying ECTs will have had their induction extended as a result of having not yet met the Teachers' standards, and need additional support to meet the standards. These ECTs must be placed onto one of the available ['extended schedules'](/api-reference/ecf/schedules-and-milestone-dates.html#extended-schedules) for ECF.
+
+Providers may submit an extended declaration (subject to meeting the engagement criteria) for each extended term until the ECT has completed their induction, up to a maximum of three extensions. On completing induction, the provider should submit a completion declaration for the final term.
+
+For further details about how and when to use these declaration types, providers should refer to the ECF payment guidance issued by their contract manager.
+
+Providers may submit extended declarations using the following values in the `declaration_type` field on the [participant declaration request body](/api-reference/reference-v3.html#schema-participantdeclarationrequest):
+
+- extended-1
+- extended-2
+- extended-3
+
+Providers will be notified ahead of this functionality becoming available in the production environment.
+
+## 10th August 2023
 
 Lead providers can now ‘resume’ NPQ and ECF participants they've previously withdrawn.
 
@@ -171,7 +189,7 @@ To enable the scenario where a participant needs to be registered as a mentor af
 
 The `training_record_id` value will be unique to each registration that a participant has for ECF-based training, as either an ECT or mentor.
 
-Induction tutors have not yet been able to register participants as mentors if they were already registered as ECTs. Given the likely scenario that ECTs will go on to become mentors, the `training_record_id` attribute will soon allow the service to recognise and differentiate registrations. Note, DfE does not expect induction tutors to begin registering ECTs as mentors until June. 
+Induction tutors have not yet been able to register participants as mentors if they were already registered as ECTs. Given the likely scenario that ECTs will go on to become mentors, the `training_record_id` attribute will soon allow the service to recognise and differentiate registrations. Note, DfE does not expect induction tutors to begin registering ECTs as mentors until June.
 
 For the moment, we have added examples to provider sandbox environments:
 
@@ -368,7 +386,7 @@ A teacher from a country outside the UK uses the DfE’s digital service to regi
 
 The API will now return a 422 error message to highlight invalid ECF or NPQ `course_identifier` entries.
 
-Invalid entries include: 
+Invalid entries include:
 
 * spelling errors
 * unrecognised values not included in the schema, or a value included in the schema but not associated with the participant
@@ -489,7 +507,7 @@ Add `employer` as possible option for NPQ `funding_choice`.
 
 ## 19 October 2021
 
-With this release we've: 
+With this release we've:
 
 * added ability to withdraw an NPQ participant from a given course. `PUT /api/v1/participants/npq/{id}/withdraw`
 * added the new endpoint to withdraw an NPQ participant from a given course. `PUT /api/v1/participants/npq/{id}/withdraw`
