@@ -33,6 +33,7 @@ class ParticipantMailer < ApplicationMailer
     ).tag(:participant_removed).associate_with(participant_profile, as: :participant_profile)
   end
 
+  # Inactive mailer - soon to be removed
   def preterm_reminder
     induction_coordinator_profile = params[:induction_coordinator_profile]
 
@@ -48,6 +49,7 @@ class ParticipantMailer < ApplicationMailer
     ).tag(:preterm_reminder).associate_with(induction_coordinator_profile, as: :induction_coordinator_profile)
   end
 
+  # Inactive mailer - soon to be removed
   def preterm_reminder_unconfirmed_for_2022
     induction_coordinator_profile = params[:induction_coordinator_profile]
 
@@ -97,6 +99,7 @@ class ParticipantMailer < ApplicationMailer
     ).tag(:cip_register_participants_reminder).associate_with(induction_coordinator_profile, as: :induction_coordinator_profile)
   end
 
+  # Inactive mailer - soon to be removed
   def sit_contact_address_bounce
     induction_coordinator_profile = params[:induction_coordinator_profile]
     school = params[:school]

@@ -11,6 +11,7 @@ class ParticipantValidationMailer < ApplicationMailer
 
   STATUTORY_GUIDANCE_LINK = "https://www.gov.uk/government/publications/induction-for-early-career-teachers-england"
 
+  # Inactive mailer - soon to be removed
   def ects_to_add_validation_information_email
     template_mail(
       ECTS_TO_ADD_VALIDATIN_INFO_TEMPLATE,
@@ -24,6 +25,7 @@ class ParticipantValidationMailer < ApplicationMailer
     )
   end
 
+  # Inactive mailer - soon to be removed
   def mentors_to_add_validation_information_email
     template_mail(
       MENTORS_TO_ADD_VALIDATION_EMAIL_TEMPLATE,
@@ -37,6 +39,7 @@ class ParticipantValidationMailer < ApplicationMailer
     )
   end
 
+  # Inactive mailer - soon to be removed
   def induction_coordinators_who_are_mentors_to_add_validation_information_email
     template_mail(
       INDUCTION_COORDINATORS_WHO_ARE_MENTORS_TO_ADD_VALIDATION_EMAIL_TEMPLATE,
@@ -50,6 +53,7 @@ class ParticipantValidationMailer < ApplicationMailer
     )
   end
 
+  # Inactive mailer - soon to be removed
   def induction_coordinators_we_asked_ects_and_mentors_for_information_email
     template_mail(
       INDUCTION_COORDINATOR_WE_ASKED_YOUR_ECTS_AND_MENTORS_TEMPLATE,
@@ -63,6 +67,7 @@ class ParticipantValidationMailer < ApplicationMailer
     ).tag(:sit_unvalidated_participants_reminder).associate_with(params[:induction_coordinator_profile], as: :induction_coordinator_profile)
   end
 
+  # Inactive mailer - soon to be removed
   def induction_coordinator_participant_email_bounced_email
     participant_profile = params[:participant_profile]
 
@@ -78,6 +83,7 @@ class ParticipantValidationMailer < ApplicationMailer
     ).tag(:sit_participant_email_bounced).associate_with(participant_profile, as: :participant_profile)
   end
 
+  # Inactive mailer - soon to be removed
   def fip_participant_validation_deadline_reminder_email
     participant_profile = params[:participant_profile]
 

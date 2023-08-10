@@ -21,6 +21,7 @@ class IneligibleParticipantMailer < ApplicationMailer
 
   ECT_NOW_ELIGIBLE_PREVIOUS_INDUCTION_TEMPLATE = "ceca360c-985c-4518-aaf9-a9963fd39f45"
 
+  # Inactive mailer - soon to be removed
   def ect_active_flags_email
     participant_profile = params[:participant_profile]
 
@@ -35,6 +36,7 @@ class IneligibleParticipantMailer < ApplicationMailer
     ).tag(:ineligible_participant).associate_with(participant_profile, as: :participant_profile)
   end
 
+  # Inactive mailer - soon to be removed
   def mentor_active_flags_email
     participant_profile = params[:participant_profile]
 
@@ -49,6 +51,7 @@ class IneligibleParticipantMailer < ApplicationMailer
     ).tag(:ineligible_participant).associate_with(participant_profile, as: :participant_profile)
   end
 
+  # Inactive mailer - soon to be removed
   def ect_no_qts_email
     participant_profile = params[:participant_profile]
 
@@ -63,6 +66,7 @@ class IneligibleParticipantMailer < ApplicationMailer
     ).tag(:ineligible_participant).associate_with(participant_profile, as: :participant_profile)
   end
 
+  # Inactive mailer - soon to be removed
   def mentor_no_qts_email
     participant_profile = params[:participant_profile]
 
