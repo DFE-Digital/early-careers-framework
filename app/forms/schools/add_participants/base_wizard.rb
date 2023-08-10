@@ -166,7 +166,7 @@ module Schools
       end
 
       def adding_yourself_as_mentor?
-        current_user.email == data_store.email
+        participant_type == "mentor" && current_user.email == data_store.email
       end
 
       def email_used_in_the_same_school?
