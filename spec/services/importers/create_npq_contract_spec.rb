@@ -30,9 +30,9 @@ RSpec.describe Importers::CreateNPQContract do
 
     context "when new contract" do
       before do
-        csv.write "provider_name,cohort_year,course_identifier,recruitment_target,per_participant,service_fee_installments"
+        csv.write "provider_name,cohort_year,course_identifier,recruitment_target,per_participant,service_fee_installments,version"
         csv.write "\n"
-        csv.write "Ambition Institute,#{cohort.start_year},npq-leading-teaching,123,456.78,13"
+        csv.write "Ambition Institute,#{cohort.start_year},npq-leading-teaching,123,456.78,13,0.0.1"
         csv.write "\n"
         csv.close
       end
@@ -57,9 +57,9 @@ RSpec.describe Importers::CreateNPQContract do
 
     context "code is run more than once" do
       before do
-        csv.write "provider_name,cohort_year,course_identifier,recruitment_target,per_participant,service_fee_installments"
+        csv.write "provider_name,cohort_year,course_identifier,recruitment_target,per_participant,service_fee_installments,version"
         csv.write "\n"
-        csv.write "Ambition Institute,#{cohort.start_year},npq-leading-teaching,123,456.78,13"
+        csv.write "Ambition Institute,#{cohort.start_year},npq-leading-teaching,123,456.78,13,0.0.1"
         csv.write "\n"
         csv.close
       end
@@ -74,9 +74,9 @@ RSpec.describe Importers::CreateNPQContract do
 
     context "when existing contract" do
       before do
-        csv.write "provider_name,cohort_year,course_identifier,recruitment_target,per_participant,service_fee_installments"
+        csv.write "provider_name,cohort_year,course_identifier,recruitment_target,per_participant,service_fee_installments,version"
         csv.write "\n"
-        csv.write "Ambition Institute,#{cohort.start_year},npq-leading-teaching,123,456.78,13"
+        csv.write "Ambition Institute,#{cohort.start_year},npq-leading-teaching,123,456.78,13,0.0.1"
         csv.write "\n"
         csv.close
 
@@ -107,9 +107,9 @@ RSpec.describe Importers::CreateNPQContract do
 
     context "when a leadership course" do
       before do
-        csv.write "provider_name,cohort_year,course_identifier,recruitment_target,per_participant,service_fee_installments"
+        csv.write "provider_name,cohort_year,course_identifier,recruitment_target,per_participant,service_fee_installments,version"
         csv.write "\n"
-        csv.write "Ambition Institute,#{cohort.start_year},npq-headship,321,654.87,14"
+        csv.write "Ambition Institute,#{cohort.start_year},npq-headship,321,654.87,14,0.0.1"
         csv.write "\n"
         csv.close
       end
@@ -133,9 +133,9 @@ RSpec.describe Importers::CreateNPQContract do
 
     context "when EHCO course" do
       before do
-        csv.write "provider_name,cohort_year,course_identifier,recruitment_target,per_participant,service_fee_installments"
+        csv.write "provider_name,cohort_year,course_identifier,recruitment_target,per_participant,service_fee_installments,version"
         csv.write "\n"
-        csv.write "Ambition Institute,#{cohort.start_year},npq-early-headship-coaching-offer,789,111.22,15"
+        csv.write "Ambition Institute,#{cohort.start_year},npq-early-headship-coaching-offer,789,111.22,15,0.0.1"
         csv.write "\n"
         csv.close
       end

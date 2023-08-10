@@ -25,7 +25,7 @@ module Importers
           # Manually create new version of contract if there are changes
           contract = NPQContract.find_or_initialize_by(
             cohort:,
-            version: version || "0.0.1",
+            version:,
             npq_lead_provider:,
             course_identifier: course.identifier,
           )
@@ -82,7 +82,7 @@ module Importers
     end
 
     def check_headers
-      unless rows.headers == %w[provider_name cohort_year course_identifier recruitment_target per_participant service_fee_installments] || rows.headers == %w[provider_name cohort_year course_identifier recruitment_target per_participant service_fee_installments version]
+      unless rows.headers == %w[provider_name cohort_year course_identifier recruitment_target per_participant service_fee_installments version]
         raise NameError, "Invalid headers"
       end
     end
