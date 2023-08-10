@@ -1217,6 +1217,10 @@ module ManageTrainingSteps
     expect(page).to have_summary_row("Appropriate body", appropriate_body.name)
   end
 
+  def then_i_am_taken_to_you_cant_add_yourself_as_ect_page
+    expect(page).to have_content("You cannot add yourself as ECT")
+  end
+
   def and_i_see_the_cip_programme
     expect(page).to have_summary_row("Programme", "DfE accredited materials")
   end

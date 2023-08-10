@@ -19,6 +19,8 @@ module Schools
             :email_already_taken
           elsif wizard.adding_yourself_as_mentor?
             :yourself
+          elsif wizard.adding_yourself_as_ect?
+            :cannot_add_yourself_as_ect
           elsif wizard.transfer?
             if wizard.needs_to_choose_a_mentor?
               :choose_mentor

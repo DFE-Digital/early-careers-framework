@@ -169,6 +169,10 @@ module Schools
         participant_type == "mentor" && current_user.email == data_store.email
       end
 
+      def adding_yourself_as_ect?
+        participant_type == "ect" && current_user.email == data_store.email
+      end
+
       def email_used_in_the_same_school?
         if email_in_use?
           participant_profile = @email_owner.teacher_profile&.ecf_profiles&.first
