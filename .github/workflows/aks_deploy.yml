@@ -64,7 +64,7 @@ jobs:
       ruby-version: "3.2.2"
 
   deploy_review:
-    name: Deploy to review environment
+    name: Deploy review
     concurrency: deploy_review_${{ github.event.pull_request.number }}
     if: contains(github.event.pull_request.labels.*.name, 'review-app') && github.event_name == 'pull_request'
     needs: [docker, brakeman]
@@ -91,6 +91,7 @@ jobs:
             Review app deployed to ${{ steps.deploy.outputs.url }}
 
   deploy_staging:
+    name: Deploy staging
     needs: [docker, rspec, cypress, lint, brakeman]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
@@ -110,6 +111,7 @@ jobs:
           current-commit-sha: ${{ github.sha }}
 
   deploy_sandbox:
+    name: Deploy sandbox
     needs: [deploy_staging]
     runs-on: ubuntu-latest
     environment:
@@ -127,6 +129,7 @@ jobs:
           current-commit-sha: ${{ github.sha }}
 
   deploy_production:
+    name: Deploy production
     needs: [deploy_staging]
     runs-on: ubuntu-latest
     environment:
