@@ -477,7 +477,7 @@ For more detailed information see the specifications for this [view a single ECF
 }
 ```
 
-### View all ‘unfunded mentor’ details
+### View all unfunded mentor details
 
 <div class="govuk-inset-text">The following endpoint is only available for systems integrated with API v3 onwards. It will not return data for API v1 or v2.</div>
 
