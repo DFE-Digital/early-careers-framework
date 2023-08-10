@@ -35,6 +35,13 @@ jobs:
     name: Run the Cypress tests
     uses: ./.github/workflows/cypress.yml
 
+  permit-merge:
+    name: Permit merge
+    needs: [lint, rspec, cypress]
+    runs-on: ubuntu-latest
+    steps:
+      - run: "echo 'Linting and tests passed, this branch is ready to be merged'"
+
   docker:
     name: Build and push Docker image
     runs-on: ubuntu-latest
