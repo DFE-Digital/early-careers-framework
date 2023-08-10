@@ -34,6 +34,12 @@ module NewSeeds
             self
           end
 
+          # NOTE: run me after adding an induction record
+          def that_has_completed(completion_date: 1.week.ago)
+            Induction::Complete.call(participant_profile:, completion_date:)
+            self
+          end
+
           def add_induction_record(induction_programme:, mentor_profile: nil, start_date: 6.months.ago, end_date: nil,
                                    induction_status: "active", training_status: "active", preferred_identity: nil,
                                    appropriate_body: nil, school_transfer: false)
