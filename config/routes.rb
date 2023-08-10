@@ -484,7 +484,9 @@ Rails.application.routes.draw do
         resources :change_email, controller: "applications/change_email", only: %i[edit update]
         resources :exports, only: %i[index new create], controller: "applications/exports"
         resources :eligibility_imports, only: %i[index new create show], controller: "applications/eligibility_imports"
-        resources :applications, only: %i[index show]
+        resources :applications, only: %i[index show] do
+          resource :change_logs, only: %i[show], controller: "applications/change_logs"
+        end
         resources :edge_cases, controller: "applications/edge_cases", only: %i[index show]
         resources :eligible_for_funding, controller: "applications/eligible_for_funding", only: %i[edit update]
         resources :eligibility_status, controller: "applications/eligibility_status", only: %i[edit update]

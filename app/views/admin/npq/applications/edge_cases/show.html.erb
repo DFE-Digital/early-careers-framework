@@ -57,6 +57,10 @@
     sl.row do |row|
       row.key(text: "Last updated date")
       row.value(text: @npq_application.updated_at.to_fs(:govuk_short))
+      row.action(
+        text: 'View change log',
+        href:  admin_npq_applications_application_change_logs_path(@npq_application),
+      )
     end
   end
 %>
