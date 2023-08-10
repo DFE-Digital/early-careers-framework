@@ -66,8 +66,8 @@ RSpec.describe "Reporting participants with a known TRN", type: :feature, js: tr
   end
 
   before do
-    allow(DqtRecordCheck).to receive(:call).and_return(
-      DqtRecordCheck::CheckResult.new(
+    allow(DQTRecordCheck).to receive(:call).and_return(
+      DQTRecordCheck::CheckResult.new(
         valid_dqt_response(participant_data),
         true,
         true,
@@ -195,7 +195,7 @@ RSpec.describe "Reporting participants with a known TRN", type: :feature, js: tr
   end
 
   def valid_dqt_response(participant_data)
-    DqtRecordPresenter.new({
+    DQTRecordPresenter.new({
       "name" => participant_data[:full_name],
       "trn" => participant_data[:trn],
       "state_name" => "Active",

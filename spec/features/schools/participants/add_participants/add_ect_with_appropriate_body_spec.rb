@@ -124,8 +124,8 @@ private
   end
 
   def and_i_fill_in_all_info
-    allow(DqtRecordCheck).to receive(:call).and_return(
-      DqtRecordCheck::CheckResult.new(
+    allow(DQTRecordCheck).to receive(:call).and_return(
+      DQTRecordCheck::CheckResult.new(
         valid_dqt_response,
         true,
         true,
@@ -146,7 +146,7 @@ private
   end
 
   def valid_dqt_response
-    DqtRecordPresenter.new({
+    DQTRecordPresenter.new({
       "name" => "George ECT",
       "trn" => "5234457",
       "state_name" => "Active",

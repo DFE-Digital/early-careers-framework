@@ -190,8 +190,8 @@ RSpec.describe "transferring participants", type: :feature, js: true do
       end
 
       def set_dqt_validation_result
-        allow(DqtRecordCheck).to receive(:call).and_return(
-          DqtRecordCheck::CheckResult.new(
+        allow(DQTRecordCheck).to receive(:call).and_return(
+          DQTRecordCheck::CheckResult.new(
             nil,
             false,
             false,
@@ -208,7 +208,7 @@ RSpec.describe "transferring participants", type: :feature, js: true do
       end
 
       def valid_dqt_response(participant_data)
-        DqtRecordPresenter.new({
+        DQTRecordPresenter.new({
           "name" => participant_data[:full_name],
           "trn" => participant_data[:trn],
           "state_name" => "Active",

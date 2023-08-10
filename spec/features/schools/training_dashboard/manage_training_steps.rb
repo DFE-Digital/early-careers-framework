@@ -1173,8 +1173,8 @@ module ManageTrainingSteps
   end
 
   def set_sit_dqt_validation_result
-    allow(DqtRecordCheck).to receive(:call).and_return(
-      DqtRecordCheck::CheckResult.new(
+    allow(DQTRecordCheck).to receive(:call).and_return(
+      DQTRecordCheck::CheckResult.new(
         valid_dqt_response(@sit_data),
         true,
         true,
@@ -1186,7 +1186,7 @@ module ManageTrainingSteps
   end
 
   def valid_dqt_response(participant_data)
-    DqtRecordPresenter.new({
+    DQTRecordPresenter.new({
       "name" => participant_data[:full_name],
                              "trn" => participant_data[:trn],
                              "state_name" => "Active",
@@ -1207,8 +1207,8 @@ module ManageTrainingSteps
   end
 
   def set_dqt_blank_validation_result
-    allow(DqtRecordCheck).to receive(:call).and_return(
-      DqtRecordCheck::CheckResult.new(
+    allow(DQTRecordCheck).to receive(:call).and_return(
+      DQTRecordCheck::CheckResult.new(
         nil,
         true,
         true,
@@ -1220,8 +1220,8 @@ module ManageTrainingSteps
   end
 
   def set_dqt_validation_result
-    allow(DqtRecordCheck).to receive(:call).and_return(
-      DqtRecordCheck::CheckResult.new(
+    allow(DQTRecordCheck).to receive(:call).and_return(
+      DQTRecordCheck::CheckResult.new(
         valid_dqt_response(@participant_data),
         true,
         true,
@@ -1233,9 +1233,9 @@ module ManageTrainingSteps
   end
 
   def set_dqt_validation_with_nino
-    allow(DqtRecordCheck).to receive(:call) do |args|
+    allow(DQTRecordCheck).to receive(:call) do |args|
       if args[:nino] == @participant_data[:nino]
-        DqtRecordCheck::CheckResult.new(
+        DQTRecordCheck::CheckResult.new(
           valid_dqt_response(@participant_data),
           true,
           true,
@@ -1244,7 +1244,7 @@ module ManageTrainingSteps
           4,
         )
       else
-        DqtRecordCheck::CheckResult.new(
+        DQTRecordCheck::CheckResult.new(
           nil,
           true,
           true,
