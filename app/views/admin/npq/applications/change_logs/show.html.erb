@@ -2,6 +2,10 @@
 
 <h2 class="govuk-heading-m">Change log</h2>
 
+<div class="govuk-inset-text govuk-!-margin-bottom-2">
+  Only changes made after September 2023 are shown.
+</div>
+
 <% @versions.each_with_index do |version| %>
   <%= govuk_table do |table|
     table.with_caption(size: 's', text: "#{version.created_at.strftime('%d %B %Y %H:%M:%S')}")
