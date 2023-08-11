@@ -6,13 +6,20 @@ module Finance
   module ECF
     module Duplicates
       class CompareController < BaseController
-        before_action :load_profiles, :set_breadcrumbs
         before_action :set_dry_run
 
-        def show; end
+        def show
+          @primary_profile = Duplicate.find(params[:id])
+          @duplicate_profile = Duplicate.find(params[:duplicate_id])
+          set_breadcrumbs
+        end
 
         def deduplicate
+          @primary_profile = Duplicate.find(params[:duplicate_id])
+          @duplicate_profile = Duplicate.find(params[:compare_id])
+
           dedup!
+          set_breadcrumbs
 
           if @dry_run
             render :show
@@ -37,11 +44,6 @@ module Finance
 
         def set_dry_run
           @dry_run = ActiveModel::Type::Boolean.new.cast(params[:dry_run] || true)
-        end
-
-        def load_profiles
-          @primary_profile = Duplicate.find(params[:id] || params[:compare_id])
-          @duplicate_profile = Duplicate.find(params[:duplicate_id])
         end
 
         def set_breadcrumbs
