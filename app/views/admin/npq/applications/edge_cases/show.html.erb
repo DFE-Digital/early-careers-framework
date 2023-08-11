@@ -60,7 +60,7 @@
       row.action(
         text: 'View change log',
         href:  admin_npq_applications_application_change_logs_path(@npq_application),
-      )
+      ) if @npq_application.change_logs.any?
     end
   end
 %>

@@ -26,7 +26,9 @@ RSpec.feature "Admin NPQ Application change logs", js: true, rutabaga: false do
 private
 
   def given_there_is_an_npq_application
-    create(:npq_application, :edge_case)
+    application = create :npq_application, :edge_case
+
+    allow(User).to receive(:find).and_return(application.user)
   end
 
   def the_npq_applications_edge_cases
@@ -40,7 +42,7 @@ private
 
   def when_i_mark_the_applicant_as_eligible
     within(".govuk-summary-list__row", text: "Eligible for funding") do
-      click_link "edit"
+      click_link "Edit"
     end
     choose "Yes"
     click_on "Continue"

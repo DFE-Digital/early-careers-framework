@@ -66,7 +66,7 @@ FactoryBot.define do
     trait :edge_case do
       works_in_school { false }
       works_in_childcare { false }
-      funding_eligiblity_status_code { 're_register' }
+      funding_eligiblity_status_code { "re_register" }
     end
 
     trait :targeted_delivery_funding_eligibility do
