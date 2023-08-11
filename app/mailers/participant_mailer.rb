@@ -10,7 +10,6 @@ class ParticipantMailer < ApplicationMailer
     mentor_fip_added_and_validated: "f71fa01a-ecc2-49e5-999b-48ff0070e13a",
     ect_cip_added_and_validated: "b0d58248-c49e-4ec6-bca2-2c4cf151c421",
     mentor_cip_added_and_validated: "1396072b-4dc7-473d-aef7-22e674e42874",
-    sit_contact_address_bounce: "c414ed7d-a3ef-43f0-a452-ee1a5f376fcc",
   }.freeze
 
   def participant_removed_by_sit
@@ -63,25 +62,6 @@ class ParticipantMailer < ApplicationMailer
         sign_in: new_user_session_url,
       },
     ).tag(:cip_register_participants_reminder).associate_with(induction_coordinator_profile, as: :induction_coordinator_profile)
-  end
-
-  # Inactive mailer - soon to be removed
-  def sit_contact_address_bounce
-    induction_coordinator_profile = params[:induction_coordinator_profile]
-    school = params[:school]
-
-    email_address = school.primary_contact_email || school.secondary_contact_email
-
-    template_mail(
-      PARTICIPANT_TEMPLATES[:sit_contact_address_bounce],
-      to: email_address,
-      rails_mailer: mailer_name,
-      rails_mail_template: action_name,
-      personalisation: {
-        school_name: school.name,
-        induction_coordinator_profile_email: induction_coordinator_profile.user.email,
-      },
-    ).tag(:sit_contact_address_bounce).associate_with(school, as: :school)
   end
 
   def sit_has_added_and_validated_participant
