@@ -10,8 +10,6 @@ class ParticipantMailer < ApplicationMailer
     mentor_fip_added_and_validated: "f71fa01a-ecc2-49e5-999b-48ff0070e13a",
     ect_cip_added_and_validated: "b0d58248-c49e-4ec6-bca2-2c4cf151c421",
     mentor_cip_added_and_validated: "1396072b-4dc7-473d-aef7-22e674e42874",
-    preterm_reminder: "3bece922-871e-49a9-88a1-83eeb8821ab1",
-    preterm_reminder_unconfirmed_for_2022: "0556f857-39b2-4a86-8a79-f42c91cd9a6b",
     sit_contact_address_bounce: "c414ed7d-a3ef-43f0-a452-ee1a5f376fcc",
   }.freeze
 
@@ -31,38 +29,6 @@ class ParticipantMailer < ApplicationMailer
         sti_name: sit_name,
       },
     ).tag(:participant_removed).associate_with(participant_profile, as: :participant_profile)
-  end
-
-  # Inactive mailer - soon to be removed
-  def preterm_reminder
-    induction_coordinator_profile = params[:induction_coordinator_profile]
-
-    template_mail(
-      PARTICIPANT_TEMPLATES[:preterm_reminder],
-      to: induction_coordinator_profile.user.email,
-      rails_mailer: mailer_name,
-      rails_mail_template: action_name,
-      personalisation: {
-        name: induction_coordinator_profile.user.full_name,
-        sign_in: new_user_session_url(**UTMService.email(:preterm_reminder)),
-      },
-    ).tag(:preterm_reminder).associate_with(induction_coordinator_profile, as: :induction_coordinator_profile)
-  end
-
-  # Inactive mailer - soon to be removed
-  def preterm_reminder_unconfirmed_for_2022
-    induction_coordinator_profile = params[:induction_coordinator_profile]
-
-    template_mail(
-      PARTICIPANT_TEMPLATES[:preterm_reminder_unconfirmed_for_2022],
-      to: induction_coordinator_profile.user.email,
-      rails_mailer: mailer_name,
-      rails_mail_template: action_name,
-      personalisation: {
-        name: induction_coordinator_profile.user.full_name,
-        sign_in: new_user_session_url(**UTMService.email(:preterm_reminder_unconfirmed_for_2022)),
-      },
-    ).tag(:preterm_reminder_unconfirmed_for_2022).associate_with(induction_coordinator_profile, as: :induction_coordinator_profile)
   end
 
   def fip_register_participants_reminder
