@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module Steps
+  # noinspection RubyTooManyMethodsInspection
   module ChangesOfCircumstanceSteps
     include RSpec::Matchers
 
@@ -38,7 +39,7 @@ module Steps
 
         if programme == "CIP"
           school_cohort = school.school_cohorts.where(cohort: Cohort.find_by(start_year: 2021)).first
-          Induction::SetCohortInductionProgramme.call school_cohort:, programme_choice: school_cohort.induction_programme_choice
+          Induction::SetCohortInductionProgramme.call school_cohort:, programme_choice: school_cohort&.induction_programme_choice
         end
 
         travel_to 1.minute.from_now
@@ -55,7 +56,7 @@ module Steps
 
         Pages::LeadProviderDashboard.loaded
                                     .confirm_schools
-                                    .complete(delivery_partner.name, [school.urn])
+                                    .complete(delivery_partner.name, [school&.urn])
         sign_out
 
         travel_to 1.minute.from_now
@@ -342,7 +343,10 @@ module Steps
 
     def then_sit_cannot_see_participant_in_school_portal(sit_name, _scenario = {})
       given_i_sign_in_as_the_user_with_the_full_name sit_name
-      then_i_confirm_has_no_participants_on_the_school_dashboard_page
+
+      school_dashboard_page = Pages::SchoolDashboardPage.loaded
+      school_dashboard_page.confirm_has_no_participants
+
       sign_out
     end
 
@@ -356,11 +360,13 @@ module Steps
     def then_sit_can_see_participant_in_school_portal(sit_name, scenario)
       given_i_sign_in_as_the_user_with_the_full_name sit_name
 
-      when_i_view_participant_details_from_the_school_dashboard_page
-      and_i_visit_participant_from_the_school_participants_dashboard_page "The Participant"
-      and_i_confirm_the_participant_on_the_school_participant_details_page_with_name "The Participant"
-      and_i_confirm_full_name_on_the_school_participant_details_page "The Participant"
-      and_i_confirm_email_address_on_the_school_participant_details_page scenario.participant_email
+      school_dashboard = Pages::SchoolDashboardPage.loaded
+      participant_dashboard = school_dashboard.view_participant_dashboard
+
+      participant_details = participant_dashboard.view_participant("The Participant")
+      expect(participant_details).to have_participant_name "The Participant"
+      expect(participant_details).to have_email scenario.participant_email
+      expect(participant_details).to have_full_name "The Participant"
 
       sign_out
     end
@@ -368,11 +374,13 @@ module Steps
     def then_sit_can_see_not_training_in_school_portal(sit_name, scenario)
       given_i_sign_in_as_the_user_with_the_full_name sit_name
 
-      when_i_view_participant_details_from_the_school_dashboard_page
-      and_i_visit_participant_from_the_school_participants_dashboard_page "The Participant"
-      and_i_confirm_the_participant_on_the_school_participant_details_page_with_name "The Participant"
-      and_i_confirm_full_name_on_the_school_participant_details_page "The Participant"
-      and_i_confirm_email_address_on_the_school_participant_details_page scenario.participant_email
+      school_dashboard = Pages::SchoolDashboardPage.loaded
+      participant_dashboard = school_dashboard.view_participant_dashboard
+
+      participant_details = participant_dashboard.view_participant("The Participant")
+      expect(participant_details).to have_participant_name "The Participant"
+      expect(participant_details).to have_email scenario.participant_email
+      expect(participant_details).to have_full_name "The Participant"
 
       sign_out
     end
@@ -480,14 +488,12 @@ module Steps
 
       course_identifier = participant_type == "ECT" ? "ecf-induction" : "ecf-mentor"
 
-      and_i_am_on_the_finance_portal
+      finance_portal = Pages::FinancePortal.load
 
-      and_i_view_participant_drilldown_from_the_finance_portal
-      when_i_find_from_the_finance_participant_drilldown_search participant_name
+      drilldown_search = finance_portal.view_participant_drilldown
+      drilldown = drilldown_search.find participant_name
 
-      drilldown = Pages::FinanceParticipantDrilldown.loaded
-
-      drilldown.has_participant? participant_user.id
+      drilldown.has_participant_id? participant_user.id
       drilldown.has_school_urn? school.urn
       drilldown.has_lead_provider? lead_provider_name
       drilldown.has_status? participant_status
@@ -501,22 +507,21 @@ module Steps
     def then_the_finance_portal_shows_the_lead_provider_payment_breakdown(lead_provider_name, statement_name, total_ects, total_mentors, started, retained, completed, voided, uplift: true)
       allow(Finance::Statement::ECF).to receive(:current).and_return(Finance::Statement::ECF.find_by(cohort: Cohort.current, cpd_lead_provider: CpdLeadProvider.find_by(name: lead_provider_name), name: statement_name))
 
-      when_i_am_on_the_finance_portal
+      finance_portal = Pages::FinancePortal.load
 
-      and_i_view_payment_breakdown_from_the_finance_portal
-      and_i_complete_from_the_finance_payment_breakdown_report_wizard lead_provider_name
-      and_i_select_statment_from_the_finance_payment_breakdown_report statement_name
+      report_wizard = finance_portal.view_payment_breakdown
 
-      report = Pages::FinancePaymentBreakdownReport.loaded
+      statement = report_wizard.complete lead_provider_name
+      statement.select_statement statement_name
 
-      report.has_started_declarations_total? started
-      report.has_retained_declarations_total? retained
-      report.has_completed_declarations_total? completed
-      report.has_voided_declarations_total? voided
+      statement.has_started_declarations_total? started
+      statement.has_retained_declarations_total? retained
+      statement.has_completed_declarations_total? completed
+      statement.has_voided_declarations_total? voided
 
-      report.has_started_declaration_payment_table? num_ects: total_ects, num_mentors: total_mentors, num_declarations: started
-      report.has_retained_1_declaration_payment_table? num_ects: total_ects, num_mentors: total_mentors, num_declarations: retained
-      report.has_other_fees_table? num_ects: uplift ? total_ects : 0, num_mentors: uplift ? total_mentors : 0
+      statement.has_started_declaration_payment_table? num_ects: total_ects, num_mentors: total_mentors, num_declarations: started
+      statement.has_retained_1_declaration_payment_table? num_ects: total_ects, num_mentors: total_mentors, num_declarations: retained
+      statement.has_other_fees_table? num_ects: uplift ? total_ects : 0, num_mentors: uplift ? total_mentors : 0
     end
 
     def self.then_admin_user_context(scenario)
@@ -529,35 +534,27 @@ module Steps
     def then_admin_user_can_see_participant(scenario)
       given_i_sign_in_as_an_admin_user
 
-      and_i_am_on_the_admin_support_portal
+      admin_support_portal = Pages::AdminSupportPortal.loaded
+      participant_list = admin_support_portal.view_participant_list
 
-      and_i_view_participant_list_from_the_admin_support_portal
-      and_i_view_participant_from_the_admin_support_participant_list "The Participant"
-
-      then_the_admin_portal_shows_the_current_participant_record "The Participant",
-                                                                 "New SIT",
-                                                                 scenario.new_lead_provider_name,
-                                                                 "Training"
-      sign_out
-    end
-
-    def then_the_admin_portal_shows_the_current_participant_record(participant_name, sit_name, lead_provider_name, validation_status)
-      school = find_school_for_sit sit_name
-
-      participant_detail = Pages::AdminSupportParticipantDetail.loaded
+      participant_detail = participant_list.view_participant "The Participant"
 
       # primary heading needs checking participant_name
-      participant_detail.has_primary_heading? participant_name
+      participant_detail.has_primary_heading? "The Participant"
+      participant_detail.has_full_name? "The Participant"
 
-      participant_detail.has_full_name? participant_name
-      participant_detail.has_training_record_state? validation_status
+      training_record_state = scenario.participant_type == "ECT" ? "Eligible to start" : "Not yet mentoring"
+      participant_detail.has_training_record_state? training_record_state
 
       # now the school data is on a sibling page, we need to navigate
       # there before checking the school/lead provider contents
-      participant_detail.open_training_tab
+      participant_training = participant_detail.open_training_tab
 
-      participant_detail.has_school? school.name
-      participant_detail.has_lead_provider? lead_provider_name
+      school = find_school_for_sit "New SIT"
+      participant_training.has_school_name? school.name
+      participant_training.has_lead_provider? scenario.new_lead_provider_name
+
+      sign_out
     end
 
     def self.then_support_service_context(scenario)

@@ -22,6 +22,10 @@ module APIs
       has_attribute_value? "email", expected_value
     end
 
+    def has_cohort?(expected_value)
+      has_attribute_value? "cohort", expected_value
+    end
+
     def has_user_type?(expected_value)
       has_attribute_value? "user_type", expected_value
     end
@@ -32,6 +36,10 @@ module APIs
 
     def has_induction_programme_choice?(expected_value)
       has_attribute_value? "induction_programme_choice", expected_value
+    end
+
+    def has_registration_completed?(expected_value)
+      has_attribute_value? "registration_completed", expected_value
     end
 
   private

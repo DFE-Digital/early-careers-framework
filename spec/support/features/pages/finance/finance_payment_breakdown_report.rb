@@ -19,7 +19,7 @@ module Pages
     section :adjustments_panel, Sections::AdjustmentsFinancePanel
     section :contract_information_panel, Sections::ContractInformationFinancePanel
 
-    def select_statment(statement_name)
+    def select_statement(statement_name)
       statement_selector.view_statement statement_name
     end
 

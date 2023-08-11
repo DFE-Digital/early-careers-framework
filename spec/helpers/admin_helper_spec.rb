@@ -97,16 +97,18 @@ RSpec.describe AdminHelper, type: :helper do
   end
 
   describe "#admin_participant_header_and_title" do
-    let(:profile) do
+    let(:participant_profile) do
       create(
         :mentor_participant_profile,
         user: create(:user, full_name: "Joey"),
       )
     end
 
+    let(:presenter) { Admin::ParticipantPresenter.new(participant_profile) }
+
     subject do
       admin_participant_header_and_title(
-        profile:,
+        presenter:,
         section: "ABC",
       )
     end

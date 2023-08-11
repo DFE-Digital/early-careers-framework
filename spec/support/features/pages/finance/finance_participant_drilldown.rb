@@ -4,11 +4,23 @@ require_relative "../base_page"
 
 module Pages
   class FinanceParticipantDrilldown < ::Pages::BasePage
-    set_url "/finance/participants/{lead_provider_id}"
+    set_url "/finance/participants/{user_id}"
     set_primary_heading "Participant"
 
-    def has_participant?(user_id)
+    def has_participant_id?(user_id)
       element_has_content? self, "User ID / Participant ID#{user_id}"
+    end
+
+    def has_profile_id?(profile_id)
+      element_has_content? self, "Profile ID#{profile_id}"
+    end
+
+    def has_external_id?(external_id)
+      element_has_content? self, "External ID#{external_id}"
+    end
+
+    def has_full_name?(full_name)
+      element_has_content? self, "Full name#{full_name}"
     end
 
     def has_school_urn?(school_urn)
@@ -27,8 +39,33 @@ module Pages
       element_has_content? self, "Training status#{training_status}"
     end
 
+    def has_induction_status?(induction_status)
+      element_has_content? self, "Induction status#{induction_status}"
+    end
+
+    def has_training_programme?(training_programme)
+      element_has_content? self, "Training programme#{training_programme}"
+    end
+
+    def eligible_for_funding?
+      element_has_content? self, "Eligible for fundingTRUE"
+    end
+
+    def not_eligible_for_funding?
+      element_has_content? self, "Eligible for funding"
+      element_without_content? self, "Eligible for fundingTRUE"
+    end
+
+    def has_participant_class?(class_name)
+      element_has_content? self, class_name
+    end
+
     def has_schedule_identifier?(schedule)
       element_has_content? self, "Schedule identifier#{schedule}"
+    end
+
+    def has_schedule?(schedule)
+      element_has_content? self, "Schedule#{schedule}"
     end
 
     def has_schedule_cohort?(cohort)

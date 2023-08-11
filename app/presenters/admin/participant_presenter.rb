@@ -39,7 +39,8 @@ class Admin::ParticipantPresenter
   end
 
   def cohort
-    school_cohort&.cohort
+    relevant_cohort_location = relevant_induction_record&.school_cohort || relevant_induction_record&.schedule || participant_profile
+    relevant_cohort_location.cohort
   end
 
   def start_year

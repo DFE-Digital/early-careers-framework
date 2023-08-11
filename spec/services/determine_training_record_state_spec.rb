@@ -37,7 +37,7 @@ RSpec.describe DetermineTrainingRecordState do
     end
 
     context "when not called with an InductionRecord" do
-      subject { described_class.call(participant_profile: scenarios.ect_on_cip.participant_profile, induction_record: TeacherProfile.new).record_state.participant_profile }
+      subject { described_class.call(participant_profile: scenarios.ect_on_cip_in_training.participant_profile, induction_record: TeacherProfile.new).record_state.participant_profile }
 
       it "Raises an ArgumentError" do
         expect { subject.participant_profile }.to raise_error ArgumentError
@@ -298,7 +298,7 @@ RSpec.describe DetermineTrainingRecordState do
       end
 
       context "and they are active" do
-        let!(:participant_profile) { scenarios.ect_on_fip.participant_profile }
+        let!(:participant_profile) { scenarios.ect_on_fip_in_training.participant_profile }
 
         include_examples "determines states as",
                          "valid",
@@ -688,7 +688,7 @@ RSpec.describe DetermineTrainingRecordState do
       end
 
       context "and they are active" do
-        let!(:participant_profile) { scenarios.ect_on_cip.participant_profile }
+        let!(:participant_profile) { scenarios.ect_on_cip_in_training.participant_profile }
 
         include_examples "determines states as",
                          "valid",
