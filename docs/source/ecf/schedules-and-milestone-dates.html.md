@@ -249,11 +249,11 @@ Participants who expect to complete their ECF-based training in more than 2 year
 ```
 Providers may submit extended declarations for ECTs on an extended schedule, providing they meet certain criteria.
 
-Qualifying ECTs will have had their induction extended as a result of having not yet met the Teachers’ standards, and need additional support to meet the standards. These ECTs must be placed onto one of the available ‘extended schedules’ for ECF. 
+Qualifying ECTs will have had their induction extended as a result of having not yet met the Teachers’ standards, and need additional support to meet the standards. These ECTs must be placed onto one of the available [‘extended schedules’](/api-reference/ecf/schedules-and-milestone-dates.html#extended-schedules) for ECF. 
 
 Providers may submit an extended declaration (subject to meeting the engagement criteria) for each extended term until the ECT has completed their induction, up to a maximum of three extensions. On completing induction, the provider should submit a completion declaration for the final term.
 
-Providers may submit extended declarations using the following values in the declaration_type field on the participant declaration request body:
+Providers may submit extended declarations using the following values in the `declaration_type` field on the [participant declaration request body](/api-reference/reference-v3.html#schema-participantdeclarationrequest):
 
 * extended-1
 * extended-2
