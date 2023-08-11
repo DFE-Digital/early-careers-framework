@@ -90,9 +90,12 @@ describe ParticipantProfileDeduplicator do
       let(:primary_latest_induction_record) { primary_profile.latest_induction_record }
       let(:primary_oldest_induction_record) { primary_profile.induction_records.oldest }
 
-      before { duplicate_profile.latest_induction_record.update!(partnership: primary_latest_induction_record.partnership) }
+      before do
+        start_date = primary_profile.induction_records.oldest.start_date - 2.days
+        duplicate_profile.latest_induction_record.update!(start_date:, partnership: primary_latest_induction_record.partnership)
+      end
 
-      it "transfers the latest induction record" do
+      it "transfers the latest induction record, setting the start_date to 1 minute before the oldest primary induction record end_date" do
         end_date = primary_oldest_induction_record.start_date - 1.minute
         preferred_identity = primary_latest_induction_record.preferred_identity
 
@@ -116,6 +119,28 @@ describe ParticipantProfileDeduplicator do
         expect { dedup! }.to change { primary_oldest_induction_record.reload.school_transfer }.from(false).to(true)
 
         expect_changes("Primary profile oldest induction record set as school transfer.")
+      end
+
+      context "when the induction record start dates are the same" do
+        before do
+          start_date = primary_profile.induction_records.oldest.start_date
+          duplicate_profile.latest_induction_record.update!(start_date:)
+        end
+
+        it "sets the start_date to the oldest primary induction record end_date" do
+          end_date = primary_oldest_induction_record.start_date
+
+          expect { dedup! }.to change { duplicate_induction_record.reload.end_date }.to(end_date)
+        end
+      end
+
+      context "when the duplicate induction record start date is after the oldest primary induction record start date" do
+        before do
+          start_date = primary_profile.induction_records.oldest.start_date + 1.minute
+          duplicate_profile.latest_induction_record.update!(start_date:)
+        end
+
+        it { expect { dedup! }.to raise_error(described_class::DeduplicationError, "Latest induction record on the duplicate profile cannot after the oldest induction record on the primary profile.") }
       end
 
       context "when the duplicate preferred_identity#user is the same as the primary" do

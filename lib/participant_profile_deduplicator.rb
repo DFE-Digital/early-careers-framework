@@ -72,7 +72,7 @@ private
     log_info("Primary profile oldest induction record set as school transfer.")
 
     duplicate_induction_record = duplicate_profile.latest_induction_record
-    end_date = primary_profile.induction_records.oldest.start_date - 1.minute
+    end_date = determine_induction_record_end_date(primary_profile.induction_records.oldest.start_date, duplicate_induction_record.start_date)
 
     duplicate_induction_record.update!(
       participant_profile_id: primary_profile.id,
@@ -83,6 +83,13 @@ private
 
     log_info("Preferred identity updated on duplicate profile latest induction record.") if duplicate_induction_record.saved_change_to_preferred_identity_id?
     log_info("Duplicate profile latest induction record transferred. End date: #{end_date}.")
+  end
+
+  def determine_induction_record_end_date(oldest_primary_induction_record_start_date, duplicate_induction_record_start_date)
+    return oldest_primary_induction_record_start_date - 1.minute if duplicate_induction_record_start_date < oldest_primary_induction_record_start_date
+    return oldest_primary_induction_record_start_date if oldest_primary_induction_record_start_date == duplicate_induction_record_start_date
+
+    raise DeduplicationError, "Latest induction record on the duplicate profile cannot after the oldest induction record on the primary profile."
   end
 
   def reconcile_remaining_induction_records!
