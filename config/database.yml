@@ -50,7 +50,7 @@ sandbox:
     <<: *default_analytics
     migrations_paths: db/analytics_migrate
     pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-    url: <%= ENV.fetch("ANALYTICS_DATABASE_URL") %>
+    url: <%= ENV["ANALYTICS_DATABASE_URL"] %>
     variables:
       statement_timeout: 20000
       idle_in_transaction_session_timeout: 10000
@@ -91,7 +91,7 @@ staging:
     <<: *default_analytics
     migrations_paths: db/analytics_migrate
     pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-    url: <%= ENV.fetch("ANALYTICS_DATABASE_URL") %>
+    url: <%= ENV["ANALYTICS_DATABASE_URL"] %>
     variables:
       statement_timeout: 20000
       idle_in_transaction_session_timeout: 10000
@@ -119,7 +119,7 @@ production:
     <<: *default_analytics
     migrations_paths: db/analytics_migrate
     pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-    url: <%= ENV.fetch("ANALYTICS_DATABASE_URL") %>
+    url: <%= ENV["ANALYTICS_DATABASE_URL"] %>
     variables:
       statement_timeout: 20000
       idle_in_transaction_session_timeout: 10000
