@@ -9,42 +9,7 @@ class IneligibleParticipantMailer < ApplicationMailer
   ECT_EXEMPT_FROM_INDUCTION_TO_ECT_PREVIOUSLY_ELIGIBLE_TEMPLATE = "f74463f8-6d44-4af7-a397-9d472bd80601"
   ECT_NO_INDUCTION_TEMPLATE = "fa64f5de-a637-4f92-bf28-f43a223eba59"
 
-  NO_QTS_TEMPLATES = {
-    ect: "fbc5b291-68fd-42b6-bb9b-e09cac6affe5",
-    mentor: "08f36052-4073-47c9-9dc7-ddf79ab5b371",
-  }.freeze
-
   ECT_NOW_ELIGIBLE_PREVIOUS_INDUCTION_TEMPLATE = "ceca360c-985c-4518-aaf9-a9963fd39f45"
-
-  # Inactive mailer - soon to be removed
-  def ect_no_qts_email
-    participant_profile = params[:participant_profile]
-
-    template_mail(
-      NO_QTS_TEMPLATES[:ect],
-      to: params[:induction_tutor_email],
-      rails_mailer: mailer_name,
-      rails_mail_template: action_name,
-      personalisation: {
-        ineligible_ECT_name: participant_profile.user.full_name,
-      },
-    ).tag(:ineligible_participant).associate_with(participant_profile, as: :participant_profile)
-  end
-
-  # Inactive mailer - soon to be removed
-  def mentor_no_qts_email
-    participant_profile = params[:participant_profile]
-
-    template_mail(
-      NO_QTS_TEMPLATES[:mentor],
-      to: params[:induction_tutor_email],
-      rails_mailer: mailer_name,
-      rails_mail_template: action_name,
-      personalisation: {
-        ineligible_mentor_name: participant_profile.user.full_name,
-      },
-    ).tag(:ineligible_participant).associate_with(participant_profile, as: :participant_profile)
-  end
 
   def ect_previous_induction_email
     participant_profile = params[:participant_profile]
