@@ -125,20 +125,7 @@ module Schools
 
       def transfer_existing_mentor_profile_to_sit
         existing_profile = find_existing_mentor_by_trn
-        user = existing_profile.user
-        Identity::Transfer.call(from_user: user, to_user: current_user)
-        user.destroy!
-        existing_profile.reload
-
-        ParticipantProfileState.create!(participant_profile: existing_profile, cpd_lead_provider: school_cohort&.default_induction_programme&.lead_provider&.cpd_lead_provider)
-        if school_cohort.default_induction_programme.present?
-          Induction::Enrol.call(participant_profile: existing_profile,
-                                induction_programme: school_cohort.default_induction_programme,
-                                start_date:)
-        end
-        Mentors::AddToSchool.call(school: school_cohort.school, mentor_profile: existing_profile)
-
-        existing_profile
+        Mentors::TransferExistingMentorToSit.call(sit_user: current_user, mentor_profile: existing_profile, school_cohort:, start_date:)
       end
 
       def find_existing_mentor_by_trn
