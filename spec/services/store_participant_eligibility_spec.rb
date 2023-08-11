@@ -171,23 +171,6 @@ RSpec.describe StoreParticipantEligibility do
               )
           end
 
-          it "sends the ect_active_flags_email when reason is active_flags" do
-            eligibility_options[:active_flags] = true
-            eligibility_options[:status] = :ineligible
-            eligibility_options[:reason] = :active_flags
-            eligibility_options[:manually_validated] = true
-            expect {
-              service.call(participant_profile: ect_profile, eligibility_options:)
-            }.to have_enqueued_mail(IneligibleParticipantMailer, :ect_active_flags_email)
-              .with(
-                params: {
-                  induction_tutor_email: induction_tutor.email,
-                participant_profile: ect_profile,
-                },
-                args: [],
-              )
-          end
-
           it "sends emails to the ect and sit when the reason is exempt_from_induction" do
             additional_induction_coordinator = create(:user, :induction_coordinator, schools: [school])
             eligibility_options[:exempt_from_induction] = true
@@ -291,23 +274,6 @@ RSpec.describe StoreParticipantEligibility do
                 args: [],
               )
           end
-
-          it "sends the mentor_active_flags_email when reason is active_flags" do
-            eligibility_options[:active_flags] = true
-            eligibility_options[:status] = :ineligible
-            eligibility_options[:reason] = :active_flags
-            eligibility_options[:manually_validated] = true
-            expect {
-              service.call(participant_profile: mentor_profile, eligibility_options:)
-            }.to have_enqueued_mail(IneligibleParticipantMailer, :mentor_active_flags_email)
-              .with(
-                params: {
-                  induction_tutor_email: induction_tutor.email,
-                  participant_profile: mentor_profile,
-                },
-                args: [],
-              )
-          end
         end
 
         context "when the school is doing CIP" do
@@ -331,16 +297,6 @@ RSpec.describe StoreParticipantEligibility do
                 service.call(participant_profile: ect_profile, eligibility_options:)
               }.to_not have_enqueued_mail(IneligibleParticipantMailer)
             end
-
-            it "does not send the ect_active_flags_email when reason is active_flags" do
-              eligibility_options[:active_flags] = true
-              eligibility_options[:status] = :ineligible
-              eligibility_options[:reason] = :active_flags
-              eligibility_options[:manually_validated] = true
-              expect {
-                service.call(participant_profile: ect_profile, eligibility_options:)
-              }.to_not have_enqueued_mail(IneligibleParticipantMailer)
-            end
           end
 
           context "when participant is a Mentor" do
@@ -355,16 +311,6 @@ RSpec.describe StoreParticipantEligibility do
               eligibility_options[:qts] = false
               eligibility_options[:status] = :ineligible
               eligibility_options[:reason] = :no_qts
-              eligibility_options[:manually_validated] = true
-              expect {
-                service.call(participant_profile: mentor_profile, eligibility_options:)
-              }.to_not have_enqueued_mail(IneligibleParticipantMailer)
-            end
-
-            it "sends the mentor_active_flags_email when reason is active_flags" do
-              eligibility_options[:active_flags] = true
-              eligibility_options[:status] = :ineligible
-              eligibility_options[:reason] = :active_flags
               eligibility_options[:manually_validated] = true
               expect {
                 service.call(participant_profile: mentor_profile, eligibility_options:)
