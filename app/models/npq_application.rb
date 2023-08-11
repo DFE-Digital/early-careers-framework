@@ -120,8 +120,8 @@ class NPQApplication < ApplicationRecord
   end
 
   def change_logs
-    v1 = versions.where_attribute_changes("eligible_for_funding").to_a
-    v2 = versions.where_attribute_changes("funding_eligiblity_status_code").to_a
+    v1 = versions.where_attribute_changes("eligible_for_funding")
+    v2 = versions.where_attribute_changes("funding_eligiblity_status_code")
 
     (v1 + v2)
       .uniq

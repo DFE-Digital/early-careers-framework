@@ -15,10 +15,8 @@
 
     table.with_body do |body|
       body.with_row do |row|
-        previous_user_email = User.find_by(id: version.previous.whodunnit).email if version.previous.present?
-
         row.with_cell(text: 'Last updated by')
-        row.with_cell(text: previous_user_email)
+        row.with_cell(text: version.previous && User.find_by(id: version.previous.whodunnit).email)
         row.with_cell(text: User.find(version.whodunnit).email)
       end
       if version.object_changes['eligible_for_funding'].present?

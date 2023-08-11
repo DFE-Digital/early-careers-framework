@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.feature "Admin NPQ Application change logs", rutabaga: false do
+RSpec.feature "Admin NPQ Application change logs", js: true, rutabaga: false do
   before do
     PaperTrail.config.enabled = true
   end
