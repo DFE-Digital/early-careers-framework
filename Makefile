@@ -10,21 +10,11 @@ aks:  ## Sets environment variables for aks deployment
 	$(eval KEY_VAULT_PURGE_PROTECTION=false)
 
 .PHONY: development
-development:
-	$(eval DEPLOY_ENV=development)
+development: test-cluster
 	$(eval include global_config/development_aks.sh)
 
-.PHONY: staging
-staging: aks
-	$(eval DEPLOY_ENV=staging)
-	$(eval include global_config/staging_aks.sh)
-
-.PHONY: sandbox
-sandbox:
-	$(eval DEPLOY_ENV=sandbox)
-
 .PHONY: review
-review: aks ## Specify review AKS environment
+review: aks test-cluster ## Specify review AKS environment
 	# PULL_REQUEST_NUMBER is set by the GitHub action
 	$(if $(PULL_REQUEST_NUMBER), , $(error Missing environment variable "PULL_REQUEST_NUMBER"))
 	$(eval include global_config/review_aks.sh)
@@ -32,9 +22,17 @@ review: aks ## Specify review AKS environment
 	$(eval export TF_VAR_app_suffix=-$(PULL_REQUEST_NUMBER))
 	$(eval export TF_VAR_uploads_storage_account_name=$(AZURE_RESOURCE_PREFIX)$(SERVICE_SHORT)rv$(PULL_REQUEST_NUMBER)sa)
 
+.PHONY: staging
+staging: aks test-cluster
+	$(eval include global_config/staging_aks.sh)
+
+.PHONY: sandbox
+sandbox: production-cluster
+	$(eval include global_config/sandbox_aks.sh)
+
 .PHONY: production
-production:
-	$(eval DEPLOY_ENV=production)
+production: production-cluster
+	$(eval include global_config/production_aks.sh)
 	$(if $(CONFIRM_PRODUCTION), , $(error Production can only run with CONFIRM_PRODUCTION))
 
 load-domain-config:
@@ -151,3 +149,21 @@ disable-maintenance:
 	echo Waiting 5s for route to be registered... && sleep 5
 	cf unmap-route ecf-unavailable london.cloudapps.digital --hostname ${APP_NAME}
 	cf delete -rf ecf-unavailable
+
+test-cluster:
+	$(eval CLUSTER_RESOURCE_GROUP_NAME=s189t01-tsc-ts-rg)
+	$(eval CLUSTER_NAME=s189t01-tsc-test-aks)
+
+production-cluster:
+	$(eval CLUSTER_RESOURCE_GROUP_NAME=s189p01-tsc-pd-rg)
+	$(eval CLUSTER_NAME=s189p01-tsc-production-aks)
+
+get-cluster-credentials: set-azure-account
+	az aks get-credentials --overwrite-existing -g ${CLUSTER_RESOURCE_GROUP_NAME} -n ${CLUSTER_NAME}
+
+.PHONY: install-konduit
+install-konduit: ## Install the konduit script, for accessing backend services
+	[ ! -f bin/konduit.sh ] \
+		&& curl -s https://raw.githubusercontent.com/DFE-Digital/teacher-services-cloud/master/scripts/konduit.sh -o bin/konduit.sh \
+		&& chmod +x bin/konduit.sh \
+		|| true

@@ -26,18 +26,36 @@ default: &default
 development:
   primary:
     <<: *default_primary
-    database: 'early_careers_framework_development'
+    database: "early_careers_framework_development"
   analytics:
     <<: *default_analytics
-    database: 'early_careers_framework_analytics_development'
+    database: "early_careers_framework_analytics_development"
 
 review:
   <<: *default_primary
   sslmode: <%= ENV.fetch("DB_SSLMODE") { "require" } %>
 
 sandbox:
+  <% if ENV.key?("VCAP_APPLICATION") %>
+
   <<: *default_primary
   database: 'early_careers_framework_sandbox'
+
+  <% else %>
+
+  primary:
+    <<: *default_primary
+    url: <%= ENV["DATABASE_URL"] %>
+  analytics:
+    <<: *default_analytics
+    migrations_paths: db/analytics_migrate
+    pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+    url: <%= ENV["ANALYTICS_DATABASE_URL"] %>
+    variables:
+      statement_timeout: 20000
+      idle_in_transaction_session_timeout: 10000
+
+  <% end %>
 
 test:
   <<: *default
@@ -56,11 +74,33 @@ deployed_development:
   <<: *default_primary
   sslmode: <%= ENV.fetch("DB_SSLMODE") { "require" } %>
 
+
 staging:
+  <% if ENV.key?("VCAP_APPLICATION") %>
+
   <<: *default_primary
   sslmode: require
 
+  <% else %>
+
+  primary:
+    <<: *default_primary
+    url: <%= ENV["DATABASE_URL"] %>
+    pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  analytics:
+    <<: *default_analytics
+    migrations_paths: db/analytics_migrate
+    pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+    url: <%= ENV["ANALYTICS_DATABASE_URL"] %>
+    variables:
+      statement_timeout: 20000
+      idle_in_transaction_session_timeout: 10000
+
+  <% end %>
+
 production:
+  <% if ENV.key?("VCAP_APPLICATION") %>
+
   <<: *default
   primary:
     <<: *default_primary
@@ -68,3 +108,20 @@ production:
   analytics:
     <<: *default_analytics
     sslmode: require
+
+  <% else %>
+
+  primary:
+    <<: *default_primary
+    url: <%= ENV["DATABASE_URL"] %>
+    pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  analytics:
+    <<: *default_analytics
+    migrations_paths: db/analytics_migrate
+    pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+    url: <%= ENV["ANALYTICS_DATABASE_URL"] %>
+    variables:
+      statement_timeout: 20000
+      idle_in_transaction_session_timeout: 10000
+
+  <% end %>

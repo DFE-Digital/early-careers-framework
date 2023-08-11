@@ -173,4 +173,6 @@ Rails.application.configure do
       end
     }
   end
+
+  config.ssl_options = { redirect: { exclude: ->(request) { request.path.include?("/check") } } }
 end

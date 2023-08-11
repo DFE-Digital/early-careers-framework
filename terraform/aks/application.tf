@@ -31,6 +31,9 @@ module "application_configuration" {
   secret_variables = {
     DATABASE_URL = module.postgres.url
     REDIS_URL    = module.redis.url
+    ANALYTICS_DATABASE_URL = <<URL
+      postgres://${urlencode(module.postgres.username)}:${urlencode(module.postgres.password)}@${module.postgres.host}:${module.postgres.port}/${try(azurerm_postgresql_flexible_server_database.analytics[0].name, "analytics")}
+    URL
   }
 }
 

@@ -46,10 +46,8 @@ jobs:
     name: Build and push Docker image
     runs-on: ubuntu-latest
     if: github.actor != 'dependabot[bot]'
-
     outputs:
-      image: ${{ steps.build-docker-image.outputs.image }}
-
+      docker-image: ${{ steps.build-docker-image.outputs.image }}
     steps:
       - uses: actions/checkout@v3
 
@@ -66,7 +64,7 @@ jobs:
       ruby-version: "3.2.2"
 
   deploy_review:
-    name: Deploy to review environment
+    name: Deploy review
     concurrency: deploy_review_${{ github.event.pull_request.number }}
     if: contains(github.event.pull_request.labels.*.name, 'review-app') && github.event_name == 'pull_request'
     needs: [docker, brakeman]
@@ -80,7 +78,7 @@ jobs:
         id: deploy
         with:
           environment: review
-          docker-image: ${{ needs.docker.outputs.image }}
+          docker-image: ${{ needs.docker.outputs.docker-image }}
           azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
           pull-request-number: ${{ github.event.pull_request.number }}
           current-commit-sha: ${{ github.event.pull_request.head.sha }}
@@ -93,12 +91,14 @@ jobs:
             Review app deployed to ${{ steps.deploy.outputs.url }}
 
   deploy_staging:
+    name: Deploy staging
     needs: [docker, rspec, cypress, lint, brakeman]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     environment:
       name: staging
-
+    outputs:
+      docker-image: ${{ needs.docker.outputs.docker-image }}
     steps:
       - uses: actions/checkout@v3
 
@@ -106,30 +106,42 @@ jobs:
         id: deploy
         with:
           environment: staging
-          docker-image: ${{ needs.docker.outputs.image }}
+          docker-image: ${{ needs.docker.outputs.docker-image }}
           azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
           current-commit-sha: ${{ github.sha }}
 
   deploy_sandbox:
+    name: Deploy sandbox
     needs: [deploy_staging]
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
     environment:
       name: sandbox
 
     steps:
       - uses: actions/checkout@v3
-      - run: |
-          echo "deploying sandbox"
+
+      - uses: ./.github/actions/deploy-environment-to-aks
+        id: deploy
+        with:
+          environment: sandbox
+          docker-image: ${{ needs.deploy_staging.outputs.docker-image }}
+          azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
+          current-commit-sha: ${{ github.sha }}
 
   deploy_production:
+    name: Deploy production
     needs: [deploy_staging]
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
     environment:
       name: production
 
     steps:
       - uses: actions/checkout@v3
-      - run: |
-          echo "deploying production"
+
+      - uses: ./.github/actions/deploy-environment-to-aks
+        id: deploy
+        with:
+          environment: production
+          docker-image: ${{ needs.deploy_staging.outputs.docker-image }}
+          azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
+          current-commit-sha: ${{ github.sha }}
