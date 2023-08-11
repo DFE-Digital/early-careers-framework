@@ -16,7 +16,7 @@ RSpec.feature "Admin NPQ Application change logs", js: true, rutabaga: false do
     and_i_am_signed_in_as_an_admin
 
     when_i_visit the_npq_applications_edge_cases
-    when_i_select_application_for "Gilda Marks Jr."
+    when_i_select_the_first_applicant
     when_i_mark_the_applicant_as_eligible
     when_i_see_the_applicant_change_log
 
@@ -26,22 +26,22 @@ RSpec.feature "Admin NPQ Application change logs", js: true, rutabaga: false do
 private
 
   def given_there_is_an_npq_application
-    create(:npq_application)
+    create(:npq_application, :edge_case)
   end
 
   def the_npq_applications_edge_cases
     admin_npq_applications_edge_cases_path
   end
 
-  def when_i_select_application_for(applicant_name)
-    click_on applicant_name
+  def when_i_select_the_first_applicant
+    first_applicant = page.find("table td.applicant-name a", match: :first)
+    first_applicant.click
   end
 
   def when_i_mark_the_applicant_as_eligible
     within(".govuk-summary-list__row", text: "Eligible for funding") do
       click_link "edit"
     end
-
     choose "Yes"
     click_on "Continue"
   end
