@@ -21,7 +21,7 @@ module Mentors
       mentor_profile
     end
 
-    private
+  private
 
     attr_reader :sit_user, :mentor_profile, :school_cohort, :start_date
 
