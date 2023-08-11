@@ -28,7 +28,7 @@ module Finance
               title: "Profiles deduplicated",
               content: @dedup_changes.join("<br>"),
             }
-            redirect_to finance_ecf_duplicates_path
+            redirect_to finance_participant_path(@primary_profile.user_id)
           end
         end
 

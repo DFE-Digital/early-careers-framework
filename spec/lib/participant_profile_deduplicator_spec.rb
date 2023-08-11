@@ -28,10 +28,14 @@ describe ParticipantProfileDeduplicator do
       end
     end
 
-    context "when the lead providers are different" do
-      let(:duplicate_profile) { create(:ect) }
+    context "when the lead providers are different but the schools are the same" do
+      let(:duplicate_profile) do
+        create(:ect) do |ect|
+          ect.update!(school_cohort: primary_profile.school_cohort)
+        end
+      end
 
-      it { expect { dedup! }.to raise_error(described_class::DeduplicationError, "Only duplicates with the same lead_provider are supported.") }
+      it { expect { dedup! }.to raise_error(described_class::DeduplicationError, "Different lead providers at the same school are not yet supported.") }
     end
 
     context "when the schedules are different" do
@@ -134,6 +138,16 @@ describe ParticipantProfileDeduplicator do
         end
       end
 
+      context "when the duplicate induction record already has an end_date" do
+        before do
+          duplicate_profile.latest_induction_record.update!(end_date: 2.years.ago)
+        end
+
+        it "retains the end_date" do
+          expect { dedup! }.not_to change { duplicate_induction_record.reload.end_date }
+        end
+      end
+
       context "when the duplicate induction record start date is after the oldest primary induction record start date" do
         before do
           start_date = primary_profile.induction_records.oldest.start_date + 1.minute
@@ -157,10 +171,14 @@ describe ParticipantProfileDeduplicator do
     end
 
     context "when the duplicate has multiple induction records" do
-      before { create(:induction_record, participant_profile: duplicate_profile) }
+      let!(:other_induction_record) { create(:induction_record, participant_profile: duplicate_profile, end_date: nil) }
 
       it "transfers all of the induction records" do
         expect { dedup! }.to change(primary_profile.induction_records, :count).by(duplicate_profile.induction_records.count)
+      end
+
+      it "ensures transferred induction records have an end_date" do
+        expect { dedup! }.to change { other_induction_record.reload.end_date }
       end
     end
 

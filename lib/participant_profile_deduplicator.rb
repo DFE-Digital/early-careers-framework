@@ -19,16 +19,16 @@ class ParticipantProfileDeduplicator
     log_info("~~~ DRY RUN ~~~") if dry_run
 
     warning_ect_mentor_duplicate
-    ensure_lead_providers_match
+    prevent_same_school_different_lead_provider
     ensure_schedules_match
     ensure_training_programmes_match
 
     ActiveRecord::Base.transaction do
-      handle_school_change!
-      reconcile_remaining_induction_records!
+      reconcile_declarations!
       transfer_validation_data!
       transfer_participant_eligibility!
-      reconcile_declarations!
+      handle_school_change!
+      reconcile_remaining_induction_records!
       delete_duplicate!
 
       raise ActiveRecord::Rollback if dry_run
@@ -39,10 +39,10 @@ class ParticipantProfileDeduplicator
 
 private
 
-  def ensure_lead_providers_match
-    return if primary_profile.lead_provider.id == duplicate_profile.lead_provider.id
+  def prevent_same_school_different_lead_provider
+    return unless primary_profile.lead_provider.id != duplicate_profile.lead_provider.id && primary_profile.school == duplicate_profile.school
 
-    raise DeduplicationError, "Only duplicates with the same lead_provider are supported."
+    raise DeduplicationError, "Different lead providers at the same school are not yet supported."
   end
 
   def ensure_schedules_match
@@ -72,7 +72,7 @@ private
     log_info("Primary profile oldest induction record set as school transfer.")
 
     duplicate_induction_record = duplicate_profile.latest_induction_record
-    end_date = determine_induction_record_end_date(primary_profile.induction_records.oldest.start_date, duplicate_induction_record.start_date)
+    end_date = determine_induction_record_end_date(primary_profile.induction_records.oldest, duplicate_induction_record)
 
     duplicate_induction_record.update!(
       participant_profile_id: primary_profile.id,
@@ -85,22 +85,29 @@ private
     log_info("Duplicate profile latest induction record transferred. End date: #{end_date}.")
   end
 
-  def determine_induction_record_end_date(oldest_primary_induction_record_start_date, duplicate_induction_record_start_date)
-    return oldest_primary_induction_record_start_date - 1.minute if duplicate_induction_record_start_date < oldest_primary_induction_record_start_date
-    return oldest_primary_induction_record_start_date if oldest_primary_induction_record_start_date == duplicate_induction_record_start_date
+  def determine_induction_record_end_date(oldest_primary_induction_record, duplicate_induction_record)
+    if oldest_primary_induction_record.start_date < duplicate_induction_record.start_date
+      raise DeduplicationError, "Latest induction record on the duplicate profile cannot after the oldest induction record on the primary profile."
+    end
 
-    raise DeduplicationError, "Latest induction record on the duplicate profile cannot after the oldest induction record on the primary profile."
+    return duplicate_induction_record.end_date if duplicate_induction_record.end_date
+    return oldest_primary_induction_record.start_date if oldest_primary_induction_record.start_date == duplicate_induction_record.start_date
+
+    oldest_primary_induction_record.start_date - 1.minute
   end
 
   def reconcile_remaining_induction_records!
-    duplicate_profile.induction_records.each do |induction_record|
+    duplicate_profile.induction_records.reload.each do |induction_record|
+      end_date = determine_induction_record_end_date(primary_profile.induction_records.oldest, induction_record)
+
       induction_record.update!(
         participant_profile_id: primary_profile.id,
         preferred_identity_id: preferred_identity(induction_record).id,
+        end_date:,
       )
 
       log_info("Preferred identity updated on duplicate profile induction record.") if induction_record.saved_change_to_preferred_identity_id?
-      log_info("Duplicate profile induction record transferred.")
+      log_info("Duplicate profile induction record transferred. End date: #{end_date}.")
     end
   end
 
