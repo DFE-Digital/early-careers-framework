@@ -119,6 +119,16 @@ class NPQApplication < ApplicationRecord
     profile.present? && profile.participant_declarations.where(state: "submitted").present?
   end
 
+  def change_logs
+    v1 = versions.where_attribute_changes("eligible_for_funding").to_a
+    v2 = versions.where_attribute_changes("funding_eligiblity_status_code").to_a
+
+    (v1 + v2)
+      .uniq
+      .sort { |a, b| b.created_at <=> a.created_at }
+      .compact
+  end
+
 private
 
   def previously_funded?

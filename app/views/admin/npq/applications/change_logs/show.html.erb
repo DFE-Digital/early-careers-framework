@@ -28,6 +28,7 @@
           row.with_cell(text: version.object_changes.dig('eligible_for_funding', 1))
         end
       end
+
       if version.object_changes['funding_eligiblity_status_code'].present?
         body.with_row do |row|
           row.with_cell(text: 'Reason if not eligible')

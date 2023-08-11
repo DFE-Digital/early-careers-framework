@@ -8,11 +8,7 @@ module Admin::NPQ::Applications
       authorize NPQApplication
 
       @npq_application = NPQApplication.find(params[:application_id])
-
-      @versions = (
-        @npq_application.versions.where_attribute_changes("eligible_for_funding") +
-        @npq_application.versions.where_attribute_changes("funding_eligiblity_status_code")
-      ).compact.sort_by(&:created_at).uniq.reverse
+      @versions = @npq_application.change_logs
     end
   end
 end
