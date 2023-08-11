@@ -1,14 +1,17 @@
 <% content_for :before_content, govuk_back_link(text: 'Back', href: admin_npq_applications_edge_case_path(@npq_application)) %>
 
-<h2 class="govuk-heading-m">Change log</h2>
+<h1 class="govuk-heading-xl">Change log</h1>
 
 <div class="govuk-inset-text govuk-!-margin-bottom-2">
   Only changes made after September 2023 are shown.
 </div>
 
 <% @versions.each_with_index do |version| %>
-  <%= govuk_table do |table|
-    table.with_caption(size: 's', text: "#{version.created_at.strftime('%d %B %Y %H:%M:%S')}")
+
+  <p class="govuk-heading-m govuk-!-margin-bottom-0 govuk-!-padding-top-4"><%= version.created_at.strftime('%d %B %Y %H:%M:%S') %></p>
+  <p class="govuk-caption-m govuk-!-margin-top-0 govuk-!-margin-bottom-2" >Updated by <%= User.find(version.whodunnit).email %></p>
+
+  <%= govuk_table(classes: 'govuk-!-margin-top-2') do |table|
     table.with_head do |head|
       head.with_row do |row|
         row.with_cell(header: true, text: 'Field changed', classes: 'govuk-!-width-one-third')
@@ -18,11 +21,6 @@
     end
 
     table.with_body do |body|
-      body.with_row do |row|
-        row.with_cell(text: 'Last updated by')
-        row.with_cell(text: version.previous && User.find_by(id: version.previous.whodunnit).email)
-        row.with_cell(text: User.find(version.whodunnit).email)
-      end
       if version.object_changes['eligible_for_funding'].present?
         body.with_row do |row|
           row.with_cell(text: 'Eligible')
@@ -30,7 +28,6 @@
           row.with_cell(text: version.object_changes.dig('eligible_for_funding', 1))
         end
       end
-
       if version.object_changes['funding_eligiblity_status_code'].present?
         body.with_row do |row|
           row.with_cell(text: 'Reason if not eligible')
