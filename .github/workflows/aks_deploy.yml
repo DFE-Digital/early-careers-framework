@@ -140,7 +140,6 @@ jobs:
 
       - uses: ./.github/actions/deploy-environment-to-aks
         id: deploy
-        continue-on-error: true # temporary until we've got prod fully configured
         with:
           environment: production
           docker-image: ${{ needs.deploy_staging.outputs.docker-image }}
