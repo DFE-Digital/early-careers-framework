@@ -9,10 +9,6 @@ aks:  ## Sets environment variables for aks deployment
 	$(eval REGION=UK South)
 	$(eval KEY_VAULT_PURGE_PROTECTION=false)
 
-.PHONY: development
-development: test-cluster
-	$(eval include global_config/development_aks.sh)
-
 .PHONY: review
 review: aks test-cluster ## Specify review AKS environment
 	# PULL_REQUEST_NUMBER is set by the GitHub action
