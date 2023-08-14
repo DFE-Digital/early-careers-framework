@@ -69,6 +69,36 @@ class ParticipantOutcome::NPQ < ApplicationRecord
     passed?
   end
 
+  def has_failed?
+    return nil if voided?
+
+    failed?
+  end
+
+  def passed_and_not_sent?
+    has_passed? && sent_to_qualified_teachers_api_at.nil?
+  end
+
+  def failed_and_not_sent?
+    has_failed? && sent_to_qualified_teachers_api_at.nil?
+  end
+
+  def passed_and_recorded?
+    has_passed? && sent_to_qualified_teachers_api_at.present? && qualified_teachers_api_request_successful
+  end
+
+  def failed_and_recorded?
+    has_failed? && sent_to_qualified_teachers_api_at.present? && qualified_teachers_api_request_successful
+  end
+
+  def passed_and_not_recorded?
+    has_passed? && sent_to_qualified_teachers_api_at.present? && qualified_teachers_api_request_successful == false
+  end
+
+  def failed_and_not_recorded?
+    has_failed? && sent_to_qualified_teachers_api_at.present? && qualified_teachers_api_request_successful == false
+  end
+
 private
 
   def push_outcome_to_big_query

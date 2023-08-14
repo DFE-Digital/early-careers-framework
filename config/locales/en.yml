@@ -695,10 +695,24 @@ en:
           retained_3: Retained 3
           retained_4: Retained 4
           completed: Completed
-          extended: Extended
-
     npq:
       payment_breakdown: NPQ Payment Breakdown
+      participant_outcomes:
+        outcome: "Outcome"
+        completion_date: "Completion date"
+        submitted: "Submitted by provider"
+        attempted: "Attempted to send to TRA API"
+        recorded: "Recorded by TRA API"
+        "yes": "YES"
+        "no": "NO. CONTACT THE DIGITAL SERVICE TEAM"
+        na: "N/A"
+        declaration_outcomes: "Declaration Outcomes"
+        passed: "Passed"
+        failed: "Failed"
+        passed_and_recorded: "Passed and recorded"
+        failed_and_recorded: "Failed and recorded"
+        passed_and_not_recorded: "Passed and not recorded"
+        failed_and_not_recorded: "Failed and not recorded"
     service_fee:
       caption: Service fee
     output_payment:
@@ -711,7 +725,6 @@ en:
       per_participant: Clawback per participant
     targeted_delivery_funding:
       caption: Targeted delivery funding
-
     banding_tracker:
       providers:
         show:
