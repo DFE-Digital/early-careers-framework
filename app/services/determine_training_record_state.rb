@@ -172,7 +172,11 @@ class DetermineTrainingRecordState < BaseService
   def call
     result = ActiveRecord::Base.connection.execute(query)
 
-    Record.new(**result.first)
+    # Adding the guard condition as this sometimes raises an error
+    # when there are no results returned. This may just be a dev data setup
+    # problem that occurs when you set a participant as "completed" but it
+    # doesn't happen to every participant marked as completed.
+    Record.new(**result.first) unless result.count.zero?
   end
 
   def all
