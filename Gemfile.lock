@@ -577,7 +577,7 @@ GEM
       activesupport (>= 5.2)
       sprockets (>= 3.0.0)
     stackprof (0.2.25)
-    strong_migrations (1.6.0)
+    strong_migrations (1.6.1)
       activerecord (>= 5.2)
     thor (1.2.2)
     thread_safe (0.3.6)
