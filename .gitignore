@@ -43,7 +43,6 @@ terraform.tfstate.d/
 ./*.tfstate
 .terraform/
 .terraform.tfstate.lock.info
-.terraform.lock.hcl
 tokens
 
 # Rails secrets
