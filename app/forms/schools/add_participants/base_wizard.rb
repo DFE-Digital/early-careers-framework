@@ -358,7 +358,7 @@ module Schools
       def dqt_record_check(force_recheck: false)
         @dqt_record_check = nil if force_recheck
 
-        @dqt_record_check ||= DqtRecordCheck.call(
+        @dqt_record_check ||= DQTRecordCheck.call(
           full_name:,
           trn: formatted_trn,
           date_of_birth:,

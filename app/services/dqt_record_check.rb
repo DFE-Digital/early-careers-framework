@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class DqtRecordCheck < ::BaseService
+class DQTRecordCheck < ::BaseService
   TITLES = %w[mr mrs miss ms dr prof rev].freeze
 
   CheckResult = Struct.new(
@@ -48,7 +48,7 @@ private
     @trn = "0000001" if trn.blank?
 
     padded_trn = TeacherReferenceNumber.new(trn).formatted_trn
-    dqt_record = DqtRecordPresenter.new(dqt_record(padded_trn, nino))
+    dqt_record = DQTRecordPresenter.new(dqt_record(padded_trn, nino))
 
     return check_failure(:no_match_found) if dqt_record.blank?
     return check_failure(:found_but_not_active) unless dqt_record.active?
@@ -171,6 +171,6 @@ private
         "status" => "In Progress",
       })
     end
-    DqtRecordPresenter.new(record)
+    DQTRecordPresenter.new(record)
   end
 end

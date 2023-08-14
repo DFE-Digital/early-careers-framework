@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Participants::SyncDqtInductionStartDate, with_feature_flags: { cohortless_dashboard: "active" } do
+RSpec.describe Participants::SyncDQTInductionStartDate, with_feature_flags: { cohortless_dashboard: "active" } do
   let(:dqt_induction_start_date) {}
   let(:participant_induction_start_date) {}
   let(:participant_created_at) { described_class::FIRST_2023_REGISTRATION_DATE + 1.hour }
@@ -28,7 +28,7 @@ RSpec.describe Participants::SyncDqtInductionStartDate, with_feature_flags: { co
     it "does not change the participant" do
       expect { subject }.to not_change(participant_profile, :updated_at)
                               .and not_change(participant_profile, :induction_start_date)
-                                     .and not_change(SyncDqtInductionStartDateError, :count)
+                                     .and not_change(SyncDQTInductionStartDateError, :count)
     end
   end
 
@@ -38,7 +38,7 @@ RSpec.describe Participants::SyncDqtInductionStartDate, with_feature_flags: { co
     it "does not change the participant" do
       expect { subject }.to not_change(participant_profile, :updated_at)
                               .and not_change(participant_profile, :induction_start_date)
-                                     .and not_change(SyncDqtInductionStartDateError, :count)
+                                     .and not_change(SyncDQTInductionStartDateError, :count)
     end
   end
 
@@ -61,7 +61,7 @@ RSpec.describe Participants::SyncDqtInductionStartDate, with_feature_flags: { co
       it "update the participant's induction start date" do
         expect { subject }.to change(participant_profile, :updated_at)
                                 .and change(participant_profile, :induction_start_date)
-                                       .and not_change(SyncDqtInductionStartDateError, :count)
+                                       .and not_change(SyncDQTInductionStartDateError, :count)
 
         expect(participant_profile.induction_start_date).to eq(dqt_induction_start_date)
       end
@@ -73,7 +73,7 @@ RSpec.describe Participants::SyncDqtInductionStartDate, with_feature_flags: { co
       it "update the participant's induction start date" do
         expect { subject }.to change(participant_profile, :updated_at)
                                 .and change(participant_profile, :induction_start_date)
-                                       .and not_change(SyncDqtInductionStartDateError, :count)
+                                       .and not_change(SyncDQTInductionStartDateError, :count)
 
         expect(participant_profile.induction_start_date).to eq(dqt_induction_start_date)
       end
@@ -90,7 +90,7 @@ RSpec.describe Participants::SyncDqtInductionStartDate, with_feature_flags: { co
       it "update only the participant's induction start date" do
         expect { subject }.to change(participant_profile, :updated_at)
                                 .and change(participant_profile, :induction_start_date)
-                                       .and not_change(SyncDqtInductionStartDateError, :count)
+                                       .and not_change(SyncDQTInductionStartDateError, :count)
 
         expect(participant_profile.induction_start_date).to eq(dqt_induction_start_date)
       end
@@ -102,7 +102,7 @@ RSpec.describe Participants::SyncDqtInductionStartDate, with_feature_flags: { co
       it "update the participant's induction start date" do
         expect { subject }.to change(participant_profile, :updated_at)
                                 .and change(participant_profile, :induction_start_date)
-                                       .and not_change(SyncDqtInductionStartDateError, :count)
+                                       .and not_change(SyncDQTInductionStartDateError, :count)
 
         expect(participant_profile.induction_start_date).to eq(dqt_induction_start_date)
       end
@@ -116,7 +116,7 @@ RSpec.describe Participants::SyncDqtInductionStartDate, with_feature_flags: { co
       it "does not change the participant but persist the error" do
         expect { subject }.to not_change(participant_profile, :updated_at)
                                 .and not_change(participant_profile, :induction_start_date)
-                                       .and change(SyncDqtInductionStartDateError, :count).by(1)
+                                       .and change(SyncDQTInductionStartDateError, :count).by(1)
       end
     end
 
@@ -128,7 +128,7 @@ RSpec.describe Participants::SyncDqtInductionStartDate, with_feature_flags: { co
         expect { subject }.to change(participant_profile, :induction_start_date)
                                 .to(dqt_induction_start_date)
                                 .and not_change { participant_profile.induction_records.latest.cohort }
-                                       .and not_change(SyncDqtInductionStartDateError, :count)
+                                       .and not_change(SyncDQTInductionStartDateError, :count)
       end
     end
 
@@ -148,7 +148,7 @@ RSpec.describe Participants::SyncDqtInductionStartDate, with_feature_flags: { co
                                 .to(dqt_induction_start_date)
                                 .and change { participant_profile.induction_records.latest.cohort.start_year }
                                        .to(Cohort.current.start_year)
-                                       .and not_change(SyncDqtInductionStartDateError, :count)
+                                       .and not_change(SyncDQTInductionStartDateError, :count)
       end
     end
 
@@ -160,14 +160,14 @@ RSpec.describe Participants::SyncDqtInductionStartDate, with_feature_flags: { co
         expect { subject }.to not_change(participant_profile, :induction_start_date)
                                 .and not_change { participant_profile.induction_records.latest.cohort.start_year }
 
-        expect(SyncDqtInductionStartDateError.find_by(participant_profile:).message)
+        expect(SyncDQTInductionStartDateError.find_by(participant_profile:).message)
           .to include("Target school cohort starting on #{Cohort.current.start_year} not setup")
       end
     end
 
     context "when an error is already present from a previous job" do
       let(:dqt_induction_start_date) { Date.new(Cohort.current.start_year, 10, 2) }
-      let!(:error) { SyncDqtInductionStartDateError.create!(participant_profile:, message: "test message") }
+      let!(:error) { SyncDQTInductionStartDateError.create!(participant_profile:, message: "test message") }
 
       context "when the participant is successfully processed" do
         let(:participant_cohort_start_year) { Cohort.current.start_year }
@@ -176,7 +176,7 @@ RSpec.describe Participants::SyncDqtInductionStartDate, with_feature_flags: { co
           expect { subject }.to change(participant_profile, :induction_start_date)
                                   .to(dqt_induction_start_date)
 
-          expect(SyncDqtInductionStartDateError.where(participant_profile:)).not_to exist
+          expect(SyncDQTInductionStartDateError.where(participant_profile:)).not_to exist
         end
       end
 
@@ -187,8 +187,8 @@ RSpec.describe Participants::SyncDqtInductionStartDate, with_feature_flags: { co
           expect { subject }.to not_change(participant_profile, :induction_start_date)
                                   .and not_change { participant_profile.induction_records.latest.cohort.start_year }
 
-          expect(SyncDqtInductionStartDateError.where(participant_profile:, message: "test message")).not_to exist
-          expect(SyncDqtInductionStartDateError.where(participant_profile:)).to exist
+          expect(SyncDQTInductionStartDateError.where(participant_profile:, message: "test message")).not_to exist
+          expect(SyncDQTInductionStartDateError.where(participant_profile:)).to exist
         end
       end
     end

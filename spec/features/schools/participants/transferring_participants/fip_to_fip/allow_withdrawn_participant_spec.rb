@@ -233,8 +233,8 @@ RSpec.describe "transferring a withdrawn participant", type: :feature, js: true 
   end
 
   def set_dqt_validation_result
-    allow(DqtRecordCheck).to receive(:call).and_return(
-      DqtRecordCheck::CheckResult.new(
+    allow(DQTRecordCheck).to receive(:call).and_return(
+      DQTRecordCheck::CheckResult.new(
         valid_dqt_response(@participant_data),
         true,
         true,
@@ -246,7 +246,7 @@ RSpec.describe "transferring a withdrawn participant", type: :feature, js: true 
   end
 
   def valid_dqt_response(participant_data)
-    DqtRecordPresenter.new({
+    DQTRecordPresenter.new({
       "name" => participant_data[:full_name],
       "trn" => participant_data[:trn],
       "state_name" => "Active",

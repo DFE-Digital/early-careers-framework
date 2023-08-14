@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe DqtRecordCheck do
+RSpec.describe DQTRecordCheck do
   shared_context "build fake DQT response" do
     before do
       allow_any_instance_of(FullDQT::V1::Client).to(receive(:get_record).and_return(fake_api_response || default_api_response))
@@ -25,7 +25,7 @@ RSpec.describe DqtRecordCheck do
   end
   let(:fake_api_response) { nil }
 
-  subject { DqtRecordCheck.new(**kwargs) }
+  subject { DQTRecordCheck.new(**kwargs) }
 
   context "when trn and national insurance number are blank" do
     let(:trn) { "" }
@@ -206,7 +206,7 @@ RSpec.describe DqtRecordCheck do
       end
 
       before do
-        allow_any_instance_of(DqtRecordCheck).to receive(:check_record).and_call_original
+        allow_any_instance_of(DQTRecordCheck).to receive(:check_record).and_call_original
       end
 
       it "sets trn to 0000001 and calls check_record again" do
