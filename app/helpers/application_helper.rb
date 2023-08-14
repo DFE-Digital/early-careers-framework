@@ -16,6 +16,10 @@ module ApplicationHelper
     @data_layer ||= build_data_layer
   end
 
+  def boolean_to_yes_no(value)
+    value ? "yes" : "no"
+  end
+
   def build_data_layer
     analytics_data = AnalyticsDataLayer.new
     analytics_data.add_user_info(current_user) if current_user
