@@ -47,7 +47,7 @@ jobs:
         if: env.TF_STATE_EXISTS == 'true'
         id: destroy-terraform
         shell: bash
-        run: make ci review_aks terraform-destroy
+        run: make ci review terraform-destroy
         env:
           TF_VAR_azure_sp_credentials_json: ${{ secrets.AZURE_CREDENTIALS }}
           DOCKER_IMAGE: "ghcr.io/dfe-digital/early-careers-framework:no-tag"
