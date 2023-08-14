@@ -17,7 +17,7 @@ module ApplicationHelper
   end
 
   def boolean_to_yes_no(value)
-    value ? "yes" : "no"
+    value ? "Yes" : "No"
   end
 
   def build_data_layer

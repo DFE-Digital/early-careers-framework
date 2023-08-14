@@ -9,7 +9,8 @@
 <% @versions.each_with_index do |version| %>
 
   <p class="govuk-heading-m govuk-!-margin-bottom-0 govuk-!-padding-top-4"><%= version.created_at.strftime('%d %B %Y %H:%M:%S') %></p>
-  <p class="govuk-caption-m govuk-!-margin-top-0 govuk-!-margin-bottom-2" >Updated by <%= User.find(version.whodunnit).email %></p>
+  <p class="govuk-caption-m govuk-!-margin-top-0 govuk-!-margin-bottom-2">Updated
+    by <%= User.find(version.whodunnit).email %></p>
 
   <%= govuk_table(classes: 'govuk-!-margin-top-2') do |table|
     table.with_head do |head|
@@ -21,18 +22,26 @@
     end
 
     table.with_body do |body|
-      if version.object_changes['eligible_for_funding'].present?
+      effs_values = version.object_changes['eligible_for_funding']
+      unless effs_values.blank?
         body.with_row do |row|
           row.with_cell(text: 'Eligible')
-          row.with_cell(text: boolean_to_yes_no(version.object_changes.dig('eligible_for_funding', 0)))
-          row.with_cell(text: boolean_to_yes_no(version.object_changes.dig('eligible_for_funding', 1)))
+          row.with_cell(text: boolean_to_yes_no(effs_values[0]))
+          row.with_cell(text: boolean_to_yes_no(effs_values[1]))
         end
       end
-      if version.object_changes['funding_eligiblity_status_code'].present?
+      fesc_values = version.object_changes['funding_eligiblity_status_code']
+      unless fesc_values.blank?
         body.with_row do |row|
           row.with_cell(text: 'Reason if not eligible')
-          row.with_cell(text: version.object_changes.dig('funding_eligiblity_status_code', 0))
-          row.with_cell(text: version.object_changes.dig('funding_eligiblity_status_code', 1))
+          row.with_cell(
+            text: t("admin.npq.applications.eligibility_status.edit.#{fesc_values[0]}",
+              default: fesc_values[0]&.humanize)
+          )
+          row.with_cell(
+            text: t("admin.npq.applications.eligibility_status.edit.#{fesc_values[1]}",
+              default: fesc_values[1]&.humanize)
+          )
         end
       end
     end

@@ -53,6 +53,6 @@ private
   end
 
   def then_i_can_see_a_change_log_on_eligible_attribute
-    expect(page).to have_selector("table.govuk-table:first-of-type tbody tr", text: /Eligible.*?false.*?true/)
+    expect(page).to have_selector("table.govuk-table:first-of-type tbody tr", text: /Eligible.*?No.*?Yes/)
   end
 end
