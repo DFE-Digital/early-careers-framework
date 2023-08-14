@@ -19,13 +19,12 @@ module Importers
           cpd_lead_provider = CpdLeadProvider.find_by!(name: row["provider_name"])
           npq_lead_provider = cpd_lead_provider.npq_lead_provider
           course = NPQCourse.find_by!(identifier: row["course_identifier"])
-          version = row["version"]
 
           # We only create/update version 0.0.1 for initial values
           # Manually create new version of contract if there are changes
           contract = NPQContract.find_or_initialize_by(
             cohort:,
-            version:,
+            version: "0.0.1",
             npq_lead_provider:,
             course_identifier: course.identifier,
           )
@@ -82,7 +81,7 @@ module Importers
     end
 
     def check_headers
-      unless rows.headers == %w[provider_name cohort_year course_identifier recruitment_target per_participant service_fee_installments version]
+      unless rows.headers == %w[provider_name cohort_year course_identifier recruitment_target per_participant service_fee_installments]
         raise NameError, "Invalid headers"
       end
     end

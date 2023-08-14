@@ -76,6 +76,7 @@ RSpec.describe ParticipantDeclaration::NPQ, type: :model do
       npq-executive-leadership
       npq-early-years-leadership
       npq-leading-literacy
+      npq-leading-primary-mathematics
     ].each do |course|
       %w[paid awaiting_clawback clawed_back].each do |state|
         context "started - #{course} - #{state}" do
