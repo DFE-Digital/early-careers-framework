@@ -535,7 +535,7 @@ module ManageTrainingSteps
   end
 
   def and_the_cohort_2022_tab_is_selected
-    expect(page).to have_text("Tell us if any new ECTs will start training at your school in the 2022 to 2023 academic year")
+    expect(page).to have_text("Tell us if any new ECTs or mentors will start training at your school in the 2022 to 2023 academic year")
   end
 
   # When_steps
@@ -863,7 +863,7 @@ module ManageTrainingSteps
 
   def then_i_am_taken_to_setup_my_programme
     expect(page).to have_content(@school.name)
-    expect(page).to have_content("Tell us if any new ECTs will start training at your school in the")
+    expect(page).to have_content("Tell us if any new ECTs or mentors will start training at your school in the")
   end
 
   def then_i_am_taken_to_check_details_page
@@ -1123,7 +1123,7 @@ module ManageTrainingSteps
   end
 
   def then_i_am_on_the_what_we_need_to_know_page
-    expect(page).to have_text("Tell us if any new ECTs will start training at your school in the 2022 to 2023 academic year")
+    expect(page).to have_text("Tell us if any new ECTs or mentors will start training at your school in the 2022 to 2023 academic year")
   end
 
   def then_i_am_taken_to_the_what_we_need_from_you_page
