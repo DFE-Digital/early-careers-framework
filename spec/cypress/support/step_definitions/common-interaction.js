@@ -81,8 +81,8 @@ When("I type {string} into {string}", (value, element) => {
 
 When("I type {string} into field labelled {string}", (value, label) => {
   cy.get("label").contains(label).click();
-  cy.focused().clear();
-  cy.focused().type(value);
+  cy.focused().clear(); // eslint-disable-line cypress/unsafe-to-chain-command
+  cy.focused().type(value); // eslint-disable-line cypress/unsafe-to-chain-command
 });
 
 When("I press enter in {string}", (element) => {
