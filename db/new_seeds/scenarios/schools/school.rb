@@ -4,17 +4,18 @@ module NewSeeds
   module Scenarios
     module Schools
       class School
-        attr_reader :name, :urn, :school, :induction_tutor, :school_cohorts, :partnerships
+        attr_reader :name, :urn, :ukprn, :school, :induction_tutor, :school_cohorts, :partnerships
 
-        def initialize(name: nil, urn: nil)
+        def initialize(name: nil, urn: nil, ukprn: nil)
           @name = name
           @urn = urn
+          @ukprn = ukprn
           @school_cohorts = {}
           @partnerships = {}
         end
 
         def build
-          school_attributes = { name:, urn: }.compact
+          school_attributes = { name:, urn:, ukprn: }.compact
           @school = FactoryBot.create(:seed_school, **school_attributes)
 
           self

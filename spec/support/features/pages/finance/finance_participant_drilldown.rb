@@ -77,5 +77,25 @@ module Pages
       element_has_content? self, "Course identifier#{course_identifier}"
       element_has_content? self, "State#{state}"
     end
+
+    def has_npq_application_id?(application_id)
+      element_has_content? self, "Application ID#{application_id}"
+    end
+
+    def has_npq_lead_provider?(lead_provider_name)
+      element_has_content? self, "Lead Provider#{lead_provider_name}"
+    end
+
+    def has_npq_application_status?(npq_application_status)
+      element_has_content? self, "Lead Provider approval status#{npq_application_status}"
+    end
+
+    def has_npq_course_name?(npq_course_name)
+      element_has_content? self, "NPQ course#{npq_course_name}"
+    end
+
+    def has_school_ukprn?(school_ukprn)
+      element_has_content? self, "School UKPRN#{school_ukprn}"
+    end
   end
 end

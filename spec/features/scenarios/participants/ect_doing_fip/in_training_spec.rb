@@ -97,7 +97,7 @@ RSpec.feature "ECT doing FIP: in training", type: :feature do
   end
 
   scenario "The current appropriate body can locate a record for the ECT", :skip do
-    given_i_sign_in_as_the_user_with_the_full_name ab_full_name
+    given_i_sign_in_as_the_user_with_the_full_name appropriate_body_name
 
     appropriate_body_portal = Pages::AppropriateBodyPortal.loaded
     appropriate_body_portal.get_participant(participant_full_name)

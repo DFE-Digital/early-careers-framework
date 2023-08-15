@@ -2,26 +2,26 @@
 
 require "rails_helper"
 
-RSpec.feature "ECT doing FIP: no validation", type: :feature do
+RSpec.feature "Mentor: in training", type: :feature do
   let!(:participant_details) do
-    NewSeeds::Scenarios::Participants::Ects::EctInTraining
+    NewSeeds::Scenarios::Participants::Mentors::MentorInTraining
       .new(school_cohort:, full_name: participant_full_name)
-      .build(appropriate_body:)
+      .build
   end
   let(:participant_id) { participant_profile.user.id }
   let(:participant_email) { participant_profile.user.email }
   let(:teacher_reference_number) { teacher_profile.trn }
   let(:training_record_id) { participant_profile.id }
-  let(:participant_full_name) { "ECT doing FIP: no validation" }
+  let(:participant_full_name) { "Mentor: in training" }
   let(:school_name) { "School chosen FIP in 2023" }
   let(:sit_full_name) { "#{school_name} SIT" }
   let(:lead_provider_name) { "Lead Provider for FIP in 2023" }
   let(:delivery_partner_name) { "Delivery Partner for FIP in 2023" }
   let(:appropriate_body_name) { "#{school_name} Appropriate Body" }
-  let(:participant_type) { "early_career_teacher" }
-  let(:short_participant_type) { "ect" }
-  let(:long_participant_type) { "Early career teacher" }
-  let(:participant_class) { "ParticipantProfile::ECT" }
+  let(:participant_type) { "mentor" }
+  let(:short_participant_type) { "mentor" }
+  let(:long_participant_type) { "Mentor" }
+  let(:participant_class) { "ParticipantProfile::Mentor" }
   let(:programme_type) { "full_induction_programme" }
   let(:programme_name) { "Full induction programme" }
   let(:schedule_identifier) { "ecf-standard-september" }
@@ -30,8 +30,8 @@ RSpec.feature "ECT doing FIP: no validation", type: :feature do
   let(:registration_completed) { true }
   let(:participant_status) { "active" }
   let(:training_status) { "active" }
-  let(:training_record_state) { "Eligible to start" }
-  let(:school_record_state) { "ELIGIBLE FOR TRAINING" }
+  let(:training_record_state) { "Mentoring" }
+  let(:school_record_state) { "MENTORING" }
   let(:delivery_partner_record_state) { "Training or eligible for training" }
   let(:appropriate_body_Record_state) { "Training or eligible for training" }
 
@@ -80,7 +80,7 @@ RSpec.feature "ECT doing FIP: no validation", type: :feature do
   let(:participant_profile) { participant_details.participant_profile }
   let(:preferred_identity) { participant_details.participant_identity }
 
-  scenario "The current school induction tutor can locate a record for the ECT" do
+  scenario "The current school induction tutor can locate a record for the Mentor" do
     given_i_sign_in_as_the_user_with_the_full_name sit_full_name
 
     school_dashboard = Pages::SchoolDashboardPage.load(slug: school.slug)
@@ -96,7 +96,7 @@ RSpec.feature "ECT doing FIP: no validation", type: :feature do
     expect(participant_details).to have_status school_record_state
   end
 
-  scenario "The current appropriate body can locate a record for the ECT", :skip do
+  scenario "The current appropriate body can locate a record for the Mentor", :skip do
     given_i_sign_in_as_the_user_with_the_full_name appropriate_body_name
 
     appropriate_body_portal = Pages::AppropriateBodyPortal.loaded
@@ -114,7 +114,7 @@ RSpec.feature "ECT doing FIP: no validation", type: :feature do
     expect(appropriate_body_portal).to have_training_record_status appropriate_body_Record_state
   end
 
-  scenario "The current lead provider can locate a record for the ECT" do
+  scenario "The current lead provider can locate a record for the Mentor" do
     lead_provider_token = LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: lead_provider_details.cpd_lead_provider)
 
     ecf_participant_endpoint = APIs::ECFParticipantsEndpoint.load(lead_provider_token)
@@ -156,7 +156,7 @@ RSpec.feature "ECT doing FIP: no validation", type: :feature do
     expect(participant_endpoint).to have_schedule_identifier schedule_identifier
   end
 
-  scenario "The current delivery partner can locate a record for the ECT" do
+  scenario "The current delivery partner can locate a record for the Mentor" do
     given_i_sign_in_as_the_user_with_the_full_name delivery_partner_name
 
     delivery_partner_portal = Pages::DeliveryPartnerPortal.loaded
@@ -174,7 +174,7 @@ RSpec.feature "ECT doing FIP: no validation", type: :feature do
     expect(delivery_partner_portal).to have_training_record_status delivery_partner_record_state
   end
 
-  scenario "The Support for ECTs service can locate a record for the CIP ECT" do
+  scenario "The Support for ECTs service can locate a record for the Mentor" do
     user_endpoint = APIs::ECFUsersEndpoint.load
     user_endpoint.get_user participant_id
 
@@ -187,7 +187,7 @@ RSpec.feature "ECT doing FIP: no validation", type: :feature do
     expect(user_endpoint).to have_user_type participant_type
   end
 
-  scenario "A DfE admin user can locate the record for the ECT" do
+  scenario "A DfE admin user can locate the record for the Mentor" do
     given_i_sign_in_as_an_admin_user
 
     participant_list = Pages::AdminSupportParticipantList.load
@@ -211,7 +211,7 @@ RSpec.feature "ECT doing FIP: no validation", type: :feature do
     expect(participant_training).to have_lead_provider lead_provider_name
   end
 
-  scenario "A DfE finance user can locate the record for the ECT" do
+  scenario "A DfE finance user can locate the record for the Mentor" do
     given_i_sign_in_as_a_finance_user
 
     drilldown_search = Pages::FinanceParticipantDrilldownSearch.load
@@ -225,7 +225,6 @@ RSpec.feature "ECT doing FIP: no validation", type: :feature do
     expect(drilldown).to have_status participant_status
     expect(drilldown).to have_induction_status participant_status
     expect(drilldown).to have_training_status training_status
-    # TODO: is this correct?
     expect(drilldown).to be_eligible_for_funding
     expect(drilldown).to have_schedule schedule_identifier
     expect(drilldown).to have_schedule_identifier schedule_identifier

@@ -1,33 +1,26 @@
 # frozen_string_literal: true
 
+require_relative "ect"
+
 module NewSeeds
   module Scenarios
     module Participants
       module Ects
-        class EctNoValidation
-          delegate :participant_profile,
-                   :participant_identity,
-                   :school_cohort,
-                   :teacher_profile,
-                   :user,
-                   to: :ect_builder
+        class EctNoValidation < NewSeeds::Scenarios::Participants::Ects::Ect
+          def build(appropriate_body: nil, **ect_builder_args)
+            # keep falsy values intact
+            ect_builder_args[:sparsity_uplift] = true unless ect_builder_args.key?(:sparsity_uplift)
+            ect_builder_args[:pupil_premium_uplift] = true unless ect_builder_args.key?(:pupil_premium_uplift)
 
-          def initialize(school_cohort:, full_name: nil, email: nil)
-            @ect_builder = NewSeeds::Scenarios::Participants::Ects::Ect.new(school_cohort:, full_name:, email:)
-          end
+            ect_builder_args[:teacher_profile_args] ||= {}
+            ect_builder_args[:teacher_profile_args][:trn] = true unless ect_builder_args[:teacher_profile_args].key?(:trn)
+            ect_builder_args[:teacher_profile_args][:trn] = nil
 
-          def build(sparsity_uplift: true, pupil_premium_uplift: true, appropriate_body: nil, **ect_builder_args)
-            ect_builder_args.merge!({ teacher_profile_args: { trn: nil } })
-
-            @ect_builder.build(sparsity_uplift:, pupil_premium_uplift:, induction_start_date: nil, **ect_builder_args)
-                        .with_induction_record(induction_programme: school_cohort.default_induction_programme, appropriate_body:)
+            super(induction_start_date: nil, **ect_builder_args)
+            with_induction_record(induction_programme: school_cohort.default_induction_programme, appropriate_body:)
 
             self
           end
-
-        private
-
-          attr_reader :ect_builder
         end
       end
     end

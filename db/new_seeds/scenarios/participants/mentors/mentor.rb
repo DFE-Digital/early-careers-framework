@@ -4,11 +4,16 @@ module NewSeeds
   module Scenarios
     module Participants
       module Mentors
-        class MentorWithSomeEcts
+        # noinspection RubyTooManyInstanceVariablesInspection
+        class Mentor
           attr_reader :participant_profile,
+                      :participant_identity,
+                      :school_cohort,
+                      :teacher_profile,
+                      :user,
                       :mentees
 
-          def initialize(school_cohort: nil, full_name: nil, email: nil, teacher_profile: nil, participant_identity: nil)
+          def initialize(school_cohort:, full_name: nil, email: nil, teacher_profile: nil, participant_identity: nil)
             @school_cohort = school_cohort
             @new_user_attributes = { full_name:, email: }.compact
             @supplied_teacher_profile = teacher_profile
@@ -17,10 +22,10 @@ module NewSeeds
           end
 
           def build(number_of_mentees: 0, teacher_profile_args: {}, **profile_args)
-            school = @school_cohort.school
+            school = school_cohort.school
             @user = @supplied_participant_identity&.user || FactoryBot.create(:seed_user, **new_user_attributes)
             @teacher_profile = @supplied_teacher_profile || FactoryBot.create(:seed_teacher_profile, user:, school:, **teacher_profile_args)
-            @participant_identity = @supplied_participant_identity || FactoryBot.create(:seed_participant_identity, user:)
+            @participant_identity = @supplied_participant_identity || FactoryBot.create(:seed_participant_identity, user:, email: user.email, external_identifier: user.id)
 
             @participant_profile = FactoryBot.create(:seed_mentor_participant_profile,
                                                      participant_identity:,
@@ -29,7 +34,6 @@ module NewSeeds
                                                      **profile_args)
 
             preferred_identity = participant_profile.participant_identity
-
             @school_mentors = Array.wrap(FactoryBot.create(:seed_school_mentor, school:, participant_profile:, preferred_identity:))
 
             add_mentees(number_of_mentees) if number_of_mentees.positive?
@@ -42,7 +46,9 @@ module NewSeeds
             self
           end
 
-          def add_induction_record(induction_programme:, start_date: 6.months.ago, end_date: nil, induction_status: "active", training_status: "active", preferred_identity: nil, school_transfer: false)
+          def add_induction_record(induction_programme:, start_date: 6.months.ago, end_date: nil,
+                                   induction_status: "active", training_status: "active", preferred_identity: participant_identity,
+                                   appropriate_body: nil, school_transfer: false)
             preferred_identity ||= FactoryBot.create(:seed_participant_identity, user: participant_profile.user)
 
             FactoryBot.create(
@@ -55,6 +61,7 @@ module NewSeeds
               end_date:,
               induction_status:,
               training_status:,
+              appropriate_body:,
               school_transfer:,
             )
           end
@@ -112,27 +119,40 @@ module NewSeeds
             email.create_association_with(@participant_profile)
           end
 
-          def add_mentee(induction_programme:)
-            mentee = NewSeeds::Scenarios::Participants::Ects::Ect
-                       .new(school_cohort:)
-                       .build
-                       .with_eligibility
-                       .with_validation_data
-                       .with_induction_record(induction_programme:, mentor_profile: @participant_profile)
-                       .participant_profile
-
-            @mentees.push(mentee)
-
+          def with_mentees(number = 1)
+            add_mentees(number)
             self
+          end
+
+          def add_mentees(number = 1)
+            raise(StandardError, "A mentor is required before mentees are added") if @participant_profile.blank?
+
+            induction_programme = school_cohort.default_induction_programme
+
+            Rails.logger.info("seeding #{number} mentees")
+            number.times.each { add_mentee(induction_programme:) }
+
+            @mentees
+          end
+
+          def with_mentee(induction_programme: nil)
+            add_mentee(induction_programme:)
+            self
+          end
+
+          def add_mentee(induction_programme: nil)
+            Rails.logger.info("seeded induction record where #{participant_profile.full_name} is mentoring #{participant_profile.full_name}")
+
+            NewSeeds::Scenarios::Participants::Ects::EctInTraining.new(school_cohort:)
+                                                                  .build
+                                                                  .with_induction_record(induction_programme:, mentor_profile: participant_profile)
+                                                                  .participant_profile
+                                                                  .tap { |participant_profile| @mentees.push(participant_profile) }
           end
 
         private
 
-          attr_reader :new_user_attributes,
-                      :school_cohort,
-                      :teacher_profile,
-                      :participant_identity,
-                      :user
+          attr_reader :new_user_attributes
         end
       end
     end
