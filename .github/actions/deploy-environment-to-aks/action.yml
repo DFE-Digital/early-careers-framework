@@ -47,6 +47,7 @@ runs:
         make ci ${{ inputs.environment }} terraform-apply
         cd terraform/aks && echo "url=$(terraform output -raw url)" >> $GITHUB_OUTPUT
       env:
+        CONFIRM_PRODUCTION: ${{ vars.CONFIRM_PRODUCTION || "0" }}
         TF_VAR_azure_sp_credentials_json: ${{ inputs.azure-credentials }}
         DOCKER_IMAGE: ${{ inputs.docker-image }}
         PULL_REQUEST_NUMBER: ${{ inputs.pull-request-number }}
