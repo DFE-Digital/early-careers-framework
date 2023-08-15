@@ -49,3 +49,7 @@ variable "enable_monitoring" {
 variable "db_sslmode" {
   default = "require"
 }
+
+variable "postgres_flexible_server_sku" {
+  default = "B_Standard_B1ms"
+}

@@ -26,6 +26,7 @@ module "postgres" {
 
   cluster_configuration_map = module.cluster_data.configuration_map
 
+  azure_sku_name          = var.postgres_flexible_server_sku
   use_azure               = var.deploy_azure_backing_services
   azure_enable_monitoring = var.enable_monitoring
   azure_extensions        = ["citext", "fuzzystrmatch", "pg_stat_statements", "pgcrypto", "plpgsql", "uuid-ossp"]
