@@ -11,16 +11,20 @@
             <%= f.govuk_error_summary %>
 
             <span class="govuk-caption-xl"><%= @wizard.school.name %></span>
+
+            <% hint_text = capture do %>
+              <p>This means teachers who have completed their initial teacher training, but have not started their 2-year induction yet.</p>
+              <p>If you do not expect any ECTs, but you do expect mentors to begin training, answer yes.</p>
+            <% end %>
+
             <%= f.govuk_collection_radio_buttons(
                 :expect_any_ects,
                 simple_yes_no_options,
                 :id,
                 :name,
                 legend: { text: title, tag: 'h1', size: 'l' },
-                hint: {
-                  text: "This means teachers who have completed their initial teacher training, but have not started their 2-year induction yet."
-                }
-              )  %>
+                hint: { text: hint_text }
+              ) %>
 
             <%= f.govuk_submit "Continue" %>
         <% end %>

@@ -47,7 +47,7 @@ module ChooseProgrammeSteps
 
   def then_i_am_taken_to_what_we_need_to_know_to_setup_academic_year
     expect(page).to have_content(@school.name)
-    expect(page).to have_content("Tell us if any new ECTs will start training at your school in the")
+    expect(page).to have_content("Tell us if any new ECTs or mentors will start training at your school in the")
   end
 
   def then_i_am_taken_to_ects_expected_in_next_academic_year_page
