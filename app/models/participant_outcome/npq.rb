@@ -75,11 +75,11 @@ class ParticipantOutcome::NPQ < ApplicationRecord
     failed?
   end
 
-  def passed_and_not_sent?
+  def passed_but_not_sent?
     has_passed? && sent_to_qualified_teachers_api_at.nil?
   end
 
-  def failed_and_not_sent?
+  def failed_but_not_sent?
     has_failed? && sent_to_qualified_teachers_api_at.nil?
   end
 
@@ -91,11 +91,11 @@ class ParticipantOutcome::NPQ < ApplicationRecord
     has_failed? && sent_to_qualified_teachers_api_at.present? && qualified_teachers_api_request_successful
   end
 
-  def passed_and_not_recorded?
+  def passed_but_not_recorded?
     has_passed? && sent_to_qualified_teachers_api_at.present? && qualified_teachers_api_request_successful == false
   end
 
-  def failed_and_not_recorded?
+  def failed_but_not_recorded?
     has_failed? && sent_to_qualified_teachers_api_at.present? && qualified_teachers_api_request_successful == false
   end
 

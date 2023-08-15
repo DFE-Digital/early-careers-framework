@@ -695,6 +695,7 @@ en:
           retained_3: Retained 3
           retained_4: Retained 4
           completed: Completed
+          extended: Extended
     npq:
       payment_breakdown: NPQ Payment Breakdown
       participant_outcomes:
@@ -711,8 +712,8 @@ en:
         failed: "Failed"
         passed_and_recorded: "Passed and recorded"
         failed_and_recorded: "Failed and recorded"
-        passed_and_not_recorded: "Passed and not recorded"
-        failed_and_not_recorded: "Failed and not recorded"
+        passed_but_not_recorded: "Passed but not recorded"
+        failed_but_not_recorded: "Failed but not recorded"
     service_fee:
       caption: Service fee
     output_payment:

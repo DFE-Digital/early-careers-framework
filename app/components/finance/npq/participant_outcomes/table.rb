@@ -27,43 +27,44 @@ module Finance
         end
 
         def sent_to_tra_at(outcome)
-          return "<strong class='govuk-tag govuk-tag--yellow'>#{t('finance.npq.participant_outcomes.na')}</strong>".html_safe if outcome.sent_to_qualified_teachers_api_at.blank?
+          return t("finance.npq.participant_outcomes.na") if outcome.sent_to_qualified_teachers_api_at.blank?
 
           outcome.sent_to_qualified_teachers_api_at.to_date.to_fs(:govuk)
         end
 
         def sent_to_tra_tag(bool)
           if bool.nil?
-            "<strong class='govuk-tag govuk-tag--yellow'>#{t('finance.npq.participant_outcomes.na')}</strong>"
+            tag.strong(t("finance.npq.participant_outcomes.na"), class: "govuk-tag govuk-tag--yellow")
           elsif bool
-            "<strong class='govuk-tag govuk-tag--green'>#{t('finance.npq.participant_outcomes.yes')}</strong>"
+            tag.strong(t("finance.npq.participant_outcomes.yes"), class: "govuk-tag govuk-tag--green")
           else
-            "<strong class='govuk-tag govuk-tag--red'>#{t('finance.npq.participant_outcomes.no')}</strong>"
-          end.html_safe
+            tag.strong(t("finance.npq.participant_outcomes.no"), class: "govuk-tag govuk-tag--red")
+          end
         end
 
         def caption_text
-          titles = [t("finance.npq.participant_outcomes.declaration_outcomes")]
-
+          title = t("finance.npq.participant_outcomes.declaration_outcomes")
           latest_outcome = outcomes.first
 
-          return titles.join if latest_outcome.blank?
+          return title if latest_outcome.blank?
 
-          if latest_outcome.passed_and_not_sent?
-            titles << t("finance.npq.participant_outcomes.passed")
-          elsif latest_outcome.failed_and_not_sent?
-            titles << t("finance.npq.participant_outcomes.failed")
-          elsif latest_outcome.passed_and_recorded?
-            titles << t("finance.npq.participant_outcomes.passed_and_recorded")
-          elsif latest_outcome.failed_and_recorded?
-            titles << t("finance.npq.participant_outcomes.failed_and_recorded")
-          elsif latest_outcome.passed_and_not_recorded?
-            titles << t("finance.npq.participant_outcomes.passed_and_not_recorded")
-          elsif latest_outcome.failed_and_not_recorded?
-            titles << t("finance.npq.participant_outcomes.failed_and_not_recorded")
-          end
+          outcome_description = if latest_outcome.passed_but_not_sent?
+                                  t("finance.npq.participant_outcomes.passed")
+                                elsif latest_outcome.failed_but_not_sent?
+                                  t("finance.npq.participant_outcomes.failed")
+                                elsif latest_outcome.passed_and_recorded?
+                                  t("finance.npq.participant_outcomes.passed_and_recorded")
+                                elsif latest_outcome.failed_and_recorded?
+                                  t("finance.npq.participant_outcomes.failed_and_recorded")
+                                elsif latest_outcome.passed_but_not_recorded?
+                                  t("finance.npq.participant_outcomes.passed_but_not_recorded")
+                                elsif latest_outcome.failed_but_not_recorded?
+                                  t("finance.npq.participant_outcomes.failed_but_not_recorded")
+                                else
+                                  latest_outcome.state.capitalize
+                                end
 
-          titles.join(": ")
+          "#{title}: #{outcome_description}"
         end
 
       private
