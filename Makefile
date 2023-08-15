@@ -98,6 +98,7 @@ arm-deployment: set-azure-account set-azure-template-tag set-azure-resource-grou
 ci:	## Run in automation environment
 	$(eval SP_AUTH=true)
 	$(eval AUTO_APPROVE=-auto-approve)
+	$(eval CONFIRM_PRODUCTION=true)
 
 .PHONY: terraform-init
 terraform-init:
