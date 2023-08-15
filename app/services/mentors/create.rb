@@ -31,25 +31,18 @@ module Mentors
         Mentors::AddToSchool.call(school: school_cohort.school, mentor_profile:)
       end
 
-      unless sit_validation
-        ParticipantMailer.with(participant_profile: mentor_profile).participant_added.deliver_later
-        mentor_profile.update_column(:request_for_details_sent_at, Time.zone.now)
-        ParticipantDetailsReminderJob.schedule(mentor_profile)
-      end
-
       mentor_profile
     end
 
   private
 
-    attr_reader :full_name, :email, :school_cohort, :start_date, :sit_validation
+    attr_reader :full_name, :email, :school_cohort, :start_date
 
-    def initialize(full_name:, email:, school_cohort:, start_date: nil, sit_validation: false, **)
+    def initialize(full_name:, email:, school_cohort:, start_date: nil, **)
       @full_name = full_name
       @email = email
       @start_date = start_date
       @school_cohort = school_cohort
-      @sit_validation = sit_validation
     end
 
     def mentor_attributes

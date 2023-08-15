@@ -133,10 +133,6 @@ class ParticipantProfile < ApplicationRecord
     false
   end
 
-  def request_for_details_sent?
-    request_for_details_sent_at.present?
-  end
-
   def role
     raise "Not implemented"
   end

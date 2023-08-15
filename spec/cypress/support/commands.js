@@ -41,7 +41,6 @@ Cypress.Commands.add("clickCommitButton", () => {
 export const SIGN_IN_EMAIL_TEMPLATE = "7ab8db5b-9842-4bc3-8dbb-f590a3198d9e";
 export const ADMIN_ACCOUNT_CREATED_TEMPLATE =
   "3620d073-d2cc-4d65-9a51-e12770cf25d9";
-export const NOMINATION_EMAIL_TEMPLATE = "a7cc4d19-c0cb-4187-a71b-1b1ea029924f";
 export const NOMINATION_CONFIRMATION_EMAIL_TEMPLATE =
   "240c5685-5cb0-40a9-9bd4-1a595d991cbc";
 export const BASIC_TEMPLATE = "b1ab542e-a8d5-4fdf-a7aa-f0ce49b98262";

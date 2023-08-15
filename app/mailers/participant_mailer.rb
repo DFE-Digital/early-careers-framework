@@ -4,12 +4,6 @@ class ParticipantMailer < ApplicationMailer
   PARTICIPANT_REMOVED_BY_SIT = "ab8fb8b1-9f44-4d27-8e80-01d5d70d22f6"
 
   PARTICIPANT_TEMPLATES = {
-    ect_cip: "3bfad27e-e7af-4b53-94cb-af36362f43d8",
-    ect_fip: "3d3dbe1a-5836-4781-836f-e546beae253e",
-    mentor_cip: "3721ec20-ba5a-4424-8114-0e009b5bdbda",
-    mentor_fip: "ba3d4caf-5ef8-4a14-9e79-b7719780da09",
-    sit_mentor_cip: "7aa80a9c-e486-42e8-92c8-7f970459d37d",
-    sit_mentor_fip: "0b7f850f-f26a-4e62-9fc5-17fbd8286e49",
     fip_register_participants_reminder: "12969797-c110-436d-b10b-7f7d08d4d9df",
     cip_register_participants_reminder: "623cb545-1bc4-4407-94a1-474e2a080e39",
     ect_fip_added_and_validated: "93fba542-f118-4855-9509-83583f251eab",
@@ -20,25 +14,6 @@ class ParticipantMailer < ApplicationMailer
     preterm_reminder_unconfirmed_for_2022: "0556f857-39b2-4a86-8a79-f42c91cd9a6b",
     sit_contact_address_bounce: "c414ed7d-a3ef-43f0-a452-ee1a5f376fcc",
   }.freeze
-
-  def participant_added
-    participant_profile = params[:participant_profile]
-
-    template_mail(
-      PARTICIPANT_TEMPLATES[template_type_for participant_profile],
-      to: participant_profile.user.email,
-      rails_mailer: mailer_name,
-      rails_mail_template: action_name,
-      personalisation: {
-        subject: "We need information for your early career teacher training programme",
-        name: participant_profile.user.full_name,
-        school_name: participant_profile.school.name,
-        participant_start: new_user_session_url(**UTMService.email(:participant_validation_invitation)),
-        roles_guidance: what_each_person_does_url,
-        reminder: "no",
-      },
-    ).tag(:request_for_details).associate_with(participant_profile, as: :participant_profile)
-  end
 
   def participant_removed_by_sit
     participant_profile = params[:participant_profile]
@@ -58,25 +33,7 @@ class ParticipantMailer < ApplicationMailer
     ).tag(:participant_removed).associate_with(participant_profile, as: :participant_profile)
   end
 
-  def add_details_reminder
-    participant_profile = params[:participant_profile]
-
-    template_mail(
-      PARTICIPANT_TEMPLATES[template_type_for participant_profile],
-      to: participant_profile.user.email,
-      rails_mailer: mailer_name,
-      rails_mail_template: action_name,
-      personalisation: {
-        subject: "Reminder: add information to start your early career teacher training",
-        name: participant_profile.user.full_name,
-        school_name: participant_profile.school.name,
-        participant_start: new_user_session_url(**UTMService.email(:participant_validation_invitation)),
-        roles_guidance: what_each_person_does_url,
-        reminder: "yes",
-      },
-    ).tag(:request_for_details).associate_with(participant_profile, as: :participant_profile)
-  end
-
+  # Inactive mailer - soon to be removed
   def preterm_reminder
     induction_coordinator_profile = params[:induction_coordinator_profile]
 
@@ -92,6 +49,7 @@ class ParticipantMailer < ApplicationMailer
     ).tag(:preterm_reminder).associate_with(induction_coordinator_profile, as: :induction_coordinator_profile)
   end
 
+  # Inactive mailer - soon to be removed
   def preterm_reminder_unconfirmed_for_2022
     induction_coordinator_profile = params[:induction_coordinator_profile]
 
@@ -141,6 +99,7 @@ class ParticipantMailer < ApplicationMailer
     ).tag(:cip_register_participants_reminder).associate_with(induction_coordinator_profile, as: :induction_coordinator_profile)
   end
 
+  # Inactive mailer - soon to be removed
   def sit_contact_address_bounce
     induction_coordinator_profile = params[:induction_coordinator_profile]
     school = params[:school]

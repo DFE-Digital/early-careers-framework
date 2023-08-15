@@ -27,46 +27,6 @@ class PartnershipNotificationService
     end
   end
 
-  def send_invite_sit_reminder_to_partnered_schools
-    current_year = Cohort.current.start_year
-
-    School.joins(:school_cohorts)
-      .partnered(current_year)
-      .where(school_cohorts: { induction_programme_choice: %i[full_induction_programme] })
-      .where.missing(:induction_coordinators)
-      .includes(:partnerships)
-      .find_each do |school|
-        ActiveRecord::Base.transaction do
-          partnership = school.partnerships.unchallenged.in_year(current_year).first
-
-          notification_email = create_notification_email(
-            partnership,
-            PartnershipNotificationEmail.email_types[:nominate_sit_email],
-          )
-
-          nomination_email = NominationEmail.create_nomination_email(
-            sent_at: notification_email.created_at,
-            sent_to: notification_email.sent_to,
-            school: notification_email.partnership.school,
-            partnership_notification_email: notification_email,
-          )
-
-          notify_id = SchoolMailer.with(
-            recipient: notification_email.sent_to,
-            school:,
-            lead_provider_name: notification_email.lead_provider.name,
-            delivery_partner_name: notification_email.delivery_partner.name,
-            nominate_url: nomination_email.nomination_url(utm_source: :partnered_invite_sit_reminder),
-            challenge_url: challenge_url(notification_email.token, utm_source: :partnered_invite_sit_reminder),
-          ).partnered_school_invite_sit_email.deliver_now.delivery_method.response.id
-
-          # This would usually be two weeks, but we don't want providers to be able challenge after the first milestone date.
-          partnership.update!(challenge_deadline: Date.parse("Oct 31 2021").end_of_day)
-          notification_email.update!(notify_id:)
-        end
-      end
-  end
-
 private
 
   def create_notification_email(partnership, type)

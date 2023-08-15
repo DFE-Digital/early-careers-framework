@@ -9,7 +9,6 @@ FactoryBot.define do
     end
 
     user            { create(:user) }
-    sit_validation  { false }
     school_cohort   { create(:school_cohort, :fip, :with_induction_programme, *uplifts, lead_provider:) }
     full_name       { user.full_name }
     email           { user.email }

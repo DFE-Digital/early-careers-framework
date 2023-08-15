@@ -160,6 +160,7 @@ class ParticipantTransferMailer < ApplicationMailer
     ).tag(:provider_existing_school_transfer_notification).associate_with(lead_provider_profile, as: :lead_provider_profile)
   end
 
+  ## Inactve mailer
   # This mailer switches on ECT and mentor-specific templates, though the inputs are the same,
   # there are minor copy changes between the templates.
   #

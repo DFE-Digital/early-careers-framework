@@ -1,11 +1,8 @@
 # frozen_string_literal: true
 
 class SchoolMailer < ApplicationMailer
-  NOMINATION_EMAIL_TEMPLATE = "a7cc4d19-c0cb-4187-a71b-1b1ea029924f"
   # replacement for the above template with dynamic academic year
   NOMINATION_EMAIL_WITH_ACADEMIC_YEAR_TEMPLATE = "bfc43b20-922f-4323-8775-a6e05f06e24a"
-  SCHOOL_PRETERM_REMINDER = "a7cc4d19-c0cb-4187-a71b-1b1ea029924f"
-  UNENGAGED_INVITE_EMAIL_TEMPLATE = "a7cc4d19-c0cb-4187-a71b-1b1ea029924f"
   NOMINATION_CONFIRMATION_EMAIL_TEMPLATE = "7935cf72-75e9-4d0d-a05f-6f2ccda2b398"
   SCHOOL_REQUESTED_SIGNIN_LINK_FROM_GIAS = "f2764570-ca3c-4e3b-97c3-251a853c9dde"
   SCHOOL_PARTNERSHIP_NOTIFICATION_EMAIL_TEMPLATE = "8cac177e-b094-4a00-9179-94fadde8ced0"
@@ -27,7 +24,6 @@ class SchoolMailer < ApplicationMailer
   NQT_PLUS_ONE_SITLESS_EMAIL_TEMPLATE = "c10392e4-9d75-402d-a7fd-47df16fa6082"
   NQT_PLUS_ONE_SIT_EMAIL_TEMPLATE = "9e01b5ac-a94c-4c71-a38d-6502d7c4c2e7"
   DIY_WORDPRESS_NOTIFICATION_TEMPLATE = "e1067a2f-b027-45a6-8e51-668e170090d1"
-  PARTNERED_SCHOOL_INVITE_SIT_EMAIL_TEMPLATE = "8cac177e-b094-4a00-9179-94fadde8ced0"
   UNPARTNERED_CIP_SIT_ADD_PARTICIPANTS_EMAIL_TEMPLATE = "ebc96223-c2ea-416e-8d3e-1f591bbd2f98"
   SIT_NEW_AMBITION_ECTS_AND_MENTORS_ADDED_TEMPLATE = "90d86c1b-2dca-4cca-9dcb-5940e7f28577"
   SIT_FIP_PARTICIPANT_VALIDATION_DEADLINE_REMINDER_TEMPLATE = "48f63205-a8d9-49a2-a76c-93d48ec9b23b"
@@ -114,6 +110,7 @@ class SchoolMailer < ApplicationMailer
     ).tag(:cohortless_pilot_2023_survey).associate_with(sit_user.induction_coordinator_profile)
   end
 
+  # Inactive mailer - soon to be removed
   def remind_sit_to_set_mentor_to_ects
     sit = params[:sit]
     ect_names = params[:ect_names]
@@ -134,6 +131,7 @@ class SchoolMailer < ApplicationMailer
     ).tag(:sit_to_set_mentor_to_ects).associate_with(sit.induction_coordinator_profile)
   end
 
+  ## Inactive mailer - soon to be removed
   # This email is currently (30/09/2021) only used for manually sent chaser emails
   def remind_induction_coordinator_to_setup_cohort_email
     induction_coordinator_profile = params[:induction_coordinator_profile]
@@ -264,29 +262,6 @@ class SchoolMailer < ApplicationMailer
     ).tag(:partnership_created, :request_to_nominate_sit).associate_with(partnership, partnership.school)
   end
 
-  def partnered_school_invite_sit_email
-    recipient = params[:recipient]
-    school = params[:school]
-    lead_provider_name = params[:lead_provider_name]
-    delivery_partner_name = params[:delivery_partner_name]
-    challenge_url = params[:challenge_url]
-    nominate_url = params[:nominate_url]
-
-    template_mail(
-      PARTNERED_SCHOOL_INVITE_SIT_EMAIL_TEMPLATE,
-      to: recipient,
-      rails_mailer: mailer_name,
-      rails_mail_template: action_name,
-      personalisation: {
-        school_name: school.name,
-        lead_provider_name:,
-        delivery_partner_name:,
-        nominate_url:,
-        challenge_url:,
-      },
-    ).tag(:partnered_school_invite_sit).associate_with(school)
-  end
-
   # This email is sent to the SIT of the school whe was reported to enter the partnership with lead provider.
   # If given school has no appointed SIT, the `school_partnership_notification_email` should be sent instead
   def coordinator_partnership_notification_email
@@ -315,6 +290,7 @@ class SchoolMailer < ApplicationMailer
     ).tag(:partnership_created).associate_with(partnership, partnership.school)
   end
 
+  # Inactive Mailer
   def ministerial_letter_email
     template_mail(
       MINISTERIAL_LETTER_EMAIL_TEMPLATE,
@@ -329,6 +305,7 @@ class SchoolMailer < ApplicationMailer
     )
   end
 
+  # Inactive mailer - soon to be removed
   def beta_invite_email
     template_mail(
       BETA_INVITE_EMAIL_TEMPLATE,
@@ -343,6 +320,7 @@ class SchoolMailer < ApplicationMailer
     )
   end
 
+  # Inactive mailer - soon to be removed
   def mat_invite_email
     template_mail(
       MAT_INVITE_EMAIL_TEMPLATE,
@@ -356,6 +334,7 @@ class SchoolMailer < ApplicationMailer
     )
   end
 
+  # Inactive mailer - soon to be removed
   def federation_invite_email
     template_mail(
       FEDERATION_INVITE_EMAIL_TEMPLATE,
@@ -369,6 +348,7 @@ class SchoolMailer < ApplicationMailer
     )
   end
 
+  # Inactive mailer - soon to be removed
   def cip_only_invite_email
     template_mail(
       CIP_ONLY_INVITE_EMAIL_TEMPLATE,
@@ -382,6 +362,7 @@ class SchoolMailer < ApplicationMailer
     )
   end
 
+  # Inactive mailer - soon to be removed
   def section_41_invite_email
     template_mail(
       SECTION_41_INVITE_EMAIL_TEMPLATE,
@@ -395,21 +376,7 @@ class SchoolMailer < ApplicationMailer
     )
   end
 
-  # Not sure if this is used anymore as it is not referenced
-  # from anywhere else
-  def unengaged_schools_email
-    template_mail(
-      UNENGAGED_INVITE_EMAIL_TEMPLATE,
-      to: params[:recipient],
-      rails_mailer: mailer_name,
-      rails_mail_template: action_name,
-      personalisation: {
-        school_name: params[:school].name,
-        nomination_link: params[:nomination_url],
-      },
-    ).tag(:unengaged_school_email).associate_with(school)
-  end
-
+  # Inactive mailer - soon to be removed
   def induction_coordinator_sign_in_chaser_email
     template_mail(
       COORDINATOR_SIGN_IN_CHASER_EMAIL_TEMPLATE,
@@ -424,6 +391,7 @@ class SchoolMailer < ApplicationMailer
     )
   end
 
+  # Inactive mailer - soon to be removed
   def induction_coordinator_reminder_to_choose_route_email
     template_mail(
       COORDINATOR_REMINDER_TO_CHOOSE_ROUTE_EMAIL_TEMPLATE,
@@ -438,6 +406,7 @@ class SchoolMailer < ApplicationMailer
     )
   end
 
+  # Inactive mailer - soon to be removed
   def induction_coordinator_reminder_to_choose_provider_email
     induction_coordinator = params[:induction_coordinator]
     school = params[:school]
@@ -454,6 +423,7 @@ class SchoolMailer < ApplicationMailer
     ).tag(:chase_unpartnered_fip_schools).associate_with(school, as: :school)
   end
 
+  # Inactive mailer - soon to be removed
   def induction_coordinator_reminder_to_choose_materials_email
     template_mail(
       COORDINATOR_REMINDER_TO_CHOOSE_MATERIALS_EMAIL_TEMPLATE,
@@ -469,6 +439,7 @@ class SchoolMailer < ApplicationMailer
     )
   end
 
+  # Inactive mailer - soon to be removed
   def induction_coordinator_add_participants_email
     template_mail(
       ADD_PARTICIPANTS_EMAIL_TEMPLATE,
@@ -482,6 +453,7 @@ class SchoolMailer < ApplicationMailer
     )
   end
 
+  # Inactive mailer - soon to be removed
   def remind_fip_induction_coordinators_to_add_ects_and_mentors_email
     induction_coordinator = params[:induction_coordinator]
     school_name = params[:school_name]
@@ -515,6 +487,7 @@ class SchoolMailer < ApplicationMailer
     )
   end
 
+  # Inactive mailer - soon to be removed
   def nqt_plus_one_sitless_invite
     template_mail(
       NQT_PLUS_ONE_SITLESS_EMAIL_TEMPLATE,
@@ -527,6 +500,7 @@ class SchoolMailer < ApplicationMailer
     )
   end
 
+  # Inactive mailer - soon to be removed
   def nqt_plus_one_sit_invite
     template_mail(
       NQT_PLUS_ONE_SIT_EMAIL_TEMPLATE,
@@ -539,6 +513,7 @@ class SchoolMailer < ApplicationMailer
     ).tag(:year2020_invite).associate_with(params[:school], as: :school)
   end
 
+  # Inactive mailer - soon to be removed
   def unpartnered_cip_sit_add_participants_email
     template_mail(
       UNPARTNERED_CIP_SIT_ADD_PARTICIPANTS_EMAIL_TEMPLATE,
@@ -552,6 +527,7 @@ class SchoolMailer < ApplicationMailer
     ).tag(:unpartnered_cip_add_participants).associate_with(params[:induction_coordinator], as: :induction_coordinator)
   end
 
+  # Inactive mailer - soon to be removed
   def diy_wordpress_notification
     user = params[:user]
 
@@ -566,6 +542,7 @@ class SchoolMailer < ApplicationMailer
     ).tag(:diy_wordpress_notification)
   end
 
+  # Inactive mailer - soon to be removed
   def sit_new_ambition_ects_and_mentors_added_email
     induction_coordinator_profile = params[:induction_coordinator_profile]
 
@@ -581,6 +558,7 @@ class SchoolMailer < ApplicationMailer
     ).tag(:sit_new_ambition_participants_added).associate_with(induction_coordinator_profile, as: :induction_coordinator)
   end
 
+  # Inactive mailer - soon to be removed
   def sit_fip_participant_validation_deadline_reminder_email
     induction_coordinator_profile = params[:induction_coordinator_profile]
 
@@ -596,32 +574,6 @@ class SchoolMailer < ApplicationMailer
         sign_in: params[:sign_in_url],
       },
     ).tag(:sit_fip_participant_validation_deadline_reminder).associate_with(induction_coordinator_profile, as: :induction_coordinator)
-  end
-
-  # Not sure this is used anymore the template doesn't have a 'season' placeholder
-  # This is referenced in InviteEcts which I think was a manually invoked service class
-  # that sent reminders
-  def school_preterm_reminder
-    school = params[:school]
-    season = params[:season]
-
-    nomination_email = NominationEmail.create_nomination_email(
-      sent_at: Time.zone.now,
-      sent_to: school.contact_email,
-      school:,
-    )
-
-    template_mail(
-      SCHOOL_PRETERM_REMINDER,
-      to: school.contact_email,
-      rails_mailer: mailer_name,
-      rails_mail_template: action_name,
-      personalisation: {
-        season:,
-        school_name: school.name,
-        nomination_link: nomination_email.nomination_url,
-      },
-    ).tag(:school_preterm_reminder).associate_with(school)
   end
 
   def fip_provider_has_withdrawn_a_participant
