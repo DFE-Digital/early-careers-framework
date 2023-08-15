@@ -3,7 +3,7 @@
 module Finance
   module BandingTracker
     class ParticipantPerDeclarationTypePerBandAggregator
-      DECLARATION_TYPES = %w[completed retained-4 retained-3 retained-2 retained-1 started].freeze
+      DECLARATION_TYPES = %w[completed retained-4 retained-3 retained-2 retained-1 started extended-1 extended-2 extended-3].freeze
 
       def initialize(participant_count_per_bands, bands)
         self.bands = bands

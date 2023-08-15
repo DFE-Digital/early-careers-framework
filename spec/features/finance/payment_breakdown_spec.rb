@@ -12,6 +12,7 @@ RSpec.feature "Finance users payment breakdowns", type: :feature, js: true do
   let(:current_start_year)     { Cohort.current.start_year }
   let(:next_start_year)        { Cohort.next.start_year }
   let(:voided_declarations)    { create_list(:ect_participant_declaration, 2, :eligible, :voided, cpd_lead_provider:) }
+
   let(:participant_aggregator_nov) do
     Finance::ECF::ParticipantAggregator.new(
       statement: november_statement,
@@ -45,8 +46,10 @@ RSpec.feature "Finance users payment breakdowns", type: :feature, js: true do
       calculator: PaymentCalculator::ECF::PaymentCalculation,
     ).call(event_type: :retained_1)
   end
+
   scenario "Can get to ECF payment breakdown page for a provider" do
     given_i_am_logged_in_as_a_finance_user
+    and_there_is_a_schedule
     and_multiple_declarations_are_submitted
     and_voided_payable_declarations_are_submitted
     when_i_click_on_payment_breakdown_header
@@ -73,6 +76,7 @@ RSpec.feature "Finance users payment breakdowns", type: :feature, js: true do
     expect(page)
       .to have_link("Download declarations (CSV)", href: finance_ecf_statement_assurance_report_path(november_statement, format: :csv))
 
+    then_i_should_see_the_total_extended
     then_i_should_see_the_total_voided
     click_link("View voided declarations")
     then_i_see_voided_declarations
@@ -83,6 +87,12 @@ private
 
   def then_i_should_see_the_total_voided
     expect(page.find("strong", text: "Total voided")).to have_sibling("div", text: voided_declarations.size)
+  end
+
+  def then_i_should_see_the_total_extended
+    extended_declarations = ParticipantDeclaration.extended
+    expect(page.find("strong", text: "Total extended")).to have_sibling("div", text: extended_declarations.count)
+    expect(page).to have_content("Extended")
   end
 
   def then_i_see_voided_declarations
@@ -125,11 +135,19 @@ private
     end
   end
 
+  def multiple_extended_declarations_are_submitted_nov_statement
+    travel_to(november_statement.deadline_date) do
+      create_list(:mentor_participant_declaration, 3, :extended, cpd_lead_provider:)
+      create_list(:ect_participant_declaration, 4, :extended, cpd_lead_provider:)
+    end
+  end
+
   def and_multiple_declarations_are_submitted
     multiple_start_declarations_are_submitted_nov_statement
     multiple_retained_declarations_are_submitted_nov_statement
     multiple_retained_declarations_are_submitted_jan_statement
     multiple_ineligible_declarations_are_submitted_jan_statement
+    multiple_extended_declarations_are_submitted_nov_statement
   end
 
   def and_voided_payable_declarations_are_submitted
@@ -205,6 +223,7 @@ private
     expect(page).to have_content(number_to_pounds(jan_starts_breakdowns[:output_payments][0][:per_participant]))
     expect(page).to have_content(jan_starts_breakdowns[:output_payments][0][:participants])
     expect(page).to have_content(number_to_pounds(jan_starts_breakdowns[:output_payments][0][:subtotal]))
+    expect(page).to_not have_content("Extended")
   end
 
   def then_i_should_see_the_correct_uplift_fee
@@ -253,6 +272,7 @@ private
 
   def and_there_is_a_schedule
     create(:ecf_schedule)
+    create(:ecf_extended_schedule)
   end
 
   def when_i_click_on_payment_breakdown_header

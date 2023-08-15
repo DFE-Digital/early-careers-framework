@@ -45,6 +45,8 @@ module Finance
                        completed_event_percentage
                      when :retained_1, :retained_2, :retained_3, :retained_4
                        retained_event_percentage
+                     when :extended_1, :extended_2, :extended_3
+                       extended_event_percentage
                      end
 
         percentage * band_for_letter(band_letter).output_payment_per_participant
@@ -68,6 +70,10 @@ module Finance
         0.15
       end
 
+      def extended_event_percentage
+        0.15
+      end
+
       def declaration_types
         %w[
           started
@@ -76,6 +82,9 @@ module Finance
           retained-3
           retained-4
           completed
+          extended-1
+          extended-2
+          extended-3
         ]
       end
 

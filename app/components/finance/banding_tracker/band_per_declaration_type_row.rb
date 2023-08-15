@@ -34,6 +34,18 @@ module Finance
         count_for_declaration_type("completed")
       end
 
+      def extended_one
+        count_for_declaration_type("extended-1")
+      end
+
+      def extended_two
+        count_for_declaration_type("extended-2")
+      end
+
+      def extended_three
+        count_for_declaration_type("extended-3")
+      end
+
       def band_name
         case bands.index(band)
         when 0 then "Band A"

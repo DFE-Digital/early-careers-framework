@@ -88,6 +88,15 @@
             </div>
           </div>
 
+          <% if @calculator.extended_count.positive? %>
+            <div>
+              <strong class="govuk-body-s govuk-!-margin-bottom-0">Total extended</strong>
+              <div class="govuk-heading-m govuk-!-padding-top-0">
+                <%= @calculator.extended_count %>
+              </div>
+            </div>
+          <% end %>
+
           <div>
             <strong class="govuk-body-s govuk-!-margin-bottom-0">Total voided</strong>
 
@@ -128,7 +137,8 @@
           <% end %>
 
           <% table.body do |body| %>
-            <% @calculator.class.event_types.each do |event_type| %>
+            <% @calculator.event_types_for_display.each do |event_type| %>
+
               <% body.row do |row| %>
                 <% row.cell(text: t(".#{event_type}"), header: true) %>
 

@@ -30,22 +30,46 @@ RSpec.describe Finance::ECF::OutputCalculator do
   describe "#fee_for_declaration" do
     subject { first_statement_calc }
 
-    it do
+    it "returns correct fees" do
       expect(subject.fee_for_declaration(band_letter: :a, type: :started)).to eql(48)
       expect(subject.fee_for_declaration(band_letter: :a, type: :retained_1)).to eql(36)
+      expect(subject.fee_for_declaration(band_letter: :a, type: :retained_2)).to eql(36)
+      expect(subject.fee_for_declaration(band_letter: :a, type: :retained_3)).to eql(36)
+      expect(subject.fee_for_declaration(band_letter: :a, type: :retained_4)).to eql(36)
       expect(subject.fee_for_declaration(band_letter: :a, type: :completed)).to eql(48)
+      expect(subject.fee_for_declaration(band_letter: :a, type: :extended_1)).to eql(36)
+      expect(subject.fee_for_declaration(band_letter: :a, type: :extended_2)).to eql(36)
+      expect(subject.fee_for_declaration(band_letter: :a, type: :extended_3)).to eql(36)
 
       expect(subject.fee_for_declaration(band_letter: :b, type: :started)).to eql(36)
+      expect(subject.fee_for_declaration(band_letter: :b, type: :retained_1)).to eql(27)
       expect(subject.fee_for_declaration(band_letter: :b, type: :retained_2)).to eql(27)
+      expect(subject.fee_for_declaration(band_letter: :b, type: :retained_3)).to eql(27)
+      expect(subject.fee_for_declaration(band_letter: :b, type: :retained_4)).to eql(27)
       expect(subject.fee_for_declaration(band_letter: :b, type: :completed)).to eql(36)
+      expect(subject.fee_for_declaration(band_letter: :b, type: :extended_1)).to eql(27)
+      expect(subject.fee_for_declaration(band_letter: :b, type: :extended_2)).to eql(27)
+      expect(subject.fee_for_declaration(band_letter: :b, type: :extended_3)).to eql(27)
 
       expect(subject.fee_for_declaration(band_letter: :c, type: :started)).to eql(24)
+      expect(subject.fee_for_declaration(band_letter: :c, type: :retained_1)).to eql(18)
+      expect(subject.fee_for_declaration(band_letter: :c, type: :retained_2)).to eql(18)
       expect(subject.fee_for_declaration(band_letter: :c, type: :retained_3)).to eql(18)
+      expect(subject.fee_for_declaration(band_letter: :c, type: :retained_4)).to eql(18)
       expect(subject.fee_for_declaration(band_letter: :c, type: :completed)).to eql(24)
+      expect(subject.fee_for_declaration(band_letter: :c, type: :extended_1)).to eql(18)
+      expect(subject.fee_for_declaration(band_letter: :c, type: :extended_2)).to eql(18)
+      expect(subject.fee_for_declaration(band_letter: :c, type: :extended_3)).to eql(18)
 
       expect(subject.fee_for_declaration(band_letter: :d, type: :started)).to eql(12)
+      expect(subject.fee_for_declaration(band_letter: :d, type: :retained_1)).to eql(9)
+      expect(subject.fee_for_declaration(band_letter: :d, type: :retained_2)).to eql(9)
       expect(subject.fee_for_declaration(band_letter: :d, type: :retained_3)).to eql(9)
+      expect(subject.fee_for_declaration(band_letter: :d, type: :retained_4)).to eql(9)
       expect(subject.fee_for_declaration(band_letter: :d, type: :completed)).to eql(12)
+      expect(subject.fee_for_declaration(band_letter: :d, type: :extended_1)).to eql(9)
+      expect(subject.fee_for_declaration(band_letter: :d, type: :extended_2)).to eql(9)
+      expect(subject.fee_for_declaration(band_letter: :d, type: :extended_3)).to eql(9)
     end
   end
 
@@ -1060,6 +1084,126 @@ RSpec.describe Finance::ECF::OutputCalculator do
           expect(second_statement_calc.uplift_breakdown).to eql(statement_two_expectation)
           expect(third_statement_calc.uplift_breakdown).to eql(statement_three_expectation)
         end
+      end
+    end
+
+    context "extended" do
+      let!(:schedule) { create(:ecf_extended_schedule) }
+
+      let!(:extended_participant_declaration) do
+        travel_to first_statement.deadline_date - 1.day do
+          create(:ect_participant_declaration, :extended, declaration_type: "extended-1", cpd_lead_provider:)
+          create(:ect_participant_declaration, :extended, declaration_type: "extended-2", cpd_lead_provider:)
+          create(:ect_participant_declaration, :extended, declaration_type: "extended-3", cpd_lead_provider:)
+        end
+      end
+
+      it "returns correct bands" do
+        extended_keys = %i[
+          band
+          min
+          max
+
+          previous_extended_1_count
+          extended_1_count
+          extended_1_additions
+          extended_1_subtractions
+
+          previous_extended_2_count
+          extended_2_count
+          extended_2_additions
+          extended_2_subtractions
+
+          previous_extended_3_count
+          extended_3_count
+          extended_3_additions
+          extended_3_subtractions
+        ]
+
+        expected = [
+          {
+            band: :a,
+            min: 1,
+            max: 2,
+
+            previous_extended_1_count: 0,
+            extended_1_additions: 1,
+            extended_1_count: 1,
+            extended_1_subtractions: 0,
+
+            previous_extended_2_count: 0,
+            extended_2_additions: 1,
+            extended_2_count: 1,
+            extended_2_subtractions: 0,
+
+            previous_extended_3_count: 0,
+            extended_3_additions: 1,
+            extended_3_count: 1,
+            extended_3_subtractions: 0,
+          },
+          {
+            band: :b,
+            min: 3,
+            max: 4,
+
+            previous_extended_1_count: 0,
+            extended_1_additions: 0,
+            extended_1_count: 0,
+            extended_1_subtractions: 0,
+
+            previous_extended_2_count: 0,
+            extended_2_additions: 0,
+            extended_2_count: 0,
+            extended_2_subtractions: 0,
+
+            previous_extended_3_count: 0,
+            extended_3_additions: 0,
+            extended_3_count: 0,
+            extended_3_subtractions: 0,
+          },
+          {
+            band: :c,
+            min: 5,
+            max: 6,
+
+            previous_extended_1_count: 0,
+            extended_1_additions: 0,
+            extended_1_count: 0,
+            extended_1_subtractions: 0,
+
+            previous_extended_2_count: 0,
+            extended_2_additions: 0,
+            extended_2_count: 0,
+            extended_2_subtractions: 0,
+
+            previous_extended_3_count: 0,
+            extended_3_additions: 0,
+            extended_3_count: 0,
+            extended_3_subtractions: 0,
+          },
+          {
+            band: :d,
+            min: 7,
+            max: 8,
+
+            previous_extended_1_count: 0,
+            extended_1_additions: 0,
+            extended_1_count: 0,
+            extended_1_subtractions: 0,
+
+            previous_extended_2_count: 0,
+            extended_2_additions: 0,
+            extended_2_count: 0,
+            extended_2_subtractions: 0,
+
+            previous_extended_3_count: 0,
+            extended_3_additions: 0,
+            extended_3_count: 0,
+            extended_3_subtractions: 0,
+          },
+        ]
+
+        expect(first_statement_calc.banding_breakdown.map { |e| e.slice(*extended_keys) }).to eql(expected)
       end
     end
   end
