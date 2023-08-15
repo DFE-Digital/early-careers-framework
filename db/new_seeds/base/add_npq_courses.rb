@@ -54,7 +54,7 @@
   },
   {
     id: "6f81f1ab-5c4e-445d-9363-0f91149c87db",
-    name: "NPQ for Leading Primary Mathematics (NPQLPM)",
+    name: "NPQ Leading Primary Mathematics (NPQLPM)",
     identifier: "npq-leading-primary-mathematics",
   },
 ].each do |hash|

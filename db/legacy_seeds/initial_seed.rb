@@ -67,7 +67,7 @@ end
   { name: "The Early Headship Coaching Offer", id: "0222d1a8-a8e1-42e3-a040-2c585f6c194a", identifier: "npq-early-headship-coaching-offer" },
   { name: "NPQ Early Years Leadership (NPQEYL)", id: "66dff4af-a518-498f-9042-36a41f9e8aa7", identifier: "npq-early-years-leadership" },
   { name: "NPQ Leading Literacy (NPQLL)", id: "829fcd45-e39d-49a9-b309-26d26debfa90", identifier: "npq-leading-literacy" },
-  { name: "NPQ for Leading Primary Mathematics (NPQLPM)", id: "6f81f1ab-5c4e-445d-9363-0f91149c87db", identifier: "npq-leading-primary-mathematics" },
+  { name: "NPQ Leading Primary Mathematics (NPQLPM)", id: "6f81f1ab-5c4e-445d-9363-0f91149c87db", identifier: "npq-leading-primary-mathematics" },
 ].each do |hash|
   NPQCourse.find_or_create_by!(name: hash[:name], id: hash[:id], identifier: hash[:identifier])
 end
