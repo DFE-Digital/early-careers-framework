@@ -29,7 +29,7 @@ sandbox: production-cluster
 .PHONY: production
 production: production-cluster
 	$(eval include global_config/production_aks.sh)
-	$(if $(CONFIRM_PRODUCTION), , $(error Production can only run with CONFIRM_PRODUCTION))
+	$(if $(or ${SKIP_CONFIRM}, ${CONFIRM_PRODUCTION}), , $(error Production can only run with CONFIRM_PRODUCTION))
 
 load-domain-config:
 	$(eval include global_config/cpd_ecf_domain.sh)
@@ -98,6 +98,7 @@ arm-deployment: set-azure-account set-azure-template-tag set-azure-resource-grou
 ci:	## Run in automation environment
 	$(eval SP_AUTH=true)
 	$(eval AUTO_APPROVE=-auto-approve)
+	$(eval SKIP_CONFIRM=true)
 
 .PHONY: terraform-init
 terraform-init:
