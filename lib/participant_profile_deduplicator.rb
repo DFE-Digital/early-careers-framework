@@ -19,6 +19,8 @@ class ParticipantProfileDeduplicator
     log_info("~~~ DRY RUN ~~~") if dry_run
 
     warning_ect_mentor_duplicate
+    warning_only_void_declarations_on_primary
+
     prevent_same_school_different_lead_provider
     ensure_schedules_match
     ensure_training_programmes_match
@@ -40,7 +42,7 @@ class ParticipantProfileDeduplicator
 private
 
   def prevent_same_school_different_lead_provider
-    return unless primary_profile.lead_provider.id != duplicate_profile.lead_provider.id && primary_profile.school == duplicate_profile.school
+    return unless primary_profile.lead_provider&.id != duplicate_profile.lead_provider&.id && primary_profile.school == duplicate_profile.school
 
     raise DeduplicationError, "Different lead providers at the same school are not yet supported."
   end
@@ -56,6 +58,12 @@ private
     duplicate_training_programmes = duplicate_profile.induction_records.map { |ir| ir.induction_programme.training_programme }.flatten
 
     raise DeduplicationError, "Only duplicates with the same training programme are supported." if primary_training_programmes.difference(duplicate_training_programmes).any?
+  end
+
+  def warning_only_void_declarations_on_primary
+    return unless primary_profile.participant_declarations.all?(&:voided?) && duplicate_profile.participant_declarations.any?(&:voidable?)
+
+    log_info("WARNING: voided declarations on primary suggest the duplicate may be the primary. You may want to swap before continuing.")
   end
 
   def warning_ect_mentor_duplicate
@@ -87,7 +95,7 @@ private
 
   def determine_induction_record_end_date(oldest_primary_induction_record, duplicate_induction_record)
     if oldest_primary_induction_record.start_date < duplicate_induction_record.start_date
-      raise DeduplicationError, "Latest induction record on the duplicate profile cannot after the oldest induction record on the primary profile."
+      log_info("WARNING: induction record on the duplicate profile is after the oldest induction record on the primary profile. You may want to swap before continuing.")
     end
 
     return duplicate_induction_record.end_date if duplicate_induction_record.end_date

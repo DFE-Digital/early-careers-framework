@@ -103,6 +103,7 @@ RSpec.describe "Duplicate profile tooling", :js do
     end
 
     expect(page).to have_button("Deduplicate", disabled: true)
+    expect(page).to have_text("Only developers should use the deduplication tool!")
 
     click_on "Dry Run"
 
@@ -114,5 +115,29 @@ RSpec.describe "Duplicate profile tooling", :js do
     click_button "Deduplicate"
 
     expect(page).to have_text("Profiles deduplicated")
+  end
+
+  it "lets you swap the records" do
+    click_on "Search duplicate records"
+
+    page.find_link("View duplicates", href: finance_ecf_duplicate_path(ect_participant_profile)).click
+
+    within "tbody tr:nth-child(2) td:nth-child(14)" do
+      click_on "View details"
+    end
+
+    within("tbody tr:nth-child(5)") do
+      expect(page.all("td").first).to have_text(ect_participant_profile.id)
+    end
+
+    within ".govuk-tabs__list" do
+      click_link "Deduplicate"
+    end
+
+    click_on "Swap"
+
+    within("tbody tr:nth-child(5)") do
+      expect(page.all("td").last).to have_text(ect_participant_profile.id)
+    end
   end
 end

@@ -154,7 +154,10 @@ describe ParticipantProfileDeduplicator do
           duplicate_profile.latest_induction_record.update!(start_date:)
         end
 
-        it { expect { dedup! }.to raise_error(described_class::DeduplicationError, "Latest induction record on the duplicate profile cannot after the oldest induction record on the primary profile.") }
+        it "logs a warning" do
+          dedup!
+          expect(instance.changes).to include("WARNING: induction record on the duplicate profile is after the oldest induction record on the primary profile. You may want to swap before continuing.")
+        end
       end
 
       context "when the duplicate preferred_identity#user is the same as the primary" do
@@ -225,6 +228,16 @@ describe ParticipantProfileDeduplicator do
                declaration_type: "retained-1",
                participant_profile: primary_profile,
                cpd_lead_provider: primary_profile.lead_provider.cpd_lead_provider)
+      end
+
+      context "when primary profile only has voided declarations and duplicate does not" do
+        before { conflicting_declaration.make_voided! }
+
+        it "logs a warning" do
+          dedup!
+
+          expect_changes("WARNING: voided declarations on primary suggest the duplicate may be the primary. You may want to swap before continuing.")
+        end
       end
 
       it "transfers declarations from the duplicate to the primary" do
