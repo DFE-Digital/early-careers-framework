@@ -25,7 +25,7 @@ class SetParticipantStartDateJob < ApplicationJob
         User.no_touching do
           # for pre-2023 registrations this should just set the induction_start_date for us
           Participants::SyncDQTInductionStartDate.call(start_date, participant_profile)
-          
+
           # put at the bottom of the list for the next iteration if nothing changed
           participant_profile.touch
         end
