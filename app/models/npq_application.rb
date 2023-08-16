@@ -16,7 +16,7 @@ class NPQApplication < ApplicationRecord
     marked_ineligible_by_policy
   ].freeze
 
-  has_paper_trail only: %i[user_id npq_lead_provider_id npq_course_id created_at updated_at lead_provider_approval_status]
+  has_paper_trail only: %i[eligible_for_funding funding_eligiblity_status_code user_id npq_lead_provider_id npq_course_id created_at updated_at lead_provider_approval_status]
 
   self.ignored_columns = %w[user_id]
 
@@ -117,6 +117,15 @@ class NPQApplication < ApplicationRecord
 
   def has_submitted_declaration?
     profile.present? && profile.participant_declarations.where(state: "submitted").present?
+  end
+
+  def change_logs
+    v1 = versions.where_attribute_changes("eligible_for_funding")
+    v2 = versions.where_attribute_changes("funding_eligiblity_status_code")
+
+    (v1 + v2)
+      .uniq
+      .sort { |a, b| b.created_at <=> a.created_at }
   end
 
 private

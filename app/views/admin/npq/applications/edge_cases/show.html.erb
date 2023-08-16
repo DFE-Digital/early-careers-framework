@@ -34,36 +34,6 @@
       row.value(text: @npq_application.lead_provider_approval_status)
     end
 
-    if (@npq_application.declared_as_billable? && @npq_application.eligible_for_funding)
-      sl.row do |row|
-        row.key(text: "Eligible for funding")
-        row.value(text: boolean_red_green_tag(@npq_application.eligible_for_funding))
-      end
-    else
-      sl.row do |row|
-        row.key(text: "Eligible for funding")
-        row.value(text: boolean_red_green_tag(@npq_application.eligible_for_funding))
-        row.action(
-          text: 'edit',
-          href: edit_admin_npq_applications_eligible_for_funding_path(@npq_application),
-          visually_hidden_text: "NPQ application"
-        )
-      end
-    end
-
-    sl.row do |row|
-      row.key(text: "Funding eligibility status code")
-      if @npq_application.eligible_for_funding?
-        row.value(text: @npq_application.funding_eligiblity_status_code&.humanize)
-      else
-        row.value(text: @npq_application.funding_eligiblity_status_code&.humanize)
-        row.action(
-          text: 'edit',
-          href: edit_admin_npq_applications_eligibility_status_path(@npq_application)
-        )
-      end
-    end
-
     sl.row do |row|
       row.key(text: "Employment type")
       row.value(text: @npq_application.employment_type&.humanize || "-")
@@ -80,15 +50,54 @@
     end
 
     sl.row do |row|
-      row.key(text: "Created at")
+      row.key(text: "Application submitted date")
       row.value(text: @npq_application.created_at.to_fs(:govuk_short))
     end
 
     sl.row do |row|
-      row.key(text: "Updated at")
+      row.key(text: "Last updated date")
       row.value(text: @npq_application.updated_at.to_fs(:govuk_short))
+      row.action(
+        text: 'View change log',
+        href:  admin_npq_applications_application_change_logs_path(@npq_application),
+      ) if @npq_application.change_logs.any?
+    end
+  end
+%>
+
+<h1 class="govuk-heading-l govuk-!-margin-top-9">Scholarship funding</h1>
+
+<%=
+  govuk_summary_list do |sl|
+    if (@npq_application.declared_as_billable? && @npq_application.eligible_for_funding)
+      sl.row do |row|
+        row.key(text: "Eligible for funding")
+        row.value(text: boolean_red_green_tag(@npq_application.eligible_for_funding))
+      end
+    else
+      sl.row do |row|
+        row.key(text: "Eligible for funding")
+        row.value(text: boolean_red_green_tag(@npq_application.eligible_for_funding))
+        row.action(
+          text: 'Edit',
+          href: edit_admin_npq_applications_eligible_for_funding_path(@npq_application),
+          visually_hidden_text: "NPQ application"
+        )
+      end
     end
 
+    sl.row do |row|
+      row.key(text: "Funding eligibility status code")
+      if @npq_application.eligible_for_funding?
+        row.value(text: @npq_application.funding_eligiblity_status_code&.humanize)
+      else
+        row.value(text: @npq_application.funding_eligiblity_status_code&.humanize)
+        row.action(
+          text: 'Edit',
+          href: edit_admin_npq_applications_eligibility_status_path(@npq_application)
+        )
+      end
+    end
     sl.row do |row|
       row.key(text: "Notes")
 
@@ -109,5 +118,6 @@
         visually_hidden_text: notes_present ? "on #{user.full_name}'s profile" : "to #{user.full_name}'s profile",
       )
     end
+
   end
 %>

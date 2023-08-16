@@ -55,7 +55,7 @@
     table.body do |body|
       @npq_applications.each do |application|
         body.row do |row|
-          row.cell(text: govuk_link_to(application.user.full_name, admin_npq_applications_edge_case_path(application)))
+          row.cell(text: govuk_link_to(application.user.full_name, admin_npq_applications_edge_case_path(application)), classes: 'applicant-name')
           row.cell(text: boolean_red_green_tag(application.eligible_for_funding))
           row.cell(text: application.funding_eligiblity_status_code&.humanize&.downcase)
           row.cell(text: application.employment_type&.humanize || '-')
