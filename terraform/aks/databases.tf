@@ -26,10 +26,11 @@ module "postgres" {
 
   cluster_configuration_map = module.cluster_data.configuration_map
 
-  azure_sku_name          = var.postgres_flexible_server_sku
-  use_azure               = var.deploy_azure_backing_services
-  azure_enable_monitoring = var.enable_monitoring
-  azure_extensions        = ["citext", "fuzzystrmatch", "pg_stat_statements", "pgcrypto", "plpgsql", "uuid-ossp"]
+  azure_sku_name                      = var.postgres_flexible_server_sku
+  postgres_enable_high_availability   = var.postgres_enable_high_availability
+  use_azure                           = var.deploy_azure_backing_services
+  azure_enable_monitoring             = var.enable_monitoring
+  azure_extensions                    = ["citext", "fuzzystrmatch", "pg_stat_statements", "pgcrypto", "plpgsql", "uuid-ossp"]
 }
 
 resource "azurerm_postgresql_flexible_server_database" "analytics" {
