@@ -7,6 +7,23 @@
     .govuk-summary-list__actions {
       width: 13%;
     }
+    .govuk-summary-list__missing {
+      border-left: 10px solid #1d70b8;
+      padding-left: 15px;
+    }
+    .govuk-summary-list__missing-heading {
+      margin-bottom: 10px;
+    }
+  }
+
+  .filter {
+    border: #f3f2f1 4px solid;
+    padding: 20px;
+    margin-bottom: 20px;
+
+    .govuk-radios__label {
+      padding-right: 5px;
+    }
   }
 
   .manage-mentors-ects {

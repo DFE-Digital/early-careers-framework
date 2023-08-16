@@ -152,6 +152,7 @@ module ManageTrainingSteps
     expect(page).to have_summary_row("Lead provider", @school_cohort.lead_provider.name)
     expect(page).to have_summary_row("Delivery partner", @school_cohort.delivery_partner.name)
   end
+  alias_method :given_i_am_taken_to_the_induction_dashboard, :given_i_am_taken_to_fip_induction_dashboard
 
   def given_the_ect_has_been_validated
     create(:ecf_participant_validation_data, participant_profile: @participant_profile_ect)
@@ -267,7 +268,19 @@ module ManageTrainingSteps
 
   def and_i_have_added_a_contacted_for_info_ect_with_mentor
     @contacted_for_info_ect_with_mentor = create(:ect_participant_profile, :email_sent, request_for_details_sent_at: 5.days.ago, user: create(:user, full_name: "CFI With-mentor"), mentor_profile_id: @participant_profile_mentor.id, school_cohort: @school_cohort)
-    Induction::Enrol.call(participant_profile: @contacted_for_info_ect_with_mentor, induction_programme: @induction_programme)
+    Induction::Enrol.call(participant_profile: @contacted_for_info_ect_with_mentor, induction_programme: @induction_programme, mentor_profile: @participant_profile_mentor)
+  end
+
+  def and_i_have_added_a_training_ect_with_mentor
+    @training_ect_with_mentor = create(:ect_participant_profile, user: create(:user, full_name: "Training ECT With-mentor"), mentor_profile_id: @participant_profile_mentor.id, school_cohort: @school_cohort, induction_start_date: 2.years.ago)
+    Induction::Enrol.call(participant_profile: @training_ect_with_mentor, induction_programme: @induction_programme, mentor_profile: @participant_profile_mentor)
+  end
+
+  def and_i_have_added_another_training_ect_with_mentor
+    user = create(:user, full_name: "Another training With-mentor")
+    teacher_profile = create(:teacher_profile, user:)
+    @another_training_ect_with_mentor = create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, teacher_profile:, mentor_profile_id: @contacted_for_info_mentor.id, school_cohort: @school_cohort, induction_start_date: 1.year.ago)
+    Induction::Enrol.call(participant_profile: @another_training_ect_with_mentor, induction_programme: @induction_programme, mentor_profile: @contacted_for_info_mentor)
   end
 
   def and_i_have_added_an_ero_mentor
@@ -300,6 +313,21 @@ module ManageTrainingSteps
     @induction_record = Induction::Enrol.call(participant_profile: @transferring_in_participant,
                                               induction_programme: @induction_programme,
                                               start_date: 2.months.from_now)
+  end
+
+  def and_i_have_added_a_deferred_ect
+    user = create(:user, full_name: "Deferred participant")
+    teacher_profile = create(:teacher_profile, user:)
+    @deferred_participant = create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, teacher_profile:, school_cohort: @school_cohort, training_status: :deferred)
+    @induction_record = Induction::Enrol.call(participant_profile: @deferred_participant,
+                                              induction_programme: @induction_programme,
+                                              start_date: 2.months.from_now)
+    @induction_record.update!(training_status: :deferred)
+  end
+
+  def and_my_ects_have_completed_their_induction
+    Induction::Complete.call(participant_profile: @contacted_for_info_ect_without_mentor, completion_date: 1.week.ago)
+    Induction::Complete.call(participant_profile: @eligible_ect_without_mentor, completion_date: 2.days.ago)
   end
 
   def given_a_participant_from_the_same_school_is_already_on_ecf
@@ -552,6 +580,11 @@ module ManageTrainingSteps
     click_on("Confirm")
   end
 
+  def when_i_filter_by(option)
+    when_i_select(option)
+    click_on("Apply filter")
+  end
+
   def when_i_submit_an_empty_form
     when_i_click_on_continue
   end
@@ -770,6 +803,10 @@ module ManageTrainingSteps
     choose(option)
   end
 
+  def when_i_sort_participants_by_induction_start_date
+    click_link("Induction start date")
+  end
+
   def and_i_choose_induction_coordinator_and_mentor_role
     choose("Induction tutor and mentor")
     click_on("Continue")
@@ -788,6 +825,38 @@ module ManageTrainingSteps
   def then_i_see_the_mentor_name
     expect(page).to have_text(@participant_data[:full_name])
   end
+
+  def then_i_see_the_participants_filter_with_counts(currently_training:, completed_induction:, no_longer_training:)
+    expect(page).to have_content("Currently training (#{currently_training})")
+    expect(page).to have_content("Completed induction (#{completed_induction})")
+    expect(page).to have_content("No longer training (#{no_longer_training})")
+  end
+
+  def then_i_see_the_participants_filtered_by(selected_option)
+    expect(page).to have_field("filtered-by-#{selected_option.downcase.parameterize}-field", checked: true, visible: false, type: :radio)
+  end
+  alias_method :and_i_see_the_participants_filtered_by, :then_i_see_the_participants_filtered_by
+
+  def and_i_see_mentors_not_training_and_ects_not_being_trained_sorted_by_name
+    expect(page).to have_content("Not mentoring or being mentored\nCFI Mentor WAITING FOR TRN\nDeferred participant TRAINING DEFERRED")
+  end
+
+  def and_i_see_ects_with_induction_completed_sorted_by_decreasing_completion_date
+    expect(page).to have_content("Teachers who have completed their induction\nEligible Without-mentor\nCompleted #{2.days.ago.to_date.to_fs(:govuk)}\nCFI Without-mentor\nCompleted #{1.week.ago.to_date.to_fs(:govuk)}")
+  end
+
+  def then_i_see_the_participants_sorted_by_mentor
+    expect(page).to have_content("Sort by: Mentor (A-Z)")
+    expect(page).to have_link(text: "Induction start date")
+    expect(page).to have_content("You need to assign a mentor to these ECTs.\nEligible Without-mentor\n\nMentor group\nMentor\n- Billy Mentor\nBilly Mentor MENTORING\nECTs\nmentored by Billy Mentor\nTraining ECT With-mentor PENDING\nInduction started #{2.years.ago.to_date.to_fs(:govuk)}\n\nMentor group\nMentor\n- CFI Mentor\nCFI Mentor WAITING FOR TRN\nECTs\nmentored by CFI Mentor\nAnother training With-mentor TRAINING\nInduction started #{1.year.ago.to_date.to_fs(:govuk)}")
+  end
+  alias_method :and_i_see_the_participants_sorted_by_mentor, :then_i_see_the_participants_sorted_by_mentor
+
+  def then_i_see_the_participants_sorted_by_induction_start_date
+    expect(page).to have_link("Mentor (A-Z)")
+    expect(page).to have_content("Eligible Without-mentor\nStatus ELIGIBLE FOR TRAINING\nMentor\nNo mentor assigned\nAssign a mentor\nAnother training With-mentor\nStatus TRAINING\nInduction started #{1.year.ago.to_date.to_fs(:govuk)}\nMentor CFI Mentor\nTraining ECT With-mentor\nStatus PENDING\nInduction started #{2.years.ago.to_date.to_fs(:govuk)}\nMentor Billy Mentor")
+  end
+  alias_method :and_i_see_the_participants_sorted_by_induction_start_date, :then_i_see_the_participants_sorted_by_induction_start_date
 
   def then_i_am_taken_to_roles_page
     expect(page).to have_selector("h1", text: "Check what each person needs to do in the early career teacher training programme")

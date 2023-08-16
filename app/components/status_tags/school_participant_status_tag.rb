@@ -2,10 +2,15 @@
 
 module StatusTags
   class SchoolParticipantStatusTag < BaseComponent
-    def initialize(participant_profile:, induction_record: nil, school: nil, display_description: true)
+    def initialize(participant_profile:,
+                   induction_record: nil,
+                   school: nil,
+                   display_description: true,
+                   display_induction_start_date: false)
       @participant_profile = participant_profile
       @induction_record = induction_record
       @display_description = display_description
+      @display_induction_start_date = display_induction_start_date
       @school = school
     end
 
@@ -23,9 +28,11 @@ module StatusTags
       t :colour, scope: translation_scope
     end
 
+    delegate :induction_start_date, to: :participant_profile
+
   private
 
-    attr_reader :participant_profile, :induction_record, :school, :display_description
+    attr_reader :participant_profile, :induction_record, :school, :display_description, :display_induction_start_date
 
     def translation_scope
       @translation_scope ||= "status_tags.school_participant_status.#{record_state}"

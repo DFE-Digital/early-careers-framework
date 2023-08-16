@@ -54,6 +54,7 @@ RSpec.describe "Add ECT as mentor", js: true do
     then_i_am_taken_to_mentor_added_confirmation_page
 
     click_on "View your ECTs and mentors"
+    when_i_filter_by("No longer training (1)")
     then_i_see_the_mentor_name
   end
 end

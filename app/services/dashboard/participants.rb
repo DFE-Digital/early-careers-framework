@@ -2,9 +2,10 @@
 
 module Dashboard
   class Participants
-    attr_reader :mentors, :orphan_ects, :school, :user, :latest_year
+    attr_reader :completed_induction, :mentors, :orphan_ects, :school, :user, :latest_year
 
     def initialize(school:, user:)
+      @completed_induction = []
       @deferred_or_transferred_ects = []
       @latest_year = Dashboard::LatestManageableCohort.call(school).start_year
       @orphan_ects = []
@@ -13,12 +14,24 @@ module Dashboard
       @mentors = process_participants
     end
 
+    def completed_induction_count
+      completed_induction.size
+    end
+
+    def currently_training_count
+      ects.size
+    end
+
+    def no_longer_training_count
+      not_mentoring_or_being_mentored.size
+    end
+
     def dashboard_school_cohorts
       SchoolCohort.dashboard_for_school(school:, latest_year:)
     end
 
     def ects
-      @ects ||= mentors.values.flatten.compact + orphan_ects
+      @ects ||= sorted_ects
     end
 
     def ects_mentored_by(mentor)
@@ -63,7 +76,7 @@ module Dashboard
           .new(user,
                school_cohort
                  .induction_records
-                 .current_or_transferring_in_or_transferred
+                 .school_dashboard_relevant
                  .eager_load(induction_programme: %i[school core_induction_programme lead_provider delivery_partner],
                              participant_profile: %i[user ecf_participant_eligibility ecf_participant_validation_data])
                  .order("users.full_name"))
@@ -83,7 +96,10 @@ module Dashboard
 
     def orphan_and_deferred_or_transferred_ects(induction_records)
       @deferred_or_transferred_ects, @orphan_ects = induction_records.partition(&:deferred_or_transferred?)
-                                                                     .map { |subset| dashboard_participants(subset) }
+                                                                     .map do |subset|
+        dashboard_participants(subset)
+      end
+      @completed_induction, @orphan_ects = @orphan_ects.partition(&:completed_induction?)
     end
 
     def orphan_mentors
@@ -113,6 +129,15 @@ module Dashboard
       school.school_mentors.reject do |school_mentor|
         profile_ids_of_mentors_mentoring.include?(school_mentor.participant_profile_id)
       end
+    end
+
+    def sorted_ects
+      future_date = Date.current + 5.years
+      ects = (mentors.values.flatten.compact + orphan_ects).sort_by do |ect|
+        [ect.induction_start_date || future_date, ect.full_name]
+      end
+
+      ects.reverse
     end
   end
 end
