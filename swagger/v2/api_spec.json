@@ -1766,6 +1766,9 @@
           },
           {
             "$ref": "#/components/schemas/ECFParticipantDeclarationCompletedAttributesRequest"
+          },
+          {
+            "$ref": "#/components/schemas/ECFParticipantDeclarationExtendedAttributesRequest"
           }
         ]
       },
@@ -1906,6 +1909,58 @@
               "completed"
             ],
             "example": "completed"
+          },
+          "declaration_date": {
+            "description": "The event declaration date",
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-05-31T02:21:32.000Z"
+          },
+          "course_identifier": {
+            "description": "The type of course the participant is enrolled in",
+            "type": "string",
+            "enum": [
+              "ecf-induction",
+              "ecf-mentor"
+            ],
+            "example": "ecf-induction"
+          },
+          "evidence_held": {
+            "description": "The type of evidence that the lead provider holds on their platform to demonstrate that the participant has met the retention criteria for the current milestone period",
+            "type": "string",
+            "enum": [
+              "training-event-attended",
+              "self-study-material-completed",
+              "other"
+            ]
+          }
+        }
+      },
+      "ECFParticipantDeclarationExtendedAttributesRequest": {
+        "description": "An ECF extended participant declaration",
+        "type": "object",
+        "required": [
+          "participant_id",
+          "declaration_type",
+          "declaration_date",
+          "course_identifier",
+          "evidence_held"
+        ],
+        "properties": {
+          "participant_id": {
+            "description": "The unique ID of the participant",
+            "type": "string",
+            "example": "3452b1a6-cbaa-422f-9ca9-40afa28583a2"
+          },
+          "declaration_type": {
+            "description": "The event declaration type",
+            "type": "string",
+            "enum": [
+              "extended-1",
+              "extended-2",
+              "extended-3"
+            ],
+            "example": "extended-1"
           },
           "declaration_date": {
             "description": "The event declaration date",
@@ -5091,11 +5146,14 @@
             "type": "string",
             "enum": [
               "started",
-              "completed",
               "retained-1",
               "retained-2",
               "retained-3",
-              "retained-4"
+              "retained-4",
+              "completed",
+              "extended-1",
+              "extended-2",
+              "extended-3"
             ],
             "example": "started"
           },
@@ -5184,7 +5242,10 @@
               "retained-2",
               "retained-3",
               "retained-4",
-              "completed"
+              "completed",
+              "extended-1",
+              "extended-2",
+              "extended-3"
             ],
             "example": "started"
           },
