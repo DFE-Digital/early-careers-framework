@@ -6,25 +6,25 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
     <%= govuk_table do |table|
-      table.head do |head|
-        head.row do |row|
-          row.cell(header: true, text: "Profile ID")
-          row.cell(header: true, text: "Induction status")
-          row.cell(header: true, text: "Training status")
-          row.cell(header: true, text: "Provider")
-          row.cell(header: true, text: "Declaration count")
-          row.cell(header: true, text: "Actions")
+      table.with_head do |head|
+        head.with_row do |row|
+          row.with_cell(header: true, text: "Profile ID")
+          row.with_cell(header: true, text: "Induction status")
+          row.with_cell(header: true, text: "Training status")
+          row.with_cell(header: true, text: "Provider")
+          row.with_cell(header: true, text: "Declaration count")
+          row.with_cell(header: true, text: "Actions")
         end
 
-        table.body do |body|
+        table.with_body do |body|
           @participant_profile.duplicate_participant_profiles.each do |participant_profile|
-            body.row do |row|
-              row.cell(text: participant_profile.id)
-              row.cell(text: participant_profile.induction_status)
-              row.cell(text: participant_profile.training_status)
-              row.cell(text: participant_profile.provider_name)
-              row.cell(text: participant_profile.declaration_count)
-              row.cell do
+            body.with_row do |row|
+              row.with_cell(text: participant_profile.id)
+              row.with_cell(text: participant_profile.induction_status)
+              row.with_cell(text: participant_profile.training_status)
+              row.with_cell(text: participant_profile.provider_name)
+              row.with_cell(text: participant_profile.declaration_count)
+              row.with_cell do
                 govuk_link_to "compare", finance_ecf_duplicate_profile_compare_path(participant_profile, @participant_profile)
               end
             end

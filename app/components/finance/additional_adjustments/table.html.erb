@@ -1,24 +1,24 @@
 <%= govuk_table do |table| %>
   <% table.caption(size: "s", text: "Additional adjustments") %>
 
-  <% table.head do |head| %>
-    <% head.row do |row| %>
-      <% row.cell(header: true, text: "Payment type") %>
-      <% row.cell(header: true, text: "Payments", numeric: true) %>
+  <% table.with_head do |head| %>
+    <% head.with_row do |row| %>
+      <% row.with_cell(header: true, text: "Payment type") %>
+      <% row.with_cell(header: true, text: "Payments", numeric: true) %>
     <% end %>
 
     <% table.body do |body| %>
       <% adjustments.each do |adjustment| %>
-        <% body.row do |row| %>
-          <% row.cell(text: adjustment.payment_type) %>
-          <% row.cell(text: number_to_pounds(adjustment.amount), numeric: true) %>
+        <% body.with_row do |row| %>
+          <% row.with_cell(text: adjustment.payment_type) %>
+          <% row.with_cell(text: number_to_pounds(adjustment.amount), numeric: true) %>
         <% end %>
       <% end %>
 
       <% if adjustments.empty? %>
-        <% body.row do |row| %>
-          <% row.cell(text: "") %>
-          <% row.cell(text: number_to_pounds(0), numeric: true) %>
+        <% body.with_row do |row| %>
+          <% row.with_cell(text: "") %>
+          <% row.with_cell(text: number_to_pounds(0), numeric: true) %>
         <% end %>
       <% end %>
     <% end %>

@@ -4,60 +4,60 @@
 
 <%=
   govuk_summary_list do |sl|
-    sl.row do |row|
-      row.key(text: "Participant ID")
-      row.value(text: @npq_application.profile_id)
+    sl.with_row do |row|
+      row.with_key(text: "Participant ID")
+      row.with_value(text: @npq_application.profile_id)
     end
 
-    sl.row do |row|
-      row.key(text: "Application ID")
-      row.value(text: @npq_application.id)
+    sl.with_row do |row|
+      row.with_key(text: "Application ID")
+      row.with_value(text: @npq_application.id)
     end
 
-    sl.row do |row|
-      row.key(text: "Email")
-      row.value(text: @npq_application.user.email)
+    sl.with_row do |row|
+      row.with_key(text: "Email")
+      row.with_value(text: @npq_application.user.email)
     end
 
-    sl.row do |row|
-      row.key(text: "NPQ course name")
-      row.value(text: @npq_application.npq_course_name)
+    sl.with_row do |row|
+      row.with_key(text: "NPQ course name")
+      row.with_value(text: @npq_application.npq_course_name)
     end
 
-    sl.row do |row|
-      row.key(text: "Lead provider")
-      row.value(text: @npq_application.npq_lead_provider.name)
+    sl.with_row do |row|
+      row.with_key(text: "Lead provider")
+      row.with_value(text: @npq_application.npq_lead_provider.name)
     end
 
-    sl.row do |row|
-      row.key(text: "Lead provider approval status")
-      row.value(text: @npq_application.lead_provider_approval_status)
+    sl.with_row do |row|
+      row.with_key(text: "Lead provider approval status")
+      row.with_value(text: @npq_application.lead_provider_approval_status)
     end
 
-    sl.row do |row|
-      row.key(text: "Employment type")
-      row.value(text: @npq_application.employment_type&.humanize || "-")
+    sl.with_row do |row|
+      row.with_key(text: "Employment type")
+      row.with_value(text: @npq_application.employment_type&.humanize || "-")
     end
 
-    sl.row do |row|
-      row.key(text: "Employment name")
-      row.value(text: @npq_application.employer_name&.humanize || "-")
+    sl.with_row do |row|
+      row.with_key(text: "Employment name")
+      row.with_value(text: @npq_application.employer_name&.humanize || "-")
     end
 
-    sl.row do |row|
-      row.key(text: "Employment role")
-      row.value(text: @npq_application.employment_role&.humanize || "-")
+    sl.with_row do |row|
+      row.with_key(text: "Employment role")
+      row.with_value(text: @npq_application.employment_role&.humanize || "-")
     end
 
-    sl.row do |row|
-      row.key(text: "Application submitted date")
-      row.value(text: @npq_application.created_at.to_fs(:govuk_short))
+    sl.with_row do |row|
+      row.with_key(text: "Application submitted date")
+      row.with_value(text: @npq_application.created_at.to_fs(:govuk_short))
     end
 
-    sl.row do |row|
-      row.key(text: "Last updated date")
-      row.value(text: @npq_application.updated_at.to_fs(:govuk_short))
-      row.action(
+    sl.with_row do |row|
+      row.with_key(text: "Last updated date")
+      row.with_value(text: @npq_application.updated_at.to_fs(:govuk_short))
+      row.with_action(
         text: 'View change log',
         href:  admin_npq_applications_application_change_logs_path(@npq_application),
       ) if @npq_application.change_logs.any?
@@ -70,15 +70,15 @@
 <%=
   govuk_summary_list do |sl|
     if (@npq_application.declared_as_billable? && @npq_application.eligible_for_funding)
-      sl.row do |row|
-        row.key(text: "Eligible for funding")
-        row.value(text: boolean_red_green_tag(@npq_application.eligible_for_funding))
+      sl.with_row do |row|
+        row.with_key(text: "Eligible for funding")
+        row.with_value(text: boolean_red_green_tag(@npq_application.eligible_for_funding))
       end
     else
-      sl.row do |row|
-        row.key(text: "Eligible for funding")
-        row.value(text: boolean_red_green_tag(@npq_application.eligible_for_funding))
-        row.action(
+      sl.with_row do |row|
+        row.with_key(text: "Eligible for funding")
+        row.with_value(text: boolean_red_green_tag(@npq_application.eligible_for_funding))
+        row.with_action(
           text: 'Edit',
           href: edit_admin_npq_applications_eligible_for_funding_path(@npq_application),
           visually_hidden_text: "NPQ application"
@@ -86,23 +86,23 @@
       end
     end
 
-    sl.row do |row|
-      row.key(text: "Funding eligibility status code")
+    sl.with_row do |row|
+      row.with_key(text: "Funding eligibility status code")
       if @npq_application.eligible_for_funding?
-        row.value(text: @npq_application.funding_eligiblity_status_code&.humanize)
+        row.with_value(text: @npq_application.funding_eligiblity_status_code&.humanize)
       else
-        row.value(text: @npq_application.funding_eligiblity_status_code&.humanize)
-        row.action(
+        row.with_value(text: @npq_application.funding_eligiblity_status_code&.humanize)
+        row.with_action(
           text: 'Edit',
           href: edit_admin_npq_applications_eligibility_status_path(@npq_application)
         )
       end
     end
-    sl.row do |row|
-      row.key(text: "Notes")
+    sl.with_row do |row|
+      row.with_key(text: "Notes")
 
       notes_present = @npq_application.notes.present?
-      row.value do
+      row.with_value do
         if notes_present
           simple_format(@npq_application.notes, class: "govuk-body")
         else
@@ -112,7 +112,7 @@
 
       user = @npq_application.user
 
-      row.action(
+      row.with_action(
         text: notes_present ? "Change notes" : "Add notes",
         href: edit_admin_npq_applications_note_path(@npq_application),
         visually_hidden_text: notes_present ? "on #{user.full_name}'s profile" : "to #{user.full_name}'s profile",

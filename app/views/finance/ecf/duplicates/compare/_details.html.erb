@@ -1,44 +1,44 @@
 <%= govuk_table do |table|
-  table.head(classes: ["govuk-body-s"]) do |head|
-    table.body(classes: ["govuk-body-s"]) do |body|
-      body.row do |row|
-        row.cell(header: true, text: "Record type")
-        row.cell { |row| govuk_tag(text: "primary", colour: "green") }
-        row.cell { |row| govuk_tag(text: "duplicate", colour: "grey") }
+  table.with_head(classes: ["govuk-body-s"]) do |head|
+    table.with_body(classes: ["govuk-body-s"]) do |body|
+      body.with_row do |row|
+        row.with_cell(header: true, text: "Record type")
+        row.with_cell { |_| tag_for(primary_profile)}
+        row.with_cell { |_| tag_for(duplicate_profile)}
       end
-      body.row { |row| comparative_table_row_for(row: row, header: "Profile type", method: :profile_type, primary_profile:, duplicate_profile:) }
-      body.row { |row| comparative_table_row_for(row: row, header: "User ID", method: :user_id, primary_profile:, duplicate_profile:) }
-      body.row { |row| comparative_table_row_for(row: row, header: "External identifier", method: :external_identifier, primary_profile:, duplicate_profile:) }
-      body.row { |row| comparative_table_row_for(row: row, header: "Profile ID", method: :id, primary_profile:, duplicate_profile:) }
-      body.row { |row| comparative_table_row_for(row: row, header: "TRN", method: :teacher_profile_trn, primary_profile:, duplicate_profile:) }
-      body.row { |row| comparative_table_row_for(row: row, header: "Teacher Profile ID", method: :teacher_profile_id, primary_profile:, duplicate_profile:) }
-      body.row { |row| comparative_table_row_for(row: row, header: "Cohort", method: :cohort, primary_profile:, duplicate_profile:) }
-      body.row { |row| comparative_table_row_for(row: row, header: "Schedule", method: :schedule_identifier, primary_profile:, duplicate_profile:) }
-      body.row { |row| comparative_table_row_for(row: row, header: "Induction status", method: :induction_status, primary_profile:, duplicate_profile:) }
-      body.row { |row| comparative_table_row_for(row: row, header: "Training status", method: :training_status, primary_profile:, duplicate_profile:) }
-      body.row { |row| comparative_table_row_for(row: row, header: "Lead Provider", method: :provider_name, primary_profile:, duplicate_profile:) }
-      body.row { |row| comparative_table_row_for(row: row, header: "School", method: :school_name, primary_profile:, duplicate_profile:) }
-      body.row do |row|
-        row.cell(header: true, text: "Starts on")
-        row.cell(text: primary_profile.start_date&.to_fs(:govuk))
-        row.cell(text: duplicate_profile.start_date&.to_fs(:govuk))
+      body.with_row { |row| comparative_table_row_for(row: row, header: "Profile type", method: :profile_type, primary_profile:, duplicate_profile:) }
+      body.with_row { |row| comparative_table_row_for(row: row, header: "User ID", method: :user_id, primary_profile:, duplicate_profile:) }
+      body.with_row { |row| comparative_table_row_for(row: row, header: "External identifier", method: :external_identifier, primary_profile:, duplicate_profile:) }
+      body.with_row { |row| comparative_table_row_for(row: row, header: "Profile ID", method: :id, primary_profile:, duplicate_profile:) }
+      body.with_row { |row| comparative_table_row_for(row: row, header: "TRN", method: :teacher_profile_trn, primary_profile:, duplicate_profile:) }
+      body.with_row { |row| comparative_table_row_for(row: row, header: "Teacher Profile ID", method: :teacher_profile_id, primary_profile:, duplicate_profile:) }
+      body.with_row { |row| comparative_table_row_for(row: row, header: "Cohort", method: :cohort, primary_profile:, duplicate_profile:) }
+      body.with_row { |row| comparative_table_row_for(row: row, header: "Schedule", method: :schedule_identifier, primary_profile:, duplicate_profile:) }
+      body.with_row { |row| comparative_table_row_for(row: row, header: "Induction status", method: :induction_status, primary_profile:, duplicate_profile:) }
+      body.with_row { |row| comparative_table_row_for(row: row, header: "Training status", method: :training_status, primary_profile:, duplicate_profile:) }
+      body.with_row { |row| comparative_table_row_for(row: row, header: "Lead Provider", method: :provider_name, primary_profile:, duplicate_profile:) }
+      body.with_row { |row| comparative_table_row_for(row: row, header: "School", method: :school_name, primary_profile:, duplicate_profile:) }
+      body.with_row do |row|
+        row.with_cell(header: true, text: "Starts on")
+        row.with_cell(text: primary_profile.start_date&.to_fs(:govuk))
+        row.with_cell(text: duplicate_profile.start_date&.to_fs(:govuk))
       end
-      body.row do |row|
-        row.cell(header: true, text: "Ends on")
-        row.cell(text: primary_profile.end_date&.to_fs(:govuk))
-        row.cell(text: duplicate_profile.end_date&.to_fs(:govuk))
+      body.with_row do |row|
+        row.with_cell(header: true, text: "Ends on")
+        row.with_cell(text: primary_profile.end_date&.to_fs(:govuk))
+        row.with_cell(text: duplicate_profile.end_date&.to_fs(:govuk))
       end
-      body.row do |row|
-        row.cell(header: true, text: "Created at")
-        row.cell(text: primary_profile.created_at&.to_fs(:govuk))
-        row.cell(text: duplicate_profile.created_at&.to_fs(:govuk))
+      body.with_row do |row|
+        row.with_cell(header: true, text: "Created at")
+        row.with_cell(text: primary_profile.created_at&.to_fs(:govuk))
+        row.with_cell(text: duplicate_profile.created_at&.to_fs(:govuk))
       end
-      body.row do |row|
-        row.cell(header: true, text: "Updated at")
-        row.cell(text: primary_profile.updated_at&.to_fs(:govuk))
-        row.cell(text: duplicate_profile.updated_at&.to_fs(:govuk))
+      body.with_row do |row|
+        row.with_cell(header: true, text: "Updated at")
+        row.with_cell(text: primary_profile.updated_at&.to_fs(:govuk))
+        row.with_cell(text: duplicate_profile.updated_at&.to_fs(:govuk))
       end
-      body.row { |row| comparative_table_row_for(row: row, header: "Declaration count", method: :declaration_count, primary_profile:, duplicate_profile:) }
+      body.with_row { |row| comparative_table_row_for(row: row, header: "Declaration count", method: :declaration_count, primary_profile:, duplicate_profile:) }
     end
   end
 end %>
@@ -47,4 +47,4 @@ end %>
   c.tab(label: "Induction records") { render 'finance/ecf/duplicates/compare/induction_records', primary_profile:, duplicate_profile: }
   c.tab(label: "Declarations") { render 'finance/ecf/duplicates/compare/declarations', primary_profile:, duplicate_profile: }
   c.tab(label: "Deduplicate") { render 'finance/ecf/duplicates/compare/deduplicate', primary_profile:, duplicate_profile: }
-end%>
+end %>
