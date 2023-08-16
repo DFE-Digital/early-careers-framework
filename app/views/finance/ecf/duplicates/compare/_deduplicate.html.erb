@@ -1,0 +1,34 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <div class="govuk-warning-text">
+      <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+      <strong class="govuk-warning-text__text">
+        <span class="govuk-warning-text__assistive">Warning</span>
+        Only developers should use the deduplication tool!
+      </strong>
+    </div>
+
+    <div class="govuk-button-group">
+      <%= button_to "Dry Run", finance_ecf_duplicate_compare_deduplicate_path(primary_profile, duplicate_profile, anchor: :deduplicate), method: :put, class: "govuk-button govuk-button--secondary", params: { dry_run: true } %>
+      <%= button_to "Swap", finance_ecf_duplicate_compare_path(primary_profile, duplicate_profile, anchor: :deduplicate), method: :get, class: "govuk-button govuk-button--secondary" %>
+      <%= button_to "Deduplicate", finance_ecf_duplicate_compare_deduplicate_path(primary_profile, duplicate_profile, anchor: :deduplicate), method: :put, class: "govuk-button govuk-button--warning", disabled: !@can_deduplicate, params: { dry_run: false } %>
+    </div>
+
+    <% if @dedup_changes %>
+      <%= govuk_details(summary_text: "Changes", open: true) do %>
+        <% if @can_deduplicate %>
+          <%= highlight_as_plain_text(@dedup_changes.join("\r")) %>
+        <% else %>
+        <div class="govuk-error-summary" data-module="govuk-error-summary" role="alert">
+          <h2 class="govuk-error-summary__title">
+            There is a problem
+          </h2>
+          <div class="govuk-error-summary__body">
+            <%= highlight_as_plain_text(@dedup_changes.join("\n\r")) %>
+          </div>
+        </div>
+        <% end %>
+      <% end %>
+    <% end %>
+  </div>
+</div>

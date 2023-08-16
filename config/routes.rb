@@ -500,7 +500,9 @@ Rails.application.routes.draw do
   namespace :finance do
     namespace :ecf do
       resources :duplicates, only: %i[index show destroy edit], path_names: { edit: "delete" } do
-        resources :compare, module: "duplicates", only: %i[show]
+        resources :compare, module: "duplicates", only: %i[show] do
+          put :deduplicate
+        end
       end
     end
 

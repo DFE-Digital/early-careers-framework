@@ -3,8 +3,8 @@
     table.body(classes: ["govuk-body-s"]) do |body|
       body.row do |row|
         row.cell(header: true, text: "Record type")
-        row.cell { |row| tag_for(primary_profile)}
-        row.cell { |row| tag_for(duplicate_profile)}
+        row.cell { |row| govuk_tag(text: "primary", colour: "green") }
+        row.cell { |row| govuk_tag(text: "duplicate", colour: "grey") }
       end
       body.row { |row| comparative_table_row_for(row: row, header: "Profile type", method: :profile_type, primary_profile:, duplicate_profile:) }
       body.row { |row| comparative_table_row_for(row: row, header: "User ID", method: :user_id, primary_profile:, duplicate_profile:) }
@@ -46,4 +46,5 @@ end %>
 <%=  govuk_tabs(title: "Induction records and declarations") do |c|
   c.tab(label: "Induction records") { render 'finance/ecf/duplicates/compare/induction_records', primary_profile:, duplicate_profile: }
   c.tab(label: "Declarations") { render 'finance/ecf/duplicates/compare/declarations', primary_profile:, duplicate_profile: }
+  c.tab(label: "Deduplicate") { render 'finance/ecf/duplicates/compare/deduplicate', primary_profile:, duplicate_profile: }
 end%>
