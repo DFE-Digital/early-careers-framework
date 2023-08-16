@@ -126,7 +126,6 @@ class NPQApplication < ApplicationRecord
     (v1 + v2)
       .uniq
       .sort { |a, b| b.created_at <=> a.created_at }
-      .compact
   end
 
 private
