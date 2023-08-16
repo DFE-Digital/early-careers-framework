@@ -1,47 +1,47 @@
 <%= govuk_summary_list do |summary_list| %>
-  <% summary_list.row do |row| %>
-    <% row.key { "Declaration ID" } %>
-    <% row.value { declaration.id } %>
+  <% summary_list.with_row do |row| %>
+    <% row.with_key { "Declaration ID" } %>
+    <% row.with_value { declaration.id } %>
   <% end %>
 
-  <% summary_list.row do |row| %>
-    <% row.key { "Declaration type" } %>
-    <% row.value { declaration.declaration_type } %>
+  <% summary_list.with_row do |row| %>
+    <% row.with_key { "Declaration type" } %>
+    <% row.with_value { declaration.declaration_type } %>
   <% end %>
 
-  <% summary_list.row do |row| %>
-    <% row.key { "Declaration date" } %>
-    <% row.value { declaration.declaration_date.to_fs(:govuk) } %>
+  <% summary_list.with_row do |row| %>
+    <% row.with_key { "Declaration date" } %>
+    <% row.with_value { declaration.declaration_date.to_fs(:govuk) } %>
   <% end %>
 
-  <% summary_list.row do |row| %>
-    <% row.key { "Course identifier" } %>
-    <% row.value { declaration.course_identifier } %>
+  <% summary_list.with_row do |row| %>
+    <% row.with_key { "Course identifier" } %>
+    <% row.with_value { declaration.course_identifier } %>
   <% end %>
 
-  <% summary_list.row do |row| %>
-    <% row.key { "Evidence held" } %>
-    <% row.value { declaration.evidence_held } %>
+  <% summary_list.with_row do |row| %>
+    <% row.with_key { "Evidence held" } %>
+    <% row.with_value { declaration.evidence_held } %>
   <% end %>
 
-  <% summary_list.row do |row| %>
-    <% row.key { "Lead provider" } %>
-    <% row.value { declaration.cpd_lead_provider.name } %>
+  <% summary_list.with_row do |row| %>
+    <% row.with_key { "Lead provider" } %>
+    <% row.with_value { declaration.cpd_lead_provider.name } %>
   <% end %>
 
-  <% summary_list.row do |row| %>
-    <% row.key { "State" } %>
-    <% row.value { declaration.state } %>
+  <% summary_list.with_row do |row| %>
+    <% row.with_key { "State" } %>
+    <% row.with_value { declaration.state } %>
   <% end %>
 
-  <% summary_list.row do |row| %>
-    <% row.key { "Created at" } %>
-    <% row.value { declaration.created_at.to_fs(:govuk) } %>
+  <% summary_list.with_row do |row| %>
+    <% row.with_key { "Created at" } %>
+    <% row.with_value { declaration.created_at.to_fs(:govuk) } %>
   <% end %>
 
-  <% summary_list.row do |row| %>
-    <% row.key { "Updated at" } %>
-    <% row.value { declaration.updated_at.to_fs(:govuk) } %>
+  <% summary_list.with_row do |row| %>
+    <% row.with_key { "Updated at" } %>
+    <% row.with_value { declaration.updated_at.to_fs(:govuk) } %>
   <% end %>
 <% end %>
 

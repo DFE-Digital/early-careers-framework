@@ -157,12 +157,12 @@
 
       <%= govuk_summary_list(classes: ["govuk-!-margin-bottom-7"]) do |list| %>
         <% @ects.each do |ect| %>
-          <% list.row do |row| %>
-            <% row.key(text: ect.full_name,
+          <% list.with_row do |row| %>
+            <% row.with_key(text: ect.full_name,
                        classes: ["govuk-!-font-weight-regular"]) %>
             <% if @mentors_added &&
                   ect.participant_profile.policy_class.new(current_user, ect.participant_profile).update_mentor? %>
-              <% row.action(text: "Change",
+              <% row.with_action(text: "Change",
                             visually_hidden_text: "mentor",
                             href: school_participant_edit_mentor_path(participant_id: ect.participant_profile_id,
                                                                       from_mentor: @profile.id)) %>

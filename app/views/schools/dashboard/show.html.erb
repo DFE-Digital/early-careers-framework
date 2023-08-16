@@ -14,29 +14,29 @@
 
       <h2 class="govuk-heading-m">Participant summary</h2>
       <%= govuk_summary_list do |list| %>
-        <% list.row do |row| %>
-          <% row.key(text: "Induction tutor") %>
-          <% row.value(text: @school.induction_coordinators.first.full_name) %>
-          <% row.action(text: "Change", href: name_schools_change_sit_path, visually_hidden_text: "induction tutor") %>
+        <% list.with_row do |row| %>
+          <% row.with_key(text: "Induction tutor") %>
+          <% row.with_value(text: @school.induction_coordinators.first.full_name) %>
+          <% row.with_action(text: "Change", href: name_schools_change_sit_path, visually_hidden_text: "induction tutor") %>
         <% end %>
 
         <% if manage_ects_and_mentors?(@school_cohorts) %>
-          <% list.row do |row| %>
-            <% row.key(text: "Mentors") %>
-            <% row.value(text: mentor_count(@school_cohorts)) %>
-            <% row.action(text: :none) %>
+          <% list.with_row do |row| %>
+            <% row.with_key(text: "Mentors") %>
+            <% row.with_value(text: mentor_count(@school_cohorts)) %>
+            <% row.with_action(text: :none) %>
           <% end %>
 
-          <% list.row do |row| %>
-            <% row.key(text: "ECTs") %>
-            <% row.value(text: ect_count(@school_cohorts)) %>
-            <% row.action(text: :none) %>
+          <% list.with_row do |row| %>
+            <% row.with_key(text: "ECTs") %>
+            <% row.with_value(text: ect_count(@school_cohorts)) %>
+            <% row.with_action(text: :none) %>
           <% end %>
 
-          <% list.row do |row| %>
-            <% row.key(text: "ECTs without mentors") %>
-            <% row.value(text: ect_with_no_mentor_count(@school_cohorts)) %>
-            <% row.action(text: :none) %>
+          <% list.with_row do |row| %>
+            <% row.with_key(text: "ECTs without mentors") %>
+            <% row.with_value(text: ect_with_no_mentor_count(@school_cohorts)) %>
+            <% row.with_action(text: :none) %>
           <% end %>
         <% end %>
       <% end %>

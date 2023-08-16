@@ -1,70 +1,70 @@
 <h2 class="govuk-heading-m">Funding eligibility</h2>
 <%=
   govuk_summary_list do |sl|
-    sl.row do |row|
-      row.key(text: 'Funding eligibility')
-      row.value(text: boolean_red_green_tag(application.eligible_for_funding))
+    sl.with_row do |row|
+      row.with_key(text: 'Funding eligibility')
+      row.with_value(text: boolean_red_green_tag(application.eligible_for_funding))
     end
 
-    sl.row do |row|
-      row.key(text: 'Funding eligibility status code')
-      row.value(text: application.funding_eligiblity_status_code || "-")
+    sl.with_row do |row|
+      row.with_key(text: 'Funding eligibility status code')
+      row.with_value(text: application.funding_eligiblity_status_code || "-")
     end
 
-    sl.row do |row|
-      row.key(text: 'Primary establishment')
-      row.value{ boolean_red_green_tag(application.primary_establishment) }
-      row.action
+    sl.with_row do |row|
+      row.with_key(text: 'Primary establishment')
+      row.with_value{ boolean_red_green_tag(application.primary_establishment) }
+      row.with_action
     end
 
-    sl.row do |row|
-      row.key(text: 'Number of pupils')
-      row.value(text: application.number_of_pupils.to_i)
-      row.action
+    sl.with_row do |row|
+      row.with_key(text: 'Number of pupils')
+      row.with_value(text: application.number_of_pupils.to_i)
+      row.with_action
     end
 
-    sl.row do |row|
-      row.key(text: 'Targeted support funding primary plus eligibility')
-      row.value{ boolean_red_green_tag(application.tsf_primary_plus_eligibility) }
-      row.action
+    sl.with_row do |row|
+      row.with_key(text: 'Targeted support funding primary plus eligibility')
+      row.with_value{ boolean_red_green_tag(application.tsf_primary_plus_eligibility) }
+      row.with_action
     end
 
-    sl.row do |row|
-      row.key(text: "Targeted delivery funding eligibility")
-      row.value { boolean_red_green_tag(application.targeted_delivery_funding_eligibility) }
+    sl.with_row do |row|
+      row.with_key(text: "Targeted delivery funding eligibility")
+      row.with_value { boolean_red_green_tag(application.targeted_delivery_funding_eligibility) }
     end
 
-    sl.row do |row|
-      row.key(text: 'Funding choice')
-      row.value(text: application.funding_choice&.capitalize || "-")
+    sl.with_row do |row|
+      row.with_key(text: 'Funding choice')
+      row.with_value(text: application.funding_choice&.capitalize || "-")
     end
 
-    sl.row do |row|
-      row.key(text: "Schedule Cohort")
+    sl.with_row do |row|
+      row.with_key(text: "Schedule Cohort")
       if application.cohort.present?
-        row.value(text: application.cohort.try(:start_year).to_s)
+        row.with_value(text: application.cohort.try(:start_year).to_s)
       else
-        row.value(text: "-" )
+        row.with_value(text: "-" )
       end
     end
 
-    sl.row do |row|
-      row.key(text: 'Schedule identifier')
+    sl.with_row do |row|
+      row.with_key(text: 'Schedule identifier')
       if application.profile.present?
-        row.value(text: application.profile.schedule.schedule_identifier)
+        row.with_value(text: application.profile.schedule.schedule_identifier)
       else
-        row.value(text: '-')
+        row.with_value(text: '-')
       end
     end
 
-    sl.row do |row|
-      row.key(text: "Created at")
-      row.value { l application.created_at, format: :admin }
+    sl.with_row do |row|
+      row.with_key(text: "Created at")
+      row.with_value { l application.created_at, format: :admin }
     end
 
-    sl.row do |row|
-      row.key(text: "Updated at")
-      row.value { l application.updated_at, format: :admin }
+    sl.with_row do |row|
+      row.with_key(text: "Updated at")
+      row.with_value { l application.updated_at, format: :admin }
     end
   end
 %>

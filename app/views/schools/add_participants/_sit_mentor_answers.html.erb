@@ -1,40 +1,40 @@
 <%= govuk_summary_list do |summary_list| %>
-  <% summary_list.row do |row| %>
-    <% row.key { "Name" } %>
-    <% row.value { form.full_name } %>
+  <% summary_list.with_row do |row| %>
+    <% row.with_key { "Name" } %>
+    <% row.with_value { form.full_name } %>
     <% unless form.found_participant_in_dqt? %>
-      <% row.action(text: "Change",
+      <% row.with_action(text: "Change",
                     visually_hidden_text: "name",
                     href: show_change_schools_add_participants_path(step: :name)) %>
       <% else %>
-        <% row.action() %>
+        <% row.with_action() %>
       <% end %>
   <% end %>
 
   <% if form.trn %>
-    <% summary_list.row do |row| %>
-      <% row.key { "TRN" } %>
-      <% row.value { form.trn } %>
+    <% summary_list.with_row do |row| %>
+      <% row.with_key { "TRN" } %>
+      <% row.with_value { form.trn } %>
       <% unless form.found_participant_in_dqt? %>
-        <% row.action(text: "Change",
+        <% row.with_action(text: "Change",
                       visually_hidden_text: "TRN",
                       href: show_change_schools_add_participants_path(step: :trn)) %>
       <% else %>
-        <% row.action() %>
+        <% row.with_action() %>
       <% end %>
     <% end %>
   <% end %>
 
   <% if form.date_of_birth %>
-    <% summary_list.row do |row| %>
-      <% row.key { "Date of birth" } %>
-      <% row.value { form.date_of_birth.to_date.to_fs(:govuk) } %>
+    <% summary_list.with_row do |row| %>
+      <% row.with_key { "Date of birth" } %>
+      <% row.with_value { form.date_of_birth.to_date.to_fs(:govuk) } %>
       <% unless form.found_participant_in_dqt? %>
-        <% row.action(text: "Change",
+        <% row.with_action(text: "Change",
                       visually_hidden_text: "date of birth",
                       href: show_change_schools_add_participants_path(step: :date_of_birth)) %>
       <% else %>
-        <% row.action() %>
+        <% row.with_action() %>
       <% end %>
     <% end %>
   <% end %>

@@ -3,14 +3,14 @@
 <% end %>
 
 <%= govuk_summary_list do |sl|
-  sl.row do |row|
-    row.key(text: "Cohort (via induction record)")
-    row.value(text: latest_induction_record&.cohort&.start_year)
+  sl.with_row do |row|
+    row.with_key(text: "Cohort (via induction record)")
+    row.with_value(text: latest_induction_record&.cohort&.start_year)
   end
 
-  sl.row do |row|
-    row.key(text: "Cohort (via schedule)")
-    row.value(text: latest_induction_record&.schedule&.cohort&.start_year)
+  sl.with_row do |row|
+    row.with_key(text: "Cohort (via schedule)")
+    row.with_value(text: latest_induction_record&.schedule&.cohort&.start_year)
   end
 end %>
 

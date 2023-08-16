@@ -7,19 +7,19 @@
     </h1>
 
     <%= govuk_summary_list do |sl|
-      sl.row do |row|
-        row.key(text: "Cohort")
-        row.value(text: @challenge_partnership_form.partnership.cohort.start_year)
+      sl.with_row do |row|
+        row.with_key(text: "Cohort")
+        row.with_value(text: @challenge_partnership_form.partnership.cohort.start_year)
       end
 
-      sl.row do |row|
-        row.key(text: "Lead Provider")
-        row.value(text: @challenge_partnership_form.partnership.lead_provider.name)
+      sl.with_row do |row|
+        row.with_key(text: "Lead Provider")
+        row.with_value(text: @challenge_partnership_form.partnership.lead_provider.name)
       end
 
-      sl.row do |row|
-        row.key(text: "Delivery partner")
-        row.value(text: @challenge_partnership_form.partnership.delivery_partner.name)
+      sl.with_row do |row|
+        row.with_key(text: "Delivery partner")
+        row.with_value(text: @challenge_partnership_form.partnership.delivery_partner.name)
       end
     end %>
 

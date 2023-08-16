@@ -7,13 +7,13 @@
     <% ci.summary_list_rows do %>
       <%=
         render(GovukComponent::SummaryListComponent::RowComponent.new) do |row|
-          row.key(text: "Lead provider")
-          row.value(text: partnership.lead_provider.name)
+          row.with_key(text: "Lead provider")
+          row.with_value(text: partnership.lead_provider.name)
         end
 
         render(GovukComponent::SummaryListComponent::RowComponent.new) do |row|
-          row.key(text: "Delivery partner")
-          row.value(text: partnership.delivery_partner.name)
+          row.with_key(text: "Delivery partner")
+          row.with_value(text: partnership.delivery_partner.name)
         end
       %>
     <% end %>
@@ -29,19 +29,19 @@
     <% relationships.each do |relationship| %>
       <%=
         govuk_summary_list do |sl|
-          sl.row do |row|
-            row.key(text: "Lead provider")
-            row.value(text: relationship.lead_provider.name)
+          sl.with_row do |row|
+            row.with_key(text: "Lead provider")
+            row.with_value(text: relationship.lead_provider.name)
           end
 
-          sl.row do |row|
-            row.key(text: "Delivery partner")
-            row.value(text: relationship.delivery_partner.name)
+          sl.with_row do |row|
+            row.with_key(text: "Delivery partner")
+            row.with_value(text: relationship.delivery_partner.name)
           end
 
-          sl.row do |row|
-            row.key(text: "Participants")
-            row.value do
+          sl.with_row do |row|
+            row.with_key(text: "Participants")
+            row.with_value do
               helpers.html_list(
                 relationship
                   .induction_programmes

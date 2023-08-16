@@ -13,9 +13,9 @@
   <p>No school details for <%= @participant_presenter.full_name %>.</p>
 <% else %>
   <%= govuk_summary_list(actions: true) do |sl|
-    sl.row do |row|
-      row.key(text: "School name")
-      row.value do
+    sl.with_row do |row|
+      row.with_key(text: "School name")
+      row.with_value do
         govuk_link_to(
           @participant_presenter.school_name,
           admin_school_path(@participant_presenter.school_friendly_id)
@@ -23,15 +23,15 @@
       end
     end
 
-    sl.row do |row|
-      row.key(text: "School URN")
-      row.value(text: @participant_presenter.school_urn)
+    sl.with_row do |row|
+      row.with_key(text: "School URN")
+      row.with_value(text: @participant_presenter.school_urn)
     end
 
     if @participant_profile.ect?
-      sl.row do |row|
-        row.key(text: "Mentor")
-        row.value(
+      sl.with_row do |row|
+        row.with_key(text: "Mentor")
+        row.with_value(
           text: if @participant_presenter.has_mentor?
                   govuk_link_to(
                     @participant_presenter.mentor_full_name,
@@ -44,30 +44,30 @@
       end
     end
 
-    sl.row do |row|
-      row.key(text: "School record state")
-      row.value(text: render(StatusTags::SchoolParticipantStatusTag.new(participant_profile: @participant_presenter.participant_profile, school: @participant_presenter.school)))
+    sl.with_row do |row|
+      row.with_key(text: "School record state")
+      row.with_value(text: render(StatusTags::SchoolParticipantStatusTag.new(participant_profile: @participant_presenter.participant_profile, school: @participant_presenter.school)))
     end
 
-    sl.row do |row|
-      row.key(text: "Lead provider")
-      row.value(text: @participant_presenter.school_lead_provider_name)
+    sl.with_row do |row|
+      row.with_key(text: "Lead provider")
+      row.with_value(text: @participant_presenter.school_lead_provider_name)
     end
 
-    sl.row do |row|
-      row.key(text: "Delivery partner")
-      row.value(text: @participant_presenter.school_delivery_partner_name)
+    sl.with_row do |row|
+      row.with_key(text: "Delivery partner")
+      row.with_value(text: @participant_presenter.school_delivery_partner_name)
     end
 
-    sl.row do |row|
-      row.key(text: "Appropriate body")
-      row.value(text: @participant_presenter.appropriate_body_name)
+    sl.with_row do |row|
+      row.with_key(text: "Appropriate body")
+      row.with_value(text: @participant_presenter.appropriate_body_name)
     end
 
     if @participant_presenter.mentor?
-      sl.row do |row|
-        row.key(text: "Mentoring")
-        row.value do
+      sl.with_row do |row|
+        row.with_key(text: "Mentoring")
+        row.with_value do
           if @participant_presenter.mentees_by_school.any?
             html_list(
               @participant_presenter.mentees_by_school.map do |school, mentees|

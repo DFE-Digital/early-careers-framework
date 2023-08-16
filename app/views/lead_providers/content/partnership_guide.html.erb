@@ -66,29 +66,29 @@
 <p class="govuk-body-m">When you have confirmed partnerships, the schools will be sent a confirmation email. This includes a link to report if they have been confirmed incorrectly.</p>
 
 <%= render GovukComponent::SummaryListComponent.new(actions: false) do |component|
-  component.row do |row|
-    row.key { "Recruited by other provider" }
-    row.value { "Another training provider has confirmed this school" }
+  component.with_row do |row|
+    row.with_key { "Recruited by other provider" }
+    row.with_value { "Another training provider has confirmed this school" }
   end
-  component.row do |row|
-    row.key { "URN is not valid" }
-    row.value { "The unique reference number (URN) does not match this school" }
+  component.with_row do |row|
+    row.with_key { "URN is not valid" }
+    row.with_value { "The unique reference number (URN) does not match this school" }
   end
-  component.row do |row|
-    row.key { "Your school - already confirmed" }
-    row.value { "You have already confirmed this school and it’s on your list" }
+  component.with_row do |row|
+    row.with_key { "Your school - already confirmed" }
+    row.with_value { "You have already confirmed this school and it’s on your list" }
   end
-  component.row do |row|
-    row.key { "School not eligible for inductions" }
-    row.value { "School is not an eligible establishment type and/or isn’t in England and/or isn’t open as per our GIAS snapshot" }
+  component.with_row do |row|
+    row.with_key { "School not eligible for inductions" }
+    row.with_value { "School is not an eligible establishment type and/or isn’t in England and/or isn’t open as per our GIAS snapshot" }
   end
-  component.row do |row|
-    row.key { "School not eligible for funding" }
-    row.value { "This school is not eligible to receive funding from the DfE. (Other independent special schools, Welsh establishments, British schools overseas etc.)<br/><br/>They can only use the accredited materials (core induction programme).".html_safe }
+  component.with_row do |row|
+    row.with_key { "School not eligible for funding" }
+    row.with_value { "This school is not eligible to receive funding from the DfE. (Other independent special schools, Welsh establishments, British schools overseas etc.)<br/><br/>They can only use the accredited materials (core induction programme).".html_safe }
   end
-    component.row do |row|
-    row.key { "School programme not yet confirmed" }
-    row.value { "The school induction tutor has not yet logged into the service to confirm if they will deliver training using a DfE-funded training provider this year and/or will continue with their current provider".html_safe }
+  component.with_row do |row|
+    row.with_key { "School programme not yet confirmed" }
+    row.with_value { "The school induction tutor has not yet logged into the service to confirm if they will deliver training using a DfE-funded training provider this year and/or will continue with their current provider".html_safe }
   end
 end %>
 
