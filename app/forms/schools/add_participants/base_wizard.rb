@@ -17,7 +17,7 @@ module Schools
 
       delegate :return_point, :changing_answer?, :transfer?, :participant_type, :trn, :confirmed_trn, :date_of_birth,
                :induction_start_date, :nino, :ect_participant?, :mentor_id, :continue_current_programme?, :participant_profile,
-               :sit_mentor?, :mentor_participant?, :appropriate_body_confirmed?, :appropriate_body_id, :known_by_another_name?,
+               :mentor_participant?, :appropriate_body_confirmed?, :appropriate_body_id, :known_by_another_name?,
                :same_provider?, :was_withdrawn_participant?, :complete?, :start_date, :start_term, :last_visited_step,
                :ect_mentor?,
                to: :data_store
@@ -172,6 +172,7 @@ module Schools
       def adding_yourself_as_mentor?
         using_sit_email? && participant_type == "mentor"
       end
+      alias_method :sit_mentor?, :adding_yourself_as_mentor?
 
       def adding_yourself_as_ect?
         using_sit_email? && participant_type == "ect"
@@ -415,6 +416,14 @@ module Schools
 
       def formatted_trn
         TeacherReferenceNumber.new(trn).formatted_trn
+      end
+
+      def full_name_or_you
+        if sit_mentor?
+          "you"
+        else
+          full_name
+        end
       end
 
       def full_name_or_yourself
