@@ -41,7 +41,6 @@ Declarations submitted for participants in standard schedules will be validated 
 Providers must [notify DfE if the participant is following any other standard or non-standard training schedule](/api-reference/ecf/guidance.html#notify-dfe-of-a-participant-39-s-training-schedule). Contact ECF contract managers via email for additional support or information. 
 
 
-
 ### Dates for standard schedule starting in September
 
 #### 2023 cohort
@@ -225,9 +224,9 @@ Declarations submitted for participants in non-standard schedules do not need AP
 
 **Providers should note:**
 
-* All participants will be registered by default to a standard schedule starting in September
-* Providers must [notify DfE if the participant is following any other standard or non-standard training schedule](/api-reference/ecf/guidance.html#notify-dfe-of-a-participant-39-s-training-schedule)
-* Providers will need to evidence any declarations and why a participant is following a non-standard induction 
+* all participants will be registered by default to a standard schedule starting in September
+* providers must [notify DfE if the participant is following any other standard or non-standard training schedule](/api-reference/ecf/guidance.html#notify-dfe-of-a-participant-39-s-training-schedule)
+* providers will need to evidence any declarations and why a participant is following a non-standard induction 
 
 ### Extended schedules
 
@@ -248,6 +247,17 @@ Participants who expect to complete their ECF-based training in more than 2 year
 ```
  "schedule_identifier": "ecf-extended-april"
 ```
+Providers may submit extended declarations for ECTs on an extended schedule, providing they meet certain criteria.
+
+Qualifying ECTs will have had their induction extended as a result of having not yet met the Teachers’ standards, and need additional support to meet the standards. These ECTs must be placed onto one of the available [‘extended schedules’](/api-reference/ecf/schedules-and-milestone-dates.html#extended-schedules) for ECF. 
+
+Providers may submit an extended declaration (subject to meeting the engagement criteria) for each extended term until the ECT has completed their induction, up to a maximum of three extensions. On completing induction, the provider should submit a completion declaration for the final term.
+
+Providers may submit extended declarations using the following values in the `declaration_type` field on the [participant declaration request body](/api-reference/reference-v3.html#schema-participantdeclarationrequest):
+
+* extended-1
+* extended-2
+* extended-3
 
 ### Reduced schedules
 
@@ -277,8 +287,8 @@ Contact ECF contract managers via email for more information on exact dates.
 
 #### Providers should note:
 
-* Replacement schedules should only be used where a new mentor takes the place of a previous mentor (in supporting an ECT’s training), but where the new mentor is not also mentoring any other ECTs.
-* Replacement schedules should not be used if a mentor is already mentoring an ECT and takes on an additional role replacing a mentor for a second ECT. A mentor’s first ECT should take precedence in determining their schedule.
+* replacement schedules should only be used where a new mentor takes the place of a previous mentor (in supporting an ECT’s training), but where the new mentor is not also mentoring any other ECTs
+* replacement schedules should not be used if a mentor is already mentoring an ECT and takes on an additional role replacing a mentor for a second ECT. A mentor’s first ECT should take precedence in determining their schedule
 
 Mentors that are not already training ECTs and are replacing a mentor must be should have their [schedule updated](/api-reference/ecf/guidance.html#notify-dfe-of-a-participant-39-s-training-schedule) to one for the following: 
 
