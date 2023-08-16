@@ -45,12 +45,12 @@
       <h2 class="govuk-heading-m">Academic year</h2>
       <%= govuk_tabs(title: "Cohorts") do |component| %>
         <% if set_up_new_cohort? %>
-          <% component.tab(label: TabLabelDecorator.new(Cohort.active_registration_cohort.description)) do %>
+          <% component.with_tab(label: TabLabelDecorator.new(Cohort.active_registration_cohort.description)) do %>
             <%= render partial: "setup_school_cohort" %>
           <% end %>
         <% end %>
         <% @school_cohorts.each do |school_cohort| %>
-          <% component.tab(label: TabLabelDecorator.new(school_cohort.description)) do %>
+          <% component.with_tab(label: TabLabelDecorator.new(school_cohort.description)) do %>
             <% if school_cohort.induction_programme_choice == "no_early_career_teachers" %>
               <%= render partial: "no_ects_cohort_details", locals: { school_cohort: school_cohort } %>
             <% else %>
