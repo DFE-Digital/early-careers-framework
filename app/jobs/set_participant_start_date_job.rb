@@ -17,12 +17,16 @@ class SetParticipantStartDateJob < ApplicationJob
       .limit(200)
       .each do |participant_profile|
         induction = DQT::GetInductionRecord.call(trn: participant_profile.teacher_profile.trn)
-        next if induction.blank?
-
-        start_date = induction["startDate"]
 
         # prevent touches from cascading up to User and being exposed in the API
         User.no_touching do
+          if induction.blank?
+            participant_profile.touch
+            next
+          end
+
+          start_date = induction["startDate"]
+
           # for pre-2023 registrations this should just set the induction_start_date for us
           Participants::SyncDQTInductionStartDate.call(start_date, participant_profile)
 
