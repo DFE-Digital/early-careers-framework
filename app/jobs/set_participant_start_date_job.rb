@@ -7,15 +7,27 @@
 class SetParticipantStartDateJob < ApplicationJob
   def perform
     ParticipantProfile::ECT
-      .joins(schedule: :cohort)
       .eligible_status
-      .where(cohort: { start_year: [2021, 2022] })
+      .joins(:teacher_profile)
+      .includes(:teacher_profile)
+      .where.not(teacher_profile: { trn: nil })
       .where(induction_start_date: nil)
-      .order(:created_at)
+      .where(created_at: ...Cohort.find_by(start_year: 2023).registration_start_date)
+      .order(:updated_at)
       .limit(200)
       .each do |participant_profile|
-        ActiveRecord::Base.no_touching do
-          Participants::SetStartDateFromDQT.call(participant_profile:)
+        induction = DQT::GetInductionRecord.call(trn: participant_profile.teacher_profile.trn)
+        next if induction.blank?
+
+        start_date = induction["startDate"]
+
+        # prevent touches from cascading up to User and being exposed in the API
+        User.no_touching do
+          # for pre-2023 registrations this should just set the induction_start_date for us
+          Participants::SyncDQTInductionStartDate.call(start_date, participant_profile)
+          
+          # put at the bottom of the list for the next iteration if nothing changed
+          participant_profile.touch
         end
       end
   rescue StandardError => e
