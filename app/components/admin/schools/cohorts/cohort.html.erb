@@ -18,10 +18,8 @@
       %>
     <% end %>
 
-    <% if helpers.policy(partnership).challenge? %>
-      <%= govuk_button_link_to(new_admin_school_partnership_challenge_partnership_path(school_cohort.school, partnership), secondary: true) do %>
-        Challenge <%= tag.span("partnership", class: "govuk-visually-hidden") %>
-      <% end %>
+    <%= govuk_button_link_to(new_admin_school_partnership_challenge_partnership_path(school_cohort.school, partnership), secondary: true) do %>
+      Challenge <%= tag.span("partnership", class: "govuk-visually-hidden") %>
     <% end %>
   <% end %>
 
