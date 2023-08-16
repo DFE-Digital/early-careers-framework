@@ -135,29 +135,29 @@
 
             <% row.with_cell(header: true, text: "Payments", numeric: true) %>
           <% end %>
+        <% end %>
 
-          <% table.with_body do |body| %>
-            <% @calculator.event_types_for_display.each do |event_type| %>
+        <% table.with_body do |body| %>
+          <% @calculator.event_types_for_display.each do |event_type| %>
 
-              <% body.with_row do |row| %>
-                <% row.with_cell(text: t(".#{event_type}"), header: true) %>
+            <% body.with_row do |row| %>
+              <% row.with_cell(text: t(".#{event_type}"), header: true) %>
 
-                <% @calculator.band_letters.each do |letter| %>
-                  <% row.with_cell(text: @calculator.public_send("#{event_type}_band_#{letter}_additions"), numeric: true) %>
-                <% end %>
-
-                <% row.with_cell(text: "") %>
+              <% @calculator.band_letters.each do |letter| %>
+                <% row.with_cell(text: @calculator.public_send("#{event_type}_band_#{letter}_additions"), numeric: true) %>
               <% end %>
 
-              <% body.with_row do |row| %>
-                <% row.with_cell(text: "Fee per participant") %>
+              <% row.with_cell(text: "") %>
+            <% end %>
 
-                <% @calculator.band_letters.each do |letter| %>
-                  <% row.with_cell(text: number_to_pounds(@calculator.public_send("#{event_type}_band_#{letter}_fee_per_declaration")), numeric: true) %>
-                <% end %>
+            <% body.with_row do |row| %>
+              <% row.with_cell(text: "Fee per participant") %>
 
-                <% row.with_cell(text: number_to_pounds(@calculator.public_send("additions_for_#{event_type}")), numeric: true) %>
+              <% @calculator.band_letters.each do |letter| %>
+                <% row.with_cell(text: number_to_pounds(@calculator.public_send("#{event_type}_band_#{letter}_fee_per_declaration")), numeric: true) %>
               <% end %>
+
+              <% row.with_cell(text: number_to_pounds(@calculator.public_send("additions_for_#{event_type}")), numeric: true) %>
             <% end %>
           <% end %>
         <% end %>
@@ -182,13 +182,13 @@
             <% row.with_cell(header: true, text: "Fee per participant", numeric: true) %>
             <% row.with_cell(header: true, text: "Payments", numeric: true) %>
           <% end %>
+        <% end %>
 
-          <% table.with_body do |body| %>
-            <% body.with_row do |row| %>
-              <% row.with_cell(text: @calculator.uplift_additions_count) %>
-              <% row.with_cell(text: number_to_pounds(@calculator.uplift_fee_per_declaration), numeric: true) %>
-              <% row.with_cell(text: number_to_pounds(@calculator.uplift_additions_count * @calculator.uplift_fee_per_declaration), numeric: true) %>
-            <% end %>
+        <% table.with_body do |body| %>
+          <% body.with_row do |row| %>
+            <% row.with_cell(text: @calculator.uplift_additions_count) %>
+            <% row.with_cell(text: number_to_pounds(@calculator.uplift_fee_per_declaration), numeric: true) %>
+            <% row.with_cell(text: number_to_pounds(@calculator.uplift_additions_count * @calculator.uplift_fee_per_declaration), numeric: true) %>
           <% end %>
         <% end %>
       <% end %>
@@ -207,30 +207,30 @@
             <% row.with_cell(header: true, text: "Fee per participant", numeric: true) %>
             <% row.with_cell(header: true, text: "Payments", numeric: true) %>
           <% end %>
+        <% end %>
 
-          <% table.with_body do |body| %>
-            <% body.with_row do |row| %>
-              <% row.with_cell(text: "Uplift clawbacks") %>
-              <% row.with_cell(text: @calculator.uplift_deductions_count) %>
-              <% row.with_cell(text: number_to_pounds(-@calculator.uplift_fee_per_declaration), numeric: true) %>
-              <% row.with_cell(text: number_to_pounds(@calculator.uplift_clawback_deductions), numeric: true) %>
-            <% end %>
+        <% table.with_body do |body| %>
+          <% body.with_row do |row| %>
+            <% row.with_cell(text: "Uplift clawbacks") %>
+            <% row.with_cell(text: @calculator.uplift_deductions_count) %>
+            <% row.with_cell(text: number_to_pounds(-@calculator.uplift_fee_per_declaration), numeric: true) %>
+            <% row.with_cell(text: number_to_pounds(@calculator.uplift_clawback_deductions), numeric: true) %>
+          <% end %>
 
-            <% @calculator.send(:output_calculator).banding_breakdown.each do |hash| %>
-              <% relevant_hash = hash.select { |k,v| k.match?(/_subtractions/) } %>
-              <% relevant_hash = relevant_hash.transform_keys { |k| k.to_s.gsub("_subtractions", "").to_sym } %>
+          <% @calculator.send(:output_calculator).banding_breakdown.each do |hash| %>
+            <% relevant_hash = hash.select { |k, v| k.match?(/_subtractions/) } %>
+            <% relevant_hash = relevant_hash.transform_keys { |k| k.to_s.gsub("_subtractions", "").to_sym } %>
 
-              <% relevant_hash.each do |name, count| %>
-                <% next if count.zero? %>
+            <% relevant_hash.each do |name, count| %>
+              <% next if count.zero? %>
 
-                <% body.with_row do |row| %>
-                  <% fee = @calculator.fee_for_declaration(band_letter: hash[:band], type: name) %>
+              <% body.with_row do |row| %>
+                <% fee = @calculator.fee_for_declaration(band_letter: hash[:band], type: name) %>
 
-                  <% row.with_cell(text: "Clawback for #{name.to_s.humanize} (Band: #{hash[:band].to_s.upcase})") %>
-                  <% row.with_cell(text: count) %>
-                  <% row.with_cell(text: number_to_pounds(-fee)) %>
-                  <% row.with_cell(text: number_to_pounds(-count * fee), numeric: true) %>
-                <% end %>
+                <% row.with_cell(text: "Clawback for #{name.to_s.humanize} (Band: #{hash[:band].to_s.upcase})") %>
+                <% row.with_cell(text: count) %>
+                <% row.with_cell(text: number_to_pounds(-fee)) %>
+                <% row.with_cell(text: number_to_pounds(-count * fee), numeric: true) %>
               <% end %>
             <% end %>
           <% end %>

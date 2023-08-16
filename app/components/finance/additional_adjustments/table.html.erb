@@ -6,20 +6,20 @@
       <% row.with_cell(header: true, text: "Payment type") %>
       <% row.with_cell(header: true, text: "Payments", numeric: true) %>
     <% end %>
+  <% end %>
 
-    <% table.with_body do |body| %>
-      <% adjustments.each do |adjustment| %>
-        <% body.with_row do |row| %>
-          <% row.with_cell(text: adjustment.payment_type) %>
-          <% row.with_cell(text: number_to_pounds(adjustment.amount), numeric: true) %>
-        <% end %>
+  <% table.with_body do |body| %>
+    <% adjustments.each do |adjustment| %>
+      <% body.with_row do |row| %>
+        <% row.with_cell(text: adjustment.payment_type) %>
+        <% row.with_cell(text: number_to_pounds(adjustment.amount), numeric: true) %>
       <% end %>
+    <% end %>
 
-      <% if adjustments.empty? %>
-        <% body.with_row do |row| %>
-          <% row.with_cell(text: "") %>
-          <% row.with_cell(text: number_to_pounds(0), numeric: true) %>
-        <% end %>
+    <% if adjustments.empty? %>
+      <% body.with_row do |row| %>
+        <% row.with_cell(text: "") %>
+        <% row.with_cell(text: number_to_pounds(0), numeric: true) %>
       <% end %>
     <% end %>
   <% end %>
@@ -43,7 +43,7 @@
 
   <div class="govuk-grid-column-one-half govuk-!-text-align-right govuk-heading-s">
     Total
-    <br/>
+    <br />
     <%= number_to_pounds(total_amount) %>
   </div>
 </div>
