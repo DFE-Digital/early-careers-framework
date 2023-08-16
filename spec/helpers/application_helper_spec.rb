@@ -107,6 +107,20 @@ RSpec.describe ApplicationHelper, type: :helper do
     end
   end
 
+  describe "#boolean_to_yes_no" do
+    it 'returns "Yes" when value is true' do
+      expect(helper.boolean_to_yes_no(true)).to eq("Yes")
+    end
+
+    it 'returns "No" when value is false' do
+      expect(helper.boolean_to_yes_no(false)).to eq("No")
+    end
+
+    it 'returns "No" when value is nil' do
+      expect(helper.boolean_to_yes_no(nil)).to eq("No")
+    end
+  end
+
   describe "#service_name" do
     it "displays the default service name" do
       helper.request.path = "/"
