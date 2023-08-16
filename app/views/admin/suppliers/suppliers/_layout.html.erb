@@ -1,10 +1,10 @@
 <h1 class="govuk-heading-l">Suppliers</h1>
 
 <%= render SubnavComponent.new do |component| %>
-  <%= component.nav_item(path: admin_suppliers_path) do %>
+  <%= component.with_nav_item(path: admin_suppliers_path) do %>
     All suppliers
   <% end %>
-  <%= component.nav_item(path: admin_supplier_users_path) do %>
+  <%= component.with_nav_item(path: admin_supplier_users_path) do %>
     All users
   <% end %>
 <% end %>

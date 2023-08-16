@@ -2,10 +2,10 @@
 
 <% content_for :nav_bar do %>
   <%= render PrimaryNavComponent.new do |component| %>
-    <%= component.nav_item(path: dashboard_path) do %>
+    <%= component.with_nav_item(path: dashboard_path) do %>
       Overview
     <% end %>
-    <%= component.nav_item(path: lead_providers_your_schools_path) do %>
+    <%= component.with_nav_item(path: lead_providers_your_schools_path) do %>
       Schools
     <% end %>
   <% end %>
@@ -22,7 +22,7 @@
 <% if @cohorts.length > 1 %>
   <%= render SubnavComponent.new do |component| %>
     <% @cohorts.each do |cohort| %>
-      <%= component.nav_item(path: lead_providers_your_schools_path(cohort: cohort)) do %>
+      <%= component.with_nav_item(path: lead_providers_your_schools_path(cohort: cohort)) do %>
         <%= cohort.start_year %> cohort
       <% end %>
     <% end %>

@@ -1,31 +1,31 @@
 <% content_for :nav_bar do %>
   <%= render PrimaryNavComponent.new(wide: true) do |component| %>
-    <%= component.nav_item(path: "/admin", selected: current_page?('/admin')) do %>
+    <%= component.with_nav_item(path: "/admin", selected: current_page?('/admin')) do %>
       Overview
     <% end %>
-    <%= component.nav_item(path: "/admin/schools") do %>
+    <%= component.with_nav_item(path: "/admin/schools") do %>
       Schools
     <% end %>
-    <%= component.nav_item(path: "/admin/participants") do %>
+    <%= component.with_nav_item(path: "/admin/participants") do %>
       Participants
     <% end %>
-    <%= component.nav_item(path: "/admin/suppliers") do %>
+    <%= component.with_nav_item(path: "/admin/suppliers") do %>
       Suppliers
     <% end %>
-    <%= component.nav_item(path: "/admin/administrators") do %>
+    <%= component.with_nav_item(path: "/admin/administrators") do %>
       Admin users
     <% end %>
-    <%= component.nav_item(path: admin_npq_applications_edge_cases_path, selected: on_admin_npq_application_page?) do %>
+    <%= component.with_nav_item(path: admin_npq_applications_edge_cases_path, selected: on_admin_npq_application_page?) do %>
       NPQ
     <% end %>
-    <%= component.nav_item(path: admin_delivery_partners_users_path) do %>
+    <%= component.with_nav_item(path: admin_delivery_partners_users_path) do %>
       Delivery partners
     <% end %>
-    <%= component.nav_item(path: admin_appropriate_bodies_users_path) do %>
+    <%= component.with_nav_item(path: admin_appropriate_bodies_users_path) do %>
       Appropriate bodies
     <% end %>
     <% if policy(:super_user).show? %>
-      <%= component.nav_item(path: admin_super_user_path) do %>
+      <%= component.with_nav_item(path: admin_super_user_path) do %>
         Super users
       <% end %>
     <% end %>
