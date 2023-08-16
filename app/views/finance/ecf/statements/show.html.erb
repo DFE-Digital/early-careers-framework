@@ -123,7 +123,7 @@
   <div class="govuk-grid-column-full">
     <div class="finance-panel finance-panel__output-payments">
       <%= govuk_table classes: ["output-payments"] do |table| %>
-        <% table.caption(size: 'm', text: "Output payments") %>
+        <% table.with_caption(size: 'm', text: "Output payments") %>
 
         <% table.with_head do |head| %>
           <% head.with_row do |row| %>
@@ -174,7 +174,7 @@
 
     <div class="finance-panel finance-panel__uplifts govuk-!-margin-top-5 govuk-!-margin-bottom-5">
       <%= govuk_table do |table| %>
-        <% table.caption(size: "m", text: "Uplift fees") %>
+        <% table.with_caption(size: "m", text: "Uplift fees") %>
 
         <% table.with_head do |head| %>
           <% head.with_row do |row| %>
@@ -198,7 +198,7 @@
       <h2 class="govuk-heading-m">Adjustments</h2>
 
       <%= govuk_table do |table| %>
-        <% table.caption(size: "s", text: "Clawbacks") %>
+        <% table.with_caption(size: "s", text: "Clawbacks") %>
 
         <% table.with_head do |head| %>
           <% head.with_row do |row| %>
