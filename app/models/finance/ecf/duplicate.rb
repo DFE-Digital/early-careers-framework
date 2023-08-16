@@ -11,8 +11,8 @@ module Finance
       has_many :induction_records, foreign_key: :participant_profile_id
       belongs_to :user
 
-      scope :primary_profiles, -> { where("id = primary_participant_profile_id") }
-      scope :duplicate_profiles, -> { where("id != primary_participant_profile_id") }
+      scope :primary_profiles, -> { where("ecf_duplicates.id = primary_participant_profile_id") }
+      scope :duplicate_profiles, -> { where("ecf_duplicates.id != primary_participant_profile_id") }
       has_many :participant_declarations, foreign_key: :participant_profile_id
 
       def primary_profile?
