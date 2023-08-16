@@ -72,7 +72,7 @@ RSpec.describe FinanceHelper, type: :helper do
       let!(:induction_record) { create(:induction_record, participant_profile:, induction_programme:) }
 
       it "returns the change training status action button" do
-        expect(row).to receive(:action).with(
+        expect(row).to receive(:with_action).with(
           text: "Change",
           visually_hidden_text: "training status",
           href: new_finance_participant_profile_ecf_induction_records_path(participant_profile.id, induction_record.id),
@@ -86,7 +86,7 @@ RSpec.describe FinanceHelper, type: :helper do
       let!(:induction_record) { create(:induction_record, participant_profile:) }
 
       it "returns the change training status action button" do
-        expect(row).to receive(:action).with(text: :none)
+        expect(row).to receive(:with_action).with(text: :none)
 
         helper.change_induction_record_training_status_button(induction_record, participant_profile, row)
       end

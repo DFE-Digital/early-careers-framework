@@ -9,21 +9,21 @@ module StatusTags
     end
 
     def label
-      t :label, scope: translation_scope
+      I18n.t :label, scope: translation_scope
     end
 
     def id
-      t :id, scope: translation_scope
+      I18n.t :id, scope: translation_scope
     end
 
     def description
-      Array.wrap(t(:description, scope: translation_scope, contact_us: render(MailToSupportComponent.new("contact us")))).map(&:html_safe)
+      Array.wrap(I18n.t(:description, scope: translation_scope, contact_us: render(MailToSupportComponent.new("contact us")))).map(&:html_safe)
     rescue I18n::MissingTranslationData
       []
     end
 
     def colour
-      t :colour, scope: translation_scope
+      I18n.t :colour, scope: translation_scope
     end
 
   private
