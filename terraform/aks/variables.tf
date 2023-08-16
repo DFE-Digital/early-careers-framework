@@ -57,3 +57,7 @@ variable "postgres_flexible_server_sku" {
 variable "postgres_enable_high_availability" {
   default = false
 }
+
+variable "azure_enable_backup_storage" {
+  default = false
+}
