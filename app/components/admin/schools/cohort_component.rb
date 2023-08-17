@@ -35,7 +35,7 @@ module Admin
 
       def build_relationships
         relationships&.each do |relationship|
-          with_relationship_component(school:, school_cohort:, relationship:)
+          with_relationship_component(school:, school_cohort:, relationship:, superuser:)
         end
       end
     end

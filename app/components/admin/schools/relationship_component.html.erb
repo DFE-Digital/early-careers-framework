@@ -2,19 +2,12 @@
   govuk_summary_list(card: { title: relationship.lead_provider.name, actions: [challenge_href] }, html_attributes: { class: "relationship" }) do |sl|
     sl.with_row do |row|
       row.with_key(text: "Delivery partner")
-      row.with_value(text: relationship.delivery_partner.name)
+      row.with_value(text: delivery_partner_name)
     end
 
     sl.with_row do |row|
       row.with_key(text: "Participants")
-      row.with_value do
-        helpers.html_list(
-          relationship
-            .induction_programmes
-            .flat_map(&:participant_profiles)
-            .map { |pp| helpers.govuk_link_to(pp.full_name, admin_participant_path(pp)) }
-        )
-      end
+      row.with_value { helpers.html_list(participants_profile_links) }
     end
   end
 %>

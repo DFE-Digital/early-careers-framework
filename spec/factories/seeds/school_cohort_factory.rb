@@ -6,6 +6,7 @@ FactoryBot.define do
 
     trait(:with_school) { school { association(:seed_school) } }
     trait(:with_cohort) { cohort { association(:seed_cohort) } }
+    trait(:with_appropriate_body) { appropriate_body { association(:seed_appropriate_body) } }
 
     trait(:fip) { induction_programme_choice { "full_induction_programme" } }
     trait(:cip) { induction_programme_choice { "core_induction_programme" } }

@@ -25,12 +25,12 @@
 
       summary_list.with_row do |row|
         row.with_key(text: "Lead provider")
-        row.with_value(text: lead_provider_name)
+        row.with_value(text: lead_provider_name || "None")
       end
 
       summary_list.with_row do |row|
         row.with_key(text: "Delivery partner")
-        row.with_value(text: delivery_partner_name)
+        row.with_value(text: delivery_partner_name || "None")
       end
     end
   %>
