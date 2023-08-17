@@ -5,6 +5,8 @@
     <%= form_for @adjustment, url: finance_statement_adjustments_path(@statement), as: :finance_adjustment do |f| %>
       <%= f.govuk_error_summary %>
       <%= f.hidden_field(:form_step) %>
+      <%= f.hidden_field(:payment_type) %>
+      <%= f.hidden_field(:amount) %>
 
       <% case @adjustment.form_step %>
       <% when "step1" %>
@@ -53,8 +55,6 @@
         providing are correct.</p>
       <br />
 
-      <%= f.hidden_field(:payment_type) %>
-      <%= f.hidden_field(:amount) %>
       <%= f.govuk_submit "Confirm and continue" %>
     <% end %>
   </div>
