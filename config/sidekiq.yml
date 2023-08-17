@@ -6,3 +6,4 @@
   - default
   - participant_outcomes
   - big_query
+  - slack_alerts

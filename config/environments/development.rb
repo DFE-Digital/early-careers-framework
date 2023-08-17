@@ -46,6 +46,8 @@ Rails.application.configure do
   config.qualified_teachers_api_url = ENV["QUALIFIED_TEACHERS_API_URL"]
   config.qualified_teachers_api_key = ENV["QUALIFIED_TEACHERS_API_KEY"]
 
+  config.slack_alerts_webhook_urls = ENV["SLACK_ALERTS_WEBHOOK_URLS"]
+
   # Don't care if the mailer can't send.
   # config.action_mailer.raise_delivery_errors = true
 

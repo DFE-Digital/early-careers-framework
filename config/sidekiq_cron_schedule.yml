@@ -39,3 +39,7 @@ set_participant_start_date_job:
   queue: default
   status: "disabled"
   description: "Disabled for now but maybe required in the near future"
+detect_sidekiq_metrics_issues_job:
+  cron: "0 * * * *"
+  class: "DetectSidekiqMetricsIssuesJob"
+  queue: slack_alerts
