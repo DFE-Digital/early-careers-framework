@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_02_144905) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_16_132809) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "fuzzystrmatch"
@@ -1239,11 +1239,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_02_144905) do
               lead_providers.name AS lead_provider_name,
               induction_programmes.training_programme,
               row_number() OVER (PARTITION BY induction_records.participant_profile_id ORDER BY induction_records.created_at DESC) AS induction_record_sort_order
-             FROM ((((induction_records
+             FROM (((((induction_records
                JOIN induction_programmes ON ((induction_programmes.id = induction_records.induction_programme_id)))
                LEFT JOIN partnerships ON ((partnerships.id = induction_programmes.partnership_id)))
                LEFT JOIN lead_providers ON ((lead_providers.id = partnerships.lead_provider_id)))
-               LEFT JOIN schools ON ((schools.id = partnerships.school_id)))) latest_induction_records ON (((latest_induction_records.participant_profile_id = participant_profiles.id) AND (latest_induction_records.induction_record_sort_order = 1))))
+               LEFT JOIN school_cohorts ON ((school_cohorts.id = induction_programmes.school_cohort_id)))
+               LEFT JOIN schools ON ((schools.id = school_cohorts.school_id)))) latest_induction_records ON (((latest_induction_records.participant_profile_id = participant_profiles.id) AND (latest_induction_records.induction_record_sort_order = 1))))
        JOIN participant_identities ON ((participant_identities.id = participant_profiles.participant_identity_id)))
        JOIN ( SELECT participant_identities_1.user_id,
               count(*) AS count
