@@ -10,7 +10,7 @@ module Admin
           @school = school
           @cohort = cohort
           @school_cohort = school_cohort
-          @partnership = partnerships&.find(&:relationship?)
+          @partnership = partnerships&.find { |p| !p.relationship? }
           @relationships = partnerships&.select(&:relationship?) || []
         end
 
