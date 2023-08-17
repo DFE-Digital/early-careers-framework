@@ -22,10 +22,6 @@ class ParticipantTransferMailer < ApplicationMailer
   # provider_existing_school_transfer_notification
   EXISTING_SCHOOL_TRANSFER_FOR_PROVIDER = "80cae2bf-658b-44ed-b3f6-337cc77fb953"
 
-  # induction_coordinator_participant_transfer_out_notification
-  SIT_TRANSFER_OUT_FOR_ECT              = "02b2d0a0-96c6-4596-9aad-17f8e5ff9883"
-  SIT_TRANSFER_OUT_FOR_MENTOR           = "6b6b6358-e6df-40c2-b6b1-00ab52943c44"
-
   # This mailer switches on ECT and mentor-specific templates, though the inputs are the same,
   # there are minor copy changes between the templates.
   #
@@ -158,37 +154,5 @@ class ParticipantTransferMailer < ApplicationMailer
         external_participant_id: induction_record.participant_profile.participant_identity.user_id,
       },
     ).tag(:provider_existing_school_transfer_notification).associate_with(lead_provider_profile, as: :lead_provider_profile)
-  end
-
-  ## Inactve mailer
-  # This mailer switches on ECT and mentor-specific templates, though the inputs are the same,
-  # there are minor copy changes between the templates.
-  #
-  # Sent to a School Induction Coordinator when an ECT or mentor *has* transferred to a new school. This is
-  # to be sent *after* the transfer has happened.
-  #
-  # Reference: 9, 10
-  def induction_coordinator_participant_transfer_out_notification
-    induction_record = params[:induction_record]
-    induction_coordinator_profile = params[:induction_coordinator_profile]
-    participant_profile = induction_record.participant_profile
-
-    template_id = if participant_profile.ect?
-                    SIT_TRANSFER_OUT_FOR_ECT
-                  else
-                    SIT_TRANSFER_OUT_FOR_MENTOR
-                  end
-
-    template_mail(
-      template_id,
-      to: induction_coordinator_profile.user.email,
-      rails_mailer: mailer_name,
-      rails_mail_template: action_name,
-      personalisation: {
-        sit_name: induction_coordinator_profile.user.name,
-        transferring_ppt_name: participant_profile.user.full_name,
-        new_school_name: induction_record.school.urn,
-      },
-    ).tag(:induction_coordinator_participant_transfer_out_notification).associate_with(induction_coordinator_profile, as: :induction_coordinator_profile)
   end
 end

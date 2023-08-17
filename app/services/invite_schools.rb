@@ -47,18 +47,6 @@ class InviteSchools
     end
   end
 
-  def inform_diy_schools_of_wordpress
-    User.where(
-      id: diy_school_cohorts_without_pending_partnerships
-            .joins(school: :induction_coordinators)
-            .select(:user_id),
-    ).find_each do |user|
-      SchoolMailer.with(
-        user:,
-      ).diy_wordpress_notification.deliver_later
-    end
-  end
-
 private
 
   def private_beta_start_url
