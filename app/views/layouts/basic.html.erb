@@ -15,7 +15,7 @@
               success: true,
               html_attributes: { data: { test: "notification-banner" } }
             ) do |banner| %>
-          <% banner.heading(text: msg[:heading]) %>
+          <% banner.with_heading(text: msg[:heading]) %>
           <% msg[:content] %>
         <% end %>
       <% else %>

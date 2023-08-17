@@ -1,62 +1,62 @@
 <%= govuk_summary_list do |summary_list| %>
-  <% summary_list.row do |row| %>
-    <% row.key { "User ID / Participant ID" } %>
-    <% row.value { @user.id } %>
-    <% row.action(text: :none) %>
+  <% summary_list.with_row do |row| %>
+    <% row.with_key { "User ID / Participant ID" } %>
+    <% row.with_value { @user.id } %>
+    <% row.with_action(text: :none) %>
   <% end %>
 
-  <% summary_list.row do |row| %>
-    <% row.key { "Profile ID" } %>
-    <% row.value { pp.id } %>
-    <% row.action(text: :none) %>
+  <% summary_list.with_row do |row| %>
+    <% row.with_key { "Profile ID" } %>
+    <% row.with_value { pp.id } %>
+    <% row.with_action(text: :none) %>
   <% end %>
 
-  <% summary_list.row do |row| %>
-    <% row.key { "Eligible for funding" } %>
-    <% row.value { pp.fundable?.to_s.upcase } %>
-    <% row.action(text: :none) %>
+  <% summary_list.with_row do |row| %>
+    <% row.with_key { "Eligible for funding" } %>
+    <% row.with_value { pp.fundable?.to_s.upcase } %>
+    <% row.with_action(text: :none) %>
   <% end %>
 
-  <% summary_list.row do |row| %>
-    <% row.key { "Lead provider" } %>
-    <% row.value { pp&.school_cohort&.school&.active_partnerships[0]&.lead_provider&.name } %>
-    <% row.action(text: :none) %>
+  <% summary_list.with_row do |row| %>
+    <% row.with_key { "Lead provider" } %>
+    <% row.with_value { pp&.school_cohort&.school&.active_partnerships[0]&.lead_provider&.name } %>
+    <% row.with_action(text: :none) %>
   <% end %>
 
-  <% summary_list.row do |row| %>
-    <% row.key { "School URN" } %>
-    <% row.value { pp&.school_cohort&.school&.urn } %>
-    <% row.action(text: :none) %>
+  <% summary_list.with_row do |row| %>
+    <% row.with_key { "School URN" } %>
+    <% row.with_value { pp&.school_cohort&.school&.urn } %>
+    <% row.with_action(text: :none) %>
   <% end %>
 
-  <% summary_list.row do |row| %>
-    <% row.key { "Status" } %>
-    <% row.value { pp.status } %>
-    <% row.action(text: :none) %>
+  <% summary_list.with_row do |row| %>
+    <% row.with_key { "Status" } %>
+    <% row.with_value { pp.status } %>
+    <% row.with_action(text: :none) %>
   <% end %>
 
-  <% summary_list.row do |row| %>
-    <% row.key { "Schedule identifier" } %>
-    <% row.value { pp.schedule&.schedule_identifier } %>
-    <% row.action(text: :none) %>
+  <% summary_list.with_row do |row| %>
+    <% row.with_key { "Schedule identifier" } %>
+    <% row.with_value { pp.schedule&.schedule_identifier } %>
+    <% row.with_action(text: :none) %>
   <% end %>
 
-  <% summary_list.row do |row| %>
-    <% row.key { "Schedule cohort" } %>
-    <% row.value { pp.schedule&.cohort&.start_year&.to_s } %>
-    <% row.action(text: :none) %>
+  <% summary_list.with_row do |row| %>
+    <% row.with_key { "Schedule cohort" } %>
+    <% row.with_value { pp.schedule&.cohort&.start_year&.to_s } %>
+    <% row.with_action(text: :none) %>
   <% end %>
 
-  <% summary_list.row do |row| %>
-    <% row.key { "Created at" } %>
-    <% row.value { pp.created_at.to_fs(:govuk) } %>
-    <% row.action(text: :none) %>
+  <% summary_list.with_row do |row| %>
+    <% row.with_key { "Created at" } %>
+    <% row.with_value { pp.created_at.to_fs(:govuk) } %>
+    <% row.with_action(text: :none) %>
   <% end %>
 
-  <% summary_list.row do |row| %>
-    <% row.key { "Updated at" } %>
-    <% row.value { pp.updated_at.to_fs(:govuk) } %>
-    <% row.action(text: :none) %>
+  <% summary_list.with_row do |row| %>
+    <% row.with_key { "Updated at" } %>
+    <% row.with_value { pp.updated_at.to_fs(:govuk) } %>
+    <% row.with_action(text: :none) %>
   <% end %>
 <% end %>
 
@@ -66,63 +66,63 @@
   <h5>Induction record: <%= ir.id %></h5>
 
   <%= govuk_summary_list do |summary_list| %>
-    <% summary_list.row do |row| %>
-      <% row.key { "Training programme" } %>
-      <% row.value { ir.induction_programme.training_programme.humanize } %>
-      <% row.action(text: :none) %>
+    <% summary_list.with_row do |row| %>
+      <% row.with_key { "Training programme" } %>
+      <% row.with_value { ir.induction_programme.training_programme.humanize } %>
+      <% row.with_action(text: :none) %>
     <% end %>
 
-    <% summary_list.row do |row| %>
-      <% row.key { "School URN" } %>
-      <% row.value { ir.induction_programme.school_cohort.school.urn } %>
-      <% row.action(text: :none) %>
+    <% summary_list.with_row do |row| %>
+      <% row.with_key { "School URN" } %>
+      <% row.with_value { ir.induction_programme.school_cohort.school.urn } %>
+      <% row.with_action(text: :none) %>
     <% end %>
 
-    <% summary_list.row do |row| %>
-      <% row.key { "Lead provider" } %>
-      <% row.value { ir.induction_programme.partnership&.lead_provider&.name } %>
-      <% row.action(text: :none) %>
+    <% summary_list.with_row do |row| %>
+      <% row.with_key { "Lead provider" } %>
+      <% row.with_value { ir.induction_programme.partnership&.lead_provider&.name } %>
+      <% row.with_action(text: :none) %>
     <% end %>
 
-    <% summary_list.row do |row| %>
-      <% row.key { "Induction status" } %>
-      <% row.value { ir.induction_status } %>
-      <% row.action(text: :none) %>
+    <% summary_list.with_row do |row| %>
+      <% row.with_key { "Induction status" } %>
+      <% row.with_value { ir.induction_status } %>
+      <% row.with_action(text: :none) %>
     <% end %>
 
-    <% summary_list.row do |row| %>
-      <% row.key { "Training status" } %>
-      <% row.value { ir.training_status } %>
+    <% summary_list.with_row do |row| %>
+      <% row.with_key { "Training status" } %>
+      <% row.with_value { ir.training_status } %>
       <%= change_induction_record_training_status_button(ir, pp, row) %>
     <% end %>
 
-    <% summary_list.row do |row| %>
-      <% row.key { "Start date" } %>
-      <% row.value { ir.start_date&.to_fs(:govuk) } %>
-      <% row.action(text: :none) %>
+    <% summary_list.with_row do |row| %>
+      <% row.with_key { "Start date" } %>
+      <% row.with_value { ir.start_date&.to_fs(:govuk) } %>
+      <% row.with_action(text: :none) %>
     <% end %>
 
-    <% summary_list.row do |row| %>
-      <% row.key { "End date" } %>
-      <% row.value { ir.end_date&.to_fs(:govuk) } %>
-      <% row.action(text: :none) %>
+    <% summary_list.with_row do |row| %>
+      <% row.with_key { "End date" } %>
+      <% row.with_value { ir.end_date&.to_fs(:govuk) } %>
+      <% row.with_action(text: :none) %>
     <% end %>
 
-    <% summary_list.row do |row| %>
-      <% row.key { "Schedule" } %>
-      <% row.value { ir.schedule.schedule_identifier } %>
-      <% row.action(text: :none) %>
+    <% summary_list.with_row do |row| %>
+      <% row.with_key { "Schedule" } %>
+      <% row.with_value { ir.schedule.schedule_identifier } %>
+      <% row.with_action(text: :none) %>
     <% end %>
 
     <% if latest_induction_record_for_provider?(ir, pp) %>
-      <% summary_list.row do |row| %>
-        <% row.key { "Lead Provider API V3" } %>
-        <% row.value do %>
+      <% summary_list.with_row do |row| %>
+        <% row.with_key { "Lead Provider API V3" } %>
+        <% row.with_value do %>
           <%= govuk_details(summary_text: "See this participant as it appears over the Lead Provider API") do %>
             <%= induction_record_participant_api_response(ir, pp) %>
           <% end %>
         <% end %>
-        <% row.action(text: :none) %>
+        <% row.with_action(text: :none) %>
       <% end %>
     <% end %>
   <% end %>

@@ -7,57 +7,57 @@
 <% end %>
 
 <%= govuk_summary_list do |list| %>
-  <% list.row do |row| %>
-    <% row.key(text: "Programme") %>
-    <% row.value(text: t(school_cohort.induction_programme_choice, scope: %i[manage_your_training induction_programmes])) %>
-    <% row.action(text: "Change", href: change_programme_schools_cohort_path(cohort_id: school_cohort.cohort.start_year), visually_hidden_text: "induction programme choice") %>
+  <% list.with_row do |row| %>
+    <% row.with_key(text: "Programme") %>
+    <% row.with_value(text: t(school_cohort.induction_programme_choice, scope: %i[manage_your_training induction_programmes])) %>
+    <% row.with_action(text: "Change", href: change_programme_schools_cohort_path(cohort_id: school_cohort.cohort.start_year), visually_hidden_text: "induction programme choice") %>
   <% end %>
 
   <% if school_cohort.core_induction_programme? %>
-    <% list.row do |row| %>
-      <% row.key(text: "Materials supplier") %>
-      <% row.value(text: school_cohort.default_induction_programme&.core_induction_programme&.name) %>
+    <% list.with_row do |row| %>
+      <% row.with_key(text: "Materials supplier") %>
+      <% row.with_value(text: school_cohort.default_induction_programme&.core_induction_programme&.name) %>
       <% if school_cohort.default_induction_programme&.core_induction_programme.blank? %>
-        <% row.action(text: "Choose", href: info_schools_core_programme_materials_path(cohort_id: school_cohort.cohort.start_year), visually_hidden_text: "materials") %>
+        <% row.with_action(text: "Choose", href: info_schools_core_programme_materials_path(cohort_id: school_cohort.cohort.start_year), visually_hidden_text: "materials") %>
       <% else %>
-        <% row.action(text: "Change", href: schools_core_programme_materials_path(cohort_id: school_cohort.cohort.start_year), visually_hidden_text: "materials") %>
+        <% row.with_action(text: "Change", href: schools_core_programme_materials_path(cohort_id: school_cohort.cohort.start_year), visually_hidden_text: "materials") %>
       <% end %>
     <% end %>
   <% end %>
 
   <% if school_cohort.appropriate_body.present? %>
-    <% list.row do |row| %>
-      <% row.key(text: "Appropriate body") %>
-      <% row.value(text: school_cohort.appropriate_body.name) %>
-      <% row.action(text: "Change", href: change_appropriate_body_schools_cohort_path(cohort_id: school_cohort.cohort.start_year)) %>
+    <% list.with_row do |row| %>
+      <% row.with_key(text: "Appropriate body") %>
+      <% row.with_value(text: school_cohort.appropriate_body.name) %>
+      <% row.with_action(text: "Change", href: change_appropriate_body_schools_cohort_path(cohort_id: school_cohort.cohort.start_year)) %>
     <% end %>
   <% else %>
-    <% list.row do |row| %>
-      <% row.key(text: "Appropriate body") %>
-      <% row.value(text: "") %>
-      <% row.action(text: "Add", href: add_appropriate_body_schools_cohort_path(cohort_id: school_cohort.cohort.start_year)) %>
+    <% list.with_row do |row| %>
+      <% row.with_key(text: "Appropriate body") %>
+      <% row.with_value(text: "") %>
+      <% row.with_action(text: "Add", href: add_appropriate_body_schools_cohort_path(cohort_id: school_cohort.cohort.start_year)) %>
     <% end %>
   <% end %>
 
   <% if school_cohort.full_induction_programme? %>
-    <% list.row do |row| %>
-      <% row.key(text: "Lead provider") %>
+    <% list.with_row do |row| %>
+      <% row.with_key(text: "Lead provider") %>
       <% if latest_partnership&.challenged? == true %>
-        <% row.value(text: nil) %>
+        <% row.with_value(text: nil) %>
       <% else %>
-        <% row.value(text: school_cohort_lead_provider_name(school_cohort)) %>
+        <% row.with_value(text: school_cohort_lead_provider_name(school_cohort)) %>
       <% end %>
-      <% row.action(text: :none) %>
+      <% row.with_action(text: :none) %>
     <% end %>
 
-    <% list.row do |row| %>
-      <% row.key(text: "Delivery partner") %>
+    <% list.with_row do |row| %>
+      <% row.with_key(text: "Delivery partner") %>
       <% if latest_partnership&.challenged? == true %>
-        <% row.value(text: nil) %>
+        <% row.with_value(text: nil) %>
       <% else %>
-        <% row.value(text: school_cohort_delivery_partner_name(school_cohort)) %>
+        <% row.with_value(text: school_cohort_delivery_partner_name(school_cohort)) %>
       <% end %>
-      <% row.action(text: :none) %>
+      <% row.with_action(text: :none) %>
     <% end %>
   <% end %>
 <% end %>

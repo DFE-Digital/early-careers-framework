@@ -1,23 +1,23 @@
 <%= govuk_summary_list do |summary_list| %>
-  <% summary_list.row do |row| %>
-    <% row.key { "Application ID" } %>
-    <% row.value { govuk_link_to application.id, finance_participant_path(application.id) } %>
-    <% row.action(text: :none) %>
+  <% summary_list.with_row do |row| %>
+    <% row.with_key { "Application ID" } %>
+    <% row.with_value { govuk_link_to application.id, finance_participant_path(application.id) } %>
+    <% row.with_action(text: :none) %>
   <% end %>
 
-  <% summary_list.row do |row| %>
-    <% row.key { "Lead Provider" } %>
-    <% row.value { application.npq_lead_provider.name } %>
-    <% row.action(text: :none) %>
+  <% summary_list.with_row do |row| %>
+    <% row.with_key { "Lead Provider" } %>
+    <% row.with_value { application.npq_lead_provider.name } %>
+    <% row.with_action(text: :none) %>
   <% end %>
 
-  <% summary_list.row do |row| %>
-    <% row.key { "Lead Provider approval status" } %>
-    <% row.value { application.lead_provider_approval_status } %>
+  <% summary_list.with_row do |row| %>
+    <% row.with_key { "Lead Provider approval status" } %>
+    <% row.with_value { application.lead_provider_approval_status } %>
     <% if application.lead_provider_approval_status == "pending" %>
-      <% row.action(text: :none) %>
+      <% row.with_action(text: :none) %>
     <% else %>
-      <% row.action(
+      <% row.with_action(
         text: "Change to pending",
         visually_hidden_text: "",
         href: new_finance_npq_application_change_lead_provider_approval_status_path(application))
@@ -25,49 +25,49 @@
     <% end %>
   <% end %>
 
-  <% summary_list.row do |row| %>
-    <% row.key { "NPQ course" } %>
-    <% row.value { application.npq_course.name } %>
-    <% row.action(text: :none) %>
+  <% summary_list.with_row do |row| %>
+    <% row.with_key { "NPQ course" } %>
+    <% row.with_value { application.npq_course.name } %>
+    <% row.with_action(text: :none) %>
   <% end %>
 
-  <% summary_list.row do |row| %>
-    <% row.key { "School URN" } %>
-    <% row.value { application.school_urn } %>
-    <% row.action(text: :none) %>
+  <% summary_list.with_row do |row| %>
+    <% row.with_key { "School URN" } %>
+    <% row.with_value { application.school_urn } %>
+    <% row.with_action(text: :none) %>
   <% end %>
 
-  <% summary_list.row do |row| %>
-    <% row.key { "School UKPRN" } %>
-    <% row.value { application.school_ukprn } %>
-    <% row.action(text: :none) %>
+  <% summary_list.with_row do |row| %>
+    <% row.with_key { "School UKPRN" } %>
+    <% row.with_value { application.school_ukprn } %>
+    <% row.with_action(text: :none) %>
   <% end %>
 
-  <% summary_list.row do |row| %>
-    <% row.key { "Targeted support funding eligibility" } %>
-    <% row.value { bool_to_tag(application.targeted_delivery_funding_eligibility) } %>
-    <% row.action(text: :none) %>
+  <% summary_list.with_row do |row| %>
+    <% row.with_key { "Targeted support funding eligibility" } %>
+    <% row.with_value { bool_to_tag(application.targeted_delivery_funding_eligibility) } %>
+    <% row.with_action(text: :none) %>
   <% end %>
 
-  <% summary_list.row do |row| %>
-    <% row.key { "Created at" } %>
-    <% row.value { application.created_at.to_fs(:govuk) } %>
-    <% row.action(text: :none) %>
+  <% summary_list.with_row do |row| %>
+    <% row.with_key { "Created at" } %>
+    <% row.with_value { application.created_at.to_fs(:govuk) } %>
+    <% row.with_action(text: :none) %>
   <% end %>
 
-  <% summary_list.row do |row| %>
-    <% row.key { "Updated at" } %>
-    <% row.value { application.updated_at.to_fs(:govuk) } %>
-    <% row.action(text: :none) %>
+  <% summary_list.with_row do |row| %>
+    <% row.with_key { "Updated at" } %>
+    <% row.with_value { application.updated_at.to_fs(:govuk) } %>
+    <% row.with_action(text: :none) %>
   <% end %>
 
-  <% summary_list.row do |row| %>
-    <% row.key { "Lead Provider API V3" } %>
-    <% row.value do %>
+  <% summary_list.with_row do |row| %>
+    <% row.with_key { "Lead Provider API V3" } %>
+    <% row.with_value do %>
       <%= govuk_details(summary_text: "See this application as it appears over the Lead Provider API") do %>
         <%= npq_application_api_response(application) %>
       <% end %>
     <% end %>
-    <% row.action(text: :none) %>
+    <% row.with_action(text: :none) %>
   <% end %>
 <% end %>

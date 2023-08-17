@@ -15,14 +15,14 @@
 
     <%=
       govuk_summary_list do |sl|
-        sl.row do |row|
-          row.key(text: "Cohort")
-          row.value(text: induction_record.cohort.start_year)
+        sl.with_row do |row|
+          row.with_key(text: "Cohort")
+          row.with_value(text: induction_record.cohort.start_year)
         end
 
-        sl.row do |row|
-          row.key(text: "School name")
-          row.value do
+        sl.with_row do |row|
+          row.with_key(text: "School name")
+          row.with_value do
             govuk_link_to(
               induction_record.school_name,
               admin_school_path(induction_record.school.friendly_id)
@@ -30,99 +30,99 @@
           end
         end
 
-        sl.row do |row|
-          row.key(text: "School URN")
-          row.value(text: induction_record.school_urn)
+        sl.with_row do |row|
+          row.with_key(text: "School URN")
+          row.with_value(text: induction_record.school_urn)
         end
 
-        sl.row do |row|
-          row.key(text: "School record state")
-          row.value(text: render(StatusTags::SchoolParticipantStatusTag.new(participant_profile: induction_record.participant_profile, induction_record: induction_record)))
+        sl.with_row do |row|
+          row.with_key(text: "School record state")
+          row.with_value(text: render(StatusTags::SchoolParticipantStatusTag.new(participant_profile: induction_record.participant_profile, induction_record: induction_record)))
         end
 
-        sl.row do |row|
-          row.key(text: "Preferred email")
-          row.value(text: induction_record.participant_email)
+        sl.with_row do |row|
+          row.with_key(text: "Preferred email")
+          row.with_value(text: induction_record.participant_email)
           if policy(induction_record).edit_preferred_email?
-            row.action(
+            row.with_action(
               href: edit_preferred_email_admin_participant_induction_records_path(@participant_profile, induction_record),
               visually_hidden_text: "preferred email"
             )
           end
         end
 
-        sl.row do |row|
-          row.key(text: "Training programme")
-          row.value(text: induction_programme_friendly_name(induction_record.training_programme))
+        sl.with_row do |row|
+          row.with_key(text: "Training programme")
+          row.with_value(text: induction_programme_friendly_name(induction_record.training_programme))
         end
 
-        sl.row do |row|
-          row.key(text: "Lead provider")
-          row.value(text: induction_record.lead_provider_name || "No lead provider")
+        sl.with_row do |row|
+          row.with_key(text: "Lead provider")
+          row.with_value(text: induction_record.lead_provider_name || "No lead provider")
         end
 
-        sl.row do |row|
-          row.key(text: "Delivery partner")
-          row.value(text: induction_record.delivery_partner_name || "No delivery partner")
+        sl.with_row do |row|
+          row.with_key(text: "Delivery partner")
+          row.with_value(text: induction_record.delivery_partner_name || "No delivery partner")
         end
 
         if induction_record.delivery_partner.present?
-          sl.row do |row|
-            row.key(text: "Delivery partner record state")
-            row.value(text: render(StatusTags::DeliveryPartnerParticipantStatusTag.new(participant_profile: induction_record.participant_profile, induction_record: induction_record)))
+          sl.with_row do |row|
+            row.with_key(text: "Delivery partner record state")
+            row.with_value(text: render(StatusTags::DeliveryPartnerParticipantStatusTag.new(participant_profile: induction_record.participant_profile, induction_record: induction_record)))
           end
         end
 
-        sl.row do |row|
-          row.key(text: "School transfer")
-          row.value(text: induction_record.school_transfer)
+        sl.with_row do |row|
+          row.with_key(text: "School transfer")
+          row.with_value(text: induction_record.school_transfer)
         end
 
-        sl.row do |row|
-          row.key(text: "Induction status")
-          row.value(text: induction_record.induction_status)
+        sl.with_row do |row|
+          row.with_key(text: "Induction status")
+          row.with_value(text: induction_record.induction_status)
         end
 
-        sl.row do |row|
-          row.key(text: "Training status")
-          row.value(text: induction_record.training_status)
+        sl.with_row do |row|
+          row.with_key(text: "Training status")
+          row.with_value(text: induction_record.training_status)
         end
 
-        sl.row do |row|
-          row.key(text: "Mentor")
-          row.value(text: induction_record.mentor_full_name)
+        sl.with_row do |row|
+          row.with_key(text: "Mentor")
+          row.with_value(text: induction_record.mentor_full_name)
         end
 
-        sl.row do |row|
-          row.key(text: "Schedule")
-          row.value(text: induction_record.schedule_identifier)
+        sl.with_row do |row|
+          row.with_key(text: "Schedule")
+          row.with_value(text: induction_record.schedule_identifier)
         end
 
-        sl.row do |row|
-          row.key(text: "Appropriate body")
-          row.value(text: induction_record.appropriate_body_name)
+        sl.with_row do |row|
+          row.with_key(text: "Appropriate body")
+          row.with_value(text: induction_record.appropriate_body_name)
         end
 
         if induction_record.appropriate_body.present?
-          sl.row do |row|
-            row.key(text: "Appropriate body record state")
-            row.value(text: render(StatusTags::AppropriateBodyParticipantStatusTag.new(participant_profile: induction_record.participant_profile, induction_record: induction_record)))
+          sl.with_row do |row|
+            row.with_key(text: "Appropriate body record state")
+            row.with_value(text: render(StatusTags::AppropriateBodyParticipantStatusTag.new(participant_profile: induction_record.participant_profile, induction_record: induction_record)))
           end
         end
 
-        sl.row do |row|
-          row.key(text: "Creation date")
-          row.value(text: induction_record.created_at&.to_fs(:govuk))
+        sl.with_row do |row|
+          row.with_key(text: "Creation date")
+          row.with_value(text: induction_record.created_at&.to_fs(:govuk))
         end
 
-        sl.row do |row|
-          row.key(text: "Start date")
-          row.value(text: induction_record.start_date.to_formatted_s(:govuk))
+        sl.with_row do |row|
+          row.with_key(text: "Start date")
+          row.with_value(text: induction_record.start_date.to_formatted_s(:govuk))
         end
 
-        sl.row do |row|
-          row.key(text: "End date")
-          row.value(text: induction_record.end_date&.to_fs(:govuk))
+        sl.with_row do |row|
+          row.with_key(text: "End date")
+          row.with_value(text: induction_record.end_date&.to_fs(:govuk))
         end
       end
     %>

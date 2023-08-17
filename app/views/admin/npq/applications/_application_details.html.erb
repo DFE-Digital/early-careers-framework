@@ -1,78 +1,78 @@
 <h2 class="govuk-heading-m">Application details</h2>
 <%=
   govuk_summary_list do |sl|
-    sl.row do |row|
-      row.key(text: 'Application ID')
-      row.value(text: application.id || govuk_tag(text: "Missing", colour: "red"))
+    sl.with_row do |row|
+      row.with_key(text: 'Application ID')
+      row.with_value(text: application.id || govuk_tag(text: "Missing", colour: "red"))
     end
 
-    sl.row do |row|
-      row.key(text: 'User ID')
-      row.value(text: application.user.id || govuk_tag(text: "Missing", colour: "red"))
+    sl.with_row do |row|
+      row.with_key(text: 'User ID')
+      row.with_value(text: application.user.id || govuk_tag(text: "Missing", colour: "red"))
     end
 
-    sl.row do |row|
-      row.key(text: 'GAI ID')
-      row.value(text: application.user.get_an_identity_id || '-')
+    sl.with_row do |row|
+      row.with_key(text: 'GAI ID')
+      row.with_value(text: application.user.get_an_identity_id || '-')
     end
 
-    sl.row do |row|
-      row.key(text: 'External ID')
-      row.value(text: application.participant_identity.external_identifier || '-')
+    sl.with_row do |row|
+      row.with_key(text: 'External ID')
+      row.with_value(text: application.participant_identity.external_identifier || '-')
     end
 
-    sl.row do |row|
-      row.key(text: 'Proflie ID')
+    sl.with_row do |row|
+      row.with_key(text: 'Proflie ID')
       if application.profile.present?
-        row.value(text: application.profile_id)
+        row.with_value(text: application.profile_id)
       else
-        row.value(text: '-')
+        row.with_value(text: '-')
       end
     end
 
-    sl.row do |row|
-      row.key(text: 'Email')
-      row.value(text: application.user.email)
+    sl.with_row do |row|
+      row.with_key(text: 'Email')
+      row.with_value(text: application.user.email)
       unless application.user.get_an_identity_id.present?
-        row.action(
+        row.with_action(
           href: edit_admin_npq_applications_change_email_path(application),
         )
       end
     end
 
-    sl.row do |row|
-      row.key(text: 'Preferred name')
-      row.value(text: application.user.full_name)
+    sl.with_row do |row|
+      row.with_key(text: 'Preferred name')
+      row.with_value(text: application.user.full_name)
       unless application.user.get_an_identity_id.present?
-        row.action(
+        row.with_action(
           href: edit_admin_npq_applications_change_name_path(application),
         )
       end
     end
 
-    sl.row do |row|
-      row.key(text: 'TRN')
-      row.value(text: application.teacher_reference_number || '-')
+    sl.with_row do |row|
+      row.with_key(text: 'TRN')
+      row.with_value(text: application.teacher_reference_number || '-')
     end
 
-    sl.row do |row|
-      row.key(text: 'TRN validated')
-      row.value { boolean_red_green_tag(application.teacher_reference_number_verified) }
+    sl.with_row do |row|
+      row.with_key(text: 'TRN validated')
+      row.with_value { boolean_red_green_tag(application.teacher_reference_number_verified) }
     end
 
-    sl.row do |row|
-      row.key(text: 'Course')
-      row.value(text: application.npq_course.name)
+    sl.with_row do |row|
+      row.with_key(text: 'Course')
+      row.with_value(text: application.npq_course.name)
     end
 
-    sl.row do |row|
-      row.key(text: 'Lead provider')
-      row.value(text: application.npq_lead_provider.name)
+    sl.with_row do |row|
+      row.with_key(text: 'Lead provider')
+      row.with_value(text: application.npq_lead_provider.name)
     end
 
-    sl.row do |row|
-      row.key(text: 'Lead provider approval status')
-      row.value(text: application.lead_provider_approval_status)
+    sl.with_row do |row|
+      row.with_key(text: 'Lead provider approval status')
+      row.with_value(text: application.lead_provider_approval_status)
     end
   end
 %>

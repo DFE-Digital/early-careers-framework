@@ -9,13 +9,13 @@
     <h1 class="govuk-heading-xl"><%= title %></h1>
 
     <%= govuk_summary_list do |summary_list| %>
-      <% summary_list.row do |row| %>
-        <% row.key { "Lead provider" } %>
-        <% row.value { @wizard.selected_lead_provider_name } %>
+      <% summary_list.with_row do |row| %>
+        <% row.with_key { "Lead provider" } %>
+        <% row.with_value { @wizard.selected_lead_provider_name } %>
       <% end %>
-      <% summary_list.row do |row| %>
-        <% row.key { "Delivery partner" } %>
-        <% row.value { @wizard.selected_delivery_partner_name } %>
+      <% summary_list.with_row do |row| %>
+        <% row.with_key { "Delivery partner" } %>
+        <% row.with_value { @wizard.selected_delivery_partner_name } %>
       <% end %>
     <% end %>
 

@@ -2,10 +2,10 @@
   <div class="govuk-grid-column-two-thirds">
     <% content_for :nav_bar do %>
       <%= render PrimaryNavComponent.new do |component| %>
-        <%= component.nav_item(path: dashboard_path) do %>
+        <%= component.with_nav_item(path: dashboard_path) do %>
           Overview
         <% end %>
-        <%= component.nav_item(path: lead_providers_report_schools_start_path) do %>
+        <%= component.with_nav_item(path: lead_providers_report_schools_start_path) do %>
           Schools
         <% end %>
       <% end %>

@@ -8,7 +8,7 @@
 <h1 class="govuk-heading-l"><%= title ||= t(".title") %></h1>
 
 <%= govuk_tabs(title: t(".tabs")) do |c| %>
-  <%= c.tab(label: t(".details")) do %>
+  <%= c.with_tab(label: t(".details")) do %>
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-full">
         <%= render "application_details", application: @application %>

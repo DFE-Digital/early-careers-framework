@@ -16,13 +16,13 @@ module FinanceHelper
 
   def change_induction_record_training_status_button(induction_record, participant_profile, row)
     if latest_induction_record_for_provider?(induction_record, participant_profile)
-      row.action(
+      row.with_action(
         text: "Change",
         visually_hidden_text: "training status",
         href: new_finance_participant_profile_ecf_induction_records_path(participant_profile.id, induction_record.id),
       )
     else
-      row.action(text: :none)
+      row.with_action(text: :none)
     end
   end
 

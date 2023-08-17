@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class PrimaryNavComponent < ViewComponent::Base
-  include ViewComponent::SlotableV2
   attr_reader :wide
 
   renders_many :nav_items, "NavItemComponent"

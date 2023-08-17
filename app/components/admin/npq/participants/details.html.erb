@@ -3,67 +3,67 @@
 </h2>
 
 <%= govuk_summary_list do |sl|
-  sl.row do |row|
-    row.key(text: "Participant name")
-    row.value(text: user_full_name)
+  sl.with_row do |row|
+    row.with_key(text: "Participant name")
+    row.with_value(text: user_full_name)
     unless npq_application.user.get_an_identity_id.present?
-    row.action(text: "Change",
+    row.with_action(text: "Change",
       href: edit_admin_participant_npq_change_full_name_path(profile),visually_hidden_text: "participant name")
   end
   end
 
-  sl.row do |row|
-    row.key(text: "Participant email")
-    row.value(text: user_email)
+  sl.with_row do |row|
+    row.with_key(text: "Participant email")
+    row.with_value(text: user_email)
     unless npq_application.user.get_an_identity_id.present?
-    row.action(text: "Change", href: edit_admin_participant_npq_change_email_path(profile), visually_hidden_text: "participant email address")
+    row.with_action(text: "Change", href: edit_admin_participant_npq_change_email_path(profile), visually_hidden_text: "participant email address")
   end
   end
 
   if profile_pending?
-    sl.row do |row|
-      row.key(text: "National Insurance number")
-      row.value(text: npq_application_nino)
+    sl.with_row do |row|
+      row.with_key(text: "National Insurance number")
+      row.with_value(text: npq_application_nino)
     end
 
-    sl.row do |row|
-      row.key(text: "Date of birth")
-      row.value(text: npq_application_date_of_birth.to_formatted_s(:govuk))
+    sl.with_row do |row|
+      row.with_key(text: "Date of birth")
+      row.with_value(text: npq_application_date_of_birth.to_formatted_s(:govuk))
     end
   end
 
-  sl.row do |row|
-    row.key(text: "Teacher reference number")
-    row.value(text: npq_application_teacher_reference_number)
+  sl.with_row do |row|
+    row.with_key(text: "Teacher reference number")
+    row.with_value(text: npq_application_teacher_reference_number)
   end
 
-  sl.row do |row|
-    row.key(text: "School name")
-    row.value(text: school_name)
+  sl.with_row do |row|
+    row.with_key(text: "School name")
+    row.with_value(text: school_name)
   end
 
-  sl.row do |row|
-    row.key(text: "School URN")
-    row.value(text: school_urn)
+  sl.with_row do |row|
+    row.with_key(text: "School URN")
+    row.with_value(text: school_urn)
   end
 
-  sl.row do |row|
-    row.key(text: "Participant type")
-    row.value(text: t(:npq, scope: "schools.participants.type"))
+  sl.with_row do |row|
+    row.with_key(text: "Participant type")
+    row.with_value(text: t(:npq, scope: "schools.participants.type"))
   end
 
-  sl.row do |row|
-    row.key(text: "Provider")
-    row.value(text: npq_application.npq_lead_provider_name)
+  sl.with_row do |row|
+    row.with_key(text: "Provider")
+    row.with_value(text: npq_application.npq_lead_provider_name)
   end
 
-  sl.row do |row|
-    row.key(text: "NPQ course")
-    row.value(text: npq_application.npq_course_name)
+  sl.with_row do |row|
+    row.with_key(text: "NPQ course")
+    row.with_value(text: npq_application.npq_course_name)
   end
 
-  sl.row do |row|
-    row.key(text: "Last updated")
-    row.value(text: last_updated)
+  sl.with_row do |row|
+    row.with_key(text: "Last updated")
+    row.with_value(text: last_updated)
   end
 end %>

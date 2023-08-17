@@ -3,7 +3,7 @@
 require "capybara"
 require "capybara/rspec"
 require "axe-rspec"
-require "webdrivers/chromedriver"
+require "selenium-webdriver"
 require "site_prism"
 require "site_prism/all_there" # Optional but needed to perform more complex matching
 
@@ -17,10 +17,6 @@ Capybara.register_driver :chrome_headless do |app|
     options: Selenium::WebDriver::Options.chrome(args:),
   )
 end
-
-# This is required as per https://github.com/titusfortner/webdrivers/issues/247
-# and can be removed when selenium 4.11 is released
-Webdrivers::Chromedriver.required_version = "114.0.5735.90"
 
 Capybara.server_port = 9887 + ENV["TEST_ENV_NUMBER"].to_i
 Capybara.javascript_driver = :chrome_headless
