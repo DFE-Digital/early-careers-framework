@@ -1,0 +1,37 @@
+name: Backup a database on GOV.UK PaaS
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: GitHub environment to backup and restore
+        type: choice
+        default: staging
+        options:
+          - staging
+          - sandbox
+          - production
+
+jobs:
+  backup:
+    name: Backup
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Setup cf cli
+        uses: DFE-Digital/github-actions/setup-cf-cli@master
+        with:
+          CF_USERNAME: ${{ secrets.GOVPAAS_STAG_USERNAME }}
+          CF_PASSWORD: ${{ secrets.GOVPAAS_STAG_PASSWORD }}
+          CF_SPACE_NAME: early-careers-framework-staging
+          INSTALL_CONDUIT: true
+
+      - name: Backup database
+        run: |
+          cf conduit ecf-postgres-staging -- pg_dump -E utf8 --clean --compress=1 --if-exists --no-owner --no-privileges --verbose -f backup.sql.gz
+
+      - name: Upload backup
+        uses: actions/upload-artifact@v3
+        with:
+          name: backup
+          path: backup.sql.gz
+          retention-days: 1
