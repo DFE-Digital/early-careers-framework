@@ -9,7 +9,7 @@
         school: @school,
         school_cohort: @school_cohorts.find_by(cohort: cohort),
         cohort: cohort,
-        partnerships: @partnerships_by_cohort[cohort.id],
+        partnerships_and_relationships: @partnerships_by_cohort[cohort.id],
       ) %>
     <% end %>
   </div>
