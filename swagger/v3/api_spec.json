@@ -3819,7 +3819,7 @@
         ],
         "properties": {
           "id": {
-            "description": "The unique identifier of the mentor record",
+            "description": "The unique identifier of the participant record",
             "type": "string",
             "format": "uuid",
             "example": "db3a7848-7308-4879-942a-c4a70ced400a"
