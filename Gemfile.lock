@@ -1,3 +1,12 @@
+GIT
+  remote: https://github.com/DFE-Digital/dfe-analytics.git
+  revision: 11d75a3c92cc15439c00ea7f2f8686acffefc103
+  tag: v1.10.1
+  specs:
+    dfe-analytics (1.10.1)
+      google-cloud-bigquery (~> 1.38)
+      request_store_rails (~> 2)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -424,6 +433,8 @@ GEM
       uber (< 0.2.0)
     request_store (1.5.1)
       rack (>= 1.4)
+    request_store_rails (2.0.0)
+      concurrent-ruby (~> 1.0)
     responders (3.1.0)
       actionpack (>= 5.2)
       railties (>= 5.2)
@@ -651,6 +662,7 @@ DEPENDENCIES
   cypress-on-rails (~> 1.15)
   database_cleaner-active_record
   devise (>= 4.8.0)
+  dfe-analytics!
   discard (~> 1.2, >= 1.2.0)
   dotenv-rails (~> 2.8.1)
   erb_lint (>= 0.1.1)

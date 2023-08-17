@@ -111,6 +111,8 @@ gem "jsbundling-rails"
 gem "sprockets", "~> 4.2.0"
 gem "sprockets-rails", require: "sprockets/railtie"
 
+gem 'dfe-analytics', github: 'DFE-Digital/dfe-analytics', tag: 'v1.10.1'
+
 # Code Highlighter
 gem "rouge"
 
