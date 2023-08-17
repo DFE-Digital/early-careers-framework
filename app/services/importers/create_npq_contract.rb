@@ -4,14 +4,16 @@ require "csv"
 
 module Importers
   class CreateNPQContract
-    attr_reader :path_to_csv
+    attr_reader :path_to_csv, :new_course_flag
 
-    def initialize(path_to_csv:)
+    def initialize(path_to_csv:, new_course_flag: false)
       @path_to_csv = path_to_csv
+      @new_course_flag = new_course_flag
     end
 
     def call
       check_headers
+      version = get_latest_version if new_course_flag == true
 
       ActiveRecord::Base.transaction do
         rows.each do |row|
@@ -24,7 +26,7 @@ module Importers
           # Manually create new version of contract if there are changes
           contract = NPQContract.find_or_initialize_by(
             cohort:,
-            version: "0.0.1",
+            version: version || "0.0.1",
             npq_lead_provider:,
             course_identifier: course.identifier,
           )
@@ -88,6 +90,10 @@ module Importers
 
     def rows
       @rows ||= CSV.read(path_to_csv, headers: true, skip_blanks: true)
+    end
+
+    def get_latest_version
+      Finance::Statement::NPQ.all.order(contract_version: :asc).pluck(:contract_version).last
     end
   end
 end
