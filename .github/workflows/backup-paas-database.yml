@@ -25,6 +25,9 @@ jobs:
           CF_SPACE_NAME: early-careers-framework-staging
           INSTALL_CONDUIT: true
 
+      - name: Setup postgres client
+        uses: DFE-Digital/github-actions/install-postgres-client@master
+
       - name: Backup database
         run: |
           cf conduit ecf-postgres-staging -- pg_dump -E utf8 --clean --compress=1 --if-exists --no-owner --no-privileges --verbose -f backup.sql.gz

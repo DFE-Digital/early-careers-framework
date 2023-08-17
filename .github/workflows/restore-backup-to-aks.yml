@@ -1,0 +1,22 @@
+name: Restore a database backup in AKS
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: GitHub environment to backup and restore
+        type: choice
+        default: staging
+        options:
+          - staging
+          - sandbox
+          - production
+
+jobs:
+  backup:
+    name: Backup
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: test
+        run: echo 'Do a restore'
+
