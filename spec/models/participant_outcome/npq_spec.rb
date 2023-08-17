@@ -231,4 +231,207 @@ RSpec.describe ParticipantOutcome::NPQ, type: :model do
       end
     end
   end
+
+  describe "#has_failed?" do
+    it "returns true if failed" do
+      outcome = described_class.new(state: "failed")
+      expect(outcome.has_failed?).to eql(true)
+    end
+
+    it "returns false if passed" do
+      outcome = described_class.new(state: "passed")
+      expect(outcome.has_failed?).to eql(false)
+    end
+
+    it "returns nil if voided" do
+      outcome = described_class.new(state: "voided")
+      expect(outcome.has_failed?).to eql(nil)
+    end
+  end
+
+  describe "#passed_but_not_sent?" do
+    it "returns true if passed but not sent" do
+      outcome = described_class.new(state: "passed", sent_to_qualified_teachers_api_at: nil)
+      expect(outcome.passed_but_not_sent?).to eql(true)
+    end
+
+    it "returns false if passed and sent" do
+      outcome = described_class.new(state: "passed", sent_to_qualified_teachers_api_at: Time.zone.now)
+      expect(outcome.passed_but_not_sent?).to eql(false)
+    end
+
+    it "returns false if failed" do
+      outcome = described_class.new(state: "failed", sent_to_qualified_teachers_api_at: nil)
+      expect(outcome.passed_but_not_sent?).to eql(false)
+    end
+  end
+
+  describe "#failed_but_not_sent?" do
+    it "returns true if failed but not sent" do
+      outcome = described_class.new(state: "failed", sent_to_qualified_teachers_api_at: nil)
+      expect(outcome.failed_but_not_sent?).to eql(true)
+    end
+
+    it "returns false if failed and sent" do
+      outcome = described_class.new(state: "failed", sent_to_qualified_teachers_api_at: Time.zone.now)
+      expect(outcome.failed_but_not_sent?).to eql(false)
+    end
+
+    it "returns false if passed" do
+      outcome = described_class.new(state: "passed", sent_to_qualified_teachers_api_at: nil)
+      expect(outcome.failed_but_not_sent?).to eql(false)
+    end
+  end
+
+  describe "#passed_and_recorded?" do
+    it "returns true if passed and recorded" do
+      outcome = described_class.new(
+        state: "passed",
+        sent_to_qualified_teachers_api_at: Time.zone.now,
+        qualified_teachers_api_request_successful: true,
+      )
+      expect(outcome.passed_and_recorded?).to eql(true)
+    end
+
+    it "returns false if passed but not recorded" do
+      outcome = described_class.new(
+        state: "passed",
+        sent_to_qualified_teachers_api_at: nil,
+        qualified_teachers_api_request_successful: nil,
+      )
+      expect(outcome.passed_and_recorded?).to eql(false)
+    end
+
+    it "returns false if failed and recorded" do
+      outcome = described_class.new(
+        state: "failed",
+        sent_to_qualified_teachers_api_at: Time.zone.now,
+        qualified_teachers_api_request_successful: true,
+      )
+      expect(outcome.passed_and_recorded?).to eql(false)
+    end
+
+    it "returns false if failed but not recorded" do
+      outcome = described_class.new(
+        state: "failed",
+        sent_to_qualified_teachers_api_at: nil,
+        qualified_teachers_api_request_successful: nil,
+      )
+      expect(outcome.passed_and_recorded?).to eql(false)
+    end
+  end
+
+  describe "#failed_and_recorded?" do
+    it "returns true if failed and recorded" do
+      outcome = described_class.new(
+        state: "failed",
+        sent_to_qualified_teachers_api_at: Time.zone.now,
+        qualified_teachers_api_request_successful: true,
+      )
+      expect(outcome.failed_and_recorded?).to eql(true)
+    end
+
+    it "returns false if failed but not recorded" do
+      outcome = described_class.new(
+        state: "failed",
+        sent_to_qualified_teachers_api_at: nil,
+        qualified_teachers_api_request_successful: nil,
+      )
+      expect(outcome.failed_and_recorded?).to eql(false)
+    end
+
+    it "returns false if passed and recorded" do
+      outcome = described_class.new(
+        state: "passed",
+        sent_to_qualified_teachers_api_at: Time.zone.now,
+        qualified_teachers_api_request_successful: true,
+      )
+      expect(outcome.failed_and_recorded?).to eql(false)
+    end
+
+    it "returns false if passed but not recorded" do
+      outcome = described_class.new(
+        state: "passed",
+        sent_to_qualified_teachers_api_at: nil,
+        qualified_teachers_api_request_successful: nil,
+      )
+      expect(outcome.failed_and_recorded?).to eql(false)
+    end
+  end
+
+  describe "#passed_but_not_recorded?" do
+    it "returns true if passed but not recorded" do
+      outcome = described_class.new(
+        state: "passed",
+        sent_to_qualified_teachers_api_at: Time.zone.now,
+        qualified_teachers_api_request_successful: false,
+      )
+      expect(outcome.passed_but_not_recorded?).to eql(true)
+    end
+
+    it "returns false if passed and recorded" do
+      outcome = described_class.new(
+        state: "passed",
+        sent_to_qualified_teachers_api_at: Time.zone.now,
+        qualified_teachers_api_request_successful: true,
+      )
+      expect(outcome.passed_but_not_recorded?).to eql(false)
+    end
+
+    it "returns false if failed and recorded" do
+      outcome = described_class.new(
+        state: "failed",
+        sent_to_qualified_teachers_api_at: Time.zone.now,
+        qualified_teachers_api_request_successful: true,
+      )
+      expect(outcome.passed_but_not_recorded?).to eql(false)
+    end
+
+    it "returns false if failed but not recorded" do
+      outcome = described_class.new(
+        state: "failed",
+        sent_to_qualified_teachers_api_at: nil,
+        qualified_teachers_api_request_successful: nil,
+      )
+      expect(outcome.passed_but_not_recorded?).to eql(false)
+    end
+  end
+
+  describe "#failed_but_not_recorded?" do
+    it "returns true if failed but not recorded" do
+      outcome = described_class.new(
+        state: "failed",
+        sent_to_qualified_teachers_api_at: Time.zone.now,
+        qualified_teachers_api_request_successful: false,
+      )
+      expect(outcome.failed_but_not_recorded?).to eql(true)
+    end
+
+    it "returns false if failed and recorded" do
+      outcome = described_class.new(
+        state: "failed",
+        sent_to_qualified_teachers_api_at: Time.zone.now,
+        qualified_teachers_api_request_successful: true,
+      )
+      expect(outcome.failed_but_not_recorded?).to eql(false)
+    end
+
+    it "returns false if passed and recorded" do
+      outcome = described_class.new(
+        state: "passed",
+        sent_to_qualified_teachers_api_at: Time.zone.now,
+        qualified_teachers_api_request_successful: true,
+      )
+      expect(outcome.failed_but_not_recorded?).to eql(false)
+    end
+
+    it "returns false if passed but not recorded" do
+      outcome = described_class.new(
+        state: "passed",
+        sent_to_qualified_teachers_api_at: nil,
+        qualified_teachers_api_request_successful: nil,
+      )
+      expect(outcome.failed_but_not_recorded?).to eql(false)
+    end
+  end
 end
