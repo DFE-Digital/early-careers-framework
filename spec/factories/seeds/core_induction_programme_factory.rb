@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory(:seed_core_induction_programme, class: "CoreInductionProgramme") do
-    name { Faker::Company.name }
+    name { ["Ambition Institute", "Education Development Trust", "Teach First", "UCL Institute of Education"].sample }
 
     trait(:valid) {}
 

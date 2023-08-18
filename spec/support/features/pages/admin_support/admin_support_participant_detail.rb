@@ -6,18 +6,31 @@ module Pages
   class AdminSupportParticipantDetail < ::Pages::BasePage
     set_url "/admin/participants/{participant_id}/details"
     # this is a hack as the participants name is the page title
-    set_primary_heading(/^.*$/)
+    set_primary_heading(/^(.*) - Details$/)
 
     def has_training_record_state?(validation_status)
-      element_has_content? self, "Training record state", validation_status
+      # TODO: get language from language files
+      element_has_content? self, "Training record state #{validation_status}"
     end
 
     def has_full_name?(full_name)
-      element_has_content? self, "Full name", full_name, "Change name"
+      element_has_content? self, "Full name#{full_name}Change name"
     end
 
     def has_email_address?(email_address)
-      element_has_content? self, "Email address", email_address, "Change email"
+      element_has_content? self, "User email address#{email_address}Change email"
+    end
+
+    def has_user_id?(user_id)
+      element_has_content? self, "User ID#{user_id}"
+    end
+
+    def has_trn?(trn)
+      element_has_content? self, "TRN#{trn}"
+    end
+
+    def has_cohort?(start_year)
+      element_has_content? self, "Cohort: #{start_year}"
     end
 
     def has_school_transfer?(school_name)
@@ -28,22 +41,18 @@ module Pages
 
     def open_details_tab
       click_on "Details"
+
+      Pages::AdminSupportParticipantDetail.loaded
     end
 
     def open_training_tab
       click_on "Training"
+
+      Pages::AdminSupportParticipantTraining.loaded
     end
 
     def open_statuses_tab
       click_on "Statuses"
-    end
-
-    def has_school?(school_name)
-      element_has_content? self, "School", school_name
-    end
-
-    def has_lead_provider?(lead_provider_name)
-      element_has_content? self, "Lead provider", lead_provider_name
     end
   end
 end

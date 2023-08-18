@@ -55,10 +55,9 @@ module NewSeeds
         def ect_on_fip_no_validation
           school_cohort = fip_school.school_cohort
 
-          @ect_on_fip_no_validation ||= NewSeeds::Scenarios::Participants::Ects::Ect
+          @ect_on_fip_no_validation ||= NewSeeds::Scenarios::Participants::Ects::EctNoValidation
             .new(school_cohort:, full_name: "ECT on FIP: no validation")
-            .build(induction_start_date: nil, teacher_profile_args: { trn: nil })
-            .with_induction_record(induction_programme: school_cohort.default_induction_programme)
+            .build
         end
 
         def ect_on_fip_details_request_submitted
@@ -275,15 +274,12 @@ module NewSeeds
             .with_induction_record(induction_programme: school_cohort.default_induction_programme)
         end
 
-        def ect_on_fip
+        def ect_on_fip_in_training
           school_cohort = fip_school.school_cohort
 
-          @ect_on_fip ||= NewSeeds::Scenarios::Participants::Ects::Ect
-            .new(school_cohort:, full_name: "ECT on FIP")
-            .build(sparsity_uplift: true, pupil_premium_uplift: true)
-            .with_validation_data
-            .with_eligibility
-            .with_induction_record(induction_programme: school_cohort.default_induction_programme)
+          @ect_on_fip_in_training ||= NewSeeds::Scenarios::Participants::Ects::EctInTraining
+            .new(school_cohort:, full_name: "ECT on FIP: In training")
+            .build
         end
 
         def ect_on_fip_withdrawn
@@ -355,21 +351,17 @@ module NewSeeds
           current_school_cohort = fip_school_with_previous_fip_cohort.school_cohorts[Cohort.current.start_year]
           previous_school_cohort = fip_school_with_previous_fip_cohort.school_cohorts[Cohort.previous.start_year]
 
-          @ect_on_fip_after_cohort_transfer ||= travel_to(2.days.ago) do
-            NewSeeds::Scenarios::Participants::Ects::Ect
-                                      .new(school_cohort: current_school_cohort, full_name: "ECT on FIP: after cohort transfer")
-                                      .build
-                                      .with_validation_data
-                                      .with_eligibility
-          end
-
-          @ect_on_fip_after_cohort_transfer
-            .with_induction_record(induction_programme: current_school_cohort.default_induction_programme, induction_status: "changed", start_date: 1.day.ago, end_date: Time.zone.now)
-            .with_induction_record(induction_programme: previous_school_cohort.default_induction_programme, induction_status: "active", start_date: Time.zone.now)
+          @ect_on_fip_after_cohort_transfer ||= NewSeeds::Scenarios::Participants::Ects::EctAfterCohortTransfer
+            .new(
+              school_cohort: current_school_cohort,
+              new_school_cohort: previous_school_cohort,
+              full_name: "ECT on FIP: after cohort transfer",
+            )
+            .build
         end
 
         def ect_on_fip_after_mentor_change
-          return @ect_on_fip_after_cohort_transfer if @ect_on_fip_after_cohort_transfer.present?
+          return @ect_on_fip_after_mentor_change if @ect_on_fip_after_mentor_change.present?
 
           school_cohort = fip_school.school_cohort
           induction_programme = school_cohort.default_induction_programme
@@ -382,7 +374,7 @@ module NewSeeds
                              .with_induction_record(induction_programme: school_cohort.default_induction_programme)
                              .participant_profile
 
-          @ect_on_fip_after_cohort_transfer = travel_to(2.days.ago) do
+          @ect_on_fip_after_mentor_change = travel_to(2.days.ago) do
             NewSeeds::Scenarios::Participants::Ects::Ect
               .new(school_cohort:, full_name: "ECT on FIP: after mentor change")
               .build
@@ -390,7 +382,7 @@ module NewSeeds
               .with_eligibility
           end
 
-          @ect_on_fip_after_cohort_transfer
+          @ect_on_fip_after_mentor_change
             .with_induction_record(induction_programme:, mentor_profile: nil, induction_status: "changed", start_date: 1.day.ago, end_date: Time.zone.now)
             .with_induction_record(induction_programme:, mentor_profile:, induction_status: "active", start_date: Time.zone.now)
         end
@@ -494,10 +486,9 @@ module NewSeeds
         def ect_on_cip_no_validation
           school_cohort = cip_school.school_cohort
 
-          @ect_on_cip_no_validation ||= NewSeeds::Scenarios::Participants::Ects::Ect
+          @ect_on_cip_no_validation ||= NewSeeds::Scenarios::Participants::Ects::EctNoValidation
             .new(school_cohort:, full_name: "ECT on CIP: no validation")
-            .build(induction_start_date: nil, teacher_profile_args: { trn: nil })
-            .with_induction_record(induction_programme: school_cohort.default_induction_programme)
+            .build
         end
 
         def ect_on_cip_details_request_submitted
@@ -681,15 +672,12 @@ module NewSeeds
             .with_induction_record(induction_programme: school_cohort.default_induction_programme)
         end
 
-        def ect_on_cip
+        def ect_on_cip_in_training
           school_cohort = cip_school.school_cohort
 
-          @ect_on_cip ||= NewSeeds::Scenarios::Participants::Ects::Ect
-            .new(school_cohort:, full_name: "ECT on CIP")
-            .build
-            .with_validation_data
-            .with_eligibility
-            .with_induction_record(induction_programme: school_cohort.default_induction_programme)
+          @ect_on_cip_in_training ||= NewSeeds::Scenarios::Participants::Ects::EctInTraining
+                                        .new(school_cohort:, full_name: "ECT on CIP: In training")
+                                        .build
         end
 
         def ect_on_cip_withdrawn

@@ -7,20 +7,26 @@ module Pages
     set_url "/schools/{slug}/participants/{participant_id}"
     set_primary_heading(/^.*$/)
 
-    def confirm_the_participant(name:)
-      has_primary_heading? name
+    def has_participant_name?(full_name)
+      has_primary_heading? full_name
     end
+    alias_method :confirm_participant_name, :has_participant_name?
 
-    def confirm_email_address(email)
+    def has_email?(email)
       element_has_content? self, "Email address #{email}"
     end
+    alias_method :has_email_address?, :has_email?
+    alias_method :confirm_email_address, :has_email?
+    alias_method :confirm_email, :has_email?
 
-    def confirm_full_name(full_name)
+    def has_full_name?(full_name)
       element_has_content? self, "Name #{full_name}"
     end
+    alias_method :confirm_full_name, :has_full_name?
 
-    def confirm_status(status)
-      element_has_content? self, "Status\n#{status}"
+    def has_status?(status)
+      element_has_content? self, "Status #{status}"
     end
+    alias_method :confirm_status, :has_status?
   end
 end

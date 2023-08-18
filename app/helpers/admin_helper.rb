@@ -49,11 +49,12 @@ module AdminHelper
     safe_join(parts.compact_blank, tag.br)
   end
 
-  def admin_participant_header_and_title(profile:, section:)
+  def admin_participant_header_and_title(presenter:, section:)
+    profile = presenter.participant_profile
     full_name = profile.full_name
     role = admin_participant_role_name(profile.class.name)
     trn = profile.teacher_profile.trn
-    cohort = profile.cohort&.start_year
+    start_year = presenter.start_year
 
     visually_hidden = tag.span(" - #{section}", class: "govuk-visually-hidden")
 
@@ -74,7 +75,7 @@ module AdminHelper
         safe_join(
           [
             tag.span("Cohort: ", class: "govuk-body govuk-!-font-weight-bold"),
-            cohort,
+            start_year,
           ],
         )
       end,

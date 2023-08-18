@@ -46,7 +46,7 @@ module Pages
       element_without_content? self, "report that your school has been confirmed incorrectly"
     end
 
-    def view_participant_details
+    def view_participant_dashboard
       click_on("Manage mentors and ECTs")
 
       Pages::SchoolParticipantsDashboardPage.loaded

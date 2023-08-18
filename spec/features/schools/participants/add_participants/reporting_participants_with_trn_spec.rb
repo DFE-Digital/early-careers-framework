@@ -80,7 +80,7 @@ RSpec.describe "Reporting participants with a known TRN", type: :feature, js: tr
 
   scenario "Adding an ECT validates input" do
     given_i_sign_in_as_the_user_with_the_full_name "Fip induction tutor"
-    and_i_view_participant_details_on_the_school_dashboard_page
+    when_i_view_participant_dashboard_on_the_school_dashboard_page
     and_i_choose_to_add_an_ect_or_mentor_on_the_school_participants_dashboard_page
 
     when_i_choose_to_add_a_new_ect_on_the_school_add_participant_wizard
@@ -109,7 +109,7 @@ RSpec.describe "Reporting participants with a known TRN", type: :feature, js: tr
 
   scenario "Adding an ECT is accessible" do
     given_i_sign_in_as_the_user_with_the_full_name "Fip induction tutor"
-    when_i_view_participant_details_on_the_school_dashboard_page
+    when_i_view_participant_dashboard_on_the_school_dashboard_page
     then_the_page_is_accessible
 
     when_i_choose_to_add_an_ect_or_mentor_on_the_school_participants_dashboard_page
@@ -144,7 +144,7 @@ RSpec.describe "Reporting participants with a known TRN", type: :feature, js: tr
   scenario "Adding a Mentor is accessible in automatic assignment period" do
     inside_auto_assignment_window do
       given_i_sign_in_as_the_user_with_the_full_name "Fip induction tutor"
-      when_i_view_participant_details_from_the_school_dashboard_page
+      when_i_view_participant_dashboard_on_the_school_dashboard_page
 
       when_i_choose_to_add_an_ect_or_mentor_from_the_school_participants_dashboard_page
       and_i_choose_to_add_a_new_mentor_on_the_school_add_participant_wizard
@@ -169,7 +169,7 @@ RSpec.describe "Reporting participants with a known TRN", type: :feature, js: tr
   scenario "Adding a Mentor is accessible outside automatic assignment period" do
     outside_auto_assignment_window do
       given_i_sign_in_as_the_user_with_the_full_name "Fip induction tutor"
-      when_i_view_participant_details_from_the_school_dashboard_page
+      when_i_view_participant_dashboard_on_the_school_dashboard_page
 
       when_i_choose_to_add_an_ect_or_mentor_from_the_school_participants_dashboard_page
       and_i_choose_to_add_a_new_mentor_on_the_school_add_participant_wizard

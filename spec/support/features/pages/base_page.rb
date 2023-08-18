@@ -1,9 +1,12 @@
 # frozen_string_literal: true
 
 require_relative "../sections/cookie_consent_banner"
+require "lib/site_prism/table"
 
 module Pages
   class BasePage < SitePrism::Page
+    extend SitePrism::Table
+
     include RSpec::Matchers
 
     element :header, "h1"

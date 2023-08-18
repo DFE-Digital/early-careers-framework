@@ -19,7 +19,7 @@ module Pages
       Pages::SchoolTransferParticipantWizard.loaded
     end
 
-    def visit_participant(participant_name)
+    def view_participant(participant_name)
       click_on participant_name
 
       Pages::SchoolParticipantDetailsPage.loaded
