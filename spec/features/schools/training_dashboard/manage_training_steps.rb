@@ -826,6 +826,10 @@ module ManageTrainingSteps
     expect(page).to have_text("#{@participant_data[:full_name]} has been added as a mentor")
   end
 
+  def then_i_am_taken_to_sit_mentor_added_confirmation_page
+    expect(page).to have_text("You’ve been added as a mentor")
+  end
+
   def then_i_see_the_mentor_name
     expect(page).to have_text(@participant_data[:full_name])
   end
@@ -1155,6 +1159,10 @@ module ManageTrainingSteps
     expect(page).to have_selector("h1", text: "When will #{@participant_data[:full_name]} start their mentor training?")
   end
 
+  def then_i_am_taken_to_sit_mentor_start_training_page
+    expect(page).to have_selector("h1", text: "When will you start mentor training?")
+  end
+
   def then_i_am_taken_to_the_cannot_add_page_same_school
     expect(page).to have_selector("h1", text: "You cannot add Sally Teacher")
     expect(page).to have_text("Our records show this person is already registered on an ECF-based training programme at your school")
@@ -1222,7 +1230,7 @@ module ManageTrainingSteps
   end
 
   def then_i_am_taken_to_you_cant_add_yourself_as_ect_page
-    expect(page).to have_content("You cannot add yourself as ECT")
+    expect(page).to have_content("You cannot add yourself as an ECT")
   end
 
   def and_i_see_the_cip_programme

@@ -53,14 +53,14 @@ RSpec.describe "SIT adding mentor", js: true do
     then_i_am_taken_to_are_you_sure_page
 
     when_i_click_on_confirm
-    then_i_am_taken_to_mentor_start_training_page
+    then_i_am_taken_to_sit_mentor_start_training_page
 
     when_i_choose_summer_term_2023
     when_i_click_on_continue
     then_i_am_taken_to_check_answers_page
 
     when_i_click_confirm_and_add
-    then_i_am_taken_to_mentor_added_confirmation_page
+    then_i_am_taken_to_sit_mentor_added_confirmation_page
 
     click_on "View your ECTs and mentors"
     then_i_see_the_sit_name

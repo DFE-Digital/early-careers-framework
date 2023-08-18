@@ -40,6 +40,9 @@ module Schools
           else
             show_path_for(step: :email)
           end
+        elsif form.next_step == :abort
+          reset_form
+          abort_path
         else
           show_path_for(step: form.next_step)
         end
@@ -129,8 +132,10 @@ module Schools
       end
 
       def find_existing_mentor_by_trn
-        profile = ECFParticipantValidationData.find_by(trn:)&.participant_profile
-        profile if profile.mentor?
+        teacher_profile = TeacherProfile.find_by(trn:)
+        return if teacher_profile.nil?
+
+        teacher_profile.ecf_profiles.mentors.first
       end
 
       def sit_adding_themself_as_existing_mentor?

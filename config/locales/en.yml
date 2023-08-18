@@ -418,6 +418,10 @@ en:
           attributes:
             mentor_id:
               blank: "Choose a mentor"
+        schools/add_participants/wizard_steps/cannot_add_yourself_as_ect_step:
+          attributes:
+            participant_type:
+              inclusion: "Select whether to add yourself as a mentor or cancel"
         schools/transferring_participant_form:
           attributes:
             full_name:
