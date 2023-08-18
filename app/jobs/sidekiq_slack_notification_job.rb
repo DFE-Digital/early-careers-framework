@@ -26,7 +26,7 @@ private
       mrkdwn: true,
     }
 
-    slack_alerts_webhook_urls.map do |slack_alerts_webhook_url|
+    slack_alerts_webhook_urls&.map do |slack_alerts_webhook_url|
       uri = URI(slack_alerts_webhook_url)
       request = Net::HTTP::Post.new(uri)
       request["Content-Type"] = "application/json"
