@@ -30,6 +30,11 @@ module Api
             return false if ecf_participant_eligibility_status == "ineligible"
           end
 
+          def can_view_personal_details?(user, cpd_lead_provider)
+            gdpr_request = user.teacher_profile&.gdpr_requests&.where(cpd_lead_provider:)&.first
+            gdpr_request.blank?
+          end
+
           def withdrawal(profile:, cpd_lead_provider:, latest_induction_record:)
             if latest_induction_record.training_status_withdrawn?
               # We are doing this in memory to avoid running those as queries on each request
@@ -98,7 +103,9 @@ module Api
 
         set_type :participant
 
-        attribute :full_name
+        attribute :full_name do |object, params|
+          object.full_name if can_view_personal_details?(object, params[:cpd_lead_provider])
+        end
 
         attribute(:teacher_reference_number) do |object|
           object.teacher_profile&.trn
@@ -121,7 +128,7 @@ module Api
 
             {
               training_record_id: profile.id,
-              email: latest_induction_record.preferred_identity&.email.presence || object.email,
+              email: can_view_personal_details?(object, params[:cpd_lead_provider]) ? latest_induction_record.preferred_identity&.email.presence || object.email : nil,
               mentor_id: latest_induction_record.participant_profile&.ect? ? latest_induction_record.mentor_profile&.participant_identity&.user_id : nil,
               school_urn: latest_induction_record.induction_programme&.school_cohort&.school&.urn,
               participant_type: profile.ect? ? :ect : :mentor,

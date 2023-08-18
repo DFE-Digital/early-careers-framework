@@ -139,6 +139,34 @@ module Api
                 expect(result[:data][0][:attributes][:ecf_enrolments][0][:email]).to eq(latest_induction_record.preferred_identity.email)
               end
             end
+
+            context "when a GDPR Request to restrict processing" do
+              context "is not present" do
+                it "does include personal information" do
+                  expect(result[:data][0][:attributes][:ecf_enrolments][0][:email]).to eq(participant.email)
+                  expect(result[:data][0][:attributes][:full_name]).to eq(participant.full_name)
+                end
+              end
+
+              context "is present for the current lead provider" do
+                let!(:gdpr_request) { GDPRRequest.create(teacher_profile: ect_profile.teacher_profile, cpd_lead_provider:, reason: :restrict_processing) }
+
+                it "does not include personal information" do
+                  expect(result[:data][0][:attributes][:ecf_enrolments][0][:email]).to be_blank
+                  expect(result[:data][0][:attributes][:full_name]).to be_blank
+                end
+              end
+
+              context "is present for another lead provider" do
+                let(:other_cpd_lead_provider) { create(:cpd_lead_provider) }
+                let!(:gdpr_request) { GDPRRequest.create(teacher_profile: ect_profile.teacher_profile, cpd_lead_provider: other_cpd_lead_provider, reason: :restrict_processing) }
+
+                it "does include personal information" do
+                  expect(result[:data][0][:attributes][:ecf_enrolments][0][:email]).to eq(participant.email)
+                  expect(result[:data][0][:attributes][:full_name]).to eq(participant.full_name)
+                end
+              end
+            end
           end
         end
       end

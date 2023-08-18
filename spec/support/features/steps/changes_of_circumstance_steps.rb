@@ -426,7 +426,7 @@ module Steps
     def then_ecf_participants_api_does_not_have_participant_details(lead_provider_name, participant_name)
       user = User.find_by(full_name: participant_name)
 
-      declarations_endpoint = APIs::ECFParticipantsEndpoint.load tokens[lead_provider_name]
+      declarations_endpoint = APIs::V1::ECFParticipantsEndpoint.load tokens[lead_provider_name]
       expect { declarations_endpoint.get_participant(user.id) }.to raise_error(Capybara::ElementNotFound)
     end
 
@@ -434,7 +434,7 @@ module Steps
       user = User.find_by(full_name: participant_name)
       school = School.find_by(name: school_name)
 
-      endpoint = APIs::ECFParticipantsEndpoint.load(tokens[lead_provider_name])
+      endpoint = APIs::V1::ECFParticipantsEndpoint.load(tokens[lead_provider_name])
       endpoint.get_participant user.id
 
       endpoint.has_full_name? participant_name

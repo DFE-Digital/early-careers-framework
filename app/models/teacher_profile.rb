@@ -6,6 +6,7 @@ class TeacherProfile < ApplicationRecord
   belongs_to :school, optional: true
 
   has_many :participant_profiles, dependent: :destroy
+  has_many :gdpr_requests, class_name: "GDPRRequest", dependent: :destroy
 
   # TODO: Legacy associations, to be removed
   has_one :early_career_teacher_profile, -> { active_record }, class_name: "ParticipantProfile::ECT"

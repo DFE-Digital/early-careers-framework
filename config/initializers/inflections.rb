@@ -26,4 +26,5 @@ ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.acronym "STI"
   inflect.acronym "BPN"
   inflect.acronym "DQT"
+  inflect.acronym "GDPR"
 end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "./participants_endpoint"
+require_relative "./base_endpoint"
 
 module APIs
   class NPQApplicationsEndpoint < APIs::BaseEndpoint

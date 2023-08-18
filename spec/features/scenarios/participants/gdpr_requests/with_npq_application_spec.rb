@@ -4,10 +4,17 @@ require "rails_helper"
 
 RSpec.feature "GDPR Request: with NPQ Application", type: :feature do
   let!(:participant_details) do
-    NewSeeds::Scenarios::Participants::Mentors::MentorWithNPQApplicationAfterGDPRRequest
+    NewSeeds::Scenarios::Participants::Mentors::MentorWithNPQApplication
       .new(school_cohort:, full_name: participant_full_name)
       .build
+      .tap do |participant_details|
+        cpd_lead_provider = participant_details.participant_profile.induction_records.latest.cpd_lead_provider
+        teacher_profile = participant_details.teacher_profile
+
+        FactoryBot.create :seed_gdpr_request, teacher_profile:, cpd_lead_provider:, reason: :restrict_processing
+      end
   end
+
   let(:participant_id) { participant_profile.user.id }
   let(:participant_email) { participant_profile.user.email }
   let(:participant_full_name) { "Mentor: with NPQ Application" }
@@ -96,18 +103,18 @@ RSpec.feature "GDPR Request: with NPQ Application", type: :feature do
   scenario "The current lead provider can locate a record for the Mentor" do
     lead_provider_token = LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: lead_provider_details.cpd_lead_provider)
 
-    ecf_participant_endpoint = APIs::ECFParticipantsEndpoint.load(lead_provider_token)
+    ecf_participant_endpoint = APIs::V1::ECFParticipantsEndpoint.load(lead_provider_token)
 
     ecf_participant_endpoint.get_participant participant_id
-    expect(ecf_participant_endpoint).to have_email_address participant_email
-    expect(ecf_participant_endpoint).to have_full_name participant_full_name
+    expect(ecf_participant_endpoint).to have_email_address nil
+    expect(ecf_participant_endpoint).to have_full_name nil
     expect(ecf_participant_endpoint).to have_trn teacher_reference_number
 
-    participant_endpoint = APIs::ParticipantsEndpoint.load(lead_provider_token)
+    participant_endpoint = APIs::V1::ParticipantsEndpoint.load(lead_provider_token)
 
     participant_endpoint.get_participant participant_id
-    expect(participant_endpoint).to have_email_address participant_email
-    expect(participant_endpoint).to have_full_name participant_full_name
+    expect(participant_endpoint).to have_email_address nil
+    expect(participant_endpoint).to have_full_name nil
     expect(participant_endpoint).to have_trn teacher_reference_number
   end
 

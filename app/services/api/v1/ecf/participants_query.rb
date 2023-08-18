@@ -17,6 +17,7 @@ module Api
           scope = InductionRecord
                     .select(*necessary_fields)
                     .eager_load(:schedule)
+                    .joins(induction_programme: { partnership: { lead_provider: %i[cpd_lead_provider] } })
                     .left_outer_joins(
                       induction_programme: { school_cohort: %i[school cohort] },
                       participant_profile: %i[ecf_participant_eligibility ecf_participant_validation_data teacher_profile user],
@@ -26,6 +27,7 @@ module Api
                     .joins(left_outer_join_participant_identities)
                     .joins(left_outer_join_mentor_profiles)
                     .joins(left_outer_join_mentor_participant_identities)
+                    .joins(left_outer_join_gdpr_requests)
                     .joins("JOIN (#{latest_induction_records_join.to_sql}) AS latest_induction_records ON latest_induction_records.latest_id = induction_records.id")
 
           if updated_since.present?
@@ -75,16 +77,21 @@ module Api
           "LEFT OUTER JOIN participant_identities participant_identities_mentor_profiles ON participant_identities_mentor_profiles.id = mentor_profiles.participant_identity_id"
         end
 
+        def left_outer_join_gdpr_requests
+          "LEFT OUTER JOIN gdpr_requests ON teacher_profiles.id = gdpr_requests.teacher_profile_id AND cpd_lead_providers.id = gdpr_requests.cpd_lead_provider_id"
+        end
+
         def necessary_fields
           induction_record_fields +
             participant_profile_fields +
             participant_identity_fields +
             user_fields +
-            ecf_participant_eligibily_fields +
+            ecf_participant_eligibility_fields +
             school_fields +
             teacher_profile_fields +
             ecf_participant_validation_fields +
-            cohort_fields
+            cohort_fields +
+            gdpr_request_fields
         end
 
         def school_fields
@@ -103,7 +110,7 @@ module Api
           ["cohorts.start_year AS start_year"]
         end
 
-        def ecf_participant_eligibily_fields
+        def ecf_participant_eligibility_fields
           [
             "ecf_participant_eligibilities.reason AS ecf_participant_eligibility_reason",
             "ecf_participant_eligibilities.status AS ecf_participant_eligibility_status",
@@ -135,6 +142,10 @@ module Api
             "participant_profiles.updated_at AS participant_profile_updated_at",
             "participant_profiles.type AS participant_profile_type",
           ]
+        end
+
+        def gdpr_request_fields
+          ["gdpr_requests.reason IS NULL AS can_view_personal_details"]
         end
 
         def induction_record_fields

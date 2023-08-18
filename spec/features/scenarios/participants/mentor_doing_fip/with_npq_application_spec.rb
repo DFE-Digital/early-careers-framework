@@ -122,7 +122,7 @@ RSpec.feature "Mentor: with NPQ Application", type: :feature do
   scenario "The current lead provider can locate a record for the Mentor" do
     lead_provider_token = LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: lead_provider_details.cpd_lead_provider)
 
-    ecf_participant_endpoint = APIs::ECFParticipantsEndpoint.load(lead_provider_token)
+    ecf_participant_endpoint = APIs::V1::ECFParticipantsEndpoint.load(lead_provider_token)
     ecf_participant_endpoint.get_participant participant_id
 
     expect(ecf_participant_endpoint).to have_email_address participant_email
@@ -141,7 +141,7 @@ RSpec.feature "Mentor: with NPQ Application", type: :feature do
     expect(ecf_participant_endpoint).to have_training_record_id training_record_id
     expect(ecf_participant_endpoint).to have_schedule_identifier schedule_identifier
 
-    participant_endpoint = APIs::ParticipantsEndpoint.load(lead_provider_token)
+    participant_endpoint = APIs::V1::ParticipantsEndpoint.load(lead_provider_token)
     participant_endpoint.get_participant participant_id
 
     expect(participant_endpoint).to have_email_address participant_email

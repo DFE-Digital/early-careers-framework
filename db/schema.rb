@@ -376,6 +376,16 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_21_154316) do
     t.index ["sluggable_type", "sluggable_id"], name: "index_friendly_id_slugs_on_sluggable_type_and_sluggable_id"
   end
 
+  create_table "gdpr_requests", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "cpd_lead_provider_id", null: false
+    t.uuid "teacher_profile_id", null: false
+    t.string "reason", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cpd_lead_provider_id"], name: "index_gdpr_requests_on_cpd_lead_provider_id"
+    t.index ["teacher_profile_id"], name: "index_gdpr_requests_on_teacher_profile_id"
+  end
+
   create_table "induction_coordinator_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "user_id", null: false
     t.datetime "created_at", null: false
@@ -1105,6 +1115,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_21_154316) do
   add_foreign_key "feature_selected_objects", "features"
   add_foreign_key "finance_adjustments", "statements"
   add_foreign_key "finance_profiles", "users"
+  add_foreign_key "gdpr_requests", "cpd_lead_providers"
+  add_foreign_key "gdpr_requests", "teacher_profiles"
   add_foreign_key "induction_coordinator_profiles", "users"
   add_foreign_key "induction_programmes", "core_induction_programmes"
   add_foreign_key "induction_programmes", "partnerships"
@@ -1250,7 +1262,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_21_154316) do
               count(*) AS count
              FROM (participant_profiles participant_profiles_1
                JOIN participant_identities participant_identities_1 ON ((participant_identities_1.id = participant_profiles_1.participant_identity_id)))
-            WHERE ((participant_profiles_1.type)::text = ANY (ARRAY[('ParticipantProfile::ECT'::character varying)::text, ('ParticipantProfile::Mentor'::character varying)::text]))
+            WHERE ((participant_profiles_1.type)::text = ANY ((ARRAY['ParticipantProfile::ECT'::character varying, 'ParticipantProfile::Mentor'::character varying])::text[]))
             GROUP BY participant_profiles_1.type, participant_identities_1.user_id) duplicates ON ((duplicates.user_id = participant_identities.user_id)))
        LEFT JOIN teacher_profiles ON ((teacher_profiles.id = participant_profiles.teacher_profile_id)))
        LEFT JOIN schedules ON ((latest_induction_records.schedule_id = schedules.id)))
@@ -1262,9 +1274,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_21_154316) do
     WHERE ((participant_identities.user_id IN ( SELECT participant_identities_1.user_id
              FROM (participant_profiles participant_profiles_1
                JOIN participant_identities participant_identities_1 ON ((participant_identities_1.id = participant_profiles_1.participant_identity_id)))
-            WHERE ((participant_profiles_1.type)::text = ANY (ARRAY[('ParticipantProfile::ECT'::character varying)::text, ('ParticipantProfile::Mentor'::character varying)::text]))
+            WHERE ((participant_profiles_1.type)::text = ANY ((ARRAY['ParticipantProfile::ECT'::character varying, 'ParticipantProfile::Mentor'::character varying])::text[]))
             GROUP BY participant_profiles_1.type, participant_identities_1.user_id
-           HAVING (count(*) > 1))) AND ((participant_profiles.type)::text = ANY (ARRAY[('ParticipantProfile::ECT'::character varying)::text, ('ParticipantProfile::Mentor'::character varying)::text])))
+           HAVING (count(*) > 1))) AND ((participant_profiles.type)::text = ANY ((ARRAY['ParticipantProfile::ECT'::character varying, 'ParticipantProfile::Mentor'::character varying])::text[])))
     ORDER BY participant_identities.external_identifier, (row_number() OVER (PARTITION BY participant_identities.user_id ORDER BY
           CASE
               WHEN (((latest_induction_records.training_status)::text = 'active'::text) AND ((latest_induction_records.induction_status)::text = 'active'::text)) THEN 1

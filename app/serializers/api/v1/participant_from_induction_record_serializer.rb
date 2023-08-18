@@ -24,6 +24,11 @@ module Api
           return true if ecf_participant_eligibility.eligible_status?
           return false if ecf_participant_eligibility.ineligible_status?
         end
+
+        def can_view_personal_details?(induction_record)
+          @gdpr_request = induction_record.participant_profile.teacher_profile.gdpr_requests.where(cpd_lead_provider: induction_record.cpd_lead_provider).first
+          @gdpr_request.blank?
+        end
       end
 
       set_type :participant
@@ -33,12 +38,11 @@ module Api
       end
 
       attribute :email do |induction_record|
-        induction_record.preferred_identity&.email ||
-          induction_record.participant_profile.user.email
+        induction_record.preferred_identity&.email || induction_record.participant_profile.user.email if can_view_personal_details?(induction_record)
       end
 
       attribute :full_name do |induction_record|
-        induction_record.participant_profile.user.full_name
+        induction_record.participant_profile.user.full_name if can_view_personal_details?(induction_record)
       end
 
       attribute :mentor_id do |induction_record|

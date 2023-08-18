@@ -31,11 +31,12 @@ module Api
       set_id :id, &:user_id
 
       attribute :email do |induction_record|
-        induction_record.preferred_identity_email ||
-          induction_record.user_email
+        induction_record.preferred_identity_email || induction_record.user_email if induction_record.can_view_personal_details
       end
 
-      attribute :full_name, &:full_name
+      attribute :full_name do |induction_record|
+        induction_record.full_name if induction_record.can_view_personal_details
+      end
 
       attribute :mentor_id do |induction_record|
         if induction_record.participant_profile_type == "ParticipantProfile::ECT"
