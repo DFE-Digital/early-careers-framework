@@ -2,14 +2,14 @@
   <%= tag.h2(heading, class: "govuk-heading-l") %>
 
   <% if empty? %>
-    <p>No partnerships or relationships in the <%= cohort.start_year %> cohort.</p>
+    <p class="govuk-body">No partnerships or relationships in the <%= cohort.start_year %> cohort.</p>
   <% else %>
     <% partnership_components.each do |pc| %>
       <%= pc %>
     <% end %>
 
     <% if relationship_components.any? %>
-      <h3>Additional relationships</h3>
+      <h3 class="govuk-heading-m">Additional relationships</h3>
 
       <% relationship_components.each do |rc| %>
         <%= rc %>
