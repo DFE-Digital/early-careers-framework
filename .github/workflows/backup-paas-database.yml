@@ -14,13 +14,14 @@ on:
 
 jobs:
   backup:
-    name: Backup ( ${{ github.event.inputs.environment }} )
+    name: Backup (${{ github.event.inputs.environment }})
     runs-on: ubuntu-latest
     environment:
       name: ${{ github.event.inputs.environment }}
 
     steps:
-      - name: Setup cf cli
+      - name: Setup cf cli (staging)
+        if: github.event.inputs.environment == 'staging'
         uses: DFE-Digital/github-actions/setup-cf-cli@master
         with:
           CF_USERNAME: ${{ secrets.GOVPAAS_STAG_USERNAME }}
@@ -28,12 +29,30 @@ jobs:
           CF_SPACE_NAME: early-careers-framework-staging
           INSTALL_CONDUIT: true
 
+      - name: Setup cf cli (sandbox)
+        if: github.event.inputs.environment == 'sandbox'
+        uses: DFE-Digital/github-actions/setup-cf-cli@master
+        with:
+          CF_USERNAME: ${{ secrets.GOVPAAS_SAND_USERNAME }}
+          CF_PASSWORD: ${{ secrets.GOVPAAS_SAND_PASSWORD }}
+          CF_SPACE_NAME: early-careers-framework-sandbox
+          INSTALL_CONDUIT: true
+
+      - name: Setup cf cli (production)
+        if: github.event.inputs.environment == 'production'
+        uses: DFE-Digital/github-actions/setup-cf-cli@master
+        with:
+          CF_USERNAME: ${{ secrets.GOVPAAS_PROD_USERNAME }}
+          CF_PASSWORD: ${{ secrets.GOVPAAS_PROD_PASSWORD }}
+          CF_SPACE_NAME: early-careers-framework-production
+          INSTALL_CONDUIT: true
+
       - name: Setup postgres client
         uses: DFE-Digital/github-actions/install-postgres-client@master
 
       - name: Backup database
         run: |
-          cf conduit ecf-postgres-staging -- pg_dump -E utf8 --clean --compress=1 --if-exists --no-owner --no-privileges --verbose -f backup.sql.gz
+          cf conduit ecf-postgres-${{ github.event.inputs.environment }} -- pg_dump -E utf8 --clean --compress=1 --if-exists --no-owner --no-privileges --verbose -f backup.sql.gz
 
       - name: Upload backup
         uses: actions/upload-artifact@v3
@@ -43,7 +62,7 @@ jobs:
           retention-days: 1
 
   restore:
-    name: Restore ( ${{ github.event.inputs.environment }} )
+    name: Restore (${{ github.event.inputs.environment }})
     environment:
       name: ${{ github.event.inputs.environment }}
     needs: [backup]
@@ -58,7 +77,6 @@ jobs:
         with:
           name: backup
 
-      # this isn't working but looks like it should
       - name: Login
         uses: azure/login@v1
         with:
@@ -75,12 +93,12 @@ jobs:
         run: make install-konduit
 
       - name: Restore database
-        run: bin/konduit.sh -i backup.sql.gz -c cpd-ecf-staging-web -- psql
+        run: bin/konduit.sh -i backup.sql.gz -c cpd-ecf-${{ github.event.inputs.environment }}-web -- psql
 
       - name: Remove PaaS event triggers
         shell: bash
         run: |
-          bin/konduit.sh cpd-ecf-staging-web -- psql -c 'drop event trigger forbid_ddl_reader; drop event trigger make_readable; drop event trigger reassign_owned;'
+          bin/konduit.sh cpd-ecf-${{ github.event.inputs.environment }}-web -- psql -c 'drop event trigger forbid_ddl_reader; drop event trigger make_readable; drop event trigger reassign_owned;'
 
       - uses: geekyeggo/delete-artifact@v2
         with:
