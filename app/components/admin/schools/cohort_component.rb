@@ -20,7 +20,7 @@ module Admin
       end
 
       def heading
-        tag.h2(safe_join([cohort.start_year, "partnership"], " "))
+        "#{cohort.start_year} partnership"
       end
 
       def empty?
