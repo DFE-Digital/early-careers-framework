@@ -13,6 +13,7 @@ FactoryBot.define do
     service_fee_installments { 19 }
     cohort { Cohort.current || create(:cohort, :current) }
     targeted_delivery_funding_per_participant { 100.0 }
+    monthly_service_fee { 0.0 }
   end
 
   trait :npq_leading_teaching do

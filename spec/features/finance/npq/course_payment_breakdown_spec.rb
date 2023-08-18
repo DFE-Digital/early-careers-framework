@@ -35,7 +35,7 @@ RSpec.feature "NPQ Course payment breakdown", type: :feature, js: true do
 
   let(:cohort_2022) { Cohort.find_by(start_year: 2022) }
 
-  scenario "see a payment breakdown per NPQ course and a payment breakdown of each individual NPQ courses for each provider" do
+  scenario "See a payment breakdown per NPQ course and a payment breakdown of each individual NPQ courses for each provider" do
     given_i_am_logged_in_as_a_finance_user
     and_those_courses_have_submitted_declarations
     when_i_visit_the_payment_breakdown_page
@@ -45,8 +45,35 @@ RSpec.feature "NPQ Course payment breakdown", type: :feature, js: true do
     then_i_should_see_correct_statement_summary
     then_i_should_see_correct_course_summary
     then_i_should_see_correct_output_payment_breakdown
-    then_i_should_see_correct_service_fee_payment_breakdown
+    then_i_should_not_see_service_fee
     then_i_should_see_the_correct_total
+    and_the_page_should_be_accessible
+
+    expect(page)
+      .to have_link("Download declarations (CSV)", href: finance_npq_statement_assurance_report_path(statement, format: :csv))
+
+    when_i_click_on_view_within_statement_summary
+    then_i_see_voided_declarations
+    when_i_click "Back"
+    when_i_click_on_view_contract
+    then_i_see_contract_information
+    and_the_page_should_be_accessible
+  end
+
+  scenario "NPQ Contracts with calculated service fees" do
+    given_i_am_logged_in_as_a_finance_user
+    and_those_courses_have_submitted_declarations
+    and_npq_contracts_have_service_fee_set_nil
+    when_i_visit_the_payment_breakdown_page
+    and_choose_to_see_npq_payment_breakdown
+    and_i_select_an_npq_lead_provider
+
+    then_i_should_see_correct_statement_summary
+    then_i_should_see_correct_total_service_fees
+    then_i_should_see_correct_course_summary
+    then_i_should_see_correct_output_payment_breakdown
+    then_i_should_see_correct_service_fee_payment_breakdown
+    then_i_should_see_the_correct_total_with_service_fees
     and_the_page_should_be_accessible
 
     expect(page)
@@ -74,9 +101,10 @@ RSpec.feature "NPQ Course payment breakdown", type: :feature, js: true do
   context "Targeted delivery funding" do
     let(:cohort) { Cohort.find_by(start_year: 2022) || create(:cohort, start_year: 2022) }
 
-    scenario "see payment breakdown with targeted delivery funding" do
+    scenario "See payment breakdown with targeted delivery funding" do
       given_i_am_logged_in_as_a_finance_user
       and_those_courses_have_submitted_declarations
+      and_npq_contracts_have_service_fee_set_nil
       and_there_are_targeted_delivery_funding_declarations
       when_i_visit_the_payment_breakdown_page
       and_choose_to_see_npq_payment_breakdown
@@ -90,6 +118,12 @@ RSpec.feature "NPQ Course payment breakdown", type: :feature, js: true do
       then_i_should_see_the_correct_total_including_targeted_delivery_funding
       and_the_page_should_be_accessible
     end
+  end
+
+  def and_npq_contracts_have_service_fee_set_nil
+    npq_leading_teaching_contract.update!(monthly_service_fee: nil)
+    npq_leading_behaviour_culture_contract.update!(monthly_service_fee: nil)
+    npq_leading_teaching_development_contract.update!(monthly_service_fee: nil)
   end
 
   def and_a_duplicate_npq_contract_exists
@@ -194,8 +228,12 @@ RSpec.feature "NPQ Course payment breakdown", type: :feature, js: true do
   def then_i_should_see_correct_overall_payments
     within(".app-application__panel__summary") do
       expect(page).to have_content("Output payment\n#{number_to_pounds total_output_payment}")
+    end
+  end
+
+  def then_i_should_see_correct_total_service_fees
+    within(".app-application__panel__summary") do
       expect(page).to have_content("Service fee\n#{number_to_pounds total_service_fees_monthly}")
-      expect(page).to have_content("VAT\n#{number_to_pounds overall_vat}")
     end
   end
 
@@ -271,6 +309,10 @@ RSpec.feature "NPQ Course payment breakdown", type: :feature, js: true do
     end
   end
 
+  def then_i_should_not_see_service_fee
+    expect(page).to_not have_content("Service fee")
+  end
+
   def then_i_should_see_correct_service_fee_payment_breakdown_below_targeted_delivery_funding
     within first(".app-application__card") do
       expect(page).to have_css("tr:nth-child(3) td:nth-child(1)", text: "Service fee")
@@ -290,6 +332,13 @@ RSpec.feature "NPQ Course payment breakdown", type: :feature, js: true do
   end
 
   def then_i_should_see_the_correct_total
+    within first(".app-application__card") do
+      expect(page).to have_content("Course total")
+      expect(page).to have_content(number_to_pounds(1_458))
+    end
+  end
+
+  def then_i_should_see_the_correct_total_with_service_fees
     within first(".app-application__card") do
       expect(page).to have_content("Course total")
       expect(page).to have_content(number_to_pounds(1_458 + 1_227.79))

@@ -14,7 +14,7 @@ RSpec.describe Finance::NPQ::StatementCalculator do
   let!(:npq_leadership_schedule) { create(:npq_leadership_schedule, cohort:) }
   let!(:npq_specialist_schedule) { create(:npq_specialist_schedule, cohort:) }
   let!(:npq_course)              { create(:npq_leadership_course, identifier: "npq-leading-teaching") }
-  let!(:contract)                { create(:npq_contract, npq_lead_provider:, cohort:) }
+  let!(:contract)                { create(:npq_contract, npq_lead_provider:, cohort:, monthly_service_fee: nil) }
 
   subject { described_class.new(statement:) }
 
@@ -117,20 +117,6 @@ RSpec.describe Finance::NPQ::StatementCalculator do
       it "does not count them" do
         expect(statement.statement_line_items.awaiting_clawback).to exist
         expect(subject.total_completed).to be_zero
-      end
-    end
-  end
-
-  describe "#overall_vat" do
-    let(:default_total) { BigDecimal("0.1212631578947368421052631578947368421064e4") }
-
-    context "when reconcile_amount is present and VAT is applicable" do
-      before do
-        statement.update!(reconcile_amount: 1234)
-      end
-
-      it "affects the amount to reconcile by" do
-        expect(subject.overall_vat).to eq((default_total + 1234) * 0.2)
       end
     end
   end

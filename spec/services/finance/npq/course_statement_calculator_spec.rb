@@ -13,7 +13,7 @@ RSpec.describe Finance::NPQ::CourseStatementCalculator do
   let(:cpd_lead_provider)   { statement.cpd_lead_provider }
   let(:npq_lead_provider)   { cpd_lead_provider.npq_lead_provider }
   let(:participant_profile) { create(:npq_application, :accepted, :eligible_for_funding, npq_course:, npq_lead_provider:).profile }
-  let!(:contract)           { create(:npq_contract, npq_lead_provider:, course_identifier: npq_course.identifier, cohort:) }
+  let!(:contract)           { create(:npq_contract, npq_lead_provider:, course_identifier: npq_course.identifier, cohort:, monthly_service_fee: nil) }
   subject { described_class.new(statement:, contract:) }
 
   describe "#billable_declarations_count_for_declaration_type" do
@@ -207,8 +207,20 @@ RSpec.describe Finance::NPQ::CourseStatementCalculator do
   end
 
   describe "#monthly_service_fees" do
-    it "returns calculated service fee" do
-      expect(subject.monthly_service_fees).to eql(BigDecimal("0.1212631578947368421052631578947368421064e4"))
+    context "when monthly_service_fee on contract set to nil" do
+      let(:contract) do
+        create(
+          :npq_contract,
+          npq_lead_provider:,
+          course_identifier: npq_course.identifier,
+          cohort:,
+          monthly_service_fee: nil,
+        )
+      end
+
+      it "returns calculated service fee" do
+        expect(subject.monthly_service_fees).to eql(BigDecimal("0.1212631578947368421052631578947368421064e4"))
+      end
     end
 
     context "when monthly_service_fee present on contract" do
@@ -223,6 +235,21 @@ RSpec.describe Finance::NPQ::CourseStatementCalculator do
 
       it "returns monthly_service_fee from contract" do
         expect(subject.monthly_service_fees).to eql(5432.10)
+      end
+    end
+
+    context "when monthly_service_fee on contract set to 0.0" do
+      let(:contract) do
+        create(
+          :npq_contract,
+          npq_lead_provider:,
+          course_identifier: npq_course.identifier,
+          monthly_service_fee: 0.0,
+        )
+      end
+
+      it "returns zero monthly_service_fee from contract" do
+        expect(subject.monthly_service_fees).to eql(0.0)
       end
     end
   end

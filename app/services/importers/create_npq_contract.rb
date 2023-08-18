@@ -32,6 +32,7 @@ module Importers
           )
 
           contract.update!(
+            monthly_service_fee: 0.0,
             recruitment_target: row["recruitment_target"].to_i,
             per_participant: row["per_participant"],
             service_fee_installments: row["service_fee_installments"].to_i,

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "payment_calculator/npq/service_fees"
+require "payment_calculator/npq/output_payment"
 
 module Finance
   module NPQ
@@ -107,7 +108,9 @@ module Finance
       end
 
       def monthly_service_fees
-        contract.monthly_service_fee || calculated_service_fee
+        return calculated_service_fee if contract.monthly_service_fee.nil?
+
+        contract.monthly_service_fee
       end
 
       def course_total

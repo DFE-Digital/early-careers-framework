@@ -14,10 +14,6 @@ module Finance
         @statement = statement
       end
 
-      def total_with_vat
-        total_payment + vat
-      end
-
       def total_output_payment
         contracts.sum do |contract|
           CourseStatementCalculator.new(statement:, contract:).output_payment_subtotal
@@ -52,14 +48,6 @@ module Finance
         clawback_payments + total_targeted_delivery_funding_refundable
       end
 
-      def overall_vat
-        total_payment * vat_rate
-      end
-
-      def vat
-        total_payment * (npq_lead_provider.vat_chargeable ? 0.2 : 0.0)
-      end
-
       def total_payment
         total_service_fees + total_output_payment - total_clawbacks + statement.reconcile_amount + total_targeted_delivery_funding
       end
@@ -87,10 +75,6 @@ module Finance
       end
 
     private
-
-      def vat_rate
-        npq_lead_provider.vat_chargeable ? 0.2 : 0.0
-      end
 
       def voided_declarations
         statement.participant_declarations.voided.unique_id

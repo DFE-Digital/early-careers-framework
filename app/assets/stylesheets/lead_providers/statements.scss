@@ -54,6 +54,10 @@
   p {
      display: flex;
      justify-content: space-between;
+
+     span {
+       margin-left: 15px;
+     }
   }
 
   h4.govuk-heading-l {
