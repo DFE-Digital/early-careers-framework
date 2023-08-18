@@ -35,7 +35,7 @@ gem "ar-uuid", "~> 0.2.3"
 gem "puma", "~> 5.6"
 
 # Soft delete
-gem "discard", "~> 1.2", ">= 1.2.0"
+gem "discard", "~> 1.3"
 
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", "~> 1.16", require: false
