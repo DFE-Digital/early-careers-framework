@@ -27,6 +27,7 @@ private
   def given_there_is_a_cip_school_in_2021
     school = create(:school, name: "Test school")
     cohort = Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021)
+    create(:seed_partnership, :with_lead_provider, :valid, cohort:, school:)
     chosen_cip = create(:core_induction_programme, name: "Chosen CIP")
     @school_cohort = create(:school_cohort,
                             school:,
@@ -44,7 +45,7 @@ private
   end
 
   def and_i_click_the_change_materials_link
-    find("[data-test=change-materials]").click
+    click_link("Change materials")
   end
 
   def the_change_materials_page

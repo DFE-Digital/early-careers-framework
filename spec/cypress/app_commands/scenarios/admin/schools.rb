@@ -16,6 +16,11 @@ cip_2 = FactoryBot.create(:core_induction_programme, name: "CIP Programme 2")
 FactoryBot.create(:school_cohort, :cip, :with_induction_programme, cohort: cohort_2021, school: school_with_cohorts, core_induction_programme: cip_1)
 FactoryBot.create(:school_cohort, :cip, :with_induction_programme, cohort: cohort_2022, school: school_with_cohorts, core_induction_programme: cip_2)
 
+FactoryBot.create(:seed_partnership, :with_lead_provider, :valid, cohort: cohort_2021, school:)
+FactoryBot.create(:seed_partnership, :with_lead_provider, :valid, cohort: cohort_2022, school:)
+FactoryBot.create(:seed_partnership, :with_lead_provider, :valid, cohort: cohort_2021, school: school_with_cohorts)
+FactoryBot.create(:seed_partnership, :with_lead_provider, :valid, cohort: cohort_2022, school: school_with_cohorts)
+
 Faker::UniqueGenerator.clear
 Faker::Config.random = Random.new(42)
 FactoryBot.create_list(:school, 7)
