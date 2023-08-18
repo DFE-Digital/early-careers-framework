@@ -41,6 +41,8 @@ jobs:
 
   restore:
     name: Restore
+    environment:
+      name: staging
     needs: [backup]
     runs-on: ubuntu-latest
 
