@@ -10,6 +10,7 @@
         school_cohort: @school_cohorts.find_by(cohort: cohort),
         cohort: cohort,
         partnerships_and_relationships: @partnerships_by_cohort[cohort.id],
+        superuser: policy(Partnership).challenge?,
       ) %>
     <% end %>
   </div>
