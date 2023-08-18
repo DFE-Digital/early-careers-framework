@@ -99,6 +99,7 @@ gem "google-cloud-bigquery"
 
 gem "sidekiq"
 gem "sidekiq-cron"
+gem "sidekiq-failures"
 
 gem "net-imap", require: false
 gem "net-pop", require: false

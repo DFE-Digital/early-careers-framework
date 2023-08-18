@@ -535,6 +535,8 @@ GEM
       fugit (~> 1.8)
       globalid (>= 1.0.1)
       sidekiq (>= 6)
+    sidekiq-failures (1.0.4)
+      sidekiq (>= 4.0.0)
     signet (0.17.0)
       addressable (~> 2.8)
       faraday (>= 0.17.5, < 3.a)
@@ -707,6 +709,7 @@ DEPENDENCIES
   shoulda-matchers (~> 5.3)
   sidekiq
   sidekiq-cron
+  sidekiq-failures
   simplecov
   site_prism (~> 3.7)
   solargraph
