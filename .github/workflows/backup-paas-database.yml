@@ -38,3 +38,45 @@ jobs:
           name: backup
           path: backup.sql.gz
           retention-days: 1
+
+  restore:
+    name: Restore
+    needs: [backup]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Download backup
+        uses: actions/download-artifact@v3
+        with:
+          name: backup
+
+      # this isn't working but looks like it should
+      - name: Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Set AKS credentials
+        shell: bash
+        run: az aks get-credentials -g s189t01-tsc-ts-rg -n s189t01-tsc-test-aks
+
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v3
+
+      - name: Install konduit
+        run: make install-konduit
+
+      - name: Restore database
+        run: bin/konduit.sh -i backup.sql.gz -c cpd-ecf-staging-web -- psql
+
+      - name: Remove PaaS event triggers
+        shell: bash
+        run: |
+          bin/konduit.sh cpd-ecf-staging-web -- psql -c 'drop event trigger forbid_ddl_reader; drop event trigger make_readable; drop event trigger reassign_owned;'
+
+      - uses: geekyeggo/delete-artifact@v2
+        with:
+          name: backup

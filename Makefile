@@ -164,3 +164,7 @@ install-konduit: ## Install the konduit script, for accessing backend services
 		&& curl -s https://raw.githubusercontent.com/DFE-Digital/teacher-services-cloud/master/scripts/konduit.sh -o bin/konduit.sh \
 		&& chmod +x bin/konduit.sh \
 		|| true
+
+.PHONY: terraform-refresh
+terraform-refresh: terraform-init
+	terraform -chdir=terraform/application refresh -var-file config/$(CONFIG)/variables.tfvars.json
