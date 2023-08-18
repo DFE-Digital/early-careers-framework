@@ -23,6 +23,8 @@ describe ParticipantProfileDeduplicator do
         expect { dedup! }.not_to change(ParticipantProfile::ECF, :count)
         expect_changes([
           "~~~ DRY RUN ~~~",
+          "Primary profile: #{primary_profile.id}",
+          "Duplicate profile: #{duplicate_profile.id}",
           "Destroyed duplicate profile.",
         ])
       end
@@ -36,12 +38,6 @@ describe ParticipantProfileDeduplicator do
       end
 
       it { expect { dedup! }.to raise_error(described_class::DeduplicationError, "Different lead providers at the same school are not yet supported.") }
-    end
-
-    context "when the schedules are different" do
-      before { duplicate_profile.latest_induction_record.update(schedule: create(:schedule, name: "other")) }
-
-      it { expect { dedup! }.to raise_error(described_class::DeduplicationError, "Only duplicates with the same schedule are supported.") }
     end
 
     context "when the training programmes are different" do
@@ -265,7 +261,7 @@ describe ParticipantProfileDeduplicator do
 
       it "voids the later declaration when there are conflicts" do
         expect { dedup! }.to change { conflicting_declaration.reload.state }.to("voided")
-        expect_changes("Voided conflicting declaration: retained-1, submitted (#{conflicting_declaration.id}).")
+        expect_changes("Voided declaration: retained-1, submitted (#{conflicting_declaration.id}).")
       end
     end
 
@@ -280,6 +276,106 @@ describe ParticipantProfileDeduplicator do
 
         expect { eligibility.reload }.to raise_error(ActiveRecord::RecordNotFound)
         expect { validation_data.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+    end
+
+    context "when the schedules and cohorts are different" do
+      let!(:primary_profile_declaration) do
+        create(:ect_participant_declaration,
+               :submitted,
+               declaration_type: "retained-1",
+               participant_profile: primary_profile,
+               cpd_lead_provider: primary_profile.lead_provider.cpd_lead_provider)
+      end
+      let!(:duplicate_profile_declaration) do
+        create(:ect_participant_declaration,
+               :submitted,
+               declaration_type: "retained-2",
+               participant_profile: duplicate_profile,
+               cpd_lead_provider: duplicate_profile.lead_provider.cpd_lead_provider)
+      end
+      let!(:primary_profile_schedule) { primary_profile.latest_induction_record.schedule }
+      let(:duplicate_profile_cohort) { create(:cohort) }
+      let!(:duplicate_profile_schedule) do
+        create(:schedule, name: "other-schedule", cohort: duplicate_profile_cohort).tap do |schedule|
+          duplicate_profile.latest_induction_record.update!(schedule:)
+        end
+      end
+
+      before do
+        school = primary_profile.school
+        cohort = duplicate_profile_cohort
+        default_induction_programme = create(:induction_programme)
+        create(:school_cohort, school:, cohort:, default_induction_programme:)
+        create(:partnership, school:, cohort:, lead_provider: primary_profile.lead_provider)
+      end
+
+      context "when the change of schedule is not valid" do
+        before do
+          primary_profile.latest_induction_record.training_status_withdrawn!
+          duplicate_profile_declaration.update!(declaration_date: 10.years.ago)
+        end
+
+        it { expect { dedup! }.to raise_error(described_class::DeduplicationError, "Cannot perform actions on a withdrawn participant") }
+      end
+
+      context "when the duplicate profile has the relevant schedule (by earliest declaration_date)" do
+        before { duplicate_profile_declaration.update!(declaration_date: 10.years.ago) }
+
+        it "updates the primary profile to use the schedule from the duplicate profile" do
+          dedup!
+
+          expect(primary_profile.reload.schedule).to eq(duplicate_profile_schedule)
+          expect(primary_profile.school_cohort.cohort).to eq(duplicate_profile_cohort)
+          expect_changes("Changed schedule on primary profile: #{duplicate_profile_schedule.schedule_identifier} (#{duplicate_profile_schedule.id}).")
+        end
+
+        it "voids the declarations on the primary profile" do
+          dedup!
+
+          expect(primary_profile_declaration.reload).to be_voided
+          expect_changes("Voided declaration: retained-1, submitted (#{primary_profile_declaration.id}).")
+        end
+      end
+
+      context "when the primary profile has the relevant schedule (by earliest declaration_date)" do
+        before { primary_profile_declaration.update!(declaration_date: 10.years.ago) }
+
+        it "does not change the primary profile schedule" do
+          dedup!
+
+          expect(primary_profile.latest_induction_record.reload.schedule).to eq(primary_profile_schedule)
+        end
+
+        it "voids the declarations on the duplicate profile" do
+          dedup!
+
+          expect(duplicate_profile_declaration.reload).to be_voided
+          expect_changes("Voided declaration: retained-2, submitted (#{duplicate_profile_declaration.id}).")
+        end
+      end
+
+      context "when the earliest declarations are not in a voidable state" do
+        before { duplicate_profile_declaration.update!(declaration_date: 10.years.ago, state: :voided) }
+
+        it "does not change the primary profile schedule (as it ignores voided declarations when determining the primary schedule)" do
+          dedup!
+
+          expect(primary_profile.latest_induction_record.reload.schedule).to eq(primary_profile_schedule)
+        end
+      end
+
+      context "when there are no voidable declarations" do
+        before do
+          duplicate_profile_declaration.update!(declaration_date: 10.years.ago, state: :voided)
+          primary_profile_declaration.voided!
+        end
+
+        it "does not change the primary profile schedule" do
+          dedup!
+
+          expect(primary_profile.latest_induction_record.reload.schedule).to eq(primary_profile_schedule)
+        end
       end
     end
   end

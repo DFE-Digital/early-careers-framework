@@ -3,7 +3,7 @@
 class ParticipantProfileDeduplicator
   class DeduplicationError < RuntimeError; end
 
-  CONFLICTING_DECLARATION_STATES = %w[submitted eligible payable paid].freeze
+  APPLICABLE_DECLARATION_STATES = %w[submitted eligible payable paid].freeze
 
   attr_reader :primary_profile_id, :duplicate_profile_id, :dry_run, :changes
 
@@ -16,16 +16,16 @@ class ParticipantProfileDeduplicator
   def dedup!
     @changes = []
 
-    log_info("~~~ DRY RUN ~~~") if dry_run
+    log_overview_info
 
     warning_ect_mentor_duplicate
     warning_only_void_declarations_on_primary
 
     prevent_same_school_different_lead_provider
-    ensure_schedules_match
     ensure_training_programmes_match
 
     ActiveRecord::Base.transaction do
+      reconcile_schedules!
       reconcile_declarations!
       transfer_validation_data!
       transfer_participant_eligibility!
@@ -41,16 +41,16 @@ class ParticipantProfileDeduplicator
 
 private
 
+  def log_overview_info
+    log_info("~~~ DRY RUN ~~~") if dry_run
+    log_info("Primary profile: #{primary_profile_id}")
+    log_info("Duplicate profile: #{duplicate_profile_id}")
+  end
+
   def prevent_same_school_different_lead_provider
     return unless primary_profile.lead_provider&.id != duplicate_profile.lead_provider&.id && primary_profile.school == duplicate_profile.school
 
     raise DeduplicationError, "Different lead providers at the same school are not yet supported."
-  end
-
-  def ensure_schedules_match
-    return if primary_profile.latest_induction_record.schedule_id == duplicate_profile.latest_induction_record.schedule_id
-
-    raise DeduplicationError, "Only duplicates with the same schedule are supported."
   end
 
   def ensure_training_programmes_match
@@ -70,6 +70,47 @@ private
     return unless duplicate_profile.is_a?(ParticipantProfile::ECT) && primary_profile.is_a?(ParticipantProfile::Mentor)
 
     log_info("WARNING: transition from ECT to Mentor may not indicate a duplication.")
+  end
+
+  def reconcile_schedules!
+    return if primary_profile.latest_induction_record.schedule_id == duplicate_profile.latest_induction_record.schedule_id || earliest_voidable_declaration.nil?
+
+    profile_with_correct_schedule = earliest_voidable_declaration.participant_profile
+    profile_with_incorrect_schedule = profile_with_correct_schedule == primary_profile ? duplicate_profile : primary_profile
+
+    profile_with_incorrect_schedule.participant_declarations.each(&method(:void_or_clawback_declaration))
+
+    return if primary_profile == profile_with_correct_schedule
+
+    update_primary_profile_schedule(profile_with_correct_schedule.latest_induction_record.schedule)
+  end
+
+  def update_primary_profile_schedule(new_schedule)
+    cpd_lead_provider = primary_profile.lead_provider.cpd_lead_provider
+    change_schedule = ChangeScheduleOnDuplicate.new(
+      participant_id: primary_profile.user_id,
+      profile: primary_profile,
+      cpd_lead_provider:,
+      course_identifier: determine_course_identifier(primary_profile),
+      schedule_identifier: new_schedule.schedule_identifier,
+      cohort: new_schedule.cohort.start_year,
+    )
+
+    raise DeduplicationError, change_schedule.errors.first.message if change_schedule.invalid?
+
+    log_info("Changed schedule on primary profile: #{new_schedule.schedule_identifier} (#{new_schedule.id}).")
+
+    change_schedule.call
+  end
+
+  def determine_course_identifier(participant_profile)
+    participant_profile.is_a?(ParticipantProfile::ECF::Mentor) ? "ecf-mentor" : "ecf-induction"
+  end
+
+  def earliest_voidable_declaration
+    (primary_profile.participant_declarations + duplicate_profile.participant_declarations)
+      .select { |d| d.state.in?(APPLICABLE_DECLARATION_STATES) }
+      .min_by(&:declaration_date)
   end
 
   def handle_school_change!
@@ -154,12 +195,18 @@ private
     return unless conflicting_declaration
 
     most_recent_declaration = [declaration, conflicting_declaration].max_by(&:created_at)
-    log_info("Voided conflicting declaration: #{most_recent_declaration.declaration_type}, #{most_recent_declaration.state} (#{most_recent_declaration.id}).")
-    VoidParticipantDeclaration.new(most_recent_declaration).call
+    void_or_clawback_declaration(most_recent_declaration)
+  end
+
+  def void_or_clawback_declaration(declaration)
+    return unless declaration.voidable? || declaration.paid?
+
+    log_info("Voided declaration: #{declaration.declaration_type}, #{declaration.state} (#{declaration.id}).")
+    VoidParticipantDeclaration.new(declaration).call
   end
 
   def conflicting_declaration(declaration)
-    return unless declaration.state.in?(CONFLICTING_DECLARATION_STATES)
+    return unless declaration.state.in?(APPLICABLE_DECLARATION_STATES)
 
     primary_profile.participant_declarations.find do |d|
       d.declaration_type == declaration.declaration_type && d.state == declaration.state
