@@ -1,41 +1,39 @@
-<div class="partnership">
-  <%=
-    govuk_summary_list do |summary_list|
-      summary_list.with_row do |row|
-        row.with_key(text: "Training programme")
-        row.with_value(text: training_programme)
+<%=
+  govuk_summary_list do |summary_list|
+    summary_list.with_row do |row|
+      row.with_key(text: "Training programme")
+      row.with_value(text: training_programme)
 
-        if allow_change_programme?
-          row.with_action(text: "Change", visually_hidden_text: "induction programme",  href: change_programme_href)
-        end
-      end
-
-      if cip?
-        summary_list.with_row do |row|
-          row.with_key(text: "Materials")
-          row.with_value(text: materials)
-          row.with_action(text: "Change", visually_hidden_text: "materials", href: change_materials_href)
-        end
-      end
-
-      summary_list.with_row do |row|
-        row.with_key(text: "Appropriate body")
-        row.with_value(text: appropriate_body_name || "None")
-      end
-
-      summary_list.with_row do |row|
-        row.with_key(text: "Lead provider")
-        row.with_value(text: lead_provider_name || "None")
-      end
-
-      summary_list.with_row do |row|
-        row.with_key(text: "Delivery partner")
-        row.with_value(text: delivery_partner_name || "None")
+      if allow_change_programme?
+        row.with_action(text: "Change", visually_hidden_text: "induction programme",  href: change_programme_href)
       end
     end
-  %>
 
-  <%= govuk_button_link_to(new_admin_school_partnership_challenge_partnership_path(school_cohort.school, partnership), secondary: true) do %>
-    Challenge <%= tag.span("partnership", class: "govuk-visually-hidden") %>
-  <% end %>
-</div>
+    if cip?
+      summary_list.with_row do |row|
+        row.with_key(text: "Materials")
+        row.with_value(text: materials)
+        row.with_action(text: "Change", visually_hidden_text: "materials", href: change_materials_href)
+      end
+    end
+
+    summary_list.with_row do |row|
+      row.with_key(text: "Appropriate body")
+      row.with_value(text: appropriate_body_name || "None")
+    end
+
+    summary_list.with_row do |row|
+      row.with_key(text: "Lead provider")
+      row.with_value(text: lead_provider_name || "None")
+    end
+
+    summary_list.with_row do |row|
+      row.with_key(text: "Delivery partner")
+      row.with_value(text: delivery_partner_name || "None")
+    end
+  end
+%>
+
+<%= govuk_button_link_to(new_admin_school_partnership_challenge_partnership_path(school_cohort.school, partnership), secondary: true) do %>
+  Challenge <%= tag.span("partnership", class: "govuk-visually-hidden") %>
+<% end %>

@@ -9,8 +9,8 @@ RSpec.describe Admin::Schools::CohortComponent, type: :component do
   let(:partnerships_and_relationships) { [partnership, *relationships] }
   let(:kwargs) { { school:, cohort:, school_cohort:, partnerships_and_relationships: } }
 
-  let(:relationship_matcher) { ".relationship" }
-  let(:partnership_matcher) { ".partnership" }
+  let(:relationship_matcher) { ".govuk-summary-card" } # each relationship is rendered within a summary card
+  let(:partnership_matcher) { ".govuk-button--secondary" } # each partnership has a challenge button
   subject { Admin::Schools::CohortComponent.new(**kwargs) }
 
   describe "rendering" do
@@ -21,7 +21,7 @@ RSpec.describe Admin::Schools::CohortComponent, type: :component do
     end
 
     context "when partnerships are present" do
-      it("renders the partnerships") { expect(rendered_content).to have_css(partnership_matcher) }
+      it("renders the partnerships") { expect(rendered_content).to have_css(partnership_matcher, text: "Challenge") }
     end
 
     context "when no partnerships are present" do
