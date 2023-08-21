@@ -50,9 +50,17 @@ jobs:
       - name: Setup postgres client
         uses: DFE-Digital/github-actions/install-postgres-client@master
 
-      - name: Backup database
+      - name: Backup database (staging, sandbox)
+        if: github.event.inputs.environment == 'staging' || github.event.inputs.environment == 'sandbox'
         run: |
           cf conduit ecf-postgres-${{ github.event.inputs.environment }} -- pg_dump -E utf8 --clean --compress=1 --if-exists --no-owner --no-privileges --verbose -f backup.sql.gz
+
+      # this is temporary while we test restoring production using the backup, re-merge it with
+      # the step above when we're ready to test for real
+      - name: Backup database (production)
+        if: github.event.inputs.environment == 'production'
+        run: |
+          cf conduit ecf-postgres-production-backup-restore -- pg_dump -E utf8 --clean --compress=1 --if-exists --no-owner --no-privileges --verbose -f backup.sql.gz
 
       - name: Upload backup
         uses: actions/upload-artifact@v3
