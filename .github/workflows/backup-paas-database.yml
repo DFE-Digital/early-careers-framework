@@ -44,7 +44,7 @@ jobs:
         with:
           CF_USERNAME: ${{ secrets.GOVPAAS_PROD_USERNAME }}
           CF_PASSWORD: ${{ secrets.GOVPAAS_PROD_PASSWORD }}
-          CF_SPACE_NAME: early-careers-framework-production
+          CF_SPACE_NAME: early-careers-framework-prod
           INSTALL_CONDUIT: true
 
       - name: Setup postgres client
