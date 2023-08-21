@@ -82,9 +82,15 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Set AKS credentials
+      - name: Set AKS credentials (staging)
         shell: bash
+        if: github.event.inputs.environment == 'staging'
         run: az aks get-credentials -g s189t01-tsc-ts-rg -n s189t01-tsc-test-aks
+
+      - name: Set AKS credentials (sandbox, production)
+        if: github.event.inputs.environment == 'sandbox' || github.event.inputs.environment == 'production'
+        shell: bash
+        run: az aks get-credentials -g s189p01-tsc-pd-rg -n s189p01-tsc-production-aks
 
       - name: Install kubectl
         uses: azure/setup-kubectl@v3
