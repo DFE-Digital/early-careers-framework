@@ -13,7 +13,7 @@ module Importers
 
     def call
       check_headers
-      version = get_latest_version if new_course_flag == true
+      version = Finance::Statement::NPQ.latest.contract_version if new_course_flag == true && Finance::Statement::NPQ.count.positive?
 
       ActiveRecord::Base.transaction do
         rows.each do |row|
@@ -90,10 +90,6 @@ module Importers
 
     def rows
       @rows ||= CSV.read(path_to_csv, headers: true, skip_blanks: true)
-    end
-
-    def get_latest_version
-      Finance::Statement::NPQ.all.order(contract_version: :asc).pluck(:contract_version).last
     end
   end
 end
