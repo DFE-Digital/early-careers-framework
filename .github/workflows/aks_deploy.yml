@@ -71,7 +71,7 @@ jobs:
   deploy_review:
     name: Deploy review
     concurrency: deploy_review_${{ github.event.pull_request.number }}
-    if: contains(github.event.pull_request.labels.*.name, 'review-app') && github.event_name == 'pull_request'
+    if: github.actor != 'dependabot[bot]'
     needs: [docker, brakeman]
     runs-on: ubuntu-latest
     environment:
