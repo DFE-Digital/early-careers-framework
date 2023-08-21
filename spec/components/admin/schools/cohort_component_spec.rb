@@ -17,7 +17,7 @@ RSpec.describe Admin::Schools::CohortComponent, type: :component do
     before { render_inline(subject) }
 
     it "renders a heading with the cohort's year followed by 'partnership'" do
-      expect(rendered_content).to have_css("h2", text: "#{cohort.start_year} partnership")
+      expect(rendered_content).to have_css("h2", text: "#{cohort.start_year} programme")
     end
 
     context "when partnerships are present" do

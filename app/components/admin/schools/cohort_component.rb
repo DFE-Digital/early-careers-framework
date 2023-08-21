@@ -20,7 +20,7 @@ module Admin
       end
 
       def heading
-        "#{cohort.start_year} partnership"
+        "#{cohort.start_year} programme"
       end
 
       def empty?
