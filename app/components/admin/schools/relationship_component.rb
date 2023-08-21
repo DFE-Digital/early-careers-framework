@@ -13,10 +13,19 @@ module Admin
         @superuser = superuser
       end
 
-      def challenge_href
-        return unless superuser
+      def allow_challenge?
+        superuser
+      end
 
-        govuk_link_to("Challenge relationship", new_admin_school_partnership_challenge_partnership_path(school_cohort.school, relationship))
+      def actions
+        [
+          if allow_challenge?
+            govuk_link_to(
+              "Challenge relationship",
+              new_admin_school_partnership_challenge_partnership_path(school_cohort.school, relationship),
+            )
+          end,
+        ].compact
       end
 
       def delivery_partner_name

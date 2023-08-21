@@ -51,4 +51,42 @@ RSpec.describe Admin::Schools::RelationshipComponent, type: :component do
       end
     end
   end
+
+  describe "#methods" do
+    describe "#allow_challenge?" do
+      it "returns false by default" do
+        expect(subject.allow_challenge?).to be(false)
+      end
+
+      context "when superuser" do
+        let(:superuser) { true }
+
+        it "returns true" do
+          expect(subject.allow_challenge?).to be(true)
+        end
+      end
+    end
+
+    describe "#delivery_partner_name" do
+      it "returns the relationship's delivery partner's name" do
+        expect(subject.delivery_partner_name).to eql(relationship.delivery_partner.name)
+      end
+    end
+
+    describe "#actions" do
+      it "returns empty by default" do
+        expect(subject.actions).to be_blank
+      end
+
+      context "when superuser" do
+        let(:superuser) { true }
+        before { render_inline(subject) }
+
+        it "returns an array of govuk styled links" do
+          expect(subject.actions).to be_an(Array)
+          expect(subject.actions).to all(match(/govuk-link/))
+        end
+      end
+    end
+  end
 end

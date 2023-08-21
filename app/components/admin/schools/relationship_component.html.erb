@@ -1,5 +1,5 @@
 <%=
-  govuk_summary_list(card: { title: relationship.lead_provider.name, actions: [challenge_href] }) do |sl|
+  govuk_summary_list(card: { title: relationship.lead_provider.name, actions: }) do |sl|
     sl.with_row do |row|
       row.with_key(text: "Delivery partner")
       row.with_value(text: delivery_partner_name)
