@@ -4,8 +4,6 @@ module NewSeeds
   module Scenarios
     module Cohorts
       class Cohort
-        include RSpec::Mocks::Syntax
-
         attr_reader :cohort, :schedules, :start_year, :is_current
 
         def initialize(start_year: Time.zone.now.year.to_i)

@@ -292,7 +292,7 @@
     },
     "/api/v1/participants/npq": {
       "get": {
-        "summary": "Retrieve multiple NPQ participants",
+        "summary": "Retrieve all NPQ participants",
         "operationId": "npq_participants",
         "tags": [
           "NPQ participants"
