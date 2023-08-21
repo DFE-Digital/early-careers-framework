@@ -71,7 +71,7 @@ jobs:
   deploy_review:
     name: Deploy review
     concurrency: deploy_review_${{ github.event.pull_request.number }}
-    if: github.actor != 'dependabot[bot]'
+    if: github.actor != 'dependabot[bot]' && github.event_name == 'pull_request'
     needs: [docker, brakeman]
     runs-on: ubuntu-latest
     environment:
