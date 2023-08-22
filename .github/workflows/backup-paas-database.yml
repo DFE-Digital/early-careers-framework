@@ -1,4 +1,4 @@
-name: Backup a database on GOV.UK PaaS
+name: Backup GOV.UK PaaS DB and restore in Azure
 on:
   workflow_dispatch:
     inputs:
@@ -11,6 +11,13 @@ on:
           - sandbox
           - production
         required: true
+  workflow_call:
+    inputs:
+      environment:
+        description: GitHub environment to backup and restore
+        type: string
+        required: true
+        default: staging
 
 jobs:
   backup:

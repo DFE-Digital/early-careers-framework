@@ -1,0 +1,16 @@
+name: Run scheduled database backups
+on:
+  schedule:
+    - cron: "20 18 * * *"
+
+jobs:
+  run-backup-and-restore:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        environment: [staging, sandbox, production]
+    steps:
+      - name: Run scheduled backup task for the ${{ matrix.environment }} database
+        uses: ./.github/workflows/backup-paas-database.yml
+        with:
+          environment: ${{ matrix.environment }}
