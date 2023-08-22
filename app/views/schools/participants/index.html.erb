@@ -26,7 +26,7 @@
 
 <div class="govuk-grid-row wrapper-dashboard-v2">
   <div class="govuk-grid-column-one-third">
-    <div class="filter">
+    <div class="app-filter">
       <%= form_for @filter, as: '', url: school_participants_path(@school), method: :get do |f| %>
         <%= f.govuk_error_summary %>
         <%= f.govuk_collection_radio_buttons(
