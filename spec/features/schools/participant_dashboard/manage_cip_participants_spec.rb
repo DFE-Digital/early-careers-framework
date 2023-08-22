@@ -53,7 +53,6 @@ RSpec.describe "Manage CIP participants", js: true, with_feature_flags: { eligib
       given_i_am_on_the_cip_induction_dashboard
       and_i_click_on(Cohort.current.description)
       when_i_navigate_to_participants_dashboard
-      when_i_filter_by("No longer training (1)")
       when_i_click_on_the_participants_name "Ineligible mentor"
       then_i_am_taken_to_view_details_page
       then_i_can_view_participant_with_status(:not_allowed)
@@ -70,7 +69,6 @@ RSpec.describe "Manage CIP participants", js: true, with_feature_flags: { eligib
       given_i_am_on_the_cip_induction_dashboard
       and_i_click_on(Cohort.current.description)
       when_i_navigate_to_participants_dashboard
-      when_i_filter_by("No longer training (1)")
       when_i_click_on_the_participants_name "ero mentor"
       then_i_am_taken_to_view_details_page
       then_i_can_view_participant_with_status(:not_yet_mentoring_ero)
@@ -120,7 +118,6 @@ RSpec.describe "Manage CIP participants", js: true, with_feature_flags: { eligib
       given_i_am_on_the_cip_induction_dashboard
       and_i_click_on(Cohort.current.description)
       when_i_navigate_to_participants_dashboard
-      when_i_filter_by("No longer training (1)")
       when_i_click_on_the_participants_name "Eligible mentor"
       then_i_am_taken_to_view_details_page
       then_i_can_view_participant_with_status(:not_yet_mentoring)
@@ -170,7 +167,6 @@ RSpec.describe "Manage CIP participants", js: true, with_feature_flags: { eligib
       given_i_am_on_the_cip_induction_dashboard
       and_i_click_on(Cohort.current.description)
       when_i_navigate_to_participants_dashboard
-      when_i_filter_by("No longer training (1)")
       when_i_click_on_the_participants_name "CFI Mentor"
       then_i_am_taken_to_view_details_page
       then_i_can_view_participant_with_status(:request_for_details_delivered)
@@ -224,7 +220,6 @@ RSpec.describe "Manage CIP participants", js: true, with_feature_flags: { eligib
       given_i_am_on_the_cip_induction_dashboard
       and_i_click_on(Cohort.current.description)
       when_i_navigate_to_participants_dashboard
-      when_i_filter_by("No longer training (1)")
       when_i_click_on_the_participants_name "DBC Mentor"
       then_i_am_taken_to_view_details_page
       then_i_can_view_participant_with_status(:different_trn)

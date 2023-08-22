@@ -21,8 +21,7 @@ RSpec.describe "Manage currently training participants", js: true do
     given_i_am_taken_to_the_induction_dashboard
 
     when_i_navigate_to_participants_dashboard
-    then_i_see_the_participants_filter_with_counts(currently_training: 0, completed_induction: 2, no_longer_training: 2)
-
+    then_i_see_the_participants_filter_with_counts(completed_induction: 2, no_longer_training: 2)
     when_i_filter_by("Completed induction (2)")
     then_i_see_the_participants_filtered_by("Completed Induction")
     and_i_see_ects_with_induction_completed_sorted_by_decreasing_completion_date

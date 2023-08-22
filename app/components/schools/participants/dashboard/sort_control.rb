@@ -4,13 +4,12 @@ module Schools
   module Participants
     module Dashboard
       class SortControl < BaseComponent
-
         OPTIONS = {
           mentor: {
             label: "Mentor (A-Z)",
           },
           induction_start_date: {
-            label: "Induction start date"
+            label: "Induction start date",
           },
         }.freeze
 

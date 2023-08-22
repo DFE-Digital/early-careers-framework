@@ -826,10 +826,12 @@ module ManageTrainingSteps
     expect(page).to have_text(@participant_data[:full_name])
   end
 
-  def then_i_see_the_participants_filter_with_counts(currently_training:, completed_induction:, no_longer_training:)
-    expect(page).to have_content("Currently training (#{currently_training})")
-    expect(page).to have_content("Completed induction (#{completed_induction})")
-    expect(page).to have_content("No longer training (#{no_longer_training})")
+  def then_i_see_the_participants_filter_with_counts(currently_training: 0, completed_induction: 0, no_longer_training: 0)
+    return unless [currently_training, completed_induction, no_longer_training].count(&:positive?).many?
+
+    expect(page).to have_content("Currently training (#{currently_training})") if currently_training.positive?
+    expect(page).to have_content("Completed induction (#{completed_induction})") if completed_induction.positive?
+    expect(page).to have_content("No longer training (#{no_longer_training})") if no_longer_training.positive?
   end
 
   def then_i_see_the_participants_filtered_by(selected_option)

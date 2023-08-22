@@ -24,8 +24,7 @@ RSpec.describe "Manage currently training participants", js: true do
     end
 
     scenario "Sorted by mentor name" do
-      then_i_see_the_participants_filter_with_counts(currently_training: 3, completed_induction: 0, no_longer_training: 0)
-      and_i_see_the_participants_filtered_by("Currently training")
+      then_i_see_the_participants_filtered_by("Currently training")
       and_i_see_the_participants_sorted_by_mentor
 
       when_i_click_on_the_participants_name "Billy Mentor"
@@ -34,9 +33,7 @@ RSpec.describe "Manage currently training participants", js: true do
 
     scenario "Sorted by induction start date" do
       when_i_sort_participants_by_induction_start_date
-      then_i_see_the_participants_filter_with_counts(currently_training: 3, completed_induction: 0, no_longer_training: 0)
-      and_i_see_the_participants_filtered_by("Currently training")
-      and_i_see_the_participants_sorted_by_induction_start_date
+      then_i_see_the_participants_sorted_by_induction_start_date
 
       when_i_click_on_the_participants_name "Training ECT With-mentor"
       then_i_am_taken_to_view_details_page

@@ -25,22 +25,24 @@
 </div>
 
 <div class="govuk-grid-row wrapper-dashboard-v2">
-  <div class="govuk-grid-column-one-third">
-    <div class="app-filter">
-      <%= form_for @filter, as: '', url: school_participants_path(@school), method: :get do |f| %>
-        <%= f.govuk_collection_radio_buttons(
-                :filtered_by,
-                @filter.filter_options,
-                :id,
-                :label,
-                legend: { text: 'Show', tag: 'h2', size: 's' },
-                include_hidden: false,
-                small: true,
-            ) %>
-        <%= f.govuk_submit "Apply filter", secondary: true %>
-      <% end %>
+  <% if @filter.filter_options.many? %>
+    <div class="govuk-grid-column-one-third">
+      <div class="app-filter">
+        <%= form_for @filter, as: '', url: school_participants_path(@school), method: :get do |f| %>
+          <%= f.govuk_collection_radio_buttons(
+                  :filtered_by,
+                  @filter.filter_options,
+                  :id,
+                  :label,
+                  legend: { text: 'Show', tag: 'h2', size: 's' },
+                  include_hidden: false,
+                  small: true,
+              ) %>
+          <%= f.govuk_submit "Apply filter", secondary: true %>
+        <% end %>
+      </div>
     </div>
-  </div>
+  <% end %>
 
   <div class="govuk-grid-column-two-thirds">
     <div class="manage-mentors-ects govuk-!-margin-bottom-8">
@@ -49,7 +51,7 @@
             render "currently_training", filter: @filter, school: @school, participants: @participants
           when "completed_induction"
             render "completed_induction", school: @school, participants: @participants
-          else
+          when "no_longer_training"
             render "no_longer_training", school: @school, participants: @participants
           end %>
     </div>

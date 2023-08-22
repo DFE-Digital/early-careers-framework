@@ -36,13 +36,19 @@ module Pages
     def find_participant(name)
       return if has_link?(name)
 
-      filter_by("No longer training")
-      return if has_link?(name)
+      if has_link?("No longer training")
+        filter_by("No longer training")
+        return if has_link?(name)
+      end
 
-      filter_by("Completed induction")
-      return if has_link?(name)
+      if has_link?("Completed induction")
+        filter_by("Completed induction")
+        return if has_link?(name)
+      end
 
-      filter_by("Currently training")
+      if has_link?("Currently training")
+        filter_by("Currently training")
+      end
     end
   end
 end

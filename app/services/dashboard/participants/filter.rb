@@ -20,12 +20,18 @@ module Dashboard
 
       def initialize(*)
         super
-        self.filtered_by = FILTER_OPTIONS.first unless FILTER_OPTIONS.include?(filtered_by)
+        self.filtered_by = filter_option_ids.first unless filter_option_ids.include?(filtered_by)
         self.sorted_by = SORT_OPTIONS.first unless SORT_OPTIONS.include?(sorted_by)
       end
 
+      def filter_option_ids
+        @filter_option_ids ||= FILTER_OPTIONS.select do |filter_option|
+          dashboard_participants.send("#{filter_option}_count").positive?
+        end
+      end
+
       def filter_options
-        @filter_options ||= FILTER_OPTIONS.map do |id|
+        @filter_options ||= filter_option_ids.map do |id|
           Dashboard::Participants::Filter::Option.new(id:, dashboard_participants:)
         end
       end
