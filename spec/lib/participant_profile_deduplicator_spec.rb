@@ -330,6 +330,12 @@ describe ParticipantProfileDeduplicator do
           expect_changes("Changed schedule on primary profile: #{duplicate_profile_schedule.schedule_identifier} (#{duplicate_profile_schedule.id}).")
         end
 
+        it "creates an induction record with the new schedule" do
+          dedup!
+
+          expect(primary_profile.latest_induction_record.schedule).to eq(duplicate_profile_schedule)
+        end
+
         it "voids the declarations on the primary profile" do
           dedup!
 
