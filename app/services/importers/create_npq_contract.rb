@@ -4,16 +4,15 @@ require "csv"
 
 module Importers
   class CreateNPQContract
-    attr_reader :path_to_csv, :new_course_flag
+    attr_reader :path_to_csv, :set_to_latest_version
 
-    def initialize(path_to_csv:, new_course_flag: false)
+    def initialize(path_to_csv:, set_to_latest_version: false)
       @path_to_csv = path_to_csv
-      @new_course_flag = new_course_flag
+      @set_to_latest_version = set_to_latest_version
     end
 
     def call
       check_headers
-      version = Finance::Statement::NPQ.latest.contract_version if new_course_flag == true && Finance::Statement::NPQ.count.positive?
 
       ActiveRecord::Base.transaction do
         rows.each do |row|
@@ -21,6 +20,7 @@ module Importers
           cpd_lead_provider = CpdLeadProvider.find_by!(name: row["provider_name"])
           npq_lead_provider = cpd_lead_provider.npq_lead_provider
           course = NPQCourse.find_by!(identifier: row["course_identifier"])
+          version = Finance::Statement::NPQ.where(cohort:, cpd_lead_provider:).pluck(:contract_version).max if set_to_latest_version == true
 
           # We only create/update version 0.0.1 for initial values
           # Manually create new version of contract if there are changes

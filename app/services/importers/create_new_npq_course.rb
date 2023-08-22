@@ -10,7 +10,7 @@ module Importers
       CreateNPQCourse.new(path_to_csv: npq_course_csv).call
 
       logger.info "Running CreateNPQContract with: '#{contract_csv}'"
-      CreateNPQContract.new(path_to_csv: contract_csv, new_course_flag: true).call
+      CreateNPQContract.new(path_to_csv: contract_csv, set_to_latest_version: true).call
     end
 
   private
@@ -26,7 +26,7 @@ module Importers
     def check_csvs!
       return if npq_course_csv.present? && contract_csv.present?
 
-      raise "All scripts need to be present to create a new ECF cohort"
+      raise "All scripts need to be present to create a new NPQ Course"
     end
   end
 end
