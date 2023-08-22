@@ -31,8 +31,8 @@ module Schools
     end
 
     def missing_mentor_html(participant_profile)
-      tag.div(class: "govuk-summary-list__missing") do
-        concat tag.div("No mentor assigned", class: "govuk-summary-list__missing-heading")
+      tag.div(class: "app-summary-list__missing") do
+        concat tag.div("No mentor assigned", class: "app-summary-list__missing-heading")
         concat govuk_link_to("Assign a mentor",
                              school_participant_edit_mentor_path(participant_id: participant_profile.id),
                              no_visited_state: true)
