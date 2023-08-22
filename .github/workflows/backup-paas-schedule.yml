@@ -1,7 +1,7 @@
 name: Run scheduled database backups
 on:
   schedule:
-    - cron: "20 18 * * *"
+    - cron: "30 4 * * *"
 
 jobs:
   run-backup-and-restore:
