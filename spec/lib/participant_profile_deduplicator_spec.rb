@@ -23,6 +23,7 @@ describe ParticipantProfileDeduplicator do
         expect { dedup! }.not_to change(ParticipantProfile::ECF, :count)
         expect_changes([
           "~~~ DRY RUN ~~~",
+          "User: #{primary_profile.user.id}",
           "Primary profile: #{primary_profile.id}",
           "Duplicate profile: #{duplicate_profile.id}",
           "Destroyed duplicate profile.",
@@ -118,7 +119,7 @@ describe ParticipantProfileDeduplicator do
       it "sets school_transfer to true on the primary profile's oldest induction record" do
         expect { dedup! }.to change { primary_oldest_induction_record.reload.school_transfer }.from(false).to(true)
 
-        expect_changes("Primary profile oldest induction record set as school transfer.")
+        expect_changes("Primary profile oldest induction record set as school transfer. Current school: #{primary_profile.school.urn}.")
       end
 
       context "when the induction record start dates are the same" do
@@ -327,7 +328,7 @@ describe ParticipantProfileDeduplicator do
 
           expect(primary_profile.reload.schedule).to eq(duplicate_profile_schedule)
           expect(primary_profile.school_cohort.cohort).to eq(duplicate_profile_cohort)
-          expect_changes("Changed schedule on primary profile: #{duplicate_profile_schedule.schedule_identifier} (#{duplicate_profile_schedule.id}).")
+          expect_changes("Changed schedule on primary profile: #{duplicate_profile_schedule.schedule_identifier}, #{duplicate_profile_cohort.start_year} (#{duplicate_profile_schedule.id}).")
         end
 
         it "creates an induction record with the new schedule" do

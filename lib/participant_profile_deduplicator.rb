@@ -43,6 +43,7 @@ private
 
   def log_overview_info
     log_info("~~~ DRY RUN ~~~") if dry_run
+    log_info("User: #{primary_profile.user_id}")
     log_info("Primary profile: #{primary_profile_id}")
     log_info("Duplicate profile: #{duplicate_profile_id}")
   end
@@ -98,7 +99,7 @@ private
 
     raise DeduplicationError, change_schedule.errors.first.message if change_schedule.invalid?
 
-    log_info("Changed schedule on primary profile: #{new_schedule.schedule_identifier} (#{new_schedule.id}).")
+    log_info("Changed schedule on primary profile: #{new_schedule.schedule_identifier}, #{new_schedule.cohort.start_year} (#{new_schedule.id}).")
 
     change_schedule.call
   end
@@ -118,7 +119,7 @@ private
 
     primary_profile.induction_records.oldest.update!(school_transfer: true)
 
-    log_info("Primary profile oldest induction record set as school transfer.")
+    log_info("Primary profile oldest induction record set as school transfer. Current school: #{primary_profile.latest_induction_record.school.urn}.")
 
     duplicate_induction_record = duplicate_profile.latest_induction_record
     end_date = determine_induction_record_end_date(primary_profile.induction_records.oldest, duplicate_induction_record)
