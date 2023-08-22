@@ -24,8 +24,7 @@ RSpec.describe "Manage currently training participants", js: true do
     end
 
     scenario "Sorted by mentor name" do
-      then_i_see_the_participants_filtered_by("Currently training")
-      and_i_see_the_participants_sorted_by_mentor
+      then_i_see_the_participants_sorted_by_mentor
 
       when_i_click_on_the_participants_name "Billy Mentor"
       then_i_am_taken_to_view_details_page

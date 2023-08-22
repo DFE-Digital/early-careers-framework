@@ -827,7 +827,7 @@ module ManageTrainingSteps
   end
 
   def then_i_see_the_participants_filter_with_counts(currently_training: 0, completed_induction: 0, no_longer_training: 0)
-    return unless [currently_training, completed_induction, no_longer_training].count(&:positive?).many?
+    return unless [currently_training, completed_induction, no_longer_training].map(&:positive?).many?
 
     expect(page).to have_content("Currently training (#{currently_training})") if currently_training.positive?
     expect(page).to have_content("Completed induction (#{completed_induction})") if completed_induction.positive?
