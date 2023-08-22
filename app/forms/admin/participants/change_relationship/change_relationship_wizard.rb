@@ -118,11 +118,11 @@ module Admin
         end
 
         def available_providers_for_participant_cohort
-          LeadProvider.where(id: ProviderRelationship.where(cohort:).select(:lead_provider_id)).order(:name)
+          LeadProvider.where(id: ProviderRelationship.where(cohort:).select(:lead_provider_id)).name_order
         end
 
         def available_delivery_partners_for_provider
-          DeliveryPartner.where(id: ProviderRelationship.where(lead_provider_id:, cohort:).select(:delivery_partner_id)).order(:name)
+          DeliveryPartner.where(id: ProviderRelationship.where(lead_provider_id:, cohort:).select(:delivery_partner_id)).name_order
         end
 
         def abort_path

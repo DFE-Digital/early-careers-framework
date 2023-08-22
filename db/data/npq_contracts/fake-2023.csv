@@ -35,14 +35,14 @@ School-Led Network,2023,npq-headship,1032,132,44
 School-Led Network,2023,npq-executive-leadership,1033,133,45
 School-Led Network,2023,npq-leading-literacy,1034,134,46
 School-Led Network,2023,npq-early-years-leadership,1035,135,47
-Leadership Learning South East,2023,npq-leading-teaching,1036,136,48
-Leadership Learning South East,2023,npq-leading-behaviour-culture,1037,137,49
-Leadership Learning South East,2023,npq-leading-teaching-development,1038,138,50
-Leadership Learning South East,2023,npq-senior-leadership,1039,139,51
-Leadership Learning South East,2023,npq-headship,1040,140,52
-Leadership Learning South East,2023,npq-executive-leadership,1041,141,53
-Leadership Learning South East,2023,npq-leading-literacy,1042,142,54
-Leadership Learning South East,2023,npq-early-years-leadership,1043,143,55
+LLSE,2023,npq-leading-teaching,1036,136,48
+LLSE,2023,npq-leading-behaviour-culture,1037,137,49
+LLSE,2023,npq-leading-teaching-development,1038,138,50
+LLSE,2023,npq-senior-leadership,1039,139,51
+LLSE,2023,npq-headship,1040,140,52
+LLSE,2023,npq-executive-leadership,1041,141,53
+LLSE,2023,npq-leading-literacy,1042,142,54
+LLSE,2023,npq-early-years-leadership,1043,143,55
 Teach First,2023,npq-leading-teaching,1044,144,56
 Teach First,2023,npq-leading-behaviour-culture,1045,145,57
 Teach First,2023,npq-leading-teaching-development,1046,146,58
@@ -72,7 +72,7 @@ Best Practice Network,2023,npq-early-headship-coaching-offer,1069,169,0
 Church of England,2023,npq-early-headship-coaching-offer,1070,170,0
 Education Development Trust,2023,npq-early-headship-coaching-offer,1071,171,0
 School-Led Network,2023,npq-early-headship-coaching-offer,1072,172,0
-Leadership Learning South East,2023,npq-early-headship-coaching-offer,1073,173,0
+LLSE,2023,npq-early-headship-coaching-offer,1073,173,0
 Teach First,2023,npq-early-headship-coaching-offer,1074,174,0
 Teacher Development Trust,2023,npq-early-headship-coaching-offer,1075,175,0
 UCL Institute of Education,2023,npq-early-headship-coaching-offer,1076,176,0
@@ -90,7 +90,7 @@ Best Practice Network,2023,npq-leading-primary-mathematics,1013,113,25
 Church of England,2023,npq-leading-primary-mathematics,1019,119,31
 Education Development Trust,2023,npq-leading-primary-mathematics,1027,127,39
 School-Led Network,2023,npq-leading-primary-mathematics,1035,135,47
-Leadership Learning South East,2023,npq-leading-primary-mathematics,1043,143,55
+LLSE,2023,npq-leading-primary-mathematics,1043,143,55
 Teach First,2023,npq-leading-primary-mathematics,1051,151,63
 Teacher Development Trust,2023,npq-leading-primary-mathematics,1059,159,71
 UCL Institute of Education,2023,npq-leading-primary-mathematics,1067,167,79

@@ -11,7 +11,7 @@ module Finance
       end
 
       def npq_lead_providers
-        NPQLeadProvider.order(:name)
+        NPQLeadProvider.name_order
       end
 
       def statements

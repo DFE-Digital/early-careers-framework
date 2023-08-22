@@ -110,4 +110,15 @@ RSpec.describe LeadProvider, type: :model do
       end
     end
   end
+
+  describe "scopes" do
+    describe "name_order" do
+      let!(:provider_one) { FactoryBot.create(:lead_provider, name: "Lead Provider Example") }
+      let!(:provider_two) { FactoryBot.create(:lead_provider, name: "Another Lead Provider Example") }
+
+      it "returns all providers in name order" do
+        expect(described_class.name_order).to eq([provider_two, provider_one])
+      end
+    end
+  end
 end

@@ -29,6 +29,8 @@ class LeadProvider < ApplicationRecord
   has_many :statements, through: :cpd_lead_provider, class_name: "Finance::Statement::ECF", source: :ecf_statements
   validates :name, presence: { message: "Enter a name" }
 
+  scope :name_order, -> { order("UPPER(name)") }
+
   def self.ransackable_attributes(_auth_object = nil)
     %w[name]
   end
