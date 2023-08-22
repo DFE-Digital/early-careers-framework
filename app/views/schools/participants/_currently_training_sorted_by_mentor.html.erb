@@ -1,10 +1,4 @@
-<p class="govuk-body">Sort by:
-  <b class="govuk-!-margin-left-2">Mentor (A-Z)</b>
-  <%= govuk_link_to("Induction start date",
-                    school_participants_path(school, sorted_by: :induction_start_date),
-                    no_visited_state: true,
-                    class: ["govuk-!-margin-left-2"]) %>
-</p>
+<%= render(Schools::Participants::Dashboard::SortControl.new(school:, selected: :mentor)) %>
 
 <% if participants.orphan_ects.any? %>
   <%= govuk_warning_text(text: "You need to assign a mentor to these ECTs.") %>

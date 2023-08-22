@@ -49,9 +49,9 @@
           when "currently_training"
             render "currently_training", filter: @filter, school: @school, participants: @participants
           when "completed_induction"
-            render "completed_induction", filter: @filter, school: @school, participants: @participants
+            render "completed_induction", school: @school, participants: @participants
           else
-            render "no_longer_training", filter: @filter, school: @school, participants: @participants
+            render "no_longer_training", school: @school, participants: @participants
           end %>
     </div>
   </div>

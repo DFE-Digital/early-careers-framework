@@ -1,12 +1,4 @@
-<p class="govuk-body">
-  Sort by:
-  <%= govuk_link_to("Mentor (A-Z)",
-                    school_participants_path(school, sorted_by: :mentor),
-                    no_visited_state: true,
-                    class: "govuk-!-margin-left-2") %>
-
-  <b class="govuk-!-margin-left-2">Induction start date</b>
-</p>
+<%= render(Schools::Participants::Dashboard::SortControl.new(school:, selected: :induction_start_date)) %>
 
 <% participants.ects.each do |ect| %>
   <%= govuk_summary_card(title: link_to_participant(ect.participant_profile, school)) do |card|

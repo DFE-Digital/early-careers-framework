@@ -132,9 +132,8 @@ module Dashboard
     end
 
     def sorted_ects
-      future_date = Date.current + 5.years
       ects = (mentors.values.flatten.compact + orphan_ects).sort_by do |ect|
-        [ect.induction_start_date || future_date, ect.full_name]
+        [ect.induction_start_date || Float::INFINITY, ect.full_name]
       end
 
       ects.reverse
