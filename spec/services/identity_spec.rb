@@ -35,9 +35,16 @@ RSpec.describe Identity do
       let(:external_id) { SecureRandom.uuid }
       let!(:identity) { create(:participant_identity, user:, external_identifier: external_id) }
 
-      context "when a matching identity record exists" do
+      context "when a matching identity record external id exists" do
         it "returns the associated user record" do
           result = described_class.find_user_by(id: external_id)
+          expect(result).to eq user
+        end
+      end
+
+      context "when a matching identity record user id exists" do
+        it "returns the associated user record" do
+          result = described_class.find_user_by(id: identity.user_id)
           expect(result).to eq user
         end
       end
