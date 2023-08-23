@@ -15,8 +15,8 @@ module Finance
         end
 
         def deduplicate
-          @primary_profile = Duplicate.find(params[:duplicate_id])
-          @duplicate_profile = Duplicate.find(params[:compare_id])
+          @primary_profile = Duplicate.find(params[:compare_id])
+          @duplicate_profile = Duplicate.find(params[:duplicate_id])
 
           dedup!
           set_breadcrumbs
