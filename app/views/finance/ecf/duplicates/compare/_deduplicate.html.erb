@@ -9,9 +9,9 @@
     </div>
 
     <div class="govuk-button-group">
-      <%= button_to "Dry Run", finance_ecf_duplicate_compare_deduplicate_path(primary_profile, duplicate_profile, anchor: :deduplicate), method: :put, class: "govuk-button govuk-button--secondary", params: { dry_run: true } %>
+      <%= button_to "Dry Run", finance_ecf_duplicate_compare_deduplicate_path(duplicate_profile, primary_profile, anchor: :deduplicate), method: :put, class: "govuk-button govuk-button--secondary", params: { dry_run: true } %>
       <%= button_to "Swap", finance_ecf_duplicate_compare_path(primary_profile, duplicate_profile, anchor: :deduplicate), method: :get, class: "govuk-button govuk-button--secondary" %>
-      <%= button_to "Deduplicate", finance_ecf_duplicate_compare_deduplicate_path(primary_profile, duplicate_profile, anchor: :deduplicate), method: :put, class: "govuk-button govuk-button--warning", disabled: !@can_deduplicate, params: { dry_run: false } %>
+      <%= button_to "Deduplicate", finance_ecf_duplicate_compare_deduplicate_path(duplicate_profile, primary_profile, anchor: :deduplicate), method: :put, class: "govuk-button govuk-button--warning", disabled: !@can_deduplicate, params: { dry_run: false } %>
     </div>
 
     <% if @dedup_changes %>
