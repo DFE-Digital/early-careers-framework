@@ -106,7 +106,7 @@ jobs:
           echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Post release notes on cpd-dev-alerts
-        uses: rtCamp/action-slack-notify@v2.2.0
+        uses: rtCamp/action-slack-notify@v2.2.1
         env:
           SLACK_CHANNEL: cpd-dev-alerts
           SLACK_USERNAME: Release notes bot
