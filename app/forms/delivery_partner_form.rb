@@ -30,11 +30,11 @@ class DeliveryPartnerForm
   end
 
   def available_lead_providers
-    LeadProvider.joins(:cohorts).includes(:cohorts).select { |lead_provider| lead_provider.cohorts.any? }
+    LeadProvider.name_order.joins(:cohorts).includes(:cohorts).select { |lead_provider| lead_provider.cohorts.any? }
   end
 
   def chosen_lead_providers
-    LeadProvider.where(id: lead_provider_ids).joins(:cohorts).includes(:cohorts)
+    LeadProvider.name_order.where(id: lead_provider_ids).joins(:cohorts).includes(:cohorts)
   end
 
   def chosen_provider_relationships(delivery_partner = nil)

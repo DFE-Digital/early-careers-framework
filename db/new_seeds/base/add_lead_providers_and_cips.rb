@@ -38,7 +38,7 @@ best_practice_network          = FactoryBot.create(:seed_cpd_lead_provider, name
 capita                         = FactoryBot.create(:seed_cpd_lead_provider, name: "Capita")
 church_of_england              = FactoryBot.create(:seed_cpd_lead_provider, name: "Church of England")
 education_development_trust    = FactoryBot.create(:seed_cpd_lead_provider, name: "Education Development Trust")
-leadership_learning_south_east = FactoryBot.create(:seed_cpd_lead_provider, name: "Leadership Learning South East")
+llse                           = FactoryBot.create(:seed_cpd_lead_provider, name: "LLSE")
 national_institute_of_teaching = FactoryBot.create(:seed_cpd_lead_provider, name: "National Institute of Teaching")
 school_led_network             = FactoryBot.create(:seed_cpd_lead_provider, name: "School-Led Network")
 teach_first                    = FactoryBot.create(:seed_cpd_lead_provider, name: "Teach First")
@@ -77,7 +77,7 @@ end
   best_practice_network          => "57ba9e86-559f-4ff4-a6d2-4610c7259b67",
   church_of_england              => "79cb41ca-cb6d-405c-b52c-b6f7c752388d",
   education_development_trust    => "21e61f53-9b34-4384-a8f5-d8224dbf946d",
-  leadership_learning_south_east => "230e67c0-071a-4a48-9673-9d043d456281",
+  llse                           => "230e67c0-071a-4a48-9673-9d043d456281",
   national_institute_of_teaching => "3ec607f2-7a3a-421f-9f1a-9aca8a634aeb",
   school_led_network             => "bc5e4e37-1d64-4149-a06b-ad10d3c55fd0",
   teach_first                    => "a02ae582-f939-462f-90bc-cebf20fa8473",

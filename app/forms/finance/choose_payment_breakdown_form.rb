@@ -17,11 +17,11 @@ module Finance
     end
 
     def npq_providers
-      NPQLeadProvider.all
+      NPQLeadProvider.name_order
     end
 
     def ecf_providers
-      LeadProvider.all
+      LeadProvider.name_order
     end
   end
 end

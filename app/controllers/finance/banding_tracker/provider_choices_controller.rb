@@ -4,7 +4,7 @@ module Finance
   module BandingTracker
     class ProviderChoicesController < BaseController
       def new
-        @providers = LeadProvider.all
+        @providers = LeadProvider.name_order
         choose_provider_form
       end
 
@@ -13,7 +13,7 @@ module Finance
 
         return redirect_to finance_banding_tracker_provider_path(id: choose_provider_form.id) if choose_provider_form.valid?
 
-        @providers = LeadProvider.all
+        @providers = LeadProvider.name_order
         render :new
       end
 

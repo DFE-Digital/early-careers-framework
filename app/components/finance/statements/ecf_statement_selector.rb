@@ -11,7 +11,7 @@ module Finance
       end
 
       def lead_providers
-        LeadProvider.order(:name)
+        LeadProvider.name_order
       end
 
       def statements

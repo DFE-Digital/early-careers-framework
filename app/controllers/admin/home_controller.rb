@@ -41,7 +41,7 @@ module Admin
     end
 
     def providers
-      LeadProvider.where(id: ProviderRelationship.where(cohort:).select(:lead_provider_id)).order(:name)
+      LeadProvider.where(id: ProviderRelationship.where(cohort:).select(:lead_provider_id)).name_order
     end
 
     def participants_registered

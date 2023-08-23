@@ -46,7 +46,7 @@ PrivacyPolicy.find_or_initialize_by(major_version: 1, minor_version: 0)
   { name: "Church of England", id: "79cb41ca-cb6d-405c-b52c-b6f7c752388d" },
   { name: "Education Development Trust", id: "21e61f53-9b34-4384-a8f5-d8224dbf946d" },
   { name: "School-Led Network", id: "bc5e4e37-1d64-4149-a06b-ad10d3c55fd0" },
-  { name: "Leadership Learning South East", id: "230e67c0-071a-4a48-9673-9d043d456281" },
+  { name: "LLSE", id: "230e67c0-071a-4a48-9673-9d043d456281" },
   { name: "Teacher Development Trust", id: "30fd937e-b93c-4f81-8fff-3c27544193f1" },
   { name: "Teach First", id: "a02ae582-f939-462f-90bc-cebf20fa8473" },
   { name: "UCL Institute of Education", id: "ef687b3d-c1c0-4566-a295-16d6fa5d0fa7" },

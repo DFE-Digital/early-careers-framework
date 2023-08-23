@@ -26,7 +26,7 @@ module Finance
 
       def lead_provider_options
         @lead_provider_options ||=
-          NPQLeadProvider.includes(:cohorts).where(cohorts: { id: npq_application.cohort_id })
+          NPQLeadProvider.name_order.includes(:cohorts).where(cohorts: { id: npq_application.cohort_id })
       end
 
       def current_lead_provider
