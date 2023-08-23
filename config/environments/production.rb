@@ -75,6 +75,8 @@ Rails.application.configure do
   config.qualified_teachers_api_url = Rails.application.credentials.QUALIFIED_TEACHERS_API_URL
   config.qualified_teachers_api_key = Rails.application.credentials.QUALIFIED_TEACHERS_API_KEY
 
+  config.slack_alerts_webhook_urls = Rails.application.credentials.SLACK_ALERTS_WEBHOOK_URLS
+
   config.action_mailer.perform_caching = false
   config.action_mailer.delivery_method = :notify
   unless ENV["IGNORE_SECRETS_FOR_BUILD"]
