@@ -37,3 +37,5 @@ set_participant_start_date_job:
   cron: "*/2 0-8 * * *"
   class: "SetParticipantStartDateJob"
   queue: default
+  status: "disabled"
+  description: "Disabled for now but maybe required in the near future"
