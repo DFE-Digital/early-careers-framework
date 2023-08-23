@@ -10,6 +10,9 @@ jobs:
       matrix:
         environment: [staging, sandbox, production]
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
       - name: Run scheduled backup task for the ${{ matrix.environment }} database
         uses: ./.github/workflows/backup-paas-database.yml
         with:
