@@ -2,6 +2,7 @@ name: Run scheduled database backups
 on:
   schedule:
     - cron: "30 4 * * *"
+  workflow_dispatch:
 
 jobs:
   run-backup-and-restore:
@@ -10,6 +11,9 @@ jobs:
       matrix:
         environment: [staging, sandbox, production]
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
       - name: Run scheduled backup task for the ${{ matrix.environment }} database
         uses: ./.github/workflows/backup-paas-database.yml
         with:
