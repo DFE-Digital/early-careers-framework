@@ -4,10 +4,11 @@ require "csv"
 
 module Importers
   class CreateNPQContract
-    attr_reader :path_to_csv
+    attr_reader :path_to_csv, :set_to_latest_version
 
-    def initialize(path_to_csv:)
+    def initialize(path_to_csv:, set_to_latest_version: false)
       @path_to_csv = path_to_csv
+      @set_to_latest_version = set_to_latest_version
     end
 
     def call
@@ -19,12 +20,13 @@ module Importers
           cpd_lead_provider = CpdLeadProvider.find_by!(name: row["provider_name"])
           npq_lead_provider = cpd_lead_provider.npq_lead_provider
           course = NPQCourse.find_by!(identifier: row["course_identifier"])
+          version = Finance::Statement::NPQ.where(cohort:, cpd_lead_provider:).pluck(:contract_version).max if set_to_latest_version == true
 
           # We only create/update version 0.0.1 for initial values
           # Manually create new version of contract if there are changes
           contract = NPQContract.find_or_initialize_by(
             cohort:,
-            version: "0.0.1",
+            version: version || "0.0.1",
             npq_lead_provider:,
             course_identifier: course.identifier,
           )
