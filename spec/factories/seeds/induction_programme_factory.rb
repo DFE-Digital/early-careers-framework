@@ -12,6 +12,7 @@ FactoryBot.define do
     trait(:with_school_cohort) { association(:school_cohort, factory: %i[seed_school_cohort valid]) }
     trait(:with_school) { association(:school, factory: :seed_school) }
     trait(:with_partnership) { association(:partnership, factory: %i[seed_partnership valid]) }
+    trait(:with_core_induction_programme) { association(:core_induction_programme, factory: :seed_core_induction_programme) }
 
     trait(:valid) { with_school_cohort }
 

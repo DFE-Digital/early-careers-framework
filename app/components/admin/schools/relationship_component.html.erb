@@ -1,0 +1,13 @@
+<%=
+  govuk_summary_list(card: { title: relationship.lead_provider.name, actions: }) do |sl|
+    sl.with_row do |row|
+      row.with_key(text: "Delivery partner")
+      row.with_value(text: delivery_partner_name)
+    end
+
+    sl.with_row do |row|
+      row.with_key(text: "Participants")
+      row.with_value { helpers.html_list(participants_profile_links) }
+    end
+  end
+%>
