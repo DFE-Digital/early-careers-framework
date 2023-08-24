@@ -41,6 +41,10 @@ class DQTRecordPresenter < SimpleDelegator
     dqt_record.dig("induction", "status") == "Exempt"
   end
 
+  def induction_in_progress?
+    dqt_record.dig("induction", "status") == "InProgress"
+  end
+
 private
 
   def dqt_record
