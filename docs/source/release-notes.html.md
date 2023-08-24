@@ -7,6 +7,12 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
+## 24 August 2023
+
+Lead providers can now submit 'extended declarations' for ECTs that are on extended schedules in production. The change applies to all versions of the API. Previously, lead providers could only test the new functionality in the [sandbox environment](/api-reference/release-notes.html#17-august-2023).
+
+There is [guidance available for providers in the API documentation](/api-reference/ecf/schedules-and-milestone-dates.html#extended-schedules). Please note that while there are currently only three extended declarations, the number of extended declarations a provider may need to submit is not limited in the contract. The DfE may add additional extended declarations should the need arise.
+
 ## 17 August 2023
 
 Lead providers can now submit 'extended declarations' for ECTs that are on extended schedules in the sandbox environment. Providers may not submit extended declarations for mentors.
