@@ -18,7 +18,8 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v3/api_
   path "/api/v3/participant-declarations" do
     get "<b>Note, this endpoint includes updated specifications.</b><br/>List all participant declarations" do
       operationId :participant_declarations
-      tags "participants declarations"
+      tags "Participant declarations"
+      produces "application/json"
       security [bearerAuth: []]
 
       parameter name: :filter,
@@ -130,12 +131,13 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v3/api_
       operationId :participant_declaration_create
       tags "Participant declarations"
       consumes "application/json"
+      produces "application/json"
       security [bearerAuth: []]
 
       parameter name: :params,
                 in: :body,
                 schema: {
-                  "$ref": "#/components/schemas/ParticipantDeclaration",
+                  "$ref": "#/components/schemas/ParticipantDeclarationRequest",
                 }
 
       response 200, "Successful" do
@@ -272,7 +274,8 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v3/api_
 
     get "<b>Note, this endpoint includes updated specifications.</b><br/>Get single participant declaration" do
       operationId :participant_declaration
-      tags "participants declaration"
+      tags "Participant declarations"
+      produces "application/json"
       security [bearerAuth: []]
 
       parameter name: :id,
@@ -376,6 +379,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v3/api_
       operationId :participant_declaration_void
       tags "Participant declarations"
       consumes "application/json"
+      produces "application/json"
       security [bearerAuth: []]
 
       parameter name: :id,

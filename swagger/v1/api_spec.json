@@ -613,7 +613,7 @@
     "/api/v1/participant-declarations": {
       "post": {
         "summary": "Declare a participant has reached a milestone. Idempotent endpoint - submitting exact copy of a request will return the same response body as submitting it the first time.",
-        "operationId": "participant_declarations",
+        "operationId": "participant_declaration_create",
         "tags": [
           "Participant declarations"
         ],
@@ -624,15 +624,6 @@
             ]
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ParticipantDeclaration"
-              }
-            }
-          }
-        },
         "parameters": [
 
         ],
@@ -677,13 +668,22 @@
               }
             }
           }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ParticipantDeclarationRequest"
+              }
+            }
+          }
         }
       },
       "get": {
         "summary": "List all participant declarations",
         "operationId": "participant_declarations",
         "tags": [
-          "participants declarations"
+          "Participant declarations"
         ],
         "security": [
           {
@@ -770,7 +770,7 @@
           "401": {
             "description": "Unauthorized",
             "content": {
-              "application/json": {
+              "text/csv": {
                 "schema": {
                   "$ref": "#/components/schemas/UnauthorisedResponse"
                 }
@@ -783,9 +783,9 @@
     "/api/v1/participant-declarations/{id}": {
       "get": {
         "summary": "Get single participant declaration",
-        "operationId": "participant_declarations",
+        "operationId": "participant_declaration",
         "tags": [
-          "participants declaration"
+          "Participant declarations"
         ],
         "security": [
           {
@@ -843,7 +843,7 @@
     "/api/v1/participant-declarations/{id}/void": {
       "put": {
         "summary": "Void a declaration - it will not be soft-deleted",
-        "operationId": "participant_declarations",
+        "operationId": "participant_declaration_void",
         "tags": [
           "Participant declarations"
         ],
@@ -1900,7 +1900,7 @@
           }
         }
       },
-      "ECFParticipantDeclarationAttributes": {
+      "ECFParticipantDeclarationRequestAttributes": {
         "anyOf": [
           {
             "$ref": "#/components/schemas/ECFParticipantDeclarationStartedAttributesRequest"
@@ -2156,7 +2156,7 @@
             "example": "ecf-participant-declaration"
           },
           "attributes": {
-            "$ref": "#/components/schemas/ECFParticipantDeclarationAttributes"
+            "$ref": "#/components/schemas/ParticipantDeclarationResponse"
           }
         }
       },
@@ -4412,7 +4412,7 @@
           }
         }
       },
-      "NPQParticipantDeclarationAttributes": {
+      "NPQParticipantDeclarationRequestAttributes": {
         "anyOf": [
           {
             "$ref": "#/components/schemas/NPQParticipantDeclarationStartedAttributesRequest"
@@ -4513,7 +4513,7 @@
             "example": "npq-participant-declaration"
           },
           "attributes": {
-            "$ref": "#/components/schemas/NPQParticipantDeclarationAttributes"
+            "$ref": "#/components/schemas/ParticipantDeclarationResponse"
           }
         }
       },
@@ -5095,12 +5095,61 @@
           "attributes": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/ECFParticipantDeclarationAttributes"
+                "$ref": "#/components/schemas/ECFParticipantDeclarationRequestAttributes"
               },
               {
-                "$ref": "#/components/schemas/NPQParticipantDeclarationAttributes"
+                "$ref": "#/components/schemas/NPQParticipantDeclarationRequestAttributes"
               }
             ]
+          }
+        }
+      },
+      "ParticipantDeclarationDataRequest": {
+        "description": "A participant declaration data request",
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "participant-declaration"
+            ]
+          },
+          "attributes": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ECFParticipantDeclarationStartedAttributesRequest"
+              },
+              {
+                "$ref": "#/components/schemas/ECFParticipantDeclarationRetainedAttributesRequest"
+              },
+              {
+                "$ref": "#/components/schemas/ECFParticipantDeclarationCompletedAttributesRequest"
+              },
+              {
+                "$ref": "#/components/schemas/ECFParticipantDeclarationExtendedAttributesRequest"
+              },
+              {
+                "$ref": "#/components/schemas/NPQParticipantDeclarationStartedAttributesRequest"
+              },
+              {
+                "$ref": "#/components/schemas/NPQParticipantDeclarationRetainedAttributesRequest"
+              },
+              {
+                "$ref": "#/components/schemas/NPQParticipantDeclarationCompletedAttributesRequest"
+              }
+            ]
+          }
+        }
+      },
+      "ParticipantDeclarationRequest": {
+        "description": "An participant declaration request",
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/ParticipantDeclarationDataRequest"
           }
         }
       },

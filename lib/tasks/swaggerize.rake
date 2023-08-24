@@ -21,11 +21,7 @@ if defined?(RSpec)
 
         t.rspec_opts = [additional_rspec_opts]
 
-        t.rspec_opts += if Rswag::Specs.config.swagger_dry_run
-                          ["--format Rswag::Specs::SwaggerFormatter", "--dry-run", "--order defined"]
-                        else
-                          ["--format Rswag::Specs::SwaggerFormatter", "--order defined"]
-                        end
+        t.rspec_opts += ["--format Rswag::Specs::SwaggerFormatter", "--order defined"]
       end
     end
   end

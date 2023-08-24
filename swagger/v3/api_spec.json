@@ -1624,130 +1624,11 @@
       }
     },
     "/api/v3/participant-declarations": {
-      "post": {
-        "summary": "<b>Note, this endpoint includes updated specifications.</b><br/>Declare a participant has reached a milestone. Idempotent endpoint - submitting exact copy of a request will return the same response body as submitting it the first time.",
-        "operationId": "participant_declarations",
-        "tags": [
-          "Participant declarations"
-        ],
-        "security": [
-          {
-            "bearerAuth": [
-
-            ]
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ParticipantDeclarationRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SingleParticipantDeclarationResponse"
-                },
-                "examples": {
-                  "success_ecf": {
-                    "value": {
-                      "data": {
-                        "id": "db3a7848-7308-4879-942a-c4a70ced400a",
-                        "type": "participant-declaration",
-                        "attributes": {
-                          "participant_id": "08d78829-f864-417f-8a30-cb7655714e28",
-                          "declaration_type": "started",
-                          "declaration_date": "2020-11-13T11:21:55Z",
-                          "course_identifier": "ecf-induction",
-                          "state": "eligible",
-                          "updated_at": "2020-11-13T11:21:55Z",
-                          "created_at": "2020-11-13T11:21:55Z",
-                          "delivery_partner_id": "99ca2223-8c1f-4ac8-985d-a0672e97694e",
-                          "statement_id": "99ca2223-8c1f-4ac8-985d-a0672e97694e",
-                          "clawback_statement_id": null,
-                          "ineligible_for_funding_reason": null,
-                          "mentor_id": "907f61ed-5770-4d38-b22c-1a4265939378",
-                          "uplift_paid": true,
-                          "evidence_held": "other",
-                          "has_passed": null,
-                          "lead_provider_name": "Example Institute"
-                        }
-                      }
-                    }
-                  },
-                  "success_npq": {
-                    "value": {
-                      "data": {
-                        "id": "db3a7848-7308-4879-942a-c4a70ced400a",
-                        "type": "participant-declaration",
-                        "attributes": {
-                          "participant_id": "bf3c6251-f2a0-4690-a859-0fbecc6ed151",
-                          "declaration_type": "started",
-                          "declaration_date": "2020-11-13T11:21:55Z",
-                          "course_identifier": "npq-leading-teaching",
-                          "state": "eligible",
-                          "updated_at": "2020-11-13T11:21:55Z",
-                          "created_at": "2020-11-13T11:21:55Z",
-                          "delivery_partner_id": null,
-                          "statement_id": "1cceffd7-0efd-432a-aedc-7be2d6cc72a2",
-                          "clawback_statement_id": null,
-                          "ineligible_for_funding_reason": null,
-                          "mentor_id": null,
-                          "uplift_paid": true,
-                          "evidence_held": null,
-                          "has_passed": null,
-                          "lead_provider_name": "Example Institute"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Bad or Missing parameter",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorisedResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BadRequestResponse"
-                }
-              }
-            }
-          }
-        }
-      },
       "get": {
         "summary": "<b>Note, this endpoint includes updated specifications.</b><br/>List all participant declarations",
         "operationId": "participant_declarations",
         "tags": [
-          "participants declarations"
+          "Participant declarations"
         ],
         "security": [
           {
@@ -1787,9 +1668,6 @@
             "description": "A list of participant declarations",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MultipleParticipantDeclarationsResponse"
-                },
                 "examples": {
                   "success": {
                     "value": {
@@ -1833,7 +1711,7 @@
                             "ineligible_for_funding_reason": null,
                             "mentor_id": null,
                             "uplift_paid": true,
-                            "evidence_held": null,
+                            "evidence_held": "other",
                             "has_passed": null,
                             "lead_provider_name": "Example Institute"
                           }
@@ -1841,6 +1719,9 @@
                       ]
                     }
                   }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/MultipleParticipantDeclarationsResponse"
                 }
               }
             }
@@ -1856,14 +1737,12 @@
             }
           }
         }
-      }
-    },
-    "/api/v3/participant-declarations/{id}": {
-      "get": {
-        "summary": "<b>Note, this endpoint includes updated specifications.</b><br/>Get single participant declaration",
-        "operationId": "participant_declarations",
+      },
+      "post": {
+        "summary": "<b>Note, this endpoint includes updated specifications.</b><br/>Declare a participant has reached a milestone. Idempotent endpoint - submitting exact copy of a request will return the same response body as submitting it the first time.",
+        "operationId": "participant_declaration_create",
         "tags": [
-          "participants declaration"
+          "Participant declarations"
         ],
         "security": [
           {
@@ -1873,25 +1752,13 @@
           }
         ],
         "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "example": "9ed4612b-f8bd-44d9-b296-38ab103fadd2",
-            "description": "The ID of the participant declaration ID",
-            "schema": {
-              "type": "string"
-            }
-          }
+
         ],
         "responses": {
           "200": {
-            "description": "A single participant declaration",
+            "description": "Successful",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SingleParticipantDeclarationResponse"
-                },
                 "examples": {
                   "success_ecf": {
                     "value": {
@@ -1945,6 +1812,142 @@
                       }
                     }
                   }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/SingleParticipantDeclarationResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Bad or Missing parameter",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ParticipantDeclarationRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/participant-declarations/{id}": {
+      "get": {
+        "summary": "<b>Note, this endpoint includes updated specifications.</b><br/>Get single participant declaration",
+        "operationId": "participant_declaration",
+        "tags": [
+          "Participant declarations"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "example": "9ed4612b-f8bd-44d9-b296-38ab103fadd2",
+            "description": "The ID of the participant declaration ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A single participant declaration",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "success_ecf": {
+                    "value": {
+                      "data": {
+                        "id": "db3a7848-7308-4879-942a-c4a70ced400a",
+                        "type": "participant-declaration",
+                        "attributes": {
+                          "participant_id": "08d78829-f864-417f-8a30-cb7655714e28",
+                          "declaration_type": "started",
+                          "declaration_date": "2020-11-13T11:21:55Z",
+                          "course_identifier": "ecf-induction",
+                          "state": "eligible",
+                          "updated_at": "2020-11-13T11:21:55Z",
+                          "created_at": "2020-11-13T11:21:55Z",
+                          "delivery_partner_id": "99ca2223-8c1f-4ac8-985d-a0672e97694e",
+                          "statement_id": "99ca2223-8c1f-4ac8-985d-a0672e97694e",
+                          "clawback_statement_id": null,
+                          "ineligible_for_funding_reason": null,
+                          "mentor_id": "907f61ed-5770-4d38-b22c-1a4265939378",
+                          "uplift_paid": true,
+                          "evidence_held": "other",
+                          "has_passed": null,
+                          "lead_provider_name": "Example Institute"
+                        }
+                      }
+                    }
+                  },
+                  "success_npq": {
+                    "value": {
+                      "data": {
+                        "id": "db3a7848-7308-4879-942a-c4a70ced400a",
+                        "type": "participant-declaration",
+                        "attributes": {
+                          "participant_id": "bf3c6251-f2a0-4690-a859-0fbecc6ed151",
+                          "declaration_type": "started",
+                          "declaration_date": "2020-11-13T11:21:55Z",
+                          "course_identifier": "npq-leading-teaching",
+                          "state": "eligible",
+                          "updated_at": "2020-11-13T11:21:55Z",
+                          "created_at": "2020-11-13T11:21:55Z",
+                          "delivery_partner_id": null,
+                          "statement_id": "1cceffd7-0efd-432a-aedc-7be2d6cc72a2",
+                          "clawback_statement_id": null,
+                          "ineligible_for_funding_reason": null,
+                          "mentor_id": null,
+                          "uplift_paid": true,
+                          "evidence_held": null,
+                          "has_passed": null,
+                          "lead_provider_name": "Example Institute"
+                        }
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/SingleParticipantDeclarationResponse"
                 }
               }
             }
@@ -1975,7 +1978,7 @@
     "/api/v3/participant-declarations/{id}/void": {
       "put": {
         "summary": "<b>Note, this endpoint includes updated specifications.</b><br/>Void a declaration - it will not be soft-deleted",
-        "operationId": "participant_declarations",
+        "operationId": "participant_declaration_void",
         "tags": [
           "Participant declarations"
         ],
@@ -2003,9 +2006,6 @@
             "description": "Successful",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SingleParticipantDeclarationResponse"
-                },
                 "examples": {
                   "success_ecf": {
                     "value": {
@@ -2059,6 +2059,9 @@
                       }
                     }
                   }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/SingleParticipantDeclarationResponse"
                 }
               }
             }
@@ -3356,143 +3359,21 @@
           }
         }
       },
-      "ECFParticipantDeclarationAttributes": {
-        "description": "The data attributes associated with a participant declaration response",
-        "type": "object",
-        "required": [
-          "participant_id",
-          "declaration_type",
-          "declaration_date",
-          "course_identifier",
-          "state",
-          "updated_at",
-          "lead_provider_name"
-        ],
-        "properties": {
-          "participant_id": {
-            "description": "The unique id of the participant",
-            "type": "string",
-            "format": "uuid",
-            "example": "db3a7848-7308-4879-942a-c4a70ced400a"
+      "ECFParticipantDeclarationRequestAttributes": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/ECFParticipantDeclarationStartedAttributesRequest"
           },
-          "declaration_type": {
-            "description": "The event declaration type",
-            "type": "string",
-            "enum": [
-              "started",
-              "retained-1",
-              "retained-2",
-              "retained-3",
-              "retained-4",
-              "completed",
-              "extended-1",
-              "extended-2",
-              "extended-3"
-            ],
-            "example": "started"
+          {
+            "$ref": "#/components/schemas/ECFParticipantDeclarationRetainedAttributesRequest"
           },
-          "declaration_date": {
-            "description": "The event declaration date",
-            "type": "string",
-            "format": "date-time",
-            "example": "2021-05-31T02:21:32.000Z"
+          {
+            "$ref": "#/components/schemas/ECFParticipantDeclarationCompletedAttributesRequest"
           },
-          "course_identifier": {
-            "description": "The type of course the participant is enrolled in",
-            "type": "string",
-            "enum": [
-              "ecf-induction",
-              "ecf-mentor"
-            ],
-            "example": "ecf-induction"
-          },
-          "state": {
-            "description": "Indicates the state of this payment declaration",
-            "type": "string",
-            "enum": [
-              "submitted",
-              "eligible",
-              "payable",
-              "paid",
-              "voided",
-              "ineligible",
-              "awaiting-clawback",
-              "clawed-back"
-            ],
-            "example": "submitted"
-          },
-          "updated_at": {
-            "description": "The date the declaration was last updated",
-            "type": "string",
-            "format": "date-time",
-            "example": "2021-05-31T02:22:32.000Z"
-          },
-          "created_at": {
-            "description": "The date the declaration was created",
-            "type": "string",
-            "format": "date-time",
-            "example": "2021-05-31T02:22:32.000Z"
-          },
-          "delivery_partner_id": {
-            "description": "Unique ID of the delivery partner associated with the participant at the time the declaration was created",
-            "type": "string",
-            "format": "uuid",
-            "example": "cd3a12347-7308-4879-942a-c4a70ced400a"
-          },
-          "statement_id": {
-            "description": "Unique ID of the statement the declaration will be paid as part of",
-            "type": "string",
-            "format": "uuid",
-            "example": "cd3a12347-7308-4879-942a-c4a70ced400a"
-          },
-          "clawback_statement_id": {
-            "description": "Unique id of the statement to which the declaration will be clawed back on, if any",
-            "type": "string",
-            "format": "uuid",
-            "example": "cd3a12347-7308-4879-942a-c4a70ced400a"
-          },
-          "ineligible_for_funding_reason": {
-            "description": "If the declaration is ineligible, the reason why",
-            "type": "string",
-            "enum": [
-              "to",
-              "be",
-              "determined"
-            ],
-            "example": "unknown"
-          },
-          "mentor_id": {
-            "description": "Unique ID of the ECT's mentor",
-            "type": "string",
-            "format": "uuid",
-            "example": "cd3a12347-7308-4879-942a-c4a70ced400a"
-          },
-          "uplift_paid": {
-            "description": "If participant is eligible for uplift, whether it has been paid as part of this declaration",
-            "type": "boolean",
-            "example": true
-          },
-          "evidence_held": {
-            "description": "The type of evidence that the lead provider holds on their platform to demonstrate that the participant has met the retention criteria for the current milestone period",
-            "type": "string",
-            "enum": [
-              "training-event-attended",
-              "self-study-material-completed",
-              "other"
-            ],
-            "example": "unknown"
-          },
-          "has_passed": {
-            "description": "Whether the participant has failed or passed",
-            "type": "boolean",
-            "example": null
-          },
-          "lead_provider_name": {
-            "description": "The name of the provider that submitted the declaration",
-            "type": "string",
-            "example": "Example Institute"
+          {
+            "$ref": "#/components/schemas/ECFParticipantDeclarationExtendedAttributesRequest"
           }
-        }
+        ]
       },
       "ECFParticipantDeclarationCompletedAttributesRequest": {
         "description": "An ECF completed participant declaration",
@@ -3620,7 +3501,7 @@
             "example": "participant-declaration"
           },
           "attributes": {
-            "$ref": "#/components/schemas/ECFParticipantDeclarationAttributes"
+            "$ref": "#/components/schemas/ParticipantDeclarationResponse"
           }
         }
       },
@@ -5837,16 +5718,16 @@
           }
         }
       },
-      "NPQParticipantDeclarationAttributes": {
+      "NPQParticipantDeclarationRequestAttributes": {
         "anyOf": [
           {
-            "$ref": "#/components/schemas/NPQParticipantStartedDeclarationAttributes"
+            "$ref": "#/components/schemas/NPQParticipantDeclarationStartedAttributesRequest"
           },
           {
-            "$ref": "#/components/schemas/NPQParticipantRetainedDeclarationAttributes"
+            "$ref": "#/components/schemas/NPQParticipantDeclarationRetainedAttributesRequest"
           },
           {
-            "$ref": "#/components/schemas/NPQParticipantCompletedDeclarationAttributes"
+            "$ref": "#/components/schemas/NPQParticipantDeclarationCompletedAttributesRequest"
           }
         ]
       },
@@ -5938,7 +5819,7 @@
             "example": "participant-declaration"
           },
           "attributes": {
-            "$ref": "#/components/schemas/NPQParticipantDeclarationAttributes"
+            "$ref": "#/components/schemas/ParticipantDeclarationResponse"
           }
         }
       },
@@ -6727,10 +6608,10 @@
           "attributes": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/ECFParticipantDeclarationAttributes"
+                "$ref": "#/components/schemas/ECFParticipantDeclarationRequestAttributes"
               },
               {
-                "$ref": "#/components/schemas/NPQParticipantDeclarationAttributes"
+                "$ref": "#/components/schemas/NPQParticipantDeclarationRequestAttributes"
               }
             ]
           }

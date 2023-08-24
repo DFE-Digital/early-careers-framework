@@ -66,24 +66,10 @@
         ],
         "responses": {
           "200": {
-            "description": "A list of NPQ applications",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MultipleNPQApplicationsResponse"
-                }
-              }
-            }
+            "description": "A list of NPQ applications"
           },
           "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorisedResponse"
-                }
-              }
-            }
+            "description": "Unauthorized"
           }
         }
       }
@@ -130,7 +116,7 @@
           "401": {
             "description": "Unauthorized",
             "content": {
-              "application/json": {
+              "text/csv": {
                 "schema": {
                   "$ref": "#/components/schemas/UnauthorisedResponse"
                 }
@@ -168,24 +154,10 @@
         ],
         "responses": {
           "200": {
-            "description": "A single NPQ application",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NPQApplicationResponse"
-                }
-              }
-            }
+            "description": "A single NPQ application"
           },
           "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorisedResponse"
-                }
-              }
-            }
+            "description": "Unauthorized"
           }
         }
       }
@@ -218,24 +190,10 @@
         ],
         "responses": {
           "200": {
-            "description": "The NPQ application being accepted",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NPQApplicationResponse"
-                }
-              }
-            }
+            "description": "The NPQ application being accepted"
           },
           "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorisedResponse"
-                }
-              }
-            }
+            "description": "Unauthorized"
           }
         }
       }
@@ -268,24 +226,10 @@
         ],
         "responses": {
           "200": {
-            "description": "The NPQ application being rejected",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NPQApplicationResponse"
-                }
-              }
-            }
+            "description": "The NPQ application being rejected"
           },
           "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorisedResponse"
-                }
-              }
-            }
+            "description": "Unauthorized"
           }
         }
       }
@@ -332,7 +276,7 @@
           "401": {
             "description": "Unauthorized",
             "content": {
-              "application/json": {
+              "text/csv": {
                 "schema": {
                   "$ref": "#/components/schemas/UnauthorisedResponse"
                 }
@@ -384,24 +328,10 @@
         ],
         "responses": {
           "200": {
-            "description": "A list of NPQ participants",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MultipleNPQParticipantsResponse"
-                }
-              }
-            }
+            "description": "A list of NPQ participants"
           },
           "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorisedResponse"
-                }
-              }
-            }
+            "description": "Unauthorized"
           }
         }
       }
@@ -434,24 +364,10 @@
         ],
         "responses": {
           "200": {
-            "description": "A single NPQ participant",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NPQParticipantResponse"
-                }
-              }
-            }
+            "description": "A single NPQ participant"
           },
           "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorisedResponse"
-                }
-              }
-            }
+            "description": "Unauthorized"
           }
         }
       }
@@ -470,15 +386,6 @@
             ]
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NPQParticipantChangeScheduleRequest"
-              }
-            }
-          }
-        },
         "parameters": [
           {
             "name": "id",
@@ -493,15 +400,18 @@
         ],
         "responses": {
           "200": {
-            "description": "The NPQ participant changing schedule",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NPQParticipantResponse"
-                }
+            "description": "The NPQ participant changing schedule"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NPQParticipantChangeScheduleRequest"
               }
             }
-          }
+          },
+          "required": true
         }
       }
     },
@@ -519,15 +429,6 @@
             ]
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NPQParticipantDeferRequest"
-              }
-            }
-          }
-        },
         "parameters": [
           {
             "name": "id",
@@ -542,15 +443,18 @@
         ],
         "responses": {
           "200": {
-            "description": "The NPQ participant being deferred",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NPQParticipantResponse"
-                }
+            "description": "The NPQ participant being deferred"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NPQParticipantDeferRequest"
               }
             }
-          }
+          },
+          "required": true
         }
       }
     },
@@ -568,15 +472,6 @@
             ]
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NPQParticipantResumeRequest"
-              }
-            }
-          }
-        },
         "parameters": [
           {
             "name": "id",
@@ -591,15 +486,18 @@
         ],
         "responses": {
           "200": {
-            "description": "The NPQ participant being resumed",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NPQParticipantResponse"
-                }
+            "description": "The NPQ participant being resumed"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NPQParticipantResumeRequest"
               }
             }
-          }
+          },
+          "required": true
         }
       }
     },
@@ -617,15 +515,6 @@
             ]
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NPQParticipantWithdrawRequest"
-              }
-            }
-          }
-        },
         "parameters": [
           {
             "name": "id",
@@ -640,32 +529,28 @@
         ],
         "responses": {
           "200": {
-            "description": "The NPQ participant being withdrawn",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NPQParticipantResponse"
-                }
+            "description": "The NPQ participant being withdrawn"
+          },
+          "422": {
+            "description": "Unprocessable entity"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NPQParticipantWithdrawRequest"
               }
             }
           },
-          "422": {
-            "description": "Unprocessable entity",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
+          "required": true
         }
       }
     },
     "/api/v2/participant-declarations": {
       "post": {
         "summary": "Declare a participant has reached a milestone. Idempotent endpoint - submitting exact copy of a request will return the same response body as submitting it the first time.",
-        "operationId": "participant_declarations",
+        "operationId": "participant_declaration_create",
         "tags": [
           "Participant declarations"
         ],
@@ -676,15 +561,6 @@
             ]
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ParticipantDeclaration"
-              }
-            }
-          }
-        },
         "parameters": [
 
         ],
@@ -729,13 +605,22 @@
               }
             }
           }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ParticipantDeclarationRequest"
+              }
+            }
+          }
         }
       },
       "get": {
         "summary": "List all participant declarations",
         "operationId": "participant_declarations",
         "tags": [
-          "participants declarations"
+          "Participant declarations"
         ],
         "security": [
           {
@@ -822,7 +707,7 @@
           "401": {
             "description": "Unauthorized",
             "content": {
-              "application/json": {
+              "text/csv": {
                 "schema": {
                   "$ref": "#/components/schemas/UnauthorisedResponse"
                 }
@@ -835,9 +720,9 @@
     "/api/v2/participant-declarations/{id}": {
       "get": {
         "summary": "Get single participant declaration",
-        "operationId": "participant_declarations",
+        "operationId": "participant_declaration",
         "tags": [
-          "participants declaration"
+          "Participant declarations"
         ],
         "security": [
           {
@@ -895,7 +780,7 @@
     "/api/v2/participant-declarations/{id}/void": {
       "put": {
         "summary": "Void a declaration - it will not be soft-deleted",
-        "operationId": "participant_declarations",
+        "operationId": "participant_declaration_void",
         "tags": [
           "Participant declarations"
         ],
@@ -974,24 +859,10 @@
         ],
         "responses": {
           "200": {
-            "description": "A list of participant outcomes",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NPQOutcomesResponse"
-                }
-              }
-            }
+            "description": "A list of participant outcomes"
           },
           "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorisedResponse"
-                }
-              }
-            }
+            "description": "Unauthorized"
           }
         }
       }
@@ -1024,24 +895,10 @@
         ],
         "responses": {
           "200": {
-            "description": "A list of participant outcomes",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NPQOutcomesResponse"
-                }
-              }
-            }
+            "description": "A list of participant outcomes"
           },
           "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorisedResponse"
-                }
-              }
-            }
+            "description": "Unauthorized"
           }
         }
       },
@@ -1058,15 +915,6 @@
             ]
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NPQOutcomeRequest"
-              }
-            }
-          }
-        },
         "parameters": [
           {
             "name": "participant_id",
@@ -1082,25 +930,21 @@
         ],
         "responses": {
           "200": {
-            "description": "Successfully submit a NPQ outcome",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NPQOutcomeResponse"
-                }
+            "description": "Successfully submit a NPQ outcome"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NPQOutcomeRequest"
               }
             }
           },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorisedResponse"
-                }
-              }
-            }
-          }
+          "required": true
         }
       }
     },
@@ -1146,24 +990,10 @@
         ],
         "responses": {
           "200": {
-            "description": "A list of ECF participants",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MultipleECFParticipantsResponse"
-                }
-              }
-            }
+            "description": "A list of ECF participants"
           },
           "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorisedResponse"
-                }
-              }
-            }
+            "description": "Unauthorized"
           }
         }
       }
@@ -1210,7 +1040,7 @@
           "401": {
             "description": "Unauthorized",
             "content": {
-              "application/json": {
+              "text/csv": {
                 "schema": {
                   "$ref": "#/components/schemas/UnauthorisedResponse"
                 }
@@ -1248,24 +1078,10 @@
         ],
         "responses": {
           "200": {
-            "description": "A single ECF participant",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ECFParticipantResponse"
-                }
-              }
-            }
+            "description": "A single ECF participant"
           },
           "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorisedResponse"
-                }
-              }
-            }
+            "description": "Unauthorized"
           }
         }
       }
@@ -1284,15 +1100,6 @@
             ]
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ECFParticipantDeferRequest"
-              }
-            }
-          }
-        },
         "parameters": [
           {
             "name": "id",
@@ -1307,15 +1114,18 @@
         ],
         "responses": {
           "200": {
-            "description": "The ECF participant being deferred",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ECFParticipantDeferResponse"
-                }
+            "description": "The ECF participant being deferred"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ECFParticipantDeferRequest"
               }
             }
-          }
+          },
+          "required": true
         }
       }
     },
@@ -1333,15 +1143,6 @@
             ]
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ECFParticipantResumeRequest"
-              }
-            }
-          }
-        },
         "parameters": [
           {
             "name": "id",
@@ -1356,15 +1157,18 @@
         ],
         "responses": {
           "200": {
-            "description": "The ECF participant being resumed",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ECFParticipantResumeResponse"
-                }
+            "description": "The ECF participant being resumed"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ECFParticipantResumeRequest"
               }
             }
-          }
+          },
+          "required": true
         }
       }
     },
@@ -1382,15 +1186,6 @@
             ]
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ECFParticipantWithdrawRequest"
-              }
-            }
-          }
-        },
         "parameters": [
           {
             "name": "id",
@@ -1405,15 +1200,18 @@
         ],
         "responses": {
           "200": {
-            "description": "The ECF participant being withdrawn",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ECFParticipantWithdrawResponse"
-                }
+            "description": "The ECF participant being withdrawn"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ECFParticipantWithdrawRequest"
               }
             }
-          }
+          },
+          "required": true
         }
       }
     },
@@ -1431,15 +1229,6 @@
             ]
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ECFParticipantChangeScheduleRequest"
-              }
-            }
-          }
-        },
         "parameters": [
           {
             "name": "id",
@@ -1454,15 +1243,18 @@
         ],
         "responses": {
           "200": {
-            "description": "The ECF participant changing schedule",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ECFParticipantResponse"
-                }
+            "description": "The ECF participant changing schedule"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ECFParticipantChangeScheduleRequest"
               }
             }
-          }
+          },
+          "required": true
         }
       }
     }
@@ -1756,7 +1548,7 @@
           }
         }
       },
-      "ECFParticipantDeclarationAttributes": {
+      "ECFParticipantDeclarationRequestAttributes": {
         "anyOf": [
           {
             "$ref": "#/components/schemas/ECFParticipantDeclarationStartedAttributesRequest"
@@ -2012,7 +1804,7 @@
             "example": "ecf-participant-declaration"
           },
           "attributes": {
-            "$ref": "#/components/schemas/ECFParticipantDeclarationAttributes"
+            "$ref": "#/components/schemas/ParticipantDeclarationResponse"
           }
         }
       },
@@ -3259,35 +3051,20 @@
             "example": [
               {
                 "id": "db3a7848-7308-4879-942a-c4a70ced400a",
-                "type": "npq_application",
+                "type": "participant",
                 "attributes": {
-                  "course_identifier": "npq-leading-teaching-development",
+                  "participant_id": "7a8fef46-3c43-42c0-b3d5-1ba5904ba562",
+                  "full_name": "Isabelle MacDonald",
                   "email": "isabelle.macdonald2@some-school.example.com",
                   "email_validated": true,
-                  "employer_name": null,
-                  "employment_role": null,
-                  "full_name": "Isabelle MacDonald",
-                  "funding_choice": null,
-                  "headteacher_status": null,
-                  "ineligible_for_funding_reason": null,
-                  "participant_id": "53847955-7cfg-41eb-a322-96c50adc742b",
-                  "private_childcare_provider_urn": null,
-                  "teacher_reference_number": "0743795",
+                  "teacher_reference_number": "1234567",
                   "teacher_reference_number_validated": true,
-                  "school_urn": "123456",
-                  "school_ukprn": "12345678",
-                  "status": "pending",
-                  "works_in_school": true,
-                  "created_at": "2022-07-06T10:47:24Z",
-                  "updated_at": "2022-11-24T17:09:37Z",
-                  "cohort": "2022",
+                  "school_urn": "106286",
+                  "school_ukprn": "10079319",
+                  "headteacher_status": "no",
                   "eligible_for_funding": true,
-                  "targeted_delivery_funding_eligibility": false,
-                  "teacher_catchment": true,
-                  "teacher_catchment_iso_country_code": "GBR",
-                  "teacher_catchment_country": "United Kingdom of Great Britain and Northern Ireland",
-                  "itt_provider": null,
-                  "lead_mentor": false
+                  "funding_choice": "trust",
+                  "course_identifier": "npq-leading-teaching"
                 }
               }
             ]
@@ -3626,7 +3403,7 @@
             "example": true
           },
           "itt_provider": {
-            "description": "This field contains the legal name of the ITT accredited provider from the <a href=\"https://www.gov.uk/government/publications/accredited-initial-teacher-training-itt-providers/list-of-providers-accredited-to-deliver-itt-from-september-2024\" class=\"govuk-link\" rel=\"noreferrer noopener\" target=\"_blank\">list of providers</a>.\n",
+            "description": "This field contains the legal name of the ITT accredited provider from the <a href=\\\"https://www.gov.uk/government/publications/accredited-initial-teacher-training-itt-providers/list-of-providers-accredited-to-deliver-itt-from-september-2024\\\" class=\\\"govuk-link\\\" rel=\\\"noreferrer noopener\\\" target=\\\"_blank\\\">list of providers</a>.\n",
             "nullable": true,
             "type": "string",
             "example": "University of Southampton"
@@ -3781,7 +3558,7 @@
             "example": true
           },
           "itt_provider": {
-            "description": "This field contains the legal name of the ITT accredited provider from the <a href=\"https://www.gov.uk/government/publications/accredited-initial-teacher-training-itt-providers/list-of-providers-accredited-to-deliver-itt-from-september-2024\" class=\"govuk-link\" rel=\"noreferrer noopener\" target=\"_blank\">list of providers</a>.\n",
+            "description": "This field contains the legal name of the ITT accredited provider from the <a href=\\\"https://www.gov.uk/government/publications/accredited-initial-teacher-training-itt-providers/list-of-providers-accredited-to-deliver-itt-from-september-2024\\\" class=\\\"govuk-link\\\" rel=\\\"noreferrer noopener\\\" target=\\\"_blank\\\">list of providers</a>.\n",
             "nullable": true,
             "type": "string",
             "example": "University of Southampton"
@@ -4112,6 +3889,17 @@
           }
         }
       },
+      "NPQOutcomeFilter": {
+        "description": "Filter NPQ outcomes to return more specific results",
+        "type": "object",
+        "properties": {
+          "created_since": {
+            "description": "Return only records that have been created since this date and time (ISO 8601 date format)",
+            "type": "string",
+            "example": "2021-05-13T11:21:55Z"
+          }
+        }
+      },
       "NPQOutcomeRequest": {
         "description": "The NPQ outcome submission request",
         "type": "object",
@@ -4313,28 +4101,6 @@
           "cohort": "2021"
         }
       },
-      "NPQParticipantChangeScheduleRequest": {
-        "description": "The change schedule request for a participant",
-        "type": "object",
-        "required": [
-          "data"
-        ],
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/NPQParticipantChangeSchedule"
-          }
-        },
-        "example": {
-          "data": {
-            "type": "participant-change-schedule",
-            "attributes": {
-              "schedule_identifier": "npq-leadership-autumn",
-              "course_identifier": "npq-leading-teaching",
-              "cohort": "2021"
-            }
-          }
-        }
-      },
       "NPQParticipantCompletedDeclarationAttributes": {
         "description": "The data attributes associated with a participant declaration response",
         "type": "object",
@@ -4447,7 +4213,7 @@
           }
         }
       },
-      "NPQParticipantDeclarationAttributes": {
+      "NPQParticipantDeclarationRequestAttributes": {
         "anyOf": [
           {
             "$ref": "#/components/schemas/NPQParticipantDeclarationStartedAttributesRequest"
@@ -4459,6 +4225,56 @@
             "$ref": "#/components/schemas/NPQParticipantDeclarationCompletedAttributesRequest"
           }
         ]
+      },
+      "NPQParticipantDeclarationResponse": {
+        "description": "An NPQ participant declaration response",
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "attributes"
+        ],
+        "properties": {
+          "id": {
+            "description": "The unique identifier of the participant declaration record",
+            "type": "string",
+            "format": "uuid",
+            "example": "cd3a12347-7308-4879-942a-c4a70ced400a"
+          },
+          "type": {
+            "description": "The data type",
+            "type": "string",
+            "enum": [
+              "npq-participant-declaration"
+            ],
+            "example": "npq-participant-declaration"
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/ParticipantDeclarationResponse"
+          }
+        }
+      },
+      "NPQParticipantChangeScheduleRequest": {
+        "description": "The change schedule request for a participant",
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/NPQParticipantChangeSchedule"
+          }
+        },
+        "example": {
+          "data": {
+            "type": "participant-change-schedule",
+            "attributes": {
+              "schedule_identifier": "npq-leadership-autumn",
+              "course_identifier": "npq-leading-teaching",
+              "cohort": "2021"
+            }
+          }
+        }
       },
       "NPQParticipantDeclarationCompletedAttributesRequest": {
         "description": "An NPQ completed participant declaration",
@@ -4513,7 +4329,8 @@
           "has_passed": {
             "description": "Whether the participant has failed or passed",
             "type": "boolean",
-            "example": true
+            "example": true,
+            "nullable": true
           }
         },
         "example": {
@@ -4522,34 +4339,6 @@
           "declaration_date": "2021-05-31T02:21:32.000Z",
           "course_identifier": "npq-leading-teaching",
           "has_passed": true
-        }
-      },
-      "NPQParticipantDeclarationResponse": {
-        "description": "An NPQ participant declaration response",
-        "type": "object",
-        "required": [
-          "id",
-          "type",
-          "attributes"
-        ],
-        "properties": {
-          "id": {
-            "description": "The unique identifier of the participant declaration record",
-            "type": "string",
-            "format": "uuid",
-            "example": "cd3a12347-7308-4879-942a-c4a70ced400a"
-          },
-          "type": {
-            "description": "The data type",
-            "type": "string",
-            "enum": [
-              "npq-participant-declaration"
-            ],
-            "example": "npq-participant-declaration"
-          },
-          "attributes": {
-            "$ref": "#/components/schemas/NPQParticipantDeclarationAttributes"
-          }
         }
       },
       "NPQParticipantDeclarationRetainedAttributesRequest": {
@@ -5130,10 +4919,10 @@
           "attributes": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/ECFParticipantDeclarationAttributes"
+                "$ref": "#/components/schemas/ECFParticipantDeclarationRequestAttributes"
               },
               {
-                "$ref": "#/components/schemas/NPQParticipantDeclarationAttributes"
+                "$ref": "#/components/schemas/NPQParticipantDeclarationRequestAttributes"
               }
             ]
           }
@@ -5259,10 +5048,7 @@
               "retained-2",
               "retained-3",
               "retained-4",
-              "completed",
-              "extended-1",
-              "extended-2",
-              "extended-3"
+              "completed"
             ],
             "example": "started"
           },
@@ -5306,6 +5092,55 @@
           }
         }
       },
+      "ParticipantDeclarationDataRequest": {
+        "description": "A participant declaration data request",
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "participant-declaration"
+            ]
+          },
+          "attributes": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ECFParticipantDeclarationStartedAttributesRequest"
+              },
+              {
+                "$ref": "#/components/schemas/ECFParticipantDeclarationRetainedAttributesRequest"
+              },
+              {
+                "$ref": "#/components/schemas/ECFParticipantDeclarationCompletedAttributesRequest"
+              },
+              {
+                "$ref": "#/components/schemas/ECFParticipantDeclarationExtendedAttributesRequest"
+              },
+              {
+                "$ref": "#/components/schemas/NPQParticipantDeclarationStartedAttributesRequest"
+              },
+              {
+                "$ref": "#/components/schemas/NPQParticipantDeclarationRetainedAttributesRequest"
+              },
+              {
+                "$ref": "#/components/schemas/NPQParticipantDeclarationCompletedAttributesRequest"
+              }
+            ]
+          }
+        }
+      },
+      "ParticipantDeclarationRequest": {
+        "description": "An participant declaration request",
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/ParticipantDeclarationDataRequest"
+          }
+        }
+      },
       "ParticipantDeclarationResponse": {
         "description": "A participant declaration response",
         "type": "object",
@@ -5344,17 +5179,6 @@
             "description": "Return only records for the given cohort",
             "type": "string",
             "example": "2022"
-          }
-        }
-      },
-      "NPQOutcomeFilter": {
-        "description": "Filter NPQ outcomes to return more specific results",
-        "type": "object",
-        "properties": {
-          "created_since": {
-            "description": "Return only records that have been created since this date and time (ISO 8601 date format)",
-            "type": "string",
-            "example": "2021-05-13T11:21:55Z"
           }
         }
       },

@@ -21,9 +21,9 @@ weight: 1
 
 The API service uses a ‘state’ model to reflect the ECF participant journey, meet contractual requirements for how providers should report participants’ training and how the DfE will pay for this training.
 
-### Partnership states 
+### Partnership states
 
-Partnership states are defined by the `status` attribute. 
+Partnership states are defined by the `status` attribute.
 
 Providers must [confirm their partnerships with schools](/api-reference/ecf/guidance/#confirm-view-and-update-partnerships) for each cohort. Once a partnership has been established the `status` value will become `active` and providers will receive participant information via the API.
 
@@ -38,11 +38,11 @@ Schools can challenge existing partnerships at any time. Once a partnership `sta
 
 ### Participant states
 
-Participant states are defined by the `training_status` attribute. 
+Participant states are defined by the `training_status` attribute.
 
-A participant’s `training_status` value will determine whether a provider can: 
+A participant’s `training_status` value will determine whether a provider can:
 
-* [update their details](/api-reference/ecf/guidance/#view-and-update-participant-data). For example, notifying DfE that a participant has withdrawn from training 
+* [update their details](/api-reference/ecf/guidance/#view-and-update-participant-data). For example, notifying DfE that a participant has withdrawn from training
 * [submit a declaration](/api-reference/ecf/guidance/#submit-view-and-void-declarations). For example, notifying DfE that a participant has started their training
 
 | training_status | Definition | Action |
@@ -61,7 +61,7 @@ A participant's `participant_status` highlights information given **by school in
 
 ### Declaration states
 
-Declaration states are defined by the `state` attribute. 
+Declaration states are defined by the `state` attribute.
 
 Providers must [submit declarations](/api-reference/ecf/guidance/#submit-view-and-void-declarations) to confirm a participant has engaged in training within a given milestone period. A declaration’s `state` value will reflect if and when the DfE will pay providers for the training delivered.
 
@@ -76,4 +76,4 @@ Providers must [submit declarations](/api-reference/ecf/guidance/#submit-view-an
 | `awaiting_clawback`     | A `paid` declaration that has since been voided by a provider    | Providers can **only** view `awaiting_clawback` declarations     |
 | `clawed_back`     | An `awaiting_clawback` declaration that has since had its value deducted from payment by DfE to a provider     | Providers can **only** view `clawed_back` declarations     |
 
-[View more detailed specifications for the declaration schema](/api-reference/reference-v3.html#schema-ecfparticipantdeclarationattributes).
+[View more detailed specifications for the declaration schema](/api-reference/reference-v3.html#schema-participantdeclarationattributes).
