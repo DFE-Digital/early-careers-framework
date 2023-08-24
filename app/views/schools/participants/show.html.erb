@@ -143,8 +143,10 @@
             <% if @profile.ect? &&
                   @profile.policy_class.new(current_user, @profile).add_appropriate_body? &&
                   policy(@induction_record).edit_appropriate_body? %>
-              <%= govuk_link_to(participant_has_appropriate_body? ? "Change" : "Add",
-                                { action: :add_appropriate_body, participant_id: @profile }) %>
+
+              <%= govuk_link_to({ action: :add_appropriate_body, participant_id: @profile }) do %>
+                <%= participant_has_appropriate_body? ? 'Change' : 'Add' %> <span class="govuk-visually-hidden"> Appropriate body</span>
+              <% end %>
             <% end %>
           </dd>
         </div>
