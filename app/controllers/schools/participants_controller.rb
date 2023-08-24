@@ -158,6 +158,6 @@ private
   end
 
   def can_appropriate_body_be_changed?
-    @induction_record.school_cohort.appropriate_body.present? && @profile.ect? && !@induction_record.training_status_withdrawn?
+    @profile.ect? && !@induction_record.training_status_withdrawn?
   end
 end

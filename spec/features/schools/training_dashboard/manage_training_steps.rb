@@ -175,7 +175,7 @@ module ManageTrainingSteps
   end
 
   def and_i_can_change_the_appropriate_body
-    expect(page).to have_summary_row_action("Appropriate body", "Change")
+    expect(page).to have_summary_row_action("Appropriate body", "Change Appropriate body")
   end
 
   def and_i_can_manage_ects_and_mentors

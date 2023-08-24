@@ -204,10 +204,10 @@ RSpec.describe "Changing participant details from the dashboard", type: :feature
   end
 
   context "When the school cohort does not have an appropriate body assigned" do
-    scenario "Induction tutor does not see the appropriate body from participant profile page" do
+    scenario "Induction tutor can see the appropriate body from participant profile page" do
       click_on "Sally Teacher"
       then_i_am_taken_to_participant_profile
-      and_i_dont_see_appropriate_body
+      and_i_see_no_appropriate_body_selected
     end
   end
 
