@@ -195,7 +195,7 @@ private
 
     return unless conflicting_declaration
 
-    most_recent_declaration = [declaration, conflicting_declaration].max_by(&:created_at)
+    most_recent_declaration = [declaration, conflicting_declaration].max_by(&:declaration_date)
     void_or_clawback_declaration(most_recent_declaration)
   end
 
