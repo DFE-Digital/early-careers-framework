@@ -211,18 +211,17 @@ describe ParticipantProfileDeduplicator do
       let(:primary_profile) { create(:ect, :eligible_for_funding) }
 
       let!(:duplicate_declaration) do
-        travel_to(1.day.ago) do
-          create(:ect_participant_declaration,
-                 :submitted,
-                 declaration_type: "retained-1",
-                 participant_profile: duplicate_profile,
-                 cpd_lead_provider: duplicate_profile.lead_provider.cpd_lead_provider)
-        end
+        create(:ect_participant_declaration,
+               :submitted,
+               declaration_type: "retained-1",
+               participant_profile: duplicate_profile,
+               cpd_lead_provider: duplicate_profile.lead_provider.cpd_lead_provider)
       end
       let!(:conflicting_declaration) do
         create(:ect_participant_declaration,
                :submitted,
                declaration_type: "retained-1",
+               declaration_date: duplicate_declaration.declaration_date + 1.day,
                participant_profile: primary_profile,
                cpd_lead_provider: primary_profile.lead_provider.cpd_lead_provider)
       end
@@ -314,14 +313,14 @@ describe ParticipantProfileDeduplicator do
       context "when the change of schedule is not valid" do
         before do
           primary_profile.latest_induction_record.training_status_withdrawn!
-          duplicate_profile_declaration.update!(declaration_date: 10.years.ago)
+          primary_profile_declaration.update!(declaration_date: duplicate_profile_declaration.declaration_date + 1.day)
         end
 
         it { expect { dedup! }.to raise_error(described_class::DeduplicationError, "Cannot perform actions on a withdrawn participant") }
       end
 
       context "when the duplicate profile has the relevant schedule (by earliest declaration_date)" do
-        before { duplicate_profile_declaration.update!(declaration_date: 10.years.ago) }
+        before { primary_profile_declaration.update!(declaration_date: duplicate_profile_declaration.declaration_date + 1.day) }
 
         it "updates the primary profile to use the schedule from the duplicate profile" do
           dedup!
@@ -346,7 +345,7 @@ describe ParticipantProfileDeduplicator do
       end
 
       context "when the primary profile has the relevant schedule (by earliest declaration_date)" do
-        before { primary_profile_declaration.update!(declaration_date: 10.years.ago) }
+        before { duplicate_profile_declaration.update!(declaration_date: primary_profile_declaration.declaration_date + 1.day) }
 
         it "does not change the primary profile schedule" do
           dedup!
@@ -363,7 +362,10 @@ describe ParticipantProfileDeduplicator do
       end
 
       context "when the earliest declarations are not in a voidable state" do
-        before { duplicate_profile_declaration.update!(declaration_date: 10.years.ago, state: :voided) }
+        before do
+          primary_profile_declaration.update!(declaration_date: duplicate_profile_declaration.declaration_date + 1.day)
+          duplicate_profile_declaration.voided!
+        end
 
         it "does not change the primary profile schedule (as it ignores voided declarations when determining the primary schedule)" do
           dedup!
@@ -374,8 +376,8 @@ describe ParticipantProfileDeduplicator do
 
       context "when there are no voidable declarations" do
         before do
-          duplicate_profile_declaration.update!(declaration_date: 10.years.ago, state: :voided)
-          primary_profile_declaration.voided!
+          primary_profile_declaration.update!(declaration_date: duplicate_profile_declaration.declaration_date + 1.day, state: :voided)
+          duplicate_profile_declaration.voided!
         end
 
         it "does not change the primary profile schedule" do
