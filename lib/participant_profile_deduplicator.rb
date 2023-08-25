@@ -16,21 +16,24 @@ class ParticipantProfileDeduplicator
   def dedup!
     @changes = []
 
+    prevent_same_school_different_lead_provider_with_declarations
+
     log_overview_info
 
     warning_ect_mentor_duplicate
     warning_only_void_declarations_on_primary
-
-    prevent_same_school_different_lead_provider
-    ensure_training_programmes_match
+    warning_training_programmes_different
 
     ActiveRecord::Base.transaction do
-      reconcile_schedules!
-      reconcile_declarations!
-      transfer_validation_data!
-      transfer_participant_eligibility!
-      handle_school_change!
-      reconcile_remaining_induction_records!
+      if reconcile?
+        reconcile_schedules!
+        reconcile_declarations!
+        transfer_validation_data!
+        transfer_participant_eligibility!
+        handle_school_change!
+        reconcile_remaining_induction_records!
+      end
+
       delete_duplicate!
 
       raise ActiveRecord::Rollback if dry_run
@@ -48,17 +51,29 @@ private
     log_info("Duplicate profile: #{duplicate_profile_id}")
   end
 
-  def prevent_same_school_different_lead_provider
-    return unless primary_profile.lead_provider&.id != duplicate_profile.lead_provider&.id && primary_profile.school == duplicate_profile.school
-
-    raise DeduplicationError, "Different lead providers at the same school are not yet supported."
+  def reconcile?
+    !same_school_different_lead_provider? || duplicate_has_declarations?
   end
 
-  def ensure_training_programmes_match
-    primary_training_programmes = primary_profile.induction_records.map { |ir| ir.induction_programme.training_programme }.flatten
-    duplicate_training_programmes = duplicate_profile.induction_records.map { |ir| ir.induction_programme.training_programme }.flatten
+  def same_school_different_lead_provider?
+    primary_profile.lead_provider&.id != duplicate_profile.lead_provider&.id && school(primary_profile) == school(duplicate_profile)
+  end
 
-    raise DeduplicationError, "Only duplicates with the same training programme are supported." if primary_training_programmes.difference(duplicate_training_programmes).any?
+  def duplicate_has_declarations?
+    duplicate_profile.participant_declarations.any?
+  end
+
+  def warning_training_programmes_different
+    primary_training_programmes = primary_profile.induction_records.map { |ir| ir.induction_programme.training_programme }.flatten.to_set
+    duplicate_training_programmes = duplicate_profile.induction_records.map { |ir| ir.induction_programme.training_programme }.flatten.to_set
+
+    log_info("WARNING: induction programmes are different (double check primary/duplicate ordering).") if primary_training_programmes != duplicate_training_programmes
+  end
+
+  def prevent_same_school_different_lead_provider_with_declarations
+    return unless same_school_different_lead_provider? && duplicate_has_declarations?
+
+    raise DeduplicationError, "Lead provider change retaining the same school is not supported when there are declarations on the duplicate"
   end
 
   def warning_only_void_declarations_on_primary
@@ -115,11 +130,11 @@ private
   end
 
   def handle_school_change!
-    return unless primary_profile.school != duplicate_profile.school
+    return unless school(primary_profile) != school(duplicate_profile)
 
     primary_profile.induction_records.oldest.update!(school_transfer: true)
 
-    log_info("Primary profile oldest induction record set as school transfer. Current school: #{primary_profile.latest_induction_record.school.urn}.")
+    log_info("Primary profile oldest induction record set as school transfer. Current school: #{school(primary_profile).urn}.")
 
     duplicate_induction_record = duplicate_profile.latest_induction_record
     end_date = determine_induction_record_end_date(primary_profile.induction_records.oldest, duplicate_induction_record)
@@ -226,6 +241,7 @@ private
     duplicate_profile.validation_decisions.destroy_all
     duplicate_profile.participant_profile_states.destroy_all
     duplicate_profile.participant_profile_schedules.destroy_all
+    duplicate_profile.induction_records.destroy_all
     duplicate_profile.ecf_participant_validation_data&.destroy!
     duplicate_profile.ecf_participant_eligibility&.destroy!
     duplicate_profile.destroy!
@@ -241,6 +257,10 @@ private
 
   def duplicate_profile
     @duplicate_profile ||= ParticipantProfile::ECF.find(duplicate_profile_id)
+  end
+
+  def school(participant_profile)
+    participant_profile.latest_induction_record&.school || participant_profile.school
   end
 
   def preferred_identity(duplicate_induction_record)

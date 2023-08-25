@@ -35,16 +35,37 @@ describe ParticipantProfileDeduplicator do
       let(:duplicate_profile) do
         create(:ect) do |ect|
           ect.update!(school_cohort: primary_profile.school_cohort)
+          ect.latest_induction_record.update!(school_cohort: primary_profile.school_cohort)
         end
       end
 
-      it { expect { dedup! }.to raise_error(described_class::DeduplicationError, "Different lead providers at the same school are not yet supported.") }
+      it "deletes the duplicate without reconciling" do
+        expect { dedup! }.not_to change { primary_profile.induction_records.reload.count }
+      end
+
+      context "when there are declarations on the duplicate" do
+        let!(:duplicate_declaration) do
+          create(:ect_participant_declaration,
+                 :submitted,
+                 declaration_type: "retained-1",
+                 participant_profile: duplicate_profile,
+                 cpd_lead_provider: duplicate_profile.lead_provider.cpd_lead_provider)
+        end
+
+        it { expect { dedup! }.to raise_error(described_class::DeduplicationError, "Lead provider change retaining the same school is not supported when there are declarations on the duplicate") }
+      end
     end
 
     context "when the training programmes are different" do
-      before { create(:induction_record, participant_profile: primary_profile) }
+      let(:induction_programme) { create(:induction_programme, :cip) }
 
-      it { expect { dedup! }.to raise_error(described_class::DeduplicationError, "Only duplicates with the same training programme are supported.") }
+      before { create(:induction_record, participant_profile: duplicate_profile, induction_programme:) }
+
+      it "logs a warning" do
+        dedup!
+
+        expect_changes("WARNING: induction programmes are different (double check primary/duplicate ordering).")
+      end
     end
 
     context "when duplicate profile is ECT and primary profile is Mentor" do
