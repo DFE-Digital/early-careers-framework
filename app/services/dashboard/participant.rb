@@ -22,16 +22,19 @@ module Dashboard
     # induction_start_date
     delegate :induction_start_date, to: :participant_profile
 
-    def participant_profile
-      @participant_profile ||= ParticipantProfile.find(participant_profile_id)
-    end
-
     def mentor
       induction_record.mentor_profile
     end
 
+    # mentor_profile_id
+    delegate :mentor_profile_id, to: :induction_record, allow_nil: true
+
     def mentored?
       induction_record&.mentor_profile_id.present?
+    end
+
+    def participant_profile
+      @participant_profile ||= ParticipantProfile.find(participant_profile_id)
     end
   end
 end
