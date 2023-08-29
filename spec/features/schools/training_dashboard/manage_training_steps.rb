@@ -582,7 +582,7 @@ module ManageTrainingSteps
 
   def when_i_filter_by(option)
     when_i_select(option)
-    click_on("Apply filter")
+    click_on("Apply")
   end
 
   def when_i_submit_an_empty_form

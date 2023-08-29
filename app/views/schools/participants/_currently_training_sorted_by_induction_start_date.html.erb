@@ -1,7 +1,7 @@
 <%= render(Schools::Participants::Dashboard::SortControl.new(school:, selected: :induction_start_date)) %>
 
 <% participants.ects.each do |ect| %>
-  <%= govuk_summary_card(title: link_to_participant(ect.participant_profile, school)) do |card|
+  <%= govuk_summary_card(title: link_to_participant(ect.participant_profile, school, regular_font: false)) do |card|
     card.with_summary_list(
         rows: [
             { key: {
@@ -19,12 +19,7 @@
                 text: "Mentor",
             },
               value: {
-                  text: (
-                      if ect.mentored?
-                        link_to_participant(ect.mentor, school)
-                      else
-                        missing_mentor_html(ect.participant_profile)
-                      end),
+                  text: (ect.mentored? ? ect.mentor.full_name : missing_mentor_html(ect.participant_profile)),
               },
             },
         ],

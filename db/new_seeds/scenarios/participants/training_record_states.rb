@@ -341,7 +341,7 @@ module NewSeeds
 
           @ect_on_fip_completed ||= NewSeeds::Scenarios::Participants::Ects::Ect
             .new(school_cohort:, full_name: "ECT on FIP: withdrawn by lead provider")
-            .build
+            .build(induction_completion_date: 1.week.ago)
             .with_validation_data
             .with_eligibility
             .with_induction_record(induction_programme: school_cohort.default_induction_programme, induction_status: "completed")
@@ -739,7 +739,7 @@ module NewSeeds
 
           @ect_on_cip_completed ||= NewSeeds::Scenarios::Participants::Ects::Ect
             .new(school_cohort:, full_name: "ECT on CIP: withdrawn by lead provider")
-            .build
+            .build(induction_completion_date: 1.week.ago)
             .with_validation_data
             .with_eligibility
             .with_induction_record(induction_programme: school_cohort.default_induction_programme, induction_status: "completed")
@@ -1208,7 +1208,7 @@ module NewSeeds
 
           NewSeeds::Scenarios::Participants::Mentors::MentorWithSomeEcts
             .new(school_cohort:, full_name: "Mentor on FIP: withdrawn by lead provider")
-            .build
+            .build(induction_completion_date: 1.week.ago)
             .with_validation_data
             .with_eligibility
             .with_induction_record(induction_programme: school_cohort.default_induction_programme, induction_status: "completed")
@@ -1624,7 +1624,7 @@ module NewSeeds
 
           NewSeeds::Scenarios::Participants::Mentors::MentorWithSomeEcts
             .new(school_cohort:, full_name: "Mentor on CIP: withdrawn by lead provider")
-            .build
+            .build(induction_completion_date: 1.week.ago)
             .with_validation_data
             .with_eligibility
             .with_induction_record(induction_programme: school_cohort.default_induction_programme, induction_status: "completed")

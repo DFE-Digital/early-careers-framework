@@ -10,12 +10,12 @@ module Schools
       school_cohorts.sum { |sc| sc.current_induction_records.ects.where(mentor_profile: nil).count }
     end
 
-    def link_to_participant(participant_profile, school)
+    def link_to_participant(participant_profile, school, regular_font: true)
       govuk_link_to(participant_profile.full_name,
                     school_participant_path(id: participant_profile.id,
                                             school_id: school.slug),
                     no_visited_state: true,
-                    class: "govuk-!-font-weight-regular")
+                    class: ("govuk-!-font-weight-regular" if regular_font))
     end
 
     def manage_ects_and_mentors?(school_cohorts)

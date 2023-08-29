@@ -129,6 +129,7 @@ module Dashboard
           next completed_induction_ect(induction_record) if induction_record.completed_induction_status?
           next deferred_or_transferred_ect(induction_record) if induction_record.deferred_or_transferred?
           next orphan_ect(induction_record) if induction_record.mentor_profile_id.blank?
+
           currently_training_ect(induction_record)
         end
 

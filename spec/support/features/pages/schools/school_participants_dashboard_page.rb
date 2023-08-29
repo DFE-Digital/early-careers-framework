@@ -21,7 +21,7 @@ module Pages
 
     def filter_by(option)
       choose("filtered-by-#{option.downcase.parameterize}-field")
-      click_on("Apply filter")
+      click_on("Apply")
     end
 
     def view_participant(participant_name)
