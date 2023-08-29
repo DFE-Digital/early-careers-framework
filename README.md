@@ -2,6 +2,8 @@
 
 # Early careers framework
 
+This app runs the [Manage training for early career teachers](https://manage-training-for-early-career-teachers.education.gov.uk) service.
+
 ## Development Setup
 
 ### Prerequisites
