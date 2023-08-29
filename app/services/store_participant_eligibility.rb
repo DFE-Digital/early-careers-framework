@@ -121,8 +121,6 @@ private
       when :previous_induction
         if @previous_status == "eligible"
           :ect_previous_induction_email_previously_eligible
-        else
-          :ect_previous_induction_email
         end
 
       else
