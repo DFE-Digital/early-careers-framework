@@ -33,7 +33,7 @@
     "webpack-merge": "^5.9.0",
     "webpack-remove-empty-scripts": "^1.0.3",
     "webpack-sources": "^3.2.3",
-    "whatwg-fetch": "^3.6.17"
+    "whatwg-fetch": "^3.6.18"
   },
   "devDependencies": {
     "axe-core": "^4.7.2",
