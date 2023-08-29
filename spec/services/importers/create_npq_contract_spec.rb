@@ -53,6 +53,7 @@ RSpec.describe Importers::CreateNPQContract do
         expect(contract.number_of_payment_periods).to eql(3)
         expect(contract.cohort).to eql(cohort)
         expect(contract.version).to eql("0.0.1")
+        expect(contract.monthly_service_fee).to eql(0.0)
       end
     end
 

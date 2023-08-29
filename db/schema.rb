@@ -603,7 +603,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_21_154316) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.uuid "cohort_id", null: false
-    t.decimal "monthly_service_fee"
+    t.decimal "monthly_service_fee", default: "0.0"
     t.decimal "targeted_delivery_funding_per_participant", default: "100.0"
     t.index ["cohort_id"], name: "index_npq_contracts_on_cohort_id"
     t.index ["npq_lead_provider_id"], name: "index_npq_contracts_on_npq_lead_provider_id"

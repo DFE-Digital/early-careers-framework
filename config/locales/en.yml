@@ -645,6 +645,8 @@ en:
     total_starts: Total starts
     total_voids: Total voids
     total: Total
+    totals: Totals
+    total_net_vat: Total net VAT
     total_declarations: Total declarations
     total_not_eligible_for_funding: Total not eligible for funding
     voided_declarations: Voided declarations
