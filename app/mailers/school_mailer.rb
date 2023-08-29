@@ -19,6 +19,7 @@ class SchoolMailer < ApplicationMailer
   REMIND_SIT_TO_ADD_PARTICIPANTS_TEMPLATE = "19b5a258-e615-4371-9e55-f9cc58187448"
   REMIND_SIT_TO_ASSIGN_MENTORS_TO_ECTS_TEMPLATE = "ae0b1c48-de11-4231-b394-0288bb779987"
   LAUNCH_ASK_GIAS_CONTACT_TO_VALIDATE_SIT_DETAILS_TEMPLATE = "1a8d24eb-cd08-4836-bfc2-3a9cf33de67e"
+  SIT_NEEDS_TO_CHASE_PARTNERSHIP = "c640e594-21f6-4de3-be41-ebb74b2c8306"
 
   def ask_gias_contact_to_validate_sit_details
     school = params[:school]
@@ -331,5 +332,25 @@ class SchoolMailer < ApplicationMailer
         opt_in_out_link:,
       },
     ).tag(:launch_ask_gias_contact_to_report_school_training_details).associate_with(school)
+  end
+
+  def sit_needs_to_chase_partnership
+    induction_coordinator = params[:induction_coordinator]
+    sit_name = induction_coordinator.user.full_name
+    sit_email_address = induction_coordinator.user.email
+
+    email = template_mail(
+      SIT_NEEDS_TO_CHASE_PARTNERSHIP,
+      to: sit_email_address,
+      rails_mailer: mailer_name,
+      rails_mail_template: action_name,
+      personalisation: {
+        SIT_name: sit_name,
+        email_address: sit_email_address,
+      },
+    )
+    email
+      .tag(:sit_needs_to_chase_partnership)
+      .associate_with(induction_coordinator, as: :induction_coordinator)
   end
 end
