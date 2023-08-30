@@ -68,9 +68,7 @@ module Admin
       end
 
       def allow_change_programme?
-        return true if cip? || other?
-
-        school_cohort.lead_provider.nil?
+        cip? || other? || school_cohort.lead_provider.nil?
       end
 
       def change_programme_href
