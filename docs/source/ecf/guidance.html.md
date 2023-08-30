@@ -699,8 +699,100 @@ As soon as school induction tutors have entered the information to the DfE servi
 GET /api/v3/participants/ecf/transfers
 ```
 
+#### What providers will see in the API 
+
+<table class="govuk-table"> 
+<caption class="govuk-table__caption govuk-table__caption--m">What providers will see when a participant is leaving them</caption> 
+<thead class="govuk-table__head"> 
+<tr class="govuk-table__row"> 
+<th scope="col" class="govuk-table__header app-custom-class">Scenario</th> 
+<th scope="col" class="govuk-table__header app-custom-class">Participant status</th> 
+<th scope="col" class="govuk-table__header app-custom-class">Transfer response</th> 
+</tr> 
+</thead> 
+<tbody class="govuk-table__body"> 
+<tr class="govuk-table__row"> 
+<th scope="row" class="govuk-table__header">Before transfer</th> 
+<td class="govuk-table__cell">Active</td> 
+<td class="govuk-table__cell">N/A</td> 
+</tr> 
+<tr class="govuk-table__row"> 
+<th scope="row" class="govuk-table__header">Old school induction tutor reports leaver</th> 
+<td class="govuk-table__cell">Leaving</td> 
+<td class="govuk-table__cell">Shows leaving details</td> 
+</tr> 
+<tr class="govuk-table__row"> 
+<th scope="row" class="govuk-table__header">New school induction tutor reports joiner</th> 
+<td class="govuk-table__cell">Leaving</td> 
+<td class="govuk-table__cell">Shows leaving and joining details</td> 
+</tr> 
+<tr class="govuk-table__row"> 
+<th scope="row" class="govuk-table__header">After transfer (today’s date => joining_date)</th> 
+<td class="govuk-table__cell">Left</td> 
+<td class="govuk-table__cell">Shows leaving and joining details</td> 
+</tr> 
+</tbody> 
+</table>
+
+<table class="govuk-table"> 
+<caption class="govuk-table__caption govuk-table__caption--m">What providers will see when a participant is joining them</caption> 
+<thead class="govuk-table__head"> 
+<tr class="govuk-table__row"> 
+<th scope="col" class="govuk-table__header app-custom-class">Scenario</th> 
+<th scope="col" class="govuk-table__header app-custom-class">Participant status</th> 
+<th scope="col" class="govuk-table__header app-custom-class">Transfer response</th> 
+</tr> 
+</thead> 
+<tbody class="govuk-table__body"> 
+<tr class="govuk-table__row"> 
+<th scope="row" class="govuk-table__header">New school induction tutor reports joiner</th> 
+<td class="govuk-table__cell">Joining</td> 
+<td class="govuk-table__cell">Shows leaving and joining details</td> 
+</tr> 
+<tr class="govuk-table__row"> 
+<th scope="row" class="govuk-table__header">After transfer (today’s date => joining_date)</th> 
+<td class="govuk-table__cell">Active</td> 
+<td class="govuk-table__cell">Shows leaving and joining details</td> 
+</tr> 
+</tbody> 
+</table> 
+
+<table class="govuk-table"> 
+<caption class="govuk-table__caption govuk-table__caption--m">What providers will see if a transferring participant is staying with them </caption> 
+<thead class="govuk-table__head"> 
+<tr class="govuk-table__row"> 
+<th scope="col" class="govuk-table__header app-custom-class">Scenario</th> 
+<th scope="col" class="govuk-table__header app-custom-class">Participant status</th> 
+<th scope="col" class="govuk-table__header app-custom-class">Transfer response</th> 
+</tr> 
+</thead> 
+<tbody class="govuk-table__body"> 
+<tr class="govuk-table__row"> 
+<th scope="row" class="govuk-table__header">Before transfer</th> 
+<td class="govuk-table__cell">Active</td> 
+<td class="govuk-table__cell">N/A</td> 
+</tr> 
+<tr class="govuk-table__row"> 
+<th scope="row" class="govuk-table__header">Old school induction tutor reports leaver</th> 
+<td class="govuk-table__cell">Leaving</td> 
+<td class="govuk-table__cell">Shows leaving details</td> 
+</tr> 
+<tr class="govuk-table__row"> 
+<th scope="row" class="govuk-table__header">New school induction tutor reports joiner</th> 
+<td class="govuk-table__cell">Joining (new school details shown)</td> 
+<td class="govuk-table__cell">Shows leaving and joining details</td> 
+</tr> 
+<tr class="govuk-table__row"> 
+<th scope="row" class="govuk-table__header">After transfer (today’s date => joining_date)</th> 
+<td class="govuk-table__cell">Active</td> 
+<td class="govuk-table__cell">Shows leaving and joining details</td> 
+</tr> 
+</tbody> 
+</table> 
+
 An example response body is listed below. Successful requests will return response bodies which can include:
 
+* the `id`, which is unique to each participant
 * the provider name and school URN the participants are transferring to or from
 * the `transfer_type`, which describes whether the participant is transferring to a `new_school` with the same provider, to a new school with a `new_provider`, or if this is yet `unknown`
 * the `status`, which describes whether the transfer has taken place yet (and the dates are in the past)
@@ -709,6 +801,7 @@ An example response body is listed below. Successful requests will return respon
 
 * transfer data can appear incomplete as induction tutors can enter transfer information at different times. **For example,** a participant is planning on transferring from school X to school Y. School X’s induction tutor confirms the participant will be leaving, but school Y’s induction tutor has not yet confirmed the participant will be joining. At this stage the only data available via the API is from the school the participant is leaving
 * where a participant’s transfer from one provider to another is complete, the original provider should maintain data accuracy and [notify DfE that the participant has withdrawn from training](/api-reference/ecf/guidance/#notify-dfe-a-participant-has-withdrawn-from-training). **For example,** a participant has transferred from provider X to provider Y. The relevant school induction tutors have confirmed that the participant has left one school and joined the other. At this stage provider X will [view the participant’s data](/api-reference/ecf/guidance.html#view-a-single-participant-39-s-data) to see `“participant_status”: “left”`. They can then [notify DfE a participant has withdrawn from training with them](/api-reference/ecf/guidance/#notify-dfe-a-participant-has-withdrawn-from-training). This will update the participant’s `training_status`  to `withdrawn`
+* it’s possible for the induction tutor from the new school to report a joiner before the old school’s induction tutor. In this case, the `leaving_date` value would be null until reported by the old school’s induction tutor 
 
 For more detailed information see the specifications for this [view participant transfers endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-transfers-get).
 
@@ -761,6 +854,7 @@ GET /api/v3/participants/ecf/{id}/transfers
 
 An example response body is listed below. Successful requests will return response bodies which can include:
 
+* the `id`, which is unique to each participant
 * the provider name and school URN the participants are transferring to or from
 * the `transfer_type`, which describes whether the participant is transferring to a `new_school` with the same provider, to a new school with a `new_provider`, or if this is yet `unknown`
 * the `status`, which describes whether the transfer has taken place yet (and the dates are in the past)
@@ -769,6 +863,7 @@ An example response body is listed below. Successful requests will return respon
 
 * transfer data can appear incomplete as induction tutors can enter transfer information at different times. **For example,** a participant is planning on transferring from school X to school Y. School X’s induction tutor confirms the participant will be leaving, but school Y’s induction tutor has not yet confirmed the participant will be joining. At this stage the only data available via the API is from the school the participant is leaving
 * where a participant’s transfer from one provider to another is complete, the original provider should maintain data accuracy and [notify DfE that the participant has withdrawn from training](/api-reference/ecf/guidance/#notify-dfe-a-participant-has-withdrawn-from-training). **For example,** a participant has transferred from provider X to provider Y. The relevant school induction tutors have confirmed that the participant has left one school and joined the other. At this stage provider X will [view the participant’s data](/api-reference/ecf/guidance.html#view-a-single-participant-39-s-data) to see `“participant_status”: “left”`. They should then [notify DfE a participant has withdrawn from training with them](/api-reference/ecf/guidance/#notify-dfe-a-participant-has-withdrawn-from-training). This will update the participant’s `training_status`  to `withdrawn`
+* it’s possible for the induction tutor from the new school to report a joiner before the old school’s induction tutor. In this case, the `leaving_date` value would be null until reported by the old school’s induction tutor 
 
 For more detailed information see the specifications for this [view a participant transfer endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-id-transfers-get).
 
