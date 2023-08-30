@@ -3,18 +3,6 @@
     summary_list.with_row do |row|
       row.with_key(text: "Training programme")
       row.with_value(text: training_programme)
-
-      if allow_change_programme?
-        row.with_action(text: "Change", visually_hidden_text: "induction programme",  href: change_programme_href)
-      end
-    end
-
-    if cip?
-      summary_list.with_row do |row|
-        row.with_key(text: "Materials")
-        row.with_value(text: materials)
-        row.with_action(text: "Change", visually_hidden_text: "materials", href: change_materials_href)
-      end
     end
 
     summary_list.with_row do |row|

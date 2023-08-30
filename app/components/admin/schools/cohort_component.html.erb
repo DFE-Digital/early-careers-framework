@@ -2,8 +2,11 @@
   <%= tag.h2(heading, class: "govuk-heading-l") %>
 
   <% if empty? %>
-    <p class="govuk-body">No partnerships or relationships in the <%= cohort.start_year %> cohort.</p>
-  <% else %>
+
+    No school cohort set up for <%= cohort.start_year %>.
+
+  <% elsif fip? %>
+
     <% partnership_components.each do |pc| %>
       <%= pc %>
     <% end %>
@@ -15,5 +18,34 @@
         <%= rc %>
       <% end %>
     <% end %>
+
+  <% else %>
+
+    <%=
+      govuk_summary_list do |summary_list|
+        summary_list.with_row do |row|
+          row.with_key(text: "Training programme")
+          row.with_value(text: training_programme)
+
+          if allow_change_programme?
+            row.with_action(text: "Change", visually_hidden_text: "induction programme",  href: change_programme_href)
+          end
+        end
+
+        if cip?
+          summary_list.with_row do |row|
+            row.with_key(text: "Materials")
+            row.with_value(text: materials)
+            row.with_action(text: "Change", visually_hidden_text: "materials", href: change_materials_href)
+          end
+
+          summary_list.with_row do |row|
+            row.with_key(text: "Appropriate body")
+            row.with_value(text: school_cohort&.appropriate_body&.name || "No appropriate body")
+          end
+        end
+      end
+    %>
+
   <% end %>
 </div>

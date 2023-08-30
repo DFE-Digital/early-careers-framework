@@ -19,12 +19,28 @@ module Admin
         build_relationships
       end
 
+      def training_programme
+        {
+          "core_induction_programme" => "Using DfE-accredited materials",
+          "design_our_own"           => "Designing their own training",
+          "no_early_career_teachers" => "No ECTs this year",
+        }.fetch(induction_programme_choice, "Not using service")
+      end
+
+      def materials
+        school_cohort.default_induction_programme&.core_induction_programme&.name
+      end
+
+      def change_materials_href
+        admin_school_change_training_materials_path(id: school_cohort.cohort.start_year, school_id: school_cohort.school.slug)
+      end
+
       def heading
         "#{cohort.start_year} programme"
       end
 
       def empty?
-        partnership_components.none? && relationship_components.none?
+        school_cohort.blank?
       end
 
       def build_partnerships
@@ -37,6 +53,34 @@ module Admin
         relationships&.each do |relationship|
           with_relationship_component(school:, school_cohort:, relationship:, superuser:)
         end
+      end
+
+      def cip?
+        school_cohort.core_induction_programme?
+      end
+
+      def fip?
+        school_cohort.full_induction_programme?
+      end
+
+      def other?
+        !cip? && !fip?
+      end
+
+      def allow_change_programme?
+        return true if cip? || other?
+
+        school_cohort.lead_provider.nil?
+      end
+
+      def change_programme_href
+        admin_school_change_programme_path(id: school_cohort.start_year, school_id: school.slug)
+      end
+
+    private
+
+      def induction_programme_choice
+        school_cohort.induction_programme_choice
       end
     end
   end
