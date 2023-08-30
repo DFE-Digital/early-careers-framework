@@ -70,11 +70,6 @@ test:
     variables:
       idle_in_transaction_session_timeout: 0
 
-deployed_development:
-  <<: *default_primary
-  sslmode: <%= ENV.fetch("DB_SSLMODE") { "require" } %>
-
-
 staging:
   <% if ENV.key?("VCAP_APPLICATION") %>
 

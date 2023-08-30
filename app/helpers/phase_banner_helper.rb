@@ -10,7 +10,6 @@ module PhaseBannerHelper
   def phase_banner_tag_colour(env = Rails.env)
     {
       "development" => "red",
-      "deployed_development" => "grey",
       "review" => "purple",
       "staging" => "turquoise",
       "sandbox" => "yellow",
