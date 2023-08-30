@@ -3,6 +3,7 @@
 class ParticipantProfile::ECF < ParticipantProfile
   self.ignored_columns = %i[school_id]
 
+  POST_TRANSITIONAL_INDUCTION_START_DATE_DEADLINE = ActiveSupport::TimeZone["London"].local(2021, 9, 1).freeze
   VALID_EVIDENCE_HELD = %w[training-event-attended self-study-material-completed other].freeze
   COURSE_IDENTIFIERS = %w[ecf-mentor ecf-induction].freeze
   WITHDRAW_REASONS = %w[
@@ -115,6 +116,14 @@ class ParticipantProfile::ECF < ParticipantProfile
 
   def schedule_for(cpd_lead_provider:)
     relevant_induction_record(lead_provider: cpd_lead_provider&.lead_provider)&.schedule
+  end
+
+  def post_transitional?
+    return false unless ect?
+    return false unless induction_start_date
+    return false if completed_induction?
+
+    induction_start_date < POST_TRANSITIONAL_INDUCTION_START_DATE_DEADLINE
   end
 
   def active_for?(cpd_lead_provider:)
