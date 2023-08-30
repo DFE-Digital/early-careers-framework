@@ -56,7 +56,7 @@ private
   end
 
   def same_school_different_lead_provider?
-    primary_profile.lead_provider&.id != duplicate_profile.lead_provider&.id && school(primary_profile) == school(duplicate_profile)
+    lead_provider(primary_profile)&.id != lead_provider(duplicate_profile)&.id && school(primary_profile) == school(duplicate_profile)
   end
 
   def duplicate_has_declarations?
@@ -102,7 +102,7 @@ private
   end
 
   def update_primary_profile_schedule(new_schedule)
-    cpd_lead_provider = primary_profile.lead_provider.cpd_lead_provider
+    cpd_lead_provider = lead_provider(primary_profile).cpd_lead_provider
     change_schedule = ChangeScheduleOnDuplicate.new(
       participant_id: primary_profile.user_id,
       profile: primary_profile,
@@ -261,6 +261,10 @@ private
 
   def school(participant_profile)
     participant_profile.latest_induction_record&.school || participant_profile.school
+  end
+
+  def lead_provider(participant_profile)
+    participant_profile.latest_induction_record&.lead_provider || participant_profile.lead_provider
   end
 
   def preferred_identity(duplicate_induction_record)
