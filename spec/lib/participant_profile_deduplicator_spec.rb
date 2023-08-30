@@ -316,7 +316,7 @@ describe ParticipantProfileDeduplicator do
                cpd_lead_provider: duplicate_profile.lead_provider.cpd_lead_provider)
       end
       let!(:primary_profile_schedule) { primary_profile.latest_induction_record.schedule }
-      let(:duplicate_profile_cohort) { create(:cohort) }
+      let(:duplicate_profile_cohort) { create(:cohort, start_year: primary_profile.cohort.start_year + 1) }
       let!(:duplicate_profile_schedule) do
         create(:schedule, name: "other-schedule", cohort: duplicate_profile_cohort).tap do |schedule|
           duplicate_profile.latest_induction_record.update!(schedule:)
