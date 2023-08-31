@@ -337,8 +337,8 @@ class SchoolMailer < ApplicationMailer
   def sit_needs_to_chase_partnership
     school = params[:school]
     induction_coordinator = school.induction_coordinators.first
-    sit_name = induction_coordinator.user.full_name
-    sit_email_address = induction_coordinator.user.email
+    sit_name = induction_coordinator.full_name
+    sit_email_address = induction_coordinator.email
 
     email = template_mail(
       SIT_NEEDS_TO_CHASE_PARTNERSHIP,
