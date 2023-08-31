@@ -335,7 +335,8 @@ class SchoolMailer < ApplicationMailer
   end
 
   def sit_needs_to_chase_partnership
-    induction_coordinator = params[:induction_coordinator]
+    school = params[:school]
+    induction_coordinator = school.induction_coordinators.first
     sit_name = induction_coordinator.user.full_name
     sit_email_address = induction_coordinator.user.email
 
@@ -345,6 +346,7 @@ class SchoolMailer < ApplicationMailer
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
+        school_name: school.name,
         SIT_name: sit_name,
         email_address: sit_email_address,
       },
