@@ -44,7 +44,7 @@ RSpec.describe Admin::Schools::CohortComponent, type: :component do
 
   describe "methods" do
     describe "#empty?" do
-      let(:partnerships_and_relationships) { [] }
+      let(:school_cohort) { nil }
 
       context "when there are relationships and partnerships" do
         it { is_expected.to be_empty }
