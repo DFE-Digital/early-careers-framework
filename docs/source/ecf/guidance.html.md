@@ -701,94 +701,27 @@ GET /api/v3/participants/ecf/transfers
 
 #### What providers will see in the API 
 
-<table class="govuk-table"> 
-<caption class="govuk-table__caption govuk-table__caption--m">What providers will see when a participant is leaving them</caption> 
-<thead class="govuk-table__head"> 
-<tr class="govuk-table__row"> 
-<th scope="col" class="govuk-table__header app-custom-class">Scenario</th> 
-<th scope="col" class="govuk-table__header app-custom-class">Participant status</th> 
-<th scope="col" class="govuk-table__header app-custom-class">Transfer response</th> 
-</tr> 
-</thead> 
-<tbody class="govuk-table__body"> 
-<tr class="govuk-table__row"> 
-<th scope="row" class="govuk-table__header">Before transfer</th> 
-<td class="govuk-table__cell">Active</td> 
-<td class="govuk-table__cell">N/A</td> 
-</tr> 
-<tr class="govuk-table__row"> 
-<th scope="row" class="govuk-table__header">Old school induction tutor reports leaver</th> 
-<td class="govuk-table__cell">Leaving</td> 
-<td class="govuk-table__cell">Shows leaving details</td> 
-</tr> 
-<tr class="govuk-table__row"> 
-<th scope="row" class="govuk-table__header">New school induction tutor reports joiner</th> 
-<td class="govuk-table__cell">Leaving</td> 
-<td class="govuk-table__cell">Shows leaving and joining details</td> 
-</tr> 
-<tr class="govuk-table__row"> 
-<th scope="row" class="govuk-table__header">After transfer (today’s date => joining_date)</th> 
-<td class="govuk-table__cell">Left</td> 
-<td class="govuk-table__cell">Shows leaving and joining details</td> 
-</tr> 
-</tbody> 
-</table>
+##### What providers will see when a participant is leaving them
+| Scenario | Participant status | Transfer response |
+| -------- | -----------------  | ----------------- |
+| **Before transfer** | Active      | N/A |
+| **Old school induction tutor reports leaver** | Leaving | Shows leaving details |
+| **New school induction tutor reports joiner** | Leaving | Shows leaving and joining details |
+| **After transfer (today’s date is on or after the joining date)** | Left | Shows leaving and joining details |
 
-<table class="govuk-table"> 
-<caption class="govuk-table__caption govuk-table__caption--m">What providers will see when a participant is joining them</caption> 
-<thead class="govuk-table__head"> 
-<tr class="govuk-table__row"> 
-<th scope="col" class="govuk-table__header app-custom-class">Scenario</th> 
-<th scope="col" class="govuk-table__header app-custom-class">Participant status</th> 
-<th scope="col" class="govuk-table__header app-custom-class">Transfer response</th> 
-</tr> 
-</thead> 
-<tbody class="govuk-table__body"> 
-<tr class="govuk-table__row"> 
-<th scope="row" class="govuk-table__header">New school induction tutor reports joiner</th> 
-<td class="govuk-table__cell">Joining</td> 
-<td class="govuk-table__cell">Shows leaving and joining details</td> 
-</tr> 
-<tr class="govuk-table__row"> 
-<th scope="row" class="govuk-table__header">After transfer (today’s date => joining_date)</th> 
-<td class="govuk-table__cell">Active</td> 
-<td class="govuk-table__cell">Shows leaving and joining details</td> 
-</tr> 
-</tbody> 
-</table> 
+##### What providers will see when a participant is joining them
+| Scenario | Participant status | Transfer response |
+| -------- | -----------------  | ----------------- |
+| **New school induction tutor reports joiner** | Joining | Shows leaving and joining details |
+| **After transfer (today’s date is on or after the joining date)** | Active | Shows leaving and joining details |
 
-<table class="govuk-table"> 
-<caption class="govuk-table__caption govuk-table__caption--m">What providers will see if a transferring participant is staying with them </caption> 
-<thead class="govuk-table__head"> 
-<tr class="govuk-table__row"> 
-<th scope="col" class="govuk-table__header app-custom-class">Scenario</th> 
-<th scope="col" class="govuk-table__header app-custom-class">Participant status</th> 
-<th scope="col" class="govuk-table__header app-custom-class">Transfer response</th> 
-</tr> 
-</thead> 
-<tbody class="govuk-table__body"> 
-<tr class="govuk-table__row"> 
-<th scope="row" class="govuk-table__header">Before transfer</th> 
-<td class="govuk-table__cell">Active</td> 
-<td class="govuk-table__cell">N/A</td> 
-</tr> 
-<tr class="govuk-table__row"> 
-<th scope="row" class="govuk-table__header">Old school induction tutor reports leaver</th> 
-<td class="govuk-table__cell">Leaving</td> 
-<td class="govuk-table__cell">Shows leaving details</td> 
-</tr> 
-<tr class="govuk-table__row"> 
-<th scope="row" class="govuk-table__header">New school induction tutor reports joiner</th> 
-<td class="govuk-table__cell">Joining (new school details shown)</td> 
-<td class="govuk-table__cell">Shows leaving and joining details</td> 
-</tr> 
-<tr class="govuk-table__row"> 
-<th scope="row" class="govuk-table__header">After transfer (today’s date => joining_date)</th> 
-<td class="govuk-table__cell">Active</td> 
-<td class="govuk-table__cell">Shows leaving and joining details</td> 
-</tr> 
-</tbody> 
-</table> 
+##### What providers will see if a transferring participant is staying with them
+| Scenario | Participant status | Transfer response |
+| -------- | -----------------  | ----------------- |
+| **Before transfer** | Active | N/A |
+| **Old school induction tutor reports leaver** | Leaving | Shows leaving details |
+| **New school induction tutor reports joiner** | Joining (new school details shown) | Shows leaving and joining details |
+| **After transfer (today’s date is on or after the joining date)** | Active | Shows leaving and joining details |
 
 An example response body is listed below. Successful requests will return response bodies which can include:
 
