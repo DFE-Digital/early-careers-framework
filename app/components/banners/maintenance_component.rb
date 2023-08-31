@@ -9,9 +9,9 @@ module Banners
     # date - required (for rendering)
     # start_time - optional
     # end_time - optional
-    DATE       = Date.new(2023, 8, 30)
-    START_TIME = Time.zone.local(2023, 8, 30, 9, 0, 0)
-    END_TIME   = Time.zone.local(2023, 8, 30, 17, 0, 0)
+    DATE       = nil # Date.new(2021, 8, 4)
+    START_TIME = nil # Time.zone.local(2021, 8, 4, 9, 0, 0)
+    END_TIME   = nil # Time.zone.local(2023, 8, 4, 17, 0, 0)
 
     def initialize(wide_container_view: false)
       @wide_container_view = wide_container_view
