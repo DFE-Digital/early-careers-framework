@@ -5,107 +5,55 @@
 <div class="govuk-grid-row">
   <% if participants_count(@school.school_cohorts) > 0 %>
     <div class="govuk-width-container">
-      <%= render GovukComponent::NotificationBannerComponent.new(title_text: 'Important', classes: 'govuk-!-margin-top-0 govuk-!-margin-bottom-5', html_attributes: { data: { test: "notification-banner"} }) do |banner| %>
-        <p class="govuk-notification-banner__heading">Do not remove ECTs or mentors who have completed their induction and training.</p>
-        <p class="govuk-notification-banner__heading">Your appropriate body and provider will confirm this with us soon, and we’ll update their records.</p>
+      <%= render GovukComponent::NotificationBannerComponent.new(title_text: 'Important', classes: 'govuk-!-margin-top-0 govuk-!-margin-bottom-5', html_attributes: { data: { test: "notification-banner" } }) do |banner| %>
+        <p class="govuk-notification-banner__heading">Do not remove ECTs or mentors who have completed their induction
+          and training.</p>
+        <p class="govuk-notification-banner__heading">Your appropriate body and provider will confirm this with us soon,
+          and we’ll update their records.</p>
       <% end %>
     </div>
   <% end %>
 
   <div class="govuk-grid-column-two-thirds">
-    <span class="govuk-caption-xl"><%= @school.name %></span>
-    <h1 class="govuk-heading-xl">Manage mentors and ECTs</h1>
+    <span class="govuk-caption-l"><%= @school.name %></span>
+    <h1 class="govuk-heading-l">Manage mentors and ECTs</h1>
 
-    <div class="wrapper-dashboard-v2 manage-mentors-ects">
-      <%= govuk_button_link_to(
-            "Add ECT or mentor",
-            schools_who_to_add_start_path(school_id: @school.slug), no_visited_state: true,
-          ) %>
+    <%= govuk_button_link_to("Add ECT or mentor",
+                             schools_who_to_add_start_path(school_id: @school.slug), no_visited_state: true) %>
 
-      <% if actions?(@participants) %>
-        <% if @participants.orphan_ects.any? %>
-          <%= govuk_warning_text(text: "You need to assign a mentor to these ECTs.") %>
-          <ul class="govuk-list">
-            <% @participants.orphan_ects.sort_by(&:full_name).each do |ect| %>
-              <li>
-                <%= govuk_link_to(ect.full_name,
-                                  school_participant_path(id: ect.participant_profile_id, school_id: @school),
-                                  no_visited_state: true,
-                                  classes: ["govuk-\!-padding-bottom-static-1 govuk-\!-margin-bottom-static-0"]) %>
-              </li>
-            <% end %>
-          </ul>
-          <br>
+  </div>
+</div>
+
+<div class="govuk-grid-row wrapper-dashboard-v2">
+  <% if @filter.filter_options.many? %>
+    <div class="govuk-grid-column-one-third">
+      <div class="app-filter">
+        <%= form_for @filter, as: '', url: school_participants_path(@school), method: :get do |f| %>
+          <%= f.govuk_collection_radio_buttons(
+                  :filtered_by,
+                  @filter.filter_options,
+                  :id,
+                  :label,
+                  legend: { text: 'Show', tag: 'h2', size: 's' },
+                  include_hidden: false,
+                  small: true,
+              ) %>
+          <%= f.govuk_submit "Apply", secondary: true %>
         <% end %>
-      <% end %>
+      </div>
+    </div>
+  <% end %>
 
-      <% @participants.mentors.keys.sort_by(&:full_name).each do |mentor| %>
-        <div class="group-card" aria-label="Mentor group">
-          <h2 class="govuk-visually-hidden">Mentor group</h2>
-
-          <h3 class="govuk-heading-s">
-            Mentor <span class="govuk-visually-hidden">- <%= mentor.full_name %></span>
-          </h3>
-          <%= govuk_summary_list(actions: false, borders: nil) do |list| %>
-            <% list.with_row do |row| %>
-              <% row.with_key(text: govuk_link_to(mentor.full_name,
-                                             school_participant_path(id: mentor.participant_profile_id, school_id: @school),
-                                             no_visited_state: true),
-                         classes: ["govuk-!-font-weight-regular"]) %>
-              <% row.with_value(
-                   text: render(StatusTags::SchoolParticipantStatusTag.new(
-                     participant_profile: mentor.participant_profile,
-                     induction_record: mentor.induction_record,
-                     display_description: false))) %>
-            <% end %>
-          <% end %>
-
-          <h3 class="govuk-heading-s">
-            ECTs <span class="govuk-visually-hidden">mentored by <%= mentor.full_name %></span>
-          </h3>
-
-          <%= govuk_summary_list(actions: false, borders: nil) do |list| %>
-            <% @participants.ects_mentored_by(mentor).sort_by(&:full_name).each do |ect| %>
-              <% list.with_row do |row| %>
-                <% row.with_key(text: govuk_link_to("#{ect.full_name}",
-                                               school_participant_path(id: ect.participant_profile_id,
-                                                                        school_id: @school),
-                                               no_visited_state: true),
-                           classes: ["govuk-!-font-weight-regular", "govuk-\!-padding-bottom-static-0"]) %>
-                <% row.with_value(
-                     text: render(StatusTags::SchoolParticipantStatusTag.new(
-                       participant_profile: ect.participant_profile,
-                       induction_record: ect.induction_record,
-                       display_description: false)),
-                     classes: ["govuk-\!-padding-bottom-static-0"]) %>
-              <% end %>
-            <% end %>
-          <% end %>
-        </div>
-        <br>
-      <% end %>
-
-      <% if @participants.not_mentoring_or_being_mentored.any? %>
-        <h3 class="govuk-heading-s">Not mentoring or being mentored</h3>
-
-        <%= govuk_summary_list(actions: false, borders: nil) do |list| %>
-          <% @participants.not_mentoring_or_being_mentored.sort_by(&:full_name).each do |participant| %>
-            <% list.with_row do |row| %>
-              <% row.with_key(text: govuk_link_to(participant.full_name,
-                                             school_participant_path(id: participant.participant_profile_id,
-                                                                     school_id: @school),
-                                             no_visited_state: true),
-                         classes: ["govuk-!-font-weight-regular", "govuk-\!-padding-bottom-static-0"]) %>
-              <% row.with_value(
-                   text: render(StatusTags::SchoolParticipantStatusTag.new(
-                     participant_profile: participant.participant_profile,
-                     induction_record: participant.induction_record,
-                     display_description: false)),
-                   classes: ["govuk-\!-padding-bottom-static-0"]) %>
-            <% end %>
-          <% end %>
-        <% end %>
-    <% end %>
+  <div class="govuk-grid-column-two-thirds">
+    <div class="manage-mentors-ects govuk-!-margin-bottom-8">
+      <%= case @filter.filtered_by.to_s
+          when "currently_training"
+            render "currently_training", filter: @filter, school: @school, participants: @participants
+          when "completed_induction"
+            render "completed_induction", school: @school, participants: @participants
+          when "no_longer_training"
+            render "no_longer_training", school: @school, participants: @participants
+          end %>
     </div>
   </div>
 </div>

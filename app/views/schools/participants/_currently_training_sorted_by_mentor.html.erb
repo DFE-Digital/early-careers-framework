@@ -1,0 +1,63 @@
+<%= render(Schools::Participants::Dashboard::SortControl.new(school:, selected: :mentor)) %>
+
+<% if participants.orphan_ects.any? %>
+  <%= govuk_warning_text(text: "You need to assign a mentor to these ECTs.") %>
+  <ul class="govuk-list">
+    <% participants.orphan_ects.sort_by(&:full_name).each do |ect| %>
+      <li>
+        <%= govuk_link_to(ect.full_name,
+                          school_participant_path(id: ect.participant_profile_id, school_id: school.slug),
+                          no_visited_state: true,
+                          class: ["govuk-\!-padding-bottom-static-1 govuk-\!-margin-bottom-static-0"]) %>
+      </li>
+    <% end %>
+  </ul>
+  <br>
+<% end %>
+
+<% participants.mentors.keys.sort_by(&:full_name).each do |mentor| %>
+  <div class="group-card" aria-label="Mentor group">
+    <h2 class="govuk-visually-hidden">Mentor group</h2>
+
+    <h3 class="govuk-heading-s">
+      Mentor <span class="govuk-visually-hidden">- <%= mentor.full_name %></span>
+    </h3>
+    <%= govuk_summary_list(actions: false, borders: nil) do |list| %>
+      <% list.with_row do |row| %>
+        <% row.with_key(text: govuk_link_to(mentor.full_name,
+                                            school_participant_path(id: mentor.participant_profile_id, school_id: school.slug),
+                                            no_visited_state: true),
+                        classes: ["govuk-!-font-weight-regular"]) %>
+        <% row.with_value(
+               text: render(StatusTags::SchoolParticipantStatusTag.new(
+                   participant_profile: mentor.participant_profile,
+                   induction_record: mentor.induction_record,
+                   display_description: false))) %>
+      <% end %>
+    <% end %>
+
+    <h3 class="govuk-heading-s">
+      ECTs <span class="govuk-visually-hidden">mentored by <%= mentor.full_name %></span>
+    </h3>
+
+    <%= govuk_summary_list(actions: false, borders: nil) do |list| %>
+      <% participants.ects_mentored_by(mentor).sort_by(&:full_name).each do |ect| %>
+        <% list.with_row do |row| %>
+          <% row.with_key(text: govuk_link_to("#{ect.full_name}",
+                                              school_participant_path(id: ect.participant_profile_id,
+                                                                      school_id: school.slug),
+                                              no_visited_state: true),
+                          classes: ["govuk-!-font-weight-regular", "govuk-\!-padding-bottom-static-0"]) %>
+          <% row.with_value(
+                 text: render(StatusTags::SchoolParticipantStatusTag.new(
+                     participant_profile: ect.participant_profile,
+                     induction_record: ect.induction_record,
+                     display_description: false,
+                     display_induction_start_date: true)),
+                 classes: ["govuk-\!-padding-bottom-static-0"]) %>
+        <% end %>
+      <% end %>
+    <% end %>
+  </div>
+  <br>
+<% end %>

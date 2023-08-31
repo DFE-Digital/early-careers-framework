@@ -1,4 +1,11 @@
 <%= govuk_tag(text: label, colour:) %>
+
+<% if display_induction_start_date && induction_start_date %>
+  <p class="govuk-body govuk-!-margin-top-2">
+    Induction started <%= participant_profile.induction_start_date.to_fs(:govuk) %>
+  </p>
+<% end %>
+
 <% if display_description %>
   <% description.each do |paragraph| %>
     <p class="govuk-body"><%= paragraph %></p>

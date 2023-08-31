@@ -19,10 +19,36 @@ module Pages
       Pages::SchoolTransferParticipantWizard.loaded
     end
 
+    def filter_by(option)
+      choose("filtered-by-#{option.downcase.parameterize}-field")
+      click_on("Apply")
+    end
+
     def view_participant(participant_name)
-      click_on participant_name
+      find_participant(participant_name)
+      click_on(participant_name)
 
       Pages::SchoolParticipantDetailsPage.loaded
+    end
+
+  private
+
+    def find_participant(name)
+      return if has_link?(name)
+
+      if has_link?("No longer training")
+        filter_by("No longer training")
+        return if has_link?(name)
+      end
+
+      if has_link?("Completed induction")
+        filter_by("Completed induction")
+        return if has_link?(name)
+      end
+
+      if has_link?("Currently training")
+        filter_by("Currently training")
+      end
     end
   end
 end

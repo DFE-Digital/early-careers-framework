@@ -63,7 +63,7 @@ class InductionRecord < ApplicationRecord
   scope :transferred, -> { leaving_induction_status.merge(end_date_in_past) }
 
   scope :current_or_transferring_in, -> { current.or(transferring_in) }
-  scope :current_or_transferring_in_or_transferred, -> { current.or(transferring_in).or(transferred) }
+  scope :school_dashboard_relevant, -> { completed_induction_status.or(current).or(transferring_in).or(transferred) }
 
   scope :ects, -> { joins(:participant_profile).merge(ParticipantProfile.ects) }
   scope :mentors, -> { joins(:participant_profile).merge(ParticipantProfile.mentors) }

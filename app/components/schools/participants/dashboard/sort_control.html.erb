@@ -1,0 +1,13 @@
+<p class="govuk-body">
+  Sort by:
+  <% options.each do |option| %>
+    <% if selected_option?(option) %>
+      <b class="govuk-!-margin-left-2"><%= option_label(option) %></b>
+    <% else %>
+      <%= govuk_link_to(option_label(option),
+                        school_participants_path(school, sorted_by: option),
+                        no_visited_state: true,
+                        class: ["govuk-!-margin-left-2"])  %>
+    <% end %>
+  <% end %>
+</p>

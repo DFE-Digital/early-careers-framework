@@ -20,6 +20,9 @@ class Schools::ParticipantsController < Schools::BaseController
 
   def index
     @participants = Dashboard::Participants.new(school: @school, user: current_user)
+    @filter = Dashboard::Participants::Filter.new(dashboard_participants: @participants,
+                                                  filtered_by: params[:filtered_by],
+                                                  sorted_by: params[:sorted_by])
   end
 
   def show

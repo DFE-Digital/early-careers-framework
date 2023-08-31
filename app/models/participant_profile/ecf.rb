@@ -54,6 +54,10 @@ class ParticipantProfile::ECF < ParticipantProfile
   end
 
   # Instance Methods
+  def completed_induction?
+    induction_completion_date.present?
+  end
+
   def contacted_for_info?
     ecf_participant_validation_data.nil?
   end

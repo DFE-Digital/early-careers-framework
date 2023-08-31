@@ -1,0 +1,10 @@
+<h2 class="govuk-heading-m">Teachers who have completed their induction</h2>
+
+<% if participants.completed_induction.any? %>
+  <% participants.completed_induction.sort_by(&:induction_completion_date).reverse.each do |participant| %>
+    <%= govuk_summary_card(title: link_to_participant(participant.participant_profile, school)) do |card|
+      card.with_summary_list(rows: [{ key: { text: "Completed", classes: ["xgovuk-!-font-weight-regular"] },
+                                      value: { text: participant.induction_completion_date.to_fs(:govuk) } }])
+    end %>
+  <% end %>
+<% end %>
