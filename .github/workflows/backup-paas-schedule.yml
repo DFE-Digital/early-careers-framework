@@ -5,26 +5,6 @@ on:
   workflow_dispatch:
 
 jobs:
-  backup-and-restore-staging:
-    runs-on: ubuntu-20.04
-    environment: staging
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Backup
-        uses: ./.github/actions/backup-paas-database
-        with:
-          environment: staging
-          staging-username: ${{ secrets.GOVPAAS_STAG_USERNAME }}
-          staging-password: ${{ secrets.GOVPAAS_STAG_PASSWORD }}
-
-      - name: Restore
-        uses: ./.github/actions/restore-paas-database
-        with:
-          environment: staging
-          azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
-
   backup-and-restore-sandbox:
     runs-on: ubuntu-20.04
     environment: sandbox
