@@ -10,6 +10,7 @@ class ParticipantMailer < ApplicationMailer
     mentor_fip_added_and_validated: "f71fa01a-ecc2-49e5-999b-48ff0070e13a",
     ect_cip_added_and_validated: "b0d58248-c49e-4ec6-bca2-2c4cf151c421",
     mentor_cip_added_and_validated: "1396072b-4dc7-473d-aef7-22e674e42874",
+    post_transitional_added_and_validated: "052dade3-a999-4d67-b466-e9ed67c7220a",
   }.freeze
 
   def participant_removed_by_sit
@@ -86,6 +87,8 @@ class ParticipantMailer < ApplicationMailer
 private
 
   def template_type_for(profile)
+    return :post_transitional if profile.post_transitional?
+
     type = profile.participant_type
     type = :sit_mentor if type == :mentor && profile.user.induction_coordinator?
     "#{type}_#{profile.school_cohort.cip? ? 'cip' : 'fip'}".to_sym
