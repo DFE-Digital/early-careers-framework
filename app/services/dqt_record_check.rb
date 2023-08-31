@@ -141,6 +141,9 @@ private
       # matched but active flags - use birthdate 6/1/1900
       6 => CheckResult.new(magic_dqt_record(active_alert: true), true, true, true, true, 4),
 
+      # all matches 20 cohort start date - use 20/1/1900
+      20 => CheckResult.new(magic_dqt_record(induction_start_date: Date.new(2020, 9, 1)), true, true, true, true, 4),
+
       # all matches 21 cohort start date - use 21/1/1900
       21 => CheckResult.new(magic_dqt_record(induction_start_date: Date.new(2021, 9, 1)), true, true, true, true, 4),
 
