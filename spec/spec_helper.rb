@@ -18,6 +18,7 @@
 #
 require "with_model"
 require "csv"
+require "govuk_rspec_helpers"
 
 RSpec.configure do |config|
   # Configure rutabaga/turnip to find features outside of /features/ folders in

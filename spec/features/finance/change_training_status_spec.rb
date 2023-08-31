@@ -20,7 +20,7 @@ RSpec.feature "Finance users participant change training status", type: :feature
       and_i_click_on("Change training status")
       and_i_click_on("Continue")
 
-      expect(page).to have_css(".govuk-error-summary__body ul.govuk-error-summary__list li a[href='#finance-npq-change-training-status-form-training-status-field-error']", text: "Choose a valid training status")
+      expect(page).to summarise_errors(["Choose a valid training status"])
 
       then_i_see("Change training status")
       and_i_see("Choose a different training status")
@@ -42,7 +42,7 @@ RSpec.feature "Finance users participant change training status", type: :feature
         and_i_click_on("Change training status")
         and_i_click_on("Continue")
 
-        expect(page).to have_css(".govuk-error-summary__body ul.govuk-error-summary__list li a[href='#finance-ecf-change-training-status-form-training-status-field-error']", text: "Choose a valid training status")
+        expect(page).to summarise_errors(["Choose a valid training status"])
 
         then_i_see("Change training status")
         and_i_see("Choose a different training status")

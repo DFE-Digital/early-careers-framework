@@ -11,38 +11,32 @@ RSpec.describe Admin::Schools::PartnershipComponent, type: :component do
   describe "rendering" do
     before { render_inline(subject) }
 
-    it "renders a summary list" do
-      expect(rendered_content).to have_css("dl.govuk-summary-list")
+    it "summarises the training programme" do
+      expect(rendered_content).to summarise(
+        key: "Training programme",
+        value: "Working with a DfE-funded provider"
+      )
     end
 
-    it "renders a 'training programme' row" do
-      expect(rendered_content).to have_css("dt", text: "Training programme")
+    it "summarises the appropriate body" do
+      expect(rendered_content).to summarise(
+        key: "Appropriate body",
+        value: school_cohort.appropriate_body.name
+      )
     end
 
-    it "renders the training programme with a change link" do
-      expect(rendered_content).to have_css("dt", text: "Training programme")
-      expect(rendered_content).to have_css("dd", text: "Working with a DfE-funded provider")
-      expect(rendered_content).not_to have_content("Change induction programme")
+    it "summarises the delivery partner" do
+      expect(rendered_content).to summarise(
+        key: "Delivery partner",
+        value: school_cohort.delivery_partner.name
+      )
     end
 
-    it "renders the appropriate body" do
-      expect(rendered_content).to have_css("dt", text: "Appropriate body")
-      expect(rendered_content).to have_css("dd", text: school_cohort.appropriate_body.name)
-    end
-
-    it "renders the appropriate body" do
-      expect(rendered_content).to have_css("dt", text: "Appropriate body")
-      expect(rendered_content).to have_css("dd", text: school_cohort.appropriate_body.name)
-    end
-
-    it "renders the delivery partner" do
-      expect(rendered_content).to have_css("dt", text: "Delivery partner")
-      expect(rendered_content).to have_css("dd", text: school_cohort.delivery_partner.name)
-    end
-
-    it "renders the lead provider" do
-      expect(rendered_content).to have_css("dt", text: "Lead provider")
-      expect(rendered_content).to have_css("dd", text: school_cohort.lead_provider.name)
+    it "summarises the lead provider" do
+      expect(rendered_content).to summarise(
+        key: "Lead provider",
+        value: school_cohort.lead_provider.name
+      )
     end
   end
 
