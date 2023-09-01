@@ -9,6 +9,20 @@ If you have any questions or comments about these notes, please contact DfE via 
 
 ## 6 September 2023
 
+Lead providers can now submit 'contracts' for new course leading primary mathematics that are on extended schedules in the sandbox environment.
+
+**New Course Identifier:** We have introduced a new course with identifier `leading-primary-mathematics`, which is now available for use by lead providers. This identifier facilitates the retrieval of applications specifically for the primary mathematics course.
+
+**Sandbox Environment Testing:** To support our development and testing processes, this new course identifier is now accessible within the sandbox environment for testing.
+
+**Contract Updates:** Lead providers can now provide and update contracts for the `leading-primary-mathematics` course.
+
+**Application Generation and Contract Sync:** Lead providers have the capability to generate applications for the `leading-primary-mathematics` course. Once an application is generated, the associated contract is automatically updated to reflect the changes. This streamlined process ensures that contracts are always in sync with the latest application data.
+
+Providers will be notified ahead of this functionality becoming available in the production environment.
+
+## 6 September 2023
+
 ### Planned API downtime on 14 September
 
 The API will be unavailable from 6pm to 9pm on Thursday 14 September while we perform planned maintenance.
