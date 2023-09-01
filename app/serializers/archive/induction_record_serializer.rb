@@ -33,4 +33,3 @@ module Archive
     attribute :created_at
   end
 end
-
