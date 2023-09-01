@@ -10,18 +10,12 @@ module AppropriateBodies
     end
 
     def scope
-      scoped = collection
+      scoped = collection.includes(
+        :cohort,
+      ).where(cohort: { start_year: Cohort.current.start_year })
 
       if params[:query].present?
         scoped = filter_query(scoped, params[:query])
-      end
-
-      if params[:role].present?
-        scoped = filter_role(scoped, params[:role])
-      end
-
-      if params[:academic_year].present?
-        scoped = filter_academic_year(scoped, params[:academic_year])
       end
 
       if params[:status].present?
@@ -49,23 +43,6 @@ module AppropriateBodies
       ).ransack("#{fields}_cont": query).result.distinct
     end
 
-    def filter_role(scoped, role)
-      case role
-      when "ect"
-        scoped.includes(:participant_profile).where(participant_profile: { type: "ParticipantProfile::ECT" })
-      when "mentor"
-        scoped.includes(:participant_profile).where(participant_profile: { type: "ParticipantProfile::Mentor" })
-      else
-        scoped
-      end
-    end
-
-    def filter_academic_year(scoped, academic_year)
-      scoped.includes(
-        :cohort,
-      ).where(cohort: { start_year: academic_year })
-    end
-
     def filter_status(scoped, status)
       ids = []
       scoped.each do |induction_record|
@@ -79,21 +56,6 @@ module AppropriateBodies
       end
 
       scoped.where(id: ids)
-    end
-
-    def role_options
-      [
-        OpenStruct.new(id: "", name: ""),
-        OpenStruct.new(id: "ect", name: "Early career teacher"),
-        OpenStruct.new(id: "mentor", name: "Mentor"),
-      ]
-    end
-
-    def academic_year_options
-      [OpenStruct.new(id: "", name: "")] +
-        Cohort.order(:start_year).map do |c|
-          OpenStruct.new(id: c.start_year, name: c.start_year)
-        end
     end
 
     def status_options

@@ -6,33 +6,36 @@ module AppropriateBodies
       with_collection_parameter :induction_record
 
       delegate :teacher_profile,
-               :role,
-               to: :participant_profile,
-               allow_nil: true
+        to: :participant_profile,
+        allow_nil: true
 
       delegate :full_name,
-               to: :user,
-               allow_nil: true
+        to: :user,
+        allow_nil: true
 
       delegate :participant_profile,
-               :training_status,
-               :school,
-               :user,
-               :cohort,
-               :lead_provider_name,
-               :delivery_partner_name,
-               to: :induction_record,
-               allow_nil: true
+        :school,
+        :user,
+        to: :induction_record,
+        allow_nil: true
 
       def initialize(induction_record:)
         @induction_record = induction_record
       end
 
-      def email
-        induction_record.preferred_identity&.email || user.email
+      def induction_type
+        if induction_record.enrolled_in_cip?
+          "CIP"
+        elsif induction_record.enrolled_in_fip?
+          "FIP"
+        end
       end
 
-    private
+      def induction_tutor
+        school.contact_email
+      end
+
+      private
 
       attr_reader :induction_record
     end

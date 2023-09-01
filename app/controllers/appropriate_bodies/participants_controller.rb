@@ -29,6 +29,8 @@ module AppropriateBodies
       @appropriate_body ||= current_user.appropriate_bodies.find(params[:appropriate_body_id])
     end
 
+    helper_method :appropriate_body
+
     def to_csv(hash)
       return "" if hash[:data].empty?
 

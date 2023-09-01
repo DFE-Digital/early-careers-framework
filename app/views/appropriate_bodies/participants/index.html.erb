@@ -11,17 +11,6 @@
   hint: "For example, school, participant name or teacher reference number (TRN)",
   filters: [
     {
-      field: :role,
-      value: params[:role],
-      options: @filter.role_options,
-    },
-    {
-      field: :academic_year,
-      value: params[:academic_year],
-      label: "academic year",
-      options: @filter.academic_year_options,
-    },
-    {
       field: :status,
       value: params[:status],
       label: "status",
@@ -34,16 +23,11 @@
   <thead class="govuk-table__head">
     <tr class="govuk-table__row">
       <th scope="col" class="govuk-table__header">Full name</th>
-      <th scope="col" class="govuk-table__header">Email address</th>
       <th scope="col" class="govuk-table__header">TRN</th>
-      <th scope="col" class="govuk-table__header">Role</th>
-      <th scope="col" class="govuk-table__header">Lead provider</th>
-      <th scope="col" class="govuk-table__header">Delivery partner</th>
-      <th scope="col" class="govuk-table__header">School</th>
-      <th scope="col" class="govuk-table__header">School unique reference number</th>
-      <th scope="col" class="govuk-table__header">Academic year</th>
-      <th scope="col" class="govuk-table__header">Training status</th>
-      <th scope="col" class="govuk-table__header">Status</th>
+      <th scope="col" class="govuk-table__header">School URN</th>
+      <th scope="col" class="govuk-table__header">Status (TBC)</th>
+      <th scope="col" class="govuk-table__header">Induction type</th>
+      <th scope="col" class="govuk-table__header">Induction tutor</th>
     </tr>
   </thead>
 
