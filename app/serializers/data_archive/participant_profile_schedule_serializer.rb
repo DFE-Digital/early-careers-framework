@@ -1,16 +1,17 @@
 # frozen_string_literal: true
 
-module Archive
+module DataArchive
   class ParticipantProfileScheduleSerializer
     include JSONAPI::Serializer
 
     set_id :id
 
-    meta do |schedule|
-      {
-        schedule_name: schedule.name,
-        cohort: schedule.cohort.start_year,
-      }
+    attribute :schedule_name do |object|
+      object.schedule.name
+    end
+
+    attribute :cohort do |object|
+      object.cohort.start_year
     end
 
     attribute :participant_profile_id

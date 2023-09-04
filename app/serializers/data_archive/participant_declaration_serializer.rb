@@ -1,16 +1,17 @@
 # frozen_string_literal: true
 
-module Archive
+module DataArchive
   class ParticipantDeclarationSerializer
     include JSONAPI::Serializer
 
     set_id :id
 
-    meta do |declaration|
-      {
-        lead_provider: declaration.cpd_lead_provider&.name,
-        delivery_partner: declaration.delivery_partner&.name,
-      }
+    attribute :lead_provider_name do |declaration|
+      declaration.cpd_lead_provider&.name
+    end
+
+    attribute :delivery_partner_name do |declaration|
+      declaration.delivery_partner&.name
     end
 
     attribute :type

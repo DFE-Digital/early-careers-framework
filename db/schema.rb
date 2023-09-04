@@ -91,6 +91,19 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_10_153003) do
     t.index ["user_id"], name: "index_appropriate_body_profiles_on_user_id"
   end
 
+  create_table "archives", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "object_type", null: false
+    t.string "object_id", null: false
+    t.string "reason", null: false
+    t.jsonb "data"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index "((data -> 'meta'::text))", name: "index_archives_on_data_meta", using: :gin
+    t.index ["object_id"], name: "index_archives_on_object_id"
+    t.index ["object_type"], name: "index_archives_on_object_type"
+    t.index ["reason"], name: "index_archives_on_reason"
+  end
+
   create_table "call_off_contracts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "version", default: "0.0.1", null: false
     t.jsonb "raw"
@@ -1034,21 +1047,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_10_153003) do
     t.datetime "updated_at", null: false
     t.index ["school_id"], name: "index_teacher_profiles_on_school_id"
     t.index ["user_id"], name: "index_teacher_profiles_on_user_id", unique: true
-  end
-
-  create_table "user_archives", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "user_id", null: false
-    t.string "name", null: false
-    t.string "email", null: false
-    t.string "trn"
-    t.string "reason", null: false
-    t.jsonb "data"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["email"], name: "index_user_archives_on_email"
-    t.index ["name"], name: "index_user_archives_on_name"
-    t.index ["reason"], name: "index_user_archives_on_reason"
-    t.index ["user_id"], name: "index_user_archives_on_user_id"
   end
 
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

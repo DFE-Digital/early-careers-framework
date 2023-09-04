@@ -1,18 +1,21 @@
 # frozen_string_literal: true
 
-module Archive
+module DataArchive
   class NPQApplicationSerializer
     include JSONAPI::Serializer
 
     set_id :id
 
-    meta do |application|
-      {
-        lead_provider: application.npq_lead_provider&.name,
-        course_name: application.npq_course&.name,
-        trn: application.teacher_reference_number,
-        cohort: application.cohort.start_year,
-      }
+    attribute :lead_provider_name do |application|
+      application.npq_lead_provider&.name
+    end
+
+    attribute :course_name do |application|
+      application.npq_course&.name
+    end
+
+    attribute :cohort do |application|
+      application.cohort.start_year
     end
 
     attribute :participant_identity_id

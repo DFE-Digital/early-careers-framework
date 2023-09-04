@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Archive
+module DataArchive
   class UserSerializer
     include JSONAPI::Serializer
 
@@ -9,10 +9,16 @@ module Archive
     attribute :email
     attribute :full_name
 
+    # values to search on (this is indexed)
     meta do |user|
       {
-        trn: user.teacher_profile&.trn,
-        user_roles: user.user_roles,
+        display_name: user.full_name,
+        search_terms: [
+          user.id,
+          user.full_name,
+          user.email,
+          user.teacher_profile&.trn,
+        ].compact
       }
     end
 

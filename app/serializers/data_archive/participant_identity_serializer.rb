@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Archive
+module DataArchive
   class ParticipantIdentitySerializer
     include JSONAPI::Serializer
 

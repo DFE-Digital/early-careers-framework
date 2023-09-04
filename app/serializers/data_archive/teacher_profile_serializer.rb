@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Archive
+module DataArchive
   class TeacherProfileSerializer
     include JSONAPI::Serializer
 
