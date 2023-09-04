@@ -13,39 +13,11 @@ RSpec.feature "Finance users payment breakdowns", type: :feature, js: true do
   let(:next_start_year)        { Cohort.next.start_year }
   let(:voided_declarations)    { create_list(:ect_participant_declaration, 2, :eligible, :voided, cpd_lead_provider:) }
 
-  let(:participant_aggregator_nov) do
-    Finance::ECF::ParticipantAggregator.new(
-      statement: november_statement,
-      recorder: ParticipantDeclaration::ECF.where(state: %w[paid payable eligible]),
-    )
-  end
-  let(:participant_aggregator_jan) do
-    Finance::ECF::ParticipantAggregator.new(
-      statement: january_statement,
-      recorder: ParticipantDeclaration::ECF.where(state: %w[paid payable eligible]),
-    )
-  end
-
   let!(:january_statement)  { create(:ecf_statement, name: "January #{next_start_year}", deadline_date: Date.new(next_start_year, 1, 31), cpd_lead_provider:, contract_version: contract.version) }
   let!(:november_statement) { create(:ecf_statement, name: "November #{current_start_year}", deadline_date: Date.new(current_start_year, 11, 30), cpd_lead_provider:, contract_version: contract.version) }
 
-  let(:jan_starts_breakdowns) do
-    Finance::ECF::CalculationOrchestrator.new(
-      statement: january_statement,
-      contract: lead_provider.call_off_contract,
-      aggregator: participant_aggregator_jan,
-      calculator: PaymentCalculator::ECF::PaymentCalculation,
-    ).call(event_type: :started)
-  end
-
-  let(:jan_retained_breakdowns) do
-    Finance::ECF::CalculationOrchestrator.new(
-      statement: january_statement,
-      contract: lead_provider.call_off_contract,
-      aggregator: participant_aggregator_jan,
-      calculator: PaymentCalculator::ECF::PaymentCalculation,
-    ).call(event_type: :retained_1)
-  end
+  let(:jan_statement_calculator) { Finance::ECF::StatementCalculator.new(statement: january_statement) }
+  let(:nov_statement_calculator) { Finance::ECF::StatementCalculator.new(statement: november_statement) }
 
   scenario "Can get to ECF payment breakdown page for a provider" do
     given_i_am_logged_in_as_a_finance_user
@@ -205,69 +177,57 @@ private
 
   def then_i_should_see_the_correct_payment_summary
     within ".finance-panel__summary" do
-      expect(page).to have_content(number_to_pounds(total_payment_with_vat_breakdown))
+      expect(page).to have_content(number_to_pounds(total_payment_with_vat))
 
       expect(page).to have_content("Output payment")
-      expect(page).to have_content(number_with_delimiter(output_payment_total))
+      expect(page).to have_content(number_to_pounds(output_payment_total))
 
       expect(page).to have_content("Service fee")
       expect(page).to have_content(number_to_pounds(service_fee_total))
 
       expect(page).to have_content("VAT")
-      expect(page).to have_content(number_to_pounds(total_vat_breakdown))
+      expect(page).to have_content(number_to_pounds(total_vat))
     end
   end
 
   def then_i_should_see_the_correct_output_fees
     expect(page).to have_content("Output payments")
-    expect(page).to have_content(number_to_pounds(jan_starts_breakdowns[:output_payments][0][:per_participant]))
-    expect(page).to have_content(jan_starts_breakdowns[:output_payments][0][:participants])
-    expect(page).to have_content(number_to_pounds(jan_starts_breakdowns[:output_payments][0][:subtotal]))
+    expect(page).to have_content(number_to_pounds(jan_statement_calculator.additions_for_started))
+    expect(page).to have_content(jan_statement_calculator.started_count)
+    expect(page).to have_content(number_to_pounds(jan_statement_calculator.output_fee))
+
+    expect(page).to have_content(number_to_pounds(nov_statement_calculator.additions_for_started))
+    expect(page).to have_content(nov_statement_calculator.started_count)
+    expect(page).to have_content(number_to_pounds(nov_statement_calculator.output_fee))
+
     expect(page).to_not have_content("Extended")
   end
 
   def then_i_should_see_the_correct_uplift_fee
     expect(page).to have_content("Uplift fee")
-    expect(page).to have_content(number_to_pounds(jan_starts_breakdowns[:other_fees][:uplift][:per_participant]))
-    expect(page).to have_content(jan_starts_breakdowns[:other_fees][:uplift][:participants])
-    expect(page).to have_content(number_to_pounds(jan_starts_breakdowns[:other_fees][:uplift][:subtotal]))
-  end
+    expect(page).to have_content(number_to_pounds(jan_statement_calculator.uplift_additions_count))
+    expect(page).to have_content(number_to_pounds(jan_statement_calculator.uplift_fee_per_declaration))
+    expect(page).to have_content(number_to_pounds(jan_statement_calculator.uplift_additions_count * jan_statement_calculator.uplift_fee_per_declaration))
 
-  def number_of_declarations
-    jan_starts_breakdowns[:output_payments].map { |params| params[:participants] }.inject(&:+) + jan_retained_breakdowns[:output_payments].map { |params| params[:participants] }.inject(&:+)
+    expect(page).to have_content(number_to_pounds(nov_statement_calculator.uplift_additions_count))
+    expect(page).to have_content(number_to_pounds(nov_statement_calculator.uplift_fee_per_declaration))
+    expect(page).to have_content(number_to_pounds(nov_statement_calculator.uplift_additions_count * jan_statement_calculator.uplift_fee_per_declaration))
   end
 
   def service_fee_total
-    jan_starts_breakdowns[:service_fees].map { |params| params[:monthly] }.inject(&:+)
+    jan_statement_calculator.service_fee
   end
 
   def output_payment_total
-    jan_starts_breakdowns[:output_payments].map { |params| params[:subtotal] }.inject(&:+) + jan_retained_breakdowns[:output_payments].map { |params| params[:subtotal] }.inject(&:+)
+    jan_statement_calculator.output_fee
   end
 
-  def total_vat_breakdown
-    total_vat_combined(jan_starts_breakdowns, jan_retained_breakdowns, lead_provider)
+  def total_vat
+    jan_statement_calculator.vat
   end
 
-  def total_payment_with_vat_breakdown
-    total_payment_with_vat_combined(jan_starts_breakdowns, jan_retained_breakdowns, lead_provider)
-  end
-
-  def total_payment_with_vat_combined(breakdown_started, breakdown_retained_1, lead_provider)
-    total_payment_combined(breakdown_started, breakdown_retained_1) + total_vat_combined(breakdown_started, breakdown_retained_1, lead_provider)
-  end
-
-  def total_vat_combined(breakdown_started, breakdown_retained_1, lead_provider)
-    total_payment_combined(breakdown_started, breakdown_retained_1) * (lead_provider.vat_chargeable ? 0.2 : 0.0)
-  end
-
-  def total_payment_combined(breakdown_started, breakdown_retained_1)
-    service_fee = breakdown_started[:service_fees].map { |params| params[:monthly] }.sum
-    output_payment = breakdown_started[:output_payments].map { |params| params[:subtotal] }.sum
-    other_fees = breakdown_started[:other_fees].values.map { |other_fee| other_fee[:subtotal] }.sum
-    retained_output_payment = breakdown_retained_1[:output_payments].map { |params| params[:subtotal] }.sum
-
-    service_fee + output_payment + other_fees + retained_output_payment
+  def total_payment_with_vat
+    jan_statement_calculator.total(with_vat: true)
   end
 
   def and_there_is_a_schedule
