@@ -31,7 +31,7 @@ RSpec.describe Cohort, type: :model do
   describe ".current" do
     describe "when the current date matches the academic year start date" do
       it "returns the cohort with start_year the current year" do
-        Timecop.freeze(Date.new(2021, 9, 1)) do
+        Timecop.freeze(Date.new(2021, 10, 1)) do
           expect(Cohort.current.start_year).to eq 2021
         end
       end
@@ -49,7 +49,7 @@ RSpec.describe Cohort, type: :model do
   describe ".next" do
     describe "when the current date matches the academic year start date" do
       it "returns the cohort with start_year the next year" do
-        Timecop.freeze(Date.new(2021, 9, 1)) do
+        Timecop.freeze(Date.new(2021, 10, 1)) do
           expect(Cohort.next.start_year).to eq 2022
         end
       end
@@ -67,7 +67,7 @@ RSpec.describe Cohort, type: :model do
   describe ".previous" do
     describe "when exactly 1 year ago matches the academic year start date" do
       it "returns the cohort with start_year the previous year" do
-        Timecop.freeze(Date.new(2021, 9, 10)) do
+        Timecop.freeze(Date.new(2021, 10, 10)) do
           expect(Cohort.previous.start_year).to eq 2020
         end
       end
@@ -84,14 +84,14 @@ RSpec.describe Cohort, type: :model do
 
   describe ".containing_date" do
     it "returns the cohort which contains the given date" do
-      expect(Cohort.containing_date(Date.new(2021, 9, 1)).start_year).to eq 2021
+      expect(Cohort.containing_date(Date.new(2021, 10, 1)).start_year).to eq 2021
       expect(Cohort.containing_date(Date.new(2022, 10, 10)).start_year).to eq 2022
       expect(Cohort.containing_date(Date.new(2023, 1, 10)).start_year).to eq 2022
       expect(Cohort.containing_date(Date.new(2024, 3, 22)).start_year).to eq 2023
     end
 
     context "when outside the currently added cohorts" do
-      let(:oob_date) { Date.new(Cohort.maximum(:start_year) + 1, 9, 1) }
+      let(:oob_date) { Date.new(Cohort.maximum(:start_year) + 1, 10, 1) }
 
       it "returns nil" do
         expect(Cohort.containing_date(oob_date)).to be_nil
@@ -101,7 +101,7 @@ RSpec.describe Cohort, type: :model do
 
   describe ".within_next_registration_period?" do
     before do
-      Cohort.find_by(start_year: 2023).update!(registration_start_date: Date.new(2023, 6, 1), academic_year_start_date: Date.new(2023, 9, 1))
+      Cohort.find_by(start_year: 2023).update!(registration_start_date: Date.new(2023, 6, 1), academic_year_start_date: Date.new(2023, 10, 1))
     end
 
     context "when the current time is after the registration start date for then next cohort" do
@@ -114,7 +114,7 @@ RSpec.describe Cohort, type: :model do
 
     context "when the active_registration_cohort and the current cohort are the same" do
       it "returns false" do
-        Timecop.freeze(Date.new(2023, 9, 1)) do
+        Timecop.freeze(Date.new(2023, 10, 1)) do
           expect(Cohort).not_to be_within_next_registration_period
         end
       end
