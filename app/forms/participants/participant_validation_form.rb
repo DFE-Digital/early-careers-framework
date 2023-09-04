@@ -170,7 +170,11 @@ module Participants
     end
 
     def change_participant_cohort_and_induction_start_date!
-      Participants::SyncDQTInductionStartDate.call(dqt_response[:induction_start_date], participant_profile) if dqt_response.present?
+      if dqt_response.present?
+        Participants::SyncDQTInductionStartDate.call(induction_start_date: dqt_response[:induction_start_date],
+                                                     induction_completion_date: dqt_response[:induction_completion_date],
+                                                     participant_profile:)
+      end
     end
 
     def store_analytics!
