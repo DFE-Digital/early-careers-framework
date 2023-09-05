@@ -7,7 +7,7 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
-## 5 September
+## 5 September 2023
 
 ### New sandbox URL
 
