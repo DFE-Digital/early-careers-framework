@@ -91,17 +91,19 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_10_153003) do
     t.index ["user_id"], name: "index_appropriate_body_profiles_on_user_id"
   end
 
-  create_table "archives", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "archive_relics", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "object_type", null: false
     t.string "object_id", null: false
+    t.string "display_name", null: false
     t.string "reason", null: false
     t.jsonb "data"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index "((data -> 'meta'::text))", name: "index_archives_on_data_meta", using: :gin
-    t.index ["object_id"], name: "index_archives_on_object_id"
-    t.index ["object_type"], name: "index_archives_on_object_type"
-    t.index ["reason"], name: "index_archives_on_reason"
+    t.index "((data -> 'meta'::text))", name: "index_archive_relics_on_data_meta", using: :gin
+    t.index ["display_name"], name: "index_archive_relics_on_display_name"
+    t.index ["object_id"], name: "index_archive_relics_on_object_id"
+    t.index ["object_type"], name: "index_archive_relics_on_object_type"
+    t.index ["reason"], name: "index_archive_relics_on_reason"
   end
 
   create_table "call_off_contracts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

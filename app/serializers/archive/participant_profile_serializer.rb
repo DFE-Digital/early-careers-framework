@@ -1,10 +1,23 @@
 # frozen_string_literal: true
 
-module DataArchive
+module Archive
   class ParticipantProfileSerializer
     include JSONAPI::Serializer
 
     set_id :id
+
+    meta do |profile|
+      user = profile.user
+      {
+        display_name: user.full_name,
+        search_terms: [
+          user.id,
+          user.full_name,
+          user.email,
+          user.teacher_profile&.trn,
+        ].compact
+      }
+    end
 
     attribute :type
     attribute :participant_identity_id

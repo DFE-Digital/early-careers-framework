@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module DataArchive
+module Archive
   class ParticipantDeclarationSerializer
     include JSONAPI::Serializer
 
@@ -25,7 +25,7 @@ module DataArchive
     attribute :state
     attribute :sparsity_uplift
     attribute :pupil_premium_uplift
-    attribute :superseded_by
+    attribute :superseded_by_id
     attribute :delivery_partner_id
     attribute :mentor_user_id
     attribute :created_at
