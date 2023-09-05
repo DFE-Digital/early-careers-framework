@@ -20,4 +20,21 @@ RSpec.describe UserMailer, type: :mailer do
       expect(sign_in_email.from).to eq(["mail@example.com"])
     end
   end
+
+  describe "#access_info_email" do
+    let(:recipient) { Faker::Internet.email }
+
+    let(:access_info_email) do
+      UserMailer.with(recipient:).access_info_email.deliver_now
+    end
+
+    it "renders the right headers" do
+      expect(access_info_email.to).to eq([recipient])
+      expect(access_info_email.from).to eq(["mail@example.com"])
+    end
+
+    it "uses the correct Notify template" do
+      expect(UserMailer::ACCESS_INFO_EMAIL_TEMPLATE).to eq("fa5a9bca-ac57-435d-b450-201ca209379b")
+    end
+  end
 end

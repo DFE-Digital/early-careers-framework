@@ -2,6 +2,7 @@
 
 class UserMailer < ApplicationMailer
   SIGN_IN_EMAIL_TEMPLATE = "7ab8db5b-9842-4bc3-8dbb-f590a3198d9e"
+  ACCESS_INFO_EMAIL_TEMPLATE = "fa5a9bca-ac57-435d-b450-201ca209379b"
 
   def test_email
     user = params[:user]
@@ -31,5 +32,20 @@ class UserMailer < ApplicationMailer
         subject: "Link to sign in",
       },
     ).tag(:sign_in)
+  end
+
+  def access_info_email
+    recipient = params[:recipient]
+
+    template_mail(
+      ACCESS_INFO_EMAIL_TEMPLATE,
+      to: recipient,
+      rails_mailer: mailer_name,
+      rails_mail_template: action_name,
+      personalisation: {
+        sign_in: new_user_session_url,
+        request_access: resend_email_request_nomination_invite_url,
+      },
+    ).tag(:access_info_email).associate_with(recipient)
   end
 end
