@@ -109,7 +109,6 @@ properties:
       - npq-early-years-leadership
       - npq-additional-support-offer
       - npq-early-headship-coaching-offer
-      - npq-leading-primary-mathematics
   status:
     description: "The current state of the NPQ application"
     type: string

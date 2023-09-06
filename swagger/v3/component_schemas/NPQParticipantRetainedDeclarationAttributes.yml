@@ -40,7 +40,6 @@ properties:
       - npq-early-years-leadership
       - npq-additional-support-offer
       - npq-early-headship-coaching-offer
-      - npq-leading-primary-mathematics
     example: npq-leading-teaching
   state:
     description: "Indicates the state of this payment declaration"

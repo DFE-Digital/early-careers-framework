@@ -38,7 +38,6 @@ properties:
       - npq-early-years-leadership
       - npq-additional-support-offer
       - npq-early-headship-coaching-offer
-      - npq-leading-primary-mathematics
     example: npq-headship
   has_passed:
     description: Whether the participant has failed or passed

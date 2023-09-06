@@ -30,7 +30,6 @@ properties:
       - npq-early-years-leadership
       - npq-additional-support-offer
       - npq-early-headship-coaching-offer
-      - npq-leading-primary-mathematics
   schedule_identifier:
     description: "The schedule currently applied to this enrolment"
     type: string

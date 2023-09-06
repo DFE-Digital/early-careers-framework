@@ -15,7 +15,6 @@ properties:
       - npq-early-years-leadership
       - npq-additional-support-offer
       - npq-early-headship-coaching-offer
-      - npq-leading-primary-mathematics
     example: npq-senior-leadership
 required:
   - course_identifier
