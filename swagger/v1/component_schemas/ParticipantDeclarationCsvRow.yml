@@ -52,7 +52,6 @@ properties:
       - npq-early-years-leadership
       - npq-additional-support-offer
       - npq-early-headship-coaching-offer
-      - npq-leading-primary-mathematics
     example: ecf-induction
   eligible_for_payment:
     description: "[Deprecated - use state instead] Indicates whether this declaration would be eligible for funding from the DfE"
