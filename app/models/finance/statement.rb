@@ -85,6 +85,10 @@ class Finance::Statement < ApplicationRecord
   def npq?
     false
   end
+
+  def payable?
+    false
+  end
 end
 
 require "finance/statement/ecf"

@@ -10,7 +10,7 @@ module Finance
 
         statement = Finance::Statement.find_by(id: statement_id)
 
-        if statement.present?
+        if statement.present? && statement.payable?
           ::Statements::MarkAsPaid.new(statement).call
         else
           Rails.logger.warn("Statement could not be found - statement_id: #{statement_id}")

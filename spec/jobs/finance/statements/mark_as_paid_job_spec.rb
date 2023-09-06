@@ -5,17 +5,29 @@ require "rails_helper"
 RSpec.describe Finance::Statements::MarkAsPaidJob do
   subject { described_class.new.perform(statement_id:) }
 
-  let!(:statement) { create(:ecf_statement, output_fee: true, deadline_date: Date.new(2021, 12, 31)) }
+  let!(:statement) { create(:ecf_payable_statement) }
 
   context "with correct params" do
     let(:service_class) { double(Statements::MarkAsPaid) }
     let(:statement_id) { statement.id }
 
-    it "calls the correct service class" do
-      expect(Statements::MarkAsPaid).to receive(:new).with(statement).and_return(service_class)
-      expect(service_class).to receive(:call)
+    context "when statement is payable" do
+      it "calls the correct service class" do
+        expect(Statements::MarkAsPaid).to receive(:new).with(statement).and_return(service_class)
+        expect(service_class).to receive(:call)
 
-      subject
+        subject
+      end
+    end
+
+    context "when statement is not payable" do
+      let!(:statement) { create(:ecf_statement) }
+
+      it "doest not call the service class" do
+        expect(Statements::MarkAsPaid).not_to receive(:new).with(statement)
+
+        subject
+      end
     end
   end
 
