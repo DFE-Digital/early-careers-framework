@@ -3,6 +3,6 @@
 namespace :deduping do
   desc "Archive email of all users that are eligible for deduping (no participant identity associated)"
   task dedup_users: :environment do
-    User.dedup_users!
+    DeduplicationService.dedup_users!
   end
 end
