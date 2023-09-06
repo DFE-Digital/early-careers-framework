@@ -7,6 +7,14 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
+## 6 September 2023
+
+### Planned API downtime on 14 September
+
+The API will be unavailable from 6pm to 9pm on Thursday 14 September while we perform planned maintenance.
+
+Providers should pause API calls during this time. You’ll be able to start using the API again from 9pm.
+
 ## 5 September 2023
 
 ### New sandbox URL
