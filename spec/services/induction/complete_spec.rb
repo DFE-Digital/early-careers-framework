@@ -58,5 +58,21 @@ RSpec.describe Induction::Complete do
         expect(induction_record.reload).to be_completed_induction_status
       end
     end
+
+    context "when the participant is not an ECT" do
+      let(:participant_profile) { create(:mentor_participant_profile, school_cohort:) }
+
+      before do
+        service.call(participant_profile:, completion_date:)
+      end
+
+      it "does not set the completion date" do
+        expect(participant_profile.induction_completion_date).to be_nil
+      end
+
+      it "does not set the completed status" do
+        expect(participant_profile.latest_induction_record).not_to be_completed_induction_status
+      end
+    end
   end
 end
