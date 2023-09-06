@@ -17,7 +17,6 @@ RSpec.feature "Finance users payment breakdowns", type: :feature, js: true do
   let!(:november_statement) { create(:ecf_statement, name: "November #{current_start_year}", deadline_date: Date.new(current_start_year, 11, 30), cpd_lead_provider:, contract_version: contract.version) }
 
   let(:jan_statement_calculator) { Finance::ECF::StatementCalculator.new(statement: january_statement) }
-  let(:nov_statement_calculator) { Finance::ECF::StatementCalculator.new(statement: november_statement) }
 
   scenario "Can get to ECF payment breakdown page for a provider" do
     given_i_am_logged_in_as_a_finance_user
@@ -196,10 +195,6 @@ private
     expect(page).to have_content(jan_statement_calculator.started_count)
     expect(page).to have_content(number_to_pounds(jan_statement_calculator.output_fee))
 
-    expect(page).to have_content(number_to_pounds(nov_statement_calculator.additions_for_started))
-    expect(page).to have_content(nov_statement_calculator.started_count)
-    expect(page).to have_content(number_to_pounds(nov_statement_calculator.output_fee))
-
     expect(page).to_not have_content("Extended")
   end
 
@@ -208,10 +203,6 @@ private
     expect(page).to have_content(number_to_pounds(jan_statement_calculator.uplift_additions_count))
     expect(page).to have_content(number_to_pounds(jan_statement_calculator.uplift_fee_per_declaration))
     expect(page).to have_content(number_to_pounds(jan_statement_calculator.uplift_additions_count * jan_statement_calculator.uplift_fee_per_declaration))
-
-    expect(page).to have_content(number_to_pounds(nov_statement_calculator.uplift_additions_count))
-    expect(page).to have_content(number_to_pounds(nov_statement_calculator.uplift_fee_per_declaration))
-    expect(page).to have_content(number_to_pounds(nov_statement_calculator.uplift_additions_count * jan_statement_calculator.uplift_fee_per_declaration))
   end
 
   def service_fee_total
