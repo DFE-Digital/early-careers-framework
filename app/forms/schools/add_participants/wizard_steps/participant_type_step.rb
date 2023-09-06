@@ -6,7 +6,7 @@ module Schools
       class ParticipantTypeStep < ::WizardStep
         attr_accessor :participant_type
 
-        validates :participant_type, presence: true, inclusion: { in: %w[ect mentor self transfer] }
+        validates :participant_type, inclusion: { in: %w[ect mentor self transfer] }
 
         def self.permitted_params
           %i[
