@@ -89,7 +89,7 @@ end
 # S3 adapter for active storage
 gem "aws-sdk-s3", require: false
 
-gem "activerecord-session_store", "~> 2.0"
+gem "activerecord-session_store", "~> 2.1"
 
 gem "active_record_extended"
 
