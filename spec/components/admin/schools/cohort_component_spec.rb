@@ -40,6 +40,20 @@ RSpec.describe Admin::Schools::CohortComponent, type: :component do
 
       it("renders no relationships") { expect(rendered_content).not_to have_css(relationship_matcher) }
     end
+
+    context "when no school cohort, partnerships or relationships are present" do
+      let(:partnership) { nil }
+      let(:relationships) { nil }
+      let(:school_cohort) { nil }
+
+      it("shows an message explaining there is no programme") do
+        expect(page).to have_content("No induction programme chosen for #{school.name} in #{cohort.academic_year}")
+      end
+
+      it "renders a link styled as a secondary button so admins can set one up" do
+        expect(page).to have_link("Choose an induction programme", href: admin_school_change_programme_path(id: cohort.start_year, school_id: school.slug), class: "govuk-button--secondary")
+      end
+    end
   end
 
   describe "methods" do

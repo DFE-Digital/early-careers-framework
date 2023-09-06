@@ -35,6 +35,10 @@ RSpec.describe Admin::Schools::RelationshipComponent, type: :component do
         expected = "/admin/schools/#{school.slug}/partnerships/#{relationship.id}/challenge-partnership/new"
         expect(rendered_content).to have_link("Challenge", href: expected)
       end
+
+      it "has visually hidden text describing the challenge link" do
+        expect(page).to have_content("Challenge relationship with #{relationship.lead_provider.name}")
+      end
     end
 
     describe "listing participants under this relationship" do
