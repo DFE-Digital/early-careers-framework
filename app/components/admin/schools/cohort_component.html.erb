@@ -3,7 +3,9 @@
 
   <% if empty? %>
 
-    No school cohort set up for <%= cohort.start_year %>.
+    <p class="govuk-body">No induction programme chosen for <%= school.name %> in <%= cohort.academic_year %>.</p>
+
+    <%= govuk_button_link_to "Choose an induction programme", admin_school_change_programme_path(id: cohort.start_year, school_id: school.slug), secondary: true %>
 
   <% elsif fip? %>
 

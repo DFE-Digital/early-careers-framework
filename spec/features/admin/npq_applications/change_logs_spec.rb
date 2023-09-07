@@ -23,10 +23,30 @@ RSpec.feature "Admin NPQ Application change logs", js: true, rutabaga: false do
     then_i_can_see_a_change_log_on_eligible_attribute
   end
 
+  scenario "Show a change log for an Applicant (API - first version)" do
+    given_there_is_an_npq_application_via_api
+    and_i_am_signed_in_as_an_admin
+
+    when_i_visit the_npq_applications_edge_cases
+    when_i_select_the_first_applicant
+    when_i_mark_the_applicant_as_eligible
+    when_i_see_the_applicant_change_log
+
+    expect(page).to have_content("Changed from", count: 2)
+    expect(page).to have_content("Updated by", count: 1)
+  end
+
 private
 
   def given_there_is_an_npq_application
     application = create :npq_application, :edge_case
+
+    allow(User).to receive(:find).and_return(application.user)
+  end
+
+  def given_there_is_an_npq_application_via_api
+    application = create :npq_application, :edge_case
+    application.versions.first.update!(whodunnit: NPQRegistrationApiToken.new.owner)
 
     allow(User).to receive(:find).and_return(application.user)
   end

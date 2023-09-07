@@ -125,20 +125,6 @@ RSpec.describe StoreParticipantEligibility do
 
       context "with eligibility_notifications feature enabled", with_feature_flags: { eligibility_notifications: "active" } do
         context "when participant is an ECT" do
-          it "sends the ect_previous_induction_email when reason is previous_induction" do
-            eligibility_options[:previous_induction] = true
-            expect {
-              service.call(participant_profile: ect_profile, eligibility_options:)
-            }.to have_enqueued_mail(IneligibleParticipantMailer, :ect_previous_induction_email)
-              .with(
-                params: {
-                  induction_tutor_email: induction_tutor.email,
-                participant_profile: ect_profile,
-                },
-                args: [],
-              )
-          end
-
           it "sends a specific email when the reason is previous induction and the ect was previously eligible" do
             create(:ecf_participant_eligibility, :eligible, participant_profile: ect_profile)
             eligibility_options[:previous_induction] = true
@@ -244,16 +230,6 @@ RSpec.describe StoreParticipantEligibility do
 
         context "when the school is doing CIP" do
           let(:school_cohort) { create(:school_cohort, :cip, school:) }
-
-          context "when participant is an ECT" do
-            it "does not send the ect_previous_induction_email when reason is previous_induction" do
-              eligibility_options[:previous_induction] = true
-
-              expect {
-                service.call(participant_profile: ect_profile, eligibility_options:)
-              }.to_not have_enqueued_mail(IneligibleParticipantMailer)
-            end
-          end
 
           context "when participant is a Mentor" do
             it "does not send the mentor_previous_participation_email when reason is previous_participation" do

@@ -374,7 +374,7 @@ en:
         schools/add_participants/wizard_steps/participant_type_step:
           attributes:
             participant_type:
-              inclusion: "Select whether to add an ECT or a Mentor"
+              inclusion: "Select ECT or mentor"
         schools/add_participants/wizard_steps/name_step:
           attributes:
             full_name:

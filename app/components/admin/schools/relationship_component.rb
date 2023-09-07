@@ -20,10 +20,9 @@ module Admin
       def actions
         [
           if allow_challenge?
-            govuk_link_to(
-              "Challenge relationship",
-              new_admin_school_partnership_challenge_partnership_path(school_cohort.school, relationship),
-            )
+            govuk_link_to(new_admin_school_partnership_challenge_partnership_path(school_cohort.school, relationship)) do
+              safe_join(["Challenge relationship", tag.span("with #{relationship.lead_provider.name}", class: "govuk-visually-hidden")], " ")
+            end
           end,
         ].compact
       end

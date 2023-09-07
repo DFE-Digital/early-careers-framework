@@ -89,7 +89,7 @@ end
 # S3 adapter for active storage
 gem "aws-sdk-s3", require: false
 
-gem "activerecord-session_store", "~> 2.0"
+gem "activerecord-session_store", "~> 2.1"
 
 gem "active_record_extended"
 
@@ -108,7 +108,7 @@ gem "json-diff", "~> 0.4.1", require: false
 
 gem "cssbundling-rails", "~> 1.2"
 gem "jsbundling-rails"
-gem "sprockets", "~> 4.2.0"
+gem "sprockets", "~> 4.2.1"
 gem "sprockets-rails", require: "sprockets/railtie"
 
 # Code Highlighter
@@ -154,7 +154,7 @@ end
 
 group :development do
   # Access an interactive console on exception pages or by calling 'console' anywhere in the code.
-  gem "web-console", "~> 4.2.0"
+  gem "web-console", "~> 4.2.1"
 
   # autocompletion backend for development
   gem "solargraph"

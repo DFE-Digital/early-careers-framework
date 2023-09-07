@@ -75,7 +75,8 @@ RSpec.describe Induction::AmendParticipantCohort do
       let(:target_cohort_start_year) { 2024 }
 
       it "returns false and set errors" do
-        travel_to Date.new(Cohort.ordered_by_start_year.last.start_year + 2, 9, 1)
+        # FIXME: this is temp until cohort specs are reverted back to 1/9
+        travel_to Date.new(Cohort.ordered_by_start_year.last.start_year + 2, 10, 1)
 
         expect(form.save).to be_falsey
         expect(form.errors[:target_cohort]).to_not be_nil

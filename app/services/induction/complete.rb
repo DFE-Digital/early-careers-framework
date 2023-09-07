@@ -2,6 +2,8 @@
 
 class Induction::Complete < BaseService
   def call
+    return unless participant_profile.ect?
+
     ActiveRecord::Base.transaction do
       participant_profile.update!(induction_completion_date: completion_date)
 

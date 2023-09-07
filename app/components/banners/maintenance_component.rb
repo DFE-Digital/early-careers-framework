@@ -9,16 +9,16 @@ module Banners
     # date - required (for rendering)
     # start_time - optional
     # end_time - optional
-    DATE       = nil # Date.new(2021, 8, 4)
-    START_TIME = nil # Time.zone.local(2021, 8, 4, 9, 0, 0)
-    END_TIME   = nil # Time.zone.local(2023, 8, 4, 17, 0, 0)
+    DATE       = Date.new(2023, 9, 14)
+    START_TIME = Time.zone.local(2023, 9, 14, 18, 0, 0)
+    END_TIME   = Time.zone.local(2023, 9, 14, 21, 0, 0)
 
     def initialize(wide_container_view: false)
       @wide_container_view = wide_container_view
     end
 
     def render?
-      date.present? && !date_is_past? && FeatureFlag.active?(:maintenance_banner)
+      date.present? && date_is_in_future? && FeatureFlag.active?(:maintenance_banner)
     end
 
     def unavailable_timeframe_string
@@ -47,7 +47,7 @@ module Banners
       DATE
     end
 
-    def date_is_past?
+    def date_is_in_future?
       date.to_time.beginning_of_day > Time.current.end_of_day
     end
 

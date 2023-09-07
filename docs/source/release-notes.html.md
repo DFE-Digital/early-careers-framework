@@ -7,6 +7,27 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
+## 6 September 2023
+
+### Planned API downtime on 14 September
+
+The API will be unavailable from 6pm to 9pm on Thursday 14 September while we perform planned maintenance.
+
+Providers should pause API calls during this time. You’ll be able to start using the API again from 9pm.
+
+## 5 September 2023
+
+### New sandbox URL
+
+We will be changing the sandbox URL to [https://cpd-ecf-sandbox-web.teacherservices.cloud/](https://cpd-ecf-sandbox-web.teacherservices.cloud/) on Thursday 7 September. 
+
+The sandbox environment will be unavailable between 5pm and 7pm on 7 September while we make this change. 
+
+Providers should:  
+
+* pause testing between 5pm and 7pm on 7 September
+* update their base URL for their integrations once the sandbox environment becomes available again to avoid any data loss
+
 ## 24 August 2023
 
 Lead providers can now submit 'extended declarations' for ECTs that are on extended schedules in production. The change applies to all versions of the API. Previously, lead providers could only test the new functionality in the [sandbox environment](/api-reference/release-notes.html#17-august-2023).
