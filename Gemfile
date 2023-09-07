@@ -172,6 +172,7 @@ end
 group :test do
   gem "axe-core-rspec"
   gem "capybara", "~> 3.39"
+  gem "govuk-rspec-helpers", git: "https://github.com/x-govuk/govuk-rspec-helpers.git"
   gem "jsonapi-rspec"
   gem "launchy"
   gem "pundit-matchers", "~> 1.9.0"
@@ -183,7 +184,6 @@ group :test do
   gem "site_prism", "~> 3.7"
   gem "webmock", "~> 3.19"
   gem "with_model"
-  gem "govuk-rspec-helpers", git: "https://github.com/x-govuk/govuk-rspec-helpers.git"
 end
 
 gem "countries", "~> 5.6"

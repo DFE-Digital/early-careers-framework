@@ -14,28 +14,28 @@ RSpec.describe Admin::Schools::PartnershipComponent, type: :component do
     it "summarises the training programme" do
       expect(rendered_content).to summarise(
         key: "Training programme",
-        value: "Working with a DfE-funded provider"
+        value: "Working with a DfE-funded provider",
       )
     end
 
     it "summarises the appropriate body" do
       expect(rendered_content).to summarise(
         key: "Appropriate body",
-        value: school_cohort.appropriate_body.name
+        value: school_cohort.appropriate_body.name,
       )
     end
 
     it "summarises the delivery partner" do
       expect(rendered_content).to summarise(
         key: "Delivery partner",
-        value: school_cohort.delivery_partner.name
+        value: school_cohort.delivery_partner.name,
       )
     end
 
     it "summarises the lead provider" do
       expect(rendered_content).to summarise(
         key: "Lead provider",
-        value: school_cohort.lead_provider.name
+        value: school_cohort.lead_provider.name,
       )
     end
   end
