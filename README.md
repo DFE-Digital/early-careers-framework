@@ -198,9 +198,9 @@ exactly what and how their test data is configured. These magic values are only 
 ## Deployment infrastructure
 
 - review, which has `RAILS_ENV=review`
-- [staging](https://cpd-ecf-staging-web.test.teacherservices.cloud/), which has `RAILS_ENV=staging`
-- [sandbox](https://cpd-ecf-sandbox-web.teacherservices.cloud/), which has `RAILS_ENV=sandbox`
-- [production](https://manage-training-for-early-career-teachers.education.gov.uk/), which has `RAILS_ENV=production`
+- [staging](https://st.manage-training-for-early-career-teachers.education.gov.uk/), which has `RAILS_ENV=staging`, [internal url](https://cpd-ecf-staging-web.test.teacherservices.cloud/)
+- [sandbox](https://sb.manage-training-for-early-career-teachers.education.gov.uk/), which has `RAILS_ENV=sandbox`, [internal url](https://cpd-ecf-sandbox-web.teacherservices.cloud/)
+- [production](https://manage-training-for-early-career-teachers.education.gov.uk/), which has `RAILS_ENV=production`, [internal url](https://cpd-ecf-production-web.teacherservices.cloud/)
 
 These are deployed using terraform. See the documentation for [details on terraform](./documentation/terraform.md) and [debugging in deployed environments](./documentation/debugging_in_govpaas.md).
 
