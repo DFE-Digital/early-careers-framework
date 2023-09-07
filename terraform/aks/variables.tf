@@ -61,3 +61,15 @@ variable "postgres_enable_high_availability" {
 variable "azure_enable_backup_storage" {
   default = false
 }
+
+variable "redis_queue_capacity" {
+  default = 1
+}
+
+variable "redis_queue_family" {
+  default = "C"
+}
+
+variable "redis_queue_sku_name" {
+  default = "Standard"
+}
