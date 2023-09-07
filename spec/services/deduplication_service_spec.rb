@@ -11,6 +11,8 @@ RSpec.describe DeduplicationService do
   let(:finance_user) { create(:user, :finance) }
   let(:induction_coordinator_user) { create(:user, :induction_coordinator) }
   let(:lead_provider_user) { create(:user, :lead_provider) }
+  let(:participant_declaration) { create(:npq_participant_declaration, state: "voided") }
+  let(:participant_declaration_user) { participant_declaration.user }
 
   before do
     deletable_user
@@ -21,10 +23,11 @@ RSpec.describe DeduplicationService do
     finance_user
     induction_coordinator_user
     lead_provider_user
+    participant_declaration_user
   end
 
   describe ".select_users_to_archive" do
-    let(:users_to_delete) { DeduplicationService.select_users_to_archive }
+    let(:users_to_delete) { DeduplicationService.new.send(:select_users_to_archive) }
 
     it "does not include admin user" do
       expect(users_to_delete).not_to include(admin_user)
@@ -50,6 +53,28 @@ RSpec.describe DeduplicationService do
       expect(users_to_delete).not_to include(lead_provider_user)
     end
 
+    context "when user has orphaned declaration" do
+      before do
+        identities = participant_declaration_user.participant_identities
+        identities.each do |identity|
+          identity.participant_profiles.each do |pp|
+            pp.participant_profile_states.each(&:destroy!)
+            pp.participant_declarations.each do |pd|
+              pd.participant_profile_id = nil
+              pd.save!(validate: false)
+            end
+            pp.destroy!
+          end
+          identity.npq_applications.each(&:destroy!)
+          identity.destroy!
+        end
+      end
+
+      it "is not included in deletion" do
+        expect(users_to_delete).not_to include(participant_declaration_user)
+      end
+    end
+
     it "includes deletable" do
       expect(users_to_delete).to include(deletable_user)
     end
@@ -57,7 +82,7 @@ RSpec.describe DeduplicationService do
 
   describe ".dedup_users" do
     it "performs deduplication (archiving) users" do
-      expect { DeduplicationService.dedup_users! }.to change { deletable_user.reload.email }.from("user@example.org").to("user#{deletable_user.id}@example.org")
+      expect { DeduplicationService.call }.to change { deletable_user.reload.email }.from("user@example.org").to("user#{deletable_user.id}@example.org")
     end
   end
 end
