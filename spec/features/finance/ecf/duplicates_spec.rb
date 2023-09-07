@@ -99,7 +99,7 @@ RSpec.describe "Duplicate profile tooling", :js do
     end
 
     within ".govuk-tabs__list" do
-      click_link "Deduplicate"
+      click_govuk_link "Deduplicate"
     end
 
     expect(page).to have_button("Deduplicate", disabled: true)
@@ -131,7 +131,7 @@ RSpec.describe "Duplicate profile tooling", :js do
     end
 
     within ".govuk-tabs__list" do
-      click_link "Deduplicate"
+      click_govuk_link "Deduplicate"
     end
 
     click_on "Swap"

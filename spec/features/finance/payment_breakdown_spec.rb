@@ -78,7 +78,7 @@ RSpec.feature "Finance users payment breakdowns", type: :feature, js: true do
 
     then_i_should_see_the_total_extended
     then_i_should_see_the_total_voided
-    click_link("View voided declarations")
+    click_govuk_link("View voided declarations")
     then_i_see_voided_declarations
     and_the_page_should_be_accessible
   end

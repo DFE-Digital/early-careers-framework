@@ -804,7 +804,7 @@ module ManageTrainingSteps
   end
 
   def when_i_sort_participants_by_induction_start_date
-    click_link("Induction start date")
+    click_govuk_link("Induction start date")
   end
 
   def and_i_choose_induction_coordinator_and_mentor_role

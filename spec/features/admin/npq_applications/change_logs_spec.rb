@@ -62,7 +62,7 @@ private
 
   def when_i_mark_the_applicant_as_eligible
     within(".govuk-summary-list__row", text: "Eligible for funding") do
-      click_link "Edit"
+      click_govuk_link "Edit NPQ application"
     end
     choose "Yes"
     click_on "Continue"

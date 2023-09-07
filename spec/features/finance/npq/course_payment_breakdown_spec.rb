@@ -290,7 +290,7 @@ RSpec.feature "NPQ Course payment breakdown", type: :feature, js: true do
 
   def when_i_click_on_view_within_statement_summary
     within(".app-application__panel__summary") do
-      when_i_click_on("View")
+      click_govuk_link("View")
     end
   end
 
@@ -352,12 +352,8 @@ RSpec.feature "NPQ Course payment breakdown", type: :feature, js: true do
     end
   end
 
-  def when_i_click_on(string)
-    click_link_or_button string
-  end
-
   def when_i_click_on_view_contract
-    find("span", text: "Contract Information").click
+    find("summary", text: "Contract Information").click
   end
 
   def then_i_see_contract_information

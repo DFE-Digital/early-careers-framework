@@ -45,7 +45,7 @@ private
   end
 
   def and_i_click_the_change_materials_link
-    click_link("Change materials")
+    click_govuk_link("Change materials")
   end
 
   def the_change_materials_page
