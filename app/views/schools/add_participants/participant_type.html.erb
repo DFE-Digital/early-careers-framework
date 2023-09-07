@@ -5,10 +5,10 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
 
-    <span class="govuk-caption-xl"><%= @school.name %></span>
 
     <%= form_with model: @form, url: url_for(action: :update), scope: @wizard.form_scope, method: :put do |f| %>
       <%= f.govuk_error_summary %>
+      <span class="govuk-caption-xl"><%= @school.name %></span>
       <%= f.govuk_radio_buttons_fieldset :participant_type , legend: { text: "Who do you want to add?", tag: 'h1', size: 'xl' } do %>
         <p class="govuk-body govuk-!-margin-top-4">
           This could be a new teacher or a teacher transferring from another school where they’ve started ECF-based training or mentoring.
@@ -18,7 +18,7 @@
             You can also add yourself as a mentor.
           </p>
         <% end %>
-        <%= f.govuk_radio_button :participant_type, :ect, label: { text: "ECT" } %>
+        <%= f.govuk_radio_button :participant_type, :ect, label: { text: "ECT" }, link_errors: true %>
         <%= f.govuk_radio_button :participant_type, :mentor, label: { text: "Mentor" } %>
         <% if @wizard.sit_can_become_a_mentor? %>
           <%= f.govuk_radio_button :participant_type, :self, label: { text: "Yourself as a mentor" } %>
