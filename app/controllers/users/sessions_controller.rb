@@ -25,7 +25,7 @@ class Users::SessionsController < Devise::SessionsController
   ].freeze
 
   skip_before_action :check_privacy_policy_accepted
-  before_action :mock_login, only: :create, if: -> { Rails.env.in?(%w[development deployed_development review staging sandbox]) }
+  before_action :mock_login, only: :create, if: -> { Rails.env.in?(%w[development review staging sandbox]) }
   before_action :redirect_to_dashboard, only: %i[sign_in_with_token redirect_from_magic_link]
   before_action :ensure_login_token_valid, only: %i[sign_in_with_token redirect_from_magic_link]
 
