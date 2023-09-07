@@ -25,10 +25,12 @@ staging: aks test-cluster
 .PHONY: sandbox
 sandbox: production-cluster
 	$(eval include global_config/sandbox_aks.sh)
+	$(eval SPACE=early-careers-framework-sandbox)
 
 .PHONY: production
 production: production-cluster
 	$(eval include global_config/production_aks.sh)
+	$(eval SPACE=early-careers-framework-prod)
 	$(if $(or ${SKIP_CONFIRM}, ${CONFIRM_PRODUCTION}), , $(error Production can only run with CONFIRM_PRODUCTION))
 
 load-domain-config:
@@ -126,10 +128,6 @@ terraform-destroy: terraform-init
 	terraform -chdir=terraform/aks destroy -var-file workspace_variables/${DEPLOY_ENV}.tfvars.json ${AUTO_APPROVE}
 
 enable-maintenance:
-	$(if ${DEPLOY_ENV} == "review_aks", $(eval VARIABLE_FILE_NAME=review), $(eval VARIABLE_FILE_NAME=${DEPLOY_ENV}))
-	$(eval include terraform/workspace-variables/${VARIABLE_FILE_NAME}.tfvars)
-	$(eval SPACE=${paas_space_name})
-
 	cf target -s ${SPACE}
 	cd service_unavailable_page && cf push
 	cf map-route ecf-unavailable london.cloudapps.digital --hostname ${APP_NAME}
