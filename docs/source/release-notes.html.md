@@ -19,7 +19,7 @@ Providers should pause API calls during this time. You’ll be able to start usi
 
 ### New sandbox URL
 
-We will be changing the sandbox URL to [https://cpd-ecf-sandbox-web.teacherservices.cloud/](https://cpd-ecf-sandbox-web.teacherservices.cloud/) on Thursday 7 September. 
+We will be changing the sandbox URL to [https://sb.manage-training-for-early-career-teachers.education.gov.uk/](https://sb.manage-training-for-early-career-teachers.education.gov.uk/) on Thursday 7 September.
 
 The sandbox environment will be unavailable between 5pm and 7pm on 7 September while we make this change. 
 
