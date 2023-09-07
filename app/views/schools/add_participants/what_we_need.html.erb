@@ -5,7 +5,7 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <span class="govuk-caption-xl"><%= @school.name %></span>
-    <h1 class="govuk-heading-xl">What we need from you</h1>
+    <h1 class="govuk-heading-xl">Add <%= @wizard.ect_participant? ? "an ECT" : "a mentor" %></h1>
 
     <p class="govuk-body">You must tell us their:</p>
     <ul class="govuk-list govuk-list--bullet">
@@ -31,7 +31,7 @@
       </p>
     <% end %>
 
-    <%= govuk_details(summary_text: "Tell your ECTs and mentors about this use of their data", classes: "govuk-!-margin-top-7 govuk-!-margin-bottom-7") do %>
+    <%= govuk_details(summary_text: "Tell your #{@wizard.ect_participant? ? "ECT" : "mentor"} about this use of their data", classes: "govuk-!-margin-top-7 govuk-!-margin-bottom-7") do %>
       <p>You should let them know that we:</p>
       <ul class="govuk-list govuk-list--bullet">
         <li>use their personal data to arrange DfE funding</li>
