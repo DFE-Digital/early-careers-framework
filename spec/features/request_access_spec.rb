@@ -24,7 +24,7 @@ RSpec.feature "Request access to the service", type: :feature, js: true, rutabag
     and_i_see_the_school_redacted_email(school)
   end
 
-  private
+private
 
   def when_i_click_on_request_access_link
     click_on "request access to the service"
@@ -34,7 +34,7 @@ RSpec.feature "Request access to the service", type: :feature, js: true, rutabag
     click_on "Continue"
   end
 
-  alias when_i_click_on_continue and_i_click_on_continue
+  alias_method :when_i_click_on_continue, :and_i_click_on_continue
 
   def then_i_am_on_the_send_link_page
     expect(page).to have_text("Send your school a link to use this service")
