@@ -43,6 +43,7 @@ class UserMailer < ApplicationMailer
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
+        service_url: root_url,
         sign_in: new_user_session_url,
         request_access: resend_email_request_nomination_invite_url,
       },
