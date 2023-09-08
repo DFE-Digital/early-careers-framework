@@ -25,6 +25,10 @@ FactoryBot.define do
       factory :ecf_paid_statement, class: "Finance::Statement::ECF::Paid" do
         paid
       end
+
+      factory :ecf_payable_statement, class: "Finance::Statement::NPQ::Payable" do
+        payable
+      end
     end
 
     trait :output_fee do

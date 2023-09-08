@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Finance::Statement < ApplicationRecord
+  has_paper_trail
+
   self.table_name = "statements"
 
   belongs_to :cpd_lead_provider
@@ -83,6 +85,10 @@ class Finance::Statement < ApplicationRecord
   end
 
   def npq?
+    false
+  end
+
+  def payable?
     false
   end
 end
