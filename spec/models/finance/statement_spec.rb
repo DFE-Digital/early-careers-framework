@@ -102,4 +102,64 @@ RSpec.describe Finance::Statement do
       it { is_expected.not_to be_payable }
     end
   end
+
+  context "#mark_as_paid!" do
+    let(:participant_declaration) do
+      create(
+        :ect_participant_declaration,
+        :eligible,
+      )
+    end
+
+    subject { participant_declaration.statements.first }
+
+    it "sets marked_as_paid_at" do
+      expect { subject.mark_as_paid! }.to change { subject.reload.marked_as_paid_at }
+    end
+  end
+
+  context "#marked_as_paid?" do
+    context "marked as paid statement" do
+      subject { create(:ecf_paid_statement) }
+
+      it "returns true" do
+        expect(subject.marked_as_paid?).to eq(true)
+      end
+    end
+
+    context "non marked as paid statement" do
+      subject { create(:ecf_statement) }
+
+      it "returns false" do
+        expect(subject.marked_as_paid?).to eq(false)
+      end
+    end
+  end
+
+  context "#mark_as_paid_visible?" do
+    context "when mark as paid is allowed" do
+      let(:participant_declaration) do
+        create(
+          :ect_participant_declaration,
+          :eligible,
+        )
+      end
+
+      subject { create(:ecf_payable_statement) }
+
+      before { participant_declaration.statement_line_items.first.update!(statement: subject) }
+
+      it "returns true" do
+        expect(subject.mark_as_paid_visible?).to eq(true)
+      end
+    end
+
+    context "when mark as paid is not allowed" do
+      subject { create(:ecf_paid_statement) }
+
+      it "returns false" do
+        expect(subject.mark_as_paid_visible?).to eq(false)
+      end
+    end
+  end
 end

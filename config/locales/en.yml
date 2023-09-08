@@ -640,6 +640,9 @@ en:
     cohort: Cohort
     course_total: Course total
     contract_information: Contract Information
+    calculation_rounding_error:
+      title: Calculation rounding errors
+      message: Due to the way payments per participant are made, there may be rounding errors in some of the individual sub-calculations. The total output fees displayed are correct. Contact your contract manager if you have any queries.
     spring: Spring 2022
     recruitment_target_total: Recruitment target total
     total_completed: Total completed
@@ -734,6 +737,13 @@ en:
       providers:
         show:
           title: "Banding tracker for %{provider_name}"
+    statements:
+      payment_authorisations:
+        title: "Check %{statement_name} statement details before authorising for payment"
+        checks_done:
+          label: "Yes, I'm ready to authorise this for payment"
+          legend: "Have all necessary assurance checks been done?"
+          error_message: "Confirm all necessary assurance checks have been done before authorising this statement for payment"
 
   admin:
     npq:

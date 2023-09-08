@@ -1,14 +1,5 @@
-<% content_for :title, t("finance.npq.payment_breakdown") %>
-<% content_for :before_content, govuk_back_link(text: "Back", href: select_provider_npq_finance_payment_breakdowns_path) %>
-
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
-    <h1 class="govuk-heading-xl">National professional qualifications (NPQs)</h1>
-    <span class="govuk-caption-l"><%= @statement.cpd_lead_provider.name %></span>
-    <h2 class="govuk-heading-l"><%= @statement.name %></h2>
-
-    <%= render Finance::Statements::NPQStatementSelector.new(current_statement: @statement, cohorts: Cohort.where(start_year: 2021..)) %>
-
     <div class="app-application__panel__summary">
       <div class="govuk-!-margin-right-4">
         <h4 class="govuk-heading-l govuk-!-margin-bottom-2"><%= t("finance.totals") %></h4>
@@ -110,8 +101,6 @@
               <div class="float tooltip">
                 <div class="float govuk-heading-m govuk-!-margin-bottom-0 govuk-!-padding-top-0">
                   <span><%= @calculator.total_voided %></span>
-                  <br>
-                  <p class="govuk-body-s"><%= govuk_link_to( t("finance.view") , finance_npq_lead_provider_statement_voided_path(@npq_lead_provider.id, @statement)) %></p>
                 </div>
               </div>
             </div>
@@ -119,47 +108,5 @@
         </li>
       </ul>
     </div>
-
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-full">
-        <div class="app-application__panel__actions">
-          <div class="duvet">
-            <div class="govuk-grid-column-one-half govuk-!-text-align-left">
-              <% if @statement.mark_as_paid_visible? %>
-                <%= button_to "Authorise for payment", new_finance_statement_payment_authorisation_path(@statement), method: :get, class: "govuk-button govuk-button--primary" %>
-              <% elsif @statement.marked_as_paid? %>
-                <%= govuk_tag(text: "Authorised for payment at #{@statement.marked_as_paid_at.strftime("%-I:%M%P on %-e %b %Y")}") %>
-              <% else %>
-                &nbsp;
-              <% end %>
-            </div>
-            <div class="govuk-grid-column-one-half govuk-!-text-align-right">
-              <p class="govuk-body-s">
-                <%= govuk_link_to "Download declarations (CSV)", finance_npq_statement_assurance_report_path(@statement, format: :csv) %>
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
   </div>
-</div>
-<br />
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
-    <div class="app-application__panel">
-      <div class="moj-filter-layout__content">
-        <% @npq_contracts.each do |npq_contract| %>
-          <%= render Finance::NPQ::PaymentOverviews::Course.new(statement: @statement, contract: npq_contract) %>
-
-          <br>
-        <% end %>
-      </div>
-    </div>
-  </div>
-
-  <%= render Finance::NPQ::PaymentOverviews::ContractInfo.new(@npq_contracts, @npq_lead_provider) %>
-
-  <%= render partial: "errors/calculation_rounding" %>
 </div>

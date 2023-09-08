@@ -1,0 +1,97 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <div class="finance-panel finance-panel__summary">
+      <div class="finance-panel__summary__total-payment-breakdown">
+        <h4 class="govuk-heading-l govuk-!-margin-bottom-2">Total <%= number_to_pounds(@calculator.total(with_vat: true)) %></h4>
+
+        <div>
+          <p class="govuk-body-s govuk-!-margin-bottom-2">
+            Output payment <span><%= number_to_pounds(@calculator.output_fee) %></span>
+          </p>
+
+          <p class="govuk-body-s govuk-!-margin-bottom-2">
+            Service fee <span><%= number_to_pounds(@calculator.service_fee) %></span>
+          </p>
+
+          <p class="govuk-body-s govuk-!-margin-bottom-2">
+            Uplift fees <span><%= number_to_pounds(@calculator.total_for_uplift) %></span>
+          </p>
+
+          <p class="govuk-body-s govuk-!-margin-bottom-2">
+            Clawbacks <span><%= number_to_pounds(@calculator.adjustments_total) %></span>
+          </p>
+
+          <p class="govuk-body-s govuk-!-margin-bottom-2">
+            Additional adjustments <span><%= number_to_pounds(@calculator.additional_adjustments_total) %></span>
+          </p>
+
+          <p class="govuk-body-s govuk-!-margin-bottom-2">
+            VAT <span><%= number_to_pounds(@calculator.vat) %></span>
+          </p>
+        </div>
+      </div>
+
+      <div class="finance-panel__summary__meta">
+        <div class="finance-panel__summary__meta__dates">
+          <div>
+            <div>
+              <strong class="govuk-body-s govuk-!-margin-bottom-0">Milestone cut off date</strong>
+            </div>
+            <div class="govuk-heading-m govuk-!-padding-top-0">
+              <%= @statement.deadline_date.to_fs(:govuk) %>
+            </div>
+          </div>
+
+          <div>
+            <div>
+              <strong class="govuk-body-s govuk-!-margin-bottom-0">Payment date</strong>
+            </div>
+            <div class="govuk-heading-m govuk-!-padding-top-0">
+              <%= @statement.payment_date.to_fs(:govuk) %>
+            </div>
+          </div>
+        </div>
+
+        <div class="finance-panel__summary__meta__counts">
+          <div class="second govuk-list govuk-!-margin-bottom-0">
+            <strong class="govuk-body-s govuk-!-margin-bottom-0">Total starts</strong>
+            <div class="govuk-heading-m govuk-!-padding-top-0">
+              <%= @calculator.started_count %>
+            </div>
+          </div>
+
+          <div>
+            <strong class="govuk-body-s govuk-!-margin-bottom-0">Total retained</strong>
+            <div class="govuk-heading-m govuk-!-padding-top-0">
+              <%= @calculator.retained_count %>
+            </div>
+          </div>
+
+          <div>
+            <strong class="govuk-body-s govuk-!-margin-bottom-0">Total completed</strong>
+            <div class="govuk-heading-m govuk-!-padding-top-0">
+              <%= @calculator.completed_count %>
+            </div>
+          </div>
+
+          <% if @calculator.extended_count.positive? %>
+            <div>
+              <strong class="govuk-body-s govuk-!-margin-bottom-0">Total extended</strong>
+              <div class="govuk-heading-m govuk-!-padding-top-0">
+                <%= @calculator.extended_count %>
+              </div>
+            </div>
+          <% end %>
+
+          <div>
+            <strong class="govuk-body-s govuk-!-margin-bottom-0">Total voided</strong>
+
+            <div class="govuk-heading-m govuk-!-padding-top-0 govuk-!-margin-bottom-0">
+              <%= @calculator.voided_count %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
