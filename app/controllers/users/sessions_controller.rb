@@ -42,6 +42,7 @@ class Users::SessionsController < Devise::SessionsController
   def create
     super
   rescue Devise::Strategies::PasswordlessAuthenticatable::Error
+    @login_email = params[:user][:email]
     render :login_email_sent
   end
 
