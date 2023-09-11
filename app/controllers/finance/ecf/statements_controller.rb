@@ -15,10 +15,10 @@ module Finance
             pdf = Grover.new(
               html_string,
               display_url: root_url,
-              format: 'A4',
-              emulate_media: 'screen',
+              format: "A4",
+              emulate_media: "screen",
             ).to_pdf
-            send_data(pdf, disposition: 'attachment', filename: "statement_#{params[:id]}.pdf", type: 'application/pdf')
+            send_data(pdf, disposition: "attachment", filename: "statement_#{params[:id]}.pdf", type: "application/pdf")
           end
         end
       end
