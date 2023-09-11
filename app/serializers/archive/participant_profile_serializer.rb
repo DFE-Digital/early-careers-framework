@@ -15,7 +15,7 @@ module Archive
           user.full_name,
           user.email,
           user.teacher_profile&.trn,
-        ].compact
+        ].compact,
       }
     end
 

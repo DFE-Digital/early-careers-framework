@@ -15,7 +15,7 @@ module Archive
         relic = Archive::Relic.create!(object_type: user.class.name,
                                        object_id: user.id,
                                        display_name: user.full_name,
-                                       reason: reason,
+                                       reason:,
                                        data:)
         destroy_user! unless keep_original
         relic
@@ -34,7 +34,7 @@ module Archive
 
     def user_can_be_archived!
       if users_excluded_roles.any?
-        raise ArchiveError, "User #{user.id} has excluded roles: #{users_excluded_roles.join(",")}"
+        raise ArchiveError, "User #{user.id} has excluded roles: #{users_excluded_roles.join(',')}"
       elsif user_has_declarations?
         raise ArchiveError, "User #{user.id} has non-voided declarations"
       elsif user_has_eligibility?
@@ -75,7 +75,7 @@ module Archive
       participant_profile.validation_decisions.destroy_all
 
       destroy_mentorships!(participant_profile) if participant_profile.mentor?
-      
+
       participant_profile.destroy!
     end
 

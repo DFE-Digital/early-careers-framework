@@ -2,12 +2,17 @@
 
 RSpec.describe Archive::UnvalidatedUser do
   let(:ect_profile) { create(:ect_participant_profile) }
-  let(:user) { ect_profile.user }
+  let!(:user) { ect_profile.user }
 
   subject(:service_call) { described_class.call(user) }
 
   it "creates a Relic record" do
     expect { service_call }.to change { Archive::Relic.count }.by(1)
+  end
+
+  it "removes the User record" do
+    user
+    expect { service_call }.to change { User.count }.by(-1)
   end
 
   describe "relic details" do
@@ -32,9 +37,17 @@ RSpec.describe Archive::UnvalidatedUser do
     it "sets the relic data to the serialized user records" do
       expect(relic.data.to_json).to eq Archive::UserSerializer.new(user).serializable_hash.to_json
     end
+
+    context "when a reason is specified" do
+      let(:relic) { described_class.call(user, reason: "a different reason") }
+
+      it "sets the reason correctly" do
+        expect(relic.reason).to eq "a different reason"
+      end
+    end
   end
 
-  context "when the user has declaration" do
+  context "when the user has a declaration" do
     let(:state) { "submitted" }
     let!(:declaration) { create(:seed_ecf_participant_declaration, :with_cpd_lead_provider, state:, user:, participant_profile: ect_profile) }
 
@@ -44,9 +57,9 @@ RSpec.describe Archive::UnvalidatedUser do
       }.to raise_error Archive::ArchiveError
     end
 
-    context "when the user only has voided declarations" do
+    context "when the declaration is void" do
       let(:state) { "voided" }
-        
+
       it "creates a Relic" do
         expect {
           service_call
@@ -58,6 +71,23 @@ RSpec.describe Archive::UnvalidatedUser do
           service_call
         }.not_to raise_error
       end
+    end
+  end
+
+  context "when the keep original flag is set" do
+    let(:relic) { described_class.call(user, keep_original: true) }
+
+    it "creates a Relic" do
+      expect {
+        relic
+      }.to change { Archive::Relic.count }.by(1)
+    end
+
+    it "does not remove any or the source records" do
+      user
+      expect {
+        relic
+      }.to change { User.count }.by(0)
     end
   end
 

@@ -34,27 +34,27 @@ module Archive
     end
 
     attribute :induction_records do |user|
-      user.participant_profiles.map do |participant_profile|
+      user.participant_profiles.map { |participant_profile|
         InductionRecordSerializer.new(participant_profile.induction_records).serializable_hash[:data]
-      end.flatten
+      }.flatten
     end
 
     attribute :participant_declarations do |user|
-      user.participant_profiles.map do |participant_profile|
+      user.participant_profiles.map { |participant_profile|
         ParticipantDeclarationSerializer.new(participant_profile.participant_declarations).serializable_hash[:data]
-      end.flatten
+      }.flatten
     end
 
     attribute :participant_profile_states do |user|
-      user.participant_profiles.map do |participant_profile|
+      user.participant_profiles.map { |participant_profile|
         ParticipantProfileStateSerializer.new(participant_profile.participant_profile_states).serializable_hash[:data]
-      end.flatten
+      }.flatten
     end
 
     attribute :participant_profile_schedules do |user|
-      user.participant_profiles.map do |participant_profile|
+      user.participant_profiles.map { |participant_profile|
         ParticipantProfileScheduleSerializer.new(participant_profile.participant_profile_schedules).serializable_hash[:data]
-      end.flatten
+      }.flatten
     end
 
     attribute :npq_applications do |user|
