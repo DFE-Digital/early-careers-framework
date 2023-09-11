@@ -100,7 +100,7 @@ module Importers
         per_participant: band_data[:per_participant],
       }
 
-      attributes.merge!(output_payment_percantage: 100, service_fee_percentage: 0) if band_d
+      attributes.merge!(output_payment_percentage: 100, service_fee_percentage: 0) if band_d
       ParticipantBand.create!(**attributes)
     end
 
