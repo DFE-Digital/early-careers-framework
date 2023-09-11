@@ -66,6 +66,6 @@ private
 
   def and_i_see_the_school_redacted_email(school)
     redacted_email = EmailDecorator.new(school.primary_contact_email).to_s
-    expect(page).to have_text("We'll email an access link to #{redacted_email}")
+    expect(page).to have_text("We’ll email an access link to #{redacted_email}")
   end
 end

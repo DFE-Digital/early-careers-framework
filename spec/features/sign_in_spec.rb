@@ -24,6 +24,6 @@ private
   end
 
   def then_i_see_the_confirmation_message
-    expect(page).to have_text("We've sent an email to user@myschool.org")
+    expect(page).to have_text("We’ve sent an email to user@myschool.org")
   end
 end
