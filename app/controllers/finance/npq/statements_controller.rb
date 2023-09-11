@@ -14,6 +14,20 @@ module Finance
         ).order(course_identifier: :asc)
 
         @calculator = StatementCalculator.new(statement: @statement)
+
+        respond_to do |format|
+          format.html
+          format.pdf do
+            html_string = render_to_string(action: :show, formats: :html)
+            pdf = Grover.new(
+              html_string,
+              display_url: root_url,
+              format: 'A4',
+              emulate_media: 'screen',
+            ).to_pdf
+            send_data(pdf, disposition: 'attachment', filename: "statement_#{params[:id]}.pdf", type: 'application/pdf')
+          end
+        end
       end
 
     private

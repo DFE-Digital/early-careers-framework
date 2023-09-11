@@ -123,6 +123,8 @@
       <div class="duvet">
         <p class="govuk-body-s">
           <%= govuk_link_to "Download declarations (CSV)", finance_npq_statement_assurance_report_path(@statement, format: :csv) %>
+          &nbsp;&nbsp;|&nbsp;&nbsp;
+          <%= govuk_link_to "Download PDF", finance_npq_lead_provider_statement_path(@npq_lead_provider, @statement, format: :pdf), target: "_blank" %>
         </p>
       </div> <!-- /.duvet -->
     </div>

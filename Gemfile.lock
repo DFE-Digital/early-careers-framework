@@ -146,6 +146,9 @@ GEM
     coderay (1.1.3)
     coercible (1.0.0)
       descendants_tracker (~> 0.0.1)
+    combine_pdf (1.0.23)
+      matrix
+      ruby-rc4 (>= 0.1.5)
     commonmarker (0.23.10)
     concurrent-ruby (1.2.2)
     connection_pool (2.4.1)
@@ -253,6 +256,9 @@ GEM
       activemodel (>= 6.1)
       activesupport (>= 6.1)
       html-attributes-utils (~> 1)
+    grover (1.1.5)
+      combine_pdf (~> 1.0)
+      nokogiri (~> 1.0)
     gyoku (1.4.0)
       builder (>= 2.1.2)
       rexml (~> 3.0)
@@ -491,6 +497,7 @@ GEM
       rubocop-capybara (~> 2.17)
       rubocop-factory_bot (~> 2.22)
     ruby-progressbar (1.13.0)
+    ruby-rc4 (0.1.5)
     ruby2_keywords (0.0.5)
     rubyzip (2.3.2)
     sass (3.7.4)
@@ -660,6 +667,7 @@ DEPENDENCIES
   googleauth
   govuk-components (~> 4.1.0)
   govuk_design_system_formbuilder (~> 4.1.1)
+  grover
   httpclient (~> 2.8, >= 2.8.3)
   jsbundling-rails
   json-diff (~> 0.4.1)

@@ -113,6 +113,8 @@
       <div class="duvet">
         <p class="govuk-body-s">
           <%= govuk_link_to "Download declarations (CSV)", finance_ecf_statement_assurance_report_path(@statement, format: :csv) %>
+          &nbsp;&nbsp;|&nbsp;&nbsp;
+          <%= govuk_link_to "Download PDF", finance_ecf_payment_breakdown_statement_path(@ecf_lead_provider, @statement, format: :pdf), target: "_blank" %>
         </p>
       </div>
     </div>
