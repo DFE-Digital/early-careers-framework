@@ -6,12 +6,11 @@
 
     <h1 class="govuk-heading-xl">Confirm this is your school</h1>
 
-    <h2 class="govuk-heading-m">Personal details</h2>
 
     <%= render partial: 'nominations/school_details', locals: { school: @nomination_request_form.school, title: "Your school" } %>
 
     <p class="govuk-body">
-      We'll email an access link to
+      We’ll email an access link to
       <%= EmailDecorator::new(@nomination_request_form.school.primary_contact_email).partial_email %>
     </p>
 

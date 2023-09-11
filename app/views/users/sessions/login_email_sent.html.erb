@@ -1,13 +1,13 @@
-<% content_for :title, "Check email" %>
+<% content_for :title, "Check your email" %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
 
     <h1 class="govuk-heading-xl">Check your email</h1>
-    <p class="govuk-body">We've sent an email to <strong><%= @login_email %></strong>.</p>
+    <p class="govuk-body">We’ve sent an email to <strong><%= @login_email %></strong>.</p>
 
     <p class="govuk-body">
-      If it does not arrivate within 5 minutes, check your spam or junk folder or
+      If it does not arrive within 5 minutes, check your spam or junk folder or
       <%= govuk_link_to "try again", new_user_session_path %>
     </p>
 
