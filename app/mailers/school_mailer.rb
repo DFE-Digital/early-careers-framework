@@ -63,6 +63,8 @@ class SchoolMailer < ApplicationMailer
 
   def remind_sit_to_add_ects_and_mentors_email
     induction_coordinator = params[:induction_coordinator]
+    school = params[:school]
+    school_name = school.name
     email_address = induction_coordinator.user.email
     name = induction_coordinator.user.full_name
 
@@ -74,6 +76,7 @@ class SchoolMailer < ApplicationMailer
       personalisation: {
         name:,
         email_address:,
+        school_name:,
       },
     ).tag(:remind_sits_to_add_ects_and_mentors).associate_with(induction_coordinator, as: :induction_coordinator_profile)
   end
