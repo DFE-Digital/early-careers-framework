@@ -1,11 +1,12 @@
-<% content_for :title, "What we need from you" %>
+<% @title = "What we need to know about this #{@wizard.ect_participant? ? "ECT" : "mentor"}" %>
+<% content_for :title, @title %>
 
 <% content_for :before_content, govuk_back_link(text: "Back", href: wizard_back_link_path) %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <span class="govuk-caption-xl"><%= @school.name %></span>
-    <h1 class="govuk-heading-xl">Add <%= @wizard.ect_participant? ? "an ECT" : "a mentor" %></h1>
+    <h1 class="govuk-heading-xl"><%= @title %></h1>
 
     <p class="govuk-body">You must tell us their:</p>
     <ul class="govuk-list govuk-list--bullet">
