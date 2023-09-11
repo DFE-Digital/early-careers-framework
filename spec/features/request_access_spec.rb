@@ -37,7 +37,7 @@ private
   alias_method :when_i_click_on_continue, :and_i_click_on_continue
 
   def then_i_am_on_the_send_link_page
-    expect(page).to have_text("Send your school a link to use this service")
+    expect(page).to have_text("Request access to this service")
   end
 
   def when_i_fill_local_authority_name
