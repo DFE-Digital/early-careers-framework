@@ -71,3 +71,10 @@ runs:
       shell: bash
       run: |
         cf conduit ecf-postgres-${{ inputs.environment }} -- pg_dump -E utf8 --clean --compress=1 --if-exists --no-owner --no-privileges --verbose -f backup-${{ inputs.environment }}.sql.gz
+
+    - name: Upload backup
+      uses: actions/upload-artifact@v3
+      with:
+        name: backup-${{ inputs.environment }}
+        path: backup-${{ inputs.environment }}.sql.gz
+        retention-days: 1
