@@ -37,6 +37,7 @@ RSpec.shared_examples "JSON Participant Deferral documentation" do |url, request
       tags tag
       security [bearerAuth: []]
       consumes "application/json"
+      produces "application/json"
 
       parameter name: :id,
                 in: :path,

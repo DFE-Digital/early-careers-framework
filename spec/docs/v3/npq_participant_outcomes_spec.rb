@@ -17,6 +17,7 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
     get "<b>Note, this endpoint includes updated specifications.</b><br/>List all participant NPQ outcomes" do
       operationId :participant_outcomes
       tags "Participants Outcomes"
+      produces "application/json"
       security [bearerAuth: []]
 
       parameter name: :filter,
@@ -63,6 +64,7 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
     get "List NPQ outcomes for single participant" do
       operationId :participant_outcomes
       tags "Participants Outcomes"
+      produces "application/json"
       security [bearerAuth: []]
 
       parameter name: :participant_id,
@@ -71,7 +73,8 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
                 example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
                 description: "The external ID of the participant",
                 schema: {
-                  type: "string",
+                  type: :string,
+                  format: :uuid,
                 }
 
       parameter name: :page,
@@ -105,6 +108,7 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
       tags "Participants Outcomes"
       security [bearerAuth: []]
       consumes "application/json"
+      produces "application/json"
 
       parameter name: :participant_id,
                 description: "The unique ID of the participant",

@@ -136,6 +136,8 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v3/api_
 
       parameter name: :params,
                 in: :body,
+                style: :deepObject,
+                required: true,
                 schema: {
                   "$ref": "#/components/schemas/ParticipantDeclarationRequest",
                 }
@@ -284,7 +286,8 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v3/api_
                 example: "9ed4612b-f8bd-44d9-b296-38ab103fadd2",
                 description: "The ID of the participant declaration ID",
                 schema: {
-                  type: "string",
+                  type: :string,
+                  format: :uuid,
                 }
 
       response "200", "A single participant declaration" do
@@ -388,7 +391,8 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v3/api_
                 example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
                 description: "The ID of the declaration to void",
                 schema: {
-                  type: "string",
+                  type: :string,
+                  format: :uuid,
                 }
 
       response 200, "Successful" do

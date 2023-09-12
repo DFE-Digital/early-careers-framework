@@ -17,6 +17,7 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
     get "<b>Note, this endpoint is new.</b><br/>Retrieve delivery partners" do
       operationId :delivery_patrners_get
       tags "delivery partners"
+      produces "application/json"
       security [bearerAuth: []]
 
       parameter name: :filter,
@@ -76,6 +77,7 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
     get "<b>Note, this endpoint is new.</b><br/>Retrieve a specific delivery partner" do
       operationId :delivery_patrner_get
       tags "delivery partners"
+      produces "application/json"
       security [bearerAuth: []]
 
       parameter name: :id,

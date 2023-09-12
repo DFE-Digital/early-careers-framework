@@ -35,6 +35,7 @@ RSpec.shared_examples "JSON Participant resume documentation" do |url, request_s
       tags tag
       security [bearerAuth: []]
       consumes "application/json"
+      produces "application/json"
 
       parameter name: :id,
                 in: :path,

@@ -20,6 +20,7 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
     get "<b>Note, this endpoint is new.</b><br/>Retrieve multiple unfunded mentors" do
       operationId :participants
       tags "unfunded mentors"
+      produces "application/json"
       security [bearerAuth: []]
 
       parameter name: :filter,
@@ -75,6 +76,7 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
     get "<b>Note, this endpoint is new.</b><br/>Get a single unfunded mentor" do
       operationId :unfunded_mentors
       tags "unfunded mentors"
+      produces "application/json"
       security [bearerAuth: []]
 
       parameter name: :id,
@@ -83,7 +85,8 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
                 example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
                 description: "The ID of the unfunded mentor.",
                 schema: {
-                  type: "string",
+                  type: :string,
+                  format: :uuid,
                 }
 
       response "200", "A single unfunded mentor" do

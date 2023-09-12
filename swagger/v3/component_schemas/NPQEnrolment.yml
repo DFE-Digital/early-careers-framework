@@ -77,11 +77,15 @@ properties:
   withdrawal:
     nullable: true
     type: object
-    $ref: "#/components/schemas/NPQWithdrawal"
+    properties:
+      attributes:
+        $ref: "#/components/schemas/NPQWithdrawal"
   deferral:
     nullable: true
     type: object
-    $ref: "#/components/schemas/NPQDeferral"
+    properties:
+      attributes:
+        $ref: "#/components/schemas/NPQDeferral"
   created_at:
     description: The date and time the NPQ participant was created
     type: string
