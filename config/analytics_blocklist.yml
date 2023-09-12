@@ -1,5 +1,15 @@
 ---
 :shared:
+  :versions:
+  - id
+  - item_type
+  - event
+  - whodunnit
+  - object
+  - object_changes
+  - created_at
+  - item_id
+  - reason
   :sessions:
   - id
   - session_id
@@ -205,14 +215,6 @@
   - delivery_partner_id
   - cohort_id
   - uploaded_urns
-  :participant_profile_states:
-  - id
-  - participant_profile_id
-  - state
-  - reason
-  - created_at
-  - updated_at
-  - cpd_lead_provider_id
   :participant_identities:
   - id
   - user_id
@@ -240,7 +242,7 @@
   - per_participant
   - created_at
   - updated_at
-  - output_payment_percantage
+  - output_payment_percentage
   - service_fee_percentage
   :npq_contracts:
   - id
@@ -305,13 +307,6 @@
   - core_induction_programme_id
   - created_at
   - updated_at
-  :lead_providers:
-  - id
-  - created_at
-  - updated_at
-  - name
-  - cpd_lead_provider_id
-  - vat_chargeable
   :induction_coordinator_profiles_schools:
   - id
   - induction_coordinator_profile_id

@@ -231,6 +231,13 @@
   - updated_at
   - code
   - name
+  :lead_providers:
+  - id
+  - created_at
+  - updated_at
+  - name
+  - cpd_lead_provider_id
+  - vat_chargeable
   :cpd_lead_providers:
   - id
   - name
@@ -297,13 +304,11 @@
   - user_id
   - created_at
   - updated_at
-  :versions:
+  :participant_profile_states:
   - id
-  - item_type
-  - event
-  - whodunnit
-  - object
-  - object_changes
-  - created_at
-  - item_id
+  - participant_profile_id
+  - state
   - reason
+  - created_at
+  - updated_at
+  - cpd_lead_provider_id
