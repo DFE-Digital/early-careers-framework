@@ -47,6 +47,6 @@ class UserMailer < ApplicationMailer
         sign_in: new_user_session_url,
         request_access: resend_email_request_nomination_invite_url,
       },
-    ).tag(:access_info_email).associate_with(recipient)
+    ).tag(:access_info_email)
   end
 end
