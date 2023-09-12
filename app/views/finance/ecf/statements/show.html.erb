@@ -115,10 +115,10 @@
         <div class="app-application__panel__actions">
           <div class="duvet">
             <div class="govuk-grid-column-one-half govuk-!-text-align-left">
-              <% if @statement.mark_as_paid_visible? %>
-                <%= button_to "Authorise for payment", new_finance_statement_payment_authorisation_path(@statement), method: :get, class: "govuk-button govuk-button--primary" %>
+              <% if authorise_for_payment_button_visible?(@statement) %>
+                <%= button_to t("finance.statements.payment_authorisations.button"), new_finance_statement_payment_authorisation_path(@statement), method: :get, class: "govuk-button govuk-button--primary" %>
               <% elsif @statement.marked_as_paid? %>
-                <%= govuk_tag(text: "Authorised for payment at #{@statement.marked_as_paid_at.strftime("%-I:%M%P on %-e %b %Y")}") %>
+                <%= govuk_tag(text: t("finance.statements.payment_authorisations.tag.content", statement_marked_as_paid_at: @statement.marked_as_paid_at.strftime("%-I:%M%P on %-e %b %Y"))) %>
               <% else %>
                 &nbsp;
               <% end %>
@@ -267,5 +267,5 @@
     <%= render Finance::ECF::Contract.new(contract: @calculator.contract) %>
   </div>
 
-  <%= render partial: "errors/calculation_rounding" %>
+  <%= render partial: "finance/statements/calculation_rounding_message" %>
 </div>

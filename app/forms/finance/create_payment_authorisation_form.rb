@@ -14,13 +14,7 @@ module Finance
     def save_form
       return false unless valid?
 
-      if statement.mark_as_paid!
-        Finance::Statements::MarkAsPaidJob.perform_later(statement_id: statement.id)
-      else
-        false
-      end
-
-      true
+      Finance::Statements::MarkAsPaidJob.perform_later(statement_id: statement.id) if statement.mark_as_paid_at!
     end
 
     def back_link

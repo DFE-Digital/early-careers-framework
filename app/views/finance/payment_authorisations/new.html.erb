@@ -20,8 +20,8 @@
       </p>
 
       <br>
-      <%= f.govuk_submit "Authorise for payment" %>
-      <%= govuk_link_to "Cancel", @payment_authorisation_form.back_link, class: "govuk-!-margin-left-6", style: "display: inline-block; margin-top: 8px;" %>
+      <%= f.govuk_submit t("finance.statements.payment_authorisations.button") %>
+      <%= govuk_link_to t("finance.statements.payment_authorisations.cancel"), @payment_authorisation_form.back_link, class: "govuk-!-margin-left-6", style: "display: inline-block; margin-top: 8px;" %>
     <% end %>
   </div>
 </div>
