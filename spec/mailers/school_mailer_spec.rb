@@ -21,9 +21,10 @@ RSpec.describe SchoolMailer, type: :mailer do
 
   describe "#remind_sit_to_assign_mentors_to_ects_email" do
     let(:induction_coordinator) { create(:seed_induction_coordinator_profile, :with_user) }
+    let(:school) { create(:seed_school) }
 
     let(:email) do
-      SchoolMailer.with(induction_coordinator:).remind_sit_to_assign_mentors_to_ects_email.deliver_now
+      SchoolMailer.with(induction_coordinator:, school:).remind_sit_to_assign_mentors_to_ects_email.deliver_now
     end
 
     it "renders the right headers" do
