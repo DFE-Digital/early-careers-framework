@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_05_155638) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_11_115906) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "fuzzystrmatch"
@@ -632,7 +632,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_05_155638) do
     t.decimal "per_participant"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "output_payment_percantage", default: 60
+    t.integer "output_payment_percentage", default: 60
     t.integer "service_fee_percentage", default: 40
     t.index ["call_off_contract_id"], name: "index_participant_bands_on_call_off_contract_id"
   end

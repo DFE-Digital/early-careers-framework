@@ -161,7 +161,7 @@ RSpec.describe Importers::CreateCallOffContract do
             min: 0,
             max: 90,
             per_participant: 895,
-            output_payment_percantage: 60,
+            output_payment_percentage: 60,
             service_fee_percentage: 40,
           )
         end
@@ -172,7 +172,7 @@ RSpec.describe Importers::CreateCallOffContract do
             min: 91,
             max: 199,
             per_participant: 700,
-            output_payment_percantage: 60,
+            output_payment_percentage: 60,
             service_fee_percentage: 40,
           )
         end
@@ -183,7 +183,7 @@ RSpec.describe Importers::CreateCallOffContract do
             min: 200,
             max: 299,
             per_participant: 600,
-            output_payment_percantage: 60,
+            output_payment_percentage: 60,
             service_fee_percentage: 40,
           )
         end
@@ -194,7 +194,7 @@ RSpec.describe Importers::CreateCallOffContract do
             min: 300,
             max: 400,
             per_participant: 500,
-            output_payment_percantage: 100,
+            output_payment_percentage: 100,
             service_fee_percentage: 0,
           )
         end
