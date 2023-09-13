@@ -7,6 +7,10 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
+## 13 September 2023
+We’ve added the new NPQ in leading primary mathematics to the sandbox environment.The new course’s identifier is `npq-leading-primary-mathematics`. Providers can access this within the sandbox environment for testing. Functionality will be the same as the other existing NPQ courses.
+
+Providers will be notified ahead of this new NPQ becoming available in the production environment.
 ## 6 September 2023
 
 ### Planned API downtime on 14 September
