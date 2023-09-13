@@ -213,7 +213,7 @@ RSpec.describe "Transferring ECT is with a different lead provider", type: :feat
   end
 
   def then_i_should_be_on_what_we_need_page
-    expect(page).to have_selector("h1", text: "What we need from you")
+    expect(page).to have_selector("h1", text: "What we need to know about this ECT")
   end
 
   def then_i_should_be_on_full_name_page

@@ -106,7 +106,7 @@ RSpec.describe "Transferring participants", type: :feature, js: true, rutabaga: 
   end
 
   def then_i_should_be_on_what_we_need_page
-    expect(page).to have_selector("h1", text: "What we need from you")
+    expect(page).to have_selector("h1", text: "What we need to know about this ECT")
   end
 
   def then_i_am_taken_to_add_ect_name_page
