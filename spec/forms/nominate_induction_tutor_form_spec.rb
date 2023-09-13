@@ -3,6 +3,7 @@
 require "rails_helper"
 
 RSpec.describe NominateInductionTutorForm, type: :model do
+  let(:nomination_email) { create(:nomination_email) }
   let(:school) { nomination_email.school }
   let(:full_name) { Faker::Name.name }
   let(:email) { Faker::Internet.email }
