@@ -73,3 +73,7 @@ variable "redis_queue_family" {
 variable "redis_queue_sku_name" {
   default = "Standard"
 }
+
+variable "domain" {
+  type = string
+}

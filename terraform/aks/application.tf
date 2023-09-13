@@ -25,6 +25,10 @@ module "application_configuration" {
     GIAS_API_SCHEMA     = "https://ea-edubase-api-prod.azurewebsites.net/edubase/schema/service.wsdl"
     GIAS_EXTRACT_ID     = 13904
     GIAS_API_USER       = "ecftech"
+    DOMAIN              = var.domain
+    GOVUK_WEBSITE_ROOT  = var.domain
+    GOVUK_APP_DOMAIN    = var.domain
+    SEND_EMAILS_TO      = "cpd-test@digital.education.gov.uk"
   }
 
   secret_key_vault_short = "app"
