@@ -16,7 +16,7 @@ class CreateInductionTutor < BaseService
       user = Identity.find_user_by(email:)
 
       if user&.induction_coordinator?
-        raise if user.full_name != full_name
+        raise "Provided email used by existing SIT with a different full name" if user.full_name != full_name
 
         user.induction_coordinator_profile.schools << school
       else
