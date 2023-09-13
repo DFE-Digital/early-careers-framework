@@ -881,6 +881,10 @@ module ManageTrainingSteps
     expect(page).to have_text("What we need to know about this ECT")
   end
 
+  def then_i_am_taken_to_the_what_we_need_from_mentor_page
+    expect(page).to have_text("What we need to know about this mentor")
+  end
+
   def then_i_am_taken_to_manage_mentors_and_ects_page
     expect(page).to have_selector("h1", text: "Manage mentors and ECTs")
     expect(page).to have_text("Add ECT or mentor")
