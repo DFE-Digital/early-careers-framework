@@ -136,6 +136,14 @@ RSpec.describe FinanceHelper, type: :helper do
         end
       end
 
+      context "marked as to be paid statement" do
+        let(:statement) { create(:ecf_payable_statement, marked_as_paid_at: Time.zone.now) }
+
+        it "returns false" do
+          expect(authorise_for_payment_button_visible?(statement)).to eq(false)
+        end
+      end
+
       context "deadline date in the future statement" do
         let(:statement) { create(:ecf_payable_statement, deadline_date: Date.tomorrow) }
 

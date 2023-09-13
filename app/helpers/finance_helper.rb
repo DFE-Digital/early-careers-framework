@@ -52,7 +52,7 @@ module FinanceHelper
   end
 
   def authorise_for_payment_button_visible?(statement)
-    statement.output_fee && statement.payable? && !statement.marked_as_paid? && statement.deadline_date < Date.current && statement.participant_declarations.any?
+    statement.output_fee && statement.payable? && !statement.marked_as_paid_at? && statement.deadline_date < Date.current && statement.participant_declarations.any?
   end
 
   def authorising_for_payment_banner_visible?(statement)
