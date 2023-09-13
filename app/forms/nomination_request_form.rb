@@ -7,7 +7,7 @@ class NominationRequestForm
   attr_accessor :local_authority_id, :school_id
 
   validates :local_authority_id,
-            presence: { message: I18n.t("errors.schools.blank") },
+            presence: { message: I18n.t("errors.local_authority.blank") },
             on: %i[local_authority save]
   validates :school_id,
             presence: { message: I18n.t("errors.schools.blank") },

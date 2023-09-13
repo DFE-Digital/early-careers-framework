@@ -10,13 +10,13 @@ RSpec.describe NominationRequestForm, type: :model do
   describe "validations" do
     it {
       is_expected.to validate_presence_of(:local_authority_id)
-                       .with_message("The details you entered do not match any schools")
+                       .with_message("Enter your school’s local authority")
                        .on(%i[local_authority save])
     }
 
     it {
       is_expected.to validate_presence_of(:school_id)
-                       .with_message("The details you entered do not match any schools")
+                       .with_message("Enter your school’s name")
                        .on(%i[school save])
     }
   end
