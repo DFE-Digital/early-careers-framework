@@ -82,26 +82,7 @@ private
     return false if full_name.in?(TITLES)
     return false if dqt_name.blank?
 
-    full_name_without_prefix = strip_title_prefix(full_name).downcase
-
-    if check_first_name_only?
-      extract_first_name(full_name_without_prefix) == extract_first_name(dqt_name).downcase
-    else
-      full_name_without_prefix == strip_title_prefix(dqt_name).downcase
-    end
-  end
-
-  def strip_title_prefix(str)
-    parts = str.split(" ")
-    if parts.first.downcase =~ /^#{Regexp.union(TITLES)}/
-      parts.drop(1).join(" ")
-    else
-      str
-    end
-  end
-
-  def extract_first_name(name)
-    strip_title_prefix(name).split(" ").first
+    NameMatcher.new(full_name, dqt_name, check_first_name_only:).matches?
   end
 
   def check_failure(reason)
