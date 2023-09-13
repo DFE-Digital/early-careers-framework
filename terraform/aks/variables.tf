@@ -78,3 +78,8 @@ variable "domain" {
   type = string
   default = ""
 }
+
+variable "external_hostname" {
+  type    = string
+  default = null
+}
