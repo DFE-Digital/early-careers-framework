@@ -3,5 +3,10 @@ terraform {
 
   backend "azurerm" {}
 
-  required_providers {}
+  required_providers {
+    statuscake = {
+      source  = "StatusCakeDev/statuscake"
+      version = ">= 2.0.5"
+    }
+  }
 }
