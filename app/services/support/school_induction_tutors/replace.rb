@@ -24,31 +24,35 @@ module Support
 
         log_updated_information
       rescue StandardError => e
-        log_error(e)
+        logger.error(e)
       end
 
     private
 
       def log_existing_information
-        Rails.logger.info("Replacing SIT for #{school.name} (ID: #{school.id})")
+        logger.info("Replacing SIT for #{school.name} (ID: #{school.id})")
 
         if school.induction_tutor.present?
-          Rails.logger.info("Existing SIT: #{school.induction_tutor.full_name} #{school.induction_tutor.email} (ID: #{school.induction_tutor.id})")
+          logger.info("Existing SIT: #{school.induction_tutor.full_name} - #{school.induction_tutor.email} (ID: #{school.induction_tutor.id})")
         else
-          Rails.logger.info("No existing SIT")
+          logger.info("No existing SIT")
         end
       end
 
       def log_updated_information
         school.reload
 
-        Rails.logger.info("Replaced SIT for #{school.name} (ID: #{school.id})")
-        Rails.logger.info("New SIT: #{school.induction_tutor.full_name} #{school.induction_tutor.email} (ID: #{school.induction_tutor.id})")
+        logger.info("New SIT: #{school.induction_tutor.full_name} - #{school.induction_tutor.email} (ID: #{school.induction_tutor.id})")
+        logger.info("Replaced SIT for #{school.name} (ID: #{school.id})")
       end
 
       def log_error(error)
-        Rails.logger.error("Failed to update SIT for #{school.name} (ID: #{school.id})")
-        Rails.logger.error(error.message)
+        logger.error("Failed to update SIT for #{school.name} (ID: #{school.id})")
+        logger.error(error.message)
+      end
+
+      def logger
+        @logger = Logger.new($stdout)
       end
     end
   end
