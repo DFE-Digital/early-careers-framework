@@ -2,6 +2,7 @@
 
 module InteractionHelper
   include Capybara::DSL
+  include GovukRSpecHelpers
 
   alias_method :when_i_click, :click_on
   alias_method :and_i_click, :click_on
