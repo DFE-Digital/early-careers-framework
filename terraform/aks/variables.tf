@@ -86,3 +86,21 @@ variable "external_hostname" {
 
 variable "statuscake_api_token" {
 }
+
+variable "webapp_replicas" {
+  default = 1
+}
+
+variable "worker_replicas" {
+  default = 1
+}
+
+variable "webapp_memory_max" {
+  type    = string
+  default = "1Gi"
+}
+
+variable "worker_memory_max" {
+  type    = string
+  default = "1Gi"
+}
