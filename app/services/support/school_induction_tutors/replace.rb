@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 module Support
   module SchoolInductionTutors
     class Replace
       class << self
         def call(school_id:, email:, full_name:)
-          new(school_id: school_id, email: email, full_name: full_name).call
+          new(school_id:, email:, full_name:).call
         end
       end
 
@@ -18,14 +20,14 @@ module Support
       def call
         log_existing_information
 
-        CreateInductionTutor.call(school: school, email: email, full_name: full_name)
+        CreateInductionTutor.call(school:, email:, full_name:)
 
         log_updated_information
-      rescue => e
+      rescue StandardError => e
         log_error(e)
       end
 
-      private
+    private
 
       def log_existing_information
         Rails.logger.info("Replacing SIT for #{school.name} (ID: #{school.id})")

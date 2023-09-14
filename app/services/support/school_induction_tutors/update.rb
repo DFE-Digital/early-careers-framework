@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 module Support
   module SchoolInductionTutors
     class Update
       class << self
         def call(school_id:, email:, full_name:)
-          new(school_id: school_id, email: email, full_name: full_name).call
+          new(school_id:, email:, full_name:).call
         end
       end
 
@@ -19,23 +21,23 @@ module Support
         if school.induction_tutor.present?
           log_existing_information
 
-          UpdateInductionTutor.call(school: school, email: email, full_name: full_name)
+          UpdateInductionTutor.call(school:, email:, full_name:)
 
           log_updated_information
         else
           send_update_to_replacement_service
         end
-      rescue => e
+      rescue StandardError => e
         log_error(e)
       end
 
-      private
+    private
 
       def send_update_to_replacement_service
         Rails.logger.info("Attempted to update existing SIT for #{school.name} (ID: #{school.id})")
         Rails.logger.info("No SIT found, redirecting update to Support::SchoolInductionTutors::Replace")
 
-        Support::SchoolInductionTutors::Replace.new(school_id: school.id, full_name: full_name, email: email).call
+        Support::SchoolInductionTutors::Replace.new(school_id: school.id, full_name:, email:).call
       end
 
       def log_existing_information

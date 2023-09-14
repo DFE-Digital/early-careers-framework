@@ -10,7 +10,7 @@ namespace :support do
       full_name = args.full_name
       email = args.email
 
-      Support::SchoolInductionTutors::Replace.new(school_id: school_id, full_name: full_name, email: email).call
+      Support::SchoolInductionTutors::Replace.new(school_id:, full_name:, email:).call
     end
 
     desc "Update the Name and Email for a school's existing SIT"
@@ -19,7 +19,7 @@ namespace :support do
       full_name = args.full_name
       email = args.email
 
-      Support::SchoolInductionTutors::Update.new(school_id: school_id, full_name: full_name, email: email).call
+      Support::SchoolInductionTutors::Update.new(school_id:, full_name:, email:).call
     end
   end
 end
