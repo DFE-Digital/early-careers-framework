@@ -312,10 +312,9 @@ RSpec.describe RecordDeclaration do
     context "when the participant is an ECT" do
       let(:participant_type) { :ect }
       let(:course_identifier) { "ecf-induction" }
-      let(:delivery_partner) { participant_profile.induction_records[0].induction_programme.partnership.delivery_partner }
 
       describe "attributes inferred from induction records" do
-        let(:latest_induction_record) { nil }
+        let(:relevant_induction_record) { nil }
         subject(:created_declaration) do
           service.call
           ParticipantDeclaration.last
@@ -327,16 +326,23 @@ RSpec.describe RecordDeclaration do
             participant_profile:,
             lead_provider: cpd_lead_provider.lead_provider,
             date_range: ..declaration_date,
-          ) { latest_induction_record }
+          ) { relevant_induction_record }
         end
 
-        it { is_expected.to have_attributes(delivery_partner:, mentor_user_id: nil) }
+        it { is_expected.to have_attributes(delivery_partner: nil, mentor_user_id: nil) }
 
-        context "when the latest induction record has a mentor_profile" do
+        context "when the relevant induction record has a delivery_partner" do
+          let(:relevant_induction_record) { participant_profile.induction_records.latest }
+          let(:delivery_partner) { relevant_induction_record.induction_programme.partnership.delivery_partner }
+
+          it { is_expected.to have_attributes(delivery_partner:) }
+        end
+
+        context "when the relevant induction record has a mentor_profile" do
           let(:mentor_user) { create(:user, full_name: "Mentor User 1") }
           let(:mentor_profile) { create(:mentor_participant_profile, user: mentor_user) }
           let(:opts) { { mentor_profile: } }
-          let(:latest_induction_record) { participant_profile.induction_records.latest }
+          let(:relevant_induction_record) { participant_profile.induction_records.latest }
 
           it { is_expected.to have_attributes(mentor_user_id: mentor_user.id) }
         end
