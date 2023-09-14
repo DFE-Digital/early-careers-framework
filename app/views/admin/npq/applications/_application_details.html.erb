@@ -22,7 +22,7 @@
     end
 
     sl.with_row do |row|
-      row.with_key(text: 'Proflie ID')
+      row.with_key(text: 'Profile ID')
       if application.profile.present?
         row.with_value(text: application.profile_id)
       else
