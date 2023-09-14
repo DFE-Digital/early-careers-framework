@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe PartnershipCsvUpload, type: :model do
-  let!(:current_cohort) { Cohort.current || create(:cohort, :current) }
+  let!(:cohort) { Cohort.current || create(:cohort, :current) }
   let(:valid_school) { create(:school) }
   let(:welsh_school) { create(:school, administrative_district_code: "W123", school_type_code: 30) }
   let(:closed_school) { create(:school, school_status_code: 2) }
@@ -13,42 +13,16 @@ RSpec.describe PartnershipCsvUpload, type: :model do
     it { is_expected.to belong_to(:delivery_partner).optional }
   end
 
-  describe "relations" do
-    it { is_expected.to have_one(:csv_attachment) }
-  end
-
-  describe "csv_validation" do
-    let(:csv_upload) { build(:partnership_csv_upload, :with_csv) }
-    let(:text_upload) { build(:partnership_csv_upload, :with_text) }
-
-    context "when CSV file is too large" do
-      before do
-        allow(csv_upload.csv)
-          .to receive(:byte_size).and_return 3.megabytes
-      end
-
-      it "is invalid" do
-        expect(csv_upload).to be_invalid
-      end
-    end
-
-    context "when file extension is not csv" do
-      it "is invalid" do
-        expect(text_upload).to be_invalid
-      end
-    end
-  end
-
   describe "#invalid schools" do
     it "finds invalid URNs" do
-      given_the_csv_contains_urns([valid_school.urn, 1])
+      @subject = create(:partnership_csv_upload, cohort:, uploaded_urns: [valid_school.urn, 1])
 
       expect(@subject.invalid_schools.length).to eql 1
       expect(@subject.invalid_schools).to contain_exactly({ urn: "1", row_number: 2, school_name: "", message: "URN is not valid" })
     end
 
     it "finds CIP only schools" do
-      given_the_csv_contains_urns([welsh_school.urn])
+      @subject = create(:partnership_csv_upload, cohort:, uploaded_urns: [welsh_school.urn])
 
       expect(@subject.invalid_schools.length).to eql 1
       expect(@subject.invalid_schools).to contain_exactly(
@@ -62,7 +36,7 @@ RSpec.describe PartnershipCsvUpload, type: :model do
     end
 
     it "finds ineligible schools" do
-      given_the_csv_contains_urns([closed_school.urn])
+      @subject = create(:partnership_csv_upload, cohort:, uploaded_urns: [closed_school.urn])
 
       expect(@subject.invalid_schools.length).to eql 1
       expect(@subject.invalid_schools).to contain_exactly(
@@ -77,12 +51,12 @@ RSpec.describe PartnershipCsvUpload, type: :model do
 
     it "finds schools already in a partnership with the lead provider" do
       partnered_school = create(:school)
-      given_the_csv_contains_urns([partnered_school.urn])
+      @subject = create(:partnership_csv_upload, cohort:, uploaded_urns: [partnered_school.urn])
       Partnership.create!(
         school: partnered_school,
         lead_provider: @subject.lead_provider,
         delivery_partner: @subject.delivery_partner,
-        cohort: current_cohort,
+        cohort:,
       )
 
       expect(@subject.invalid_schools.length).to eql 1
@@ -97,11 +71,11 @@ RSpec.describe PartnershipCsvUpload, type: :model do
     end
 
     context "when a school ran FIP in the last cohort but hasn't made a choice for the following year" do
-      let(:school_cohort) { create(:school_cohort, cohort: current_cohort) }
+      let(:school_cohort) { create(:school_cohort, cohort:) }
       let(:next_cohort) { Cohort.next || create(:cohort, :next) }
 
       before do
-        given_the_csv_contains_urns([school_cohort.school.urn], cohort: next_cohort)
+        @subject = create(:partnership_csv_upload, cohort: next_cohort, uploaded_urns: [school_cohort.school.urn])
       end
 
       it "errors when school is partnered in previous year with a different provider" do
@@ -135,9 +109,9 @@ RSpec.describe PartnershipCsvUpload, type: :model do
 
     context "school already recruited by other provider" do
       it "errors when school is with a lead provider" do
-        partnership = create(:partnership, cohort: current_cohort)
+        partnership = create(:partnership, cohort:)
         partnered_school = partnership.school
-        given_the_csv_contains_urns([partnered_school.urn])
+        @subject = create(:partnership_csv_upload, cohort:, uploaded_urns: [partnered_school.urn])
 
         expect(@subject.invalid_schools.length).to eql 1
         expect(@subject.invalid_schools).to contain_exactly(
@@ -155,21 +129,21 @@ RSpec.describe PartnershipCsvUpload, type: :model do
   describe "#urns" do
     it "returns the correct URNs" do
       urns = 5.times.map { Faker::Number.unique.decimal_part(digits: 7).to_s }
-      given_the_csv_contains_urns(urns)
+      @subject = create(:partnership_csv_upload, cohort:, uploaded_urns: urns)
 
       expect(@subject.urns).to eql urns
     end
 
     it "returns unique URNs" do
       urns = [1, 1, 2, 2, 3, 3]
-      given_the_csv_contains_urns(urns)
+      @subject = create(:partnership_csv_upload, cohort:, uploaded_urns: urns)
 
       expect(@subject.urns).to eql %w[1 2 3]
     end
 
     it "removes BOM from the input" do
       urns = %w[1 2 3]
-      given_the_csv_contains_urns(urns, insert_bom: true)
+      @subject = create(:partnership_csv_upload, cohort:, uploaded_urns: urns)
 
       expect(@subject.urns).to eql %w[1 2 3]
     end
@@ -177,83 +151,16 @@ RSpec.describe PartnershipCsvUpload, type: :model do
 
   describe "#valid_schools" do
     it "returns only valid schools" do
-      given_the_csv_contains_urns([valid_school.urn, closed_school.urn])
+      @subject = create(:partnership_csv_upload, cohort:, uploaded_urns: [valid_school.urn, closed_school.urn])
 
       expect(@subject.valid_schools).to contain_exactly(valid_school)
     end
 
     it "deals with leading zeros in URNs" do
       school_with_leading_zero = create(:school, urn: "20001")
-      given_the_csv_contains_urns(%w[020001])
+      @subject = create(:partnership_csv_upload, cohort:, uploaded_urns: %w[020001])
 
       expect(@subject.valid_schools).to contain_exactly(school_with_leading_zero)
     end
-  end
-
-  describe "#sync_uploaded_urns" do
-    it "populates the uploaded_urns field with the CSV contents and maintains duplicates" do
-      urns = %w[1 1 2 2 3]
-      given_the_csv_contains_urns(urns, insert_bom: true)
-
-      expect(@subject.uploaded_urns).to be_blank
-
-      @subject.sync_uploaded_urns
-
-      expect(@subject.uploaded_urns).to eql(urns.map(&:to_s))
-    end
-
-    it "removes empty urns" do
-      urns = ["1", "", "2", " ", "3", "4"]
-      given_the_csv_contains_urns(urns, insert_bom: true)
-
-      expect(@subject.uploaded_urns).to be_blank
-
-      @subject.sync_uploaded_urns
-
-      expect(@subject.uploaded_urns).to eql(%w[1 2 3 4])
-    end
-
-    it "flattens multiple urns on one line" do
-      urns = ["1", "2,3,4", "5", ",,,", "6", "7"]
-      given_the_csv_contains_urns(urns, insert_bom: true)
-
-      expect(@subject.uploaded_urns).to be_blank
-
-      @subject.sync_uploaded_urns
-
-      expect(@subject.uploaded_urns).to eql(%w[1 2 3 4 5 6 7])
-    end
-
-    it "removes leading or trailing whitespace and condenses internal whitespace" do
-      urns = ["1", "2,3 ,4 ", "5", " ,,,", "6", "7"]
-      given_the_csv_contains_urns(urns, insert_bom: true)
-
-      expect(@subject.uploaded_urns).to be_blank
-
-      @subject.sync_uploaded_urns
-
-      expect(@subject.uploaded_urns).to eql(%w[1 2 3 4 5 6 7])
-    end
-  end
-
-private
-
-  def given_the_csv_contains_urns(urns, cohort: current_cohort, insert_bom: false)
-    bom = "\xEF\xBB\xBF"
-
-    file = Tempfile.new
-    file.write(bom) if insert_bom
-    file.write(urns.join("\n"))
-    file.close
-
-    if insert_bom
-      expect(File.read(file).bytes).to start_with(bom.bytes)
-    end
-
-    @subject = build(:partnership_csv_upload, cohort:)
-    @subject.csv.attach(io: File.open(file), filename: "test.csv", content_type: "text/csv")
-    @subject.save!
-  ensure
-    file&.unlink
   end
 end

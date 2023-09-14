@@ -2,14 +2,9 @@
 
 class PartnershipCsvUpload < ApplicationRecord
   has_paper_trail
-  has_one_attached :csv
   belongs_to :lead_provider, optional: true
   belongs_to :delivery_partner, optional: true
   belongs_to :cohort
-
-  validate :csv_validation
-
-  MAX_FILE_SIZE = 2.megabytes
 
   def invalid_schools
     @invalid_schools ||= find_school_errors
@@ -25,38 +20,10 @@ class PartnershipCsvUpload < ApplicationRecord
   end
 
   def urns
-    @urns ||= csv.open { |csv| csv.readlines.map(&:chomp) }
-                 .map { |s| strip_bom(s) }
-                 .uniq
-  end
-
-  # NOTE: this method is intended for short term use while we migrate the urn
-  # lists from ActiveStorage to Postgres arrays
-  def sync_uploaded_urns
-    uploaded_urns = clean_uploaded_lines(strip_bom(csv.download).scrub.lines(chomp: true))
-
-    return if uploaded_urns.blank?
-
-    update!(uploaded_urns:)
-  end
-
-  def clean_uploaded_lines(lines)
-    lines.flat_map { |line| line.split(",").reject(&:blank?).map(&:squish) }
+    uploaded_urns.uniq
   end
 
 private
-
-  def csv_validation
-    return unless csv.attached?
-
-    if csv.filename.extension.downcase != "csv"
-      errors.add(:base, "File must be a CSV")
-    end
-
-    if csv.byte_size > MAX_FILE_SIZE
-      errors.add(:base, "File must be less than 2mb.")
-    end
-  end
 
   def find_school_errors
     errors = []
@@ -88,9 +55,5 @@ private
     return false if previous_year_lead_provider.blank?
 
     school.school_cohorts.find_by(cohort:).blank?
-  end
-
-  def strip_bom(string)
-    string.force_encoding("UTF-8").gsub(/\xEF\xBB\xBF/, "")
   end
 end
