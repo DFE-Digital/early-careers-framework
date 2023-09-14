@@ -23,20 +23,6 @@ class PartnershipCsvUpload < ApplicationRecord
     uploaded_urns.uniq
   end
 
-  # NOTE: this method is intended for short term use while we migrate the urn
-  # lists from ActiveStorage to Postgres arrays
-  def sync_uploaded_urns
-    uploaded_urns = clean_uploaded_lines(strip_bom(csv.download).scrub.lines(chomp: true))
-
-    return if uploaded_urns.blank?
-
-    update!(uploaded_urns:)
-  end
-
-  def clean_uploaded_lines(lines)
-    lines.flat_map { |line| line.split(",").reject(&:blank?).map(&:squish) }
-  end
-
 private
 
   def find_school_errors
@@ -69,9 +55,5 @@ private
     return false if previous_year_lead_provider.blank?
 
     school.school_cohorts.find_by(cohort:).blank?
-  end
-
-  def strip_bom(string)
-    string.force_encoding("UTF-8").gsub(/\xEF\xBB\xBF/, "")
   end
 end

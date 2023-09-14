@@ -75,7 +75,7 @@ RSpec.describe PartnershipCsvUpload, type: :model do
       let(:next_cohort) { Cohort.next || create(:cohort, :next) }
 
       before do
-        @subject = create(:partnership_csv_upload, cohort:, uploaded_urns: [school_cohort.school.urn], cohort: next_cohort)
+        @subject = create(:partnership_csv_upload, cohort: next_cohort, uploaded_urns: [school_cohort.school.urn])
       end
 
       it "errors when school is partnered in previous year with a different provider" do
