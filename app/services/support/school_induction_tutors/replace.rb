@@ -4,15 +4,15 @@ module Support
   module SchoolInductionTutors
     class Replace
       class << self
-        def call(school_id:, email:, full_name:)
-          new(school_id:, email:, full_name:).call
+        def call(school_urn:, email:, full_name:)
+          new(school_urn:, email:, full_name:).call
         end
       end
 
       attr_reader :school, :email, :full_name
 
-      def initialize(school_id:, email:, full_name:)
-        @school = School.find(school_id)
+      def initialize(school_urn:, email:, full_name:)
+        @school = School.find_by!(urn: school_urn)
         @email = email
         @full_name = full_name
       end
@@ -30,7 +30,7 @@ module Support
     private
 
       def log_existing_information
-        logger.info("Replacing SIT for #{school.name} (ID: #{school.id})")
+        logger.info("Replacing SIT for #{school.name} (URN: #{school.urn})")
 
         if school.induction_tutor.present?
           logger.info("Existing SIT: #{school.induction_tutor.full_name} - #{school.induction_tutor.email} (ID: #{school.induction_tutor.id})")
@@ -43,11 +43,11 @@ module Support
         school.reload
 
         logger.info("New SIT: #{school.induction_tutor.full_name} - #{school.induction_tutor.email} (ID: #{school.induction_tutor.id})")
-        logger.info("Replaced SIT for #{school.name} (ID: #{school.id})")
+        logger.info("Replaced SIT for #{school.name} (URN: #{school.urn})")
       end
 
       def log_error(error)
-        logger.error("Failed to update SIT for #{school.name} (ID: #{school.id})")
+        logger.error("Failed to update SIT for #{school.name} (URN: #{school.urn})")
         logger.error(error.message)
       end
 
