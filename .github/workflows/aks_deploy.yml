@@ -87,6 +87,7 @@ jobs:
           azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
           pull-request-number: ${{ github.event.pull_request.number }}
           current-commit-sha: ${{ github.event.pull_request.head.sha }}
+          statuscake-api-token: ${{ secrets.STATUSCAKE_API_TOKEN }}
 
       - name: Post sticky pull request comment
         if: github.event_name == 'pull_request'
@@ -114,6 +115,7 @@ jobs:
           docker-image: ${{ needs.docker.outputs.docker-image }}
           azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
           current-commit-sha: ${{ github.sha }}
+          statuscake-api-token: ${{ secrets.STATUSCAKE_API_TOKEN }}
 
   deploy_sandbox:
     name: Deploy sandbox
@@ -132,6 +134,7 @@ jobs:
           docker-image: ${{ needs.deploy_staging.outputs.docker-image }}
           azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
           current-commit-sha: ${{ github.sha }}
+          statuscake-api-token: ${{ secrets.STATUSCAKE_API_TOKEN }}
 
   deploy_production:
     name: Deploy production
@@ -150,3 +153,4 @@ jobs:
           docker-image: ${{ needs.deploy_staging.outputs.docker-image }}
           azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
           current-commit-sha: ${{ github.sha }}
+          statuscake-api-token: ${{ secrets.STATUSCAKE_API_TOKEN }}

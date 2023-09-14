@@ -166,3 +166,9 @@ install-konduit: ## Install the konduit script, for accessing backend services
 .PHONY: terraform-refresh
 terraform-refresh: terraform-init
 	terraform -chdir=terraform/application refresh -var-file config/$(CONFIG)/variables.tfvars.json
+
+action-group-resources: set-azure-account # make env_aks action-group-resources ACTION_GROUP_EMAIL=notificationemail@domain.com . Must be run before setting enable_monitoring=true for each subscription
+	$(if $(ACTION_GROUP_EMAIL), , $(error Please specify a notification email for the action group))
+	echo ${AZURE_RESOURCE_PREFIX}-${SERVICE_SHORT}-mn-rg
+	az group create -l uksouth -g ${AZURE_RESOURCE_PREFIX}-${SERVICE_SHORT}-mn-rg --tags "Product=Manage training for early career teachers" "Environment=Test" "Service Offering=Teacher services cloud"
+	az monitor action-group create -n ${AZURE_RESOURCE_PREFIX}-cpd-ecf -g ${AZURE_RESOURCE_PREFIX}-${SERVICE_SHORT}-mn-rg --action email ${AZURE_RESOURCE_PREFIX}-${SERVICE_SHORT}-email ${ACTION_GROUP_EMAIL}

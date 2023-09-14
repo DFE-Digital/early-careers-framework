@@ -21,6 +21,9 @@ inputs:
   current-commit-sha:
     description: The commit sha for the current commit
     required: true
+  statuscake-api-token:
+    description: The Statuscake token
+    required: false
 
 outputs:
   url:
@@ -48,6 +51,7 @@ runs:
         cd terraform/aks && echo "url=$(terraform output -raw url)" >> $GITHUB_OUTPUT
       env:
         TF_VAR_azure_sp_credentials_json: ${{ inputs.azure-credentials }}
+        TF_VAR_statuscake_api_token: ${{ inputs.statuscake-api-token }}
         DOCKER_IMAGE: ${{ inputs.docker-image }}
         PULL_REQUEST_NUMBER: ${{ inputs.pull-request-number }}
 
