@@ -80,14 +80,14 @@ private
 
   def start_url
     Rails.application.routes.url_helpers.root_url(
-      host: Rails.application.config.domain,
+      host: Rails.application.config.domain.to_s,
       **UTMService.email(:new_induction_tutor),
     )
   end
 
   def step_by_step_url
     Rails.application.routes.url_helpers.step_by_step_url(
-      host: Rails.application.config.domain,
+      host: Rails.application.config.domain.to_s,
       **UTMService.email(:new_induction_tutor),
     )
   end

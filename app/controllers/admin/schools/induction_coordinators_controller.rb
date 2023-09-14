@@ -17,7 +17,7 @@ module Admin
       if @induction_tutor_form.valid?(%i[full_name email])
         @induction_tutor_form.save!
         set_success_message(content: "New induction tutor added. They will get an email with next steps.", title: "Success")
-        redirect_to admin_school_path(@school)
+        redirect_to admin_school_path(school)
       else
         render :new
       end
@@ -32,7 +32,7 @@ module Admin
 
       if @induction_tutor_form.save
         set_success_message(content: "Induction tutor details updated", title: "Success")
-        redirect_to admin_school_path(@school)
+        redirect_to admin_school_path(school)
       else
         render :edit
       end
@@ -46,10 +46,10 @@ module Admin
 
     def school_induction_tutor_attributes
       {
-        induction_tutor: @school.induction_tutor,
-        email: @school.induction_tutor&.email,
-        full_name: @school.induction_tutor&.full_name,
-      }
+        induction_tutor: school.induction_tutor,
+        email: school.induction_tutor&.email,
+        full_name: school.induction_tutor&.full_name,
+      }.compact
     end
 
     def tutor_form_params
