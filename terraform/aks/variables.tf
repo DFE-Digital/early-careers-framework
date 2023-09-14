@@ -76,4 +76,5 @@ variable "redis_queue_sku_name" {
 
 variable "domain" {
   type = string
+  default = ""
 }
