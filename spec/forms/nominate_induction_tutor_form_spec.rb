@@ -32,7 +32,7 @@ RSpec.describe NominateInductionTutorForm, type: :model do
 
       it "an error is added" do
         expect(form.valid?(:email)).to be_falsey
-        expect(form.errors[:full_name].first).to eq("A user with a different name (#{full_name}) has already been registered with this email address. Please, change the name or email you have entered.")
+        expect(form.errors[:full_name].first).to eq("A user with a different name (#{full_name}) has already been registered with this email address. Change the name or email address you entered.")
       end
     end
 

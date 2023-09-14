@@ -53,7 +53,7 @@ private
 
   def name_matches
     if different_name?
-      errors.add(:full_name, "A user with a different name (#{user.full_name}) has already been registered with this email address. Please, change the name or email you have entered.")
+      errors.add(:full_name, "A user with a different name (#{user.full_name}) has already been registered with this email address. Change the name or email address you entered.")
     end
   end
 

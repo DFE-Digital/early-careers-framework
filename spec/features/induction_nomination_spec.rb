@@ -31,7 +31,7 @@ RSpec.feature "Nominating tutors", :js do
       fill_in "nominate_induction_tutor_form[email]", with: "john-smith@example.com"
       click_on "Continue"
 
-      expect(page).to have_text("A user with a different name (John Smith) has already been registered with this email address. Please, change the name or email you have entered.")
+      expect(page).to have_text("A user with a different name (John Smith) has already been registered with this email address. Change the name or email address you entered.")
 
       and_the_page_should_be_accessible
 
@@ -48,7 +48,7 @@ RSpec.feature "Nominating tutors", :js do
       fill_in "nominate_induction_tutor_form[email]", with: different_user.email
       click_on "Continue"
 
-      expect(page).to have_text("A user with a different name (#{different_user.full_name}) has already been registered with this email address. Please, change the name or email you have entered.")
+      expect(page).to have_text("A user with a different name (#{different_user.full_name}) has already been registered with this email address. Change the name or email address you entered.")
 
       and_the_page_should_be_accessible
 
