@@ -20,6 +20,10 @@ class SchoolMailer < ApplicationMailer
   REMIND_SIT_TO_ASSIGN_MENTORS_TO_ECTS_TEMPLATE = "ae0b1c48-de11-4231-b394-0288bb779987"
   LAUNCH_ASK_GIAS_CONTACT_TO_VALIDATE_SIT_DETAILS_TEMPLATE = "1a8d24eb-cd08-4836-bfc2-3a9cf33de67e"
   SIT_NEEDS_TO_CHASE_PARTNERSHIP = "c640e594-21f6-4de3-be41-ebb74b2c8306"
+  FINANCE_ERRORS_WITH_THE_NQT_PLUS_ONE_GRANT = "cd7cbbfc-f40e-47e6-9491-467d0e99140a"
+  FINANCE_ERRORS_WITH_THE_ECF_YEAR_2_GRANT = "2324145f-b679-4c40-b64a-08b0c05990d5"
+  FINANCE_ERRORS_WITH_NQT_PLUS_ONE_AND_ECF_YEAR_2_SCHOOLS_VERSION = "94bec423-027b-4cf4-a501-9de61dde4905"
+  FINANCE_ERRORS_WITH_NQT_PLUS_ONE_AND_ECF_YEAR_2_LOCAL_AUTHORITY_VERSION = "9953ed6b-4853-4be2-9ac2-692f07906166"
 
   def ask_gias_contact_to_validate_sit_details
     school = params[:school]
@@ -360,5 +364,66 @@ class SchoolMailer < ApplicationMailer
     email
       .tag(:sit_needs_to_chase_partnership)
       .associate_with(induction_coordinator, as: :induction_coordinator)
+  end
+
+  ## Finance amendments mailers - One off mailers
+  def finance_errors_with_the_nqt_plus_one_grant
+    recipient_email = params[:recipient_email]
+    school = params[:school]
+
+    template_mail(
+      FINANCE_ERRORS_WITH_THE_NQT_PLUS_ONE_GRANT,
+      to: recipient_email,
+      rails_mailer: mailer_name,
+      rails_mail_template: action_name,
+      personalisation: {
+        school_name: school.name,
+      },
+    ).tag(:finance_errors_with_the_nqt_plus_one_grant).associate_with(school)
+  end
+
+  def finance_errors_with_the_ecf_year_2_grant
+    recipient_email = params[:recipient_email]
+    school = params[:school]
+
+    template_mail(
+      FINANCE_ERRORS_WITH_THE_ECF_YEAR_2_GRANT,
+      to: recipient_email,
+      rails_mailer: mailer_name,
+      rails_mail_template: action_name,
+      personalisation: {
+        school_name: school.name,
+      },
+    ).tag(:finance_errors_with_the_ecf_year_2_grant).associate_with(school)
+  end
+
+  def finance_errors_with_nqt_plus_one_and_ecf_year_2_schools_version
+    recipient_email = params[:recipient_email]
+    school = params[:school]
+
+    template_mail(
+      FINANCE_ERRORS_WITH_NQT_PLUS_ONE_AND_ECF_YEAR_2_SCHOOLS_VERSION,
+      to: recipient_email,
+      rails_mailer: mailer_name,
+      rails_mail_template: action_name,
+      personalisation: {
+        school_name: school.name,
+      },
+    ).tag(:finance_errors_with_nqt_plus_one_and_ecf_year_2_schools_version).associate_with(school)
+  end
+
+  def finance_errors_with_nqt_plus_one_and_ecf_year_2_local_authority_version
+    local_authority_email = params[:local_authority_email]
+    local_authority_name = params[:local_authority_name]
+
+    template_mail(
+      FINANCE_ERRORS_WITH_NQT_PLUS_ONE_AND_ECF_YEAR_2_LOCAL_AUTHORITY_VERSION,
+      to: local_authority_email,
+      rails_mailer: mailer_name,
+      rails_mail_template: action_name,
+      personalisation: {
+        local_authority_name:,
+      },
+    ).tag(:finance_errors_with_nqt_plus_one_and_ecf_year_2_local_authority_version)
   end
 end

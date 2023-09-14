@@ -286,4 +286,85 @@ RSpec.describe SchoolMailer, type: :mailer do
       expect(SchoolMailer::LAUNCH_ASK_GIAS_CONTACT_TO_REPORT_SCHOOL_TRAINING_DETAILS_TEMPLATE).to eq("f4dfee2a-2cc3-4d32-97f9-8adca41343bf")
     end
   end
+
+  describe "#finance_errors_with_the_nqt_plus_one_grant" do
+    let(:sit_user) { create(:user, :induction_coordinator) }
+
+    let(:finance_errors_with_the_nqt_plus_one_grant) do
+      SchoolMailer.with(
+        recipient_email: sit_user.email,
+        school: sit_user.school,
+      ).finance_errors_with_the_nqt_plus_one_grant.deliver_now
+    end
+
+    it "renders the right headers" do
+      expect(finance_errors_with_the_nqt_plus_one_grant.to).to eq([sit_user.email])
+      expect(finance_errors_with_the_nqt_plus_one_grant.from).to eq(["mail@example.com"])
+    end
+
+    it "uses the correct Notify template" do
+      expect(SchoolMailer::FINANCE_ERRORS_WITH_THE_NQT_PLUS_ONE_GRANT).to eq("cd7cbbfc-f40e-47e6-9491-467d0e99140a")
+    end
+  end
+
+  describe "#finance_errors_with_the_ecf_year_2_grant" do
+    let(:sit_user) { create(:user, :induction_coordinator) }
+
+    let(:finance_errors_with_the_ecf_year_2_grant) do
+      SchoolMailer.with(
+        recipient_email: sit_user.email,
+        school: sit_user.school,
+      ).finance_errors_with_the_ecf_year_2_grant.deliver_now
+    end
+
+    it "renders the right headers" do
+      expect(finance_errors_with_the_ecf_year_2_grant.to).to eq([sit_user.email])
+      expect(finance_errors_with_the_ecf_year_2_grant.from).to eq(["mail@example.com"])
+    end
+
+    it "uses the correct Notify template" do
+      expect(SchoolMailer::FINANCE_ERRORS_WITH_THE_ECF_YEAR_2_GRANT).to eq("2324145f-b679-4c40-b64a-08b0c05990d5")
+    end
+  end
+
+  describe "#finance_errors_with_nqt_plus_one_and_ecf_year_2_schools_version" do
+    let(:sit_user) { create(:user, :induction_coordinator) }
+
+    let(:finance_errors_with_nqt_plus_one_and_ecf_year_2_schools_version) do
+      SchoolMailer.with(
+        recipient_email: sit_user.email,
+        school: sit_user.school,
+      ).finance_errors_with_nqt_plus_one_and_ecf_year_2_schools_version.deliver_now
+    end
+
+    it "renders the right headers" do
+      expect(finance_errors_with_nqt_plus_one_and_ecf_year_2_schools_version.to).to eq([sit_user.email])
+      expect(finance_errors_with_nqt_plus_one_and_ecf_year_2_schools_version.from).to eq(["mail@example.com"])
+    end
+
+    it "uses the correct Notify template" do
+      expect(SchoolMailer::FINANCE_ERRORS_WITH_NQT_PLUS_ONE_AND_ECF_YEAR_2_SCHOOLS_VERSION).to eq("94bec423-027b-4cf4-a501-9de61dde4905")
+    end
+  end
+
+  describe "#finance_errors_with_nqt_plus_one_and_ecf_year_2_local_authority_version" do
+    let(:local_authority_email) { Faker::Internet.email }
+    let(:local_authority_name) { "Test local authority" }
+
+    let(:finance_errors_with_nqt_plus_one_and_ecf_year_2_local_authority_version) do
+      SchoolMailer.with(
+        local_authority_email:,
+        local_authority_name:,
+      ).finance_errors_with_nqt_plus_one_and_ecf_year_2_local_authority_version.deliver_now
+    end
+
+    it "renders the right headers" do
+      expect(finance_errors_with_nqt_plus_one_and_ecf_year_2_local_authority_version.to).to eq([local_authority_email])
+      expect(finance_errors_with_nqt_plus_one_and_ecf_year_2_local_authority_version.from).to eq(["mail@example.com"])
+    end
+
+    it "uses the correct Notify template" do
+      expect(SchoolMailer::FINANCE_ERRORS_WITH_NQT_PLUS_ONE_AND_ECF_YEAR_2_LOCAL_AUTHORITY_VERSION).to eq("9953ed6b-4853-4be2-9ac2-692f07906166")
+    end
+  end
 end
