@@ -422,7 +422,7 @@ class SchoolMailer < ApplicationMailer
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
-        local_authority_name: local_authority_name,
+        local_authority_name:,
       },
     ).tag(:finance_errors_with_nqt_plus_one_and_ecf_year_2_local_authority_version)
   end

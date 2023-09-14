@@ -349,7 +349,7 @@ RSpec.describe SchoolMailer, type: :mailer do
 
   describe "#finance_errors_with_nqt_plus_one_and_ecf_year_2_local_authority_version" do
     let(:local_authority_email) { Faker::Internet.email }
-    let(:local_authority_name) { 'asd' }
+    let(:local_authority_name) { "Test local authority" }
 
     let(:finance_errors_with_nqt_plus_one_and_ecf_year_2_local_authority_version) do
       SchoolMailer.with(
