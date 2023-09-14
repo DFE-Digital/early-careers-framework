@@ -88,4 +88,18 @@ RSpec.describe Finance::Statement do
     it { is_expected.to_not be_ecf }
     it { is_expected.to be_npq }
   end
+
+  context ".payable?" do
+    context "payable statement" do
+      subject { create :ecf_payable_statement }
+
+      it { is_expected.to be_payable }
+    end
+
+    context "non payable statement" do
+      subject { create :ecf_statement }
+
+      it { is_expected.not_to be_payable }
+    end
+  end
 end

@@ -25,10 +25,12 @@ staging: aks test-cluster
 .PHONY: sandbox
 sandbox: production-cluster
 	$(eval include global_config/sandbox_aks.sh)
+	$(eval SPACE=early-careers-framework-sandbox)
 
 .PHONY: production
 production: production-cluster
 	$(eval include global_config/production_aks.sh)
+	$(eval SPACE=early-careers-framework-prod)
 	$(if $(or ${SKIP_CONFIRM}, ${CONFIRM_PRODUCTION}), , $(error Production can only run with CONFIRM_PRODUCTION))
 
 load-domain-config:
@@ -126,10 +128,6 @@ terraform-destroy: terraform-init
 	terraform -chdir=terraform/aks destroy -var-file workspace_variables/${DEPLOY_ENV}.tfvars.json ${AUTO_APPROVE}
 
 enable-maintenance:
-	$(if ${DEPLOY_ENV} == "review_aks", $(eval VARIABLE_FILE_NAME=review), $(eval VARIABLE_FILE_NAME=${DEPLOY_ENV}))
-	$(eval include terraform/workspace-variables/${VARIABLE_FILE_NAME}.tfvars)
-	$(eval SPACE=${paas_space_name})
-
 	cf target -s ${SPACE}
 	cd service_unavailable_page && cf push
 	cf map-route ecf-unavailable london.cloudapps.digital --hostname ${APP_NAME}
@@ -168,3 +166,9 @@ install-konduit: ## Install the konduit script, for accessing backend services
 .PHONY: terraform-refresh
 terraform-refresh: terraform-init
 	terraform -chdir=terraform/application refresh -var-file config/$(CONFIG)/variables.tfvars.json
+
+action-group-resources: set-azure-account # make env_aks action-group-resources ACTION_GROUP_EMAIL=notificationemail@domain.com . Must be run before setting enable_monitoring=true for each subscription
+	$(if $(ACTION_GROUP_EMAIL), , $(error Please specify a notification email for the action group))
+	echo ${AZURE_RESOURCE_PREFIX}-${SERVICE_SHORT}-mn-rg
+	az group create -l uksouth -g ${AZURE_RESOURCE_PREFIX}-${SERVICE_SHORT}-mn-rg --tags "Product=Manage training for early career teachers" "Environment=Test" "Service Offering=Teacher services cloud"
+	az monitor action-group create -n ${AZURE_RESOURCE_PREFIX}-cpd-ecf -g ${AZURE_RESOURCE_PREFIX}-${SERVICE_SHORT}-mn-rg --action email ${AZURE_RESOURCE_PREFIX}-${SERVICE_SHORT}-email ${ACTION_GROUP_EMAIL}

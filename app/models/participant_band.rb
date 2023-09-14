@@ -47,7 +47,7 @@ class ParticipantBand < ApplicationRecord
   end
 
   def output_payment_per_participant
-    (per_participant * output_payment_percantage) / 100
+    (per_participant * output_payment_percentage) / 100
   end
 
   def service_fee_total

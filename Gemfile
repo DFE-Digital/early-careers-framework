@@ -6,7 +6,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby File.read(Pathname.new(__dir__).join(".ruby-version")).strip
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem "rails", "~> 7.0.7"
+gem "rails", "~> 7.0.8"
 
 # User management and rbac
 gem "devise", ">= 4.8.0"
@@ -15,8 +15,8 @@ gem "pretender", ">= 0.4.0"
 gem "pundit"
 
 # Error and performance monitoring
-gem "sentry-rails", "~> 5.5"
-gem "sentry-ruby", "~> 5.7"
+gem "sentry-rails", "~> 5.11"
+gem "sentry-ruby", "~> 5.11"
 gem "sentry-sidekiq"
 
 gem "secure_headers"
@@ -86,9 +86,6 @@ platform :mswin, :mingw, :x64_mingw do
   gem "wdm", "~> 0.1"
 end
 
-# S3 adapter for active storage
-gem "aws-sdk-s3", require: false
-
 gem "activerecord-session_store", "~> 2.1"
 
 gem "active_record_extended"
@@ -146,7 +143,7 @@ group :development, :test do
   gem "erb_lint", ">= 0.1.1", require: false
 end
 
-group :development, :deployed_development, :test, :staging, :sandbox, :review do
+group :development, :test, :staging, :sandbox, :review do
   gem "factory_bot_rails", "~> 6.2.0"
   gem "faker"
   gem "timecop"

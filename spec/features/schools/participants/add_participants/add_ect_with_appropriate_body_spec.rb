@@ -119,7 +119,7 @@ private
   end
 
   def and_i_go_through_the_what_we_need_from_you_page
-    expect(page).to have_selector("h1", text: "What we need from you")
+    expect(page).to have_selector("h1", text: "What we need to know about this ECT")
     click_on "Continue"
   end
 

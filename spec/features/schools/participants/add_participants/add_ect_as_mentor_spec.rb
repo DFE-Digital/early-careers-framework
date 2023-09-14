@@ -25,7 +25,7 @@ RSpec.describe "Add ECT as mentor", js: true do
 
     when_i_select_to_add_a "Mentor"
     when_i_click_on_continue
-    then_i_am_taken_to_the_what_we_need_from_you_page
+    then_i_am_taken_to_the_what_we_need_to_know_about_this_mentor_page
 
     when_i_click_on_continue
     then_i_am_taken_to_add_mentor_full_name_page

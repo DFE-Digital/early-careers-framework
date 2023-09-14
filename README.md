@@ -197,12 +197,10 @@ exactly what and how their test data is configured. These magic values are only 
 
 ## Deployment infrastructure
 
-Aside from review apps (above), we have four deployed environments:
-
-- [dev](https://ecf-dev.london.cloudapps.digital/), which has RAILS_ENV=deployed_development
-- [staging](https://s-manage-training-for-early-career-teachers.education.gov.uk/), which has RAILS_ENV=staging
-- [sandbox](https://ecf-sandbox.london.cloudapps.digital/sandbox), which has RAILS_ENV=sandbox
-- [production](https://manage-training-for-early-career-teachers.education.gov.uk/), which has RAILS_ENV=production
+- review, which has `RAILS_ENV=review`
+- [staging](https://st.manage-training-for-early-career-teachers.education.gov.uk/), which has `RAILS_ENV=staging`, [internal url](https://cpd-ecf-staging-web.test.teacherservices.cloud/)
+- [sandbox](https://sb.manage-training-for-early-career-teachers.education.gov.uk/), which has `RAILS_ENV=sandbox`, [internal url](https://cpd-ecf-sandbox-web.teacherservices.cloud/)
+- [production](https://manage-training-for-early-career-teachers.education.gov.uk/), which has `RAILS_ENV=production`, [internal url](https://cpd-ecf-production-web.teacherservices.cloud/)
 
 These are deployed using terraform. See the documentation for [details on terraform](./documentation/terraform.md) and [debugging in deployed environments](./documentation/debugging_in_govpaas.md).
 

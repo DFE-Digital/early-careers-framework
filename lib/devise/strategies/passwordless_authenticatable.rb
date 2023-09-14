@@ -40,6 +40,7 @@ module Devise
             UserMailer.with(email: email.downcase, full_name: user.full_name, url:, token_expiry: token_expiry.localtime.to_fs(:govuk)).sign_in_email.deliver_later(queue: "priority_mailers")
             raise LoginIncompleteError
           else
+            UserMailer.with(recipient: email.downcase).access_info_email.deliver_later(queue: "priority_mailers")
             raise EmailNotFoundError
           end
         end

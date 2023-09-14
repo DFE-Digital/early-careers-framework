@@ -34,7 +34,6 @@ Style/MixinUsage:
 
 Rails/UnknownEnv:
   Environments:
-    - deployed_development
     - development
     - production
     - review

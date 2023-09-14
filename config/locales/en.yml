@@ -152,7 +152,9 @@ en:
     how_to_continue:
       blank: "Select an answer"
     schools:
-      blank: "The details you entered do not match any schools"
+      blank: "Enter your school’s name"
+    local_authority:
+      blank: "Enter your school’s local authority"
     programme_choice:
       blank: "Select how you want to run your induction"
     cohorts:

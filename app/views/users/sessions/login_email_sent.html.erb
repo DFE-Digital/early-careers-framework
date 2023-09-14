@@ -1,18 +1,17 @@
-<% content_for :title, "Check email" %>
+<% content_for :title, "Check your email" %>
 
 <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
+  <div class="govuk-grid-column-two-thirds">
 
-        <h1 class="govuk-heading-xl">Check your email</h1>
-        <p class="govuk-body">If you have an account, we’ve sent you a link to sign in.</p>
+    <h1 class="govuk-heading-xl">Check your email</h1>
+    <p class="govuk-body">We’ve sent an email to <strong><%= @login_email %></strong>.</p>
 
-        <h2 class="govuk-heading-m">If you do not get an email</h2>
-      	<ol class="govuk-list govuk-list--number">
-            <li>Check your spam or junk folder.</li>
-            <li>Try signing in again, making sure your email address is typed correctly and does not include any spaces.</li>
-		</ol>
-        <p class="govuk-body">If you’re not registered, <%= govuk_link_to "find out how to get an account", check_account_path, class: "govuk-link govuk-link--no-visited-state" %>.</p>
-	    <p class="govuk-body">If you still need help, contact us: <%= render MailToSupportComponent.new %></p>
+    <p class="govuk-body">
+      If it does not arrive within 5 minutes, check your spam or junk folder or
+      <%= govuk_link_to "try again", new_user_session_path %>
+    </p>
 
-    </div>
+    <p class="govuk-body">If you need help, contact us: <%= render MailToSupportComponent.new %></p>
+
+  </div>
 </div>

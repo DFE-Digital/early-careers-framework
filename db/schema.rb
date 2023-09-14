@@ -10,41 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_21_154316) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_13_213845) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "fuzzystrmatch"
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
   enable_extension "uuid-ossp"
-
-  create_table "active_storage_attachments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "name", null: false
-    t.string "record_type", null: false
-    t.uuid "record_id", null: false
-    t.uuid "blob_id", null: false
-    t.datetime "created_at", precision: nil, null: false
-    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
-    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
-  end
-
-  create_table "active_storage_blobs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "key", null: false
-    t.string "filename", null: false
-    t.string "content_type"
-    t.text "metadata"
-    t.string "service_name", null: false
-    t.bigint "byte_size", null: false
-    t.string "checksum", null: false
-    t.datetime "created_at", precision: nil, null: false
-    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
-  end
-
-  create_table "active_storage_variant_records", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "blob_id", null: false
-    t.string "variation_digest", null: false
-    t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
-  end
 
   create_table "additional_school_emails", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "school_id", null: false
@@ -632,7 +604,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_21_154316) do
     t.decimal "per_participant"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "output_payment_percantage", default: 60
+    t.integer "output_payment_percentage", default: 60
     t.integer "service_fee_percentage", default: 40
     t.index ["call_off_contract_id"], name: "index_participant_bands_on_call_off_contract_id"
   end
@@ -1025,6 +997,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_21_154316) do
     t.boolean "output_fee", default: true
     t.string "contract_version", default: "0.0.1"
     t.decimal "reconcile_amount", default: "0.0", null: false
+    t.datetime "marked_as_paid_at"
     t.index ["cohort_id"], name: "index_statements_on_cohort_id"
     t.index ["cpd_lead_provider_id"], name: "index_statements_on_cpd_lead_provider_id"
   end
@@ -1081,8 +1054,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_21_154316) do
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
   end
 
-  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "additional_school_emails", "schools"
   add_foreign_key "admin_profiles", "users"
   add_foreign_key "api_requests", "cpd_lead_providers"

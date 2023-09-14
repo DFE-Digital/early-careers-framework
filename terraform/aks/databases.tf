@@ -7,6 +7,9 @@ module "redis" {
   service_name          = local.service_name
   service_short         = var.service_short
   config_short          = var.config_short
+  azure_capacity        = var.redis_queue_capacity
+  azure_family          = var.redis_queue_family
+  azure_sku_name        = var.redis_queue_sku_name
 
   cluster_configuration_map = module.cluster_data.configuration_map
 

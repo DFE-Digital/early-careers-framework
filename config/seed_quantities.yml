@@ -70,8 +70,5 @@ review:
   npq_applications_edge_cases: 8
   ects_becoming_mentors: 3
 
-deployed_development:
-  <<: *default
-
 staging:
   <<: *default

@@ -888,7 +888,7 @@ module ManageTrainingSteps
   end
 
   def then_i_should_be_on_the_what_we_need_from_you_page
-    expect(page).to have_selector("h1", text: "What we need from you")
+    expect(page).to have_selector("h1", text: "What we need to know about this ECT")
   end
 
   def then_i_am_taken_to_add_ect_name_page
@@ -1197,8 +1197,12 @@ module ManageTrainingSteps
     expect(page).to have_text("Tell us if any new ECTs or mentors will start training at your school in the 2022 to 2023 academic year")
   end
 
-  def then_i_am_taken_to_the_what_we_need_from_you_page
-    expect(page).to have_content("What we need from you")
+  def then_i_am_taken_to_the_what_we_need_to_know_about_this_mentor_page
+    expect(page).to have_content("What we need to know about this mentor")
+  end
+
+  def then_i_am_taken_to_the_what_we_need_to_know_about_this_ect_page
+    expect(page).to have_content("What we need to know about this ECT")
   end
 
   def then_i_am_taken_to_the_appropriate_body_type_page

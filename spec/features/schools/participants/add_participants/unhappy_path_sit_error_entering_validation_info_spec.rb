@@ -20,7 +20,7 @@ RSpec.describe "Add participants", js: true do
 
     when_i_select_to_add_a "ECT"
     when_i_click_on_continue
-    then_i_am_taken_to_the_what_we_need_from_you_page
+    then_i_am_taken_to_the_what_we_need_to_know_about_this_ect_page
 
     when_i_click_on_continue
     then_i_am_taken_to_add_ect_name_page

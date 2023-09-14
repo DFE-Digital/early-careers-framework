@@ -31,7 +31,6 @@ RSpec.describe PhaseBannerHelper, type: :helper do
     context "other environments" do
       {
         "development" => "red",
-        "deployed_development" => "grey",
         "review" => "purple",
         "staging" => "turquoise",
         "sandbox" => "yellow",
