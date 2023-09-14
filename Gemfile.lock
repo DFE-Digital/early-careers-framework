@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/x-govuk/govuk-rspec-helpers.git
-  revision: de855b4bb262fea4dec3d5bb77fb7cb8db035099
+  revision: eca60b5db141a70e5f9cddb653ce91d4e8d5d29b
   specs:
     govuk-rspec-helpers (0.1)
       capybara (>= 3.24)
