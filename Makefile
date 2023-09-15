@@ -15,7 +15,7 @@ review: aks test-cluster ## Specify review AKS environment
 	$(if $(PULL_REQUEST_NUMBER), , $(error Missing environment variable "PULL_REQUEST_NUMBER"))
 	$(eval include global_config/review_aks.sh)
 	$(eval backend_config=-backend-config="key=terraform-$(PULL_REQUEST_NUMBER).tfstate")
-	$(eval export TF_VAR_app_suffix=$(PULL_REQUEST_NUMBER))
+	$(eval export TF_VAR_app_suffix=-$(PULL_REQUEST_NUMBER))
 	$(eval export TF_VAR_uploads_storage_account_name=$(AZURE_RESOURCE_PREFIX)$(SERVICE_SHORT)rv$(PULL_REQUEST_NUMBER)sa)
 
 .PHONY: staging
