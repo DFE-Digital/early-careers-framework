@@ -25,16 +25,6 @@ FactoryBot.define do
       end
     end
 
-    trait :with_unhandled_changes do
-      attribute_changes do
-        {
-          school_status_code: [4, 1],
-          school_status_name: %w[proposed_to_open open],
-          ukprn: %w[12345678 98765421],
-        }
-      end
-    end
-
     trait :handled do
       handled { true }
     end
