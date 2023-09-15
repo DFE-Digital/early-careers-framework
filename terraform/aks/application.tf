@@ -1,5 +1,5 @@
 locals {
-  environment  = "${var.app_environment}-${var.app_suffix}"
+  environment  = "${var.app_environment}${var.app_suffix}"
   service_name = "cpd-ecf"
   domain       = var.app_environment == "review" ? "cpd-ecf-${local.environment}-web.test.teacherservices.cloud" : var.domain
 }
