@@ -20,7 +20,7 @@ module Support
       def call
         log_existing_information
 
-        NominateInductionTutorForm.call(school:, email:, full_name:)
+        NominateInductionTutorForm.new(school:, email:, full_name:).save!
 
         log_updated_information
       rescue StandardError => e

@@ -21,7 +21,7 @@ module Support
         if school.induction_tutor.present?
           log_existing_information
 
-          EditInductionTutorForm.call(induction_tutor: school.induction_tutor, email:, full_name:)
+          EditInductionTutorForm.new(induction_tutor: school.induction_tutor, email:, full_name:).call
 
           log_updated_information
         else
