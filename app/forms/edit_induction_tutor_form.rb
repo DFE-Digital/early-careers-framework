@@ -23,6 +23,8 @@ class EditInductionTutorForm
     valid? && induction_tutor.update!(full_name:, email:)
   end
 
+  alias_method :call, :save
+
 private
 
   def name_matches?
