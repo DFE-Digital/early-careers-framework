@@ -10,6 +10,7 @@ class HealthcheckController < ApplicationController
       environment: Rails.env,
       database: {
         connected: database_connected?,
+        populated: database_populated?,
         migration_version:,
       },
       sidekiq: {
@@ -33,6 +34,15 @@ private
 
   def database_connected?
     ApplicationRecord.connection.select_value("SELECT 1") == 1
+  rescue StandardError
+    false
+  end
+
+  def database_populated?
+    [
+      ApplicationRecord.connection.select_value("select count(*) from schools"),
+      ApplicationRecord.connection.select_value("select count(*) from schedules"),
+    ].all?(&:positive?)
   rescue StandardError
     false
   end
