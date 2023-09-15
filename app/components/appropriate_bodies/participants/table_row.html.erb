@@ -3,33 +3,18 @@
     <%= full_name %>
   </td>
   <td class="govuk-table__cell">
-    <%= email %>
-  </td>
-  <td class="govuk-table__cell">
     <%= teacher_profile&.trn %>
-  </td>
-  <td class="govuk-table__cell">
-    <%= role %>
-  </td>
-  <td class="govuk-table__cell">
-    <%= lead_provider_name %>
-  </td>
-  <td class="govuk-table__cell">
-    <%= delivery_partner_name %>
-  </td>
-  <td class="govuk-table__cell">
-    <%= school&.name %>
   </td>
   <td class="govuk-table__cell">
     <%= school&.urn %>
   </td>
   <td class="govuk-table__cell">
-    <%= cohort&.start_year %>
-  </td>
-  <td class="govuk-table__cell">
-    <%= training_status %>
-  </td>
-  <td class="govuk-table__cell">
     <%= render StatusTags::AppropriateBodyParticipantStatusTag.new(participant_profile:, induction_record:) %>
+  </td>
+  <td class="govuk-table__cell">
+    <%= induction_type %>
+  </td>
+  <td class="govuk-table__cell">
+    <%= induction_tutor %>
   </td>
 </tr>

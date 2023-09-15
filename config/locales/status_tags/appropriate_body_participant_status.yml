@@ -26,169 +26,169 @@ en:
 
       internal_error:
         id: "dfe_checking_eligibility"
-        label: "DfE checking eligibility"
-        description: "We’re checking these people’s details with the Teaching Regulation Agency to make sure they’re eligible for funding. We’ll confirm this soon."
+        label: "No induction registered"
+        description: "Check you’ve registered this ECT’s induction with the Teaching Regulation Agency (TRA)."
 
       checks_not_complete:
         id: "dfe_checking_eligibility"
-        label: "DfE checking eligibility"
-        description: "We’re checking these people’s details with the Teaching Regulation Agency to make sure they’re eligible for funding. We’ll confirm this soon."
+        label: "No induction registered"
+        description: "Check you’ve registered this ECT’s induction with the Teaching Regulation Agency (TRA)."
 
       different_trn:
         id: "dfe_checking_eligibility"
-        label: "DfE checking eligibility"
-        description: "We’re checking these people’s details with the Teaching Regulation Agency to make sure they’re eligible for funding. We’ll confirm this soon."
+        label: "No induction registered"
+        description: "Check you’ve registered this ECT’s induction with the Teaching Regulation Agency (TRA)."
 
       tra_record_not_found:
         id: "dfe_checking_eligibility"
-        label: "DfE checking eligibility"
-        description: "We’re checking these people’s details with the Teaching Regulation Agency to make sure they’re eligible for funding. We’ll confirm this soon."
+        label: "No induction registered"
+        description: "Check you’ve registered this ECT’s induction with the Teaching Regulation Agency (TRA)."
 
       duplicate_profile:
         id: "not_eligible_for_funded_training"
         label: "Not eligible for funded training"
-        description: "We’ve checked these people’s details and found they’re not eligible for this programme."
+        description: "This means the ECT has either completed, failed, or is exempt from serving their induction."
 
       # TRA Record checks
 
       active_flags:
         id: "dfe_checking_eligibility"
-        label: "DfE checking eligibility"
-        description: "We’re checking these people’s details with the Teaching Regulation Agency to make sure they’re eligible for funding. We’ll confirm this soon."
+        label: "No induction registered"
+        description: "Check you’ve registered this ECT’s induction with the Teaching Regulation Agency (TRA)."
 
       not_allowed:
         id: "not_eligible_for_funded_training"
         label: "Not eligible for funded training"
-        description: "We’ve checked these people’s details and found they’re not eligible for this programme."
+        description: "This means the ECT has either completed, failed, or is exempt from serving their induction."
 
       exempt_from_induction:
         id: "not_eligible_for_funded_training"
         label: "Not eligible for funded training"
-        description: "We’ve checked these people’s details and found they’re not eligible for this programme."
+        description: "This means the ECT has either completed, failed, or is exempt from serving their induction."
 
       not_qualified:
         id: "checking_qts"
         label: "Checking QTS"
-        description: "These ECTs do not have qualified teacher status (QTS) yet. They need this to be eligible for funded training. We’ll keep checking their status and notify you if something changes."
+        description: "We’re awaiting confirmation of their qualified teacher status (QTS)."
 
       no_induction_start:
         id: "dfe_checking_eligibility"
-        label: "DfE checking eligibility"
-        description: "We’re checking these people’s details with the Teaching Regulation Agency to make sure they’re eligible for funding. We’ll confirm this soon."
+        label: "No induction registered"
+        description: "Check you’ve registered this ECT’s induction with the Teaching Regulation Agency (TRA)."
 
       # FIP ECTs
 
       registered_for_fip_no_partner:
         id: "training_or_eligible_for_training"
-        label: "Training or eligible for training"
-        description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
+        label: "Induction confirmed"
+        description: "An induction period has been registered with the Teaching Regulation Agency (TRA) for this ECT."
 
       registered_for_fip_training:
         id: "training_or_eligible_for_training"
-        label: "Training or eligible for training"
-        description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
+        label: "Induction confirmed"
+        description: "An induction period has been registered with the Teaching Regulation Agency (TRA) for this ECT."
 
       active_fip_training:
         id: "training_or_eligible_for_training"
-        label: "Training or eligible for training"
-        description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
+        label: "Induction confirmed"
+        description: "An induction period has been registered with the Teaching Regulation Agency (TRA) for this ECT."
 
       # CIP ECTs
 
       registered_for_cip_training:
         id: "training_or_eligible_for_training"
-        label: "Training or eligible for training"
-        description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
+        label: "Induction confirmed"
+        description: "An induction period has been registered with the Teaching Regulation Agency (TRA) for this ECT."
 
       active_cip_training:
         id: "training_or_eligible_for_training"
-        label: "Training or eligible for training"
-        description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
+        label: "Induction confirmed"
+        description: "An induction period has been registered with the Teaching Regulation Agency (TRA) for this ECT."
 
       # DIY ECTs
 
       registered_for_diy_training:
         id: "training_or_eligible_for_training"
-        label: "Training or eligible for training"
-        description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
+        label: "Induction confirmed"
+        description: "An induction period has been registered with the Teaching Regulation Agency (TRA) for this ECT."
 
       active_diy_training:
         id: "training_or_eligible_for_training"
-        label: "Training or eligible for training"
-        description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
+        label: "Induction confirmed"
+        description: "An induction period has been registered with the Teaching Regulation Agency (TRA) for this ECT."
 
       # mentoring
 
       active_mentoring:
         id: "training_or_eligible_for_training"
-        label: "Training or eligible for training"
-        description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
+        label: "Induction confirmed"
+        description: "An induction period has been registered with the Teaching Regulation Agency (TRA) for this ECT."
 
       not_yet_mentoring:
         id: "training_or_eligible_for_training"
-        label: "Training or eligible for training"
-        description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
+        label: "Induction confirmed"
+        description: "An induction period has been registered with the Teaching Regulation Agency (TRA) for this ECT."
 
       active_mentoring_ero:
         id: "training_or_eligible_for_training"
-        label: "Training or eligible for training"
-        description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
+        label: "Induction confirmed"
+        description: "An induction period has been registered with the Teaching Regulation Agency (TRA) for this ECT."
 
       not_yet_mentoring_ero:
         id: "training_or_eligible_for_training"
-        label: "Training or eligible for training"
-        description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
+        label: "Induction confirmed"
+        description: "An induction period has been registered with the Teaching Regulation Agency (TRA) for this ECT."
 
       # changes of circumstance
 
       leaving:
         id: "training_or_eligible_for_training"
-        label: "Training or eligible for training"
-        description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
+        label: "Induction confirmed"
+        description: "An induction period has been registered with the Teaching Regulation Agency (TRA) for this ECT."
 
       joining:
         id: "training_or_eligible_for_training"
-        label: "Training or eligible for training"
-        description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
+        label: "Induction confirmed"
+        description: "An induction period has been registered with the Teaching Regulation Agency (TRA) for this ECT."
 
       deferred_training:
         id: "training_or_eligible_for_training"
-        label: "Training or eligible for training"
-        description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
+        label: "Induction confirmed"
+        description: "An induction period has been registered with the Teaching Regulation Agency (TRA) for this ECT."
 
       withdrawn_training:
         id: "no_longer_being_trained"
         label: "No longer being trained"
-        description: "Your provider reported that they’re not training the people listed below. If this is wrong, contact the relevant provider."
+        description: "The ECT's training provider or school has indicated they're no longer being trained."
 
       left:
         id: "no_longer_being_trained"
         label: "No longer being trained"
-        description: "Your provider reported that they’re not training the people listed below. If this is wrong, contact the relevant provider."
+        description: "The ECT's training provider or school has indicated they're no longer being trained."
 
       withdrawn_programme:
         id: "no_longer_being_trained"
         label: "No longer being trained"
-        description: "You are not responsible for the people listed below. If this is wrong, contact the relevant provider."
+        description: "The ECT's training provider or school has indicated they're no longer being trained."
 
       no_longer_involved:
         id: "no_longer_being_trained"
         label: "No longer being trained"
-        description: "You are not responsible for the people listed below. If this is wrong, contact the relevant provider."
+        description: "The ECT's training provider or school has indicated they're no longer being trained."
 
       not_registered_for_training:
         id: "no_longer_being_trained"
         label: "No longer being trained"
-        description: "You are not responsible for the people listed below. If this is wrong, contact the relevant provider."
+        description: "The ECT's training provider or school has indicated they're no longer being trained."
 
       # completion
 
       previous_induction:
         id: "not_eligible_for_funded_training"
         label: "Not eligible for funded training"
-        description: "We’ve checked these people’s details and found they’re not eligible for this programme."
+        description: "This means the ECT has either completed, failed, or is exempt from serving their induction."
 
       completed_training:
         id: "training_or_eligible_for_training"
-        label: "Training or eligible for training"
-        description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
+        label: "Induction confirmed"
+        description: "An induction period has been registered with the Teaching Regulation Agency (TRA) for this ECT."
