@@ -5,7 +5,7 @@ require "rails_helper"
 RSpec.describe "Admin::Schools::InductionCoordinators", type: :request do
   let(:admin_user) { create(:user, :admin) }
   let(:school) { create(:school) }
-  let(:induction_tutor) { create(:user, :induction_coordinator, full_name: "May Weather", email: "may.weather@school.org", schools: [school]) }
+  let!(:induction_tutor) { create(:user, :induction_coordinator, full_name: "May Weather", email: "may.weather@school.org", schools: [school]) }
 
   before do
     sign_in admin_user
@@ -20,132 +20,39 @@ RSpec.describe "Admin::Schools::InductionCoordinators", type: :request do
   end
 
   describe "POST /admin/schools/:school_id/induction-coordinators" do
-    it "creates the induction tutor and redirects to admin/schools#show" do
-      form_params = {
-        tutor_details: {
-          full_name: "jo",
-          email: "jo@example.com",
-        },
-      }
-      post admin_school_induction_coordinators_path(school), params: form_params
+    context "when the induction tutor can be created/replaced" do
+      it "creates the induction tutor and redirects to admin/schools#show" do
+        form_params = {
+          tutor_details: {
+            full_name: "jo",
+            email: "jo@example.com",
+          },
+        }
+        post admin_school_induction_coordinators_path(school), params: form_params
 
-      created_user = User.order(:created_at).last
-      expect(created_user.full_name).to eq "jo"
-      expect(created_user.email).to eq "jo@example.com"
-      expect(created_user.induction_coordinator?).to be_truthy
-      expect(response).to redirect_to admin_school_path(school)
-      expect(flash[:success][:content]).to eq "New induction tutor added. They will get an email with next steps."
-    end
-
-    context "when an induction tutor already exists with that email address" do
-      let!(:existing_induction_coordinator) { create(:user, :induction_coordinator) }
-
-      it "can't create the induction tutor because the email address is already in use, it rerenders the form" do
-        expect {
-          post admin_school_induction_coordinators_path(school), params: {
-            tutor_details: {
-              full_name: existing_induction_coordinator.full_name,
-              email: existing_induction_coordinator.email,
-            },
-          }
-        }.not_to change { User.count }
-
-        expect(existing_induction_coordinator.schools.count).to eql(1)
-        expect(response.body).to include("The email address #{existing_induction_coordinator.email} is already used")
-        expect(response.request.path).to eql(admin_school_induction_coordinators_path(school))
-      end
-
-      it "renders name_different when the name is different" do
-        expect {
-          post admin_school_induction_coordinators_path(school), params: {
-            tutor_details: {
-              full_name: "Different Name",
-              email: existing_induction_coordinator.email,
-            },
-          }
-        }.not_to change { User.count }
-
-        expect(existing_induction_coordinator.schools.count).to eql 1
-        expect(existing_induction_coordinator.schools).not_to include school
+        created_user = User.order(:created_at).last
+        expect(created_user.full_name).to eq "jo"
+        expect(created_user.email).to eq "jo@example.com"
+        expect(created_user.induction_coordinator?).to be_truthy
+        expect(response).to redirect_to admin_school_path(school)
+        expect(flash[:success][:content]).to eq "New induction tutor added. They will get an email with next steps."
       end
     end
 
-    context "when an ECT user already exists with that email address" do
-      let!(:existing_user) { create(:ect_participant_profile).user }
-
-      it "render to email_used" do
+    context "when the induction tutor cannot be created/replaced" do
+      it "re-renders the form" do
         expect {
           post admin_school_induction_coordinators_path(school), params: {
             tutor_details: {
-              full_name: existing_user.full_name,
-              email: existing_user.email,
-            },
-          }
-        }.not_to change { User.count }
-      end
-    end
-
-    context "when a mentor user already exists with that email address" do
-      let!(:existing_user) { create(:mentor_participant_profile).user }
-
-      it "can't create the mentor because the email address is already in use, it rerenders the form" do
-        expect {
-          post admin_school_induction_coordinators_path(school), params: {
-            tutor_details: {
-              full_name: existing_user.full_name,
-              email: existing_user.email,
+              full_name: induction_tutor.full_name,
+              email: induction_tutor.email,
             },
           }
         }.not_to change { User.count }
 
-        expect(existing_user.induction_coordinator_profile).to be_nil
-        expect(response.body).to include("The email address #{existing_user.email} is already in use")
-      end
-
-      it "does not change the user's name when a different name is used" do
-        expect {
-          post admin_school_induction_coordinators_path(school), params: {
-            tutor_details: {
-              full_name: "Different Name",
-              email: existing_user.email,
-            },
-          }
-        }.to not_change { User.count }
-               .and not_change { existing_user.full_name }
-
-        expect(response.body).to include("The email address #{existing_user.email} is already in use")
-      end
-    end
-
-    context "when a NPQ registrant already exists with that email address" do
-      let(:npq_profile) { create(:npq_participant_profile) }
-      let!(:existing_user) { npq_profile.user }
-
-      it "adds an induction tutor profile to the existing user" do
-        expect {
-          post admin_school_induction_coordinators_path(school), params: {
-            tutor_details: {
-              full_name: existing_user.full_name,
-              email: existing_user.email,
-            },
-          }
-        }.not_to change { User.count }
-
-        expect(response.body).to include("The email address #{existing_user.email} is already in use")
-      end
-
-      it "does not change the user's name when a different name is used" do
-        expect {
-          post admin_school_induction_coordinators_path(school), params: {
-            tutor_details: {
-              full_name: "Different Name",
-              email: existing_user.email,
-            },
-          }
-        }.to not_change { User.count }
-               .and not_change { existing_user.full_name }
-
-        expect(response.body).to include("The email address #{existing_user.email} is already in use")
+        expect(induction_tutor.schools.count).to eql(1)
+        expect(response.body).to include("The user with email #{induction_tutor.email} is already an induction coordinator")
+        expect(response).to render_template("admin/schools/induction_coordinators/new")
       end
     end
   end
@@ -159,7 +66,7 @@ RSpec.describe "Admin::Schools::InductionCoordinators", type: :request do
       get "/admin/schools/#{school.id}/induction-coordinators/#{induction_tutor.id}/edit"
 
       expect(response).to render_template("admin/schools/induction_coordinators/edit")
-      expect(assigns(:induction_tutor_form).user_id).to eq induction_tutor.id
+      expect(assigns(:induction_tutor_form).induction_tutor).to eq induction_tutor
       expect(assigns(:induction_tutor_form).email).to eq induction_tutor.email
       expect(assigns(:induction_tutor_form).full_name).to eq induction_tutor.full_name
     end
@@ -169,8 +76,8 @@ RSpec.describe "Admin::Schools::InductionCoordinators", type: :request do
     it "updates the induction tutor and redirects to admin/schools#show" do
       form_params = {
         tutor_details: {
-          full_name: "Arthur Chigley",
-          email: "arthur.chigley@example.com",
+          full_name: "May Chigley",
+          email: "may.chigley@example.com",
         },
       }
       patch admin_school_induction_coordinator_path(school, induction_tutor.id), params: form_params
@@ -178,8 +85,8 @@ RSpec.describe "Admin::Schools::InductionCoordinators", type: :request do
       expect(response).to redirect_to admin_school_path(school)
       expect(flash[:success][:content]).to eq "Induction tutor details updated"
       induction_tutor.reload
-      expect(induction_tutor.full_name).to eq "Arthur Chigley"
-      expect(induction_tutor.email).to eq "arthur.chigley@example.com"
+      expect(induction_tutor.full_name).to eq "May Chigley"
+      expect(induction_tutor.email).to eq "may.chigley@example.com"
     end
   end
 end

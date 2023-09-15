@@ -317,7 +317,12 @@ en:
             target_cohort_start_year:
               excluded: "Invalid value. Must be different to %{year}"
               invalid: "Invalid value. Must be an integer between %{start} and %{end}"
-
+        edit_induction_tutor_form:
+          attributes:
+            email:
+              <<: *email_error_messages
+            full_name:
+              <<: *full_name_error_messages
         nominate_induction_tutor_form:
           attributes:
             email:

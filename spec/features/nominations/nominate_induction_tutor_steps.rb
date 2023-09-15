@@ -100,7 +100,7 @@ module NominateInductionTutorSteps
   end
 
   def then_i_should_see_the_name_not_match_error
-    expect(page).to have_text("The name you entered does not match our records")
+    expect(page).to have_text("A user with a different name (John Smith) has already been registered with this email address. Change the name or email address you entered")
   end
 
   def then_i_should_be_redirected_to_the_choice_saved_page

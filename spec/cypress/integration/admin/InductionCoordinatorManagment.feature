@@ -17,13 +17,6 @@ Feature: Admin user creating induction tutor
     Then I should be on "new admin school induction coordinator" page
     And the page should be accessible
 
-    Given user was created as "induction_coordinator" with email "existing_induction_coordinator@example.com" and full_name "Existing User"
-    When I type "John Smith" into "name input"
-    And I type "existing_induction_coordinator@example.com" into "email input"
-    And I click the submit button
-    Then "page body" should contain "An induction tutor has already been nominated using this email address"
-    And the page should be accessible
-
     When I clear "name input"
     And I type "John Smith" into "name input"
     And I clear "email input"
@@ -50,7 +43,7 @@ Feature: Admin user creating induction tutor
     Then I should be on "choose replace or update induction tutor" page
     And the page should be accessible
 
-    When I click on "update induction tutor" 
+    When I click on "update induction tutor"
     And I click the submit button
     Then I should be on "edit admin school induction coordinator" page
     And "name input" should have value "Brenda Walsh"
@@ -81,7 +74,7 @@ Feature: Admin user creating induction tutor
     When I click on "link" containing "Change"
     Then I should be on "choose replace or update induction tutor" page
 
-    When I click on "replace induction tutor" 
+    When I click on "replace induction tutor"
     And I click the submit button
     Then I should be on "new admin school induction coordinator" page
 

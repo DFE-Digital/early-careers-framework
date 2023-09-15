@@ -65,7 +65,6 @@ RSpec.describe "Schools::ChangeSit", type: :request do
 
     before do
       set_session(:induction_tutor_form, {
-        school_id: school.id,
         full_name: new_name,
         email: new_email,
       })
@@ -131,7 +130,6 @@ RSpec.describe "Schools::ChangeSit", type: :request do
 
       before do
         set_session(:induction_tutor_form, {
-          school_id: school.id,
           full_name: new_name,
           email: new_email,
         })

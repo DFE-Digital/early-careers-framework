@@ -233,32 +233,4 @@ RSpec.describe DQTRecordCheck do
       end
     end
   end
-
-  describe "private methods" do
-    names = {
-      "Miss Allison Taylor"         => { without_title_prefix: "Allison Taylor", first_name: "Allison" },
-      "Mr Dolph Starbeam"           => { without_title_prefix: "Dolph Starbeam", first_name: "Dolph" },
-      "Rev Tim Lovejoy"             => { without_title_prefix: "Tim Lovejoy", first_name: "Tim" },
-      "Prof. Jonathan Frink"        => { without_title_prefix: "Jonathan Frink", first_name: "Jonathan" },
-      "Ms. Edna Krabapel"           => { without_title_prefix: "Edna Krabapel", first_name: "Edna" },
-      "Milhouse Van Houten"         => { without_title_prefix: "Milhouse Van Houten", first_name: "Milhouse" },
-      "Mr Charles Montgomery Burns" => { without_title_prefix: "Charles Montgomery Burns", first_name: "Charles" },
-    }
-
-    describe "#strip_title_prefix" do
-      names.each do |input, output|
-        specify "#{input} => #{output.fetch(:without_title_prefix)}" do
-          expect(subject.send(:strip_title_prefix, input)).to eql(output.fetch(:without_title_prefix))
-        end
-      end
-    end
-
-    describe "#extract_first_name" do
-      names.each do |input, output|
-        specify "#{input} => #{output.fetch(:first_name)}" do
-          expect(subject.send(:extract_first_name, input)).to eql(output.fetch(:first_name))
-        end
-      end
-    end
-  end
 end

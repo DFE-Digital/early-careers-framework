@@ -37,11 +37,7 @@ module Schools
     def confirm; end
 
     def save
-      CreateInductionTutor.call(
-        school: @induction_tutor_form.school,
-        email: @induction_tutor_form.email,
-        full_name: @induction_tutor_form.full_name,
-      )
+      @induction_tutor_form.save!
       redirect_to action: :success
     end
 
@@ -64,7 +60,7 @@ module Schools
 
     def set_form
       @induction_tutor_form = NominateInductionTutorForm.new(session[:induction_tutor_form])
-      @induction_tutor_form.school_id ||= active_school.id
+      @induction_tutor_form.school ||= active_school
       @induction_tutor_form.assign_attributes(form_params) if form_params.present?
     end
 
