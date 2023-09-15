@@ -21,7 +21,7 @@ class Rack::Attack
 
   throttle("API requests by ip", limit: 1000, period: 5.minutes) do |request|
     if request.path.starts_with?(API_PATH)
-      request.ip
+      request.get_header("HTTP_AUTHORIZATION")
     end
   end
 
