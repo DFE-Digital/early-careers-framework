@@ -30,3 +30,21 @@ else
   echo "Fail: healthcheck migration version is $response_migration but latest is $latest_migration"
   exit 1
 fi
+
+database_connected=$(jq ".database.connected" <<< $response)
+
+if [[ $database_connected == 'true' ]]; then
+  echo "✅ Database is connected"
+else
+  echo "Fail: database is not connected"
+  exit 1
+fi
+
+database_poplulated=$(jq ".database.populated" <<< $response)
+
+if [[ $database_poplulated == 'true' ]]; then
+  echo "✅ Database is populated"
+else
+  echo "Fail: database is not populated"
+  exit 1
+fi
