@@ -4,7 +4,7 @@ class HealthcheckController < ApplicationController
   NOTIFY_STATUS_API = "https://stdg40247zwv.statuspage.io/api/v2/status.json"
 
   def check
-    render status: :ok, json: {
+    render status:, json: {
       version: release_version,
       sha:,
       environment: Rails.env,
@@ -27,6 +27,14 @@ class HealthcheckController < ApplicationController
   end
 
 private
+
+  def status
+    if database_connected? && database_populated?
+      :ok
+    else
+      :internal_server_error
+    end
+  end
 
   def sha
     ENV["SHA"].presence || ENV["COMMIT_SHA"].presence || "none"
