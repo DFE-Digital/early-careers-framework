@@ -2,11 +2,11 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-heading-xl">You’re now signed in</h1>
-    <%= form_tag(users_sign_in_with_token_path) do %>
+    <%= form_with(url: users_sign_in_with_token_path) do |f| %>
       <div class="field">
         <%= hidden_field_tag :login_token, @login_token %>
       </div>
-      <%= submit_tag "Continue", class: "govuk-button" %>
+      <%= f.govuk_submit %>
     <% end %>
   </div>
 </div>
