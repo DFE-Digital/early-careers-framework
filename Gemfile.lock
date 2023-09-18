@@ -1,9 +1,9 @@
 GIT
   remote: https://github.com/DFE-Digital/dfe-analytics.git
-  revision: b1617a618bdcfb505f6ba8f7b1c0b5efa20a3f1a
-  tag: v1.6.0
+  revision: 11d75a3c92cc15439c00ea7f2f8686acffefc103
+  tag: v1.10.1
   specs:
-    dfe-analytics (1.6.0)
+    dfe-analytics (1.10.1)
       google-cloud-bigquery (~> 1.38)
       request_store_rails (~> 2)
 
@@ -110,6 +110,7 @@ GEM
       ice_nine (~> 0.11.0)
       thread_safe (~> 0.3, >= 0.3.1)
     backport (1.2.0)
+    base64 (0.1.1)
     bcrypt (3.1.18)
     benchmark (0.2.1)
     better_html (2.0.2)
@@ -192,7 +193,8 @@ GEM
       railties (>= 5.0.0)
     faker (2.23.0)
       i18n (>= 1.8.11, < 2)
-    faraday (2.7.10)
+    faraday (2.7.11)
+      base64
       faraday-net_http (>= 2.0, < 3.1)
       ruby2_keywords (>= 0.0.4)
     faraday-net_http (3.0.2)
