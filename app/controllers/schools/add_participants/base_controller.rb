@@ -64,7 +64,11 @@ module Schools
                                      submitted_params:)
         end
         @form = @wizard.form
-      rescue BaseWizard::AlreadyInitialised, BaseWizard::InvalidStep
+      rescue BaseWizard::AlreadyInitialised => e
+        Rails.logger.error("AddParticipants::BaseController: already initialised")
+        remove_session_data
+        redirect_to abort_path
+      rescue BaseWizard::InvalidStep
         Rails.logger.error("AddParticipants::BaseController: Invalid step \"#{step_name}\"")
         remove_session_data
         redirect_to abort_path

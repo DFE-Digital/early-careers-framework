@@ -99,6 +99,14 @@ module Schools
         full_name.present? && trn.present? && date_of_birth.present?
       end
 
+      def after_transfer_sign_in_needed
+        data_store.get(:after_transfer_sign_in_needed)
+      end
+
+      def current_user
+        data_store.get(:current_user)
+      end
+
     private
 
       def transfer_participant!
@@ -147,6 +155,8 @@ module Schools
       def transfer_sit_to_mentor_profile
         existing_profile = find_existing_mentor_by_trn
         profile = Mentors::TransferExistingMentorToSit.call(sit_user: current_user, mentor_profile: existing_profile, school_cohort:, start_date:)
+        data_store.set(:current_user, profile.user)
+        data_store.set(:after_transfer_sign_in_needed, true)
         profile.induction_records.latest
       end
 
