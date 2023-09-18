@@ -1,0 +1,314 @@
+---
+:shared:
+  :participant_outcomes:
+  - id
+  - state
+  - completion_date
+  - participant_declaration_id
+  - created_at
+  - updated_at
+  - qualified_teachers_api_request_successful
+  - sent_to_qualified_teachers_api_at
+  :school_cohorts:
+  - id
+  - induction_programme_choice
+  - school_id
+  - cohort_id
+  - created_at
+  - updated_at
+  - estimated_teacher_count
+  - estimated_mentor_count
+  - core_induction_programme_id
+  - opt_out_of_updates
+  - default_induction_programme_id
+  - appropriate_body_id
+  :schools:
+  - id
+  - created_at
+  - updated_at
+  - urn
+  - name
+  - school_type_code
+  - address_line1
+  - address_line2
+  - address_line3
+  - postcode
+  - network_id
+  - domains
+  - school_type_name
+  - ukprn
+  - school_phase_type
+  - school_phase_name
+  - school_website
+  - school_status_code
+  - school_status_name
+  - secondary_contact_email
+  - primary_contact_email
+  - administrative_district_code
+  - administrative_district_name
+  - slug
+  - section_41_approved
+  :partnerships:
+  - id
+  - created_at
+  - updated_at
+  - school_id
+  - lead_provider_id
+  - cohort_id
+  - delivery_partner_id
+  - challenged_at
+  - challenge_reason
+  - challenge_deadline
+  - pending
+  - report_id
+  - relationship
+  :participant_outcome_api_requests:
+  - id
+  - request_path
+  - status_code
+  - request_headers
+  - request_body
+  - response_body
+  - response_headers
+  - participant_outcome_id
+  - created_at
+  - updated_at
+  :participant_declarations:
+  - id
+  - declaration_type
+  - declaration_date
+  - created_at
+  - updated_at
+  - user_id
+  - course_identifier
+  - evidence_held
+  - type
+  - cpd_lead_provider_id
+  - state
+  - participant_profile_id
+  - superseded_by_id
+  - sparsity_uplift
+  - pupil_premium_uplift
+  - delivery_partner_id
+  - mentor_user_id
+  :npq_applications:
+  - id
+  - npq_lead_provider_id
+  - npq_course_id
+  - teacher_reference_number
+  - teacher_reference_number_verified
+  - school_urn
+  - headteacher_status
+  - active_alert
+  - eligible_for_funding
+  - funding_choice
+  - lead_provider_approval_status
+  - school_ukprn
+  - created_at
+  - updated_at
+  - participant_identity_id
+  - works_in_school
+  - employer_name
+  - employment_role
+  - targeted_support_funding_eligibility
+  - cohort_id
+  - targeted_delivery_funding_eligibility
+  - works_in_nursery
+  - works_in_childcare
+  - kind_of_nursery
+  - private_childcare_provider_urn
+  - funding_eligiblity_status_code
+  - teacher_catchment
+  - teacher_catchment_country
+  - employment_type
+  - teacher_catchment_iso_country_code
+  - itt_provider
+  - lead_mentor
+  - notes
+  - primary_establishment
+  - number_of_pupils
+  - tsf_primary_eligibility
+  - tsf_primary_plus_eligibility
+  - eligible_for_funding_updated_by_id
+  - eligible_for_funding_updated_at
+  :induction_records:
+  - id
+  - induction_programme_id
+  - participant_profile_id
+  - schedule_id
+  - start_date
+  - end_date
+  - created_at
+  - updated_at
+  - training_status
+  - preferred_identity_id
+  - induction_status
+  - mentor_profile_id
+  - school_transfer
+  - appropriate_body_id
+  :appropriate_bodies:
+  - id
+  - name
+  - body_type
+  - created_at
+  - updated_at
+  - disable_from_year
+  :participant_profiles:
+  - id
+  - type
+  - core_induction_programme_id
+  - cohort_id
+  - mentor_profile_id
+  - sparsity_uplift
+  - pupil_premium_uplift
+  - created_at
+  - updated_at
+  - status
+  - school_cohort_id
+  - teacher_profile_id
+  - schedule_id
+  - npq_course_id
+  - school_urn
+  - school_ukprn
+  - request_for_details_sent_at
+  - training_status
+  - profile_duplicity
+  - participant_identity_id
+  - notes
+  - induction_start_date
+  - induction_completion_date
+  :cohorts_lead_providers:
+  - lead_provider_id
+  - cohort_id
+  - created_at
+  - updated_at
+  :school_local_authority_districts:
+  - id
+  - school_id
+  - local_authority_district_id
+  - start_year
+  - end_year
+  - created_at
+  - updated_at
+  :school_local_authorities:
+  - id
+  - school_id
+  - local_authority_id
+  - start_year
+  - end_year
+  - created_at
+  - updated_at
+  :pupil_premiums:
+  - id
+  - school_id
+  - start_year
+  - created_at
+  - updated_at
+  - pupil_premium_incentive
+  - sparsity_incentive
+  :participant_profile_schedules:
+  - id
+  - participant_profile_id
+  - schedule_id
+  - created_at
+  - updated_at
+  :npq_lead_providers:
+  - id
+  - name
+  - created_at
+  - updated_at
+  - cpd_lead_provider_id
+  - vat_chargeable
+  :npq_courses:
+  - id
+  - name
+  - created_at
+  - updated_at
+  - identifier
+  :local_authorities:
+  - id
+  - created_at
+  - updated_at
+  - code
+  - name
+  :lead_providers:
+  - id
+  - created_at
+  - updated_at
+  - name
+  - cpd_lead_provider_id
+  - vat_chargeable
+  :cpd_lead_providers:
+  - id
+  - name
+  - created_at
+  - updated_at
+  :induction_programmes:
+  - id
+  - school_cohort_id
+  - partnership_id
+  - core_induction_programme_id
+  - training_programme
+  - created_at
+  - updated_at
+  - delivery_partner_to_be_confirmed
+  :declaration_states:
+  - id
+  - participant_declaration_id
+  - state
+  - created_at
+  - updated_at
+  - state_reason
+  :cohorts:
+  - id
+  - created_at
+  - updated_at
+  - start_year
+  - registration_start_date
+  - academic_year_start_date
+  - npq_registration_start_date
+  - automatic_assignment_period_end_date
+  :provider_relationships:
+  - id
+  - lead_provider_id
+  - delivery_partner_id
+  - cohort_id
+  - created_at
+  - updated_at
+  - discarded_at
+  :delivery_partners:
+  - id
+  - created_at
+  - updated_at
+  - name
+  - discarded_at
+  :school_mentors:
+  - id
+  - participant_profile_id
+  - school_id
+  - preferred_identity_id
+  - created_at
+  - updated_at
+  - remove_from_school_on
+  :induction_coordinator_profiles:
+  - id
+  - user_id
+  - created_at
+  - updated_at
+  - discarded_at
+  - reminder_email_sent_at
+  :teacher_profiles:
+  - id
+  - trn
+  - school_id
+  - user_id
+  - created_at
+  - updated_at
+  :participant_profile_states:
+  - id
+  - participant_profile_id
+  - state
+  - reason
+  - created_at
+  - updated_at
+  - cpd_lead_provider_id

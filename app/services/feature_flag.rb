@@ -15,6 +15,7 @@ class FeatureFlag
   PERMANENT_SETTINGS = %i[
     zendesk_widget
     maintenance_banner
+    dfe_analytics
   ].freeze
 
   # Short-lived feature flags

@@ -5,7 +5,9 @@ require "rails_helper"
 RSpec.describe FeatureFlag do
   let(:feature_name) { Faker::Lorem.words(number: 3).join("_").to_sym }
   before do
-    stub_const("FeatureFlag::FEATURES", { feature_name => described_class.new(name: feature_name) })
+    features = described_class::FEATURES.dup
+    features[feature_name] = described_class.new(name: feature_name)
+    stub_const("FeatureFlag::FEATURES", features)
   end
 
   describe ".activate" do
