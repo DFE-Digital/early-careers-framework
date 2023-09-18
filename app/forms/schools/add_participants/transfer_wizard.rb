@@ -110,7 +110,7 @@ module Schools
                                elsif !needs_to_confirm_programme? || chose_to_join_school_programme?
                                  transfer_fip_participant_to_schools_programme(profile)
                                elsif sit_adding_themself_as_existing_mentor?
-                                 transfer_existing_mentor_profile_to_sit
+                                 transfer_sit_to_mentor_profile
                                else
                                  transfer_fip_participant_and_continue_existing_programme(profile)
                                end
@@ -144,7 +144,7 @@ module Schools
         )
       end
 
-      def transfer_existing_mentor_profile_to_sit
+      def transfer_sit_to_mentor_profile
         existing_profile = find_existing_mentor_by_trn
         profile = Mentors::TransferExistingMentorToSit.call(sit_user: current_user, mentor_profile: existing_profile, school_cohort:, start_date:)
         profile.induction_records.latest
