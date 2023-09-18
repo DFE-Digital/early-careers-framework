@@ -66,6 +66,14 @@ RSpec.describe CreatePartnershipCsvUpload do
         expect(subject.call.uploaded_urns).to eql(%w[1 2 3 4 5 6 7])
       end
     end
+
+    context "with other unicode characters" do
+      let(:urns) { ["\u00A0", "18900\u000f", " 10000\u00A0", "\u2000", "12345\n"] }
+
+      it "removes extra characters and keeps the urns" do
+        expect(subject.call.uploaded_urns).to eql(%w[18900 10000 12345])
+      end
+    end
   end
 
 private

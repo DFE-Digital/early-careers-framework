@@ -26,7 +26,7 @@ private
   end
 
   def clean_uploaded_lines(lines)
-    lines.flat_map { |line| line.split(",").reject(&:blank?).map(&:squish) }
+    lines.flat_map { |line| line.split(",").reject(&:blank?).map { |urn| urn.scan(/\d|,/).join } }
   end
 
   def strip_bom(string)
