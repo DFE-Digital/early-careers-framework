@@ -41,7 +41,7 @@ const buttons = {
   "search button": "[data-test=search-button]",
   "impersonate button": "[data-test=impersonate-button]",
   "stop impersonating button": "[data-test=stop-impersonating-button]",
-  "remove button": ".govuk-button[value=Remove]",
+  "remove button": '.govuk-button:contains("Remove")',
 };
 
 const links = {
