@@ -103,7 +103,7 @@ gem "net-smtp", require: false
 
 gem "json-diff", "~> 0.4.1", require: false
 
-gem "cssbundling-rails", "~> 1.2"
+gem "cssbundling-rails", "~> 1.3"
 gem "jsbundling-rails"
 gem "sprockets", "~> 4.2.1"
 gem "sprockets-rails", require: "sprockets/railtie"
