@@ -159,9 +159,9 @@ module Schools
       def transfer_sit_to_mentor_profile
         existing_profile = find_existing_mentor_by_trn
         profile = Mentors::TransferExistingMentorToSit.call(sit_user: current_user, mentor_profile: existing_profile, school_cohort:, start_date:)
-        data_store.set(:current_user, profile.user)
         data_store.set(:after_transfer_sign_in_needed, true)
         data_store.set(:sit_added_as_mentor, true)
+        data_store.set(:current_user, profile.user)
         profile.induction_records.latest
       end
 
