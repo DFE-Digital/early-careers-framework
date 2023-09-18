@@ -15,6 +15,8 @@ RSpec.describe "SIT adding mentor", js: true do
     then_i_am_taken_to_fip_induction_dashboard
 
     @mentor = create(:mentor)
+    @mentor.user.teacher_profile.update!(trn: @participant_data[:trn])
+
     ECFParticipantValidationData.create!(
       participant_profile: @mentor,
       trn: @participant_data[:trn],
@@ -46,17 +48,25 @@ RSpec.describe "SIT adding mentor", js: true do
 
     when_i_add_a_date_of_birth
     when_i_click_on_continue
+    expect(page).to have_text("Will #{@participant_data[:full_name]} only mentor ECTs at your school?")
+
+    when_i_choose_yes
+    and_i_click_on_confirm
+    expect(page).to have_text("When is #{@participant_data[:full_name]} moving to your school?")
+
+    when_i_add_a_start_date
+    when_i_click_on_continue
     then_i_am_taken_to_add_ect_or_mentor_email_page
 
     when_i_add_sits_email
-    when_i_click_on_continue
+    and_i_click_on_continue
     then_i_am_taken_to_are_you_sure_page
 
     when_i_click_on_confirm
-    then_i_am_taken_to_sit_mentor_start_training_page
+    then_i_am_taken_to_continue_current_training_page
 
-    when_i_choose_summer_term_2023
-    when_i_click_on_continue
+    when_i_choose_yes
+    and_i_click_on_continue
     then_i_am_taken_to_check_answers_page
 
     when_i_click_confirm_and_add

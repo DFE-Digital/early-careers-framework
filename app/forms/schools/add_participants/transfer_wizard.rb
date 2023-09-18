@@ -9,6 +9,7 @@ module Schools
           join_school_programme
           cannot_add_manual_transfer
           email
+          yourself
           email_already_taken
           joining_date
           choose_mentor
@@ -108,6 +109,8 @@ module Schools
                                  transfer_fip_participant_to_schools_programme(profile)
                                elsif !needs_to_confirm_programme? || chose_to_join_school_programme?
                                  transfer_fip_participant_to_schools_programme(profile)
+                               elsif sit_adding_themself_as_existing_mentor?
+                                 transfer_existing_mentor_profile_to_sit
                                else
                                  transfer_fip_participant_and_continue_existing_programme(profile)
                                end
@@ -139,6 +142,12 @@ module Schools
           end_date: start_date,
           mentor_profile:,
         )
+      end
+
+      def transfer_existing_mentor_profile_to_sit
+        existing_profile = find_existing_mentor_by_trn
+        profile = Mentors::TransferExistingMentorToSit.call(sit_user: current_user, mentor_profile: existing_profile, school_cohort:, start_date:)
+        profile.induction_records.latest
       end
 
       # This methods assumes that all transfers are requested by the incoming school for now. There

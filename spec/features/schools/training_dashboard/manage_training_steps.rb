@@ -572,6 +572,10 @@ module ManageTrainingSteps
     choose "Summer term 2023"
   end
 
+  def when_i_choose_yes
+    choose("Yes")
+  end
+
   def when_i_click_on_back
     click_on("Back")
   end
@@ -579,6 +583,8 @@ module ManageTrainingSteps
   def when_i_click_on_confirm
     click_on("Confirm")
   end
+
+  alias_method :and_i_click_on_confirm, :when_i_click_on_confirm
 
   def when_i_filter_by(option)
     when_i_select(option)
@@ -824,6 +830,10 @@ module ManageTrainingSteps
 
   def then_i_am_taken_to_mentor_added_confirmation_page
     expect(page).to have_text("#{@participant_data[:full_name]} has been added as a mentor")
+  end
+
+  def then_i_am_taken_to_continue_current_training_page
+    expect(page).to have_text("Will #{@induction_coordinator_profile.user.full_name} continue with their current training programme?")
   end
 
   def then_i_am_taken_to_sit_mentor_added_confirmation_page

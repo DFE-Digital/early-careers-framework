@@ -112,8 +112,6 @@ module Schools
                                                     preferred_email: email)
                     elsif ect_participant?
                       EarlyCareerTeachers::Create.call(**participant_create_args)
-                    elsif sit_adding_themself_as_existing_mentor?
-                      transfer_existing_mentor_profile_to_sit
                     else
                       Mentors::Create.call(**participant_create_args.except(:induction_start_date, :mentor_profile_id))
                     end
@@ -124,22 +122,6 @@ module Schools
         send_added_and_validated_email(profile) if profile && profile.ecf_participant_validation_data.present? && !sit_mentor?
 
         profile
-      end
-
-      def transfer_existing_mentor_profile_to_sit
-        existing_profile = find_existing_mentor_by_trn
-        Mentors::TransferExistingMentorToSit.call(sit_user: current_user, mentor_profile: existing_profile, school_cohort:, start_date:)
-      end
-
-      def find_existing_mentor_by_trn
-        teacher_profile = TeacherProfile.find_by(trn:)
-        return if teacher_profile.nil?
-
-        teacher_profile.ecf_profiles.mentors.first
-      end
-
-      def sit_adding_themself_as_existing_mentor?
-        adding_yourself_as_mentor? && find_existing_mentor_by_trn.present?
       end
 
       def store_validation_result!(profile)

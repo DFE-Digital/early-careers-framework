@@ -174,6 +174,17 @@ module Schools
       end
       alias_method :sit_mentor?, :adding_yourself_as_mentor?
 
+      def find_existing_mentor_by_trn
+        teacher_profile = TeacherProfile.find_by(trn:)
+        return if teacher_profile.nil?
+
+        teacher_profile.ecf_profiles.mentors.first
+      end
+
+      def sit_adding_themself_as_existing_mentor?
+        adding_yourself_as_mentor? && find_existing_mentor_by_trn.present?
+      end
+
       def adding_yourself_as_ect?
         using_sit_email? && participant_type == "ect"
       end
