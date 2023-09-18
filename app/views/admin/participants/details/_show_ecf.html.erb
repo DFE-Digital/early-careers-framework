@@ -70,6 +70,16 @@
   end
 
   sl.with_row do |row|
+    row.with_key(text: "Induction start date")
+    row.with_value(text: @participant_presenter.induction_start_date)
+  end
+
+  sl.with_row do |row|
+    row.with_key(text: "Induction completion date")
+    row.with_value(text: @participant_presenter.induction_completion_date)
+  end
+
+  sl.with_row do |row|
     row.with_key(text: "Profile ID")
     row.with_value(text: tag.code(@participant_presenter.id))
   end
