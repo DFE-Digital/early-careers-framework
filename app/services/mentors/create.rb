@@ -12,15 +12,10 @@ module Mentors
 
         create_teacher_profile
 
-        raise ParticipantProfileExistsError if participant_profile_exists?
+        mentor_profile = find_or_create_participant_profile
 
-        mentor_profile = ParticipantProfile::Mentor.create!({
-          teacher_profile:,
-          schedule: Finance::Schedule::ECF.default_for(cohort: school_cohort.cohort),
-          participant_identity: Identity::Create.call(user:, email:),
-        }.merge(mentor_attributes))
-
-        ParticipantProfileState.create!(participant_profile: mentor_profile, cpd_lead_provider: school_cohort&.default_induction_programme&.lead_provider&.cpd_lead_provider)
+        ParticipantProfileState.create!(participant_profile: mentor_profile,
+                                        cpd_lead_provider: school_cohort&.default_induction_programme&.lead_provider&.cpd_lead_provider)
 
         if school_cohort.default_induction_programme.present?
           Induction::Enrol.call(participant_profile: mentor_profile,
@@ -61,19 +56,52 @@ module Mentors
       @user ||= find_or_create_user!
     end
 
+    def mentor_update_attributes
+      {
+        teacher_profile:,
+        status: :active,
+        schedule: Finance::Schedule::ECF.default_for(cohort: school_cohort.cohort),
+      }.merge(mentor_attributes)
+    end
+
+    def mentor_create_attributes
+      mentor_update_attributes.merge(participant_identity: Identity::Create.call(user:, email:))
+    end
+
+    def find_or_create_participant_profile
+      if existing_participant_profile.present?
+        existing_participant_profile.update!(mentor_update_attributes)
+        existing_participant_profile
+      else
+        ParticipantProfile::Mentor.create!(mentor_create_attributes)
+      end
+    end
+
+    def existing_participant_profile
+      via_teacher_profile = teacher_profile.participant_profiles.mentors.first
+      return via_teacher_profile if via_teacher_profile.present?
+
+      participant_identity = ParticipantIdentityResolver.call(
+        participant_id: user.id,
+        course_identifier: "ecf-mentor",
+        cpd_lead_provider: nil,
+      )
+      ParticipantProfileResolver.call(
+        participant_identity:,
+        course_identifier: "ecf-mentor",
+        cpd_lead_provider: nil,
+      )
+    end
+
     def find_or_create_user!
       Identity.find_user_by(email:) || User.create!(email:, full_name:)
     end
 
     def teacher_profile
-      @teacher_profile ||= TeacherProfile.find_or_create_by!(user:) do |profile|
-        profile.school = school_cohort.school
+      @teacher_profile ||= TeacherProfile.find_or_create_by!(user:).tap do |teacher_profile|
+        teacher_profile.update!(school: school_cohort.school)
       end
     end
     alias_method :create_teacher_profile, :teacher_profile
-
-    def participant_profile_exists?
-      teacher_profile.participant_profiles.mentors.exists? || user.participant_identities.joins(:participant_profiles).where(participant_profiles: { type: "ParticipantProfile::Mentor" }).exists?
-    end
   end
 end
