@@ -7,18 +7,8 @@ module Mentors
     def call
       mentor_user = mentor_profile.user
       Identity::Transfer.call(from_user: sit_user, to_user: mentor_user)
-      sit_user.destroy!
+      # sit_user.destroy!
       mentor_profile.reload
-
-      # ParticipantProfileState.create!(participant_profile: mentor_profile, cpd_lead_provider: school_cohort&.default_induction_programme&.lead_provider&.cpd_lead_provider)
-      # if school_cohort.default_induction_programme.present?
-      #   Induction::Enrol.call(participant_profile: mentor_profile,
-      #                         induction_programme: school_cohort.default_induction_programme,
-      #                         start_date:)
-      # end
-      # Mentors::AddToSchool.call(school: school_cohort.school, mentor_profile:)
-
-      mentor_profile
     end
 
   private
