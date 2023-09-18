@@ -181,7 +181,7 @@ RSpec.describe Admin::Schools::CohortComponent, type: :component do
     end
 
     it "passes the partnership information to the partnership slots" do
-      expect(subject).to have_received(:with_partnership_component).with(school:, school_cohort:, partnership:)
+      expect(subject).to have_received(:with_partnership_component).with(school:, school_cohort:, partnership:, training_programme: "Working with a DfE-funded provider")
     end
 
     it "passes the relationship information to the relationship slots" do
