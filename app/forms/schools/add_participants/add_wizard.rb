@@ -6,12 +6,10 @@ module Schools
       def self.steps
         %i[
           email
-          yourself
           email_already_taken
           start_date
           start_term
           cannot_add_registration_not_yet_open
-          cannot_add_yourself_as_ect
           need_training_setup
           choose_mentor
           confirm_appropriate_body
@@ -40,9 +38,6 @@ module Schools
           else
             show_path_for(step: :email)
           end
-        elsif form.next_step == :abort
-          reset_form
-          abort_path
         else
           show_path_for(step: form.next_step)
         end
