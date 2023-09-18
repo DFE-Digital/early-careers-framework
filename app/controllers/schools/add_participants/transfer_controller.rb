@@ -9,7 +9,7 @@ module Schools
       def update
         if @form.valid?
           @wizard.save!
-          check_needs_after_transfer_sign_in
+          needs_after_transfer_sign_in?
           redirect_to @wizard.next_step_path
         else
           render @wizard.current_step
@@ -18,7 +18,7 @@ module Schools
 
     private
 
-      def check_needs_after_transfer_sign_in
+      def needs_after_transfer_sign_in?
         if @wizard.after_transfer_sign_in_needed
           sign_in(@wizard.current_user, scope: :user)
           PrivacyPolicy.current.accept!(@wizard.current_user)
