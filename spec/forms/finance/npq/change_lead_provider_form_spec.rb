@@ -25,6 +25,7 @@ RSpec.describe Finance::NPQ::ChangeLeadProviderForm, type: :model do
         it "does not change lead provider" do
           old_lead_provider = participant_profile.npq_application.npq_lead_provider
           expect(form.save).to be false
+
           expect(participant_profile.npq_application.reload.npq_lead_provider).to eql(old_lead_provider)
           expect(participant_profile.npq_application.reload.npq_lead_provider).not_to eql(lead_provider)
         end

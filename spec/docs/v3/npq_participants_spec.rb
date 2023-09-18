@@ -118,7 +118,8 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
                   "NPQ Participant" do
     let(:participant) { npq_application }
     let(:profile)     { npq_application.profile }
-    let(:schedule) { create(:npq_leadership_schedule, schedule_identifier: "npq-aso-june", name: "NPQ ASO June") }
+    let(:schedule)    { create(:npq_leadership_schedule, schedule_identifier: "npq-aso-june", name: "NPQ ASO June") }
+    let!(:contract)   { create(:npq_contract, npq_course: npq_application.npq_course, npq_lead_provider: npq_application.npq_lead_provider) }
 
     let(:attributes) do
       {

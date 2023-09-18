@@ -9,8 +9,8 @@ module Finance
       attribute :participant_profile
       attribute :lead_provider_id
 
+      validates :cohort, npq_contract_for_cohort_and_course: true, if: :lead_provider
       validates :lead_provider_id, inclusion: { in: :valid_lead_provider_ids }
-      validates :cohort, npq_contract_for_cohort_and_course: true
 
       def save
         return false unless valid?
@@ -39,7 +39,7 @@ module Finance
       end
 
       def lead_provider
-        @lead_provider ||= NPQLeadProvider.find(lead_provider_id)
+        @lead_provider ||= NPQLeadProvider.find_by(id: lead_provider_id)
       end
 
       def course_identifier
