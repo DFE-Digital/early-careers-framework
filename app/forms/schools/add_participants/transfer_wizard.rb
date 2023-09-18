@@ -107,6 +107,10 @@ module Schools
         data_store.get(:current_user)
       end
 
+      def sit_added_as_mentor?
+        data_store.get(:sit_added_as_mentor)
+      end
+
     private
 
       def transfer_participant!
@@ -157,6 +161,7 @@ module Schools
         profile = Mentors::TransferExistingMentorToSit.call(sit_user: current_user, mentor_profile: existing_profile, school_cohort:, start_date:)
         data_store.set(:current_user, profile.user)
         data_store.set(:after_transfer_sign_in_needed, true)
+        data_store.set(:sit_added_as_mentor, true)
         profile.induction_records.latest
       end
 

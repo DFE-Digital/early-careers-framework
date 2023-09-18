@@ -14,6 +14,8 @@ RSpec.describe "SIT adding mentor", js: true do
     and_i_click_on(Cohort.current.description)
     then_i_am_taken_to_fip_induction_dashboard
 
+    create(:participant_identity, user: @induction_coordinator_profile.user)
+
     @mentor = create(:mentor)
     @mentor.user.teacher_profile.update!(trn: @participant_data[:trn])
 
@@ -26,8 +28,9 @@ RSpec.describe "SIT adding mentor", js: true do
     set_dqt_validation_result
   end
 
-  scenario "Induction tutor adds themself as mentor using their own email address" do
+  scenario "Induction tutor adds themself as mentor using their own email address and TRN belonging to an existing mentor profile" do
     when_i_navigate_to_participants_dashboard
+
     when_i_click_to_add_a_new_ect_or_mentor
     then_i_should_be_on_the_who_to_add_page
 
@@ -73,6 +76,9 @@ RSpec.describe "SIT adding mentor", js: true do
     then_i_am_taken_to_sit_mentor_added_confirmation_page
 
     click_on "View your ECTs and mentors"
-    then_i_see_the_sit_name
+    expect(page).to have_text(@mentor.user.full_name)
+
+    click_on "Back"
+    expect(page).to have_summary_row("Induction tutor", @mentor.user.full_name)
   end
 end
