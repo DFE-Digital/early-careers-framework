@@ -68,6 +68,21 @@ describe ParticipantProfileDeduplicator do
       end
     end
 
+    context "when deduplicating Mentor profiles" do
+      let(:primary_profile) { create(:mentor) }
+      let(:duplicate_profile) { create(:mentor) }
+      let!(:duplicate_mentee) { create(:ect, mentor_profile: duplicate_profile) }
+
+      before { 3.times { create(:induction_record, participant_profile: duplicate_mentee, mentor_profile: duplicate_profile) } }
+
+      it "transfers the duplicate profile mentees to the primary profile" do
+        dedup!
+
+        expect(duplicate_mentee.induction_records).to all(have_attributes({ mentor_profile_id: primary_profile.id }))
+        expect(primary_profile.mentee_profiles).to include(duplicate_mentee)
+      end
+    end
+
     context "when duplicate profile is ECT and primary profile is Mentor" do
       let(:primary_profile) { create(:mentor) }
 
