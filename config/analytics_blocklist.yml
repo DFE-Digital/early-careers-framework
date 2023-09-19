@@ -16,27 +16,6 @@
   - data
   - created_at
   - updated_at
-  :active_storage_variant_records:
-  - id
-  - blob_id
-  - variation_digest
-  :active_storage_blobs:
-  - id
-  - key
-  - filename
-  - content_type
-  - metadata
-  - service_name
-  - byte_size
-  - checksum
-  - created_at
-  :active_storage_attachments:
-  - id
-  - name
-  - record_type
-  - record_id
-  - blob_id
-  - created_at
   :ecf_duplicates:
   - user_id
   - external_identifier
@@ -75,6 +54,16 @@
   - user_id
   - created_at
   - updated_at
+  :npq_application_eligibility_imports:
+  - id
+  - user_id
+  - filename
+  - status
+  - updated_records
+  - import_errors
+  - processed_at
+  - created_at
+  - updated_at
   :statement_line_items:
   - id
   - statement_id
@@ -105,6 +94,15 @@
   - declaration_type
   - created_at
   - updated_at
+  :schedules:
+  - id
+  - name
+  - created_at
+  - updated_at
+  - schedule_identifier
+  - type
+  - cohort_id
+  - identifier_alias
   :milestones:
   - id
   - name
@@ -360,6 +358,37 @@
   - status
   - delivered_at
   - tags
+  :ecf_participant_validation_data:
+  - id
+  - participant_profile_id
+  - full_name
+  - date_of_birth
+  - trn
+  - nino
+  - api_failure
+  - created_at
+  - updated_at
+  :ecf_participant_eligibilities:
+  - id
+  - participant_profile_id
+  - qts
+  - active_flags
+  - previous_participation
+  - previous_induction
+  - manually_validated
+  - status
+  - created_at
+  - updated_at
+  - reason
+  - different_trn
+  - no_induction
+  - exempt_from_induction
+  :ecf_ineligible_participants:
+  - id
+  - trn
+  - reason
+  - created_at
+  - updated_at
   :district_sparsities:
   - id
   - local_authority_district_id
@@ -458,56 +487,6 @@
   - get_an_identity_id
   - archived_email
   - archived_at
-  :schedules:
-  - id
-  - name
-  - created_at
-  - updated_at
-  - schedule_identifier
-  - type
-  - cohort_id
-  - identifier_alias
-  :npq_application_eligibility_imports:
-  - id
-  - user_id
-  - filename
-  - status
-  - updated_records
-  - import_errors
-  - processed_at
-  - created_at
-  - updated_at
-  :ecf_ineligible_participants:
-  - id
-  - trn
-  - reason
-  - created_at
-  - updated_at
-  :ecf_participant_validation_data:
-  - id
-  - participant_profile_id
-  - full_name
-  - date_of_birth
-  - trn
-  - nino
-  - api_failure
-  - created_at
-  - updated_at
-  :ecf_participant_eligibilities:
-  - id
-  - participant_profile_id
-  - qts
-  - active_flags
-  - previous_participation
-  - previous_induction
-  - manually_validated
-  - status
-  - created_at
-  - updated_at
-  - reason
-  - different_trn
-  - no_induction
-  - exempt_from_induction
   :ecf_school_cohorts:
   - id
   - school_cohort_id
