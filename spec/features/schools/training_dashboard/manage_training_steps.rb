@@ -607,6 +607,14 @@ module ManageTrainingSteps
     click_on("Back")
   end
 
+  def when_i_choose_to_cancel
+    choose "Cancel and return to the list of ECTs and mentors"
+  end
+
+  def when_i_choose_to_add_myself_as_mentor
+    choose "Add myself as a mentor instead"
+  end
+
   def when_i_click_on_confirm
     click_on("Confirm")
   end
@@ -616,6 +624,10 @@ module ManageTrainingSteps
   def when_i_filter_by(option)
     when_i_select(option)
     click_on("Apply")
+  end
+
+  def when_i_click_on_view_ects_and_mentors
+    click_on "View your ECTs and mentors"
   end
 
   def when_i_submit_an_empty_form
@@ -907,6 +919,18 @@ module ManageTrainingSteps
 
   def then_i_see_the_sit_name
     expect(page).to have_text(@induction_coordinator_profile.user.full_name)
+  end
+
+  def then_i_am_taken_to_manage_your_training_page
+    expect(page).to have_selector("h1", text: "Manage your training")
+  end
+
+  def then_i_am_taken_to_add_yourself_as_mentor_confirmation_page
+    expect(page).to have_text("Are you sure you want to add yourself as a mentor?")
+  end
+
+  def then_i_am_taken_to_sit_added_as_mentor_page
+    expect(page).to have_text("#{@induction_coordinator_profile.user.full_name} has been added as a mentor")
   end
 
   def then_i_am_taken_to_roles_page
