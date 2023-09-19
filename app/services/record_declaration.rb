@@ -166,20 +166,19 @@ private
   def mentor_user_id
     return nil unless participant_profile.ect?
 
-    induction_record = Induction::FindBy.call(
+    relevant_induction_record&.mentor_profile&.participant_identity&.user_id
+  end
+
+  def delivery_partner
+    relevant_induction_record&.induction_programme&.partnership&.delivery_partner
+  end
+
+  def relevant_induction_record
+    @relevant_induction_record ||= Induction::FindBy.call(
       participant_profile:,
       lead_provider: cpd_lead_provider.lead_provider,
       date_range: ..declaration_date,
     )
-
-    induction_record&.mentor_profile&.participant_identity&.user_id
-  end
-
-  def delivery_partner
-    Induction::FindBy.call(participant_profile:, lead_provider: cpd_lead_provider.lead_provider)
-      &.induction_programme
-      &.partnership
-      &.delivery_partner
   end
 
   def validate_evidence_held?
