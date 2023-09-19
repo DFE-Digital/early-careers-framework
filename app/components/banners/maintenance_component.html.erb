@@ -14,7 +14,7 @@
       </p>
 
       <%= form_with url: maintenance_banner_dismissal_path, method: :patch do |f| %>
-        <%= f.submit "Dismiss", class: "govuk-button govuk-button--secondary govuk-!-margin-0" %>
+        <%= f.govuk_submit("Dismiss", secondary: true, class: "govuk-!-margin-0") %>
       <% end %>
     </div>
   </div>

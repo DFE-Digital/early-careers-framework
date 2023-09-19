@@ -59,7 +59,7 @@ const login = (traits, args) => {
       cy.visit(`/users/confirm_sign_in?login_token=${user.login_token}`);
     });
 
-  cy.get('[action="/users/sign_in_with_token"] [name="commit"]').click();
+  cy.get(".govuk-main-wrapper .govuk-button").contains("Continue").click();
 };
 
 Given("I am logged in as {string}", (traits) => login(traits));
@@ -81,7 +81,7 @@ Given("I am logged in as existing user with {}", (argsStr) => {
   );
   cy.visit(`/users/confirm_sign_in?login_token=abcdefghij`);
 
-  cy.get('[action="/users/sign_in_with_token"] [name="commit"]').click();
+  cy.get(".govuk-main-wrapper .govuk-button").contains("Continue").click();
 });
 
 const setFeature = (feature, isActive) => {
