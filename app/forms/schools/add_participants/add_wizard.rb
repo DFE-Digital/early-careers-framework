@@ -11,6 +11,7 @@ module Schools
           start_term
           cannot_add_registration_not_yet_open
           cannot_add_yourself_as_ect
+          yourself
           need_training_setup
           choose_mentor
           confirm_appropriate_body
