@@ -46,7 +46,7 @@ class AppropriateBodySelectionForm
 
   def self.body_type_choices_for_year(cohort_start_year)
     if cohort_start_year.present?
-      TYPES.select { |ab_type| ab_type.disable_from_year.nil? || ab_type.disable_from_year > cohort_start_year }
+      TYPES.select { |ab_type| ab_type.disable_from_year.nil? || cohort_start_year < ab_type.disable_from_year }
     else
       TYPES
     end
