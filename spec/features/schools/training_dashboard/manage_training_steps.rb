@@ -187,6 +187,7 @@ module ManageTrainingSteps
 
   def and_i_am_signed_in_as_an_induction_coordinator
     @induction_coordinator_profile = create(:induction_coordinator_profile, schools: [@school_cohort.school], user: create(:user, full_name: "Carl Coordinator"))
+    create(:participant_identity, user: @induction_coordinator_profile.user)
     privacy_policy = create(:privacy_policy)
     privacy_policy.accept!(@induction_coordinator_profile.user)
     sign_in_as @induction_coordinator_profile.user
@@ -350,6 +351,16 @@ module ManageTrainingSteps
     create(:ecf_participant_validation_data, participant_profile: @participant_profile_ect, full_name: "Sally Teacher", trn: "1234567", date_of_birth: Date.new(1998, 3, 22))
   end
 
+  def given_there_is_a_mentor_with_the_same_trn
+    @mentor = create(:mentor)
+    @mentor.user.teacher_profile.update!(trn: @participant_data[:trn])
+    ECFParticipantValidationData.create!(
+      participant_profile: @mentor,
+      trn: @participant_data[:trn],
+      date_of_birth: @participant_data[:date_of_birth],
+    )
+  end
+
   def and_i_have_a_transferring_out_participant
     and_i_have_added_an_eligible_ect
     @induction_record.leaving!(2.months.from_now)
@@ -382,6 +393,22 @@ module ManageTrainingSteps
 
   def then_i_should_see_the_add_your_ect_and_mentor_link
     expect(page).to have_text("Add your early career teacher and mentor details")
+  end
+
+  def then_i_am_taken_to_only_mentor_ects_at_your_school_page
+    expect(page).to have_text("Will #{@participant_data[:full_name]} only mentor ECTs at your school?")
+  end
+
+  def then_i_am_taken_to_when_is_participant_moving_to_school_page
+    expect(page).to have_text("When is #{@participant_data[:full_name]} moving to your school?")
+  end
+
+  def then_i_see_the_existing_mentor_name
+    expect(page).to have_text(@mentor.user.full_name)
+  end
+
+  def then_i_see_induction_tutor_name
+    expect(page).to have_summary_row("Induction tutor", @mentor.user.full_name)
   end
 
   def then_i_should_be_on_the_who_to_add_page

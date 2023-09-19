@@ -10,20 +10,10 @@ RSpec.describe "SIT adding mentor", js: true do
     given_there_is_a_school_that_has_chosen_cip
     set_participant_data
     given_there_is_a_school_that_has_chosen_fip_and_partnered
+    given_there_is_a_mentor_with_the_same_trn
     and_i_am_signed_in_as_an_induction_coordinator
     and_i_click_on(Cohort.current.description)
     then_i_am_taken_to_fip_induction_dashboard
-
-    create(:participant_identity, user: @induction_coordinator_profile.user)
-
-    @mentor = create(:mentor)
-    @mentor.user.teacher_profile.update!(trn: @participant_data[:trn])
-
-    ECFParticipantValidationData.create!(
-      participant_profile: @mentor,
-      trn: @participant_data[:trn],
-      date_of_birth: @participant_data[:date_of_birth],
-    )
 
     set_dqt_validation_result
   end
@@ -51,11 +41,11 @@ RSpec.describe "SIT adding mentor", js: true do
 
     when_i_add_a_date_of_birth
     when_i_click_on_continue
-    expect(page).to have_text("Will #{@participant_data[:full_name]} only mentor ECTs at your school?")
+    then_i_am_taken_to_only_mentor_ects_at_your_school_page
 
     when_i_choose_yes
     and_i_click_on_confirm
-    expect(page).to have_text("When is #{@participant_data[:full_name]} moving to your school?")
+    then_i_am_taken_to_when_is_participant_moving_to_school_page
 
     when_i_add_a_start_date
     when_i_click_on_continue
@@ -76,9 +66,9 @@ RSpec.describe "SIT adding mentor", js: true do
     then_i_am_taken_to_sit_mentor_added_confirmation_page
 
     click_on "View your ECTs and mentors"
-    expect(page).to have_text(@mentor.user.full_name)
+    then_i_see_the_existing_mentor_name
 
     click_on "Back"
-    expect(page).to have_summary_row("Induction tutor", @mentor.user.full_name)
+    then_i_see_induction_tutor_name
   end
 end
