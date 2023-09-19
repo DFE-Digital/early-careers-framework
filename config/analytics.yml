@@ -178,6 +178,7 @@
   - induction_start_date
   - induction_completion_date
   :cohorts_lead_providers:
+  - id
   - lead_provider_id
   - cohort_id
   - created_at
