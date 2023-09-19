@@ -14,14 +14,14 @@ module LeadProviders
           render :show and return
         end
 
-        @partnership_csv_upload = PartnershipCsvUpload.new(
+        @partnership_csv_upload = CreatePartnershipCsvUpload.new(
+          csv_file: upload_params[:csv],
           cohort_id: report_schools_form.cohort_id,
           lead_provider_id: current_user.lead_provider_profile.lead_provider.id,
           delivery_partner_id: report_schools_form.delivery_partner_id,
-          uploaded_urns: upload_params[:csv].read.lines(chomp: true),
-        )
+        ).call
 
-        if @partnership_csv_upload.save
+        if @partnership_csv_upload
           session[:partnership_csv_upload_id] = @partnership_csv_upload.id
 
           if @partnership_csv_upload.invalid_schools.empty?
