@@ -583,6 +583,7 @@ Rails.application.routes.draw do
           get :delete
         end
       end
+      resources :payment_authorisations, only: %i[new create]
     end
   end
 

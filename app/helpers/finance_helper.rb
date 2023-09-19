@@ -50,4 +50,12 @@ module FinanceHelper
 
     induction_record == participant_profile.latest_induction_record_for(cpd_lead_provider:)
   end
+
+  def authorise_for_payment_button_visible?(statement)
+    statement.output_fee && statement.payable? && !statement.marked_as_paid_at? && statement.deadline_date < Date.current && statement.participant_declarations.any?
+  end
+
+  def authorising_for_payment_banner_visible?(statement)
+    statement.payable? && statement.marked_as_paid_at?
+  end
 end

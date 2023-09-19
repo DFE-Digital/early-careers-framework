@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "Participant outcomes", type: :request, end_to_end_scenario: true do
+RSpec.describe "Participant outcomes", type: :request, end_to_end_scenario: true, perform_jobs: true do
   let!(:declaration) { create :npq_participant_declaration, :eligible, declaration_type: "completed", participant_profile: npq_application.profile, cpd_lead_provider: provider }
   let(:provider) { create :cpd_lead_provider, :with_npq_lead_provider }
   let(:npq_application) { create :npq_application, :accepted, npq_lead_provider: provider.npq_lead_provider }
@@ -10,31 +10,13 @@ RSpec.describe "Participant outcomes", type: :request, end_to_end_scenario: true
   let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: provider) }
   let(:date) { Time.zone.today.to_fs("Y-m-d") }
   let(:response_headers) { { "test" => "test" } }
-  let(:queue_double) { double(detect: nil) }
+  let(:queue_name) { :participant_outcomes }
 
   before do
-    # Inline processing of the participant_outcomes queue only
-    @old_perform_enqueued_jobs = queue_adapter.perform_enqueued_jobs
-    @old_perform_enqueued_at_jobs = queue_adapter.perform_enqueued_at_jobs
-    @old_queue = queue_adapter.queue
-    queue_adapter.perform_enqueued_jobs = true
-    queue_adapter.perform_enqueued_at_jobs = true
-    queue_adapter.queue = :participant_outcomes
-
     # Stub the qualified teachers API endpoint
     stub_request(:put, "#{Rails.application.config.qualified_teachers_api_url}/v2/npq-qualifications?trn=#{declaration.participant_profile.teacher_profile.trn}")
       .with(body: { completionDate: date, qualificationType: declaration.qualification_type }.to_json)
       .to_return(status: 204, headers: response_headers)
-
-    # TODO: we have to stub this because the job is hardcoded to use the
-    # Sidekiq API. An adapter interface would be useful here.
-    allow(Sidekiq::Queue).to receive(:new).with("participant_outcomes").and_return(queue_double)
-  end
-
-  after do
-    queue_adapter.perform_enqueued_jobs = @old_perform_enqueued_jobs
-    queue_adapter.perform_enqueued_at_jobs = @old_perform_enqueued_at_jobs
-    queue_adapter.queue = @old_queue
   end
 
   # Happy path

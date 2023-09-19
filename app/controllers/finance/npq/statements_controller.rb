@@ -12,8 +12,8 @@ module Finance
           version: @statement.contract_version,
           cohort: @statement.cohort,
         ).order(course_identifier: :asc)
-
         @calculator = StatementCalculator.new(statement: @statement)
+        set_important_message(title: t("finance.statements.payment_authorisations.banner.title"), content: t("finance.statements.payment_authorisations.banner.content", statement_marked_as_paid_at: @statement.marked_as_paid_at.strftime("%-I:%M%P on %-e %b %Y"))) if authorising_for_payment_banner_visible?(@statement)
       end
 
     private

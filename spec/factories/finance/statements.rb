@@ -16,6 +16,7 @@ FactoryBot.define do
 
       factory :npq_paid_statement, class: "Finance::Statement::NPQ::Paid" do
         paid
+        marked_as_paid_at { Time.zone.now }
       end
     end
 
@@ -24,9 +25,10 @@ FactoryBot.define do
 
       factory :ecf_paid_statement, class: "Finance::Statement::ECF::Paid" do
         paid
+        marked_as_paid_at { Time.zone.now }
       end
 
-      factory :ecf_payable_statement, class: "Finance::Statement::NPQ::Payable" do
+      factory :ecf_payable_statement, class: "Finance::Statement::ECF::Payable" do
         payable
       end
     end
