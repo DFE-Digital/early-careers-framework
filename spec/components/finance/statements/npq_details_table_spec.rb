@@ -21,8 +21,8 @@ RSpec.describe Finance::Statements::NPQDetailsTable, type: :component do
 
   it "has the correct text" do
     expect(rendered).to have_text("Total starts")
-    expect(rendered).to have_text(1)
+    expect(rendered).to have_text(2)
     expect(rendered).to have_text("Total net VAT")
-    expect(rendered).to have_text("£1,372.63")
+    expect(rendered).to have_text("£1,532.63")
   end
 end

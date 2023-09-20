@@ -83,6 +83,7 @@ en:
   schedule_invalid_for_course: Selected schedule is not valid for the course
   missing_school_cohort_default_partnership: You cannot change a participant to this cohort as you do not have a partnership with the school for the cohort. Contact the DfE for assistance.
   missing_npq_contract_for_cohort_and_course: You cannot change a participant to this cohort as you do not have a contract for the cohort and course. Contact the DfE for assistance.
+  missing_npq_contract_for_cohort_and_course_new_declaration: You cannot submit a declaration for this participant as you do not have a contract for the cohort and course. Contact the DfE for assistance.
   withdrawn_participant: Cannot perform actions on a withdrawn participant
   declaration_already_voided: "This declaration has already been voided."
   declaration_not_voidable: "This declaration cannot be voided. Contact the DfE if you have any questions about why you cannot void it."
