@@ -24,121 +24,12 @@
     }
   ],
   "paths": {
-    "/api/v1/participants/npq/{participant_id}/outcomes": {
-      "post": {
-        "summary": "Submit a NPQ outcome for a single participant",
-        "operationId": "npq_outcome_post",
-        "tags": [
-          "Participants Outcomes"
-        ],
-        "security": [
-          {
-            "bearerAuth": [
-
-            ]
-          }
-        ],
-        "parameters": [
-          {
-            "name": "participant_id",
-            "description": "The unique ID of the participant",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            },
-            "example": "70885c85-f52b-45fe-b969-e09a93ffc6ee"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successfully submit a NPQ outcome",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NPQOutcomeResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorisedResponse"
-                }
-              }
-            }
-          }
-        },
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NPQOutcomeRequest"
-              }
-            }
-          },
-          "required": true
-        }
-      },
+    "/api/v1/npq-applications": {
       "get": {
-        "summary": "List NPQ outcomes for single participant",
-        "operationId": "participant_outcomes",
+        "summary": "Retrieve multiple NPQ applications",
+        "operationId": "npq_applications",
         "tags": [
-          "Participants Outcomes"
-        ],
-        "security": [
-          {
-            "bearerAuth": [
-
-            ]
-          }
-        ],
-        "parameters": [
-          {
-            "name": "participant_id",
-            "in": "path",
-            "required": true,
-            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
-            "description": "The external ID of the participant",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorisedResponse"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "A list of participant outcomes",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NPQOutcomesResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/participants/npq/outcomes": {
-      "get": {
-        "summary": "List all participant NPQ outcomes",
-        "operationId": "participant_outcomes",
-        "tags": [
-          "Participants Outcomes"
+          "NPQ applications"
         ],
         "security": [
           {
@@ -152,13 +43,13 @@
             "name": "filter",
             "in": "query",
             "schema": {
-              "$ref": "#/components/schemas/NPQOutcomeFilter"
+              "$ref": "#/components/schemas/ListFilter"
             },
             "style": "deepObject",
             "explode": true,
             "required": false,
-            "description": "Refine participant outcomes to return.",
-            "example": "filter[created_since]=2020-11-13T11:21:55Z"
+            "description": "Refine NPQ applications to return.",
+            "example": "filter[cohort]=2022&filter[updated_since]=2020-11-13T11:21:55Z"
           },
           {
             "name": "page",
@@ -170,16 +61,16 @@
             "explode": true,
             "required": false,
             "example": "page[page]=1&page[per_page]=5",
-            "description": "Pagination options to navigate through the list of participant NPQ outcomes."
+            "description": "Pagination options to navigate through the list of NPQ applications."
           }
         ],
         "responses": {
           "200": {
-            "description": "A list of participant outcomes",
+            "description": "A list of NPQ applications",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/NPQOutcomesResponse"
+                  "$ref": "#/components/schemas/MultipleNPQApplicationsResponse"
                 }
               }
             }
@@ -197,50 +88,12 @@
         }
       }
     },
-    "/api/v1/participant-declarations.csv": {
+    "/api/v1/npq-applications.csv": {
       "get": {
-        "summary": "Retrieve all participant declarations in CSV format",
-        "operationId": "ecf_participant_declarations_csv",
+        "summary": "Retrieve all NPQ applications in CSV format",
+        "operationId": "npq_applications_csv",
         "tags": [
-          "Participant declarations"
-        ],
-        "security": [
-          {
-            "bearerAuth": [
-
-            ]
-          }
-        ],
-        "responses": {
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "text/csv": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorisedResponse"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "A CSV file of participant declarations",
-            "content": {
-              "text/csv": {
-                "schema": {
-                  "$ref": "#/components/schemas/MultipleParticipantDeclarationsCsvResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/participant-declarations": {
-      "get": {
-        "summary": "List all participant declarations",
-        "operationId": "participant_declarations",
-        "tags": [
-          "Participant declarations"
+          "NPQ applications"
         ],
         "security": [
           {
@@ -254,34 +107,22 @@
             "name": "filter",
             "in": "query",
             "schema": {
-              "$ref": "#/components/schemas/ListFilterDeclarations"
+              "$ref": "#/components/schemas/ListFilter"
             },
             "style": "deepObject",
             "explode": true,
             "required": false,
-            "description": "Refine participant declarations to return.",
-            "example": "participant_id=ab3a7848-1208-7679-942a-b4a70eed400a&updated_since=2020-11-13T11:21:55Z"
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "schema": {
-              "$ref": "#/components/schemas/Pagination"
-            },
-            "style": "deepObject",
-            "explode": true,
-            "required": false,
-            "example": "page[page]=1&page[per_page]=5",
-            "description": "Pagination options to navigate through the list of participant declarations."
+            "description": "Refine NPQ applications to return.",
+            "example": "updated_since=2020-11-13T11:21:55Z"
           }
         ],
         "responses": {
           "200": {
-            "description": "A list of participant declarations",
+            "description": "A CSV file of NPQ application",
             "content": {
-              "application/json": {
+              "text/csv": {
                 "schema": {
-                  "$ref": "#/components/schemas/MultipleParticipantDeclarationsResponse"
+                  "$ref": "#/components/schemas/MultipleNPQApplicationsCsvResponse"
                 }
               }
             }
@@ -289,177 +130,9 @@
           "401": {
             "description": "Unauthorized",
             "content": {
-              "application/json": {
+              "text/csv": {
                 "schema": {
                   "$ref": "#/components/schemas/UnauthorisedResponse"
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "summary": "Declare a participant has reached a milestone. Idempotent endpoint - submitting exact copy of a request will return the same response body as submitting it the first time.",
-        "operationId": "participant_declaration_create",
-        "tags": [
-          "Participant declarations"
-        ],
-        "security": [
-          {
-            "bearerAuth": [
-
-            ]
-          }
-        ],
-        "parameters": [
-
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SingleParticipantDeclarationResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BadRequestResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Bad or Missing parameter",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorisedResponse"
-                }
-              }
-            }
-          }
-        },
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ParticipantDeclarationRequest"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/participant-declarations/{id}": {
-      "get": {
-        "summary": "Get single participant declaration",
-        "operationId": "participant_declaration",
-        "tags": [
-          "Participant declarations"
-        ],
-        "security": [
-          {
-            "bearerAuth": [
-
-            ]
-          }
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "example": "9ed4612b-f8bd-44d9-b296-38ab103fadd2",
-            "description": "The ID of the participant declaration ID",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "404": {
-            "description": "Not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotFoundResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorisedResponse"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "A single participant declaration",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SingleParticipantDeclarationResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/participant-declarations/{id}/void": {
-      "put": {
-        "summary": "Void a declaration - it will not be soft-deleted",
-        "operationId": "participant_declaration_void",
-        "tags": [
-          "Participant declarations"
-        ],
-        "security": [
-          {
-            "bearerAuth": [
-
-            ]
-          }
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
-            "description": "The ID of the declaration to void",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SingleParticipantDeclarationResponse"
                 }
               }
             }
@@ -496,6 +169,56 @@
         "responses": {
           "200": {
             "description": "A single NPQ application",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NPQApplicationResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/npq-applications/{id}/accept": {
+      "post": {
+        "summary": "Accept an NPQ application",
+        "operationId": "npq_applications_accept",
+        "tags": [
+          "NPQ applications"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
+            "description": "The ID of the NPQ application to accept.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The NPQ application being accepted",
             "content": {
               "application/json": {
                 "schema": {
@@ -567,12 +290,12 @@
         }
       }
     },
-    "/api/v1/npq-applications": {
+    "/api/v1/participants/npq": {
       "get": {
-        "summary": "Retrieve multiple NPQ applications",
-        "operationId": "npq_applications",
+        "summary": "Retrieve multiple NPQ participants",
+        "operationId": "npq_participants",
         "tags": [
-          "NPQ applications"
+          "NPQ participants"
         ],
         "security": [
           {
@@ -591,8 +314,8 @@
             "style": "deepObject",
             "explode": true,
             "required": false,
-            "description": "Refine NPQ applications to return.",
-            "example": "filter[cohort]=2022&filter[updated_since]=2020-11-13T11:21:55Z"
+            "description": "Refine NPQ participants to return.",
+            "example": "updated_since=2020-11-13T11:21:55Z"
           },
           {
             "name": "page",
@@ -604,10 +327,20 @@
             "explode": true,
             "required": false,
             "example": "page[page]=1&page[per_page]=5",
-            "description": "Pagination options to navigate through the list of NPQ applications."
+            "description": "Pagination options to navigate through the list of NPQ participants."
           }
         ],
         "responses": {
+          "200": {
+            "description": "A list of NPQ participants",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MultipleNPQParticipantsResponse"
+                }
+              }
+            }
+          },
           "401": {
             "description": "Unauthorized",
             "content": {
@@ -617,128 +350,16 @@
                 }
               }
             }
-          },
-          "200": {
-            "description": "A list of NPQ applications",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MultipleNPQApplicationsResponse"
-                }
-              }
-            }
           }
         }
       }
     },
-    "/api/v1/npq-applications/{id}/accept": {
-      "post": {
-        "summary": "Accept an NPQ application",
-        "operationId": "npq_applications_accept",
-        "tags": [
-          "NPQ applications"
-        ],
-        "security": [
-          {
-            "bearerAuth": [
-
-            ]
-          }
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
-            "description": "The ID of the NPQ application to accept.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorisedResponse"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "The NPQ application being accepted",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NPQApplicationResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/npq-applications.csv": {
+    "/api/v1/participants/npq/{id}": {
       "get": {
-        "summary": "Retrieve all NPQ applications in CSV format",
-        "operationId": "npq_applications_csv",
-        "tags": [
-          "NPQ applications"
-        ],
-        "security": [
-          {
-            "bearerAuth": [
-
-            ]
-          }
-        ],
-        "parameters": [
-          {
-            "name": "filter",
-            "in": "query",
-            "schema": {
-              "$ref": "#/components/schemas/ListFilter"
-            },
-            "style": "deepObject",
-            "explode": true,
-            "required": false,
-            "description": "Refine NPQ applications to return.",
-            "example": "updated_since=2020-11-13T11:21:55Z"
-          }
-        ],
-        "responses": {
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "text/csv": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorisedResponse"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "A CSV file of NPQ application",
-            "content": {
-              "text/csv": {
-                "schema": {
-                  "$ref": "#/components/schemas/MultipleNPQApplicationsCsvResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/participants/npq/{id}/resume": {
-      "put": {
-        "summary": "Notify that an NPQ participant is resuming their course",
+        "summary": "Get a single NPQ participant",
         "operationId": "npq_participant",
         "tags": [
-          "NPQ Participant"
+          "NPQ participants"
         ],
         "security": [
           {
@@ -753,7 +374,7 @@
             "in": "path",
             "required": true,
             "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
-            "description": "The ID of the participant to resume",
+            "description": "The ID of the NPQ participant.",
             "schema": {
               "type": "string"
             }
@@ -761,7 +382,7 @@
         ],
         "responses": {
           "200": {
-            "description": "The NPQ participant being resumed",
+            "description": "A single NPQ participant",
             "content": {
               "application/json": {
                 "schema": {
@@ -769,17 +390,17 @@
                 }
               }
             }
-          }
-        },
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NPQParticipantResumeRequest"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
               }
             }
-          },
-          "required": true
+          }
         }
       }
     },
@@ -833,12 +454,12 @@
         }
       }
     },
-    "/api/v1/participants/npq": {
-      "get": {
-        "summary": "Retrieve multiple NPQ participants",
-        "operationId": "npq_participants",
+    "/api/v1/participants/npq/{id}/defer": {
+      "put": {
+        "summary": "Notify that an NPQ participant is taking a break from their course",
+        "operationId": "npq_participant",
         "tags": [
-          "NPQ participants"
+          "NPQ Participant"
         ],
         "security": [
           {
@@ -849,51 +470,87 @@
         ],
         "parameters": [
           {
-            "name": "filter",
-            "in": "query",
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
+            "description": "The ID of the participant to defer",
             "schema": {
-              "$ref": "#/components/schemas/ListFilter"
-            },
-            "style": "deepObject",
-            "explode": true,
-            "required": false,
-            "description": "Refine NPQ participants to return.",
-            "example": "updated_since=2020-11-13T11:21:55Z"
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "schema": {
-              "$ref": "#/components/schemas/Pagination"
-            },
-            "style": "deepObject",
-            "explode": true,
-            "required": false,
-            "example": "page[page]=1&page[per_page]=5",
-            "description": "Pagination options to navigate through the list of NPQ participants."
+              "type": "string"
+            }
           }
         ],
         "responses": {
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorisedResponse"
-                }
-              }
-            }
-          },
           "200": {
-            "description": "A list of NPQ participants",
+            "description": "The NPQ participant being deferred",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/MultipleNPQParticipantsResponse"
+                  "$ref": "#/components/schemas/NPQParticipantResponse"
                 }
               }
             }
           }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NPQParticipantDeferRequest"
+              }
+            }
+          },
+          "required": true
+        }
+      }
+    },
+    "/api/v1/participants/npq/{id}/resume": {
+      "put": {
+        "summary": "Notify that an NPQ participant is resuming their course",
+        "operationId": "npq_participant",
+        "tags": [
+          "NPQ Participant"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
+            "description": "The ID of the participant to resume",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The NPQ participant being resumed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NPQParticipantResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NPQParticipantResumeRequest"
+              }
+            }
+          },
+          "required": true
         }
       }
     },
@@ -957,12 +614,12 @@
         }
       }
     },
-    "/api/v1/participants/npq/{id}/defer": {
-      "put": {
-        "summary": "Notify that an NPQ participant is taking a break from their course",
-        "operationId": "npq_participant",
+    "/api/v1/participant-declarations": {
+      "post": {
+        "summary": "Declare a participant has reached a milestone. Idempotent endpoint - submitting exact copy of a request will return the same response body as submitting it the first time.",
+        "operationId": "participant_declaration_create",
         "tags": [
-          "NPQ Participant"
+          "Participant declarations"
         ],
         "security": [
           {
@@ -972,68 +629,29 @@
           }
         ],
         "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
-            "description": "The ID of the participant to defer",
-            "schema": {
-              "type": "string"
-            }
-          }
+
         ],
         "responses": {
           "200": {
-            "description": "The NPQ participant being deferred",
+            "description": "Successful",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/NPQParticipantResponse"
+                  "$ref": "#/components/schemas/SingleParticipantDeclarationResponse"
                 }
               }
             }
-          }
-        },
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NPQParticipantDeferRequest"
+          },
+          "422": {
+            "description": "Bad or Missing parameter",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
               }
             }
           },
-          "required": true
-        }
-      }
-    },
-    "/api/v1/participants/npq/{id}": {
-      "get": {
-        "summary": "Get a single NPQ participant",
-        "operationId": "npq_participant",
-        "tags": [
-          "NPQ participants"
-        ],
-        "security": [
-          {
-            "bearerAuth": [
-
-            ]
-          }
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
-            "description": "The ID of the NPQ participant.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
           "401": {
             "description": "Unauthorized",
             "content": {
@@ -1044,12 +662,83 @@
               }
             }
           },
-          "200": {
-            "description": "A single NPQ participant",
+          "400": {
+            "description": "Bad Request",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/NPQParticipantResponse"
+                  "$ref": "#/components/schemas/BadRequestResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ParticipantDeclarationRequest"
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "List all participant declarations",
+        "operationId": "participant_declarations",
+        "tags": [
+          "Participant declarations"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "filter",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/ListFilterDeclarations"
+            },
+            "style": "deepObject",
+            "explode": true,
+            "required": false,
+            "description": "Refine participant declarations to return.",
+            "example": "participant_id=ab3a7848-1208-7679-942a-b4a70eed400a&updated_since=2020-11-13T11:21:55Z"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Pagination"
+            },
+            "style": "deepObject",
+            "explode": true,
+            "required": false,
+            "example": "page[page]=1&page[per_page]=5",
+            "description": "Pagination options to navigate through the list of participant declarations."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of participant declarations",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MultipleParticipantDeclarationsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
                 }
               }
             }
@@ -1057,12 +746,110 @@
         }
       }
     },
-    "/api/v1/participants/{id}/defer": {
-      "put": {
-        "summary": "Notify that an ECF participant is taking a break from their course",
-        "operationId": "participant",
+    "/api/v1/participant-declarations.csv": {
+      "get": {
+        "summary": "Retrieve all participant declarations in CSV format",
+        "operationId": "ecf_participant_declarations_csv",
         "tags": [
-          "ECF Participant"
+          "Participant declarations"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A CSV file of participant declarations",
+            "content": {
+              "text/csv": {
+                "schema": {
+                  "$ref": "#/components/schemas/MultipleParticipantDeclarationsCsvResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/csv": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/participant-declarations/{id}": {
+      "get": {
+        "summary": "Get single participant declaration",
+        "operationId": "participant_declaration",
+        "tags": [
+          "Participant declarations"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "example": "9ed4612b-f8bd-44d9-b296-38ab103fadd2",
+            "description": "The ID of the participant declaration ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A single participant declaration",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SingleParticipantDeclarationResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/participant-declarations/{id}/void": {
+      "put": {
+        "summary": "Void a declaration - it will not be soft-deleted",
+        "operationId": "participant_declaration_void",
+        "tags": [
+          "Participant declarations"
         ],
         "security": [
           {
@@ -1077,7 +864,7 @@
             "in": "path",
             "required": true,
             "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
-            "description": "The ID of the participant to defer",
+            "description": "The ID of the declaration to void",
             "schema": {
               "type": "string"
             }
@@ -1085,34 +872,24 @@
         ],
         "responses": {
           "200": {
-            "description": "The ECF participant being deferred",
+            "description": "Successful",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ECFParticipantResponse"
+                  "$ref": "#/components/schemas/SingleParticipantDeclarationResponse"
                 }
               }
             }
           }
-        },
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ECFParticipantDeferRequest"
-              }
-            }
-          },
-          "required": true
         }
       }
     },
-    "/api/v1/participants/{id}/resume": {
-      "put": {
-        "summary": "Notify that an ECF participant is resuming their course",
-        "operationId": "participant",
+    "/api/v1/participants/npq/outcomes": {
+      "get": {
+        "summary": "List all participant NPQ outcomes",
+        "operationId": "participant_outcomes",
         "tags": [
-          "ECF Participant"
+          "Participants Outcomes"
         ],
         "security": [
           {
@@ -1123,46 +900,60 @@
         ],
         "parameters": [
           {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
-            "description": "The ID of the participant to resume",
+            "name": "filter",
+            "in": "query",
             "schema": {
-              "type": "string"
-            }
+              "$ref": "#/components/schemas/NPQOutcomeFilter"
+            },
+            "style": "deepObject",
+            "explode": true,
+            "required": false,
+            "description": "Refine participant outcomes to return.",
+            "example": "filter[created_since]=2020-11-13T11:21:55Z"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Pagination"
+            },
+            "style": "deepObject",
+            "explode": true,
+            "required": false,
+            "example": "page[page]=1&page[per_page]=5",
+            "description": "Pagination options to navigate through the list of participant NPQ outcomes."
           }
         ],
         "responses": {
           "200": {
-            "description": "The ECF participant being resumed",
+            "description": "A list of participant outcomes",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ECFParticipantResponse"
+                  "$ref": "#/components/schemas/NPQOutcomesResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
                 }
               }
             }
           }
-        },
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ECFParticipantResumeRequest"
-              }
-            }
-          },
-          "required": true
         }
       }
     },
-    "/api/v1/participants/{id}/change-schedule": {
-      "put": {
-        "summary": "Notify that an ECF participant is changing training schedule",
-        "operationId": "participant",
+    "/api/v1/participants/npq/{participant_id}/outcomes": {
+      "get": {
+        "summary": "List NPQ outcomes for single participant",
+        "operationId": "participant_outcomes",
         "tags": [
-          "ECF Participant"
+          "Participants Outcomes"
         ],
         "security": [
           {
@@ -1173,11 +964,11 @@
         ],
         "parameters": [
           {
-            "name": "id",
+            "name": "participant_id",
             "in": "path",
             "required": true,
             "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
-            "description": "The ID of the participant",
+            "description": "The external ID of the participant",
             "schema": {
               "type": "string"
             }
@@ -1185,34 +976,32 @@
         ],
         "responses": {
           "200": {
-            "description": "The ECF participant changing schedule",
+            "description": "A list of participant outcomes",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ECFParticipantResponse"
+                  "$ref": "#/components/schemas/NPQOutcomesResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
                 }
               }
             }
           }
-        },
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ECFParticipantChangeScheduleRequest"
-              }
-            }
-          },
-          "required": true
         }
-      }
-    },
-    "/api/v1/participants/{id}/withdraw": {
-      "put": {
-        "summary": "Notify that an ECF participant has withdrawn from their course",
-        "operationId": "participant",
+      },
+      "post": {
+        "summary": "Submit a NPQ outcome for a single participant",
+        "operationId": "npq_outcome_post",
         "tags": [
-          "ECF Participant"
+          "Participants Outcomes"
         ],
         "security": [
           {
@@ -1223,23 +1012,34 @@
         ],
         "parameters": [
           {
-            "name": "id",
+            "name": "participant_id",
+            "description": "The unique ID of the participant",
             "in": "path",
             "required": true,
-            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
-            "description": "The ID of the participant to withdraw",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "format": "uuid"
+            },
+            "example": "70885c85-f52b-45fe-b969-e09a93ffc6ee"
           }
         ],
         "responses": {
           "200": {
-            "description": "The ECF participant being withdrawn",
+            "description": "Successfully submit a NPQ outcome",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ECFParticipantResponse"
+                  "$ref": "#/components/schemas/NPQOutcomeResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
                 }
               }
             }
@@ -1249,7 +1049,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ECFParticipantWithdrawRequest"
+                "$ref": "#/components/schemas/NPQOutcomeRequest"
               }
             }
           },
@@ -1257,12 +1057,12 @@
         }
       }
     },
-    "/api/v1/participants/ecf/{id}/change-schedule": {
-      "put": {
-        "summary": "Notify that an ECF participant is changing training schedule",
-        "operationId": "participant",
+    "/api/v1/participants/ecf": {
+      "get": {
+        "summary": "Retrieve multiple participants, replaces <code>/api/v1/participants</code>",
+        "operationId": "participants",
         "tags": [
-          "ECF Participant"
+          "ECF participants"
         ],
         "security": [
           {
@@ -1273,37 +1073,103 @@
         ],
         "parameters": [
           {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
-            "description": "The ID of the participant",
+            "name": "filter",
+            "in": "query",
             "schema": {
-              "type": "string"
-            }
+              "$ref": "#/components/schemas/ParticipantListFilter"
+            },
+            "style": "deepObject",
+            "explode": true,
+            "required": false,
+            "description": "Refine ECF participants to return.",
+            "example": "filter[cohort]=2022&filter[updated_since]=2020-11-13T11:21:55Z"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Pagination"
+            },
+            "style": "deepObject",
+            "explode": true,
+            "required": false,
+            "example": "page[page]=1&page[per_page]=5",
+            "description": "Pagination options to navigate through the list of ECF participants."
           }
         ],
         "responses": {
           "200": {
-            "description": "The ECF participant changing schedule",
+            "description": "A list of ECF participants",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ECFParticipantResponse"
+                  "$ref": "#/components/schemas/MultipleECFParticipantsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
                 }
               }
             }
           }
-        },
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ECFParticipantChangeScheduleRequest"
+        }
+      }
+    },
+    "/api/v1/participants/ecf.csv": {
+      "get": {
+        "summary": "Retrieve all participants in CSV format, replaces <code>/api/v1/participants.csv</code>",
+        "operationId": "ecf_participants_csv",
+        "tags": [
+          "ECF participants"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "filter",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/ParticipantListFilter"
+            },
+            "style": "deepObject",
+            "explode": true,
+            "required": false,
+            "description": "Refine ECF participants to return.",
+            "example": "updated_since=2020-11-13T11:21:55Z"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A CSV file of ECF participants",
+            "content": {
+              "text/csv": {
+                "schema": {
+                  "$ref": "#/components/schemas/MultipleECFParticipantsCsvResponse"
+                }
               }
             }
           },
-          "required": true
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/csv": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -1334,22 +1200,22 @@
           }
         ],
         "responses": {
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorisedResponse"
-                }
-              }
-            }
-          },
           "200": {
             "description": "A single ECF participant",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ECFParticipantResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
                 }
               }
             }
@@ -1507,12 +1373,12 @@
         }
       }
     },
-    "/api/v1/participants/ecf.csv": {
-      "get": {
-        "summary": "Retrieve all participants in CSV format, replaces <code>/api/v1/participants.csv</code>",
-        "operationId": "ecf_participants_csv",
+    "/api/v1/participants/ecf/{id}/change-schedule": {
+      "put": {
+        "summary": "Notify that an ECF participant is changing training schedule",
+        "operationId": "participant",
         "tags": [
-          "ECF participants"
+          "ECF Participant"
         ],
         "security": [
           {
@@ -1523,48 +1389,46 @@
         ],
         "parameters": [
           {
-            "name": "filter",
-            "in": "query",
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
+            "description": "The ID of the participant",
             "schema": {
-              "$ref": "#/components/schemas/ParticipantListFilter"
-            },
-            "style": "deepObject",
-            "explode": true,
-            "required": false,
-            "description": "Refine ECF participants to return.",
-            "example": "updated_since=2020-11-13T11:21:55Z"
+              "type": "string"
+            }
           }
         ],
         "responses": {
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "text/csv": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorisedResponse"
-                }
-              }
-            }
-          },
           "200": {
-            "description": "A CSV file of ECF participants",
+            "description": "The ECF participant changing schedule",
             "content": {
-              "text/csv": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/MultipleECFParticipantsCsvResponse"
+                  "$ref": "#/components/schemas/ECFParticipantResponse"
                 }
               }
             }
           }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ECFParticipantChangeScheduleRequest"
+              }
+            }
+          },
+          "required": true
         }
       }
     },
-    "/api/v1/participants/ecf": {
-      "get": {
-        "summary": "Retrieve multiple participants, replaces <code>/api/v1/participants</code>",
-        "operationId": "participants",
+    "/api/v1/participants/{id}/defer": {
+      "put": {
+        "summary": "Notify that an ECF participant is taking a break from their course",
+        "operationId": "participant",
         "tags": [
-          "ECF participants"
+          "ECF Participant"
         ],
         "security": [
           {
@@ -1575,51 +1439,187 @@
         ],
         "parameters": [
           {
-            "name": "filter",
-            "in": "query",
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
+            "description": "The ID of the participant to defer",
             "schema": {
-              "$ref": "#/components/schemas/ParticipantListFilter"
-            },
-            "style": "deepObject",
-            "explode": true,
-            "required": false,
-            "description": "Refine ECF participants to return.",
-            "example": "filter[cohort]=2022&filter[updated_since]=2020-11-13T11:21:55Z"
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "schema": {
-              "$ref": "#/components/schemas/Pagination"
-            },
-            "style": "deepObject",
-            "explode": true,
-            "required": false,
-            "example": "page[page]=1&page[per_page]=5",
-            "description": "Pagination options to navigate through the list of ECF participants."
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "A list of ECF participants",
+            "description": "The ECF participant being deferred",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/MultipleECFParticipantsResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                  "$ref": "#/components/schemas/ECFParticipantResponse"
                 }
               }
             }
           }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ECFParticipantDeferRequest"
+              }
+            }
+          },
+          "required": true
+        }
+      }
+    },
+    "/api/v1/participants/{id}/resume": {
+      "put": {
+        "summary": "Notify that an ECF participant is resuming their course",
+        "operationId": "participant",
+        "tags": [
+          "ECF Participant"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
+            "description": "The ID of the participant to resume",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The ECF participant being resumed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ECFParticipantResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ECFParticipantResumeRequest"
+              }
+            }
+          },
+          "required": true
+        }
+      }
+    },
+    "/api/v1/participants/{id}/withdraw": {
+      "put": {
+        "summary": "Notify that an ECF participant has withdrawn from their course",
+        "operationId": "participant",
+        "tags": [
+          "ECF Participant"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
+            "description": "The ID of the participant to withdraw",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The ECF participant being withdrawn",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ECFParticipantResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ECFParticipantWithdrawRequest"
+              }
+            }
+          },
+          "required": true
+        }
+      }
+    },
+    "/api/v1/participants/{id}/change-schedule": {
+      "put": {
+        "summary": "Notify that an ECF participant is changing training schedule",
+        "operationId": "participant",
+        "tags": [
+          "ECF Participant"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
+            "description": "The ID of the participant",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The ECF participant changing schedule",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ECFParticipantResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ECFParticipantChangeScheduleRequest"
+              }
+            }
+          },
+          "required": true
         }
       }
     }

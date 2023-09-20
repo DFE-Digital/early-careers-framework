@@ -92,16 +92,12 @@ properties:
     example: cd3a12347-7308-4879-942a-c4a70ced400a
   withdrawal:
     nullable: true
-    type: object
-    properties:
-      attributes:
-        $ref: "#/components/schemas/ECFWithdrawal"
+    anyOf:
+      - $ref: "#/components/schemas/ECFWithdrawal"
   deferral:
     nullable: true
-    type: object
-    properties:
-      attributes:
-        $ref: "#/components/schemas/ECFDeferral"
+    anyOf:
+      - $ref: "#/components/schemas/ECFDeferral"
   created_at:
     description: The date and time the ECF participant was created
     type: string

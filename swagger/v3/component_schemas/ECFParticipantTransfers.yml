@@ -28,16 +28,12 @@ properties:
       - complete
   leaving:
     nullable: true
-    type: object
-    properties:
-      attributes:
-        $ref: "#/components/schemas/ECFParticipantLeaving"
+    anyOf:
+      - $ref: "#/components/schemas/ECFParticipantLeaving"
   joining:
     nullable: true
-    type: object
-    properties:
-      attributes:
-        $ref: "#/components/schemas/ECFParticipantJoining"
+    anyOf:
+      - $ref: "#/components/schemas/ECFParticipantJoining"
   created_at:
     description: The date and time the ECF participant transfer was created
     type: string

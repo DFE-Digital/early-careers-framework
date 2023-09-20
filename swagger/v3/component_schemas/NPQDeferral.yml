@@ -7,7 +7,7 @@ properties:
   reason:
     description: "The reason a participant was deferred"
     type: string
-    example:
+    example: career-break
     enum:
       - bereavement
       - long-term-sickness
@@ -19,3 +19,6 @@ properties:
     type: string
     format: date-time
     example: "2021-05-31T02:22:32.000Z"
+example:
+  reason: career-break
+  date: "2021-05-31T02:22:32.000Z"

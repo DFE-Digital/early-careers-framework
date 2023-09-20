@@ -21,7 +21,7 @@ if defined?(RSpec)
 
         t.rspec_opts = [additional_rspec_opts]
 
-        t.rspec_opts += ["--format Rswag::Specs::SwaggerFormatter"]
+        t.rspec_opts += ["--format Rswag::Specs::SwaggerFormatter", "--order defined"]
       end
     end
   end

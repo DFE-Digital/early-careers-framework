@@ -24,455 +24,6 @@
     }
   ],
   "paths": {
-    "/api/v3/participant-declarations/{id}/void": {
-      "put": {
-        "summary": "<b>Note, this endpoint includes updated specifications.</b><br/>Void a declaration - it will not be soft-deleted",
-        "operationId": "participant_declaration_void",
-        "tags": [
-          "Participant declarations"
-        ],
-        "security": [
-          {
-            "bearerAuth": [
-
-            ]
-          }
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
-            "description": "The ID of the declaration to void",
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful",
-            "content": {
-              "application/json": {
-                "examples": {
-                  "success_ecf": {
-                    "value": {
-                      "data": {
-                        "id": "db3a7848-7308-4879-942a-c4a70ced400a",
-                        "type": "participant-declaration",
-                        "attributes": {
-                          "participant_id": "08d78829-f864-417f-8a30-cb7655714e28",
-                          "declaration_type": "started",
-                          "declaration_date": "2020-11-13T11:21:55Z",
-                          "course_identifier": "ecf-induction",
-                          "state": "voided",
-                          "updated_at": "2020-11-13T11:21:55Z",
-                          "created_at": "2020-11-13T11:21:55Z",
-                          "delivery_partner_id": "99ca2223-8c1f-4ac8-985d-a0672e97694e",
-                          "statement_id": "99ca2223-8c1f-4ac8-985d-a0672e97694e",
-                          "clawback_statement_id": null,
-                          "ineligible_for_funding_reason": null,
-                          "mentor_id": "907f61ed-5770-4d38-b22c-1a4265939378",
-                          "uplift_paid": true,
-                          "evidence_held": "other",
-                          "has_passed": null,
-                          "lead_provider_name": "Example Institute"
-                        }
-                      }
-                    }
-                  },
-                  "success_npq": {
-                    "value": {
-                      "data": {
-                        "id": "db3a7848-7308-4879-942a-c4a70ced400a",
-                        "type": "participant-declaration",
-                        "attributes": {
-                          "participant_id": "bf3c6251-f2a0-4690-a859-0fbecc6ed151",
-                          "declaration_type": "started",
-                          "declaration_date": "2020-11-13T11:21:55Z",
-                          "course_identifier": "npq-leading-teaching",
-                          "state": "voided",
-                          "updated_at": "2020-11-13T11:21:55Z",
-                          "created_at": "2020-11-13T11:21:55Z",
-                          "delivery_partner_id": null,
-                          "statement_id": "1cceffd7-0efd-432a-aedc-7be2d6cc72a2",
-                          "clawback_statement_id": null,
-                          "ineligible_for_funding_reason": null,
-                          "mentor_id": null,
-                          "uplift_paid": true,
-                          "evidence_held": null,
-                          "has_passed": null,
-                          "lead_provider_name": "Example Institute"
-                        }
-                      }
-                    }
-                  }
-                },
-                "schema": {
-                  "$ref": "#/components/schemas/SingleParticipantDeclarationResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v3/participant-declarations": {
-      "post": {
-        "summary": "<b>Note, this endpoint includes updated specifications.</b><br/>Declare a participant has reached a milestone. Idempotent endpoint - submitting exact copy of a request will return the same response body as submitting it the first time.",
-        "operationId": "participant_declaration_create",
-        "tags": [
-          "Participant declarations"
-        ],
-        "security": [
-          {
-            "bearerAuth": [
-
-            ]
-          }
-        ],
-        "parameters": [
-
-        ],
-        "responses": {
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorisedResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BadRequestResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Bad or Missing parameter",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "Successful",
-            "content": {
-              "application/json": {
-                "examples": {
-                  "success_ecf": {
-                    "value": {
-                      "data": {
-                        "id": "db3a7848-7308-4879-942a-c4a70ced400a",
-                        "type": "participant-declaration",
-                        "attributes": {
-                          "participant_id": "08d78829-f864-417f-8a30-cb7655714e28",
-                          "declaration_type": "started",
-                          "declaration_date": "2020-11-13T11:21:55Z",
-                          "course_identifier": "ecf-induction",
-                          "state": "eligible",
-                          "updated_at": "2020-11-13T11:21:55Z",
-                          "created_at": "2020-11-13T11:21:55Z",
-                          "delivery_partner_id": "99ca2223-8c1f-4ac8-985d-a0672e97694e",
-                          "statement_id": "99ca2223-8c1f-4ac8-985d-a0672e97694e",
-                          "clawback_statement_id": null,
-                          "ineligible_for_funding_reason": null,
-                          "mentor_id": "907f61ed-5770-4d38-b22c-1a4265939378",
-                          "uplift_paid": true,
-                          "evidence_held": "other",
-                          "has_passed": null,
-                          "lead_provider_name": "Example Institute"
-                        }
-                      }
-                    }
-                  },
-                  "success_npq": {
-                    "value": {
-                      "data": {
-                        "id": "db3a7848-7308-4879-942a-c4a70ced400a",
-                        "type": "participant-declaration",
-                        "attributes": {
-                          "participant_id": "bf3c6251-f2a0-4690-a859-0fbecc6ed151",
-                          "declaration_type": "started",
-                          "declaration_date": "2020-11-13T11:21:55Z",
-                          "course_identifier": "npq-leading-teaching",
-                          "state": "eligible",
-                          "updated_at": "2020-11-13T11:21:55Z",
-                          "created_at": "2020-11-13T11:21:55Z",
-                          "delivery_partner_id": null,
-                          "statement_id": "1cceffd7-0efd-432a-aedc-7be2d6cc72a2",
-                          "clawback_statement_id": null,
-                          "ineligible_for_funding_reason": null,
-                          "mentor_id": null,
-                          "uplift_paid": true,
-                          "evidence_held": null,
-                          "has_passed": null,
-                          "lead_provider_name": "Example Institute"
-                        }
-                      }
-                    }
-                  }
-                },
-                "schema": {
-                  "$ref": "#/components/schemas/SingleParticipantDeclarationResponse"
-                }
-              }
-            }
-          }
-        },
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ParticipantDeclarationRequest"
-              }
-            }
-          },
-          "required": true
-        }
-      },
-      "get": {
-        "summary": "<b>Note, this endpoint includes updated specifications.</b><br/>List all participant declarations",
-        "operationId": "participant_declarations",
-        "tags": [
-          "Participant declarations"
-        ],
-        "security": [
-          {
-            "bearerAuth": [
-
-            ]
-          }
-        ],
-        "parameters": [
-          {
-            "name": "filter",
-            "in": "query",
-            "schema": {
-              "$ref": "#/components/schemas/ParticipantDeclarationsFilter"
-            },
-            "style": "deepObject",
-            "explode": true,
-            "required": false,
-            "description": "Refine participant declarations to return.",
-            "example": "filter[participant_id]=ab3a7848-1208-7679-942a-b4a70eed400a&filter[updated_since]=2020-11-13T11:21:55Z"
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "schema": {
-              "$ref": "#/components/schemas/Pagination"
-            },
-            "style": "deepObject",
-            "explode": true,
-            "required": false,
-            "example": "page[page]=1&page[per_page]=5",
-            "description": "Pagination options to navigate through the list of participant declarations."
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "A list of participant declarations",
-            "content": {
-              "application/json": {
-                "examples": {
-                  "success": {
-                    "value": {
-                      "data": [
-                        {
-                          "id": "db3a7848-7308-4879-942a-c4a70ced400a",
-                          "type": "participant-declaration",
-                          "attributes": {
-                            "participant_id": "08d78829-f864-417f-8a30-cb7655714e28",
-                            "declaration_type": "started",
-                            "declaration_date": "2020-11-13T11:21:55Z",
-                            "course_identifier": "ecf-induction",
-                            "state": "eligible",
-                            "updated_at": "2020-11-13T11:21:55Z",
-                            "created_at": "2020-11-13T11:21:55Z",
-                            "delivery_partner_id": "99ca2223-8c1f-4ac8-985d-a0672e97694e",
-                            "statement_id": "99ca2223-8c1f-4ac8-985d-a0672e97694e",
-                            "clawback_statement_id": null,
-                            "ineligible_for_funding_reason": null,
-                            "mentor_id": "907f61ed-5770-4d38-b22c-1a4265939378",
-                            "uplift_paid": true,
-                            "evidence_held": "other",
-                            "has_passed": null,
-                            "lead_provider_name": "Example Institute"
-                          }
-                        },
-                        {
-                          "id": "db3a7848-7308-4879-942a-c4a70ced400a",
-                          "type": "participant-declaration",
-                          "attributes": {
-                            "participant_id": "bf3c6251-f2a0-4690-a859-0fbecc6ed151",
-                            "declaration_type": "started",
-                            "declaration_date": "2020-11-13T11:21:55Z",
-                            "course_identifier": "npq-leading-teaching",
-                            "state": "eligible",
-                            "updated_at": "2020-11-13T11:21:55Z",
-                            "created_at": "2020-11-13T11:21:55Z",
-                            "delivery_partner_id": null,
-                            "statement_id": "1cceffd7-0efd-432a-aedc-7be2d6cc72a2",
-                            "clawback_statement_id": null,
-                            "ineligible_for_funding_reason": null,
-                            "mentor_id": null,
-                            "uplift_paid": true,
-                            "evidence_held": "other",
-                            "has_passed": null,
-                            "lead_provider_name": "Example Institute"
-                          }
-                        }
-                      ]
-                    }
-                  }
-                },
-                "schema": {
-                  "$ref": "#/components/schemas/MultipleParticipantDeclarationsResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorisedResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v3/participant-declarations/{id}": {
-      "get": {
-        "summary": "<b>Note, this endpoint includes updated specifications.</b><br/>Get single participant declaration",
-        "operationId": "participant_declaration",
-        "tags": [
-          "Participant declarations"
-        ],
-        "security": [
-          {
-            "bearerAuth": [
-
-            ]
-          }
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "example": "9ed4612b-f8bd-44d9-b296-38ab103fadd2",
-            "description": "The ID of the participant declaration ID",
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "A single participant declaration",
-            "content": {
-              "application/json": {
-                "examples": {
-                  "success_ecf": {
-                    "value": {
-                      "data": {
-                        "id": "db3a7848-7308-4879-942a-c4a70ced400a",
-                        "type": "participant-declaration",
-                        "attributes": {
-                          "participant_id": "08d78829-f864-417f-8a30-cb7655714e28",
-                          "declaration_type": "started",
-                          "declaration_date": "2020-11-13T11:21:55Z",
-                          "course_identifier": "ecf-induction",
-                          "state": "eligible",
-                          "updated_at": "2020-11-13T11:21:55Z",
-                          "created_at": "2020-11-13T11:21:55Z",
-                          "delivery_partner_id": "99ca2223-8c1f-4ac8-985d-a0672e97694e",
-                          "statement_id": "99ca2223-8c1f-4ac8-985d-a0672e97694e",
-                          "clawback_statement_id": null,
-                          "ineligible_for_funding_reason": null,
-                          "mentor_id": "907f61ed-5770-4d38-b22c-1a4265939378",
-                          "uplift_paid": true,
-                          "evidence_held": "other",
-                          "has_passed": null,
-                          "lead_provider_name": "Example Institute"
-                        }
-                      }
-                    }
-                  },
-                  "success_npq": {
-                    "value": {
-                      "data": {
-                        "id": "db3a7848-7308-4879-942a-c4a70ced400a",
-                        "type": "participant-declaration",
-                        "attributes": {
-                          "participant_id": "bf3c6251-f2a0-4690-a859-0fbecc6ed151",
-                          "declaration_type": "started",
-                          "declaration_date": "2020-11-13T11:21:55Z",
-                          "course_identifier": "npq-leading-teaching",
-                          "state": "eligible",
-                          "updated_at": "2020-11-13T11:21:55Z",
-                          "created_at": "2020-11-13T11:21:55Z",
-                          "delivery_partner_id": null,
-                          "statement_id": "1cceffd7-0efd-432a-aedc-7be2d6cc72a2",
-                          "clawback_statement_id": null,
-                          "ineligible_for_funding_reason": null,
-                          "mentor_id": null,
-                          "uplift_paid": true,
-                          "evidence_held": null,
-                          "has_passed": null,
-                          "lead_provider_name": "Example Institute"
-                        }
-                      }
-                    }
-                  }
-                },
-                "schema": {
-                  "$ref": "#/components/schemas/SingleParticipantDeclarationResponse"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotFoundResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorisedResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/v3/delivery-partners": {
       "get": {
         "summary": "<b>Note, this endpoint is new.</b><br/>Retrieve delivery partners",
@@ -577,22 +128,22 @@
           }
         ],
         "responses": {
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorisedResponse"
-                }
-              }
-            }
-          },
           "200": {
             "description": "Successfully return a specific delivery partner",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/DeliveryPartnerResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
                 }
               }
             }
@@ -610,12 +161,12 @@
         }
       }
     },
-    "/api/v3/unfunded-mentors/ecf": {
+    "/api/v3/participants/ecf/transfers": {
       "get": {
-        "summary": "<b>Note, this endpoint is new.</b><br/>Retrieve multiple unfunded mentors",
+        "summary": "<b>Note, this endpoint is new.</b><br/>Retrieve multiple ECF participant transfers",
         "operationId": "participants",
         "tags": [
-          "unfunded mentors"
+          "participant transfers"
         ],
         "security": [
           {
@@ -634,7 +185,7 @@
             "style": "deepObject",
             "explode": true,
             "required": false,
-            "description": "Refine unfunded mentors to return.",
+            "description": "Refine participant transfers to return.",
             "example": "filter[updated_since]=2020-11-13T11:21:55Z"
           },
           {
@@ -647,28 +198,47 @@
             "explode": true,
             "required": false,
             "example": "page[page]=1&page[per_page]=5",
-            "description": "Pagination options to navigate through the list of unfunded mentors."
-          },
-          {
-            "name": "sort",
-            "in": "query",
-            "schema": {
-              "$ref": "#/components/schemas/ECFUnfundedMentorsSort"
-            },
-            "style": "form",
-            "explode": false,
-            "required": false,
-            "description": "Sort unfunded mentors being returned.",
-            "example": "sort=-updated_at"
+            "description": "Pagination options to navigate through the list of participant transfers."
           }
         ],
         "responses": {
           "200": {
-            "description": "A list of unfunded mentors",
+            "description": "A list of ECF participant transfers",
             "content": {
               "application/json": {
+                "examples": {
+                  "success": {
+                    "value": {
+                      "data": [
+                        {
+                          "id": "db3a7848-7308-4879-942a-c4a70ced400a",
+                          "type": "participant-transfer",
+                          "attributes": {
+                            "updated_at": "2021-05-31T02:22:32.000Z",
+                            "transfers": {
+                              "training_record_id": "000a97ff-d2a9-4779-a397-9bfd9063072e",
+                              "transfer_type": "new_provider",
+                              "status": "complete",
+                              "leaving": {
+                                "school_urn": "123456",
+                                "provider": "Old Institute",
+                                "date": "2021-05-31"
+                              },
+                              "joining": {
+                                "school_urn": "654321",
+                                "provider": "New Institute",
+                                "date": "2021-06-01"
+                              },
+                              "created_at": "2021-05-31T02:22:32.000Z"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
                 "schema": {
-                  "$ref": "#/components/schemas/MultipleUnfundedMentorsResponse"
+                  "$ref": "#/components/schemas/MultipleECFParticipantTransferResponse"
                 }
               }
             }
@@ -686,12 +256,12 @@
         }
       }
     },
-    "/api/v3/unfunded-mentors/ecf/{id}": {
+    "/api/v3/participants/ecf/{id}/transfers": {
       "get": {
-        "summary": "<b>Note, this endpoint is new.</b><br/>Get a single unfunded mentor",
-        "operationId": "unfunded_mentors",
+        "summary": "<b>Note, this endpoint is new.</b><br/>Get a single participant's transfers",
+        "operationId": "participant_transfers",
         "tags": [
-          "unfunded mentors"
+          "participant transfers"
         ],
         "security": [
           {
@@ -706,7 +276,7 @@
             "in": "path",
             "required": true,
             "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
-            "description": "The ID of the unfunded mentor.",
+            "description": "The ID of the ECF participant.",
             "schema": {
               "type": "string",
               "format": "uuid"
@@ -714,22 +284,22 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "A single participant's transfers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ECFParticipantTransferResponse"
+                }
+              }
+            }
+          },
           "401": {
             "description": "Unauthorized",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/UnauthorisedResponse"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "A single unfunded mentor",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnfundedMentorResponse"
                 }
               }
             }
@@ -747,73 +317,12 @@
         }
       }
     },
-    "/api/v3/statements/{id}": {
+    "/api/v3/participants/ecf": {
       "get": {
-        "summary": "<b>Note, this endpoint is new.</b><br/>Retrieve specific financial statement",
-        "operationId": "statement_get",
+        "summary": "<b>Note, this endpoint includes updated specifications.</b><br/>Retrieve multiple participants, replaces <code>/api/v3/participants</code>",
+        "operationId": "participants",
         "tags": [
-          "statements"
-        ],
-        "security": [
-          {
-            "bearerAuth": [
-
-            ]
-          }
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "description": "The unique ID of the statement",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            },
-            "example": "fe82db5d-a7ff-42b4-9eb7-19a87bf0ce5f"
-          }
-        ],
-        "responses": {
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorisedResponse"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "A specific financial statement",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/StatementResponse"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotFoundResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v3/statements": {
-      "get": {
-        "summary": "<b>Note, this endpoint is new.</b><br/>Retrieve financial statements",
-        "operationId": "statements_get",
-        "tags": [
-          "statements"
+          "ECF participants"
         ],
         "security": [
           {
@@ -827,13 +336,13 @@
             "name": "filter",
             "in": "query",
             "schema": {
-              "$ref": "#/components/schemas/StatementsFilter"
+              "$ref": "#/components/schemas/ECFParticipantFilter"
             },
             "style": "deepObject",
             "explode": true,
             "required": false,
-            "description": "Refine statements to return.",
-            "example": "filter[cohort]=2021,2022&filter[type]=ecf&filter[updated_since]=2020-11-13T11:21:55Z"
+            "description": "Refine ECF participants to return.",
+            "example": "filter[cohort]=2022&filter[training_status]=active&filter[updated_since]=2020-11-13T11:21:55Z"
           },
           {
             "name": "page",
@@ -845,16 +354,28 @@
             "explode": true,
             "required": false,
             "example": "page[page]=1&page[per_page]=5",
-            "description": "Pagination options to navigate through the list of statements."
+            "description": "Pagination options to navigate through the list of ECF participants."
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/ECFParticipantsSort"
+            },
+            "style": "form",
+            "explode": false,
+            "required": false,
+            "description": "Sort ECF participants being returned.",
+            "example": "sort=-updated_at"
           }
         ],
         "responses": {
           "200": {
-            "description": "A list of statements as part of which the DfE will make output payments for ecf or npq participants",
+            "description": "A list of ECF participants",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StatementsResponse"
+                  "$ref": "#/components/schemas/MultipleECFParticipantsResponse"
                 }
               }
             }
@@ -869,6 +390,668 @@
               }
             }
           }
+        }
+      }
+    },
+    "/api/v3/participants/ecf/{id}": {
+      "get": {
+        "summary": "<b>Note, this endpoint includes updated specifications.</b><br/>Get a single ECF participant",
+        "operationId": "ecf_participant",
+        "tags": [
+          "ECF participants"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
+            "description": "The ID of the ECF participant.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A single ECF participant",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ECFParticipantResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/participants/ecf/{id}/defer": {
+      "put": {
+        "summary": "<b>Note, this endpoint includes updated specifications.</b><br/>Notify that an ECF participant is taking a break from their course",
+        "operationId": "ecf_participant_defer",
+        "tags": [
+          "ECF Participant"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
+            "description": "The ID of the participant to defer",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The ECF participant being deferred",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "success": {
+                    "value": {
+                      "data": {
+                        "id": "db3a7848-7308-4879-942a-c4a70ced400a",
+                        "type": "participant",
+                        "attributes": {
+                          "full_name": "Jane Smith",
+                          "teacher_reference_number": "1234567",
+                          "updated_at": "2021-05-31T02:22:32.000Z",
+                          "ecf_enrolments": {
+                            "training_record_id": "000a97ff-d2a9-4779-a397-9bfd9063072e",
+                            "email": "jane.smith@some-school.example.com",
+                            "mentor_id": "bb36d74a-68a7-47b6-86b6-1fd0d141c590",
+                            "school_urn": "106286",
+                            "participant_type": "ect",
+                            "cohort": "2021",
+                            "training_status": "withdrawn",
+                            "participant_status": "withdrawn",
+                            "teacher_reference_number_validated": true,
+                            "eligible_for_funding": true,
+                            "pupil_premium_uplift": true,
+                            "sparsity_uplift": true,
+                            "schedule_identifier": "ecf-standard-january",
+                            "delivery_partner_id": "cd3a12347-7308-4879-942a-c4a70ced400a",
+                            "withdrawal": null,
+                            "deferral": {
+                              "reason": "other",
+                              "date": "2021-06-31T02:22:32.000Z"
+                            },
+                            "created_at": "2022-11-09T16:07:38Z"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ECFParticipantResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ECFParticipantDeferRequest"
+              }
+            }
+          },
+          "required": true
+        }
+      }
+    },
+    "/api/v3/participants/ecf/{id}/resume": {
+      "put": {
+        "summary": "<b>Note, this endpoint includes updated specifications.</b><br/>Notify that an ECF participant is resuming their course",
+        "operationId": "ecf_participant_resume",
+        "tags": [
+          "ECF Participant"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
+            "description": "The ID of the participant to resume",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The ECF participant being resumed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ECFParticipantResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ECFParticipantResumeRequest"
+              }
+            }
+          },
+          "required": true
+        }
+      }
+    },
+    "/api/v3/participants/ecf/{id}/withdraw": {
+      "put": {
+        "summary": "<b>Note, this endpoint includes updated specifications.</b><br/>Notify that an ECF participant has withdrawn from their course",
+        "operationId": "participant",
+        "tags": [
+          "ECF Participant"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
+            "description": "The ID of the participant to withdraw",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The ECF participant being withdrawn",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "success": {
+                    "value": {
+                      "data": {
+                        "id": "db3a7848-7308-4879-942a-c4a70ced400a",
+                        "type": "participant",
+                        "attributes": {
+                          "full_name": "Jane Smith",
+                          "teacher_reference_number": "1234567",
+                          "updated_at": "2021-05-31T02:22:32.000Z",
+                          "ecf_enrolments": {
+                            "training_record_id": "000a97ff-d2a9-4779-a397-9bfd9063072e",
+                            "email": "jane.smith@some-school.example.com",
+                            "mentor_id": "bb36d74a-68a7-47b6-86b6-1fd0d141c590",
+                            "school_urn": "106286",
+                            "participant_type": "ect",
+                            "cohort": "2021",
+                            "training_status": "withdrawn",
+                            "participant_status": "withdrawn",
+                            "teacher_reference_number_validated": true,
+                            "eligible_for_funding": true,
+                            "pupil_premium_uplift": true,
+                            "sparsity_uplift": true,
+                            "schedule_identifier": "ecf-standard-january",
+                            "delivery_partner_id": "cd3a12347-7308-4879-942a-c4a70ced400a",
+                            "withdrawal": {
+                              "reason": "other",
+                              "date": "2021-06-31T02:22:32.000Z"
+                            },
+                            "deferral": null,
+                            "created_at": "2022-11-09T16:07:38Z"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ECFParticipantResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ECFParticipantWithdrawRequest"
+              }
+            }
+          },
+          "required": true
+        }
+      }
+    },
+    "/api/v3/participants/ecf/{id}/change-schedule": {
+      "put": {
+        "summary": "<b>Note, this endpoint includes updated specifications.</b><br/>Notify that an ECF Participant is changing training schedule",
+        "operationId": "ecf_participant_change_schedule",
+        "tags": [
+          "ECF Participant"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
+            "description": "The ID of the participant",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The ECF Participant changing schedule",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ECFParticipantResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ECFParticipantChangeScheduleRequest"
+              }
+            }
+          },
+          "required": true
+        }
+      }
+    },
+    "/api/v3/partnerships/ecf": {
+      "get": {
+        "summary": "<b>Note, this endpoint is new.</b><br/>Retrieve multiple ECF partnerships",
+        "operationId": "partnerships_ecf_get",
+        "tags": [
+          "ECF partnerships"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "filter",
+            "schema": {
+              "$ref": "#/components/schemas/PartnershipsFilter"
+            },
+            "in": "query",
+            "style": "deepObject",
+            "explode": true,
+            "required": false,
+            "description": "Refine partnerships to return.",
+            "example": "filter[cohort]=2021,2022"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Pagination"
+            },
+            "style": "deepObject",
+            "explode": true,
+            "required": false,
+            "example": "page[page]=1&page[per_page]=5",
+            "description": "Pagination options to navigate through the list of partnerships."
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/PartnershipsSort"
+            },
+            "style": "form",
+            "explode": false,
+            "required": false,
+            "description": "Sort partnerships being returned.",
+            "example": "sort=-updated_at"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of ECF partnerships",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MultipleECFPartnershipsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "<b>Note, this endpoint is new.</b><br/>Create an ECF partnership with a school and delivery partner",
+        "operationId": "partnerships_ecf_post",
+        "tags": [
+          "ECF partnerships"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "parameters": [
+
+        ],
+        "responses": {
+          "200": {
+            "description": "Create an ECF partnership",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "success": {
+                    "value": {
+                      "data": {
+                        "id": "cd3a12347-7308-4879-942a-c4a70ced400a",
+                        "type": "partnership",
+                        "attributes": {
+                          "cohort": 2021,
+                          "urn": "123456",
+                          "school_id": "dd4a11347-7308-4879-942a-c4a70ced400v",
+                          "delivery_partner_id": "db2fbf67-b7b7-454f-a1b7-0020411e2314",
+                          "delivery_partner_name": "Delivery Partner Example",
+                          "status": "active",
+                          "challenged_reason": null,
+                          "challenged_at": null,
+                          "induction_tutor_name": "John Doe",
+                          "induction_tutor_email": "john.doe@example.com",
+                          "updated_at": "2021-05-31T02:22:32.000Z",
+                          "created_at": "2021-05-31T02:22:32.000Z"
+                        }
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ECFPartnershipResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ECFPartnershipRequestErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ECFPartnershipRequest"
+              }
+            }
+          },
+          "required": true
+        }
+      }
+    },
+    "/api/v3/partnerships/ecf/{id}": {
+      "get": {
+        "summary": "<b>Note, this endpoint is new.</b><br/>Get a single ECF partnership",
+        "operationId": "partnerships_ecf_get",
+        "tags": [
+          "ECF partnerships"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "description": "The unique ID of the partnership",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "example": "00acafd3-e6f6-41e7-a770-3207be94f755"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A single partnership",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ECFPartnershipResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "<b>Note, this endpoint is new.</b><br/>Update a partnership’s delivery partner in an existing partnership in a cohort",
+        "operationId": "partnerships_ecf_put",
+        "tags": [
+          "ECF partnerships"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
+            "description": "The ID of the partnership to update",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Update an ECF partnership",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "success": {
+                    "value": {
+                      "data": {
+                        "id": "cd3a12347-7308-4879-942a-c4a70ced400a",
+                        "type": "partnership",
+                        "attributes": {
+                          "cohort": 2021,
+                          "urn": "123456",
+                          "school_id": "dd4a11347-7308-4879-942a-c4a70ced400v",
+                          "delivery_partner_id": "db2fbf67-b7b7-454f-a1b7-0020411e2314",
+                          "delivery_partner_name": "Delivery Partner Example",
+                          "status": "active",
+                          "challenged_reason": null,
+                          "challenged_at": null,
+                          "induction_tutor_name": "John Doe",
+                          "induction_tutor_email": "john.doe@example.com",
+                          "updated_at": "2021-05-31T02:22:32.000Z",
+                          "created_at": "2021-05-31T02:22:32.000Z"
+                        }
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ECFPartnershipResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ECFPartnershipRequestErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ECFPartnershipUpdateRequest"
+              }
+            }
+          },
+          "required": true
         }
       }
     },
@@ -1012,6 +1195,16 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "A single school",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ECFSchoolResponse"
+                }
+              }
+            }
+          },
           "401": {
             "description": "Unauthorized",
             "content": {
@@ -1031,26 +1224,16 @@
                 }
               }
             }
-          },
-          "200": {
-            "description": "A single school",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ECFSchoolResponse"
-                }
-              }
-            }
           }
         }
       }
     },
-    "/api/v3/partnerships/ecf": {
+    "/api/v3/unfunded-mentors/ecf": {
       "get": {
-        "summary": "<b>Note, this endpoint is new.</b><br/>Retrieve multiple ECF partnerships",
-        "operationId": "partnerships_ecf_get",
+        "summary": "<b>Note, this endpoint is new.</b><br/>Retrieve multiple unfunded mentors",
+        "operationId": "participants",
         "tags": [
-          "ECF partnerships"
+          "unfunded mentors"
         ],
         "security": [
           {
@@ -1062,15 +1245,15 @@
         "parameters": [
           {
             "name": "filter",
-            "schema": {
-              "$ref": "#/components/schemas/PartnershipsFilter"
-            },
             "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/ListFilter"
+            },
             "style": "deepObject",
             "explode": true,
             "required": false,
-            "description": "Refine partnerships to return.",
-            "example": "filter[cohort]=2021,2022"
+            "description": "Refine unfunded mentors to return.",
+            "example": "filter[updated_since]=2020-11-13T11:21:55Z"
           },
           {
             "name": "page",
@@ -1082,22 +1265,32 @@
             "explode": true,
             "required": false,
             "example": "page[page]=1&page[per_page]=5",
-            "description": "Pagination options to navigate through the list of partnerships."
+            "description": "Pagination options to navigate through the list of unfunded mentors."
           },
           {
             "name": "sort",
             "in": "query",
             "schema": {
-              "$ref": "#/components/schemas/PartnershipsSort"
+              "$ref": "#/components/schemas/ECFUnfundedMentorsSort"
             },
             "style": "form",
             "explode": false,
             "required": false,
-            "description": "Sort partnerships being returned.",
+            "description": "Sort unfunded mentors being returned.",
             "example": "sort=-updated_at"
           }
         ],
         "responses": {
+          "200": {
+            "description": "A list of unfunded mentors",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MultipleUnfundedMentorsResponse"
+                }
+              }
+            }
+          },
           "401": {
             "description": "Unauthorized",
             "content": {
@@ -1107,168 +1300,16 @@
                 }
               }
             }
-          },
-          "200": {
-            "description": "A list of ECF partnerships",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MultipleECFPartnershipsResponse"
-                }
-              }
-            }
           }
-        }
-      },
-      "post": {
-        "summary": "<b>Note, this endpoint is new.</b><br/>Create an ECF partnership with a school and delivery partner",
-        "operationId": "partnerships_ecf_post",
-        "tags": [
-          "ECF partnerships"
-        ],
-        "security": [
-          {
-            "bearerAuth": [
-
-            ]
-          }
-        ],
-        "parameters": [
-
-        ],
-        "responses": {
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorisedResponse"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "Create an ECF partnership",
-            "content": {
-              "application/json": {
-                "examples": {
-                  "success": {
-                    "value": {
-                      "data": {
-                        "id": "cd3a12347-7308-4879-942a-c4a70ced400a",
-                        "type": "partnership",
-                        "attributes": {
-                          "cohort": 2021,
-                          "urn": "123456",
-                          "school_id": "dd4a11347-7308-4879-942a-c4a70ced400v",
-                          "delivery_partner_id": "db2fbf67-b7b7-454f-a1b7-0020411e2314",
-                          "delivery_partner_name": "Delivery Partner Example",
-                          "status": "active",
-                          "challenged_reason": null,
-                          "challenged_at": null,
-                          "induction_tutor_name": "John Doe",
-                          "induction_tutor_email": "john.doe@example.com",
-                          "updated_at": "2021-05-31T02:22:32.000Z",
-                          "created_at": "2021-05-31T02:22:32.000Z"
-                        }
-                      }
-                    }
-                  }
-                },
-                "schema": {
-                  "$ref": "#/components/schemas/ECFPartnershipResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Unprocessable entity",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ECFPartnershipRequestErrorResponse"
-                }
-              }
-            }
-          }
-        },
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ECFPartnershipRequest"
-              }
-            }
-          },
-          "required": true
         }
       }
     },
-    "/api/v3/partnerships/ecf/{id}": {
+    "/api/v3/unfunded-mentors/ecf/{id}": {
       "get": {
-        "summary": "<b>Note, this endpoint is new.</b><br/>Get a single ECF partnership",
-        "operationId": "partnerships_ecf_get",
+        "summary": "<b>Note, this endpoint is new.</b><br/>Get a single unfunded mentor",
+        "operationId": "unfunded_mentors",
         "tags": [
-          "ECF partnerships"
-        ],
-        "security": [
-          {
-            "bearerAuth": [
-
-            ]
-          }
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "description": "The unique ID of the partnership",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            },
-            "example": "00acafd3-e6f6-41e7-a770-3207be94f755"
-          }
-        ],
-        "responses": {
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorisedResponse"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotFoundResponse"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "A single partnership",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ECFPartnershipResponse"
-                }
-              }
-            }
-          }
-        }
-      },
-      "put": {
-        "summary": "<b>Note, this endpoint is new.</b><br/>Update a partnership’s delivery partner in an existing partnership in a cohort",
-        "operationId": "partnerships_ecf_put",
-        "tags": [
-          "ECF partnerships"
+          "unfunded mentors"
         ],
         "security": [
           {
@@ -1283,7 +1324,7 @@
             "in": "path",
             "required": true,
             "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
-            "description": "The ID of the partnership to update",
+            "description": "The ID of the unfunded mentor.",
             "schema": {
               "type": "string",
               "format": "uuid"
@@ -1291,22 +1332,12 @@
           }
         ],
         "responses": {
-          "422": {
-            "description": "Unprocessable entity",
+          "200": {
+            "description": "A single unfunded mentor",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ECFPartnershipRequestErrorResponse"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotFoundResponse"
+                  "$ref": "#/components/schemas/UnfundedMentorResponse"
                 }
               }
             }
@@ -1321,50 +1352,334 @@
               }
             }
           },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/npq-applications": {
+      "get": {
+        "summary": "Retrieve multiple NPQ applications",
+        "operationId": "npq_applications",
+        "tags": [
+          "NPQ applications"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "filter",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/NPQApplicationsFilter"
+            },
+            "style": "deepObject",
+            "explode": true,
+            "required": false,
+            "description": "Refine NPQ applications to return.",
+            "example": "filter[cohort]=2021,2022&filter[participant_id]=7e5bcdbf-c818-4961-8da5-439cab1984e0,c2a7ef98-bbfc-48c5-8f02-d484071d2165&filter[updated_since]=2020-11-13T11:21:55Z"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Pagination"
+            },
+            "style": "deepObject",
+            "explode": true,
+            "required": false,
+            "example": "page[page]=1&page[per_page]=5",
+            "description": "Pagination options to navigate through the list of NPQ applications."
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/NPQApplicationsSort"
+            },
+            "style": "form",
+            "explode": false,
+            "required": false,
+            "description": "Sort NPQ applications being returned.",
+            "example": "sort=-updated_at"
+          }
+        ],
+        "responses": {
           "200": {
-            "description": "Update an ECF partnership",
+            "description": "A list of NPQ applications",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MultipleNPQApplicationsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/npq-applications/{id}": {
+      "get": {
+        "summary": "Get a single NPQ application",
+        "operationId": "npq_application",
+        "tags": [
+          "NPQ applications"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
+            "description": "The ID of the NPQ application.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A single NPQ application",
             "content": {
               "application/json": {
                 "examples": {
                   "success": {
                     "value": {
                       "data": {
-                        "id": "cd3a12347-7308-4879-942a-c4a70ced400a",
-                        "type": "partnership",
+                        "id": "db3a7848-7308-4879-942a-c4a70ced400a",
+                        "type": "npq_application",
                         "attributes": {
-                          "cohort": 2021,
-                          "urn": "123456",
-                          "school_id": "dd4a11347-7308-4879-942a-c4a70ced400v",
-                          "delivery_partner_id": "db2fbf67-b7b7-454f-a1b7-0020411e2314",
-                          "delivery_partner_name": "Delivery Partner Example",
-                          "status": "active",
-                          "challenged_reason": null,
-                          "challenged_at": null,
-                          "induction_tutor_name": "John Doe",
-                          "induction_tutor_email": "john.doe@example.com",
-                          "updated_at": "2021-05-31T02:22:32.000Z",
-                          "created_at": "2021-05-31T02:22:32.000Z"
+                          "course_identifier": "npq-leading-teaching-development",
+                          "email": "isabelle.macdonald2@some-school.example.com",
+                          "email_validated": true,
+                          "employer_name": null,
+                          "employment_role": null,
+                          "full_name": "Isabelle MacDonald",
+                          "funding_choice": null,
+                          "headteacher_status": null,
+                          "ineligible_for_funding_reason": null,
+                          "participant_id": "53847955-7cfg-41eb-a322-96c50adc742b",
+                          "private_childcare_provider_urn": null,
+                          "teacher_reference_number": "0743795",
+                          "teacher_reference_number_validated": true,
+                          "school_urn": "123456",
+                          "school_ukprn": "12345678",
+                          "status": "pending",
+                          "works_in_school": true,
+                          "created_at": "2022-07-06T10:47:24Z",
+                          "updated_at": "2022-11-24T17:09:37Z",
+                          "cohort": "2022",
+                          "eligible_for_funding": true,
+                          "targeted_delivery_funding_eligibility": false,
+                          "teacher_catchment": true,
+                          "teacher_catchment_iso_country_code": "GBR",
+                          "teacher_catchment_country": "United Kingdom of Great Britain and Northern Ireland",
+                          "itt_provider": null,
+                          "lead_mentor": false
                         }
                       }
                     }
                   }
                 },
                 "schema": {
-                  "$ref": "#/components/schemas/ECFPartnershipResponse"
+                  "$ref": "#/components/schemas/NPQApplicationResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundResponse"
                 }
               }
             }
           }
-        },
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ECFPartnershipUpdateRequest"
+        }
+      }
+    },
+    "/api/v3/npq-applications/{id}/accept": {
+      "post": {
+        "summary": "Accept an NPQ application",
+        "operationId": "npq_applications_accept",
+        "tags": [
+          "NPQ applications"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
+            "description": "The ID of the NPQ application to accept.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The NPQ application being accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NPQApplicationResponse"
+                }
               }
             }
           },
-          "required": true
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NPQApplicationAcceptErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/npq-applications/{id}/reject": {
+      "post": {
+        "summary": "Reject an NPQ application",
+        "operationId": "npq_applications_reject",
+        "tags": [
+          "NPQ applications"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "example": "14b1b4ab-fa81-4f7a-b4b5-f632412e8c5c",
+            "description": "The ID of the NPQ application to reject.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The NPQ application being rejected",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NPQApplicationResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NPQApplicationRejectErrorResponse"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -1409,16 +1724,6 @@
           }
         ],
         "responses": {
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorisedResponse"
-                }
-              }
-            }
-          },
           "200": {
             "description": "A list of participant outcomes",
             "content": {
@@ -1428,11 +1733,82 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
           }
         }
       }
     },
     "/api/v3/participants/npq/{participant_id}/outcomes": {
+      "get": {
+        "summary": "List NPQ outcomes for single participant",
+        "operationId": "participant_outcomes",
+        "tags": [
+          "Participants Outcomes"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "participant_id",
+            "in": "path",
+            "required": true,
+            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
+            "description": "The external ID of the participant",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Pagination"
+            },
+            "style": "deepObject",
+            "explode": true,
+            "required": false,
+            "example": "page[page]=1&page[per_page]=5",
+            "description": "Pagination options to navigate through the list of participant NPQ outcomes."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of participant outcomes",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NPQOutcomesResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
+          }
+        }
+      },
       "post": {
         "summary": "Submit a NPQ outcome for a single participant",
         "operationId": "npq_outcome_post",
@@ -1491,12 +1867,14 @@
           },
           "required": true
         }
-      },
+      }
+    },
+    "/api/v3/participants/npq": {
       "get": {
-        "summary": "List NPQ outcomes for single participant",
-        "operationId": "participant_outcomes",
+        "summary": "<b>Note, this endpoint includes updated specifications.</b><br/>Retrieve multiple NPQ participants",
+        "operationId": "npq_participants",
         "tags": [
-          "Participants Outcomes"
+          "NPQ participants"
         ],
         "security": [
           {
@@ -1507,15 +1885,16 @@
         ],
         "parameters": [
           {
-            "name": "participant_id",
-            "in": "path",
-            "required": true,
-            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
-            "description": "The external ID of the participant",
+            "name": "filter",
+            "in": "query",
             "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
+              "$ref": "#/components/schemas/NPQParticipantFilter"
+            },
+            "style": "deepObject",
+            "explode": true,
+            "required": false,
+            "description": "Refine NPQ participants to return.",
+            "example": "filter[training_status]=active&filter[updated_since]=2020-11-13T11:21:55Z"
           },
           {
             "name": "page",
@@ -1527,10 +1906,83 @@
             "explode": true,
             "required": false,
             "example": "page[page]=1&page[per_page]=5",
-            "description": "Pagination options to navigate through the list of participant NPQ outcomes."
+            "description": "Pagination options to navigate through the list of NPQ participants."
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/NPQParticipantsSort"
+            },
+            "style": "form",
+            "explode": false,
+            "required": false,
+            "description": "Sort NPQ participants being returned.",
+            "example": "sort=-updated_at"
           }
         ],
         "responses": {
+          "200": {
+            "description": "A list of NPQ participants",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MultipleNPQParticipantsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/participants/npq/{id}": {
+      "get": {
+        "summary": "<b>Note, this endpoint includes updated specifications.</b><br/>Get a single NPQ participant",
+        "operationId": "npq_participant",
+        "tags": [
+          "NPQ participants"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
+            "description": "The ID of the NPQ participant.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A single NPQ participant",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NPQParticipantResponse"
+                }
+              }
+            }
+          },
           "401": {
             "description": "Unauthorized",
             "content": {
@@ -1541,16 +1993,66 @@
               }
             }
           },
-          "200": {
-            "description": "A list of participant outcomes",
+          "404": {
+            "description": "Not Found",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/NPQOutcomesResponse"
+                  "$ref": "#/components/schemas/NotFoundResponse"
                 }
               }
             }
           }
+        }
+      }
+    },
+    "/api/v3/participants/npq/{id}/change-schedule": {
+      "put": {
+        "summary": "Notify that an NPQ participant is changing training schedule",
+        "operationId": "npq_participant",
+        "tags": [
+          "NPQ Participant"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
+            "description": "The ID of the participant",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The NPQ participant changing schedule",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NPQParticipantResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NPQParticipantChangeScheduleRequest"
+              }
+            }
+          },
+          "required": true
         }
       }
     },
@@ -1699,193 +2201,6 @@
         }
       }
     },
-    "/api/v3/participants/npq/{id}/change-schedule": {
-      "put": {
-        "summary": "Notify that an NPQ participant is changing training schedule",
-        "operationId": "npq_participant",
-        "tags": [
-          "NPQ Participant"
-        ],
-        "security": [
-          {
-            "bearerAuth": [
-
-            ]
-          }
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
-            "description": "The ID of the participant",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The NPQ participant changing schedule",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NPQParticipantResponse"
-                }
-              }
-            }
-          }
-        },
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NPQParticipantChangeScheduleRequest"
-              }
-            }
-          },
-          "required": true
-        }
-      }
-    },
-    "/api/v3/participants/npq": {
-      "get": {
-        "summary": "<b>Note, this endpoint includes updated specifications.</b><br/>Retrieve multiple NPQ participants",
-        "operationId": "npq_participants",
-        "tags": [
-          "NPQ participants"
-        ],
-        "security": [
-          {
-            "bearerAuth": [
-
-            ]
-          }
-        ],
-        "parameters": [
-          {
-            "name": "filter",
-            "in": "query",
-            "schema": {
-              "$ref": "#/components/schemas/NPQParticipantFilter"
-            },
-            "style": "deepObject",
-            "explode": true,
-            "required": false,
-            "description": "Refine NPQ participants to return.",
-            "example": "filter[training_status]=active&filter[updated_since]=2020-11-13T11:21:55Z"
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "schema": {
-              "$ref": "#/components/schemas/Pagination"
-            },
-            "style": "deepObject",
-            "explode": true,
-            "required": false,
-            "example": "page[page]=1&page[per_page]=5",
-            "description": "Pagination options to navigate through the list of NPQ participants."
-          },
-          {
-            "name": "sort",
-            "in": "query",
-            "schema": {
-              "$ref": "#/components/schemas/NPQParticipantsSort"
-            },
-            "style": "form",
-            "explode": false,
-            "required": false,
-            "description": "Sort NPQ participants being returned.",
-            "example": "sort=-updated_at"
-          }
-        ],
-        "responses": {
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorisedResponse"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "A list of NPQ participants",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MultipleNPQParticipantsResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v3/participants/npq/{id}": {
-      "get": {
-        "summary": "<b>Note, this endpoint includes updated specifications.</b><br/>Get a single NPQ participant",
-        "operationId": "npq_participant",
-        "tags": [
-          "NPQ participants"
-        ],
-        "security": [
-          {
-            "bearerAuth": [
-
-            ]
-          }
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
-            "description": "The ID of the NPQ participant.",
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotFoundResponse"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "A single NPQ participant",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NPQParticipantResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorisedResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/v3/participants/npq/{id}/withdraw": {
       "put": {
         "summary": "<b>Note, this endpoint includes updated specifications.</b><br/>Withdrawn a participant from a course",
@@ -1981,351 +2296,12 @@
         }
       }
     },
-    "/api/v3/participants/ecf/{id}/defer": {
-      "put": {
-        "summary": "<b>Note, this endpoint includes updated specifications.</b><br/>Notify that an ECF participant is taking a break from their course",
-        "operationId": "ecf_participant_defer",
-        "tags": [
-          "ECF Participant"
-        ],
-        "security": [
-          {
-            "bearerAuth": [
-
-            ]
-          }
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
-            "description": "The ID of the participant to defer",
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The ECF participant being deferred",
-            "content": {
-              "application/json": {
-                "examples": {
-                  "success": {
-                    "value": {
-                      "data": {
-                        "id": "db3a7848-7308-4879-942a-c4a70ced400a",
-                        "type": "participant",
-                        "attributes": {
-                          "full_name": "Jane Smith",
-                          "teacher_reference_number": "1234567",
-                          "updated_at": "2021-05-31T02:22:32.000Z",
-                          "ecf_enrolments": {
-                            "training_record_id": "000a97ff-d2a9-4779-a397-9bfd9063072e",
-                            "email": "jane.smith@some-school.example.com",
-                            "mentor_id": "bb36d74a-68a7-47b6-86b6-1fd0d141c590",
-                            "school_urn": "106286",
-                            "participant_type": "ect",
-                            "cohort": "2021",
-                            "training_status": "withdrawn",
-                            "participant_status": "withdrawn",
-                            "teacher_reference_number_validated": true,
-                            "eligible_for_funding": true,
-                            "pupil_premium_uplift": true,
-                            "sparsity_uplift": true,
-                            "schedule_identifier": "ecf-standard-january",
-                            "delivery_partner_id": "cd3a12347-7308-4879-942a-c4a70ced400a",
-                            "withdrawal": null,
-                            "deferral": {
-                              "reason": "other",
-                              "date": "2021-06-31T02:22:32.000Z"
-                            },
-                            "created_at": "2022-11-09T16:07:38Z"
-                          }
-                        }
-                      }
-                    }
-                  }
-                },
-                "schema": {
-                  "$ref": "#/components/schemas/ECFParticipantResponse"
-                }
-              }
-            }
-          }
-        },
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ECFParticipantDeferRequest"
-              }
-            }
-          },
-          "required": true
-        }
-      }
-    },
-    "/api/v3/participants/ecf/{id}/change-schedule": {
-      "put": {
-        "summary": "<b>Note, this endpoint includes updated specifications.</b><br/>Notify that an ECF Participant is changing training schedule",
-        "operationId": "ecf_participant_change_schedule",
-        "tags": [
-          "ECF Participant"
-        ],
-        "security": [
-          {
-            "bearerAuth": [
-
-            ]
-          }
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
-            "description": "The ID of the participant",
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The ECF Participant changing schedule",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ECFParticipantResponse"
-                }
-              }
-            }
-          }
-        },
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ECFParticipantChangeScheduleRequest"
-              }
-            }
-          },
-          "required": true
-        }
-      }
-    },
-    "/api/v3/participants/ecf/{id}/withdraw": {
-      "put": {
-        "summary": "<b>Note, this endpoint includes updated specifications.</b><br/>Notify that an ECF participant has withdrawn from their course",
-        "operationId": "participant",
-        "tags": [
-          "ECF Participant"
-        ],
-        "security": [
-          {
-            "bearerAuth": [
-
-            ]
-          }
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
-            "description": "The ID of the participant to withdraw",
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The ECF participant being withdrawn",
-            "content": {
-              "application/json": {
-                "examples": {
-                  "success": {
-                    "value": {
-                      "data": {
-                        "id": "db3a7848-7308-4879-942a-c4a70ced400a",
-                        "type": "participant",
-                        "attributes": {
-                          "full_name": "Jane Smith",
-                          "teacher_reference_number": "1234567",
-                          "updated_at": "2021-05-31T02:22:32.000Z",
-                          "ecf_enrolments": {
-                            "training_record_id": "000a97ff-d2a9-4779-a397-9bfd9063072e",
-                            "email": "jane.smith@some-school.example.com",
-                            "mentor_id": "bb36d74a-68a7-47b6-86b6-1fd0d141c590",
-                            "school_urn": "106286",
-                            "participant_type": "ect",
-                            "cohort": "2021",
-                            "training_status": "withdrawn",
-                            "participant_status": "withdrawn",
-                            "teacher_reference_number_validated": true,
-                            "eligible_for_funding": true,
-                            "pupil_premium_uplift": true,
-                            "sparsity_uplift": true,
-                            "schedule_identifier": "ecf-standard-january",
-                            "delivery_partner_id": "cd3a12347-7308-4879-942a-c4a70ced400a",
-                            "withdrawal": {
-                              "reason": "other",
-                              "date": "2021-06-31T02:22:32.000Z"
-                            },
-                            "deferral": null,
-                            "created_at": "2022-11-09T16:07:38Z"
-                          }
-                        }
-                      }
-                    }
-                  }
-                },
-                "schema": {
-                  "$ref": "#/components/schemas/ECFParticipantResponse"
-                }
-              }
-            }
-          }
-        },
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ECFParticipantWithdrawRequest"
-              }
-            }
-          },
-          "required": true
-        }
-      }
-    },
-    "/api/v3/participants/ecf/{id}/resume": {
-      "put": {
-        "summary": "<b>Note, this endpoint includes updated specifications.</b><br/>Notify that an ECF participant is resuming their course",
-        "operationId": "ecf_participant_resume",
-        "tags": [
-          "ECF Participant"
-        ],
-        "security": [
-          {
-            "bearerAuth": [
-
-            ]
-          }
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
-            "description": "The ID of the participant to resume",
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The ECF participant being resumed",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ECFParticipantResponse"
-                }
-              }
-            }
-          }
-        },
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ECFParticipantResumeRequest"
-              }
-            }
-          },
-          "required": true
-        }
-      }
-    },
-    "/api/v3/participants/ecf/{id}": {
+    "/api/v3/participant-declarations": {
       "get": {
-        "summary": "<b>Note, this endpoint includes updated specifications.</b><br/>Get a single ECF participant",
-        "operationId": "ecf_participant",
+        "summary": "<b>Note, this endpoint includes updated specifications.</b><br/>List all participant declarations",
+        "operationId": "participant_declarations",
         "tags": [
-          "ECF participants"
-        ],
-        "security": [
-          {
-            "bearerAuth": [
-
-            ]
-          }
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
-            "description": "The ID of the ECF participant.",
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "A single ECF participant",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ECFParticipantResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorisedResponse"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotFoundResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v3/participants/ecf": {
-      "get": {
-        "summary": "<b>Note, this endpoint includes updated specifications.</b><br/>Retrieve multiple participants, replaces <code>/api/v3/participants</code>",
-        "operationId": "participants",
-        "tags": [
-          "ECF participants"
+          "Participant declarations"
         ],
         "security": [
           {
@@ -2339,13 +2315,13 @@
             "name": "filter",
             "in": "query",
             "schema": {
-              "$ref": "#/components/schemas/ECFParticipantFilter"
+              "$ref": "#/components/schemas/ParticipantDeclarationsFilter"
             },
             "style": "deepObject",
             "explode": true,
             "required": false,
-            "description": "Refine ECF participants to return.",
-            "example": "filter[cohort]=2022&filter[training_status]=active&filter[updated_since]=2020-11-13T11:21:55Z"
+            "description": "Refine participant declarations to return.",
+            "example": "filter[participant_id]=ab3a7848-1208-7679-942a-b4a70eed400a&filter[updated_since]=2020-11-13T11:21:55Z"
           },
           {
             "name": "page",
@@ -2357,88 +2333,12 @@
             "explode": true,
             "required": false,
             "example": "page[page]=1&page[per_page]=5",
-            "description": "Pagination options to navigate through the list of ECF participants."
-          },
-          {
-            "name": "sort",
-            "in": "query",
-            "schema": {
-              "$ref": "#/components/schemas/ECFParticipantsSort"
-            },
-            "style": "form",
-            "explode": false,
-            "required": false,
-            "description": "Sort ECF participants being returned.",
-            "example": "sort=-updated_at"
-          }
-        ],
-        "responses": {
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorisedResponse"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "A list of ECF participants",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MultipleECFParticipantsResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v3/participants/ecf/transfers": {
-      "get": {
-        "summary": "<b>Note, this endpoint is new.</b><br/>Retrieve multiple ECF participant transfers",
-        "operationId": "participants",
-        "tags": [
-          "participant transfers"
-        ],
-        "security": [
-          {
-            "bearerAuth": [
-
-            ]
-          }
-        ],
-        "parameters": [
-          {
-            "name": "filter",
-            "in": "query",
-            "schema": {
-              "$ref": "#/components/schemas/ListFilter"
-            },
-            "style": "deepObject",
-            "explode": true,
-            "required": false,
-            "description": "Refine participant transfers to return.",
-            "example": "filter[updated_since]=2020-11-13T11:21:55Z"
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "schema": {
-              "$ref": "#/components/schemas/Pagination"
-            },
-            "style": "deepObject",
-            "explode": true,
-            "required": false,
-            "example": "page[page]=1&page[per_page]=5",
-            "description": "Pagination options to navigate through the list of participant transfers."
+            "description": "Pagination options to navigate through the list of participant declarations."
           }
         ],
         "responses": {
           "200": {
-            "description": "A list of ECF participant transfers",
+            "description": "A list of participant declarations",
             "content": {
               "application/json": {
                 "examples": {
@@ -2447,25 +2347,46 @@
                       "data": [
                         {
                           "id": "db3a7848-7308-4879-942a-c4a70ced400a",
-                          "type": "participant-transfer",
+                          "type": "participant-declaration",
                           "attributes": {
-                            "updated_at": "2021-05-31T02:22:32.000Z",
-                            "transfers": {
-                              "training_record_id": "000a97ff-d2a9-4779-a397-9bfd9063072e",
-                              "transfer_type": "new_provider",
-                              "status": "complete",
-                              "leaving": {
-                                "school_urn": "123456",
-                                "provider": "Old Institute",
-                                "date": "2021-05-31"
-                              },
-                              "joining": {
-                                "school_urn": "654321",
-                                "provider": "New Institute",
-                                "date": "2021-06-01"
-                              },
-                              "created_at": "2021-05-31T02:22:32.000Z"
-                            }
+                            "participant_id": "08d78829-f864-417f-8a30-cb7655714e28",
+                            "declaration_type": "started",
+                            "declaration_date": "2020-11-13T11:21:55Z",
+                            "course_identifier": "ecf-induction",
+                            "state": "eligible",
+                            "updated_at": "2020-11-13T11:21:55Z",
+                            "created_at": "2020-11-13T11:21:55Z",
+                            "delivery_partner_id": "99ca2223-8c1f-4ac8-985d-a0672e97694e",
+                            "statement_id": "99ca2223-8c1f-4ac8-985d-a0672e97694e",
+                            "clawback_statement_id": null,
+                            "ineligible_for_funding_reason": null,
+                            "mentor_id": "907f61ed-5770-4d38-b22c-1a4265939378",
+                            "uplift_paid": true,
+                            "evidence_held": "other",
+                            "has_passed": null,
+                            "lead_provider_name": "Example Institute"
+                          }
+                        },
+                        {
+                          "id": "db3a7848-7308-4879-942a-c4a70ced400a",
+                          "type": "participant-declaration",
+                          "attributes": {
+                            "participant_id": "bf3c6251-f2a0-4690-a859-0fbecc6ed151",
+                            "declaration_type": "started",
+                            "declaration_date": "2020-11-13T11:21:55Z",
+                            "course_identifier": "npq-leading-teaching",
+                            "state": "eligible",
+                            "updated_at": "2020-11-13T11:21:55Z",
+                            "created_at": "2020-11-13T11:21:55Z",
+                            "delivery_partner_id": null,
+                            "statement_id": "1cceffd7-0efd-432a-aedc-7be2d6cc72a2",
+                            "clawback_statement_id": null,
+                            "ineligible_for_funding_reason": null,
+                            "mentor_id": null,
+                            "uplift_paid": true,
+                            "evidence_held": "other",
+                            "has_passed": null,
+                            "lead_provider_name": "Example Institute"
                           }
                         }
                       ]
@@ -2473,7 +2394,7 @@
                   }
                 },
                 "schema": {
-                  "$ref": "#/components/schemas/MultipleECFParticipantTransferResponse"
+                  "$ref": "#/components/schemas/MultipleParticipantDeclarationsResponse"
                 }
               }
             }
@@ -2489,14 +2410,252 @@
             }
           }
         }
+      },
+      "post": {
+        "summary": "<b>Note, this endpoint includes updated specifications.</b><br/>Declare a participant has reached a milestone. Idempotent endpoint - submitting exact copy of a request will return the same response body as submitting it the first time.",
+        "operationId": "participant_declaration_create",
+        "tags": [
+          "Participant declarations"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "parameters": [
+
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "success_ecf": {
+                    "value": {
+                      "data": {
+                        "id": "db3a7848-7308-4879-942a-c4a70ced400a",
+                        "type": "participant-declaration",
+                        "attributes": {
+                          "participant_id": "08d78829-f864-417f-8a30-cb7655714e28",
+                          "declaration_type": "started",
+                          "declaration_date": "2020-11-13T11:21:55Z",
+                          "course_identifier": "ecf-induction",
+                          "state": "eligible",
+                          "updated_at": "2020-11-13T11:21:55Z",
+                          "created_at": "2020-11-13T11:21:55Z",
+                          "delivery_partner_id": "99ca2223-8c1f-4ac8-985d-a0672e97694e",
+                          "statement_id": "99ca2223-8c1f-4ac8-985d-a0672e97694e",
+                          "clawback_statement_id": null,
+                          "ineligible_for_funding_reason": null,
+                          "mentor_id": "907f61ed-5770-4d38-b22c-1a4265939378",
+                          "uplift_paid": true,
+                          "evidence_held": "other",
+                          "has_passed": null,
+                          "lead_provider_name": "Example Institute"
+                        }
+                      }
+                    }
+                  },
+                  "success_npq": {
+                    "value": {
+                      "data": {
+                        "id": "db3a7848-7308-4879-942a-c4a70ced400a",
+                        "type": "participant-declaration",
+                        "attributes": {
+                          "participant_id": "bf3c6251-f2a0-4690-a859-0fbecc6ed151",
+                          "declaration_type": "started",
+                          "declaration_date": "2020-11-13T11:21:55Z",
+                          "course_identifier": "npq-leading-teaching",
+                          "state": "eligible",
+                          "updated_at": "2020-11-13T11:21:55Z",
+                          "created_at": "2020-11-13T11:21:55Z",
+                          "delivery_partner_id": null,
+                          "statement_id": "1cceffd7-0efd-432a-aedc-7be2d6cc72a2",
+                          "clawback_statement_id": null,
+                          "ineligible_for_funding_reason": null,
+                          "mentor_id": null,
+                          "uplift_paid": true,
+                          "evidence_held": null,
+                          "has_passed": null,
+                          "lead_provider_name": "Example Institute"
+                        }
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/SingleParticipantDeclarationResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Bad or Missing parameter",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ParticipantDeclarationRequest"
+              }
+            }
+          },
+          "required": true
+        }
       }
     },
-    "/api/v3/participants/ecf/{id}/transfers": {
+    "/api/v3/participant-declarations/{id}": {
       "get": {
-        "summary": "<b>Note, this endpoint is new.</b><br/>Get a single participant's transfers",
-        "operationId": "participant_transfers",
+        "summary": "<b>Note, this endpoint includes updated specifications.</b><br/>Get single participant declaration",
+        "operationId": "participant_declaration",
         "tags": [
-          "participant transfers"
+          "Participant declarations"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "example": "9ed4612b-f8bd-44d9-b296-38ab103fadd2",
+            "description": "The ID of the participant declaration ID",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A single participant declaration",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "success_ecf": {
+                    "value": {
+                      "data": {
+                        "id": "db3a7848-7308-4879-942a-c4a70ced400a",
+                        "type": "participant-declaration",
+                        "attributes": {
+                          "participant_id": "08d78829-f864-417f-8a30-cb7655714e28",
+                          "declaration_type": "started",
+                          "declaration_date": "2020-11-13T11:21:55Z",
+                          "course_identifier": "ecf-induction",
+                          "state": "eligible",
+                          "updated_at": "2020-11-13T11:21:55Z",
+                          "created_at": "2020-11-13T11:21:55Z",
+                          "delivery_partner_id": "99ca2223-8c1f-4ac8-985d-a0672e97694e",
+                          "statement_id": "99ca2223-8c1f-4ac8-985d-a0672e97694e",
+                          "clawback_statement_id": null,
+                          "ineligible_for_funding_reason": null,
+                          "mentor_id": "907f61ed-5770-4d38-b22c-1a4265939378",
+                          "uplift_paid": true,
+                          "evidence_held": "other",
+                          "has_passed": null,
+                          "lead_provider_name": "Example Institute"
+                        }
+                      }
+                    }
+                  },
+                  "success_npq": {
+                    "value": {
+                      "data": {
+                        "id": "db3a7848-7308-4879-942a-c4a70ced400a",
+                        "type": "participant-declaration",
+                        "attributes": {
+                          "participant_id": "bf3c6251-f2a0-4690-a859-0fbecc6ed151",
+                          "declaration_type": "started",
+                          "declaration_date": "2020-11-13T11:21:55Z",
+                          "course_identifier": "npq-leading-teaching",
+                          "state": "eligible",
+                          "updated_at": "2020-11-13T11:21:55Z",
+                          "created_at": "2020-11-13T11:21:55Z",
+                          "delivery_partner_id": null,
+                          "statement_id": "1cceffd7-0efd-432a-aedc-7be2d6cc72a2",
+                          "clawback_statement_id": null,
+                          "ineligible_for_funding_reason": null,
+                          "mentor_id": null,
+                          "uplift_paid": true,
+                          "evidence_held": null,
+                          "has_passed": null,
+                          "lead_provider_name": "Example Institute"
+                        }
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/SingleParticipantDeclarationResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/participant-declarations/{id}/void": {
+      "put": {
+        "summary": "<b>Note, this endpoint includes updated specifications.</b><br/>Void a declaration - it will not be soft-deleted",
+        "operationId": "participant_declaration_void",
+        "tags": [
+          "Participant declarations"
         ],
         "security": [
           {
@@ -2511,68 +2670,7 @@
             "in": "path",
             "required": true,
             "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
-            "description": "The ID of the ECF participant.",
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorisedResponse"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotFoundResponse"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "A single participant's transfers",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ECFParticipantTransferResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v3/npq-applications/{id}/reject": {
-      "post": {
-        "summary": "Reject an NPQ application",
-        "operationId": "npq_applications_reject",
-        "tags": [
-          "NPQ applications"
-        ],
-        "security": [
-          {
-            "bearerAuth": [
-
-            ]
-          }
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "example": "14b1b4ab-fa81-4f7a-b4b5-f632412e8c5c",
-            "description": "The ID of the NPQ application to reject.",
+            "description": "The ID of the declaration to void",
             "schema": {
               "type": "string",
               "format": "uuid"
@@ -2581,112 +2679,65 @@
         ],
         "responses": {
           "200": {
-            "description": "The NPQ application being rejected",
+            "description": "Successful",
             "content": {
               "application/json": {
+                "examples": {
+                  "success_ecf": {
+                    "value": {
+                      "data": {
+                        "id": "db3a7848-7308-4879-942a-c4a70ced400a",
+                        "type": "participant-declaration",
+                        "attributes": {
+                          "participant_id": "08d78829-f864-417f-8a30-cb7655714e28",
+                          "declaration_type": "started",
+                          "declaration_date": "2020-11-13T11:21:55Z",
+                          "course_identifier": "ecf-induction",
+                          "state": "voided",
+                          "updated_at": "2020-11-13T11:21:55Z",
+                          "created_at": "2020-11-13T11:21:55Z",
+                          "delivery_partner_id": "99ca2223-8c1f-4ac8-985d-a0672e97694e",
+                          "statement_id": "99ca2223-8c1f-4ac8-985d-a0672e97694e",
+                          "clawback_statement_id": null,
+                          "ineligible_for_funding_reason": null,
+                          "mentor_id": "907f61ed-5770-4d38-b22c-1a4265939378",
+                          "uplift_paid": true,
+                          "evidence_held": "other",
+                          "has_passed": null,
+                          "lead_provider_name": "Example Institute"
+                        }
+                      }
+                    }
+                  },
+                  "success_npq": {
+                    "value": {
+                      "data": {
+                        "id": "db3a7848-7308-4879-942a-c4a70ced400a",
+                        "type": "participant-declaration",
+                        "attributes": {
+                          "participant_id": "bf3c6251-f2a0-4690-a859-0fbecc6ed151",
+                          "declaration_type": "started",
+                          "declaration_date": "2020-11-13T11:21:55Z",
+                          "course_identifier": "npq-leading-teaching",
+                          "state": "voided",
+                          "updated_at": "2020-11-13T11:21:55Z",
+                          "created_at": "2020-11-13T11:21:55Z",
+                          "delivery_partner_id": null,
+                          "statement_id": "1cceffd7-0efd-432a-aedc-7be2d6cc72a2",
+                          "clawback_statement_id": null,
+                          "ineligible_for_funding_reason": null,
+                          "mentor_id": null,
+                          "uplift_paid": true,
+                          "evidence_held": null,
+                          "has_passed": null,
+                          "lead_provider_name": "Example Institute"
+                        }
+                      }
+                    }
+                  }
+                },
                 "schema": {
-                  "$ref": "#/components/schemas/NPQApplicationResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Unprocessable Entity",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NPQApplicationRejectErrorResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorisedResponse"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotFoundResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v3/npq-applications/{id}/accept": {
-      "post": {
-        "summary": "Accept an NPQ application",
-        "operationId": "npq_applications_accept",
-        "tags": [
-          "NPQ applications"
-        ],
-        "security": [
-          {
-            "bearerAuth": [
-
-            ]
-          }
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
-            "description": "The ID of the NPQ application to accept.",
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "422": {
-            "description": "Unprocessable Entity",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NPQApplicationAcceptErrorResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorisedResponse"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "The NPQ application being accepted",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NPQApplicationResponse"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotFoundResponse"
+                  "$ref": "#/components/schemas/SingleParticipantDeclarationResponse"
                 }
               }
             }
@@ -2694,12 +2745,12 @@
         }
       }
     },
-    "/api/v3/npq-applications": {
+    "/api/v3/statements": {
       "get": {
-        "summary": "Retrieve multiple NPQ applications",
-        "operationId": "npq_applications",
+        "summary": "<b>Note, this endpoint is new.</b><br/>Retrieve financial statements",
+        "operationId": "statements_get",
         "tags": [
-          "NPQ applications"
+          "statements"
         ],
         "security": [
           {
@@ -2713,13 +2764,13 @@
             "name": "filter",
             "in": "query",
             "schema": {
-              "$ref": "#/components/schemas/NPQApplicationsFilter"
+              "$ref": "#/components/schemas/StatementsFilter"
             },
             "style": "deepObject",
             "explode": true,
             "required": false,
-            "description": "Refine NPQ applications to return.",
-            "example": "filter[cohort]=2021,2022&filter[participant_id]=7e5bcdbf-c818-4961-8da5-439cab1984e0,c2a7ef98-bbfc-48c5-8f02-d484071d2165&filter[updated_since]=2020-11-13T11:21:55Z"
+            "description": "Refine statements to return.",
+            "example": "filter[cohort]=2021,2022&filter[type]=ecf&filter[updated_since]=2020-11-13T11:21:55Z"
           },
           {
             "name": "page",
@@ -2731,22 +2782,20 @@
             "explode": true,
             "required": false,
             "example": "page[page]=1&page[per_page]=5",
-            "description": "Pagination options to navigate through the list of NPQ applications."
-          },
-          {
-            "name": "sort",
-            "in": "query",
-            "schema": {
-              "$ref": "#/components/schemas/NPQApplicationsSort"
-            },
-            "style": "form",
-            "explode": false,
-            "required": false,
-            "description": "Sort NPQ applications being returned.",
-            "example": "sort=-updated_at"
+            "description": "Pagination options to navigate through the list of statements."
           }
         ],
         "responses": {
+          "200": {
+            "description": "A list of statements as part of which the DfE will make output payments for ecf or npq participants",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StatementsResponse"
+                }
+              }
+            }
+          },
           "401": {
             "description": "Unauthorized",
             "content": {
@@ -2756,26 +2805,16 @@
                 }
               }
             }
-          },
-          "200": {
-            "description": "A list of NPQ applications",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MultipleNPQApplicationsResponse"
-                }
-              }
-            }
           }
         }
       }
     },
-    "/api/v3/npq-applications/{id}": {
+    "/api/v3/statements/{id}": {
       "get": {
-        "summary": "Get a single NPQ application",
-        "operationId": "npq_application",
+        "summary": "<b>Note, this endpoint is new.</b><br/>Retrieve specific financial statement",
+        "operationId": "statement_get",
         "tags": [
-          "NPQ applications"
+          "statements"
         ],
         "security": [
           {
@@ -2787,17 +2826,27 @@
         "parameters": [
           {
             "name": "id",
+            "description": "The unique ID of the statement",
             "in": "path",
             "required": true,
-            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
-            "description": "The ID of the NPQ application.",
             "schema": {
               "type": "string",
               "format": "uuid"
-            }
+            },
+            "example": "fe82db5d-a7ff-42b4-9eb7-19a87bf0ce5f"
           }
         ],
         "responses": {
+          "200": {
+            "description": "A specific financial statement",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StatementResponse"
+                }
+              }
+            }
+          },
           "401": {
             "description": "Unauthorized",
             "content": {
@@ -2814,55 +2863,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/NotFoundResponse"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "A single NPQ application",
-            "content": {
-              "application/json": {
-                "examples": {
-                  "success": {
-                    "value": {
-                      "data": {
-                        "id": "db3a7848-7308-4879-942a-c4a70ced400a",
-                        "type": "npq_application",
-                        "attributes": {
-                          "course_identifier": "npq-leading-teaching-development",
-                          "email": "isabelle.macdonald2@some-school.example.com",
-                          "email_validated": true,
-                          "employer_name": null,
-                          "employment_role": null,
-                          "full_name": "Isabelle MacDonald",
-                          "funding_choice": null,
-                          "headteacher_status": null,
-                          "ineligible_for_funding_reason": null,
-                          "participant_id": "53847955-7cfg-41eb-a322-96c50adc742b",
-                          "private_childcare_provider_urn": null,
-                          "teacher_reference_number": "0743795",
-                          "teacher_reference_number_validated": true,
-                          "school_urn": "123456",
-                          "school_ukprn": "12345678",
-                          "status": "pending",
-                          "works_in_school": true,
-                          "created_at": "2022-07-06T10:47:24Z",
-                          "updated_at": "2022-11-24T17:09:37Z",
-                          "cohort": "2022",
-                          "eligible_for_funding": true,
-                          "targeted_delivery_funding_eligibility": false,
-                          "teacher_catchment": true,
-                          "teacher_catchment_iso_country_code": "GBR",
-                          "teacher_catchment_country": "United Kingdom of Great Britain and Northern Ireland",
-                          "itt_provider": null,
-                          "lead_mentor": false
-                        }
-                      }
-                    }
-                  }
-                },
-                "schema": {
-                  "$ref": "#/components/schemas/NPQApplicationResponse"
                 }
               }
             }
@@ -3070,7 +3070,7 @@
           "reason": {
             "description": "The reason a participant was deferred",
             "type": "string",
-            "example": null,
+            "example": "career-break",
             "enum": [
               "bereavement",
               "long-term-sickness",
@@ -3085,6 +3085,10 @@
             "format": "date-time",
             "example": "2021-05-31T02:22:32.000Z"
           }
+        },
+        "example": {
+          "reason": "career-break",
+          "date": "2021-05-31T02:22:32.000Z"
         }
       },
       "ECFEnrolment": {
@@ -3200,21 +3204,19 @@
           },
           "withdrawal": {
             "nullable": true,
-            "type": "object",
-            "properties": {
-              "attributes": {
+            "anyOf": [
+              {
                 "$ref": "#/components/schemas/ECFWithdrawal"
               }
-            }
+            ]
           },
           "deferral": {
             "nullable": true,
-            "type": "object",
-            "properties": {
-              "attributes": {
+            "anyOf": [
+              {
                 "$ref": "#/components/schemas/ECFDeferral"
               }
-            }
+            ]
           },
           "created_at": {
             "description": "The date and time the ECF participant was created",
@@ -3693,6 +3695,11 @@
             "format": "date",
             "example": "2021-05-31"
           }
+        },
+        "example": {
+          "school_urn": 123456,
+          "provider": "Example Institute",
+          "date": "2021-05-31"
         }
       },
       "ECFParticipantLeaving": {
@@ -3719,6 +3726,11 @@
             "format": "date",
             "example": "2021-05-31"
           }
+        },
+        "example": {
+          "school_urn": 123456,
+          "provider": "Example Institute",
+          "date": "2021-05-31"
         }
       },
       "ECFParticipantResponse": {
@@ -3892,21 +3904,19 @@
           },
           "leaving": {
             "nullable": true,
-            "type": "object",
-            "properties": {
-              "attributes": {
+            "anyOf": [
+              {
                 "$ref": "#/components/schemas/ECFParticipantLeaving"
               }
-            }
+            ]
           },
           "joining": {
             "nullable": true,
-            "type": "object",
-            "properties": {
-              "attributes": {
+            "anyOf": [
+              {
                 "$ref": "#/components/schemas/ECFParticipantJoining"
               }
-            }
+            ]
           },
           "created_at": {
             "description": "The date and time the ECF participant transfer was created",
@@ -4441,6 +4451,10 @@
             "format": "date-time",
             "example": "2021-05-31T02:22:32.000Z"
           }
+        },
+        "example": {
+          "reason": "moved-school",
+          "date": "2021-05-31T02:22:32.000Z"
         }
       },
       "Error": {
@@ -5129,7 +5143,7 @@
           "reason": {
             "description": "The reason a participant was deferred",
             "type": "string",
-            "example": null,
+            "example": "career-break",
             "enum": [
               "bereavement",
               "long-term-sickness",
@@ -5144,6 +5158,10 @@
             "format": "date-time",
             "example": "2021-05-31T02:22:32.000Z"
           }
+        },
+        "example": {
+          "reason": "career-break",
+          "date": "2021-05-31T02:22:32.000Z"
         }
       },
       "NPQEnrolment": {
@@ -5238,21 +5256,19 @@
           },
           "withdrawal": {
             "nullable": true,
-            "type": "object",
-            "properties": {
-              "attributes": {
+            "anyOf": [
+              {
                 "$ref": "#/components/schemas/NPQWithdrawal"
               }
-            }
+            ]
           },
           "deferral": {
             "nullable": true,
-            "type": "object",
-            "properties": {
-              "attributes": {
+            "anyOf": [
+              {
                 "$ref": "#/components/schemas/NPQDeferral"
               }
-            }
+            ]
           },
           "created_at": {
             "description": "The date and time the NPQ participant was created",
@@ -6581,7 +6597,7 @@
           "reason": {
             "description": "The reason a participant was withdrawn",
             "type": "string",
-            "example": "moved-school",
+            "example": "personal-reason-moving-school",
             "enum": [
               "insufficient-capacity-to-undertake-programme",
               "personal-reason-health-or-pregnancy-related",
@@ -6608,6 +6624,10 @@
             "format": "date-time",
             "example": "2021-05-31T02:22:32.000Z"
           }
+        },
+        "example": {
+          "reason": "personal-reason-moving-school",
+          "date": "2021-05-31T02:22:32.000Z"
         }
       },
       "NotFoundResponse": {
