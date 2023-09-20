@@ -62,6 +62,8 @@ module DataStage
         if school.counterpart.present?
           school.counterpart.update!(extract_values_from(simple_changes)) if simple_changes.any?
           school.school_changes.create!(attribute_changes: major_changes, status: :changed) if major_changes.any?
+        elsif school.open? && school.school_links.none?
+          school.create_or_sync_counterpart!
         end
       end
     end

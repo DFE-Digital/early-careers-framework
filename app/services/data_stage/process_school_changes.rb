@@ -4,17 +4,8 @@ module DataStage
   class ProcessSchoolChanges < ::BaseService
     include GiasTypes
 
-    UNHANDLED_ATTRIBUTES = %w[
-      school_type_code
-      school_type_name
-      section_41_approved
-      ukprn
-    ].freeze
-
     def call
       DataStage::SchoolChange.includes(:school).unprocessed.status_changed.find_each do |change|
-        next if has_unhandled_changes?(change)
-
         if change.attribute_changes.key? "school_status_code"
           handle_status_code_change(change)
         else
@@ -24,26 +15,6 @@ module DataStage
     end
 
   private
-
-    def has_unhandled_changes?(school_change)
-      unhandled_attrs = (UNHANDLED_ATTRIBUTES & school_change.attribute_changes.keys)
-      school = school_change.school
-      counterpart = school.counterpart
-
-      has_unhandled_changes = false
-
-      if counterpart.present? && unhandled_attrs.any?
-        unhandled_attrs.each do |attr|
-          current_value = counterpart.send(attr)
-          next if current_value.blank? || current_value == school.send(attr)
-
-          has_unhandled_changes = true
-          break
-        end
-      end
-
-      has_unhandled_changes
-    end
 
     def handle_status_code_change(change)
       from_code = change.school.school_status_code

@@ -17,10 +17,6 @@ module GiasTypes
   MAJOR_CHANGE_ATTRIBUTES = %w[
     school_status_code
     school_status_name
-    school_type_code
-    school_type_name
-    section_41_approved
-    ukprn
   ].freeze
 
   def open_status_code?(status_code)
