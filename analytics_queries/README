@@ -1,6 +1,10 @@
 These queries select the data used for analysis by TAD/IES/BMG. They can be used as follows:
 
-cf conduit ecf-postgres-sandbox -- psql -c "\copy (SELECT pd.id, pd.user_id, pd.declaration_type, pd.declaration_date, (pd.state = 'voided') as voided, pd.evidence_held FROM participant_declarations pd WHERE course_identifier in ('ecf-induction', 'ecf-mentor')) to 'declarations.csv' csv header"
+konduit cpd-ecf-production-web -- psql --file=some-file.sql
+
+Konduit can be found in the scripts directory in DFE-Digital/teacher-services-cloud, it does what
+`cf conduit` used to but it works with Azure. You need to authenticate and get PIM access before
+running it.
 
 Substitute the database name and query as appropriate. Nathan Easey is the point of contact for questions around this.
 
@@ -12,9 +16,10 @@ Note, the above process has been streamlined by moving the `\copy` command into 
 
 Now we can `cd /tmp/exports` and run the ones we need:
 
-cf conduit ecf-postgres-sandbox -- psql < /tmp/exports/declarations.sql
-cf conduit ecf-postgres-sandbox -- psql < /tmp/exports/participants.sql
-cf conduit ecf-postgres-sandbox -- psql < /tmp/exports/partnerships.sql
-cf conduit ecf-postgres-sandbox -- psql < /tmp/exports/schools.sql
+konduit cpd-ecf-production-web -- psql --file=declarations.sql
+konduit cpd-ecf-production-web -- psql --file=induction_records.sql
+konduit cpd-ecf-production-web -- psql --file=participants.sql
+konduit cpd-ecf-production-web -- psql --file=partnerships.sql
+konduit cpd-ecf-production-web -- psql --file=schools.sql
 
 The CSV files will be deposited in our `/tmp/exports` folder. We can zip, password and upload them as normal.
