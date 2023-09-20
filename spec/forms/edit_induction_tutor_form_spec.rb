@@ -3,8 +3,8 @@
 require "rails_helper"
 
 RSpec.describe EditInductionTutorForm, type: :model do
-  let(:induction_tutor) { NewSeeds::Scenarios::Schools::School.new.build.with_an_induction_tutor.induction_tutor }
-  let(:full_name) { Faker::Name.name }
+  let(:induction_tutor) { NewSeeds::Scenarios::Schools::School.new.build.with_an_induction_tutor(full_name: "Helen Bach").induction_tutor }
+  let(:full_name) { "Bert Pancakes" }
   let(:email) { Faker::Internet.email }
 
   describe "validations" do

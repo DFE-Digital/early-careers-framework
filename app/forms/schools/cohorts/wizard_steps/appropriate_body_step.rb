@@ -13,7 +13,7 @@ module Schools
         end
 
         def choices
-          @choices ||= AppropriateBody.where(body_type: wizard.appropriate_body_type)
+          @choices ||= AppropriateBody.where(body_type: wizard.appropriate_body_type).active_in_year(wizard.cohort.start_year)
         end
 
         def complete?

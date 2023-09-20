@@ -11,6 +11,9 @@ module Importers
 
         AppropriateBody.find_or_create_by!(name:, body_type:)
       end
+
+      # remove NTA from 2023 onwards
+      AppropriateBody.find_by(body_type: "national", name: "National Teacher Accreditation (NTA)")&.update!(disable_from_year: 2023)
     end
   end
 end
