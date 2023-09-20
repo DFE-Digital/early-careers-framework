@@ -284,6 +284,31 @@ RSpec.describe ParticipantValidationService do
         end
       end
 
+      context "when the participant's induction status is Not Yet Completed" do
+        let(:induction) do
+          {
+            "start_date" => induction_start_date,
+            "status" => "Not Yet Completed",
+          }
+        end
+
+        it "does not raise an error" do
+          expect { validation_result }.not_to raise_error
+        end
+
+        it "returns previous_induction as false" do
+          expect(validation_result[:previous_induction]).to eq false
+        end
+
+        it "returns no_induction as false" do
+          expect(validation_result[:no_induction]).to eq false
+        end
+
+        it "returns induction_start_date" do
+          expect(validation_result[:induction_start_date]).to eq(induction_start_date)
+        end
+      end
+
       context "when the participant has previously had an induction and participation" do
         let!(:eligibility) { create(:ineligible_participant, trn:, reason: :previous_participation) }
         let(:induction) do

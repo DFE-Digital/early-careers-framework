@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class DQTRecordPresenter < SimpleDelegator
+  INDUCTION_IN_PROGRESS = ["InProgress", "In Progress", "NotYetCompleted", "Not Yet Completed"].freeze
+
   def name
     dqt_record["name"]
   end
@@ -42,7 +44,7 @@ class DQTRecordPresenter < SimpleDelegator
   end
 
   def induction_in_progress?
-    dqt_record.dig("induction", "status") == "InProgress"
+    INDUCTION_IN_PROGRESS.include?(dqt_record.dig("induction", "status"))
   end
 
 private
