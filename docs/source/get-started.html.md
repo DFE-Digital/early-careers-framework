@@ -80,17 +80,17 @@ The sandbox environment is used to test API integrations without affecting real 
 
 ```
 API v1: 
-https://ecf-sandbox.london.cloudapps.digital/api/v1
+https://sb.manage-training-for-early-career-teachers.education.gov.uk/api/v1
 ```
 
 ```
 API v2:
-https://ecf-sandbox.london.cloudapps.digital/api/v2
+https://sb.manage-training-for-early-career-teachers.education.gov.uk/api/v2
 ```
 
 ```
 API v3: 
-https://ecf-sandbox.london.cloudapps.digital/api/v3
+https://sb.manage-training-for-early-career-teachers.education.gov.uk/api/v3
 ```
 
 <div class="govuk-inset-text"> Note, there are some custom API headers that can only be used in sandbox. </div>
