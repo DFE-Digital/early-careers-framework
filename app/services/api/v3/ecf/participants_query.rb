@@ -41,7 +41,7 @@ module Api
 
           User
             .select("users.*")
-            .includes(:participant_identities, :teacher_profile, participant_profiles: [:participant_profile_states, :schedule, :teacher_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, { induction_records: [:preferred_identity, :schedule, :delivery_partner, :participant_profile, { mentor_profile: :participant_identity, induction_programme: [school_cohort: %i[school cohort]] }] }])
+            .includes(:participant_identities, :teacher_profile, :user_merges, participant_profiles: [:participant_profile_states, :schedule, :teacher_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, { induction_records: [:preferred_identity, :schedule, :delivery_partner, :participant_profile, { mentor_profile: :participant_identity, induction_programme: [school_cohort: %i[school cohort]] }] }])
             .from("(#{sub_query.to_sql}) as users")
             .order(sort_order(default: "participant_profiles_induction_records.created_at ASC", model: User))
             .distinct

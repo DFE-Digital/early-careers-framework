@@ -313,3 +313,13 @@
   - created_at
   - updated_at
   - cpd_lead_provider_id
+  :statements:
+  - show_total_with_vat
+  - service_fee_enabled
+  :user_merges:
+  - id
+  - from_user_id
+  - to_user_id
+  - user_id
+  - created_at
+  - updated_at

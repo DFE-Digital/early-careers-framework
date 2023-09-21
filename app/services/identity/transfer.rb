@@ -9,6 +9,7 @@ module Identity
         transfer_identities!
         transfer_induction_coordinator_profile!
         transfer_get_an_identity_id!
+        create_user_merge!
       end
     end
 
@@ -56,6 +57,13 @@ module Identity
         from_user.update_attribute(:get_an_identity_id, nil) # rubocop:disable Rails/SkipsModelValidations
         to_user.update!(get_an_identity_id: from_id)
       end
+    end
+
+    def create_user_merge!
+      to_user.user_merges.create!(from_user:, to_user:)
+
+      # Move previous user merge history to new to_user
+      from_user.user_merges.update!(user: to_user)
     end
   end
 end

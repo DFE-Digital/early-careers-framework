@@ -78,6 +78,16 @@ module Api
           }
         }.compact
       end
+
+      attribute(:user_merges) do |object|
+        object.user_merges.map do |um|
+          {
+            from_user_id: um.from_user_id,
+            to_user_id: um.to_user_id,
+            created_at: um.created_at.rfc3339,
+          }
+        end
+      end
     end
   end
 end
