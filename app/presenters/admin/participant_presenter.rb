@@ -87,6 +87,22 @@ class Admin::ParticipantPresenter
     induction_records
   end
 
+  def induction_start_date
+    if participant_profile.induction_start_date
+      participant_profile.induction_start_date.to_formatted_s(:govuk)
+    else
+      "Not yet recorded"
+    end
+  end
+
+  def induction_completion_date
+    if participant_profile.induction_completion_date
+      participant_profile.induction_completion_date.to_formatted_s(:govuk)
+    else
+      "Not yet recorded"
+    end
+  end
+
   def has_mentor?
     relevant_induction_record&.mentor&.present?
   end
