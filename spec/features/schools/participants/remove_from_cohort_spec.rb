@@ -64,5 +64,8 @@ RSpec.describe "SIT removing participants from the cohort", js: true, with_featu
 
     click_on "Return to manage mentors and ECTs"
     expect(page).to have_no_content ineligible_user.full_name
+    when_i_select("No longer training")
+    click_on("Apply")
+    expect(page).to have_content ineligible_user.full_name
   end
 end

@@ -2,12 +2,14 @@
 
 module Dashboard
   class Participants
-    attr_reader :completed_induction, :mentors, :orphan_ects, :school, :user, :latest_year
+    attr_reader :completed_induction, :mentors, :orphan_ects, :school, :user, :latest_year, :active_mentors
 
     def initialize(school:, user:)
+      @active_mentors = []
       @completed_induction = []
       @currently_training_ects = []
-      @deferred_or_transferred_ects = []
+      @no_longer_training_ects = []
+      @no_longer_training_mentors = []
       @latest_year = Dashboard::LatestManageableCohort.call(school).start_year
       @orphan_ects = []
       @school = school
@@ -21,11 +23,11 @@ module Dashboard
     end
 
     def currently_training_count
-      ects.size
+      (currently_training_ects + orphan_ects + active_mentors).size
     end
 
     def no_longer_training_count
-      not_mentoring_or_being_mentored.size
+      no_longer_training.size
     end
 
     def dashboard_school_cohorts
@@ -44,13 +46,13 @@ module Dashboard
       @no_qts ||= induction_records.select { |induction_record| no_qts?(induction_record) }
     end
 
-    def not_mentoring_or_being_mentored
-      @not_mentoring_or_being_mentored ||= (orphan_mentors + deferred_or_transferred_ects).sort_by(&:full_name)
+    def no_longer_training
+      @no_longer_training ||= (no_longer_training_mentors + no_longer_training_ects).sort_by(&:full_name)
     end
 
   private
 
-    attr_reader :currently_training_ects, :deferred_or_transferred_ects
+    attr_reader :currently_training_ects, :no_longer_training_ects, :no_longer_training_mentors
 
     def dashboard_mentor(mentor)
       return mentor if mentor.is_a?(Dashboard::Participant)
@@ -96,16 +98,6 @@ module Dashboard
         induction_record.participant_no_qts?
     end
 
-    def orphan_mentors
-      @orphan_mentors ||= school_mentors_not_mentoring.map do |school_mentor|
-        dashboard_participant(school_mentor.participant_profile_id)
-      end
-    end
-
-    def profile_ids_of_mentors_mentoring
-      mentors.keys.map(&:participant_profile_id)
-    end
-
     def completed_induction_ect(induction_record)
       @completed_induction << dashboard_participant(induction_record.participant_profile_id, induction_record:)
     end
@@ -114,38 +106,67 @@ module Dashboard
       @currently_training_ects << dashboard_participant(induction_record.participant_profile_id, induction_record:)
     end
 
-    def deferred_or_transferred_ect(induction_record)
-      @deferred_or_transferred_ects << dashboard_participant(induction_record.participant_profile_id, induction_record:)
+    def no_longer_training_ect(induction_record)
+      @no_longer_training_ects << dashboard_participant(induction_record.participant_profile_id, induction_record:)
+    end
+
+    def withdrawn_ect(induction_record)
+      @withdrawn_ects << dashboard_participant(induction_record.participant_profile_id, induction_record:)
     end
 
     def orphan_ect(induction_record)
       @orphan_ects << dashboard_participant(induction_record.participant_profile_id, induction_record:)
     end
 
+    def no_longer_training_mentor(induction_record)
+      @no_longer_training_mentors << dashboard_participant(induction_record.participant_profile_id, induction_record:)
+    end
+
     def process_participants
+      process_ects
+      process_mentors
+    end
+
+    def process_ects
       induction_records
         .select(&:ect?)
         .each do |induction_record|
           next completed_induction_ect(induction_record) if induction_record.completed_induction_status?
-          next deferred_or_transferred_ect(induction_record) if induction_record.deferred_or_transferred?
+          next no_longer_training_ect(induction_record) if induction_record.deferred_or_transferred? || induction_record.withdrawn_induction_status?
           next orphan_ect(induction_record) if induction_record.mentor_profile_id.blank?
 
           currently_training_ect(induction_record)
         end
+    end
 
+    # Discover all the relevant mentors of the school, including:
+    # - orphan mentors
+    # - mentors with mentees
+    # - mentors linked to the school's ects, but not in the school's mentor pool
+    def process_mentors
+      induction_records
+        .reject(&:ect?)
+        .each do |induction_record|
+          next no_longer_training_mentor(induction_record) if induction_record.deferred_or_transferred? || induction_record.withdrawn_induction_status?
+
+          @active_mentors << dashboard_participant(induction_record.participant_profile_id, induction_record:)
+        end
+
+      # Create a hash with the format below, to display the mentors in the "Currently training" filter
+      # { mentor_dashboard_participant => [ect_dashboard_participant_1, ect_dashboard_participant_2] }
       @mentors = @currently_training_ects.group_by(&:mentor_profile_id).transform_keys do |mentor_profile_id|
         dashboard_participant(mentor_profile_id)
       end
-    end
 
-    def school_mentors_not_mentoring
-      school.school_mentors.reject do |school_mentor|
-        profile_ids_of_mentors_mentoring.include?(school_mentor.participant_profile_id)
+      # Include also the orphan mentors in the @mentors
+      @orphan_mentor_ids = @active_mentors.map(&:participant_profile_id) - @currently_training_ects.map(&:mentor_profile_id)
+      @orphan_mentor_ids.each do |mentor_profile_id|
+        @mentors[dashboard_participant(mentor_profile_id)] = nil
       end
     end
 
     def sorted_ects
-      ects = (mentors.values.flatten.compact + orphan_ects).sort_by do |ect|
+      ects = (currently_training_ects + orphan_ects).sort_by do |ect|
         [ect.induction_start_date || Float::INFINITY, ect.full_name]
       end
 

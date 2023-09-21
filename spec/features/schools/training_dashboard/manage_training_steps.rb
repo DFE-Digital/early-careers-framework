@@ -840,7 +840,7 @@ module ManageTrainingSteps
   alias_method :and_i_see_the_participants_filtered_by, :then_i_see_the_participants_filtered_by
 
   def and_i_see_mentors_not_training_and_ects_not_being_trained_sorted_by_name
-    expect(page).to have_content("Not mentoring or being mentored\nCFI Mentor WAITING FOR TRN\nDeferred participant TRAINING DEFERRED")
+    expect(page).to have_content("Not mentoring or being mentored\nDeferred participant TRAINING DEFERRED")
   end
 
   def and_i_see_ects_with_induction_completed_sorted_by_decreasing_completion_date
