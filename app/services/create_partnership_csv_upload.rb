@@ -30,6 +30,6 @@ private
   end
 
   def strip_bom(string)
-    string.force_encoding("UTF-8").gsub(/\xEF\xBB\xBF/, "")
+    string.encode("UTF-8", invalid: :replace, undef: :replace).gsub(/\xEF\xBB\xBF/, "")
   end
 end
