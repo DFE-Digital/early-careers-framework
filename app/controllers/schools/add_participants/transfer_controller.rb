@@ -21,9 +21,13 @@ module Schools
       def needs_after_transfer_sign_in?
         if @wizard.after_transfer_sign_in_needed
           sign_in(@wizard.current_user, scope: :user)
-          if PrivacyPolicy.acceptance_required?(@wizard.current_user)
-            PrivacyPolicy.current.accept!(@wizard.current_user)
-          end
+          ensure_policy_acceptance
+        end
+      end
+
+      def ensure_policy_acceptance
+        if PrivacyPolicy.current.acceptance_required?(@wizard.current_user)
+          PrivacyPolicy.current.accept!(@wizard.current_user)
         end
       end
 
