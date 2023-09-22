@@ -105,10 +105,11 @@ private
   def update_mentored_ects!
     return unless [primary_profile, duplicate_profile].all?(&:mentor?)
 
-    duplicate_profile.mentee_profiles.each do |mentee|
-      mentee.update!(mentor_profile_id: primary_profile.id)
-      mentee.induction_records.each { |induction_record| induction_record.update!(mentor_profile_id: primary_profile.id) }
-    end
+    duplicate_profile.mentee_profiles.update_all(mentor_profile_id: primary_profile.id)
+
+    InductionRecord
+      .where(mentor_profile_id: duplicate_profile.id)
+      .update_all(mentor_profile_id: primary_profile.id)
   end
 
   def update_primary_profile_schedule(new_schedule)
