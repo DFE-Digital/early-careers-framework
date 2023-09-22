@@ -29,6 +29,10 @@ class Email < ApplicationRecord
     status == "delivered"
   end
 
+  def submitted?
+    status == "submitted"
+  end
+
   def failed?
     status.in? FAILED_STATUSES
   end
