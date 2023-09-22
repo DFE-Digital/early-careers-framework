@@ -82,7 +82,7 @@ properties:
     type: boolean
     example: true
   schedule_identifier:
-    description: "The schedule of the ECF participant. For the possible values please refer to the <a href=\"/ecf-usage.html#notifying-of-schedule-change\" class=\"govuk-link\">ECF change schedule guidance</a>."
+    description: "The schedule of the ECF participant. For the possible values please refer to the <a href=\"/api-reference/ecf/schedules-and-milestone-dates.html#schedules-and-milestone-dates\" class=\"govuk-link\">ECF schedules and milestone dates guidance</a>."
     type: string
     example: ecf-standard-january
   delivery_partner_id:
