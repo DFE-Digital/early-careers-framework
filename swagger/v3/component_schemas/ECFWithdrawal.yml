@@ -20,3 +20,6 @@ properties:
     type: string
     format: date-time
     example: "2021-05-31T02:22:32.000Z"
+example:
+  reason: moved-school
+  date: "2021-05-31T02:22:32.000Z"

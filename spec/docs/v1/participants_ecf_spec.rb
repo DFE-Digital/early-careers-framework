@@ -14,6 +14,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json" do
     get "Retrieve multiple participants, replaces <code>/api/v1/participants</code>" do
       operationId :participants
       tags "ECF participants"
+      produces "application/json"
       security [bearerAuth: []]
 
       parameter name: :filter,
@@ -92,6 +93,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json" do
     get "Get a single ECF participant" do
       operationId :ecf_participant
       tags "ECF participants"
+      produces "application/json"
       security [bearerAuth: []]
 
       parameter name: :id,
@@ -151,6 +153,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json" do
       tags "ECF Participant"
       security [bearerAuth: []]
       consumes "application/json"
+      produces "application/json"
 
       parameter name: :id,
                 in: :path,

@@ -1,4 +1,4 @@
-description: "Note, this is a new endpoint. The details of an unfunded mentor"
+description: "<b>Note, this is a new endpoint.</b><br/>The details of an unfunded mentor"
 type: object
 required:
   - id

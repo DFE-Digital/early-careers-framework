@@ -1,4 +1,4 @@
-description: "Note, this is a new endpoint. The details of an ECF participant transfer"
+description: "<b>Note, this is a new endpoint.</b><br/> The details of an ECF participant transfer"
 type: object
 required:
   - id

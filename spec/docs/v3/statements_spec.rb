@@ -28,6 +28,7 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
     get "<b>Note, this endpoint is new.</b><br/>Retrieve financial statements" do
       operationId :statements_get
       tags "statements"
+      produces "application/json"
       security [bearerAuth: []]
 
       parameter name: :filter,
@@ -78,6 +79,7 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
     get "<b>Note, this endpoint is new.</b><br/>Retrieve specific financial statement" do
       operationId :statement_get
       tags "statements"
+      produces "application/json"
       security [bearerAuth: []]
 
       parameter name: :id,

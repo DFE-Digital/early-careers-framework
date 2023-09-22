@@ -18,6 +18,7 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
       get "<b>Note, this endpoint is new.</b><br/>Retrieve multiple ECF partnerships" do
         operationId :partnerships_ecf_get
         tags "ECF partnerships"
+        produces "application/json"
         security [bearerAuth: []]
 
         let!(:partnership) { create(:partnership, school:, cohort:, delivery_partner:, lead_provider:) }
@@ -75,6 +76,7 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
       get "<b>Note, this endpoint is new.</b><br/>Get a single ECF partnership" do
         operationId :partnerships_ecf_get
         tags "ECF partnerships"
+        produces "application/json"
         security [bearerAuth: []]
 
         let!(:partnership) { create(:partnership, school:, cohort:, delivery_partner:, lead_provider:) }
@@ -122,6 +124,7 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
         tags "ECF partnerships"
         security [bearerAuth: []]
         consumes "application/json"
+        produces "application/json"
 
         let(:params) do
           {
@@ -219,6 +222,7 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
         tags "ECF partnerships"
         security [bearerAuth: []]
         consumes "application/json"
+        produces "application/json"
 
         let!(:partnership) { create(:partnership, school:, cohort:, delivery_partner:, lead_provider:) }
         let(:delivery_partner2) { create(:delivery_partner, name: "Second Delivery Partner") }
@@ -241,7 +245,8 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
                   example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
                   description: "The ID of the partnership to update",
                   schema: {
-                    type: "string",
+                    type: :string,
+                    format: :uuid,
                   }
 
         parameter name: :params,

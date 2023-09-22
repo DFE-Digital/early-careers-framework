@@ -18,6 +18,7 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
     get "<b>Note, this endpoint is new.</b><br/>Retrieve multiple ECF participant transfers" do
       operationId :participants
       tags "participant transfers"
+      produces "application/json"
       security [bearerAuth: []]
 
       parameter name: :filter,
@@ -45,6 +46,46 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
       response "200", "A list of ECF participant transfers" do
         schema({ "$ref": "#/components/schemas/MultipleECFParticipantTransferResponse" })
 
+        after do |example|
+          content = example.metadata[:response][:content] || {}
+          example_spec = {
+            "application/json" => {
+              examples: {
+                success: {
+                  value: JSON.parse({
+                    data: [
+                      {
+                        id: "db3a7848-7308-4879-942a-c4a70ced400a",
+                        type: "participant-transfer",
+                        attributes: {
+                          updated_at: "2021-05-31T02:22:32.000Z",
+                          transfers: {
+                            training_record_id: "000a97ff-d2a9-4779-a397-9bfd9063072e",
+                            transfer_type: "new_provider",
+                            status: "complete",
+                            leaving: {
+                              school_urn: "123456",
+                              provider: "Old Institute",
+                              date: "2021-05-31",
+                            },
+                            joining: {
+                              school_urn: "654321",
+                              provider: "New Institute",
+                              date: "2021-06-01",
+                            },
+                            created_at: "2021-05-31T02:22:32.000Z",
+                          },
+                        },
+                      },
+                    ],
+                  }.to_json, symbolize_names: true),
+                },
+              },
+            },
+          }
+          example.metadata[:response][:content] = content.deep_merge(example_spec)
+        end
+
         run_test!
       end
 
@@ -62,6 +103,7 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
     get "<b>Note, this endpoint is new.</b><br/>Get a single participant's transfers" do
       operationId :participant_transfers
       tags "participant transfers"
+      produces "application/json"
       security [bearerAuth: []]
 
       parameter name: :id,
@@ -70,7 +112,8 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
                 example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
                 description: "The ID of the ECF participant.",
                 schema: {
-                  type: "string",
+                  type: :string,
+                  format: :uuid,
                 }
 
       response "200", "A single participant's transfers" do

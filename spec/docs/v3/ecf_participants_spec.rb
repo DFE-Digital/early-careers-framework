@@ -20,6 +20,7 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
     get "<b>Note, this endpoint includes updated specifications.</b><br/>Retrieve multiple participants, replaces <code>/api/v3/participants</code>" do
       operationId :participants
       tags "ECF participants"
+      produces "application/json"
       security [bearerAuth: []]
 
       parameter name: :filter,
@@ -75,6 +76,7 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
     get "<b>Note, this endpoint includes updated specifications.</b><br/>Get a single ECF participant" do
       operationId :ecf_participant
       tags "ECF participants"
+      produces "application/json"
       security [bearerAuth: []]
 
       parameter name: :id,
@@ -83,7 +85,8 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
                 example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
                 description: "The ID of the ECF participant.",
                 schema: {
-                  type: "string",
+                  type: :string,
+                  format: :uuid,
                 }
 
       response "200", "A single ECF participant" do
@@ -119,6 +122,7 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
       tags "ECF Participant"
       security [bearerAuth: []]
       consumes "application/json"
+      produces "application/json"
 
       parameter name: :id,
                 in: :path,
@@ -126,7 +130,8 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
                 example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
                 description: "The ID of the participant to defer",
                 schema: {
-                  type: "string",
+                  type: :string,
+                  format: :uuid,
                 }
 
       parameter name: :params,
@@ -211,6 +216,7 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
       tags "ECF Participant"
       security [bearerAuth: []]
       consumes "application/json"
+      produces "application/json"
 
       parameter name: :id,
                 in: :path,
@@ -218,7 +224,8 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
                 example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
                 description: "The ID of the participant to resume",
                 schema: {
-                  type: "string",
+                  type: :string,
+                  format: :uuid,
                 }
 
       parameter name: :params,
@@ -264,12 +271,17 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
       tags "ECF Participant"
       security [bearerAuth: []]
       consumes "application/json"
+      produces "application/json"
 
       parameter name: :id,
                 in: :path,
                 required: true,
                 example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
-                description: "The ID of the participant to withdraw"
+                description: "The ID of the participant to withdraw",
+                schema: {
+                  type: :string,
+                  format: :uuid,
+                }
 
       parameter name: :params,
                 in: :body,
@@ -356,6 +368,7 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
       tags "ECF Participant"
       security [bearerAuth: []]
       consumes "application/json"
+      produces "application/json"
 
       parameter name: :id,
                 in: :path,
@@ -363,7 +376,8 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
                 example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
                 description: "The ID of the participant",
                 schema: {
-                  type: "string",
+                  type: :string,
+                  format: :uuid,
                 }
 
       parameter name: :params,

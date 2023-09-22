@@ -21,6 +21,10 @@
               <p>
                 This response returns a <%= get_schema_link(response.content['application/json'].schema) %> schema.
               </p>
+            <% elsif response.content['text/csv'] %>
+              <p>
+                This response returns a <%= get_schema_link(response.content['text/csv'].schema) %> schema.
+              </p>
             <% end %>
           </td>
         </tr>
@@ -42,6 +46,10 @@
         <% if response.content['application/json'] %>
           <p>
             This response returns a <%= get_schema_link(response.content['application/json'].schema) %> schema.
+          </p>
+        <% elsif response.content['text/csv'] %>
+          <p>
+            This response returns a <%= get_schema_link(response.content['text/csv'].schema) %> schema.
           </p>
         <% end %>
 

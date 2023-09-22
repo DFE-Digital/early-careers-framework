@@ -18,6 +18,7 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
     get "<b>Note, this endpoint includes updated specifications.</b><br/>Retrieve multiple NPQ participants" do
       operationId :npq_participants
       tags "NPQ participants"
+      produces "application/json"
       security [bearerAuth: []]
 
       parameter name: :filter,
@@ -73,6 +74,7 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
     get "<b>Note, this endpoint includes updated specifications.</b><br/>Get a single NPQ participant" do
       operationId :npq_participant
       tags "NPQ participants"
+      produces "application/json"
       security [bearerAuth: []]
 
       parameter name: :id,
@@ -81,7 +83,8 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
                 example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
                 description: "The ID of the NPQ participant.",
                 schema: {
-                  type: "string",
+                  type: :string,
+                  format: :uuid,
                 }
 
       response "200", "A single NPQ participant" do
@@ -174,6 +177,7 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
       tags "NPQ Participant"
       security [bearerAuth: []]
       consumes "application/json"
+      produces "application/json"
 
       parameter name: :id,
                 in: :path,
@@ -181,7 +185,8 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
                 example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
                 description: "The ID of the participant to withdraw",
                 schema: {
-                  type: "string",
+                  type: :string,
+                  format: :uuid,
                 }
 
       parameter name: :params,
@@ -256,6 +261,8 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
 
           example.metadata[:response][:content] = content.deep_merge(example_spec)
         end
+
+        run_test!
       end
 
       response "422", "Unprocessable entity" do
@@ -289,6 +296,7 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
       tags "NPQ Participant"
       security [bearerAuth: []]
       consumes "application/json"
+      produces "application/json"
 
       parameter name: :id,
                 in: :path,
@@ -296,7 +304,8 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
                 example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
                 description: "The ID of the participant to defer",
                 schema: {
-                  type: "string",
+                  type: :string,
+                  format: :uuid,
                 }
 
       parameter name: :params,
