@@ -86,27 +86,27 @@
 <%= govuk_summary_list(actions: true) do |sl|
   sl.with_row do |row|
     row.with_key(text: "Validation status")
-    row.with_value(text: govuk_tag(text: states.validation_state.humanize, colour: "grey"))
+    row.with_value(text: govuk_tag(text: states.validation_state.to_s.humanize, colour: "grey"))
   end
 
   sl.with_row do |row|
     row.with_key(text: "Training eligibility status")
-    row.with_value(text: govuk_tag(text: states.training_eligibility_state.humanize, colour: "grey"))
+    row.with_value(text: govuk_tag(text: states.training_eligibility_state.to_s.humanize, colour: "grey"))
   end
 
   sl.with_row do |row|
     row.with_key(text: "FIP funding eligibility status")
-    row.with_value(text: govuk_tag(text: states.fip_funding_eligibility_state.humanize, colour: "grey"))
+    row.with_value(text: govuk_tag(text: states.fip_funding_eligibility_state.to_s.humanize, colour: "grey"))
   end
 
   sl.with_row do |row|
     row.with_key(text: "Mentoring status")
-    row.with_value(text: govuk_tag(text: states.mentoring_state.humanize, colour: "grey"))
+    row.with_value(text: govuk_tag(text: states.mentoring_state.to_s.humanize, colour: "grey"))
   end
 
   sl.with_row do |row|
     row.with_key(text: "Training status")
-    row.with_value(text: govuk_tag(text: states.training_state.humanize, colour: "grey"))
+    row.with_value(text: govuk_tag(text: states.training_state.to_s.humanize, colour: "grey"))
   end
 end %>
 

@@ -27,7 +27,7 @@ module Admin
             update_admin_signatures if @npq_application.saved_change_to_eligible_for_funding?
             flash[:success] = {
               title: "#{name} updated",
-              content: "#{name} has been marked '#{@npq_application.funding_eligiblity_status_code.humanize.downcase}'",
+              content: "#{name} has been marked '#{@npq_application.funding_eligiblity_status_code.to_s.humanize.downcase}'",
             }
           else
             flash[:alert] = "Failed to save new elgibility"
