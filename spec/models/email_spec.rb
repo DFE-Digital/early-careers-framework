@@ -9,6 +9,34 @@ RSpec.describe Email, type: :model do
     it { is_expected.to have_many(:associations) }
   end
 
+  describe "status fields" do
+    context "when status is submitted" do
+      subject(:email) { described_class.create!(status: "submitted") }
+
+      it { is_expected.to be_submitted }
+      it { is_expected.not_to be_delivered }
+      it { is_expected.not_to be_failed }
+    end
+
+    context "when status is delivered" do
+      subject(:email) { described_class.create!(status: "delivered") }
+
+      it { is_expected.to be_delivered }
+      it { is_expected.not_to be_submitted }
+      it { is_expected.not_to be_failed }
+    end
+
+    Email::FAILED_STATUSES.each do |status|
+      context "when status is #{status}" do
+        subject(:email) { described_class.create!(status:) }
+
+        it { is_expected.to be_failed }
+        it { is_expected.not_to be_submitted }
+        it { is_expected.not_to be_delivered }
+      end
+    end
+  end
+
   describe "#create_association_with" do
     let(:school) { create(:seed_school, urn: "123123", name: "Imaginary High School") }
 
