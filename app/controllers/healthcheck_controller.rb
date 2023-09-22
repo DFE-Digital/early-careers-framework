@@ -4,12 +4,13 @@ class HealthcheckController < ApplicationController
   NOTIFY_STATUS_API = "https://stdg40247zwv.statuspage.io/api/v2/status.json"
 
   def check
-    render status: :ok, json: {
+    render status:, json: {
       version: release_version,
       sha:,
       environment: Rails.env,
       database: {
         connected: database_connected?,
+        populated: database_populated?,
         migration_version:,
       },
       sidekiq: {
@@ -27,12 +28,29 @@ class HealthcheckController < ApplicationController
 
 private
 
+  def status
+    if database_connected? && database_populated?
+      :ok
+    else
+      :internal_server_error
+    end
+  end
+
   def sha
     ENV["SHA"].presence || ENV["COMMIT_SHA"].presence || "none"
   end
 
   def database_connected?
     ApplicationRecord.connection.select_value("SELECT 1") == 1
+  rescue StandardError
+    false
+  end
+
+  def database_populated?
+    [
+      ApplicationRecord.connection.select_value("select count(*) from schools"),
+      ApplicationRecord.connection.select_value("select count(*) from schedules"),
+    ].all?(&:positive?)
   rescue StandardError
     false
   end
