@@ -14,13 +14,17 @@ RSpec.describe Induction::FindBy do
   let(:school_3) { NewSeeds::Scenarios::Schools::School.new.build.chosen_fip_and_partnered_in(cohort:) }
   let(:ect) { NewSeeds::Scenarios::Participants::Ects::Ect.new(school_cohort: school_1.school_cohort).build }
 
+  let(:appropriate_body_1) { create(:appropriate_body_local_authority) }
+  let(:appropriate_body_2) { create(:appropriate_body_local_authority) }
+  let(:appropriate_body_5) { create(:appropriate_body_national_organisation) }
+
   let(:participant_profile) { ect.participant_profile }
 
-  let!(:induction_1) { ect.add_induction_record(induction_programme: school_1.induction_programme, start_date: Date.new(current_year, 9, 1), end_date: Date.new(current_year, 10, 1), induction_status: "leaving") }
-  let!(:induction_2) { ect.add_induction_record(induction_programme: school_2.induction_programme, start_date: Date.new(current_year, 10, 1), end_date: Date.new(current_year, 11, 1), induction_status: "leaving") }
+  let!(:induction_1) { ect.add_induction_record(induction_programme: school_1.induction_programme, start_date: Date.new(current_year, 9, 1), end_date: Date.new(current_year, 10, 1), induction_status: "leaving", appropriate_body: appropriate_body_1) }
+  let!(:induction_2) { ect.add_induction_record(induction_programme: school_2.induction_programme, start_date: Date.new(current_year, 10, 1), end_date: Date.new(current_year, 11, 1), induction_status: "leaving", appropriate_body: appropriate_body_2) }
   let!(:induction_3) { ect.add_induction_record(induction_programme: school_3.induction_programme, start_date: Date.new(current_year, 11, 1), end_date: Date.new(current_year, 12, 1), induction_status: "changed") }
   let!(:induction_4) { ect.add_induction_record(induction_programme: school_3.induction_programme, start_date: Date.new(current_year, 12, 1), end_date: Date.new(current_year + 1, 1, 1), induction_status: "leaving") }
-  let!(:induction_5) { ect.add_induction_record(induction_programme: school_3.induction_programme, start_date: Date.new(current_year + 1, 1, 1), end_date: nil, induction_status: "leaving") }
+  let!(:induction_5) { ect.add_induction_record(induction_programme: school_3.induction_programme, start_date: Date.new(current_year + 1, 1, 1), end_date: nil, induction_status: "leaving", appropriate_body: appropriate_body_5) }
 
   subject(:service) { described_class }
 
@@ -116,6 +120,16 @@ RSpec.describe Induction::FindBy do
           expect(service.call(participant_profile:, school: school_1.school)).to eq induction_1
           expect(service.call(participant_profile:, school: school_2.school)).to eq induction_2
           expect(service.call(participant_profile:, school: school_3.school)).to eq induction_5
+        end
+      end
+    end
+
+    context "when an appropriate body is supplied" do
+      it "returns the latest induction record for that appropriate body" do
+        travel_to a_point_in_time do
+          expect(service.call(participant_profile:, appropriate_body: appropriate_body_1)).to eq induction_1
+          expect(service.call(participant_profile:, appropriate_body: appropriate_body_2)).to eq induction_2
+          expect(service.call(participant_profile:, appropriate_body: appropriate_body_5)).to eq induction_5
         end
       end
     end
