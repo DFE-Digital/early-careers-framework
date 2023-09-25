@@ -454,6 +454,7 @@ RSpec.describe ChangeSchedule do
     let(:schedule_identifier) { new_schedule.schedule_identifier }
     let(:new_cohort) { Cohort.previous }
     let(:new_schedule) { Finance::Schedule::NPQ.find_by(cohort: new_cohort, schedule_identifier: "npq-leadership-spring") }
+    let!(:npq_contract) { create(:npq_contract, :npq_senior_leadership, npq_lead_provider:, npq_course:) }
 
     describe "validations" do
       it_behaves_like "validating a participant for a change schedule"
@@ -463,6 +464,7 @@ RSpec.describe ChangeSchedule do
       end
 
       context "when the cohort is changing" do
+        let!(:npq_contract_new_cohort) { create(:npq_contract, :npq_senior_leadership, cohort: new_cohort, npq_lead_provider:, npq_course:) }
         let(:new_schedule) { Finance::Schedule::NPQ.find_by(schedule_identifier: "npq-leadership-spring", cohort: new_cohort) }
         let(:params) do
           {
@@ -515,6 +517,18 @@ RSpec.describe ChangeSchedule do
           is_expected.to be_invalid
 
           expect(service.errors.messages_for(:participant_id)).to include("Your update cannot be made as the '#/participant_id' is not recognised. Check participant details and try again.")
+        end
+      end
+
+      context "when lead provider has no contract for the cohort and course" do
+        let(:new_cohort) { Cohort.previous }
+
+        before { npq_contract.update!(npq_course: create(:npq_specialist_course)) }
+
+        it "is invalid and returns an error message" do
+          is_expected.to be_invalid
+
+          expect(service.errors.messages_for(:cohort)).to include("You cannot change a participant to this cohort as you do not have a contract for the cohort and course. Contact the DfE for assistance.")
         end
       end
     end

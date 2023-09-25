@@ -14,11 +14,11 @@ RSpec.describe Finance::NPQ::StatementCalculator do
   let!(:npq_leadership_schedule) { create(:npq_leadership_schedule, cohort:) }
   let!(:npq_specialist_schedule) { create(:npq_specialist_schedule, cohort:) }
   let!(:npq_course)              { create(:npq_leadership_course, identifier: "npq-leading-teaching") }
-  let!(:contract)                { create(:npq_contract, npq_lead_provider:, cohort:, monthly_service_fee: nil) }
 
   subject { described_class.new(statement:) }
 
   describe "#total_payment" do
+    let!(:contract) { create(:npq_contract, npq_lead_provider:, cohort:, monthly_service_fee: nil) }
     let(:default_total) { BigDecimal("0.1212631578947368421052631578947368421064e4") }
 
     context "when there is a positive reconcile_amount" do

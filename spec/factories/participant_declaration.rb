@@ -53,6 +53,13 @@ FactoryBot.define do
 
       params[:evidence_held] = "other" if declaration_type != "started"
 
+      if participant_profile.is_a?(ParticipantProfile::NPQ)
+        create(:npq_contract,
+               npq_lead_provider: cpd_lead_provider.npq_lead_provider,
+               cohort: participant_profile.npq_application.cohort,
+               npq_course: participant_profile.npq_application.npq_course)
+      end
+
       service = RecordDeclaration.new(params)
       raise ArgumentError, service.errors.full_messages unless service.valid?
 

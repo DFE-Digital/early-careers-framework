@@ -18,6 +18,7 @@ class ChangeSchedule
   validates :course_identifier, course: true, presence: { message: I18n.t(:missing_course_identifier) }
   validates :cpd_lead_provider, induction_record: true
   validates :schedule_identifier, presence: { message: I18n.t(:invalid_schedule) }
+  validates :cohort, npq_contract_for_cohort_and_course: true
   validate :not_already_withdrawn
   validate :validate_new_schedule_valid_with_existing_declarations
   validate :change_with_a_different_schedule
@@ -73,14 +74,14 @@ class ChangeSchedule
     @schedule ||= participant_profile&.schedule_for(cpd_lead_provider:)
   end
 
+  def cohort
+    @cohort ||= super ? Cohort.find_by(start_year: super) : fallback_cohort
+  end
+
 private
 
   def user
     @user ||= participant_identity&.user
-  end
-
-  def cohort
-    @cohort ||= super ? Cohort.find_by(start_year: super) : fallback_cohort
   end
 
   def fallback_cohort

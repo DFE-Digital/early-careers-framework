@@ -46,6 +46,7 @@ module ParticipantDeclarationSteps
     NPQ::Application::Accept.new(npq_application: @npq_application).call
     @declaration_date = @npq_application.reload.profile.schedule.milestones.first.start_date + 1.day
     @submission_date = @npq_application.profile.schedule.milestones.first.start_date + 2.days
+    create(:npq_contract, cohort:, npq_course:, npq_lead_provider:)
   end
 
   def when_the_participant_details_are_passed_to_the_lead_provider

@@ -246,6 +246,7 @@ RSpec.describe "NPQ Participants API", type: :request do
         create(:npq_aso_schedule, schedule_identifier: SecureRandom.alphanumeric)
       end
     end
+    let!(:contract) { create(:npq_contract, npq_course: npq_application.npq_course, npq_lead_provider: npq_application.npq_lead_provider) }
 
     it "changes the schedules of the specified profile", :aggregate_failures do
       put "/api/v1/participants/npq/#{npq_application.profile.user_id}/change-schedule", params: {

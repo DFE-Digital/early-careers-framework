@@ -501,6 +501,7 @@ RSpec.describe "API Participant Declarations", type: :request do
         let(:course_identifier) { npq_course.identifier }
         let(:declaration_type)  { "completed" }
         let(:has_passed) { nil }
+        let!(:contract) { create(:npq_contract, npq_course:, npq_lead_provider: cpd_lead_provider.npq_lead_provider) }
         let(:params) do
           {
             data: {
