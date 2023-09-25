@@ -1,4 +1,4 @@
-description: "A list of unfunded mentors"
+description: "A list of ECF participant transfers"
 type: object
 required:
   - data
@@ -7,3 +7,38 @@ properties:
     type: array
     items:
       $ref: "#/components/schemas/ECFParticipantTransfer"
+    example:
+      - id: db3a7848-7308-4879-942a-c4a70ced400a
+        type: participant-transfer
+        attributes:
+          updated_at: "2021-05-31T02:22:32.000Z"
+          transfers:
+            training_record_id: "000a97ff-d2a9-4779-a397-9bfd9063072e"
+            transfer_type: "new_provider"
+            status: "complete"
+            leaving:
+              school_urn: "123456"
+              provider: "Old Institute"
+              date: "2021-05-31"
+            joining:
+              school_urn: "654321"
+              provider: "New Institute"
+              date: "2021-06-01"
+            created_at: "2021-05-31T02:22:32.000Z"
+      - id: bb36d74a-68a7-47b6-86b6-1fd0d141c590
+        type: participant-transfer
+        attributes:
+          updated_at: "2021-05-31T02:22:32.000Z"
+          transfers:
+            training_record_id: "000a97ff-d2a9-4779-a397-9bfd9063072e"
+            transfer_type: "new_provider"
+            status: "complete"
+            leaving:
+              school_urn: "123456"
+              provider: "Old Institute"
+              date: "2021-05-31"
+            joining:
+              school_urn: "654321"
+              provider: "New Institute"
+              date: "2021-06-01"
+            created_at: "2021-05-31T02:22:32.000Z"

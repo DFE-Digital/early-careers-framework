@@ -120,11 +120,6 @@ RSpec.feature "ECT nominate SIT journey", type: :feature, js: true do
 
     when_i_fill_in_using_an_ects_email
     click_on "Continue"
-    then_i_should_see_the_email_already_used_error
-    and_the_page_should_be_accessible
-
-    when_i_fill_in_the_sits_email
-    click_on "Continue"
     then_i_should_be_on_the_check_details_page
 
     click_on "Confirm and nominate"

@@ -82,6 +82,8 @@ en:
   schedule_invalidates_declaration: Changing schedule would invalidate existing declarations. Please void them first.
   schedule_invalid_for_course: Selected schedule is not valid for the course
   missing_school_cohort_default_partnership: You cannot change a participant to this cohort as you do not have a partnership with the school for the cohort. Contact the DfE for assistance.
+  missing_npq_contract_for_cohort_and_course: You cannot change a participant to this cohort as you do not have a contract for the cohort and course. Contact the DfE for assistance.
+  missing_npq_contract_for_cohort_and_course_new_declaration: You cannot submit a declaration for this participant as you do not have a contract for the cohort and course. Contact the DfE for assistance.
   withdrawn_participant: Cannot perform actions on a withdrawn participant
   declaration_already_voided: "This declaration has already been voided."
   declaration_not_voidable: "This declaration cannot be voided. Contact the DfE if you have any questions about why you cannot void it."
@@ -317,7 +319,12 @@ en:
             target_cohort_start_year:
               excluded: "Invalid value. Must be different to %{year}"
               invalid: "Invalid value. Must be an integer between %{start} and %{end}"
-
+        edit_induction_tutor_form:
+          attributes:
+            email:
+              <<: *email_error_messages
+            full_name:
+              <<: *full_name_error_messages
         nominate_induction_tutor_form:
           attributes:
             email:
@@ -640,6 +647,9 @@ en:
     cohort: Cohort
     course_total: Course total
     contract_information: Contract Information
+    calculation_rounding_message:
+      title: Calculation rounding errors
+      content: Due to the way payments per participant are made, there may be rounding errors in some of the individual sub-calculations. The total output fees displayed are correct. Contact your contract manager if you have any queries.
     spring: Spring 2022
     recruitment_target_total: Recruitment target total
     total_completed: Total completed
@@ -734,6 +744,20 @@ en:
       providers:
         show:
           title: "Banding tracker for %{provider_name}"
+    statements:
+      payment_authorisations:
+        title: "Check %{statement_name} statement details before authorising for payment"
+        button: "Authorise for payment"
+        cancel: "Cancel"
+        tag:
+          content: "Authorised for payment at %{statement_marked_as_paid_at}"
+        banner:
+          title: "Authorising for payment"
+          content: "Requested at %{statement_marked_as_paid_at}. This may take up to 15 minutes. Refresh to see the updated statement."
+        checks_done:
+          label: "Yes, I'm ready to authorise this for payment"
+          legend: "Have all necessary assurance checks been done?"
+          error_message: "Confirm all necessary assurance checks have been done before authorising this statement for payment"
 
   admin:
     npq:

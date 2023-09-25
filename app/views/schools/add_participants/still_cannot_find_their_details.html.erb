@@ -39,7 +39,12 @@
       <% end %>
     <% end %>
 
-    <h3 class="govuk-heading-m">If you are sure this information is correct</h3>
+    <h3 class="govuk-heading-m">Contact the <%= @wizard.ect_participant? ? "ECT" : "mentor" %> to check you have the correct information for them</h3>
+    <p class="govuk-body">
+      If their details are incorrect, try to register them again with the correct information.  
+    </p>
+
+   <h3 class="govuk-heading-m">If you're sure this information is correct</h3>
     <p class="govuk-body">
       Contact us for help to register this <%= @wizard.ect_participant? ? "ECT" : "mentor" %> at your school: <%= render MailToSupportComponent.new %>
     </p>

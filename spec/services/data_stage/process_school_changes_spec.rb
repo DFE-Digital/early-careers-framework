@@ -10,62 +10,6 @@ RSpec.describe DataStage::ProcessSchoolChanges do
   let(:excluded_attrs) { %w[id created_at updated_at slug network_id domains la_code] }
 
   describe ".call" do
-    context "when the change contains unhandled attributes" do
-      let!(:school_change) { create(:staged_school_change, :with_unhandled_changes, school: staged_school) }
-
-      context "when the live school does not exist" do
-        it "creates the school" do
-          expect { service.call }.to change { ::School.count }.by(1)
-        end
-
-        it "links the new school to the correct local authority and district" do
-          service.call
-          live_school = ::School.find_by(urn: staged_school.urn)
-          expect(live_school.local_authority).to eq local_authority
-          expect(live_school.local_authority_district).to eq local_authority_district
-        end
-
-        it "marks the change as handled" do
-          service.call
-          expect(school_change.reload).to be_handled
-        end
-      end
-
-      context "when the live school already exists" do
-        let!(:live_school) { create(:school, urn: 20_001, name: "The Starship Children's Centre", school_status_code: 4, school_status_name: "Proposed to open", ukprn: "12345678") }
-
-        it "does not process any of the changes" do
-          service.call
-          expect(live_school.reload.school_status_code).to eq 4
-          expect(live_school.reload.school_status_name).to eq "proposed_to_open"
-        end
-
-        it "does not mark the change as handled" do
-          service.call
-          expect(school_change.reload).not_to be_handled
-        end
-
-        context "when the unhandled attributes are not set" do
-          before do
-            live_school.update!(ukprn: nil)
-            service.call
-            live_school.reload
-          end
-
-          it "syncs the changes to the live school" do
-            expect(live_school.school_status_code).to eq 1
-            expect(live_school.school_status_name).to eq "open"
-            expect(live_school.ukprn).to eq "987654321"
-          end
-
-          it "marks the change as handled" do
-            service.call
-            expect(school_change.reload).to be_handled
-          end
-        end
-      end
-    end
-
     context "when a school status code changes to an open status" do
       let!(:school_change) { create(:staged_school_change, :opening, school: staged_school) }
 

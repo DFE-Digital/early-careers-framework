@@ -31,6 +31,7 @@ class RecordDeclaration
   validate :validates_billable_slot_available
   validates :course_identifier, course: true
   validates :cpd_lead_provider, induction_record: true
+  validates :cohort, npq_contract_for_cohort_and_course: { message: I18n.t(:missing_npq_contract_for_cohort_and_course_new_declaration) }
 
   attr_reader :raw_declaration_date
 
@@ -81,13 +82,12 @@ class RecordDeclaration
     schedule.milestones.find_by(declaration_type:)
   end
 
-  def schedule
-    participant_profile&.schedule
-  end
-
 private
 
   attr_writer :raw_declaration_date
+
+  delegate :schedule, to: :participant_profile, allow_nil: true
+  delegate :cohort, to: :schedule
 
   def participant_profile_for_course_identifier
     return unless participant_identity
@@ -166,20 +166,19 @@ private
   def mentor_user_id
     return nil unless participant_profile.ect?
 
-    induction_record = Induction::FindBy.call(
+    relevant_induction_record&.mentor_profile&.participant_identity&.user_id
+  end
+
+  def delivery_partner
+    relevant_induction_record&.induction_programme&.partnership&.delivery_partner
+  end
+
+  def relevant_induction_record
+    @relevant_induction_record ||= Induction::FindBy.call(
       participant_profile:,
       lead_provider: cpd_lead_provider.lead_provider,
       date_range: ..declaration_date,
     )
-
-    induction_record&.mentor_profile&.participant_identity&.user_id
-  end
-
-  def delivery_partner
-    Induction::FindBy.call(participant_profile:, lead_provider: cpd_lead_provider.lead_provider)
-      &.induction_programme
-      &.partnership
-      &.delivery_partner
   end
 
   def validate_evidence_held?

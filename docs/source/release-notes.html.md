@@ -185,7 +185,7 @@ Changes to the [API v3 spec](/api-reference/reference-v3.html) have been impleme
 
 ### Test dynamic scenarios
 
-Providers will also be able to [sign into the sandbox environment](https://ecf-sandbox.london.cloudapps.digital/users/sign_in) as school induction tutors. Scenarios, such as transfers, can be simulated. Providers will be contacted shortly with login instructions.
+Providers will also be able to [sign into the sandbox environment](https://sb.manage-training-for-early-career-teachers.education.gov.uk/users/sign_in) as school induction tutors. Scenarios, such as transfers, can be simulated. Providers will be contacted shortly with login instructions.
 
 **Note,** when registering participants in the sandbox environment, providers must use the following dates of birth if they want to the participants to appear as **eligible for funding**:
 

@@ -7,7 +7,7 @@ properties:
   reason:
     description: "The reason a participant was withdrawn"
     type: string
-    example: moved-school
+    example: personal-reason-moving-school
     enum:
       - insufficient-capacity-to-undertake-programme
       - personal-reason-health-or-pregnancy-related
@@ -31,3 +31,6 @@ properties:
     type: string
     format: date-time
     example: "2021-05-31T02:22:32.000Z"
+example:
+  reason: personal-reason-moving-school
+  date: "2021-05-31T02:22:32.000Z"

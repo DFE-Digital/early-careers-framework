@@ -291,6 +291,7 @@ RSpec.describe RecordDeclaration do
     described_class.new(params)
   end
 
+  let!(:cohort_2020) { create(:cohort, start_year: 2020) }
   let!(:current_cohort) { Cohort.current || create(:cohort, :current) }
   let!(:previous_cohort) { Cohort.current.previous || create(:cohort, start_year: Cohort.current.start_year - 1) }
 
@@ -312,10 +313,9 @@ RSpec.describe RecordDeclaration do
     context "when the participant is an ECT" do
       let(:participant_type) { :ect }
       let(:course_identifier) { "ecf-induction" }
-      let(:delivery_partner) { participant_profile.induction_records[0].induction_programme.partnership.delivery_partner }
 
       describe "attributes inferred from induction records" do
-        let(:latest_induction_record) { nil }
+        let(:relevant_induction_record) { nil }
         subject(:created_declaration) do
           service.call
           ParticipantDeclaration.last
@@ -327,16 +327,23 @@ RSpec.describe RecordDeclaration do
             participant_profile:,
             lead_provider: cpd_lead_provider.lead_provider,
             date_range: ..declaration_date,
-          ) { latest_induction_record }
+          ) { relevant_induction_record }
         end
 
-        it { is_expected.to have_attributes(delivery_partner:, mentor_user_id: nil) }
+        it { is_expected.to have_attributes(delivery_partner: nil, mentor_user_id: nil) }
 
-        context "when the latest induction record has a mentor_profile" do
+        context "when the relevant induction record has a delivery_partner" do
+          let(:relevant_induction_record) { participant_profile.induction_records.latest }
+          let(:delivery_partner) { relevant_induction_record.induction_programme.partnership.delivery_partner }
+
+          it { is_expected.to have_attributes(delivery_partner:) }
+        end
+
+        context "when the relevant induction record has a mentor_profile" do
           let(:mentor_user) { create(:user, full_name: "Mentor User 1") }
           let(:mentor_profile) { create(:mentor_participant_profile, user: mentor_user) }
           let(:opts) { { mentor_profile: } }
-          let(:latest_induction_record) { participant_profile.induction_records.latest }
+          let(:relevant_induction_record) { participant_profile.induction_records.latest }
 
           it { is_expected.to have_attributes(mentor_user_id: mentor_user.id) }
         end
@@ -372,6 +379,8 @@ RSpec.describe RecordDeclaration do
       create(:npq_participant_profile, *traits, npq_lead_provider: cpd_lead_provider.npq_lead_provider, npq_course:)
     end
     let(:course_identifier) { npq_course.identifier }
+    let!(:npq_contract) { create(:npq_contract, cohort: schedule.cohort, npq_course:, npq_lead_provider: cpd_lead_provider.npq_lead_provider) }
+    let!(:another_npq_cohort_contract) { create(:npq_contract, cohort: cohort_2020, npq_course:, npq_lead_provider: cpd_lead_provider.npq_lead_provider) }
 
     before do
       create(:npq_statement, :output_fee, deadline_date: 6.weeks.from_now, cpd_lead_provider:)
@@ -395,7 +404,6 @@ RSpec.describe RecordDeclaration do
     context "for next cohort" do
       let!(:schedule) { create(:npq_specialist_schedule, cohort:) }
       let!(:statement) { create(:npq_statement, :output_fee, deadline_date: 6.weeks.from_now, cpd_lead_provider:, cohort:) }
-
       let(:cohort) { Cohort.next || create(:cohort, :next) }
       let(:npq_lead_provider) { cpd_lead_provider.npq_lead_provider }
       let(:participant_profile) { create(:npq_participant_profile, :eligible_for_funding, npq_lead_provider:, npq_course:, schedule:) }
@@ -527,6 +535,16 @@ RSpec.describe RecordDeclaration do
         end
       end
     end
+
+    context "when lead provider has no contract for the cohort and course" do
+      before { npq_contract.update!(npq_course: create(:npq_specialist_course)) }
+
+      it "has a meaningful error" do
+        is_expected.to be_invalid
+
+        expect(service.errors.messages_for(:cohort)).to include("You cannot submit a declaration for this participant as you do not have a contract for the cohort and course. Contact the DfE for assistance.")
+      end
+    end
   end
 
   context "when re-posting after a clawback" do
@@ -560,7 +578,6 @@ RSpec.describe RecordDeclaration do
   end
 
   context "when user is for 2020 cohort" do
-    let!(:cohort_2020) { create(:cohort, start_year: 2020) }
     let!(:school_cohort_2020) { create(:school_cohort, cohort: cohort_2020, school: participant_profile.school) }
 
     before do

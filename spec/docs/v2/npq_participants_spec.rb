@@ -14,6 +14,7 @@ describe "API", type: :request, swagger_doc: "v2/api_spec.json" do
     get "Retrieve multiple NPQ participants" do
       operationId :npq_participants
       tags "NPQ participants"
+      produces "application/json"
       security [bearerAuth: []]
 
       parameter name: :filter,
@@ -58,6 +59,7 @@ describe "API", type: :request, swagger_doc: "v2/api_spec.json" do
     get "Get a single NPQ participant" do
       operationId :npq_participant
       tags "NPQ participants"
+      produces "application/json"
       security [bearerAuth: []]
 
       parameter name: :id,
@@ -95,6 +97,7 @@ describe "API", type: :request, swagger_doc: "v2/api_spec.json" do
                   "NPQ Participant" do
     let(:participant) { npq_application }
     let(:profile)     { npq_application.profile }
+    let!(:contract)   { create(:npq_contract, npq_course: npq_application.npq_course, npq_lead_provider: npq_application.npq_lead_provider) }
 
     let(:attributes) do
       {
@@ -150,6 +153,7 @@ describe "API", type: :request, swagger_doc: "v2/api_spec.json" do
       tags "NPQ Participant"
       security [bearerAuth: []]
       consumes "application/json"
+      produces "application/json"
 
       parameter name: :id,
                 in: :path,

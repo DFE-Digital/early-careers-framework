@@ -55,7 +55,7 @@ gem "mail-notify", "~> 1.1"
 # do not rely on host's timezone data, which can be inconsistent
 gem "tzinfo-data"
 
-gem "govuk-components", "~> 4.1.0"
+gem "govuk-components", "~> 4.1.1"
 gem "govuk_design_system_formbuilder", "~> 4.1.1"
 gem "view_component", require: "view_component/engine"
 
@@ -103,7 +103,7 @@ gem "net-smtp", require: false
 
 gem "json-diff", "~> 0.4.1", require: false
 
-gem "cssbundling-rails", "~> 1.2"
+gem "cssbundling-rails", "~> 1.3"
 gem "jsbundling-rails"
 gem "sprockets", "~> 4.2.1"
 gem "sprockets-rails", require: "sprockets/railtie"
@@ -112,6 +112,8 @@ gem "sprockets-rails", require: "sprockets/railtie"
 gem "rouge"
 
 gem "auto_strip_attributes", "~> 2.6"
+
+gem "dfe-analytics", github: "DFE-Digital/dfe-analytics", tag: "v1.6.0"
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

@@ -3,8 +3,9 @@
 require "rails_helper"
 
 RSpec.describe NPQ::AmendParticipantCohort, type: :model do
-  let(:npq_application) { create(:npq_application, cohort: cohort_previous) }
+  let(:npq_application) { create(:npq_application, :accepted, cohort: cohort_previous) }
   let(:npq_application_id) { npq_application.id }
+  let!(:npq_contract) { create(:npq_contract, :npq_senior_leadership, cohort: cohort_previous, npq_lead_provider: npq_application.npq_lead_provider, npq_course: npq_application.npq_course) }
 
   let!(:cohort_current) { Cohort.current }
   let(:cohort_previous) { Cohort.previous }
@@ -54,6 +55,15 @@ RSpec.describe NPQ::AmendParticipantCohort, type: :model do
       it "returns an error message" do
         expect(subject).to be_invalid
         expect(subject.errors.messages_for(:target_cohort_start_year)).to include("Invalid value. Must be different to 2021")
+      end
+    end
+
+    context "when lead provider has no contract for the cohort and course" do
+      before { npq_contract.update!(npq_course: create(:npq_specialist_course)) }
+
+      it "is invalid and returns an error message" do
+        expect(subject).to be_invalid
+        expect(subject.errors.messages_for(:cohort)).to include("You cannot change a participant to this cohort as you do not have a contract for the cohort and course. Contact the DfE for assistance.")
       end
     end
   end

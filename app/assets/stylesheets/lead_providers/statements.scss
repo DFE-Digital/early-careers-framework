@@ -84,6 +84,23 @@
   }
 }
 
+.app-application__panel__actions {
+  display: grid;
+  padding: 0px 20px;
+  background-color: #f8f8f8;
+  border: none;
+  margin-bottom: 0 !important;
+
+  .duvet {
+    border-top: 1px solid #b1b4b6;
+    padding-top: 20px;
+  }
+
+  .govuk-grid-column-one-half {
+    padding: 0 !important;
+  }
+}
+
 .app-application__card {
   margin-bottom: 10px;
   border-bottom: 1px solid black;
@@ -168,19 +185,5 @@
     td {
       border-bottom: 0;
     }
-  }
-}
-
-.finance-panel__summary__downloads {
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: 1fr;
-  grid-column-gap: 0px;
-  grid-row-gap: 0px;
-  background: #f8f8f8;
-  padding: 0 20px;
-  .duvet {
-    border-top: 1px solid #b1b4b6;
-    padding-top: 20px;
   }
 }

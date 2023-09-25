@@ -14,6 +14,7 @@ describe "API", type: :request, swagger_doc: "v2/api_spec.json" do
     get "Retrieve multiple NPQ applications" do
       operationId :npq_applications
       tags "NPQ applications"
+      produces "application/json"
       security [bearerAuth: []]
 
       parameter name: :filter,
@@ -58,8 +59,8 @@ describe "API", type: :request, swagger_doc: "v2/api_spec.json" do
     get "Retrieve all NPQ applications in CSV format" do
       operationId :npq_applications_csv
       tags "NPQ applications"
-      security [bearerAuth: []]
       produces "text/csv"
+      security [bearerAuth: []]
 
       parameter name: :filter,
                 in: :query,
@@ -92,6 +93,7 @@ describe "API", type: :request, swagger_doc: "v2/api_spec.json" do
     get "Get a single NPQ application" do
       operationId :npq_application
       tags "NPQ applications"
+      produces "application/json"
       security [bearerAuth: []]
 
       parameter name: :id,
@@ -126,6 +128,8 @@ describe "API", type: :request, swagger_doc: "v2/api_spec.json" do
     post "Accept an NPQ application" do
       operationId :npq_applications_accept
       tags "NPQ applications"
+      consumes "application/json"
+      produces "application/json"
       security [bearerAuth: []]
 
       parameter name: :id,
@@ -160,6 +164,8 @@ describe "API", type: :request, swagger_doc: "v2/api_spec.json" do
     post "Reject an NPQ application" do
       operationId :npq_applications_reject
       tags "NPQ applications"
+      consumes "application/json"
+      produces "application/json"
       security [bearerAuth: []]
 
       parameter name: :id,

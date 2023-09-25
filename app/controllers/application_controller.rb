@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ApplicationController < ActionController::Base
+  include DfE::Analytics::Requests
+
   default_form_builder GOVUKDesignSystemFormBuilder::FormBuilder
   include Pagy::Backend
 

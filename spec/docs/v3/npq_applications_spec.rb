@@ -14,6 +14,7 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
     get "Retrieve multiple NPQ applications" do
       operationId :npq_applications
       tags "NPQ applications"
+      produces "application/json"
       security [bearerAuth: []]
 
       parameter name: :filter,
@@ -75,6 +76,7 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
     get "Get a single NPQ application" do
       operationId :npq_application
       tags "NPQ applications"
+      produces "application/json"
       security [bearerAuth: []]
 
       parameter name: :id,
@@ -83,7 +85,8 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
                 example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
                 description: "The ID of the NPQ application.",
                 schema: {
-                  type: "string",
+                  type: :string,
+                  format: :uuid,
                 }
 
       response "200", "A single NPQ application" do
@@ -167,6 +170,8 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
     post "Accept an NPQ application" do
       operationId :npq_applications_accept
       tags "NPQ applications"
+      consumes "application/json"
+      produces "application/json"
       security [bearerAuth: []]
 
       parameter name: :id,
@@ -175,7 +180,8 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
                 example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
                 description: "The ID of the NPQ application to accept.",
                 schema: {
-                  type: "string",
+                  type: :string,
+                  format: :uuid,
                 }
 
       response "200", "The NPQ application being accepted" do
@@ -219,6 +225,8 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
     post "Reject an NPQ application" do
       operationId :npq_applications_reject
       tags "NPQ applications"
+      consumes "application/json"
+      produces "application/json"
       security [bearerAuth: []]
 
       parameter name: :id,
@@ -227,7 +235,8 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
                 example: "14b1b4ab-fa81-4f7a-b4b5-f632412e8c5c",
                 description: "The ID of the NPQ application to reject.",
                 schema: {
-                  type: "string",
+                  type: :string,
+                  format: :uuid,
                 }
 
       response "200", "The NPQ application being rejected" do

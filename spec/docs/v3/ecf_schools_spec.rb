@@ -15,6 +15,7 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
     get "<b>Note, this endpoint is new.</b><br/>Retrieve multiple ECF schools scoped to cohort" do
       operationId :school_ecf_get
       tags "ECF schools"
+      produces "application/json"
       security [bearerAuth: []]
 
       parameter name: "filter[cohort]",
@@ -94,6 +95,7 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
     get "<b>Note, this endpoint is new.</b><br/>Get a single ECF school scoped to cohort" do
       operationId :school_ecf_get
       tags "ECF schools"
+      produces "application/json"
       security [bearerAuth: []]
 
       parameter name: :id,

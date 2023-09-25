@@ -59,6 +59,8 @@ module "web_application" {
 
   docker_image = var.docker_image
   probe_path = "/check"
+  replicas   = var.webapp_replicas
+  max_memory = var.webapp_memory_max
 }
 
 module "worker_application" {
@@ -79,4 +81,7 @@ module "worker_application" {
   docker_image  = var.docker_image
   command       = ["bundle", "exec", "sidekiq", "-C", "./config/sidekiq.yml"]
   probe_command = ["pgrep", "-f", "sidekiq"]
+
+  replicas   = var.worker_replicas
+  max_memory = var.worker_memory_max
 }

@@ -14,15 +14,16 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v2/api_
 
   path "/api/v2/participant-declarations" do
     post "Declare a participant has reached a milestone. Idempotent endpoint - submitting exact copy of a request will return the same response body as submitting it the first time." do
-      operationId :participant_declarations
+      operationId :participant_declaration_create
       tags "Participant declarations"
       consumes "application/json"
+      produces "application/json"
       security [bearerAuth: []]
 
       parameter name: :params,
                 in: :body,
                 schema: {
-                  "$ref": "#/components/schemas/ParticipantDeclaration",
+                  "$ref": "#/components/schemas/ParticipantDeclarationRequest",
                 }
 
       response 200, "Successful" do
@@ -84,7 +85,8 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v2/api_
   path "/api/v2/participant-declarations" do
     get "List all participant declarations" do
       operationId :participant_declarations
-      tags "participants declarations"
+      tags "Participant declarations"
+      produces "application/json"
       security [bearerAuth: []]
 
       parameter name: :filter,
@@ -132,8 +134,8 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v2/api_
     get "Retrieve all participant declarations in CSV format" do
       operationId :ecf_participant_declarations_csv
       tags "Participant declarations"
-      security [bearerAuth: []]
       produces "text/csv"
+      security [bearerAuth: []]
 
       response "200", "A CSV file of participant declarations" do
         schema "$ref": "#/components/schemas/MultipleParticipantDeclarationsCsvResponse"
@@ -157,8 +159,9 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v2/api_
     end
 
     get "Get single participant declaration" do
-      operationId :participant_declarations
-      tags "participants declaration"
+      operationId :participant_declaration
+      tags "Participant declarations"
+      produces "application/json"
       security [bearerAuth: []]
 
       parameter name: :id,
@@ -196,9 +199,10 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v2/api_
 
   path "/api/v2/participant-declarations/{id}/void" do
     put "Void a declaration - it will not be soft-deleted" do
-      operationId :participant_declarations
+      operationId :participant_declaration_void
       tags "Participant declarations"
       consumes "application/json"
+      produces "application/json"
       security [bearerAuth: []]
 
       parameter name: :id,

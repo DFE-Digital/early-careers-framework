@@ -21,7 +21,7 @@ RSpec.feature "Appropriate body users participants", type: :feature do
       pending: false,
     )
   end
-  let(:induction_programme) { create(:induction_programme, partnership:, school_cohort:) }
+  let(:induction_programme) { create(:induction_programme, :fip, partnership:, school_cohort:) }
   let!(:induction_record) { create(:induction_record, participant_profile:, appropriate_body:, induction_programme:, training_status: "withdrawn") }
 
   let!(:prev_cohort_year) { create(:cohort, start_year: 2020) }
@@ -56,42 +56,8 @@ RSpec.feature "Appropriate body users participants", type: :feature do
       and_i_see_participant_details
     end
 
-    scenario "Search email" do
-      when_i_fill_in("query", with: participant_profile.user.email)
-      and_i_click_on("Search")
-      and_i_see_participant_details
-    end
-
     scenario "Search TRN" do
       when_i_fill_in("query", with: participant_profile.teacher_profile.trn)
-      and_i_click_on("Search")
-      and_i_see_participant_details
-    end
-  end
-
-  context "Filter role" do
-    scenario "None existing role" do
-      when_i_choose("role", with: "Mentor")
-      and_i_click_on("Search")
-      and_i_do_not_see_participant_details
-    end
-
-    scenario "Existing role" do
-      when_i_choose("role", with: "Early career teacher")
-      and_i_click_on("Search")
-      and_i_see_participant_details
-    end
-  end
-
-  context "Filter academic year" do
-    scenario "None existing year" do
-      when_i_choose("academic_year", with: 2020)
-      and_i_click_on("Search")
-      and_i_do_not_see_participant_details
-    end
-
-    scenario "Existing year" do
-      when_i_choose("academic_year", with: participant_profile.cohort.start_year)
       and_i_click_on("Search")
       and_i_see_participant_details
     end
@@ -146,12 +112,10 @@ private
 
   def and_i_see_participant_details
     expect(page).to have_content(participant_profile.user.full_name)
-    expect(page).to have_content(participant_profile.user.email)
   end
 
   def and_i_do_not_see_participant_details
     expect(page).not_to have_content(participant_profile.user.full_name)
-    expect(page).not_to have_content(participant_profile.user.email)
   end
 
   def when_i_fill_in(selector, with:)
@@ -173,7 +137,11 @@ private
   def and_i_see_participant_details_csv_export
     data = CSV.parse(page.body).transpose
     expect(data[0]).to eq(["full_name", participant_profile.user.full_name])
-    expect(data[1]).to eq(["email_address", participant_profile.user.email])
+    expect(data[1]).to eq(["trn", participant_profile.teacher_profile.trn])
+    expect(data[2]).to eq(["school_urn", induction_record.school&.urn])
+    expect(data[3]).to eq(["status", "No longer being trained"])
+    expect(data[4]).to eq(%w[induction_type FIP])
+    expect(data[5]).to eq(["induction_tutor", induction_record.school.contact_email])
   end
 
   def and_i_do_not_see_newer_induction_record_details

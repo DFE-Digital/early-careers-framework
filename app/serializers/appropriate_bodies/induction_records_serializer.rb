@@ -13,39 +13,28 @@ module AppropriateBodies
       induction_record.user.full_name
     end
 
-    attribute :email_address do |induction_record|
-      induction_record.preferred_identity&.email ||
-        induction_record.user.email
-    end
-
     attribute :trn do |induction_record|
       induction_record.participant_profile.teacher_profile.trn
     end
 
-    attribute :role do |induction_record|
-      induction_record.participant_profile.role
-    end
-
-    attribute :lead_provider, &:lead_provider_name
-
-    attribute :delivery_partner, &:delivery_partner_name
-
-    attribute :school do |induction_record|
-      induction_record.school&.name
-    end
-
-    attribute :school_unique_reference_number do |induction_record|
+    attribute :school_urn do |induction_record|
       induction_record.school&.urn
     end
 
-    attribute :academic_year do |induction_record|
-      induction_record.cohort&.start_year
-    end
-
-    attribute :training_status, &:training_status
-
     attribute :status do |induction_record|
       StatusTags::AppropriateBodyParticipantStatusTag.new(participant_profile: induction_record.participant_profile, induction_record:).label
+    end
+
+    attribute :induction_type do |induction_record|
+      if induction_record.enrolled_in_cip?
+        "CIP"
+      elsif induction_record.enrolled_in_fip?
+        "FIP"
+      end
+    end
+
+    attribute :induction_tutor do |induction_record|
+      induction_record.school.contact_email
     end
   end
 end

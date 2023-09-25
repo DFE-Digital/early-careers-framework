@@ -6,8 +6,9 @@ RSpec.feature "Finance users participant change lead provider", type: :feature d
   let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider) }
 
   describe "NPQ" do
-    let(:participant_profile)     { create(:npq_participant_profile, npq_lead_provider: cpd_lead_provider.npq_lead_provider) }
-    let(:participant_declaration) { create(:npq_participant_declaration, :submitted, participant_profile:, cpd_lead_provider:) }
+    let(:participant_profile) { create(:npq_participant_profile, npq_lead_provider: cpd_lead_provider.npq_lead_provider) }
+    let(:npq_course) { create(:npq_leadership_course, identifier: "npq-senior-leadership") }
+    let(:participant_declaration) { create(:npq_participant_declaration, :submitted, participant_profile:, cpd_lead_provider:, npq_course:) }
     let(:voided_participant_declaration) { create(:npq_participant_declaration, :voided, participant_profile:, cpd_lead_provider:) }
     let(:npq_lead_provider) { create(:npq_lead_provider) }
 
@@ -123,9 +124,7 @@ RSpec.feature "Finance users participant change lead provider", type: :feature d
 
   def and_a_npq_lead_provider_exists
     npq_lead_provider
-    cohort = participant_profile.npq_application.cohort
-    create(:npq_leadership_course, identifier: "npq-senior-leadership")
-    create(:npq_contract, :npq_senior_leadership, cohort:, npq_lead_provider:)
+    create(:npq_contract, npq_course: participant_profile.npq_application.npq_course, npq_lead_provider:)
   end
 
   def then_i_should_not_see_change_lead_provider_link

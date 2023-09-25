@@ -30,7 +30,7 @@
         <td class="govuk-table__cell">
           <%= form_for :remove, url: { action: :remove_school } do |form| %>
             <%= form.hidden_field :school_id, value: school.id, id: "remove-school-#{school.id}" %>
-            <%= form.submit "Remove", class: "govuk-button govuk-button--secondary govuk-!-margin-0", data: { module: "govuk-button" } %>
+            <%= form.govuk_submit("Remove", secondary: true, class: "govuk-!-margin-0") %>
           <% end %>
         </td>
       </tr>

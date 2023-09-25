@@ -50,6 +50,7 @@ jobs:
         run: make ci review terraform-destroy
         env:
           TF_VAR_azure_sp_credentials_json: ${{ secrets.AZURE_CREDENTIALS }}
+          TF_VAR_statuscake_api_token: ${{ secrets.STATUSCAKE_API_TOKEN }}
           DOCKER_IMAGE: "ghcr.io/dfe-digital/early-careers-framework:no-tag"
           PULL_REQUEST_NUMBER: ${{ github.event.pull_request.number }}
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_13_213845) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_19_093921) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "fuzzystrmatch"
@@ -119,7 +119,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_13_213845) do
     t.index ["start_year"], name: "index_cohorts_on_start_year", unique: true
   end
 
-  create_table "cohorts_lead_providers", id: false, force: :cascade do |t|
+  create_table "cohorts_lead_providers", force: :cascade do |t|
     t.uuid "lead_provider_id", null: false
     t.uuid "cohort_id", null: false
     t.datetime "created_at", null: false

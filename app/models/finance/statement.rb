@@ -91,6 +91,14 @@ class Finance::Statement < ApplicationRecord
   def payable?
     false
   end
+
+  def mark_as_paid_at!
+    update!(marked_as_paid_at: Time.zone.now)
+  end
+
+  def marked_as_paid?
+    marked_as_paid_at.present? && paid?
+  end
 end
 
 require "finance/statement/ecf"

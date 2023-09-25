@@ -18,3 +18,7 @@ properties:
     type: string
     format: date
     example: "2021-05-31"
+example:
+  school_urn: 123456
+  provider: Example Institute
+  date: "2021-05-31"

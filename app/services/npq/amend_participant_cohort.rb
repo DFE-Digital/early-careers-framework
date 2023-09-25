@@ -14,7 +14,8 @@ module NPQ
                 message: lambda do |form, _|
                   I18n.t("errors.cohort.blank", year: form.target_cohort_start_year, where: "the service")
                 end,
-              }
+              },
+              npq_contract_for_cohort_and_course: true
     validate :participant_profile_has_no_declarations
     validate :source_cohort_different_to_target_cohort
 
@@ -32,34 +33,41 @@ module NPQ
       end
     end
 
-  private
-
-    def source_cohort
-      @source_cohort ||= npq_application.cohort
-    end
-
-    def target_cohort
-      @target_cohort ||= Cohort.find_by(start_year: target_cohort_start_year)
-    end
-
-    def npq_application
-      @npq_application ||= NPQApplication.find_by(id: npq_application_id)
-    end
-
     def participant_profile
       @participant_profile ||= npq_application&.profile
     end
 
-    def participant_declarations
-      @participant_declarations ||= participant_profile.participant_declarations
+    def target_schedule
+      @target_schedule ||= Finance::Schedule::NPQ.find_by(cohort: target_cohort, name: source_schedule.name, schedule_identifier: source_schedule.schedule_identifier, type: source_schedule.type)
     end
 
     def source_schedule
       @source_schedule ||= participant_profile.schedule
     end
 
-    def target_schedule
-      Finance::Schedule::NPQ.find_by(cohort: target_cohort, name: source_schedule.name, schedule_identifier: source_schedule.schedule_identifier, type: source_schedule.type)
+    def target_cohort
+      @target_cohort ||= Cohort.find_by(start_year: target_cohort_start_year)
+    end
+
+  private
+
+    delegate :npq_lead_provider, :npq_course, to: :npq_application
+    delegate :cpd_lead_provider, to: :npq_lead_provider
+    delegate :identifier, to: :npq_course
+
+    alias_method :course_identifier, :identifier
+    alias_method :cohort, :target_cohort
+
+    def source_cohort
+      @source_cohort ||= npq_application.cohort
+    end
+
+    def npq_application
+      @npq_application ||= NPQApplication.find_by(id: npq_application_id)
+    end
+
+    def participant_declarations
+      @participant_declarations ||= participant_profile.participant_declarations
     end
 
     def source_cohort_different_to_target_cohort

@@ -42,9 +42,7 @@ class Nominations::NominateInductionCoordinatorController < ApplicationControlle
   def check; end
 
   def create
-    CreateInductionTutor.call(school: @nominate_induction_tutor_form.school,
-                              email: @nominate_induction_tutor_form.email,
-                              full_name: @nominate_induction_tutor_form.full_name)
+    @nominate_induction_tutor_form.save!
     session.delete(:nominate_induction_tutor_form)
 
     redirect_to nominate_school_lead_success_nominate_induction_coordinator_path
@@ -70,6 +68,7 @@ private
   def load_nominate_induction_tutor_form
     @nominate_induction_tutor_form = ::NominateInductionTutorForm.new(session[:nominate_induction_tutor_form])
     @nominate_induction_tutor_form.assign_attributes(nominate_induction_tutor_form_params)
+    @nominate_induction_tutor_form.school = school
   end
 
   def nominate_induction_tutor_form_params

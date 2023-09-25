@@ -28,18 +28,12 @@ properties:
       - complete
   leaving:
     nullable: true
-    $ref: "#/components/schemas/ECFParticipantLeaving"
-    example:
-      school_urn: "123456"
-      provider: "Old Institute"
-      date: "2021-05-31"
+    anyOf:
+      - $ref: "#/components/schemas/ECFParticipantLeaving"
   joining:
     nullable: true
-    $ref: "#/components/schemas/ECFParticipantJoining"
-    example:
-      school_urn: "654321"
-      provider: "New Institute"
-      date: "2021-06-01"
+    anyOf:
+      - $ref: "#/components/schemas/ECFParticipantJoining"
   created_at:
     description: The date and time the ECF participant transfer was created
     type: string

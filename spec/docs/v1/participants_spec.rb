@@ -40,6 +40,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json" do
       tags "ECF Participant"
       security [bearerAuth: []]
       consumes "application/json"
+      produces "application/json"
 
       parameter name: :id,
                 in: :path,

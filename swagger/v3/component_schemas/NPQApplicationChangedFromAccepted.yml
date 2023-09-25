@@ -1,0 +1,13 @@
+description: NPQ Application has already been accepted
+type: object
+properties:
+  title:
+    description: The title of the error
+    type: string
+    enum:
+      - Once accepted an application cannot change state
+    example: Once accepted an application cannot change state
+  detail:
+    description: Additional info about the error
+    type: string
+    example: You cannot reject this NPQ application as it has already been accepted
