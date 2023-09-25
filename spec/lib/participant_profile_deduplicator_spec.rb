@@ -68,6 +68,35 @@ describe ParticipantProfileDeduplicator do
       end
     end
 
+    context "when deduplicating Mentor profiles" do
+      let(:primary_profile) { create(:mentor) }
+      let(:duplicate_profile) { create(:mentor) }
+      let(:other_mentor) { create(:mentor) }
+
+      let!(:duplicate_mentee) { create(:ect, mentor_profile: duplicate_profile) }
+      let!(:relevant_historical_induction_record) { travel_to(1.day.ago) { create(:induction_record, participant_profile: duplicate_mentee, mentor_profile: duplicate_profile) } }
+      let!(:irrelevant_historical_induction_record) { travel_to(2.days.ago) { create(:induction_record, participant_profile: duplicate_mentee, mentor_profile: other_mentor) } }
+      let!(:other_mentee_relevant_historical_induction_record) { create(:induction_record, mentor_profile: duplicate_profile) }
+
+      it "transfers the duplicate profile mentees to the primary profile" do
+        dedup!
+
+        # Transfer mentee to the primary profile
+        expect(primary_profile.mentee_profiles).to include(duplicate_mentee)
+
+        # Update relevant induction records on the mentee to point to the primary
+        expect(duplicate_mentee.latest_induction_record.reload).to have_attributes({ mentor_profile_id: primary_profile.id })
+        expect(relevant_historical_induction_record.reload).to have_attributes({ mentor_profile_id: primary_profile.id })
+        # Don't update induction records pointing to another mentor
+        expect(irrelevant_historical_induction_record.reload).to have_attributes({ mentor_profile_id: other_mentor.id })
+
+        # Don't transfer mentees that are not currently with the duplicate mentor
+        expect(primary_profile.mentee_profiles).not_to include(other_mentee_relevant_historical_induction_record.participant_profile)
+        # But do update relevant induction records on these mentees
+        expect(other_mentee_relevant_historical_induction_record.reload).to have_attributes({ mentor_profile_id: primary_profile.id })
+      end
+    end
+
     context "when duplicate profile is ECT and primary profile is Mentor" do
       let(:primary_profile) { create(:mentor) }
 

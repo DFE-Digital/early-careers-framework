@@ -31,6 +31,7 @@ class ParticipantProfileDeduplicator
         transfer_validation_data!
         transfer_participant_eligibility!
         handle_school_change!
+        update_mentored_ects!
         reconcile_remaining_induction_records!
       end
 
@@ -83,7 +84,7 @@ private
   end
 
   def warning_ect_mentor_duplicate
-    return unless duplicate_profile.is_a?(ParticipantProfile::ECT) && primary_profile.is_a?(ParticipantProfile::Mentor)
+    return unless duplicate_profile.ect? && primary_profile.mentor?
 
     log_info("WARNING: transition from ECT to Mentor may not indicate a duplication.")
   end
@@ -99,6 +100,16 @@ private
     return if primary_profile == profile_with_correct_schedule
 
     update_primary_profile_schedule(profile_with_correct_schedule.latest_induction_record.schedule)
+  end
+
+  def update_mentored_ects!
+    return unless [primary_profile, duplicate_profile].all?(&:mentor?)
+
+    duplicate_profile.mentee_profiles.update_all(mentor_profile_id: primary_profile.id)
+
+    InductionRecord
+      .where(mentor_profile_id: duplicate_profile.id)
+      .update_all(mentor_profile_id: primary_profile.id)
   end
 
   def update_primary_profile_schedule(new_schedule)
@@ -120,7 +131,7 @@ private
   end
 
   def determine_course_identifier(participant_profile)
-    participant_profile.is_a?(ParticipantProfile::ECF::Mentor) ? "ecf-mentor" : "ecf-induction"
+    participant_profile.mentor? ? "ecf-mentor" : "ecf-induction"
   end
 
   def earliest_voidable_declaration
