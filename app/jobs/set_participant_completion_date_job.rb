@@ -12,6 +12,7 @@ class SetParticipantCompletionDateJob < ApplicationJob
       .includes(:teacher_profile)
       .where.not(teacher_profile: { trn: nil })
       .where.not(induction_start_date: nil)
+      .where(induction_completion_date: nil)
       .where(created_at: ...Cohort.find_by(start_year: 2023).registration_start_date)
       .order(:updated_at)
       .limit(200)
