@@ -29,7 +29,7 @@ module AppropriateBodies
           full_name: participant_profile.user.full_name,
           trn: participant_profile.teacher_profile.trn,
           school_urn: induction_record.school.urn,
-          status: "No longer being trained",
+          status: "ECT not currently linked to you",
           induction_type: "FIP",
           induction_tutor: induction_record.school.contact_email,
         )

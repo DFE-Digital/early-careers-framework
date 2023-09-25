@@ -157,29 +157,29 @@ en:
         description: "An induction period has been registered with the Teaching Regulation Agency (TRA) for this ECT."
 
       withdrawn_training:
-        id: "no_longer_being_trained"
-        label: "No longer being trained"
-        description: "The ECT's training provider or school has indicated they're no longer being trained."
+        id: "ect_no_longer_linked"
+        label: "ECT not currently linked to you"
+        description: "The school has indicated you're no longer acting as the appropriate body for this ECT."
 
       left:
-        id: "no_longer_being_trained"
-        label: "No longer being trained"
-        description: "The ECT's training provider or school has indicated they're no longer being trained."
+        id: "ect_no_longer_linked"
+        label: "ECT not currently linked to you"
+        description: "The school has indicated you're no longer acting as the appropriate body for this ECT."
 
       withdrawn_programme:
-        id: "no_longer_being_trained"
-        label: "No longer being trained"
-        description: "The ECT's training provider or school has indicated they're no longer being trained."
+        id: "ect_no_longer_linked"
+        label: "ECT not currently linked to you"
+        description: "The school has indicated you're no longer acting as the appropriate body for this ECT."
 
       no_longer_involved:
-        id: "no_longer_being_trained"
-        label: "No longer being trained"
-        description: "The ECT's training provider or school has indicated they're no longer being trained."
+        id: "ect_no_longer_linked"
+        label: "ECT not currently linked to you"
+        description: "The school has indicated you're no longer acting as the appropriate body for this ECT."
 
       not_registered_for_training:
-        id: "no_longer_being_trained"
-        label: "No longer being trained"
-        description: "The ECT's training provider or school has indicated they're no longer being trained."
+        id: "ect_no_longer_linked"
+        label: "ECT not currently linked to you"
+        description: "The school has indicated you're no longer acting as the appropriate body for this ECT."
 
       # completion
 
