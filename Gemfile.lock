@@ -7,6 +7,15 @@ GIT
       google-cloud-bigquery (~> 1.38)
       request_store_rails (~> 2)
 
+GIT
+  remote: https://github.com/x-govuk/govuk-rspec-helpers.git
+  revision: a975b2fe1a253dbaca9a290bbfcc0583e0b1f266
+  specs:
+    govuk-rspec-helpers (0.1)
+      capybara (>= 3.24)
+      rspec (~> 3.0)
+      rspec-expectations
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -657,6 +666,7 @@ DEPENDENCIES
   google-cloud-bigquery
   googleauth
   govuk-components (~> 4.1.1)
+  govuk-rspec-helpers!
   govuk_design_system_formbuilder (~> 4.1.1)
   httpclient (~> 2.8, >= 2.8.3)
   jsbundling-rails
