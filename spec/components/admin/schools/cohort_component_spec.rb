@@ -66,7 +66,7 @@ RSpec.describe Admin::Schools::CohortComponent, type: :component do
         end
 
         it "contains a link that allows the induction programme to be changed" do
-          expect(page).to have_link("Change induction programme", href: admin_school_change_programme_path(id: cohort.start_year, school_id: school.slug))
+          expect(page).to have_link("Change training programme", href: admin_school_change_programme_path(id: cohort.start_year, school_id: school.slug))
         end
       end
     end
