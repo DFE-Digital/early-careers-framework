@@ -8,6 +8,7 @@
 # optional params:
 #   lead_provider: restricts search to a LeadProvider
 #   delivery_partner: restricts search to a DeliveryPartner
+#   appropriate_body: restricts search to an AppropriateBody
 #   schedule: restricts search to a Schedule
 #   school: restricts search to a School
 #   date_range: restrict search to a date range e.g. Date.new(2022, 9, 1)..Date.new(2022, 11, 1)
@@ -19,6 +20,7 @@ class Induction::FindBy < BaseService
     query = participant_profile.induction_records
 
     query = add_provider_to(query:) if lead_provider.present? || delivery_partner.present?
+    query = add_appropriate_body_to(query:) if appropriate_body.present?
     query = add_schedule_to(query:) if schedule.present?
     query = add_school_to(query:) if school.present?
     query = add_date_range_to(query:) if date_range.present?
@@ -29,12 +31,13 @@ class Induction::FindBy < BaseService
 
 private
 
-  attr_reader :participant_profile, :lead_provider, :delivery_partner, :schedule, :school, :date_range, :current_not_latest_record, :only_active_partnerships
+  attr_reader :participant_profile, :lead_provider, :delivery_partner, :appropriate_body, :schedule, :school, :date_range, :current_not_latest_record, :only_active_partnerships
 
-  def initialize(participant_profile:, lead_provider: nil, delivery_partner: nil, schedule: nil, school: nil, date_range: nil, current_not_latest_record: false, only_active_partnerships: false)
+  def initialize(participant_profile:, lead_provider: nil, delivery_partner: nil, appropriate_body: nil, schedule: nil, school: nil, date_range: nil, current_not_latest_record: false, only_active_partnerships: false)
     @participant_profile = participant_profile
     @lead_provider = lead_provider
     @delivery_partner = delivery_partner
+    @appropriate_body = appropriate_body
     @schedule = schedule
     @school = school
     @date_range = date_range
@@ -57,6 +60,10 @@ private
     end
 
     query.joins(induction_programme: :partnership).where(induction_programme: { partnerships: })
+  end
+
+  def add_appropriate_body_to(query:)
+    query.where(appropriate_body:)
   end
 
   def add_schedule_to(query:)
