@@ -21,7 +21,7 @@ RSpec.describe "Admin::Participants::ValidationDataController", type: :request d
     end
 
     it "validates the validation data" do
-      expect(response).to redirect_to("/admin/participants/#{ect_profile.id}#validation-data")
+      expect(response).to redirect_to("/admin/participants/#{ect_profile.id}/validation-data")
     end
 
     it "clears the TRN prior to validation" do
