@@ -16,51 +16,37 @@ RSpec.describe AppropriateBodies::ParticipantsFilter do
 
   let(:collection) { AppropriateBodies::InductionRecordsQuery.new(appropriate_body:).induction_records }
   let(:params) { {} }
+  let(:training_record_states) { DetermineTrainingRecordState.call(participant_profiles: collection.map(&:participant_profile), induction_records: collection) }
 
-  subject { described_class.new(collection:, params:) }
+  subject { described_class.new(collection:, params:, training_record_states:).scope.to_a }
 
   context "No filter" do
-    it "returns correct participants" do
-      expect(subject.scope.count).to eql(2)
-      expect(subject.scope.to_a).to match_array([induction_record1, induction_record2])
-    end
+    it { is_expected.to match_array([induction_record1, induction_record2]) }
   end
 
   context "Search filter" do
     context "by full name" do
       let(:params) { { query: participant_profile2.user.full_name } }
 
-      it "returns correct participants" do
-        expect(subject.scope.count).to eql(1)
-        expect(subject.scope.to_a).to match_array([induction_record2])
-      end
+      it { is_expected.to match_array([induction_record2]) }
     end
 
     context "by school name" do
       let(:params) { { query: induction_record1.school.name } }
 
-      it "returns correct participants" do
-        expect(subject.scope.count).to eql(1)
-        expect(subject.scope.to_a).to match_array([induction_record1])
-      end
+      it { is_expected.to match_array([induction_record1]) }
     end
 
     context "by school URN" do
       let(:params) { { query: induction_record2.school.urn } }
 
-      it "returns correct participants" do
-        expect(subject.scope.count).to eql(1)
-        expect(subject.scope.to_a).to match_array([induction_record2])
-      end
+      it { is_expected.to match_array([induction_record2]) }
     end
 
     context "by TRN" do
       let(:params) { { query: participant_profile1.teacher_profile.trn } }
 
-      it "returns correct participants" do
-        expect(subject.scope.count).to eql(1)
-        expect(subject.scope.to_a).to match_array([induction_record1])
-      end
+      it { is_expected.to match_array([induction_record1]) }
     end
   end
 
@@ -68,27 +54,19 @@ RSpec.describe AppropriateBodies::ParticipantsFilter do
     context "Filter by training_or_eligible_for_training" do
       let(:params) { { status: "training_or_eligible_for_training" } }
 
-      it "returns correct participants" do
-        expect(subject.scope.count).to eql(1)
-        expect(subject.scope.to_a).to match_array([induction_record2])
-      end
+      it { is_expected.to match_array([induction_record2]) }
     end
 
     context "Filter by dfe_checking_eligibility" do
       let(:params) { { status: "dfe_checking_eligibility" } }
 
-      it "returns correct participants" do
-        expect(subject.scope.count).to eql(1)
-        expect(subject.scope.to_a).to match_array([induction_record1])
-      end
+      it { is_expected.to match_array([induction_record1]) }
     end
 
     context "Filter by contacted_for_information" do
       let(:params) { { status: "contacted_for_information" } }
 
-      it "should return empty" do
-        expect(subject.scope.count).to eql(0)
-      end
+      it { is_expected.to be_empty }
     end
   end
 end

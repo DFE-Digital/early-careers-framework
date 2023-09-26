@@ -9,7 +9,7 @@
     <%= school&.urn %>
   </td>
   <td class="govuk-table__cell">
-    <%= render StatusTags::AppropriateBodyParticipantStatusTag.new(participant_profile:, induction_record:) %>
+    <%= render StatusTags::AppropriateBodyParticipantStatusTag.new(training_record_states[participant_profile.id]) %>
   </td>
   <td class="govuk-table__cell">
     <%= induction_type %>

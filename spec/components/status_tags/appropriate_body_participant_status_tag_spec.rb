@@ -1,12 +1,13 @@
 # frozen_string_literal: true
 
 RSpec.describe StatusTags::AppropriateBodyParticipantStatusTag, type: :component do
-  let(:component) { described_class.new participant_profile: ParticipantProfile.new }
+  let(:training_record_state) { instance_double(TrainingRecordState) }
+  let(:component) { described_class.new(training_record_state) }
 
   subject(:label) { render_inline component }
 
   context "The language file" do
-    DetermineTrainingRecordState::RECORD_STATES.each_key do |key|
+    TrainingRecordState::RECORD_STATES.each_key do |key|
       it "includes the record_state :#{key} as a language entry" do
         expect(I18n.t("status_tags.appropriate_body_participant_status").keys).to include key.to_sym
       end
@@ -21,7 +22,7 @@ RSpec.describe StatusTags::AppropriateBodyParticipantStatusTag, type: :component
     end
 
     it "includes :#{key} as a recognised record_state" do
-      expect(DetermineTrainingRecordState::RECORD_STATES.keys).to include key.to_s
+      expect(TrainingRecordState::RECORD_STATES.keys).to include key.to_s
     end
   end
 end

@@ -2,11 +2,12 @@
 
 module AppropriateBodies
   class ParticipantsFilter
-    attr_reader :collection, :params
+    attr_reader :collection, :params, :training_record_states
 
-    def initialize(collection:, params:)
+    def initialize(collection:, params:, training_record_states:)
       @collection = collection
       @params = params
+      @training_record_states = training_record_states
     end
 
     def scope
@@ -47,7 +48,8 @@ module AppropriateBodies
         participant_profile = induction_record.participant_profile
         next unless participant_profile
 
-        status_tag = StatusTags::AppropriateBodyParticipantStatusTag.new(participant_profile:)
+        status_tag = StatusTags::AppropriateBodyParticipantStatusTag.new(training_record_states[participant_profile.id])
+
         if status_tag.id == status
           ids << induction_record.id
         end
