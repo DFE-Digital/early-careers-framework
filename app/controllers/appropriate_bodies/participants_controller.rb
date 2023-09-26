@@ -5,9 +5,11 @@ require "csv"
 module AppropriateBodies
   class ParticipantsController < BaseController
     def index
-      collection = InductionRecordsQuery.new(appropriate_body:).induction_records
+      induction_records = InductionRecordsQuery.new(appropriate_body:).induction_records
+      participant_profiles = induction_records.map(&:participant_profile)
 
-      @filter = ParticipantsFilter.new(collection:, params: filter_params)
+      @training_record_states = DetermineTrainingRecordState.call(participant_profiles:, induction_records:)
+      @filter = ParticipantsFilter.new(collection: induction_records, params: filter_params, training_record_states: @training_record_states)
 
       respond_to do |format|
         format.html do
@@ -19,7 +21,7 @@ module AppropriateBodies
         end
 
         format.csv do
-          serializer = InductionRecordsSerializer.new(@filter.scope.order(updated_at: :desc))
+          serializer = InductionRecordsSerializer.new(@filter.scope.order(updated_at: :desc), params: { training_record_states: @training_record_states })
           render body: to_csv(serializer.serializable_hash)
         end
       end

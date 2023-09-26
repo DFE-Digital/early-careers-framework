@@ -2,10 +2,10 @@
 
 module StatusTags
   class AppropriateBodyParticipantStatusTag < BaseComponent
-    def initialize(participant_profile:, induction_record: nil, appropriate_body: nil)
-      @participant_profile = participant_profile
-      @induction_record = induction_record
-      @appropriate_body = appropriate_body
+    attr_reader :training_record_state
+
+    def initialize(training_record_state)
+      @training_record_state = training_record_state
     end
 
     def label
@@ -35,7 +35,7 @@ module StatusTags
     end
 
     def record_state
-      @record_state ||= DetermineTrainingRecordState.call(participant_profile:, induction_record:, appropriate_body:)&.record_state || :no_longer_involved
+      @record_state ||= training_record_state&.record_state || :no_longer_involved
     end
   end
 end

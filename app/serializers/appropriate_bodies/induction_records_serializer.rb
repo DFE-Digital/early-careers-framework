@@ -21,8 +21,9 @@ module AppropriateBodies
       induction_record.school&.urn
     end
 
-    attribute :status do |induction_record|
-      StatusTags::AppropriateBodyParticipantStatusTag.new(participant_profile: induction_record.participant_profile, induction_record:).label
+    attribute :status do |induction_record, params|
+      participant_profile = induction_record.participant_profile
+      StatusTags::AppropriateBodyParticipantStatusTag.new(params[:training_record_states][participant_profile.id]).label
     end
 
     attribute :induction_type do |induction_record|

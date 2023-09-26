@@ -20,9 +20,8 @@ class Induction::FindBy < BaseService
     query = participant_profile.induction_records
 
     query = add_provider_to(query:) if lead_provider.present? || delivery_partner.present?
-    query = add_appropriate_body_to(query:) if appropriate_body.present?
     query = add_schedule_to(query:) if schedule.present?
-    query = add_school_to(query:) if school.present?
+    query = add_school_to(query:) if school.present? || appropriate_body.present?
     query = add_date_range_to(query:) if date_range.present?
 
     query = query.current if current_not_latest_record
@@ -62,16 +61,17 @@ private
     query.joins(induction_programme: :partnership).where(induction_programme: { partnerships: })
   end
 
-  def add_appropriate_body_to(query:)
-    query.where(appropriate_body:)
-  end
-
   def add_schedule_to(query:)
     query.where(schedule:)
   end
 
   def add_school_to(query:)
-    query.joins(induction_programme: :school_cohort).where(induction_programme: { school_cohorts: { school: } })
+    school_cohorts = {
+      school:,
+      appropriate_body:,
+    }.compact_blank
+
+    query.joins(induction_programme: :school_cohort).where(induction_programme: { school_cohorts: })
   end
 
   def add_date_range_to(query:)

@@ -35,7 +35,7 @@
 
   <tbody class="govuk-table__body">
     <% if @induction_records.any? %>
-      <%= render AppropriateBodies::Participants::TableRow.with_collection(@induction_records) %>
+      <%= render AppropriateBodies::Participants::TableRow.with_collection(@induction_records, training_record_states: @training_record_states) %>
     <% else %>
       <tr class="govuk-table__row">
         <td colspan="11" class="govuk-table__cell">
