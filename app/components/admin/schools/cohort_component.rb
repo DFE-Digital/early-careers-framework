@@ -23,7 +23,9 @@ module Admin
         {
           "core_induction_programme" => "Using DfE-accredited materials",
           "design_our_own"           => "Designing their own training",
+          "full_induction_programme" => "Working with a DfE-funded provider",
           "no_early_career_teachers" => "No ECTs this year",
+          "school_funded_fip"        => "School-funded full induction programme",
         }.fetch(induction_programme_choice, "Not using service")
       end
 
@@ -45,7 +47,7 @@ module Admin
 
       def build_partnerships
         partnerships&.each do |partnership|
-          with_partnership_component(school:, school_cohort:, partnership:)
+          with_partnership_component(school:, school_cohort:, partnership:, training_programme:)
         end
       end
 
@@ -53,6 +55,10 @@ module Admin
         relationships&.each do |relationship|
           with_relationship_component(school:, school_cohort:, relationship:, superuser:)
         end
+      end
+
+      def has_partnerships_or_relationships?
+        partnerships.present? && relationships.present?
       end
 
       def cip?
@@ -78,7 +84,7 @@ module Admin
     private
 
       def induction_programme_choice
-        school_cohort.induction_programme_choice
+        school_cohort&.induction_programme_choice
       end
     end
   end

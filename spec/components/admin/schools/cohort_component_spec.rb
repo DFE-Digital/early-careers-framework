@@ -21,38 +21,60 @@ RSpec.describe Admin::Schools::CohortComponent, type: :component do
       expect(rendered_content).to have_css("h2", text: "#{cohort.start_year} programme")
     end
 
-    context "when partnerships are present" do
-      it("renders the partnerships") { expect(rendered_content).to have_css(partnership_matcher, text: "Challenge") }
-    end
-
-    context "when no partnerships are present" do
-      let(:partnership) { nil }
-
-      it("renders no partnerships") { expect(rendered_content).not_to have_css(partnership_matcher) }
-    end
-
-    context "when relationships are present" do
-      it("renders the relationships") { expect(rendered_content).to have_css(relationship_matcher) }
-    end
-
-    context "when no relationships are present" do
-      let(:relationships) { nil }
-
-      it("renders no relationships") { expect(rendered_content).not_to have_css(relationship_matcher) }
-    end
-
-    context "when no school cohort, partnerships or relationships are present" do
-      let(:partnership) { nil }
-      let(:relationships) { nil }
-      let(:school_cohort) { nil }
-
-      it("shows an message explaining there is no programme") do
-        expect(page).to have_content("No induction programme chosen for #{school.name} in #{cohort.academic_year}")
+    context "when school is FIP" do
+      context "when partnerships are present" do
+        it("renders the partnerships") { expect(rendered_content).to have_css(partnership_matcher, text: "Challenge") }
       end
 
-      it "renders a link styled as a secondary button so admins can set one up" do
-        expect(page).to have_link("Choose an induction programme", href: admin_school_change_programme_path(id: cohort.start_year, school_id: school.slug), class: "govuk-button--secondary")
+      context "when no partnerships are present" do
+        let(:partnership) { nil }
+
+        it("renders no partnerships") { expect(rendered_content).not_to have_css(partnership_matcher) }
       end
+
+      context "when relationships are present" do
+        it("renders the relationships") { expect(rendered_content).to have_css(relationship_matcher) }
+      end
+
+      context "when no relationships are present" do
+        let(:relationships) { nil }
+
+        it("renders no relationships") { expect(rendered_content).not_to have_css(relationship_matcher) }
+      end
+
+      context "when no school cohort, partnerships or relationships are present" do
+        let(:partnership) { nil }
+        let(:relationships) { nil }
+        let(:school_cohort) { nil }
+
+        it("shows an message explaining there is no programme") do
+          expect(page).to have_content("No induction programme chosen for #{school.name} in #{cohort.academic_year}")
+        end
+
+        it "renders a link styled as a secondary button so admins can set one up" do
+          expect(page).to have_link("Choose an induction programme", href: admin_school_change_programme_path(id: cohort.start_year, school_id: school.slug), class: "govuk-button--secondary")
+        end
+      end
+
+      context "when there is a school cohort but there is not partnership or relationships" do
+        let(:partnership) { nil }
+        let(:relationships) { nil }
+
+        it "displays the training programme" do
+          expect(page).to have_content("Training programme")
+          expect(page).to have_content("Working with a DfE-funded provider")
+        end
+
+        it "contains a link that allows the induction programme to be changed" do
+          expect(page).to have_link("Change training programme", href: admin_school_change_programme_path(id: cohort.start_year, school_id: school.slug))
+        end
+      end
+    end
+
+    context "when school is CIP" do
+      let(:induction_programme_choice) { "core_induction_programme" }
+
+      it("renders the correct description") { expect(page).to have_content("Using DfE-accredited materials") }
     end
   end
 
@@ -104,6 +126,28 @@ RSpec.describe Admin::Schools::CohortComponent, type: :component do
       it "returns the default induction programme's core induction programme name" do
         expected = school_cohort.default_induction_programme.core_induction_programme.name
         expect(subject.materials).to eql(expected)
+      end
+    end
+
+    describe "#has_partnerships_or_relationships?" do
+      context "when there is a partnership and some relationships" do
+        it { is_expected.to have_partnerships_or_relationships }
+      end
+
+      context "when there is a partnership but no relationships" do
+        let(:relationships) { nil }
+        it { is_expected.not_to have_partnerships_or_relationships }
+      end
+
+      context "when there are relationships but no partnership" do
+        let(:partnership) { nil }
+        it { is_expected.not_to have_partnerships_or_relationships }
+      end
+
+      context "when there is no partnership and there are no relationships" do
+        let(:partnership) { nil }
+        let(:relationships) { nil }
+        it { is_expected.not_to have_partnerships_or_relationships }
       end
     end
 
@@ -181,7 +225,7 @@ RSpec.describe Admin::Schools::CohortComponent, type: :component do
     end
 
     it "passes the partnership information to the partnership slots" do
-      expect(subject).to have_received(:with_partnership_component).with(school:, school_cohort:, partnership:)
+      expect(subject).to have_received(:with_partnership_component).with(school:, school_cohort:, partnership:, training_programme: "Working with a DfE-funded provider")
     end
 
     it "passes the relationship information to the relationship slots" do

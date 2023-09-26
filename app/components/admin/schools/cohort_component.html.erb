@@ -9,16 +9,31 @@
 
   <% elsif fip? %>
 
-    <% partnership_components.each do |pc| %>
-      <%= pc %>
-    <% end %>
-
-    <% if relationship_components.any? %>
-      <h3 class="govuk-heading-m">Additional relationships</h3>
-
-      <% relationship_components.each do |rc| %>
-        <%= rc %>
+    <% if has_partnerships_or_relationships? %>
+      <% partnership_components.each do |pc| %>
+        <%= pc %>
       <% end %>
+
+      <% if relationships.present? %>
+        <h3 class="govuk-heading-m">Additional relationships</h3>
+
+        <% relationship_components.each do |rc| %>
+          <%= rc %>
+        <% end %>
+      <% end %>
+    <% else %>
+      <%=
+        govuk_summary_list do |summary_list|
+          summary_list.with_row do |row|
+            row.with_key(text: "Training programme")
+            row.with_value(text: training_programme)
+
+            if allow_change_programme?
+              row.with_action(text: "Change", visually_hidden_text: "training programme",  href: change_programme_href)
+            end
+          end
+        end
+      %>
     <% end %>
 
   <% else %>

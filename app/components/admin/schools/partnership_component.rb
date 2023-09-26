@@ -3,19 +3,13 @@
 module Admin
   module Schools
     class PartnershipComponent < ViewComponent::Base
-      attr_accessor :partnership, :school, :school_cohort
+      attr_accessor :partnership, :school, :school_cohort, :training_programme
 
-      def initialize(partnership:, school:, school_cohort:)
+      def initialize(partnership:, school:, school_cohort:, training_programme:)
         @partnership = partnership
         @school = school
         @school_cohort = school_cohort
-      end
-
-      def training_programme
-        {
-          "full_induction_programme" => "Working with a DfE-funded provider",
-          "school_funded_fip"        => "School-funded full induction programme",
-        }.fetch(induction_programme_choice)
+        @training_programme = training_programme
       end
 
       def heading
@@ -35,10 +29,6 @@ module Admin
       end
 
     private
-
-      def induction_programme_choice
-        school_cohort.induction_programme_choice
-      end
 
       def visually_hidden(text)
         tag.span(text, class: "govuk-visually-hidden")
