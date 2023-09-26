@@ -72,7 +72,7 @@ RSpec.feature "Banding tracker", type: :feature, js: true do
     click_on "Continue"
 
     within "ul.govuk-error-summary__list" do
-      expect(page).to have_link("Please select a provider", href: "#finance-banding-tracker-choose-provider-id-field-error")
+      expect(page).to have_link("Select a provider", href: "#finance-banding-tracker-choose-provider-id-field-error")
     end
 
     choose "Lead provider name"

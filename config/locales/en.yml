@@ -146,7 +146,7 @@ en:
       invalid: The property '#/participant_id' must have a valid UUID format
     cpd_lead_provider: &cpd_lead_provider_error_messages
       blank: The lead provider must be present
-    select_file: "Please select a CSV file to upload."
+    select_file: "Select a CSV file to upload."
     supplier:
       blank: "Select one"
     mentor:
@@ -193,9 +193,9 @@ en:
       blank: "Not registered"
       not_active: "Not active"
     programme:
-      blank: "Please select programme type"
+      blank: "Select programme type"
     provider:
-      blank: "Please select a provider"
+      blank: "Select a provider"
     national_insurance_number:
       blank: Enter the national insurance number (NINo)
       invalid: Enter a National Insurance number in the correct format
@@ -277,8 +277,8 @@ en:
             transfer_choice:
               blank: "Select which programme the participant will join"
             start_date:
-              blank: "Please enter a start date"
-              invalid: "Please enter a valid start date"
+              blank: "Enter a start date"
+              invalid: "Enter a valid start date"
               before_start: "Start date cannot be before the current induction record start (%{date})"
             email:
               <<: *email_error_messages
@@ -293,13 +293,13 @@ en:
         admin/application_exports_form:
           attributes:
             start_date:
-              blank: "Please enter a start date"
-              invalid: "Please enter a valid start date"
+              blank: "Enter a start date"
+              invalid: "Enter a valid start date"
               in_future: "Start date cannot be in the future"
               before_relaunch_date: "Start date must be after 6th June 2022"
             end_date:
-              blank: "Please enter an end date"
-              invalid: "Please enter a valid end date"
+              blank: "Enter an end date"
+              invalid: "Enter a valid end date"
               in_future: "End date cannot be in the future"
               before_start_date: "End date must be after start date"
         induction/amend_participant_cohort:

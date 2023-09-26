@@ -15,14 +15,14 @@ class AppropriateBodySelectionForm
 
   validates :body_appointed,
             inclusion: { in: %w[yes no],
-                         message: "Please select whether you have appointed an appropriate body or not" },
+                         message: "Select whether you have appointed an appropriate body or not" },
             on: :body_appointed
   validates :body_type,
-            presence: { message: "Please select an appropriate body type" },
+            presence: { message: "Select an appropriate body type" },
             on: :body_type,
             inclusion: { in: %w[local_authority national teaching_school_hub unknown],
-                         message: "Please select an appropriate body type" }
-  validates :body_id, presence: { message: "Please select an appropriate body" }, on: :body
+                         message: "Select an appropriate body type" }
+  validates :body_id, presence: { message: "Select an appropriate body" }, on: :body
 
   def attributes
     {

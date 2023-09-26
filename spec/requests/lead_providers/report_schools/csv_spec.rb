@@ -34,7 +34,7 @@ RSpec.describe "Lead Provider school reporting: uploading csv", type: :request d
         post "/lead-providers/report-schools/csv", params: {}
 
         expect(response).to render_template :show
-        expect(response.body).to include("Please select a CSV file to upload")
+        expect(response.body).to include("Select a CSV file to upload")
       end
     end
 
