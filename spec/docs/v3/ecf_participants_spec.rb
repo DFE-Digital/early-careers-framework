@@ -395,7 +395,7 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
             "data": {
               "type": "participant",
               "attributes": {
-                schedule_identifier: "ecf-january-standard-2023",
+                schedule_identifier: "ecf-standard-january",
                 course_identifier: "ecf-induction",
               },
             },
@@ -405,7 +405,7 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
         schema({ "$ref": "#/components/schemas/ECFParticipantResponse" })
 
         before do
-          create(:schedule, schedule_identifier: "ecf-january-standard-2023", name: "ECF January standard 2023", cohort:)
+          create(:schedule, schedule_identifier: "ecf-standard-january", name: "ECF January standard 2023", cohort:)
         end
 
         run_test!

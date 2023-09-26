@@ -3185,8 +3185,22 @@
             "example": true
           },
           "schedule_identifier": {
-            "description": "The schedule of the ECF participant. For the possible values please refer to the <a href=\"/ecf-usage.html#notifying-of-schedule-change\" class=\"govuk-link\">ECF change schedule guidance</a>.",
+            "description": "The schedule of the ECF participant. For the possible values please refer to the <a href=\"/api-reference/ecf/schedules-and-milestone-dates.html#schedules-and-milestone-dates\" class=\"govuk-link\">ECF schedules and milestone dates guidance</a>.",
             "type": "string",
+            "enum": [
+              "ecf-standard-september",
+              "ecf-standard-january",
+              "ecf-standard-april",
+              "ecf-reduced-september",
+              "ecf-reduced-january",
+              "ecf-reduced-april",
+              "ecf-extended-september",
+              "ecf-extended-january",
+              "ecf-extended-april",
+              "ecf-replacement-september",
+              "ecf-replacement-january",
+              "ecf-replacement-april"
+            ],
             "example": "ecf-standard-january"
           },
           "delivery_partner_id": {
@@ -3311,7 +3325,16 @@
             "enum": [
               "ecf-standard-september",
               "ecf-standard-january",
-              "ecf-standard-april"
+              "ecf-standard-april",
+              "ecf-reduced-september",
+              "ecf-reduced-january",
+              "ecf-reduced-april",
+              "ecf-extended-september",
+              "ecf-extended-january",
+              "ecf-extended-april",
+              "ecf-replacement-september",
+              "ecf-replacement-january",
+              "ecf-replacement-april"
             ],
             "example": "ecf-standard-september"
           },
@@ -5237,19 +5260,23 @@
             ]
           },
           "schedule_identifier": {
-            "description": "The schedule the participant is enrolled in",
+            "description": "The schedule the participant is enrolled in. For the possible values please refer to the <a href=\"/api-reference/npq/schedules-and-milestone-dates.html#schedules-and-milestone-dates\" class=\"govuk-link\">NPQ schedules and milestone dates guidance</a>.",
             "type": "string",
-            "example": "npq-leadership-autumn",
             "enum": [
+              "npq-aso-march",
+              "npq-aso-june",
+              "npq-aso-november",
+              "npq-aso-december",
+              "npq-ehco-march",
+              "npq-ehco-june",
+              "npq-ehco-november",
+              "npq-ehco-december",
               "npq-leadership-autumn",
               "npq-leadership-spring",
               "npq-specialist-autumn",
-              "npq-specialist-spring",
-              "npq-aso-november",
-              "npq-aso-december",
-              "npq-aso-march",
-              "npq-aso-june"
-            ]
+              "npq-specialist-spring"
+            ],
+            "example": "npq-leadership-autumn"
           },
           "cohort": {
             "description": "The value indicates which call-off contract funds this participant's training. 2021 indicates a participant that has started, or will start, their training in the 2021/22 academic year. Providers may change an NPQ participant's cohort up until the point of submitting a started declaration.",
@@ -5635,12 +5662,16 @@
             "description": "The new schedule of the participant",
             "type": "string",
             "enum": [
-              "npq-aso-november",
-              "npq-aso-december",
               "npq-aso-march",
               "npq-aso-june",
-              "npq-leadership-spring",
+              "npq-aso-november",
+              "npq-aso-december",
+              "npq-ehco-march",
+              "npq-ehco-june",
+              "npq-ehco-november",
+              "npq-ehco-december",
               "npq-leadership-autumn",
+              "npq-leadership-spring",
               "npq-specialist-autumn",
               "npq-specialist-spring"
             ],
