@@ -172,3 +172,15 @@ action-group-resources: set-azure-account # make env_aks action-group-resources 
 	echo ${AZURE_RESOURCE_PREFIX}-${SERVICE_SHORT}-mn-rg
 	az group create -l uksouth -g ${AZURE_RESOURCE_PREFIX}-${SERVICE_SHORT}-mn-rg --tags "Product=Manage training for early career teachers" "Environment=Test" "Service Offering=Teacher services cloud"
 	az monitor action-group create -n ${AZURE_RESOURCE_PREFIX}-cpd-ecf -g ${AZURE_RESOURCE_PREFIX}-${SERVICE_SHORT}-mn-rg --action email ${AZURE_RESOURCE_PREFIX}-${SERVICE_SHORT}-email ${ACTION_GROUP_EMAIL}
+
+aks-console: get-cluster-credentials
+	$(if $(PULL_REQUEST_NUMBER), $(eval export APP_ID=review-$(PULL_REQUEST_NUMBER)) , $(eval export APP_ID=$(CONFIG_LONG)))
+	kubectl -n ${NAMESPACE} exec -ti --tty deployment/cpd-ecf-${APP_ID}-web -- /bin/sh -c "cd /app && bundle exec rails c"
+
+aks-ssh: get-cluster-credentials
+	$(if $(PULL_REQUEST_NUMBER), $(eval export APP_ID=review-$(PULL_REQUEST_NUMBER)) , $(eval export APP_ID=$(CONFIG_LONG)))
+	kubectl -n ${NAMESPACE} exec -ti --tty deployment/cpd-ecf-${APP_ID}-web -- /bin/sh
+
+aks-worker-ssh: get-cluster-credentials
+	$(if $(PULL_REQUEST_NUMBER), $(eval export APP_ID=review-$(PULL_REQUEST_NUMBER))-worker , $(eval export APP_ID=$(CONFIG_LONG)))
+	kubectl -n ${NAMESPACE} exec -ti --tty deployment/cpd-ecf-${APP_ID}-worker -- /bin/sh
