@@ -159,8 +159,8 @@ module Dashboard
       end
 
       # Include also the orphan mentors in the @mentors
-      @orphan_mentor_ids = @active_mentors.map(&:participant_profile_id) - @currently_training_ects.map(&:mentor_profile_id)
-      @orphan_mentor_ids.each do |mentor_profile_id|
+      orphan_mentor_ids = @active_mentors.map(&:participant_profile_id) - @currently_training_ects.map(&:mentor_profile_id)
+      orphan_mentor_ids.each do |mentor_profile_id|
         @mentors[dashboard_participant(mentor_profile_id)] = nil
       end
     end
