@@ -15,7 +15,7 @@ class AppropriateBodySelectionForm
 
   validates :body_appointed,
             inclusion: { in: %w[yes no],
-                         message: "Select whether you have appointed an appropriate body or not" },
+                         message: "Select whether you’ve appointed an appropriate body or not" },
             on: :body_appointed
   validates :body_type,
             presence: { message: "Select an appropriate body type" },

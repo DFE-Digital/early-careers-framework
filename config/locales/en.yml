@@ -193,7 +193,7 @@ en:
       blank: "Not registered"
       not_active: "Not active"
     programme:
-      blank: "Select programme type"
+      blank: "Select a programme type"
     provider:
       blank: "Select a provider"
     national_insurance_number:
