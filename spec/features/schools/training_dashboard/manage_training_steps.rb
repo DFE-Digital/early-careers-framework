@@ -17,6 +17,21 @@ module ManageTrainingSteps
     @induction_programme.update!(partnership: @partnership)
   end
 
+  def given_there_is_a_sit_and_mentor_in_another_school
+    @induction_coordinator_profile = create(:induction_coordinator_profile, schools: [@school], user: create(:user, full_name: @participant_data[:full_name], email: @participant_data[:email]))
+    create(:participant_identity, user: @induction_coordinator_profile.user)
+    privacy_policy = create(:privacy_policy)
+    privacy_policy.accept!(@induction_coordinator_profile.user)
+
+    @mentor = create(:mentor, user: @induction_coordinator_profile.user)
+    @mentor.user.teacher_profile.update!(trn: @participant_data[:trn])
+    ECFParticipantValidationData.create!(
+      participant_profile: @mentor,
+      trn: @participant_data[:trn],
+      date_of_birth: @participant_data[:date_of_birth],
+    )
+  end
+
   def given_there_is_a_school_that_has_chosen_fip
     @cohort = Cohort.current || create(:cohort, :current)
     @school = create(:school, name: "Fip School")
@@ -194,6 +209,8 @@ module ManageTrainingSteps
     set_participant_data
     set_updated_participant_data
   end
+
+  alias_method :when_i_am_signed_in_as_an_induction_coordinator, :and_i_am_signed_in_as_an_induction_coordinator
 
   def and_i_have_added_an_ect
     user = create(:user, full_name: "Sally Teacher", email: "sally-teacher@example.com")
@@ -684,6 +701,7 @@ module ManageTrainingSteps
     click_on "Add ECT or mentor"
   end
   alias_method :when_i_click_to_add_a_new_participant, :when_i_click_to_add_a_new_ect_or_mentor
+  alias_method :and_i_click_to_add_a_new_ect_or_mentor, :when_i_click_to_add_a_new_ect_or_mentor
 
   def when_i_select_to_add_a(participant_type)
     choose(participant_type, allow_label_click: true)
@@ -708,6 +726,8 @@ module ManageTrainingSteps
   def when_i_sign_back_in
     sign_in_as @induction_coordinator_profile.user
   end
+
+  alias_method :when_i_sign_in_as_sit, :when_i_sign_back_in
 
   def when_i_click_on_change_name
     click_on("Change name", visible: false)
