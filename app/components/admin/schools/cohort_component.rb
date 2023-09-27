@@ -58,7 +58,7 @@ module Admin
       end
 
       def has_partnerships_or_relationships?
-        partnerships.present? && relationships.present?
+        partnerships.present? || relationships.present?
       end
 
       def cip?
