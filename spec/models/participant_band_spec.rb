@@ -3,13 +3,13 @@
 require "rails_helper"
 
 RSpec.describe ParticipantBand, type: :model do
+  describe "associations" do
+    it { is_expected.to belong_to(:call_off_contract) }
+  end
+
   context "without revision of recruitment target" do
     let(:call_off_contract) { create(:call_off_contract) }
     let(:bands) { call_off_contract.bands }
-
-    describe "associations" do
-      it { is_expected.to belong_to(:call_off_contract) }
-    end
 
     describe "ranges" do
       it "orders the bands appropriately regardless of creation order" do
@@ -46,10 +46,6 @@ RSpec.describe ParticipantBand, type: :model do
   context "with revised recruitment target" do
     let(:call_off_contract) { create(:call_off_contract, recruitment_target: 4500, revised_target: 5100) }
     let(:bands) { call_off_contract.bands }
-
-    describe "associations" do
-      it { is_expected.to belong_to(:call_off_contract) }
-    end
 
     describe "ranges" do
       context "if there are no previous participants" do
@@ -138,6 +134,36 @@ RSpec.describe ParticipantBand, type: :model do
           expect(bands[2].number_of_participants_in_this_band(2500, 1900)).to eq(400)
         end
       end
+    end
+  end
+
+  context "when lead provider has only three participand bands" do
+    let(:call_off_contract) { create(:call_off_contract, :with_no_participants_in_band_c) }
+    let(:bands) { call_off_contract.bands }
+
+    it "orders the bands appropriately regardless of creation order" do
+      expect(bands[0].min).to be_nil
+      expect(bands[1].min).to eql(bands[0].max + 1)
+      expect(bands[2].min).to eql(bands[1].max + 1)
+    end
+
+    it "uses only the first band if there are only enough participants for this band" do
+      expect(bands[0].number_of_participants_in_this_band(90)).to eq(90)
+      expect(bands[1].number_of_participants_in_this_band(90)).to eq(0)
+      expect(bands[2].number_of_participants_in_this_band(90)).to eq(0)
+    end
+
+    it "uses the first two bands if there are only enough participants for the first two bands" do
+      expect(bands[0].number_of_participants_in_this_band(100)).to eq(90)
+      expect(bands[1].number_of_participants_in_this_band(100)).to eq(10)
+      expect(bands[2].number_of_participants_in_this_band(100)).to eq(0)
+    end
+
+    it "uses three bands only" do
+      expect(bands[0].number_of_participants_in_this_band(500)).to eq(90)
+      expect(bands[1].number_of_participants_in_this_band(500)).to eq(109)
+      expect(bands[2].number_of_participants_in_this_band(500)).to eq(301)
+      expect(bands[3]).to be_nil
     end
   end
 end

@@ -58,6 +58,18 @@ FactoryBot.define do
       end
     end
 
+    trait :with_no_participants_in_band_c do
+      transient do
+        with_minimal_bands { true }
+      end
+
+      after(:create) do |contract, _evaluator|
+        create(:participant_band, call_off_contract: contract, max: 90, per_participant: 895, output_payment_percentage: 60, service_fee_percentage: 40)
+        create(:participant_band, call_off_contract: contract, min: 91, max: 199, per_participant: 700, output_payment_percentage: 60, service_fee_percentage: 40)
+        create(:participant_band, call_off_contract: contract, min: 200, max: nil, per_participant: 500, output_payment_percentage: 100, service_fee_percentage: 0)
+      end
+    end
+
     after(:create) do |contract, evaluator|
       unless evaluator.with_minimal_bands
         create(:participant_band, :band_a, call_off_contract: contract)
