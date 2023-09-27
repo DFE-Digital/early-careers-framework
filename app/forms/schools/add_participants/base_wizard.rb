@@ -169,10 +169,11 @@ module Schools
         data_store.email == current_user.email
       end
 
-      def adding_yourself_as_mentor?
+      def sit_adding_themself_as_mentor?
         using_sit_email? && participant_type == "mentor"
       end
-      alias_method :sit_mentor?, :adding_yourself_as_mentor?
+
+      alias_method :sit_mentor?, :sit_adding_themself_as_mentor?
 
       def find_existing_mentor_by_trn
         teacher_profile = TeacherProfile.find_by(trn:)
@@ -182,7 +183,7 @@ module Schools
       end
 
       def sit_adding_themself_as_existing_mentor?
-        adding_yourself_as_mentor? && find_existing_mentor_by_trn.present?
+        sit_adding_themself_as_mentor? && find_existing_mentor_by_trn.present?
       end
 
       def adding_yourself_as_ect?

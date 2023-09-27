@@ -24,7 +24,7 @@ RSpec.describe Schools::AddParticipants::WizardSteps::EmailStep, type: :model do
     let(:ect_participant) { false }
     let(:confirm_start_term) { false }
     let(:confirm_appropriate_body) { false }
-    let(:adding_yourself_as_mentor) { false }
+    let(:sit_adding_themself_as_mentor) { false }
     let(:adding_yourself_as_ect) { false }
 
     before do
@@ -32,7 +32,7 @@ RSpec.describe Schools::AddParticipants::WizardSteps::EmailStep, type: :model do
       allow(wizard).to receive(:transfer?).and_return(transfer)
       allow(wizard).to receive(:needs_to_choose_a_mentor?).and_return(choose_mentor)
       allow(wizard).to receive(:ect_participant?).and_return(ect_participant)
-      allow(wizard).to receive(:adding_yourself_as_mentor?).and_return(adding_yourself_as_mentor)
+      allow(wizard).to receive(:sit_adding_themself_as_mentor?).and_return(sit_adding_themself_as_mentor)
       allow(wizard).to receive(:adding_yourself_as_ect?).and_return(adding_yourself_as_ect)
     end
 
@@ -110,7 +110,7 @@ RSpec.describe Schools::AddParticipants::WizardSteps::EmailStep, type: :model do
       end
 
       context "when SIT is adding themself as mentor" do
-        let(:adding_yourself_as_mentor) { true }
+        let(:sit_adding_themself_as_mentor) { true }
 
         it "returns :yourself" do
           expect(step.next_step).to eql :yourself
