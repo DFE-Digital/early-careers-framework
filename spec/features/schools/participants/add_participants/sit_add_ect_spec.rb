@@ -92,7 +92,7 @@ RSpec.describe "SIT adding themself as ECT", js: true do
     then_i_am_taken_to_check_answers_page
 
     when_i_click_confirm_and_add
-    then_i_am_taken_to_sit_added_as_mentor_page
+    then_i_am_taken_to_yourself_as_mentor_confirmation_page
 
     when_i_click_on_view_ects_and_mentors
     then_i_see_the_sit_name
