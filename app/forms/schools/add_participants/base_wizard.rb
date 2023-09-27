@@ -578,10 +578,6 @@ module Schools
       def adding_ect_as_mentor?
         participant_type == "mentor" && !@email_owner&.teacher_profile&.participant_profiles&.mentors&.exists?
       end
-
-      def sit_added_as_mentor?
-        false
-      end
     end
   end
 end
