@@ -59,13 +59,13 @@ RSpec.describe Dashboard::Participants do
     end
   end
 
-  describe "#not_mentoring_or_being_mentored" do
+  describe "#no_longer_training" do
     subject do
-      described_class.new(school: school_1, user:).not_mentoring_or_being_mentored.map(&:induction_record)
+      described_class.new(school: school_1, user:).no_longer_training.map(&:induction_record)
     end
 
     it "returns a unique entry per ect mentor not mentoring or ects not training" do
-      expect(subject).to contain_exactly(deferred_induction_record, not_mentoring_induction_record, transferred_induction_record)
+      expect(subject).to contain_exactly(deferred_induction_record, withdrawn_induction_record, transferred_induction_record)
     end
   end
 end
