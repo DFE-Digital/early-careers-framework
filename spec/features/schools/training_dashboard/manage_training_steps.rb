@@ -408,7 +408,7 @@ module ManageTrainingSteps
   end
 
   def then_i_see_induction_tutor_name
-    expect(page).to have_summary_row("Induction tutor", @mentor.user.full_name)
+    expect(page).to have_summary_row("Induction tutor", @induction_coordinator_profile.user.full_name)
   end
 
   def then_i_should_be_on_the_who_to_add_page
