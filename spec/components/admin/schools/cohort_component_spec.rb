@@ -136,12 +136,12 @@ RSpec.describe Admin::Schools::CohortComponent, type: :component do
 
       context "when there is a partnership but no relationships" do
         let(:relationships) { nil }
-        it { is_expected.not_to have_partnerships_or_relationships }
+        it { is_expected.to have_partnerships_or_relationships }
       end
 
       context "when there are relationships but no partnership" do
         let(:partnership) { nil }
-        it { is_expected.not_to have_partnerships_or_relationships }
+        it { is_expected.to have_partnerships_or_relationships }
       end
 
       context "when there is no partnership and there are no relationships" do
