@@ -20,7 +20,11 @@ module Schools
 
       def needs_after_transfer_sign_in?
         if @wizard.after_transfer_sign_in_needed
-          sign_in(@wizard.current_user, scope: :user)
+          if true_user.admin?
+            impersonate_user(@wizard.current_user)
+          else
+            sign_in(@wizard.current_user, scope: :user)
+          end
           ensure_policy_acceptance
         end
       end
