@@ -46,6 +46,7 @@ RSpec.describe Schools::AddParticipants::WizardSteps::DateOfBirthStep, type: :mo
     let(:registration_open) { false }
     let(:need_setup) { false }
     let(:confirm_start_term) { false }
+    let(:participant_withdrawn) { false }
 
     before do
       allow(wizard).to receive(:participant_exists?).and_return(participant_exists)
@@ -59,6 +60,7 @@ RSpec.describe Schools::AddParticipants::WizardSteps::DateOfBirthStep, type: :mo
       allow(wizard).to receive(:registration_open_for_participant_cohort?).and_return(registration_open)
       allow(wizard).to receive(:need_training_setup?).and_return(need_setup)
       allow(wizard).to receive(:needs_to_confirm_start_term?).and_return(confirm_start_term)
+      allow(wizard).to receive(:participant_withdrawn?).and_return(participant_withdrawn)
       allow(wizard).to receive(:set_ect_mentor).and_return(nil)
     end
 

@@ -13,16 +13,11 @@ module EarlyCareerTeachers
 
         create_teacher_profile
 
-        raise ParticipantProfileExistsError if participant_profile_exists?
+        profile = find_or_create_participant_profile
 
-        profile = ParticipantProfile::ECT.create!(
-          teacher_profile:,
-          schedule: Finance::Schedule::ECF.default_for(cohort: school_cohort.cohort),
-          participant_identity: Identity::Create.call(user:),
-          **ect_attributes,
-        )
+        ParticipantProfileState.create!(participant_profile: profile,
+                                        cpd_lead_provider: school_cohort&.default_induction_programme&.lead_provider&.cpd_lead_provider)
 
-        ParticipantProfileState.create!(participant_profile: profile, cpd_lead_provider: school_cohort&.default_induction_programme&.lead_provider&.cpd_lead_provider)
         if school_cohort.default_induction_programme.present?
           Induction::Enrol.call(participant_profile: profile,
                                 induction_programme: school_cohort.default_induction_programme,
@@ -60,8 +55,8 @@ module EarlyCareerTeachers
     end
 
     def teacher_profile
-      @teacher_profile ||= TeacherProfile.find_or_create_by!(user:) do |teacher|
-        teacher.school = school_cohort.school
+      @teacher_profile ||= TeacherProfile.find_or_create_by!(user:).tap do |teacher_profile|
+        teacher_profile.update!(school: school_cohort.school)
       end
     end
     alias_method :create_teacher_profile, :teacher_profile
@@ -76,8 +71,42 @@ module EarlyCareerTeachers
       ParticipantProfile::Mentor.find(mentor_profile_id) if mentor_profile_id.present?
     end
 
-    def participant_profile_exists?
-      teacher_profile.participant_profiles.ects.exists? || user.participant_identities.joins(:participant_profiles).where(participant_profiles: { type: "ParticipantProfile::ECT" }).exists?
+    def school
+      school_cohort.school
+    end
+
+    def find_or_create_participant_profile
+      if existing_participant_profile.present?
+        existing_participant_profile.update!(
+          teacher_profile:,
+          schedule: Finance::Schedule::ECF.default_for(cohort: school_cohort.cohort),
+          **ect_attributes,
+        )
+        existing_participant_profile
+      else
+        ParticipantProfile::ECT.create!(
+          teacher_profile:,
+          schedule: Finance::Schedule::ECF.default_for(cohort: school_cohort.cohort),
+          participant_identity: Identity::Create.call(user:),
+          **ect_attributes,
+        )
+      end
+    end
+
+    def existing_participant_profile
+      via_teacher_profile = teacher_profile.participant_profiles.ects.first
+      return via_teacher_profile if via_teacher_profile.present?
+
+      participant_identity = ParticipantIdentityResolver.call(
+        participant_id: user.id,
+        course_identifier: "ecf-induction",
+        cpd_lead_provider: nil,
+      )
+      ParticipantProfileResolver.call(
+        participant_identity:,
+        course_identifier: "ecf-induction",
+        cpd_lead_provider: nil,
+      )
     end
   end
 end
