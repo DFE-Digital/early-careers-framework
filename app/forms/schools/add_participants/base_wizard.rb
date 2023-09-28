@@ -17,7 +17,7 @@ module Schools
 
       delegate :return_point, :changing_answer?, :transfer?, :participant_type, :trn, :confirmed_trn, :date_of_birth,
                :induction_start_date, :nino, :ect_participant?, :mentor_id, :continue_current_programme?, :participant_profile,
-               :sit_mentor?, :mentor_participant?, :appropriate_body_confirmed?, :appropriate_body_id, :known_by_another_name?,
+               :mentor_participant?, :appropriate_body_confirmed?, :appropriate_body_id, :known_by_another_name?,
                :same_provider?, :was_withdrawn_participant?, :complete?, :start_date, :start_term, :last_visited_step,
                :ect_mentor?,
                to: :data_store
@@ -163,6 +163,31 @@ module Schools
         return true unless transfer?
 
         @email_owner != existing_user
+      end
+
+      def using_sit_email?
+        data_store.email == current_user.email
+      end
+
+      def sit_adding_themself_as_mentor?
+        using_sit_email? && participant_type == "mentor"
+      end
+
+      alias_method :sit_mentor?, :sit_adding_themself_as_mentor?
+
+      def find_existing_mentor_by_trn
+        teacher_profile = TeacherProfile.find_by(trn:)
+        return if teacher_profile.nil?
+
+        teacher_profile.ecf_profiles.mentors.first
+      end
+
+      def sit_adding_themself_as_existing_mentor?
+        sit_adding_themself_as_mentor? && find_existing_mentor_by_trn.present?
+      end
+
+      def adding_yourself_as_ect?
+        using_sit_email? && participant_type == "ect"
       end
 
       def email_used_in_the_same_school?
@@ -403,6 +428,14 @@ module Schools
 
       def formatted_trn
         TeacherReferenceNumber.new(trn).formatted_trn
+      end
+
+      def full_name_or_you
+        if sit_mentor?
+          "you"
+        else
+          full_name
+        end
       end
 
       def full_name_or_yourself

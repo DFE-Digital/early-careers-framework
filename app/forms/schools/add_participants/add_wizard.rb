@@ -10,6 +10,8 @@ module Schools
           start_date
           start_term
           cannot_add_registration_not_yet_open
+          cannot_add_yourself_as_ect
+          yourself
           need_training_setup
           choose_mentor
           confirm_appropriate_body
@@ -93,6 +95,10 @@ module Schools
 
       def start_term_description
         "#{start_term.capitalize} #{start_term == 'spring' ? Time.zone.now.year + 1 : Time.zone.now.year}"
+      end
+
+      def sit_added_as_mentor?
+        participant_create_args[:email] == current_user.email
       end
 
     private

@@ -35,10 +35,6 @@ module Schools
         save_progress!
       end
 
-      def sit_can_become_a_mentor?
-        !current_user.mentor?
-      end
-
       def registration_open_for_participant_cohort?
         desired_cohort = cohort_to_place_participant
 
