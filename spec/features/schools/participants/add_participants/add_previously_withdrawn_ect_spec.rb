@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "Adding ECT with appropriate body", type: :feature, js: true do
+RSpec.describe "Adding previously withdrawn ECT", type: :feature, js: true do
   let(:current_year) { Time.current.year }
   let!(:cohort) { Cohort.current || create(:cohort, start_year: current_year) }
   let(:previous_cohort) { create(:cohort, start_year: cohort.start_year - 1) }
@@ -60,46 +60,77 @@ RSpec.describe "Adding ECT with appropriate body", type: :feature, js: true do
     participant_profile = add_and_remove_participant_from_school_cohort(previous_school_cohort)
     the_participant_profile_is_set_up_as_withdrawn_correctly(participant_profile, previous_school_cohort)
 
-    sign_in
+    expect {
+      sign_in
 
-    when_i_go_to_add_new_ect_page
-    and_i_go_through_the_who_do_you_want_to_add_page
-    and_i_go_through_the_what_we_need_from_you_page
+      when_i_go_to_add_new_ect_page
+      and_i_go_through_the_who_do_you_want_to_add_page
+      and_i_go_through_the_what_we_need_from_you_page
 
-    and_i_fill_in_all_info
-    then_i_am_taken_to_the_confirm_appropriate_body_page
+      and_i_fill_in_all_info
+      then_i_am_taken_to_the_confirm_appropriate_body_page
 
-    when_i_click_on_confirm
-    then_i_am_taken_to_the_confirmation_page
-    and_i_see_the_correct_details(joint_provider_details: true)
+      when_i_click_on_confirm
+      then_i_am_taken_to_the_confirmation_page
+      and_i_see_the_correct_details(joint_provider_details: true)
 
-    when_i_check_the_ect_details
-    and_i_see_the_correct_details
+      when_i_check_the_ect_details
+      and_i_see_the_correct_details
 
-    and_the_participant_profile_is_set_up_correctly(participant_profile)
+      and_the_participant_profile_is_set_up_correctly(participant_profile)
+    }.to_not change { ParticipantProfile.count }
+  end
+
+  scenario "Adding an ECT back to the school it was withdrawn from with a different email" do
+    participant_profile = add_and_remove_participant_from_school_cohort(previous_school_cohort)
+    the_participant_profile_is_set_up_as_withdrawn_correctly(participant_profile, previous_school_cohort)
+
+    expect {
+      new_email = "another_#{ect_email}"
+
+      sign_in
+
+      when_i_go_to_add_new_ect_page
+      and_i_go_through_the_who_do_you_want_to_add_page
+      and_i_go_through_the_what_we_need_from_you_page
+
+      and_i_fill_in_all_info(email: new_email)
+      then_i_am_taken_to_the_confirm_appropriate_body_page
+
+      when_i_click_on_confirm
+      then_i_am_taken_to_the_confirmation_page
+      and_i_see_the_correct_details(joint_provider_details: true, expected_email: new_email)
+
+      when_i_check_the_ect_details
+      and_i_see_the_correct_details(expected_email: new_email)
+
+      and_the_participant_profile_is_set_up_correctly(participant_profile)
+    }.to_not change { ParticipantProfile.count }
   end
 
   scenario "Adding an ECT to a school different to the one it was withdrawn from" do
     participant_profile = add_and_remove_participant_from_school_cohort(previous_school_cohort_different_school)
     the_participant_profile_is_set_up_as_withdrawn_correctly(participant_profile, previous_school_cohort_different_school)
 
-    sign_in
+    expect {
+      sign_in
 
-    when_i_go_to_add_new_ect_page
-    and_i_go_through_the_who_do_you_want_to_add_page
-    and_i_go_through_the_what_we_need_from_you_page
+      when_i_go_to_add_new_ect_page
+      and_i_go_through_the_who_do_you_want_to_add_page
+      and_i_go_through_the_what_we_need_from_you_page
 
-    and_i_fill_in_all_info
-    then_i_am_taken_to_the_confirm_appropriate_body_page
+      and_i_fill_in_all_info
+      then_i_am_taken_to_the_confirm_appropriate_body_page
 
-    when_i_click_on_confirm
-    then_i_am_taken_to_the_confirmation_page
-    and_i_see_the_correct_details(joint_provider_details: true)
+      when_i_click_on_confirm
+      then_i_am_taken_to_the_confirmation_page
+      and_i_see_the_correct_details(joint_provider_details: true)
 
-    when_i_check_the_ect_details
-    and_i_see_the_correct_details
+      when_i_check_the_ect_details
+      and_i_see_the_correct_details
 
-    and_the_participant_profile_is_set_up_correctly(participant_profile)
+      and_the_participant_profile_is_set_up_correctly(participant_profile)
+    }.to_not change { ParticipantProfile.count }
   end
 
 private
@@ -166,7 +197,7 @@ private
     click_on "Continue"
   end
 
-  def and_i_fill_in_all_info
+  def and_i_fill_in_all_info(email: ect_email)
     allow(DQTRecordCheck).to receive(:call).and_return(
       DQTRecordCheck::CheckResult.new(
         valid_dqt_response,
@@ -184,7 +215,7 @@ private
     click_on "Continue"
     fill_in_date("What’s George ECT’s date of birth?", with: ect_dob)
     click_on "Continue"
-    fill_in "add_participant_wizard[email]", with: ect_email
+    fill_in "add_participant_wizard[email]", with: email
     click_on "Continue"
   end
 
@@ -211,11 +242,11 @@ private
     expect(page).to have_content("Check your answers")
   end
 
-  def and_i_see_the_correct_details(joint_provider_details: false)
+  def and_i_see_the_correct_details(joint_provider_details: false, expected_email: ect_email)
     expect(page).to have_summary_row("Name", ect_full_name)
     expect(page).to have_summary_row("TRN", ect_trn)
     expect(page).to have_summary_row("Date of birth", ect_dob.to_date.to_fs(:govuk))
-    expect(page).to have_summary_row("Email address", ect_email)
+    expect(page).to have_summary_row("Email address", expected_email)
     expect(page).to have_summary_row("Appropriate body", appropriate_body.name)
 
     if joint_provider_details
@@ -235,6 +266,7 @@ private
     participant_profile.reload
     expected_cohort = expected_school_cohort.cohort
     expect([
+      participant_profile.status,
       participant_profile.training_status,
       participant_profile.latest_induction_record.reload.induction_status,
       participant_profile.cohort.start_year,
@@ -244,6 +276,7 @@ private
       participant_profile.induction_start_date,
       participant_profile.teacher_profile.trn,
     ]).to eq [
+      "withdrawn",
       "active",
       "withdrawn",
       expected_cohort.start_year,
@@ -258,6 +291,7 @@ private
   def and_the_participant_profile_is_set_up_correctly(participant_profile)
     participant_profile.reload
     expect([
+      participant_profile.status,
       participant_profile.training_status,
       participant_profile.latest_induction_record.reload.induction_status,
       participant_profile.cohort.start_year,
@@ -267,6 +301,7 @@ private
       participant_profile.induction_start_date,
       participant_profile.teacher_profile.trn,
     ]).to eq [
+      "active",
       "active",
       "active",
       cohort.start_year,

@@ -119,62 +119,34 @@ RSpec.describe Mentors::Create do
 
   context "when the user has an active participant profile" do
     context "when the profile is attached to teacher_profile" do
-      let!(:existing_participant_profile) do
+      before do
         create(:mentor_participant_profile, teacher_profile: create(:teacher_profile, user:))
       end
 
-      it "updates the existing user" do
+      it "raises an error" do
         expect {
           described_class.call(
             email: user.email,
             full_name: Faker::Name.name,
             school_cohort:,
           )
-        }.to change { ParticipantProfile::Mentor.count }.by(0)
-         .and change { User.count }.by(0)
-         .and change { TeacherProfile.count }.by(0)
-         .and change { user.teacher_profile.reload.school }.to(school)
-      end
-
-      it "returns the existing profile" do
-        expect(
-          described_class.call(
-            email: user.email,
-            full_name: Faker::Name.name,
-            school_cohort:,
-          ),
-        ).to eq(existing_participant_profile)
+        }.to raise_error(described_class::ParticipantProfileExistsError)
       end
     end
 
     context "when the profile is attached to participant identities" do
-      let!(:existing_participant_profile) do
-        create(:mentor_participant_profile).tap do |participant_profile|
-          participant_profile.update!(participant_identity: create(:participant_identity, user:))
-        end
+      before do
+        create(:mentor_participant_profile).update!(participant_identity: create(:participant_identity, user:))
       end
 
-      it "updates the existing user" do
+      it "raises an error" do
         expect {
           described_class.call(
             email: user.email,
             full_name: Faker::Name.name,
             school_cohort:,
           )
-        }.to change { ParticipantProfile::Mentor.count }.by(0)
-         .and change { User.count }.by(0)
-         .and change { TeacherProfile.count }.by(1)
-         .and change { user.reload.teacher_profile&.school }.from(nil).to(school)
-      end
-
-      it "returns the existing profile" do
-        expect(
-          described_class.call(
-            email: user.email,
-            full_name: Faker::Name.name,
-            school_cohort:,
-          ),
-        ).to eq(existing_participant_profile)
+        }.to raise_error(described_class::ParticipantProfileExistsError)
       end
     end
   end
