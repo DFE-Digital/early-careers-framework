@@ -8,7 +8,8 @@ RSpec.describe DetermineTrainingRecordState do
   let!(:current_school) { nil }
 
   subject(:determined_state) do
-    described_class.call(participant_profile:, school: current_school)
+    participant_profiles = ParticipantProfile.where(id: participant_profile.id)
+    described_class.call(participant_profiles:, school: current_school)
   end
 
   shared_examples "determines states as" do |validation_state, training_eligibility_state, fip_funding_eligibility_state, mentoring_state, training_state, record_state|
@@ -28,22 +29,6 @@ RSpec.describe DetermineTrainingRecordState do
   end
 
   describe "#call" do
-    context "when not called with a ParticipantProfile" do
-      subject { described_class.call(participant_profile: TeacherProfile.new).record_state.participant_profile }
-
-      it "Raises an ArgumentError" do
-        expect { subject.participant_profile }.to raise_error ArgumentError
-      end
-    end
-
-    context "when not called with an InductionRecord" do
-      subject { described_class.call(participant_profile: scenarios.ect_on_cip_in_training.participant_profile, induction_record: TeacherProfile.new).record_state.participant_profile }
-
-      it "Raises an ArgumentError" do
-        expect { subject.participant_profile }.to raise_error ArgumentError
-      end
-    end
-
     context "when a FIP ECT" do
       context "and is awaiting validation" do
         let!(:participant_profile) { scenarios.ect_on_fip_no_validation.participant_profile }
