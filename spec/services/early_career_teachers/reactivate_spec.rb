@@ -42,6 +42,7 @@ RSpec.describe EarlyCareerTeachers::Reactivate do
 
   let(:creation_date_for_withdrawn_record) { Date.new(cohort.start_year - 1, 1, 1) }
   let!(:participant_profile) { add_and_remove_participant_from_school_cohort(school_cohort) }
+  let!(:current_withdrawn_induction_record) { participant_profile.latest_induction_record }
 
   it "uses the existing teacher profile record" do
     expect {
@@ -63,6 +64,18 @@ RSpec.describe EarlyCareerTeachers::Reactivate do
         school_cohort:,
       )
     }.to change { school.reload.ecf_participant_profiles.ects.active_record.count }.by(1)
+  end
+
+  it "closes out the existing induction record" do
+    frozen_time = Time.current.at_beginning_of_minute
+    travel_to(frozen_time)
+    expect {
+      described_class.call(
+        email: user.email,
+        participant_profile:,
+        school_cohort:,
+      )
+    }.to change { current_withdrawn_induction_record.reload.end_date }.from(nil).to(frozen_time)
   end
 
   it "reactivates the existing participant profile" do
@@ -176,7 +189,6 @@ RSpec.describe EarlyCareerTeachers::Reactivate do
   end
 
   def withdraw_participant(participant_profile:)
-    participant_profile.update!(status: :withdrawn)
-    participant_profile.latest_induction_record.withdrawing!
+    participant_profile.withdrawn_record!
   end
 end

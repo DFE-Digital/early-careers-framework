@@ -40,6 +40,7 @@ RSpec.describe Mentors::Reactivate do
 
   let(:creation_date_for_withdrawn_record) { Date.new(cohort.start_year - 1, 1, 1) }
   let!(:participant_profile) { add_and_remove_participant_from_school_cohort(school_cohort) }
+  let!(:current_withdrawn_induction_record) { participant_profile.latest_induction_record }
 
   it "adds the mentor to the school mentors pool" do
     expect {
@@ -49,6 +50,18 @@ RSpec.describe Mentors::Reactivate do
         school_cohort:,
       )
     }.to change { school.mentor_profiles.active_record.count }.by(1)
+  end
+
+  it "closes out the existing induction record" do
+    frozen_time = Time.current.at_beginning_of_minute
+    travel_to(frozen_time)
+    expect {
+      described_class.call(
+        email: user.email,
+        participant_profile:,
+        school_cohort:,
+      )
+    }.to change { current_withdrawn_induction_record.reload.end_date }.from(nil).to(frozen_time)
   end
 
   it "reactivates the existing participant profile" do
@@ -150,8 +163,7 @@ RSpec.describe Mentors::Reactivate do
   end
 
   def withdraw_participant(participant_profile:)
-    participant_profile.update!(status: :withdrawn)
-    participant_profile.reload.latest_induction_record.withdrawing!
+    participant_profile.withdrawn_record!
     participant_profile.mentee_profiles.update_all(mentor_profile_id: nil)
 
     participant_profile.mentee_profiles.each do |mentee_profile|

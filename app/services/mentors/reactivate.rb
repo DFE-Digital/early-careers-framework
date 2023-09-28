@@ -12,6 +12,8 @@ module Mentors
         ParticipantProfileState.create!(participant_profile:, cpd_lead_provider: school_cohort&.default_induction_programme&.lead_provider&.cpd_lead_provider)
 
         if school_cohort.default_induction_programme.present?
+          end_current_induction_record
+
           Induction::Enrol.call(participant_profile:,
                                 induction_programme: school_cohort.default_induction_programme,
                                 start_date:,
@@ -33,6 +35,13 @@ module Mentors
       @email = email
       @start_date = start_date
       @school_cohort = school_cohort
+    end
+
+    def end_current_induction_record
+      latest_induction_record = participant_profile.latest_induction_record
+      return unless latest_induction_record.end_date.nil?
+
+      latest_induction_record.changing!(Time.current)
     end
 
     def reactivate_participant_profile
