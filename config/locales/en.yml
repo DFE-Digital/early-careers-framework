@@ -408,7 +408,7 @@ en:
         schools/add_participants/wizard_steps/start_term_step:
           attributes:
             start_term:
-              inclusion: "Select the start term for this participant"
+              inclusion: "Select the start you will start mentor training"
         schools/add_participants/wizard_steps/joining_date_step:
           attributes:
             start_date:
