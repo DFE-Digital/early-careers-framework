@@ -16,7 +16,7 @@ RSpec.describe AppropriateBodies::Participants::TableRow, type: :component do
     it { is_expected.to have_text(participant_profile.user.full_name) }
     it { is_expected.to have_text(participant_profile.teacher_profile.trn) }
     it { is_expected.to have_text(induction_record.school.urn) }
-    it { is_expected.to have_text("No longer being trained") }
+    it { is_expected.to have_text("ECT not currently linked to you") }
     it { is_expected.to have_text("FIP") }
     it { is_expected.to have_text(induction_record.school.contact_email) }
   end
@@ -27,7 +27,7 @@ RSpec.describe AppropriateBodies::Participants::TableRow, type: :component do
     it { is_expected.to have_text(participant_profile.user.full_name) }
     it { is_expected.to have_text(participant_profile.teacher_profile.trn) }
     it { is_expected.to have_text(induction_record.school.urn) }
-    it { is_expected.to have_text("No longer being trained") }
+    it { is_expected.to have_text("ECT not currently linked to you") }
     it { is_expected.to have_text("CIP") }
     it { is_expected.to have_text(induction_record.school.contact_email) }
   end

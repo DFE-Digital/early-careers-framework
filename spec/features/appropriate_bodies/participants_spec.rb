@@ -74,7 +74,7 @@ RSpec.feature "Appropriate body users participants", type: :feature do
     end
 
     scenario "Existing status" do
-      when_i_choose("status", with: "No longer being trained")
+      when_i_choose("status", with: "ECT not currently linked to you")
       and_i_click_on("Search")
       and_i_see_participant_details
     end
@@ -139,7 +139,7 @@ private
     expect(data[0]).to eq(["full_name", participant_profile.user.full_name])
     expect(data[1]).to eq(["trn", participant_profile.teacher_profile.trn])
     expect(data[2]).to eq(["school_urn", induction_record.school&.urn])
-    expect(data[3]).to eq(["status", "No longer being trained"])
+    expect(data[3]).to eq(["status", "ECT not currently linked to you"])
     expect(data[4]).to eq(%w[induction_type FIP])
     expect(data[5]).to eq(["induction_tutor", induction_record.school.contact_email])
   end
