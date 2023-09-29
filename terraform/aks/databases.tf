@@ -1,3 +1,23 @@
+module "redis-cache" {
+  source = "git::https://github.com/DFE-Digital/terraform-modules.git//aks/redis?ref=testing"
+
+  namespace                 = var.namespace
+  environment               = local.environment
+  azure_resource_prefix     = var.azure_resource_prefix
+  service_name              = local.service_name
+  service_short             = var.service_short
+  config_short              = var.config_short
+  azure_capacity            = var.redis_cache_capacity
+  azure_family              = var.redis_cache_family
+  azure_sku_name            = var.redis_cache_sku_name
+  name                      = "cache"
+
+  cluster_configuration_map = module.cluster_data.configuration_map
+
+  use_azure               = var.deploy_azure_backing_services
+  azure_enable_monitoring = var.enable_monitoring
+}
+
 module "redis" {
   source = "git::https://github.com/DFE-Digital/terraform-modules.git//aks/redis?ref=testing"
 
