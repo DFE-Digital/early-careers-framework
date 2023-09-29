@@ -79,6 +79,42 @@ RSpec.describe ChooseRoleForm, type: :model do
       end
     end
 
+    describe "lead_provider role" do
+      let(:user) { create(:user, :lead_provider) }
+
+      it { is_expected.to validate_inclusion_of(:role).in_array(%w[lead_provider]) }
+
+      it "only_one_role should be true" do
+        expect(form.only_one_role).to be true
+      end
+
+      it "has correct role_options" do
+        expect(form.role_options).to have_key("lead_provider")
+      end
+
+      describe "param with lead_provider role" do
+        let(:form_role) { "lead_provider" }
+        let(:helpers) { Struct.new(:dashboard_path).new("/lead-provider") }
+
+        it "should be valid" do
+          expect(form.valid?).to be true
+        end
+
+        it "returns correct redirect_path" do
+          expect(form.redirect_path(helpers:)).to be helpers.dashboard_path
+        end
+      end
+
+      describe "param with incorrect role" do
+        let(:form_role) { "does_not_exist" }
+
+        it "should be invalid" do
+          expect(form.valid?).to be false
+          expect(form.errors[:role]).to include "Choose a role"
+        end
+      end
+    end
+
     describe "admin role" do
       let(:user) { create(:user, :admin) }
 

@@ -37,6 +37,11 @@ class SupplierUserForm
 private
 
   def email_not_taken
-    errors.add(:email, :unique, message: I18n.t("errors.supplier_email.taken")) if Identity.find_user_by(email:)
+    return if supplier.blank?
+    return unless (user = Identity.find_user_by(email:))
+
+    if LeadProviderProfile.where(user:, lead_provider: chosen_supplier).exists?
+      errors.add(:email, :unique, message: I18n.t("errors.supplier_email.taken"))
+    end
   end
 end
