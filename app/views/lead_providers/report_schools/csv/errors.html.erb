@@ -5,7 +5,7 @@
      csv_valid_rows: @valid_schools.count,
      csv_errors: @errors.map {|error| error[:message].parameterize.underscore}.tally,
    ) %>
-<h1 class="govuk-heading-xl">Your CSV has errors</h1>
+<h1 class="govuk-heading-l">Your CSV has errors</h1>
 
 <p class="govuk-body">We have found <%= @urns.count %> rows in your CSV:</p>
 <ul class="govuk-list govuk-list--bullet">

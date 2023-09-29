@@ -2,7 +2,7 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
 
-    <span class="govuk-caption-xl"><%= @school.name %></span>
+    <span class="govuk-caption-l"><%= @school.name %></span>
 
     <%= form_with model: @induction_record.preferred_identity,
                   scope: '',
@@ -14,9 +14,9 @@
                              width: 'two-thirds',
                              hint: -> { tag.p(t('participant.edit_email_hint')) },
                              label: { text: t('participant.edit_email', name: @profile.full_name),
-                                      size: 'xl',
+                                      size: 'l',
                                       tag: 'h1',
-                                      class: 'govuk-heading-xl' } %>
+                                      class: 'govuk-heading-l' } %>
       <%= f.govuk_submit %>
     <% end %>
   </div>

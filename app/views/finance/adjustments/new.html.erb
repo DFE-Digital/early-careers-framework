@@ -12,22 +12,22 @@
       <% when "step1" %>
         <%= f.govuk_text_field(
                 :payment_type,
-                caption: { text: "Add adjustment", size: "xl" },
-                label: { text: "What is the name of the adjustment", tag: "h1", size: "xl" },
+                caption: { text: "Add adjustment", size: "l" },
+                label: { text: "What is the name of the adjustment", tag: "h1", size: "l" },
                 hint: { text: "Describe what the adjustment is for. For example 'IT consultant fee'" }
             ) %>
         <%= f.govuk_submit "Continue" %>
       <% when "step2" %>
         <%= f.govuk_text_field(
                 :amount,
-                caption: { text: "Add adjustment", size: "xl" },
-                label: { text: "How much is the payment?", tag: "h1", size: "xl" }
+                caption: { text: "Add adjustment", size: "l" },
+                label: { text: "How much is the payment?", tag: "h1", size: "l" }
             ) %>
         <%= f.hidden_field(:payment_type) %>
         <%= f.govuk_submit "Continue" %>
       <% when "confirm" %>
-        <span class="govuk-caption-xl">Add adjustment</span>
-        <h1 class="govuk-heading-xl">Check your answers</h1>
+        <span class="govuk-caption-l">Add adjustment</span>
+        <h1 class="govuk-heading-l">Check your answers</h1>
 
         <%= govuk_table do |table| %>
           <% table.with_head do |head| %>

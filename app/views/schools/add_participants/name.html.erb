@@ -14,8 +14,8 @@
     <%= form_with model: @form, url: url_for(action: :update), scope: @wizard.form_scope, method: :put do |f| %>
       <%= f.govuk_error_summary %>
       <%= f.govuk_text_field :full_name, width: "three-quarters",
-        label: { text: full_name_label, tag: :h1, size: 'xl' },
-        caption: { text: @school.name, size: 'xl' },
+        label: { text: full_name_label, tag: :h1, size: 'l' },
+        caption: { text: @school.name, size: 'l' },
         hint: { text: "We just need their first name and last name, not titles like Mr, Mrs, Dr." } %>
       <%= f.govuk_submit "Continue" %>
     <% end %>

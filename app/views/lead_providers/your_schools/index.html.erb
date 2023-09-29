@@ -13,7 +13,7 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl">Your schools</h1>
+    <h1 class="govuk-heading-l">Your schools</h1>
     <%= govuk_button_link_to "Confirm more schools", lead_providers_report_schools_start_path if @selected_cohort == Cohort.current %>
     <%= govuk_button_link_to "Download schools for #{@selected_cohort&.display_name}", active_lead_providers_partnerships_path(cohort: @selected_cohort, format: :csv) if @total_provider_schools.positive? %>
   </div>
@@ -32,7 +32,7 @@
 <div class="govuk-grid-row govuk-!-margin-bottom-6">
   <div class="govuk-grid-column-one-third">
     <div class="dashboard-numbers">
-      <p class="govuk-heading-xl"><%= @total_provider_schools %></p>
+      <p class="govuk-heading-l"><%= @total_provider_schools %></p>
       <p class="govuk-heading-s"><%= "School".pluralize(@total_provider_schools) %> recruited</p>
     </div>
   </div>

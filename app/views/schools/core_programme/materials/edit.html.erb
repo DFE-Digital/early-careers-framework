@@ -5,14 +5,14 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         
-        <span class="govuk-caption-xl"><%= @school.name %></span>
+        <span class="govuk-caption-l"><%= @school.name %></span>
         <%= form_for @form, url: { action: :update }, method: :put do |f| %>
             <%= f.govuk_error_summary %>
             <%= f.govuk_collection_radio_buttons :core_induction_programme_id,
                                            CoreInductionProgramme.all,
                                            :id,
                                            :name,
-                                           legend: { text: "Which training materials do you want to use?", size: "xl", tag: "h1" } %>
+                                           legend: { text: "Which training materials do you want to use?", size: "l", tag: "h1" } %>
             <%= f.govuk_submit "Continue" %>
         <% end %>
 

@@ -118,7 +118,7 @@ RSpec.describe AdminHelper, type: :helper do
     end
 
     it "returns a caption containing the user role" do
-      expect(subject).to have_css(".govuk-caption-xl", text: "Mentor")
+      expect(subject).to have_css(".govuk-caption-l", text: "Mentor")
     end
 
     it "returns the TRN" do

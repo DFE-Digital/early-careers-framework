@@ -6,7 +6,7 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
 
-    <span class="govuk-caption-xl"><%= @school.name %></span>
+    <span class="govuk-caption-l"><%= @school.name %></span>
     <%= form_with model: @profile.user, scope: '',
                   url: school_participant_update_name_path,
                   method: :put do |f| %>
@@ -15,9 +15,9 @@
                              value: nil,
                              width: 'two-thirds',
                              label: { text: t('participant.edit_name', name: @profile.full_name),
-                                      size: 'xl',
+                                      size: 'l',
                                       tag: 'h1',
-                                      class: 'govuk-heading-xl' } %>
+                                      class: 'govuk-heading-l' } %>
       <%= f.govuk_submit %>
     <% end %>
 

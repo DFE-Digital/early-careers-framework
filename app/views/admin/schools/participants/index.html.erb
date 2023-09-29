@@ -1,9 +1,9 @@
 <% content_for :title, "School detail: participants" %>
 
-<h1 class="govuk-heading-xl"><%= @school.name %></h1>
+<h1 class="govuk-heading-l"><%= @school.name %></h1>
 <%= render partial: "admin/schools/shared/navigation" %>
 
-<h2 class="govuk-heading-l">Participants</h2>
+<h2 class="govuk-heading-m">Participants</h2>
 
 <% if @participant_profiles.present? %>
   <table class="govuk-table">

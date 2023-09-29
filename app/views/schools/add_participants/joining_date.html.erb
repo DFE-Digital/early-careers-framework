@@ -7,13 +7,13 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
 
-    <span class="govuk-caption-xl"><%= @school.name %></span>
+    <span class="govuk-caption-l"><%= @school.name %></span>
 
     <%= form_with model: @wizard.form, url: url_for(action: :update), scope: @wizard.form_scope, method: :put do |f| %>
       <%= f.govuk_error_summary %>
       <%= f.govuk_date_field :start_date,
         width: "two-thirds",
-        legend: { text: title, tag: "h1", size: "xl", class: "govuk-heading-xl" },
+        legend: { text: title, tag: "h1", size: "l", class: "govuk-heading-l" },
         hint: { text: "For example, 14 7 2023" } do %>
 
         <p class="govuk-body">

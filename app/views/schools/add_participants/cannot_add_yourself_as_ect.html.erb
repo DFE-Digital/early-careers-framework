@@ -8,8 +8,8 @@
     <%= form_with model: @form, url: url_for(action: :update), scope: @wizard.form_scope, method: :put do |f| %>
       <%= f.govuk_error_summary %>
 
-      <span class="govuk-caption-xl"><%= @school.name %></span>
-      <h1 class="govuk-heading-xl"><%= title %></h1>
+      <span class="govuk-caption-l"><%= @school.name %></span>
+      <h1 class="govuk-heading-l"><%= title %></h1>
 
       <%= f.govuk_radio_buttons_fieldset :participant_type , legend: { text: "What would you like to do?", size: 'm' } do %>
         <%= f.govuk_radio_button :participant_type, :mentor, label: { text: "Add myself as a mentor instead" }, link_errors: true %>

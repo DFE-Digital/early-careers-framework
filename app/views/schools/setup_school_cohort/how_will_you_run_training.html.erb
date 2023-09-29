@@ -5,7 +5,7 @@
 
 <% content_for :before_content, govuk_back_link(text: "Back", href: expect_any_ects_schools_setup_school_cohort_path) %>
 
-<span class="govuk-caption-xl"><%= @school.name %></span>
+<span class="govuk-caption-l"><%= @school.name %></span>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
@@ -18,7 +18,7 @@
         :how_will_you_run_training_choice,
         @setup_school_cohort_form.how_will_you_run_training_choices(cip_only: @school.cip_only?),
         :id, :name,
-        legend: { text: title, tag: 'h1', size: 'xl' }) do %>
+        legend: { text: title, tag: 'h1', size: 'l' }) do %>
 
         <p class="govuk-body">This choice will only apply for ECTs and mentors starting in the <%= registration_cohort %> academic year.</p>
         <p class="govuk-body">

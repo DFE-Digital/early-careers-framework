@@ -2,7 +2,7 @@
   <div class="govuk-grid-column-two-thirds">
     <%= form_for @choose_role_form, url: choose_role_path do |f| %>
       <%= f.govuk_error_summary %>
-      <%= f.govuk_radio_buttons_fieldset :role, legend: { text: "What role do you want to view?", tag: 'h1', size: 'xl' } do %>
+      <%= f.govuk_radio_buttons_fieldset :role, legend: { text: "What role do you want to view?", tag: 'h1', size: 'l' } do %>
         <p>Choose a role to view relevant organisations.</p>
 
         <% @choose_role_form.role_options.each_with_index do |(val, name), n| %>

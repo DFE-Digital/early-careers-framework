@@ -5,7 +5,7 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <span class="govuk-caption-xl"><%= @school.name %></span>
+    <span class="govuk-caption-l"><%= @school.name %></span>
     <%= form_with model: @wizard.form, url: url_for(action: :update), scope: @wizard.form_scope, method: :put do |f| %>
       <%= f.govuk_error_summary %>
       <%= f.govuk_collection_radio_buttons(
@@ -13,7 +13,7 @@
         simple_yes_no_options,
         :id, :name,
         inline: true,
-        legend: { text: title, tag: 'h1', size: 'xl' }) do %>
+        legend: { text: title, tag: 'h1', size: 'l' }) do %>
 
         <% if @wizard.transfer_has_same_provider_and_different_delivery_partner? %>
           <p class="govuk-body">This is the same lead provider, but a different delivery partner to other ECTs and mentors at your school.</p>

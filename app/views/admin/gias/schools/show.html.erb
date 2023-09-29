@@ -3,7 +3,7 @@
 
 <span class="govuk-caption-l"><%= @school.name_and_urn %></span>
 
-<h1 class="govuk-heading-xl">School details</h1>
+<h1 class="govuk-heading-l">School details</h1>
 <% if @school.counterpart&.eligible? %>
   <p class="govuk-body">
     <%= govuk_link_to "View live school", admin_school_path(id: @school.counterpart.slug), target: "_blank" %>
