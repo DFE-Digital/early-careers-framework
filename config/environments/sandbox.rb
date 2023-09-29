@@ -45,7 +45,7 @@ Rails.application.configure do
   config.session_store :cookie_store, key: "_early_career_framework_session", secure: true, expire_after: 2.weeks
 
   # Use a different cache store in production.
-  # config.cache_store = :mem_cache_store
+  config.cache_store = :redis_cache_store, { url: ENV["REDIS_CACHE_URL"], pool_size: ENV.fetch("RAILS_MAX_THREADS", 5) }
 
   # Use a real queuing backend for Active Job (and separate queues per environment).
   # config.active_job.queue_adapter     = :resque
