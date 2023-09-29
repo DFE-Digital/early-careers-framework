@@ -56,20 +56,27 @@
           row.with_value(text: induction_programme_friendly_name(induction_record.training_programme))
         end
 
-        sl.with_row do |row|
-          row.with_key(text: "Lead provider")
-          row.with_value(text: induction_record.lead_provider_name || "No lead provider")
-        end
-
-        sl.with_row do |row|
-          row.with_key(text: "Delivery partner")
-          row.with_value(text: induction_record.delivery_partner_name || "No delivery partner")
-        end
-
-        if induction_record.delivery_partner.present?
+        if induction_record.enrolled_in_fip?
           sl.with_row do |row|
-            row.with_key(text: "Delivery partner record state")
-            row.with_value(text: render(StatusTags::DeliveryPartnerParticipantStatusTag.new(participant_profile: induction_record.participant_profile, induction_record: induction_record)))
+            row.with_key(text: "Lead provider")
+            row.with_value(text: induction_record.lead_provider_name || "No lead provider")
+          end
+
+          sl.with_row do |row|
+            row.with_key(text: "Delivery partner")
+            row.with_value(text: induction_record.delivery_partner_name || "No delivery partner")
+          end
+
+          if induction_record.delivery_partner.present?
+            sl.with_row do |row|
+              row.with_key(text: "Delivery partner record state")
+              row.with_value(text: render(StatusTags::DeliveryPartnerParticipantStatusTag.new(participant_profile: induction_record.participant_profile, induction_record: induction_record)))
+            end
+          end
+        elsif induction_record.enrolled_in_cip?
+          sl.with_row do |row|
+            row.with_key(text: "Materials supplier")
+            row.with_value(text: induction_record.core_induction_programme_name || "No materials supplier")
           end
         end
 
