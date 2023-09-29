@@ -75,8 +75,8 @@
           end
         elsif induction_record.enrolled_in_cip?
           sl.with_row do |row|
-            row.with_key(text: "Core materials provider")
-            row.with_value(text: induction_record.core_induction_programme_name || "No materials provider")
+            row.with_key(text: "Materials supplier")
+            row.with_value(text: induction_record.core_induction_programme_name || "No materials supplier")
           end
         end
 
