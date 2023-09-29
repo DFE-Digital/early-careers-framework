@@ -151,18 +151,46 @@ class TrainingRecordState
   end
 
   def validation_state
-    @validation_state ||= begin
-      return :different_trn if manual_check_different_trn?
+    @validation_state_data = {
+      manual_checks: manual_checks?,
+      different_trn_reason: different_trn_reason?,
+      awaiting_validation_data: awaiting_validation_data?,
+      latest_request_for_details_delivered: latest_request_for_details_delivered?,
+      latest_request_for_details_failed: latest_request_for_details_failed?,
+      latest_request_for_details_submitted: latest_request_for_details_submitted?,
+      validation_api_failed: validation_api_failed?,
+      mentor: mentor?,
+      participant_validation_data_blank: participant_validation_data_blank?,
+      teacher_profile_trn_present: teacher_profile_trn_present?,
+      validation_data_trn_present: validation_data_trn_present?,
+    }.transform_values { |v| !!v } # FIXME really each method should return a boolean
 
-      return :request_for_details_delivered if request_for_details_delivered?
-      return :request_for_details_failed if request_for_details_failed?
-      return :request_for_details_submitted if request_for_details_submitted?
+    case @validation_state_data
+    in { manual_checks: true, different_trn_reason: true }
+      :different_trn
 
-      return :validation_not_started if awaiting_validation_data?
+    in { awaiting_validation_data: true, latest_request_for_details_delivered: true }
+      :request_for_details_delivered
 
-      return :internal_error if validation_api_failed?
-      return :tra_record_not_found if no_tra_record_found?
+    in { awaiting_validation_data: true, latest_request_for_details_failed: true }
+      :request_for_details_failed
 
+    in { awaiting_validation_data: true, latest_request_for_details_submitted: true }
+      :request_for_details_submitted
+
+    in { teacher_profile_trn_present: false, participant_validation_data_blank: true }
+      :validation_not_started
+
+    in { validation_api_failed: true }
+      :internal_error
+
+    in { mentor: false, teacher_profile_trn_present: false }
+      :tra_record_not_found
+
+    in { validation_data_trn_present: true, teacher_profile_trn_present: false }
+      :tra_record_not_found
+
+    else
       :valid
     end
   end
@@ -442,8 +470,8 @@ private
     manual_checks? && participant_profile.ecf_participant_eligibility&.active_flags_reason?
   end
 
-  def manual_check_different_trn?
-    manual_checks? && participant_profile.ecf_participant_eligibility&.different_trn_reason?
+  def different_trn_reason?
+    participant_profile.ecf_participant_eligibility&.different_trn_reason?
   end
 
   def manual_check_no_induction?
@@ -462,24 +490,36 @@ private
     participant_profile.teacher_profile&.trn.nil? && participant_profile.ecf_participant_validation_data.blank?
   end
 
-  def request_for_details_submitted?
-    awaiting_validation_data? && latest_request_for_details&.submitted?
+  def participant_validation_data_blank?
+    participant_profile.ecf_participant_validation_data.blank?
   end
 
-  def request_for_details_failed?
-    awaiting_validation_data? && latest_request_for_details&.failed?
+  def latest_request_for_details_submitted?
+    latest_request_for_details&.submitted?
   end
 
-  def request_for_details_delivered?
-    awaiting_validation_data? && latest_request_for_details&.delivered?
+  def latest_request_for_details_failed?
+    latest_request_for_details&.failed?
+  end
+
+  def latest_request_for_details_delivered?
+    latest_request_for_details&.delivered?
   end
 
   def validation_api_failed?
     participant_profile.ecf_participant_validation_data&.api_failure || false
   end
 
+  def teacher_profile_trn_present?
+    participant_profile.teacher_profile&.trn.present?
+  end
+
+  def validation_data_trn_present?
+    participant_profile.ecf_participant_validation_data&.trn.present?
+  end
+
   def no_tra_record_found?
-    return participant_profile.teacher_profile&.trn.nil? unless mentor?
+    return participant_profile.teacher_profile&.trn.nil? if !mentor?
 
     participant_profile.ecf_participant_validation_data&.trn.present? && participant_profile.teacher_profile&.trn.nil?
   end
