@@ -23,9 +23,28 @@ RSpec.describe Schools::AddParticipants::WizardSteps::ContinueCurrentProgrammeSt
     end
 
     context "when not continuing the current programme" do
-      it "returns :join_school_programme" do
+      before do
         step.continue_current_programme = "no"
-        expect(step.next_step).to eql :join_school_programme
+      end
+
+      context "when needs to choose a school programme" do
+        before do
+          allow(wizard).to receive(:needs_to_choose_school_programme?).and_return(true)
+        end
+
+        it "returns :join_school_programme" do
+          expect(step.next_step).to eql :join_school_programme
+        end
+      end
+
+      context "when no need to choose a school programme" do
+        before do
+          allow(wizard).to receive(:needs_to_choose_school_programme?).and_return(false)
+        end
+
+        it "returns :check_answers" do
+          expect(step.next_step).to eql :check_answers
+        end
       end
     end
   end

@@ -220,7 +220,7 @@ module Pages
       choose "No"
       click_on "Continue"
 
-      choose "Yes"
+      choose option: "default_for_participant_cohort"
       click_on "Continue"
 
       self

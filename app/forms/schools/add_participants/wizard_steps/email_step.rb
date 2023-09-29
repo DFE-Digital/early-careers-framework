@@ -15,6 +15,7 @@ module Schools
         end
 
         def next_step
+          # debugger
           if wizard.email_in_use?
             :email_already_taken
           elsif wizard.adding_yourself_as_ect?
@@ -24,6 +25,8 @@ module Schools
               :choose_mentor
             elsif wizard.needs_to_confirm_programme?
               :continue_current_programme
+            elsif wizard.needs_to_choose_school_programme?
+              :join_school_programme
             else
               :check_answers
             end

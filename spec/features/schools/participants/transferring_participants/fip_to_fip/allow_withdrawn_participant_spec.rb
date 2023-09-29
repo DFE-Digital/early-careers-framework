@@ -52,8 +52,12 @@ RSpec.describe "transferring a withdrawn participant", type: :feature, js: true 
     and_it_should_list_the_schools_mentors
     when_i_assign_a_mentor
     click_on "Continue"
+    then_i_should_be_taken_to_the_schools_current_programme_page
 
+    when_i_select @lead_provider.name
+    click_on "Continue"
     then_i_should_be_taken_to_the_check_your_answers_page
+
     click_on "Confirm and add"
     then_i_should_be_on_the_complete_page
 
@@ -177,6 +181,12 @@ RSpec.describe "transferring a withdrawn participant", type: :feature, js: true 
 
   def then_i_should_be_on_the_select_mentor_page
     expect(page).to have_selector("h1", text: "Who will #{@participant_data[:full_name]}’s mentor be?")
+  end
+
+  def then_i_should_be_taken_to_the_schools_current_programme_page
+    expect(page).to have_selector("h1", text: "Who will #{@participant_data[:full_name]}'s new lead provider / delivery partner be?")
+    expect(page).to have_text(@lead_provider.name)
+    expect(page).to have_text(@delivery_partner.name)
   end
 
   def then_i_should_be_taken_to_the_check_your_answers_page

@@ -2,21 +2,21 @@
 
 RSpec.describe Induction::TransferAndContinueExistingFip do
   describe "#call" do
-    let(:lead_provider)   { create(:cpd_lead_provider, :with_lead_provider).lead_provider }
-    let(:school_1)        { create(:school, name: "Transferring From School") }
-    let(:school_2)        { create(:school, name: "Transferring To School") }
+    let(:lead_provider) { create(:cpd_lead_provider, :with_lead_provider).lead_provider }
+    let(:school_1) { create(:school, name: "Transferring From School") }
+    let(:school_2) { create(:school, name: "Transferring To School") }
     let(:school_cohort_1) { create(:school_cohort, :fip, :with_induction_programme, school: school_1, lead_provider:) }
     let(:school_cohort_2) { create(:school_cohort, :fip, :with_induction_programme, school: school_2, lead_provider:) }
-    let(:participant_profile)  { create(:ect,    school_cohort: school_cohort_1, lead_provider:) }
-    let!(:mentor_profile_1)    { create(:mentor, school_cohort: school_cohort_1, lead_provider:) }
-    let!(:mentor_profile_2)    { create(:mentor, school_cohort: school_cohort_2, lead_provider:) }
-    let(:start_date)           { 1.week.from_now }
-    let(:end_date)             { 1.week.ago }
-    let(:new_email_address)    { "hank.shanklin@new-school.example.com" }
+    let(:participant_profile) { create(:ect, school_cohort: school_cohort_1, lead_provider:) }
+    let!(:mentor_profile_1) { create(:mentor, school_cohort: school_cohort_1, lead_provider:) }
+    let!(:mentor_profile_2) { create(:mentor, school_cohort: school_cohort_2, lead_provider:) }
+    let(:start_date) { 1.week.from_now }
+    let(:end_date) { 1.week.ago }
+    let(:new_email_address) { "hank.shanklin@new-school.example.com" }
 
     let(:new_induction_programme) { school_cohort_2.induction_programmes.order(:created_at).last }
-    let(:new_partnership)         { school_2.partnerships.order(:created_at).last }
-    let(:new_induction_record)    { participant_profile.induction_records.latest }
+    let(:new_partnership) { school_2.partnerships.order(:created_at).last }
+    let(:new_induction_record) { participant_profile.induction_records.latest }
 
     subject(:service) { described_class }
 
@@ -105,6 +105,58 @@ RSpec.describe Induction::TransferAndContinueExistingFip do
                      email: new_email_address,
                      start_date:,
                      end_date:)
+      end
+    end
+
+    context "when there is an existing active partnership at the school cohort for the participant's current LP/DP" do
+      let!(:partnership) do
+        create(:partnership,
+               school: school_2,
+               cohort: school_cohort_2.cohort,
+               lead_provider: original_induction.lead_provider,
+               delivery_partner: original_induction.delivery_partner)
+      end
+
+      it "do not create a new partnership at the transferring in school" do
+        expect { service_call }.not_to change { school_2.partnerships.count }.from(2)
+      end
+
+      it "create a new induction_programme at the transferring in school" do
+        expect { service_call }.to change { school_cohort_2.induction_programmes.count }.from(1).to(2)
+      end
+
+      it "enrols the participant in the new programme" do
+        service_call
+
+        expect(new_induction_record.induction_programme.partnership).to eq(partnership)
+      end
+    end
+
+    context "when there is an existing induction programme at the school cohort for the participant's current LP/DP" do
+      let!(:partnership) do
+        create(:partnership,
+               school: school_2,
+               cohort: school_cohort_2.cohort,
+               lead_provider: original_induction.lead_provider,
+               delivery_partner: original_induction.delivery_partner)
+      end
+
+      let!(:induction_programme) do
+        create(:induction_programme, :fip, school_cohort: school_cohort_2, partnership:)
+      end
+
+      it "don't create a new partnership at the transferring in school" do
+        expect { service_call }.not_to change { school_2.partnerships.count }.from(2)
+      end
+
+      it "don't create a new induction_programme at the transferring in school" do
+        expect { service_call }.not_to change { school_cohort_2.induction_programmes.count }.from(2)
+      end
+
+      it "enrols the participant in the new programme" do
+        service_call
+
+        expect(new_induction_record.induction_programme).to eq(induction_programme)
       end
     end
   end

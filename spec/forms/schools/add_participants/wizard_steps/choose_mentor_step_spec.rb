@@ -32,6 +32,7 @@ RSpec.describe Schools::AddParticipants::WizardSteps::ChooseMentorStep, type: :m
       context "when the ECT is on a different programme" do
         it "should return continue_current_programme" do
           allow(wizard).to receive(:needs_to_confirm_programme?).and_return(true)
+          allow(wizard).to receive(:needs_to_choose_school_programme?).and_return(true)
           expect(step.next_step).to eql :continue_current_programme
         end
       end
@@ -39,6 +40,7 @@ RSpec.describe Schools::AddParticipants::WizardSteps::ChooseMentorStep, type: :m
       context "when the ECT is training with the same provider" do
         it "should return check_answers" do
           allow(wizard).to receive(:needs_to_confirm_programme?).and_return(false)
+          allow(wizard).to receive(:needs_to_choose_school_programme?).and_return(false)
           expect(step.next_step).to eql :check_answers
         end
       end

@@ -101,7 +101,6 @@ RSpec.describe "ECT has matching lead provider and delivery partner", type: :fea
 
     when_i_assign_a_mentor
     click_on "Continue"
-
     then_i_should_be_taken_to_the_check_your_answers_page
     then_the_page_should_be_accessible
 
@@ -264,6 +263,12 @@ RSpec.describe "ECT has matching lead provider and delivery partner", type: :fea
   def then_i_should_be_on_the_complete_page
     expect(page).to have_selector("h2", text: "What happens next")
     expect(page).to have_text("We’ll let this person know")
+  end
+
+  def then_i_should_be_taken_to_the_teachers_current_programme_page
+    expect(page).to have_selector("h1", text: "Will they continue with this lead provider and delivery partner?")
+    expect(page).to have_text(@lead_provider.name)
+    expect(page).to have_text(@delivery_partner.name)
   end
 
   def then_i_receive_a_missing_name_error_message
