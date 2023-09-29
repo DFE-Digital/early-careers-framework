@@ -33,6 +33,16 @@ if ENV.key?("REDIS_URI")
   end
 end
 
+if ENV.key?("REDIS_QUEUE_URL")
+  Sidekiq.configure_server do |config|
+    config.redis = { url: ENV.fetch("REDIS_QUEUE_URL") }
+  end
+
+  Sidekiq.configure_client do |config|
+    config.redis = { url: ENV.fetch("REDIS_QUEUE_URL") }
+  end
+end
+
 # Sidekiq Cron
 if Sidekiq.server?
   Rails.application.config.after_initialize do
