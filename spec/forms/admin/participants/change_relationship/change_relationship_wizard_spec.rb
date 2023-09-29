@@ -4,12 +4,8 @@ RSpec.describe Admin::Participants::ChangeRelationship::ChangeRelationshipWizard
   let(:current_step) { :reason_for_change }
   let(:data_store) { instance_double(FormData::ChangeParticipantRelationshipStore) }
   let(:admin_user) { create(:seed_admin_profile, :with_user) }
-  let(:school) { create(:seed_school, :with_induction_coordinator) }
-  let(:cohort) { create(:seed_cohort, start_year: 2022) }
   let(:request) { {} }
-  let(:school_cohort) { create(:seed_school_cohort, :fip, cohort:, school:) }
-  let(:induction_programme) { create(:seed_induction_programme, :fip, :with_partnership, school_cohort:, school:, cohort:) }
-  let!(:participant_profile) { create(:seed_ect_participant_profile, :with_teacher_profile, :with_participant_identity, :with_schedule, school_cohort:) }
+  let!(:participant_profile) { create(:seed_ect_participant_profile, :valid) }
 
   let(:submitted_params) { {} }
 
@@ -18,11 +14,9 @@ RSpec.describe Admin::Participants::ChangeRelationship::ChangeRelationshipWizard
   before do
     allow(data_store).to receive(:set)
     allow(data_store).to receive(:participant_profile).and_return(participant_profile)
-    Induction::Enrol.call(participant_profile:, induction_programme:, start_date: Date.new(cohort.start_year, 9, 1))
   end
 
   describe "#programme_can_be_changed?" do
-    let!(:relationship) { create(:seed_partnership, :with_lead_provider, :with_delivery_partner, school:, cohort:, relationship: true) }
     let(:circumstances_change) { false }
     let(:has_declarations) { false }
 
