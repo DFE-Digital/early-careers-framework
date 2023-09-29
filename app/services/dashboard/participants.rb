@@ -75,7 +75,7 @@ module Dashboard
     # List of relevant (current or transferring_in or transferred) induction record of each of the participant of
     # the school in the cohorts displayed by the dashboard
     def induction_records
-      @induction_records ||= dashboard_school_cohorts.flat_map do |school_cohort|
+      @induction_records ||= dashboard_school_cohorts.flat_map { |school_cohort|
         InductionRecordPolicy::Scope
           .new(user,
                school_cohort
@@ -86,8 +86,7 @@ module Dashboard
                  .order("users.full_name"))
           .resolve
           .order(start_date: :desc, created_at: :desc)
-          .uniq(&:participant_profile_id)
-      end
+      }.uniq(&:participant_profile_id)
     end
 
     def no_qts?(induction_record)

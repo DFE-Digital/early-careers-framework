@@ -107,6 +107,10 @@ module Schools
         check_for_dqt_record? && dqt_record(force_recheck: true).present? && existing_participant_profile.present?
       end
 
+      def participant_withdrawn?
+        Induction::FindBy.call(participant_profile: existing_participant_profile)&.induction_status == "withdrawn"
+      end
+
       def existing_participant_is_a_different_type?
         participant_exists? && existing_participant_profile.participant_type != participant_type.to_sym
       end

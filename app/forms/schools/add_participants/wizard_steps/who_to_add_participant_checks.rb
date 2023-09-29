@@ -5,7 +5,7 @@ module Schools
     module WizardSteps
       module WhoToAddParticipantChecks
         def next_step_after_participant_check
-          if wizard.participant_exists?
+          if wizard.participant_exists? && !wizard.participant_withdrawn?
             existing_participant_checks
           else
             new_participant_checks
@@ -54,7 +54,7 @@ module Schools
         def cohort_checks
           if wizard.needs_to_confirm_start_term?
             # we're not sure at this point which cohort is needed
-            # so allow to procedd at this point
+            # so allow to proceed at this point
             :none
           elsif !wizard.registration_open_for_participant_cohort?
             # we know the cohort at this point (only if induction start date set)

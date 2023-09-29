@@ -190,17 +190,23 @@ module Schools
         using_sit_email? && participant_type == "ect"
       end
 
+      def email_owner_participant_profile
+        @email_owner.teacher_profile&.ecf_profiles&.first
+      end
+
+      def email_owner_induction_record_for_current_school
+        return if email_owner_participant_profile.blank?
+
+        Induction::FindBy.call(
+          participant_profile: email_owner_participant_profile,
+          school:,
+        )
+      end
+
       def email_used_in_the_same_school?
-        if email_in_use?
-          participant_profile = @email_owner.teacher_profile&.ecf_profiles&.first
-          if participant_profile
-            Induction::FindBy.call(participant_profile:)&.school == school
-          else
-            false
-          end
-        else
-          false
-        end
+        return false unless email_in_use?
+
+        email_owner_induction_record_for_current_school.present?
       end
 
       ## handling transfers
