@@ -151,147 +151,180 @@ class TrainingRecordState
   end
 
   def validation_state
-    @validation_state ||= begin
-      return :different_trn if manual_check_different_trn?
+    case validation_state_data
+    in { manual_checks: true, different_trn_reason: true }
+      :different_trn
 
-      return :request_for_details_delivered if request_for_details_delivered?
-      return :request_for_details_failed if request_for_details_failed?
-      return :request_for_details_submitted if request_for_details_submitted?
+    in { awaiting_validation_data: true, latest_request_for_details_delivered: true }
+      :request_for_details_delivered
 
-      return :validation_not_started if awaiting_validation_data?
+    in { awaiting_validation_data: true, latest_request_for_details_failed: true }
+      :request_for_details_failed
 
-      return :internal_error if validation_api_failed?
-      return :tra_record_not_found if no_tra_record_found?
+    in { awaiting_validation_data: true, latest_request_for_details_submitted: true }
+      :request_for_details_submitted
 
+    in { teacher_profile_trn_present: false, participant_validation_data_blank: true }
+      :validation_not_started
+
+    in { validation_data_api_failed: true }
+      :internal_error
+
+    in { mentor: false, teacher_profile_trn_present: false }
+      :tra_record_not_found
+
+    in { validation_data_trn_present: true, teacher_profile_trn_present: false }
+      :tra_record_not_found
+
+    else
       :valid
     end
   end
 
   def training_eligibility_state
-    @training_eligibility_state ||= begin
-      return :checks_not_complete if eligibility_not_checked?
+    case training_eligibility_state_data
+    in { eligibility_blank: true, teacher_profile_trn_present: true }
+      :checks_not_complete
 
-      return :active_flags if manual_check_active_flags?
-      return :not_allowed if ineligible_active_flags?
+    in { eligibility_blank: true, ect: true }
+      :checks_not_complete
 
-      return :eligible_for_mentor_training if mentored?
-      return :not_yet_mentoring if mentor?
+    in { manual_checks: true, active_reason: true }
+      :active_flags
 
-      return :duplicate_profile if ineligible_duplicate_profile?
-      return :not_qualified if manual_check_no_qts?
+    in { ineligible: true, active_reason: true }
+      :not_allowed
 
-      return :exempt_from_induction if ineligible_exempt_from_induction?
-      return :previous_induction if ineligible_previous_induction?
+    in { mentored: true }
+      :eligible_for_mentor_training
 
-      return :tra_record_not_found if no_tra_record_found?
+    in { mentor: true }
+      :not_yet_mentoring
 
+    in { ineligible: true, duplicate_profile_reason: true }
+      :duplicate_profile
+
+    in { manual_checks: true, no_qts_reason: true }
+      :not_qualified
+
+    in { ineligible: true, exempt_from_induction_reason: true }
+      :exempt_from_induction
+
+    in { ineligible: true, previous_induction_reason: true }
+      :previous_induction
+
+    in { mentor: false, teacher_profile_trn_present: false }
+      :tra_record_not_found
+
+    in { validation_data_trn_present: true, teacher_profile_trn_present: false }
+      :tra_record_not_found
+
+    else
       :eligible_for_induction_training
     end
   end
 
   def fip_funding_eligibility_state
-    @fip_funding_eligibility_state ||= begin
-      return :checks_not_complete if eligibility_not_checked?
+    case fip_funding_eligibility_state_data
+    in { eligibility_blank: true, teacher_profile_trn_present: true }
+      :checks_not_complete
 
-      return :eligible_for_fip_funding if eligible? && !mentor?
+    in { eligibility_blank: true, ect: true }
+      :checks_not_complete
 
-      unless eligible? && mentor?
-        return :active_flags if manual_check_active_flags?
-        return :not_allowed if ineligible_active_flags?
-      end
-
-      if mentor?
-        if ineligible_previous_participation?
-          return :ineligible_ero_secondary if secondary_profile? || ineligible_duplicate_profile?
-          return :ineligible_ero_primary if primary_profile?
-
-          return :ineligible_ero
-        end
-
-        return :ineligible_secondary if secondary_profile? || ineligible_duplicate_profile?
-        return :eligible_for_mentor_funding_primary if primary_profile?
-
-        return :eligible_for_mentor_funding
-      end
-
-      return :duplicate_profile if ineligible_duplicate_profile?
-      return :no_induction_start if manual_check_no_induction?
-      return :not_qualified if manual_check_no_qts?
-
-      return :exempt_from_induction if ineligible_exempt_from_induction?
-      return :previous_induction if ineligible_previous_induction?
-
-      return :tra_record_not_found if no_tra_record_found?
-
+    in { eligible: true, mentor: false }
       :eligible_for_fip_funding
+
+    in { manual_checks: true, active_reason: true, eligible: false }
+      :active_flags
+
+    in { manual_checks: true, active_reason: true, mentor: false }
+      :active_flags
+
+    in { ineligible: true, active_reason: true, eligible: false }
+      :not_allowed
+
+    in { ineligible: true, active_reason: true, mentor: false }
+      :not_allowed
+
+    in { mentor: true }
+      mentor_fip_funding_eligibility_state
+    else
+      ect_fip_funding_eligibility_state
     end
   end
 
   def training_state
-    @training_state ||= begin
-      return :no_longer_involved if changed_training?
-      return :leaving if is_leaving_school?
-      return :left if has_left_school?
-      return :joining if is_joining_school?
+    case training_state_data
+    in { changed_training: true }
+      :no_longer_involved
 
-      return :withdrawn_programme if withdrawn_participant?
-      return :withdrawn_training if withdrawn_training?
-      return :deferred_training if deferred_training?
-      return :completed_training if completed_training?
+    in { leaving_school: true }
+      :leaving
 
+    in { left_school: true }
+      :left
+
+    in { joining_school: true }
+      :joining
+
+    in { withdrawn_participant: true }
+      :withdrawn_programme
+
+    in { withdrawn_training: true }
+      :withdrawn_training
+
+    in { deferred_training: true }
+      :deferred_training
+
+    in { completed_training: true }
+      :completed_training
+
+    else
       ect_training_state
     end
   end
 
   def mentoring_state
-    @mentoring_state ||= begin
-      return :not_a_mentor unless mentor?
+    case mentoring_state_data
+    in { mentor: false }
+      :not_a_mentor
 
-      if mentoring?
-        return :active_mentoring_ero if previous_participation?
+    in { mentoring: true, previous_participation_reason: true }
+      :active_mentoring_ero
 
-        :active_mentoring
-      else
-        return :not_yet_mentoring_ero if previous_participation?
+    in { mentoring: true }
+      :active_mentoring
 
-        :not_yet_mentoring
-      end
-    end
-  end
+    in { mentoring: false, previous_participation_reason: true }
+      :not_yet_mentoring_ero
 
-  def ect_training_state
-    @ect_training_state ||= begin
-      if on_fip?
-        return :registered_for_fip_no_partner if no_partnership?
-        return :registered_for_fip_training unless induction_start_date_in_past?
-
-        return :active_fip_training
-      end
-
-      if on_cip?
-        return :registered_for_cip_training unless induction_start_date_in_past?
-
-        return :active_cip_training
-      end
-
-      if on_design_our_own?
-        return :registered_for_diy_training unless induction_start_date_in_past?
-
-        return :active_diy_training
-      end
-
-      :not_registered_for_training
+    else
+      :not_yet_mentoring
     end
   end
 
   def record_state
-    @record_state ||= begin
-      return training_state if withdrawn_participant? || (transitioning_or_not_currently_training? && !mentor?)
-      return validation_state unless validation_status_valid?
-      return training_eligibility_state unless eligible_for_training?
-      return fip_funding_eligibility_state if on_fip? && !applicable_funding_state?
-      return mentoring_state if mentor?
+    case record_state_data
+    in { withdrawn_participant: true }
+      training_state
 
+    in { transitioning_or_not_currently_training: true, mentor: false }
+      training_state
+
+    in { validation_status_valid: false }
+      validation_state
+
+    in { eligible_for_training: false }
+      training_eligibility_state
+
+    in { on_fip: true, application_funding_state: false }
+      fip_funding_eligibility_state
+
+    in { mentor: true }
+      mentoring_state
+
+    else
       training_state
     end
   end
@@ -301,6 +334,206 @@ class TrainingRecordState
   end
 
 private
+
+  def ect_training_state
+    case ect_training_state_data
+    in { on_fip: true, partnership: false }
+      :registered_for_fip_no_partner
+
+    in { on_fip: true, induction_start_date_in_past: true }
+      :active_fip_training
+
+    in { on_fip: true }
+      :registered_for_fip_training
+
+    in { on_cip: true, induction_start_date_in_past: true }
+      :active_cip_training
+
+    in { on_cip: true }
+      :registered_for_cip_training
+
+    in { on_design_our_own: true, induction_start_date_in_past: true }
+      :active_diy_training
+
+    in { on_design_our_own: true }
+      :registered_for_diy_training
+
+    else
+      :not_registered_for_training
+    end
+  end
+
+  def mentor_fip_funding_eligibility_state
+    case mentor_fip_funding_eligibility_state_data
+    in { mentor: true, ineligible: true, previous_participation_reason: true, secondary_profile: true }
+      :ineligible_ero_secondary
+
+    in { mentor: true, ineligible: true, previous_participation_reason: true, duplicate_profile_reason: true }
+      :ineligible_ero_secondary
+
+    in { mentor: true, ineligible: true, previous_participation_reason: true, primary_profile: true }
+      :ineligible_ero_primary
+
+    in { mentor: true, ineligible: true, previous_participation_reason: true }
+      :ineligible_ero
+
+    in { mentor: true, ineligible: true, secondary_profile: true }
+      :ineligible_secondary
+
+    in { mentor: true, ineligible: true, duplicate_profile_reason: true }
+      :ineligible_secondary
+
+    in { mentor: true, primary_profile: true }
+      :eligible_for_mentor_funding_primary
+
+    else
+      :eligible_for_mentor_funding
+    end
+  end
+
+  def ect_fip_funding_eligibility_state
+    case ect_fip_funding_eligibility_state_data
+    in { mentor: false, ineligible: true, duplicate_profile_reason: true }
+      :duplicate_profile
+
+    in { mentor: false, manual_checks: true, no_induction_reason: true }
+      :no_induction_start
+
+    in { mentor: false, manual_checks: true, no_qts_reason: true }
+      :not_qualified
+
+    in { mentor: false, ineligible: true, exempt_from_induction_reason: true }
+      :exempt_from_induction
+
+    in { mentor: false, ineligible: true, previous_induction_reason: true }
+      :previous_induction
+
+    in { mentor: false, teacher_profile_trn_present: false }
+      :tra_record_not_found
+
+    in { validation_data_trn_present: true, teacher_profile_trn_present: false }
+      :tra_record_not_found
+
+    else
+      :eligible_for_fip_funding
+    end
+  end
+
+  def validation_state_data
+    @validation_state_data ||= {
+      manual_checks: manual_checks?,
+      different_trn_reason: different_trn_reason?,
+      latest_request_for_details_delivered: latest_request_for_details_delivered?,
+      latest_request_for_details_failed: latest_request_for_details_failed?,
+      latest_request_for_details_submitted: latest_request_for_details_submitted?,
+      validation_data_api_failed: validation_data_api_failed?,
+      mentor: mentor?,
+      participant_validation_data_blank: participant_validation_data_blank?,
+      teacher_profile_trn_present: teacher_profile_trn_present?,
+      validation_data_trn_present: validation_data_trn_present?,
+      awaiting_validation_data: awaiting_validation_data?,
+    }
+  end
+
+  def training_eligibility_state_data
+    @training_eligibility_state_data ||= {
+      eligibility_blank: eligibility_blank?,
+      teacher_profile_trn_present: teacher_profile_trn_present?,
+      manual_checks: manual_checks?,
+      active_reason: active_reason?,
+      duplicate_profile_reason: duplicate_profile_reason?,
+      no_qts_reason: no_qts_reason?,
+      exempt_from_induction_reason: exempt_from_induction_reason?,
+      previous_induction_reason: previous_induction_reason?,
+      ineligible: ineligible?,
+      mentored: mentored?,
+      mentor: mentor?,
+      validation_data_trn_present: validation_data_trn_present?,
+      ect: ect?,
+    }
+  end
+
+  def fip_funding_eligibility_state_data
+    @fip_funding_eligibility_state_data ||= {
+      eligibility_blank: eligibility_blank?,
+      teacher_profile_trn_present: teacher_profile_trn_present?,
+      eligible: eligible?,
+      ineligible: ineligible?,
+      mentor: mentor?,
+      manual_checks: manual_checks?,
+      active_reason: active_reason?,
+      ect: ect?,
+    }
+  end
+
+  def mentor_fip_funding_eligibility_state_data
+    @mentor_fip_funding_eligibility_state_data ||= {
+      ineligible: ineligible?,
+      mentor: mentor?,
+      previous_participation_reason: previous_participation_reason?,
+      secondary_profile: secondary_profile?,
+      primary_profile: primary_profile?,
+      duplicate_profile_reason: duplicate_profile_reason?,
+    }
+  end
+
+  def ect_fip_funding_eligibility_state_data
+    @ect_fip_funding_eligibility_state_data ||= {
+      teacher_profile_trn_present: teacher_profile_trn_present?,
+      ineligible: ineligible?,
+      mentor: mentor?,
+      manual_checks: manual_checks?,
+      duplicate_profile_reason: duplicate_profile_reason?,
+      no_induction_reason: no_induction_reason?,
+      no_qts_reason: no_qts_reason?,
+      exempt_from_induction_reason: exempt_from_induction_reason?,
+      previous_induction_reason: previous_induction_reason?,
+      validation_data_trn_present: validation_data_trn_present?,
+    }
+  end
+
+  def training_state_data
+    @training_state_data ||= {
+      changed_training: changed_training?,
+      leaving_school: leaving_school?,
+      left_school: left_school?,
+      joining_school: joining_school?,
+      withdrawn_participant: withdrawn_participant?,
+      withdrawn_training: withdrawn_training?,
+      deferred_training: deferred_training?,
+      completed_training: completed_training?,
+    }
+  end
+
+  def ect_training_state_data
+    @ect_training_state_data ||= {
+      on_fip: on_fip?,
+      on_cip: on_cip?,
+      on_design_our_own: on_design_our_own?,
+      partnership: partnership?,
+      induction_start_date_in_past: induction_start_date_in_past?,
+    }
+  end
+
+  def mentoring_state_data
+    @mentoring_state_data ||= {
+      mentor: mentor?,
+      mentoring: mentoring?,
+      previous_participation_reason: previous_participation_reason?,
+    }
+  end
+
+  def record_state_data
+    @record_state_data ||= {
+      withdrawn_participant: withdrawn_participant?,
+      transitioning_or_not_currently_training: transitioning_or_not_currently_training?,
+      validation_status_valid: validation_status_valid?,
+      eligible_for_training: eligible_for_training?,
+      on_fip: on_fip?,
+      application_funding_state: applicable_funding_state?,
+      mentor: mentor?,
+    }
+  end
 
   def latest_request_for_details
     if induction_record.respond_to?(:transient_latest_request_for_details_status)
@@ -358,20 +591,28 @@ private
     ].include?(fip_funding_eligibility_state)
   end
 
-  def on_fip?
-    relevant_induction_programme&.full_induction_programme?
-  end
-
-  def on_cip?
-    relevant_induction_programme&.core_induction_programme?
-  end
-
-  def on_design_our_own?
-    relevant_induction_programme&.design_our_own?
+  def ect?
+    participant_profile.ect?
   end
 
   def mentor?
     participant_profile.mentor?
+  end
+
+  def relevant_induction_programme
+    @relevant_induction_programme ||= induction_record&.induction_programme || participant_profile.school_cohort&.default_induction_programme
+  end
+
+  def on_fip?
+    !!relevant_induction_programme&.full_induction_programme?
+  end
+
+  def on_cip?
+    !!relevant_induction_programme&.core_induction_programme?
+  end
+
+  def on_design_our_own?
+    !!relevant_induction_programme&.design_our_own?
   end
 
   def primary_profile?
@@ -382,114 +623,96 @@ private
     participant_profile.secondary_profile?
   end
 
-  def sparsity_uplift?
-    participant_profile.sparsity_uplift
-  end
-
-  def pupil_premium_uplift?
-    participant_profile.pupil_premium_uplift
-  end
-
   def uplift?
-    sparsity_uplift? || pupil_premium_uplift?
-  end
-
-  def eligibility_not_checked?
-    participant_profile.ecf_participant_eligibility.blank? && (participant_profile.ect? || participant_profile.teacher_profile&.trn.present?)
-  end
-
-  def eligible?
-    participant_profile.ecf_participant_eligibility&.eligible_status?
-  end
-
-  def eligible_no_qts?
-    eligible? && participant_profile.ecf_participant_eligibility&.no_qts_reason?
-  end
-
-  def ineligible?
-    participant_profile.ecf_participant_eligibility&.ineligible_status?
-  end
-
-  def ineligible_active_flags?
-    ineligible? && participant_profile.ecf_participant_eligibility&.active_flags_reason?
-  end
-
-  def ineligible_exempt_from_induction?
-    ineligible? && participant_profile.ecf_participant_eligibility&.exempt_from_induction_reason?
-  end
-
-  def ineligible_duplicate_profile?
-    ineligible? && participant_profile.ecf_participant_eligibility&.duplicate_profile_reason?
-  end
-
-  def ineligible_previous_induction?
-    ineligible? && participant_profile.ecf_participant_eligibility&.previous_induction_reason?
-  end
-
-  def ineligible_previous_participation?
-    ineligible? && participant_profile.ecf_participant_eligibility&.previous_participation_reason?
-  end
-
-  def previous_participation?
-    participant_profile.ecf_participant_eligibility&.previous_participation_reason?
-  end
-
-  def manual_checks?
-    participant_profile.ecf_participant_eligibility&.manual_check_status?
-  end
-
-  def manual_check_active_flags?
-    manual_checks? && participant_profile.ecf_participant_eligibility&.active_flags_reason?
-  end
-
-  def manual_check_different_trn?
-    manual_checks? && participant_profile.ecf_participant_eligibility&.different_trn_reason?
-  end
-
-  def manual_check_no_induction?
-    manual_checks? && participant_profile.ecf_participant_eligibility&.no_induction_reason?
-  end
-
-  def manual_check_no_qts?
-    manual_checks? && participant_profile.ecf_participant_eligibility&.no_qts_reason?
-  end
-
-  def induction_start_date_in_past?
-    participant_profile.induction_start_date&.past?
+    participant_profile.sparsity_uplift? || participant_profile.pupil_premium_uplift?
   end
 
   def awaiting_validation_data?
-    participant_profile.teacher_profile&.trn.nil? && participant_profile.ecf_participant_validation_data.blank?
+    participant_validation_data_blank? && !teacher_profile_trn_present?
   end
 
-  def request_for_details_submitted?
-    awaiting_validation_data? && latest_request_for_details&.submitted?
+  def eligibility_blank?
+    participant_profile.ecf_participant_eligibility.blank?
   end
 
-  def request_for_details_failed?
-    awaiting_validation_data? && latest_request_for_details&.failed?
+  def eligible?
+    !!participant_profile.ecf_participant_eligibility&.eligible_status?
   end
 
-  def request_for_details_delivered?
-    awaiting_validation_data? && latest_request_for_details&.delivered?
+  def ineligible?
+    !!participant_profile.ecf_participant_eligibility&.ineligible_status?
   end
 
-  def validation_api_failed?
-    participant_profile.ecf_participant_validation_data&.api_failure || false
+  def manual_checks?
+    !!participant_profile.ecf_participant_eligibility&.manual_check_status?
   end
 
-  def no_tra_record_found?
-    return participant_profile.teacher_profile&.trn.nil? unless mentor?
-
-    participant_profile.ecf_participant_validation_data&.trn.present? && participant_profile.teacher_profile&.trn.nil?
+  def exempt_from_induction_reason?
+    !!participant_profile.ecf_participant_eligibility&.exempt_from_induction_reason?
   end
 
-  def no_partnership?
-    relevant_induction_programme&.partnership&.lead_provider.nil?
+  def previous_induction_reason?
+    !!participant_profile.ecf_participant_eligibility&.previous_induction_reason?
   end
 
-  def relevant_induction_programme
-    @relevant_induction_programme ||= induction_record&.induction_programme || participant_profile.school_cohort&.default_induction_programme
+  def previous_participation_reason?
+    !!participant_profile.ecf_participant_eligibility&.previous_participation_reason?
+  end
+
+  def different_trn_reason?
+    !!participant_profile.ecf_participant_eligibility&.different_trn_reason?
+  end
+
+  def duplicate_profile_reason?
+    !!participant_profile.ecf_participant_eligibility&.duplicate_profile_reason?
+  end
+
+  def active_reason?
+    !!participant_profile.ecf_participant_eligibility&.active_flags_reason?
+  end
+
+  def no_induction_reason?
+    !!participant_profile.ecf_participant_eligibility&.no_induction_reason?
+  end
+
+  def no_qts_reason?
+    !!participant_profile.ecf_participant_eligibility&.no_qts_reason?
+  end
+
+  def induction_start_date_in_past?
+    !!participant_profile.induction_start_date&.past?
+  end
+
+  def teacher_profile_trn_present?
+    participant_profile.teacher_profile&.trn.present?
+  end
+
+  def validation_data_api_failed?
+    !!participant_profile.ecf_participant_validation_data&.api_failure
+  end
+
+  def validation_data_trn_present?
+    participant_profile.ecf_participant_validation_data&.trn.present?
+  end
+
+  def participant_validation_data_blank?
+    participant_profile.ecf_participant_validation_data.blank?
+  end
+
+  def latest_request_for_details_submitted?
+    !!latest_request_for_details&.submitted?
+  end
+
+  def latest_request_for_details_failed?
+    !!latest_request_for_details&.failed?
+  end
+
+  def latest_request_for_details_delivered?
+    !!latest_request_for_details&.delivered?
+  end
+
+  def partnership?
+    relevant_induction_programme&.partnership&.lead_provider.present?
   end
 
   def withdrawn_training?
@@ -505,22 +728,22 @@ private
   end
 
   def completed_training?
-    induction_record&.completed_induction_status?
+    !!induction_record&.completed_induction_status?
   end
 
   def changed_training?
-    induction_record&.changed_induction_status?
+    !!induction_record&.changed_induction_status?
   end
 
-  def is_leaving_school?
-    induction_record&.leaving_induction_status? && induction_record&.end_date&.future?
+  def leaving_school?
+    !!(induction_record&.leaving_induction_status? && induction_record&.end_date&.future?)
   end
 
-  def has_left_school?
-    induction_record&.leaving_induction_status? && induction_record&.end_date&.past?
+  def left_school?
+    !!(induction_record&.leaving_induction_status? && induction_record&.end_date&.past?)
   end
 
-  def is_joining_school?
-    induction_record&.active_induction_status? && induction_record&.school_transfer && induction_record&.start_date&.future?
+  def joining_school?
+    !!(induction_record&.active_induction_status? && induction_record&.school_transfer && induction_record&.start_date&.future?)
   end
 end
