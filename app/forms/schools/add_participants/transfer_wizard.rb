@@ -116,13 +116,13 @@ module Schools
       def transfer_participant!
         profile = existing_participant_profile
         data_store.set(:was_withdrawn_participant, withdrawn_participant?)
-        new_induction_record = if transfer_has_the_same_provider? || was_withdrawn_participant?
+        new_induction_record = if sit_adding_themself_as_existing_mentor?
+                                 transfer_sit_to_mentor_profile
+                               elsif transfer_has_the_same_provider? || was_withdrawn_participant?
                                  data_store.set(:same_provider, true)
                                  transfer_fip_participant_to_schools_programme(profile)
                                elsif !needs_to_confirm_programme? || chose_to_join_school_programme?
                                  transfer_fip_participant_to_schools_programme(profile)
-                               elsif sit_adding_themself_as_existing_mentor?
-                                 transfer_sit_to_mentor_profile
                                else
                                  transfer_fip_participant_and_continue_existing_programme(profile)
                                end
