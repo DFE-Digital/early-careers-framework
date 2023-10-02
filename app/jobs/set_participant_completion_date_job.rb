@@ -10,7 +10,7 @@ class SetParticipantCompletionDateJob < ApplicationJob
 
   def perform
     CompletionCandidate.limit(MAX_CANDIDATES).each do |candidate|
-      Participants::CheckAndSetCompletionDate.call(candidate.participant_profile)
+      Participants::CheckAndSetCompletionDate.call(participant_profile: candidate.participant_profile)
       candidate.destroy!
     end
   rescue StandardError => e
