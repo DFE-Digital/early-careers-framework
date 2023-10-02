@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_19_093921) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_29_170240) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "fuzzystrmatch"
@@ -126,6 +126,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_19_093921) do
     t.datetime "updated_at", null: false
     t.index ["cohort_id", "lead_provider_id"], name: "index_cohorts_lead_providers_on_cohort_id_and_lead_provider_id"
     t.index ["lead_provider_id", "cohort_id"], name: "index_cohorts_lead_providers_on_lead_provider_id_and_cohort_id"
+  end
+
+  create_table "completion_candidates", id: false, force: :cascade do |t|
+    t.uuid "participant_profile_id"
+    t.index ["participant_profile_id"], name: "index_completion_candidates_on_participant_profile_id", unique: true
   end
 
   create_table "core_induction_programmes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -1064,6 +1069,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_19_093921) do
   add_foreign_key "call_off_contracts", "lead_providers"
   add_foreign_key "cohorts_lead_providers", "cohorts"
   add_foreign_key "cohorts_lead_providers", "lead_providers"
+  add_foreign_key "completion_candidates", "participant_profiles", on_delete: :cascade
   add_foreign_key "data_stage_school_changes", "data_stage_schools"
   add_foreign_key "data_stage_school_links", "data_stage_schools"
   add_foreign_key "deleted_duplicates", "participant_profiles", column: "primary_participant_profile_id"
