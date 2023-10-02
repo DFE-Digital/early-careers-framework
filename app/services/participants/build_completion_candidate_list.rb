@@ -33,10 +33,14 @@ module Participants
           AND c.start_year IN (2020,2021,2022)
           AND pp.induction_start_date IS NOT NULL
           AND pp.induction_completion_date IS NULL
-          AND pp.created_at < '2023-9-1'
+          AND pp.created_at < '#{registration_start_date}'
           AND tp.trn IS NOT NULL;
         SQL
       )
+    end
+
+    def registration_start_date
+      Cohort.find_by(start_year: 2023).registration_start_date.to_date.to_s
     end
   end
 end
