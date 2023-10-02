@@ -28,5 +28,17 @@ RSpec.describe "DfE Analytics", type: :request do
     it "does not send a web request event for GET /check" do
       expect { get check_path }.not_to have_sent_analytics_event_types(:web_request)
     end
+
+    context "with lead provider API requests" do
+      let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
+      let(:token)             { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
+      let(:bearer_token)      { "Bearer #{token}" }
+
+      it "sends DFE Analytics web request event" do
+        default_headers[:Authorization] = bearer_token
+
+        expect { get "/api/v3/participants/ecf" }.to have_sent_analytics_event_types(:web_request)
+      end
+    end
   end
 end
