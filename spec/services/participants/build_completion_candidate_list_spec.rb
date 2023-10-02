@@ -33,6 +33,17 @@ RSpec.describe Participants::BuildCompletionCandidateList do
         expect(CompletionCandidate.all).not_to include ect_22
       end
     end
+
+    context "when an ECT has an induction completion date" do
+      before do
+        ect_22.update!(induction_completion_date: 1.week.ago)
+      end
+
+      it "does not add them to the list" do
+        service_call
+        expect(CompletionCandidate.all).not_to include ect_22
+      end
+    end
   end
 
   def make_ect_for_cohort(cohort)
