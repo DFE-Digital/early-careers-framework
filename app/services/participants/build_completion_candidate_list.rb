@@ -22,7 +22,7 @@ module Participants
 
     def build_candidate_list
       ActiveRecord::Base.connection.execute(
-        <<~SQL
+        <<~SQL,
           INSERT INTO completion_candidates (participant_profile_id)
           SELECT pp.id
           FROM participant_profiles pp

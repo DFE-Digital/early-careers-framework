@@ -39,7 +39,7 @@ RSpec.describe Participants::BuildCompletionCandidateList do
     start_date = Date.new(cohort.start_year, 9, 1)
     travel_to(start_date) do
       schedule = create(:seed_finance_schedule, cohort:)
-      profile = create(:ect_participant_profile, schedule:, induction_start_date: start_date)
+      create(:ect_participant_profile, schedule:, induction_start_date: start_date)
     end
   end
 end

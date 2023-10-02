@@ -4,10 +4,12 @@ module Participants
   class CheckAndSetCompletionDate < BaseService
     def call
       return unless participant_profile.ect?
+
       Induction::Complete.call(participant_profile:, completion_date:) if completion_date.present?
     end
 
   private
+
     attr_reader :participant_profile
 
     def initialize(participant_profile:)
