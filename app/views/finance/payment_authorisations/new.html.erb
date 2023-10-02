@@ -2,7 +2,7 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
-    <h1 class="govuk-heading-xl"><%= I18n.t("finance.statements.payment_authorisations.title", statement_name: @statement.name) %></h1>
+    <h1 class="govuk-heading-l"><%= I18n.t("finance.statements.payment_authorisations.title", statement_name: @statement.name) %></h1>
 
     <%= form_for @payment_authorisation_form, url: finance_statement_payment_authorisations_path(@statement), as: :finance_payment_authorisation do |f| %>
       <%= f.govuk_error_summary %>

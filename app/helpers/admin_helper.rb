@@ -61,8 +61,8 @@ module AdminHelper
     content_for(:title) { "#{full_name} - #{section}" }
 
     safe_join([
-      tag.span(role, class: "govuk-caption-xl"),
-      tag.h1(class: "govuk-heading-xl govuk-!-margin-bottom-4") { safe_join([full_name, visually_hidden]) },
+      tag.span(role, class: "govuk-caption-l"),
+      tag.h1(class: "govuk-heading-l govuk-!-margin-bottom-4") { safe_join([full_name, visually_hidden]) },
       tag.p(class: "govuk-!-margin-top-1 govuk-!-margin-bottom-1") do
         safe_join(
           [

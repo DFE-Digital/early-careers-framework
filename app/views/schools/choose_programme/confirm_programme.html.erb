@@ -6,8 +6,8 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
 
-        <span class="govuk-caption-xl"><%= @school.name %></span>
-        <h1 class="govuk-heading-xl">Confirm your training programme</h1>
+        <span class="govuk-caption-l"><%= @school.name %></span>
+        <h1 class="govuk-heading-l">Confirm your training programme</h1>
         <p class="govuk-body govuk-!-margin-bottom-7">You’ve chosen to <%= t @induction_choice_form.programme_choice, scope: "schools.induction_choice_form.confirmation_options", cohort: @induction_choice_form.cohort.display_name %>.</p>
 
     <%= form_for @induction_choice_form, url: choose_appropriate_body_schools_choose_programme_path do |f| %>

@@ -4,8 +4,8 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <span class="govuk-caption-xl"><%= @cohort.display_name %></span>
-    <h1 class="govuk-heading-xl govuk-!-margin-top-2">Choose an induction programme</h1>
+    <span class="govuk-caption-l"><%= @cohort.display_name %></span>
+    <h1 class="govuk-heading-l govuk-!-margin-top-2">Choose an induction programme</h1>
     <p class="govuk-body-l">
       <strong>You’ve chosen to:</strong>
       <%= I18n.t "schools.induction_choice_form.confirmation_options.#{@school_cohort.induction_programme_choice}", cohort: @school_cohort.cohort.start_year %>

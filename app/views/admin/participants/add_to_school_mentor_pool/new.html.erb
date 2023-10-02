@@ -4,8 +4,8 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
 
-    <span class="govuk-caption-xl">Adding <%=  @participant_profile.user.full_name %> to a school mentor pool</span>
-    <h1 class="govuk-heading-xl">What’s the URN of the school</h1>
+    <span class="govuk-caption-l">Adding <%=  @participant_profile.user.full_name %> to a school mentor pool</span>
+    <h1 class="govuk-heading-l">What’s the URN of the school</h1>
     <%= form_for @add_mentor_to_school, url: admin_participant_add_to_school_mentor_pool_path(@participant_profile), method: :post do |f| %>
       <%= f.govuk_error_summary %>
       <%= f.govuk_text_field :school_urn, label: { text: "School URN" }, hint: { text: "Enter the 6-digit URN of the new school, for example 123456" } %>

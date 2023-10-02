@@ -2,7 +2,7 @@
   <div class="govuk-grid-column-two-thirds">
     <% if current_user.lead_provider? %>
       <%= render partial: "navigation" %>
-      <h1 class="govuk-heading-xl"><%= @lead_provider.name %></h1>
+      <h1 class="govuk-heading-l"><%= @lead_provider.name %></h1>
       <% @lead_provider.cohorts.where(start_year: ..Cohort.active_registration_cohort.start_year).each do |cohort| %>
         <h2 class="govuk-heading-m">
           <%= govuk_link_to "Confirm your schools for the #{cohort.description} academic year", lead_providers_report_schools_start_path(cohort: cohort) %>
@@ -15,7 +15,7 @@
       </h2>
       <p>See which schools have added their early career teachers and mentors.</p>
     <% else %>
-      <h1 class="govuk-heading-xl">You cannot use this service yet</h1>
+      <h1 class="govuk-heading-l">You cannot use this service yet</h1>
       <p class="govuk-body">
         If your school induction tutor has added your information as an early career teacher (ECT) or mentor, we’ll
         contact you soon.

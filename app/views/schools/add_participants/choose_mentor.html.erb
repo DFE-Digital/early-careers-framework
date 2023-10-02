@@ -9,8 +9,8 @@
       <%= f.govuk_error_summary %>
       <%= f.hidden_field :mentor_id, value: '' %>
       <%= f.govuk_radio_buttons_fieldset :mentor_id,
-                                         legend: { text: title, tag: 'h1', size: 'xl' },
-                                         caption: { text: @school.name, size: 'xl' } do %>
+                                         legend: { text: title, tag: 'h1', size: 'l' },
+                                         caption: { text: @school.name, size: 'l' } do %>
         <% @wizard.mentor_options.each_with_index do |mentor, i| %>
           <%= f.govuk_radio_button :mentor_id, mentor.id, label: { text: mentor.full_name }, link_errors: i == 0 %>
         <% end %>

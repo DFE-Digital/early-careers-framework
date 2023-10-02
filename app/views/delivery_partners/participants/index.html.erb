@@ -1,5 +1,5 @@
-<span class="govuk-caption-xl">Delivery partner</span>
-<h1 class="govuk-heading-xl"><%= delivery_partner.name %> Participants</h1>
+<span class="govuk-caption-l">Delivery partner</span>
+<h1 class="govuk-heading-l"><%= delivery_partner.name %> Participants</h1>
 
 <p class="govuk-body govuk-!-text-align-right">
   <%= govuk_link_to "Download (csv)", delivery_partner_participants_path(params.permit(:query, :role, :academic_year, :status).merge({format: :csv})) %>

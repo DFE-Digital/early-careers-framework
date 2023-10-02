@@ -7,7 +7,7 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
 
-        <span class="govuk-caption-xl"><%= @school.name %></span>
+        <span class="govuk-caption-l"><%= @school.name %></span>
 
         <%= form_with model: @wizard.form, url: url_for(action: :update), scope: @wizard.to_key, method: :put do |f| %>
             <%= f.govuk_error_summary %>
@@ -16,7 +16,7 @@
                 simple_yes_no_options,
                 :id,
                 :name,
-                legend: { text: title, tag: 'h1', size: 'xl' }) do %>
+                legend: { text: title, tag: 'h1', size: 'l' }) do %>
 
                 <h2 class="govuk-heading-s govuk-!-margin-bottom-1 govuk-!-margin-top-5">Your DfE-funded lead
                     provider</h2>
