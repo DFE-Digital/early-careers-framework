@@ -7,6 +7,14 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
+## 2 October 2023
+
+We’ve added the new NPQ in leading primary mathematics to the production environment.
+
+The new course’s identifier is `npq-leading-primary-mathematics`. Functionality is the same as the other existing NPQ courses.
+
+Providers should ensure that any participants they accept for this course are on the correct schedule.
+
 ## 13 September 2023
 
 We’ve added the new NPQ in leading primary mathematics to the sandbox environment.
@@ -60,7 +68,7 @@ Providers may submit extended declarations using the following values in the `de
 
 Providers will be notified ahead of this functionality becoming available in the production environment.
 
-## 10th August 2023
+## 10 August 2023
 
 Lead providers can now ‘resume’ NPQ and ECF participants they've previously withdrawn.
 
