@@ -171,7 +171,7 @@ end
 group :test do
   gem "axe-core-rspec"
   gem "capybara", "~> 3.39"
-  gem "govuk-rspec-helpers", git: "https://github.com/x-govuk/govuk-rspec-helpers.git"
+  gem "govuk-rspec-helpers"
   gem "jsonapi-rspec"
   gem "launchy"
   gem "pundit-matchers", "~> 1.9.0"
