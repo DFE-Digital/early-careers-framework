@@ -3,8 +3,6 @@
 module Api
   class ApiController < ActionController::API
     include ActionController::MimeResponds
-    include DfE::Analytics::Requests
-
     before_action :remove_charset
     rescue_from ActionController::ParameterMissing, with: :missing_parameter_response
     rescue_from ActionController::UnpermittedParameters, with: :unpermitted_parameter_response
