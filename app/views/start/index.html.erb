@@ -43,3 +43,8 @@
     </aside>
   </div>
 </div>
+
+Your IP:
+<p>1. <%= request.env["action_dispatch.remote_ip"] %></p>
+<p>2. <%= request.env["HTTP_X_FORWARDED_FOR"] %></p>
+<p>2. <%= request.ip %></p>
