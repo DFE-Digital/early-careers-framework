@@ -195,13 +195,14 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
                               date: "2021-06-31T02:22:32.000Z",
                             },
                             created_at: "2022-11-09T16:07:38Z",
+                            induction_end_date: "2022-01-12",
                           },
                         ],
-                        "participant_id_changes": [
+                        participant_id_changes: [
                           {
-                            "from_participant_id": "db3a7848-7308-4879-942a-c4a70ced400a",
-                            "to_participant_id": "23dd8d66-e11f-4139-9001-86b4f9abcb02",
-                            "changed_at": "2023-09-23T02:22:32.000Z",
+                            from_participant_id: "db3a7848-7308-4879-942a-c4a70ced400a",
+                            to_participant_id: "23dd8d66-e11f-4139-9001-86b4f9abcb02",
+                            changed_at: "2023-09-23T02:22:32.000Z",
                           },
                         ],
                       },
@@ -356,13 +357,14 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
                             },
                             deferral: nil,
                             created_at: "2022-11-09T16:07:38Z",
+                            induction_end_date: "2022-01-12",
                           },
                         ],
-                        "participant_id_changes": [
+                        participant_id_changes: [
                           {
-                            "from_participant_id": "db3a7848-7308-4879-942a-c4a70ced400a",
-                            "to_participant_id": "23dd8d66-e11f-4139-9001-86b4f9abcb02",
-                            "changed_at": "2023-09-23T02:22:32.000Z",
+                            from_participant_id: "db3a7848-7308-4879-942a-c4a70ced400a",
+                            to_participant_id: "23dd8d66-e11f-4139-9001-86b4f9abcb02",
+                            changed_at: "2023-09-23T02:22:32.000Z",
                           },
                         ],
                       },

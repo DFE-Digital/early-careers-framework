@@ -426,7 +426,8 @@ For more detailed information see the specifications for this [view multiple ECF
             "delivery_partner_id": "cd3a12347-7308-4879-942a-c4a70ced400a",
             "withdrawal": null,
             "deferral": null,
-            "created_at": "2021-05-31T02:22:32.000Z"
+            "created_at": "2021-05-31T02:22:32.000Z",
+            "induction_end_date": "2022-01-12"
           }
         ],
         "participant_id_changes": [
@@ -486,7 +487,8 @@ For more detailed information see the specifications for this [view a single ECF
           "delivery_partner_id": "cd3a12347-7308-4879-942a-c4a70ced400a",
           "withdrawal": null,
           "deferral": null,
-          "created_at": "2021-05-31T02:22:32.000Z"
+          "created_at": "2021-05-31T02:22:32.000Z",
+          "induction_end_date": "2022-01-12"
         }
       ],
       "participant_id_changes": [
@@ -509,9 +511,9 @@ A single mentor can be assigned to multiple ECTs, including ECTs who are trainin
 
 ‘Unfunded mentors’ are mentors who are registered with other providers.
 
-A participant will have the same `participant_id` throughout the API. 
+A participant will have the same `participant_id` throughout the API.
 
-If a participant is a mentor and linked to an ECT, then the `mentor_id` that appears on the response for their ECT will be the mentor’s `participant_id`. 
+If a participant is a mentor and linked to an ECT, then the `mentor_id` that appears on the response for their ECT will be the mentor’s `participant_id`.
 
 If the mentor is an unfunded mentor, then the identifier will be their `participant_id`.
 
@@ -723,7 +725,7 @@ As soon as school induction tutors have entered the information to the DfE servi
 GET /api/v3/participants/ecf/transfers
 ```
 
-#### What providers will see in the API 
+#### What providers will see in the API
 
 ##### What providers will see when a participant is leaving them
 | Scenario | Participant status | Transfer response |
@@ -758,7 +760,7 @@ An example response body is listed below. Successful requests will return respon
 
 * transfer data can appear incomplete as induction tutors can enter transfer information at different times. **For example,** a participant is planning on transferring from school X to school Y. School X’s induction tutor confirms the participant will be leaving, but school Y’s induction tutor has not yet confirmed the participant will be joining. At this stage the only data available via the API is from the school the participant is leaving
 * where a participant’s transfer from one provider to another is complete, the original provider should maintain data accuracy and [notify DfE that the participant has withdrawn from training](/api-reference/ecf/guidance/#notify-dfe-a-participant-has-withdrawn-from-training). **For example,** a participant has transferred from provider X to provider Y. The relevant school induction tutors have confirmed that the participant has left one school and joined the other. At this stage provider X will [view the participant’s data](/api-reference/ecf/guidance.html#view-a-single-participant-39-s-data) to see `“participant_status”: “left”`. They can then [notify DfE a participant has withdrawn from training with them](/api-reference/ecf/guidance/#notify-dfe-a-participant-has-withdrawn-from-training). This will update the participant’s `training_status`  to `withdrawn`
-* it’s possible for the induction tutor from the new school to report a joiner before the old school’s induction tutor. In this case, the `leaving_date` value would be null until reported by the old school’s induction tutor 
+* it’s possible for the induction tutor from the new school to report a joiner before the old school’s induction tutor. In this case, the `leaving_date` value would be null until reported by the old school’s induction tutor
 
 For more detailed information see the specifications for this [view participant transfers endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-transfers-get).
 
@@ -820,7 +822,7 @@ An example response body is listed below. Successful requests will return respon
 
 * transfer data can appear incomplete as induction tutors can enter transfer information at different times. **For example,** a participant is planning on transferring from school X to school Y. School X’s induction tutor confirms the participant will be leaving, but school Y’s induction tutor has not yet confirmed the participant will be joining. At this stage the only data available via the API is from the school the participant is leaving
 * where a participant’s transfer from one provider to another is complete, the original provider should maintain data accuracy and [notify DfE that the participant has withdrawn from training](/api-reference/ecf/guidance/#notify-dfe-a-participant-has-withdrawn-from-training). **For example,** a participant has transferred from provider X to provider Y. The relevant school induction tutors have confirmed that the participant has left one school and joined the other. At this stage provider X will [view the participant’s data](/api-reference/ecf/guidance.html#view-a-single-participant-39-s-data) to see `“participant_status”: “left”`. They should then [notify DfE a participant has withdrawn from training with them](/api-reference/ecf/guidance/#notify-dfe-a-participant-has-withdrawn-from-training). This will update the participant’s `training_status`  to `withdrawn`
-* it’s possible for the induction tutor from the new school to report a joiner before the old school’s induction tutor. In this case, the `leaving_date` value would be null until reported by the old school’s induction tutor 
+* it’s possible for the induction tutor from the new school to report a joiner before the old school’s induction tutor. In this case, the `leaving_date` value would be null until reported by the old school’s induction tutor
 
 For more detailed information see the specifications for this [view a participant transfer endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-id-transfers-get).
 

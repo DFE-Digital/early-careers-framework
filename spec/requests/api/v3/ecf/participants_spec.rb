@@ -11,7 +11,7 @@ RSpec.describe "API ECF Participants", type: :request do
   let!(:school_cohort) { create(:school_cohort, :fip, :with_induction_programme, lead_provider: cpd_lead_provider.lead_provider, cohort: cohort_2021) }
   let!(:mentor_profile) do
     travel_to 3.days.ago do
-      create(:mentor, school_cohort:, lead_provider:)
+      create(:mentor, school_cohort:, lead_provider:, induction_completion_date: Date.parse("2022-01-12"))
     end
   end
 
@@ -32,7 +32,7 @@ RSpec.describe "API ECF Participants", type: :request do
   end
 
   let!(:withdrawn_ect_profile_record) { create(:ect, :withdrawn_record, school_cohort:, lead_provider:) }
-  let(:early_career_teacher_profile) { create(:ect, :eligible_for_funding, school_cohort:) }
+  let(:early_career_teacher_profile) { create(:ect, :eligible_for_funding, school_cohort:, induction_completion_date: Date.parse("2022-01-12")) }
 
   describe "GET /api/v3/participants/ecf" do
     context "when authorized" do
@@ -308,6 +308,7 @@ RSpec.describe "API ECF Participants", type: :request do
                 "withdrawal": nil,
                 "deferral": nil,
                 "created_at": early_career_teacher_profile.created_at.rfc3339,
+                "induction_end_date": early_career_teacher_profile.induction_completion_date&.strftime("%Y-%m-%d"),
               }],
             },
           },
