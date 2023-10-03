@@ -8,6 +8,8 @@ module Admin
     # show 2023 pilot stats
     def show
       @pilot_stats = get_pilot_stats
+      @remote_ip = request.remote_ip
+      @real_ip = request.headers['x-real-ip']
     end
 
   private
