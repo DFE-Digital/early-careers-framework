@@ -179,4 +179,6 @@ Rails.application.configure do
   end
 
   config.ssl_options = { redirect: { exclude: ->(request) { request.path.include?("/check") } } }
+
+  config.middleware.insert_before ActionDispatch::RemoteIp, FixAzureXForwardedForMiddleware
 end

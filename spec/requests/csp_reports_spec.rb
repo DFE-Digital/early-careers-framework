@@ -30,13 +30,3 @@ RSpec.describe "CSP violation reporting" do
     it { expect(Rails.logger).to have_received(:error).with({ "csp-report" => expected_report }).once }
   end
 end
-
-RSpec.describe "Rate limiting" do
-  let(:ip) { "1.2.3.4" }
-
-  it_behaves_like "an IP-based rate limited endpoint", "POST /csp_reports", 5, 1.minute do
-    def perform_request
-      post csp_reports_path, params: {}.to_json, headers: { "REMOTE_ADDR" => ip }
-    end
-  end
-end

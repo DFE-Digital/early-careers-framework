@@ -1,33 +1,52 @@
 # frozen_string_literal: true
 
-RSpec.shared_examples "an IP-based rate limited endpoint" do |desc, limit, period|
+shared_examples "a rate limited endpoint", rack_attack: true do |desc, period|
   describe desc do
-    let(:memory_store) { ActiveSupport::Cache.lookup_store(:memory_store) }
+    let(:limit) { 3 }
+
+    subject { response }
 
     before do
+      memory_store = ActiveSupport::Cache.lookup_store(:memory_store)
       allow(Rack::Attack.cache).to receive(:store) { memory_store }
+
+      allow(Rails.logger).to receive(:warn)
+
+      freeze_time
+
+      # Reduce the request limit to make the tests faster.
+      Rack::Attack.throttles[desc].instance_variable_set(:@limit, limit)
+
       request_count.times { perform_request }
     end
-
-    subject { response.status }
 
     context "when fewer than rate limit" do
       let(:request_count) { limit - 1 }
 
-      it { is_expected.to_not eq(429) }
+      it { is_expected.to have_http_status(:success) }
     end
 
     context "when more than rate limit" do
       let(:request_count) { limit + 1 }
 
-      it { is_expected.to eq(429) }
+      it { is_expected.to have_http_status(:too_many_requests) }
 
-      context "when time restriction has passed" do
-        it "allows another request" do
-          travel period + 1.second
-          perform_request
-          expect(response.status).to_not eq(429)
-        end
+      it "logs a warning" do
+        expect(Rails.logger).to have_received(:warn).with(
+          %r{\[rack-attack\] Throttled request [a-zA-Z0-9]{20} from #{Regexp.escape(request.remote_ip)} to '#{request.path}'},
+        )
+      end
+
+      it "allows another request when the time restriction has passed" do
+        travel period + 10.seconds
+        perform_request
+        is_expected.to have_http_status(:success)
+      end
+
+      it "allows another request if the condition changes" do
+        change_condition
+        perform_request
+        is_expected.to have_http_status(:success)
       end
     end
   end
