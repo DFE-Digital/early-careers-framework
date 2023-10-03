@@ -50,7 +50,7 @@
 </dl>
 
 <% if @eligibility_import.import_errors.any? %>
-  <h2 class="govuk-heading-l"><%= t(".table.import_errors") %></h2>
+  <h2 class="govuk-heading-m"><%= t(".table.import_errors") %></h2>
 
   <ul>
     <% @eligibility_import.import_errors.each do |import_error| %>

@@ -124,7 +124,7 @@
 </dl>
 
 <% if @school.school_links.any? %>
-  <h2 class="govuk-heading-l">School links</h2>
+  <h2 class="govuk-heading-m">School links</h2>
   <dl class="govuk-summary-list">
     <% @school.school_links.order(created_at: :desc).each do |link| %>
       <div class="govuk-summary-list__row">
