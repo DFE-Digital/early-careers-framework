@@ -184,3 +184,10 @@ aks-ssh: get-cluster-credentials
 aks-worker-ssh: get-cluster-credentials
 	$(if $(PULL_REQUEST_NUMBER), $(eval export APP_ID=review-$(PULL_REQUEST_NUMBER))-worker , $(eval export APP_ID=$(CONFIG_LONG)))
 	kubectl -n ${NAMESPACE} exec -ti --tty deployment/cpd-ecf-${APP_ID}-worker -- /bin/sh
+
+## ie: FILENAME=restart.txt make staging aks-copy-tmp-file
+## ie: FILENAME=restart.txt make ci production aks-copy-tmp-file
+aks-copy-tmp-file: get-cluster-credentials
+	$(if $(PULL_REQUEST_NUMBER), $(eval export APP_ID=review-$(PULL_REQUEST_NUMBER)) , $(eval export APP_ID=$(CONFIG_LONG)))
+	$(if $(FILENAME), , $(error Usage: FILENAME=restart.txt make staging aks-copy-tmp-file))
+	kubectl -n ${NAMESPACE} exec -ti --tty deployment/cpd-ecf-${APP_ID}-web -- cat /app/tmp/${FILENAME} > ${FILENAME}
