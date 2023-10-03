@@ -331,6 +331,7 @@ Rails.application.routes.draw do
           put "date-of-birth", action: :date_of_birth
           get "national-insurance-number", action: :nino, as: :nino
           put "national-insurance-number", action: :nino
+          get "preview-validation", action: :validate_details_preview, as: :validate_details_preview
           post "validate-details", action: :validate_details, as: :validate_details
         end
       end

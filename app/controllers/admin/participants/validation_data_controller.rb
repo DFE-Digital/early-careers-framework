@@ -4,7 +4,7 @@ module Admin::Participants
   class ValidationDataController < Admin::BaseController
     include RetrieveProfile
 
-    before_action :load_validation_data_form, except: :validate_details
+    before_action :load_validation_data_form, except: %i[validate_details validate_details_preview]
     before_action :check_can_update_validation_data, if: -> { request.put? || request.post? }
     before_action :save_and_redirect, except: :validate_details
 
@@ -24,6 +24,10 @@ module Admin::Participants
     def date_of_birth; end
 
     def nino; end
+
+    def validate_details_preview
+      @preview = Admin::Participants::ValidationPreview.call(@participant_profile)
+    end
 
     def validate_details
       generate_status_message(validate_participant!)
