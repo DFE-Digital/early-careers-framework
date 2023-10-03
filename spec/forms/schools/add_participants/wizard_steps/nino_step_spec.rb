@@ -20,7 +20,10 @@ RSpec.describe Schools::AddParticipants::WizardSteps::NinoStep, type: :model do
     let(:different_participant_type) { false }
     let(:ect_participant) { false }
     let(:mentor_participant) { false }
-    let(:already_at_school) { false }
+    let(:already_enrolled_at_school_and_training) { false }
+    let(:already_enrolled_at_school_but_leaving) { false }
+    let(:already_enrolled_at_school_but_withdrawn) { false }
+    let(:already_enrolled_at_school_but_deferred) { false }
     let(:different_name) { false }
     let(:found_dqt_record) { false }
     let(:sit_mentor) { false }
@@ -34,7 +37,10 @@ RSpec.describe Schools::AddParticipants::WizardSteps::NinoStep, type: :model do
       allow(wizard).to receive(:existing_participant_is_a_different_type?).and_return(different_participant_type)
       allow(wizard).to receive(:ect_participant?).and_return(ect_participant)
       allow(wizard).to receive(:mentor_participant?).and_return(mentor_participant)
-      allow(wizard).to receive(:already_enrolled_at_school?).and_return(already_at_school)
+      allow(wizard).to receive(:already_enrolled_at_school_and_training?).and_return(already_enrolled_at_school_and_training)
+      allow(wizard).to receive(:already_enrolled_at_school_but_leaving?).and_return(already_enrolled_at_school_but_leaving)
+      allow(wizard).to receive(:already_enrolled_at_school_but_withdrawn?).and_return(already_enrolled_at_school_but_withdrawn)
+      allow(wizard).to receive(:already_enrolled_at_school_but_deferred?).and_return(already_enrolled_at_school_but_deferred)
       allow(wizard).to receive(:dqt_record_has_different_name?).and_return(different_name)
       allow(wizard).to receive(:found_participant_in_dqt?).and_return(found_dqt_record)
       allow(wizard).to receive(:sit_mentor?).and_return(sit_mentor)
@@ -95,7 +101,7 @@ RSpec.describe Schools::AddParticipants::WizardSteps::NinoStep, type: :model do
           let(:mentor_participant) { true }
 
           context "when the ECT is already enrolled at the school" do
-            let(:already_at_school) { true }
+            let(:already_enrolled_at_school_and_training) { true }
 
             before do
               allow(wizard).to receive(:set_ect_mentor)
@@ -106,8 +112,8 @@ RSpec.describe Schools::AddParticipants::WizardSteps::NinoStep, type: :model do
         end
       end
 
-      context "when the participant is already enrolled at the school" do
-        let(:already_at_school) { true }
+      context "when the participant is already enrolled at the school and training" do
+        let(:already_enrolled_at_school_and_training) { true }
 
         it "returns :cannot_add_already_enrolled_at_school" do
           expect(step.next_step).to eql :cannot_add_already_enrolled_at_school

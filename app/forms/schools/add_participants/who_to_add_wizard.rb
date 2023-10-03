@@ -27,6 +27,9 @@ module Schools
           cannot_add_mismatch
           cannot_add_mentor_at_multiple_schools
           cannot_add_already_enrolled_at_school
+          cannot_add_already_enrolled_at_school_but_leaving
+          cannot_add_already_enrolled_at_school_but_withdrawn
+          cannot_add_already_enrolled_at_school_but_deferred
           cannot_add_registration_not_yet_open
         ]
       end
@@ -81,6 +84,22 @@ module Schools
 
       def already_enrolled_at_school?
         existing_induction_record.school == school
+      end
+
+      def already_enrolled_at_school_and_training?
+        already_enrolled_at_school? && existing_induction_record.active_induction_status? && existing_induction_record.training_status_active?
+      end
+
+      def already_enrolled_at_school_but_leaving?
+        already_enrolled_at_school? && existing_induction_record.leaving_induction_status?
+      end
+
+      def already_enrolled_at_school_but_withdrawn?
+        already_enrolled_at_school? && existing_induction_record.training_status_withdrawn?
+      end
+
+      def already_enrolled_at_school_but_deferred?
+        already_enrolled_at_school? && existing_induction_record.training_status_deferred?
       end
 
       def show_path_for(step:)
