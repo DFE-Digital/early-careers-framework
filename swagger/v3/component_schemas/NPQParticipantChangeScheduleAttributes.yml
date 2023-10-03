@@ -5,12 +5,16 @@ properties:
     description: "The new schedule of the participant"
     type: string
     enum:
-      - npq-aso-november
-      - npq-aso-december
       - npq-aso-march
       - npq-aso-june
-      - npq-leadership-spring
+      - npq-aso-november
+      - npq-aso-december
+      - npq-ehco-march
+      - npq-ehco-june
+      - npq-ehco-november
+      - npq-ehco-december
       - npq-leadership-autumn
+      - npq-leadership-spring
       - npq-specialist-autumn
       - npq-specialist-spring
     example: npq-leadership-autumn

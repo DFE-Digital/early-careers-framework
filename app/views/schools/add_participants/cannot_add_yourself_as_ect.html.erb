@@ -1,0 +1,22 @@
+<% title = "You cannot add yourself as an ECT" %>
+<% content_for :title, title %>
+
+<% content_for :before_content, govuk_back_link( text: "Back", href: wizard_back_link_path) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= form_with model: @form, url: url_for(action: :update), scope: @wizard.form_scope, method: :put do |f| %>
+      <%= f.govuk_error_summary %>
+
+      <span class="govuk-caption-l"><%= @school.name %></span>
+      <h1 class="govuk-heading-l"><%= title %></h1>
+
+      <%= f.govuk_radio_buttons_fieldset :participant_type , legend: { text: "What would you like to do?", size: 'm' } do %>
+        <%= f.govuk_radio_button :participant_type, :mentor, label: { text: "Add myself as a mentor instead" }, link_errors: true %>
+        <%= f.govuk_radio_button :participant_type, :return, label: { text: "Cancel and return to the list of ECTs and mentors" } %>
+      <% end %>
+
+      <%= f.govuk_submit "Continue" %>
+    <% end %>
+  </div>
+</div>

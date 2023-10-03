@@ -24,7 +24,7 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl govuk-!-margin-bottom-6">
+    <h1 class="govuk-heading-l govuk-!-margin-bottom-6">
       <%= @school.name %>
     </h1>
   </div>
@@ -39,7 +39,7 @@
 <div class="govuk-grid-row govuk-!-margin-bottom-6">
   <div class="govuk-grid-column-one-third">
     <div class="dashboard-numbers key-number">
-      <p class="govuk-heading-xl">
+      <p class="govuk-heading-l">
         <%= @school.early_career_teacher_profiles_for(@selected_cohort).count -%>
       </p>
       <p class="govuk-heading-s">ECTs added</p>
@@ -47,7 +47,7 @@
   </div>
   <div class="govuk-grid-column-one-third">
     <div class="dashboard-numbers key-number">
-      <p class="govuk-heading-xl">
+      <p class="govuk-heading-l">
         <%= @school.mentor_profiles_for(@selected_cohort).count -%>
       </p>
       <p class="govuk-heading-s">mentors added</p>

@@ -6,7 +6,7 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
 
-        <span class="govuk-caption-xl"><%= @school.name %></span>
+        <span class="govuk-caption-l"><%= @school.name %></span>
 
         <%= form_for @induction_choice_form, url: schools_choose_programme_path, method: :post do |f| %>
             <%= f.govuk_error_summary %>
@@ -15,7 +15,7 @@
               @induction_choice_form.programme_choices,
               :id,
               :name,
-              legend: { text: "How do you want to run your training in #{@induction_choice_form.cohort.start_year} to #{@induction_choice_form.cohort.start_year + 1}?", size: "xl", tag: "h1" }
+              legend: { text: "How do you want to run your training in #{@induction_choice_form.cohort.start_year} to #{@induction_choice_form.cohort.start_year + 1}?", size: "l", tag: "h1" }
             ) do %>
               <p class="govuk-body">To learn more about your training options, visit
                 <%= govuk_link_to "How to set up training for early career teachers (opens in new tab)",

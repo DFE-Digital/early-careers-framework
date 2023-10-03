@@ -142,7 +142,7 @@ module Admin
         end
 
         def programme_can_be_changed?
-          !participant_has_declarations_with_the_current_provider?
+          reason_for_change_circumstances? || !participant_has_declarations_with_the_current_provider?
         end
 
         def show_path_for(step:)

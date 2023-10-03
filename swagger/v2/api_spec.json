@@ -1666,7 +1666,16 @@
             "enum": [
               "ecf-standard-september",
               "ecf-standard-january",
-              "ecf-standard-april"
+              "ecf-standard-april",
+              "ecf-reduced-september",
+              "ecf-reduced-january",
+              "ecf-reduced-april",
+              "ecf-extended-september",
+              "ecf-extended-january",
+              "ecf-extended-april",
+              "ecf-replacement-september",
+              "ecf-replacement-january",
+              "ecf-replacement-april"
             ]
           },
           "updated_at": {
@@ -1714,7 +1723,16 @@
             "enum": [
               "ecf-standard-september",
               "ecf-standard-january",
-              "ecf-standard-april"
+              "ecf-standard-april",
+              "ecf-reduced-september",
+              "ecf-reduced-january",
+              "ecf-reduced-april",
+              "ecf-extended-september",
+              "ecf-extended-january",
+              "ecf-extended-april",
+              "ecf-replacement-september",
+              "ecf-replacement-january",
+              "ecf-replacement-april"
             ],
             "example": "ecf-standard-september"
           },
@@ -1888,7 +1906,17 @@
             "example": "ecf-standard-january",
             "enum": [
               "ecf-standard-september",
-              "ecf-standard-january"
+              "ecf-standard-january",
+              "ecf-standard-april",
+              "ecf-reduced-september",
+              "ecf-reduced-january",
+              "ecf-reduced-april",
+              "ecf-extended-september",
+              "ecf-extended-january",
+              "ecf-extended-april",
+              "ecf-replacement-september",
+              "ecf-replacement-january",
+              "ecf-replacement-april"
             ]
           },
           "updated_at": {
@@ -2261,7 +2289,16 @@
             "enum": [
               "ecf-standard-september",
               "ecf-standard-january",
-              "ecf-standard-april"
+              "ecf-standard-april",
+              "ecf-reduced-september",
+              "ecf-reduced-january",
+              "ecf-reduced-april",
+              "ecf-extended-september",
+              "ecf-extended-january",
+              "ecf-extended-april",
+              "ecf-replacement-september",
+              "ecf-replacement-january",
+              "ecf-replacement-april"
             ]
           },
           "updated_at": {
@@ -2487,7 +2524,16 @@
             "enum": [
               "ecf-standard-september",
               "ecf-standard-january",
-              "ecf-standard-april"
+              "ecf-standard-april",
+              "ecf-reduced-september",
+              "ecf-reduced-january",
+              "ecf-reduced-april",
+              "ecf-extended-september",
+              "ecf-extended-january",
+              "ecf-extended-april",
+              "ecf-replacement-september",
+              "ecf-replacement-january",
+              "ecf-replacement-april"
             ]
           },
           "updated_at": {
@@ -2867,7 +2913,16 @@
             "enum": [
               "ecf-standard-september",
               "ecf-standard-january",
-              "ecf-standard-april"
+              "ecf-standard-april",
+              "ecf-reduced-september",
+              "ecf-reduced-january",
+              "ecf-reduced-april",
+              "ecf-extended-september",
+              "ecf-extended-january",
+              "ecf-extended-april",
+              "ecf-replacement-september",
+              "ecf-replacement-january",
+              "ecf-replacement-april"
             ]
           },
           "updated_at": {
@@ -3688,14 +3743,18 @@
             "type": "string",
             "example": "npq-leadership-autumn",
             "enum": [
+              "npq-aso-march",
+              "npq-aso-june",
+              "npq-aso-november",
+              "npq-aso-december",
+              "npq-ehco-march",
+              "npq-ehco-june",
+              "npq-ehco-november",
+              "npq-ehco-december",
               "npq-leadership-autumn",
               "npq-leadership-spring",
               "npq-specialist-autumn",
-              "npq-specialist-spring",
-              "npq-aso-november",
-              "npq-aso-december",
-              "npq-aso-march",
-              "npq-aso-june"
+              "npq-specialist-spring"
             ]
           },
           "cohort": {
@@ -3781,14 +3840,18 @@
             "type": "string",
             "example": "npq-specialist-autumn",
             "enum": [
-              "npq-specialist-autumn",
-              "npq-specialist-spring",
+              "npq-aso-march",
+              "npq-aso-june",
+              "npq-aso-november",
+              "npq-aso-december",
+              "npq-ehco-march",
+              "npq-ehco-june",
+              "npq-ehco-november",
+              "npq-ehco-december",
               "npq-leadership-autumn",
               "npq-leadership-spring",
-              "npq-aso-december",
-              "npq-aso-november",
-              "npq-aso-march",
-              "npq-aso-june"
+              "npq-specialist-autumn",
+              "npq-specialist-spring"
             ]
           },
           "cohort": {
@@ -4131,12 +4194,16 @@
             "description": "The new schedule of the participant",
             "type": "string",
             "enum": [
-              "npq-aso-november",
-              "npq-aso-december",
               "npq-aso-march",
               "npq-aso-june",
-              "npq-leadership-spring",
+              "npq-aso-november",
+              "npq-aso-december",
+              "npq-ehco-march",
+              "npq-ehco-june",
+              "npq-ehco-november",
+              "npq-ehco-december",
               "npq-leadership-autumn",
+              "npq-leadership-spring",
               "npq-specialist-autumn",
               "npq-specialist-spring"
             ],

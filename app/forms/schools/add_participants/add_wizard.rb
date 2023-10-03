@@ -10,6 +10,8 @@ module Schools
           start_date
           start_term
           cannot_add_registration_not_yet_open
+          cannot_add_yourself_as_ect
+          yourself
           need_training_setup
           choose_mentor
           confirm_appropriate_body
@@ -95,6 +97,10 @@ module Schools
         "#{start_term.capitalize} #{start_term == 'spring' ? Time.zone.now.year + 1 : Time.zone.now.year}"
       end
 
+      def sit_added_as_mentor?
+        participant_create_args[:email] == current_user.email
+      end
+
     private
 
       def add_participant!
@@ -106,9 +112,9 @@ module Schools
                                                     school_cohort:,
                                                     preferred_email: email)
                     elsif ect_participant?
-                      EarlyCareerTeachers::Create.call(**participant_create_args)
+                      reactivate_or_create_ect_profile
                     else
-                      Mentors::Create.call(**participant_create_args.except(:induction_start_date, :mentor_profile_id))
+                      reactivate_or_create_mentor_profile
                     end
 
           store_validation_result!(profile)
@@ -117,6 +123,43 @@ module Schools
         send_added_and_validated_email(profile) if profile && profile.ecf_participant_validation_data.present? && !sit_mentor?
 
         profile
+      end
+
+      def existing_withdrawn_records(trn:)
+        lookup_trn = TeacherReferenceNumber.new(trn).formatted_trn
+        teacher_profile = TeacherProfile.find_by(trn: lookup_trn)
+        teacher_profile&.participant_profiles&.withdrawn_record || ParticipantProfile.none
+      end
+
+      def existing_withdrawn_ect(trn:)
+        existing_withdrawn_records(trn:).ects.first
+      end
+
+      def existing_withdrawn_mentor(trn:)
+        existing_withdrawn_records(trn:).mentors.first
+      end
+
+      def reactivate_or_create_ect_profile
+        existing_profile = existing_withdrawn_ect(trn:)
+
+        if existing_profile
+          args = participant_create_args.except(:full_name)
+          EarlyCareerTeachers::Reactivate.call(participant_profile: existing_profile, **args)
+        else
+          EarlyCareerTeachers::Create.call(**participant_create_args)
+        end
+      end
+
+      def reactivate_or_create_mentor_profile
+        args = participant_create_args.except(:induction_start_date, :mentor_profile_id)
+
+        existing_profile = existing_withdrawn_mentor(trn:)
+        if existing_profile
+          args = args.except(:full_name)
+          Mentors::Reactivate.call(participant_profile: existing_profile, **args)
+        else
+          Mentors::Create.call(**args)
+        end
       end
 
       def store_validation_result!(profile)

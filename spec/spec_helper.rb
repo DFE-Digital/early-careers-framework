@@ -111,7 +111,7 @@ RSpec.configure do |config|
 
   config.before(:suite) do
     # create cohorts since 2020 with default schedule
-    end_year = Date.current.month < 10 ? Date.current.year : Date.current.year + 1
+    end_year = Date.current.month < 11 ? Date.current.year : Date.current.year + 1
     (2020..end_year).each do |start_year|
       cohort = Cohort.find_by(start_year:) || FactoryBot.create(:cohort, start_year:)
       Finance::Schedule::ECF.default_for(cohort:) || FactoryBot.create(:ecf_schedule, cohort:)

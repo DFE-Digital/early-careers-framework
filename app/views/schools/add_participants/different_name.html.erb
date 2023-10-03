@@ -8,8 +8,8 @@
     <%= form_with model: @form, url: url_for(action: :update), scope: @wizard.form_scope, method: :put do |f| %>
       <%= f.govuk_error_summary %>
       <%= f.govuk_text_field :full_name, width: "three-quarters",
-        label: { text: title, tag: :h1, size: 'xl', class: "govuk-!-margin-bottom-8" },
-        caption: { text: @school.name, size: 'xl' } do %>
+        label: { text: title, tag: :h1, size: 'l', class: "govuk-!-margin-bottom-8" },
+        caption: { text: @school.name, size: 'l' } do %>
         <p class="govuk-body">We just need their first name and last name, not titles like Mr, Mrs, Dr.</p>
         <p class="govuk-body">We need to match their name with the record held by the Teacher Regulation Agency (TRA).</p>
       <% end %>

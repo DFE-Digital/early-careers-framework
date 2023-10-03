@@ -187,11 +187,11 @@ module ChooseProgrammeSteps
   end
 
   def and_i_see_the_challenge_link
-    expect(page).to have_link(text: "report that your school has been confirmed incorrectly")
+    expect(page).to have_link("challenge-partnership-link")
   end
 
   def and_i_do_not_see_the_challenge_link
-    expect(page).to_not have_link(text: "report that your school has been confirmed incorrectly")
+    expect(page).to_not have_link("challenge-partnership-link")
   end
 
   def and_cohort_for_next_academic_year_is_created
@@ -329,7 +329,7 @@ module ChooseProgrammeSteps
   end
 
   def when_i_challenge_the_new_cohort_partnership
-    click_on("report that your school has been confirmed incorrectly")
+    click_on("challenge-partnership-link")
     choose("This looks like a mistake")
     click_on("Submit")
   end

@@ -65,7 +65,7 @@
 <% if latest_partnership&.challenged? == false %>
   <% if latest_partnership&.in_challenge_window? %>
     <p class="govuk-body">
-      If this does not look right, <%= govuk_link_to "report that your school has been confirmed incorrectly", challenge_partnership_path(partnership: latest_partnership) %>. This link will expire on <%= latest_partnership.challenge_deadline&.to_date&.to_fs(:govuk) %>.
+      If your school is not working with this lead provider or delivery partner, <%= govuk_link_to("tell us before #{latest_partnership.challenge_deadline&.to_date&.to_fs(:govuk)}", challenge_partnership_path(partnership: latest_partnership), id: "challenge-partnership-link") %>. 
     </p>
   <% else %>
     <p class="govuk-body">

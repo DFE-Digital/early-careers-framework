@@ -4,7 +4,7 @@
   <div class="govuk-grid-column-two-thirds">
     <% if @wizard.participant_profile.post_transitional? %>
       <%= render partial: 'schools/add_participants/eligibility_confirmation/post_transitional', locals: { profile: @wizard.participant_profile } %>
-    <% elsif @wizard.sit_mentor? %>
+    <% elsif @wizard.sit_added_as_mentor? %>
       <%= govuk_panel title_text: "You’ve been added as a mentor", text: nil, classes: "govuk-!-margin-bottom-7" %>
     <% elsif exempt_from_induction?(@wizard.participant_profile) %>
       <%= render partial: 'schools/add_participants/eligibility_confirmation/exempt_from_induction', locals: { profile: @wizard.participant_profile } %>

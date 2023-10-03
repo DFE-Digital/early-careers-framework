@@ -1,8 +1,8 @@
 <h3 class="govuk-heading-s">Not mentoring or being mentored</h3>
 
-<% if participants.not_mentoring_or_being_mentored.any? %>
+<% if participants.no_longer_training.any? %>
   <%= govuk_summary_list(actions: false, borders: nil) do |list| %>
-    <% participants.not_mentoring_or_being_mentored.sort_by(&:full_name).each do |participant| %>
+    <% participants.no_longer_training.sort_by(&:full_name).each do |participant| %>
       <% list.with_row do |row| %>
         <% row.with_key(text: govuk_link_to(participant.full_name,
                                        school_participant_path(id: participant.participant_profile_id,

@@ -33,17 +33,17 @@ module Pages
     end
 
     def report_school_has_been_confirmed_incorrectly
-      click_on "report that your school has been confirmed incorrectly"
+      click_on "challenge-partnership-link"
 
       Pages::ReportIncorrectPartnershipPage.loaded
     end
 
     def confirm_can_report_school_has_been_confirmed_incorrectly
-      element_has_content? self, "report that your school has been confirmed incorrectly"
+      element_has_content? self, "If your school is not working with this lead provider or delivery partner,"
     end
 
     def confirm_cannot_report_school_has_been_confirmed_incorrectly
-      element_without_content? self, "report that your school has been confirmed incorrectly"
+      element_without_content? self, "If your school is not working with this lead provider or delivery partner,"
     end
 
     def view_participant_dashboard

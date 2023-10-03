@@ -63,8 +63,8 @@ RSpec.feature "Admin NPQ Application export system", js: true, rutabaga: false d
     then_i_should_be_on the_npq_applications_exports_page
     and_the_page_should_be_accessible
 
-    then_i_see_an_error_message("Please enter a valid start date")
-    then_i_see_an_error_message("Please enter a valid end date")
+    then_i_see_an_error_message("Enter a valid start date")
+    then_i_see_an_error_message("Enter a valid end date")
   end
 
   scenario "Admin enters no dates" do
@@ -82,8 +82,8 @@ RSpec.feature "Admin NPQ Application export system", js: true, rutabaga: false d
     then_i_should_be_on the_npq_applications_exports_page
     and_the_page_should_be_accessible
 
-    then_i_see_an_error_message("Please enter a start date")
-    then_i_see_an_error_message("Please enter an end date")
+    then_i_see_an_error_message("Enter a start date")
+    then_i_see_an_error_message("Enter an end date")
   end
 
   scenario "Admin enters an end date before start date" do

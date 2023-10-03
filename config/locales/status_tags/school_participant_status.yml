@@ -127,7 +127,7 @@ en:
       not_yet_mentoring:
         label: "NOT MENTORING"
         description: "The participant is not currently mentoring any ECTs."
-        colour: "turquoise"
+        colour: "purple"
 
       active_mentoring_ero:
         label: "MENTORING"

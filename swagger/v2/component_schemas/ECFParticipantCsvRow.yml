@@ -100,6 +100,16 @@ properties:
     enum:
       - ecf-standard-september
       - ecf-standard-january
+      - ecf-standard-april
+      - ecf-reduced-september
+      - ecf-reduced-january
+      - ecf-reduced-april
+      - ecf-extended-september
+      - ecf-extended-january
+      - ecf-extended-april
+      - ecf-replacement-september
+      - ecf-replacement-january
+      - ecf-replacement-april
   updated_at:
     description: "The date the ECF participant was last updated"
     type: string

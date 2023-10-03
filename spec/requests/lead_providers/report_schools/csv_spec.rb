@@ -29,12 +29,12 @@ RSpec.describe "Lead Provider school reporting: uploading csv", type: :request d
   describe "POST /lead-providers/report-schools/csv" do
     context "with no file selected" do
       it "renders :new with error message" do
-        expect_any_instance_of(AnalyticsDataLayer).to receive(:add).with(csv_file_errors: %w[please_select_a_csv_file_to_upload])
+        expect_any_instance_of(AnalyticsDataLayer).to receive(:add).with(csv_file_errors: %w[select_a_csv_file_to_upload])
 
         post "/lead-providers/report-schools/csv", params: {}
 
         expect(response).to render_template :show
-        expect(response.body).to include("Please select a CSV file to upload")
+        expect(response.body).to include("Select a CSV file to upload")
       end
     end
 

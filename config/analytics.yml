@@ -155,6 +155,7 @@
   - disable_from_year
   :participant_profiles:
   - id
+  - school_id
   - type
   - core_induction_programme_id
   - cohort_id

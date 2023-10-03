@@ -2,10 +2,11 @@
 
 RSpec.describe Admin::Schools::PartnershipComponent, type: :component do
   let(:induction_programme_choice) { "full_induction_programme" }
+  let(:training_programme) { "A training programme" }
   let(:school) { FactoryBot.create(:seed_school) }
   let(:school_cohort) { FactoryBot.create(:seed_school_cohort, :with_cohort, :with_appropriate_body, school:, induction_programme_choice:) }
   let(:partnership) { FactoryBot.create(:seed_partnership, :valid, school:, cohort: school_cohort.cohort) }
-  let(:kwargs) { { school:, school_cohort:, partnership: } }
+  let(:kwargs) { { school:, school_cohort:, partnership:, training_programme: } }
   subject { Admin::Schools::PartnershipComponent.new(**kwargs) }
 
   describe "rendering" do
@@ -32,6 +33,13 @@ RSpec.describe Admin::Schools::PartnershipComponent, type: :component do
       )
     end
 
+    it "summarises the training programme" do
+      expect(rendered_content).to summarise(
+        key: "Training programme",
+        value: "Working with a DfE-funded provider",
+      )
+    end
+
     it "summarises the lead provider" do
       expect(rendered_content).to summarise(
         key: "Lead provider",
@@ -41,19 +49,6 @@ RSpec.describe Admin::Schools::PartnershipComponent, type: :component do
   end
 
   describe "methods" do
-    describe "#training_programme" do
-      {
-        "full_induction_programme" => "Working with a DfE-funded provider",
-        "school_funded_fip"        => "School-funded full induction programme",
-      }.each do |training_programme, description|
-        describe "training programme '#{training_programme}" do
-          let(:school_cohort) { FactoryBot.create(:seed_school_cohort, :with_cohort, induction_programme_choice: training_programme, school:) }
-
-          it("has description #{description}") { expect(subject.training_programme).to eql(description) }
-        end
-      end
-    end
-
     describe "#lead_provider_name" do
       it "is the lead provider's name" do
         expect(subject.lead_provider_name).to eql(school_cohort.lead_provider.name)

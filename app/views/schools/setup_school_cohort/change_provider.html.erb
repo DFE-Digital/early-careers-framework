@@ -8,7 +8,7 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
 
-        <span class="govuk-caption-xl"><%= @school.name %></span>
+        <span class="govuk-caption-l"><%= @school.name %></span>
 
         <%= form_for @setup_school_cohort_form, url: { action: :change_provider }, method: :put do |f| %>
         <%= f.govuk_error_summary %>
@@ -17,7 +17,7 @@
             @setup_school_cohort_form.change_provider_choices,
             :id, :name,
             inline: true,
-            legend: { text: title, tag: 'h1', size: 'xl' }) do %>
+            legend: { text: title, tag: 'h1', size: 'l' }) do %>
 
             <h2 class="govuk-heading-s govuk-!-margin-bottom-1 govuk-!-margin-top-5">Your DfE-funded lead provider</h2>
             <p class="govuk-body"><%= previous_cohort.lead_provider&.name %></p>

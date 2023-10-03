@@ -9,16 +9,28 @@
           <strong><%= @cohort.description %></strong>
       <% end %>
 
-      <h2 class="govuk-heading-m">What to do next</h2>
+      <% if @school_cohort.school_funded_fip? %>
+        <%= render partial: 'schools/cohort_setup/training_confirmation_school_funded_fip' %>
+      <% elsif @school_cohort.design_our_own? %>
+        <%= render partial: 'schools/cohort_setup/training_confirmation_diy' %>
+      <% else %>
+        <h2 class="govuk-heading-m">What to do next</h2>
 
-      <p class="govuk-body">As soon as possible:</p>
-      <ul class="govuk-list govuk-!-margin-bottom-7t govuk-list--bullet govuk-list--spaced">
-        <% unless appropriate_body_form.body_appointed? %>
-          <li>tell us which appropriate body you’ve appointed for your ECTs</li>
-        <% end %>
-        <li>add the new ECTs and mentors to this service so we can check their eligibility for DfE funding</li>
-        <li>use this service to tell us which mentor has been assigned to each ECT</li>
-      </ul>
+        <p class="govuk-body">As soon as possible:</p>
+        <ul class="govuk-list govuk-!-margin-bottom-7t govuk-list--bullet govuk-list--spaced">
+          <% if @school_cohort.core_induction_programme? %>
+            <li>
+              choose the DfE-accredited materials you want to use - you may need to create an account to access the materials
+            </li>
+          <% end %>
+
+          <% unless appropriate_body_form.body_appointed? %>
+            <li>tell us which appropriate body you’ve appointed for your ECTs</li>
+          <% end %>
+          <li>add the new ECTs and mentors to this service so we can check their eligibility for DfE funding</li>
+          <li>use this service to tell us which mentor has been assigned to each ECT</li>
+        </ul>
+      <% end %>
 
       <% if continue %>
         <%= govuk_link_to("Continue to transfer ECT/Mentor", what_we_need_schools_transferring_participant_path)  %>

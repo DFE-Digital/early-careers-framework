@@ -35,10 +35,6 @@ module Schools
         save_progress!
       end
 
-      def sit_can_become_a_mentor?
-        !current_user.mentor?
-      end
-
       def registration_open_for_participant_cohort?
         desired_cohort = cohort_to_place_participant
 
@@ -109,6 +105,10 @@ module Schools
       def participant_exists?
         # NOTE: this doesn't differentiate being at this school from being at another school
         check_for_dqt_record? && dqt_record(force_recheck: true).present? && existing_participant_profile.present?
+      end
+
+      def participant_withdrawn?
+        Induction::FindBy.call(participant_profile: existing_participant_profile)&.induction_status == "withdrawn"
       end
 
       def existing_participant_is_a_different_type?

@@ -75,7 +75,7 @@ module Admin::Participants
     end
 
     def validation_page
-      admin_participant_path(@participant_profile, anchor: "validation-data")
+      admin_participant_validation_data_path(@participant_profile)
     end
 
     def has_npq_profile?

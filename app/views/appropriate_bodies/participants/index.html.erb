@@ -1,7 +1,7 @@
-<span class="govuk-caption-xl">Appropriate body</span>
-<h1 class="govuk-heading-xl"><%= @appropriate_body.name %> Participants</h1>
+<span class="govuk-caption-l">Appropriate body</span>
+<h1 class="govuk-heading-l"><%= @appropriate_body.name %> Participants</h1>
 
-<span class="govuk-caption-xl"><%= Cohort.current.academic_year %> academic year</span>
+<span class="govuk-caption-l"><%= Cohort.current.academic_year %> academic year</span>
 
 <p class="govuk-body govuk-!-text-align-right">
   <%= govuk_link_to "Download (csv)", appropriate_body_participants_path(params.permit(:query, :role, :academic_year, :status).merge({format: :csv})) %>

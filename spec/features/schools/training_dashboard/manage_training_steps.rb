@@ -17,6 +17,21 @@ module ManageTrainingSteps
     @induction_programme.update!(partnership: @partnership)
   end
 
+  def given_there_is_a_sit_and_mentor_in_another_school
+    @induction_coordinator_profile = create(:induction_coordinator_profile, schools: [@school], user: create(:user, full_name: @participant_data[:full_name], email: @participant_data[:email]))
+    create(:participant_identity, user: @induction_coordinator_profile.user)
+    privacy_policy = create(:privacy_policy)
+    privacy_policy.accept!(@induction_coordinator_profile.user)
+
+    @mentor = create(:mentor, user: @induction_coordinator_profile.user)
+    @mentor.user.teacher_profile.update!(trn: @participant_data[:trn])
+    ECFParticipantValidationData.create!(
+      participant_profile: @mentor,
+      trn: @participant_data[:trn],
+      date_of_birth: @participant_data[:date_of_birth],
+    )
+  end
+
   def given_there_is_a_school_that_has_chosen_fip
     @cohort = Cohort.current || create(:cohort, :current)
     @school = create(:school, name: "Fip School")
@@ -187,12 +202,15 @@ module ManageTrainingSteps
 
   def and_i_am_signed_in_as_an_induction_coordinator
     @induction_coordinator_profile = create(:induction_coordinator_profile, schools: [@school_cohort.school], user: create(:user, full_name: "Carl Coordinator"))
+    create(:participant_identity, user: @induction_coordinator_profile.user)
     privacy_policy = create(:privacy_policy)
     privacy_policy.accept!(@induction_coordinator_profile.user)
     sign_in_as @induction_coordinator_profile.user
     set_participant_data
     set_updated_participant_data
   end
+
+  alias_method :when_i_am_signed_in_as_an_induction_coordinator, :and_i_am_signed_in_as_an_induction_coordinator
 
   def and_i_have_added_an_ect
     user = create(:user, full_name: "Sally Teacher", email: "sally-teacher@example.com")
@@ -350,6 +368,16 @@ module ManageTrainingSteps
     create(:ecf_participant_validation_data, participant_profile: @participant_profile_ect, full_name: "Sally Teacher", trn: "1234567", date_of_birth: Date.new(1998, 3, 22))
   end
 
+  def given_there_is_a_mentor_with_the_same_trn
+    @mentor = create(:mentor)
+    @mentor.user.teacher_profile.update!(trn: @participant_data[:trn])
+    ECFParticipantValidationData.create!(
+      participant_profile: @mentor,
+      trn: @participant_data[:trn],
+      date_of_birth: @participant_data[:date_of_birth],
+    )
+  end
+
   def and_i_have_a_transferring_out_participant
     and_i_have_added_an_eligible_ect
     @induction_record.leaving!(2.months.from_now)
@@ -382,6 +410,22 @@ module ManageTrainingSteps
 
   def then_i_should_see_the_add_your_ect_and_mentor_link
     expect(page).to have_text("Add your early career teacher and mentor details")
+  end
+
+  def then_i_am_taken_to_only_mentor_ects_at_your_school_page
+    expect(page).to have_text("Will #{@participant_data[:full_name]} only mentor ECTs at your school?")
+  end
+
+  def then_i_am_taken_to_when_is_participant_moving_to_school_page
+    expect(page).to have_text("When is #{@participant_data[:full_name]} moving to your school?")
+  end
+
+  def then_i_see_the_existing_mentor_name
+    expect(page).to have_text(@mentor.user.full_name)
+  end
+
+  def then_i_see_induction_tutor_name
+    expect(page).to have_summary_row("Induction tutor", @induction_coordinator_profile.user.full_name)
   end
 
   def then_i_should_be_on_the_who_to_add_page
@@ -572,17 +616,35 @@ module ManageTrainingSteps
     choose "Summer term 2023"
   end
 
+  def when_i_choose_yes
+    choose("Yes")
+  end
+
   def when_i_click_on_back
     click_on("Back")
+  end
+
+  def when_i_choose_to_cancel
+    choose "Cancel and return to the list of ECTs and mentors"
+  end
+
+  def when_i_choose_to_add_myself_as_mentor
+    choose "Add myself as a mentor instead"
   end
 
   def when_i_click_on_confirm
     click_on("Confirm")
   end
 
+  alias_method :and_i_click_on_confirm, :when_i_click_on_confirm
+
   def when_i_filter_by(option)
     when_i_select(option)
     click_on("Apply")
+  end
+
+  def when_i_click_on_view_ects_and_mentors
+    click_on "View your ECTs and mentors"
   end
 
   def when_i_submit_an_empty_form
@@ -639,6 +701,7 @@ module ManageTrainingSteps
     click_on "Add ECT or mentor"
   end
   alias_method :when_i_click_to_add_a_new_participant, :when_i_click_to_add_a_new_ect_or_mentor
+  alias_method :and_i_click_to_add_a_new_ect_or_mentor, :when_i_click_to_add_a_new_ect_or_mentor
 
   def when_i_select_to_add_a(participant_type)
     choose(participant_type, allow_label_click: true)
@@ -663,6 +726,8 @@ module ManageTrainingSteps
   def when_i_sign_back_in
     sign_in_as @induction_coordinator_profile.user
   end
+
+  alias_method :when_i_sign_in_as_sit, :when_i_sign_back_in
 
   def when_i_click_on_change_name
     click_on("Change name", visible: false)
@@ -698,6 +763,10 @@ module ManageTrainingSteps
 
   def when_i_add_ect_or_mentor_email
     fill_in "What’s #{@participant_data[:full_name]}’s email address?", with: @participant_data[:email]
+  end
+
+  def when_i_add_sits_email
+    fill_in "What’s #{@participant_data[:full_name]}’s email address?", with: @induction_coordinator_profile.user.email
   end
 
   def when_i_add_ect_or_mentor_nino_for(name)
@@ -822,6 +891,14 @@ module ManageTrainingSteps
     expect(page).to have_text("#{@participant_data[:full_name]} has been added as a mentor")
   end
 
+  def then_i_am_taken_to_continue_current_training_page
+    expect(page).to have_text("Will #{@induction_coordinator_profile.user.full_name} continue with their current training programme?")
+  end
+
+  def then_i_am_taken_to_sit_mentor_added_confirmation_page
+    expect(page).to have_text("You’ve been added as a mentor")
+  end
+
   def then_i_see_the_mentor_name
     expect(page).to have_text(@participant_data[:full_name])
   end
@@ -840,7 +917,7 @@ module ManageTrainingSteps
   alias_method :and_i_see_the_participants_filtered_by, :then_i_see_the_participants_filtered_by
 
   def and_i_see_mentors_not_training_and_ects_not_being_trained_sorted_by_name
-    expect(page).to have_content("Not mentoring or being mentored\nCFI Mentor WAITING FOR TRN\nDeferred participant TRAINING DEFERRED")
+    expect(page).to have_content("Not mentoring or being mentored\nDeferred participant TRAINING DEFERRED")
   end
 
   def and_i_see_ects_with_induction_completed_sorted_by_decreasing_completion_date
@@ -860,9 +937,33 @@ module ManageTrainingSteps
   end
   alias_method :and_i_see_the_participants_sorted_by_induction_start_date, :then_i_see_the_participants_sorted_by_induction_start_date
 
+  def then_i_see_the_sit_name
+    expect(page).to have_text(@induction_coordinator_profile.user.full_name)
+  end
+
+  def then_i_am_taken_to_manage_your_training_page
+    expect(page).to have_selector("h1", text: "Manage your training")
+  end
+
+  def then_i_am_taken_to_add_yourself_as_mentor_confirmation_page
+    expect(page).to have_text("Are you sure you want to add yourself as a mentor?")
+  end
+
+  def then_i_am_taken_to_sit_added_as_mentor_page
+    expect(page).to have_text("#{@induction_coordinator_profile.user.full_name} has been added as a mentor")
+  end
+
   def then_i_am_taken_to_roles_page
     expect(page).to have_selector("h1", text: "Check what each person needs to do in the early career teacher training programme")
     expect(page).to have_text("An induction tutor should only assign themself as a mentor in exceptional circumstances")
+  end
+
+  def then_i_am_taken_to_the_what_we_need_from_you_page
+    expect(page).to have_text("What we need to know about this ECT")
+  end
+
+  def then_i_am_taken_to_the_what_we_need_from_mentor_page
+    expect(page).to have_text("What we need to know about this mentor")
   end
 
   def then_i_am_taken_to_manage_mentors_and_ects_page
@@ -1147,6 +1248,10 @@ module ManageTrainingSteps
     expect(page).to have_selector("h1", text: "When will #{@participant_data[:full_name]} start their mentor training?")
   end
 
+  def then_i_am_taken_to_sit_mentor_start_training_page
+    expect(page).to have_selector("h1", text: "When will you start mentor training?")
+  end
+
   def then_i_am_taken_to_the_cannot_add_page_same_school
     expect(page).to have_selector("h1", text: "You cannot add Sally Teacher")
     expect(page).to have_text("Our records show this person is already registered on an ECF-based training programme at your school")
@@ -1211,6 +1316,10 @@ module ManageTrainingSteps
 
   def then_i_see_appropriate_body(appropriate_body)
     expect(page).to have_summary_row("Appropriate body", appropriate_body.name)
+  end
+
+  def then_i_am_taken_to_you_cant_add_yourself_as_ect_page
+    expect(page).to have_content("You cannot add yourself as an ECT")
   end
 
   def and_i_see_the_cip_programme

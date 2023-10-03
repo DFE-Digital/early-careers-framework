@@ -17,6 +17,10 @@ module Schools
         def next_step
           if wizard.email_in_use?
             :email_already_taken
+          elsif wizard.sit_adding_themself_as_mentor?
+            :yourself
+          elsif wizard.adding_yourself_as_ect?
+            :cannot_add_yourself_as_ect
           elsif wizard.transfer?
             if wizard.needs_to_choose_a_mentor?
               :choose_mentor
