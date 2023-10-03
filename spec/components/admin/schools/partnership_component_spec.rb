@@ -15,7 +15,7 @@ RSpec.describe Admin::Schools::PartnershipComponent, type: :component do
     it "summarises the training programme" do
       expect(rendered_content).to summarise(
         key: "Training programme",
-        value: "Working with a DfE-funded provider",
+        value: "A training programme",
       )
     end
 
@@ -30,13 +30,6 @@ RSpec.describe Admin::Schools::PartnershipComponent, type: :component do
       expect(rendered_content).to summarise(
         key: "Delivery partner",
         value: school_cohort.delivery_partner.name,
-      )
-    end
-
-    it "summarises the training programme" do
-      expect(rendered_content).to summarise(
-        key: "Training programme",
-        value: "Working with a DfE-funded provider",
       )
     end
 
