@@ -7,6 +7,16 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
+## 9 November 2023
+
+We're trialing new functionality in the API v3 sandbox which allows lead providers to add a participant's schedule when accepting NPQ applications.
+
+We've added the optional `schedule-identifier` field on the [NPQ accept an application request body](/api-reference/npq/guidance.html#example-request-body).
+
+This will prevent providers having to make manual changes if a participant has been defaulted to the wrong schedule.
+
+We'd welcome feedback on this sandbox update before it goes into production.
+
 ## 6 November 2023
 
 Lead providers can now use the new `participant_id_changes` features in the Live environment.

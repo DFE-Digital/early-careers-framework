@@ -812,7 +812,6 @@
                           "private_childcare_provider_urn": "EY944860",
                           "school_ukprn": "10079319",
                           "headteacher_status": "no",
-                          "eligible_for_funding": true,
                           "funding_choice": "trust",
                           "course_identifier": "npq-leading-teaching",
                           "status": "accepted",
@@ -820,12 +819,14 @@
                           "updated_at": "2021-05-31T02:22:32.000Z",
                           "ineligible_for_funding_reason": "establishment-ineligible",
                           "cohort": "2022",
+                          "eligible_for_funding": true,
                           "targeted_delivery_funding_eligibility": true,
                           "teacher_catchment": true,
-                          "teacher_catchment_country": "France",
                           "teacher_catchment_iso_country_code": "FRA",
+                          "teacher_catchment_country": "France",
+                          "itt_provider": "University of Southampton",
                           "lead_mentor": true,
-                          "itt_provider": "University of Southampton"
+                          "schedule_identifier": "npq-leadership-spring"
                         }
                       }
                     }
@@ -861,6 +862,15 @@
                 "schema": {
                   "$ref": "#/components/schemas/NPQApplicationAcceptErrorResponse"
                 }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NPQApplicationAcceptRequest"
               }
             }
           }
@@ -921,7 +931,6 @@
                           "private_childcare_provider_urn": "EY944860",
                           "school_ukprn": "10079319",
                           "headteacher_status": "no",
-                          "eligible_for_funding": true,
                           "funding_choice": "trust",
                           "course_identifier": "npq-leading-teaching",
                           "status": "rejected",
@@ -929,12 +938,14 @@
                           "updated_at": "2021-05-31T02:22:32.000Z",
                           "ineligible_for_funding_reason": "establishment-ineligible",
                           "cohort": "2022",
+                          "eligible_for_funding": true,
                           "targeted_delivery_funding_eligibility": true,
                           "teacher_catchment": true,
-                          "teacher_catchment_country": "France",
                           "teacher_catchment_iso_country_code": "FRA",
+                          "teacher_catchment_country": "France",
+                          "itt_provider": "University of Southampton",
                           "lead_mentor": true,
-                          "itt_provider": "University of Southampton"
+                          "schedule_identifier": "npq-leadership-spring"
                         }
                       }
                     }
@@ -4834,12 +4845,13 @@
                   "updated_at": "2022-11-24T17:09:37Z",
                   "cohort": "2022",
                   "eligible_for_funding": true,
-                  "targeted_delivery_funding_eligibility": false,
+                  "targeted_delivery_funding_eligibility": true,
                   "teacher_catchment": true,
-                  "teacher_catchment_iso_country_code": "GBR",
-                  "teacher_catchment_country": "United Kingdom of Great Britain and Northern Ireland",
-                  "itt_provider": null,
-                  "lead_mentor": false
+                  "teacher_catchment_iso_country_code": "FRA",
+                  "teacher_catchment_country": "France",
+                  "itt_provider": "University of Southampton",
+                  "lead_mentor": true,
+                  "schedule_identifier": "npq-leadership-spring"
                 }
               }
             ]
@@ -4995,6 +5007,69 @@
             "description": "Additional info about the error",
             "type": "string",
             "example": "You cannot accept this NPQ application as it has already been rejected"
+          }
+        }
+      },
+      "NPQApplicationAcceptAttributesRequest": {
+        "description": "The NPQ Application acceptance request",
+        "type": "object",
+        "required": [
+          "schedule_identifier"
+        ],
+        "properties": {
+          "schedule_identifier": {
+            "description": "The new schedule of the participant",
+            "type": "string",
+            "enum": [
+              "npq-aso-march",
+              "npq-aso-june",
+              "npq-aso-november",
+              "npq-aso-december",
+              "npq-ehco-march",
+              "npq-ehco-june",
+              "npq-ehco-november",
+              "npq-ehco-december",
+              "npq-leadership-autumn",
+              "npq-leadership-spring",
+              "npq-specialist-autumn",
+              "npq-specialist-spring"
+            ],
+            "example": "npq-leadership-spring"
+          }
+        }
+      },
+      "NPQApplicationAcceptDataRequest": {
+        "description": "The NPQ Application acceptance request attributes",
+        "type": "object",
+        "required": [
+          "type",
+          "data"
+        ],
+        "properties": {
+          "type": {
+            "description": "The data type",
+            "type": "string",
+            "example": "npq-application-accept"
+          },
+          "data": {
+            "$ref": "#/components/schemas/NPQApplicationAcceptAttributesRequest"
+          }
+        }
+      },
+      "NPQApplicationAcceptRequest": {
+        "description": "The NPQ Application acceptance request",
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/NPQApplicationAcceptDataRequest"
+          }
+        },
+        "example": {
+          "data": {
+            "type": "npq-application-accept",
+            "attributes": {
+              "schedule_identifier": "npq-leadership-spring"
+            }
           }
         }
       },
@@ -5199,6 +5274,26 @@
             "nullable": true,
             "type": "string",
             "example": "University of Southampton"
+          },
+          "schedule_identifier": {
+            "description": "The new schedule of the participant",
+            "nullable": true,
+            "type": "string",
+            "example": "npq-leadership-spring",
+            "enum": [
+              "npq-aso-march",
+              "npq-aso-june",
+              "npq-aso-november",
+              "npq-aso-december",
+              "npq-ehco-march",
+              "npq-ehco-june",
+              "npq-ehco-november",
+              "npq-ehco-december",
+              "npq-leadership-autumn",
+              "npq-leadership-spring",
+              "npq-specialist-autumn",
+              "npq-specialist-spring"
+            ]
           }
         }
       },

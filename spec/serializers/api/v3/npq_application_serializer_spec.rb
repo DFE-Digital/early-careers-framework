@@ -4,11 +4,11 @@ require "rails_helper"
 
 module Api
   module V3
-    RSpec.describe NPQApplicationSerializer do
+    RSpec.describe NPQApplicationSerializer, with_feature_flags: { accept_npq_application_can_change_schedule: "active" } do
       subject(:result) { described_class.new(npq_application).serializable_hash }
 
       describe "serialization" do
-        let(:npq_application) { create(:npq_application, targeted_delivery_funding_eligibility: true) }
+        let(:npq_application) { create(:npq_application, :accepted, targeted_delivery_funding_eligibility: true) }
 
         it "returns expected data", :aggregate_failures do
           expect(result[:data][:attributes][:course_identifier]).to eql(npq_application.npq_course.identifier)
@@ -32,6 +32,7 @@ module Api
           expect(result[:data][:attributes][:itt_provider]).to eql(npq_application.itt_provider)
           expect(result[:data][:attributes][:lead_mentor]).to eql(npq_application.lead_mentor)
           expect(result[:data][:attributes][:targeted_delivery_funding_eligibility]).to eql(npq_application.targeted_delivery_funding_eligibility)
+          expect(result[:data][:attributes][:schedule_identifier]).to eql(npq_application.profile.schedule.schedule_identifier)
         end
 
         describe "#updated_at" do

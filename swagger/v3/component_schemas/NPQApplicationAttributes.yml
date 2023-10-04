@@ -147,11 +147,6 @@ properties:
     nullable: true
     type: boolean
     example: true
-  teacher_catchment_country:
-    description: This field shows the text entered by the participant during their NPQ online registration.
-    nullable: true
-    type: string
-    example: "France"
   teacher_catchment_iso_country_code:
     description: |
       This field identifies which non-UK country the participant has registered from.
@@ -159,6 +154,11 @@ properties:
     nullable: true
     type: string
     example: "FRA"
+  teacher_catchment_country:
+    description: This field shows the text entered by the participant during their NPQ online registration.
+    nullable: true
+    type: string
+    example: "France"
   itt_provider:
     description: |
       This field contains the legal name of the ITT accredited provider from the <a href="https://www.gov.uk/government/publications/accredited-initial-teacher-training-itt-providers/list-of-providers-accredited-to-deliver-itt-from-september-2024" class="govuk-link" rel="noreferrer noopener" target="_blank">list of providers</a>.
@@ -171,3 +171,21 @@ properties:
     nullable: true
     type: boolean
     example: true
+  schedule_identifier:
+    description: "The new schedule of the participant"
+    nullable: true
+    type: string
+    enum:
+      - npq-aso-march
+      - npq-aso-june
+      - npq-aso-november
+      - npq-aso-december
+      - npq-ehco-march
+      - npq-ehco-june
+      - npq-ehco-november
+      - npq-ehco-december
+      - npq-leadership-autumn
+      - npq-leadership-spring
+      - npq-specialist-autumn
+      - npq-specialist-spring
+    example: npq-leadership-spring
