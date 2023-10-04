@@ -39,7 +39,7 @@ RSpec.describe Schools::AddParticipants::WizardSteps::DateOfBirthStep, type: :mo
     let(:ect) { false }
     let(:mentor) { false }
     let(:different_type) { false }
-    let(:already_at_school) { false }
+    let(:already_at_school_and_training) { false }
     let(:different_name) { false }
     let(:sit_mentor) { false }
     let(:found_in_dqt) { false }
@@ -47,13 +47,19 @@ RSpec.describe Schools::AddParticipants::WizardSteps::DateOfBirthStep, type: :mo
     let(:need_setup) { false }
     let(:confirm_start_term) { false }
     let(:participant_withdrawn) { false }
+    let(:already_enrolled_at_school_but_leaving) { false }
+    let(:already_enrolled_at_school_but_withdrawn) { false }
+    let(:already_enrolled_at_school_but_deferred) { false }
 
     before do
       allow(wizard).to receive(:participant_exists?).and_return(participant_exists)
       allow(wizard).to receive(:ect_participant?).and_return(ect)
       allow(wizard).to receive(:mentor_participant?).and_return(mentor)
       allow(wizard).to receive(:existing_participant_is_a_different_type?).and_return(different_type)
-      allow(wizard).to receive(:already_enrolled_at_school?).and_return(already_at_school)
+      allow(wizard).to receive(:already_enrolled_at_school_and_training?).and_return(already_at_school_and_training)
+      allow(wizard).to receive(:already_enrolled_at_school_but_leaving?).and_return(already_enrolled_at_school_but_leaving)
+      allow(wizard).to receive(:already_enrolled_at_school_but_withdrawn?).and_return(already_enrolled_at_school_but_withdrawn)
+      allow(wizard).to receive(:already_enrolled_at_school_but_deferred?).and_return(already_enrolled_at_school_but_deferred)
       allow(wizard).to receive(:dqt_record_has_different_name?).and_return(different_name)
       allow(wizard).to receive(:sit_mentor?).and_return(sit_mentor)
       allow(wizard).to receive(:found_participant_in_dqt?).and_return(found_in_dqt)
@@ -114,7 +120,7 @@ RSpec.describe Schools::AddParticipants::WizardSteps::DateOfBirthStep, type: :mo
           let(:mentor) { true }
 
           context "when the ECT is already enrolled at the school" do
-            let(:already_at_school) { true }
+            let(:already_at_school_and_training) { true }
 
             before do
               allow(wizard).to receive(:set_ect_mentor)
@@ -127,10 +133,36 @@ RSpec.describe Schools::AddParticipants::WizardSteps::DateOfBirthStep, type: :mo
 
       context "when the participant is the same type" do
         context "when the participant is already enrolled at the school" do
-          let(:already_at_school) { true }
+          context "when the participant is leaving" do
+            let(:already_enrolled_at_school_but_leaving) { true }
 
-          it "returns :cannot_add_already_enrolled_at_school" do
-            expect(step.next_step).to eql :cannot_add_already_enrolled_at_school
+            it "returns :cannot_add_already_enrolled_at_school_but_leaving" do
+              expect(step.next_step).to eql :cannot_add_already_enrolled_at_school_but_leaving
+            end
+          end
+
+          context "when the participant is withdrawn" do
+            let(:already_enrolled_at_school_but_withdrawn) { true }
+
+            it "returns :cannot_add_already_enrolled_at_school_but_withdrawn" do
+              expect(step.next_step).to eql :cannot_add_already_enrolled_at_school_but_withdrawn
+            end
+          end
+
+          context "when the participant is deferred" do
+            let(:already_enrolled_at_school_but_deferred) { true }
+
+            it "returns :cannot_add_already_enrolled_at_school_but_deferred" do
+              expect(step.next_step).to eql :cannot_add_already_enrolled_at_school_but_deferred
+            end
+          end
+
+          context "when the participant is training" do
+            let(:already_at_school_and_training) { true }
+
+            it "returns :cannot_add_already_enrolled_at_school" do
+              expect(step.next_step).to eql :cannot_add_already_enrolled_at_school
+            end
           end
         end
 

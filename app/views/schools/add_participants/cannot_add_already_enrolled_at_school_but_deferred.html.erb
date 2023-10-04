@@ -1,0 +1,23 @@
+<% title =  "You cannot add #{@wizard.full_name}" %>
+<% content_for :title, title %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <span class="govuk-caption-xl"><%= @school.name %></span>
+    <h1 class="govuk-heading-xl"><%= title %></h1>
+
+    <% if @wizard.existing_induction_record.enrolled_in_fip? %>
+      <p class="govuk-body">They've already been registered. You reported that they've taken a leave of absence from your school.</p>
+
+      <% if @wizard.existing_lead_provider.present? %>
+          <p class="govuk-body">If you reported this by mistake, or they've returned to school, contact your training provider (<%= @wizard.existing_lead_provider.name %>) and ask for them to be reinstated.</p>
+          <p class="govuk-body">Once your provider confirms this with us, we'll update this person's training record for you.</p>
+      <% end %>
+    <% elsif @wizard.existing_induction_record.enrolled_in_cip? %>
+      <p class="govuk-body">They've already been registered. You reported that they've taken a leave of absence from your school. </p>
+      <p class="govuk-body">If you reported this by mistake, or they’ve returned to school, email our support team for help: <%= govuk_mail_to "continuing-professional-development@digital.education.gov.uk" %></p>
+    <% end %>
+
+    <%= govuk_link_to "View your ECTs and mentors", @wizard.dashboard_path, no_visited_state: true %>
+  </div>
+</div>
