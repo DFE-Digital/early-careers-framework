@@ -9,8 +9,11 @@ class Rack::Attack
       # so that we bail quickly if that middleware goes away or changes
       # the field name. Have preferred this to instantiating a whole
       # ActionDispatch::Request as that's a whole lot of work and this happens
-      # on every request
-      @remote_ip ||= env.fetch("action_dispatch.remote_ip").to_s
+      # on every request.
+      #
+      # Favour the X-Real-IP header if set by Azure, if not fallback to
+      # ActionDispatch#remote_ip which is more reliable than Rack's ip method.
+      @remote_ip ||= env.fetch("x-real-ip", nil).presence || env.fetch("action_dispatch.remote_ip").to_s
     end
   end
 
@@ -29,8 +32,8 @@ class Rack::Attack
     request.path == "/check"
   end
 
-  throttle("Non-API requests by ip", limit: 300, period: 5.minutes) do |request|
-    unless request.path.starts_with?(API_PATH)
+  throttle("Login attempts by ip", limit: 5, period: 20.seconds) do |request|
+    if request.path == "/users/sign_in" && request.post?
       request.remote_ip
     end
   end
@@ -41,8 +44,8 @@ class Rack::Attack
     end
   end
 
-  throttle("Login attempts by ip", limit: 5, period: 20.seconds) do |request|
-    if request.path == "/users/sign_in" && request.post?
+  throttle("Non-API requests by ip", limit: 300, period: 5.minutes) do |request|
+    unless request.path.starts_with?(API_PATH)
       request.remote_ip
     end
   end

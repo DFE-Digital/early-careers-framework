@@ -2,7 +2,7 @@
 
 shared_examples "a rate limited endpoint", rack_attack: true do |desc, period|
   describe desc do
-    let(:limit) { 3 }
+    let(:limit) { 2 }
 
     subject { response }
 
@@ -10,12 +10,11 @@ shared_examples "a rate limited endpoint", rack_attack: true do |desc, period|
       memory_store = ActiveSupport::Cache.lookup_store(:memory_store)
       allow(Rack::Attack.cache).to receive(:store) { memory_store }
 
+      allow(Rack::Attack.throttles[desc]).to receive(:limit) { limit }
+
       allow(Rails.logger).to receive(:warn)
 
       freeze_time
-
-      # Reduce the request limit to make the tests faster.
-      Rack::Attack.throttles[desc].instance_variable_set(:@limit, limit)
 
       request_count.times { perform_request }
     end
@@ -38,7 +37,7 @@ shared_examples "a rate limited endpoint", rack_attack: true do |desc, period|
       end
 
       it "allows another request when the time restriction has passed" do
-        travel period + 10.seconds
+        travel(period + 10.seconds)
         perform_request
         is_expected.to have_http_status(:success)
       end

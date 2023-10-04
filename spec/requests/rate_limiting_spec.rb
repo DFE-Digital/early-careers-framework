@@ -6,7 +6,7 @@ describe "Rate limiting" do
   let(:ip) { "1.2.3.4" }
   let(:other_ip) { "9.8.7.6" }
 
-  before { default_headers[:REMOTE_ADDR] = ip }
+  before { set_request_ip(ip) }
 
   it_behaves_like "a rate limited endpoint", "csp_reports req/ip", 1.minute do
     def perform_request
@@ -14,7 +14,7 @@ describe "Rate limiting" do
     end
 
     def change_condition
-      default_headers[:REMOTE_ADDR] = other_ip
+      set_request_ip(other_ip)
     end
   end
 
@@ -25,7 +25,7 @@ describe "Rate limiting" do
       end
 
       def change_condition
-        default_headers[:REMOTE_ADDR] = other_ip
+        set_request_ip(other_ip)
       end
     end
   end
@@ -36,7 +36,7 @@ describe "Rate limiting" do
     end
 
     def change_condition
-      default_headers[:REMOTE_ADDR] = other_ip
+      set_request_ip(other_ip)
     end
   end
 
@@ -49,9 +49,7 @@ describe "Rate limiting" do
     let(:token2) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider2) }
     let(:bearer_token2) { "Bearer #{token2}" }
 
-    before do
-      default_headers[:Authorization] = bearer_token1
-    end
+    before { set_auth_token(bearer_token1) }
 
     it_behaves_like "a rate limited endpoint", "API requests by ip", 5.minutes do
       def perform_request
@@ -59,8 +57,16 @@ describe "Rate limiting" do
       end
 
       def change_condition
-        default_headers[:Authorization] = bearer_token2
+        set_auth_token(bearer_token2)
       end
     end
+  end
+
+  def set_request_ip(request_ip)
+    default_headers[:REMOTE_ADDR] = request_ip
+  end
+
+  def set_auth_token(token)
+    default_headers[:Authorization] = token
   end
 end
