@@ -20,7 +20,15 @@ module Api
             .where(partnerships: { cohort: cohorts })
             .order(sort_order(default: "partnerships.created_at ASC", model: Partnership))
             .distinct
-          scope = scope.where("partnerships.updated_at > ?", updated_since) if updated_since_filter.present?
+
+          if updated_since_filter.present?
+            scope = scope.includes(:delivery_partner, school: [:induction_coordinators])
+            scope = scope.where(partnerships: { updated_at: updated_since.. })
+              .or(scope.where(school: { updated_at: updated_since.. }))
+              .or(scope.where(delivery_partner: { updated_at: updated_since.. }))
+              .or(scope.where(school: { users: { updated_at: updated_since.. } }))
+          end
+
           scope = scope.where(partnerships: { delivery_partner: [delivery_partner_id_filter] }) if delivery_partner_id_filter.present?
           scope
         end

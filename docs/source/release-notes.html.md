@@ -7,6 +7,14 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
+## 9 October 2023
+
+The DfE has released a change to the `updated_at` functionality of the [ECFPartnershipAttributes](/api-reference/reference-v3.html#schema-ecfpartnershipattributes).
+
+Now, when a user (for example, a school induction tutor) challenges a partnership, the date and time of this change will populate the `updated_at` field of the partnership.
+
+In this way, providers may rely on the `updated_since` filter to identify if the partnership has been challenged since their most recent call to the API.
+
 ## 6 October 2023
 
 In the sandbox environment, the DfE has added experimental fields to API v3 documentation intended to make it simpler for lead providers to identify and manage deduped participants.
