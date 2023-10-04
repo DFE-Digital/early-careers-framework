@@ -90,6 +90,10 @@ module Schools
         already_enrolled_at_school? && existing_induction_record.active_induction_status? && existing_induction_record.training_status_active?
       end
 
+      def already_enrolled_at_school_and_completed?
+        already_enrolled_at_school? && existing_induction_record.completed_induction_status?
+      end
+
       def already_enrolled_at_school_but_leaving?
         already_enrolled_at_school? && existing_induction_record.leaving_induction_status?
       end

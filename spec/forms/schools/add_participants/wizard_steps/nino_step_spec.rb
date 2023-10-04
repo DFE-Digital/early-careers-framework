@@ -24,6 +24,7 @@ RSpec.describe Schools::AddParticipants::WizardSteps::NinoStep, type: :model do
     let(:already_enrolled_at_school_but_leaving) { false }
     let(:already_enrolled_at_school_but_withdrawn) { false }
     let(:already_enrolled_at_school_but_deferred) { false }
+    let(:already_at_school_and_completed) { false }
     let(:different_name) { false }
     let(:found_dqt_record) { false }
     let(:sit_mentor) { false }
@@ -38,6 +39,7 @@ RSpec.describe Schools::AddParticipants::WizardSteps::NinoStep, type: :model do
       allow(wizard).to receive(:ect_participant?).and_return(ect_participant)
       allow(wizard).to receive(:mentor_participant?).and_return(mentor_participant)
       allow(wizard).to receive(:already_enrolled_at_school_and_training?).and_return(already_enrolled_at_school_and_training)
+      allow(wizard).to receive(:already_enrolled_at_school_and_completed?).and_return(already_at_school_and_completed)
       allow(wizard).to receive(:already_enrolled_at_school_but_leaving?).and_return(already_enrolled_at_school_but_leaving)
       allow(wizard).to receive(:already_enrolled_at_school_but_withdrawn?).and_return(already_enrolled_at_school_but_withdrawn)
       allow(wizard).to receive(:already_enrolled_at_school_but_deferred?).and_return(already_enrolled_at_school_but_deferred)

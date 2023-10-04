@@ -18,7 +18,7 @@ module Schools
             cohort_checks
           elsif adding_an_ect_profile_to_a_mentor?
             :cannot_add_ect_because_already_a_mentor
-          elsif wizard.already_enrolled_at_school_and_training?
+          elsif wizard.already_enrolled_at_school_and_training? || wizard.already_enrolled_at_school_and_completed?
             :cannot_add_already_enrolled_at_school
           elsif wizard.already_enrolled_at_school_but_leaving?
             :cannot_add_already_enrolled_at_school_but_leaving

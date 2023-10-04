@@ -50,6 +50,7 @@ RSpec.describe Schools::AddParticipants::WizardSteps::DateOfBirthStep, type: :mo
     let(:already_enrolled_at_school_but_leaving) { false }
     let(:already_enrolled_at_school_but_withdrawn) { false }
     let(:already_enrolled_at_school_but_deferred) { false }
+    let(:already_at_school_and_completed) { false }
 
     before do
       allow(wizard).to receive(:participant_exists?).and_return(participant_exists)
@@ -57,6 +58,7 @@ RSpec.describe Schools::AddParticipants::WizardSteps::DateOfBirthStep, type: :mo
       allow(wizard).to receive(:mentor_participant?).and_return(mentor)
       allow(wizard).to receive(:existing_participant_is_a_different_type?).and_return(different_type)
       allow(wizard).to receive(:already_enrolled_at_school_and_training?).and_return(already_at_school_and_training)
+      allow(wizard).to receive(:already_enrolled_at_school_and_completed?).and_return(already_at_school_and_completed)
       allow(wizard).to receive(:already_enrolled_at_school_but_leaving?).and_return(already_enrolled_at_school_but_leaving)
       allow(wizard).to receive(:already_enrolled_at_school_but_withdrawn?).and_return(already_enrolled_at_school_but_withdrawn)
       allow(wizard).to receive(:already_enrolled_at_school_but_deferred?).and_return(already_enrolled_at_school_but_deferred)
@@ -158,6 +160,14 @@ RSpec.describe Schools::AddParticipants::WizardSteps::DateOfBirthStep, type: :mo
           end
 
           context "when the participant is training" do
+            let(:already_at_school_and_training) { true }
+
+            it "returns :cannot_add_already_enrolled_at_school" do
+              expect(step.next_step).to eql :cannot_add_already_enrolled_at_school
+            end
+          end
+
+          context "when the participant is completed" do
             let(:already_at_school_and_training) { true }
 
             it "returns :cannot_add_already_enrolled_at_school" do
