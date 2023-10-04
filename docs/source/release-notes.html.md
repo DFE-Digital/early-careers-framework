@@ -7,6 +7,14 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
+## 4 October 2023
+
+The DfE has released a change to the `updated_at` functionality of the [ECFPartnershipAttributes](https://manage-training-for-early-career-teachers.education.gov.uk/api-reference/reference-v3.html#schema-ecfpartnershipattributes). 
+
+Now, when a user (for example, a school induction tutor) challenges a partnership, the date and time of this change will populate the `updated_at` field of the partnership. 
+
+In this way, providers may rely on the `updated_since` filter to identify if the partnership has been challenged since their most recent call to the API.
+
 ## 2 October 2023
 
 We’ve added the new NPQ in leading primary mathematics to the production environment.
