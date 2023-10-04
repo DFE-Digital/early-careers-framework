@@ -11,6 +11,8 @@ module "redis-cache" {
   azure_family              = var.redis_cache_family
   azure_sku_name            = var.redis_cache_sku_name
   name                      = "cache"
+  azure_maxmemory_policy    = "allkeys-lru"
+  azure_patch_schedule      = [{ "day_of_week" : "Sunday", "start_hour_utc" : 01 }]
 
   cluster_configuration_map = module.cluster_data.configuration_map
 
