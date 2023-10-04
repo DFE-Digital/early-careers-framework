@@ -377,6 +377,89 @@ RSpec.describe "NPQ Applications API", type: :request do
         expect(parsed_response.dig("errors", 0, "detail")).to eql("Once rejected an application cannot change state")
       end
     end
+
+    context "when schedule identifier is in the params" do
+      let(:params) do
+        { data: { attributes: { schedule_identifier: "npq-leadership-spring" } } }
+      end
+
+      it "update status to accepted" do
+        expect { post("/api/v1/npq-applications/#{default_npq_application.id}/accept", params:) }
+          .to change { default_npq_application.reload.lead_provider_approval_status }.from("pending").to("accepted")
+      end
+
+      it "responds with 200 and representation of the resource" do
+        post("/api/v1/npq-applications/#{default_npq_application.id}/accept", params:)
+
+        expect(response).to be_successful
+
+        expect(parsed_response.dig("data", "attributes", "status")).to eql("accepted")
+      end
+
+      it "updates npq profile schedule identifier" do
+        post("/api/v1/npq-applications/#{default_npq_application.id}/accept", params:)
+
+        expect(response).to be_successful
+        expect(default_npq_application.profile.schedule.schedule_identifier).to eql("npq-leadership-spring")
+      end
+
+      context "when schedule identifier is empty" do
+        let(:params) do
+          { data: { attributes: { schedule_identifier: "" } } }
+        end
+
+        it "update status to accepted" do
+          expect { post("/api/v1/npq-applications/#{default_npq_application.id}/accept", params:) }
+            .to change { default_npq_application.reload.lead_provider_approval_status }.from("pending").to("accepted")
+        end
+
+        it "responds with 200 and representation of the resource" do
+          post("/api/v1/npq-applications/#{default_npq_application.id}/accept", params:)
+
+          expect(response).to be_successful
+
+          expect(parsed_response.dig("data", "attributes", "status")).to eql("accepted")
+        end
+      end
+
+      context "when schedule identifier has a wrong value" do
+        let(:params) do
+          { data: { attributes: { schedule_identifier: "any-schedule" } } }
+        end
+
+        it "return 422" do
+          post("/api/v1/npq-applications/#{default_npq_application.id}/accept", params:)
+
+          expect(response).to have_http_status(:unprocessable_entity)
+        end
+
+        it "returns error in response" do
+          post("/api/v1/npq-applications/#{default_npq_application.id}/accept", params:)
+
+          expect(parsed_response.key?("errors")).to be_truthy
+          expect(parsed_response.dig("errors", 0, "detail")).to eql("Selected schedule is not valid for the course")
+        end
+      end
+
+      context "when schedule identifier has an invalid schedule for the npq course" do
+        let(:params) do
+          { data: { attributes: { schedule_identifier: "npq-specialist-spring" } } }
+        end
+
+        it "return 422" do
+          post("/api/v1/npq-applications/#{default_npq_application.id}/accept", params:)
+
+          expect(response).to have_http_status(:unprocessable_entity)
+        end
+
+        it "returns error in response" do
+          post("/api/v1/npq-applications/#{default_npq_application.id}/accept", params:)
+
+          expect(parsed_response.key?("errors")).to be_truthy
+          expect(parsed_response.dig("errors", 0, "detail")).to eql("Selected schedule is not valid for the course")
+        end
+      end
+    end
   end
 end
 

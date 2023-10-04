@@ -33,7 +33,7 @@ module Api
       end
 
       def accept
-        service = ::NPQ::Application::Accept.new(npq_application:)
+        service = ::NPQ::Application::Accept.new({ npq_application: }.merge(accept_npq_application_params["attributes"] || {}))
 
         render_from_service(service, json_serializer_class)
       end
@@ -67,6 +67,14 @@ module Api
 
       def npq_application
         @npq_application ||= npq_lead_provider.npq_applications.includes(:cohort, :npq_course, participant_identity: [:user]).find(params[:id])
+      end
+
+      def accept_npq_application_params
+        params
+          .require(:data)
+          .permit(:type, attributes: %i[schedule_identifier])
+      rescue ActionController::ParameterMissing
+        {}
       end
     end
   end
