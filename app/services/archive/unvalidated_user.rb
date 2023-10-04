@@ -7,7 +7,7 @@ module Archive
     ].freeze
 
     def call
-      user_can_be_archived!
+      check_user_can_be_archived!
 
       data = Archive::UserSerializer.new(user).serializable_hash
 
@@ -32,13 +32,15 @@ module Archive
       @keep_original = keep_original
     end
 
-    def user_can_be_archived!
+    def check_user_can_be_archived!
       if users_excluded_roles.any?
         raise ArchiveError, "User #{user.id} has excluded roles: #{users_excluded_roles.join(',')}"
       elsif user_has_declarations?
         raise ArchiveError, "User #{user.id} has non-voided declarations"
       elsif user_has_eligibility?
         raise ArchiveError, "User #{user.id} has an eligibility record"
+      elsif user_has_mentees?
+        raise ArchiveError, "User #{user.id} has mentees"
       end
     end
 
@@ -52,6 +54,14 @@ module Archive
 
     def user_has_eligibility?
       ECFParticipantEligibility.where(participant_profile_id: user.participant_profiles.select(:id)).any?
+    end
+
+    def user_has_mentees?
+      return false unless user.user_roles.include? "mentor"
+
+      user.teacher_profile.participant_profiles.mentors.any? do |mentor_profile|
+        InductionRecord.where(mentor_profile:).any?
+      end
     end
 
     def destroy_user!
@@ -74,17 +84,7 @@ module Archive
       participant_profile.induction_records.destroy_all
       participant_profile.validation_decisions.destroy_all
 
-      destroy_mentorships!(participant_profile) if participant_profile.mentor?
-
       participant_profile.destroy!
-    end
-
-    def destroy_mentorships!(participant_profile)
-      InductionRecord.active.where(mentor_profile_id: participant_profile.id).each do |induction_record|
-        Induction::ChangeInductionRecord.call(induction_record:, changes: { mentor_profile_id: nil })
-      end
-
-      participant_profile.school_mentors.destroy_all
     end
   end
 end

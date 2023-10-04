@@ -3,20 +3,14 @@
 module Archive
   class ParticipantProfileSerializer
     include JSONAPI::Serializer
+    include ArchiveHelper
 
     set_id :id
 
-    meta do |profile|
-      user = profile.user
-      {
-        display_name: user.full_name,
-        search_terms: [
-          user.id,
-          user.full_name,
-          user.email,
-          user.teacher_profile&.trn,
-        ].compact,
-      }
+    # if top level User isn't archived but profiles are
+    # including User metadata to enable searching
+    meta do |participant_profile|
+      add_user_metadata(participant_profile.user)
     end
 
     attribute :type

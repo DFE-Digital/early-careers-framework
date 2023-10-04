@@ -607,3 +607,12 @@
   - body_type
   - created_at
   - updated_at
+  :archive_relics:
+  - id
+  - object_type
+  - object_id
+  - display_name
+  - reason
+  - data
+  - created_at
+  - updated_at

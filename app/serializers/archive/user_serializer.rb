@@ -3,6 +3,7 @@
 module Archive
   class UserSerializer
     include JSONAPI::Serializer
+    include ArchiveHelper
 
     set_id :id
 
@@ -11,12 +12,7 @@ module Archive
 
     # values to search on (this is indexed)
     meta do |user|
-      [
-        user.id,
-        user.full_name,
-        user.email,
-        user.teacher_profile&.trn,
-      ].compact
+      add_user_metadata(user)
     end
 
     # teacher_profile

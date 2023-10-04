@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe Archive::UnvalidatedUser do
-  let(:ect_profile) { create(:ect_participant_profile) }
-  let!(:user) { ect_profile.user }
+  let(:participant_profile) { create(:ect_participant_profile) }
+  let!(:user) { participant_profile.user }
 
   subject(:service_call) { described_class.call(user) }
 
@@ -49,7 +49,7 @@ RSpec.describe Archive::UnvalidatedUser do
 
   context "when the user has a declaration" do
     let(:state) { "submitted" }
-    let!(:declaration) { create(:seed_ecf_participant_declaration, :with_cpd_lead_provider, state:, user:, participant_profile: ect_profile) }
+    let!(:declaration) { create(:seed_ecf_participant_declaration, :with_cpd_lead_provider, state:, user:, participant_profile:) }
 
     it "raises an ArchiveError" do
       expect {
@@ -92,7 +92,7 @@ RSpec.describe Archive::UnvalidatedUser do
   end
 
   context "when the user has an eligibility record" do
-    let!(:eligibility) { create(:ecf_participant_eligibility, participant_profile: ect_profile) }
+    let!(:eligibility) { create(:ecf_participant_eligibility, participant_profile:) }
 
     it "raises an ArchiveError" do
       expect {
@@ -133,6 +133,17 @@ RSpec.describe Archive::UnvalidatedUser do
 
   context "when the user has a lead_provider profile" do
     let!(:lead_provider_profile) { create(:lead_provider_profile, user:) }
+
+    it "raises an ArchiveError" do
+      expect {
+        service_call
+      }.to raise_error Archive::ArchiveError
+    end
+  end
+
+  context "when the user has mentees" do
+    let(:participant_profile) { create(:mentor_participant_profile) }
+    let!(:mentee) { create(:seed_induction_record, :valid, mentor_profile: participant_profile) }
 
     it "raises an ArchiveError" do
       expect {
