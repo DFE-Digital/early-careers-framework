@@ -13,7 +13,6 @@ class ApplicationController < ActionController::Base
   before_action :previous_url_for_cookies_page, except: :check
   before_action :check_privacy_policy_accepted, except: :check
   before_action :set_sentry_user, except: :check, unless: :devise_controller?
-  before_action :log_x_real_ip_header
 
   def check
     head :ok
@@ -26,19 +25,6 @@ class ApplicationController < ActionController::Base
   end
 
 private
-
-  def log_x_real_ip_header
-    Rails.logger.info("x-real-ip: #{obfuscate_ip(request.headers['x-real-ip'])} (remote ip: #{obfuscate_ip(request.remote_ip)})")
-  end
-
-  def obfuscate_ip(ip)
-    return if ip.blank?
-
-    ip_segments = ip.split(".")
-    return unless ip_segments.count == 4
-
-    "#{ip_segments.first}.***.***.#{ip_segments.last}"
-  end
 
   def previous_url_for_cookies_page
     if request.get? && controller_name == "cookies"
