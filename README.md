@@ -182,7 +182,6 @@ To further aid manual testing and review of certain circumstances and behaviours
 that can be used in the __date of birth__ field when adding or validating an ECT or mentor participant. Using these values
 returns a "spoofed" response from the DQT API integration that enables us to proceed without calling the API or needing to know
 exactly what and how their test data is configured. These magic values are only available in development environments.
-
 | Date of birth | Validation response |
 |---------------|---------------------|
 | 1/1/1900 | All data matches and eligible participants |
