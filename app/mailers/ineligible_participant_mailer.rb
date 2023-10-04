@@ -13,10 +13,11 @@ class IneligibleParticipantMailer < ApplicationMailer
 
   def ect_previous_induction_email
     participant_profile = params[:participant_profile]
+    induction_tutor_email = params[:induction_tutor_email]
 
     template_mail(
       ECT_PREVIOUS_INDUCTION_TEMPLATE,
-      to: params[:induction_tutor_email],
+      to: induction_tutor_email,
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
@@ -27,11 +28,12 @@ class IneligibleParticipantMailer < ApplicationMailer
 
   def ect_previous_induction_email_previously_eligible
     participant_profile = params[:participant_profile]
+    induction_tutor_email = params[:induction_tutor_email]
 
     sit = Identity.find_user_by(email: induction_tutor_email)
     template_mail(
       ECT_PREVIOUS_INDUCTION_PREVIOUSLY_ELIGIBLE_TEMPLATE,
-      to: params[:induction_tutor_email],
+      to: induction_tutor_email,
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
