@@ -1,6 +1,6 @@
 <% content_for :title, "ECT or mentor details" %>
 
-<% content_for :before_content, govuk_back_link(text: "Back", href: school_participants_path) %>
+<% content_for :before_content, govuk_breadcrumbs(breadcrumbs: breadcrumbs(@school, @profile)) %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">

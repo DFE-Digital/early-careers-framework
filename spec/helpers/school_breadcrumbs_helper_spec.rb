@@ -6,7 +6,7 @@ RSpec.describe SchoolBreadcrumbsHelper, type: :helper do
   include Devise::Test::ControllerHelpers
 
   let(:school) { induction_coordinator.induction_coordinator_profile.schools.first }
-  let!(:cohort) { Cohort.current || create(:cohort, :current) }
+  let(:participant) { create(:teacher_profile) }
 
   before do
     sign_in induction_coordinator
@@ -20,15 +20,15 @@ RSpec.describe SchoolBreadcrumbsHelper, type: :helper do
         expect(helper.breadcrumbs).to eql({})
       end
 
-      it "returns the school path" do
+      it "returns the school page" do
         expect(helper.breadcrumbs(school)).to eql({ school.name => schools_dashboard_path(school_id: school.slug) })
       end
 
-      it "returns the cohort path" do
-        expect(helper.breadcrumbs(school, cohort)).to(
+      it "returns the school page and the Manage mentors and ECTs page" do
+        expect(helper.breadcrumbs(school, participant)).to(
           eql({
             school.name => schools_dashboard_path(school_id: school.slug),
-            "#{cohort.display_name} cohort" => schools_cohort_path(school_id: school.slug, cohort_id: cohort.start_year),
+            "Manage mentors and ECTs" => school_participants_path(school_id: school.slug),
           }),
         )
       end
@@ -38,11 +38,11 @@ RSpec.describe SchoolBreadcrumbsHelper, type: :helper do
       let(:schools) { create_list(:school, rand(2..5)) }
       let(:induction_coordinator) { create(:user, :induction_coordinator, school_ids: schools.map(&:id)) }
 
-      it "returns the schools index page" do
+      it "returns the Mange your schools page" do
         expect(helper.breadcrumbs).to eql({ "Manage your schools" => schools_dashboard_index_path })
       end
 
-      it "returns the school path" do
+      it "returns the Mange your schools page and the school page" do
         expect(helper.breadcrumbs(school)).to(
           eql({
             "Manage your schools" => schools_dashboard_index_path,
@@ -51,12 +51,12 @@ RSpec.describe SchoolBreadcrumbsHelper, type: :helper do
         )
       end
 
-      it "returns the cohort path" do
-        expect(helper.breadcrumbs(school, cohort)).to(
+      it "returns the Mange your schools page, the school page and the Manage mentors and ECTs page" do
+        expect(helper.breadcrumbs(school, participant)).to(
           eql({
             "Manage your schools" => schools_dashboard_index_path,
             school.name => schools_dashboard_path(school_id: school.slug),
-            "#{cohort.display_name} cohort" => schools_cohort_path(school_id: school.slug, cohort_id: cohort.start_year),
+            "Manage mentors and ECTs" => school_participants_path(school_id: school.slug),
           }),
         )
       end

@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 module SchoolBreadcrumbsHelper
-  def breadcrumbs(active_school = nil, active_cohort = nil)
+  def breadcrumbs(active_school = nil, active_participant = nil)
     breadcrumbs = base_breadcrumbs
     breadcrumbs.merge!({ active_school.name => schools_dashboard_path(school_id: active_school) }) if active_school.present?
-    breadcrumbs.merge!({ "#{active_cohort.display_name} cohort" => schools_cohort_path(school_id: active_school, cohort_id: active_cohort) }) if active_cohort.present?
+    breadcrumbs.merge!({ "Manage mentors and ECTs" => school_participants_path(school_id: active_school) }) if active_participant.present?
     breadcrumbs
   end
 
