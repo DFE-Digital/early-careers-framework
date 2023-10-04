@@ -33,13 +33,13 @@ if ENV.key?("REDIS_URI")
   end
 end
 
-if ENV.key?("REDIS_QUEUE_URL")
+if ENV.key?("REDIS_URL")
   Sidekiq.configure_server do |config|
-    config.redis = { url: ENV.fetch("REDIS_QUEUE_URL") }
+    config.redis = { url: ENV.fetch("REDIS_URL") }
   end
 
   Sidekiq.configure_client do |config|
-    config.redis = { url: ENV.fetch("REDIS_QUEUE_URL") }
+    config.redis = { url: ENV.fetch("REDIS_URL") }
   end
 end
 
