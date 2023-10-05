@@ -13,6 +13,10 @@ class Rack::Attack
     request.path == "/api/notify-callback" && request.post?
   end
 
+  safelist("Allow /check endpoint at any rate") do |request|
+    request.path == "/check"
+  end
+
   throttle("Non-API requests by ip", limit: 300, period: 5.minutes) do |request|
     unless request.path.starts_with?(API_PATH)
       request.ip
