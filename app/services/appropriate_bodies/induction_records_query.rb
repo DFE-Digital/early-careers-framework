@@ -16,6 +16,14 @@ module AppropriateBodies
 
       InductionRecord.distinct
         .joins("JOIN (#{join.to_sql}) AS latest_induction_records ON latest_induction_records.latest_id = induction_records.id")
+        .includes(
+          :induction_programme,
+          :partnership,
+          :lead_provider,
+          :user,
+          school: [:induction_coordinators],
+          participant_profile: %i[teacher_profile ecf_participant_eligibility ecf_participant_validation_data],
+        )
         .select(
           "induction_records.*",
           latest_email_status_per_participant,

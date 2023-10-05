@@ -13,7 +13,7 @@ RSpec.describe TrainingRecordState do
   end
 
   subject(:determined_state) do
-    described_class.new(participant_profile, induction_record)
+    described_class.new(induction_record)
   end
 
   shared_examples "determines states as" do |validation_state, training_eligibility_state, fip_funding_eligibility_state, mentoring_state, training_state, record_state|
@@ -363,18 +363,6 @@ RSpec.describe TrainingRecordState do
                        :not_a_mentor,
                        :active_fip_training,
                        :active_fip_training
-    end
-
-    context "and they were withdrawn before an induction record was created for them" do
-      let!(:participant_profile) { scenarios.ect_on_fip_withdrawn_no_induction_record.participant_profile }
-
-      include_examples "determines states as",
-                       :valid,
-                       :eligible_for_induction_training,
-                       :eligible_for_fip_funding,
-                       :not_a_mentor,
-                       :withdrawn_training,
-                       :withdrawn_training
     end
 
     context "and their training has been deferred" do
@@ -753,18 +741,6 @@ RSpec.describe TrainingRecordState do
                        :not_a_mentor,
                        :active_cip_training,
                        :active_cip_training
-    end
-
-    context "and they were withdrawn before an induction record was created for them" do
-      let!(:participant_profile) { scenarios.ect_on_cip_withdrawn_no_induction_record.participant_profile }
-
-      include_examples "determines states as",
-                       :valid,
-                       :eligible_for_induction_training,
-                       :eligible_for_fip_funding,
-                       :not_a_mentor,
-                       :withdrawn_training,
-                       :withdrawn_training
     end
 
     context "and their training has been deferred" do
@@ -1193,18 +1169,6 @@ RSpec.describe TrainingRecordState do
                        :active_mentoring
     end
 
-    context "and they were withdrawn before an induction record was created for them" do
-      let!(:participant_profile) { scenarios.mentor_on_fip_withdrawn_no_induction_record.participant_profile }
-
-      include_examples "determines states as",
-                       :valid,
-                       :eligible_for_mentor_training,
-                       :eligible_for_mentor_funding,
-                       :active_mentoring,
-                       :withdrawn_training,
-                       :active_mentoring
-    end
-
     context "and their training has been deferred" do
       let!(:participant_profile) { scenarios.mentor_on_fip_deferred.participant_profile }
 
@@ -1592,18 +1556,6 @@ RSpec.describe TrainingRecordState do
                        :eligible_for_mentor_funding,
                        :active_mentoring,
                        :registered_for_cip_training,
-                       :active_mentoring
-    end
-
-    context "and they were withdrawn before an induction record was created for them" do
-      let!(:participant_profile) { scenarios.mentor_on_cip_withdrawn_no_induction_record.participant_profile }
-
-      include_examples "determines states as",
-                       :valid,
-                       :eligible_for_mentor_training,
-                       :eligible_for_mentor_funding,
-                       :active_mentoring,
-                       :withdrawn_training,
                        :active_mentoring
     end
 

@@ -6,9 +6,8 @@ module AppropriateBodies
   class ParticipantsController < BaseController
     def index
       induction_records = InductionRecordsQuery.new(appropriate_body:).induction_records
-      participant_profiles = induction_records.map(&:participant_profile)
 
-      @training_record_states = DetermineTrainingRecordState.call(participant_profiles:, induction_records:)
+      @training_record_states = DetermineTrainingRecordState.call(induction_records:)
       @filter = ParticipantsFilter.new(collection: induction_records, params: filter_params, training_record_states: @training_record_states)
 
       respond_to do |format|

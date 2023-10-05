@@ -145,9 +145,9 @@ class TrainingRecordState
 
   delegate :id, to: :participant_profile, prefix: true
 
-  def initialize(participant_profile, induction_record)
-    @participant_profile = participant_profile
+  def initialize(induction_record)
     @induction_record = induction_record
+    @participant_profile = induction_record.participant_profile
   end
 
   def validation_state
@@ -600,7 +600,7 @@ private
   end
 
   def relevant_induction_programme
-    @relevant_induction_programme ||= induction_record&.induction_programme || participant_profile.school_cohort&.default_induction_programme
+    @relevant_induction_programme ||= induction_record.induction_programme || participant_profile.school_cohort&.default_induction_programme
   end
 
   def on_fip?
@@ -716,34 +716,34 @@ private
   end
 
   def withdrawn_training?
-    induction_record.present? ? induction_record.training_status_withdrawn? : participant_profile.training_status_withdrawn?
+    induction_record.training_status_withdrawn?
   end
 
   def deferred_training?
-    induction_record.present? ? induction_record.training_status_deferred? : participant_profile.training_status_deferred?
+    induction_record.training_status_deferred?
   end
 
   def withdrawn_participant?
-    induction_record.present? ? induction_record.withdrawn_induction_status? : participant_profile.withdrawn_record?
+    induction_record.withdrawn_induction_status?
   end
 
   def completed_training?
-    !!induction_record&.completed_induction_status?
+    induction_record.completed_induction_status?
   end
 
   def changed_training?
-    !!induction_record&.changed_induction_status?
+    induction_record.changed_induction_status?
   end
 
   def leaving_school?
-    !!(induction_record&.leaving_induction_status? && induction_record&.end_date&.future?)
+    induction_record.leaving_induction_status? && induction_record.end_date&.future?
   end
 
   def left_school?
-    !!(induction_record&.leaving_induction_status? && induction_record&.end_date&.past?)
+    induction_record.leaving_induction_status? && induction_record.end_date&.past?
   end
 
   def joining_school?
-    !!(induction_record&.active_induction_status? && induction_record&.school_transfer && induction_record&.start_date&.future?)
+    induction_record.active_induction_status? && induction_record.school_transfer && induction_record.start_date&.future?
   end
 end

@@ -16,7 +16,7 @@ RSpec.describe AppropriateBodies::ParticipantsFilter do
 
   let(:collection) { AppropriateBodies::InductionRecordsQuery.new(appropriate_body:).induction_records }
   let(:params) { {} }
-  let(:training_record_states) { DetermineTrainingRecordState.call(participant_profiles: collection.map(&:participant_profile), induction_records: collection) }
+  let(:training_record_states) { DetermineTrainingRecordState.call(induction_records: collection) }
 
   subject { described_class.new(collection:, params:, training_record_states:).scope.to_a }
 
