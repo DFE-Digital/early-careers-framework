@@ -13,3 +13,7 @@ properties:
     description: "Return only records that have this training status"
     type: :string
     example: "active"
+  from_participant_id:
+    description: "Return only records that have this from Participant ID"
+    type: "string"
+    example: "439ac4fe-a003-417f-9694-07c45b3482f8"

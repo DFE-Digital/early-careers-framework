@@ -389,6 +389,11 @@ Note, providers can also filter results by adding `cohort` and `updated_since` f
 
 An example response body is listed below.
 
+**Providers should note:**
+
+* The DfE has [previously advised](/api-reference/release-notes.html#15-march-2023) of the possibility that participants may be registered as duplicates with multiple participant_ids. Where the DfE identifies duplicates, it will fix the error by ‘retiring’ one of the participant IDs, then associating all records and data under the remaining ID.
+* Providers can check if an ECF participant’s ID has changed using the `participant_id_changes` nested structure in the [ECFEnrolment](/api-reference/reference-v3.html#schema-ecfenrolment), which contains a `from_participant_id` and a `to_participant_id` string fields, as well a `changed_at` date value
+
 For more detailed information see the specifications for this [view multiple ECF participants endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-get).
 
 #### Example response body:
@@ -423,6 +428,13 @@ For more detailed information see the specifications for this [view multiple ECF
             "deferral": null,
             "created_at": "2021-05-31T02:22:32.000Z"
           }
+        ],
+        "participant_id_changes": [
+          {
+            "from_participant_id": "db3a7848-7308-4879-942a-c4a70ced400a",
+            "to_participant_id": "23dd8d66-e11f-4139-9001-86b4f9abcb02",
+            "changed_at": "2023-09-23T02:22:32.000Z",
+          }
         ]
       }
     }
@@ -437,6 +449,11 @@ For more detailed information see the specifications for this [view multiple ECF
 ```
 
 An example response body is listed below.
+
+**Providers should note:**
+
+* The DfE has [previously advised](/api-reference/release-notes.html#15-march-2023) of the possibility that participants may be registered as duplicates with multiple participant_ids. Where the DfE identifies duplicates, it will fix the error by ‘retiring’ one of the participant IDs, then associating all records and data under the remaining ID.
+* Providers can check if an ECF participant’s ID has changed using the `participant_id_changes` nested structure in the [ECFEnrolment](/api-reference/reference-v3.html#schema-ecfenrolment), which contains a `from_participant_id` and a `to_participant_id` string fields, as well a `changed_at` date value
 
 For more detailed information see the specifications for this [view a single ECF participant endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-id-get).
 
@@ -470,6 +487,13 @@ For more detailed information see the specifications for this [view a single ECF
           "withdrawal": null,
           "deferral": null,
           "created_at": "2021-05-31T02:22:32.000Z"
+        }
+      ],
+      "participant_id_changes": [
+        {
+          "from_participant_id": "db3a7848-7308-4879-942a-c4a70ced400a",
+          "to_participant_id": "23dd8d66-e11f-4139-9001-86b4f9abcb02",
+          "changed_at": "2023-09-23T02:22:32.000Z",
         }
       ]
     }

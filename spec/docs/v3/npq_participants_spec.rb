@@ -30,7 +30,7 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
                 explode: true,
                 required: false,
                 description: "Refine NPQ participants to return.",
-                example: CGI.unescape({ filter: { updated_since: "2020-11-13T11:21:55Z", training_status: :active } }.to_param)
+                example: CGI.unescape({ filter: { updated_since: "2020-11-13T11:21:55Z", training_status: :active, from_participant_id: "439ac4fe-a003-417f-9694-07c45b3482f8" } }.to_param)
 
       parameter name: :page,
                 in: :query,
