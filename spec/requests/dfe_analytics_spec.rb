@@ -24,5 +24,9 @@ RSpec.describe "DfE Analytics", type: :request do
       Cohort.create!(start_year: 2005)
       expect(:create_entity).to have_been_enqueued_as_analytics_events
     end
+
+    it "does not send a web request event for GET /check" do
+      expect { get check_path }.not_to have_sent_analytics_event_types(:web_request)
+    end
   end
 end
