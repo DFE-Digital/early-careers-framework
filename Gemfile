@@ -37,9 +37,6 @@ gem "puma", "~> 5.6"
 # Soft delete
 gem "discard", "~> 1.3"
 
-# Faster Redis
-gem "hiredis"
-
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", "~> 1.16", require: false
 

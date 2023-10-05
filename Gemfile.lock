@@ -251,7 +251,6 @@ GEM
       builder (>= 2.1.2)
       rexml (~> 3.0)
     hashdiff (1.0.1)
-    hiredis (0.6.3)
     html-attributes-utils (1.0.2)
       activesupport (>= 6.1.4.4)
     httpclient (2.8.3)
@@ -655,7 +654,6 @@ DEPENDENCIES
   googleauth
   govuk-components (~> 4.1.1)
   govuk_design_system_formbuilder (~> 4.1.1)
-  hiredis
   httpclient (~> 2.8, >= 2.8.3)
   jsbundling-rails
   json-diff (~> 0.4.1)
