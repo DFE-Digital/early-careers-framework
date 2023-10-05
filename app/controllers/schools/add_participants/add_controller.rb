@@ -32,7 +32,7 @@ module Schools
 
       def data_check
         if has_already_completed? || !who_stage_complete?
-          Rails.logger.info("AddController#data_check: redirect to abort path {has_already_completed? = #{has_already_completed?}, who_stage_complete? = #{who_stage_complete?}}")
+          Rails.logger.info("TransferController#data_check: check failed {has_already_completed? = #{has_already_completed?}, found_participant_in_dqt? = #{@wizard.found_participant_in_dqt?}, transfer? = #{@wizard.transfer?}")
           remove_session_data
           redirect_to abort_path
         end
