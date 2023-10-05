@@ -53,7 +53,7 @@ class Schools::ParticipantsController < Schools::BaseController
   def edit_email; end
 
   def update_email
-    identity = @induction_record.preferred_identity
+    identity = @profile.user.participant_identities.find_by(email: params[:email]) || @induction_record.preferred_identity
     identity.assign_attributes(email: params[:email])
     redirect_to action: :email_used and return if email_used?(identity.email)
 
