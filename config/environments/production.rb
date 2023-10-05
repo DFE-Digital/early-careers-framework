@@ -42,15 +42,8 @@ Rails.application.configure do
   config.force_ssl = true
   config.session_store :cookie_store, key: "_early_career_framework_session", secure: true, expire_after: 2.weeks
 
-  config.cache_store = :redis_cache_store,
-                       {
-                         url: ENV["REDIS_CACHE_URL"],
-                           pool_size: ENV.fetch("RAILS_MAX_THREADS", 5),
-                           connect_timeout: 30, # Defaults to 20 seconds
-                           read_timeout: 0.2, # Defaults to 1 second
-                           write_timeout: 0.2, # Defaults to 1 second
-                           reconnect_attempts: 1, # Defaults to 0
-                       }
+  # Use a different cache store in production.
+  # config.cache_store = :mem_cache_store
 
   # Use a real queuing backend for Active Job (and separate queues per environment).
   config.active_job.queue_adapter = :sidekiq
