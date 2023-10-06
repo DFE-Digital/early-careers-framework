@@ -7,6 +7,18 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
+## 10 October 2023
+
+Providers can now see if and when an early career teacher has completed their induction in the API v3.
+
+We’ve done this by adding a new field, `induction_end_date`, to the participant profile ECF endpoint.
+
+The `induction_end_date` field sits in the data responses for ECF participants.
+
+[Example response body for all participant data](https://manage-training-for-early-career-teachers.education.gov.uk/api-reference/ecf/guidance.html#view-all-participant-data-example-response-body)
+
+[Example response body for a single participant’s data](https://cpd-ecf-review-4094-web.test.teacherservices.cloud/api-reference/ecf/guidance.html#view-a-single-participant-39-s-data-example-response-body)
+
 ## 9 October 2023
 
 The DfE has released a change to the `updated_at` functionality of the [ECFPartnershipAttributes](/api-reference/reference-v3.html#schema-ecfpartnershipattributes).
@@ -60,9 +72,9 @@ Providers should pause API calls during this time. You’ll be able to start usi
 
 We will be changing the sandbox URL to [https://sb.manage-training-for-early-career-teachers.education.gov.uk/](https://sb.manage-training-for-early-career-teachers.education.gov.uk/) on Thursday 7 September.
 
-The sandbox environment will be unavailable between 5pm and 7pm on 7 September while we make this change. 
+The sandbox environment will be unavailable between 5pm and 7pm on 7 September while we make this change.
 
-Providers should:  
+Providers should:
 
 * pause testing between 5pm and 7pm on 7 September
 * update their base URL for their integrations once the sandbox environment becomes available again to avoid any data loss
