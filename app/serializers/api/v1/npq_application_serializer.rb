@@ -75,6 +75,10 @@ module Api
       attribute :teacher_catchment_country
       attribute :itt_provider
       attribute :lead_mentor
+
+      attribute(:schedule_identifier) do |object|
+        object.profile&.schedule&.schedule_identifier
+      end
     end
   end
 end
