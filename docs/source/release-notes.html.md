@@ -7,6 +7,18 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
+## 6 October 2023
+
+Providers can now see if and when an early career teacher has completed their induction in the API v3.
+
+We’ve done this by adding a new field, `induction_end_date`, to the participant profile ECF endpoint. 
+
+The `induction_end_date` field sits in the data responses for ECF participants. 
+
+[Example response body for all participant data](https://manage-training-for-early-career-teachers.education.gov.uk/api-reference/ecf/guidance.html#view-all-participant-data-example-response-body) 
+
+[Example response body for a single participant’s data](https://cpd-ecf-review-4094-web.test.teacherservices.cloud/api-reference/ecf/guidance.html#view-a-single-participant-39-s-data-example-response-body)
+
 ## 2 October 2023
 
 We’ve added the new NPQ in leading primary mathematics to the production environment.
