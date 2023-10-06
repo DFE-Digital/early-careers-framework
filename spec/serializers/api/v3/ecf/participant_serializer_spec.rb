@@ -53,7 +53,7 @@ module Api
                       withdrawal: nil,
                       deferral: nil,
                       created_at: ect_profile.created_at.rfc3339,
-                      induction_end_date: ect_profile.induction_completion_date&.strftime("%Y-%m-%d"),
+                      induction_end_date: "2022-01-12",
                     },
                   ],
               },
@@ -92,7 +92,7 @@ module Api
                   withdrawal: nil,
                   deferral: nil,
                   created_at: mentor_profile.created_at.rfc3339,
-                  induction_end_date: mentor_profile.induction_completion_date&.strftime("%Y-%m-%d"),
+                  induction_end_date: nil,
                 })
               end
             end

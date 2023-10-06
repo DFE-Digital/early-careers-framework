@@ -308,7 +308,7 @@ RSpec.describe "API ECF Participants", type: :request do
                 "withdrawal": nil,
                 "deferral": nil,
                 "created_at": early_career_teacher_profile.created_at.rfc3339,
-                "induction_end_date": early_career_teacher_profile.induction_completion_date&.strftime("%Y-%m-%d"),
+                "induction_end_date": "2022-01-12",
               }],
             },
           },
