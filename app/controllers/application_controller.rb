@@ -13,6 +13,7 @@ class ApplicationController < ActionController::Base
   before_action :previous_url_for_cookies_page, except: :check
   before_action :check_privacy_policy_accepted, except: :check
   before_action :set_sentry_user, except: :check, unless: :devise_controller?
+  skip_after_action :trigger_request_event, only: :check
 
   def check
     head :ok
