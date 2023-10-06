@@ -57,7 +57,7 @@ module Schools
       end
 
       def who_stage_complete?
-        @wizard.found_participant_in_dqt? && @wizard.transfer?
+        @wizard.found_participant_in_dqt? && @wizard.transfer? # (@wizard.transfer? || @wizard.sit_adding_themself_as_mentor?)
       end
     end
   end
