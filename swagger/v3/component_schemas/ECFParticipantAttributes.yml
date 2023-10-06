@@ -23,3 +23,8 @@ properties:
     type: array
     items:
       $ref: "#/components/schemas/ECFEnrolment"
+  participant_id_changes:
+    description: "Information about the Participant ID changes"
+    type: array
+    items:
+      $ref: "#/components/schemas/ParticipantIdChange"

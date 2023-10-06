@@ -7,6 +7,21 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
+## 6 October 2023
+
+In the sandbox environment, the DfE has added experimental fields to API v3 documentation intended to make it simpler for lead providers to identify and manage deduped participants.
+
+The DfE has [previously advised](/api-reference/release-notes.html#15-march-2023) of the possibility that participants may be registered as duplicates with multiple participant_ids.
+
+Where the DfE identifies duplicates, it will fix the error by ‘retiring’ one of the participant IDs, then associating all records and data under the remaining ID. To date, when this occurred, the DfE has informed providers of changes via CSVs.
+
+Now, the DfE proposes that lead providers may manage these limited changes using some new API functionality including:
+
+* For API v3, a new `participant_id_changes` nested structure added to the [ECFEnrolment](/api-reference/reference-v3.html#schema-ecfenrolment) and [NPQEnrolment](/api-reference/reference-v3.html#schema-npqenrolment) schemas, which would each contain a `from_participant_id` and a `to_participant_id` string fields, as well a `changed_at` date value
+* For API v3, a new filter for the various GET participant endpoints, so lead providers can search by a participant_id to check if it has changed, which will return the participant including their changed id e.g. **GET** `api/v3/participants/ecf?filter[from_participant_id]={your_id}`
+
+The DfE welcomes feedback on these changes and intends to release them to the sandbox and production as soon as possible. The DfE will provide a release note at each stage.
+
 ## 2 October 2023
 
 We’ve added the new NPQ in leading primary mathematics to the production environment.

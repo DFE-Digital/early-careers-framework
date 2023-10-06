@@ -1,0 +1,22 @@
+description: "The details of an Participant ID change"
+type: object
+required:
+  - from_participant_id
+  - to_participant_id
+  - changed_at
+properties:
+  from_participant_id:
+    description: "The unique identifier of the changed from participant training record."
+    type: string
+    format: uuid
+    example: "000a97ff-d2a9-4779-a397-9bfd9063072e"
+  to_participant_id:
+    description: "The unique identifier of the changed to participant training record."
+    type: string
+    format: uuid
+    example: "000a97ff-d2a9-4779-a397-9bfd9063072e"
+  changed_at:
+    description: The date and time the Participant ID change
+    type: string
+    format: date-time
+    example: "2021-05-31T02:22:32.000Z"

@@ -317,6 +317,11 @@ Note, providers can also filter results by adding `updated_since` filters to the
 
 An example response body is listed below.
 
+**Providers should note:**
+
+* The DfE has [previously advised](/api-reference/release-notes.html#15-march-2023) of the possibility that participants may be registered as duplicates with multiple participant_ids. Where the DfE identifies duplicates, it will fix the error by ‘retiring’ one of the participant IDs, then associating all records and data under the remaining ID.
+* Providers can check if an NPQ participant’s ID has changed using the `participant_id_changes` nested structure in the [NPQEnrolment](/api-reference/reference-v3.html#schema-npqenrolment), which contains a `from_participant_id` and a `to_participant_id` string fields, as well a `changed_at` date value
+
 For more detailed information see the specifications for this [view multiple NPQ participants endpoint](/api-reference/reference-v3.html#api-v3-participants-npq-get).
 
 #### Example response body:
@@ -346,6 +351,13 @@ For more detailed information see the specifications for this [view multiple NPQ
             "deferral": null
             "created_at": "2021-05-31T02:22:32.000Z"
           }
+        ],
+        "participant_id_changes": [
+          {
+            "from_participant_id": "ac3d1243-7308-4879-942a-c4a70ced400a",
+            "to_participant_id": "23dd8d66-e11f-4139-9001-86b4f9abcb02",
+            "changed_at": "2023-09-23T02:22:32.000Z",
+          }
         ]
       }
     }
@@ -360,6 +372,11 @@ For more detailed information see the specifications for this [view multiple NPQ
 ```
 
 An example response body is listed below.
+
+**Providers should note:**
+
+* The DfE has [previously advised](/api-reference/release-notes.html#15-march-2023) of the possibility that participants may be registered as duplicates with multiple participant_ids. Where the DfE identifies duplicates, it will fix the error by ‘retiring’ one of the participant IDs, then associating all records and data under the remaining ID.
+* Providers can check if an NPQ participant’s ID has changed using the `participant_id_changes` nested structure in the [NPQEnrolment](/api-reference/reference-v3.html#schema-npqenrolment), which contains a `from_participant_id` and a `to_participant_id` string fields, as well a `changed_at` date value
 
 For more detailed information see the specifications for this [view a single NPQ participant endpoint](/api-reference/reference-v3.html#api-v3-participants-npq-id-get).
 
@@ -391,6 +408,13 @@ For more detailed information see the specifications for this [view a single NPQ
             "withdrawal": null
             "deferral": null
             "created_at": "2021-05-31T02:22:32.000Z"
+          }
+        ],
+        "participant_id_changes": [
+          {
+            "from_participant_id": "ac3d1243-7308-4879-942a-c4a70ced400a",
+            "to_participant_id": "23dd8d66-e11f-4139-9001-86b4f9abcb02",
+            "changed_at": "2023-09-23T02:22:32.000Z",
           }
         ]
       }

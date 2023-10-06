@@ -1174,7 +1174,7 @@
             "explode": true,
             "required": false,
             "description": "Refine NPQ participants to return.",
-            "example": "filter[updated_since]=2020-11-13T11:21:55Z&filter[training_status]=active"
+            "example": "filter[updated_since]=2020-11-13T11:21:55Z&filter[training_status]=active&filter[from_participant_id]=439ac4fe-a003-417f-9694-07c45b3482f8"
           },
           {
             "name": "page",
@@ -1234,6 +1234,13 @@
                                 "withdrawal": null,
                                 "deferral": null,
                                 "created_at": "2021-05-31T02:22:32.000Z"
+                              }
+                            ],
+                            "participant_id_changes": [
+                              {
+                                "from_participant_id": "ac3d1243-7308-4879-942a-c4a70ced400a",
+                                "to_participant_id": "23dd8d66-e11f-4139-9001-86b4f9abcb02",
+                                "changed_at": "2023-09-23T02:22:32.000Z"
                               }
                             ]
                           }
@@ -1316,6 +1323,13 @@
                               "withdrawal": null,
                               "deferral": null,
                               "created_at": "2021-05-31T02:22:32.000Z"
+                            }
+                          ],
+                          "participant_id_changes": [
+                            {
+                              "from_participant_id": "db3a7848-7308-4879-942a-c4a70ced400a",
+                              "to_participant_id": "23dd8d66-e11f-4139-9001-86b4f9abcb02",
+                              "changed_at": "2023-09-23T02:22:32.000Z"
                             }
                           ]
                         }
@@ -1469,6 +1483,13 @@
                               },
                               "created_at": "2021-05-31T02:22:32.000Z"
                             }
+                          ],
+                          "participant_id_changes": [
+                            {
+                              "from_participant_id": "db3a7848-7308-4879-942a-c4a70ced400a",
+                              "to_participant_id": "23dd8d66-e11f-4139-9001-86b4f9abcb02",
+                              "changed_at": "2023-09-23T02:22:32.000Z"
+                            }
                           ]
                         }
                       }
@@ -1600,6 +1621,13 @@
                               },
                               "deferral": null,
                               "created_at": "2021-05-31T02:22:32.000Z"
+                            }
+                          ],
+                          "participant_id_changes": [
+                            {
+                              "from_participant_id": "db3a7848-7308-4879-942a-c4a70ced400a",
+                              "to_participant_id": "23dd8d66-e11f-4139-9001-86b4f9abcb02",
+                              "changed_at": "2023-09-23T02:22:32.000Z"
                             }
                           ]
                         }
@@ -2097,7 +2125,7 @@
             "explode": true,
             "required": false,
             "description": "Refine ECF participants to return.",
-            "example": "filter[cohort]=2022&filter[updated_since]=2020-11-13T11:21:55Z&filter[training_status]=active"
+            "example": "filter[cohort]=2022&filter[updated_since]=2020-11-13T11:21:55Z&filter[training_status]=active&filter[from_participant_id]=439ac4fe-a003-417f-9694-07c45b3482f8"
           },
           {
             "name": "page",
@@ -2408,6 +2436,13 @@
                               },
                               "created_at": "2021-05-31T02:22:32.000Z"
                             }
+                          ],
+                          "participant_id_changes": [
+                            {
+                              "from_participant_id": "db3a7848-7308-4879-942a-c4a70ced400a",
+                              "to_participant_id": "23dd8d66-e11f-4139-9001-86b4f9abcb02",
+                              "changed_at": "2023-09-23T02:22:32.000Z"
+                            }
                           ]
                         }
                       }
@@ -2544,6 +2579,13 @@
                                 "date": "2021-06-31T02:22:32.000Z"
                               },
                               "created_at": "2021-05-31T02:22:32.000Z"
+                            }
+                          ],
+                          "participant_id_changes": [
+                            {
+                              "from_participant_id": "db3a7848-7308-4879-942a-c4a70ced400a",
+                              "to_participant_id": "23dd8d66-e11f-4139-9001-86b4f9abcb02",
+                              "changed_at": "2023-09-23T02:22:32.000Z"
                             }
                           ]
                         }
@@ -3229,6 +3271,35 @@
           }
         }
       },
+      "ParticipantIdChange": {
+        "description": "The details of an Participant ID change",
+        "type": "object",
+        "required": [
+          "from_participant_id",
+          "to_participant_id",
+          "changed_at"
+        ],
+        "properties": {
+          "from_participant_id": {
+            "description": "The unique identifier of the changed from participant training record.",
+            "type": "string",
+            "format": "uuid",
+            "example": "000a97ff-d2a9-4779-a397-9bfd9063072e"
+          },
+          "to_participant_id": {
+            "description": "The unique identifier of the changed to participant training record.",
+            "type": "string",
+            "format": "uuid",
+            "example": "000a97ff-d2a9-4779-a397-9bfd9063072e"
+          },
+          "changed_at": {
+            "description": "The date and time the Participant ID change",
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-05-31T02:22:32.000Z"
+          }
+        }
+      },
       "ECFParticipant": {
         "description": "<b>Note, this endpoint includes updated specifications.</b><br/>The details of a participant",
         "type": "object",
@@ -3260,7 +3331,8 @@
         "required": [
           "full_name",
           "updated_at",
-          "ecf_enrolments"
+          "ecf_enrolments",
+          "participant_id_changes"
         ],
         "properties": {
           "full_name": {
@@ -3284,6 +3356,13 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/ECFEnrolment"
+            }
+          },
+          "participant_id_changes": {
+            "description": "Information about the Participant ID changes",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ParticipantIdChange"
             }
           }
         }
@@ -5623,6 +5702,13 @@
             "items": {
               "$ref": "#/components/schemas/NPQEnrolment"
             }
+          },
+          "participant_id_changes": {
+            "description": "Information about the Participant ID changes",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ParticipantIdChange"
+            }
           }
         }
       },
@@ -7041,6 +7127,11 @@
             "description": "Return only records that have this training status",
             "type": "string",
             "example": "active"
+          },
+          "from_participant_id": {
+            "description": "Return only records that have this from Participant ID",
+            "type": "string",
+            "example": "439ac4fe-a003-417f-9694-07c45b3482f8"
           }
         }
       },
@@ -7057,6 +7148,11 @@
             "description": "Return only records that have this training status",
             "type": "string",
             "example": "active"
+          },
+          "from_participant_id": {
+            "description": "Return only records that have this from Participant ID",
+            "type": "string",
+            "example": "439ac4fe-a003-417f-9694-07c45b3482f8"
           }
         }
       },
