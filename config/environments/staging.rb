@@ -42,11 +42,10 @@ Rails.application.configure do
   config.force_ssl = true
   config.session_store :cookie_store, key: "_early_career_framework_session", secure: true, expire_after: 2.weeks
 
-  # Use a different cache store in production.
+  # Mirrors the production cache store.
   config.cache_store = :redis_cache_store,
                        {
                          url: ENV["REDIS_CACHE_URL"],
-                           pool_size: ENV.fetch("RAILS_MAX_THREADS", 5),
                            connect_timeout: 30, # Defaults to 20 seconds
                            reconnect_attempts: 1, # Defaults to 0
                            error_handler: lambda { |method:, returning:, exception:|
