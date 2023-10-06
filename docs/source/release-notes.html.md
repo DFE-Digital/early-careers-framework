@@ -9,15 +9,13 @@ If you have any questions or comments about these notes, please contact DfE via 
 
 ## 10 October 2023
 
-Providers can now see if and when an early career teacher has completed their induction in the API v3.
+Lead providers integrated with v3 of the API can now view details of ECTs that have completed their induction.
 
-We’ve done this by adding a new field, `induction_end_date`, to the participant profile ECF endpoint.
+We've added a new field, `induction_end_date`, to [ECFEnrolment](/api-reference/reference-v3.html#schema-ecfenrolment). We populate the field with data gathered about the date an ECT completed their induction from the Database of Qualified Teachers (DQT).
 
-The `induction_end_date` field sits in the data responses for ECF participants.
+We check the DQT on a daily basis for data about induction completion. We'll update a participant's records when we confirm they've completed their induction. Lead providers can use the [`updated_since` filter on the GET participants endpoint](/api-reference/reference-v3.html#schema-ecfparticipantfilter) to check for this kind of update.
 
-[Example response body for all participant data](https://manage-training-for-early-career-teachers.education.gov.uk/api-reference/ecf/guidance.html#view-all-participant-data-example-response-body)
-
-[Example response body for a single participant’s data](https://cpd-ecf-review-4094-web.test.teacherservices.cloud/api-reference/ecf/guidance.html#view-a-single-participant-39-s-data-example-response-body)
+Lead providers can use the field to identify participants that have completed their induction, and which may need to be placed on a [reduced schedule](/api-reference/ecf/schedules-and-milestone-dates.html#reduced-schedule).
 
 ## 9 October 2023
 
