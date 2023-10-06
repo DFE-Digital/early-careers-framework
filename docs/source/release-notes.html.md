@@ -7,6 +7,16 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
+## 6 October 2023
+
+Lead providers integrated with v3 of the API can now view details of ECTs that have completed their induction. 
+
+We’ve added a new field, `induction_end_date`, to [EcfParticipantAttributes](https://manage-training-for-early-career-teachers.education.gov.uk/api-reference/reference-v3.html#schema-ecfparticipantattributes). We populate the field with data gathered about the date an ECT completed their induction from the Database of Qualified Teachers (DQT).
+
+We check the DQT on a daily basis for data about induction completion. We'll update a participant’s records when we confirm they’ve completed their induction. Lead providers can use the [`updated_since` filter on the GET participants endpoint](https://manage-training-for-early-career-teachers.education.gov.uk/api-reference/reference-v3.html#schema-ecfparticipantfilter) to check for this kind of update. 
+
+Lead providers can use the field to identify participants that have completed their induction, and which may need to be placed on a [reduced schedule](https://manage-training-for-early-career-teachers.education.gov.uk/api-reference/ecf/schedules-and-milestone-dates.html#reduced-schedule). 
+
 ## 2 October 2023
 
 We’ve added the new NPQ in leading primary mathematics to the production environment.
