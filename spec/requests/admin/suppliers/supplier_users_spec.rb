@@ -87,13 +87,16 @@ RSpec.describe "Admin::SupplierUsers", type: :request do
       expect(User.find_by_email(email).full_name).to eq full_name
     end
 
-    it "shows an error when an email address is in use" do
+    it "does not show error when an email address is in use" do
       existing_user = create(:user)
 
-      when_i_enter_user_details(full_name, existing_user.email)
+      expect(existing_user).not_to be_lead_provider
 
-      expect(response).to render_template(:user_details)
-      expect(response.body).to include("There is already a user with this email address")
+      when_i_enter_user_details(existing_user.full_name, existing_user.email)
+
+      # Then
+      given_i_have_confirmed_my_choices
+      expect(existing_user.reload).to be_lead_provider
     end
 
     it "shows an error when nothing is entered" do

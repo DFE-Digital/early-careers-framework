@@ -18,6 +18,7 @@ RSpec.describe LeadProviderProfile, type: :model do
     let(:lead_provider) { create(:lead_provider) }
     let(:start_url) { "www.example.com" }
     let(:created_user) { User.find_by(email:) }
+    let(:existing_user) { create(:user) }
 
     it "creates a lead provider user" do
       expect {
@@ -30,6 +31,14 @@ RSpec.describe LeadProviderProfile, type: :model do
 
       expect(created_user.present?).to be(true)
       expect(created_user.full_name).to eql(name)
+    end
+
+    it "creates lead_provider_profile for an existing user" do
+      expect(existing_user.lead_provider).to eql(nil)
+      LeadProviderProfile.create_lead_provider_user(existing_user.full_name, existing_user.email, lead_provider, start_url)
+
+      existing_user.reload
+      expect(existing_user.lead_provider).to eql(lead_provider)
     end
 
     it "sends an email to the new user" do

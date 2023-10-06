@@ -7,6 +7,7 @@ class ChooseRoleForm
   USER_ROLES = {
     "appropriate_body" => "Appropriate body",
     "delivery_partner" => "Delivery partner",
+    "lead_provider" => "Lead provider",
     "admin" => "DfE admin",
     "finance" => "DfE Finance",
     "induction_coordinator" => "Induction tutor",
@@ -38,6 +39,8 @@ class ChooseRoleForm
       helpers.induction_coordinator_dashboard_path(user)
     when "teacher"
       helpers.participant_start_path(user)
+    when "lead_provider"
+      helpers.dashboard_path
     when "no_role"
       helpers.dashboard_path
     end
@@ -60,7 +63,7 @@ class ChooseRoleForm
 private
 
   def rejected_roles
-    %w[induction_coordinator early_career_teacher mentor npq_applicant npq_participant teacher lead_provider].freeze
+    %w[induction_coordinator early_career_teacher mentor npq_applicant npq_participant teacher].freeze
   end
 
   def sanitized_user_roles
