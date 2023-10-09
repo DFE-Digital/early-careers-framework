@@ -1,5 +1,7 @@
 ---
 :shared:
+  :completion_candidates:
+    - participant_profile_id
   :versions:
   - id
   - item_type
