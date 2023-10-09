@@ -17,12 +17,28 @@ module ManageTrainingSteps
     @induction_programme.update!(partnership: @partnership)
   end
 
-  def given_there_is_a_sit_and_mentor_in_another_school
+  def given_there_is_a_sit
+    @induction_coordinator_profile = create(:induction_coordinator_profile, schools: [@school])
+    create(:participant_identity, user: @induction_coordinator_profile.user)
+    privacy_policy = create(:privacy_policy)
+    privacy_policy.accept!(@induction_coordinator_profile.user)
+  end
+
+  def given_there_is_a_sit_and_mentor_in_difference_schools
     @induction_coordinator_profile = create(:induction_coordinator_profile, schools: [@school], user: create(:user, full_name: @participant_data[:full_name], email: @participant_data[:email]))
     create(:participant_identity, user: @induction_coordinator_profile.user)
     privacy_policy = create(:privacy_policy)
     privacy_policy.accept!(@induction_coordinator_profile.user)
+    @mentor = create(:mentor)
+    @mentor.user.teacher_profile.update!(trn: @participant_data[:trn])
+    ECFParticipantValidationData.create!(
+      participant_profile: @mentor,
+      trn: @participant_data[:trn],
+      date_of_birth: @participant_data[:date_of_birth],
+    )
+  end
 
+  def given_there_is_a_mentor_in_another_school
     @mentor = create(:mentor)
     @mentor.user.teacher_profile.update!(trn: @participant_data[:trn])
     ECFParticipantValidationData.create!(
