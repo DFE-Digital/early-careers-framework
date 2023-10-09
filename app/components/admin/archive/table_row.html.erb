@@ -1,0 +1,18 @@
+<tr class="govuk-table__row nhsuk-table__row">
+  <td class="govuk-table__cell nhsuk-table__cell">
+    <span class="nhsuk-table-responsive__heading">Full name</span>
+    <%= govuk_link_to full_name, admin_archive_relic_path(relic) %>
+  </td>
+  <td class="govuk-table__cell nhsuk-table__cell">
+    <span class="nhsuk-table-responsive__heading">Email</span>
+    <%= email %>
+  </td>
+  <td class="govuk-table__cell nhsuk-table__cell">
+    <span class="nhsuk-table-responsive__heading">TRN</span>
+    <%= trn %>
+  </td>
+  <td class="govuk-table__cell nhsuk-table__cell">
+    <span class="nhsuk-table-responsive__heading">Reason</span>
+    <%= relic.reason %>
+  </td>
+</tr>

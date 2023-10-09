@@ -9,7 +9,7 @@ module Archive
     def call
       check_user_can_be_archived!
 
-      data = Archive::UserSerializer.new(user).serializable_hash
+      data = Archive::UserSerializer.new(user).serializable_hash[:data]
 
       ActiveRecord::Base.transaction do
         relic = Archive::Relic.create!(object_type: user.class.name,

@@ -6,12 +6,13 @@ module Archive
 
     class_methods do
       def add_user_metadata(user)
-        [
-          user.id,
-          user.full_name,
-          user.email,
-          user.teacher_profile&.trn,
-        ].compact
+        {
+          full_name: user.full_name,
+          email: user.email,
+          trn: user.teacher_profile&.trn,
+          id: user.id,
+          roles: user.user_roles,
+        }
       end
     end
   end

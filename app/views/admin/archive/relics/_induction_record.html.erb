@@ -1,0 +1,57 @@
+<h5>Induction record: <%= ir.id %></h5>
+
+<%= govuk_summary_list do |summary_list| %>
+  <% summary_list.with_row do |row| %>
+    <% row.with_key { "Training programme" } %>
+    <% row.with_value { ir.training_programme.humanize } %>
+    <% row.with_action(text: :none) %>
+  <% end %>
+
+  <% summary_list.with_row do |row| %>
+    <% row.with_key { "School URN" } %>
+    <% row.with_value { ir.school_urn } %>
+    <% row.with_action(text: :none) %>
+  <% end %>
+
+  <% summary_list.with_row do |row| %>
+    <% row.with_key { "Lead provider" } %>
+    <% row.with_value { ir.lead_provider } %>
+    <% row.with_action(text: :none) %>
+  <% end %>
+
+  <% summary_list.with_row do |row| %>
+    <% row.with_key { "Delivery partner" } %>
+    <% row.with_value { ir.delivery_partner } %>
+    <% row.with_action(text: :none) %>
+  <% end %>
+
+  <% summary_list.with_row do |row| %>
+    <% row.with_key { "Induction status" } %>
+    <% row.with_value { ir.induction_status } %>
+    <% row.with_action(text: :none) %>
+  <% end %>
+
+  <% summary_list.with_row do |row| %>
+    <% row.with_key { "Training status" } %>
+    <% row.with_value { ir.training_status } %>
+    <%= change_induction_record_training_status_button(ir, pp, row) %>
+  <% end %>
+
+  <% summary_list.with_row do |row| %>
+    <% row.with_key { "Start date" } %>
+    <% row.with_value { ir.start_date&.to_fs(:govuk) } %>
+    <% row.with_action(text: :none) %>
+  <% end %>
+
+  <% summary_list.with_row do |row| %>
+    <% row.with_key { "End date" } %>
+    <% row.with_value { ir.end_date&.to_fs(:govuk) } %>
+    <% row.with_action(text: :none) %>
+  <% end %>
+
+  <% summary_list.with_row do |row| %>
+    <% row.with_key { "Schedule" } %>
+    <% row.with_value { ir.schedule.schedule_identifier } %>
+    <% row.with_action(text: :none) %>
+  <% end %>
+<% end %>

@@ -7,6 +7,6 @@ module Archive
     validates :reason, presence: true
     validates :data, presence: true
 
-    scope :with_metadata_containing, ->(search_term) { where("data->'meta' @> :value", value: search_term.to_json) }
+    scope :with_metadata_containing, ->(search_term) { where("data->>'meta' ilike :value", value: "%#{search_term}%") }
   end
 end

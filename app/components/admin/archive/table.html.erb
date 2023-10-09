@@ -1,0 +1,17 @@
+<div class="nhsuk-table-container">
+  <table data-test="admin-participants-table" class="govuk-table nhsuk-table-responsive">
+    <thead  class="nhsuk-table__head">
+      <tr class="govuk-table__row">
+        <th scope="col" class="govuk-table__header">Full name</th>
+        <th scope="col" class="govuk-table__header">Email</th>
+        <th scope="col" class="govuk-table__header">TRN</th>
+        <th scope="col" class="govuk-table__header">Reason</th>
+      </tr>
+    </thead>
+    <tbody class="govuk-table__body nhsuk-table__body">
+      <%= render Admin::Archive::TableRow.with_collection(relics) %>
+    </tbody>
+  </table>
+</div>
+
+<%== govuk_pagination(pagy: @pagy) %>

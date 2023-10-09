@@ -1,0 +1,36 @@
+<% content_for :before_content, govuk_back_link(text: "Back", href: admin_archive_relics_path) %>
+
+<span class="govuk-caption-l">Archive</span>
+<h1 class="govuk-heading-l"><%= @user.full_name %></h1>
+
+<h2>Identities</h2>
+
+<% @user.participant_identities.each_with_index do |identity, i| %>
+  <h3><%= "Identity #{i + 1}" %></h3>
+
+  <%= govuk_summary_list do |summary_list| %>
+    <% summary_list.with_row do |row| %>
+      <% row.with_key { "User ID / Participant ID" } %>
+      <% row.with_value { @user.id } %>
+    <% end %>
+
+    <% summary_list.with_row do |row| %>
+      <% row.with_key { "External ID" } %>
+      <% row.with_value { identity.external_identifier } %>
+    <% end %>
+
+    <% summary_list.with_row do |row| %>
+      <% row.with_key { "Email" } %>
+      <% row.with_value { identity.email } %>
+    <% end %>
+  <% end %>
+<% end %>
+
+<h2>Profiles</h2>
+
+<% @user.participant_profiles.each do |pp| %>
+  <h3><%= pp.type %></h3>
+  <% if pp.ecf? %>
+    <%= render partial: "ecf_profile", locals: { pp: pp, user: @user } %>
+  <% end %>
+<% end %>
