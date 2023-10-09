@@ -60,10 +60,6 @@ module Api
             )
           end
 
-          it "returns the partnership updated_at timestamp" do
-            expect(subject.serializable_hash[:data][:attributes][:updated_at]).to eq(partnership.updated_at.rfc3339)
-          end
-
           context "when partnership active" do
             it "returns an active status" do
               expect(subject.serializable_hash[:data][:attributes][:status]).to eq("active")
@@ -91,6 +87,62 @@ module Api
 
             it "returns the challenged_at timestamp" do
               expect(subject.serializable_hash[:data][:attributes][:challenged_at]).to eq(partnership.challenged_at)
+            end
+          end
+
+          context "updated_at attribute" do
+            let!(:latest_updated_at) { 5.hours.ago }
+
+            before do
+              [
+                partnership,
+                school,
+                delivery_partner,
+                partnership.school.induction_coordinators.first,
+              ].each do |rec|
+                rec.update!(updated_at: 2.days.ago)
+              end
+            end
+
+            context "with latest partnership.updated_at" do
+              before do
+                partnership.update!(updated_at: latest_updated_at)
+                school.update!(updated_at: 2.days.ago)
+              end
+
+              it "returns the correct updated_at timestamp" do
+                expect(subject.serializable_hash[:data][:attributes][:updated_at]).to eq(latest_updated_at.rfc3339)
+              end
+            end
+
+            context "with latest school.updated_at" do
+              before do
+                partnership.school.update!(updated_at: latest_updated_at)
+              end
+
+              it "returns the correct updated_at timestamp" do
+                expect(subject.serializable_hash[:data][:attributes][:updated_at]).to eq(latest_updated_at.rfc3339)
+              end
+            end
+
+            context "with latest delivery_partner.updated_at" do
+              before do
+                partnership.delivery_partner.update!(updated_at: latest_updated_at)
+              end
+
+              it "returns the correct updated_at timestamp" do
+                expect(subject.serializable_hash[:data][:attributes][:updated_at]).to eq(latest_updated_at.rfc3339)
+              end
+            end
+
+            context "with induction_coordinator_profiles.first.updated_at" do
+              before do
+                partnership.school.induction_coordinators.first.update!(updated_at: latest_updated_at)
+              end
+
+              it "returns the correct updated_at timestamp" do
+                expect(subject.serializable_hash[:data][:attributes][:updated_at]).to eq(latest_updated_at.rfc3339)
+              end
             end
           end
         end

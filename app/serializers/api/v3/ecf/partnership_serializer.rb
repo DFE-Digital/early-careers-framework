@@ -51,7 +51,12 @@ module Api
         end
 
         attribute :updated_at do |partnership|
-          partnership.updated_at.rfc3339
+          [
+            partnership.updated_at,
+            partnership.school.updated_at,
+            partnership.delivery_partner&.updated_at,
+            partnership.school&.induction_coordinators&.first&.updated_at,
+          ].compact.max.rfc3339
         end
       end
     end

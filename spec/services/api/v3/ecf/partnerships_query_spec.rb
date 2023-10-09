@@ -49,13 +49,71 @@ RSpec.describe Api::V3::ECF::PartnershipsQuery do
     end
 
     describe "updated_since filter" do
-      context "with correct value" do
-        let!(:another_partnership) { create(:partnership, cohort: another_cohort, lead_provider:, updated_at: 2.days.ago.iso8601) }
+      let!(:partnership) { create(:partnership, cohort:, lead_provider:) }
+      let!(:another_partnership) { create(:partnership, cohort: another_cohort, lead_provider:) }
 
+      let(:user1) { create(:participant_identity).user }
+      let(:user2) { create(:participant_identity).user }
+      let!(:induction_coordinator_profile) { create(:induction_coordinator_profile, user: user1, schools: [partnership.school]) }
+      let!(:induction_coordinator_profile2) { create(:induction_coordinator_profile, user: user2, schools: [another_partnership.school]) }
+
+      before do
+        [
+          partnership,
+          partnership.school,
+          partnership.delivery_partner,
+          partnership.school.induction_coordinators.first,
+        ].each do |rec|
+          rec.update!(updated_at: 2.days.ago)
+        end
+
+        [
+          another_partnership,
+          another_partnership.school,
+          another_partnership.delivery_partner,
+          another_partnership.school.induction_coordinators.first,
+        ].each do |rec|
+          rec.update!(updated_at: 5.days.ago)
+        end
+      end
+
+      context "with latest partnership.updated_at" do
         let(:params) { { filter: { updated_since: 1.day.ago.iso8601 } } }
-
-        it "returns all partnerships for the specific cohort" do
+        before do
+          partnership.update!(updated_at: 1.hour.ago)
+        end
+        it "returns correct partnership" do
           expect(subject.partnerships).to match_array([partnership])
+        end
+      end
+
+      context "with latest school.updated_at" do
+        let(:params) { { filter: { updated_since: 1.day.ago.iso8601 } } }
+        before do
+          another_partnership.school.update!(updated_at: 1.hour.ago)
+        end
+        it "returns correct partnership" do
+          expect(subject.partnerships).to match_array([another_partnership])
+        end
+      end
+
+      context "with latest delivery_partner.updated_at" do
+        let(:params) { { filter: { updated_since: 1.day.ago.iso8601 } } }
+        before do
+          partnership.delivery_partner.update!(updated_at: 1.hour.ago)
+        end
+        it "returns correct partnership" do
+          expect(subject.partnerships).to match_array([partnership])
+        end
+      end
+
+      context "with induction_coordinators.first.first.updated_at" do
+        let(:params) { { filter: { updated_since: 1.day.ago.iso8601 } } }
+        before do
+          another_partnership.school.induction_coordinators.first.update!(updated_at: 1.hour.ago)
+        end
+        it "returns correct partnership" do
+          expect(subject.partnerships).to match_array([another_partnership])
         end
       end
     end
