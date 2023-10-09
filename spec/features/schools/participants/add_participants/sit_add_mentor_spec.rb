@@ -99,10 +99,7 @@ RSpec.describe "SIT adding mentor", js: true do
 
     when_i_add_ect_or_mentor_email
     and_i_click_on_continue
-    then_i_am_taken_to_add_yourself_as_mentor_confirmation_page
-
-    when_i_click_on_confirm
-    then_i_should_be_taken_to_the_teachers_current_programme_page
+    then_i_am_taken_to_continue_current_training_page
 
     when_i_choose_yes
     and_i_click_on_continue
@@ -112,6 +109,6 @@ RSpec.describe "SIT adding mentor", js: true do
     then_i_am_taken_to_yourself_as_mentor_confirmation_page
 
     when_i_click_on "View your ECTs and mentors"
-    then_i_see_the_mentor_name
+    then_i_see_the_transferred_mentor_name
   end
 end

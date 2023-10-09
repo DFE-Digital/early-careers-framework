@@ -23,7 +23,7 @@ module ManageTrainingSteps
     privacy_policy = create(:privacy_policy)
     privacy_policy.accept!(@induction_coordinator_profile.user)
 
-    @mentor = create(:mentor, user: @induction_coordinator_profile.user)
+    @mentor = create(:mentor)
     @mentor.user.teacher_profile.update!(trn: @participant_data[:trn])
     ECFParticipantValidationData.create!(
       participant_profile: @mentor,
@@ -901,6 +901,10 @@ module ManageTrainingSteps
 
   def then_i_see_the_mentor_name
     expect(page).to have_text(@participant_data[:full_name])
+  end
+
+  def then_i_see_the_transferred_mentor_name
+    expect(page).to have_text(@mentor.full_name)
   end
 
   def then_i_see_the_participants_filter_with_counts(currently_training: 0, completed_induction: 0, no_longer_training: 0)
