@@ -367,8 +367,9 @@ Providers can view data to find out whether participants:
 * have valid teacher reference numbers (TRN)
 * have achieved qualified teacher status (QTS)
 * are eligible for funding
-* have [transferred to or from a school you are partnered with](/api-reference/ecf/guidance/#view-data-for-all-participants-who-have-transferred)
-* have been assigned [unfunded mentors](/api-reference/ecf/guidance.html#view-all-unfunded-mentor-details)
+* have [transferred to or from a school you're partnered with](/api-reference/ecf/guidance/#view-data-for-all-participants-who-have-transferred)
+* have (if they're ECTs) been assigned [unfunded mentors](/api-reference/ecf/guidance.html#view-all-unfunded-mentor-details)
+* have (if they're ECTs) completed their induction, according to the Database of Qualified Teachers
 
 Note, while participants can enter different email addresses when registering for each training course they apply for, providers will only see the email address associated with a given course registration. For example, a participant may complete their ECF-based training with one associated email address, then register for an NPQ with a different email address, and go on to be an ECT mentor with a third email address. The DfE will share the relevant email address with the relevant course provider.
 
