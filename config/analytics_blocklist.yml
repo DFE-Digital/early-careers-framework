@@ -1,7 +1,5 @@
 ---
 :shared:
-  :completion_candidates:
-    - participant_profile_id
   :versions:
   - id
   - item_type
@@ -294,11 +292,11 @@
   - code
   - name
   :lead_provider_profiles:
-  - id
   - user_id
   - lead_provider_id
   - created_at
   - updated_at
+  - id
   - discarded_at
   :lead_provider_cips:
   - id
@@ -308,11 +306,11 @@
   - created_at
   - updated_at
   :induction_coordinator_profiles_schools:
-  - id
   - induction_coordinator_profile_id
   - school_id
   - created_at
   - updated_at
+  - id
   :finance_profiles:
   - id
   - user_id
@@ -409,6 +407,8 @@
   - name
   - created_at
   - updated_at
+  :completion_candidates:
+  - participant_profile_id
   :call_off_contracts:
   - id
   - version
