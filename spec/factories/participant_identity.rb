@@ -13,6 +13,7 @@ FactoryBot.define do
 
     trait :secondary do
       external_identifier { SecureRandom.uuid }
+      email { Faker::Internet.email(domain: "example.com") }
     end
   end
 end

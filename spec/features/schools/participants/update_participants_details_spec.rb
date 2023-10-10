@@ -183,6 +183,7 @@ RSpec.describe "Changing participant details from the dashboard", type: :feature
 
   scenario "Induction tutor can change ECT / mentor email from participant profile page" do
     given_the_ect_has_been_validated
+    and_the_ect_has_multiple_identities
     when_i_view_participant_from_the_school_participants_dashboard_page "Sally Teacher"
     when_i_click_on_change_email
     then_i_am_on_the_edit_school_participant_email_page
@@ -193,7 +194,7 @@ RSpec.describe "Changing participant details from the dashboard", type: :feature
     then_i_see_an_error_message "Enter an email address"
 
     when_i_set_an_invalid_email_on_the_edit_school_participant_email_page
-    then_i_see_an_error_message "Enter an email address"
+    then_i_see_an_error_message "Enter an email address in the correct format"
 
     when_i_set_the_email_on_the_edit_school_participant_email_page_with_new_email "jane@school.com"
     then_i_see_a_confirmation_message_on_the_school_participant_email_updated_page_with_name "Sally Teacher"
@@ -201,6 +202,11 @@ RSpec.describe "Changing participant details from the dashboard", type: :feature
 
     when_i_return_to_the_participant_profile_from_the_school_participant_email_updated_page
     then_i_confirm_participant_name_on_the_school_participant_details_page_with_name "Sally Teacher"
+
+    when_i_click_on_change_email
+    when_i_set_the_email_on_the_edit_school_participant_email_page_with_new_email @ect_alternative_identity.email
+    then_i_see_a_confirmation_message_on_the_school_participant_email_updated_page_with_name
+    when_i_return_to_the_participant_profile_from_the_school_participant_email_updated_page
   end
 
   context "When the school cohort does not have an appropriate body assigned" do

@@ -364,6 +364,10 @@ module ManageTrainingSteps
     Induction::Complete.call(participant_profile: @eligible_ect_without_mentor, completion_date: 2.days.ago)
   end
 
+  def and_the_ect_has_multiple_identities
+    @ect_alternative_identity = create(:participant_identity, :secondary, user: @participant_profile_ect.user)
+  end
+
   def given_a_participant_from_the_same_school_is_already_on_ecf
     user = create(:user, full_name: "Sally Teacher", email: "sally-teacher@example.com")
     teacher_profile = create(:teacher_profile, user:, trn: "1234567")
