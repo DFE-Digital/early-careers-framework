@@ -314,3 +314,10 @@
   - created_at
   - updated_at
   - cpd_lead_provider_id
+  :participant_id_changes:
+  - id
+  - user_id
+  - from_participant_id
+  - to_participant_id
+  - created_at
+  - updated_at
