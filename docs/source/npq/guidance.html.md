@@ -376,7 +376,7 @@ An example response body is listed below.
 **Providers should note:**
 
 * we’ve [previously advised](/api-reference/release-notes.html#15-march-2023) of the possibility that participants may be registered as duplicates with multiple `participant_ids`. Where we identify duplicates, we’ll fix the error by ‘retiring’ one of the participant IDs and then associating all records and data under the remaining ID. To date, when this has occurred, we’ve informed providers of changes via CSVs
-* providers can check if an NPQ participant’s ID has changed using the `participant_id_changes` nested structure in the [NPQEnrolment](https://manage-training-for-early-career-teachers.education.gov.uk/api-reference/reference-v3.html#schema-npqenrolment), which contains `from_participant_id` and `to_participant_id` string fields, as well a `changed_at` date value
+* providers can check if an NPQ participant’s ID has changed using the `participant_id_changes` nested structure in the [NPQEnrolment](/api-reference/reference-v3.html#schema-npqenrolment), which contains `from_participant_id` and `to_participant_id` string fields, as well a `changed_at` date value
 
 For more detailed information see the specifications for this [view a single NPQ participant endpoint](/api-reference/reference-v3.html#api-v3-participants-npq-id-get).
 
