@@ -261,7 +261,12 @@ Providers may submit extended declarations using the following values in the `de
 
 ### Reduced schedules
 
-While the API will accept any declarations submitted after the first milestone start date (1 September, 1 January, 1 April each year), providers must submit declarations according to the terms outlined in the ECF contract payment guidance. 
+Reduced schedules apply to participants that expect to complete their ECF-based training in less than 2 years.
+
+Providers should note:
+
+* providers may identify ECTs that have already completed their induction, and so need to be placed on a reduced schedule, via the API. We include details of the date an ECT completed their induction in the v3 [EcfParticipantAttributes](/api-reference/reference-v3.html#schema-ecfparticipantattributes)
+* while the API will accept any declarations submitted after the first milestone start date (1 September, 1 January, 1 April each year), providers must submit declarations according to the terms outlined in the ECF contract payment guidance
 
 Contact ECF contract managers via email for more information on exact dates.
 
