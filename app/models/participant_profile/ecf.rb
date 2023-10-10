@@ -11,7 +11,6 @@ class ParticipantProfile::ECF < ParticipantProfile
     moved-school
     mentor-no-longer-being-mentor
     school-left-fip
-    started-in-error
     other
   ].freeze
 
