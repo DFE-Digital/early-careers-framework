@@ -3,9 +3,10 @@
 require "rails_helper"
 
 RSpec.describe NPQ::AmendParticipantCohort, type: :model do
-  let(:npq_application) { create(:npq_application, :accepted, cohort: cohort_previous) }
+  let(:npq_course) { create(:npq_leadership_course) }
+  let(:npq_application) { create(:npq_application, :accepted, cohort: cohort_previous, npq_course:) }
   let(:npq_application_id) { npq_application.id }
-  let!(:npq_contract) { create(:npq_contract, :npq_senior_leadership, cohort: cohort_previous, npq_lead_provider: npq_application.npq_lead_provider, npq_course: npq_application.npq_course) }
+  let!(:npq_contract) { create(:npq_contract, :npq_senior_leadership, cohort: cohort_previous, npq_lead_provider: npq_application.npq_lead_provider, npq_course:) }
 
   let!(:cohort_current) { Cohort.current }
   let(:cohort_previous) { Cohort.previous }
