@@ -7,6 +7,16 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
+## 10 October 2023
+
+Lead providers integrated with v3 of the API can now view details of ECTs that have completed their induction.
+
+We've added a new field, `induction_end_date`, to [ECFEnrolment](/api-reference/reference-v3.html#schema-ecfenrolment). We populate the field with data gathered about the date an ECT completed their induction from the Database of Qualified Teachers (DQT).
+
+We check the DQT on a daily basis for data about induction completion. We'll update a participant's records when we confirm they've completed their induction. Lead providers can use the [`updated_since` filter on the GET participants endpoint](/api-reference/reference-v3.html#schema-ecfparticipantfilter) to check for this kind of update.
+
+Lead providers can use the field to identify participants that have completed their induction, and which may need to be placed on a [reduced schedule](/api-reference/ecf/schedules-and-milestone-dates.html#reduced-schedule).
+
 ## 9 October 2023
 
 We've released a change to the `updated_at` functionality of the [ECFPartnershipAttributes](/api-reference/reference-v3.html#schema-ecfpartnershipattributes).
@@ -60,9 +70,9 @@ Providers should pause API calls during this time. You’ll be able to start usi
 
 We will be changing the sandbox URL to [https://sb.manage-training-for-early-career-teachers.education.gov.uk/](https://sb.manage-training-for-early-career-teachers.education.gov.uk/) on Thursday 7 September.
 
-The sandbox environment will be unavailable between 5pm and 7pm on 7 September while we make this change. 
+The sandbox environment will be unavailable between 5pm and 7pm on 7 September while we make this change.
 
-Providers should:  
+Providers should:
 
 * pause testing between 5pm and 7pm on 7 September
 * update their base URL for their integrations once the sandbox environment becomes available again to avoid any data loss

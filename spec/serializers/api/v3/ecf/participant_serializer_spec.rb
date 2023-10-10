@@ -14,7 +14,7 @@ module Api
           let(:school_cohort) { create(:school_cohort, :fip, :with_induction_programme, delivery_partner:, school:, cohort:, lead_provider: cpd_lead_provider.lead_provider) }
           let!(:provider_relationship) { create(:provider_relationship, cohort:, delivery_partner:, lead_provider: cpd_lead_provider.lead_provider) }
           let(:participant) { create(:user) }
-          let!(:ect_profile) { create(:ect, :eligible_for_funding, school_cohort:, user: participant) }
+          let!(:ect_profile) { create(:ect, :eligible_for_funding, school_cohort:, user: participant, induction_completion_date: Date.parse("2022-01-12")) }
 
           subject { described_class.new([participant], params: { cpd_lead_provider: }) }
 
@@ -53,6 +53,7 @@ module Api
                       withdrawal: nil,
                       deferral: nil,
                       created_at: ect_profile.created_at.rfc3339,
+                      induction_end_date: "2022-01-12",
                     },
                   ],
               },
@@ -91,6 +92,7 @@ module Api
                   withdrawal: nil,
                   deferral: nil,
                   created_at: mentor_profile.created_at.rfc3339,
+                  induction_end_date: nil,
                 })
               end
             end
