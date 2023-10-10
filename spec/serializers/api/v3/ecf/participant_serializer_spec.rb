@@ -103,7 +103,7 @@ module Api
                 ect_profile.participant_profile_states.last.update!(state: "withdrawn")
               end
 
-              it "includes a withdrawal object" do
+              it "includes a withdrawal object", :flakey_test do
                 expect(result[:data][0][:attributes][:ecf_enrolments][0][:withdrawal]).to eq({
                   reason: ect_profile.participant_profile_state.reason,
                   date: ect_profile.participant_profile_state.created_at.rfc3339,

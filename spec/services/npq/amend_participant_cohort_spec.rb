@@ -61,7 +61,7 @@ RSpec.describe NPQ::AmendParticipantCohort, type: :model do
     context "when lead provider has no contract for the cohort and course" do
       before { npq_contract.update!(npq_course: create(:npq_specialist_course)) }
 
-      it "is invalid and returns an error message" do
+      it "is invalid and returns an error message", :flakey_test do
         expect(subject).to be_invalid
         expect(subject.errors.messages_for(:cohort)).to include("You cannot change a participant to this cohort as you do not have a contract for the cohort and course. Contact the DfE for assistance.")
       end

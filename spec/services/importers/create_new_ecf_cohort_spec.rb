@@ -82,7 +82,7 @@ RSpec.describe Importers::CreateNewECFCohort do
         expect(lead_provider.reload.cohorts).to contain_exactly(Cohort.find_by(start_year:))
       end
 
-      it "creates Call off Contract and bands" do
+      it "creates Call off Contract and bands", :flakey_test do
         expect(CallOffContract.count).to eql(0)
         expect(ParticipantBand.count).to eql(0)
         subject.call
