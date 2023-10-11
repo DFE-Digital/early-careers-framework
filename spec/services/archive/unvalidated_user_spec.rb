@@ -35,7 +35,7 @@ RSpec.describe Archive::UnvalidatedUser do
     end
 
     it "sets the relic data to the serialized user records" do
-      expect(relic.data.to_json).to eq Archive::UserSerializer.new(user).serializable_hash.to_json
+      expect(relic.data.to_json).to eq Archive::UserSerializer.new(user).serializable_hash[:data].to_json
     end
 
     context "when a reason is specified" do
