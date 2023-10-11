@@ -21,7 +21,7 @@ RSpec.describe "NPQ Application Status API", type: :request do
     it "returns correct jsonapi content" do
       @controller = Api::V1::NPQ::ApplicationSynchronizationsController.new
       @controller.params = { "@npq_applications": npq_application }
-      get "/api/v1/npq/application_synchronizations"
+      get "/api/v1/npq/application_synchronizations", params: { ecf_ids: SecureRandom.uuid }
       expect(parsed_response).to be_a(Hash)
       expect(parsed_response["attributes"]["id"]).to eq(npq_application.id.to_s)
       expect(parsed_response["attributes"]["lead_provider_approval_status"]).to eq(npq_application.lead_provider_approval_status)
