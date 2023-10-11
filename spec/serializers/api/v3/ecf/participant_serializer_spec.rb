@@ -5,7 +5,7 @@ require "rails_helper"
 module Api
   module V3
     module ECF
-      RSpec.describe ParticipantSerializer do
+      RSpec.describe ParticipantSerializer, with_feature_flags: { participant_id_changes: "active" } do
         describe "serialization" do
           let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
           let(:school) { create(:school) }
@@ -56,6 +56,7 @@ module Api
                       induction_end_date: "2022-01-12",
                     },
                   ],
+                participant_id_changes: [],
               },
             ])
           end
@@ -139,6 +140,48 @@ module Api
 
               it "selects the latest induction record correctly" do
                 expect(result[:data][0][:attributes][:ecf_enrolments][0][:email]).to eq(latest_induction_record.preferred_identity.email)
+              end
+            end
+          end
+
+          describe "participant_id_changes" do
+            context "when there are no participant_id_changes" do
+              it "should returne empty array" do
+                expect(result[:data][0][:attributes][:participant_id_changes]).to eql([])
+              end
+            end
+
+            context "when there is one participant_id_changes" do
+              let!(:participant_id_change) { create(:participant_id_change, user: participant, to_participant: participant) }
+
+              it "should returns participant id change" do
+                expect(result[:data][0][:attributes][:participant_id_changes]).to eql([
+                  {
+                    from_participant_id: participant_id_change.from_participant_id,
+                    to_participant_id: participant_id_change.to_participant_id,
+                    changed_at: participant_id_change.created_at.rfc3339,
+                  },
+                ])
+              end
+            end
+
+            context "when there are multiple participant_id_changes" do
+              let!(:participant_id_change1) { create(:participant_id_change, user: participant, to_participant: participant) }
+              let!(:participant_id_change2) { create(:participant_id_change, user: participant, to_participant: participant) }
+
+              it "should returns participant id changes" do
+                expect(result[:data][0][:attributes][:participant_id_changes]).to eql([
+                  {
+                    from_participant_id: participant_id_change2.from_participant_id,
+                    to_participant_id: participant_id_change2.to_participant_id,
+                    changed_at: participant_id_change2.created_at.rfc3339,
+                  },
+                  {
+                    from_participant_id: participant_id_change1.from_participant_id,
+                    to_participant_id: participant_id_change1.to_participant_id,
+                    changed_at: participant_id_change1.created_at.rfc3339,
+                  },
+                ])
               end
             end
           end

@@ -14,7 +14,7 @@ RSpec.describe "NPQ Participants API", type: :request do
 
   before { default_headers[:Authorization] = bearer_token }
 
-  describe "GET /api/v3/participants/npq" do
+  describe "GET /api/v3/participants/npq", with_feature_flags: { participant_id_changes: "active" } do
     context "when authorized" do
       let(:npq_application) { npq_applications.sample }
       let(:npq_course)      { npq_application.npq_course }
@@ -56,6 +56,7 @@ RSpec.describe "NPQ Participants API", type: :request do
               :teacher_reference_number,
               :updated_at,
               :npq_enrolments,
+              :participant_id_changes,
             ).exactly)
         end
 
@@ -190,7 +191,7 @@ RSpec.describe "NPQ Participants API", type: :request do
     end
   end
 
-  describe "GET /api/v3/participants/npq/:id" do
+  describe "GET /api/v3/participants/npq/:id", with_feature_flags: { participant_id_changes: "active" } do
     let(:npq_application) { create(:npq_application, :accepted, :with_started_declaration, npq_lead_provider:) }
     let(:npq_participant) { npq_application.profile }
 
@@ -227,6 +228,7 @@ RSpec.describe "NPQ Participants API", type: :request do
             :teacher_reference_number,
             :updated_at,
             :npq_enrolments,
+            :participant_id_changes,
           ).exactly)
       end
     end

@@ -20,3 +20,7 @@ properties:
     type: string
     format: date-time
     example: "2021-05-31T02:22:32.000Z"
+example:
+  from_participant_id: "000a97ff-d2a9-4779-a397-9bfd9063072e"
+  to_participant_id: "000a97ff-d2a9-4779-a397-9bfd9063072e"
+  changed_at: "2021-05-31T02:22:32.000Z"

@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "API ECF Participants", type: :request do
+RSpec.describe "API ECF Participants", type: :request, with_feature_flags: { participant_id_changes: "active" } do
   let(:cohort_2021) { Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021) }
   let(:cpd_lead_provider) { create(:cpd_lead_provider, lead_provider:) }
   let(:lead_provider)     { create(:lead_provider) }
@@ -100,6 +100,7 @@ RSpec.describe "API ECF Participants", type: :request do
               :teacher_reference_number,
               :updated_at,
               :ecf_enrolments,
+              :participant_id_changes,
             ).exactly)
         end
 
@@ -310,6 +311,7 @@ RSpec.describe "API ECF Participants", type: :request do
                 "created_at": early_career_teacher_profile.created_at.rfc3339,
                 "induction_end_date": "2022-01-12",
               }],
+              "participant_id_changes": [],
             },
           },
         })
