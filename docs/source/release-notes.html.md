@@ -7,9 +7,11 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
-## 12 October 2023
+## 11 October 2023
 
-The DfE has removed the possible value `started-in-error` from the [ECFWithdrawal](/api-reference/reference-v3.html#schema-ecfwithdrawal) object. Only NPQ participants may be withdrawn for this reason.
+We've removed the `started-in-error` option from the [ECFWithdrawal schemas](/api-reference/reference-v3.html#schema-ecfwithdrawal) in all versions of the API.
+
+Note that NPQ participants can still be withdrawn for this reason.
 
 ## 10 October 2023
 
