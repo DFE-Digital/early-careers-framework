@@ -70,7 +70,8 @@ RSpec.describe NPQ::AmendParticipantCohort, type: :model do
   end
 
   describe "#call" do
-    let(:npq_application) { create(:npq_application, cohort: cohort_current) }
+    let(:npq_course) { create(:npq_leadership_course) }
+    let(:npq_application) { create(:npq_application, cohort: cohort_current, npq_course:) }
 
     context "when invalid" do
       let(:target_cohort_start_year) {}
@@ -86,7 +87,7 @@ RSpec.describe NPQ::AmendParticipantCohort, type: :model do
       end
 
       context "when a profile is attached to an NPQ application" do
-        let(:npq_course) { create(:npq_course, identifier: "npq-leading-teaching") }
+        let(:npq_course) { create(:npq_leadership_course, identifier: "npq-leading-teaching") }
         let(:npq_application) { create(:npq_application, :accepted, cohort: cohort_current, npq_course:) }
 
         let(:source_schedule) { Finance::Schedule::NPQSpecialist.schedule_for(cohort: cohort_current) }
