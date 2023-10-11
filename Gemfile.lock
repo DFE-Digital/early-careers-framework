@@ -332,7 +332,7 @@ GEM
       commonmarker (~> 0.17)
     orm_adapter (0.5.0)
     os (1.1.4)
-    pagy (6.0.4)
+    pagy (6.1.0)
     paper_trail (12.3.0)
       activerecord (>= 5.2)
       request_store (~> 1.1)
@@ -672,7 +672,7 @@ DEPENDENCIES
   net-smtp
   nokogiri
   openapi3_parser (~> 0.9.2)
-  pagy (~> 6, >= 6)
+  pagy (~> 6)
   paper_trail
   parallel_tests
   pg (~> 1.5)
