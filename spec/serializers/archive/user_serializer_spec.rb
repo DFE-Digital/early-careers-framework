@@ -36,7 +36,6 @@ RSpec.describe Archive::UserSerializer do
       # TODO: not needed as yet
       expect(attrs[:participant_declarations]).to match_array Archive::ParticipantDeclarationSerializer.new(ect_profile.participant_declarations).serializable_hash[:data]
       expect(attrs[:participant_profile_states]).to match_array Archive::ParticipantProfileStateSerializer.new(ect_profile.participant_profile_states).serializable_hash[:data]
-      expect(attrs[:participant_profile_schedules]).to match_array Archive::ParticipantProfileScheduleSerializer.new(ect_profile.participant_profile_schedules).serializable_hash[:data]
       expect(attrs[:npq_applications]).to match_array Archive::NPQApplicationSerializer.new(user.npq_applications).serializable_hash[:data]
     end
   end

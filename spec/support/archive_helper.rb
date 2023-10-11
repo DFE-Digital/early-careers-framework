@@ -127,7 +127,6 @@ module ArchiveHelper
                                ],
                                "participant_declarations" => [],
                                "participant_profile_states" => [],
-                               "participant_profile_schedules" => [],
                              },
                            })
   end

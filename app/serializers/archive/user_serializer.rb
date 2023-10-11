@@ -47,12 +47,6 @@ module Archive
       }.flatten
     end
 
-    attribute :participant_profile_schedules do |user|
-      user.participant_profiles.map { |participant_profile|
-        ParticipantProfileScheduleSerializer.new(participant_profile.participant_profile_schedules).serializable_hash[:data]
-      }.flatten
-    end
-
     attribute :npq_applications do |user|
       NPQApplicationSerializer.new(user.npq_applications).serializable_hash[:data]
     end
