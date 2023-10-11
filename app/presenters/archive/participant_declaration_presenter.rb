@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Archive
   class ParticipantDeclarationPresenter < RelicPresenter
     def schedule
@@ -5,7 +7,7 @@ module Archive
     end
 
     def declaration_date
-      DateTime.parse(attribute(:declaration_date))
+      Time.zone.parse(attribute(:declaration_date))
     end
 
     def cpd_lead_provider
@@ -13,7 +15,7 @@ module Archive
     end
 
     def created_at
-      DateTime.parse(attribute(:created_at))
+      Time.zone.parse(attribute(:created_at))
     end
   end
 end

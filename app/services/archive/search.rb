@@ -2,21 +2,21 @@
 
 module Archive
   class Search < BaseService
-    attr_reader :scope, :search_term, :role
+    attr_reader :scope, :search_term, :type
 
-    def initialize(scope = Archive::Relic, search_term: nil, role: nil)
+    def initialize(scope = Archive::Relic, search_term: nil, type: nil)
       # make the scope overrideable so we can pass in one that's been
       # checked by Pundit from the controller
       @scope       = scope
       @search_term = search_term
-      @role        = role
+      @type        = type
     end
 
     def call
       scope
         .merge(search_conditions)
-        .merge(role_conditions)
-        .order(order)
+        .merge(type_conditions)
+        .order(display_name: :asc)
     end
 
   private
@@ -29,16 +29,12 @@ module Archive
       end
     end
 
-    def role_conditions
-      if role.present?
-        Archive::Relic.with_metadata_containing(role)
+    def type_conditions
+      if type.present?
+        Archive::Relic.with_metadata_containing(type)
       else
         Archive::Relic.all
       end
-    end
-
-    def order
-      Arel.sql("data->'meta'->>'full_name' ASC")
     end
   end
 end

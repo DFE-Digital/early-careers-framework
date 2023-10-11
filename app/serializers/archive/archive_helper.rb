@@ -12,6 +12,8 @@ module Archive
           trn: user.teacher_profile&.trn,
           id: user.id,
           roles: user.user_roles,
+          profiles: user.participant_profiles.map(&:id),
+          identities: user.participant_identities.map { |i| [i.external_identifier, i.email] },
         }
       end
     end

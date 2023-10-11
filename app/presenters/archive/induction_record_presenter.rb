@@ -7,15 +7,15 @@ module Archive
     end
 
     def start_date
-      DateTime.parse(attribute(:start_date))
+      Time.zone.parse(attribute(:start_date))
     end
 
     def end_date
-      DateTime.parse(attribute(:end_date)) unless attribute(:end_date).blank?
+      Time.zone.parse(attribute(:end_date)) if attribute(:end_date).present?
     end
 
     def created_at
-      DateTime.parse(attribute(:created_at))
+      Time.zone.parse(attribute(:created_at))
     end
   end
 end

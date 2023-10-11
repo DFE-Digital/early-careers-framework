@@ -9,9 +9,9 @@ module Admin
 
       def index
         search_term = params[:query]
-        role        = params[:type]
+        type        = params[:type]
 
-        @relics = ::Archive::Search.call(policy_scope(::Archive::Relic), search_term:, role:)
+        @relics = ::Archive::Search.call(policy_scope(::Archive::Relic), search_term:, type:)
       end
 
       def show

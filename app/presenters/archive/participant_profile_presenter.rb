@@ -23,7 +23,7 @@ module Archive
     end
 
     def created_at
-      DateTime.parse(attribute(:created_at))
+      Time.zone.parse(attribute(:created_at))
     end
 
     def induction_records

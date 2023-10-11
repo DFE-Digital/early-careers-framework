@@ -3,7 +3,7 @@
 module Archive
   class RelicPresenter
     attr_reader :relic
- 
+
     def self.wrap(collection)
       collection.map do |relic|
         new relic
@@ -18,16 +18,20 @@ module Archive
       relic["id"]
     end
 
-    def method_missing(m, *args, &block)
-      if relic["attributes"].has_key?(m.to_s)
-        attribute(m)
+    def method_missing(method_name, *args, &block)
+      if relic["attributes"].key?(method_name.to_s)
+        attribute(method_name)
       else
         super
       end
     end
 
+    def respond_to_missing?(method_name, include_private = false)
+      relic["attributes"].key?(method_name.to_s) || super
+    end
+
   private
-    
+
     def attribute(name)
       relic.dig("attributes", name.to_s)
     end

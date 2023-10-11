@@ -24,7 +24,6 @@ module Admin
     private
 
       attr_reader :relic
-
     end
   end
 end

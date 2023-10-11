@@ -34,7 +34,7 @@
   <% summary_list.with_row do |row| %>
     <% row.with_key { "Training status" } %>
     <% row.with_value { ir.training_status } %>
-    <%= change_induction_record_training_status_button(ir, pp, row) %>
+    <% row.with_action(text: :none) %>
   <% end %>
 
   <% summary_list.with_row do |row| %>
