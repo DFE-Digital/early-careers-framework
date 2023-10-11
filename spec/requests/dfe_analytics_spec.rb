@@ -40,5 +40,17 @@ RSpec.describe "DfE Analytics", type: :request do
         expect { get "/api/v3/participants/ecf" }.to have_sent_analytics_event_types(:web_request)
       end
     end
+
+    context "with NPQ registration application API requests" do
+      let!(:npq_application) { create(:npq_application) }
+      let(:token)             { NPQRegistrationApiToken.create_with_random_token! }
+      let(:bearer_token)      { "Bearer #{token}" }
+
+      it "sends DFE Analytics web request event" do
+        default_headers[:Authorization] = bearer_token
+
+        expect { get "/api/v1/npq-profiles/#{npq_application.id}" }.to have_sent_analytics_event_types(:web_request)
+      end
+    end
   end
 end
