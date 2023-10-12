@@ -6,14 +6,6 @@ module Archive
 
     set_id :id
 
-    attribute :lead_provider_name do |declaration|
-      declaration.cpd_lead_provider&.name
-    end
-
-    attribute :delivery_partner_name do |declaration|
-      declaration.delivery_partner&.name
-    end
-
     attribute :type
     attribute :participant_profile_id
     attribute :cpd_lead_provider_id

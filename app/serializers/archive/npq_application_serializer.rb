@@ -6,21 +6,10 @@ module Archive
 
     set_id :id
 
-    attribute :lead_provider_name do |application|
-      application.npq_lead_provider&.name
-    end
-
-    attribute :course_name do |application|
-      application.npq_course&.name
-    end
-
-    attribute :cohort do |application|
-      application.cohort.start_year
-    end
-
     attribute :participant_identity_id
     attribute :npq_lead_provider_id
     attribute :npq_course_id
+    attribute :date_of_birth
     attribute :teacher_reference_number
     attribute :teacher_reference_number_verified
     attribute :school_urn
