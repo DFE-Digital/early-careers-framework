@@ -15,7 +15,6 @@ module Schools
         end
 
         def next_step
-          # debugger
           if wizard.email_in_use?
             :email_already_taken
           elsif wizard.adding_yourself_as_ect?
