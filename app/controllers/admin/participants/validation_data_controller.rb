@@ -4,9 +4,9 @@ module Admin::Participants
   class ValidationDataController < Admin::BaseController
     include RetrieveProfile
 
-    before_action :load_validation_data_form, except: :validate_details
+    before_action :load_validation_data_form
     before_action :check_can_update_validation_data, if: -> { request.put? || request.post? }
-    before_action :save_and_redirect, except: :validate_details
+    before_action :save_and_redirect
 
     def show
       @participant_presenter = Admin::ParticipantPresenter.new(@participant_profile)
@@ -25,26 +25,10 @@ module Admin::Participants
 
     def nino; end
 
-    def validate_details
-      generate_status_message(validate_participant!)
-      redirect_to validation_page
-    end
-
   private
 
     def school
       @school ||= @participant_profile.school
-    end
-
-    def validate_participant!
-      return unless validation_data.present? && validation_data.can_validate_participant?
-
-      ActiveRecord::Base.transaction do
-        @participant_profile.teacher_profile.update!(trn: nil) unless has_npq_profile?
-        @participant_profile.ecf_participant_eligibility&.destroy!
-        # this returns either nil, false on failure or an ECFParticipantEligibility record on success
-        Participants::ParticipantValidationForm.call(@participant_profile)
-      end
     end
 
     def save_and_redirect
@@ -66,20 +50,8 @@ module Admin::Participants
       validation_data.save!
     end
 
-    def generate_status_message(validation_result)
-      if validation_result.blank?
-        set_important_message(content: "No match was found for these details")
-      else
-        set_success_message(content: "Details matched and eligibility determined")
-      end
-    end
-
     def validation_page
       admin_participant_validation_data_path(@participant_profile)
-    end
-
-    def has_npq_profile?
-      @participant_profile.teacher_profile.npq_profiles.any?
     end
 
     def validation_data

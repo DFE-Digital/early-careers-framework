@@ -76,6 +76,10 @@ class User < ApplicationRecord
     admin_profile.present?
   end
 
+  def super_user?
+    admin? && admin_profile.super_user?
+  end
+
   def finance?
     finance_profile.present?
   end

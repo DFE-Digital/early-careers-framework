@@ -14,6 +14,88 @@ RSpec.describe Participants::ParticipantValidationForm, type: :model do
     allow(StoreValidationResult).to receive(:call).and_return(eligibility_record)
   end
 
+  describe "#call" do
+    subject(:call) { described_class.call(participant_profile, data:) }
+
+    let(:data) do
+      {
+        trn: "1234567",
+        nino: "AB123456C",
+        date_of_birth: 20.years.ago,
+        full_name: "John Doe",
+      }
+    end
+
+    context "when no validation data is provided" do
+      let(:data) { nil }
+      it { is_expected.to be false }
+    end
+
+    context "when validation data is provided" do
+      it "builds a form with the validation data" do
+        expect(described_class).to receive(:build).with(participant_profile, data:)
+        call
+      end
+
+      it "calls the form" do
+        stubbed_form_object = double(described_class)
+        allow(described_class).to receive(:build).and_return(stubbed_form_object)
+        expect(stubbed_form_object).to receive(:call).once
+        call
+      end
+    end
+  end
+
+  describe ".call" do
+    subject(:call) { described_class.build(participant_profile, data:).call }
+
+    let(:data) do
+      {
+        trn: "1234567",
+        nino: "AB123456C",
+        date_of_birth: 20.years.ago.to_date,
+        full_name: "John Doe",
+      }
+    end
+
+    let(:validation_result) do
+      {
+        trn: "1234567",
+        qts: true,
+        active_alert: false,
+        previous_participation: false,
+        previous_induction: false,
+        no_induction: true,
+        exempt_from_induction: false,
+        induction_start_date: Date.new(2022, 9, 1),
+      }
+    end
+
+    before do
+      allow(ParticipantProfile).to receive(:find).with(participant_profile.id).and_return(participant_profile)
+    end
+
+    it "updates eligibility" do
+      expect(StoreValidationResult).to receive(:call).with(
+        participant_profile:,
+        validation_data: {
+          trn: data[:trn],
+          nino: data[:nino],
+          dob: data[:date_of_birth],
+          full_name: data[:full_name],
+        },
+        dqt_response: validation_result,
+      ).twice
+
+      expect(Participants::SyncDQTInductionStartDate).to receive(:call).with(
+        validation_result[:induction_start_date],
+        participant_profile,
+      )
+
+      call
+    end
+  end
+
   describe "check eligibility!" do
     subject { form.check_eligibility! }
 

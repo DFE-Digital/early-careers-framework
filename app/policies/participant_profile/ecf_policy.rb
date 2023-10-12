@@ -27,6 +27,8 @@ class ParticipantProfile::ECFPolicy < ParticipantProfilePolicy
   alias_method :update_appropriate_body?, :update?
 
   def update_validation_data?
+    return true if super_user?
+
     admin? && record.training_status_active? && (record.ecf_participant_eligibility.blank? || !record.eligible?)
   end
 

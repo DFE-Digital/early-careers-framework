@@ -62,7 +62,7 @@
   end
 end %>
 
-<% unless states.validation_status_valid? %>
+<% if !states.validation_status_valid? || current_user.super_user? %>
   <% if @participant_presenter.eligibility_data.present? %>
     <h3 class="govuk-heading-m">Eligibility data</h3>
     <%= govuk_summary_list(actions: true) do |sl|
@@ -121,5 +121,11 @@ end %>
     <% button_label = "Validate details" %>
   <% end %>
 
-  <%= govuk_button_to button_label, validate_details_admin_participant_validation_data_path(@participant_presenter.validation_data.participant_profile) if can_be_updated %>
+  <%=
+    govuk_link_to(
+      button_label,
+      new_admin_participant_validate_details_path(participant_id: params[:participant_id]),
+      class: "govuk-button"
+    ) if can_be_updated
+  %>
 <% end %>
