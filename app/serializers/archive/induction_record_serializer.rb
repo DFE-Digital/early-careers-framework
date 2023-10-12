@@ -6,6 +6,18 @@ module Archive
 
     set_id :id
 
+    attribute :training_programme do |induction_record|
+      induction_record.induction_programme.training_programme
+    end
+
+    attribute :school_name do |induction_record|
+      induction_record.school.name
+    end
+
+    attribute :school_urn do |induction_record|
+      induction_record.school.urn
+    end
+
     attribute :lead_provider, &:lead_provider_name
     attribute :delivery_partner, &:delivery_partner_name
     attribute :core_materials, &:core_induction_programme_name

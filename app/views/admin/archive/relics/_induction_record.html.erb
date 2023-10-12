@@ -13,16 +13,24 @@
     <% row.with_action(text: :none) %>
   <% end %>
 
-  <% summary_list.with_row do |row| %>
-    <% row.with_key { "Lead provider" } %>
-    <% row.with_value { ir.lead_provider } %>
-    <% row.with_action(text: :none) %>
-  <% end %>
+  <% if ir.fip? %>
+    <% summary_list.with_row do |row| %>
+      <% row.with_key { "Lead provider" } %>
+      <% row.with_value { ir.lead_provider } %>
+      <% row.with_action(text: :none) %>
+    <% end %>
 
-  <% summary_list.with_row do |row| %>
-    <% row.with_key { "Delivery partner" } %>
-    <% row.with_value { ir.delivery_partner } %>
-    <% row.with_action(text: :none) %>
+    <% summary_list.with_row do |row| %>
+      <% row.with_key { "Delivery partner" } %>
+      <% row.with_value { ir.delivery_partner } %>
+      <% row.with_action(text: :none) %>
+    <% end %>
+  <% else %>
+    <% summary_list.with_row do |row| %>
+      <% row.with_key { "Core materials" } %>
+      <% row.with_value { ir.core_materials } %>
+      <% row.with_action(text: :none) %>
+    <% end %>
   <% end %>
 
   <% summary_list.with_row do |row| %>

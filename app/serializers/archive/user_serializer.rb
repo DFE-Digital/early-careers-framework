@@ -9,6 +9,7 @@ module Archive
 
     attribute :email
     attribute :full_name
+    attribute :created_at
 
     # values to search on (this is indexed)
     meta do |user|

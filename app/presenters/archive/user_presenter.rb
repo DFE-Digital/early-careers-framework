@@ -6,6 +6,10 @@ module Archive
       relic.dig("attributes", "teacher_profile", "attributes", "trn")
     end
 
+    def created_at
+      Time.zone.parse(attribute(:created_at))
+    end
+
     def participant_identities
       @participant_identities ||= ParticipantIdentityPresenter.wrap(attribute("participant_identities"))
     end

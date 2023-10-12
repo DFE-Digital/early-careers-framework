@@ -25,13 +25,5 @@ module Archive
     def created_at
       Time.zone.parse(attribute(:created_at))
     end
-
-    def induction_records
-      InductionRecord.none
-    end
-
-    def participant_declarations
-      ParticipantDeclaration.none
-    end
   end
 end

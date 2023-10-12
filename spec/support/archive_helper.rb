@@ -27,6 +27,7 @@ module ArchiveHelper
                              "attributes" => {
                                "email" => email,
                                "full_name" => name,
+                               "created_at" => 1.year.ago,
                                "teacher_profile" => {
                                  "id" => "486429d1-b6ba-4313-8628-cd86670f3d92",
                                  "type" => "teacher_profile",
@@ -41,9 +42,7 @@ module ArchiveHelper
                                    "id" => SecureRandom.uuid,
                                    "type" => "induction_record",
                                    "attributes" => {
-                                     "cohort" =>2022,
                                      "end_date" =>nil,
-                                     "schedule" => "ECF Standard September",
                                      "created_at" => "2023-09-19T13:54:34.188Z",
                                      "school_urn" => "000017",
                                      "start_date" => "2023-03-19T13:54:34.184Z",
@@ -125,7 +124,29 @@ module ArchiveHelper
                                    },
                                  },
                                ],
-                               "participant_declarations" => [],
+                               "participant_declarations" => [
+                                 {
+                                   "id" => "db0c2e55-4b06-4d31-8a12-cb0b4b5b2ce0",
+                                   "type" => "participant_declaration",
+                                   "attributes" =>  {
+                                     "type" => "ParticipantDeclaration::ECF",
+                                     "state" => "voided",
+                                     "user_id" => "c85b472f-b07a-467b-8903-23f0609eee9b",
+                                     "created_at" => "2023-09-29T12:23:41.089Z",
+                                     "evidence_held" => nil,
+                                     "mentor_user_id" => nil,
+                                     "sparsity_uplift" => nil,
+                                     "declaration_date" => "2023-09-27T12:23:41.087Z",
+                                     "declaration_type" => "started",
+                                     "superseded_by_id" => nil,
+                                     "course_identifier" => "ecf-induction",
+                                     "delivery_partner_id" => nil,
+                                     "cpd_lead_provider_id" => "12774ef0-8f72-49d8-a063-995161f53dc8",
+                                     "pupil_premium_uplift" => nil,
+                                     "participant_profile_id" => profile_id,
+                                   },
+                                 },
+                               ],
                                "participant_profile_states" => [],
                              },
                            })

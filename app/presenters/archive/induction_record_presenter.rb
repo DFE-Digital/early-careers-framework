@@ -2,6 +2,14 @@
 
 module Archive
   class InductionRecordPresenter < RelicPresenter
+    def fip?
+      attribute(:training_programme) == "full_induction_programme"
+    end
+
+    def cip?
+      attribute(:training_programme) == "core_induction_programme"
+    end
+
     def schedule
       @schedule ||= Finance::Schedule.find(attribute(:schedule_id))
     end
