@@ -41,6 +41,24 @@ RSpec.describe Api::V3::NPQParticipantsQuery do
       end
     end
 
+    describe "from_participant_id filter" do
+      let(:params) { { filter: { from_participant_id: } } }
+
+      context "ID does not exist" do
+        let(:from_participant_id) { "doesnotexist" }
+        it { is_expected.to be_empty }
+      end
+
+      context "ID with a match" do
+        let!(:another_user) { create(:npq_participant_profile, npq_lead_provider:, npq_course:, training_status: :withdrawn).user }
+        let!(:participant_id_change1) { create(:participant_id_change, to_participant: user, user:) }
+        let!(:participant_id_change2) { create(:participant_id_change, to_participant: another_user, user: another_user) }
+        let(:from_participant_id) { participant_id_change1.from_participant_id }
+
+        it { is_expected.to contain_exactly(user) }
+      end
+    end
+
     describe "updated_since filter" do
       let!(:another_participant_profile) { create(:npq_participant_profile, npq_lead_provider:, npq_course:) }
       let(:params) { { filter: { updated_since: 1.day.ago.iso8601 } } }

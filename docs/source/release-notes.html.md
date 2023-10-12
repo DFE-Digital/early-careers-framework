@@ -7,6 +7,14 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
+## 17 October 2023
+
+Lead providers can now test the new `participant_id_changes` feature in the sandbox.
+
+The DfE welcomes feedback and intends to deploy the change to the production environment as soon as possible.
+
+Further detail on the change is available in the release note of [6 October 2023](/api-reference/release-notes.html#6-october-2023).
+
 ## 16 October 2023
 
 We've removed the `started-in-error` option from the [ECFWithdrawal schemas](/api-reference/reference-v3.html#schema-ecfwithdrawal) in all versions of the API.
