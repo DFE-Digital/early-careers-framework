@@ -15,7 +15,6 @@ module Schools
         end
 
         def next_step
-          # debugger
           if continue_current_programme? || !wizard.needs_to_choose_school_programme?
             :check_answers
           else
