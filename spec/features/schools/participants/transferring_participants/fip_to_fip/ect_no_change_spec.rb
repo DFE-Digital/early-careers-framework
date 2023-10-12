@@ -266,7 +266,7 @@ RSpec.describe "ECT has matching lead provider and delivery partner", type: :fea
   end
 
   def then_i_should_be_taken_to_the_teachers_current_programme_page
-    expect(page).to have_selector("h1", text: "Will they continue with this lead provider and delivery partner?")
+    expect(page).to have_selector("h1", text: "Will they continue with these training providers?")
     expect(page).to have_text(@lead_provider.name)
     expect(page).to have_text(@delivery_partner.name)
   end

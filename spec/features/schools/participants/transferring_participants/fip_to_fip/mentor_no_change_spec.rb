@@ -168,7 +168,7 @@ RSpec.describe "Transferring a mentor weith matching lead provider and delivery 
   end
 
   def then_i_should_be_taken_to_the_schools_current_programme_page
-    expect(page).to have_selector("h1", text: "Who will #{@participant_data[:full_name]}'s new lead provider / delivery partner be?")
+    expect(page).to have_selector("h1", text: "Who will #{@participant_data[:full_name]}'s new training providers be?")
   end
 
   def then_i_should_be_taken_to_the_check_your_answers_page

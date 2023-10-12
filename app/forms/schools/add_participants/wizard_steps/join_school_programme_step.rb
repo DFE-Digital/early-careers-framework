@@ -6,7 +6,8 @@ module Schools
       class JoinSchoolProgrammeStep < ::WizardStep
         attr_accessor :join_school_programme
 
-        validates :join_school_programme, inclusion: { in: %w[default_for_participant_cohort default_for_current_cohort] }
+        validates :join_school_programme,
+                  inclusion: { in: %w[default_for_participant_cohort default_for_current_cohort other_providers] }
 
         def self.permitted_params
           %i[
@@ -57,7 +58,7 @@ module Schools
         end
 
         def other_providers_choice
-          OpenStruct.new(id: :other_providers, name: "Another lead provider and / or delivery partner")
+          OpenStruct.new(id: :other_providers, name: "Another training providers or programme")
         end
 
         def participant_cohort_provider_names

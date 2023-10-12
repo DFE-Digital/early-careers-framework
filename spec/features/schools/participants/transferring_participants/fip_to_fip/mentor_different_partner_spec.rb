@@ -232,13 +232,13 @@ RSpec.describe "Transferring a mentor with a different provider", type: :feature
   end
 
   def then_i_should_be_taken_to_the_teachers_current_programme_page
-    expect(page).to have_selector("h1", text: "Will they continue with this lead provider and delivery partner?")
+    expect(page).to have_selector("h1", text: "Will they continue with these training providers?")
     expect(page).to have_text(@lead_provider_two.name)
     expect(page).to have_text(@other_delivery_partner.name)
   end
 
   def then_i_should_be_taken_to_the_schools_current_programme_page
-    expect(page).to have_selector("h1", text: "Who will #{@participant_data[:full_name]}'s new lead provider / delivery partner be?")
+    expect(page).to have_selector("h1", text: "Who will #{@participant_data[:full_name]}'s new training providers be?")
     expect(page).to have_text(@lead_provider.name)
     expect(page).to have_text(@delivery_partner.name)
   end

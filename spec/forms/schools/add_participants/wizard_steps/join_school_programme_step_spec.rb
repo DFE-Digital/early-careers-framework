@@ -5,7 +5,7 @@ RSpec.describe Schools::AddParticipants::WizardSteps::JoinSchoolProgrammeStep, t
   subject(:step) { described_class.new(wizard:) }
 
   describe "validations" do
-    it { is_expected.to validate_inclusion_of(:join_school_programme).in_array(%w[default_for_participant_cohort default_for_current_cohort]) }
+    it { is_expected.to validate_inclusion_of(:join_school_programme).in_array(%w[default_for_participant_cohort default_for_current_cohort other_providers]) }
   end
 
   describe ".permitted_params" do
@@ -54,7 +54,7 @@ RSpec.describe Schools::AddParticipants::WizardSteps::JoinSchoolProgrammeStep, t
 
       it "include other providers in the list of options" do
         expect(step.choices).to include(OpenStruct.new(id: :other_providers,
-                                                       name: "Another lead provider and / or delivery partner"))
+                                                       name: "Another training providers or programme"))
       end
 
       context "when the latest school cohort has the same default LP/DP programme as the participant school cohort" do
@@ -90,7 +90,7 @@ RSpec.describe Schools::AddParticipants::WizardSteps::JoinSchoolProgrammeStep, t
 
         it "include other providers in the list of options" do
           expect(step.choices).to include(OpenStruct.new(id: :other_providers,
-                                                         name: "Another lead provider and / or delivery partner"))
+                                                         name: "Another training providers or programme"))
         end
       end
     end
