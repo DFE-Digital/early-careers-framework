@@ -15,7 +15,6 @@ module Schools
         end
 
         def next_step
-          # debugger
           if wizard.transfer?
             if wizard.needs_to_confirm_programme?
               :continue_current_programme
