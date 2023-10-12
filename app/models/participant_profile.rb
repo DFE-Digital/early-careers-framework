@@ -18,6 +18,12 @@ class ParticipantProfile < ApplicationRecord
     other
   ].freeze
 
+  # This is where the active_record, active_record?, withdrawn_record, withdrawn_record? methods come from.
+  # It took me a while to realise that active_record was scope composed from the
+  # status and suffix rather than related to ActiveRecord since my IDE definition lookup was pointing me
+  # to the wrong place.
+  # Hopefully this comment will save someone else some time.
+  # Keywords for searching: def active_record?, def active_record
   enum status: {
     active: "active",
     withdrawn: "withdrawn",
