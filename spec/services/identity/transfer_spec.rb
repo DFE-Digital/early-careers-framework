@@ -110,5 +110,43 @@ RSpec.describe Identity::Transfer do
         end
       end
     end
+
+    context "create participant_id_changes" do
+      it "creates a participant_id_change for user2" do
+        expect(ParticipantIdChange.count).to eql(0)
+        service.call(from_user: user1, to_user: user2)
+
+        expect(ParticipantIdChange.count).to eql(1)
+        rec = ParticipantIdChange.first
+        expect(rec.from_participant).to eql(user1)
+        expect(rec.to_participant).to eql(user2)
+        expect(rec.user).to eql(user2)
+      end
+
+      context "with existing participant_id_changes" do
+        let(:previous_user) { create(:user) }
+        let!(:previous_change) { create(:participant_id_change, from_participant: previous_user, to_participant: user1, user: user1) }
+
+        it "moves previous participant_id_change to user2" do
+          expect(ParticipantIdChange.count).to eql(1)
+          rec = ParticipantIdChange.first
+          expect(rec.from_participant).to eql(previous_user)
+          expect(rec.to_participant).to eql(user1)
+          expect(rec.user).to eql(user1)
+
+          service.call(from_user: user1, to_user: user2)
+          expect(ParticipantIdChange.count).to eql(2)
+
+          rec1, rec2 = ParticipantIdChange.order(:created_at).to_a
+          expect(rec1.from_participant).to eql(previous_user)
+          expect(rec1.to_participant).to eql(user1)
+          expect(rec1.user).to eql(user2)
+
+          expect(rec2.from_participant).to eql(user1)
+          expect(rec2.to_participant).to eql(user2)
+          expect(rec2.user).to eql(user2)
+        end
+      end
+    end
   end
 end

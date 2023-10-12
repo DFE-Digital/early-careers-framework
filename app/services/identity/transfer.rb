@@ -9,6 +9,7 @@ module Identity
         transfer_identities!
         transfer_induction_coordinator_profile!
         transfer_get_an_identity_id!
+        create_participant_id_change!
       end
     end
 
@@ -56,6 +57,13 @@ module Identity
         from_user.update_attribute(:get_an_identity_id, nil) # rubocop:disable Rails/SkipsModelValidations
         to_user.update!(get_an_identity_id: from_id)
       end
+    end
+
+    def create_participant_id_change!
+      to_user.participant_id_changes.create!(from_participant: from_user, to_participant: to_user)
+
+      # Move previous change history to new to_user
+      from_user.participant_id_changes.update!(user: to_user)
     end
   end
 end

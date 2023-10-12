@@ -39,6 +39,8 @@ class User < ApplicationRecord
   has_many :npq_application_eligibility_imports, class_name: "NPQApplications::EligibilityImport"
   has_many :npq_application_exports, class_name: "NPQApplications::Export"
 
+  has_many :participant_id_changes, -> { order(created_at: :desc) }
+
   auto_strip_attributes :full_name, nullify: false, squish: true
   auto_strip_attributes :email, nullify: false
 

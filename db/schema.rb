@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_29_170240) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_10_153003) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "fuzzystrmatch"
@@ -654,6 +654,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_29_170240) do
     t.index ["user_id"], name: "index_participant_declarations_on_user_id"
   end
 
+  create_table "participant_id_changes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.uuid "from_participant_id", null: false
+    t.uuid "to_participant_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["from_participant_id"], name: "index_participant_id_changes_on_from_participant_id"
+    t.index ["to_participant_id"], name: "index_participant_id_changes_on_to_participant_id"
+    t.index ["user_id"], name: "index_participant_id_changes_on_user_id"
+  end
+
   create_table "participant_identities", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "user_id", null: false
     t.citext "email", null: false
@@ -1111,6 +1122,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_29_170240) do
   add_foreign_key "participant_declarations", "participant_profiles"
   add_foreign_key "participant_declarations", "users"
   add_foreign_key "participant_declarations", "users", column: "mentor_user_id"
+  add_foreign_key "participant_id_changes", "users"
   add_foreign_key "participant_identities", "users"
   add_foreign_key "participant_outcome_api_requests", "participant_outcomes"
   add_foreign_key "participant_outcomes", "participant_declarations"

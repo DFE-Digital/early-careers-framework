@@ -19,6 +19,7 @@ RSpec.describe User, type: :model do
     it { is_expected.to have_one(:lead_provider_profile) }
     it { is_expected.to have_one(:lead_provider).through(:lead_provider_profile) }
     it { is_expected.to have_one(:early_career_teacher_profile) }
+    it { is_expected.to have_many(:participant_id_changes) }
 
     describe "early_career_teacher_profile" do
       it "returns an active profile" do
