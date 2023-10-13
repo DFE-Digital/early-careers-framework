@@ -6,7 +6,8 @@ RSpec.describe "NPQ Application Status API", type: :request do
   let(:cpd_lead_provider) { create(:cpd_lead_provider) }
   let(:token)             { NPQRegistrationApiToken.create_with_random_token!(cpd_lead_provider_id: cpd_lead_provider.id) }
   let(:bearer_token)      { "Bearer #{token}" }
-  let(:parsed_response) { JSON.parse(response.body)["data"]&.first }
+  let(:parsed_response)   { JSON.parse(response.body)["data"]&.first }
+  let(:ecf_ids)           { SecureRandom.uuid }
 
   before { default_headers[:Authorization] = bearer_token }
 
@@ -21,11 +22,12 @@ RSpec.describe "NPQ Application Status API", type: :request do
     it "returns correct jsonapi content" do
       @controller = Api::V1::NPQ::ApplicationSynchronizationsController.new
       @controller.params = { "@npq_applications": npq_application }
-      get "/api/v1/npq/application_synchronizations", params: { ecf_ids: SecureRandom.uuid }
+      get "/api/v1/npq/application_synchronizations", params: { ecf_ids: }
       expect(parsed_response).to be_a(Hash)
       expect(parsed_response["attributes"]["id"]).to eq(npq_application.id.to_s)
       expect(parsed_response["attributes"]["lead_provider_approval_status"]).to eq(npq_application.lead_provider_approval_status)
       expect(parsed_response["attributes"]["participant_outcome_state"]).to eq(state)
+      expect(request.query_parameters["ecf_ids"]).to eq(ecf_ids)
     end
   end
 end
