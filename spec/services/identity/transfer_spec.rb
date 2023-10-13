@@ -147,6 +147,16 @@ RSpec.describe Identity::Transfer do
           expect(rec2.user).to eql(user2)
         end
       end
+
+      context "run transfer multiple times" do
+        it "should only create one participant_id_change" do
+          expect(ParticipantIdChange.count).to eql(0)
+          service.call(from_user: user1, to_user: user2)
+          expect(ParticipantIdChange.count).to eql(1)
+          service.call(from_user: user1, to_user: user2)
+          expect(ParticipantIdChange.count).to eql(1)
+        end
+      end
     end
   end
 end
