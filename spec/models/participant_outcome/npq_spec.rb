@@ -434,4 +434,33 @@ RSpec.describe ParticipantOutcome::NPQ, type: :model do
       expect(outcome.failed_but_not_recorded?).to eql(false)
     end
   end
+
+  describe "#resend!" do
+    let(:resend_service_instance) { double }
+
+    before do
+      allow(NPQ::ResendParticipantOutcome).to receive(:new).and_return(resend_service_instance)
+    end
+
+    it "calls the correct service class" do
+      expect(NPQ::ResendParticipantOutcome).to receive(:new).with(participant_outcome_id: subject.id).and_return(resend_service_instance)
+      expect(resend_service_instance).to receive(:call)
+
+      outcome.resend!
+    end
+  end
+
+  describe "#latest_per_declaration?" do
+    let!(:outcome_1) { create(:participant_outcome, :passed, :sent_to_qualified_teachers_api, participant_declaration: declaration) }
+    let!(:outcome_2) { create(:participant_outcome, :failed, :not_sent_to_qualified_teachers_api, participant_declaration: declaration) }
+    let!(:outcome_3) { create(:participant_outcome, :voided, :not_sent_to_qualified_teachers_api, participant_declaration: declaration) }
+    let!(:outcome_4) { create(:participant_outcome, :voided, :not_sent_to_qualified_teachers_api) }
+
+    it "checks whether an outcome is the latest participant outcome for a declaration or not " do
+      expect(outcome_1.latest_per_declaration?).to be_falsey
+      expect(outcome_2.latest_per_declaration?).to be_falsey
+      expect(outcome_3.latest_per_declaration?).to be_truthy
+      expect(outcome_4.latest_per_declaration?).to be_truthy
+    end
+  end
 end

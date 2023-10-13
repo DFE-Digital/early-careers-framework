@@ -19,7 +19,8 @@ RSpec.describe Finance::NPQ::ParticipantOutcomes::Table, type: :component do
       is_expected.to have_table_text(participant_outcome.completion_date.to_fs(:govuk), col: 2)
       is_expected.to have_table_text(participant_outcome.created_at.to_date.to_fs(:govuk), col: 3)
       is_expected.to have_table_text("N/A", col: 4)
-      is_expected.to have_table_text("N/A", col: 5)
+      is_expected.to have_table_text("Pending", col: 5)
+      is_expected.not_to have_table_text("Resend", col: 6)
       is_expected.to have_table_caption("Declaration Outcomes: Failed")
     end
   end
@@ -33,7 +34,8 @@ RSpec.describe Finance::NPQ::ParticipantOutcomes::Table, type: :component do
       is_expected.to have_table_text(participant_outcome.completion_date.to_fs(:govuk), col: 2)
       is_expected.to have_table_text(participant_outcome.created_at.to_date.to_fs(:govuk), col: 3)
       is_expected.to have_table_text("N/A", col: 4)
-      is_expected.to have_table_text("N/A", col: 5)
+      is_expected.to have_table_text("Pending", col: 5)
+      is_expected.not_to have_table_text("Resend", col: 6)
       is_expected.to have_table_caption("Declaration Outcomes")
     end
   end
@@ -48,7 +50,8 @@ RSpec.describe Finance::NPQ::ParticipantOutcomes::Table, type: :component do
         is_expected.to have_table_text(participant_outcome.completion_date.to_fs(:govuk), col: 2)
         is_expected.to have_table_text(participant_outcome.created_at.to_date.to_fs(:govuk), col: 3)
         is_expected.to have_table_text("N/A", col: 4)
-        is_expected.to have_table_text("N/A", col: 5)
+        is_expected.to have_table_text("Pending", col: 5)
+        is_expected.not_to have_table_text("Resend", col: 6)
         is_expected.to have_table_caption("Declaration Outcomes: Passed")
       end
     end
@@ -63,7 +66,8 @@ RSpec.describe Finance::NPQ::ParticipantOutcomes::Table, type: :component do
         is_expected.to have_table_text(participant_outcome.completion_date.to_fs(:govuk), col: 2)
         is_expected.to have_table_text(participant_outcome.created_at.to_date.to_fs(:govuk), col: 3)
         is_expected.to have_table_text(tra_datetime.to_date.to_fs(:govuk), col: 4)
-        is_expected.to have_table_text("N/A", col: 5)
+        is_expected.to have_table_text("Pending", col: 5)
+        is_expected.not_to have_table_text("Resend", col: 6)
         is_expected.to have_table_caption("Declaration Outcomes")
       end
     end
@@ -79,6 +83,7 @@ RSpec.describe Finance::NPQ::ParticipantOutcomes::Table, type: :component do
         is_expected.to have_table_text(participant_outcome.created_at.to_date.to_fs(:govuk), col: 3)
         is_expected.to have_table_text(tra_datetime.to_date.to_fs(:govuk), col: 4)
         is_expected.to have_table_text("YES", col: 5)
+        is_expected.not_to have_table_text("Resend", col: 6)
         is_expected.to have_table_caption("Declaration Outcomes: Passed and recorded")
       end
     end
@@ -94,6 +99,7 @@ RSpec.describe Finance::NPQ::ParticipantOutcomes::Table, type: :component do
         is_expected.to have_table_text(participant_outcome.created_at.to_date.to_fs(:govuk), col: 3)
         is_expected.to have_table_text(tra_datetime.to_date.to_fs(:govuk), col: 4)
         is_expected.to have_table_text("NO. CONTACT THE DIGITAL SERVICE TEAM", col: 5)
+        is_expected.to have_table_text("Resend", col: 6)
         is_expected.to have_table_caption("Declaration Outcomes: Passed but not recorded")
       end
     end

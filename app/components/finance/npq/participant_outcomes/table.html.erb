@@ -9,6 +9,7 @@
         row.with_cell(header: true, text: t("finance.npq.participant_outcomes.submitted"))
         row.with_cell(header: true, text: t("finance.npq.participant_outcomes.attempted"))
         row.with_cell(header: true, text: t("finance.npq.participant_outcomes.recorded"))
+        row.with_cell(header: true, text: "")
       end
     end
 
@@ -19,7 +20,12 @@
           row.with_cell(text: completion_date(outcome))
           row.with_cell(text: changed_date(outcome))
           row.with_cell(text: sent_to_tra_at(outcome))
-          row.with_cell(text: sent_to_tra_tag(outcome.qualified_teachers_api_request_successful))
+          row.with_cell(text: sent_to_tra_tag(outcome))
+          if resend_to_tra?(outcome)
+            row.with_cell(text: govuk_link_to("Resend", resend_finance_npq_participant_outcome_path(outcome)))
+          else
+            row.with_cell(text: "")
+          end
         end
       end
     end

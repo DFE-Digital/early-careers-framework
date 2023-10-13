@@ -732,6 +732,7 @@ en:
         failed_and_recorded: "Failed and recorded"
         passed_but_not_recorded: "Passed but not recorded"
         failed_but_not_recorded: "Failed but not recorded"
+        pending: "Pending"
     service_fee:
       caption: Service fee
     output_payment:

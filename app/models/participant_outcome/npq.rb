@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ParticipantOutcome::NPQ < ApplicationRecord
+  has_paper_trail
+
   self.table_name = "participant_outcomes"
 
   VALID_STATES = %i[passed failed voided].freeze
@@ -24,7 +26,7 @@ class ParticipantOutcome::NPQ < ApplicationRecord
 
     def to_send_to_qualified_teachers_api
       eligible_outcomes = not_sent_to_qualified_teachers_api
-        .where(id: latest_per_declaration.map(&:id))
+        .where(id: latest_per_declarations.map(&:id))
 
       eligible_outcomes.passed
         .or(
@@ -34,13 +36,13 @@ class ParticipantOutcome::NPQ < ApplicationRecord
         )
     end
 
-    def latest_per_declaration
+    def latest_per_declarations
       select("DISTINCT ON(participant_declaration_id) *")
         .order(:participant_declaration_id, created_at: :desc)
     end
 
     def declarations_where_outcome_passed_and_sent
-      latest_per_declaration
+      latest_per_declarations
         .passed
         .sent_to_qualified_teachers_api
         .map(&:participant_declaration_id)
@@ -60,6 +62,23 @@ class ParticipantOutcome::NPQ < ApplicationRecord
 
     def not_passed
       where.not(state: :passed)
+    end
+
+    def latest_per_declaration
+      join = ParticipantOutcome::NPQ
+        .select(Arel.sql("DISTINCT FIRST_VALUE(participant_outcomes.id) OVER (#{latest_participant_outcome_order}) AS latest_id"))
+
+      ParticipantOutcome::NPQ.distinct
+        .joins("JOIN (#{join.to_sql}) AS latest_participant_outcomes ON latest_participant_outcomes.latest_id = participant_outcomes.id")
+    end
+
+  private
+
+    def latest_participant_outcome_order
+      <<~SQL
+        PARTITION BY participant_outcomes.participant_declaration_id
+          ORDER BY participant_outcomes.created_at DESC
+      SQL
     end
   end
 
@@ -97,6 +116,14 @@ class ParticipantOutcome::NPQ < ApplicationRecord
 
   def failed_but_not_recorded?
     has_failed? && sent_to_qualified_teachers_api_at.present? && qualified_teachers_api_request_successful == false
+  end
+
+  def latest_per_declaration?
+    self.class.latest_per_declaration.where(id:).any?
+  end
+
+  def resend!
+    NPQ::ResendParticipantOutcome.new(participant_outcome_id: id).call
   end
 
 private
