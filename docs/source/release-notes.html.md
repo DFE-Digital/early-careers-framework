@@ -7,7 +7,7 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
-## 11 October 2023
+## 16 October 2023
 
 We've removed the `started-in-error` option from the [ECFWithdrawal schemas](/api-reference/reference-v3.html#schema-ecfwithdrawal) in all versions of the API.
 
