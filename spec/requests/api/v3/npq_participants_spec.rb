@@ -14,7 +14,7 @@ RSpec.describe "NPQ Participants API", type: :request do
 
   before { default_headers[:Authorization] = bearer_token }
 
-  describe "GET /api/v3/participants/npq" do
+  describe "GET /api/v3/participants/npq", with_feature_flags: { participant_id_changes: "active" } do
     context "when authorized" do
       let(:npq_application) { npq_applications.sample }
       let(:npq_course)      { npq_application.npq_course }
@@ -56,6 +56,7 @@ RSpec.describe "NPQ Participants API", type: :request do
               :teacher_reference_number,
               :updated_at,
               :npq_enrolments,
+              :participant_id_changes,
             ).exactly)
         end
 
@@ -104,6 +105,24 @@ RSpec.describe "NPQ Participants API", type: :request do
             get "/api/v3/participants/npq", params: { filter: { updated_since: 2.days.ago.iso8601 } }
 
             expect(parsed_response["data"].size).to eq(3)
+          end
+
+          context "with filter from_participant_id" do
+            let(:user) { create(:npq_participant_profile, npq_lead_provider:, npq_course:, training_status: :withdrawn).user }
+            let!(:participant_id_change1) { create(:participant_id_change, to_participant: user, user:) }
+            let(:from_participant_id) { participant_id_change1.from_participant_id }
+
+            it "returns matching users when filtering by from_participant_id" do
+              get "/api/v3/participants/npq", params: { filter: { from_participant_id: } }
+
+              expect(parsed_response["data"].size).to eq(1)
+            end
+
+            it "returns empty array if from_participant_id does not exist" do
+              get "/api/v3/participants/npq", params: { filter: { from_participant_id: "doesnotexist" } }
+
+              expect(parsed_response["data"].size).to eq(0)
+            end
           end
 
           context "with invalid filter of a string" do
@@ -190,7 +209,7 @@ RSpec.describe "NPQ Participants API", type: :request do
     end
   end
 
-  describe "GET /api/v3/participants/npq/:id" do
+  describe "GET /api/v3/participants/npq/:id", with_feature_flags: { participant_id_changes: "active" } do
     let(:npq_application) { create(:npq_application, :accepted, :with_started_declaration, npq_lead_provider:) }
     let(:npq_participant) { npq_application.profile }
 
@@ -227,6 +246,7 @@ RSpec.describe "NPQ Participants API", type: :request do
             :teacher_reference_number,
             :updated_at,
             :npq_enrolments,
+            :participant_id_changes,
           ).exactly)
       end
     end

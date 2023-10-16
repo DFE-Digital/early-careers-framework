@@ -141,6 +141,16 @@ module Api
             }
           }.compact
         end
+
+        attribute(:participant_id_changes, if: -> { FeatureFlag.active?(:participant_id_changes) }) do |object|
+          (object.participant_id_changes || []).map do |c|
+            {
+              from_participant_id: c.from_participant_id,
+              to_participant_id: c.to_participant_id,
+              changed_at: c.created_at.rfc3339,
+            }
+          end
+        end
       end
     end
   end

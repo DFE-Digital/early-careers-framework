@@ -4,6 +4,7 @@ required:
   - full_name
   - updated_at
   - ecf_enrolments
+  - participant_id_changes
 properties:
   full_name:
     description: "The full name of this ECF participant"

@@ -97,6 +97,23 @@ RSpec.describe Api::V3::ECF::ParticipantsQuery do
       end
     end
 
+    describe "with from_participant_id filter" do
+      let(:params) { { filter: { from_participant_id: } } }
+
+      context "ID does not exist" do
+        let(:from_participant_id) { "doesnotexist" }
+        it { expect(subject.participants_for_pagination).to be_empty }
+      end
+
+      context "ID with a match" do
+        let!(:participant_id_change1) { create(:participant_id_change, to_participant: user, user:) }
+        let!(:participant_id_change2) { create(:participant_id_change, to_participant: another_user, user: another_user) }
+        let(:from_participant_id) { participant_id_change1.from_participant_id }
+
+        it { expect(subject.participants_for_pagination).to contain_exactly(user) }
+      end
+    end
+
     context "with ect becoming mentor" do
       let(:mentor_participant_profile) { create(:mentor_participant_profile, participant_identity: user.participant_identities.first, teacher_profile: participant_profile.teacher_profile) }
       let(:mentor_induction_programme) { create(:induction_programme, :fip, partnership:) }

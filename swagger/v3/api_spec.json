@@ -5684,6 +5684,7 @@
         "required": [
           "full_name",
           "npq_enrolments",
+          "participant_id_changes",
           "updated_at"
         ],
         "properties": {

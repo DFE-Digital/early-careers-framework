@@ -43,8 +43,8 @@ module Api
 
         def ecf_participant_params
           params
-            .with_defaults(sort: "", filter: { cohort: "", updated_since: "", training_status: "" })
-            .permit(:id, :sort, filter: %i[cohort updated_since training_status])
+            .with_defaults(sort: "", filter: { cohort: "", updated_since: "", training_status: "", from_participant_id: "" })
+            .permit(:id, :sort, filter: %i[cohort updated_since training_status from_participant_id])
         end
 
         def ecf_participant_query

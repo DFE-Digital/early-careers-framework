@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "API ECF Participants", type: :request do
+RSpec.describe "API ECF Participants", type: :request, with_feature_flags: { participant_id_changes: "active" } do
   let(:cohort_2021) { Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021) }
   let(:cpd_lead_provider) { create(:cpd_lead_provider, lead_provider:) }
   let(:lead_provider)     { create(:lead_provider) }
@@ -100,6 +100,7 @@ RSpec.describe "API ECF Participants", type: :request do
               :teacher_reference_number,
               :updated_at,
               :ecf_enrolments,
+              :participant_id_changes,
             ).exactly)
         end
 
@@ -159,6 +160,29 @@ RSpec.describe "API ECF Participants", type: :request do
               },
             ],
           }))
+        end
+
+        context "with filter from_participant_id" do
+          let(:partnership) { create(:partnership, lead_provider:, cohort: cohort_2021) }
+          let(:participant_profile) { create(:ect_participant_profile) }
+          let(:induction_programme) { create(:induction_programme, :fip, partnership:) }
+          let(:induction_record) { create(:induction_record, induction_programme:, participant_profile:) }
+          let(:user) { induction_record.user }
+
+          let!(:participant_id_change1) { create(:participant_id_change, to_participant: user, user:) }
+          let(:from_participant_id) { participant_id_change1.from_participant_id }
+
+          it "returns matching users when filtering by from_participant_id" do
+            get "/api/v3/participants/ecf", params: { filter: { from_participant_id: } }
+
+            expect(parsed_response["data"].size).to eq(1)
+          end
+
+          it "returns empty array if from_participant_id does not exist" do
+            get "/api/v3/participants/ecf", params: { filter: { from_participant_id: "doesnotexist" } }
+
+            expect(parsed_response["data"].size).to eq(0)
+          end
         end
 
         context "when updated_since parameter is supplied" do
@@ -310,6 +334,7 @@ RSpec.describe "API ECF Participants", type: :request do
                 "created_at": early_career_teacher_profile.created_at.rfc3339,
                 "induction_end_date": "2022-01-12",
               }],
+              "participant_id_changes": [],
             },
           },
         })
