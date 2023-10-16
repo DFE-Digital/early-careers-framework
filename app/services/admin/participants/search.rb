@@ -60,6 +60,6 @@ private
   end
 
   def order
-    "DATE(users.created_at) ASC, users.full_name"
+    "DATE(users.created_at) DESC, users.full_name"
   end
 end
