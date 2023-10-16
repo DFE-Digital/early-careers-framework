@@ -58,7 +58,7 @@ module Schools
         end
 
         def other_providers_choice
-          OpenStruct.new(id: :other_providers, name: "Another training providers or programme")
+          OpenStruct.new(id: :other_providers, name: "Other training providers or another training programme")
         end
 
         def participant_cohort_provider_names

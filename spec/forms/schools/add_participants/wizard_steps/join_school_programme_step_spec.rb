@@ -54,7 +54,7 @@ RSpec.describe Schools::AddParticipants::WizardSteps::JoinSchoolProgrammeStep, t
 
       it "include other providers in the list of options" do
         expect(step.choices).to include(OpenStruct.new(id: :other_providers,
-                                                       name: "Another training providers or programme"))
+                                                       name: "Other training providers or another training programme"))
       end
 
       context "when the latest school cohort has the same default LP/DP programme as the participant school cohort" do
@@ -90,7 +90,7 @@ RSpec.describe Schools::AddParticipants::WizardSteps::JoinSchoolProgrammeStep, t
 
         it "include other providers in the list of options" do
           expect(step.choices).to include(OpenStruct.new(id: :other_providers,
-                                                         name: "Another training providers or programme"))
+                                                         name: "Other training providers or another training programme"))
         end
       end
     end

@@ -19,10 +19,6 @@ module Schools
         ]
       end
 
-      def continue_current_programme!
-        data_store.set(:continue_current_programme, true)
-      end
-
       def do_not_continue_current_programme!
         data_store.set(:continue_current_programme, false)
       end
@@ -41,12 +37,8 @@ module Schools
       def needs_to_confirm_programme?
         return do_not_continue_current_programme! if withdrawn_participant?
         return do_not_continue_current_programme! if [existing_lead_provider, existing_delivery_partner].any?(&:blank?)
-        return true if [existing_lead_provider, lead_provider, current_cohort_lead_provider].compact.map(&:name).uniq.many?
-        return true if [existing_delivery_partner, delivery_partner, current_cohort_delivery_partner].compact.map(&:name).uniq.many?
 
-        continue_current_programme!
-
-        false
+        true
       end
 
       def show_training_provider_section?

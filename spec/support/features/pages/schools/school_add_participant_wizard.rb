@@ -79,7 +79,13 @@ module Pages
       add_email_address full_name, email_address
       # choose_a_mentor mentor_full_name if mentor_full_name.present?
 
-      choose_schools_current_training_provider unless same_provider
+      if same_provider
+        choose "Yes"
+        click_on "Continue"
+      else
+        choose_schools_current_training_provider
+      end
+      # choose_schools_current_training_provider unless same_provider
       confirm_and_transfer
     end
 
@@ -92,7 +98,12 @@ module Pages
 
       add_start_date start_date
       add_email_address full_name, email_address
-      choose_schools_current_training_provider unless same_provider
+      if same_provider
+        choose "Yes"
+        click_on "Continue"
+      else
+        choose_schools_current_training_provider
+      end
 
       confirm_and_transfer
     end

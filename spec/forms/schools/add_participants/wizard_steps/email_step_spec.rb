@@ -54,8 +54,8 @@ RSpec.describe Schools::AddParticipants::WizardSteps::EmailStep, type: :model do
         allow(wizard).to receive(:needs_to_choose_school_programme?).and_return(choose_school_programme)
       end
 
-      it "returns :check_answers" do
-        expect(step.next_step).to eql :check_answers
+      it "returns :cannot_add_manual_transfer" do
+        expect(step.next_step).to eql :cannot_add_manual_transfer
       end
 
       context "when a mentor can be chosen" do

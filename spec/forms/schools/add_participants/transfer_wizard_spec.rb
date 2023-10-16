@@ -65,8 +65,8 @@ RSpec.describe Schools::AddParticipants::TransferWizard, type: :model do
         to_school.school_cohorts.each { |sc| sc.update!(default_induction_programme: nil) }
       end
 
-      it "returns false" do
-        expect(form.needs_to_confirm_programme?).to be_falsey
+      it "returns true" do
+        expect(form.needs_to_confirm_programme?).to be_truthy
       end
     end
 
@@ -95,8 +95,8 @@ RSpec.describe Schools::AddParticipants::TransferWizard, type: :model do
                 .chosen_fip_and_partnered_in(cohort: next_cohort, partnership: current_cohort_partnership)
       end
 
-      it "returns false" do
-        expect(form.needs_to_confirm_programme?).to be_falsey
+      it "returns true" do
+        expect(form.needs_to_confirm_programme?).to be_truthy
       end
     end
 

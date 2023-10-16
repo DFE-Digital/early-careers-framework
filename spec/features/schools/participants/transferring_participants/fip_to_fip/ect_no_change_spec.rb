@@ -101,6 +101,10 @@ RSpec.describe "ECT has matching lead provider and delivery partner", type: :fea
 
     when_i_assign_a_mentor
     click_on "Continue"
+    then_i_should_be_taken_to_the_teachers_current_programme_page
+
+    when_i_select "Yes"
+    click_on "Continue"
     then_i_should_be_taken_to_the_check_your_answers_page
     then_the_page_should_be_accessible
 

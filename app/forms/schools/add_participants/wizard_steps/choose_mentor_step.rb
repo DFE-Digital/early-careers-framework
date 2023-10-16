@@ -21,7 +21,7 @@ module Schools
             elsif wizard.needs_to_choose_school_programme?
               :join_school_programme
             else
-              :check_answers
+              :cannot_add_manual_transfer
             end
           elsif wizard.needs_to_confirm_appropriate_body?
             :confirm_appropriate_body

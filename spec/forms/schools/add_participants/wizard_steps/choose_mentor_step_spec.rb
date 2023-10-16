@@ -38,10 +38,10 @@ RSpec.describe Schools::AddParticipants::WizardSteps::ChooseMentorStep, type: :m
       end
 
       context "when the ECT is training with the same provider" do
-        it "should return check_answers" do
+        it "should return :cannot_add_manual_transfer" do
           allow(wizard).to receive(:needs_to_confirm_programme?).and_return(false)
           allow(wizard).to receive(:needs_to_choose_school_programme?).and_return(false)
-          expect(step.next_step).to eql :check_answers
+          expect(step.next_step).to eql :cannot_add_manual_transfer
         end
       end
     end
