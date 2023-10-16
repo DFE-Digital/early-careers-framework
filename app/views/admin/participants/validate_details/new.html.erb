@@ -1,0 +1,146 @@
+<%
+  if @preview_data.revalidating
+    page_title = "Eligibility Revalidation Preview"
+    confirm_button = "Confirm Revalidate details"
+  else
+    page_title = "Eligibility Validation Preview"
+    confirm_button = "Confirm Validate details"
+  end
+%>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full-width">
+
+    <span class="govuk-caption-xl"><%= @participant_profile.full_name %></span>
+    <h1 class="govuk-heading-xl"><%= page_title %></h1>
+
+    <h2 class="govuk-heading-l">Validation Data</h2>
+
+    <dl class="govuk-summary-list govuk-!-margin-bottom-7">
+      <% @preview_data.validation_data.each do |key, value| %>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            <%= key.to_s.titlecase %>
+          </dt>
+          <dd class="govuk-summary-list__value">
+            <% if [true, false].include?(value) %>
+              <%= value ? "True" : "False" %>
+            <% elsif value.is_a?(Date) %>
+              <%= value.to_formatted_s(:govuk) %>
+            <% else %>
+              <%= value || "-" %>
+            <% end %>
+          </dd>
+        </div>
+      <% end %>
+    </dl>
+
+    <h2 class="govuk-heading-l">DQT Response</h2>
+
+    <dl class="govuk-summary-list govuk-!-margin-bottom-7">
+      <% if @preview_data.dqt_response.present? %>
+        <% @preview_data.dqt_response.each do |key, value| %>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              <%= key.to_s.titlecase %>
+            </dt>
+            <dd class="govuk-summary-list__value">
+              <% if [true, false].include?(value) %>
+                <%= value ? "True" : "False" %>
+              <% elsif value.is_a?(Time) %>
+                <%= value.to_formatted_s(:govuk) %>
+              <% else %>
+                <%= value || "-" %>
+              <% end %>
+            </dd>
+          </div>
+        <% end %>
+      <% else %>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            Error
+          </dt>
+          <dd class="govuk-summary-list__value">
+            No DQT response
+          </dd>
+        </div>
+      <% end %>
+
+    </dl>
+
+    <h2 class="govuk-heading-l">New State Preview</h2>
+
+    <%=
+      govuk_summary_list(actions: true) do |sl|
+        sl.with_row do |row|
+          row.with_key(text: "New Validation State")
+          row.with_value(text: @preview_data.new_validation_state)
+        end
+
+        if @preview_data.eligibility_data.present?
+          sl.with_row do |row|
+            row.with_key(text: "Primary reason")
+            row.with_value(text: @preview_data.eligibility_data[:reason])
+          end
+
+          sl.with_row do |row|
+            row.with_key(text: "Active Flags")
+            row.with_value(text: @preview_data.eligibility_data[:active_flags])
+          end
+
+          if @preview_data.eligibility_data[:mentor?]
+            sl.with_row do |row|
+              row.with_key(text: "Previous participation (ERO)")
+              row.with_value(text: @preview_data.eligibility_data[:previous_participation])
+            end
+
+            sl.with_row do |row|
+              row.with_key(text: "Secondary mentor profile")
+              row.with_value(text: @preview_data.eligibility_data[:duplicate_profile])
+            end
+          end
+
+          if @preview_data.eligibility_data[:ect?]
+            sl.with_row do |row|
+              row.with_key(text: "Previous induction (NQT+1)")
+              row.with_value(text: @preview_data.eligibility_data[:previous_induction])
+            end
+
+            sl.with_row do |row|
+              row.with_key(text: "Qualified teacher status (QTS)")
+              row.with_value(text: @preview_data.eligibility_data[:qts])
+            end
+
+            sl.with_row do |row|
+              row.with_key(text: "Exempt from induction")
+              row.with_value(text: @preview_data.eligibility_data[:exempt_from_induction])
+            end
+
+            sl.with_row do |row|
+              row.with_key(text: "Induction is registered with TRA")
+              row.with_value(text: @preview_data.eligibility_data[:registered_induction])
+            end
+          end
+
+          sl.with_row do |row|
+            row.with_key(text: "Teacher profile has different TRN")
+            row.with_value(text: @preview_data.eligibility_data[:different_trn])
+          end
+        end
+      end
+    %>
+  </div>
+
+  <%=
+    govuk_link_to(
+      confirm_button,
+      admin_participant_validate_details_path(@participant_profile),
+      method: :post,
+      class: "govuk-button",
+      data: {
+        confirm: "Are you sure you want to #{confirm_button.downcase}, this will persist the above changes?",
+      }
+    ) if policy(@participant_profile).update_validation_data?
+  %>
+</div>
+

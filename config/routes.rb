@@ -331,9 +331,10 @@ Rails.application.routes.draw do
           put "date-of-birth", action: :date_of_birth
           get "national-insurance-number", action: :nino, as: :nino
           put "national-insurance-number", action: :nino
-          post "validate-details", action: :validate_details, as: :validate_details
         end
       end
+
+      resource :validate_details, path: "validate-details", only: %i[new create], controller: "participants/validate_details"
 
       member do
         put :update_email, path: "update-email"

@@ -3,6 +3,25 @@
 class EligibilityPresenter < SimpleDelegator
   delegate :mentor?, :ect?, to: :participant_profile
 
+  def as_json
+    return {} if eligibility_record.blank?
+
+    {
+      eligibility:,
+      reason:,
+      active_flags:,
+      previous_induction:,
+      qts:,
+      different_trn:,
+      registered_induction:,
+      exempt_from_induction:,
+      duplicate_profile:,
+      previous_participation:,
+      mentor?: mentor?,
+      ect?: ect?,
+    }
+  end
+
   def eligibility
     eligibility_record.status.humanize.capitalize
   end

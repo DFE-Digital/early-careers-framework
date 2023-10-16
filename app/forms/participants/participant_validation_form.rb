@@ -10,6 +10,13 @@ module Participants
     #   * :date_of_birth [Date]
     #   * :full_name [String]
     def self.call(participant_profile, save_validation_data_without_match: true, data: nil)
+      form = build(participant_profile, data:)
+      return false if form.blank?
+
+      form.call(save_validation_data_without_match:)
+    end
+
+    def self.build(participant_profile, data: nil)
       validation_data = if data.present?
                           OpenStruct.new(data)
                         else
@@ -24,7 +31,7 @@ module Participants
         nino: validation_data.nino,
         dob: validation_data.date_of_birth,
         full_name: validation_data.full_name,
-      ).call(save_validation_data_without_match:)
+      )
     end
 
     # lifted from https://github.com/dwp/nino-format-validation
