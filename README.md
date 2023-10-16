@@ -8,7 +8,7 @@
 
 - Ruby 3.2.2
 - PostgreSQL (we deploy on 11.x)
-- NodeJS 18.17.0
+- NodeJS 18.18.0
 - Yarn 1.12.x
 - Docker
 - Redis 6.2
@@ -157,7 +157,7 @@ yarn cypress:open
 
 #### Moving to capybara
 
-Features and user journeys are being migrated to Capybara as part of the feature scenarios and these can be run using: 
+Features and user journeys are being migrated to Capybara as part of the feature scenarios and these can be run using:
 
 ```
 bundle exec bin/features_ci
