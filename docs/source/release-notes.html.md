@@ -7,6 +7,12 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
+## 16 October 2023
+
+We've removed the `started-in-error` option from the [ECFWithdrawal schemas](/api-reference/reference-v3.html#schema-ecfwithdrawal) in all versions of the API.
+
+Note that NPQ participants can still be withdrawn for this reason.
+
 ## 10 October 2023
 
 Lead providers integrated with v3 of the API can now view details of ECTs that have completed their induction.
@@ -27,7 +33,7 @@ In this way, providers may rely on the `updated_since` filter to identify if the
 
 ## 6 October 2023
 
-We’ve added experimental fields to the API v3 sandbox environment to make it simpler for lead providers to identify and manage deduped participants. 
+We’ve added experimental fields to the API v3 sandbox environment to make it simpler for lead providers to identify and manage deduped participants.
 
 We’ve [previously advised](/api-reference/release-notes.html#15-march-2023) of the possibility that participants may be registered as duplicates with multiple participant_ids.
 

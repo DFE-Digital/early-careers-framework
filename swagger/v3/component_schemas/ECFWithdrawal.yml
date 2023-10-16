@@ -13,7 +13,6 @@ properties:
       - moved-school
       - mentor-no-longer-being-mentor
       - school-left-fip
-      - started-in-error
       - other
   date:
     description: The date and time the participant was withdrawn
