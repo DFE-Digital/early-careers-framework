@@ -12,8 +12,9 @@ module Admin::Participants
 
   private
 
+    # Get the school from the induction record for ECTs and from the participant profile for NPQs
     def school
-      @school ||= @participant_profile.school
+      @school ||= @participant_profile.latest_induction_record&.school || @participant_profile.school
     end
   end
 end
