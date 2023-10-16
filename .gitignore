@@ -36,6 +36,7 @@ bin/konduit.sh
 # Terraform
 *.tfstate
 *.tfstate.backup
+*.lock.hcl
 .terraform/environment
 terraform.tfplan
 terraform.tfstate
