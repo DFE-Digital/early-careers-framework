@@ -12,7 +12,7 @@ inputs:
   node-version:
     description: The version of Node.js to install
     required: false
-    default: "18.17"
+    default: "18.18"
   prepare-test-database:
     description: When 'true', sets up a test database
     required: false
