@@ -128,9 +128,9 @@ RSpec.describe "statements endpoint spec", type: :request do
       it "returns statements updated after updated_since" do
         get "/api/v3/statements", params: { filter: { updated_since: 2.days.ago.iso8601 } }
 
+        expected_ids = [ecf_statement_current_cohort.id, npq_statement_next_cohort.id]
         expect(parsed_response["data"].size).to eql(2)
-        expect(parsed_response.dig("data", 0, "id")).to eql(ecf_statement_current_cohort.id)
-        expect(parsed_response.dig("data", 1, "id")).to eql(npq_statement_next_cohort.id)
+        expect(parsed_response["data"].map { |statement| statement["id"] }).to match_array expected_ids
       end
     end
 
