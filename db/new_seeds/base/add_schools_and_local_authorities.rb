@@ -101,12 +101,11 @@ ur_local_authority = local_authorities.sample
 fhtsh_ab = AppropriateBody.find_by(name: "Flying High Teaching School Hub")
 nta_ab = AppropriateBody.find_by(name: "National Teacher Accreditation (NTA)")
 
-ur_cohorts = @cohorts
-ur_cohort_2021 = ur_cohorts.detect { |cohort| cohort.start_year == 2021 }
-ur_cohort_2022 = ur_cohorts.detect { |cohort| cohort.start_year == 2022 }
+cohort_2021 = @cohorts.detect { |cohort| cohort.start_year == 2021 }
+cohort_2022 = @cohorts.detect { |cohort| cohort.start_year == 2022 }
 
-ur_school_cohort_2021 = FactoryBot.create(:seed_school_cohort, :fip, school: ur_school, cohort: ur_cohort_2021, appropriate_body: nta_ab)
-ur_school_cohort_2022 = FactoryBot.create(:seed_school_cohort, :fip, school: ur_school, cohort: ur_cohort_2022, appropriate_body: fhtsh_ab)
+ur_school_cohort_2021 = FactoryBot.create(:seed_school_cohort, :fip, school: ur_school, cohort: cohort_2021, appropriate_body: nta_ab)
+ur_school_cohort_2022 = FactoryBot.create(:seed_school_cohort, :fip, school: ur_school, cohort: cohort_2022, appropriate_body: fhtsh_ab)
 
 ambition = LeadProvider.find_by(name: "Ambition Institute")
 ucl = LeadProvider.find_by(name: "UCL Institute of Education")
@@ -117,21 +116,21 @@ glf_wiltshire_teaching_school_hub = FactoryBot.create(:seed_delivery_partner, na
 FactoryBot.create(:seed_provider_relationship,
                   lead_provider: ucl,
                   delivery_partner: wiltshire_schools_alliance,
-                  cohort: ur_cohort_2021)
+                  cohort: cohort_2021)
 
 FactoryBot.create(:seed_provider_relationship,
                   lead_provider: ambition,
                   delivery_partner: glf_wiltshire_teaching_school_hub,
-                  cohort: ur_cohort_2022)
+                  cohort: cohort_2022)
 
 ur_partnership_2021 = FactoryBot.create(:seed_partnership,
-                                        cohort: ur_cohort_2021,
+                                        cohort: cohort_2021,
                                         school: ur_school,
                                         delivery_partner: wiltshire_schools_alliance,
                                         lead_provider: ucl)
 
 ur_partnership_2022 = FactoryBot.create(:seed_partnership,
-                                        cohort: ur_cohort_2022,
+                                        cohort: cohort_2022,
                                         school: ur_school,
                                         delivery_partner: glf_wiltshire_teaching_school_hub,
                                         lead_provider: ambition)
