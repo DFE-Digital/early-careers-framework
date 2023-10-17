@@ -23,7 +23,7 @@ module Api
                     .left_joins(:participant_id_changes)
                     .order(sort_order(default: :created_at, model: User))
                     .distinct
-          scope = scope.where(users: { updated_at: updated_since.. }) if updated_since_filter.present?
+          scope = apply_updated_since_filter(scope)
           scope = scope.where(induction_records: { training_status: }) if training_status.present?
           scope = scope.where(participant_id_changes: { from_participant_id: }) if from_participant_id.present?
           scope
@@ -79,6 +79,17 @@ module Api
 
         def left_outer_join_induction_records
           "LEFT OUTER JOIN induction_records ON participant_profiles.id = induction_records.participant_profile_id"
+        end
+
+        def apply_updated_since_filter(scope)
+          return scope if updated_since_filter.blank?
+
+          scope = scope.includes(:participant_identities)
+
+          scope.where(participant_profiles: { updated_at: updated_since.. })
+            .or(scope.where(users: { updated_at: updated_since.. }))
+            .or(scope.where(participant_identities: { updated_at: updated_since.. }))
+            .or(scope.where(participant_profiles: { induction_records: { updated_at: updated_since.. }}))
         end
       end
     end

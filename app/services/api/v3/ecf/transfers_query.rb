@@ -28,11 +28,7 @@ module Api
               },
             )
 
-          if updated_since_filter.present?
-            scope.where(updated_at: updated_since..).order(:updated_at)
-          else
-            scope.order(:created_at)
-          end
+          apply_updated_since_filter(scope)
         end
 
         def user
@@ -88,6 +84,13 @@ module Api
                 induction_programmes: { partnerships: { lead_provider_id: lead_provider.id } },
               },
             )
+        end
+
+        def apply_updated_since_filter(scope)
+          return scope.order(:created_at) if updated_since_filter.blank?
+
+          scope.where(users: { updated_at: updated_since.. })
+            .or(scope.where(induction_records: { updated_at: updated_since.. })).order(:updated_at)
         end
       end
     end

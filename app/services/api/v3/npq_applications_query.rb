@@ -63,7 +63,10 @@ module Api
       def apply_updated_since_filter(scope)
         return scope if updated_since_filter.blank?
 
-        scope.where("updated_at > ?", updated_since)
+        scope.where(profile: { updated_at: updated_since.. })
+          .or(scope.where(user: { updated_at: updated_since.. }))
+          .or(scope.where(participant_identity: { updated_at: updated_since.. }))
+          .or(scope.where(npq_applications: { updated_at: updated_since.. }))
       end
 
       def apply_participant_id_filter(scope)
