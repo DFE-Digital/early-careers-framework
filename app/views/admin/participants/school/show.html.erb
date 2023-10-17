@@ -49,14 +49,21 @@
       row.with_value(text: render(StatusTags::SchoolParticipantStatusTag.new(participant_profile: @participant_presenter.participant_profile, school: @participant_presenter.school)))
     end
 
-    sl.with_row do |row|
-      row.with_key(text: "Lead provider")
-      row.with_value(text: @participant_presenter.school_lead_provider_name)
-    end
+    if @participant_presenter.relevant_induction_record&.enrolled_in_fip?
+      sl.with_row do |row|
+        row.with_key(text: "Lead provider")
+        row.with_value(text: @participant_presenter.school_lead_provider_name)
+      end
 
-    sl.with_row do |row|
-      row.with_key(text: "Delivery partner")
-      row.with_value(text: @participant_presenter.school_delivery_partner_name)
+      sl.with_row do |row|
+        row.with_key(text: "Delivery partner")
+        row.with_value(text: @participant_presenter.school_delivery_partner_name)
+      end
+    elsif @participant_presenter.relevant_induction_record&.enrolled_in_cip?
+      sl.with_row do |row|
+        row.with_key(text: "Materials supplier")
+        row.with_value(text: @participant_presenter.relevant_induction_record.core_induction_programme_name)
+      end
     end
 
     sl.with_row do |row|

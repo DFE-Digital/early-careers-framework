@@ -12,6 +12,10 @@ module Pages
       element_has_content? self, "Cohort: #{start_year}"
     end
 
+    def has_materials_supplier?(material_supplier)
+      element_has_content? self, "Materials supplier#{material_supplier}"
+    end
+
     def has_school_name?(school_name)
       element_has_content? self, "School name#{school_name}"
     end
