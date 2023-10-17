@@ -103,6 +103,22 @@ RSpec.describe Finance::NPQ::ParticipantOutcomes::Table, type: :component do
         is_expected.to have_table_caption("Declaration Outcomes: Passed but not recorded")
       end
     end
+
+    context "to be sent to TRA" do
+      let(:tra_datetime) { Time.zone.now }
+      let!(:participant_outcome) { create :participant_outcome, :passed, participant_declaration: }
+
+      it "renders correctly" do
+        is_expected.to have_table_row_count(1)
+        is_expected.to have_table_text("Passed", col: 1)
+        is_expected.to have_table_text(participant_outcome.completion_date.to_fs(:govuk), col: 2)
+        is_expected.to have_table_text(participant_outcome.created_at.to_date.to_fs(:govuk), col: 3)
+        is_expected.to have_table_text("N/A", col: 4)
+        is_expected.to have_table_text("Pending", col: 5)
+        is_expected.not_to have_table_text("Resend", col: 6)
+        is_expected.to have_table_caption("Declaration Outcomes")
+      end
+    end
   end
 
   def have_table_text(txt, col:)
