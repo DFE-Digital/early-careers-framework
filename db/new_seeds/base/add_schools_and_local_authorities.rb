@@ -103,6 +103,7 @@ nta_ab = AppropriateBody.find_by(name: "National Teacher Accreditation (NTA)")
 
 cohort_2021 = @cohorts.detect { |cohort| cohort.start_year == 2021 }
 cohort_2022 = @cohorts.detect { |cohort| cohort.start_year == 2022 }
+cohort_2023 = @cohorts.detect { |cohort| cohort.start_year == 2023 }
 
 ur_school_cohort_2021 = FactoryBot.create(:seed_school_cohort, :fip, school: ur_school, cohort: cohort_2021, appropriate_body: nta_ab)
 ur_school_cohort_2022 = FactoryBot.create(:seed_school_cohort, :fip, school: ur_school, cohort: cohort_2022, appropriate_body: fhtsh_ab)
@@ -259,4 +260,16 @@ FactoryBot.create(:seed_induction_coordinator_profile, :with_user).tap do |induc
     ect.with_induction_record(induction_programme: ur_induction_programme_2022,
                               appropriate_body: fhtsh_ab)
   end
+end
+
+# 2023 FIP school with a partnership in place
+FactoryBot.create(:seed_school, name: "St Benedict's").tap do |st_benedicts|
+  st_benedicts_school_cohort = FactoryBot.create(:seed_school_cohort, :fip, school: st_benedicts, cohort: cohort_2023)
+
+  induction_programme = NewSeeds::Scenarios::InductionProgrammes::Fip.new(school_cohort: st_benedicts_school_cohort)
+    .build
+    .with_partnership
+    .induction_programme
+
+  st_benedicts_school_cohort.update!(default_induction_programme: induction_programme)
 end
