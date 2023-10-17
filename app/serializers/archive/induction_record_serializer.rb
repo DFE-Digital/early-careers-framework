@@ -6,9 +6,7 @@ module Archive
 
     set_id :id
 
-    attribute :training_programme do |induction_record|
-      induction_record.training_programme
-    end
+    attribute :training_programme
 
     attribute :school_name
     attribute :school_urn

@@ -16,12 +16,10 @@ module Archive
       add_user_metadata(user)
     end
 
-    # teacher_profile
     attribute :teacher_profile do |user|
       TeacherProfileSerializer.new(user.teacher_profile).serializable_hash[:data]
     end
 
-    # participant identities -> participant profiles -> induction records
     attribute :participant_identities do |user|
       ParticipantIdentitySerializer.new(user.participant_identities).serializable_hash[:data]
     end
