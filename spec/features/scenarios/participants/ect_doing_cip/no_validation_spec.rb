@@ -87,6 +87,7 @@ RSpec.feature "ECT doing CIP: no validation", type: :feature do
     expect(participant_details).to have_email participant_email
     expect(participant_details).to have_full_name participant_full_name
     expect(participant_details).to have_status school_record_state
+    expect(participant_details).to have_materials_supplier cip_material_provider
   end
 
   scenario "The current appropriate body can locate a record for the ECT", :skip do
