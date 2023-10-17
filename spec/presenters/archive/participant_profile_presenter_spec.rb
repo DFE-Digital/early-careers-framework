@@ -7,12 +7,6 @@ RSpec.describe Archive::ParticipantProfilePresenter do
 
   let(:profile) { create(:seed_ect_participant_profile, :valid) }
 
-  # let(:id) { SecureRandom.uuid }
-  # let(:alt_id) { SecureRandom.uuid }
-  # let(:profile_id) { SecureRandom.uuid }
-  # let(:trn) { "0012345" }
-  # let(:user) { build_archived_ect(name: "Adam West", id:, alt_id:, profile_id:, trn:) }
-  # let(:profile) { user.data.dig("attributes", "participant_profiles").first }
   let(:serialized_profile) { JSON.parse(Archive::ParticipantProfileSerializer.new(profile).serializable_hash[:data].to_json) }
   subject(:presenter) { described_class.new(serialized_profile) }
 
