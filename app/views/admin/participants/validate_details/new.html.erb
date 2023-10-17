@@ -132,14 +132,10 @@
   </div>
 
   <%=
-    govuk_link_to(
+    govuk_button_to(
       confirm_button,
       admin_participant_validate_details_path(@participant_profile),
-      method: :post,
-      class: "govuk-button",
-      data: {
-        confirm: "Are you sure you want to #{confirm_button.downcase}, this will persist the above changes?",
-      }
+      class: "govuk-button"
     ) if policy(@participant_profile).update_validation_data?
   %>
 </div>
