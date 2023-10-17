@@ -51,7 +51,13 @@ Rails.application.configure do
                            connect_timeout: 30, # Defaults to 20 seconds
                            reconnect_attempts: 1, # Defaults to 0
                            error_handler: lambda { |method:, returning:, exception:|
-                                            Sentry.capture_exception(exception, tags: { method:, returning: })
+                                            # We get a few timeout errors/day from Redis; it may be that the cache is
+                                            # under heavy load, but we don't want to be alerted about it.
+                                            if exception.instance_of?(Redis::TimeoutError)
+                                              Rails.logger.warn("Redis timeout error #{exception}")
+                                            else
+                                              Sentry.capture_exception(exception, tags: { method:, returning: })
+                                            end
                                           },
                        }
 
