@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "semantic"
+
 module Oneoffs
   class RemoveFeesFromECFContracts
     attr_reader :cohort_year, :from_date
@@ -23,7 +25,7 @@ module Oneoffs
         # Contract already set to zero
         next if old_contract.monthly_service_fee.to_s == "0.0"
 
-        new_version = increment_version(version)
+        new_version = Semantic::Version.new(version).patch!.to_s
 
         new_contract = CallOffContract.find_or_initialize_by(
           version: new_version,
@@ -57,11 +59,6 @@ module Oneoffs
 
     def statements
       @statements ||= Finance::Statement::ECF.where(cohort:).where("payment_date >= ?", from_date)
-    end
-
-    def increment_version(version)
-      n = (version.split(".") || []).last.to_i
-      "0.0.#{n + 1}"
     end
   end
 end

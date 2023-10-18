@@ -141,13 +141,4 @@ RSpec.describe Oneoffs::RemoveFeesFromECFContracts do
       end
     end
   end
-
-  describe "#increment_version" do
-    it "should increment version" do
-      expect(subject.increment_version("0.0.0")).to eql("0.0.1")
-      expect(subject.increment_version("0.0.1")).to eql("0.0.2")
-      expect(subject.increment_version("0.0.2")).to eql("0.0.3")
-      expect(subject.increment_version("0.0.3")).to eql("0.0.4")
-    end
-  end
 end
