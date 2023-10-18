@@ -20,6 +20,11 @@ variable "deploy_azure_backing_services" {
   default = true
 }
 
+variable "deploy_snapshot_database" {
+  type    = string
+  default = false
+}
+
 variable "azure_sp_credentials_json" {
   type    = string
   default = null
@@ -52,6 +57,10 @@ variable "db_sslmode" {
 
 variable "postgres_flexible_server_sku" {
   default = "B_Standard_B1ms"
+}
+
+variable "postgres_snapshot_flexible_server_sku" {
+  default = "GP_Standard_D2ds_v4"
 }
 
 variable "postgres_enable_high_availability" {
