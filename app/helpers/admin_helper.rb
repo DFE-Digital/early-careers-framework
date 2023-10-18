@@ -103,4 +103,11 @@ module AdminHelper
       "unknown"
     end
   end
+
+  def training_statuses
+    [
+      OpenStruct.new(id: "deferred", value: "deferred"),
+      OpenStruct.new(id: "withdrawn", value: "withdrawn"),
+    ]
+  end
 end

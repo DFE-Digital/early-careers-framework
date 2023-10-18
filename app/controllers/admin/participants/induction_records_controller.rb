@@ -5,7 +5,7 @@ module Admin::Participants
     include Pundit::Authorization
     include RetrieveProfile
 
-    before_action :load_induction_record, only: %i[edit_preferred_email update_preferred_email]
+    before_action :load_induction_record, except: %i[show]
 
     def show
       @participant_presenter = Admin::ParticipantPresenter.new(@participant_profile)
@@ -33,6 +33,22 @@ module Admin::Participants
       end
     end
 
+    def edit_training_status
+      authorize @induction_record
+    end
+
+    def update_training_status
+      authorize @induction_record
+
+      if training_status_updated?
+        set_success_message(heading: "The induction records has been updated")
+        redirect_to admin_participant_induction_records_path(@participant_profile)
+      else
+        flash.now[:notice] = { heading: "The induction records could not be updated" }
+        render "admin/participants/induction_records/edit_training_status"
+      end
+    end
+
   private
 
     def load_induction_record
@@ -46,6 +62,25 @@ module Admin::Participants
 
     def induction_params
       params.require(:induction_record).permit(:preferred_identity_id)
+    end
+
+    def training_status_params
+      params.require(:induction_record).permit(:training_status)
+    end
+
+    def training_status_updated?
+      return true if @induction_record.attributes.slice(*training_status_params.keys) == training_status_params
+
+      begin
+        ActiveRecord::Base.transaction do
+          @participant_profile.update!(training_status_params) if @induction_record == @participant_profile.latest_induction_record
+          Induction::ChangeInductionRecord.call(induction_record: @induction_record, changes: training_status_params)
+
+          true
+        end
+      rescue StandardError
+        false
+      end
     end
   end
 end

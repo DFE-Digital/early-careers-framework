@@ -93,6 +93,13 @@
         sl.with_row do |row|
           row.with_key(text: "Training status")
           row.with_value(text: induction_record.training_status)
+          if policy(induction_record).edit_training_status? &&
+              @participant_presenter.school_latest_induction_record?(induction_record)
+            row.with_action(
+                href: edit_training_status_admin_participant_induction_records_path(@participant_profile, induction_record),
+                visually_hidden_text: "training status"
+            )
+          end
         end
 
         sl.with_row do |row|

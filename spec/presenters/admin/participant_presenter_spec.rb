@@ -24,24 +24,40 @@ RSpec.describe(Admin::ParticipantPresenter) do
   end
 
   describe "delegation" do
+    it { is_expected.to delegate_method(:appropriate_body).to(:school_cohort).allow_nil }
+    it { is_expected.to delegate_method(:name).to(:appropriate_body).with_prefix.allow_nil }
+    it { is_expected.to delegate_method(:delivery_partner_name).to(:relevant_induction_record).allow_nil }
+    it { is_expected.to delegate_method(:ect?).to(:participant_profile) }
+    it { is_expected.to delegate_method(:ecf_participant_eligibility).to(:participant_profile) }
+    it { is_expected.to delegate_method(:ecf_participant_validation_data).to(:participant_profile) }
+    it { is_expected.to delegate_method(:email).to(:user) }
+    it { is_expected.to delegate_method(:enrolled_in_fip?).to(:relevant_induction_record) }
+    it { is_expected.to delegate_method(:full_name).to(:user) }
     it { is_expected.to delegate_method(:id).to(:participant_profile) }
-    it { is_expected.to delegate_method(:participant_identity).to(:participant_profile) }
-    it { is_expected.to delegate_method(:training_status).to(:participant_profile) }
+    it { is_expected.to delegate_method(:lead_provider_name).to(:relevant_induction_record).allow_nil }
+    it { is_expected.to delegate_method(:full_name).to(:mentor_profile).with_prefix(:mentor).allow_nil }
+    it { is_expected.to delegate_method(:mentor_profile).to(:relevant_induction_record).allow_nil }
+    it { is_expected.to delegate_method(:mentor?).to(:participant_profile) }
     it { is_expected.to delegate_method(:notes).to(:participant_profile) }
     it { is_expected.to delegate_method(:notes?).to(:participant_profile) }
-    it { is_expected.to delegate_method(:ect?).to(:participant_profile) }
-    it { is_expected.to delegate_method(:mentor?).to(:participant_profile) }
-    it { is_expected.to delegate_method(:ecf_participant_validation_data).to(:participant_profile) }
-    it { is_expected.to delegate_method(:ecf_participant_eligibility).to(:participant_profile) }
-    it { is_expected.to delegate_method(:teacher_profile).to(:participant_profile) }
-
-    it { is_expected.to delegate_method(:full_name).to(:user) }
-    it { is_expected.to delegate_method(:email).to(:user) }
     it { is_expected.to delegate_method(:participant_identities).to(:user) }
-
-    it { is_expected.to delegate_method(:user_id).to(:participant_identity) }
-
+    it { is_expected.to delegate_method(:participant_identity).to(:participant_profile) }
+    it { is_expected.to delegate_method(:school).to(:school_cohort).allow_nil }
+    it { is_expected.to delegate_method(:school_cohort).to(:relevant_induction_record).allow_nil }
+    it { is_expected.to delegate_method(:delivery_partner).to(:school_cohort).with_prefix(:school).allow_nil }
+    it { is_expected.to delegate_method(:name).to(:school_delivery_partner).with_prefix.allow_nil }
+    it { is_expected.to delegate_method(:friendly_id).to(:school).with_prefix.allow_nil }
+    it { is_expected.to delegate_method(:lead_provider).to(:school_cohort).with_prefix(:school).allow_nil }
+    it { is_expected.to delegate_method(:name).to(:school_lead_provider).with_prefix.allow_nil }
+    it { is_expected.to delegate_method(:name).to(:school).with_prefix.allow_nil }
+    it { is_expected.to delegate_method(:urn).to(:school).with_prefix.allow_nil }
+    it { is_expected.to delegate_method(:start_year).to(:cohort).allow_nil }
+    it { is_expected.to delegate_method(:status).to(:participant_profile) }
+    it { is_expected.to delegate_method(:teacher_profile).to(:participant_profile) }
+    it { is_expected.to delegate_method(:training_status).to(:participant_profile) }
     it { is_expected.to delegate_method(:trn).to(:teacher_profile) }
+    it { is_expected.to delegate_method(:user).to(:participant_profile) }
+    it { is_expected.to delegate_method(:user_id).to(:participant_identity) }
   end
 
   describe "methods" do
@@ -161,6 +177,24 @@ RSpec.describe(Admin::ParticipantPresenter) do
       describe "#all_induction_records" do
         it "returns all of the participant's induction records" do
           expect(subject.all_induction_records.pluck(:id)).to match_array(participant_profile.induction_records.pluck(:id))
+        end
+      end
+
+      describe "#school_latest_induction_record?" do
+        context "when the induction_record is the latest induction record of the participant on any school" do
+          let(:induction_record) { subject.all_induction_records.order(start_date: :desc).first }
+
+          it "returns true" do
+            expect(subject.school_latest_induction_record?(induction_record)).to be_truthy
+          end
+        end
+
+        context "when the induction_record is not the latest induction record of the participant on any school" do
+          let(:induction_record) { subject.all_induction_records.order(start_date: :desc).last }
+
+          it "returns false" do
+            expect(subject.school_latest_induction_record?(induction_record)).to be_falsey
+          end
         end
       end
 

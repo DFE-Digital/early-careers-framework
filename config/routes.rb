@@ -313,6 +313,8 @@ Rails.application.routes.draw do
         member do
           get ":induction_record_id/edit_preferred_email", action: :edit_preferred_email, as: :edit_preferred_email
           put ":induction_record_id/update_preferred_email", action: :update_preferred_email, as: :update_preferred_email
+          get ":induction_record_id/edit_training_status", action: :edit_training_status, as: :edit_training_status
+          put ":induction_record_id/update_training_status", action: :update_training_status, as: :update_training_status
         end
       end
       resource :cohorts, only: :show, controller: "participants/cohorts"
