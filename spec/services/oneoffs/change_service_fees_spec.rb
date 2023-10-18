@@ -18,6 +18,8 @@ describe Oneoffs::ChangeServiceFees do
 
     subject(:perform_change) { instance.perform_change(date_range:, monthly_service_fee:, dry_run:) }
 
+    it { is_expected.to eq(instance.recorded_info) }
+
     it "duplicates the latest contract with a new version/monthly_service_fee" do
       expect { perform_change }.to change { CallOffContract.count }.by(1)
 
@@ -56,7 +58,7 @@ describe Oneoffs::ChangeServiceFees do
     it "logs out information" do
       perform_change
 
-      expect_changes([
+      expect(instance).to have_recorded_info([
         "Current contract version: 0.0.2, fee: 10.0",
         "New contract version: 0.0.3, fee: 20.0",
         "Updating statement dated: 2023-10-25",
@@ -127,20 +129,14 @@ describe Oneoffs::ChangeServiceFees do
 
       it "does not make any changes, but records the changes it would make" do
         expect { perform_change }.not_to change { CallOffContract.count }
-        expect_changes([
+
+        expect(instance).to have_recorded_info([
           "~~~ DRY RUN ~~~",
           "Current contract version: 0.0.2, fee: 10.0",
           "New contract version: 0.0.3, fee: 20.0",
           "Updating statement dated: 2023-10-25",
         ])
       end
-    end
-  end
-
-  def expect_changes(changes)
-    Array.wrap(changes).each do |change|
-      expect(instance.changes).to include(change)
-      expect(Rails.logger).to have_received(:info).with(change)
     end
   end
 end

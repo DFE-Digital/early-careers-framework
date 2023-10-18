@@ -1,12 +1,13 @@
 # frozen_string_literal: true
 
 require "semantic"
+require "has_recordable_information"
 
 module Oneoffs
   class ChangeServiceFees
     class CallOffContractNotFoundError < StandardError; end
 
-    attr_reader :changes
+    include HasRecordableInformation
 
     delegate :lead_provider, to: :cpd_lead_provider, private: true
 
@@ -16,21 +17,23 @@ module Oneoffs
     end
 
     def perform_change(date_range:, monthly_service_fee:, dry_run: true)
-      @changes = []
+      reset_recorded_info
 
-      log_info("~~~ DRY RUN ~~~") if dry_run
+      record_info("~~~ DRY RUN ~~~") if dry_run
 
       ActiveRecord::Base.transaction do
         contract = create_contract(monthly_service_fee)
 
-        log_info("Current contract version: #{call_off_contract.version}, fee: #{call_off_contract.monthly_service_fee}")
-        log_info("New contract version: #{contract.version}, fee: #{contract.monthly_service_fee}")
+        record_info("Current contract version: #{call_off_contract.version}, fee: #{call_off_contract.monthly_service_fee}")
+        record_info("New contract version: #{contract.version}, fee: #{contract.monthly_service_fee}")
 
         create_participant_bands(contract)
         update_statement_contract_versions(date_range, contract.version)
 
         raise ActiveRecord::Rollback if dry_run
       end
+
+      recorded_info
     end
 
   private
@@ -62,7 +65,7 @@ module Oneoffs
 
     def update_statement_contract_versions(date_range, contract_version)
       statements(date_range).each do |s|
-        log_info("Updating statement dated: #{s.payment_date}")
+        record_info("Updating statement dated: #{s.payment_date}")
         s.update!(contract_version:)
       end
     end
@@ -70,11 +73,6 @@ module Oneoffs
     def statements(date_range)
       @statements ||= Finance::Statement::ECF
         .where(cohort:, cpd_lead_provider:, payment_date: date_range)
-    end
-
-    def log_info(info)
-      changes << info
-      Rails.logger.info(info)
     end
   end
 end
