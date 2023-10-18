@@ -552,7 +552,7 @@ module Steps
 
       school = find_school_for_sit "New SIT"
       participant_training.has_school_name? school.name
-      participant_training.has_lead_provider? scenario.new_lead_provider_name
+      participant_training.has_materials_supplier? ""
 
       sign_out
     end
