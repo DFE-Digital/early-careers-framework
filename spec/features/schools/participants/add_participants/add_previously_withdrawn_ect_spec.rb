@@ -81,6 +81,36 @@ RSpec.describe "Adding previously withdrawn ECT", type: :feature, js: true do
     }.to_not change { ParticipantProfile.count }
   end
 
+  scenario "Adding an ECT without validation data back to the school it was withdrawn from" do
+    participant_profile = add_and_remove_participant_from_school_cohort(previous_school_cohort)
+    participant_profile.teacher_profile.update!(trn: nil)
+    the_participant_profile_is_set_up_as_withdrawn_correctly(
+      participant_profile,
+      previous_school_cohort,
+      expected_trn: nil,
+    )
+
+    expect {
+      sign_in
+
+      when_i_go_to_add_new_ect_page
+      and_i_go_through_the_who_do_you_want_to_add_page
+      and_i_go_through_the_what_we_need_from_you_page
+
+      and_i_fill_in_all_info
+      then_i_am_taken_to_the_confirm_appropriate_body_page
+
+      when_i_click_on_confirm
+      then_i_am_taken_to_the_confirmation_page
+      and_i_see_the_correct_details(joint_provider_details: true)
+
+      when_i_check_the_ect_details
+      and_i_see_the_correct_details
+
+      and_the_participant_profile_is_set_up_correctly(participant_profile)
+    }.to_not change { ParticipantProfile.count }
+  end
+
   scenario "Adding an ECT back to the school it was withdrawn from with a different email" do
     participant_profile = add_and_remove_participant_from_school_cohort(previous_school_cohort)
     the_participant_profile_is_set_up_as_withdrawn_correctly(participant_profile, previous_school_cohort)
@@ -262,7 +292,7 @@ private
     expect(page).to have_content("Contact them directly to check whether they need to be transferred to your school")
   end
 
-  def the_participant_profile_is_set_up_as_withdrawn_correctly(participant_profile, expected_school_cohort)
+  def the_participant_profile_is_set_up_as_withdrawn_correctly(participant_profile, expected_school_cohort, expected_trn: ect_trn)
     participant_profile.reload
     expected_cohort = expected_school_cohort.cohort
     expect([
@@ -284,7 +314,7 @@ private
       expected_school_cohort.id,
       nil,
       creation_date_for_withdrawn_record,
-      ect_trn,
+      expected_trn,
     ]
   end
 
