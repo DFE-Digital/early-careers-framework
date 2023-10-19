@@ -1,5 +1,5 @@
 name: Backup DB
-description: Backup DB and upload GitHub artefact
+description: Backup production DB and restore to snapshot DB
 
 inputs:
   environment:
@@ -36,9 +36,7 @@ runs:
       shell: bash
       run: |
         bin/konduit.sh cpd-ecf-${{ inputs.environment }}-web -- pg_dump -E utf8 --compress=1 --clean --if-exists --no-privileges --no-owner --verbose -f backup-${{ inputs.environment }}.sql.gz
-    - name: Upload backup
-      uses: actions/upload-artifact@v3
-      with:
-        name: backup-${{ inputs.environment }}
-        path: backup-${{ inputs.environment }}.sql.gz
-        retention-days: 1
+
+    - name: Restore snapshot database
+      shell: bash
+      run: bin/konduit.sh -d s189p01-cpdecf-pd-pg-snapshot -k s189p01-cpdecf-pd-app-kv -i backup-${{ inputs.environment }}.sql.gz -c -t 7200 cpd-ecf-${{ inputs.environment }}-web -- psql
