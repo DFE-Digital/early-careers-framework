@@ -573,6 +573,10 @@ Rails.application.routes.draw do
       end
 
       resources :contracts, only: %i[show]
+
+      resources :participant_outcomes, only: %i[], param: :participant_outcome_id do
+        get :resend, on: :member
+      end
     end
 
     resources :statements, only: [] do

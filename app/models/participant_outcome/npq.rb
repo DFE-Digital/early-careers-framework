@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ParticipantOutcome::NPQ < ApplicationRecord
+  has_paper_trail
+
   self.table_name = "participant_outcomes"
 
   VALID_STATES = %i[passed failed voided].freeze
@@ -97,6 +99,14 @@ class ParticipantOutcome::NPQ < ApplicationRecord
 
   def failed_but_not_recorded?
     has_failed? && sent_to_qualified_teachers_api_at.present? && qualified_teachers_api_request_successful == false
+  end
+
+  def latest_per_declaration?
+    participant_declaration.outcomes.latest.id == id
+  end
+
+  def resend!
+    NPQ::ResendParticipantOutcome.new(participant_outcome_id: id).call
   end
 
 private

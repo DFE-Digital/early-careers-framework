@@ -32,9 +32,14 @@ module Finance
           outcome.sent_to_qualified_teachers_api_at.to_date.to_fs(:govuk)
         end
 
-        def sent_to_tra_tag(bool)
+        def sent_to_tra_tag(outcome)
+          bool = outcome.qualified_teachers_api_request_successful
           if bool.nil?
-            tag.strong(t("finance.npq.participant_outcomes.na"), class: "govuk-tag govuk-tag--yellow")
+            if outcome.latest_per_declaration?
+              tag.strong(t("finance.npq.participant_outcomes.pending"), class: "govuk-tag govuk-tag--blue")
+            else
+              tag.strong(t("finance.npq.participant_outcomes.na"), class: "govuk-tag govuk-tag--yellow")
+            end
           elsif bool
             tag.strong(t("finance.npq.participant_outcomes.yes"), class: "govuk-tag govuk-tag--green")
           else
@@ -65,6 +70,10 @@ module Finance
                                 end
 
           "#{title}: #{outcome_description}"
+        end
+
+        def resend_to_tra?(outcome)
+          outcome.qualified_teachers_api_request_successful == false && outcome.latest_per_declaration?
         end
 
       private
