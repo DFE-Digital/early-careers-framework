@@ -127,6 +127,13 @@ terraform-plan: terraform-init
 terraform-destroy: terraform-init
 	terraform -chdir=terraform/aks destroy -var-file workspace_variables/${DEPLOY_ENV}.tfvars.json ${AUTO_APPROVE}
 
+
+## DOCKER_IMAGE=fake-image make review terraform-unlock PULL_REQUEST_NUMBER=4169 LOCK_ID=123456
+## DOCKER_IMAGE=fake-image make staging terraform-unlock LOCK_ID=123456
+.PHONY: terraform-unlock
+terraform-unlock: terraform-init
+	terraform -chdir=terraform/aks force-unlock ${LOCK_ID}
+
 enable-maintenance:
 	cf target -s ${SPACE}
 	cd service_unavailable_page && cf push
