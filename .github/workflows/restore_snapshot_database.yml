@@ -9,13 +9,6 @@ on:
         options:
           - production
         required: true
-  workflow_call:
-    inputs:
-      environment:
-        description: GitHub environment to backup and restore
-        type: string
-        required: true
-        default: production
 
 jobs:
   backup-and-restore-production:
