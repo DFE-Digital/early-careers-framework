@@ -33,11 +33,11 @@ module Api
       end
 
       def show
-        render json: serializer_class.new(participant_declaration).serializable_hash.to_json
+        render json: serializer_class.new(participant_declaration_query_scope).serializable_hash.to_json
       end
 
       def void
-        render json: serializer_class.new(VoidParticipantDeclaration.new(participant_declaration).call).serializable_hash.to_json
+        render json: serializer_class.new(VoidParticipantDeclaration.new(participant_declaration_for_lead_provider).call).serializable_hash.to_json
       end
 
     private
@@ -66,8 +66,12 @@ module Api
         current_user
       end
 
-      def participant_declaration
-        @participant_declaration ||= ParticipantDeclaration.for_lead_provider(cpd_lead_provider).find(params[:id])
+      def participant_declaration_query_scope
+        @participant_declaration_query_scope ||= query_scope.find(params[:id])
+      end
+
+      def participant_declaration_for_lead_provider
+        @participant_declaration_for_lead_provider ||= ParticipantDeclaration.for_lead_provider(cpd_lead_provider).find(params[:id])
       end
 
       def permitted_params

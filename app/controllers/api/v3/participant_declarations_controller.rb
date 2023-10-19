@@ -33,7 +33,7 @@ module Api
       # GET /api/v3/participant-declarations/:id
       #
       def show
-        render json: serializer_class.new(participant_declaration).serializable_hash.to_json
+        render json: serializer_class.new(participant_declaration_from_query).serializable_hash.to_json
       end
 
       # Void a participant declaration
@@ -41,7 +41,7 @@ module Api
       # PUT /api/v3/participant-declarations/:id/void
       #
       def void
-        render json: serializer_class.new(VoidParticipantDeclaration.new(participant_declaration).call).serializable_hash.to_json
+        render json: serializer_class.new(VoidParticipantDeclaration.new(participant_declaration_for_lead_provider).call).serializable_hash.to_json
       end
 
     private
@@ -94,8 +94,12 @@ module Api
         Rails.logger.info "Error on schema validation, #{e}"
       end
 
-      def participant_declaration
-        @participant_declaration ||= ParticipantDeclaration.for_lead_provider(cpd_lead_provider).find(params[:id])
+      def participant_declaration_from_query
+        @participant_declaration_from_query ||= participant_declarations_query.participant_declaration(params[:id])
+      end
+
+      def participant_declaration_for_lead_provider
+        @participant_declaration_for_lead_provider ||= ParticipantDeclaration.for_lead_provider(cpd_lead_provider).find(params[:id])
       end
 
       def access_scope
