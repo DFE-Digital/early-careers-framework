@@ -59,9 +59,6 @@ gem "govuk-components", "~> 4.1.1"
 gem "govuk_design_system_formbuilder", "~> 4.1.1"
 gem "view_component", require: "view_component/engine"
 
-# Semantic versioning
-gem "semantic", require: false
-
 # Fetching from APIs
 gem "httpclient", "~> 2.8", ">= 2.8.3"
 gem "rubyzip", "~> 2.3", ">= 2.3.0"

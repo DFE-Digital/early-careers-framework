@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "semantic"
 require "has_recordable_information"
 
 module Oneoffs::ECF
@@ -51,7 +50,7 @@ module Oneoffs::ECF
       raise CallOffContractNotFoundError unless call_off_contract
 
       call_off_contract.dup.tap do |c|
-        c.version = Semantic::Version.new(c.version).patch!
+        c.version = Finance::ECF::ContractVersion.new(c.version).increment!
         c.monthly_service_fee = monthly_service_fee
         c.save!
       end

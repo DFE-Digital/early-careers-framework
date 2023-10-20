@@ -513,7 +513,6 @@ GEM
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
-    semantic (1.6.1)
     sentry-rails (5.12.0)
       railties (>= 5.0)
       sentry-ruby (~> 5.12.0)
@@ -698,7 +697,6 @@ DEPENDENCIES
   scss_lint-govuk
   secure_headers
   selenium-webdriver
-  semantic
   sentry-rails (~> 5.12)
   sentry-ruby (~> 5.12)
   sentry-sidekiq
