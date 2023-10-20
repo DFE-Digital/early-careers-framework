@@ -1,0 +1,25 @@
+name: Restore Snapshot DB from production DB
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: GitHub environment to backup and restore
+        type: choice
+        default: production
+        options:
+          - production
+        required: true
+
+jobs:
+  backup-and-restore-production:
+    runs-on: ubuntu-20.04
+    environment: production
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Backup and restore snapshot
+        uses: ./.github/actions/backup-and-restore-snapshot-database
+        with:
+          environment: production
+          azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}

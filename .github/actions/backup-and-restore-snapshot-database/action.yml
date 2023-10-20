@@ -1,0 +1,42 @@
+name: Backup DB
+description: Backup production DB and restore to snapshot DB
+
+inputs:
+  environment:
+    description: The name of the environment
+    required: true
+  azure-credentials:
+    description: Azure credentials
+    required: true
+
+runs:
+  using: composite
+
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ inputs.azure-credentials }}
+
+    - name: Set AKS credentials
+      shell: bash
+      run: az aks get-credentials -g s189p01-tsc-pd-rg -n s189p01-tsc-production-aks
+
+    - name: Install kubectl
+      uses: azure/setup-kubectl@v3
+
+    - name: Install konduit
+      shell: bash
+      run: make install-konduit
+
+    - name: Backup database
+      shell: bash
+      run: |
+        bin/konduit.sh cpd-ecf-${{ inputs.environment }}-web -- pg_dump -E utf8 --compress=1 --clean --if-exists --no-privileges --no-owner --verbose -f backup-${{ inputs.environment }}.sql.gz
+
+    - name: Restore snapshot database
+      shell: bash
+      run: bin/konduit.sh -d s189p01-cpdecf-pd-pg-snapshot -k s189p01-cpdecf-pd-app-kv -i backup-${{ inputs.environment }}.sql.gz -c -t 7200 cpd-ecf-${{ inputs.environment }}-web -- psql
