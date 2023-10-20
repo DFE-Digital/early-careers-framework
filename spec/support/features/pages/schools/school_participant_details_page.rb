@@ -28,5 +28,9 @@ module Pages
       element_has_content? self, "Status #{status}"
     end
     alias_method :confirm_status, :has_status?
+
+    def has_materials_supplier?(material_supplier)
+      element_has_content? self, "Materials supplier #{material_supplier}"
+    end
   end
 end
