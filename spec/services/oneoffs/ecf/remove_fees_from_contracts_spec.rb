@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-RSpec.describe Oneoffs::RemoveFeesFromECFContracts do
+RSpec.describe Oneoffs::ECF::RemoveFeesFromContracts do
   let(:cohort) { create(:cohort, start_year: 2021) }
 
-  subject { Oneoffs::RemoveFeesFromECFContracts.new(cohort_year: 2021, from_date: "2023-10-01") }
+  subject { described_class.new(cohort_year: 2021, from_date: "2023-10-01") }
 
   describe "#call" do
     let!(:ecf_statement1) { create(:ecf_statement, cohort:, contract_version: "0.0.1", payment_date: "2023-10-25") }

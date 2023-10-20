@@ -2,8 +2,8 @@
 
 require "semantic"
 
-module Oneoffs
-  class RemoveFeesFromECFContracts
+module Oneoffs::ECF
+  class RemoveFeesFromContracts
     attr_reader :cohort_year, :from_date
 
     def initialize(cohort_year:, from_date:)

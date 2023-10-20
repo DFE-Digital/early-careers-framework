@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Oneoffs::ChangeServiceFees do
+describe Oneoffs::ECF::ChangeServiceFees do
   let(:cpd_lead_provider) { ecf_statement.cpd_lead_provider }
   let(:cohort) { create(:cohort, start_year: 2021) }
 
@@ -12,11 +12,11 @@ describe Oneoffs::ChangeServiceFees do
   before { allow(Rails.logger).to receive(:info) }
 
   describe "#perform_change" do
-    let(:date_range) { Date.new(2023, 10, 1)..Date.new(2023, 10, 31) }
+    let(:payment_date_range) { Date.new(2023, 10, 1)..Date.new(2023, 10, 31) }
     let(:monthly_service_fee) { 20 }
     let(:dry_run) { false }
 
-    subject(:perform_change) { instance.perform_change(date_range:, monthly_service_fee:, dry_run:) }
+    subject(:perform_change) { instance.perform_change(payment_date_range:, monthly_service_fee:, dry_run:) }
 
     it { is_expected.to eq(instance.recorded_info) }
 
@@ -69,10 +69,10 @@ describe Oneoffs::ChangeServiceFees do
       expect { perform_change }.to change { ecf_statement.reload.contract_version }.from("0.0.2").to("0.0.3")
     end
 
-    it "does not change statements outside the given date range" do
-      ecf_statement_out_of_date_range = create(:ecf_statement, cohort:, payment_date: date_range.last + 1.day)
+    it "does not change statements outside the given payment date range" do
+      ecf_statement_out_of_payment_date_range = create(:ecf_statement, cohort:, payment_date: payment_date_range.last + 1.day)
 
-      expect { perform_change }.not_to change { ecf_statement_out_of_date_range.reload.contract_version }
+      expect { perform_change }.not_to change { ecf_statement_out_of_payment_date_range.reload.contract_version }
     end
 
     it "does not change statements with other cohorts" do

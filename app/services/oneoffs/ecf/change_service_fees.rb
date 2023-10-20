@@ -3,7 +3,7 @@
 require "semantic"
 require "has_recordable_information"
 
-module Oneoffs
+module Oneoffs::ECF
   class ChangeServiceFees
     class CallOffContractNotFoundError < StandardError; end
 
@@ -16,7 +16,7 @@ module Oneoffs
       @cohort = cohort
     end
 
-    def perform_change(date_range:, monthly_service_fee:, dry_run: true)
+    def perform_change(payment_date_range:, monthly_service_fee:, dry_run: true)
       reset_recorded_info
 
       record_info("~~~ DRY RUN ~~~") if dry_run
@@ -28,7 +28,7 @@ module Oneoffs
         record_info("New contract version: #{contract.version}, fee: #{contract.monthly_service_fee}")
 
         create_participant_bands(contract)
-        update_statement_contract_versions(date_range, contract.version)
+        update_statement_contract_versions(payment_date_range, contract.version)
 
         raise ActiveRecord::Rollback if dry_run
       end
@@ -63,16 +63,16 @@ module Oneoffs
       end
     end
 
-    def update_statement_contract_versions(date_range, contract_version)
-      statements(date_range).each do |s|
+    def update_statement_contract_versions(payment_date_range, contract_version)
+      statements(payment_date_range).each do |s|
         record_info("Updating statement dated: #{s.payment_date}")
         s.update!(contract_version:)
       end
     end
 
-    def statements(date_range)
+    def statements(payment_date_range)
       @statements ||= Finance::Statement::ECF
-        .where(cohort:, cpd_lead_provider:, payment_date: date_range)
+        .where(cohort:, cpd_lead_provider:, payment_date: payment_date_range)
     end
   end
 end
