@@ -42,8 +42,7 @@ module Oneoffs::ECF
     def call_off_contract
       @call_off_contract ||= CallOffContract
         .where(lead_provider:, cohort:)
-        .order(version: :desc)
-        .first
+        .max_by { |c| Finance::ECF::ContractVersion.new(c.version).numerical_value }
     end
 
     def create_contract(monthly_service_fee)
