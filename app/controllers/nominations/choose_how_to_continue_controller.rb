@@ -62,10 +62,10 @@ private
   def cohort
     # This should always be `Cohort.active_registration_cohort` I think, but we need to ensure
     # that a non-pilot school doesn't come here and setup 2023-24 prematurely
-    if FeatureFlag.active? :cohortless_dashboard
+    # if FeatureFlag.active? :cohortless_dashboard
       Cohort.active_registration_cohort
-    else
-      Cohort.current
-    end
+    # else
+    #   Cohort.current
+    # end
   end
 end
