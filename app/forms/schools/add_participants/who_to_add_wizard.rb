@@ -43,12 +43,6 @@ module Schools
 
         return true if desired_cohort.start_year <= Cohort.current.start_year
 
-        # if Cohort.within_next_registration_period? && desired_cohort == Cohort.next
-        #   FeatureFlag.active?(:cohortless_dashboard, for: school)
-        # else
-        #   false
-        # end
-
         Cohort.within_next_registration_period? && desired_cohort == Cohort.next
       end
 
