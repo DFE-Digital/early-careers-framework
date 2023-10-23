@@ -47,7 +47,7 @@ module Schools
       private
 
         def start_term_in_registration_scope?
-          return true if Cohort.within_next_registration_period? && FeatureFlag.active?(:cohortless_dashboard, for: wizard.school)
+          return true if Cohort.within_next_registration_period?
           return true if cannot_automatically_determine_cohort? && start_term == "summer"
 
           false
