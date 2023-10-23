@@ -4,58 +4,13 @@ require "tempfile"
 
 RSpec.describe Importers::CreateNewECFCohort do
   describe "#call" do
-    let(:start_year) { Cohort.ordered_by_start_year.last.start_year + 1 }
+    let(:start_year) { "2024" }
 
-    let(:cohort_csv) do
-      csv = Tempfile.new("cohort_csv_data.csv")
-      csv.write "start-year,registration-start-date,academic-year-start-date,npq-registration-start-date"
-      csv.write "\n"
-      csv.write "#{start_year},#{start_year}/05/10,#{start_year}/09/01"
-      csv.write "\n"
-      csv.close
-      csv.path
-    end
-
-    let(:cohort_lead_provider_csv) do
-      csv = Tempfile.new("cohort_lead_provider_csv_data.csv")
-      csv.write "lead-provider-name,cohort-start-year"
-      csv.write "\n"
-      csv.write "Ambition Institute,#{start_year}"
-      csv.write "\n"
-      csv.close
-      csv.path
-    end
-
-    let(:contract_csv) do
-      csv = Tempfile.new("contract_csv_data.csv")
-      csv.write "lead-provider-name,cohort-start-year,uplift-target,uplift-amount,recruitment-target,revised-target,set-up-fee,monthly-service-fee,band-a-min,band-a-max,band-a-per-participant,band-b-min,band-b-max,band-b-per-participant,band-c-min,band-c-max,band-c-per-participant,band-d-min,band-d-max,band-d-per-participant"
-      csv.write "\n"
-      csv.write "Ambition Institute,#{start_year},0.44,200,4600,4790,0,0,90,895,91,199,700,200,299,600,300,400,500"
-      csv.write "\n"
-      csv.close
-      csv.path
-    end
-
-    let(:schedule_csv) do
-      csv = Tempfile.new("schedule_csv_data.csv")
-      csv.write "type,schedule-identifier,schedule-name,schedule-cohort-year,milestone-name,milestone-declaration-type,milestone-start-date,milestone-date,milestone-payment-date"
-      csv.write "\n"
-      csv.write "ecf_standard,ecf-standard-september,ECF Standard September,#{start_year},Output 1 - Participant Start,started,#{start_year}/09/01,#{start_year}/11/30,#{start_year}/11/30"
-      csv.write "\n"
-      csv.close
-      csv.path
-    end
-
-    let(:statement_csv) do
-      csv = Tempfile.new("statement_csv_data.csv")
-      csv.write "type,name,cohort,deadline_date,payment_date,output_fee"
-      csv.write "\n"
-      csv.write "ecf,September #{start_year},#{start_year},#{start_year}-09-01,#{start_year}-11-25,true"
-      csv.write "\n"
-      csv.close
-      csv.path
-    end
-
+    let(:cohort_csv) { "spec/fixtures/files/importers/cohort_csv_data.csv" }
+    let(:cohort_lead_provider_csv) { "spec/fixtures/files/importers/cohort_lead_provider_csv_data.csv" }
+    let(:contract_csv) { "spec/fixtures/files/importers/contract_csv_data.csv" }
+    let(:schedule_csv) { "spec/fixtures/files/importers/schedule_csv_data.csv" }
+    let(:statement_csv) { "spec/fixtures/files/importers/statement_csv_data.csv" }
     let(:lead_provider) { create(:lead_provider, name: "Ambition Institute", cohorts: []) }
     let!(:cpd_lead_provider) { create(:cpd_lead_provider, name: "Ambition Institute", lead_provider:) }
 
@@ -82,7 +37,7 @@ RSpec.describe Importers::CreateNewECFCohort do
         expect(lead_provider.reload.cohorts).to contain_exactly(Cohort.find_by(start_year:))
       end
 
-      it "creates Call off Contract and bands", :flakey_test do
+      it "creates Call off Contract and bands" do
         expect(CallOffContract.count).to eql(0)
         expect(ParticipantBand.count).to eql(0)
         subject.call
