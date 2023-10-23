@@ -151,4 +151,28 @@ RSpec.describe Archive::UnvalidatedUser do
       }.to raise_error Archive::ArchiveError
     end
   end
+
+  context "when the user has a participant ID change record" do
+    before do
+      user.participant_id_changes.create!(from_participant: user, to_participant: create(:seed_user, :valid))
+    end
+
+    it "raises an ArchiveError" do
+      expect {
+        service_call
+      }.to raise_error Archive::ArchiveError
+    end
+  end
+
+  context "when the user has a GAI ID" do
+    before do
+      user.update!(get_an_identity_id: SecureRandom.uuid)
+    end
+
+    it "raises an ArchiveError" do
+      expect {
+        service_call
+      }.to raise_error Archive::ArchiveError
+    end
+  end
 end

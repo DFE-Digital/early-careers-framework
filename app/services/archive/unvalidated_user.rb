@@ -41,6 +41,10 @@ module Archive
         raise ArchiveError, "User #{user.id} has an eligibility record"
       elsif user_has_mentees?
         raise ArchiveError, "User #{user.id} has mentees"
+      elsif user_has_been_transferred?
+        raise ArchiveError, "User #{user.id} has transfer records"
+      elsif user_has_gai_id?
+        raise ArchiveError, "User #{user.id} has a Get an Identity ID"
       end
     end
 
@@ -62,6 +66,14 @@ module Archive
       user.teacher_profile.participant_profiles.mentors.any? do |mentor_profile|
         InductionRecord.where(mentor_profile:).any?
       end
+    end
+
+    def user_has_been_transferred?
+      user.participant_id_changes.any?
+    end
+
+    def user_has_gai_id?
+      user.get_an_identity_id.present?
     end
 
     def destroy_user!
