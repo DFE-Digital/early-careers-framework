@@ -11,7 +11,6 @@ module Participants
     end
 
     def call
-      return false unless FeatureFlag.active?(:cohortless_dashboard)
       return false unless dqt_induction_start_date
       return update_induction_start_date if mentor? || pre_2021_dqt_induction_start_date? || pre_2023_participant?
       return cohort_missing unless target_cohort
