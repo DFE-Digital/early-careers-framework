@@ -266,6 +266,21 @@ module Schools
         data_store.set(:same_provider, using_same_provider)
       end
 
+      # check answers helpers
+      def show_default_induction_programme_details?
+        !!(school_cohort&.default_induction_programme && school_cohort.default_induction_programme&.partnership&.active?)
+      end
+
+      # only relevant when we are in the registration period before the next cohort starts
+      # and the participant doesn't have an induction start date registered with DQT
+      def show_start_term?
+        (mentor_participant? || induction_start_date.blank?) && start_term.present?
+      end
+
+      def start_term_description
+        "#{start_term.capitalize} #{start_term == 'spring' ? Time.zone.now.year + 1 : Time.zone.now.year}"
+      end
+
       def needs_to_confirm_start_term?
         # are we in the next registration period (or pre-registration period) and the participant does not have
         # an induction start date
