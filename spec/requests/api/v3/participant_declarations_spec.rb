@@ -604,6 +604,61 @@ RSpec.describe "API Participant Declarations", type: :request do
 
         expect(response.status).to eql(200)
       end
+
+      context "when querying a single old participant declaration owned by another provider" do
+        let(:school_cohort) { create(:school_cohort, :fip, :with_induction_programme, lead_provider: cpd_lead_provider.lead_provider) }
+
+        let(:old_cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
+        let(:old_school_cohort) { create(:school_cohort, :fip, :with_induction_programme, lead_provider: old_cpd_lead_provider.lead_provider) }
+        let(:participant_profile) { create(:ect, school_cohort: old_school_cohort) }
+
+        let(:old_participant_declaration) do
+          create(
+            :participant_declaration,
+            user: participant_profile.user,
+            cpd_lead_provider: old_cpd_lead_provider,
+            participant_profile:,
+            course_identifier: "ecf-induction",
+          )
+        end
+
+        let(:new_participant_declaration) do
+          create(
+            :participant_declaration,
+            user: participant_profile.user,
+            cpd_lead_provider:,
+            participant_profile:,
+            course_identifier: "ecf-induction",
+            declaration_type: "retained-1",
+          )
+        end
+
+        before do
+          old_participant_declaration
+
+          Induction::TransferToSchoolsProgramme.call(
+            participant_profile:,
+            induction_programme: school_cohort.default_induction_programme,
+          )
+          participant_profile.reload
+
+          new_participant_declaration
+        end
+
+        it "loads old provider declaration" do
+          get "/api/v3/participant-declarations/#{old_participant_declaration.id}"
+          expect(response.status).to eq 200
+
+          expect(parsed_response["data"]["id"]).to eql(old_participant_declaration.id)
+        end
+
+        it "loads new provider declaration" do
+          get "/api/v3/participant-declarations/#{new_participant_declaration.id}"
+          expect(response.status).to eq 200
+
+          expect(parsed_response["data"]["id"]).to eql(new_participant_declaration.id)
+        end
+      end
     end
   end
 
@@ -685,6 +740,58 @@ RSpec.describe "API Participant Declarations", type: :request do
 
         it "returns a 200" do
           put "/api/v3/participant-declarations/#{participant_declaration.id}/void"
+          expect(response.status).to eql(200)
+        end
+      end
+
+      context "when old participant declaration owned by another provider" do
+        let(:school_cohort) { create(:school_cohort, :fip, :with_induction_programme, lead_provider: cpd_lead_provider.lead_provider) }
+
+        let(:old_cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
+        let(:old_school_cohort) { create(:school_cohort, :fip, :with_induction_programme, lead_provider: old_cpd_lead_provider.lead_provider) }
+        let(:participant_profile) { create(:ect, school_cohort: old_school_cohort) }
+
+        let(:old_participant_declaration) do
+          create(
+            :participant_declaration,
+            user: participant_profile.user,
+            cpd_lead_provider: old_cpd_lead_provider,
+            participant_profile:,
+            course_identifier: "ecf-induction",
+          )
+        end
+
+        let(:new_participant_declaration) do
+          create(
+            :participant_declaration,
+            user: participant_profile.user,
+            cpd_lead_provider:,
+            participant_profile:,
+            course_identifier: "ecf-induction",
+            declaration_type: "retained-1",
+          )
+        end
+
+        before do
+          old_participant_declaration
+
+          Induction::TransferToSchoolsProgramme.call(
+            participant_profile:,
+            induction_programme: school_cohort.default_induction_programme,
+          )
+          participant_profile.reload
+
+          new_participant_declaration
+        end
+
+        it "should return not found for old_participant_declaration" do
+          expect {
+            put "/api/v3/participant-declarations/#{old_participant_declaration.id}/void"
+          }.to raise_error ActiveRecord::RecordNotFound
+        end
+
+        it "should void new_participant_declaration" do
+          put "/api/v3/participant-declarations/#{new_participant_declaration.id}/void"
           expect(response.status).to eql(200)
         end
       end

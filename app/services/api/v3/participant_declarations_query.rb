@@ -57,6 +57,13 @@ module Api
         scope
       end
 
+      def participant_declaration(id)
+        ParticipantDeclaration.union(
+          declarations_scope,
+          previous_declarations_scope,
+        ).find(id)
+      end
+
     private
 
       delegate :lead_provider, to: :cpd_lead_provider

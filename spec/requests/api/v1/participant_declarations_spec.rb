@@ -759,6 +759,63 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
           expect(response.status).to eq 404
         end
       end
+
+      context "when querying a single old participant declaration owned by another provider" do
+        let(:old_cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
+        let(:old_school_cohort) { create(:school_cohort, :fip, :with_induction_programme, lead_provider: old_cpd_lead_provider.lead_provider) }
+        let(:participant_profile) { create(participant_type, *traits, school_cohort: old_school_cohort) }
+
+        let!(:participant_declaration) { nil }
+
+        let(:old_participant_declaration) do
+          create(
+            :participant_declaration,
+            user: participant_profile.user,
+            cpd_lead_provider: old_cpd_lead_provider,
+            participant_profile:,
+            course_identifier: "ecf-induction",
+          )
+        end
+
+        let(:new_participant_declaration) do
+          create(
+            :participant_declaration,
+            user: participant_profile.user,
+            cpd_lead_provider:,
+            participant_profile:,
+            course_identifier: "ecf-induction",
+            declaration_type: "retained-1",
+          )
+        end
+
+        before do
+          old_participant_declaration
+
+          Induction::TransferToSchoolsProgramme.call(
+            participant_profile:,
+            induction_programme: school_cohort.default_induction_programme,
+          )
+          participant_profile.reload
+
+          new_participant_declaration
+        end
+
+        it "loads old provider declaration" do
+          get "/api/v1/participant-declarations/#{old_participant_declaration.id}"
+          expect(response.status).to eq 200
+
+          expected_response = expected_single_json_response(declaration: old_participant_declaration, profile: participant_profile)
+          expect(JSON.parse(response.body)).to eq(expected_response)
+        end
+
+        it "loads new provider declaration" do
+          get "/api/v1/participant-declarations/#{new_participant_declaration.id}"
+          expect(response.status).to eq 200
+
+          expected_response = expected_single_json_response(declaration: new_participant_declaration, profile: participant_profile, declaration_type: "retained-1")
+          expect(JSON.parse(response.body)).to eq(expected_response)
+        end
+      end
     end
   end
 
@@ -845,6 +902,56 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         expect(response.status).to eql(200)
       end
     end
+
+    context "when old participant declaration owned by another provider" do
+      let(:old_cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
+      let(:old_school_cohort) { create(:school_cohort, :fip, :with_induction_programme, lead_provider: old_cpd_lead_provider.lead_provider) }
+      let(:participant_profile) { create(participant_type, *traits, school_cohort: old_school_cohort) }
+
+      let(:old_participant_declaration) do
+        create(
+          :participant_declaration,
+          user: participant_profile.user,
+          cpd_lead_provider: old_cpd_lead_provider,
+          participant_profile:,
+          course_identifier: "ecf-induction",
+        )
+      end
+
+      let(:new_participant_declaration) do
+        create(
+          :participant_declaration,
+          user: participant_profile.user,
+          cpd_lead_provider:,
+          participant_profile:,
+          course_identifier: "ecf-induction",
+          declaration_type: "retained-1",
+        )
+      end
+
+      before do
+        old_participant_declaration
+
+        Induction::TransferToSchoolsProgramme.call(
+          participant_profile:,
+          induction_programme: school_cohort.default_induction_programme,
+        )
+        participant_profile.reload
+
+        new_participant_declaration
+      end
+
+      it "should return not found for old_participant_declaration" do
+        expect {
+          put "/api/v1/participant-declarations/#{old_participant_declaration.id}/void"
+        }.to raise_error ActiveRecord::RecordNotFound
+      end
+
+      it "should void new_participant_declaration" do
+        put "/api/v1/participant-declarations/#{new_participant_declaration.id}/void"
+        expect(response.status).to eql(200)
+      end
+    end
   end
 
 private
@@ -853,29 +960,29 @@ private
     JSON.parse(response.body)
   end
 
-  def expected_json_response(declaration:, profile:, course_identifier: "ecf-induction", state: "submitted", has_passed: nil)
+  def expected_json_response(declaration:, profile:, course_identifier: "ecf-induction", state: "submitted", has_passed: nil, declaration_type: "started")
     {
       "data" =>
       [
-        single_json_declaration(declaration:, profile:, course_identifier:, state:, has_passed:),
+        single_json_declaration(declaration:, profile:, course_identifier:, state:, has_passed:, declaration_type:),
       ],
     }
   end
 
-  def expected_single_json_response(declaration:, profile:, course_identifier: "ecf-induction", state: "submitted", has_passed: nil)
+  def expected_single_json_response(declaration:, profile:, course_identifier: "ecf-induction", state: "submitted", has_passed: nil, declaration_type: "started")
     {
       "data" =>
-      single_json_declaration(declaration:, profile:, course_identifier:, state:, has_passed:),
+      single_json_declaration(declaration:, profile:, course_identifier:, state:, has_passed:, declaration_type:),
     }
   end
 
-  def single_json_declaration(declaration:, profile:, course_identifier: "ecf-induction", state: "submitted", has_passed: nil)
+  def single_json_declaration(declaration:, profile:, course_identifier: "ecf-induction", state: "submitted", has_passed: nil, declaration_type: "started")
     {
       "id" => declaration.id,
       "type" => "participant-declaration",
       "attributes" => {
         "participant_id" => profile.user.id,
-        "declaration_type" => "started",
+        "declaration_type" => declaration_type,
         "declaration_date" => declaration.declaration_date.rfc3339,
         "course_identifier" => course_identifier,
         "state" => state,

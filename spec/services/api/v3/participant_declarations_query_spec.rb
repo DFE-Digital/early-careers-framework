@@ -269,4 +269,53 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery do
       end
     end
   end
+
+  describe "#participant_declaration" do
+    let!(:participant_declaration) do
+      create(
+        :ect_participant_declaration,
+        :paid,
+        uplifts: [:sparsity_uplift],
+        declaration_type: "started",
+        evidence_held: "training-event-attended",
+        cpd_lead_provider: cpd_lead_provider1,
+        participant_profile: participant_profile1,
+        delivery_partner: delivery_partner1,
+      )
+    end
+
+    context "find participant declaration" do
+      it "return one participant declarationsfor" do
+        expect(subject.participant_declaration(participant_declaration.id)).to eql(participant_declaration)
+      end
+    end
+
+    context "declaration does not exist" do
+      it "returns not found error" do
+        expect { subject.participant_declaration("XXXX") }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+    end
+
+    context "when declaration have been transferred to new provider" do
+      let(:transfer_induction_record) do
+        NewSeeds::Scenarios::Participants::Transfers::FipToFipChangingTrainingProvider
+          .new(lead_provider_from: lead_provider2, lead_provider_to: lead_provider1)
+          .build
+      end
+      let!(:transferred_declaration) do
+        create(
+          :ect_participant_declaration,
+          :eligible,
+          declaration_type: "started",
+          cpd_lead_provider: cpd_lead_provider2,
+          participant_profile: transfer_induction_record.participant_profile,
+          delivery_partner: delivery_partner1,
+        )
+      end
+
+      it "is included in the response" do
+        expect(subject.participant_declaration(transferred_declaration.id)).to eql(transferred_declaration)
+      end
+    end
+  end
 end
