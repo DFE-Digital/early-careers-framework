@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-RSpec.describe Oneoffs::RemoveFeesFromECFContracts do
+RSpec.describe Oneoffs::ECF::RemoveFeesFromContracts do
   let(:cohort) { create(:cohort, start_year: 2021) }
 
-  subject { Oneoffs::RemoveFeesFromECFContracts.new(cohort_year: 2021, from_date: "2023-10-01") }
+  subject { described_class.new(cohort_year: 2021, from_date: "2023-10-01") }
 
   describe "#call" do
     let!(:ecf_statement1) { create(:ecf_statement, cohort:, contract_version: "0.0.1", payment_date: "2023-10-25") }
@@ -139,15 +139,6 @@ RSpec.describe Oneoffs::RemoveFeesFromECFContracts do
         expect(new_band.output_payment_percentage).to eql(old_band.output_payment_percentage)
         expect(new_band.service_fee_percentage).to eql(old_band.service_fee_percentage)
       end
-    end
-  end
-
-  describe "#increment_version" do
-    it "should increment version" do
-      expect(subject.increment_version("0.0.0")).to eql("0.0.1")
-      expect(subject.increment_version("0.0.1")).to eql("0.0.2")
-      expect(subject.increment_version("0.0.2")).to eql("0.0.3")
-      expect(subject.increment_version("0.0.3")).to eql("0.0.4")
     end
   end
 end

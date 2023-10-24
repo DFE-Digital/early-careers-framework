@@ -1,11 +1,15 @@
 # frozen_string_literal: true
 
+require "has_recordable_information"
+
 class ParticipantProfileDeduplicator
   class DeduplicationError < RuntimeError; end
 
+  include HasRecordableInformation
+
   APPLICABLE_DECLARATION_STATES = %w[submitted eligible payable paid].freeze
 
-  attr_reader :primary_profile_id, :duplicate_profile_id, :dry_run, :changes
+  attr_reader :primary_profile_id, :duplicate_profile_id, :dry_run
 
   def initialize(primary_profile_id, duplicate_profile_id, dry_run: true)
     @primary_profile_id = primary_profile_id
@@ -14,7 +18,7 @@ class ParticipantProfileDeduplicator
   end
 
   def dedup!
-    @changes = []
+    reset_recorded_info
 
     prevent_same_school_different_lead_provider_with_declarations
 
@@ -40,16 +44,16 @@ class ParticipantProfileDeduplicator
       raise ActiveRecord::Rollback if dry_run
     end
 
-    @changes
+    recorded_info
   end
 
 private
 
   def log_overview_info
-    log_info("~~~ DRY RUN ~~~") if dry_run
-    log_info("User: #{primary_profile.user_id}")
-    log_info("Primary profile: #{primary_profile_id}")
-    log_info("Duplicate profile: #{duplicate_profile_id}")
+    record_info("~~~ DRY RUN ~~~") if dry_run
+    record_info("User: #{primary_profile.user_id}")
+    record_info("Primary profile: #{primary_profile_id}")
+    record_info("Duplicate profile: #{duplicate_profile_id}")
   end
 
   def reconcile?
@@ -68,7 +72,7 @@ private
     primary_training_programmes = primary_profile.induction_records.map { |ir| ir.induction_programme.training_programme }.flatten.to_set
     duplicate_training_programmes = duplicate_profile.induction_records.map { |ir| ir.induction_programme.training_programme }.flatten.to_set
 
-    log_info("WARNING: induction programmes are different (double check primary/duplicate ordering).") if primary_training_programmes != duplicate_training_programmes
+    record_info("WARNING: induction programmes are different (double check primary/duplicate ordering).") if primary_training_programmes != duplicate_training_programmes
   end
 
   def prevent_same_school_different_lead_provider_with_declarations
@@ -80,13 +84,13 @@ private
   def warning_only_void_declarations_on_primary
     return unless primary_profile.participant_declarations.all?(&:voided?) && duplicate_profile.participant_declarations.any?(&:voidable?)
 
-    log_info("WARNING: voided declarations on primary suggest the duplicate may be the primary. You may want to swap before continuing.")
+    record_info("WARNING: voided declarations on primary suggest the duplicate may be the primary. You may want to swap before continuing.")
   end
 
   def warning_ect_mentor_duplicate
     return unless duplicate_profile.ect? && primary_profile.mentor?
 
-    log_info("WARNING: transition from ECT to Mentor may not indicate a duplication.")
+    record_info("WARNING: transition from ECT to Mentor may not indicate a duplication.")
   end
 
   def reconcile_schedules!
@@ -125,7 +129,7 @@ private
 
     raise DeduplicationError, change_schedule.errors.first.message if change_schedule.invalid?
 
-    log_info("Changed schedule on primary profile: #{new_schedule.schedule_identifier}, #{new_schedule.cohort.start_year} (#{new_schedule.id}).")
+    record_info("Changed schedule on primary profile: #{new_schedule.schedule_identifier}, #{new_schedule.cohort.start_year} (#{new_schedule.id}).")
 
     change_schedule.call
   end
@@ -145,7 +149,7 @@ private
 
     primary_profile.induction_records.oldest.update!(school_transfer: true)
 
-    log_info("Primary profile oldest induction record set as school transfer. Current school: #{school(primary_profile).urn}.")
+    record_info("Primary profile oldest induction record set as school transfer. Current school: #{school(primary_profile).urn}.")
 
     duplicate_induction_record = duplicate_profile.latest_induction_record
     end_date = determine_induction_record_end_date(primary_profile.induction_records.oldest, duplicate_induction_record)
@@ -157,13 +161,13 @@ private
       preferred_identity: preferred_identity(duplicate_induction_record),
     )
 
-    log_info("Preferred identity updated on duplicate profile latest induction record.") if duplicate_induction_record.saved_change_to_preferred_identity_id?
-    log_info("Duplicate profile latest induction record transferred. End date: #{end_date}.")
+    record_info("Preferred identity updated on duplicate profile latest induction record.") if duplicate_induction_record.saved_change_to_preferred_identity_id?
+    record_info("Duplicate profile latest induction record transferred. End date: #{end_date}.")
   end
 
   def determine_induction_record_end_date(oldest_primary_induction_record, duplicate_induction_record)
     if oldest_primary_induction_record.start_date < duplicate_induction_record.start_date
-      log_info("WARNING: induction record on the duplicate profile is after the oldest induction record on the primary profile. You may want to swap before continuing.")
+      record_info("WARNING: induction record on the duplicate profile is after the oldest induction record on the primary profile. You may want to swap before continuing.")
     end
 
     return duplicate_induction_record.end_date if duplicate_induction_record.end_date
@@ -182,15 +186,15 @@ private
         end_date:,
       )
 
-      log_info("Preferred identity updated on duplicate profile induction record.") if induction_record.saved_change_to_preferred_identity_id?
-      log_info("Duplicate profile induction record transferred. End date: #{end_date}.")
+      record_info("Preferred identity updated on duplicate profile induction record.") if induction_record.saved_change_to_preferred_identity_id?
+      record_info("Duplicate profile induction record transferred. End date: #{end_date}.")
     end
   end
 
   def transfer_validation_data!
     return if primary_profile.ecf_participant_validation_data.present? || duplicate_profile.ecf_participant_validation_data.nil?
 
-    log_info("Validation data transferred.")
+    record_info("Validation data transferred.")
 
     duplicate_profile.ecf_participant_validation_data.update!(participant_profile_id: primary_profile.id)
   end
@@ -200,7 +204,7 @@ private
 
     duplicate_profile.ecf_participant_eligibility.update!(participant_profile_id: primary_profile.id)
 
-    log_info("Eligibility transferred.")
+    record_info("Eligibility transferred.")
   end
 
   def reconcile_declarations!
@@ -211,8 +215,8 @@ private
         user_id: primary_profile.user_id,
       )
 
-      log_info("User changed on declaration (#{declaration.id}).") if declaration.saved_change_to_user_id?
-      log_info("Transferred declaration: #{declaration.declaration_type}, #{declaration.state} (#{declaration.id}).")
+      record_info("User changed on declaration (#{declaration.id}).") if declaration.saved_change_to_user_id?
+      record_info("Transferred declaration: #{declaration.declaration_type}, #{declaration.state} (#{declaration.id}).")
     end
   end
 
@@ -228,7 +232,7 @@ private
   def void_or_clawback_declaration(declaration)
     return unless declaration.voidable? || declaration.paid?
 
-    log_info("Voided declaration: #{declaration.declaration_type}, #{declaration.state} (#{declaration.id}).")
+    record_info("Voided declaration: #{declaration.declaration_type}, #{declaration.state} (#{declaration.id}).")
     VoidParticipantDeclaration.new(declaration).call
   end
 
@@ -246,7 +250,7 @@ private
       primary_participant_profile: primary_profile,
     )
 
-    log_info("Destroyed duplicate profile.")
+    record_info("Destroyed duplicate profile.")
 
     duplicate_profile.reload
     duplicate_profile.validation_decisions.destroy_all
@@ -284,10 +288,5 @@ private
     else
       primary_profile.latest_induction_record.preferred_identity
     end
-  end
-
-  def log_info(info)
-    changes << info
-    Rails.logger.info(info)
   end
 end

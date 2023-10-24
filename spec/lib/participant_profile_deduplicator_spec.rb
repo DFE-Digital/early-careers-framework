@@ -14,14 +14,14 @@ describe ParticipantProfileDeduplicator do
   describe "#dedup!" do
     subject(:dedup!) { instance.dedup! }
 
-    it { is_expected.to eq(instance.changes) }
+    it { is_expected.to eq(instance.recorded_info) }
 
     context "when dry_run is true" do
       let(:dry_run) { true }
 
       it "does not make any changes, but logs out as if it does" do
         expect { dedup! }.not_to change(ParticipantProfile::ECF, :count)
-        expect_changes([
+        expect(instance).to have_recorded_info([
           "~~~ DRY RUN ~~~",
           "User: #{primary_profile.user.id}",
           "Primary profile: #{primary_profile.id}",
@@ -64,7 +64,7 @@ describe ParticipantProfileDeduplicator do
       it "logs a warning" do
         dedup!
 
-        expect_changes("WARNING: induction programmes are different (double check primary/duplicate ordering).")
+        expect(instance).to have_recorded_info("WARNING: induction programmes are different (double check primary/duplicate ordering).")
       end
     end
 
@@ -103,7 +103,7 @@ describe ParticipantProfileDeduplicator do
       it "logs a warning" do
         dedup!
 
-        expect_changes("WARNING: transition from ECT to Mentor may not indicate a duplication.")
+        expect(instance).to have_recorded_info("WARNING: transition from ECT to Mentor may not indicate a duplication.")
       end
     end
 
@@ -125,7 +125,7 @@ describe ParticipantProfileDeduplicator do
       expect { validation_decision.reload }.to raise_error(ActiveRecord::RecordNotFound)
       expect { duplicate_profile.reload }.to raise_error(ActiveRecord::RecordNotFound)
 
-      expect_changes("Destroyed duplicate profile.")
+      expect(instance).to have_recorded_info("Destroyed duplicate profile.")
     end
 
     context "when the school has changed" do
@@ -160,7 +160,7 @@ describe ParticipantProfileDeduplicator do
           preferred_identity:,
         )
 
-        expect_changes([
+        expect(instance).to have_recorded_info([
           "Duplicate profile latest induction record transferred. End date: #{end_date}.",
           "Preferred identity updated on duplicate profile latest induction record.",
         ])
@@ -169,7 +169,7 @@ describe ParticipantProfileDeduplicator do
       it "sets school_transfer to true on the primary profile's oldest induction record" do
         expect { dedup! }.to change { primary_oldest_induction_record.reload.school_transfer }.from(false).to(true)
 
-        expect_changes("Primary profile oldest induction record set as school transfer. Current school: #{primary_profile.school.urn}.")
+        expect(instance).to have_recorded_info("Primary profile oldest induction record set as school transfer. Current school: #{primary_profile.school.urn}.")
       end
 
       context "when the induction record start dates are the same" do
@@ -203,7 +203,7 @@ describe ParticipantProfileDeduplicator do
 
         it "logs a warning" do
           dedup!
-          expect(instance.changes).to include("WARNING: induction record on the duplicate profile is after the oldest induction record on the primary profile. You may want to swap before continuing.")
+          expect(instance).to have_recorded_info("WARNING: induction record on the duplicate profile is after the oldest induction record on the primary profile. You may want to swap before continuing.")
         end
       end
 
@@ -215,7 +215,7 @@ describe ParticipantProfileDeduplicator do
 
         it "does not update the preferred identity on the transferred induction record" do
           expect { dedup! }.not_to change { duplicate_induction_record.reload.preferred_identity }
-          expect(instance.changes).not_to include("Preferred identity updated on duplicate profile induction record.")
+          expect(instance).not_to have_recorded_info("Preferred identity updated on duplicate profile induction record.")
         end
       end
     end
@@ -246,7 +246,7 @@ describe ParticipantProfileDeduplicator do
 
       expect { dedup! }.to change { duplicate_validation_data.reload.participant_profile_id }.to(primary_profile.id)
 
-      expect_changes("Validation data transferred.")
+      expect(instance).to have_recorded_info("Validation data transferred.")
     end
 
     it "transfers ecf_participant_eligibility from the duplicate to the primary" do
@@ -254,7 +254,7 @@ describe ParticipantProfileDeduplicator do
 
       expect { dedup! }.to change { duplicate_eligibility.reload.participant_profile_id }.to(primary_profile.id)
 
-      expect_changes("Eligibility transferred.")
+      expect(instance).to have_recorded_info("Eligibility transferred.")
     end
 
     context "when there are declarations" do
@@ -282,7 +282,7 @@ describe ParticipantProfileDeduplicator do
         it "logs a warning" do
           dedup!
 
-          expect_changes("WARNING: voided declarations on primary suggest the duplicate may be the primary. You may want to swap before continuing.")
+          expect(instance).to have_recorded_info("WARNING: voided declarations on primary suggest the duplicate may be the primary. You may want to swap before continuing.")
         end
       end
 
@@ -294,7 +294,7 @@ describe ParticipantProfileDeduplicator do
           user_id: primary_profile.user_id,
         )
 
-        expect_changes([
+        expect(instance).to have_recorded_info([
           "User changed on declaration (#{duplicate_declaration.id}).",
           "Transferred declaration: retained-1, submitted (#{duplicate_declaration.id}).",
         ])
@@ -305,13 +305,13 @@ describe ParticipantProfileDeduplicator do
 
         it "does not log out the user change" do
           dedup!
-          expect(instance.changes).not_to include("User changed on declaration (#{duplicate_declaration.id}).")
+          expect(instance).not_to have_recorded_info("User changed on declaration (#{duplicate_declaration.id}).")
         end
       end
 
       it "voids the later declaration when there are conflicts" do
         expect { dedup! }.to change { conflicting_declaration.reload.state }.to("voided")
-        expect_changes("Voided declaration: retained-1, submitted (#{conflicting_declaration.id}).")
+        expect(instance).to have_recorded_info("Voided declaration: retained-1, submitted (#{conflicting_declaration.id}).")
       end
     end
 
@@ -377,7 +377,7 @@ describe ParticipantProfileDeduplicator do
 
           expect(primary_profile.reload.schedule).to eq(duplicate_profile_schedule)
           expect(primary_profile.school_cohort.cohort).to eq(duplicate_profile_cohort)
-          expect_changes("Changed schedule on primary profile: #{duplicate_profile_schedule.schedule_identifier}, #{duplicate_profile_cohort.start_year} (#{duplicate_profile_schedule.id}).")
+          expect(instance).to have_recorded_info("Changed schedule on primary profile: #{duplicate_profile_schedule.schedule_identifier}, #{duplicate_profile_cohort.start_year} (#{duplicate_profile_schedule.id}).")
         end
 
         it "creates an induction record with the new schedule" do
@@ -390,7 +390,7 @@ describe ParticipantProfileDeduplicator do
           dedup!
 
           expect(primary_profile_declaration.reload).to be_voided
-          expect_changes("Voided declaration: retained-1, submitted (#{primary_profile_declaration.id}).")
+          expect(instance).to have_recorded_info("Voided declaration: retained-1, submitted (#{primary_profile_declaration.id}).")
         end
       end
 
@@ -407,7 +407,7 @@ describe ParticipantProfileDeduplicator do
           dedup!
 
           expect(duplicate_profile_declaration.reload).to be_voided
-          expect_changes("Voided declaration: retained-2, submitted (#{duplicate_profile_declaration.id}).")
+          expect(instance).to have_recorded_info("Voided declaration: retained-2, submitted (#{duplicate_profile_declaration.id}).")
         end
       end
 
@@ -436,13 +436,6 @@ describe ParticipantProfileDeduplicator do
           expect(primary_profile.latest_induction_record.reload.schedule).to eq(primary_profile_schedule)
         end
       end
-    end
-  end
-
-  def expect_changes(changes)
-    Array.wrap(changes).each do |change|
-      expect(instance.changes).to include(change)
-      expect(Rails.logger).to have_received(:info).with(change)
     end
   end
 end
