@@ -14,6 +14,7 @@ module Api
     rescue_from ActiveRecord::RecordNotUnique, with: :bad_request_response
     rescue_from ActiveRecord::RecordInvalid, with: :invalid_transition
     rescue_from Api::Errors::InvalidTransitionError, with: :invalid_transition
+    rescue_from Api::Errors::InvalidParticipantOutcomeError, with: :invalid_transition
     rescue_from Api::Errors::InvalidDatetimeError, with: :invalid_updated_since_response
     rescue_from Api::Errors::InvalidTrainingStatusError, with: :invalid_training_status_response
     rescue_from Pagy::VariableError, with: :invalid_pagination_response

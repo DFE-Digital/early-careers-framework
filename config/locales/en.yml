@@ -42,6 +42,7 @@ en:
   invalid_transition: "Invalid action"
   invalid_page_parameters: "The '#/page[page]' and '#/page[per_page]' parameter values must be a valid number (equal and more than 1)"
   cannot_change_cohort: "The property '#/cohort' cannot be changed"
+  cannot_create_completed_declaration: "Could not create completed declaration. Contact the DfE for support."
   invalid_participant: "Your update cannot be made as the '#/participant_id' is not recognised. Check participant details and try again."
   invalid_identifier: "The entered '#/course_identifier' is not recognised for the given participant. Check details and try again."
   invalid_declaration_type: "The property '#/declaration_type' must be available for '#/course_identifier'"

@@ -47,7 +47,7 @@ class RecordDeclaration
 
       declaration_attempt.update!(participant_declaration:)
 
-      create_participant_outcome
+      create_participant_outcome!
     end
 
     participant_declaration
@@ -241,15 +241,21 @@ private
     has_passed.to_s == "true" ? "passed" : "failed"
   end
 
-  def create_participant_outcome
+  def create_participant_outcome!
     return unless validate_has_passed?
 
-    NPQ::CreateParticipantOutcome.new(
+    service = NPQ::CreateParticipantOutcome.new(
       cpd_lead_provider:,
       course_identifier:,
       participant_external_id: participant_identity.user_id,
       completion_date: declaration_date,
       state: participant_outcome_state,
-    ).call
+    )
+
+    if service.valid?
+      service.call
+    else
+      raise Api::Errors::InvalidParticipantOutcomeError, I18n.t(:cannot_create_completed_declaration)
+    end
   end
 end

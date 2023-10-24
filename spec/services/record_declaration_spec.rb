@@ -534,6 +534,18 @@ RSpec.describe RecordDeclaration do
           end
         end
       end
+
+      context "when CreateParticipantOutcome service class is invalid" do
+        before do
+          allow_any_instance_of(NPQ::CreateParticipantOutcome).to receive(:valid?).and_return(false)
+        end
+
+        it "raises an InvalidParticipantOutcomeError" do
+          expect(ParticipantDeclaration::NPQ.completed.count).to be(0)
+          expect { service.call }.to raise_error(Api::Errors::InvalidParticipantOutcomeError)
+          expect(ParticipantDeclaration::NPQ.completed.count).to be(0)
+        end
+      end
     end
 
     context "when lead provider has no contract for the cohort and course" do
