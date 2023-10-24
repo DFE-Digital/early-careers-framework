@@ -28,6 +28,10 @@ module Admin
         partnership.delivery_partner.name
       end
 
+      def change_appropriate_body_href
+        admin_school_change_appropriate_body_path(school.id, school_cohort.id)
+      end
+
     private
 
       def visually_hidden(text)

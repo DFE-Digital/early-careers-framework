@@ -14,3 +14,13 @@ en:
         design_our_own: "design and deliver their own programme based on the Early Career Framework (ECF)"
         school_funded_fip: "use a training provider funded by their school."
         no_early_career_teachers: "opt out of notifications because they don’t expect to have any early career teachers starting in %{cohort}"
+
+  activemodel:
+    errors:
+      models:
+        admin/change_appropriate_body_form:
+          attributes:
+            appropriate_body:
+              blank: "Select appropriate body"
+            teaching_school_hub_id:
+              blank: "Select teaching school hub"

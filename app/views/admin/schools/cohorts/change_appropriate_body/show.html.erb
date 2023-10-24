@@ -1,0 +1,33 @@
+<% title = "Who is the appropriate body for their #{@school_cohort.cohort.start_year} programme?" %>
+<% content_for :title, title %>
+<% content_for :before_content, govuk_back_link(
+  text: "Back",
+  href: admin_school_cohorts_path) %>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <%= form_for @change_appropriate_body_form, url: admin_school_change_appropriate_body_path(@school, @school_cohort), method: :patch do |f| %>
+      <%= f.govuk_error_summary %>
+
+      <span class="govuk-caption-l"><%= @school.name %></span>
+      <%= f.govuk_radio_buttons_fieldset(:appropriate_body, legend: { size: 'l', text: title }, hint: {text: "This will change the default for any new ECTs registered, but will not affect any existing ECTs" }) do %>
+        <% @national_appropriate_bodies.each_with_index do |appropriate_body, index| %>
+          <%= f.govuk_radio_button :appropriate_body, appropriate_body.id, label: { text: appropriate_body.name }, link_errors: (index == 0) %>
+        <% end %>
+
+        <%= f.govuk_radio_divider %>
+        <%= f.govuk_radio_button :appropriate_body, 'teaching_school_hub', label: { text: 'A teaching school hub' } do %>
+          <%= f.govuk_collection_select(:teaching_school_hub_id,
+              @teaching_school_hubs,
+              :id,
+              :name,
+              label: { text: "Teaching school hub", size: 's' },
+              options: { include_blank: true },
+              class: "autocomplete") %>
+        <% end %>
+      <% end %>
+
+      <%= f.govuk_submit "Continue" %>
+    <% end %>
+  </div>
+</div>
