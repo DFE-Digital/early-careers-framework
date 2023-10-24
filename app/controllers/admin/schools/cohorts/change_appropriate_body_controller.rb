@@ -49,7 +49,7 @@ module Admin
         end
 
         def set_school_cohort
-          @school_cohort ||= @school.school_cohorts.find(params[:id])
+          @school_cohort = @school.school_cohorts.find(params[:id])
         end
       end
     end
