@@ -23,24 +23,24 @@ module Admin
           end
         end
 
-        private
+      private
 
         def form_from_school_cohort
-          if @school_cohort.appropriate_body&.body_type == 'teaching_school_hub'
+          if @school_cohort.appropriate_body&.body_type == "teaching_school_hub"
             Admin::ChangeAppropriateBodyForm.new(
-              appropriate_body: 'teaching_school_hub',
-              teaching_school_hub_id: @school_cohort.appropriate_body_id
+              appropriate_body: "teaching_school_hub",
+              teaching_school_hub_id: @school_cohort.appropriate_body_id,
             )
           else
             Admin::ChangeAppropriateBodyForm.new(
-              appropriate_body: @school_cohort.appropriate_body_id
+              appropriate_body: @school_cohort.appropriate_body_id,
             )
           end
         end
 
         def set_appropriate_body_options
-          @national_appropriate_bodies = AppropriateBody.where(body_type: 'national').active_in_year(@school_cohort.cohort.start_year)
-          @teaching_school_hubs = AppropriateBody.where(body_type: 'teaching_school_hub').active_in_year(@school_cohort.cohort.start_year)
+          @national_appropriate_bodies = AppropriateBody.where(body_type: "national").active_in_year(@school_cohort.cohort.start_year)
+          @teaching_school_hubs = AppropriateBody.where(body_type: "teaching_school_hub").active_in_year(@school_cohort.cohort.start_year)
         end
 
         def set_school_and_cohort

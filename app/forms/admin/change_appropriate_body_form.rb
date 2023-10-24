@@ -6,10 +6,9 @@ class Admin::ChangeAppropriateBodyForm
   validates :appropriate_body, presence: true
   validates :teaching_school_hub_id, presence: true, if: :teaching_school_hub?
 
-  private
+private
 
   def teaching_school_hub?
-    appropriate_body == 'teaching_school_hub'
+    appropriate_body == "teaching_school_hub"
   end
-
 end
