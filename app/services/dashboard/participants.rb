@@ -10,7 +10,7 @@ module Dashboard
       @currently_training_ects = []
       @no_longer_training_ects = []
       @no_longer_training_mentors = []
-      @latest_year = Dashboard::LatestManageableCohort.call(school).start_year
+      @latest_year = Cohort.active_registration_cohort.start_year
       @orphan_ects = []
       @school = school
       @user = user
