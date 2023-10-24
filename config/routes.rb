@@ -294,6 +294,7 @@ Rails.application.routes.draw do
           resource :change_training_materials, only: %i[show update], path: "change-training-materials", controller: "schools/cohorts/change_training_materials" do
             post :confirm
           end
+          resource :change_appropriate_body, only: %i[show update], path: "appropriate-body", controller: "schools/cohorts/change_appropriate_body"
         end
       end
       resources :partnerships, only: [] do
