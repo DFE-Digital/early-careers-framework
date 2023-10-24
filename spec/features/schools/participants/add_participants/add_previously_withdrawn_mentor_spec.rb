@@ -351,7 +351,6 @@ private
       participant_profile.schedule.id,
       participant_profile.school_cohort_id,
       participant_profile.mentor_profile_id,
-      participant_profile.induction_start_date,
       participant_profile.teacher_profile.trn,
     ]).to match [
       "active",
@@ -361,9 +360,9 @@ private
       Finance::Schedule::ECF.default_for(cohort: school_cohort.cohort).id,
       school_cohort.id,
       nil,
-      nil,
       ect_trn,
     ]
+    expect(participant_profile.induction_start_date).to_not be_nil
   end
 
   def when_i_check_the_mentor_details
