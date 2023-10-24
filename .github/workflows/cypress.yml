@@ -60,7 +60,7 @@ jobs:
           cache: "yarn"
 
       - name: Install node.js dependencies
-        run: yarn install --production=false --frozen-lockfile --ignore-engines --prefer-offline
+        run: yarn install --immutable --refresh-lockfile
 
       - name: Set up test database
         run: bin/rails db:create db:schema:load
