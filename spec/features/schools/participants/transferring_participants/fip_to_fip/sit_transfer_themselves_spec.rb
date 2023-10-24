@@ -51,7 +51,6 @@ RSpec.describe "SIT transferring themselves", type: :feature, js: true do
     then_i_should_be_on_the_add_email_page
 
     when_i_update_the_email_with_the_sit_email
-    # when_i_update_the_email_with("sally-mentor@example.com")
     click_on "Continue"
 
     then_i_should_be_taken_to_the_teachers_current_programme_page
@@ -339,7 +338,6 @@ RSpec.describe "SIT transferring themselves", type: :feature, js: true do
 
   def then_i_should_be_on_the_sit_mentor_complete_page
     expect(page).to have_selector("h1", text: "You’ve been added as a mentor")
-    # expect(page).to have_text("We’ll let this person know you’ve registered them for ECF-based training at your school")
   end
 
   def then_i_should_be_on_the_complete_page_for_an_existing_induction
