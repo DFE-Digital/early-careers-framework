@@ -32,9 +32,9 @@ RSpec.describe Importers::CreateNewNPQCohort do
 
     let(:contract_csv) do
       csv = Tempfile.new("contract_csv_data.csv")
-      csv.write "provider_name,cohort_year,course_identifier,recruitment_target,per_participant,service_fee_installments"
+      csv.write "provider_name,cohort_year,course_identifier,recruitment_target,per_participant,service_fee_installments,special_course"
       csv.write "\n"
-      csv.write "#{cpd_lead_provider.name},#{start_year},npq-headship,321,654.87,14"
+      csv.write "#{cpd_lead_provider.name},#{start_year},npq-headship,321,654.87,14,FALSE"
       csv.write "\n"
       csv.close
       csv.path
