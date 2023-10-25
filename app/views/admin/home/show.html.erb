@@ -31,6 +31,10 @@
           </tr>
         <% end %>
         <tr class="govuk-table__row">
+          <th scope="row" class="govuk-table__header govuk-!-font-weight-regular govuk-!-padding-left-5">No provider set up yet</th>
+          <td class="govuk-table__cell govuk-table__cell--numeric"><%= number_with_delimiter(@pilot_stats.fip_total - @pilot_stats.partnership_totals.sum {|p| p[:total] }) %></td>
+        </tr>
+        <tr class="govuk-table__row">
           <th scope="row" class="govuk-table__header govuk-!-font-weight-regular">Not expecting any early career teachers</th>
           <td class="govuk-table__cell  govuk-table__cell--numeric"><%= number_with_delimiter(@pilot_stats.no_ects_total) %></td>
         </tr>
