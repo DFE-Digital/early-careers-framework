@@ -3,7 +3,7 @@
 require "rails_helper"
 require_relative "../../training_dashboard/manage_training_steps"
 
-RSpec.describe "Add participants", js: true do
+RSpec.describe "Add participants", js: true, travel_to: Date.new(2023, 5, 1) do
   include ManageTrainingSteps
 
   before do
