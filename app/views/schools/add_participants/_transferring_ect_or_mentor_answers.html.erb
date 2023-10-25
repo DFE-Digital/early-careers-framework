@@ -85,7 +85,6 @@
 
   <% if form.show_training_provider_section? %>
     <% summary_list.with_row do |row| %>
-      <% # debugger %>
       <% row.with_key { "Training with" } %>
       <% if form.continue_current_programme? %>
         <% row.with_value do %>

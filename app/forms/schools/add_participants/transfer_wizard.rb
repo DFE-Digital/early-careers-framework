@@ -155,7 +155,6 @@ module Schools
       def transfer_fip_participant_to_schools_programme(profile)
         chosen_school_cohort = join_current_cohort_school_programme? ? school_current_cohort : school_cohort
 
-        # debugger
         Induction::TransferToSchoolsProgramme.call(
           participant_profile: profile,
           induction_programme: chosen_school_cohort.default_induction_programme,
