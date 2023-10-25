@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "transferring participants", type: :feature, js: true do
+RSpec.describe "transferring participants", type: :feature, js: true, travel_to: Date.new(2023, 5, 1) do
   context "Attempting to transfer an ECT to a school" do
     context "ECT cannot be validated" do
       before do
