@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "Transferring participants", type: :feature, js: true, rutabaga: false do
+RSpec.describe "Transferring participants", type: :feature, js: true, rutabaga: false, travel_to: Date.new(2023, 5, 1) do
   context "Participant is already enrolled at the school" do
     before do
       set_participant_data
