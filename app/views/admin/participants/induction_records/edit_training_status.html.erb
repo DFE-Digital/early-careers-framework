@@ -3,14 +3,13 @@
   <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-heading-l">Change the training status for this participant at <%= @induction_record.school_name %></h1>
     <%= form_for @induction_record, url: update_training_status_admin_participant_induction_records_path(@participant_profile, @induction_record), method: :put do |f| %>
-      <%= f.govuk_collection_select :training_status,
-                                    training_statuses,
-                                    :id,
-                                    :value,
-                                    label: { text: "Select training status" },
-                                    options: { selected: @induction_record.training_status }
-      %>
-
+      <%= f.govuk_collection_radio_buttons(
+              :training_status,
+              training_statuses,
+              :id,
+              :value,
+              legend: { text: "Select training status", tag: 'h1', size: 'l' },
+              options: { selected: @induction_record.training_status }) %>
       <%= f.govuk_submit "Submit" %>
     <% end %>
   </div>
