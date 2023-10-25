@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "ECT has matching lead provider and delivery partner", type: :feature, js: true do
+RSpec.describe "ECT has matching lead provider and delivery partner", type: :feature, js: true, travel_to: Date.new(2021, 9, 1) do
   before do
     allow_participant_transfer_mailers
     set_participant_data
@@ -196,7 +196,7 @@ RSpec.describe "ECT has matching lead provider and delivery partner", type: :fea
   def when_i_add_a_valid_start_date
     legend = "When is #{@participant_data[:full_name]} moving to your school?"
 
-    fill_in_date(legend, with: "2023-10-24")
+    fill_in_date(legend, with: "2021-10-24")
   end
 
   def when_i_assign_a_mentor
