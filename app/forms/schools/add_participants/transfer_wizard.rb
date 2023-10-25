@@ -29,9 +29,15 @@ module Schools
 
       def needs_to_choose_school_programme?
         return do_not_join_school_programme! if continue_current_programme?
-        return true if [lead_provider, delivery_partner].all?
+        return true if [lead_provider, delivery_partner].all? &&
+          (lead_provider != existing_lead_provider || delivery_partner != existing_delivery_partner)
+        return false if [current_cohort_lead_provider, current_cohort_delivery_partner].any?(&:blank?)
+        return false unless ProviderRelationship.exists?(lead_provider: current_cohort_lead_provider,
+                                                         delivery_partner: current_cohort_delivery_partner,
+                                                         cohort: participant_cohort)
 
-        [current_cohort_lead_provider, current_cohort_delivery_partner].all?
+        (current_cohort_lead_provider != existing_lead_provider ||
+          current_cohort_delivery_partner != existing_delivery_partner)
       end
 
       def needs_to_confirm_programme?

@@ -84,3 +84,58 @@ module Admin::Participants
     end
   end
 end
+#
+# r = Hash.new { 0 }
+# i = 0
+# ParticipantProfile::ECT.where(induction_start_date: nil).find_each do |pp|
+#   i += 1
+#   lir = pp.latest_induction_record
+#   cohort = lir&.cohort_start_year
+#   if cohort
+#     r["#{cohort}-#{lir.induction_status}-#{lir.training_status}"] += 1 if cohort
+#   else
+#     pp pp.id
+#   end
+# end
+# r
+# - Total ECTs: 4555
+#
+# - ECTs by cohort:
+# {
+#   2023 => 2162,
+#   2022 => 993,
+#   2021 => 1376,
+#   2020 => 24
+# }
+#
+# - ECTs by cohort-induction_status-training_status:
+# {
+#   "2020-active-active" => 23,
+#   "2020-withdrawn-active" => 1,
+#   "2021-active-active" => 277,
+#   "2021-active-deferred" => 26,
+#   "2021-active-withdrawn" => 195,
+#   "2021-leaving-active" => 36,
+#   "2021-leaving-deferred" => 2,
+#   "2021-leaving-withdrawn" => 33,
+#   "2021-withdrawn-active" => 803,
+#   "2021-withdrawn-deferred" => 1,
+#   "2021-withdrawn-withdrawn" => 3,
+#   "2022-active-active" => 484,
+#   "2022-active-deferred" => 34,
+#   "2022-active-withdrawn" => 70,
+#   "2022-leaving-active" => 44,
+#   "2022-leaving-deferred" => 5,
+#   "2022-leaving-withdrawn" => 13,
+#   "2022-withdrawn-active" => 340,
+#   "2022-withdrawn-deferred" => 2,
+#   "2022-withdrawn-withdrawn" => 1,
+#   "2023-active-active" => 2115,
+#   "2023-active-deferred" => 2,
+#   "2023-active-withdrawn" => 21,
+#   "2023-leaving-active" => 7,
+#   "2023-leaving-withdrawn" => 1,
+#   "2023-withdrawn-active" => 16
+# }
+#
+# # {2023=>14157, 2022=>27489, 2021=>38247, 2020=>24}

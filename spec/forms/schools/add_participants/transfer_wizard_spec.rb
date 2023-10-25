@@ -136,17 +136,7 @@ RSpec.describe Schools::AddParticipants::TransferWizard, type: :model do
       end
     end
 
-    context "when the target school has no default providers for the participant cohort and its latest cohort" do
-      before do
-        to_school.school_cohorts.each { |sc| sc.update!(default_induction_programme: nil) }
-      end
-
-      it "returns false" do
-        expect(form.needs_to_choose_school_programme?).to be_falsey
-      end
-    end
-
-    context "when the target school has default providers for the participant cohort" do
+    context "when the target school has default providers for the participant cohort different to those of the participant" do
       let(:to_school) do
         NewSeeds::Scenarios::Schools::School
           .new
@@ -160,9 +150,70 @@ RSpec.describe Schools::AddParticipants::TransferWizard, type: :model do
       end
     end
 
-    context "when the target school has default providers for the current cohort" do
+    context "when the target school has same or no providers for the participant cohort and no default providers for its latest cohort" do
+      before do
+        to_school.school_cohorts.each { |sc| sc.update!(default_induction_programme: nil) }
+      end
+
+      it "returns false" do
+        expect(form.needs_to_choose_school_programme?).to be_falsey
+      end
+    end
+
+    context "when the target school has the same providers as the participant for the participant and current cohorts" do
+      let(:scenario) { NewSeeds::Scenarios::Schools::School.new.build }
+      let(:to_school) { scenario.school }
+
+      let(:participant_cohort_partnership) do
+        FactoryBot.create(:seed_partnership,
+                          cohort:,
+                          school: to_school,
+                          lead_provider: from_induction_programme.lead_provider,
+                          delivery_partner: from_induction_programme.delivery_partner)
+      end
+
+      let(:current_cohort_partnership) do
+        FactoryBot.create(:seed_partnership,
+                          cohort: next_cohort,
+                          school: to_school,
+                          lead_provider: from_induction_programme.lead_provider,
+                          delivery_partner: from_induction_programme.delivery_partner)
+      end
+
+      before do
+        scenario.chosen_fip_and_partnered_in(cohort:, partnership: participant_cohort_partnership)
+                .chosen_fip_and_partnered_in(cohort: next_cohort, partnership: current_cohort_partnership)
+      end
+
+      it "returns false" do
+        expect(form.needs_to_choose_school_programme?).to be_falsey
+      end
+    end
+
+    context "when the target school has default providers for the current cohort but not providing training for the participant´s cohort" do
       before do
         to_school.school_cohorts.for_year(cohort.start_year).first.update!(default_induction_programme: nil)
+      end
+
+      it "returns false" do
+        expect(form.needs_to_choose_school_programme?).to be_falsey
+      end
+    end
+
+    context "when the target school has default providers for the current cohort providing training for the participant's cohort" do
+      let(:current_cohort_lead_provider) do
+        to_school.school_cohorts.for_year(next_cohort.start_year).first.default_induction_programme.lead_provider
+      end
+
+      let(:current_cohort_delivery_partner) do
+        to_school.school_cohorts.for_year(next_cohort.start_year).first.default_induction_programme.delivery_partner
+      end
+
+      before do
+        to_school.school_cohorts.for_year(cohort.start_year).first.update!(default_induction_programme: nil)
+        ProviderRelationship.create!(lead_provider: current_cohort_lead_provider,
+                                     delivery_partner: current_cohort_delivery_partner,
+                                     cohort:)
       end
 
       it "returns true" do
