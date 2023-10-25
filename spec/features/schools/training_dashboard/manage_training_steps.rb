@@ -1291,7 +1291,7 @@ module ManageTrainingSteps
   end
 
   def then_i_should_be_taken_to_the_teachers_current_programme_page
-    expect(page).to have_selector("h1", text: "Will they continue with these training providers?")
+    expect(page).to have_selector("h2", text: "Will they continue with these training providers?")
   end
 
   alias_method :then_i_am_taken_to_the_teachers_current_programme_page, :then_i_should_be_taken_to_the_teachers_current_programme_page

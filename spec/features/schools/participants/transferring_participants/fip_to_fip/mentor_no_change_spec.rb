@@ -172,13 +172,13 @@ RSpec.describe "Transferring a mentor weith matching lead provider and delivery 
   end
 
   def then_i_should_be_taken_to_the_teachers_current_programme_page
-    expect(page).to have_selector("h1", text: "Will they continue with these training providers?")
+    expect(page).to have_selector("h2", text: "Will they continue with these training providers?")
     expect(page).to have_text(@lead_provider.name)
     expect(page).to have_text(@delivery_partner.name)
   end
 
   def then_i_should_be_taken_to_the_schools_current_programme_page
-    expect(page).to have_selector("h1", text: "Who will #{@participant_data[:full_name]}'s new training providers be?")
+    expect(page).to have_selector("h1", text: "Who will #{@participant_data[:full_name]}’s new training providers be?")
   end
 
   def then_i_should_be_taken_to_the_check_your_answers_page
