@@ -41,6 +41,7 @@ RSpec.describe Schools::AddParticipants::WizardSteps::JoinSchoolProgrammeStep, t
       allow(wizard).to receive(:delivery_partner).and_return(participant_cohort_delivery_partner)
       allow(wizard).to receive(:current_cohort_lead_provider).and_return(current_cohort_lead_provider)
       allow(wizard).to receive(:current_cohort_delivery_partner).and_return(current_cohort_delivery_partner)
+      allow(wizard).to receive(:current_providers_training_on_participant_cohort?).and_return(true)
     end
 
     context "when the participant school cohort has a default LP/DP programme" do
@@ -71,9 +72,22 @@ RSpec.describe Schools::AddParticipants::WizardSteps::JoinSchoolProgrammeStep, t
         let(:current_cohort_lead_provider) { instance_double(LeadProvider, name: "LP2") }
         let(:current_cohort_delivery_partner) { instance_double(DeliveryPartner, name: "DP2") }
 
-        it "include the combo in the list of options" do
-          expect(step.choices).to include(OpenStruct.new(id: :default_for_current_cohort,
-                                                         name: "LP2 with DP2"))
+        context "when the combo is training on the participant's cohort" do
+          it "include the combo in the list of options" do
+            expect(step.choices).to include(OpenStruct.new(id: :default_for_current_cohort,
+                                                           name: "LP2 with DP2"))
+          end
+        end
+
+        context "when the combo is not training on the participant's cohort" do
+          before do
+            allow(wizard).to receive(:current_providers_training_on_participant_cohort?).and_return(false)
+          end
+
+          it "do not include the combo in the list of options" do
+            expect(step.choices).not_to include(OpenStruct.new(id: :default_for_current_cohort,
+                                                               name: "LP2 with DP2"))
+          end
         end
       end
     end

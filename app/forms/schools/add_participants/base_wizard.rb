@@ -148,6 +148,14 @@ module Schools
         @current_cohort_delivery_partner ||= school_current_cohort&.default_induction_programme&.delivery_partner
       end
 
+      def current_providers_training_on_participant_cohort?
+        return false unless [current_cohort_lead_provider, current_cohort_delivery_partner].all?
+
+        ProviderRelationship.exists?(lead_provider: current_cohort_lead_provider,
+                                     delivery_partner: current_cohort_delivery_partner,
+                                     cohort: participant_cohort)
+      end
+
       def lead_provider
         @lead_provider ||= school_cohort.default_induction_programme&.lead_provider
       end

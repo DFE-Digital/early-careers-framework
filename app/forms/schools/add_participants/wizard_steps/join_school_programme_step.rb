@@ -40,6 +40,7 @@ module Schools
         end
 
         def default_current_cohort_choice?
+          return false unless wizard.current_providers_training_on_participant_cohort?
           return false unless current_cohort_provider_names
 
           participant_cohort_provider_names != current_cohort_provider_names
