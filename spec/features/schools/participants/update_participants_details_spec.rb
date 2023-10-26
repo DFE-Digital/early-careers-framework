@@ -3,7 +3,7 @@
 require "rails_helper"
 require_relative "../training_dashboard/manage_training_steps"
 
-RSpec.describe "Changing participant details from check answers", type: :feature, js: true do
+RSpec.describe "Changing participant details from check answers", type: :feature, js: true, travel_to: Date.new(2023, 5, 1) do
   include ManageTrainingSteps
 
   before do
