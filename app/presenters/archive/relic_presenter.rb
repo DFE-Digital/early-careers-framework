@@ -18,6 +18,10 @@ module Archive
       relic["id"]
     end
 
+    def meta
+      relic["meta"]
+    end
+
     def method_missing(method_name, *args, &block)
       if relic["attributes"].key?(method_name.to_s)
         attribute(method_name)

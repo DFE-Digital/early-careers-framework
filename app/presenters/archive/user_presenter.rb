@@ -3,7 +3,15 @@
 module Archive
   class UserPresenter < RelicPresenter
     def trn
-      relic.dig("attributes", "teacher_profile", "attributes", "trn")
+      relic.dig("attributes", "teacher_profile", "attributes", "trn") || "Not recorded"
+    end
+
+    def roles
+      if meta["roles"].blank?
+        "None"
+      else
+        meta["roles"].map(&:humanize).join(", ")
+      end
     end
 
     def created_at
