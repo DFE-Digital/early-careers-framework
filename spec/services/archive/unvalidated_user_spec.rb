@@ -72,6 +72,27 @@ RSpec.describe Archive::UnvalidatedUser do
         }.not_to raise_error
       end
     end
+
+    context "when the declaration has a different profile but same user (bad data)" do
+      let(:profile2) { create(:ect_participant_profile) }
+      let!(:declaration) { create(:seed_ecf_participant_declaration, :with_cpd_lead_provider, participant_profile: profile2, state:, user:) }
+
+      it "raises an ArchiveError" do
+        expect {
+          service_call
+        }.to raise_error Archive::ArchiveError
+      end
+
+      context "when the declaration is void" do
+        let(:state) { "voided" }
+
+        it "raises an ArchiveError" do
+          expect {
+            service_call
+          }.to raise_error Archive::ArchiveError
+        end
+      end
+    end
   end
 
   context "when the keep original flag is set" do
@@ -141,14 +162,34 @@ RSpec.describe Archive::UnvalidatedUser do
     end
   end
 
-  context "when the user has mentees" do
+  context "when the user is a mentor" do
     let(:participant_profile) { create(:mentor_participant_profile) }
-    let!(:mentee) { create(:seed_induction_record, :valid, mentor_profile: participant_profile) }
+    let!(:school_mentor) { create(:seed_school_mentor, :with_school, preferred_identity: participant_profile.participant_identity, participant_profile:) }
 
-    it "raises an ArchiveError" do
+    it "removes their school mentor relations" do
       expect {
         service_call
-      }.to raise_error Archive::ArchiveError
+      }.to change { SchoolMentor.count }.by(-1)
+    end
+
+    context "when the user has mentees" do
+      let!(:mentee) { create(:seed_induction_record, :valid, mentor_profile: participant_profile) }
+
+      it "raises an ArchiveError" do
+        expect {
+          service_call
+        }.to raise_error Archive::ArchiveError
+      end
+    end
+  end
+
+  context "when the user has states" do
+    let!(:states) { create_list(:seed_ect_participant_profile_state, 3, participant_profile:) }
+
+    it "removes the participant profile states" do
+      expect {
+        service_call
+      }.to change { ParticipantProfileState.count }.by(-3)
     end
   end
 

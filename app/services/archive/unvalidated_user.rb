@@ -53,7 +53,11 @@ module Archive
     end
 
     def user_has_declarations?
-      ParticipantDeclaration.not_voided.where(participant_profile_id: user.participant_profiles.select(:id)).any?
+      profile_ids = user.participant_profiles.pluck(:id)
+      # handle bad data case where user_id might be on declarations not associated with the users profiles
+      # in this case it doesn't matter whether they're voided or not, removing the user will cause issues.
+      ParticipantDeclaration.not_voided.where(participant_profile_id: profile_ids).any? ||
+        ParticipantDeclaration.where(user_id: user.id).where.not(participant_profile_id: profile_ids).any?
     end
 
     def user_has_eligibility?
@@ -96,6 +100,7 @@ module Archive
       participant_profile.induction_records.destroy_all
       participant_profile.validation_decisions.destroy_all
 
+      participant_profile.school_mentors.destroy_all if participant_profile.mentor?
       participant_profile.destroy!
     end
   end
