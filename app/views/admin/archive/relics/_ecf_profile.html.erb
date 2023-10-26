@@ -1,0 +1,67 @@
+<%= govuk_summary_list do |summary_list| %>
+  <% summary_list.with_row do |row| %>
+    <% row.with_key { "User ID / Participant ID" } %>
+    <% row.with_value { @user.id } %>
+    <% row.with_action(text: :none) %>
+  <% end %>
+
+  <% summary_list.with_row do |row| %>
+    <% row.with_key { "Profile ID" } %>
+    <% row.with_value { pp.id } %>
+    <% row.with_action(text: :none) %>
+  <% end %>
+
+  <% summary_list.with_row do |row| %>
+    <% row.with_key { "School URN" } %>
+    <% row.with_value { pp&.school_cohort&.school&.urn } %>
+    <% row.with_action(text: :none) %>
+  <% end %>
+
+  <% summary_list.with_row do |row| %>
+    <% row.with_key { "Status" } %>
+    <% row.with_value { pp.status } %>
+    <% row.with_action(text: :none) %>
+  <% end %>
+
+  <% summary_list.with_row do |row| %>
+    <% row.with_key { "Training status" } %>
+    <% row.with_value { pp.training_status } %>
+    <% row.with_action(text: :none) %>
+  <% end %>
+
+  <% summary_list.with_row do |row| %>
+    <% row.with_key { "Schedule identifier" } %>
+    <% row.with_value { pp.schedule&.schedule_identifier } %>
+    <% row.with_action(text: :none) %>
+  <% end %>
+
+  <% summary_list.with_row do |row| %>
+    <% row.with_key { "Schedule cohort" } %>
+    <% row.with_value { pp.schedule&.cohort&.start_year&.to_s } %>
+    <% row.with_action(text: :none) %>
+  <% end %>
+
+  <% summary_list.with_row do |row| %>
+    <% row.with_key { "Created at" } %>
+    <% row.with_value { pp.created_at.to_fs(:govuk) } %>
+    <% row.with_action(text: :none) %>
+  <% end %>
+<% end %>
+
+<h4>Induction records</h4>
+
+<% user.induction_records_for_profile(pp).each do |ir| %>
+  <%= render partial: "induction_record", locals: { ir: ir } %>
+<% end %>
+
+<h4>Declarations</h4>
+
+<% declarations = user.participant_declarations_for_profile(pp) %>
+
+<% if declarations.blank? %>
+  No declarations have been made
+<% end %>
+
+<% declarations.each do |declaration| %>
+  <%= render partial: "declaration", locals: { declaration: declaration } %>
+<% end %>

@@ -18,3 +18,4 @@
   ],
 ) %>
 <%= render Admin::Participants::Table.new(profiles: @participant_profiles, page: params.fetch(:page, 1)) %>
+<%= govuk_link_to "View archived participants", admin_archive_relics_path, no_visited_state: true %>

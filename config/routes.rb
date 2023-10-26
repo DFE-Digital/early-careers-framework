@@ -391,6 +391,11 @@ Rails.application.routes.draw do
       resources :major_school_changes, only: %i[index], path: "major-school-changes"
     end
 
+    namespace :archive do
+      get "/", to: redirect("/admin/archive/relics")
+      resources :relics, only: %i[index show]
+    end
+
     unless Rails.env.production?
       namespace :test_data, path: "test-data" do
         get "/", to: redirect("/admin/test-data/fip-schools")
