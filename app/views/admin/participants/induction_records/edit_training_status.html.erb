@@ -1,0 +1,15 @@
+<% content_for :before_content, govuk_back_link(text: "Back", href: admin_participant_path(@participant_profile)) %>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= form_for @induction_record, url: update_training_status_admin_participant_induction_records_path(@participant_profile, @induction_record), method: :put do |f| %>
+      <%= f.govuk_collection_radio_buttons(
+              :training_status,
+              training_statuses,
+              :id,
+              :value,
+              legend: { text: "Training status for #{@participant_profile.full_name} at #{@induction_record.school_name}", tag: 'h1', size: 'l' },
+              options: { selected: @induction_record.training_status }) %>
+      <%= f.govuk_submit "Save" %>
+    <% end %>
+  </div>
+</div>
