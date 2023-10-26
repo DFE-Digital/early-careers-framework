@@ -107,7 +107,7 @@ RSpec.describe "Changing participant details from the dashboard", type: :feature
   scenario "withdrawn participants" do
     given_an_ect_has_been_withdrawn_by_the_provider
     when_i_visit_manage_training_dashboard
-    and_i_click(Cohort.current.description)
+    and_i_click(Cohort.active_registration_cohort.description)
 
     when_i_navigate_to_participants_dashboard
     when_i_click_on_the_participants_name "Sally Teacher"
