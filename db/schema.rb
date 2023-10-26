@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_10_153003) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_24_151523) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "fuzzystrmatch"
@@ -597,6 +597,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_10_153003) do
     t.uuid "cohort_id", null: false
     t.decimal "monthly_service_fee", default: "0.0"
     t.decimal "targeted_delivery_funding_per_participant", default: "100.0"
+    t.boolean "special_course", default: false, null: false
     t.index ["cohort_id"], name: "index_npq_contracts_on_cohort_id"
     t.index ["npq_lead_provider_id"], name: "index_npq_contracts_on_npq_lead_provider_id"
   end

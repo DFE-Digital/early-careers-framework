@@ -39,6 +39,7 @@ module Importers
             number_of_payment_periods: number_of_payment_periods_for(course:),
             service_fee_percentage: service_fee_percentage_for(course:),
             output_payment_percentage: output_payment_percentage_for(course:),
+            special_course: (row["special_course"].to_s.upcase == "TRUE"),
           )
         end
       end
@@ -84,7 +85,7 @@ module Importers
     end
 
     def check_headers
-      unless rows.headers == %w[provider_name cohort_year course_identifier recruitment_target per_participant service_fee_installments]
+      unless rows.headers == %w[provider_name cohort_year course_identifier recruitment_target per_participant service_fee_installments special_course]
         raise NameError, "Invalid headers"
       end
     end

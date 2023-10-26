@@ -31,9 +31,9 @@ RSpec.describe Importers::CreateNPQContract do
 
     context "when new contract" do
       before do
-        csv.write "provider_name,cohort_year,course_identifier,recruitment_target,per_participant,service_fee_installments"
+        csv.write "provider_name,cohort_year,course_identifier,recruitment_target,per_participant,service_fee_installments,special_course"
         csv.write "\n"
-        csv.write "Ambition Institute,#{cohort.start_year},npq-leading-teaching,123,456.78,13"
+        csv.write "Ambition Institute,#{cohort.start_year},npq-leading-teaching,123,456.78,13,TRUE"
         csv.write "\n"
         csv.close
       end
@@ -54,6 +54,7 @@ RSpec.describe Importers::CreateNPQContract do
         expect(contract.cohort).to eql(cohort)
         expect(contract.version).to eql("0.0.1")
         expect(contract.monthly_service_fee).to eql(0.0)
+        expect(contract.special_course).to eql(true)
       end
     end
 
@@ -63,9 +64,9 @@ RSpec.describe Importers::CreateNPQContract do
       let!(:statement) { create(:npq_statement, cpd_lead_provider:, cohort:, contract_version:) }
 
       before do
-        csv.write "provider_name,cohort_year,course_identifier,recruitment_target,per_participant,service_fee_installments"
+        csv.write "provider_name,cohort_year,course_identifier,recruitment_target,per_participant,service_fee_installments,special_course"
         csv.write "\n"
-        csv.write "Ambition Institute,#{cohort.start_year},npq-leading-teaching,123,456.78,13"
+        csv.write "Ambition Institute,#{cohort.start_year},npq-leading-teaching,123,456.78,13,false"
         csv.write "\n"
         csv.close
       end
@@ -85,12 +86,13 @@ RSpec.describe Importers::CreateNPQContract do
         expect(contract.number_of_payment_periods).to eql(3)
         expect(contract.cohort).to eql(cohort)
         expect(contract.version).to eql(contract_version)
+        expect(contract.special_course).to eql(false)
       end
     end
 
     context "code is run more than once" do
       before do
-        csv.write "provider_name,cohort_year,course_identifier,recruitment_target,per_participant,service_fee_installments"
+        csv.write "provider_name,cohort_year,course_identifier,recruitment_target,per_participant,service_fee_installments,special_course"
         csv.write "\n"
         csv.write "Ambition Institute,#{cohort.start_year},npq-leading-teaching,123,456.78,13"
         csv.write "\n"
@@ -107,9 +109,9 @@ RSpec.describe Importers::CreateNPQContract do
 
     context "when existing contract" do
       before do
-        csv.write "provider_name,cohort_year,course_identifier,recruitment_target,per_participant,service_fee_installments"
+        csv.write "provider_name,cohort_year,course_identifier,recruitment_target,per_participant,service_fee_installments,special_course"
         csv.write "\n"
-        csv.write "Ambition Institute,#{cohort.start_year},npq-leading-teaching,123,456.78,13"
+        csv.write "Ambition Institute,#{cohort.start_year},npq-leading-teaching,123,456.78,13,TRUE"
         csv.write "\n"
         csv.close
 
@@ -121,6 +123,7 @@ RSpec.describe Importers::CreateNPQContract do
           per_participant: 100,
           service_fee_installments: 100,
           number_of_payment_periods: 100,
+          special_course: false,
         )
       end
 
@@ -135,14 +138,15 @@ RSpec.describe Importers::CreateNPQContract do
         expect(contract.per_participant).to eql(456.78)
         expect(contract.service_fee_installments).to eql(13)
         expect(contract.number_of_payment_periods).to eql(3)
+        expect(contract.special_course).to eql(true)
       end
     end
 
     context "when a leadership course" do
       before do
-        csv.write "provider_name,cohort_year,course_identifier,recruitment_target,per_participant,service_fee_installments"
+        csv.write "provider_name,cohort_year,course_identifier,recruitment_target,per_participant,service_fee_installments,special_course"
         csv.write "\n"
-        csv.write "Ambition Institute,#{cohort.start_year},npq-headship,321,654.87,14"
+        csv.write "Ambition Institute,#{cohort.start_year},npq-headship,321,654.87,14,true"
         csv.write "\n"
         csv.close
       end
@@ -161,14 +165,15 @@ RSpec.describe Importers::CreateNPQContract do
         expect(contract.per_participant).to eql(654.87)
         expect(contract.number_of_payment_periods).to eql(4)
         expect(contract.cohort).to eql(cohort)
+        expect(contract.special_course).to eql(true)
       end
     end
 
     context "when EHCO course" do
       before do
-        csv.write "provider_name,cohort_year,course_identifier,recruitment_target,per_participant,service_fee_installments"
+        csv.write "provider_name,cohort_year,course_identifier,recruitment_target,per_participant,service_fee_installments,special_course"
         csv.write "\n"
-        csv.write "Ambition Institute,#{cohort.start_year},npq-early-headship-coaching-offer,789,111.22,15"
+        csv.write "Ambition Institute,#{cohort.start_year},npq-early-headship-coaching-offer,789,111.22,15,FALSE"
         csv.write "\n"
         csv.close
       end
@@ -187,6 +192,7 @@ RSpec.describe Importers::CreateNPQContract do
         expect(contract.per_participant).to eql(111.22)
         expect(contract.number_of_payment_periods).to eql(4)
         expect(contract.cohort).to eql(cohort)
+        expect(contract.special_course).to eql(false)
       end
     end
   end
