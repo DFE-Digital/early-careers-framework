@@ -7,7 +7,7 @@
               training_statuses,
               :id,
               :value,
-              legend: { text: "Training status for #{@participant_profile.name} at #{@induction_record.school_name}", tag: 'h1', size: 'l' },
+              legend: { text: "Training status for #{@participant_profile.full_name} at #{@induction_record.school_name}", tag: 'h1', size: 'l' },
               options: { selected: @induction_record.training_status }) %>
       <%= f.govuk_submit "Save" %>
     <% end %>
