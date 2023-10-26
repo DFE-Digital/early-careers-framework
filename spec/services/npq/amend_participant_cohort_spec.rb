@@ -62,7 +62,7 @@ RSpec.describe NPQ::AmendParticipantCohort, type: :model do
     context "when lead provider has no contract for the cohort and course" do
       before { npq_contract.update!(npq_course: create(:npq_specialist_course)) }
 
-      it "is invalid and returns an error message", :flakey_test do
+      it "is invalid and returns an error message" do
         expect(subject).to be_invalid
         expect(subject.errors.messages_for(:cohort)).to include("You cannot change a participant to this cohort as you do not have a contract for the cohort and course. Contact the DfE for assistance.")
       end
@@ -71,7 +71,7 @@ RSpec.describe NPQ::AmendParticipantCohort, type: :model do
 
   describe "#call" do
     let(:npq_course) { create(:npq_leadership_course) }
-    let(:npq_application) { create(:npq_application, cohort: cohort_current, npq_course:) }
+    let(:npq_application) { create(:npq_application, :accepted, cohort: cohort_current, npq_course:) }
 
     context "when invalid" do
       let(:target_cohort_start_year) {}
@@ -92,16 +92,6 @@ RSpec.describe NPQ::AmendParticipantCohort, type: :model do
 
         let(:source_schedule) { Finance::Schedule::NPQSpecialist.schedule_for(cohort: cohort_current) }
         let(:target_schedule) { Finance::Schedule::NPQSpecialist.schedule_for(cohort: cohort_previous) }
-
-        before do
-          {
-            npq_specialist_schedule: %w[npq-specialist-spring npq-specialist-autumn],
-          }.each do |schedule_type, schedule_identifiers|
-            schedule_identifiers.each do |schedule_identifier|
-              create(schedule_type, cohort: cohort_previous, schedule_identifier:)
-            end
-          end
-        end
 
         it "updates the cohort on the NPQ application to the target cohort" do
           expect { subject.call }.to change { npq_application.reload.cohort }.from(cohort_current).to(cohort_previous)

@@ -16,6 +16,8 @@ module Api
           let(:participant) { create(:user) }
           let!(:ect_profile) { create(:ect, :eligible_for_funding, school_cohort:, user: participant, induction_completion_date: Date.parse("2022-01-12")) }
 
+          before { freeze_time }
+
           subject { described_class.new([participant], params: { cpd_lead_provider: }) }
 
           let(:result) { subject.serializable_hash }
@@ -101,28 +103,24 @@ module Api
             context "when the profile is withdrawn" do
               before do
                 ect_profile.induction_records.latest.update!(training_status: "withdrawn")
-                ect_profile.participant_profile_states.last.update!(state: "withdrawn")
+                ect_profile.participant_profile_states.last.update!(state: "withdrawn", reason: "other")
               end
 
-              it "includes a withdrawal object", :flakey_test do
-                expect(result[:data][0][:attributes][:ecf_enrolments][0][:withdrawal]).to eq({
-                  reason: ect_profile.participant_profile_state.reason,
-                  date: ect_profile.participant_profile_state.created_at.rfc3339,
-                })
+              it "includes a withdrawal object" do
+                expect(result[:data][0][:attributes][:ecf_enrolments][0][:withdrawal][:reason]).to eq("other")
+                expect(result[:data][0][:attributes][:ecf_enrolments][0][:withdrawal][:date]).to eql(ect_profile.participant_profile_state.created_at.rfc3339)
               end
             end
 
             context "when the profile is deferred" do
               before do
                 ect_profile.induction_records.latest.update!(training_status: "deferred")
-                ect_profile.participant_profile_states.last.update!(state: "deferred")
+                ect_profile.participant_profile_states.last.update!(state: "deferred", reason: "other")
               end
 
               it "includes a deferral object" do
-                expect(result[:data][0][:attributes][:ecf_enrolments][0][:deferral]).to eq({
-                  reason: ect_profile.participant_profile_state.reason,
-                  date: ect_profile.participant_profile_state.created_at.rfc3339,
-                })
+                expect(result[:data][0][:attributes][:ecf_enrolments][0][:deferral][:reason]).to eq("other")
+                expect(result[:data][0][:attributes][:ecf_enrolments][0][:deferral][:date]).to eql(ect_profile.participant_profile_state.created_at.rfc3339)
               end
             end
 
@@ -170,7 +168,7 @@ module Api
               let!(:participant_id_change2) { create(:participant_id_change, user: participant, to_participant: participant) }
 
               it "should returns participant id changes" do
-                expect(result[:data][0][:attributes][:participant_id_changes]).to eql([
+                expect(result[:data][0][:attributes][:participant_id_changes]).to match_array([
                   {
                     from_participant_id: participant_id_change2.from_participant_id,
                     to_participant_id: participant_id_change2.to_participant_id,
