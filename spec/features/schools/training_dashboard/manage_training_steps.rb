@@ -6,7 +6,7 @@ module ManageTrainingSteps
   # Given_steps
 
   def given_there_is_a_school_that_has_chosen_fip_and_partnered
-    start_year = Date.today.year
+    start_year = Time.zone.today.year
     @cohort = Cohort.find_by(start_year:) || create(:cohort, start_year:)
     @school = create(:school, name: "Fip School")
     @school_cohort = create(:school_cohort, school: @school, cohort: @cohort, induction_programme_choice: "full_induction_programme")

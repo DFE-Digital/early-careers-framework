@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe "Adding previously withdrawn Mentor", type: :feature, js: true do
-  let!(:year) { Date.today.year }
+  let!(:year) { Time.zone.today.year }
   let!(:cohort) { create(:cohort, start_year: year) }
   let(:previous_cohort) { create(:cohort, start_year: year - 1) }
   let!(:school) { create(:school, name: "Fip School") }
