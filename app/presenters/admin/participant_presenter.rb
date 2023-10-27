@@ -42,7 +42,7 @@ class Admin::ParticipantPresenter
   end
 
   delegate :email, to: :user
-  delegate :enrolled_in_fip?, to: :relevant_induction_record
+  delegate :enrolled_in_fip?, to: :relevant_induction_record, allow_nil: true
   delegate :full_name, to: :user
 
   def has_mentor?

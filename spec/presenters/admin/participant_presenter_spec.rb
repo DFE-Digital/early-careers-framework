@@ -31,7 +31,7 @@ RSpec.describe(Admin::ParticipantPresenter) do
     it { is_expected.to delegate_method(:ecf_participant_eligibility).to(:participant_profile) }
     it { is_expected.to delegate_method(:ecf_participant_validation_data).to(:participant_profile) }
     it { is_expected.to delegate_method(:email).to(:user) }
-    it { is_expected.to delegate_method(:enrolled_in_fip?).to(:relevant_induction_record) }
+    it { is_expected.to delegate_method(:enrolled_in_fip?).to(:relevant_induction_record).allow_nil }
     it { is_expected.to delegate_method(:full_name).to(:user) }
     it { is_expected.to delegate_method(:id).to(:participant_profile) }
     it { is_expected.to delegate_method(:lead_provider_name).to(:relevant_induction_record).allow_nil }
