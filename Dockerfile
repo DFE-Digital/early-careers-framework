@@ -38,7 +38,7 @@ RUN apk -U upgrade && \
     bundle config set no-cache 'true' && \
     bundle config set no-binstubs 'true' && \
     bundle --retry=5 --jobs=4 --without=development test && \
-    yarn install --check-files --production && \
+    yarn workspaces focus --production && \
     apk del .gem-installdeps && \
     rm -rf /usr/local/bundle/cache && \
     find /usr/local/bundle/gems -name "*.c" -delete && \
