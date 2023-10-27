@@ -38,7 +38,6 @@ RUN apk -U upgrade && \
     bundle config set no-cache 'true' && \
     bundle config set no-binstubs 'true' && \
     bundle --retry=5 --jobs=4 --without=development test && \
-    yarn workspaces focus --production && \
     apk del .gem-installdeps && \
     rm -rf /usr/local/bundle/cache && \
     find /usr/local/bundle/gems -name "*.c" -delete && \
@@ -69,6 +68,9 @@ ENV GOVUK_APP_DOMAIN="http://localhost:3000" \
 
 WORKDIR /app
 COPY . .
+
+WORKDIR /app
+RUN yarn workspaces focus --all --production
 
 RUN bundle exec rake assets:precompile && \
     apk del nodejs yarn && \
