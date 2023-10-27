@@ -20,7 +20,7 @@
         row.with_value(text: @wizard.existing_delivery_partner.name)
       end
 
-      if @wizard.existing_participant_profile.induction_start_date
+      if @wizard.existing_participant_profile.ect? && @wizard.existing_participant_profile.induction_start_date
         sl.with_row do |row|
           row.with_key(text: "Status")
           row.with_value(text: "Induction started on #{@wizard.existing_participant_profile.induction_start_date.to_fs(:govuk)}")
