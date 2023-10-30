@@ -23,7 +23,13 @@ RSpec.describe ParticipantDeclaration::ECF do
     end
 
     context "retained-1 - ecf-induction - paid - pupil_premium_uplift" do
-      subject { create(:ect_participant_declaration, :paid, uplifts: [:pupil_premium_uplift], declaration_type: "retained-1") }
+      let(:schedule) { Finance::Schedule.find_by(schedule_identifier: "ecf-standard-september", cohort: Cohort.current) }
+
+      subject do
+        travel_to schedule.milestones.find_by!(declaration_type: "retained-1").start_date + 2.days do
+          create(:ect_participant_declaration, :paid, uplifts: [:pupil_premium_uplift], declaration_type: "retained-1")
+        end
+      end
 
       it "should return false" do
         expect(subject.uplift_paid?).to eql(false)

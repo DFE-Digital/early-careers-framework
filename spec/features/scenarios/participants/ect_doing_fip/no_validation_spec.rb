@@ -26,7 +26,7 @@ RSpec.feature "ECT doing FIP: no validation", type: :feature do
   let(:programme_name) { "Full induction programme" }
   let(:schedule_identifier) { "ecf-standard-september" }
   let(:cip_materials) { "none" }
-  let(:start_year) { 2023 }
+  let(:start_year) { Cohort.next.start_year }
   let(:registration_completed) { true }
   let(:participant_status) { "active" }
   let(:training_status) { "active" }

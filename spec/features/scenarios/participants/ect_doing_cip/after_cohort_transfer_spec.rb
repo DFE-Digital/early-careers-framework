@@ -27,7 +27,7 @@ RSpec.feature "ECT doing CIP: after cohort transfer", type: :feature do
   let(:schedule_identifier) { "ecf-standard-september" }
   let(:cip_material_provider) { "Education Development Trust" }
   let(:cip_materials) { "edt" }
-  let(:start_year) { 2023 }
+  let(:start_year) { Cohort.next.start_year }
   let(:previous_start_year) { start_year - 1 }
   let(:registration_completed) { true }
   let(:participant_status) { "active" }
