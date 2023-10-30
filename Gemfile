@@ -50,7 +50,7 @@ gem "listen", "~> 3.8"
 gem "rack-attack", "~> 6.7"
 
 # GOV.UK Notify
-gem "mail-notify", "~> 1.1"
+gem "mail-notify", "~> 1.2"
 
 # do not rely on host's timezone data, which can be inconsistent
 gem "tzinfo-data"
