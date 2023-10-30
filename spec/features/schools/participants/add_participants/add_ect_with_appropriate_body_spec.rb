@@ -34,6 +34,7 @@ RSpec.describe "Adding ECT with appropriate body", type: :feature, js: true do
   let!(:schedule) { create :ecf_schedule }
 
   before do
+    allow(Cohort).to receive(:active_registration_cohort).and_return(cohort)
     school_cohort.update! default_induction_programme: induction_programme
   end
 
