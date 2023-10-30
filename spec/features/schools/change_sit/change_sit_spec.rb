@@ -77,6 +77,7 @@ private
 
   def given_there_is_a_school_and_an_induction_coordinator
     @cohort = Cohort.current || create(:cohort, :current)
+    allow(Cohort).to receive(:active_registration_cohort).and_return(@cohort)
     @school = create(:school, name: "Fip School")
     @school_cohort = create(:school_cohort, school: @school, cohort: @cohort, induction_programme_choice: "full_induction_programme")
 
@@ -89,6 +90,7 @@ private
     second_school = create(:school, name: "Test School 2", slug: "111112-test-school-2", urn: "111112")
 
     @cohort = Cohort.current || create(:cohort, :current)
+    allow(Cohort).to receive(:active_registration_cohort).and_return(@cohort)
     @school_cohort = create(:school_cohort, :cip, school: first_school, cohort: @cohort, induction_programme_choice: "full_induction_programme")
 
     create_partnership(first_school)
