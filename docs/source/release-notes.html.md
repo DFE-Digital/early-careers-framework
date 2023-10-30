@@ -7,6 +7,10 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
+## 30 October 2023
+
+Lead providers will now see a 422 error code if a `completed` declaration outcome fails. In such instances, you'll be prompted to contact us for support.
+
 ## 17 October 2023
 
 Lead providers can now test the new `participant_id_changes` feature in the sandbox.

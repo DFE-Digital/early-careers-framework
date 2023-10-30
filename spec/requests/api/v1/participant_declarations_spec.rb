@@ -624,6 +624,20 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
             expect(ParticipantOutcome::NPQ.count).to eql(1)
           end
         end
+
+        context "when CreateParticipantOutcome service class is invalid" do
+          let(:has_passed) { true }
+
+          before do
+            allow_any_instance_of(NPQ::CreateParticipantOutcome).to receive(:valid?).and_return(false)
+          end
+
+          it "returns 422" do
+            post "/api/v1/participant-declarations", params: params.to_json
+            expect(response.status).to eq 422
+            expect(response.body).to eq({ errors: [{ title: "Invalid action", detail: I18n.t(:cannot_create_completed_declaration) }] }.to_json)
+          end
+        end
       end
     end
 
