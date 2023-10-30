@@ -57,7 +57,7 @@ module Admin
           # This applies for all the data in the preview response.
           eligibility_data = Admin::ParticipantPresenter.new(preview_profile).eligibility_data.as_json
 
-          new_validation_state = DetermineTrainingRecordState.call(participant_profile: preview_profile)
+          new_validation_state = DetermineTrainingRecordStateLegacy.call(participant_profile: preview_profile)
                                                              .validation_state
 
           @preview_response = PreviewStruct.new(
