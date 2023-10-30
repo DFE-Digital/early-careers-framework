@@ -19,23 +19,30 @@ module Schools
         ]
       end
 
+      def do_not_continue_current_programme!
+        data_store.set(:continue_current_programme, false)
+      end
+
+      def do_not_join_school_programme!
+        data_store.set(:join_school_programme, nil)
+      end
+
+      def needs_to_choose_school_programme?
+        return do_not_join_school_programme! if continue_current_programme?
+        return true if [lead_provider, delivery_partner].all? &&
+          (lead_provider != existing_lead_provider || delivery_partner != existing_delivery_partner)
+        return false if [current_cohort_lead_provider, current_cohort_delivery_partner].any?(&:blank?)
+        return false unless current_providers_training_on_participant_cohort?
+
+        (current_cohort_lead_provider != existing_lead_provider ||
+          current_cohort_delivery_partner != existing_delivery_partner)
+      end
+
       def needs_to_confirm_programme?
-        return false if withdrawn_participant?
-        return false if [existing_lead_provider, existing_delivery_partner].any?(&:blank?)
+        return do_not_continue_current_programme! if withdrawn_participant?
+        return do_not_continue_current_programme! if [existing_lead_provider, existing_delivery_partner].any?(&:blank?)
 
-        lead_provider != existing_lead_provider || delivery_partner != existing_delivery_partner
-      end
-
-      def switching_programme?
-        chose_to_join_school_programme? && !chose_to_continue_current_programme?
-      end
-
-      def chose_to_join_school_programme?
-        transfer? && join_school_programme?
-      end
-
-      def chose_to_continue_current_programme?
-        transfer? && continue_current_programme?
+        true
       end
 
       def show_training_provider_section?
@@ -118,13 +125,10 @@ module Schools
         data_store.set(:was_withdrawn_participant, withdrawn_participant?)
         new_induction_record = if sit_adding_themself_as_existing_mentor?
                                  transfer_sit_to_mentor_profile
-                               elsif transfer_has_the_same_provider? || was_withdrawn_participant?
-                                 data_store.set(:same_provider, true)
-                                 transfer_fip_participant_to_schools_programme(profile)
-                               elsif !needs_to_confirm_programme? || chose_to_join_school_programme?
-                                 transfer_fip_participant_to_schools_programme(profile)
-                               else
+                               elsif continue_current_programme?
                                  transfer_fip_participant_and_continue_existing_programme(profile)
+                               else
+                                 transfer_fip_participant_to_schools_programme(profile)
                                end
 
         send_notification_emails!(new_induction_record, was_withdrawn_participant?)
@@ -135,16 +139,6 @@ module Schools
         existing_participant_profile.training_status_withdrawn? || existing_induction_record&.training_status_withdrawn?
       end
 
-      def transfer_fip_participant_to_schools_programme(profile)
-        Induction::TransferToSchoolsProgramme.call(
-          participant_profile: profile,
-          induction_programme: school_cohort.default_induction_programme,
-          start_date:,
-          email:,
-          mentor_profile:,
-        )
-      end
-
       def transfer_fip_participant_and_continue_existing_programme(profile)
         Induction::TransferAndContinueExistingFip.call(
           school_cohort:,
@@ -152,6 +146,18 @@ module Schools
           email:,
           start_date:,
           end_date: start_date,
+          mentor_profile:,
+        )
+      end
+
+      def transfer_fip_participant_to_schools_programme(profile)
+        chosen_school_cohort = join_current_cohort_school_programme? ? school_current_cohort : school_cohort
+
+        Induction::TransferToSchoolsProgramme.call(
+          participant_profile: profile,
+          induction_programme: chosen_school_cohort.default_induction_programme,
+          start_date:,
+          email:,
           mentor_profile:,
         )
       end
@@ -192,9 +198,9 @@ module Schools
         Induction::SendTransferNotificationEmails.call(
           induction_record: new_induction_record,
           was_withdrawn_participant:,
-          same_delivery_partner: transfer_has_the_same_delivery_partner?,
-          same_provider: transfer_has_the_same_provider?,
-          switch_to_schools_programme: switching_programme?,
+          same_delivery_partner: same_delivery_partner?,
+          same_provider: same_provider?,
+          switch_to_schools_programme: needs_to_choose_school_programme?,
           lead_provider_profiles_in:,
           lead_provider_profiles_out:,
         )

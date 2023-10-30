@@ -79,6 +79,13 @@ module ApplicationHelper
     "#{name}#{name[-1] == 's' ? '’' : '’s'}"
   end
 
+  def keep_providers_options
+    [
+      OpenStruct.new(id: "yes", name: "Yes"),
+      OpenStruct.new(id: "no", name: "No, they’ll move to different training providers or a different training programme"),
+    ]
+  end
+
   def simple_yes_no_options
     [
       OpenStruct.new(id: "yes", name: "Yes"),

@@ -1,4 +1,4 @@
-<% title = "Will #{@wizard.full_name} be training with your school’s current providers?" %>
+<% title = "Who will #{@wizard.full_name}’s new training providers be?" %>
 
 <% content_for :title, title %>
 
@@ -11,9 +11,10 @@
       <%= f.govuk_error_summary %>
       <%= f.govuk_collection_radio_buttons(
         :join_school_programme,
-        simple_yes_no_options,
-        :id, :name,
-        inline: true,
+        @wizard.form.choices,
+        :id,
+        :name,
+        inline: false,
         legend: { text: title, tag: 'h1', size: 'l' }) do %>
 
         <h2 class="govuk-heading-s govuk-!-margin-bottom-1">Lead provider</h2>

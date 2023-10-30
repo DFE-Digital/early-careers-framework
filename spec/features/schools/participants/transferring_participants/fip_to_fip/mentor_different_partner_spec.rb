@@ -58,7 +58,7 @@ RSpec.describe "Transferring a mentor with a different provider", type: :feature
     click_on "Continue"
 
     then_i_should_be_taken_to_the_schools_current_programme_page
-    when_i_select "Yes"
+    when_i_select @lead_provider.name
     click_on "Continue"
 
     then_i_should_be_taken_to_the_check_your_answers_page
@@ -94,15 +94,14 @@ RSpec.describe "Transferring a mentor with a different provider", type: :feature
 
     when_i_add_a_valid_date_of_birth
     click_on "Continue"
-
     then_i_should_be_on_the_only_mentor_at_your_school_page
+
     when_i_select "Yes"
     click_on "Confirm"
-
     then_i_should_be_on_the_teacher_start_date_page
+
     when_i_add_a_valid_start_date
     click_on "Continue"
-
     then_i_should_be_on_the_add_email_page
 
     when_i_update_the_email_with("sally-mentor@example.com")
@@ -111,7 +110,6 @@ RSpec.describe "Transferring a mentor with a different provider", type: :feature
     then_i_should_be_taken_to_the_teachers_current_programme_page
     when_i_select "Yes"
     click_on "Continue"
-
     then_i_should_be_taken_to_the_check_your_answers_page_for_an_existing_induction
 
     click_on "Confirm and add"
@@ -234,13 +232,13 @@ RSpec.describe "Transferring a mentor with a different provider", type: :feature
   end
 
   def then_i_should_be_taken_to_the_teachers_current_programme_page
-    expect(page).to have_selector("h1", text: "Will #{@participant_data[:full_name]} continue with their current training programme?")
+    expect(page).to have_selector("h2", text: "Will they continue with these training providers?")
     expect(page).to have_text(@lead_provider_two.name)
     expect(page).to have_text(@other_delivery_partner.name)
   end
 
   def then_i_should_be_taken_to_the_schools_current_programme_page
-    expect(page).to have_selector("h1", text: "Will #{@participant_data[:full_name]} be training with your school’s current providers?")
+    expect(page).to have_selector("h1", text: "Who will #{@participant_data[:full_name]}’s new training providers be?")
     expect(page).to have_text(@lead_provider.name)
     expect(page).to have_text(@delivery_partner.name)
   end

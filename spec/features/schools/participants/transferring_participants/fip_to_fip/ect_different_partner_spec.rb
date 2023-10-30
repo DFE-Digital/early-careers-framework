@@ -63,7 +63,7 @@ RSpec.describe "Transferring ECT is with a different lead provider", type: :feat
     then_i_should_be_taken_to_the_schools_current_programme_page
     then_the_page_should_be_accessible
 
-    when_i_select "Yes"
+    when_i_select @lead_provider.name
     click_on "Continue"
 
     then_i_should_be_taken_to_the_check_your_answers_page
@@ -249,11 +249,11 @@ RSpec.describe "Transferring ECT is with a different lead provider", type: :feat
   end
 
   def then_i_should_be_taken_to_the_schools_current_programme_page
-    expect(page).to have_selector("h1", text: "Will #{@participant_data[:full_name]} be training with your school’s current providers?")
+    expect(page).to have_selector("h1", text: "Who will #{@participant_data[:full_name]}’s new training providers be?")
   end
 
   def then_i_should_be_taken_to_the_teachers_current_programme_page
-    expect(page).to have_selector("h1", text: "Will #{@participant_data[:full_name]} continue with their current training programme?")
+    expect(page).to have_selector("h2", text: "Will they continue with these training providers?")
     expect(page).to have_text(@lead_provider_two.name)
     expect(page).to have_text(@other_delivery_partner.name)
   end

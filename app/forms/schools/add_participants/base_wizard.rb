@@ -18,8 +18,9 @@ module Schools
       delegate :return_point, :changing_answer?, :transfer?, :participant_type, :trn, :confirmed_trn, :date_of_birth,
                :induction_start_date, :nino, :ect_participant?, :mentor_id, :continue_current_programme?, :participant_profile,
                :mentor_participant?, :appropriate_body_confirmed?, :appropriate_body_id, :known_by_another_name?,
-               :same_provider?, :was_withdrawn_participant?, :complete?, :start_date, :start_term, :last_visited_step,
-               :ect_mentor?,
+               :was_withdrawn_participant?, :complete?, :start_date, :start_term, :last_visited_step,
+               :ect_mentor?, :join_school_programme, :join_school_programme?, :join_participant_cohort_school_programme?,
+               :join_current_cohort_school_programme?,
                to: :data_store
 
       def initialize(current_step:, data_store:, current_user:, school:, submitted_params: {})
@@ -96,10 +97,6 @@ module Schools
         data_store.set(:ect_mentor, true)
       end
 
-      def join_school_programme?
-        withdrawn_participant? || data_store.join_school_programme?
-      end
-
       def not_known_by_another_name?
         # only true if responded to question with no
         data_store.get(:known_by_another_name) == "no"
@@ -137,6 +134,26 @@ module Schools
       def school_cohort
         # determine this based on which cohort to place the participant in
         @school_cohort ||= school.school_cohorts.find_by(cohort: participant_cohort)
+      end
+
+      def school_current_cohort
+        @school_current_cohort ||= school.school_cohorts.find_by(cohort: Dashboard::LatestManageableCohort.call(school))
+      end
+
+      def current_cohort_lead_provider
+        @current_cohort_lead_provider ||= school_current_cohort&.default_induction_programme&.lead_provider
+      end
+
+      def current_cohort_delivery_partner
+        @current_cohort_delivery_partner ||= school_current_cohort&.default_induction_programme&.delivery_partner
+      end
+
+      def current_providers_training_on_participant_cohort?
+        return false unless [current_cohort_lead_provider, current_cohort_delivery_partner].all?
+
+        ProviderRelationship.exists?(lead_provider: current_cohort_lead_provider,
+                                     delivery_partner: current_cohort_delivery_partner,
+                                     cohort: participant_cohort)
       end
 
       def lead_provider
@@ -246,24 +263,18 @@ module Schools
         existing_participant_profile.training_status_withdrawn? || existing_induction_record.training_status_withdrawn?
       end
 
-      def transfer_has_same_providers?
-        transfer_has_the_same_provider? && transfer_has_the_same_delivery_partner?
+      def same_provider?
+        return lead_provider == existing_lead_provider if join_participant_cohort_school_programme?
+        return current_cohort_lead_provider == existing_lead_provider if join_current_cohort_school_programme?
+
+        false
       end
 
-      def transfer_has_same_provider_and_different_delivery_partner?
-        transfer_has_the_same_provider? && !transfer_has_the_same_delivery_partner?
-      end
+      def same_delivery_partner?
+        return delivery_partner == existing_delivery_partner if join_participant_cohort_school_programme?
+        return current_cohort_delivery_partner == existing_delivery_partner if join_current_cohort_school_programme?
 
-      def transfer_has_the_same_provider?
-        lead_provider == existing_lead_provider
-      end
-
-      def transfer_has_the_same_delivery_partner?
-        delivery_partner == existing_delivery_partner
-      end
-
-      def set_same_provider(using_same_provider)
-        data_store.set(:same_provider, using_same_provider)
+        false
       end
 
       def needs_to_confirm_start_term?

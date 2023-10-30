@@ -51,8 +51,8 @@ RSpec.describe "old and new SIT transferring the same participant", type: :featu
       @school_cohort_one = create(:school_cohort, school: @school_one, cohort: @cohort, induction_programme_choice: "full_induction_programme")
       @school_cohort_two = create(:school_cohort, school: @school_two, cohort: @cohort, induction_programme_choice: "full_induction_programme")
       @ect = create(:ect_participant_profile, user: create(:user, full_name: "Sally Teacher"), school_cohort: @school_cohort_one)
-      @induction_programme_one = create(:induction_programme, :fip, school_cohort: @school_cohort_one, partnership: @partnership_1)
-      @induction_programme_two = create(:induction_programme, :fip, school_cohort: @school_cohort_two, partnership: @partnership_2)
+      @induction_programme_one = create(:induction_programme, :fip, school_cohort: @school_cohort_one)
+      @induction_programme_two = create(:induction_programme, :fip, school_cohort: @school_cohort_two)
       @school_cohort_one.update!(default_induction_programme: @induction_programme_one)
       @induction_record = Induction::Enrol.call(participant_profile: @ect, induction_programme: @induction_programme_one)
     end

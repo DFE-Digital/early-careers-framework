@@ -912,7 +912,7 @@ module ManageTrainingSteps
   end
 
   def then_i_am_taken_to_continue_current_training_page
-    expect(page).to have_text("Will #{@induction_coordinator_profile.user.full_name} continue with their current training programme?")
+    expect(page).to have_text("Will they continue with these training providers?")
   end
 
   def then_i_am_taken_to_sit_mentor_added_confirmation_page
@@ -1291,7 +1291,7 @@ module ManageTrainingSteps
   end
 
   def then_i_should_be_taken_to_the_teachers_current_programme_page
-    expect(page).to have_selector("h1", text: "Will #{@participant_data[:full_name]} continue with their current training programme?")
+    expect(page).to have_selector("h2", text: "Will they continue with these training providers?")
   end
 
   alias_method :then_i_am_taken_to_the_teachers_current_programme_page, :then_i_should_be_taken_to_the_teachers_current_programme_page

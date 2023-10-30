@@ -17,8 +17,10 @@ module Schools
         def next_step
           if continue_current_programme?
             :check_answers
-          else
+          elsif wizard.needs_to_choose_school_programme?
             :join_school_programme
+          else
+            :cannot_add_manual_transfer
           end
         end
 

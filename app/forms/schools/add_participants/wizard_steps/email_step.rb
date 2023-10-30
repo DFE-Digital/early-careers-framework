@@ -24,8 +24,10 @@ module Schools
               :choose_mentor
             elsif wizard.needs_to_confirm_programme?
               :continue_current_programme
+            elsif wizard.needs_to_choose_school_programme?
+              :join_school_programme
             else
-              :check_answers
+              :cannot_add_manual_transfer
             end
           elsif wizard.sit_adding_themself_as_mentor?
             :yourself

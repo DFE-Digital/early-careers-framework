@@ -98,11 +98,23 @@ module FormData
     end
 
     def continue_current_programme?
-      get(:continue_current_programme) == "yes"
+      ["yes", true].include?(get(:continue_current_programme))
+    end
+
+    def join_school_programme
+      get :join_school_programme
+    end
+
+    def join_current_cohort_school_programme?
+      join_school_programme == "default_for_current_cohort"
+    end
+
+    def join_participant_cohort_school_programme?
+      join_school_programme == "default_for_participant_cohort"
     end
 
     def join_school_programme?
-      get(:join_school_programme) == "yes"
+      join_participant_cohort_school_programme? || join_current_cohort_school_programme?
     end
 
     def known_by_another_name?
@@ -111,10 +123,6 @@ module FormData
 
     def participant_profile
       get(:participant_profile)
-    end
-
-    def same_provider?
-      get(:same_provider) == true
     end
 
     def was_withdrawn_participant?

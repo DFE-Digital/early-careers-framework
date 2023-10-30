@@ -21,6 +21,7 @@ RSpec.describe Schools::AddParticipants::WizardSteps::EmailStep, type: :model do
     let(:transfer) { false }
     let(:choose_mentor) { false }
     let(:confirm_programme) { false }
+    let(:choose_school_programme) { false }
     let(:ect_participant) { false }
     let(:confirm_start_term) { false }
     let(:confirm_appropriate_body) { false }
@@ -50,10 +51,11 @@ RSpec.describe Schools::AddParticipants::WizardSteps::EmailStep, type: :model do
 
       before do
         allow(wizard).to receive(:needs_to_confirm_programme?).and_return(confirm_programme)
+        allow(wizard).to receive(:needs_to_choose_school_programme?).and_return(choose_school_programme)
       end
 
-      it "returns :check_answers" do
-        expect(step.next_step).to eql :check_answers
+      it "returns :cannot_add_manual_transfer" do
+        expect(step.next_step).to eql :cannot_add_manual_transfer
       end
 
       context "when a mentor can be chosen" do
@@ -69,6 +71,14 @@ RSpec.describe Schools::AddParticipants::WizardSteps::EmailStep, type: :model do
 
         it "returns :continue_current_programme" do
           expect(step.next_step).to eql :continue_current_programme
+        end
+      end
+
+      context "when a school programme needs to be chosen" do
+        let(:choose_school_programme) { true }
+
+        it "returns :join_school_programme" do
+          expect(step.next_step).to eql :join_school_programme
         end
       end
     end
