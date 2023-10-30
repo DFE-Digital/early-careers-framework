@@ -50,6 +50,7 @@ RSpec.feature "School contact making cohort choice journey", type: :feature, js:
     context "when the school is in the pilot", with_feature_flags: { cohortless_dashboard: "active" } do
       before do
         create(:cohort, :next) if Cohort.next.blank?
+        allow(Cohort).to receive(:active_registration_cohort).and_return(Cohort.current)
       end
 
       include_context "School choosing how to setup their cohort" do
