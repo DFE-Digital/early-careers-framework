@@ -13,6 +13,7 @@ RSpec.describe "SIT removing participants from the cohort", js: true, with_featu
   let(:privacy_policy) { create :privacy_policy }
 
   before do
+    allow(Cohort).to receive(:active_registration_cohort).and_return(school_cohort.cohort)
     Induction::SetCohortInductionProgramme.call(school_cohort:, programme_choice: "full_induction_programme")
     Induction::Enrol.call(participant_profile: mentor_profile, induction_programme: school_cohort.default_induction_programme)
     Mentors::AddToSchool.call(school: school_cohort.school, mentor_profile:)
