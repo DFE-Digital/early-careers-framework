@@ -8,6 +8,7 @@ RSpec.describe "Schools::Partnerships", type: :request do
   let(:cohort) { Cohort.current || create(:cohort, :current) }
 
   before do
+    allow(Cohort).to receive(:active_registration_cohort).and_return(cohort)
     create(:school_cohort, school:, cohort:)
     sign_in user
   end
