@@ -24,9 +24,14 @@
 /public/packs-test
 /node_modules
 /vendor/cache
-yarn-debug.log*
-/yarn-error.log
-.yarn-integrity
+.pnp.*
+.yarn/*
+!.yarn/cache
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
 bin/konduit.sh
 
 .env
