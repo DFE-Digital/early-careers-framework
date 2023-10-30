@@ -9,6 +9,7 @@ RSpec.describe "Admin::Participants", type: :request do
   let!(:induction_coordinator) { create(:user, :induction_coordinator) }
 
   before do
+    allow(Cohort).to receive(:active_registration_cohort).and_return(cohort)
     sign_in admin_user
   end
 
