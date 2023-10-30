@@ -279,7 +279,8 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         let(:course_identifier) { npq_course.identifier }
         let(:declaration_type)  { "completed" }
         let(:has_passed) { nil }
-        let!(:contract) { create(:npq_contract, npq_course:, npq_lead_provider: cpd_lead_provider.npq_lead_provider) }
+        let!(:contract_current_cohort) { create(:npq_contract, npq_course:, npq_lead_provider: cpd_lead_provider.npq_lead_provider, cohort: Cohort.current) }
+        let!(:contract_previous_cohort) { create(:npq_contract, npq_course:, npq_lead_provider: cpd_lead_provider.npq_lead_provider, cohort: Cohort.previous) }
         let(:params) do
           {
             data: {
@@ -509,14 +510,16 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         end
 
         let(:new_participant_declaration) do
-          create(
-            :participant_declaration,
-            user: participant_profile.user,
-            cpd_lead_provider:,
-            participant_profile:,
-            course_identifier: "ecf-induction",
-            declaration_type: "retained-1",
-          )
+          travel_to participant_profile.schedule.milestones.find_by!(declaration_type: "retained-1").start_date + 2.days do
+            create(
+              :participant_declaration,
+              user: participant_profile.user,
+              cpd_lead_provider:,
+              participant_profile:,
+              course_identifier: "ecf-induction",
+              declaration_type: "retained-1",
+            )
+          end
         end
 
         before do
@@ -654,14 +657,16 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
       end
 
       let(:new_participant_declaration) do
-        create(
-          :participant_declaration,
-          user: participant_profile.user,
-          cpd_lead_provider:,
-          participant_profile:,
-          course_identifier: "ecf-induction",
-          declaration_type: "retained-1",
-        )
+        travel_to participant_profile.schedule.milestones.find_by!(declaration_type: "retained-1").start_date + 2.days do
+          create(
+            :participant_declaration,
+            user: participant_profile.user,
+            cpd_lead_provider:,
+            participant_profile:,
+            course_identifier: "ecf-induction",
+            declaration_type: "retained-1",
+          )
+        end
       end
 
       before do

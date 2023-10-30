@@ -8,24 +8,23 @@ RSpec.describe "API Participant Declarations", type: :request do
   let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
   let(:bearer_token) { "Bearer #{token}" }
   let(:parsed_response) { JSON.parse(response.body) }
+  let(:cohort_current) { Cohort.current || create(:cohort, :current) }
+  let(:cohort_previous) { Cohort.previous || create(:cohort, :previous) }
 
   describe "#index" do
     let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider1) }
 
-    let(:cohort1) { Cohort.current || create(:cohort, :current) }
-    let(:cohort2) { Cohort.previous || create(:cohort, :previous) }
-
     let(:cpd_lead_provider1) { create(:cpd_lead_provider, :with_lead_provider) }
     let(:lead_provider1) { cpd_lead_provider1.lead_provider }
-    let(:school_cohort1) { create(:school_cohort, :fip, :with_induction_programme, lead_provider: lead_provider1, cohort: cohort1) }
-    let(:school_cohort2) { create(:school_cohort, :fip, :with_induction_programme, lead_provider: lead_provider1, cohort: cohort2) }
-    let(:participant_profile1) { create(:ect, :eligible_for_funding, school_cohort: school_cohort1, lead_provider: lead_provider1) }
-    let(:participant_profile2) { create(:ect, :eligible_for_funding, school_cohort: school_cohort1, lead_provider: lead_provider1) }
-    let(:participant_profile3) { create(:ect, :eligible_for_funding, school_cohort: school_cohort2, lead_provider: lead_provider1) }
+    let(:school_cohort_current) { create(:school_cohort, :fip, :with_induction_programme, lead_provider: lead_provider1, cohort: cohort_current) }
+    let(:school_cohort_previous) { create(:school_cohort, :fip, :with_induction_programme, lead_provider: lead_provider1, cohort: cohort_previous) }
+    let(:participant_profile1) { create(:ect, :eligible_for_funding, school_cohort: school_cohort_current, lead_provider: lead_provider1) }
+    let(:participant_profile2) { create(:ect, :eligible_for_funding, school_cohort: school_cohort_current, lead_provider: lead_provider1) }
+    let(:participant_profile3) { create(:ect, :eligible_for_funding, school_cohort: school_cohort_previous, lead_provider: lead_provider1) }
 
     let(:cpd_lead_provider2) { create(:cpd_lead_provider, :with_lead_provider) }
     let(:lead_provider2) { cpd_lead_provider2.lead_provider }
-    let(:school_cohort3) { create(:school_cohort, :fip, :with_induction_programme, lead_provider: lead_provider2, cohort: cohort2) }
+    let(:school_cohort3) { create(:school_cohort, :fip, :with_induction_programme, lead_provider: lead_provider2, cohort: cohort_previous) }
     let(:participant_profile4) { create(:ect, :eligible_for_funding, school_cohort: school_cohort3, lead_provider: lead_provider1) }
 
     let(:delivery_partner1) { create(:delivery_partner) }
@@ -166,14 +165,14 @@ RSpec.describe "API Participant Declarations", type: :request do
 
       context "when filtering by cohort" do
         it "returns all participant declarations for one" do
-          get "/api/v3/participant-declarations", params: { filter: { cohort: cohort2.display_name } }
+          get "/api/v3/participant-declarations", params: { filter: { cohort: cohort_previous.display_name } }
 
           expect(parsed_response["data"].size).to eql(1)
           expect(parsed_response.dig("data", 0, "id")).to eql(participant_declaration3.id)
         end
 
         it "returns all participant declarations for many" do
-          get "/api/v3/participant-declarations", params: { filter: { cohort: [cohort1.display_name, cohort2.display_name].join(",") } }
+          get "/api/v3/participant-declarations", params: { filter: { cohort: [cohort_current.display_name, cohort_previous.display_name].join(",") } }
 
           expect(parsed_response["data"].size).to eql(3)
           expect(parsed_response.dig("data", 0, "id")).to eql(participant_declaration3.id)
@@ -501,7 +500,8 @@ RSpec.describe "API Participant Declarations", type: :request do
         let(:course_identifier) { npq_course.identifier }
         let(:declaration_type)  { "completed" }
         let(:has_passed) { nil }
-        let!(:contract) { create(:npq_contract, npq_course:, npq_lead_provider: cpd_lead_provider.npq_lead_provider) }
+        let!(:contract_current_cohort) { create(:npq_contract, npq_course:, npq_lead_provider: cpd_lead_provider.npq_lead_provider, cohort: cohort_current) }
+        let!(:contract_previous_cohort) { create(:npq_contract, npq_course:, npq_lead_provider: cpd_lead_provider.npq_lead_provider, cohort: cohort_previous) }
         let(:params) do
           {
             data: {
@@ -637,14 +637,16 @@ RSpec.describe "API Participant Declarations", type: :request do
         end
 
         let(:new_participant_declaration) do
-          create(
-            :participant_declaration,
-            user: participant_profile.user,
-            cpd_lead_provider:,
-            participant_profile:,
-            course_identifier: "ecf-induction",
-            declaration_type: "retained-1",
-          )
+          travel_to participant_profile.schedule.milestones.find_by!(declaration_type: "retained-1").start_date + 2.days do
+            create(
+              :participant_declaration,
+              user: participant_profile.user,
+              cpd_lead_provider:,
+              participant_profile:,
+              course_identifier: "ecf-induction",
+              declaration_type: "retained-1",
+            )
+          end
         end
 
         before do
@@ -776,14 +778,16 @@ RSpec.describe "API Participant Declarations", type: :request do
         end
 
         let(:new_participant_declaration) do
-          create(
-            :participant_declaration,
-            user: participant_profile.user,
-            cpd_lead_provider:,
-            participant_profile:,
-            course_identifier: "ecf-induction",
-            declaration_type: "retained-1",
-          )
+          travel_to participant_profile.schedule.milestones.find_by!(declaration_type: "retained-1").start_date + 2.days do
+            create(
+              :participant_declaration,
+              user: participant_profile.user,
+              cpd_lead_provider:,
+              participant_profile:,
+              course_identifier: "ecf-induction",
+              declaration_type: "retained-1",
+            )
+          end
         end
 
         before do
