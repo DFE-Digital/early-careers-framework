@@ -74,6 +74,16 @@ RSpec.describe ApiRequestJob do
     expect(ApiRequest.find_by(request_path: "/api/v1/bar").request_body).to eq("foo" => "meh")
   end
 
+  it "saves request data from PUT requests" do
+    described_class.new.perform({
+      body: { "foo" => "meh" }.to_json,
+      path: "/api/v1/bar",
+      method: "PUT",
+    }, {}, 500, Time.zone.now)
+
+    expect(ApiRequest.find_by(request_path: "/api/v1/bar").request_body).to eq("foo" => "meh")
+  end
+
   it "records when POST data is not valid JSON" do
     described_class.new.perform({
       body: "This is not JSON",
