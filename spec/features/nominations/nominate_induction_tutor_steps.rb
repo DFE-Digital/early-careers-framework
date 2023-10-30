@@ -5,6 +5,8 @@ module NominateInductionTutorSteps
 
   def given_a_valid_nomination_email_has_been_created
     @nomination_email = create(:nomination_email)
+    @cohort = Cohort.current || create(:cohort, :current)
+    allow(Cohort).to receive(:active_registration_cohort).and_return(@cohort)
     @school_cohort = create(:school_cohort, :fip, school: @nomination_email.school)
   end
 
@@ -14,6 +16,8 @@ module NominateInductionTutorSteps
 
   def given_an_email_address_for_another_school_sit_already_exists
     @nomination_email = create(:nomination_email, :email_address_already_used_for_another_school)
+    @cohort = Cohort.current || create(:cohort, :current)
+    allow(Cohort).to receive(:active_registration_cohort).and_return(@cohort)
     @school_cohort = create(:school_cohort, :fip, school: @nomination_email.school)
   end
 
