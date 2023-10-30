@@ -320,4 +320,43 @@ RSpec.describe Finance::NPQ::StatementCalculator do
       expect(subject.total_clawbacks.to_f).to eq(160.0 + 100.0)
     end
   end
+
+  describe "NPQContract with special_course" do
+    let!(:npq_maths_course) { create(:npq_leadership_course, identifier: "npq-leading-primary-mathematics") }
+
+    let(:leading_maths_contract) do
+      npq_lead_provider.npq_contracts.find_by(
+        version: statement.contract_version,
+        cohort: statement.cohort,
+        course_identifier: npq_maths_course.identifier,
+      )
+    end
+
+    before do
+      travel_to statement.deadline_date do
+        create_list(:npq_participant_declaration, 3, :eligible, npq_course:, cpd_lead_provider:)
+        create_list(:npq_participant_declaration, 7, :eligible, npq_course: npq_maths_course, cpd_lead_provider:)
+      end
+    end
+
+    context "when leading_maths_contract has special_course is false" do
+      it "totals all course types" do
+        expect(NPQContract.count).to eql(2)
+        expect(subject.total_output_payment.to_f).to eq(160.0 * 10)
+        expect(subject.total_starts.to_f).to eq(10)
+      end
+    end
+
+    context "when leading_maths_contract has special_course is true" do
+      before do
+        leading_maths_contract.update!(special_course: true)
+      end
+
+      it "totals only totals course types that are not special" do
+        expect(NPQContract.count).to eql(2)
+        expect(subject.total_output_payment.to_f).to eq(160.0 * 3)
+        expect(subject.total_starts.to_f).to eq(3)
+      end
+    end
+  end
 end

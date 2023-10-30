@@ -10,28 +10,35 @@ module Oneoffs::NPQ
 
     def call
       ActiveRecord::Base.transaction do
+        old_contracts = []
+
         statements.each do |statement|
-          npq_lead_provider = statement.npq_lead_provider
-          version = statement.contract_version
+          NPQContract.where(
+            version: statement.contract_version,
+            npq_lead_provider: statement.npq_lead_provider,
+            cohort: statement.cohort,
+          ).each do |contract|
+            # Contract already set to true
+            next if contract.special_course
 
-          old_contract = NPQContract.where(
-            version:,
-            npq_lead_provider:,
-            cohort:,
-            course_identifier:,
-          ).first!
+            old_contracts << contract
+          end
+        end
 
-          # Contract already set to true
-          next if old_contract.special_course
+        old_contracts.uniq!
 
-          new_version = Finance::ECF::ContractVersion.new(version).increment!
+        old_contracts.each do |old_contract|
+          new_version = Finance::ECF::ContractVersion.new(old_contract.version).increment!
 
           new_contract = old_contract.dup
           new_contract.version = new_version
-          new_contract.special_course = true
+          new_contract.special_course = (old_contract.course_identifier == course_identifier)
           new_contract.save!
 
-          statement.update!(contract_version: new_version)
+          statements.where(
+            cpd_lead_provider: old_contract.npq_lead_provider.cpd_lead_provider,
+            contract_version: old_contract.version,
+          ).update!(contract_version: new_version)
         end
       end
     end
@@ -45,7 +52,7 @@ module Oneoffs::NPQ
     end
 
     def statements
-      @statements ||= Finance::Statement::NPQ.where(cohort:, payment_date: payment_date_range)
+      @statements = Finance::Statement::NPQ.where(cohort:, payment_date: payment_date_range)
     end
   end
 end
