@@ -124,6 +124,7 @@ RSpec.describe "Transferring a mentor with a different provider", type: :feature
   # given
   def given_there_are_two_schools_that_have_chosen_fip_for_2021_and_partnered
     @cohort = Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021)
+    allow(Cohort).to receive(:active_registration_cohort).and_return(@cohort)
     @school_one = create(:school, name: "Fip School 1")
     @school_two = create(:school, name: "Fip School 2")
     create(:school_cohort, school: @school_one, cohort: Cohort.find_by(start_year: 2022) || create(:cohort, start_year: 2022), induction_programme_choice: "full_induction_programme")
