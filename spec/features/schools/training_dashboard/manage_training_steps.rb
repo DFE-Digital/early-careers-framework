@@ -144,7 +144,8 @@ module ManageTrainingSteps
 
   def given_there_are_multiple_schools_and_an_induction_coordinator
     cohort = create :cohort, :current
-
+    allow(Cohort).to receive(:active_registration_cohort).and_return(cohort)
+    
     first_school = create :school, name: "Test School 1", slug: "111111-test-school-1", urn: "111111"
     create(:school_cohort, :cip, school: first_school, cohort:)
 
