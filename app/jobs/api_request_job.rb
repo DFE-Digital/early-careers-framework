@@ -4,7 +4,7 @@ class ApiRequestJob
   include Sidekiq::Worker
   include ActionController::HttpAuthentication::Token
 
-  def perform(request_data, response_data, status_code, created_at)
+  def perform(request_data, response_data, status_code, created_at, request_uuid)
     request_data = request_data.with_indifferent_access
     response_data = response_data.with_indifferent_access
     request_headers = request_data.fetch(:headers, {})
@@ -14,7 +14,7 @@ class ApiRequestJob
     response_headers = response_data[:headers]
     response_body = response_data[:body]
 
-    ApiRequest.create!(
+    api_request = ApiRequest.create!(
       request_path: request_data[:path],
       request_headers:,
       request_body: request_body(request_data),
@@ -26,6 +26,33 @@ class ApiRequestJob
       cpd_lead_provider:,
       created_at:,
     )
+
+    # control if/when we want that to run for testing purposes
+    return unless FeatureFlag.active?(:send_api_request_to_analytics)
+
+    # exclude or only send for specific endpoints
+    return if request_data[:path] == "/api/v1/npq-profiles"
+
+    event = DfE::Analytics::Event.new
+      .with_type(:api_request)
+      .with_entity_table_name("api_requests")
+      .with_user(api_request.cpd_lead_provider)
+      .with_request_uuid(request_uuid)
+      .with_data({
+        id: api_request.id,
+        request_path: api_request.request_path,
+        request_headers: api_request.request_headers,
+        request_body: api_request.request_body,
+        request_method: api_request.request_method,
+        response_headers: api_request.response_headers,
+        response_body: api_request.response_body,
+        status_code: api_request.status_code,
+        user_description: api_request.user_description,
+        cpd_lead_provider: api_request.cpd_lead_provider_id,
+        created_at: api_request.created_at,
+      })
+
+    DfE::Analytics::SendEvents.do([event])
   end
 
 private
