@@ -22,7 +22,11 @@ module Api
         # Remove this code once all application statuses have been migrated.
         def set_npq_applications
           ecf_ids = params[:ecf_ids].split(",")
-          @npq_applications = NPQApplication.where("updated_at >= ? OR id IN (?)", 1.week.ago, ecf_ids).select(:lead_provider_approval_status, :id, :participant_identity_id)
+
+          @npq_applications = NPQApplication
+            .where(id: ecf_ids)
+            .or(NPQApplication.where(updated_at: 1.week.ago..))
+            .select(:lead_provider_approval_status, :id, :participant_identity_id)
         end
       end
     end
