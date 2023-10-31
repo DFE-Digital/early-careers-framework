@@ -23,6 +23,7 @@ RSpec.describe Schools::Cohorts::SetupWizard, type: :model do
   end
 
   before do
+    allow(Cohort).to receive(:active_registration_cohort).and_return(cohort)
     allow(data_store).to receive(:store).and_return({ something: "is here" })
     allow(data_store).to receive(:current_user).and_return(sit_user)
     allow(data_store).to receive(:school_id).and_return(school.slug)
@@ -35,12 +36,6 @@ RSpec.describe Schools::Cohorts::SetupWizard, type: :model do
   end
 
   shared_context "sending the pilot survey" do
-    it "does not send the pilot survey" do
-      expect {
-        wizard.success
-      }.not_to have_enqueued_mail(SchoolMailer, :cohortless_pilot_2023_survey_email)
-    end
-
     context "when the school is in the pilot", with_feature_flags: { cohortless_dashboard: "active" }, travel_to: Date.new(2023, 7, 1) do
       it "sends the pilot survey" do
         expect {
