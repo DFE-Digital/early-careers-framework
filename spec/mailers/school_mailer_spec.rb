@@ -76,7 +76,7 @@ RSpec.describe SchoolMailer, type: :mailer do
     end
 
     it "renders the right headers" do
-      expect(Cohort).to receive(:current).and_return(cohort).once
+      expect(Cohort).to receive(:active_registration_cohort).and_return(cohort).once
       expect(nomination_email.from).to eq(["mail@example.com"])
       expect(nomination_email.to).to eq([primary_contact_email])
     end
