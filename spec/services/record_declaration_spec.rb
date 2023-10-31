@@ -297,7 +297,7 @@ RSpec.describe RecordDeclaration do
 
   context "when the participant is an ECF" do
     let(:schedule)              { Finance::Schedule::ECF.find_by(schedule_identifier: "ecf-standard-september", cohort: current_cohort) }
-    let(:declaration_date)      { Date.new(current_cohort.start_year, 11, 1) } # FIXME: schedule.milestones.find_by(declaration_type: "started").start_date
+    let(:declaration_date)      { Date.new(current_cohort.start_year, 12, 2) } # FIXME: schedule.milestones.find_by(declaration_type: "started").start_date
     let(:traits)                { [] }
     let(:opts)                  { {} }
     let(:participant_profile) do

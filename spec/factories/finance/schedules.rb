@@ -9,8 +9,8 @@ FactoryBot.define do
           {
             name: "Output 1 - Participant Start",
             start_date: Date.new(start_year, 9, 1),
-            milestone_date: Date.new(start_year, 11, 30),
-            payment_date: Date.new(start_year, 11, 30),
+            milestone_date: Date.new(start_year, 12, 30),
+            payment_date: Date.new(start_year, 12, 30),
             declaration_type: "started",
           },
           {
