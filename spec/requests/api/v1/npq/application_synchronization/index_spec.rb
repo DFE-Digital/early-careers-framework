@@ -3,31 +3,46 @@
 require "rails_helper"
 
 RSpec.describe "NPQ Application Status API", type: :request do
-  let(:cpd_lead_provider) { create(:cpd_lead_provider) }
-  let(:token)             { NPQRegistrationApiToken.create_with_random_token!(cpd_lead_provider_id: cpd_lead_provider.id) }
-  let(:bearer_token)      { "Bearer #{token}" }
-  let(:parsed_response)   { JSON.parse(response.body)["data"]&.first }
-  let(:ecf_ids)           { SecureRandom.uuid }
-
-  before { default_headers[:Authorization] = bearer_token }
-
   describe "GET /api/v1/npq/application_synchronizations" do
-    let(:npq_application) { create(:npq_application) }
-    let(:pick_application) { NPQApplication.where(id: npq_application.id).pick(:lead_provider_approval_status, :id, :participant_identity_id) }
-    let(:state) do
-      participant_declaration_id = NPQApplication.participant_declaration_finder(pick_application.last)&.id
-      ParticipantOutcome::NPQ.latest_per_declaration&.find_by_participant_declaration_id(participant_declaration_id)&.state
+    let(:cpd_lead_provider) { create(:cpd_lead_provider) }
+    let(:token) { NPQRegistrationApiToken.create_with_random_token!(cpd_lead_provider_id: cpd_lead_provider.id) }
+    let(:npq_applications) { create_list(:npq_application, 2) }
+    let(:npq_application_ids) { npq_applications.map(&:id) }
+    let(:ecf_ids) { npq_applications.map(&:id).join(",") }
+    let(:bearer_token) { "Bearer #{token}" }
+    let(:response_data) { JSON.parse(response.body)["data"] }
+
+    before { default_headers[:Authorization] = bearer_token }
+
+    describe "uses the right serializer" do
+      before do
+        allow(Api::V1::NPQ::ApplicationSynchronizationSerializer).to receive(:new).with(npq_applications).and_call_original
+      end
+
+      it "uses the Api::V1::NPQ::ApplicationSynchronizationSerializer" do
+        get "/api/v1/npq/application_synchronizations", params: { ecf_ids: }
+
+        expect(Api::V1::NPQ::ApplicationSynchronizationSerializer).to have_received(:new).once.with(npq_applications)
+      end
     end
 
-    it "returns correct jsonapi content" do
-      @controller = Api::V1::NPQ::ApplicationSynchronizationsController.new
-      @controller.params = { "@npq_applications": npq_application }
-      get "/api/v1/npq/application_synchronizations", params: { ecf_ids: }
-      expect(parsed_response).to be_a(Hash)
-      expect(parsed_response["attributes"]["id"]).to eq(npq_application.id.to_s)
-      expect(parsed_response["attributes"]["lead_provider_approval_status"]).to eq(npq_application.lead_provider_approval_status)
-      expect(parsed_response["attributes"]["participant_outcome_state"]).to eq(state)
-      expect(request.query_parameters["ecf_ids"]).to eq(ecf_ids)
+    context "when valid, existing uuids are sent" do
+      it "returns correct jsonapi content" do
+        get "/api/v1/npq/application_synchronizations", params: { ecf_ids: }
+
+        expect(response_data.map { |r| r["id"] }).to match_array(npq_application_ids)
+      end
+    end
+
+    context "when a blank entry is included" do
+      let(:ecf_ids) { "#{npq_applications.first.id},,#{npq_applications.second.id}" }
+
+      it "ignores it and returns the correct jsonapi content without erroring" do
+        get "/api/v1/npq/application_synchronizations", params: { ecf_ids: }
+
+        expect(response_data.size).to eq(2)
+        expect(response_data.map { |r| r["id"] }).to match_array(npq_application_ids)
+      end
     end
   end
 end
