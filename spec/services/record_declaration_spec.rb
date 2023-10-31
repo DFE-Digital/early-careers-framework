@@ -293,7 +293,7 @@ RSpec.describe RecordDeclaration do
 
   let!(:cohort_2020) { create(:cohort, start_year: 2020) }
   let!(:current_cohort) { Cohort.current || create(:cohort, :current) }
-  let!(:previous_cohort) { Cohort.current.previous || create(:cohort, start_year: Cohort.current.start_year - 1) }
+  let!(:previous_cohort) { Cohort.previous || create(:cohort, :previous) }
 
   context "when the participant is an ECF" do
     let(:schedule)              { Finance::Schedule::ECF.find_by(schedule_identifier: "ecf-standard-september", cohort: current_cohort) }
@@ -380,6 +380,8 @@ RSpec.describe RecordDeclaration do
     end
     let(:course_identifier) { npq_course.identifier }
     let!(:npq_contract) { create(:npq_contract, cohort: schedule.cohort, npq_course:, npq_lead_provider: cpd_lead_provider.npq_lead_provider) }
+    let!(:npq_contract_previous_cohort) { create(:npq_contract, cohort: Cohort.previous, npq_course:, npq_lead_provider: cpd_lead_provider.npq_lead_provider) }
+    let!(:npq_contract_2021_cohort) { create(:npq_contract, cohort: Cohort.find_by(start_year: 2021), npq_course:, npq_lead_provider: cpd_lead_provider.npq_lead_provider) }
     let!(:another_npq_cohort_contract) { create(:npq_contract, cohort: cohort_2020, npq_course:, npq_lead_provider: cpd_lead_provider.npq_lead_provider) }
 
     before do

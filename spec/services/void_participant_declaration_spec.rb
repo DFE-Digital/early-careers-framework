@@ -118,23 +118,24 @@ RSpec.describe VoidParticipantDeclaration do
       let(:npq_course) { create(:npq_leadership_course) }
       let(:declaration_type) { "completed" }
       let(:participant_profile) do
-        create(:npq_participant_profile, npq_lead_provider: cpd_lead_provider.npq_lead_provider, npq_course:)
+        create(:npq_participant_profile, npq_lead_provider: cpd_lead_provider.npq_lead_provider, npq_course:, schedule:)
       end
+      let!(:npq_contract) { create(:npq_contract, npq_course:, npq_lead_provider: cpd_lead_provider.npq_lead_provider) }
       let(:participant_declaration) do
-        travel_to declaration_date do
+        travel_to declaration_date + 2.days do
           create(:npq_participant_declaration, participant_profile:, cpd_lead_provider:, declaration_type:, declaration_date:, state: "paid", has_passed: true)
         end
       end
 
       before do
-        create(:npq_statement, :output_fee, deadline_date: 6.weeks.from_now, cpd_lead_provider:)
+        create(:npq_statement, :output_fee, deadline_date: declaration_date + 6.weeks, cpd_lead_provider:)
       end
 
       it "can be voided" do
         expect(participant_declaration.reload).to be_paid
         expect(participant_declaration.outcomes.count).to eql(1)
 
-        travel_to declaration_date + 1.day do
+        travel_to declaration_date + 3.day do
           subject.call
         end
         expect(participant_declaration.reload).to be_awaiting_clawback

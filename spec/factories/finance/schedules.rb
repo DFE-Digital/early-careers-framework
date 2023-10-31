@@ -95,11 +95,12 @@ FactoryBot.define do
 
     trait(:with_npq_milestones) do
       after(:create) do |schedule|
+        start_year = schedule.cohort.start_year
         [
-          { name: "Output 1 - Participant Start", start_date: Date.new(2021, 9, 1), payment_date: Date.new(2021, 11, 30), declaration_type: "started" },
-          { name: "Output 2 - Retention Point 1", start_date: Date.new(2021, 11, 1), payment_date: Date.new(2022, 2, 28), declaration_type: "retained-1" },
-          { name: "Output 3 - Retention Point 2", start_date: Date.new(2022, 2, 1), payment_date: Date.new(2022, 5, 31), declaration_type: "retained-2" },
-          { name: "Output 4 - Participant Completion", start_date: Date.new(2023, 2, 1), payment_date: Date.new(2023, 5, 31), declaration_type: "completed" },
+          { name: "Output 1 - Participant Start", start_date: Date.new(start_year, 9, 1), payment_date: Date.new(start_year, 11, 30), declaration_type: "started" },
+          { name: "Output 2 - Retention Point 1", start_date: Date.new(start_year, 11, 1), payment_date: Date.new(start_year + 1, 2, 28), declaration_type: "retained-1" },
+          { name: "Output 3 - Retention Point 2", start_date: Date.new(start_year + 1, 2, 1), payment_date: Date.new(start_year + 1, 5, 31), declaration_type: "retained-2" },
+          { name: "Output 4 - Participant Completion", start_date: Date.new(start_year + 2, 2, 1), payment_date: Date.new(start_year + 2, 5, 31), declaration_type: "completed" },
         ].each do |hash|
           Finance::Milestone.find_or_create_by!(
             schedule:,
