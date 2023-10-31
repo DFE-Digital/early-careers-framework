@@ -29,10 +29,12 @@ module Finance
       end
 
       def uplift_breakdown
+        available_uplifts = upper_band_limit - previous_fill_level_for_uplift + current_refundable_count_for_uplift
+
         @uplift_breakdown ||= {
           previous_count: previous_fill_level_for_uplift,
-          count: current_billable_count_for_uplift - current_refundable_count_for_uplift,
-          additions: current_billable_count_for_uplift,
+          count: [available_uplifts, current_billable_count_for_uplift - current_refundable_count_for_uplift].min,
+          additions: [available_uplifts, current_billable_count_for_uplift].min,
           subtractions: current_refundable_count_for_uplift,
         }
       end
@@ -168,6 +170,10 @@ module Finance
         statement.contract.bands.order(max: :asc)
       end
 
+      def upper_band_limit
+        bands.to_a.last.max
+      end
+
       def band_letters
         bands.zip(:a..:z).map { |e| e[1] }
       end
@@ -207,7 +213,7 @@ module Finance
           .where("participant_declarations.sparsity_uplift = true OR participant_declarations.pupil_premium_uplift = true")
           .count
 
-        billable - refundable
+        [upper_band_limit, billable - refundable].min
       end
 
       def current_billable_count_for_declaration_type(declaration_type)

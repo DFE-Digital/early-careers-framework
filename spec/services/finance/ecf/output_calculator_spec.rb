@@ -867,6 +867,40 @@ RSpec.describe Finance::ECF::OutputCalculator do
         end
       end
 
+      context "when there are uplifts on started declarations in excess of the upper band limit" do
+        let(:max_billable_declarations) { first_statement.contract.bands.map(&:max).max }
+
+        before do
+          declarations = create_list(
+            :ect_participant_declaration, max_billable_declarations + 1,
+            state: :paid,
+            pupil_premium_uplift: true,
+            declaration_type: "started"
+          )
+
+          declarations.each do |dec|
+            Finance::StatementLineItem.create!(
+              statement: first_statement,
+              participant_declaration: dec,
+              state: dec.state,
+            )
+          end
+        end
+
+        let(:expected) do
+          {
+            previous_count: 0,
+            count: max_billable_declarations,
+            additions: max_billable_declarations,
+            subtractions: 0,
+          }
+        end
+
+        it "does not count them" do
+          expect(first_statement_calc.uplift_breakdown).to eql(expected)
+        end
+      end
+
       context "when there are uplifts but not on started declarations" do
         before do
           declarations = create_list(
@@ -1083,6 +1117,87 @@ RSpec.describe Finance::ECF::OutputCalculator do
           expect(first_statement_calc.uplift_breakdown).to eql(statement_one_expectation)
           expect(second_statement_calc.uplift_breakdown).to eql(statement_two_expectation)
           expect(third_statement_calc.uplift_breakdown).to eql(statement_three_expectation)
+        end
+      end
+
+      context "when the upper band limit is exceeded by previous statements" do
+        let(:max_billable_declarations) { first_statement.contract.bands.map(&:max).max }
+
+        before do
+          setup_statement_one
+          setup_statement_two
+        end
+
+        def setup_statement_one
+          declarations = create_list(
+            :ect_participant_declaration, max_billable_declarations + 1,
+            state: :paid,
+            pupil_premium_uplift: true
+          )
+
+          declarations.each do |dec|
+            Finance::StatementLineItem.create!(
+              statement: first_statement,
+              participant_declaration: dec,
+              state: dec.state,
+            )
+          end
+        end
+
+        def setup_statement_two
+          declarations = create_list(
+            :ect_participant_declaration, 3,
+            state: :paid,
+            pupil_premium_uplift: true
+          )
+
+          declarations.each do |dec|
+            Finance::StatementLineItem.create!(
+              statement: second_statement,
+              participant_declaration: dec,
+              state: dec.state,
+            )
+          end
+
+          clawback_line_items = first_statement
+            .billable_statement_line_items
+            .joins(:participant_declaration)
+            .where(participant_declarations: { state: "paid" })
+            .order(Arel.sql("RANDOM()"))
+            .limit(2)
+
+          clawback_line_items.each do |line_item|
+            Finance::StatementLineItem.create!(
+              statement: second_statement,
+              participant_declaration: line_item.participant_declaration,
+              state: "clawed_back",
+            )
+
+            line_item.participant_declaration.update!(state: "clawed_back")
+          end
+        end
+
+        let(:statement_one_expectation) do
+          {
+            previous_count: 0,
+            count: 8,
+            additions: 8,
+            subtractions: 0,
+          }
+        end
+
+        let(:statement_two_expectation) do
+          {
+            previous_count: 8,
+            count: 1,
+            additions: 2,
+            subtractions: 2,
+          }
+        end
+
+        it "returns correct uplifts" do
+          expect(first_statement_calc.uplift_breakdown).to eql(statement_one_expectation)
+          expect(second_statement_calc.uplift_breakdown).to eql(statement_two_expectation)
         end
       end
     end
