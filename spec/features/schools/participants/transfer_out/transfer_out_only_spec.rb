@@ -6,7 +6,7 @@ Dir.glob(Rails.root.join("db/new_seeds/scenarios/**/*.rb")).each do |scenario|
   require scenario
 end
 
-RSpec.describe "transfer out participants", type: :feature, js: true, rutabaga: false, travel_to: Time.zone.local(2022, 11, 21) do
+RSpec.describe "transfer out participants", type: :feature, js: true, rutabaga: false, travel_to: Time.zone.local(2022, 12, 21) do
   context "Transfer out an ECT" do
     before do
       allow_participant_transfer_mailers
@@ -74,13 +74,13 @@ RSpec.describe "transfer out participants", type: :feature, js: true, rutabaga: 
     def when_i_add_an_invalid_date
       legend = "When is #{@ect.full_name} leaving your school?"
 
-      fill_in_date(legend, with: "23-11-24")
+      fill_in_date(legend, with: "23-12-24")
     end
 
     def when_i_add_a_valid_end_date
       legend = "When is #{@ect.full_name} leaving your school?"
 
-      fill_in_date(legend, with: "2022-11-24")
+      fill_in_date(legend, with: "2022-12-24")
     end
 
     def when_i_select(option)
@@ -106,7 +106,7 @@ RSpec.describe "transfer out participants", type: :feature, js: true, rutabaga: 
     def then_i_should_be_on_the_check_your_answers_page
       expect(page).to have_selector("h1", text: "Check your answers")
       expect(page).to have_selector("dd", text: @ect.full_name)
-      expect(page).to have_selector("dd", text: Date.new(2022, 11, 24).to_fs(:govuk))
+      expect(page).to have_selector("dd", text: Date.new(2022, 12, 24).to_fs(:govuk))
     end
 
     def then_i_should_be_on_the_complete_page

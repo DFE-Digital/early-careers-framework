@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "old and new SIT transferring the same participant", type: :feature, js: true, rutabaga: false, travel_to: Time.zone.local(2021, 11, 21) do
+RSpec.describe "old and new SIT transferring the same participant", type: :feature, js: true, rutabaga: false, travel_to: Time.zone.local(2021, 12, 21) do
   context "Transfer out an ECT that has already been transferred in" do
     before do
       set_participant_data
@@ -83,7 +83,7 @@ RSpec.describe "old and new SIT transferring the same participant", type: :featu
     def when_i_add_a_valid_end_date
       legend = "When is #{@participant_data[:full_name]} leaving your school?"
 
-      fill_in_date(legend, with: "2022-11-24")
+      fill_in_date(legend, with: "2022-12-24")
     end
 
     def when_i_select(option)
@@ -179,7 +179,7 @@ RSpec.describe "old and new SIT transferring the same participant", type: :featu
         trn: "1001000",
         full_name: "Sally Teacher",
         start_date: Time.zone.today.prev_month,
-        end_date: Date.new(2022, 11, 24),
+        end_date: Date.new(2022, 12, 24),
         email: "sally-teacher@example.com",
       }
     end

@@ -8,7 +8,7 @@ FactoryBot.define do
   factory :cohort do
     start_year { Faker::Number.unique.between(from: 2022, to: 2100) }
     registration_start_date { Date.new(start_year.to_i, 6, 5) }
-    academic_year_start_date { Date.new(start_year.to_i, 11, 1) }
+    academic_year_start_date { Date.new(start_year.to_i, 12, 1) }
     automatic_assignment_period_end_date { Date.new(start_year.to_i + 1, 3, 31) }
 
     initialize_with do
@@ -16,15 +16,15 @@ FactoryBot.define do
     end
 
     trait :previous do
-      start_year { Date.current.year - (Date.current.month < 11 ? 2 : 1) }
+      start_year { Date.current.year - (Date.current.month < 12 ? 2 : 1) }
     end
 
     trait :current do
-      start_year { Date.current.year - (Date.current.month < 11 ? 1 : 0) }
+      start_year { Date.current.year - (Date.current.month < 12 ? 1 : 0) }
     end
 
     trait :next do
-      start_year { Date.current.year + (Date.current.month < 11 ? 0 : 1) }
+      start_year { Date.current.year + (Date.current.month < 12 ? 0 : 1) }
     end
 
     trait :consecutive_years do
