@@ -23,6 +23,7 @@ RSpec.describe ParticipantProfilePolicy, type: :policy do
     it { is_expected.to forbid_action(:show) }
     it { is_expected.to forbid_action(:destroy) }
     it { is_expected.to forbid_actions(%i[edit_cohort update_cohort]) }
+    it { is_expected.to forbid_actions(%i[edit_induction_status confirm_induction_status]) }
   end
 
   context "being a super user admin" do
@@ -30,6 +31,7 @@ RSpec.describe ParticipantProfilePolicy, type: :policy do
     let(:user) { scenario.user }
 
     it { is_expected.to permit_actions(%i[edit_cohort update_cohort]) }
+    it { is_expected.to permit_actions(%i[edit_induction_status confirm_induction_status]) }
   end
 
   describe described_class::Scope do
