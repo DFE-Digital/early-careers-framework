@@ -86,6 +86,11 @@ RSpec.describe "API Participant Declarations", type: :request do
       )
     end
 
+    let(:npq_only_lead_provider) { create(:cpd_lead_provider, :with_npq_lead_provider) }
+    let(:npq_lead_provider) { npq_only_lead_provider.npq_lead_provider }
+    let(:npq_application) { create(:npq_application, :accepted, :with_started_declaration, npq_lead_provider:) }
+    let!(:npq_participant_declarations) { npq_application.profile.participant_declarations }
+
     context "when unauthorized" do
       it "returns 401 for invalid bearer token" do
         default_headers[:Authorization] = "Bearer ugLPicDrpGZdD_w7hhCL"
@@ -249,6 +254,17 @@ RSpec.describe "API Participant Declarations", type: :request do
           get "/api/v3/participant-declarations", params: { filter: { delivery_partner_id: "does_not_exist" } }
 
           expect(parsed_response["data"].size).to eql(0)
+        end
+      end
+
+      context "with an npq only provider" do
+        let!(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: npq_only_lead_provider) }
+
+        it "returns the NPQ IDs only" do
+          get "/api/v3/participant-declarations"
+
+          participant_declaration_ids = npq_participant_declarations.pluck(:id)
+          expect(parsed_response["data"][0]["id"]).to be_in(participant_declaration_ids)
         end
       end
     end
@@ -490,7 +506,7 @@ RSpec.describe "API Participant Declarations", type: :request do
       end
 
       context "when NPQ participant has completed declaration" do
-        let(:cpd_lead_provider)     { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider) }
+        let(:cpd_lead_provider)     { create(:cpd_lead_provider, :with_npq_lead_provider) }
         let(:schedule)              { NPQCourse.schedule_for(npq_course:) }
         let(:declaration_date)      { schedule.milestones.find_by(declaration_type:).start_date + 1.day }
         let(:npq_course) { create(:npq_leadership_course) }

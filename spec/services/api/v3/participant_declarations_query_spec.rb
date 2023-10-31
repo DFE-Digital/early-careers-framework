@@ -23,6 +23,11 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery do
   let(:delivery_partner2) { create(:delivery_partner) }
   let(:params) { {} }
 
+  let(:npq_only_lead_provider) { create(:cpd_lead_provider, :with_npq_lead_provider) }
+  let(:npq_lead_provider) { npq_only_lead_provider.npq_lead_provider }
+  let(:npq_application) { create(:npq_application, :accepted, :with_started_declaration, npq_lead_provider:) }
+  let!(:npq_participant_declarations) { npq_application.profile.participant_declarations }
+
   subject { described_class.new(cpd_lead_provider: cpd_lead_provider1, params:) }
 
   describe "#participant_declarations_for_pagination" do
@@ -201,6 +206,14 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery do
 
       it "returns no participant declarations" do
         expect(subject.participant_declarations_for_pagination.to_a).to be_empty
+      end
+    end
+
+    context "with npq only lead provider" do
+      subject { described_class.new(cpd_lead_provider: npq_only_lead_provider, params:) }
+
+      it "returns all participant declarations for that provider" do
+        expect(subject.participant_declarations_for_pagination.pluck(:id)).to eq(npq_participant_declarations.pluck(:id))
       end
     end
   end
