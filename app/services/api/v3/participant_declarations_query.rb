@@ -66,7 +66,9 @@ module Api
 
     private
 
-      delegate :lead_provider, to: :cpd_lead_provider
+      def lead_provider
+        cpd_lead_provider.lead_provider if cpd_lead_provider.respond_to?(:lead_provider)
+      end
 
       def declarations_scope
         scope = ParticipantDeclaration.for_lead_provider(cpd_lead_provider)
@@ -81,7 +83,8 @@ module Api
 
       def previous_declarations_scope
         scope = with_joins(ParticipantDeclaration)
-          .where(participant_profile: { induction_records: { induction_programme: { partnerships: { lead_provider_id: lead_provider.id } } } })
+        scope = scope
+          .where(participant_profile: { induction_records: { induction_programme: { partnerships: { lead_provider_id: lead_provider&.id } } } })
           .where(participant_profile: { induction_records: { induction_status: "active" } }) # only want induction records that are the winning latest ones
           .where(state: %w[submitted eligible payable paid])
 
