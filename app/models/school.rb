@@ -118,15 +118,15 @@ class School < ApplicationRecord
   end
 
   def participants_for(cohort)
-    school_cohorts.find_by(cohort:)&.active_ecf_participants || []
+    active_profiles_for(cohort:).map(&:user)
   end
 
   def early_career_teacher_profiles_for(cohort)
-    school_cohorts.find_by(cohort:)&.ecf_participant_profiles&.ects&.active_record || []
+    active_profiles_for(cohort:, type: ParticipantProfile::ECT)
   end
 
   def mentor_profiles_for(cohort)
-    school_cohorts.find_by(cohort:)&.ecf_participant_profiles&.mentors&.active_record || []
+    active_profiles_for(cohort:, type: ParticipantProfile::Mentor)
   end
 
   def mentors
@@ -204,5 +204,19 @@ private
 
   def cip_only_establishment_type?
     CIP_ONLY_TYPE_CODES.include?(school_type_code)
+  end
+
+  def active_profiles_for(cohort:, type: ParticipantProfile)
+    school_cohort = school_cohorts.find_by(cohort:)
+    type
+      .joins(induction_records: { induction_programme: :school_cohort })
+      .includes(:user)
+      .where(
+        induction_records: {
+          induction_programmes: { school_cohort: },
+        },
+        status: :active,
+      )
+      .distinct
   end
 end
