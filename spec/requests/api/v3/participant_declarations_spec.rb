@@ -257,7 +257,7 @@ RSpec.describe "API Participant Declarations", type: :request do
         end
       end
 
-      context "with an npq only provider" do
+      context "with an NPQ only provider" do
         let!(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: npq_only_lead_provider) }
 
         it "returns the NPQ IDs only" do
@@ -285,6 +285,53 @@ RSpec.describe "API Participant Declarations", type: :request do
             expect(parsed_response["data"].size).to eql(2)
             expect(parsed_response.dig("data", 0, "id")).to be_in(participant_declaration_ids)
             expect(parsed_response.dig("data", 1, "id")).to be_in(participant_declaration_ids)
+          end
+
+          it "returns no participant declarations if no matches" do
+            get "/api/v3/participant-declarations", params: { filter: { cohort: "3100" } }
+
+            expect(parsed_response["data"].size).to eql(0)
+          end
+        end
+      end
+
+      context "with an NPQ and ECF provider" do
+        let(:cpd_lead_provider1) { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider) }
+        let(:npq_lead_provider) { cpd_lead_provider1.npq_lead_provider }
+
+        it "returns the declaration ids" do
+          get "/api/v3/participant-declarations"
+
+          participant_declaration_ids = npq_participant_declarations.pluck(:id) + [participant_declaration1, participant_declaration2, participant_declaration3].map(&:id)
+          expect(parsed_response["data"].size).to eql(participant_declaration_ids.size)
+          expect(parsed_response["data"][0]["id"]).to be_in(participant_declaration_ids)
+          expect(parsed_response["data"][1]["id"]).to be_in(participant_declaration_ids)
+          expect(parsed_response["data"][2]["id"]).to be_in(participant_declaration_ids)
+          expect(parsed_response["data"][3]["id"]).to be_in(participant_declaration_ids)
+        end
+
+        context "when filtering by cohort" do
+          let!(:another_npq_application) { create(:npq_application, :accepted, :with_started_declaration, npq_lead_provider:, cohort: cohort2) }
+
+          it "returns all participant declarations for one" do
+            get "/api/v3/participant-declarations", params: { filter: { cohort: cohort2.display_name } }
+
+            participant_declaration_ids = another_npq_application.profile.participant_declarations.pluck(:id) + [participant_declaration3.id]
+            expect(parsed_response["data"].size).to eql(participant_declaration_ids.size)
+            expect(parsed_response.dig("data", 0, "id")).to be_in(participant_declaration_ids)
+            expect(parsed_response.dig("data", 1, "id")).to be_in(participant_declaration_ids)
+          end
+
+          it "returns all participant declarations for many" do
+            get "/api/v3/participant-declarations", params: { filter: { cohort: [cohort1.display_name, cohort2.display_name].join(",") } }
+
+            participant_declaration_ids = another_npq_application.profile.participant_declarations.pluck(:id) + npq_participant_declarations.pluck(:id) + [participant_declaration1, participant_declaration2, participant_declaration3].map(&:id)
+
+            expect(parsed_response["data"].size).to eql(participant_declaration_ids.size)
+            expect(parsed_response["data"][0]["id"]).to be_in(participant_declaration_ids)
+            expect(parsed_response["data"][1]["id"]).to be_in(participant_declaration_ids)
+            expect(parsed_response["data"][2]["id"]).to be_in(participant_declaration_ids)
+            expect(parsed_response["data"][3]["id"]).to be_in(participant_declaration_ids)
           end
 
           it "returns no participant declarations if no matches" do

@@ -78,12 +78,22 @@ module Api
         scope = ParticipantDeclaration.for_lead_provider(cpd_lead_provider)
 
         if cohort_years.present?
-          scope = with_joins(scope).where(participant_profile: { induction_records: { cohorts: { start_year: cohort_years } } }) if lead_provider.present?
-
-          scope = scope.left_outer_joins(participant_profile: [schedule: :cohort]).where(participant_profile: { schedule: { cohorts: { start_year: cohort_years } } }) if npq_lead_provider.present?
+          scope = ecf_cohort_for(scope).or(npq_cohort_for(scope))
         end
 
         scope
+      end
+
+      def ecf_cohort_for(scope)
+        return ParticipantDeclaration.none if lead_provider.blank?
+
+        with_joins(scope).where(participant_profile: { induction_records: { cohorts: { start_year: cohort_years } } })
+      end
+
+      def npq_cohort_for(scope)
+        return ParticipantDeclaration.none if npq_lead_provider.blank?
+
+        with_joins(scope).where(participant_profile: { type: "ParticipantProfile::NPQ", schedule: { cohorts: { start_year: cohort_years } } })
       end
 
       def ecf_previous_declarations_scope
@@ -110,10 +120,11 @@ module Api
       def with_joins(scope)
         scope.left_outer_joins(
           participant_profile: [
-            induction_records: [
+            [schedule: :cohort],
+            { induction_records: [
               :cohort,
               { induction_programme: :partnership },
-            ],
+            ] },
           ],
         )
       end
