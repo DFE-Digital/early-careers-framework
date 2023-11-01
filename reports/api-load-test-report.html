@@ -1,0 +1,2027 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template ">
+  <head>
+    <meta charset="utf-8">
+    <title>Performance test report - EDUCATION.GOV.UK</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#003a69"> 
+    
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    
+      <link rel="shortcut icon" sizes="16x16 32x32 48x48" href="https://design-system.service.gov.uk/assets/images/favicon.ico" type="image/x-icon">
+      <link rel="mask-icon" href="https://design-system.service.gov.uk/assets/images/govuk-mask-icon.svg" color="#003a69"> 
+      <link rel="apple-touch-icon" sizes="180x180" href="https://design-system.service.gov.uk/assets/images/govuk-apple-touch-icon-180x180.png">
+      <link rel="apple-touch-icon" sizes="167x167" href="https://design-system.service.gov.uk/assets/images/govuk-apple-touch-icon-167x167.png">
+      <link rel="apple-touch-icon" sizes="152x152" href="https://design-system.service.gov.uk/assets/images/govuk-apple-touch-icon-152x152.png">
+      <link rel="apple-touch-icon" href="https://design-system.service.gov.uk/assets/images/govuk-apple-touch-icon.png">
+    
+
+    
+  <link href="https://design-system.service.gov.uk/stylesheets/main-8b722cf33a433600f925958f167685f3.css" rel="stylesheet">
+
+  <style>
+    .app-card {
+      background-color: #f3f2f1;
+      display: block;
+      padding: 10px;
+      text-decoration: none;
+      font-family: "GDS Transport", arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-weight: 400;
+      font-size: 16px;
+      font-size: 1rem;
+      line-height: 1.25;
+    }
+    @media print {
+      .app-card {
+        font-family: sans-serif;
+      }
+    }
+    @media (min-width: 40.0625em) {
+      .app-card {
+        font-size: 19px;
+        font-size: 1.1875rem;
+        line-height: 1.3157894737;
+      }
+    }
+    @media print {
+      .app-card {
+        font-size: 14pt;
+        line-height: 1.15;
+      }
+    }
+    @media (min-width: 48.0625em) {
+      .app-card {
+        padding: 20px;
+      }
+    }
+
+    .app-card--blue {
+      background: #1d70b8;
+      color: #ffffff;
+    }
+
+    .app-card--grey {
+      color: #383f43;
+      background: #eeefef;
+    }
+
+    .app-card--purple {
+      color: #3d2375;
+      background: #dbd5e9;
+    }
+
+    .app-card--turquoise {
+      color: #10403c;
+      background: #bfe3e0;
+    }
+
+    .app-card--light-blue {
+      color: #144e81;
+      background: #d2e2f1;
+    }
+
+    .app-card--yellow {
+      color: #594d00;
+      background: #fff7bf;
+    }
+
+    .app-card--orange {
+      color: #6e3619;
+      background: #fcd6c3;
+    }
+
+    .app-card--red {
+      color: #942514;
+      background: #f6d7d2;
+    }
+
+    .app-card--pink {
+      color: #80224d;
+      background: #f7d7e6;
+    }
+
+    .app-card--green {
+      color: #005a30;
+      background: #cce2d8;
+    }
+
+    .app-card--red {
+      color: #942514;
+      background: #f6d7d2;
+    }
+
+    .failed {
+      color: #942514;
+      background: #f6d7d2;
+    }
+
+    .app-card--white {
+      background-color: #ffffff;
+    }
+
+    .app-card__count {
+      font-family: "GDS Transport", arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-weight: 700;
+      font-size: 53px;
+      font-size: 3.3125rem;
+      line-height: 1.0377358491;
+      display: block;
+    }
+    @media print {
+      .app-card__count {
+        font-family: sans-serif;
+      }
+    }
+    @media (min-width: 40.0625em) {
+      .app-card__count {
+        font-size: 80px;
+        font-size: 5rem;
+        line-height: 1;
+      }
+    }
+    @media print {
+      .app-card__count {
+        font-size: 53pt;
+        line-height: 1.1;
+      }
+    }
+
+    .app-card__secondary-count {
+      font-family: "GDS Transport", arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-weight: 700;
+      font-size: 32px;
+      font-size: 2rem;
+      line-height: 1.09375;
+      display: block;
+    }
+    @media print {
+      .app-card__secondary-count {
+        font-family: sans-serif;
+      }
+    }
+    @media (min-width: 40.0625em) {
+      .app-card__secondary-count {
+        font-size: 48px;
+        font-size: 3rem;
+        line-height: 1.0416666667;
+      }
+    }
+    @media print {
+      .app-card__secondary-count {
+        font-size: 32pt;
+        line-height: 1.15;
+      }
+    }
+  </style>
+
+
+    
+    
+    <meta property="og:image" content="https://design-system.service.gov.uk/assets/images/govuk-opengraph-image.png">
+    
+  </head>
+  <body class="govuk-template__body ">
+    <script>document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
+    
+
+    
+      <a href="#main-content" class="govuk-skip-link" data-module="govuk-skip-link">Skip to main content</a>
+
+    
+
+    
+      
+
+<header class="govuk-header " role="banner" data-module="govuk-header">
+  <div class="govuk-header__container govuk-width-container">
+    <div class="govuk-header__logo">
+      <a href="/" class="govuk-header__link govuk-header__link--homepage">
+        <span class="govuk-header__logotype">
+          <!--[if gt IE 8]><!-->
+          <svg
+            aria-hidden="true"
+            focusable="false"
+            class="govuk-header__logotype-crown"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 132 97"
+            height="30"
+            width="36"
+          >
+            <path
+              fill="currentColor" fill-rule="evenodd"
+              d="M25 30.2c3.5 1.5 7.7-.2 9.1-3.7 1.5-3.6-.2-7.8-3.9-9.2-3.6-1.4-7.6.3-9.1 3.9-1.4 3.5.3 7.5 3.9 9zM9 39.5c3.6 1.5 7.8-.2 9.2-3.7 1.5-3.6-.2-7.8-3.9-9.1-3.6-1.5-7.6.2-9.1 3.8-1.4 3.5.3 7.5 3.8 9zM4.4 57.2c3.5 1.5 7.7-.2 9.1-3.8 1.5-3.6-.2-7.7-3.9-9.1-3.5-1.5-7.6.3-9.1 3.8-1.4 3.5.3 7.6 3.9 9.1zm38.3-21.4c3.5 1.5 7.7-.2 9.1-3.8 1.5-3.6-.2-7.7-3.9-9.1-3.6-1.5-7.6.3-9.1 3.8-1.3 3.6.4 7.7 3.9 9.1zm64.4-5.6c-3.6 1.5-7.8-.2-9.1-3.7-1.5-3.6.2-7.8 3.8-9.2 3.6-1.4 7.7.3 9.2 3.9 1.3 3.5-.4 7.5-3.9 9zm15.9 9.3c-3.6 1.5-7.7-.2-9.1-3.7-1.5-3.6.2-7.8 3.7-9.1 3.6-1.5 7.7.2 9.2 3.8 1.5 3.5-.3 7.5-3.8 9zm4.7 17.7c-3.6 1.5-7.8-.2-9.2-3.8-1.5-3.6.2-7.7 3.9-9.1 3.6-1.5 7.7.3 9.2 3.8 1.3 3.5-.4 7.6-3.9 9.1zM89.3 35.8c-3.6 1.5-7.8-.2-9.2-3.8-1.4-3.6.2-7.7 3.9-9.1 3.6-1.5 7.7.3 9.2 3.8 1.4 3.6-.3 7.7-3.9 9.1zM69.7 17.7l8.9 4.7V9.3l-8.9 2.8c-.2-.3-.5-.6-.9-.9L72.4 0H59.6l3.5 11.2c-.3.3-.6.5-.9.9l-8.8-2.8v13.1l8.8-4.7c.3.3.6.7.9.9l-5 15.4v.1c-.2.8-.4 1.6-.4 2.4 0 4.1 3.1 7.5 7 8.1h.2c.3 0 .7.1 1 .1.4 0 .7 0 1-.1h.2c4-.6 7.1-4.1 7.1-8.1 0-.8-.1-1.7-.4-2.4V34l-5.1-15.4c.4-.2.7-.6 1-.9zM66 92.8c16.9 0 32.8 1.1 47.1 3.2 4-16.9 8.9-26.7 14-33.5l-9.6-3.4c1 4.9 1.1 7.2 0 10.2-1.5-1.4-3-4.3-4.2-8.7L108.6 76c2.8-2 5-3.2 7.5-3.3-4.4 9.4-10 11.9-13.6 11.2-4.3-.8-6.3-4.6-5.6-7.9 1-4.7 5.7-5.9 8-.5 4.3-8.7-3-11.4-7.6-8.8 7.1-7.2 7.9-13.5 2.1-21.1-8 6.1-8.1 12.3-4.5 20.8-4.7-5.4-12.1-2.5-9.5 6.2 3.4-5.2 7.9-2 7.2 3.1-.6 4.3-6.4 7.8-13.5 7.2-10.3-.9-10.9-8-11.2-13.8 2.5-.5 7.1 1.8 11 7.3L80.2 60c-4.1 4.4-8 5.3-12.3 5.4 1.4-4.4 8-11.6 8-11.6H55.5s6.4 7.2 7.9 11.6c-4.2-.1-8-1-12.3-5.4l1.4 16.4c3.9-5.5 8.5-7.7 10.9-7.3-.3 5.8-.9 12.8-11.1 13.8-7.2.6-12.9-2.9-13.5-7.2-.7-5 3.8-8.3 7.1-3.1 2.7-8.7-4.6-11.6-9.4-6.2 3.7-8.5 3.6-14.7-4.6-20.8-5.8 7.6-5 13.9 2.2 21.1-4.7-2.6-11.9.1-7.7 8.8 2.3-5.5 7.1-4.2 8.1.5.7 3.3-1.3 7.1-5.7 7.9-3.5.7-9-1.8-13.5-11.2 2.5.1 4.7 1.3 7.5 3.3l-4.7-15.4c-1.2 4.4-2.7 7.2-4.3 8.7-1.1-3-.9-5.3 0-10.2l-9.5 3.4c5 6.9 9.9 16.7 14 33.5 14.8-2.1 30.8-3.2 47.7-3.2z"
+            ></path>
+          </svg>
+          <!--<![endif]-->
+          <!--[if IE 8]>
+          <img src="/assets/images/govuk-logotype-crown.png" class="govuk-header__logotype-crown-fallback-image" width="36" height="32" alt="">
+          <![endif]-->
+          <span class="govuk-header__logotype-text">
+            GOV.UK
+          </span>
+        </span>
+        
+      </a>
+    </div>
+    
+  </div>
+</header>
+
+    
+
+    
+      <div class="govuk-width-container ">
+        
+        <main class="govuk-main-wrapper " id="main-content" role="main">
+          
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-xl">
+        <span class="govuk-caption-xl">Continuing Professional Development</span>
+        Performance summary
+      </h1>
+    </div>
+  </div>
+
+  <div class="govuk-!-margin-bottom-4">
+    <div class="app-card app-card--blue">
+      <span class="app-card__count">679</span>
+      <span class="app-card__count"></span>
+        Total Requests
+    </div>
+  </div>
+
+  <div class="govuk-grid-row govuk-!-margin-bottom-4">
+    <div class="govuk-grid-column-one-third">
+      <div class="app-card app-card--red">
+        <span class="app-card__count">2</span>
+          Failed Requests
+      </div>
+    </div>
+
+    <div class="govuk-grid-column-one-third">
+      <div class="app-card app-card--red">
+        <span class="app-card__count">12</span>
+          Breached Thresholds
+      </div>
+    </div>
+
+    <div class="govuk-grid-column-one-third">
+      <div class="app-card app-card--grey">
+        <span class="app-card__count">0</span>
+          Failed Checks
+      </div>
+    </div>
+  </div>
+
+  <table class="govuk-table">
+  
+  <caption class="govuk-table__caption govuk-table__caption--m">Standard request metrics</caption>
+  
+  
+  <thead class="govuk-table__head">
+    <tr class="govuk-table__row">
+    
+      <th scope="col" class="govuk-table__header"></th>
+    
+      <th scope="col" class="govuk-table__header govuk-table__header--numeric">Count</th>
+    
+      <th scope="col" class="govuk-table__header govuk-table__header--numeric">Rate</th>
+    
+      <th scope="col" class="govuk-table__header govuk-table__header--numeric">Average</th>
+    
+      <th scope="col" class="govuk-table__header govuk-table__header--numeric">Maximum</th>
+    
+      <th scope="col" class="govuk-table__header govuk-table__header--numeric">Median</th>
+    
+      <th scope="col" class="govuk-table__header govuk-table__header--numeric">Minimum</th>
+    
+      <th scope="col" class="govuk-table__header govuk-table__header--numeric">90th Percentile</th>
+    
+      <th scope="col" class="govuk-table__header govuk-table__header--numeric">95th Percentile</th>
+    
+    </tr>
+  </thead>
+  
+  <tbody class="govuk-table__body">
+    
+      
+        <tr class="govuk-table__row">
+        
+          
+          
+          <th scope="row" class="govuk-table__header govuk-body-s"
+          >http_req_duration</th>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >10488.61</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >59970.38</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >9512.53</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >707.33</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >18410.50</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >23445.47</td>
+          
+        
+        </tr>
+      
+    
+      
+        <tr class="govuk-table__row">
+        
+          
+          
+          <th scope="row" class="govuk-table__header govuk-body-s"
+          >http_req_waiting</th>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >10443.64</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >59970.31</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >9486.05</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >707.14</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >18345.53</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >23431.08</td>
+          
+        
+        </tr>
+      
+    
+      
+        <tr class="govuk-table__row">
+        
+          
+          
+          <th scope="row" class="govuk-table__header govuk-body-s"
+          >http_req_connecting</th>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >0.01</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >0.79</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+        </tr>
+      
+    
+      
+        <tr class="govuk-table__row">
+        
+          
+          
+          <th scope="row" class="govuk-table__header govuk-body-s"
+          >http_req_tls_handshaking</th>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+        </tr>
+      
+    
+      
+        <tr class="govuk-table__row">
+        
+          
+          
+          <th scope="row" class="govuk-table__header govuk-body-s"
+          >http_req_sending</th>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >0.06</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >2.64</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >0.05</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >0.01</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >0.10</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >0.13</td>
+          
+        
+        </tr>
+      
+    
+      
+        <tr class="govuk-table__row">
+        
+          
+          
+          <th scope="row" class="govuk-table__header govuk-body-s"
+          >http_req_receiving</th>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >44.91</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >696.05</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >3.19</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >197.28</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >294.17</td>
+          
+        
+        </tr>
+      
+    
+      
+        <tr class="govuk-table__row">
+        
+          
+          
+          <th scope="row" class="govuk-table__header govuk-body-s"
+          >http_req_blocked</th>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >0.03</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >3.85</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >0.01</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >0.00</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >0.01</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >0.02</td>
+          
+        
+        </tr>
+      
+    
+      
+        <tr class="govuk-table__row">
+        
+          
+          
+          <th scope="row" class="govuk-table__header govuk-body-s"
+          >iteration_duration</th>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >79699.71</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >115699.71</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >80605.28</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >47034.21</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >88539.33</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >91083.94</td>
+          
+        
+        </tr>
+      
+    
+      
+        <tr class="govuk-table__row">
+        
+          
+          
+          <th scope="row" class="govuk-table__header govuk-body-s"
+          >group_duration</th>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >17916.67</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >63445.00</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >15366.41</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >2452.88</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >32140.10</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >37121.20</td>
+          
+        
+        </tr>
+      
+    
+  </tbody>
+</table>
+
+
+  
+    <table class="govuk-table">
+  
+  <caption class="govuk-table__caption govuk-table__caption--m">Custom request metrics</caption>
+  
+  
+  <thead class="govuk-table__head">
+    <tr class="govuk-table__row">
+    
+      <th scope="col" class="govuk-table__header"></th>
+    
+      <th scope="col" class="govuk-table__header govuk-table__header--numeric">Count</th>
+    
+      <th scope="col" class="govuk-table__header govuk-table__header--numeric">Rate</th>
+    
+      <th scope="col" class="govuk-table__header govuk-table__header--numeric">Average</th>
+    
+      <th scope="col" class="govuk-table__header govuk-table__header--numeric">Maximum</th>
+    
+      <th scope="col" class="govuk-table__header govuk-table__header--numeric">Median</th>
+    
+      <th scope="col" class="govuk-table__header govuk-table__header--numeric">Minimum</th>
+    
+      <th scope="col" class="govuk-table__header govuk-table__header--numeric">90th Percentile</th>
+    
+      <th scope="col" class="govuk-table__header govuk-table__header--numeric">95th Percentile</th>
+    
+    </tr>
+  </thead>
+  
+  <tbody class="govuk-table__body">
+    
+      
+        <tr class="govuk-table__row">
+        
+          
+          
+          <th scope="row" class="govuk-table__header govuk-body-s"
+          >dropped_iterations</th>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >482</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >0.77</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+        </tr>
+      
+    
+      
+        <tr class="govuk-table__row">
+        
+          
+          
+          <th scope="row" class="govuk-table__header govuk-body-s"
+          >http_req_duration{scenario:api-load-test,group:::API v1::/participants/ecf?page[page]=first}</th>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >10647.66</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s failed"
+          >59970.38</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >10049.99</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >2146.29</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >16482.62</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s failed"
+          >18478.49</td>
+          
+        
+        </tr>
+      
+    
+      
+        <tr class="govuk-table__row">
+        
+          
+          
+          <th scope="row" class="govuk-table__header govuk-body-s"
+          >http_req_duration{scenario:api-load-test,group:::API v1::/participants/ecf?page[page]=last}</th>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >7388.32</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s failed"
+          >24676.78</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >5771.28</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >707.33</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >14109.37</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s failed"
+          >18191.12</td>
+          
+        
+        </tr>
+      
+    
+      
+        <tr class="govuk-table__row">
+        
+          
+          
+          <th scope="row" class="govuk-table__header govuk-body-s"
+          >http_req_duration{scenario:api-load-test,group:::API v2::/participants/ecf?page[page]=first}</th>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >8858.62</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s failed"
+          >25532.51</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >9038.07</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >1134.31</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >13015.52</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s failed"
+          >13999.74</td>
+          
+        
+        </tr>
+      
+    
+      
+        <tr class="govuk-table__row">
+        
+          
+          
+          <th scope="row" class="govuk-table__header govuk-body-s"
+          >http_req_duration{scenario:api-load-test,group:::API v2::/participants/ecf?page[page]=last}</th>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >8228.85</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s failed"
+          >24375.76</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >6977.83</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >993.41</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >15424.82</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s failed"
+          >18752.91</td>
+          
+        
+        </tr>
+      
+    
+      
+        <tr class="govuk-table__row">
+        
+          
+          
+          <th scope="row" class="govuk-table__header govuk-body-s"
+          >http_req_duration{scenario:api-load-test,group:::API v3::/participants/ecf?page[page]=first}</th>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >16899.43</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s failed"
+          >33160.03</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >15286.84</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >5130.05</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >26101.26</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s failed"
+          >27383.93</td>
+          
+        
+        </tr>
+      
+    
+      
+        <tr class="govuk-table__row">
+        
+          
+          
+          <th scope="row" class="govuk-table__header govuk-body-s"
+          >http_req_duration{scenario:api-load-test,group:::API v3::/participants/ecf?page[page]=last}</th>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >11222.06</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s failed"
+          >27772.18</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >10423.69</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >2721.81</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >17995.81</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s failed"
+          >19649.91</td>
+          
+        
+        </tr>
+      
+    
+      
+        <tr class="govuk-table__row">
+        
+          
+          
+          <th scope="row" class="govuk-table__header govuk-body-s"
+          >http_req_failed{scenario:api-load-test,group:::API v1::/participants/ecf?page[page]=first}</th>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s good"
+          >0.02</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+        </tr>
+      
+    
+      
+        <tr class="govuk-table__row">
+        
+          
+          
+          <th scope="row" class="govuk-table__header govuk-body-s"
+          >http_req_failed{scenario:api-load-test,group:::API v1::/participants/ecf?page[page]=last}</th>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s good"
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+        </tr>
+      
+    
+      
+        <tr class="govuk-table__row">
+        
+          
+          
+          <th scope="row" class="govuk-table__header govuk-body-s"
+          >http_req_failed{scenario:api-load-test,group:::API v2::/participants/ecf?page[page]=first}</th>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s good"
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+        </tr>
+      
+    
+      
+        <tr class="govuk-table__row">
+        
+          
+          
+          <th scope="row" class="govuk-table__header govuk-body-s"
+          >http_req_failed{scenario:api-load-test,group:::API v2::/participants/ecf?page[page]=last}</th>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s good"
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+        </tr>
+      
+    
+      
+        <tr class="govuk-table__row">
+        
+          
+          
+          <th scope="row" class="govuk-table__header govuk-body-s"
+          >http_req_failed{scenario:api-load-test,group:::API v3::/participants/ecf?page[page]=first}</th>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s good"
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+        </tr>
+      
+    
+      
+        <tr class="govuk-table__row">
+        
+          
+          
+          <th scope="row" class="govuk-table__header govuk-body-s"
+          >http_req_failed{scenario:api-load-test,group:::API v3::/participants/ecf?page[page]=last}</th>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s good"
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-body-s "
+          >-</td>
+          
+        
+        </tr>
+      
+    
+  </tbody>
+</table>
+
+  
+
+  <div class="govuk-inset-text govuk-body-s">
+  Note. All times are in milli-seconds
+</div>
+
+
+  <h2 class="govuk-heading-m">Other stats</h2>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+      
+        <table class="govuk-table">
+  
+  
+  <thead class="govuk-table__head">
+    <tr class="govuk-table__row">
+    
+      <th scope="col" class="govuk-table__header"></th>
+    
+      <th scope="col" class="govuk-table__header govuk-table__header--numeric">Passed</th>
+    
+      <th scope="col" class="govuk-table__header govuk-table__header--numeric">Failed</th>
+    
+    </tr>
+  </thead>
+  
+  <tbody class="govuk-table__body">
+    
+      
+        <tr class="govuk-table__row">
+        
+          
+          
+          <th scope="row" class="govuk-table__header govuk-!-width-one-half"
+          >Checks</th>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-width-one-quarter"
+          >1013</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-width-one-quarter"
+          >345</td>
+          
+        
+        </tr>
+      
+    
+  </tbody>
+</table>
+
+      
+    </div>
+
+    <div class="govuk-grid-column-one-half">
+      
+        <table class="govuk-table">
+  
+  
+  <thead class="govuk-table__head">
+    <tr class="govuk-table__row">
+    
+      <th scope="col" class="govuk-table__header"></th>
+    
+      <th scope="col" class="govuk-table__header govuk-table__header--numeric">Total</th>
+    
+      <th scope="col" class="govuk-table__header govuk-table__header--numeric">Rate</th>
+    
+    </tr>
+  </thead>
+  
+  <tbody class="govuk-table__body">
+    
+      
+        <tr class="govuk-table__row">
+        
+          
+          
+          <th scope="row" class="govuk-table__header govuk-!-width-one-half"
+          >Iterations</th>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-width-one-quarter"
+          >109</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-width-one-quarter"
+          >0.17</td>
+          
+        
+        </tr>
+      
+    
+  </tbody>
+</table>
+
+      
+    </div>
+
+    <div class="govuk-grid-column-one-half">
+      <table class="govuk-table">
+  
+  
+  <thead class="govuk-table__head">
+    <tr class="govuk-table__row">
+    
+      <th scope="col" class="govuk-table__header"></th>
+    
+      <th scope="col" class="govuk-table__header govuk-table__header--numeric">Min</th>
+    
+      <th scope="col" class="govuk-table__header govuk-table__header--numeric">Max</th>
+    
+    </tr>
+  </thead>
+  
+  <tbody class="govuk-table__body">
+    
+      
+        <tr class="govuk-table__row">
+        
+          
+          
+          <th scope="row" class="govuk-table__header govuk-!-width-one-half"
+          >Virtual Users</th>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-width-one-quarter"
+          >1</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-width-one-quarter"
+          >15</td>
+          
+        
+        </tr>
+      
+    
+  </tbody>
+</table>
+
+    </div>
+
+    <div class="govuk-grid-column-one-half">
+      <table class="govuk-table">
+  
+  
+  <thead class="govuk-table__head">
+    <tr class="govuk-table__row">
+    
+      <th scope="col" class="govuk-table__header"></th>
+    
+      <th scope="col" class="govuk-table__header govuk-table__header--numeric">Total</th>
+    
+      <th scope="col" class="govuk-table__header govuk-table__header--numeric">Rate</th>
+    
+    </tr>
+  </thead>
+  
+  <tbody class="govuk-table__body">
+    
+      
+        <tr class="govuk-table__row">
+        
+          
+          
+          <th scope="row" class="govuk-table__header govuk-!-width-one-half"
+          >Requests</th>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-width-one-quarter"
+          >109</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-width-one-quarter"
+          >0.17/sec</td>
+          
+        
+        </tr>
+      
+    
+  </tbody>
+</table>
+
+    </div>
+
+    <div class="govuk-grid-column-one-half">
+      <table class="govuk-table">
+  
+  
+  <thead class="govuk-table__head">
+    <tr class="govuk-table__row">
+    
+      <th scope="col" class="govuk-table__header"></th>
+    
+      <th scope="col" class="govuk-table__header govuk-table__header--numeric">Total</th>
+    
+      <th scope="col" class="govuk-table__header govuk-table__header--numeric">Rate</th>
+    
+    </tr>
+  </thead>
+  
+  <tbody class="govuk-table__body">
+    
+      
+        <tr class="govuk-table__row">
+        
+          
+          
+          <th scope="row" class="govuk-table__header govuk-!-width-one-half"
+          >Data Received</th>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-width-one-quarter"
+          >457.32 MB</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-width-one-quarter"
+          >0.73 mB/s</td>
+          
+        
+        </tr>
+      
+    
+  </tbody>
+</table>
+
+    </div>
+
+    <div class="govuk-grid-column-one-half">
+      <table class="govuk-table">
+  
+  
+  <thead class="govuk-table__head">
+    <tr class="govuk-table__row">
+    
+      <th scope="col" class="govuk-table__header"></th>
+    
+      <th scope="col" class="govuk-table__header govuk-table__header--numeric">Total</th>
+    
+      <th scope="col" class="govuk-table__header govuk-table__header--numeric">Rate</th>
+    
+    </tr>
+  </thead>
+  
+  <tbody class="govuk-table__body">
+    
+      
+        <tr class="govuk-table__row">
+        
+          
+          
+          <th scope="row" class="govuk-table__header govuk-!-width-one-half"
+          >Data Sent</th>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-width-one-quarter"
+          >0.19 MB</td>
+          
+        
+          
+          
+          <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-width-one-quarter"
+          >0.00 mB/s</td>
+          
+        
+        </tr>
+      
+    
+  </tbody>
+</table>
+
+    </div>
+  </div>
+
+  
+
+        </main>
+      </div>
+    
+
+    
+      <footer class="govuk-footer " role="contentinfo">
+  <div class="govuk-width-container ">
+    
+    <div class="govuk-footer__meta">
+      <div class="govuk-footer__meta-item govuk-footer__meta-item--grow">
+        
+        <svg
+          aria-hidden="true"
+          focusable="false"
+          class="govuk-footer__licence-logo"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 483.2 195.7"
+          height="17"
+          width="41"
+        >
+          <path
+            fill="currentColor"
+            d="M421.5 142.8V.1l-50.7 32.3v161.1h112.4v-50.7zm-122.3-9.6A47.12 47.12 0 0 1 221 97.8c0-26 21.1-47.1 47.1-47.1 16.7 0 31.4 8.7 39.7 21.8l42.7-27.2A97.63 97.63 0 0 0 268.1 0c-36.5 0-68.3 20.1-85.1 49.7A98 98 0 0 0 97.8 0C43.9 0 0 43.9 0 97.8s43.9 97.8 97.8 97.8c36.5 0 68.3-20.1 85.1-49.7a97.76 97.76 0 0 0 149.6 25.4l19.4 22.2h3v-87.8h-80l24.3 27.5zM97.8 145c-26 0-47.1-21.1-47.1-47.1s21.1-47.1 47.1-47.1 47.2 21 47.2 47S123.8 145 97.8 145"
+          />
+        </svg>
+        <span class="govuk-footer__licence-description">
+          
+            All content is available under the
+            <a
+              class="govuk-footer__link"
+              href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+              rel="license"
+            >Open Government Licence v3.0</a>, except where otherwise stated
+          
+        </span>
+      </div>
+      <div class="govuk-footer__meta-item">
+        <a
+          class="govuk-footer__link govuk-footer__copyright-logo"
+          href="https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/"
+        >© Crown copyright</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+    
+
+    
+  
+  <script src="https://design-system.service.gov.uk/javascripts/govuk-frontend-069e73dfb31aacad687703e346188e8c.js"></script>
+  <script>window.GOVUKFrontend.initAll()</script>
+
+  </body>
+</html>

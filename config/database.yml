@@ -35,6 +35,14 @@ review:
   <<: *default_primary
   sslmode: <%= ENV.fetch("DB_SSLMODE") { "require" } %>
 
+performance:
+  primary:
+    <<: *default_primary
+    database: 'early_careers_framework_performance'
+  analytics:
+    <<: *default_analytics
+    database: 'early_careers_framework_analytics_performance'
+
 sandbox:
   <% if ENV.key?("VCAP_APPLICATION") %>
 

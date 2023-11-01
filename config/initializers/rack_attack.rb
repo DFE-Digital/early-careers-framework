@@ -32,21 +32,23 @@ class Rack::Attack
     request.path == "/check"
   end
 
-  throttle("Login attempts by ip", limit: 5, period: 20.seconds) do |request|
-    if request.path == "/users/sign_in" && request.post?
-      request.remote_ip
+  unless Rails.env.performance?
+    throttle("Login attempts by ip", limit: 5, period: 20.seconds) do |request|
+      if request.path == "/users/sign_in" && request.post?
+        request.remote_ip
+      end
     end
-  end
 
-  throttle("API requests by ip", limit: 1000, period: 5.minutes) do |request|
-    if request.path.starts_with?(API_PATH)
-      request.get_header("HTTP_AUTHORIZATION")
+    throttle("API requests by ip", limit: 1000, period: 5.minutes) do |request|
+      if request.path.starts_with?(API_PATH)
+        request.get_header("HTTP_AUTHORIZATION")
+      end
     end
-  end
 
-  throttle("Non-API requests by ip", limit: 300, period: 5.minutes) do |request|
-    unless request.path.starts_with?(API_PATH)
-      request.remote_ip
+    throttle("Non-API requests by ip", limit: 300, period: 5.minutes) do |request|
+      unless request.path.starts_with?(API_PATH)
+        request.remote_ip
+      end
     end
   end
 end
