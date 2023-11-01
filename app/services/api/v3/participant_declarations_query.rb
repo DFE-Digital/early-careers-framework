@@ -17,7 +17,7 @@ module Api
         filterable_attributes = %i[id created_at user_id updated_at delivery_partner_id]
         scope = ParticipantDeclaration.union(
           declarations_scope.select(*filterable_attributes),
-          previous_declarations_scope.select(*filterable_attributes),
+          ecf_previous_declarations_scope.select(*filterable_attributes),
         )
 
         if participant_ids.present?
@@ -60,7 +60,7 @@ module Api
       def participant_declaration(id)
         ParticipantDeclaration.union(
           declarations_scope,
-          previous_declarations_scope,
+          ecf_previous_declarations_scope,
         ).find(id)
       end
 
@@ -70,25 +70,29 @@ module Api
         cpd_lead_provider.lead_provider if cpd_lead_provider.respond_to?(:lead_provider)
       end
 
+      def npq_lead_provider
+        cpd_lead_provider.npq_lead_provider if cpd_lead_provider.respond_to?(:npq_lead_provider)
+      end
+
       def declarations_scope
         scope = ParticipantDeclaration.for_lead_provider(cpd_lead_provider)
 
         if cohort_years.present?
-          scope = with_joins(scope)
-          scope = scope.where(participant_profile: { induction_records: { cohorts: { start_year: cohort_years } } })
+          scope = with_joins(scope).where(participant_profile: { induction_records: { cohorts: { start_year: cohort_years } } }) if lead_provider.present?
+
+          scope = scope.left_outer_joins(participant_profile: [schedule: :cohort]).where(participant_profile: { schedule: { cohorts: { start_year: cohort_years } } }) if npq_lead_provider.present?
         end
 
         scope
       end
 
-      def previous_declarations_scope
+      def ecf_previous_declarations_scope
         scope = with_joins(ParticipantDeclaration)
-        scope = scope
           .where(participant_profile: { induction_records: { induction_programme: { partnerships: { lead_provider_id: lead_provider&.id } } } })
           .where(participant_profile: { induction_records: { induction_status: "active" } }) # only want induction records that are the winning latest ones
           .where(state: %w[submitted eligible payable paid])
 
-        if cohort_years.present?
+        if cohort_years.present? && lead_provider.present?
           scope = scope.where(participant_profile: { induction_records: { cohorts: { start_year: cohort_years } } })
         end
 
