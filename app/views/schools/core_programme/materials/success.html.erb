@@ -9,14 +9,11 @@
             <strong><%= @cohort.description %></strong>
           <% end %>
 
-          <p>To access the training materials:</p>
-          <ol class="govuk-list govuk-list--number govuk-!-margin-bottom-7">
-            <li>Visit <%= govuk_link_to 'Support for early career teachers (opens in new tab)',
-            "https://support-for-early-career-teachers.education.gov.uk/users/sign-up",
-            target: :_blank,
-            rel: "noopener noreferrer" %>.</li>
-            <li>Enter your email address to create a new account.</li>
-          </ol>
+        <p class="govuk-body">To access the training materials, visit <%= govuk_link_to 'Support for early career teachers (opens in new tab)',
+              "https://support-for-early-career-teachers.education.gov.uk",
+              target: "_blank",
+              rel: "noopener noreferrer" %>.
+        </p>
 
         <%= govuk_link_to "Return to manage your training", schools_dashboard_path(school_id: @school.slug) %>
 
