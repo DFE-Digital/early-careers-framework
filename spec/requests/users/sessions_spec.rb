@@ -226,6 +226,10 @@ RSpec.describe "Users::Sessions", type: :request do
       let(:school) { user.schools.first }
       let!(:cohort) { create :cohort, :current }
 
+      before do
+        allow(Cohort).to receive(:active_registration_cohort).and_return(cohort)
+      end
+
       it "redirects to correct dashboard" do
         post "/users/sign_in_with_token", params: { login_token: user.login_token }
         follow_redirect!
