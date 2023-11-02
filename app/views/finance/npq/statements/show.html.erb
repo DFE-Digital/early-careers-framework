@@ -128,7 +128,7 @@
               <% if authorise_for_payment_button_visible?(@statement) %>
                 <%= button_to t("finance.statements.payment_authorisations.button"), new_finance_statement_payment_authorisation_path(@statement), method: :get, class: "govuk-button govuk-button--primary" %>
               <% elsif @statement.marked_as_paid? %>
-                <%= govuk_tag(text: t("finance.statements.payment_authorisations.tag.content", statement_marked_as_paid_at: @statement.marked_as_paid_at.strftime("%-I:%M%P on %-e %b %Y"))) %>
+                <%= govuk_tag(text: t("finance.statements.payment_authorisations.tag.content", statement_marked_as_paid_at: @statement.marked_as_paid_at.in_time_zone("London").strftime("%-I:%M%P on %-e %b %Y"))) %>
               <% else %>
                 &nbsp;
               <% end %>
