@@ -36,6 +36,7 @@ module UserHelper
     visit users_confirm_sign_in_path(login_token: @logged_in_admin_user.login_token)
     click_button "Continue"
   end
+  alias_method :and_i_sign_in_as_a_super_user_admin, :given_i_sign_in_as_a_super_user_admin
 
   def given_i_sign_in_as_a_finance_user
     token = "test-finance-token-#{Time.zone.now.to_f}"
