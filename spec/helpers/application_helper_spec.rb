@@ -12,10 +12,6 @@ RSpec.describe ApplicationHelper, type: :helper do
 
   let!(:cohort) { Cohort.current || create(:cohort, :current) }
 
-  before do
-    allow(Cohort).to receive(:active_registration_cohort).and_return(@cohort)
-  end
-
   describe "#induction_coordinator_dashboard_path" do
     it "returns schools/choose-programme for induction coordinators" do
       expect(helper.induction_coordinator_dashboard_path(induction_coordinator)).to eq("/schools/#{school.slug}/cohorts/#{cohort.start_year}/choose-programme")
@@ -35,11 +31,6 @@ RSpec.describe ApplicationHelper, type: :helper do
           create(:cohort,
                  start_year: Time.current.year,
                  registration_start_date: Time.current - 1.day)
-        end
-
-        before do
-          pilot!(school)
-          SchoolCohort.create!(school:, cohort: future_cohort, induction_programme_choice: "full_induction_programme")
         end
 
         it "returns the school dashboard path with the active registration tab selected" do
