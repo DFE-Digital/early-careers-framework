@@ -110,4 +110,9 @@ module AdminHelper
       OpenStruct.new(id: "withdrawn", value: "Withdrawn"),
     ]
   end
+
+  def allowed_to_change_induction_status?(participant_presenter)
+    policy(participant_presenter.participant_profile).edit_induction_status? &&
+      %w[withdrawn leaving].include?(participant_presenter.relevant_induction_record&.induction_status)
+  end
 end

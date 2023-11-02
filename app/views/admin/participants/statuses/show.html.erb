@@ -129,7 +129,7 @@ end %>
   sl.with_row do |row|
     row.with_key(text: "induction status")
     row.with_value(text: govuk_tag(text: @participant_presenter.relevant_induction_record&.induction_status || "No Induction Record Found", colour: "grey"))
-    if policy(@participant_presenter.participant_profile).edit_induction_status? && ['withdrawn', 'leaving'].include?(@participant_presenter.relevant_induction_record&.induction_status)
+    if allowed_to_change_induction_status?(@participant_presenter)
       row.with_action(
         href: edit_admin_participant_change_induction_status_path(@participant_presenter.participant_profile),
         visually_hidden_text: "induction status"
