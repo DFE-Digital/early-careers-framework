@@ -43,18 +43,22 @@ RSpec.feature "School contact making cohort choice journey", type: :feature, js:
   end
 
   context "During the cohortless pilot for 2023/24", travel_to: Date.new(2023, 7, 1) do
+    before do
+      cohort = Cohort.current || create(:cohort, :current)
+      allow(Cohort).to receive(:active_registration_cohort).and_return(cohort)
+    end
+
     include_context "School choosing how to setup their cohort" do
       let(:academic_year_text) { Cohort.current.description }
     end
 
-    context "when the school is in the pilot", with_feature_flags: { cohortless_dashboard: "active" } do
+    context "when the school is in the pilot" do
       before do
         create(:cohort, :next) if Cohort.next.blank?
-        allow(Cohort).to receive(:active_registration_cohort).and_return(Cohort.current)
       end
 
       include_context "School choosing how to setup their cohort" do
-        let(:academic_year_text) { Cohort.next.description }
+        let(:academic_year_text) { Cohort.active_registration_cohort.description }
       end
     end
   end
