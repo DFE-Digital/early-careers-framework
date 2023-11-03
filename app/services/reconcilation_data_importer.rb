@@ -27,7 +27,7 @@ private
     from_user = User.find_by(id: from_user_id)
     to_user = User.find_or_create_by!(id: to_user_id)
     if from_user.present? && to_user.present?
-      Identity::Transfer.call(from_user: from_user, to_user: to_user)
+      Identity::Transfer.call(from_user:, to_user:)
       Rails.logger.info("Data is successfully moved from #{from_user.email} to #{to_user.email}")
     else
       Rails.logger.info("Data is not updated because from_user is not present")
