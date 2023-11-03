@@ -1120,7 +1120,7 @@ RSpec.describe Finance::ECF::OutputCalculator do
         end
       end
 
-      context "when the upper band limit is exceeded by previous statements" do
+      context "when the upper band limit is met by previous statements" do
         let(:max_billable_declarations) { first_statement.contract.bands.map(&:max).max }
 
         before do
@@ -1130,7 +1130,7 @@ RSpec.describe Finance::ECF::OutputCalculator do
 
         def setup_statement_one
           declarations = create_list(
-            :ect_participant_declaration, max_billable_declarations + 1,
+            :ect_participant_declaration, max_billable_declarations,
             state: :paid,
             pupil_premium_uplift: true
           )
@@ -1189,7 +1189,7 @@ RSpec.describe Finance::ECF::OutputCalculator do
         let(:statement_two_expectation) do
           {
             previous_count: 8,
-            count: 1,
+            count: 0,
             additions: 2,
             subtractions: 2,
           }

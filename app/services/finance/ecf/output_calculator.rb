@@ -29,12 +29,10 @@ module Finance
       end
 
       def uplift_breakdown
-        available_uplifts = upper_band_limit - previous_fill_level_for_uplift + current_refundable_count_for_uplift
-
         @uplift_breakdown ||= {
           previous_count: previous_fill_level_for_uplift,
-          count: [available_uplifts, current_billable_count_for_uplift - current_refundable_count_for_uplift].min,
-          additions: [available_uplifts, current_billable_count_for_uplift].min,
+          count: current_billable_count_for_uplift - current_refundable_count_for_uplift,
+          additions: current_billable_count_for_uplift,
           subtractions: current_refundable_count_for_uplift,
         }
       end
@@ -95,7 +93,7 @@ module Finance
       # second pass subtracts refunds
       # third pass further subtracts refunds if statement is net negative
       def current_banding_for_declaration_type(declaration_type)
-        pot_size = current_billable_count_for_declaration_type(declaration_type)
+        pot_size = current_billable_declarations_for_type(declaration_type).count
 
         banding = previous_banding_for_declaration_type(declaration_type).map do |hash|
           band_capacity = hash[:max] - (hash[:min] - 1) - hash[:"previous_#{declaration_type.underscore}_count"]
@@ -110,7 +108,7 @@ module Finance
           hash
         end
 
-        pot_size = current_refundable_count_declaration_type(declaration_type)
+        pot_size = current_refundable_declarations_for_type(declaration_type).count
 
         banding = banding.reverse.map do |hash|
           fill_level = hash[:"#{declaration_type.underscore}_count"]
@@ -170,82 +168,79 @@ module Finance
         statement.contract.bands.order(max: :asc)
       end
 
-      def upper_band_limit
-        bands.to_a.last.max
-      end
-
       def band_letters
         bands.zip(:a..:z).map { |e| e[1] }
       end
 
-      def previous_fill_level_for_declaration_type(declaration_type)
-        billable = Finance::StatementLineItem
+      def current_billable_declarations_for_type(declaration_type)
+        statement
+          .billable_statement_line_items
+          .joins(:participant_declaration)
+          .where(participant_declarations: { declaration_type: })
+      end
+
+      def current_refundable_declarations_for_type(declaration_type)
+        statement
+          .refundable_statement_line_items
+          .joins(:participant_declaration)
+          .where(participant_declarations: { declaration_type: })
+      end
+
+      def previous_billable_declarations_for_type(declaration_type)
+        Finance::StatementLineItem
           .where(statement: statement.previous_statements)
           .billable
           .joins(:participant_declaration)
           .where(participant_declarations: { declaration_type: })
-          .count
+      end
 
-        refundable = Finance::StatementLineItem
+      def previous_refundable_declarations_for_type(declaration_type)
+        Finance::StatementLineItem
           .where(statement: statement.previous_statements)
           .refundable
           .joins(:participant_declaration)
           .where(participant_declarations: { declaration_type: })
-          .count
+      end
+
+      def previous_fill_level_for_declaration_type(declaration_type)
+        billable = previous_billable_declarations_for_type(declaration_type).count
+        refundable = previous_refundable_declarations_for_type(declaration_type).count
 
         billable - refundable
       end
 
       def previous_fill_level_for_uplift
-        billable = Finance::StatementLineItem
-          .where(statement: statement.previous_statements)
-          .billable
-          .joins(:participant_declaration)
-          .where(participant_declarations: { declaration_type: "started" })
+        billable = previous_billable_declarations_for_type(:started)
           .where("participant_declarations.sparsity_uplift = true OR participant_declarations.pupil_premium_uplift = true")
           .count
 
-        refundable = Finance::StatementLineItem
-          .where(statement: statement.previous_statements)
-          .refundable
-          .joins(:participant_declaration)
-          .where(participant_declarations: { declaration_type: "started" })
+        refundable = previous_refundable_declarations_for_type(:started)
           .where("participant_declarations.sparsity_uplift = true OR participant_declarations.pupil_premium_uplift = true")
           .count
 
-        [upper_band_limit, billable - refundable].min
-      end
-
-      def current_billable_count_for_declaration_type(declaration_type)
-        statement
-          .billable_statement_line_items
-          .joins(:participant_declaration)
-          .where(participant_declarations: { declaration_type: })
-          .count
-      end
-
-      def current_refundable_count_declaration_type(declaration_type)
-        statement
-          .refundable_statement_line_items
-          .joins(:participant_declaration)
-          .where(participant_declarations: { declaration_type: })
-          .count
+        billable - refundable
       end
 
       def current_billable_count_for_uplift
-        statement
-          .billable_statement_line_items
-          .joins(:participant_declaration)
-          .where(participant_declarations: { declaration_type: "started" })
+        # It doesn't seem to be straight forward to find out how many started declarations
+        # are being included in the current statement. In my digging it appears that if there are
+        # available slots then started_additions will be positive. If there are no available
+        # slots until after subtracting refundable declarations (net negative) then the
+        # started_count will be set to the number available (as a negative).
+        started_additions = banding_breakdown.sum { |hash| hash[:started_additions] }
+        started_count = banding_breakdown.sum { |hash| hash[:started_count] }.abs
+
+        current_billable_declarations_for_type(:started)
+          .limit([started_additions, started_count].max)
           .where("participant_declarations.sparsity_uplift = true OR participant_declarations.pupil_premium_uplift = true")
           .count
       end
 
       def current_refundable_count_for_uplift
-        statement
-          .refundable_statement_line_items
-          .joins(:participant_declaration)
-          .where(participant_declarations: { declaration_type: "started" })
+        refunded_count = banding_breakdown.sum { |hash| hash[:started_subtractions] }
+
+        current_refundable_declarations_for_type(:started)
+          .limit(refunded_count)
           .where("participant_declarations.sparsity_uplift = true OR participant_declarations.pupil_premium_uplift = true")
           .count
       end
