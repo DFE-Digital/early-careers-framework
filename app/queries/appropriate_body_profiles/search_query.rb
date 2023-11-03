@@ -5,11 +5,13 @@ module AppropriateBodyProfiles
     attr_reader :query, :scope
 
     def initialize(query:, scope: AppropriateBodyProfile.all)
-      @query = query.strip
+      @query = query&.strip
       @scope = scope
     end
 
     def call
+      return scope.includes(:user, :appropriate_body).order("users.full_name asc") if query.blank?
+
       scope
         .includes(:user, :appropriate_body)
         .where("users.full_name ILIKE ?", "%#{query}%")

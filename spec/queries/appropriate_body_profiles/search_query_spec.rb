@@ -18,7 +18,7 @@ RSpec.describe AppropriateBodyProfiles::SearchQuery do
       let(:query) { "A" }
 
       it "searches users by name" do
-        expect(subject).to match_array([appropriate_body_profile_a])
+        expect(subject).to eq([appropriate_body_profile_a])
       end
     end
 
@@ -26,15 +26,31 @@ RSpec.describe AppropriateBodyProfiles::SearchQuery do
       let(:query) { "user_a@" }
 
       it "searches users by email" do
-        expect(subject).to match_array([appropriate_body_profile_a])
+        expect(subject).to eq([appropriate_body_profile_a])
       end
     end
 
-    context "when the query includes part of the appropriate boby name of a user" do
+    context "when the query includes part of the appropriate body name of a user" do
       let(:query) { "Test" }
 
       it "searches users by appropriate body name" do
-        expect(subject).to match_array([appropriate_body_profile_a, appropriate_body_profile_b, appropriate_body_profile_c])
+        expect(subject).to eq([appropriate_body_profile_a, appropriate_body_profile_b, appropriate_body_profile_c])
+      end
+    end
+
+    context "when the query includes no matches" do
+      let(:query) { "XYZW123" }
+
+      it "returns empty" do
+        expect(subject).to be_empty
+      end
+    end
+
+    context "when the query is blank" do
+      let(:query) { "" }
+
+      it "returns all records" do
+        expect(subject).to eq([appropriate_body_profile_a, appropriate_body_profile_b, appropriate_body_profile_c])
       end
     end
   end

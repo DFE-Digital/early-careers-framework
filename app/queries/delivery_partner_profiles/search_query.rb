@@ -5,11 +5,13 @@ module DeliveryPartnerProfiles
     attr_reader :query, :scope
 
     def initialize(query:, scope: DeliveryPartnerProfile.all)
-      @query = query.strip
+      @query = query&.strip
       @scope = scope
     end
 
     def call
+      return scope.includes(:user, :delivery_partner).order("users.full_name ASC") if query.blank?
+
       scope
         .includes(:user, :delivery_partner)
         .where("users.full_name ILIKE ?", "%#{query}%")

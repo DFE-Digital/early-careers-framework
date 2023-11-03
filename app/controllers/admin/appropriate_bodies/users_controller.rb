@@ -69,8 +69,6 @@ module Admin
       end
 
       def scoped
-        return policy_scope(AppropriateBodyProfile).includes(:user).order("users.full_name asc") if params[:query].blank?
-
         ::AppropriateBodyProfiles::SearchQuery
           .new(query: params[:query], scope: policy_scope(AppropriateBodyProfile))
           .call

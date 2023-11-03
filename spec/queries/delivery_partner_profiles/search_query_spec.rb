@@ -18,7 +18,7 @@ RSpec.describe DeliveryPartnerProfiles::SearchQuery do
       let(:query) { "A" }
 
       it "searches users by name" do
-        expect(subject).to match_array([delivery_partner_profile_a])
+        expect(subject).to eq([delivery_partner_profile_a])
       end
     end
 
@@ -26,7 +26,7 @@ RSpec.describe DeliveryPartnerProfiles::SearchQuery do
       let(:query) { "user_a@" }
 
       it "searches users by email" do
-        expect(subject).to match_array([delivery_partner_profile_a])
+        expect(subject).to eq([delivery_partner_profile_a])
       end
     end
 
@@ -34,7 +34,23 @@ RSpec.describe DeliveryPartnerProfiles::SearchQuery do
       let(:query) { "Test" }
 
       it "searches users by delivery partner name" do
-        expect(subject).to match_array([delivery_partner_profile_a, delivery_partner_profile_b, delivery_partner_profile_c])
+        expect(subject).to eq([delivery_partner_profile_a, delivery_partner_profile_b, delivery_partner_profile_c])
+      end
+    end
+
+    context "when the query includes no matches" do
+      let(:query) { "XYZW123" }
+
+      it "returns empty" do
+        expect(subject).to be_empty
+      end
+    end
+
+    context "when the query is blank" do
+      let(:query) { "" }
+
+      it "returns all records" do
+        expect(subject).to eq([delivery_partner_profile_a, delivery_partner_profile_b, delivery_partner_profile_c])
       end
     end
   end
