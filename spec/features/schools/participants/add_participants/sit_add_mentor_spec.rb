@@ -50,6 +50,10 @@ RSpec.describe "SIT adding mentor", js: true do
 
     when_i_choose_summer_term_2023
     and_i_click_on_continue
+    then_i_am_taken_to_choose_sit_partnership_page
+
+    when_i_choose_current_providers
+    and_i_click_on_continue
     then_i_am_taken_to_check_answers_page
 
     when_i_click_confirm_and_add
@@ -112,7 +116,7 @@ RSpec.describe "SIT adding mentor", js: true do
     then_i_see_the_transferred_mentor_name
   end
 
-  scenario "Induction tutor adds a new mentor" do
+  scenario "Induction tutor adds a new mentor to current providers" do
     given_there_is_a_sit
 
     when_i_sign_in_as_sit
@@ -147,6 +151,10 @@ RSpec.describe "SIT adding mentor", js: true do
     then_i_am_taken_to_mentor_start_training_page
 
     when_i_choose_summer_term_2023
+    and_i_click_on_continue
+    then_i_am_taken_to_choose_mentor_partnership_page
+
+    when_i_choose_current_providers
     and_i_click_on_continue
     then_i_am_taken_to_check_answers_page
 

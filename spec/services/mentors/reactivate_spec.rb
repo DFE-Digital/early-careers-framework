@@ -46,6 +46,7 @@ RSpec.describe Mentors::Reactivate do
     expect {
       described_class.call(
         email: user.email,
+        induction_programme:,
         participant_profile:,
         school_cohort:,
       )
@@ -58,6 +59,7 @@ RSpec.describe Mentors::Reactivate do
     expect {
       described_class.call(
         email: user.email,
+        induction_programme:,
         participant_profile:,
         school_cohort:,
       )
@@ -68,6 +70,7 @@ RSpec.describe Mentors::Reactivate do
     expect {
       described_class.call(
         email: user.email,
+        induction_programme:,
         participant_profile:,
         school_cohort:,
       )
@@ -79,6 +82,7 @@ RSpec.describe Mentors::Reactivate do
       expect {
         described_class.call(
           email: user.email,
+          induction_programme:,
           participant_profile:,
           school_cohort:,
         )
@@ -86,7 +90,7 @@ RSpec.describe Mentors::Reactivate do
     end
   end
 
-  context "when there is no default induction programme set" do
+  context "when there is no induction programme given" do
     before do
       school_cohort.update!(default_induction_programme: nil)
     end
@@ -95,6 +99,7 @@ RSpec.describe Mentors::Reactivate do
       expect {
         described_class.call(
           email: user.email,
+          induction_programme: nil,
           participant_profile:,
           school_cohort:,
         )
@@ -103,28 +108,28 @@ RSpec.describe Mentors::Reactivate do
   end
 
   it "has no uplift if the school has not uplift set" do
-    described_class.call(email: user.email, participant_profile:, school_cohort:)
+    described_class.call(email: user.email, induction_programme:, participant_profile:, school_cohort:)
     expect(participant_profile.reload.pupil_premium_uplift).to be(false)
     expect(participant_profile.sparsity_uplift).to be(false)
   end
 
   it "has only pupil_premium_uplift set when the school has only pupil_premium_uplift set" do
     school_cohort.update!(school: pupil_premium_school)
-    described_class.call(email: user.email, participant_profile:, school_cohort:)
+    described_class.call(email: user.email, induction_programme:, participant_profile:, school_cohort:)
     expect(participant_profile.reload.pupil_premium_uplift).to be(true)
     expect(participant_profile.sparsity_uplift).to be(false)
   end
 
   it "has only sparsity_uplift set when the school has only sparsity_uplift set" do
     school_cohort.update!(school: sparsity_school)
-    described_class.call(email: user.email, participant_profile:, school_cohort:)
+    described_class.call(email: user.email, induction_programme:, participant_profile:, school_cohort:)
     expect(participant_profile.reload.pupil_premium_uplift).to be(false)
     expect(participant_profile.sparsity_uplift).to be(true)
   end
 
   it "has both sparsity_uplift and pupil_premium_uplift set when the school has both pupil_premium_uplift and sparsity_uplift set" do
     school_cohort.update!(school: uplift_school)
-    described_class.call(email: user.email, participant_profile:, school_cohort:)
+    described_class.call(email: user.email, induction_programme:, participant_profile:, school_cohort:)
     expect(participant_profile.reload.pupil_premium_uplift).to be(true)
     expect(participant_profile.sparsity_uplift).to be(true)
   end
@@ -133,6 +138,7 @@ RSpec.describe Mentors::Reactivate do
     expect {
       described_class.call(
         email: user.email,
+        induction_programme:,
         participant_profile:,
         school_cohort:,
       )

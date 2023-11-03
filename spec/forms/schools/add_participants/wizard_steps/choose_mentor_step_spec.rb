@@ -58,9 +58,18 @@ RSpec.describe Schools::AddParticipants::WizardSteps::ChooseMentorStep, type: :m
         end
       end
 
+      context "when a partnership needs to be chosen" do
+        it "should return choose_partnership" do
+          allow(wizard).to receive(:needs_to_confirm_appropriate_body?).and_return(false)
+          allow(wizard).to receive(:needs_to_choose_partnership?).and_return(true)
+          expect(step.next_step).to eql :choose_partnership
+        end
+      end
+
       context "when the school does not have an appropriate body set" do
         it "should return check_answers" do
           allow(wizard).to receive(:needs_to_confirm_appropriate_body?).and_return(false)
+          allow(wizard).to receive(:needs_to_choose_partnership?).and_return(false)
           expect(step.next_step).to eql :check_answers
         end
       end

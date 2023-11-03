@@ -157,6 +157,9 @@ RSpec.describe "Reporting participants with a known TRN", type: :feature, js: tr
       when_i_add_email_address_to_the_school_add_participant_wizard "Sally Teacher", participant_data[:email]
       then_the_page_is_accessible
 
+      when_i_choose_current_providers_on_the_school_add_participant_wizard
+      then_the_page_is_accessible
+
       when_i_confirm_and_add_on_the_school_add_participant_wizard
       then_the_page_is_accessible
 
@@ -183,6 +186,9 @@ RSpec.describe "Reporting participants with a known TRN", type: :feature, js: tr
       then_the_page_is_accessible
 
       when_i_choose_summer_term_on_the_school_add_participant_wizard
+      then_the_page_is_accessible
+
+      when_i_choose_current_providers_on_the_school_add_participant_wizard
       then_the_page_is_accessible
 
       when_i_confirm_and_add_on_the_school_add_participant_wizard

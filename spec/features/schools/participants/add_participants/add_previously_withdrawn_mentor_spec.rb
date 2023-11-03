@@ -71,7 +71,10 @@ RSpec.describe "Adding previously withdrawn Mentor", type: :feature, js: true do
 
       when_i_choose_summer_term_2023
       when_i_click_on_continue
+      then_i_am_taken_to_choose_mentor_partnership_page
 
+      when_i_choose_current_providers
+      when_i_click_on_continue
       then_i_am_taken_to_the_confirmation_page
       and_i_see_the_correct_details(joint_provider_details: true)
 
@@ -103,7 +106,10 @@ RSpec.describe "Adding previously withdrawn Mentor", type: :feature, js: true do
 
       when_i_choose_summer_term_2023
       when_i_click_on_continue
+      then_i_am_taken_to_choose_mentor_partnership_page
 
+      when_i_choose_current_providers
+      when_i_click_on_continue
       then_i_am_taken_to_the_confirmation_page
       and_i_see_the_correct_details(joint_provider_details: true)
 
@@ -132,7 +138,10 @@ RSpec.describe "Adding previously withdrawn Mentor", type: :feature, js: true do
 
       when_i_choose_summer_term_2023
       when_i_click_on_continue
+      then_i_am_taken_to_choose_mentor_partnership_page
 
+      when_i_choose_current_providers
+      when_i_click_on_continue
       then_i_am_taken_to_the_confirmation_page
       and_i_see_the_correct_details(joint_provider_details: true, expected_email: new_email)
 
@@ -159,7 +168,10 @@ RSpec.describe "Adding previously withdrawn Mentor", type: :feature, js: true do
 
       when_i_choose_summer_term_2023
       when_i_click_on_continue
+      then_i_am_taken_to_choose_mentor_partnership_page
 
+      when_i_choose_current_providers
+      when_i_click_on_continue
       then_i_am_taken_to_the_confirmation_page
       and_i_see_the_correct_details(joint_provider_details: true)
 
@@ -292,6 +304,10 @@ private
     expect(page).to have_content("Is this the appropriate body for George Mentor’s induction?")
   end
 
+  def then_i_am_taken_to_choose_mentor_partnership_page
+    expect(page).to have_selector("h1", text: "Who will George Mentor do their mentor training with?")
+  end
+
   def then_i_am_taken_to_the_confirmation_page
     expect(page).to have_content("Check your answers")
   end
@@ -378,5 +394,9 @@ private
 
   def when_i_click_on_continue
     click_on "Continue"
+  end
+
+  def when_i_choose_current_providers
+    choose option: "current_providers"
   end
 end

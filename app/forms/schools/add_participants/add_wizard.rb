@@ -11,13 +11,23 @@ module Schools
           start_term
           cannot_add_registration_not_yet_open
           cannot_add_yourself_as_ect
+          cannot_add_mentor_to_providers
           yourself
           need_training_setup
           choose_mentor
           confirm_appropriate_body
+          choose_partnership
           check_answers
           complete
         ]
+      end
+
+      def chosen_lead_provider
+        previous_providers? ? previous_cohort_lead_provider : lead_provider
+      end
+
+      def chosen_delivery_partner
+        previous_providers? ? previous_cohort_delivery_partner : delivery_partner
       end
 
       def save!
@@ -82,9 +92,8 @@ module Schools
         ect_participant? && mentor_id.blank? && mentor_options.any?
       end
 
-      # check answers helpers
-      def show_default_induction_programme_details?
-        !!(school_cohort&.default_induction_programme && school_cohort.default_induction_programme&.partnership&.active?)
+      def needs_to_choose_partnership?
+        mentor_participant? && ([lead_provider, delivery_partner].all? || previous_providers_training_on_current_cohort?)
       end
 
       # only relevant when we are in the registration period before the next cohort starts
@@ -110,6 +119,7 @@ module Schools
           profile = if ect_mentor?
                       Mentors::AddProfileToECT.call(ect_profile: existing_participant_profile,
                                                     school_cohort:,
+                                                    induction_programme: mentor_induction_programme,
                                                     preferred_email: email)
                     elsif ect_participant?
                       reactivate_or_create_ect_profile
@@ -123,6 +133,17 @@ module Schools
         send_added_and_validated_email(profile) if profile && profile.ecf_participant_validation_data.present? && !sit_mentor?
 
         profile
+      end
+
+      def mentor_induction_programme
+        previous_providers? ? create_programme_with_previous_providers : programme
+      end
+
+      def create_programme_with_previous_providers
+        partnership = Induction::CreateRelationship.call(school_cohort:,
+                                                         lead_provider: previous_cohort_lead_provider,
+                                                         delivery_partner: previous_cohort_delivery_partner)
+        InductionProgramme.full_induction_programme.create!(school_cohort:, partnership:)
       end
 
       def reactivate_or_create_ect_profile
@@ -142,9 +163,11 @@ module Schools
         existing_profile = ::Participants::WithdrawnProfileFinder.find(trn:, email:, type: :mentor)
         if existing_profile
           args = args.except(:full_name)
-          Mentors::Reactivate.call(participant_profile: existing_profile, **args)
+          Mentors::Reactivate.call(participant_profile: existing_profile,
+                                   induction_programme: mentor_induction_programme,
+                                   **args)
         else
-          Mentors::Create.call(**args)
+          Mentors::Create.call(induction_programme: mentor_induction_programme, **args)
         end
       end
 

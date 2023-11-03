@@ -48,6 +48,10 @@ RSpec.describe "Add ECT as mentor", js: true do
 
     when_i_choose_summer_term_2023
     when_i_click_on_continue
+    then_i_am_taken_to_choose_mentor_partnership_page
+
+    when_i_choose_current_providers
+    and_i_click_on_continue
     then_i_am_taken_to_check_answers_page
 
     when_i_click_confirm_and_add
