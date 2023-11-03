@@ -3,8 +3,9 @@
 require "rails_helper"
 
 RSpec.describe Schools::AddParticipants::TransferWizard, type: :model do
-  let(:cohort) { Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021) }
-  let(:next_cohort) { Cohort.find_by(start_year: 2022) || create(:cohort, start_year: 2022) }
+  let(:year) { Time.zone.today.year }
+  let(:cohort) { Cohort.find_by(start_year: year - 1) || create(:cohort, start_year: year - 1) }
+  let(:next_cohort) { Cohort.find_by(start_year: year) || create(:cohort, start_year: year) }
   let(:data_store) do
     FormData::AddParticipantStore.new(session: { any_key: { trn:,
                                                             confirmed_trn: trn,
