@@ -3,17 +3,6 @@
 <% content_for :before_content, govuk_breadcrumbs(breadcrumbs: breadcrumbs(@school)) %>
 
 <div class="govuk-grid-row">
-  <% if participants_count(@school.school_cohorts) > 0 %>
-    <div class="govuk-width-container">
-      <%= render GovukComponent::NotificationBannerComponent.new(title_text: 'Important', classes: 'govuk-!-margin-top-0 govuk-!-margin-bottom-5', html_attributes: { data: { test: "notification-banner" } }) do |banner| %>
-        <p class="govuk-notification-banner__heading">Do not remove ECTs or mentors who have completed their induction
-          and training.</p>
-        <p class="govuk-notification-banner__heading">Your appropriate body and provider will confirm this with us soon,
-          and we’ll update their records.</p>
-      <% end %>
-    </div>
-  <% end %>
-
   <div class="govuk-grid-column-two-thirds">
     <span class="govuk-caption-l"><%= @school.name %></span>
     <h1 class="govuk-heading-l">Manage mentors and ECTs</h1>

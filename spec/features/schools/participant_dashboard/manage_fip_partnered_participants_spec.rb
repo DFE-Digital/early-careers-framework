@@ -9,28 +9,6 @@ RSpec.describe "Manage FIP partnered participants with no change of circumstance
   context "inactive change of circumstances flag" do
     it_behaves_like "manage fip participants example"
   end
-
-  context "Completed participants banner" do
-    context "when school has participants" do
-      scenario "the banner is displayed" do
-        given_there_is_a_school_that_has_chosen_fip_and_partnered
-        and_i_have_added_a_contacted_for_info_mentor
-        and_i_have_added_an_eligible_ect_with_mentor
-        and_i_am_signed_in_as_an_induction_coordinator
-        and_i_click("Manage mentors and ECTs")
-        then_i_see_the_complete_participants_banner
-      end
-    end
-
-    context "when school has no participants" do
-      scenario "The banner is not displayed" do
-        given_there_is_a_school_that_has_chosen_fip_and_partnered
-        and_i_am_signed_in_as_an_induction_coordinator
-        and_i_click("Manage mentors and ECTs")
-        then_i_do_not_see_the_complete_participants_banner
-      end
-    end
-  end
 end
 
 RSpec.describe "Manage FIP partnered participants with change of circumstances", js: true, with_feature_flags: { eligibility_notifications: "active" } do
