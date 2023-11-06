@@ -55,3 +55,7 @@ Lint/MissingSuper:
 Rails/SaveBang:
   Exclude:
     - "app/services/migrators/*"
+
+Style/RedundantFetchBlock:
+  Exclude:
+    - 'app/middlewares/api_request_middleware.rb'
