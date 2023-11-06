@@ -8,3 +8,4 @@
 .github/*
 .githooks/*
 /coverage/*
+/performance/reports

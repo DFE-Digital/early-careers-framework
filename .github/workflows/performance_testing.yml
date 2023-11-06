@@ -1,0 +1,91 @@
+name: "Performance Testing"
+
+on:
+  workflow_call:
+    inputs:
+      scenario:
+        description: The performance test scenario to run
+        required: true
+        default: smoke-test
+        type: string
+      docker-image:
+        description: The docker image to run the tests against
+        required: true
+        default: early-career-framework
+        type: string
+      number-authorities:
+        description: the number of authorities to create
+        required: true
+        default: 1
+        type: number
+      number-schools:
+        description: the number of schools per authority to create
+        required: true
+        default: 1
+        type: number
+      number-participants:
+        description: the number of participants per school to create
+        required: true
+        default: 1
+        type: number
+
+env:
+  IMAGE: ${{ inputs.docker-image }}
+
+  PERF_NUM_AUTHORITIES: ${{ inputs.number-authorities }}
+  PERF_NUM_SCHOOLS: ${{ inputs.number-schools }}
+  PERF_NUM_PARTICIPANTS: ${{ inputs.number-participants }}
+
+  PERF_SCENARIO: ${{ inputs.scenario }}
+  PERF_REPORT_FILE: k6-output.json
+
+jobs:
+  run_performance_test:
+    name: "Run performance test"
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Node
+        uses: actions/setup-node@v3.8.2
+        with:
+          node-version: "18.18.x"
+          cache: "yarn"
+
+      - name: Install node.js dependencies
+        run: yarn install --immutable --refresh-lockfile
+
+      - name: Deploy docker container network
+        run: |
+          docker compose -f ./performance/docker-compose.yml up -d web
+
+      - name: Seed the performance database
+        run: |
+          docker compose -f ./performance/docker-compose.yml up seed
+
+      - name: Run the Performance tests
+        run: |
+          docker compose -f ./performance/docker-compose.yml up k6
+
+      - name: Extract summary
+        run: |
+          mkdir ./reports
+          docker compose -f ./performance/docker-compose.yml cp k6:/home/k6/k6-output.json ./reports/${{ inputs.scenario }}-summary.json
+
+      - name: Generate the HTML performance tests report
+        working-directory: ./performance
+        run: |
+          node html-reporter.js ../reports/${{ inputs.scenario }}-summary.json ../reports/${{ inputs.scenario }}-summary.html
+
+      - name: Shutdown the network
+        if: always()
+        run: |
+          docker-compose -f ./performance/docker-compose.yml down
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: ${{ inputs.scenario }}-report
+          path: |
+            ./reports/*.html
+            ./reports/*.json

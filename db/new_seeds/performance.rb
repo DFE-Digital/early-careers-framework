@@ -2,10 +2,10 @@
 
 email_domain = "@example.com" # Prevent low effort email scraping
 
-num_authorities = ENV.fetch("PERF_NUM_AUTHORITIES") { 10 }.to_i
-num_schools = ENV.fetch("PERF_NUM_SCHOOLS") { 10 }.to_i
-num_participants = ENV.fetch("PERF_NUM_PARTICIPANTS") { 10 }.to_i
-lead_provider_api_token = "performance-api-token" # ENV.fetch("PERF_LEAD_PROVIDER_API_TOKEN") { "performance-api-token" }.to_i
+num_authorities = ENV.fetch("PERF_NUM_AUTHORITIES", 10).to_i
+num_schools = ENV.fetch("PERF_NUM_SCHOOLS", 10).to_i
+num_participants = ENV.fetch("PERF_NUM_PARTICIPANTS", 10).to_i
+lead_provider_api_token = ENV.fetch("PERF_LEAD_PROVIDER_API_TOKEN", "performance-api-token")
 
 Faker::Config.locale = "en-GB"
 

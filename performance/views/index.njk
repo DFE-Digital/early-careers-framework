@@ -1,0 +1,399 @@
+{% extends "govuk/template.njk" %}
+{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
+{% from "govuk/components/tabs/macro.njk" import govukTabs %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+
+{% set data = report.summary.data %}
+
+{% block pageTitle %}CPD API Performance dashboard - EDUCATION.GOV.UK{% endblock %}
+
+{% block head %}
+  <link href="https://design-system.service.gov.uk/stylesheets/main-8b722cf33a433600f925958f167685f3.css" rel="stylesheet">
+
+  <style>
+    .app-card {
+      background-color: #f3f2f1;
+      display: block;
+      padding: 10px;
+      text-decoration: none;
+      font-family: "GDS Transport", arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-weight: 400;
+      font-size: 16px;
+      font-size: 1rem;
+      line-height: 1.25;
+    }
+    @media print {
+      .app-card {
+        font-family: sans-serif;
+      }
+    }
+    @media (min-width: 40.0625em) {
+      .app-card {
+        font-size: 19px;
+        font-size: 1.1875rem;
+        line-height: 1.3157894737;
+      }
+    }
+    @media print {
+      .app-card {
+        font-size: 14pt;
+        line-height: 1.15;
+      }
+    }
+    @media (min-width: 48.0625em) {
+      .app-card {
+        padding: 20px;
+      }
+    }
+
+    .app-card--blue {
+      background: #1d70b8;
+      color: #ffffff;
+    }
+
+    .app-card--grey {
+      color: #383f43;
+      background: #eeefef;
+    }
+
+    .app-card--purple {
+      color: #3d2375;
+      background: #dbd5e9;
+    }
+
+    .app-card--turquoise {
+      color: #10403c;
+      background: #bfe3e0;
+    }
+
+    .app-card--light-blue {
+      color: #144e81;
+      background: #d2e2f1;
+    }
+
+    .app-card--yellow {
+      color: #594d00;
+      background: #fff7bf;
+    }
+
+    .app-card--orange {
+      color: #6e3619;
+      background: #fcd6c3;
+    }
+
+    .app-card--red {
+      color: #942514;
+      background: #f6d7d2;
+    }
+
+    .app-card--pink {
+      color: #80224d;
+      background: #f7d7e6;
+    }
+
+    .app-card--green {
+      color: #005a30;
+      background: #cce2d8;
+    }
+
+    .app-card--red {
+      color: #942514;
+      background: #f6d7d2;
+    }
+
+    .failed {
+      color: #942514;
+      background: #f6d7d2;
+    }
+
+    .app-card--white {
+      background-color: #ffffff;
+    }
+
+    .app-card__count {
+      font-family: "GDS Transport", arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-weight: 700;
+      font-size: 53px;
+      font-size: 3.3125rem;
+      line-height: 1.0377358491;
+      display: block;
+    }
+    @media print {
+      .app-card__count {
+        font-family: sans-serif;
+      }
+    }
+    @media (min-width: 40.0625em) {
+      .app-card__count {
+        font-size: 80px;
+        font-size: 5rem;
+        line-height: 1;
+      }
+    }
+    @media print {
+      .app-card__count {
+        font-size: 53pt;
+        line-height: 1.1;
+      }
+    }
+
+    .app-card__secondary-count {
+      font-family: "GDS Transport", arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-weight: 700;
+      font-size: 32px;
+      font-size: 2rem;
+      line-height: 1.09375;
+      display: block;
+    }
+    @media print {
+      .app-card__secondary-count {
+        font-family: sans-serif;
+      }
+    }
+    @media (min-width: 40.0625em) {
+      .app-card__secondary-count {
+        font-size: 48px;
+        font-size: 3rem;
+        line-height: 1.0416666667;
+      }
+    }
+    @media print {
+      .app-card__secondary-count {
+        font-size: 32pt;
+        line-height: 1.15;
+      }
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-xl">
+        <span class="govuk-caption-xl">{{ service.name }}</span>
+        {{ report.name }}
+      </h1>
+    </div>
+  </div>
+
+  <div class="govuk-!-margin-bottom-4">
+    <div class="app-card app-card--blue">
+      <span class="app-card__count">{% if data.metrics.http_reqs %}{{ data.metrics.http_reqs.values.count }}{% endif %}</span>
+      <span class="app-card__count">{% if data.metrics.grpc_reqs %}{{ data.metrics.grpc_reqs.values.count }}{% endif %}</span>
+        Total Requests
+    </div>
+  </div>
+
+  <div class="govuk-grid-row govuk-!-margin-bottom-4">
+    <div class="govuk-grid-column-one-third">
+      <div class="app-card app-card--{% if data.metrics.http_req_failed.values.passes > 0 %}red{% else %}grey{% endif %}">
+        <span class="app-card__count">{{ data.metrics.http_req_failed.values.passes }}</span>
+          Failed Requests
+      </div>
+    </div>
+
+    <div class="govuk-grid-column-one-third">
+      <div class="app-card app-card--{% if report.summary.thresholdFailures > 0 %}red{% else %}grey{% endif %}">
+        <span class="app-card__count">{{ report.summary.thresholdFailures }}</span>
+          Breached Thresholds
+      </div>
+    </div>
+
+    <div class="govuk-grid-column-one-third">
+      <div class="app-card app-card--{% if report.summary.checkFailures > 0 %}red{% else %}grey{% endif %}">
+        <span class="app-card__count">{{ report.summary.checkFailures }}</span>
+          Failed Checks
+      </div>
+    </div>
+  </div>
+
+  {{ govukTable({
+    caption: "Standard request metrics",
+    captionClasses: "govuk-table__caption--m",
+    firstCellIsHeader: true,
+    head: [
+      { text: "" },
+      { text: "Count", format: "numeric" },
+      { text: "Rate", format: "numeric" },
+      { text: "Average", format: "numeric" },
+      { text: "Maximum", format: "numeric" },
+      { text: "Median", format: "numeric" },
+      { text: "Minimum", format: "numeric" },
+      { text: "90th Percentile", format: "numeric" },
+      { text: "95th Percentile", format: "numeric" }
+    ],
+    rows: report.summary.standardMetricRows
+  }) }}
+
+  {% if report.summary.sortedMetricRows.length > 0 %}
+    {{ govukTable({
+      caption: "Custom request metrics",
+      captionClasses: "govuk-table__caption--m",
+      firstCellIsHeader: true,
+      head: [
+        { text: "" },
+        { text: "Count", format: "numeric" },
+        { text: "Rate", format: "numeric" },
+        { text: "Average", format: "numeric" },
+        { text: "Maximum", format: "numeric" },
+        { text: "Median", format: "numeric" },
+        { text: "Minimum", format: "numeric" },
+        { text: "90th Percentile", format: "numeric" },
+        { text: "95th Percentile", format: "numeric" }
+      ],
+      rows: report.summary.sortedMetricRows
+    }) }}
+  {% endif %}
+
+  {{ govukInsetText({ classes: "govuk-body-s", text: "Note. All times are in milli-seconds" }) }}
+
+  <h2 class="govuk-heading-m">Other stats</h2>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+      {% if data.metrics.checks %}
+        {{ govukTable({
+          firstCellIsHeader: true,
+          head: [ { text: "" }, { text: "Passed", format: "numeric" }, { text: "Failed", format: "numeric" } ],
+          rows: [
+            [
+              { text: "Checks", classes: "govuk-!-width-one-half" },
+              { text: data.metrics.checks.values.passes, format: "numeric", classes: "govuk-!-width-one-quarter" },
+              { text: data.metrics.checks.values.fails, format: "numeric", classes: "govuk-!-width-one-quarter" }
+            ]
+          ]
+        }) }}
+      {% endif %}
+    </div>
+
+    <div class="govuk-grid-column-one-half">
+      {% if data.metrics.iterations %}
+        {{ govukTable({
+          firstCellIsHeader: true,
+          head: [ { text: "" }, { text: "Total", format: "numeric" }, { text: "Rate", format: "numeric" } ],
+          rows: [
+            [
+              { text: "Iterations", classes: "govuk-!-width-one-half" },
+              { text: data.metrics.iterations.values.count, format: "numeric", classes: "govuk-!-width-one-quarter" },
+              { text: data.metrics.iterations.values.rate.toFixed(2), format: "numeric", classes: "govuk-!-width-one-quarter" }
+            ]
+          ]
+        }) }}
+      {% endif %}
+    </div>
+
+    <div class="govuk-grid-column-one-half">
+      {{ govukTable({
+        firstCellIsHeader: true,
+        head: [ { text: "" }, { text: "Min", format: "numeric" }, { text: "Max", format: "numeric" } ],
+        rows: [
+          [
+            { text: "Virtual Users", classes: "govuk-!-width-one-half" },
+            { text: data.metrics.vus.values.min, format: "numeric", classes: "govuk-!-width-one-quarter" },
+            { text: data.metrics.vus.values.max, format: "numeric", classes: "govuk-!-width-one-quarter" }
+          ]
+        ]
+      }) }}
+    </div>
+
+    <div class="govuk-grid-column-one-half">
+      {{ govukTable({
+        firstCellIsHeader: true,
+        head: [ { text: "" }, { text: "Total", format: "numeric" }, { text: "Rate", format: "numeric" } ],
+        rows: [
+          [
+            { text: "Requests", classes: "govuk-!-width-one-half" },
+            { text: data.metrics.iterations.values.count, format: "numeric", classes: "govuk-!-width-one-quarter" },
+            { text: data.metrics.iterations.values.rate.toFixed(2) + "/sec", format: "numeric", classes: "govuk-!-width-one-quarter" }
+          ]
+        ]
+      }) }}
+    </div>
+
+    <div class="govuk-grid-column-one-half">
+      {{ govukTable({
+        firstCellIsHeader: true,
+        head: [ { text: "" }, { text: "Total", format: "numeric" }, { text: "Rate", format: "numeric" } ],
+        rows: [
+          [
+            { text: "Data Received", classes: "govuk-!-width-one-half" },
+            { text: (data.metrics.data_received.values.count/1000000).toFixed(2) + " MB", format: "numeric", classes: "govuk-!-width-one-quarter" },
+            { text: (data.metrics.data_received.values.rate/1000000).toFixed(2) + " mB/s", format: "numeric", classes: "govuk-!-width-one-quarter" }
+          ]
+        ]
+      }) }}
+    </div>
+
+    <div class="govuk-grid-column-one-half">
+      {{ govukTable({
+        firstCellIsHeader: true,
+        head: [ { text: "" }, { text: "Total", format: "numeric" }, { text: "Rate", format: "numeric" } ],
+        rows: [
+          [
+            { text: "Data Sent", classes: "govuk-!-width-one-half" },
+            { text: (data.metrics.data_sent.values.count/1000000).toFixed(2) + " MB", format: "numeric", classes: "govuk-!-width-one-quarter" },
+            { text: (data.metrics.data_sent.values.rate/1000000).toFixed(2) + " mB/s", format: "numeric", classes: "govuk-!-width-one-quarter" }
+          ]
+        ]
+      }) }}
+    </div>
+  </div>
+
+  {% if data.root_group.groups.length > 0 %}
+      <h2 class="govuk-heading-m">Checks and groups</h2>
+
+      {% set tab_list = [] %}
+      {% for group in data.root_group.groups %}
+        {% set group_checks = [] %}
+        {% for check in group.checks %}
+          {% if check.fails > 0 %}
+            {% set check_class = "failed" %}
+          {% else %}
+            {% set check_class = "" %}
+          {% endif %}
+
+          {% set group_check = [
+              { classes: check_class, text: check.name },
+              { classes: check_class, format: "numeric", text: check.passes },
+              { classes: check_class, format: "numeric", text: check.fails }
+          ] %}
+          {% set group_checks = (group_checks.push(group_check), group_checks) %}
+        {% endfor %}
+
+        {% set panel_title = "Group - " + group.name %}
+        {% set panelHtml %}
+        <h2 class="govuk-heading-l">{{ panel_title }}</h2>
+
+        {{ govukTable({
+          firstCellIsHeader: true,
+          head: [
+            { text: "Check Name" },
+            { text: "Passes", format: "numeric" },
+            { text: "Failures", format: "numeric" }
+          ],
+          rows: group_checks
+        }) }}
+        {% endset -%}
+
+        {% set tab_list = (tab_list.push({
+          label: panel_title,
+          id: "tab" + loop.index,
+          panel: { html: panelHtml }
+        }), tab_list) %}
+      {% endfor %}
+
+      {{ govukTabs({ items: tab_list }) }}
+  {% endif %}
+{% endblock %}
+
+{% block bodyEnd %}
+  {# Run JavaScript at end of the <body>, to avoid blocking the initial render. #}
+  <script src="https://design-system.service.gov.uk/javascripts/govuk-frontend-069e73dfb31aacad687703e346188e8c.js"></script>
+  <script>window.GOVUKFrontend.initAll()</script>
+{% endblock %}
