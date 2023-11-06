@@ -120,7 +120,8 @@
         if induction_record.appropriate_body.present?
           sl.with_row do |row|
             row.with_key(text: "Appropriate body record state")
-            row.with_value(text: render(StatusTags::AppropriateBodyParticipantStatusTag.new(participant_profile: induction_record.participant_profile, induction_record: induction_record)))
+            training_record_states = DetermineTrainingRecordState.call(induction_records: induction_record)
+            row.with_value(text: render(StatusTags::AppropriateBodyParticipantStatusTag.new(training_record_states[induction_record.participant_profile_id])))
           end
         end
 

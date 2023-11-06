@@ -20,8 +20,9 @@ module AppropriateBodies
     end
     let(:induction_programme) { create(:induction_programme, :fip, partnership:) }
     let!(:induction_record) { create :induction_record, participant_profile:, induction_programme:, training_status: "withdrawn" }
+    let(:training_record_states) { DetermineTrainingRecordState.call(induction_records: induction_record) }
 
-    subject { described_class.new(induction_record) }
+    subject { described_class.new(induction_record, params: { training_record_states: }) }
 
     context "#serializable_hash" do
       it "returns valid hash" do
