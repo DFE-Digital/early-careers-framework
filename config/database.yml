@@ -36,13 +36,6 @@ review:
   sslmode: <%= ENV.fetch("DB_SSLMODE") { "require" } %>
 
 sandbox:
-  <% if ENV.key?("VCAP_APPLICATION") %>
-
-  <<: *default_primary
-  database: 'early_careers_framework_sandbox'
-
-  <% else %>
-
   primary:
     <<: *default_primary
     url: <%= ENV["DATABASE_URL"] %>
@@ -54,8 +47,6 @@ sandbox:
     variables:
       statement_timeout: 20000
       idle_in_transaction_session_timeout: 10000
-
-  <% end %>
 
 test:
   <<: *default
@@ -71,13 +62,6 @@ test:
       idle_in_transaction_session_timeout: 0
 
 staging:
-  <% if ENV.key?("VCAP_APPLICATION") %>
-
-  <<: *default_primary
-  sslmode: require
-
-  <% else %>
-
   primary:
     <<: *default_primary
     url: <%= ENV["DATABASE_URL"] %>
@@ -90,22 +74,8 @@ staging:
     variables:
       statement_timeout: 20000
       idle_in_transaction_session_timeout: 10000
-
-  <% end %>
 
 production:
-  <% if ENV.key?("VCAP_APPLICATION") %>
-
-  <<: *default
-  primary:
-    <<: *default_primary
-    sslmode: require
-  analytics:
-    <<: *default_analytics
-    sslmode: require
-
-  <% else %>
-
   primary:
     <<: *default_primary
     url: <%= ENV["DATABASE_URL"] %>
@@ -118,5 +88,3 @@ production:
     variables:
       statement_timeout: 20000
       idle_in_transaction_session_timeout: 10000
-
-  <% end %>
