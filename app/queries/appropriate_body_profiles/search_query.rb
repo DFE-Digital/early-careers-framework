@@ -1,22 +1,22 @@
 # frozen_string_literal: true
 
-module DeliveryPartnerProfiles
+module AppropriateBodyProfiles
   class SearchQuery
     attr_reader :query, :scope
 
-    def initialize(query:, scope: DeliveryPartnerProfile.all)
+    def initialize(query:, scope: AppropriateBodyProfile.all)
       @query = query&.strip
       @scope = scope
     end
 
     def call
-      return scope.includes(:user, :delivery_partner).order("users.full_name ASC") if query.blank?
+      return scope.includes(:user, :appropriate_body).order("users.full_name asc") if query.blank?
 
       scope
-        .includes(:user, :delivery_partner)
+        .includes(:user, :appropriate_body)
         .where("users.full_name ILIKE ?", "%#{query}%")
         .or(scope.where("users.email ILIKE ?", "%#{query}%"))
-        .or(scope.where("delivery_partners.name ILIKE ?", "%#{query}%"))
+        .or(scope.where("appropriate_bodies.name ILIKE ?", "%#{query}%"))
         .order("users.full_name ASC")
     end
   end

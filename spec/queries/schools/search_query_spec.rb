@@ -14,7 +14,7 @@ RSpec.describe Schools::SearchQuery do
       let(:query) { "A" }
 
       it "searches schools by name" do
-        expect(subject).to match_array([school_a])
+        expect(subject).to eq([school_a])
       end
     end
 
@@ -22,7 +22,7 @@ RSpec.describe Schools::SearchQuery do
       let(:query) { "090" }
 
       it "searches schools by urn" do
-        expect(subject).to match_array([school_a, school_b])
+        expect(subject).to eq([school_a, school_b])
       end
     end
 
@@ -35,7 +35,7 @@ RSpec.describe Schools::SearchQuery do
       end
 
       it "searches schools by sit's email" do
-        expect(subject).to match_array([school_a, school_c])
+        expect(subject).to eq([school_a, school_c])
       end
 
       context "when there is more than one induction coordinator for the same school" do
@@ -46,7 +46,7 @@ RSpec.describe Schools::SearchQuery do
         end
 
         it "only returns the school once" do
-          expect(subject).to match_array([school_a])
+          expect(subject).to eq([school_a])
         end
       end
     end
@@ -55,7 +55,23 @@ RSpec.describe Schools::SearchQuery do
       let(:query) { "M1" }
 
       it "searches schools by sit's email" do
-        expect(subject).to match_array([school_a, school_b])
+        expect(subject).to eq([school_a, school_b])
+      end
+    end
+
+    context "when the query includes no matches" do
+      let(:query) { "XYZW123" }
+
+      it "returns empty" do
+        expect(subject).to be_empty
+      end
+    end
+
+    context "when the query is blank" do
+      let(:query) { "" }
+
+      it "returns all records" do
+        expect(subject).to eq([school_a, school_b, school_c])
       end
     end
   end

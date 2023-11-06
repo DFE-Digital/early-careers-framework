@@ -69,6 +69,31 @@ RSpec.feature "Admin appropriate body users" do
     and_i_should_not_see("joe@example.com")
   end
 
+  scenario "View a list of users" do
+    given_a_appropriate_body_user_exists
+    when_i_visit_admin_appropriate_body_users_page
+    then_i_see("Appropriate bodies")
+    and_i_see("Search appropriate body users")
+    and_i_see("Enter the user's name, email address or appropriate body")
+
+    when_i_fill_in("query-field", with: @appropriate_body_user.full_name[0])
+    and_i_click_on("Search")
+    then_i_see(@appropriate_body_user.full_name)
+    and_i_see(@appropriate_body_user.email)
+
+    when_i_fill_in("query-field", with: @appropriate_body_user.email)
+    and_i_click_on("Search")
+    then_i_see(@appropriate_body_user.full_name)
+    and_i_see(@appropriate_body_user.email)
+
+    when_i_fill_in("query-field", with: SecureRandom.uuid)
+    and_i_click_on("Search")
+    then_i_should_not_see(@appropriate_body_user.full_name)
+    and_i_should_not_see(@appropriate_body_user.email)
+  end
+
+private
+
   def given_a_appropriate_body_exists
     @appropriate_body = create(:appropriate_body_local_authority, name: "First Partner")
   end
@@ -109,11 +134,19 @@ RSpec.feature "Admin appropriate body users" do
     expect(page).to have_content(string)
   end
 
+  def then_i_should_not_see(string)
+    expect(page).not_to have_content(string)
+  end
+
   def and_i_should_not_see(string)
     expect(page).not_to have_content(string)
   end
 
   def given_a_appropriate_body_user_exists
     @appropriate_body_user = create(:user, :appropriate_body)
+  end
+
+  def when_i_fill_in(selector, with:)
+    page.fill_in selector, with:
   end
 end
