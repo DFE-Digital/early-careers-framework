@@ -446,19 +446,6 @@
   - body
   - created_at
   - updated_at
-  :api_requests:
-  - id
-  - request_path
-  - status_code
-  - request_headers
-  - request_body
-  - response_body
-  - request_method
-  - response_headers
-  - cpd_lead_provider_id
-  - user_description
-  - created_at
-  - updated_at
   :admin_profiles:
   - id
   - user_id

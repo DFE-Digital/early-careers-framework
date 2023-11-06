@@ -24,6 +24,7 @@ class FeatureFlag
     prevent_2023_ect_registrations
     cohortless_dashboard
     school_participant_status_language
+    send_api_request_to_analytics
   ].freeze
 
   FEATURES = (PERMANENT_SETTINGS + TEMPORARY_FEATURE_FLAGS).index_with { |name|
