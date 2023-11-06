@@ -544,110 +544,143 @@ RSpec.describe School, type: :model do
     end
   end
 
-  describe "#participants_for" do
-    it "includes active participants" do
-      ect_profile = create_profile_with_induction_record(:ect_participant_profile, school_cohort)
-      mentor_profile = create_profile_with_induction_record(:mentor_participant_profile, school_cohort)
+  describe "participant queries" do
+    let(:partnership) { create(:partnership) }
+    let(:lead_provider) { partnership.lead_provider }
 
-      expect(school.participants_for(cohort)).to contain_exactly(ect_profile.user, mentor_profile.user)
+    describe "#early_career_teacher_profiles_for" do
+      it "includes active ECTs" do
+        ect_profile = create_profile_with_induction_record(:ect_participant_profile, partnership, school_cohort)
+
+        expect(school.early_career_teacher_profiles_for(cohort, lead_provider)).to contain_exactly(ect_profile)
+      end
+
+      it "does not include ECTs with withdrawn records" do
+        ect_profile = create_profile_with_induction_record(:ect_participant_profile, partnership, school_cohort, :withdrawn_record)
+
+        expect(school.early_career_teacher_profiles_for(cohort, lead_provider)).not_to include ect_profile
+      end
+
+      it "does not include ECTs from other cohorts" do
+        another_school_cohort = create(:school_cohort, cohort: Cohort.next || create(:cohort, :next), school:)
+        ect_profile = create_profile_with_induction_record(:ect_participant_profile, partnership, another_school_cohort)
+
+        expect(school.early_career_teacher_profiles_for(cohort, lead_provider)).not_to include ect_profile
+      end
+
+      it "does not include ECTs from other schools" do
+        another_school_cohort = create(:school_cohort, school: create(:school), cohort:)
+        ect_profile = create_profile_with_induction_record(:ect_participant_profile, partnership, another_school_cohort)
+
+        expect(school.early_career_teacher_profiles_for(cohort, lead_provider)).not_to include ect_profile
+      end
+
+      it "does not include mentors" do
+        mentor_profile = create_profile_with_induction_record(:mentor_participant_profile, partnership, school_cohort)
+
+        expect(school.early_career_teacher_profiles_for(cohort, lead_provider)).not_to include mentor_profile
+      end
+
+      it "does not include ECTs with another lead provider/partnership" do
+        other_partnership = create(:partnership)
+        other_ect_profile = create_profile_with_induction_record(:ect_participant_profile, other_partnership, school_cohort)
+
+        expect(school.early_career_teacher_profiles_for(cohort, lead_provider)).not_to include(other_ect_profile)
+      end
+
+      it "only returns an ECT for the latest school if they have transferred (and are under the same lead provider)" do
+        another_school = create(:school)
+        another_school_cohort = create(:school_cohort, school: another_school, cohort:)
+        ect_profile = create_profile_with_induction_record(:ect_participant_profile, partnership, school_cohort).tap do |participant_profile|
+          create(:induction_record, school_cohort: another_school_cohort, participant_profile:, partnership:)
+        end
+
+        expect(school.early_career_teacher_profiles_for(cohort, lead_provider)).not_to include(ect_profile)
+        expect(another_school.early_career_teacher_profiles_for(cohort, lead_provider)).to include(ect_profile)
+      end
+
+      it "returns an ECT for both schools if they have transferred (and are under different lead providers)" do
+        another_school = create(:school)
+        another_school_cohort = create(:school_cohort, school: another_school, cohort:)
+        another_partnership = create(:partnership)
+        ect_profile = create_profile_with_induction_record(:ect_participant_profile, partnership, school_cohort).tap do |participant_profile|
+          create(:induction_record, school_cohort: another_school_cohort, participant_profile:, partnership: another_partnership)
+        end
+
+        expect(school.early_career_teacher_profiles_for(cohort, lead_provider)).to include(ect_profile)
+        expect(another_school.early_career_teacher_profiles_for(cohort, another_partnership.lead_provider)).to include(ect_profile)
+      end
     end
 
-    it "does not include participants with withdrawn records" do
-      ect = create_profile_with_induction_record(:ect_participant_profile, school_cohort, :withdrawn_record)
-      mentor = create_profile_with_induction_record(:mentor_participant_profile, school_cohort, :withdrawn_record)
+    describe "#mentor_profiles_for" do
+      it "includes active mentors" do
+        mentor_profile = create_profile_with_induction_record(:mentor_participant_profile, partnership, school_cohort)
 
-      expect(school.participants_for(cohort)).not_to include(ect.user, mentor.user)
-    end
+        expect(school.mentor_profiles_for(cohort, lead_provider)).to contain_exactly(mentor_profile)
+      end
 
-    it "does not include participants from other cohorts" do
-      another_school_cohort = create(:school_cohort, cohort: Cohort.next || create(:cohort, :next), school:)
-      ect_profile = create_profile_with_induction_record(:ect_participant_profile, another_school_cohort)
-      mentor_profile = create_profile_with_induction_record(:mentor_participant_profile, another_school_cohort)
+      it "does not include mentors with withdrawn records" do
+        mentor_profile = create_profile_with_induction_record(:mentor_participant_profile, partnership, school_cohort, :withdrawn_record)
 
-      expect(school.participants_for(cohort)).not_to include(ect_profile.user, mentor_profile.user)
-    end
+        expect(school.mentor_profiles_for(cohort, lead_provider)).not_to include mentor_profile
+      end
 
-    it "does not include participants from other schools" do
-      another_school_cohort = create(:school_cohort, school: create(:school), cohort:)
-      ect_profile = create_profile_with_induction_record(:ect_participant_profile, another_school_cohort)
-      mentor_profile = create_profile_with_induction_record(:mentor_participant_profile, another_school_cohort)
+      it "does not include mentors from other cohorts" do
+        another_school_cohort = create(:school_cohort, cohort: Cohort.next || create(:cohort, :next), school:)
+        mentor_profile = create_profile_with_induction_record(:mentor_participant_profile, partnership, another_school_cohort)
 
-      expect(school.participants_for(cohort)).not_to include(ect_profile.user, mentor_profile.user)
+        expect(school.mentor_profiles_for(cohort, lead_provider)).not_to include mentor_profile
+      end
+
+      it "does not include mentors from other schools" do
+        another_school_cohort = create(:school_cohort, school: create(:school), cohort:)
+        mentor_profile = create_profile_with_induction_record(:mentor_participant_profile, partnership, another_school_cohort)
+
+        expect(school.mentor_profiles_for(cohort, lead_provider)).not_to include mentor_profile
+      end
+
+      it "does not include ECTs" do
+        ect_profile = create_profile_with_induction_record(:ect_participant_profile, partnership, school_cohort)
+
+        expect(school.mentor_profiles_for(cohort, lead_provider)).not_to include ect_profile
+      end
+
+      it "does not include mentors with another lead provider/partnership" do
+        other_partnership = create(:partnership)
+        other_mentor_profile = create_profile_with_induction_record(:mentor_participant_profile, other_partnership, school_cohort)
+
+        expect(school.mentor_profiles_for(cohort, lead_provider)).not_to include(other_mentor_profile)
+      end
+
+      it "only returns a mentor for the latest school if they have transferred (and are under the same lead provider)" do
+        another_school = create(:school)
+        another_school_cohort = create(:school_cohort, school: another_school, cohort:)
+        mentor_profile = create_profile_with_induction_record(:mentor_participant_profile, partnership, school_cohort).tap do |participant_profile|
+          create(:induction_record, school_cohort: another_school_cohort, participant_profile:, partnership:)
+        end
+
+        expect(school.mentor_profiles_for(cohort, lead_provider)).not_to include(mentor_profile)
+        expect(another_school.mentor_profiles_for(cohort, lead_provider)).to include(mentor_profile)
+      end
+
+      it "returns a mentor for both schools if they have transferred (and are under different lead providers)" do
+        another_school = create(:school)
+        another_school_cohort = create(:school_cohort, school: another_school, cohort:)
+        another_partnership = create(:partnership)
+        mentor_profile = create_profile_with_induction_record(:mentor_participant_profile, partnership, school_cohort).tap do |participant_profile|
+          create(:induction_record, school_cohort: another_school_cohort, participant_profile:, partnership: another_partnership)
+        end
+
+        expect(school.mentor_profiles_for(cohort, lead_provider)).to include(mentor_profile)
+        expect(another_school.mentor_profiles_for(cohort, another_partnership.lead_provider)).to include(mentor_profile)
+      end
     end
   end
 
-  describe "#early_career_teacher_profiles_for" do
-    it "includes active ECTs" do
-      ect_profile = create_profile_with_induction_record(:ect_participant_profile, school_cohort)
-
-      expect(school.early_career_teacher_profiles_for(cohort)).to contain_exactly(ect_profile)
-    end
-
-    it "does not include ECTs with withdrawn records" do
-      ect_profile = create_profile_with_induction_record(:ect_participant_profile, school_cohort, :withdrawn_record)
-
-      expect(school.early_career_teacher_profiles_for(cohort)).not_to include ect_profile
-    end
-
-    it "does not include ECTs from other cohorts" do
-      another_school_cohort = create(:school_cohort, cohort: Cohort.next || create(:cohort, :next), school:)
-      ect_profile = create_profile_with_induction_record(:ect_participant_profile, another_school_cohort)
-
-      expect(school.early_career_teacher_profiles_for(cohort)).not_to include ect_profile
-    end
-
-    it "does not include ECTs from other schools" do
-      another_school_cohort = create(:school_cohort, school: create(:school), cohort:)
-      ect_profile = create_profile_with_induction_record(:ect_participant_profile, another_school_cohort)
-
-      expect(school.early_career_teacher_profiles_for(cohort)).not_to include ect_profile
-    end
-
-    it "does not include mentors" do
-      mentor_profile = create_profile_with_induction_record(:mentor_participant_profile, school_cohort)
-
-      expect(school.early_career_teacher_profiles_for(cohort)).not_to include mentor_profile
-    end
-  end
-
-  describe "#mentor_profiles_for" do
-    it "includes active mentors" do
-      mentor_profile = create_profile_with_induction_record(:mentor_participant_profile, school_cohort)
-
-      expect(school.mentor_profiles_for(cohort)).to contain_exactly(mentor_profile)
-    end
-
-    it "does not include mentors with withdrawn records" do
-      mentor_profile = create_profile_with_induction_record(:mentor_participant_profile, school_cohort, :withdrawn_record)
-
-      expect(school.mentor_profiles_for(cohort)).not_to include mentor_profile
-    end
-
-    it "does not include mentors from other cohorts" do
-      another_school_cohort = create(:school_cohort, cohort: Cohort.next || create(:cohort, :next), school:)
-      mentor_profile = create_profile_with_induction_record(:mentor_participant_profile, another_school_cohort)
-
-      expect(school.mentor_profiles_for(cohort)).not_to include mentor_profile
-    end
-
-    it "does not include mentors from other schools" do
-      another_school_cohort = create(:school_cohort, school: create(:school), cohort:)
-      mentor_profile = create_profile_with_induction_record(:mentor_participant_profile, another_school_cohort)
-
-      expect(school.mentor_profiles_for(cohort)).not_to include mentor_profile
-    end
-
-    it "does not include ECTs" do
-      ect_profile = create_profile_with_induction_record(:ect_participant_profile, school_cohort)
-
-      expect(school.mentor_profiles_for(cohort)).not_to include ect_profile
-    end
-  end
-
-  def create_profile_with_induction_record(factory, school_cohort, *traits)
+  def create_profile_with_induction_record(factory, partnership, school_cohort, *traits)
     create(factory, *traits, school_cohort:).tap do |participant_profile|
       # We create multiple to ensure we don't double count participants.
-      create_list(:induction_record, 2, school_cohort:, participant_profile:)
+      create_list(:induction_record, 2, school_cohort:, participant_profile:, partnership:)
     end
   end
 end

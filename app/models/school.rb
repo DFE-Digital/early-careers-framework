@@ -3,6 +3,8 @@
 class School < ApplicationRecord
   has_paper_trail
 
+  include Api::Concerns::FetchLatestInductionRecords
+
   extend FriendlyId
   include GiasHelpers
   extend AutoStripAttributes
@@ -117,16 +119,12 @@ class School < ApplicationRecord
     partnerships.unchallenged.where(relationship: false).joins(%i[delivery_partner cohort]).find_by(cohorts: { start_year: year })&.delivery_partner
   end
 
-  def participants_for(cohort)
-    active_profiles_for(cohort:).map(&:user)
+  def early_career_teacher_profiles_for(cohort, lead_provider)
+    active_profiles_for(cohort:, lead_provider:, type: ParticipantProfile::ECT)
   end
 
-  def early_career_teacher_profiles_for(cohort)
-    active_profiles_for(cohort:, type: ParticipantProfile::ECT)
-  end
-
-  def mentor_profiles_for(cohort)
-    active_profiles_for(cohort:, type: ParticipantProfile::Mentor)
+  def mentor_profiles_for(cohort, lead_provider)
+    active_profiles_for(cohort:, lead_provider:, type: ParticipantProfile::Mentor)
   end
 
   def mentors
@@ -206,11 +204,13 @@ private
     CIP_ONLY_TYPE_CODES.include?(school_type_code)
   end
 
-  def active_profiles_for(cohort:, type: ParticipantProfile)
+  def active_profiles_for(cohort:, lead_provider:, type: ParticipantProfile)
     school_cohort = school_cohorts.find_by(cohort:)
     type
+      .select(:id)
       .joins(induction_records: { induction_programme: :school_cohort })
-      .includes(:user)
+      .joins("JOIN (#{latest_induction_records_for_lead_provider_join(lead_provider).to_sql}) AS latest_induction_records
+          ON latest_induction_records.latest_id = induction_records.id")
       .where(
         induction_records: {
           induction_programmes: { school_cohort: },

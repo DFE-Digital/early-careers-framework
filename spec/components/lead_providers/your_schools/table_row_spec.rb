@@ -17,7 +17,7 @@ RSpec.describe LeadProviders::YourSchools::TableRow, type: :component do
     let!(:ect_profiles) do
       create_list(:ect, rand(1..5), school_cohort:).tap do |participant_profiles|
         participant_profiles.each do |participant_profile|
-          create(:induction_record, school_cohort:, participant_profile:)
+          create(:induction_record, school_cohort:, participant_profile:, partnership:)
         end
       end
     end
