@@ -6,7 +6,7 @@ module ManageTrainingSteps
   # Given_steps
 
   def given_there_is_a_school_that_has_chosen_fip_and_partnered
-    @cohort = Cohort.current || create(:cohort, :current)
+    @cohort = Cohort.current
     @school = create(:school, name: "Fip School")
     @school_cohort = create(:school_cohort, school: @school, cohort: @cohort, induction_programme_choice: "full_induction_programme")
     @induction_programme = create(:induction_programme, :fip, school_cohort: @school_cohort, partnership: nil)
@@ -357,6 +357,26 @@ module ManageTrainingSteps
                                               induction_programme: @induction_programme,
                                               start_date: 2.months.from_now)
     @induction_record.update!(training_status: :deferred)
+  end
+
+  def and_i_have_added_an_ect_with_withdrawn_training
+    user = create(:user, full_name: "Withdrawn training participant")
+    teacher_profile = create(:teacher_profile, user:)
+    @withdrawn_training_participant = create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, teacher_profile:, school_cohort: @school_cohort, training_status: :withdrawn)
+    @induction_record = Induction::Enrol.call(participant_profile: @withdrawn_training_participant,
+                                              induction_programme: @induction_programme,
+                                              start_date: 2.months.from_now)
+    @induction_record.update!(training_status: :withdrawn)
+  end
+
+  def and_i_have_added_an_ect_with_withdrawn_induction_status
+    user = create(:user, full_name: "Withdrawn training participant")
+    teacher_profile = create(:teacher_profile, user:)
+    @withdrawn_induction_status_participant = create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, teacher_profile:, school_cohort: @school_cohort, status: :withdrawn)
+    @induction_record = Induction::Enrol.call(participant_profile: @withdrawn_induction_status_participant,
+                                              induction_programme: @induction_programme,
+                                              start_date: 2.months.from_now)
+    @induction_record.update!(induction_status: :withdrawn)
   end
 
   def and_my_ects_have_completed_their_induction
