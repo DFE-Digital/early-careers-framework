@@ -16,14 +16,16 @@ RSpec.describe "Manage currently training participants", js: true do
     and_i_have_added_a_training_ect_with_mentor
     and_i_have_added_an_eligible_ect_without_mentor
     and_i_have_added_a_deferred_ect
+    and_i_have_added_an_ect_with_withdrawn_training
+    and_i_have_added_an_ect_with_withdrawn_induction_status
     and_i_am_signed_in_as_an_induction_coordinator
     and_i_click(Cohort.current.description)
     given_i_am_taken_to_the_induction_dashboard
 
     when_i_navigate_to_participants_dashboard
-    then_i_see_the_participants_filter_with_counts(currently_training: 4, no_longer_training: 1)
+    then_i_see_the_participants_filter_with_counts(currently_training: 4, no_longer_training: 3)
 
-    when_i_filter_by("No longer training (1)")
+    when_i_filter_by("No longer training (3)")
     then_i_see_the_participants_filtered_by("No Longer Training")
     and_i_see_mentors_not_training_and_ects_not_being_trained_sorted_by_name
 
