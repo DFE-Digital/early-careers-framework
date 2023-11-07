@@ -28,5 +28,6 @@ RSpec.describe "Manage currently training participants", js: true do
 
     when_i_click_on_the_participants_name "Eligible Without-mentor"
     then_i_am_taken_to_view_details_page
+    and_i_see_the_completion_status_tag
   end
 end
