@@ -120,11 +120,11 @@ class School < ApplicationRecord
   end
 
   def early_career_teacher_profiles_for(cohort, lead_provider)
-    active_profiles_for(cohort:, lead_provider:, type: ParticipantProfile::ECT)
+    active_ect_profiles_for(cohort:, lead_provider:).reject(&:mentor?)
   end
 
   def mentor_profiles_for(cohort, lead_provider)
-    active_profiles_for(cohort:, lead_provider:, type: ParticipantProfile::Mentor)
+    active_ect_profiles_for(cohort:, lead_provider:).select(&:mentor?)
   end
 
   def mentors
@@ -204,10 +204,20 @@ private
     CIP_ONLY_TYPE_CODES.include?(school_type_code)
   end
 
-  def active_profiles_for(cohort:, lead_provider:, type: ParticipantProfile)
+  def active_ect_profiles_for(cohort:, lead_provider:)
+    @cache ||= {}
+
+    key = "#{cohort.id}-#{lead_provider.id}"
+
+    return @cache[key] if @cache[key].present?
+
+    @cache[key] = query_active_ect_profiles_for(cohort:, lead_provider:)
+  end
+
+  def query_active_ect_profiles_for(cohort:, lead_provider:)
     school_cohort = school_cohorts.find_by(cohort:)
-    type
-      .select(:id)
+    ParticipantProfile::ECF
+      .select(:id, :type)
       .joins(induction_records: { induction_programme: :school_cohort })
       .joins("JOIN (#{latest_induction_records_for_lead_provider_join(lead_provider).to_sql}) AS latest_induction_records
           ON latest_induction_records.latest_id = induction_records.id")
