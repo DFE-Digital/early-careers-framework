@@ -10,7 +10,7 @@ RSpec.describe ApplicationHelper, type: :helper do
   let(:school) { induction_coordinator.induction_coordinator_profile.schools.first }
   let(:participant_profile) { create(:ect) }
 
-  let!(:cohort) { Cohort.current || create(:cohort, :current) }
+  let!(:cohort) { Cohort.active_registration_cohort }
 
   describe "#induction_coordinator_dashboard_path" do
     it "returns schools/choose-programme for induction coordinators" do
@@ -31,6 +31,10 @@ RSpec.describe ApplicationHelper, type: :helper do
           create(:cohort,
                  start_year: Time.current.year,
                  registration_start_date: Time.current - 1.day)
+        end
+
+        before do
+          SchoolCohort.create!(school:, cohort: future_cohort, induction_programme_choice: "full_induction_programme")
         end
 
         it "returns the school dashboard path with the active registration tab selected" do
