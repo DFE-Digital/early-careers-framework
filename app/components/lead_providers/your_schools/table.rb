@@ -5,8 +5,9 @@ module LeadProviders
     class Table < BaseComponent
       include Pagy::Backend
 
-      def initialize(partnerships:, page:)
+      def initialize(partnerships:, profiles_by_partnership:, page:)
         @pagy, @partnerships = paginate(partnerships, page || 1)
+        @profiles_by_partnership = profiles_by_partnership
       end
 
     private
@@ -19,7 +20,7 @@ module LeadProviders
         end
       end
 
-      attr_reader :partnerships
+      attr_reader :partnerships, :profiles_by_partnership
     end
   end
 end

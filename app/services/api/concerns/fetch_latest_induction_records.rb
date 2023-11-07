@@ -5,7 +5,7 @@ module Api::Concerns::FetchLatestInductionRecords
 
 protected
 
-  def latest_induction_records_for_lead_provider_join(lead_provider)
+  def latest_induction_records_join
     InductionRecord
     .select(Arel.sql("DISTINCT FIRST_VALUE(induction_records.id) OVER (#{latest_induction_record_order}) AS latest_id"))
     .joins(:participant_profile, { induction_programme: :partnership })
@@ -18,10 +18,6 @@ protected
         },
       },
     )
-  end
-
-  def latest_induction_records_join
-    latest_induction_records_for_lead_provider_join(lead_provider)
   end
 
   def latest_induction_record_order

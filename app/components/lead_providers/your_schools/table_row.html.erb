@@ -16,10 +16,10 @@
   </td>
   <td class="govuk-table__cell nhsuk-table__cell govuk-table__cell--numeric">
     <span class="nhsuk-table-responsive__heading">ECTs</span>
-    <%= school.early_career_teacher_profiles_for(cohort, partnership.lead_provider).size %>
+    <%= profiles_by_partnership[[partnership.id, "ParticipantProfile::ECT"]] || 0 %>
   </td>
   <td class="govuk-table__cell nhsuk-table__cell govuk-table__cell--numeric">
     <span class="nhsuk-table-responsive__heading">Mentors</span>
-    <%= school.mentor_profiles_for(cohort, partnership.lead_provider).size %>
+    <%= profiles_by_partnership[[partnership.id, "ParticipantProfile::Mentor"]] || 0 %>
   </td>
 </tr>
