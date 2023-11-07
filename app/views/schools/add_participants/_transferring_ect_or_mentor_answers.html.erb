@@ -107,7 +107,7 @@
           <% row.with_action(text: "Change",
                              visually_hidden_text: "training programme",
                              href: form.change_path_for(step: :continue_current_programme)) %>
-        <% elsif form.needs_to_choose_school_programme %>
+        <% elsif form.needs_to_choose_school_programme? %>
           <% row.with_action(text: "Change",
                              visually_hidden_text: "training programme",
                              href: form.change_path_for(step: :join_school_programme)) %>
