@@ -319,6 +319,8 @@
   - user_id
   - created_at
   - updated_at
+  - role
+  - lead_provider_id
   :feature_selected_objects:
   - id
   - object_type

@@ -26,7 +26,7 @@
   <% summary_list.with_row do |row| %>
     <% row.with_key { "Lead provider" } %>
     <% row.with_value { pp.npq_application&.npq_lead_provider&.name } %>
-    <% if Finance::NPQ::ChangeLeadProviderForm.new(participant_profile: pp).change_lead_provider? %>
+    <% if policy(FinanceProfile).change_lead_provider? && Finance::NPQ::ChangeLeadProviderForm.new(participant_profile: pp).change_lead_provider? %>
       <% row.with_action(
         text: "Change",
         visually_hidden_text: "lead provider",
@@ -52,11 +52,15 @@
   <% summary_list.with_row do |row| %>
     <% row.with_key { "Training status" } %>
     <% row.with_value { pp.state } %>
-    <% row.with_action(
-      text: "Change",
-      visually_hidden_text: "training status",
-      href: new_finance_participant_profile_npq_change_training_status_path(pp))
-    %>
+    <% if policy(FinanceProfile).change_training_status? %>
+      <% row.with_action(
+        text: "Change",
+        visually_hidden_text: "training status",
+        href: new_finance_participant_profile_npq_change_training_status_path(pp))
+      %>
+    <% else %>
+      <% row.with_action(text: :none) %>
+    <% end %>
   <% end %>
 
   <% summary_list.with_row do |row| %>

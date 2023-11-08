@@ -2,17 +2,25 @@
   <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-heading-l">Manage CPD contracts</h1>
 
-    <h2 class="govuk-heading-m"><%= govuk_link_to "View financial statements", finance_payment_breakdowns_url %></h2>
-    <p class="govuk-body">View, download and update financial statements for lead providers.</p>
+    <% if policy(FinanceProfile).view_statements? %>
+      <h2 class="govuk-heading-m"><%= govuk_link_to "View financial statements", finance_payment_breakdowns_url %></h2>
+      <p class="govuk-body">View, download and update financial statements for lead providers.</p>
+    <% end %>
 
-    <h2 class="govuk-heading-m"><%= govuk_link_to "View payment schedules", finance_schedules_path %></h2>
-    <p class="govuk-body">View cohort milestone dates and payment schedules.</p>
+    <% if policy(FinanceProfile).view_payment_schedules? %>
+      <h2 class="govuk-heading-m"><%= govuk_link_to "View payment schedules", finance_schedules_path %></h2>
+      <p class="govuk-body">View cohort milestone dates and payment schedules.</p>
+    <% end %>
 
-    <h2 class="govuk-heading-m"><%= govuk_link_to "Search participant data", finance_participants_path %></h2>
-    <p class="govuk-body">Search, view and edit participant records, training histories and funding eligibility.</p>
+    <% if policy(FinanceProfile).view_participant_data? %>
+      <h2 class="govuk-heading-m"><%= govuk_link_to "Search participant data", finance_participants_path %></h2>
+      <p class="govuk-body">Search, view and edit participant records, training histories and funding eligibility.</p>
+    <% end %>
 
-    <h2 class="govuk-heading-m"><%= govuk_link_to "Search duplicate records", finance_ecf_duplicates_path %></h2>
-    <p class="govuk-body">Search and compare participant records with any ECF duplicate errors.</p>
+    <% if policy(FinanceProfile).view_duplicate_records? %>
+      <h2 class="govuk-heading-m"><%= govuk_link_to "Search duplicate records", finance_ecf_duplicates_path %></h2>
+      <p class="govuk-body">Search and compare participant records with any ECF duplicate errors.</p>
+    <% end %>
 
   </div>
 </div>

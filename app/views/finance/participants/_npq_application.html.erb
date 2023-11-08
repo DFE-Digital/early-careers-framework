@@ -14,7 +14,7 @@
   <% summary_list.with_row do |row| %>
     <% row.with_key { "Lead Provider approval status" } %>
     <% row.with_value { application.lead_provider_approval_status } %>
-    <% if application.lead_provider_approval_status == "pending" %>
+    <% if !policy(FinanceProfile).change_training_status? or application.lead_provider_approval_status == "pending" %>
       <% row.with_action(text: :none) %>
     <% else %>
       <% row.with_action(
