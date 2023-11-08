@@ -361,6 +361,9 @@ Rails.application.routes.draw do
       resource :npq_change_email, only: %i[edit update], controller: "participants/npq/change_email"
 
       resource :change_induction_start_date, only: %i[edit update], controller: "participants/change_induction_start_date"
+      resource :change_induction_status, only: %i[edit], controller: "participants/change_induction_status" do
+        get :confirm_induction_status
+      end
 
       resource :school_transfer, path: "school-transfer", only: [], controller: "participants/school_transfer" do
         member do

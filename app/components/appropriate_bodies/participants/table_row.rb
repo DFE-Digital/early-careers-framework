@@ -19,8 +19,9 @@ module AppropriateBodies
                to: :induction_record,
                allow_nil: true
 
-      def initialize(induction_record:)
+      def initialize(induction_record:, training_record_states:)
         @induction_record = induction_record
+        @training_record_states = training_record_states
       end
 
       def induction_type
@@ -37,7 +38,7 @@ module AppropriateBodies
 
     private
 
-      attr_reader :induction_record
+      attr_reader :induction_record, :training_record_states
     end
   end
 end

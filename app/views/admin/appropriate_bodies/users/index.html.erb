@@ -2,7 +2,14 @@
 
 <%= render "admin/appropriate_bodies/heading" %>
 
+<%= render SearchBox.new(
+  query: @query,
+  title: "Search appropriate body users",
+  hint: "Enter the user's name, email address or appropriate body"
+) %>
+
 <%= govuk_button_link_to "Add a new user", new_admin_appropriate_bodies_user_path %>
+
 <table class="govuk-table">
   <thead>
     <tr class="govuk-table__row">

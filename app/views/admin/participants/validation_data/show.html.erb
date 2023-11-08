@@ -8,7 +8,7 @@
 <%= render partial: "admin/participants/nav" %>
 
 <% can_be_updated = policy(@participant_profile).update_validation_data? %>
-<% states = DetermineTrainingRecordState.call(participant_profile: @participant_profile) %>
+<% states = DetermineTrainingRecordStateLegacy.call(participant_profile: @participant_profile) %>
 
 <%= govuk_summary_list(actions: true) do |sl|
   sl.with_row do |row|

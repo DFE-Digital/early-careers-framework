@@ -9,6 +9,14 @@ module ParticipantSteps
 
   # Given
 
+  def given_the_ect_has_withdrawn_induction_status
+    Induction::ChangeInductionRecord.call(induction_record: @induction_record, changes: { induction_status: :withdrawn })
+  end
+
+  def given_the_ect_has_leaving_induction_status
+    Induction::ChangeInductionRecord.call(induction_record: @induction_record, changes: { induction_status: :leaving })
+  end
+
   def given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
     @cohort = Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021)
     @school = create(:school, name: "Fip School")
@@ -30,6 +38,10 @@ module ParticipantSteps
 
   def when_i_visit_admin_participants_dashboard
     visit admin_participants_path
+  end
+
+  def when_i_visit_the_satuses_page_for_participant(participant_profile)
+    visit admin_participant_statuses_path(participant_profile)
   end
 
   def when_i_click_on_the_participants_name(name)
@@ -64,6 +76,10 @@ module ParticipantSteps
     within(".app-subnav") { click_on(text) }
   end
 
+  def when_the_ect_has_withdrawn_induction_status
+    @participant_profile_ect.latest_induction_record.update(induction_status:)
+  end
+
   # Then
 
   def then_i_should_be_on_the_edit_name_page
@@ -72,6 +88,10 @@ module ParticipantSteps
 
   def then_i_should_be_on_the_edit_email_page
     expect(page).to have_text("Change mentor’s email address")
+  end
+
+  def then_i_should_be_on_the_edit_induction_status_page
+    expect(page).to have_text("New induction status for #{@participant_profile_ect.full_name}")
   end
 
   def then_i_should_see_the_ects_details
@@ -93,6 +113,10 @@ module ParticipantSteps
 
   def then_i_should_be_in_the_admin_participants_dashboard
     expect(page).to have_selector("h1", text: "Participants")
+  end
+
+  def then_i_should_be_in_the_admin_participants_statuses_dashboard
+    expect(page).to have_css(active_tab_selector, text: "Statuses")
   end
 
   def then_i_should_be_on_the_edit_notes_page
@@ -145,9 +169,21 @@ module ParticipantSteps
 
   # And
 
+  def and_a_new_induction_record_should_be_created
+    expect(@participant_profile_ect.induction_records.count).to eq(3)
+  end
+
   def and_i_have_added_an_ect
     @participant_profile_ect = create(:ect_participant_profile, user: create(:user, full_name: "Sally Teacher", email: "sally-teacher@example.com"), school_cohort: @school_cohort)
-    Induction::Enrol.call(participant_profile: @participant_profile_ect, induction_programme: @induction_programme)
+    @induction_record = Induction::Enrol.call(participant_profile: @participant_profile_ect, induction_programme: @induction_programme)
+  end
+
+  def and_i_click_on_change_induction_status
+    click_on("Change induction status", visible: false)
+  end
+
+  def and_the_induction_record_should_have_school_transfer_true
+    expect(@participant_profile_ect.latest_induction_record.school_transfer).to be true
   end
 
   def and_i_have_added_a_mentor
@@ -177,12 +213,27 @@ module ParticipantSteps
     end
   end
 
+  def and_i_click_on_confirm
+    click_on("Confirm")
+  end
+  alias_method :when_i_click_on_confirm, :and_i_click_on_confirm
+
   def and_i_click_on_continue
     click_on("Continue")
   end
 
   def and_admin_should_be_shown_a_success_message
     expect(page).to have_selector ".govuk-notification-banner--success"
+  end
+
+  def and_i_should_see_the_induction_statuses_are_active
+    within(page.find("dt", text: /^induction status$/).ancestor(".govuk-summary-list__row").find("dd")) do
+      expect(page).to have_text("ACTIVE")
+    end
+
+    within(page.find("dt", text: /^status$/).ancestor(".govuk-summary-list__row").find("dd")) do
+      expect(page).to have_text("ACTIVE")
+    end
   end
 
   def and_the_page_should_have_the_updated_name(name)
@@ -247,5 +298,11 @@ module ParticipantSteps
 
   def then_i_should_see_all_the_user_participant_identities
     expect(page).to have_select("Select email", options: @participant_profile_ect.user.participant_identities.map(&:email))
+  end
+
+  def then_i_should_not_see_the_change_induction_status_link
+    within(page.find("dt", text: /^induction status$/).ancestor(".govuk-summary-list__row").find("dd")) do
+      expect(page).to_not have_link("change")
+    end
   end
 end

@@ -25,7 +25,7 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery do
 
   let(:npq_only_lead_provider) { create(:cpd_lead_provider, :with_npq_lead_provider) }
   let(:npq_lead_provider) { npq_only_lead_provider.npq_lead_provider }
-  let(:npq_application) { create(:npq_application, :accepted, :with_started_declaration, npq_lead_provider:) }
+  let(:npq_application) { create(:npq_application, :accepted, :with_started_declaration, npq_lead_provider:, cohort: cohort1) }
   let!(:npq_participant_declarations) { npq_application.profile.participant_declarations }
 
   subject { described_class.new(cpd_lead_provider: cpd_lead_provider1, params:) }
@@ -209,11 +209,81 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery do
       end
     end
 
-    context "with npq only lead provider" do
+    context "with NPQ only lead provider" do
       subject { described_class.new(cpd_lead_provider: npq_only_lead_provider, params:) }
 
       it "returns all participant declarations for that provider" do
         expect(subject.participant_declarations_for_pagination.pluck(:id)).to eq(npq_participant_declarations.pluck(:id))
+      end
+
+      context "with cohort filter" do
+        let(:another_npq_application) { create(:npq_application, :accepted, :with_started_declaration, npq_lead_provider:, cohort: cohort2) }
+        let!(:npq_participant_declarations) { another_npq_application.profile.participant_declarations }
+
+        let(:cohort) { cohort2.start_year.to_s }
+        let(:params) { { filter: { cohort: } } }
+
+        it "returns all participant declarations for the specific cohort" do
+          expect(subject.participant_declarations_for_pagination.pluck(:id)).to eq(npq_participant_declarations.pluck(:id))
+        end
+      end
+
+      context "with multiple cohort filter" do
+        let(:another_npq_application) { create(:npq_application, :accepted, :with_started_declaration, npq_lead_provider:, cohort: cohort2) }
+        let!(:npq_participant_declarations) { another_npq_application.profile.participant_declarations + npq_application.profile.participant_declarations }
+        let(:params) { { filter: { cohort: [cohort1.start_year, cohort2.start_year].join(",") } } }
+
+        it "returns all participant declarations for the specific cohort" do
+          expect(subject.participant_declarations_for_pagination.pluck(:id)).to eq(npq_participant_declarations.pluck(:id))
+        end
+      end
+
+      context "with incorrect cohort filter" do
+        let(:params) { { filter: { cohort: "2017" } } }
+
+        it "returns no participant declarations" do
+          expect(subject.participant_declarations_for_pagination.to_a).to be_empty
+        end
+      end
+    end
+
+    context "with an NPQ and ECF lead provider" do
+      let(:cpd_lead_provider1) { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider) }
+      let(:npq_lead_provider) { cpd_lead_provider1.npq_lead_provider }
+      let(:ecf_declarations) { [participant_declaration3, participant_declaration1, participant_declaration2] }
+
+      it "returns all participant declarations for that provider" do
+        expect(subject.participant_declarations_for_pagination.pluck(:id)).to match_array(npq_participant_declarations.pluck(:id) + ecf_declarations.map(&:id))
+      end
+
+      context "with cohort filter" do
+        let(:another_npq_application) { create(:npq_application, :accepted, :with_started_declaration, npq_lead_provider:, cohort: cohort2) }
+        let!(:npq_participant_declarations) { another_npq_application.profile.participant_declarations }
+
+        let(:cohort) { cohort2.start_year.to_s }
+        let(:params) { { filter: { cohort: } } }
+
+        it "returns all participant declarations for the specific cohort" do
+          expect(subject.participant_declarations_for_pagination.pluck(:id)).to match_array(npq_participant_declarations.pluck(:id) + [participant_declaration3.id])
+        end
+      end
+
+      context "with multiple cohort filter" do
+        let(:another_npq_application) { create(:npq_application, :accepted, :with_started_declaration, npq_lead_provider:, cohort: cohort2) }
+        let!(:npq_participant_declarations) { another_npq_application.profile.participant_declarations + npq_application.profile.participant_declarations }
+        let(:params) { { filter: { cohort: [cohort1.start_year, cohort2.start_year].join(",") } } }
+
+        it "returns all participant declarations for the specific cohort" do
+          expect(subject.participant_declarations_for_pagination.pluck(:id)).to match_array(npq_participant_declarations.pluck(:id) + ecf_declarations.map(&:id))
+        end
+      end
+
+      context "with incorrect cohort filter" do
+        let(:params) { { filter: { cohort: "2017" } } }
+
+        it "returns no participant declarations" do
+          expect(subject.participant_declarations_for_pagination.to_a).to be_empty
+        end
       end
     end
   end

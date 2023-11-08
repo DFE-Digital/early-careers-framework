@@ -131,7 +131,7 @@ module Dashboard
         .select(&:ect?)
         .each do |induction_record|
           next completed_induction_ect(induction_record) if induction_record.completed_induction_status?
-          next no_longer_training_ect(induction_record) if induction_record.deferred_or_transferred? || induction_record.withdrawn_induction_status?
+          next no_longer_training_ect(induction_record) if induction_record.deferred_or_transferred_or_withdrawn?
           next orphan_ect(induction_record) if induction_record.mentor_profile_id.blank?
 
           currently_training_ect(induction_record)
@@ -146,7 +146,7 @@ module Dashboard
       induction_records
         .reject(&:ect?)
         .each do |induction_record|
-          next no_longer_training_mentor(induction_record) if induction_record.deferred_or_transferred? || induction_record.withdrawn_induction_status?
+          next no_longer_training_mentor(induction_record) if induction_record.deferred_or_transferred_or_withdrawn?
 
           @active_mentors << dashboard_participant(induction_record.participant_profile_id, induction_record:)
         end

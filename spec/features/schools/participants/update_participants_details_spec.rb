@@ -110,6 +110,7 @@ RSpec.describe "Changing participant details from the dashboard", type: :feature
     and_i_click(Cohort.current.description)
 
     when_i_navigate_to_participants_dashboard
+    when_i_filter_by("No longer training (1)")
     when_i_click_on_the_participants_name "Sally Teacher"
     then_i_am_taken_to_view_details_page
     and_it_should_not_allow_a_sit_to_edit_the_participant_details

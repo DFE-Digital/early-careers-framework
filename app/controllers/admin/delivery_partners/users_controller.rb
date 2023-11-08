@@ -69,8 +69,6 @@ module Admin
       end
 
       def scoped
-        return policy_scope(DeliveryPartnerProfile).includes(:user).order("users.full_name asc") if params[:query].blank?
-
         ::DeliveryPartnerProfiles::SearchQuery
           .new(query: params[:query], scope: policy_scope(DeliveryPartnerProfile))
           .call

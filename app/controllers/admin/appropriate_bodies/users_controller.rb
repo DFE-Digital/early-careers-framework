@@ -8,8 +8,8 @@ module Admin
       before_action :set_appropriate_body_profile_and_authorize, only: %i[edit update delete destroy]
 
       def index
+        @query = params[:query]
         authorize AppropriateBodyProfile
-        scoped = policy_scope(AppropriateBodyProfile).includes(:user).order("users.full_name asc")
         @pagy, @appropriate_body_profiles = pagy(scoped, page: params[:page], items: 20)
       end
 
@@ -66,6 +66,12 @@ module Admin
       def set_appropriate_body_profile_and_authorize
         @appropriate_body_profile = AppropriateBodyProfile.find(params[:id])
         authorize @appropriate_body_profile
+      end
+
+      def scoped
+        ::AppropriateBodyProfiles::SearchQuery
+          .new(query: params[:query], scope: policy_scope(AppropriateBodyProfile))
+          .call
       end
     end
   end

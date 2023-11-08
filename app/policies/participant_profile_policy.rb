@@ -13,7 +13,12 @@ class ParticipantProfilePolicy < ApplicationPolicy
     super_user_only
   end
 
+  def edit_induction_status?
+    super_user_only
+  end
+
   alias_method :edit_cohort?, :change_cohort?
+  alias_method :confirm_induction_status?, :edit_induction_status?
   alias_method :update_cohort?, :change_cohort?
 
   alias_method :withdraw_record?, :destroy?

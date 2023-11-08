@@ -7,10 +7,21 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
+## 6 November 2023
+
+Lead providers can now use the new `participant_id_changes` features in the Live environment.
+
+Further detail on the change is available in the release note of [6 October 2023](/api-reference/release-notes.html#6-october-2023).
+
+## 2 November 2023
+
+The DfE has released a fix for an issue which affected NPQ only providers using the v3 declarations endpoints. Some providers reported receiving 403 errors when attempting to POST or GET declarations. The issue was limited to v3. The fix has been released to sandbox and production environments.
+
+The fix also addresses an issue with the [cohort filter](/api-reference/reference-v3.html#schema-participantdeclarationsfilter), which is available for the declarations endpoint. Providers using the filter should now see that the response only returns NPQ and ECF declarations in the cohort specified. Previously, the filtering was inconsistent for NPQ declarations. The fix applies to production and sandbox environments.
+
 ## 30 October 2023
 
 Lead providers will now see a 422 error code if a `completed` declaration outcome fails. In such instances, you'll be prompted to contact us for support.
-
 ## 17 October 2023
 
 Lead providers can now test the new `participant_id_changes` feature in the sandbox.

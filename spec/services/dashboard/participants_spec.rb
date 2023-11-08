@@ -23,6 +23,12 @@ RSpec.describe Dashboard::Participants do
       .build
       .add_induction_record(induction_programme: transfer_1.induction_programme_from, training_status: :deferred)
   end
+  let!(:withdrawn_training_record) do
+    NewSeeds::Scenarios::Participants::Ects::Ect
+      .new(school_cohort: ect_1_induction_record_1.school_cohort)
+      .build
+      .add_induction_record(induction_programme: transfer_1.induction_programme_from, training_status: :withdrawn)
+  end
   # TODO: copied from NewSeeds::Scenarios::Participants::TrainingRecordStates#ect_on_fip_transferred as they are not yet set up to receive a school cohort
   let!(:transferred_induction_record) do
     transferred_to_school_cohort = NewSeeds::Scenarios::Schools::School.new.build
@@ -65,7 +71,7 @@ RSpec.describe Dashboard::Participants do
     end
 
     it "returns a unique entry per ect mentor not mentoring or ects not training" do
-      expect(subject).to contain_exactly(deferred_induction_record, withdrawn_induction_record, transferred_induction_record)
+      expect(subject).to contain_exactly(deferred_induction_record, withdrawn_induction_record, transferred_induction_record, withdrawn_training_record)
     end
   end
 end

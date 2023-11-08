@@ -142,7 +142,7 @@ module Api
           }.compact
         end
 
-        attribute(:participant_id_changes, if: -> { FeatureFlag.active?(:participant_id_changes) }) do |object|
+        attribute(:participant_id_changes) do |object|
           (object.participant_id_changes || []).map do |c|
             {
               from_participant_id: c.from_participant_id,

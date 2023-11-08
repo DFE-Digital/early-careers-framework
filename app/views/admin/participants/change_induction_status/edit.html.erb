@@ -1,0 +1,24 @@
+<% content_for :before_content, govuk_back_link( text: "Back", href: admin_participant_statuses_path(@participant_profile)) %>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-l">New induction status for <%= @participant_profile.full_name %></h1>
+      <h3 class="govuk-heading-m">Relevant induction record</h3>
+      <%= govuk_summary_list do |sl|
+        sl.with_row do |row|
+          row.with_key(text: "induction status")
+          row.with_value(text: govuk_tag(text: "Active", colour: "grey"))
+        end
+      end %>
+
+      <h3 class="govuk-heading-m">Participant profile</h3>
+      <%= govuk_summary_list do |sl|
+        sl.with_row do |row|
+          row.with_key(text: "status")
+          row.with_value(text: govuk_tag(text: "Active", colour: "grey"))
+        end
+      end %>
+
+      <%= govuk_button_link_to "Confirm",  confirm_induction_status_admin_participant_change_induction_status_path %>
+  </div>
+</div>
+

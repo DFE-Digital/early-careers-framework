@@ -69,6 +69,31 @@ RSpec.feature "Admin delivery partner users" do
     and_i_should_not_see("joe@example.com")
   end
 
+  scenario "View a list of users" do
+    given_a_delivery_partner_user_exists
+    when_i_visit_admin_delivery_partner_users_page
+    then_i_see("Delivery partners")
+    and_i_see("Search delivery partner users")
+    and_i_see("Enter the user's name, email address or delivery partner")
+
+    when_i_fill_in("query-field", with: @delivery_partner_user.full_name[0])
+    and_i_click_on("Search")
+    then_i_see(@delivery_partner_user.full_name)
+    and_i_see(@delivery_partner_user.email)
+
+    when_i_fill_in("query-field", with: @delivery_partner_user.email)
+    and_i_click_on("Search")
+    then_i_see(@delivery_partner_user.full_name)
+    and_i_see(@delivery_partner_user.email)
+
+    when_i_fill_in("query-field", with: SecureRandom.uuid)
+    and_i_click_on("Search")
+    then_i_should_not_see(@delivery_partner_user.full_name)
+    and_i_should_not_see(@delivery_partner_user.email)
+  end
+
+private
+
   def given_a_delivery_partner_exists
     @delivery_partner = create(:delivery_partner, name: "First Partner")
   end
@@ -109,11 +134,19 @@ RSpec.feature "Admin delivery partner users" do
     expect(page).to have_content(string)
   end
 
+  def then_i_should_not_see(string)
+    expect(page).not_to have_content(string)
+  end
+
   def and_i_should_not_see(string)
     expect(page).not_to have_content(string)
   end
 
   def given_a_delivery_partner_user_exists
     @delivery_partner_user = create(:user, :delivery_partner)
+  end
+
+  def when_i_fill_in(selector, with:)
+    page.fill_in selector, with:
   end
 end

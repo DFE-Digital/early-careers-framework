@@ -366,6 +366,26 @@ module ManageTrainingSteps
     @induction_record.update!(training_status: :deferred)
   end
 
+  def and_i_have_added_an_ect_with_withdrawn_training
+    user = create(:user, full_name: "Withdrawn training participant")
+    teacher_profile = create(:teacher_profile, user:)
+    @withdrawn_training_participant = create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, teacher_profile:, school_cohort: @school_cohort, training_status: :withdrawn)
+    @induction_record = Induction::Enrol.call(participant_profile: @withdrawn_training_participant,
+                                              induction_programme: @induction_programme,
+                                              start_date: 2.months.from_now)
+    @induction_record.update!(training_status: :withdrawn)
+  end
+
+  def and_i_have_added_an_ect_with_withdrawn_induction_status
+    user = create(:user, full_name: "Withdrawn training participant")
+    teacher_profile = create(:teacher_profile, user:)
+    @withdrawn_induction_status_participant = create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, teacher_profile:, school_cohort: @school_cohort, status: :withdrawn)
+    @induction_record = Induction::Enrol.call(participant_profile: @withdrawn_induction_status_participant,
+                                              induction_programme: @induction_programme,
+                                              start_date: 2.months.from_now)
+    @induction_record.update!(induction_status: :withdrawn)
+  end
+
   def and_my_ects_have_completed_their_induction
     Induction::Complete.call(participant_profile: @contacted_for_info_ect_without_mentor, completion_date: 1.week.ago)
     Induction::Complete.call(participant_profile: @eligible_ect_without_mentor, completion_date: 2.days.ago)
@@ -1319,14 +1339,6 @@ module ManageTrainingSteps
   def then_i_see_the_cohort_tabs
     then_i_see_the_tab_for_the_cohort(2021)
     then_i_see_the_tab_for_the_cohort(2022)
-  end
-
-  def then_i_see_the_complete_participants_banner
-    expect(page).to have_text("Do not remove ECTs or mentors who have completed their induction and training.")
-  end
-
-  def then_i_do_not_see_the_complete_participants_banner
-    expect(page).not_to have_text("Do not remove ECTs or mentors who have completed their induction and training.")
   end
 
   def then_i_am_on_the_what_we_need_to_know_page

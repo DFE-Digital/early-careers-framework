@@ -14,6 +14,9 @@ RSpec.describe Induction::FindBy do
   let(:school_3) { NewSeeds::Scenarios::Schools::School.new.build.chosen_fip_and_partnered_in(cohort:) }
   let(:ect) { NewSeeds::Scenarios::Participants::Ects::Ect.new(school_cohort: school_1.school_cohort).build }
 
+  let(:appropriate_body_1) { create(:appropriate_body_local_authority) }
+  let(:appropriate_body_2) { create(:appropriate_body_national_organisation) }
+
   let(:participant_profile) { ect.participant_profile }
 
   let!(:induction_1) { ect.add_induction_record(induction_programme: school_1.induction_programme, start_date: Date.new(current_year, 9, 1), end_date: Date.new(current_year, 10, 1), induction_status: "leaving") }
@@ -23,6 +26,11 @@ RSpec.describe Induction::FindBy do
   let!(:induction_5) { ect.add_induction_record(induction_programme: school_3.induction_programme, start_date: Date.new(current_year + 1, 1, 1), end_date: nil, induction_status: "leaving") }
 
   subject(:service) { described_class }
+
+  before do
+    school_1.school_cohort.update!(appropriate_body: appropriate_body_1)
+    school_2.school_cohort.update!(appropriate_body: appropriate_body_2)
+  end
 
   describe "#call" do
     it "returns the latest induction record for the participant" do
@@ -116,6 +124,15 @@ RSpec.describe Induction::FindBy do
           expect(service.call(participant_profile:, school: school_1.school)).to eq induction_1
           expect(service.call(participant_profile:, school: school_2.school)).to eq induction_2
           expect(service.call(participant_profile:, school: school_3.school)).to eq induction_5
+        end
+      end
+    end
+
+    context "when an appropriate body is supplied" do
+      it "returns the latest induction record for that appropriate body" do
+        travel_to a_point_in_time do
+          expect(service.call(participant_profile:, appropriate_body: appropriate_body_1)).to eq induction_1
+          expect(service.call(participant_profile:, appropriate_body: appropriate_body_2)).to eq induction_2
         end
       end
     end

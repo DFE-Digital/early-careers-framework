@@ -5,7 +5,7 @@ require "rails_helper"
 module Api
   module V3
     module ECF
-      RSpec.describe ParticipantSerializer, with_feature_flags: { participant_id_changes: "active" } do
+      RSpec.describe ParticipantSerializer do
         describe "serialization" do
           let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
           let(:school) { create(:school) }

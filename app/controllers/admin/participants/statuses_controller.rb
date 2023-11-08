@@ -5,6 +5,8 @@ module Admin::Participants
     include RetrieveProfile
 
     def show
+      appropriate_body_induction_record = Induction::FindBy.call(participant_profile: @participant_profile, appropriate_body: @participant_profile.school_cohort&.appropriate_body)
+      @appropriate_body_training_record_states = DetermineTrainingRecordState.call(induction_records: appropriate_body_induction_record)
       @participant_presenter = Admin::ParticipantPresenter.new(@participant_profile)
 
       add_breadcrumb(

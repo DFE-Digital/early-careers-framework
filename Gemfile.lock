@@ -156,7 +156,7 @@ GEM
       activerecord (>= 5.a)
       database_cleaner-core (~> 2.0.0)
     database_cleaner-core (2.0.1)
-    date (3.3.3)
+    date (3.3.4)
     declarative (0.0.20)
     descendants_tracker (0.0.4)
       thread_safe (~> 0.3, >= 0.3.1)
@@ -202,7 +202,7 @@ GEM
     foreman (0.87.2)
     friendly_id (5.5.0)
       activerecord (>= 4.0.0)
-    fugit (1.8.1)
+    fugit (1.9.0)
       et-orbi (~> 1, >= 1.2.7)
       raabro (~> 1.4)
     globalid (1.2.1)
@@ -312,12 +312,12 @@ GEM
     minitest (5.20.0)
     msgpack (1.6.0)
     multi_json (1.15.0)
-    net-imap (0.4.3)
+    net-imap (0.4.4)
       date
       net-protocol
     net-pop (0.1.2)
       net-protocol
-    net-protocol (0.2.1)
+    net-protocol (0.2.2)
       timeout
     net-smtp (0.4.0)
       net-protocol
@@ -527,7 +527,7 @@ GEM
       connection_pool (>= 2.2.5, < 3)
       rack (~> 2.0)
       redis (>= 4.5.0, < 5)
-    sidekiq-cron (1.10.1)
+    sidekiq-cron (1.11.0)
       fugit (~> 1.8)
       globalid (>= 1.0.1)
       sidekiq (>= 6)
@@ -578,7 +578,7 @@ GEM
     thread_safe (0.3.6)
     tilt (2.1.0)
     timecop (0.9.8)
-    timeout (0.4.0)
+    timeout (0.4.1)
     trailblazer-option (0.1.2)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
