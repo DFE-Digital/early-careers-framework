@@ -16,9 +16,15 @@ RSpec.describe StatusTags::SchoolParticipantStatusTag, type: :component do
   I18n.t("status_tags.school_participant_status").each do |key, value|
     context "when :#{key} is the determined state" do
       before { allow(component).to receive(:record_state).and_return(key) }
+      let(:tag_description) do
+        Array.wrap(value[:description]).join("\n  ")
+        .gsub("%{contact_us}", "contact us\n")
+        .gsub("%{appropriate_body_name}", "Your appropriate body")
+        .gsub("%{induction_completion_date}", "")
+      end
 
       it { is_expected.to have_text value[:label] }
-      it { is_expected.to have_text Array.wrap(value[:description]).join("\n  ").gsub("%{contact_us}", "contact us\n") }
+      it { is_expected.to have_text tag_description }
     end
 
     it "includes :#{key} as a recognised record_state" do

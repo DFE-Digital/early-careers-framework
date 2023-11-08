@@ -624,6 +624,10 @@ module ManageTrainingSteps
     Mentors::AddToSchool.call(mentor_profile: @no_qts_mentor, school: @school)
   end
 
+  def and_i_see_the_completion_status_tag
+    expect(page).to have_text("Your appropriate body confirmed that this person completed their induction and training on #{@eligible_ect_without_mentor.induction_completion_date.to_fs(:govuk)}")
+  end
+
   def and_it_should_not_allow_a_sit_to_edit_the_participant_details
     expect(page).not_to have_link("//a[text()='Change']")
   end
