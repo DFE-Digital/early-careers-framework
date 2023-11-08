@@ -7,8 +7,6 @@ class ApiRequest < ApplicationRecord
   scope :successful, -> { where(status_code: [200]) }
 
   def send_event(type, data)
-    return unless FeatureFlag.active?(:send_api_request_to_analytics)
-
     # exclude or only send events for specific api endpoints
     return if data["request_path"] =~ /^\/api\/v\d+\/npq-profiles/
 
