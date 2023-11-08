@@ -8,6 +8,7 @@
     summary_list.with_row do |row|
       row.with_key(text: "Appropriate body")
       row.with_value(text: appropriate_body_name || "None")
+      row.with_action(text: "Change", visually_hidden_text: "appropriate body", href: change_appropriate_body_href)
     end
 
     summary_list.with_row do |row|

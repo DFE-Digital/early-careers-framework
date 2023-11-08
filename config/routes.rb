@@ -295,6 +295,8 @@ Rails.application.routes.draw do
             post :confirm
           end
         end
+
+        resource :appropriate_body, only: %i[edit update], path: "appropriate-body", controller: "schools/cohorts/appropriate_bodies"
       end
       resources :partnerships, only: [] do
         resource :challenge_partnership, only: %i[new create], path: "challenge-partnership", controller: "schools/cohorts/challenge_partnership" do

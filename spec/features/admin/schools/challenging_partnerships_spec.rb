@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.feature "Admin managing school provision", js: true, rutabaga: false do
+RSpec.feature "Admin challenges school partnership", js: true, rutabaga: false do
   # feature removed while the new journeys are developed
   xscenario "Admin challenges school partnership" do
     given_there_is_a_partnered_school
