@@ -26,7 +26,7 @@ module LeadProviders
           relationship: false,
         )
 
-      @profiles_by_partnership = Participants::ActiveByPartnership.call(partnerships: @partnerships, lead_provider: @lead_provider)
+      @participant_counts = Participants::ActiveCountByPartnership.call(partnerships: @partnerships, lead_provider: @lead_provider)
       @total_provider_schools = @partnerships.count
 
       @query = params[:query]

@@ -5,14 +5,14 @@ RSpec.describe LeadProviders::YourSchools::Table, type: :component do
 
   let(:items) { 10 }
   let(:partnerships) { create_list(:partnership, 21) }
-  let(:profiles_by_partnership) do
+  let(:participant_counts) do
     partnerships.each_with_object({}) do |partnership, hash|
-      hash[[partnership.id, "ParticipantProfile::ECT"]] = 3
+      hash[partnership.id] = { ect_count: 3, mentor_count: 0 }
     end
   end
   let(:page) { rand(1..2) }
 
-  let(:component) { described_class.new partnerships:, profiles_by_partnership:, page: }
+  let(:component) { described_class.new partnerships:, participant_counts:, page: }
   subject! { render_inline(component) }
 
   it "renders table row for each school" do

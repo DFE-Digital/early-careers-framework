@@ -5,14 +5,14 @@ module LeadProviders
     class TableRow < BaseComponent
       with_collection_parameter :partnership
 
-      def initialize(partnership:, profiles_by_partnership:)
+      def initialize(partnership:, participant_counts:)
         @partnership = partnership
-        @profiles_by_partnership = profiles_by_partnership
+        @participant_counts = participant_counts
       end
 
     private
 
-      attr_reader :partnership, :profiles_by_partnership
+      attr_reader :partnership, :participant_counts
 
       delegate :school, :cohort, to: :partnership
     end

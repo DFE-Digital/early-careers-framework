@@ -2,17 +2,16 @@
 
 require "rails_helper"
 
-RSpec.describe Participants::ActiveByPartnership do
+RSpec.describe Participants::ActiveCountByPartnership do
   let(:partnership) { create(:partnership) }
   let(:lead_provider) { partnership.lead_provider }
   let(:partnerships) { [partnership] }
 
   describe "#call" do
-    subject { described_class.call(partnerships:, lead_provider:) }
+    subject(:counts) { described_class.call(partnerships:, lead_provider:) }
 
-    it "does not set a value if there are no participants found" do
-      is_expected.not_to include([partnership.id, "ParticipantProfile::ECT"])
-      is_expected.not_to include([partnership.id, "ParticipantProfile::Mentor"])
+    it "returns a count of 0 by default" do
+      expect(counts[partnership.id]).to eq(ect_count: 0, mentor_count: 0)
     end
 
     it "counts active ECTs and Mentors" do
@@ -20,8 +19,7 @@ RSpec.describe Participants::ActiveByPartnership do
       create_profile_with_induction_record(:mentor_participant_profile, partnership)
       create_profile_with_induction_record(:mentor_participant_profile, partnership)
 
-      is_expected.to include([partnership.id, "ParticipantProfile::ECT"] => 1)
-      is_expected.to include([partnership.id, "ParticipantProfile::Mentor"] => 2)
+      expect(counts[partnership.id]).to include(ect_count: 1, mentor_count: 2)
     end
 
     it "does not include withdrawn records" do
@@ -60,8 +58,8 @@ RSpec.describe Participants::ActiveByPartnership do
           create(:induction_record, participant_profile:, partnership: latest_partnership)
         end
 
-        is_expected.not_to include([partnership.id, "ParticipantProfile::ECT"])
-        is_expected.to include([latest_partnership.id, "ParticipantProfile::ECT"] => 1)
+        is_expected.not_to have_key(partnership.id)
+        expect(counts[latest_partnership.id]).to include(ect_count: 1)
       end
     end
 
@@ -76,16 +74,16 @@ RSpec.describe Participants::ActiveByPartnership do
       end
 
       it "includes participants only for the partnership of the provided lead provider" do
-        is_expected.to include([partnership.id, "ParticipantProfile::ECT"] => 1)
-        is_expected.not_to include([another_partnership.id, "ParticipantProfile::ECT"])
+        expect(counts[partnership.id]).to include(ect_count: 1)
+        is_expected.not_to have_key(another_partnership.id)
       end
 
       context "when querying as the other lead provider" do
         let(:lead_provider) { another_partnership.lead_provider }
 
         it "includes participants only for the partnership of the provided lead provider" do
-          is_expected.to include([another_partnership.id, "ParticipantProfile::ECT"] => 1)
-          is_expected.not_to include([partnership.id, "ParticipantProfile::ECT"])
+          expect(counts[another_partnership.id]).to include(ect_count: 1)
+          is_expected.not_to have_key(partnership.id)
         end
       end
     end

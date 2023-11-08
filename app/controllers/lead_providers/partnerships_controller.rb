@@ -14,7 +14,7 @@ module LeadProviders
       @school = @partnership.school
       @selected_cohort = @partnership.cohort
       @delivery_partner = @partnership.delivery_partner
-      @profiles_by_partnership = Participants::ActiveByPartnership.call(partnerships: @partnership, lead_provider: @lead_provider)
+      @participant_counts = Participants::ActiveCountByPartnership.call(partnerships: @partnership, lead_provider: @lead_provider)
     end
 
     def active
