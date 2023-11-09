@@ -92,12 +92,13 @@ For more detailed information see the specifications for this [view multiple NPQ
         "updated_at": "2022-11-24T17:09:37Z",
         "cohort": "2022",
         "eligible_for_funding": true,
-        "targeted_delivery_funding_eligibility": false,
+         "targeted_delivery_funding_eligibility": false,
         "teacher_catchment": true,
         "teacher_catchment_iso_country_code": "GBR",
         "teacher_catchment_country": "United Kingdom of Great Britain and Northern Ireland",
         "itt_provider": null,
-        "lead_mentor": false
+        "lead_mentor": false,
+        "schedule_identifier": "npq-leadership-spring"
       }
     }
   ]
@@ -148,7 +149,8 @@ For more detailed information see the specifications for this [view a specific N
       “teacher_catchment_country”: “France”,
       “teacher_catchment_iso_country_code”: “FRA”,
       “lead_mentor”: true,
-      “itt_provider”: “University of Southampton”
+      “itt_provider”: “University of Southampton”,
+      "schedule_identifier": "npq-leadership-spring"
     }
   }
 }
@@ -169,6 +171,23 @@ POST /api/v3/npq-applications/{id}/accept
 ```
 
 The request parameter must include the `id` of the corresponding NPQ application.
+
+An **optional** request body allows lead providers to add a participant's schedule when accepting NPQ applications.
+
+An example request body is listed below.
+
+#### Example request body:
+
+```
+{
+  "data": {
+    "type": "npq-application-accept",
+    "attributes": {
+      "schedule_identifier": "npq-leadership-spring"
+    }
+  }
+}
+```
 
 An example response body is listed below. Successful requests will return a response body including updates to the `status` attribute.
 
@@ -210,7 +229,8 @@ For more detailed information see the specifications for this [accept an NPQ app
       "teacher_catchment_country": "France",
       "teacher_catchment_iso_country_code": "FRA",
       "lead_mentor": true,
-      "itt_provider": "University of Southampton"
+      "itt_provider": "University of Southampton",
+      "schedule_identifier": "npq-leadership-spring"
     }
   }
 }
@@ -271,7 +291,8 @@ For more detailed information see the specifications for this [accept an NPQ app
       "teacher_catchment_country": "France",
       "teacher_catchment_iso_country_code": "FRA",
       "lead_mentor": true,
-      "itt_provider": "University of Southampton"
+      "itt_provider": "University of Southampton",
+      "schedule_identifier": "npq-leadership-spring"
     }
   }
 }

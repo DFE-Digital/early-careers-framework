@@ -1,0 +1,10 @@
+description: "The NPQ Application acceptance request"
+type: object
+properties:
+  data:
+    $ref: "#/components/schemas/NPQApplicationAcceptDataRequest"
+example:
+  data:
+    type: "npq-application-accept"
+    attributes:
+      schedule_identifier: "npq-leadership-spring"

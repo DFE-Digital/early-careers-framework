@@ -1,0 +1,22 @@
+description: "The NPQ Application acceptance request"
+type: object
+required:
+  - schedule_identifier
+properties:
+  schedule_identifier:
+    description: "The new schedule of the participant"
+    type: string
+    enum:
+      - npq-aso-march
+      - npq-aso-june
+      - npq-aso-november
+      - npq-aso-december
+      - npq-ehco-march
+      - npq-ehco-june
+      - npq-ehco-november
+      - npq-ehco-december
+      - npq-leadership-autumn
+      - npq-leadership-spring
+      - npq-specialist-autumn
+      - npq-specialist-spring
+    example: npq-leadership-spring

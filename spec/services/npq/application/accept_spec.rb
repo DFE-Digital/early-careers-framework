@@ -20,7 +20,7 @@ RSpec.describe NPQ::Application::Accept do
     let(:trn) { rand(1_000_000..9_999_999).to_s }
     let(:user) { create(:user) }
     let(:identity) { create(:participant_identity, user:) }
-    let(:npq_course) { create(:npq_course, identifier: "npq-senior-leadership") }
+    let(:npq_course) { create(:npq_leadership_course, identifier: "npq-senior-leadership") }
     let(:npq_lead_provider) { create(:npq_lead_provider) }
 
     let(:npq_application) do
@@ -290,6 +290,51 @@ RSpec.describe NPQ::Application::Accept do
           subject.call
           npq_application.reload
           expect(npq_application.user.teacher_profile.trn).to be_blank
+        end
+      end
+
+      context "when the schedule identifier is present in the params", with_feature_flags: { accept_npq_application_can_change_schedule: "active" } do
+        let(:params) do
+          {
+            npq_application:,
+            schedule_identifier:,
+          }
+        end
+        let(:schedule_identifier) { "npq-leadership-spring" }
+
+        it "creates teacher and participant profile" do
+          expect { service.call }
+            .to change(TeacherProfile, :count).by(1)
+            .and change(ParticipantProfile::NPQ, :count).by(1)
+        end
+
+        it "creates participant profile correctly" do
+          subject.call
+
+          profile = user.teacher_profile.npq_profiles.first
+
+          expect(profile.schedule).to eql(Finance::Schedule::NPQ.where(schedule_identifier:, cohort: cohort_2021).first)
+          expect(profile.npq_course).to eql(npq_application.npq_course)
+          expect(profile.teacher_profile).to eql(user.teacher_profile)
+          expect(profile.user).to eql(user)
+          expect(profile.school_urn).to eql(npq_application.school_urn)
+          expect(profile.school_ukprn).to eql(npq_application.school_ukprn)
+        end
+
+        context "when schedule identifier is not valid for the npq course" do
+          let(:schedule_identifier) { "npq-specialist-spring" }
+
+          it "does not create neither teacher nor participant profile" do
+            expect { service.call }
+              .to change(TeacherProfile, :count).by(0)
+              .and change(ParticipantProfile::NPQ, :count).by(0)
+          end
+
+          it "is invalid and returns an error message" do
+            is_expected.to be_invalid
+
+            expect(service.errors.messages_for(:schedule_identifier)).to include("Selected schedule is not valid for the course")
+          end
         end
       end
     end

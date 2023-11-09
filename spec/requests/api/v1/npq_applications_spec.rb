@@ -54,7 +54,7 @@ RSpec.describe "NPQ Applications API", type: :request do
           expect(parsed_response["data"][0]["id"]).to be_in(NPQApplication.pluck(:id))
 
           profile = NPQApplication.find(parsed_response["data"][0]["id"])
-          expect(parsed_response["data"][0]).to eql single_json_application(npq_application: profile)
+          expect(parsed_response["data"][0]).to eql single_json_v1_application(npq_application: profile)
         end
 
         it "can return paginated data" do
@@ -259,7 +259,7 @@ RSpec.describe "NPQ Applications API", type: :request do
     end
 
     context "when authorized" do
-      let(:expected_response) { expected_single_json_response(npq_application:) }
+      let(:expected_response) { expected_single_json_v1_response(npq_application:) }
 
       it "returns correct jsonapi content type header" do
         expect(response.headers["Content-Type"]).to eql("application/vnd.api+json")
@@ -380,14 +380,14 @@ RSpec.describe "NPQ Applications API", type: :request do
   end
 end
 
-def expected_single_json_response(npq_application:)
+def expected_single_json_v1_response(npq_application:)
   {
     "data" =>
-        single_json_application(npq_application:),
+        single_json_v1_application(npq_application:),
   }
 end
 
-def single_json_application(npq_application:)
+def single_json_v1_application(npq_application:)
   {
     "id" => npq_application.id,
     "type" => "npq_application",
