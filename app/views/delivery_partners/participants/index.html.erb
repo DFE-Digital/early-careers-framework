@@ -47,8 +47,8 @@
   </thead>
 
   <tbody class="govuk-table__body">
-    <% if @participant_profiles.any? %>
-      <%= render DeliveryPartners::Participants::TableRow.with_collection(@participant_profiles, delivery_partner: delivery_partner) %>
+    <% if @induction_records.any? %>
+      <%= render DeliveryPartners::Participants::TableRow.with_collection(@induction_records, training_record_states: @training_record_states) %>
     <% else %>
       <tr class="govuk-table__row">
         <td colspan="10" class="govuk-table__cell">

@@ -3,28 +3,13 @@
 module DeliveryPartners
   class ParticipantsController < BaseController
     def index
-      collection = ParticipantProfile::ECF.includes(
-        induction_records: {
-          induction_programme: [:partnership],
-        },
-      ).where(
-        induction_records: {
-          induction_programme: {
-            partnerships: {
-              delivery_partner:,
-              challenged_at: nil,
-              challenge_reason: nil,
-              pending: false,
-            },
-          },
-        },
-      )
-
-      @filter = ParticipantsFilter.new(collection:, params: filter_params)
+      induction_records = InductionRecordsQuery.new(delivery_partner:).induction_records
+      @training_record_states = DetermineTrainingRecordState.call(induction_records:)
+      @filter = ParticipantsFilter.new(collection: induction_records, params: filter_params, training_record_states: @training_record_states)
 
       respond_to do |format|
         format.html do
-          @pagy, @participant_profiles = pagy(
+          @pagy, @induction_records = pagy(
             @filter.scope.order(updated_at: :desc),
             page: params[:page],
             items: 50,
@@ -32,12 +17,7 @@ module DeliveryPartners
         end
 
         format.csv do
-          serializer = DeliveryPartners::ParticipantsSerializer.new(
-            @filter.scope.order(updated_at: :desc),
-            params: {
-              delivery_partner:,
-            },
-          )
+          serializer = InductionRecordsSerializer.new(@filter.scope.order(updated_at: :desc), params: { training_record_states: @training_record_states })
           render body: to_csv(serializer.serializable_hash)
         end
       end

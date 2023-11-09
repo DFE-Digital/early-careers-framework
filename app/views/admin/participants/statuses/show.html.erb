@@ -61,7 +61,7 @@
 
       sl.with_row do |row|
         row.with_key(text: "Training record state")
-        row.with_value(text: render(StatusTags::DeliveryPartnerParticipantStatusTag.new(participant_profile: @participant_presenter.participant_profile, delivery_partner: @participant_presenter.school_cohort&.delivery_partner)))
+        row.with_value(text: render(StatusTags::DeliveryPartnerParticipantStatusTag.new(@delivery_partner_training_record_states[@participant_presenter.participant_profile.id])))
       end
     end %>
   <% end %>

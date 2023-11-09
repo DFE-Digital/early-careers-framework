@@ -3,7 +3,7 @@
 module DeliveryPartners
   module Participants
     class TableRow < BaseComponent
-      with_collection_parameter :participant_profile
+      with_collection_parameter :induction_record
 
       delegate :user,
                :teacher_profile,
@@ -16,12 +16,13 @@ module DeliveryPartners
 
       delegate :training_status,
                :school,
+               :participant_profile,
                to: :induction_record,
                allow_nil: true
 
-      def initialize(participant_profile:, delivery_partner:)
-        @participant_profile = participant_profile
-        @delivery_partner = delivery_partner
+      def initialize(induction_record:, training_record_states:)
+        @induction_record = induction_record
+        @training_record_states = training_record_states
       end
 
       def lead_provider_name
@@ -34,11 +35,7 @@ module DeliveryPartners
 
     private
 
-      attr_reader :participant_profile, :delivery_partner
-
-      def induction_record
-        @induction_record ||= participant_profile.relevant_induction_record_for(delivery_partner:)
-      end
+      attr_reader :induction_record, :training_record_states
     end
   end
 end
