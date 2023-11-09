@@ -45,10 +45,7 @@ module AppropriateBodies
     def filter_status(scoped, status)
       ids = []
       scoped.each do |induction_record|
-        participant_profile = induction_record.participant_profile
-        next unless participant_profile
-
-        status_tag = StatusTags::AppropriateBodyParticipantStatusTag.new(training_record_states[participant_profile.id])
+        status_tag = StatusTags::AppropriateBodyParticipantStatusTag.new(training_record_states[induction_record.participant_profile_id])
 
         if status_tag.id == status
           ids << induction_record.id

@@ -2,11 +2,12 @@
 
 module DeliveryPartners
   class ParticipantsFilter
-    attr_reader :collection, :params
+    attr_reader :collection, :params, :training_record_states
 
-    def initialize(collection:, params:)
+    def initialize(collection:, params:, training_record_states:)
       @collection = collection
       @params = params
+      @training_record_states = training_record_states
     end
 
     def scope
@@ -36,27 +37,25 @@ module DeliveryPartners
         user_full_name
         user_email
         user_teacher_profile_trn
-        induction_records_induction_programme_partnership_lead_provider_name
-        induction_records_school_cohort_school_name
-        induction_records_school_cohort_school_urn
+        induction_programme_partnership_lead_provider_name
+        school_cohort_school_name
+        school_cohort_school_urn
       ].join("_or_")
 
       scoped.includes(
         user: [
           :teacher_profile,
         ],
-        induction_records: {
-          induction_programme: { partnership: [:lead_provider] },
-        },
+        induction_programme: { partnership: [:lead_provider] },
       ).ransack("#{fields}_cont": query).result.distinct
     end
 
     def filter_role(scoped, role)
       case role
       when "ect"
-        scoped.where(type: "ParticipantProfile::ECT")
+        scoped.where(participant_profile: { type: "ParticipantProfile::ECT" })
       when "mentor"
-        scoped.where(type: "ParticipantProfile::Mentor")
+        scoped.where(participant_profile: { type: "ParticipantProfile::Mentor" })
       else
         scoped
       end
@@ -70,12 +69,12 @@ module DeliveryPartners
 
     def filter_status(scoped, status)
       ids = []
-      scoped.each do |participant_profile|
-        induction_record = participant_profile.relevant_induction_record_for(delivery_partner: params[:delivery_partner])
 
-        status_tag = StatusTags::DeliveryPartnerParticipantStatusTag.new(participant_profile:, delivery_partner: induction_record.delivery_partner)
+      scoped.each do |induction_record|
+        status_tag = StatusTags::DeliveryPartnerParticipantStatusTag.new(training_record_states[induction_record.participant_profile_id])
+
         if status_tag.id == status
-          ids << participant_profile.id
+          ids << induction_record.id
         end
       end
 
