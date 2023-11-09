@@ -170,6 +170,22 @@ RSpec.describe ParticipantProfile::ECFPolicy, type: :policy do
       it { is_expected.to forbid_action(:edit_email) }
       it { is_expected.to forbid_action(:update_email) }
     end
+
+    context "with a mentor who is mentoring, but not training at the school" do
+      let(:user) { create(:user, :induction_coordinator) }
+      let(:participant_profile) { create(:mentor_participant_profile) }
+
+      before do
+        Mentors::AddToSchool.call(mentor_profile: participant_profile, school: user.school)
+      end
+
+      it { is_expected.to permit_action(:show) }
+      it { is_expected.to forbid_action(:edit_name) }
+      it { is_expected.to forbid_action(:update_name) }
+      it { is_expected.to forbid_action(:edit_email) }
+      it { is_expected.to forbid_action(:update_email) }
+      it { is_expected.to forbid_action(:withdraw_record) }
+    end
   end
 
   context "induction tutor at a different school" do
