@@ -6,12 +6,12 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <%= form_for @form, url: admin_school_cohort_appropriate_body_path, method: :patch do |form| %>
+      <span class="govuk-caption-l"><%= school.name %></span>
       <%=
         form.govuk_radio_buttons_fieldset(
           :appropriate_body_id,
           legend: { text: @question, tag: "h1", size: "l" },
-          hint: { text: "This will change the default for any new ECTs registered, but will not affect any existing ECTs" },
-          caption: { text: school.name }
+          hint: { text: "This will change the default for any new ECTs registered, but will not affect any existing ECTs" }
         ) do
       %>
         <% @form.radio_options.each do |radio_option| %>
