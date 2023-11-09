@@ -172,6 +172,8 @@ en:
       blank: "Choose a delivery partner"
     appropriate_body:
       blank: "Choose an appropriate body"
+    teaching_school_hub:
+      blank: "Choose a teaching school hub"
     cohort:
       blank: "starting on %{year} not setup on %{where}"
       excluded_start_year: "Invalid value. Must be different to %{year}"

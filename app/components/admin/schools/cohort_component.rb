@@ -81,6 +81,10 @@ module Admin
         admin_school_change_programme_path(id: school_cohort.start_year, school_id: school.slug)
       end
 
+      def change_appropriate_body_href
+        edit_admin_school_cohort_appropriate_body_path(cohort_id: school_cohort.start_year, school_id: school.slug)
+      end
+
     private
 
       def induction_programme_choice

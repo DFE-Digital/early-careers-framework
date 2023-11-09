@@ -12,6 +12,7 @@ class SchoolCohortPolicy < ApplicationPolicy
   alias_method :info?, :update?
   alias_method :edit?, :update?
   alias_method :success?, :update?
+  alias_method :change_appropriate_body?, :update?
 
   class Scope < Scope
     def resolve
