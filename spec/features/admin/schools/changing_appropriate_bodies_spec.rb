@@ -4,6 +4,7 @@ require "rails_helper"
 
 RSpec.feature "Admin managing appropriate bodies", js: true, rutabaga: false do
   scenario "Admin changes appropriate body for a 2021 cohort to IStip" do
+    given_there_is_a_cip_school_in(2021)
     i_should_be_able_to_navigate_to_the_edit_page(2021)
     and_there_should_be_a_radio_button_for "Independent Schools Teacher Induction Panel (IStip)"
     and_there_should_be_a_radio_button_for "National Teacher Accreditation (NTA)"
@@ -13,6 +14,7 @@ RSpec.feature "Admin managing appropriate bodies", js: true, rutabaga: false do
   end
 
   scenario "Admin changes appropriate body for a 2021 cohort to NTA" do
+    given_there_is_a_cip_school_in(2021)
     i_should_be_able_to_navigate_to_the_edit_page(2021)
     and_there_should_be_a_radio_button_for "Independent Schools Teacher Induction Panel (IStip)"
     and_there_should_be_a_radio_button_for "National Teacher Accreditation (NTA)"
@@ -22,6 +24,7 @@ RSpec.feature "Admin managing appropriate bodies", js: true, rutabaga: false do
   end
 
   scenario "Admin changes appropriate body for a 2021 cohort to a teaching school hub" do
+    given_there_is_a_cip_school_in(2021)
     i_should_be_able_to_navigate_to_the_edit_page(2021)
     and_there_should_be_a_radio_button_for "Independent Schools Teacher Induction Panel (IStip)"
     and_there_should_be_a_radio_button_for "National Teacher Accreditation (NTA)"
@@ -31,6 +34,17 @@ RSpec.feature "Admin managing appropriate bodies", js: true, rutabaga: false do
   end
 
   scenario "Admin changes appropriate body for a 2023 cohort" do
+    given_there_is_a_cip_school_in(2023)
+    i_should_be_able_to_navigate_to_the_edit_page(2023)
+    and_there_should_be_a_radio_button_for "Independent Schools Teacher Induction Panel (IStip)"
+    and_there_should_be_a_radio_button_for "A teaching school hub"
+    and_there_should_not_be_a_radio_button_for "National Teacher Accreditation (NTA)"
+
+    and_i_should_be_able_to_update_the_appropriate_body("Independent Schools Teacher Induction Panel (IStip)", 2023)
+  end
+
+  scenario "Admin changes appropriate body for a DIY cohort" do
+    given_there_is_a_cip_school_in(2023, induction_programme_choice: "design_our_own")
     i_should_be_able_to_navigate_to_the_edit_page(2023)
     and_there_should_be_a_radio_button_for "Independent Schools Teacher Induction Panel (IStip)"
     and_there_should_be_a_radio_button_for "A teaching school hub"
@@ -41,15 +55,19 @@ RSpec.feature "Admin managing appropriate bodies", js: true, rutabaga: false do
 
 private
 
-  def given_there_is_a_cip_school_in(year)
+  def given_there_is_a_cip_school_in(year, induction_programme_choice: "core_induction_programme")
     @school = create(:school, name: "Test school")
     cohort = Cohort.find_by(start_year: year) || create(:cohort, start_year: year)
     create(:seed_partnership, :with_lead_provider, :valid, cohort:, school: @school)
-    chosen_cip = create(:core_induction_programme, name: "Chosen CIP")
+
+    chosen_cip = if induction_programme_choice == "core_induction_programme"
+                   create(:core_induction_programme, name: "Chosen CIP")
+                 end
+
     @school_cohort = create(:school_cohort,
                             school: @school,
                             cohort:,
-                            induction_programme_choice: "core_induction_programme",
+                            induction_programme_choice:,
                             core_induction_programme: chosen_cip)
   end
 
@@ -84,7 +102,6 @@ private
   end
 
   def i_should_be_able_to_navigate_to_the_edit_page(year)
-    given_there_is_a_cip_school_in(year)
     and_there_is_another_core_induction_programme
     and_there_are_the_required_appropriate_bodies
     and_i_am_signed_in_as_an_admin
