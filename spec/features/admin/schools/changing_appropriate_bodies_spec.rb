@@ -115,7 +115,7 @@ private
 
   def and_i_click_the_change_appropriate_body_link(year)
     within "#cohort-#{year}" do
-      click_link("Change appropriate body", visible: false)
+      click_link("Change appropriate body for their #{year} programme", visible: false)
     end
   end
 

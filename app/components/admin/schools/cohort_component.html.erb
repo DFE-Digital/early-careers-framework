@@ -59,7 +59,7 @@
           summary_list.with_row do |row|
             row.with_key(text: "Appropriate body")
             row.with_value(text: school_cohort&.appropriate_body&.name || "No appropriate body")
-            row.with_action(text: "Change", visually_hidden_text: "appropriate body", href: change_appropriate_body_href)
+            row.with_action(text: "Change", visually_hidden_text: "appropriate body for their #{school_cohort.cohort.start_year} programme", href: change_appropriate_body_href)
           end
         end
       end
