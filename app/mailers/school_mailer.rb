@@ -108,11 +108,7 @@ class SchoolMailer < ApplicationMailer
     nomination_url = params[:nomination_url]
     expiry_date = params[:expiry_date]
 
-    academic_year = if FeatureFlag.active?(:cohortless_dashboard, for: school)
-                      Cohort.active_registration_cohort.description
-                    else
-                      Cohort.current.description
-                    end
+    academic_year = Cohort.active_registration_cohort.description
 
     template_mail(
       NOMINATION_EMAIL_WITH_ACADEMIC_YEAR_TEMPLATE,
