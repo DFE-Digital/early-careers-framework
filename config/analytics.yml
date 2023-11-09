@@ -321,3 +321,31 @@
   - to_participant_id
   - created_at
   - updated_at
+  :induction_coordinator_profiles_schools:
+  - id
+  - induction_coordinator_profile_id
+  - school_id
+  - created_at
+  - updated_at
+  :nomination_emails:
+  - id
+  - token
+  - notify_status
+  - sent_to
+  - sent_at
+  - opened_at
+  - school_id
+  - created_at
+  - updated_at
+  - partnership_notification_email_id
+  - notify_id
+  - delivered_at
+  :schedules:
+  - id
+  - name
+  - created_at
+  - updated_at
+  - schedule_identifier
+  - type
+  - cohort_id
+  - identifier_alias
