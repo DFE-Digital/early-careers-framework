@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe SchoolCohort, type: :model, with_feature_flag: { cohortless_dashboard: "active" } do
+RSpec.describe SchoolCohort, type: :model do
   describe "associations" do
     it { is_expected.to belong_to(:cohort) }
     it { is_expected.to belong_to(:school) }
@@ -97,7 +97,6 @@ RSpec.describe SchoolCohort, type: :model, with_feature_flag: { cohortless_dashb
     end
 
     it "returns cohorts from the current year up to 2 years in the past" do
-      pilot!(school)
       travel_to Date.new(2024, 5, 15)
 
       described_class.dashboard_for_school(school:, latest_year: Cohort.active_registration_cohort.start_year)

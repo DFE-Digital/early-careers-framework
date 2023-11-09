@@ -81,7 +81,7 @@ RSpec.describe SchoolMailer, type: :mailer do
       expect(nomination_email.to).to eq([primary_contact_email])
     end
 
-    context "when the pilot is active", with_feature_flags: { cohortless_dashboard: "active" }, travel_to: Date.new(2023, 7, 1) do
+    context "when the pilot is active", travel_to: Date.new(2023, 7, 1) do
       let!(:cohort_next) { Cohort.next || create(:cohort, :next) }
 
       it "renders the right headers" do

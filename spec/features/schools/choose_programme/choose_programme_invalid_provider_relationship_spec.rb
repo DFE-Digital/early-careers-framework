@@ -7,7 +7,7 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
   include ChooseProgrammeSteps
 
   before do
-    given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered(pilot: true)
+    given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
     and_cohort_for_next_academic_year_is_created
     and_i_am_signed_in_as_an_induction_coordinator
     then_i_am_taken_to_what_we_need_to_know_to_setup_academic_year
