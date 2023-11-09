@@ -329,7 +329,6 @@
   - updated_at
   :nomination_emails:
   - id
-  - token
   - notify_status
   - sent_to
   - sent_at

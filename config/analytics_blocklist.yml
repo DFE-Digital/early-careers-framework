@@ -256,6 +256,8 @@
   :npq_applications:
   - date_of_birth
   - nino
+  :nomination_emails:
+  - token
   :networks:
   - id
   - created_at
