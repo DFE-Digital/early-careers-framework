@@ -89,6 +89,10 @@ RSpec.describe "SIT adding themself as ECT", js: true do
 
     when_i_choose_summer_term_2023
     and_i_click_on_continue
+    then_i_am_taken_to_choose_sit_partnership_page
+
+    when_i_choose_current_providers
+    and_i_click_on_continue
     then_i_am_taken_to_check_answers_page
 
     when_i_click_confirm_and_add

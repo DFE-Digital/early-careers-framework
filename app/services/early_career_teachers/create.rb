@@ -22,10 +22,10 @@ module EarlyCareerTeachers
           **ect_attributes,
         )
 
-        ParticipantProfileState.create!(participant_profile: profile, cpd_lead_provider: school_cohort&.default_induction_programme&.lead_provider&.cpd_lead_provider)
-        if school_cohort.default_induction_programme.present?
+        ParticipantProfileState.create!(participant_profile: profile, cpd_lead_provider: induction_programme&.lead_provider&.cpd_lead_provider)
+        if induction_programme.present?
           Induction::Enrol.call(participant_profile: profile,
-                                induction_programme: school_cohort.default_induction_programme,
+                                induction_programme:,
                                 mentor_profile:,
                                 start_date:,
                                 appropriate_body_id:)
@@ -37,7 +37,7 @@ module EarlyCareerTeachers
 
   private
 
-    attr_reader :full_name, :email, :school_cohort, :mentor_profile_id, :start_date, :appropriate_body_id, :induction_start_date
+    attr_reader :full_name, :email, :induction_programme, :school_cohort, :mentor_profile_id, :start_date, :appropriate_body_id, :induction_start_date
 
     def initialize(full_name:, email:, school_cohort:, mentor_profile_id: nil, start_date: nil, appropriate_body_id: nil, induction_start_date: nil)
       @full_name = full_name
@@ -47,6 +47,7 @@ module EarlyCareerTeachers
       @start_date = start_date
       @appropriate_body_id = appropriate_body_id
       @induction_start_date = induction_start_date
+      @induction_programme = induction_programme || school_cohort.default_induction_programme
     end
 
     def ect_attributes

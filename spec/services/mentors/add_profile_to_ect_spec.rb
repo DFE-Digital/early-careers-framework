@@ -22,7 +22,11 @@ RSpec.describe Mentors::AddProfileToECT do
     }
   end
 
-  subject(:service_call) { described_class.call(ect_profile:, school_cohort: school_cohort_22, preferred_email:) }
+  subject(:service_call) do
+    described_class.call(ect_profile:,
+                         induction_programme: school_cohort_22.default_induction_programme,
+                         school_cohort: school_cohort_22, preferred_email:)
+  end
 
   before do
     allow(ParticipantValidationService).to receive(:validate).and_return(validation_result)

@@ -18,8 +18,24 @@ RSpec.describe Schools::AddParticipants::WizardSteps::ConfirmAppropriateBodyStep
   end
 
   describe "#next_step" do
-    it "should return check_answers" do
-      expect(step.next_step).to eql :check_answers
+    context "when a partnership needs to be chosen" do
+      before do
+        allow(wizard).to receive(:needs_to_choose_partnership?).and_return(true)
+      end
+
+      it "returns choose_partnership" do
+        expect(step.next_step).to eql :choose_partnership
+      end
+    end
+
+    context "when a partnership needs not to be chosen" do
+      before do
+        allow(wizard).to receive(:needs_to_choose_partnership?).and_return(false)
+      end
+
+      it "returns check_answers" do
+        expect(step.next_step).to eql :check_answers
+      end
     end
   end
 end

@@ -62,7 +62,7 @@ module Pages
       add_teacher_reference_number full_name, trn
       add_date_of_birth date_of_birth
       add_email_address full_name, email_address
-
+      maybe_choose_current_providers
       confirm_and_add
     end
 
@@ -138,6 +138,20 @@ module Pages
 
       self
     end
+
+    def maybe_choose_current_providers
+      choose_current_providers if has_selector?("[value='current_providers']")
+    end
+
+    # what values :current, :previous or :other
+    def choose_providers(what: :current)
+      choose option: "#{what}_providers", allow_label_click: true
+      click_on "Continue"
+
+      self
+    end
+
+    alias_method :choose_current_providers, :choose_providers
 
     def add_full_name(participant_name)
       # TODO: is this label correct? it is visually hidden, but pretty sure it should be proper english

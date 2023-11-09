@@ -20,11 +20,11 @@ module Mentors
           participant_identity: Identity::Create.call(user:, email:),
         }.merge(mentor_attributes))
 
-        ParticipantProfileState.create!(participant_profile: mentor_profile, cpd_lead_provider: school_cohort&.default_induction_programme&.lead_provider&.cpd_lead_provider)
+        ParticipantProfileState.create!(participant_profile: mentor_profile, cpd_lead_provider: induction_programme&.lead_provider&.cpd_lead_provider)
 
-        if school_cohort.default_induction_programme.present?
+        if induction_programme.present?
           Induction::Enrol.call(participant_profile: mentor_profile,
-                                induction_programme: school_cohort.default_induction_programme,
+                                induction_programme:,
                                 start_date:)
         end
 
@@ -36,10 +36,11 @@ module Mentors
 
   private
 
-    attr_reader :full_name, :email, :school_cohort, :start_date
+    attr_reader :full_name, :email, :induction_programme, :school_cohort, :start_date
 
-    def initialize(full_name:, email:, school_cohort:, start_date: nil, **)
+    def initialize(full_name:, email:, school_cohort:, induction_programme: nil, start_date: nil, **)
       @full_name = full_name
+      @induction_programme = induction_programme || school_cohort.default_induction_programme
       @email = email
       @start_date = start_date
       @school_cohort = school_cohort

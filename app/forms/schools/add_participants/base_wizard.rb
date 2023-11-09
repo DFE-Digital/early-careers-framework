@@ -20,7 +20,7 @@ module Schools
                :mentor_participant?, :appropriate_body_confirmed?, :appropriate_body_id, :known_by_another_name?,
                :was_withdrawn_participant?, :complete?, :start_date, :start_term, :last_visited_step,
                :ect_mentor?, :join_school_programme, :join_school_programme?, :join_participant_cohort_school_programme?,
-               :join_current_cohort_school_programme?,
+               :join_current_cohort_school_programme?, :current_providers?, :previous_providers?, :providers_chosen?,
                to: :data_store
 
       def initialize(current_step:, data_store:, current_user:, school:, submitted_params: {})
@@ -137,15 +137,37 @@ module Schools
       end
 
       def school_current_cohort
-        @school_current_cohort ||= school.school_cohorts.find_by(cohort: Dashboard::LatestManageableCohort.call(school))
+        @school_current_cohort ||= school.school_cohorts.find_by(cohort: current_cohort) if current_cohort
+      end
+
+      def school_previous_cohort
+        @school_previous_cohort ||= school.school_cohorts.find_by(cohort: previous_cohort) if previous_cohort
+      end
+
+      def current_cohort
+        @current_cohort ||= Dashboard::LatestManageableCohort.call(school)
+      end
+
+      def previous_cohort
+        @previous_cohort ||= current_cohort&.previous
       end
 
       def current_cohort_lead_provider
-        @current_cohort_lead_provider ||= school_current_cohort&.default_induction_programme&.lead_provider
+        @current_cohort_lead_provider ||= current_cohort_partnership&.lead_provider
       end
 
       def current_cohort_delivery_partner
-        @current_cohort_delivery_partner ||= school_current_cohort&.default_induction_programme&.delivery_partner
+        @current_cohort_delivery_partner ||= current_cohort_partnership&.delivery_partner
+      end
+
+      def current_cohort_programme
+        @current_cohort_programme ||= school_current_cohort.default_induction_programme
+      end
+
+      def current_cohort_partnership
+        @current_cohort_partnership ||= current_cohort_programme&.partnership
+
+        @current_cohort_partnership if @current_cohort_partnership&.active?
       end
 
       def current_providers_training_on_participant_cohort?
@@ -156,12 +178,48 @@ module Schools
                                      cohort: participant_cohort)
       end
 
+      def previous_providers_training_on_current_cohort?
+        return false unless [previous_cohort_lead_provider, previous_cohort_delivery_partner].all?
+
+        ProviderRelationship.exists?(lead_provider: previous_cohort_lead_provider,
+                                     delivery_partner: previous_cohort_delivery_partner,
+                                     cohort: current_cohort)
+      end
+
       def lead_provider
-        @lead_provider ||= school_cohort.default_induction_programme&.lead_provider
+        @lead_provider ||= partnership&.lead_provider
       end
 
       def delivery_partner
-        @delivery_partner ||= school_cohort.default_induction_programme&.delivery_partner
+        @delivery_partner ||= partnership&.delivery_partner
+      end
+
+      def programme
+        @programme ||= school_cohort&.default_induction_programme
+      end
+
+      def partnership
+        @partnership ||= programme&.partnership
+
+        @partnership if @partnership&.active?
+      end
+
+      def previous_cohort_lead_provider
+        @previous_cohort_lead_provider ||= previous_cohort_partnership&.lead_provider
+      end
+
+      def previous_cohort_delivery_partner
+        @previous_cohort_delivery_partner ||= previous_cohort_partnership&.delivery_partner
+      end
+
+      def previous_cohort_programme
+        @previous_cohort_programme ||= school_previous_cohort&.default_induction_programme
+      end
+
+      def previous_cohort_partnership
+        @previous_cohort_partnership ||= previous_cohort_programme&.partnership
+
+        @previous_cohort_partnership if @previous_cohort_partnership&.active?
       end
 
       def email_in_use?
@@ -569,6 +627,7 @@ module Schools
           school_cohort_id
           school_id
           ect_mentor
+          providers
         ].each do |key|
           data_store.set(key, nil)
         end

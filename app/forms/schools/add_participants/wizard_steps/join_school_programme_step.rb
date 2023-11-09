@@ -16,7 +16,7 @@ module Schools
         end
 
         def choices
-          options = [default_participant_cohort_choice].compact
+          options = Array(default_participant_cohort_choice)
           options << default_current_cohort_choice if default_current_cohort_choice?
           options << other_providers_choice if options.present?
 

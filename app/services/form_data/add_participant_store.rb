@@ -125,6 +125,22 @@ module FormData
       get(:participant_profile)
     end
 
+    def providers
+      get(:providers)
+    end
+
+    def current_providers?
+      providers == "current_providers"
+    end
+
+    def previous_providers?
+      providers == "previous_providers"
+    end
+
+    def providers_chosen?
+      current_providers? || previous_providers?
+    end
+
     def was_withdrawn_participant?
       get(:was_withdrawn_participant) == true
     end

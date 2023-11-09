@@ -656,6 +656,18 @@ module ManageTrainingSteps
 
   # When_steps
 
+  def when_i_choose_current_providers
+    choose option: "current_providers"
+  end
+
+  def when_i_choose_previous_providers
+    choose option: "previous_providers"
+  end
+
+  def when_i_choose_other_providers
+    choose option: "other_providers"
+  end
+
   def when_i_choose_summer_term_2023
     choose "Summer term 2023"
   end
@@ -1294,6 +1306,14 @@ module ManageTrainingSteps
 
   def then_i_am_taken_to_mentor_start_training_page
     expect(page).to have_selector("h1", text: "When will #{@participant_data[:full_name]} start their mentor training?")
+  end
+
+  def then_i_am_taken_to_choose_sit_partnership_page
+    expect(page).to have_selector("h1", text: "Who will #{@induction_coordinator_profile.full_name} do their mentor training with?")
+  end
+
+  def then_i_am_taken_to_choose_mentor_partnership_page
+    expect(page).to have_selector("h1", text: "Who will #{@participant_data[:full_name]} do their mentor training with?")
   end
 
   def then_i_am_taken_to_sit_mentor_start_training_page

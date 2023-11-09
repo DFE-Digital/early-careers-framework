@@ -20,11 +20,11 @@ module Mentors
         )
 
         ParticipantProfileState.create!(participant_profile: mentor_profile,
-                                        cpd_lead_provider: school_cohort&.default_induction_programme&.lead_provider&.cpd_lead_provider)
+                                        cpd_lead_provider: induction_programme&.lead_provider&.cpd_lead_provider)
 
-        if school_cohort.default_induction_programme.present?
+        if induction_programme.present?
           Induction::Enrol.call(participant_profile: mentor_profile,
-                                induction_programme: school_cohort.default_induction_programme,
+                                induction_programme:,
                                 preferred_email:,
                                 start_date:)
         end
@@ -39,10 +39,11 @@ module Mentors
 
   private
 
-    attr_reader :ect_profile, :preferred_email, :school_cohort, :start_date
+    attr_reader :ect_profile, :induction_programme, :preferred_email, :school_cohort, :start_date
 
-    def initialize(ect_profile:, school_cohort:, preferred_email: nil, start_date: nil)
+    def initialize(ect_profile:, induction_programme:, school_cohort:, preferred_email: nil, start_date: nil)
       @ect_profile = ect_profile
+      @induction_programme = induction_programme
       @preferred_email = preferred_email || ect_profile.participant_identity.email
       @start_date = start_date
       @school_cohort = school_cohort
