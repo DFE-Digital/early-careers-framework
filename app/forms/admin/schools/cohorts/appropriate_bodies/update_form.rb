@@ -14,7 +14,7 @@ module Admin
           attr_accessor :appropriate_body_id, :teaching_school_hub_id, :school_cohort
 
           validates :appropriate_body_id, presence: { message: I18n.t("errors.appropriate_body.blank") }
-          validates :teaching_school_hub_id, presence: { message: I18n.t("errors.appropriate_body.blank") }, if: :teaching_school_hub_selected?
+          validates :teaching_school_hub_id, presence: { message: I18n.t("errors.teaching_school_hub.blank") }, if: :teaching_school_hub_selected?
           validate :validate_selected_appropriate_body
 
           def save!
