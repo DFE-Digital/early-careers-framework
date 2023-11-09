@@ -3,11 +3,12 @@
 require "rails_helper"
 
 module DeliveryPartners
-  RSpec.describe ParticipantsSerializer do
+  RSpec.describe InductionRecordsSerializer do
     let(:school) { create(:school) }
     let(:school_cohort) { create(:school_cohort, school:) }
     let(:participant_profile) { create(:ect_participant_profile, school_cohort:, training_status: "withdrawn") }
 
+    let(:training_record_states) { DetermineTrainingRecordState.call(induction_records: induction_record) }
     let(:lead_provider) { create(:lead_provider) }
     let(:delivery_partner_user) { create(:user, :delivery_partner) }
     let(:delivery_partner) { delivery_partner_user.delivery_partners.first }
@@ -28,7 +29,7 @@ module DeliveryPartners
 
     let!(:prev_cohort_year) { create(:cohort, start_year: 2020) }
 
-    subject { described_class.new(participant_profile, params: { delivery_partner: }) }
+    subject { described_class.new(induction_record, params: { training_record_states: }) }
 
     context "#serializable_hash" do
       it "returns valid hash" do
