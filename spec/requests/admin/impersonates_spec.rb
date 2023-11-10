@@ -9,7 +9,7 @@ RSpec.describe "Admin::Participants", type: :request do
   let!(:induction_coordinator) { create(:user, :induction_coordinator) }
 
   before do
-    allow(Cohort).to receive(:active_registration_cohort).and_return(cohort)
+    # allow(Cohort).to receive(:active_registration_cohort).and_return(cohort)
     sign_in admin_user
   end
 
@@ -21,9 +21,11 @@ RSpec.describe "Admin::Participants", type: :request do
     end
 
     it "redirects to impersonated user start page" do
-      when_i_impersonate(induction_coordinator)
-      follow_redirect!
-      expect(response).to redirect_to(schools_choose_programme_path(induction_coordinator.school, cohort.start_year))
+      inside_registration_window(cohort:) do
+        when_i_impersonate(induction_coordinator)
+        follow_redirect!
+        expect(response).to redirect_to(schools_choose_programme_path(induction_coordinator.school, cohort.start_year))
+      end
     end
 
     it "errors if you impersonate yourself" do

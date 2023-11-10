@@ -8,7 +8,8 @@ RSpec.describe "Schools::ChooseProgramme", type: :request do
   let(:cohort) { Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021) }
 
   before do
-    allow(Cohort).to receive(:active_registration_cohort).and_return(cohort)
+    # allow(Cohort).to receive(:active_registration_cohort).and_return(cohort)
+    disable_cohort_setup_check
     sign_in user
   end
 
@@ -27,9 +28,11 @@ RSpec.describe "Schools::ChooseProgramme", type: :request do
       end
 
       it "redirects to the dashboard" do
-        get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/choose-programme"
-        follow_redirect!
-        expect(response).to redirect_to("/schools/#{school.slug}#_#{cohort.description.parameterize}")
+        inside_registration_window(cohort:) do
+          get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/choose-programme"
+          follow_redirect!
+          expect(response).to redirect_to("/schools/#{school.slug}#_#{cohort.description.parameterize}")
+        end
       end
     end
   end
