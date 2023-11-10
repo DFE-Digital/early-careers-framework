@@ -104,20 +104,14 @@ module BulkMailers
     def contact_sits_that_have_chosen_fip_but_not_partnered
       email_count = 0
 
-      Schools::ThatChoseFipButNotPartneredQuery
+      Schools::UnpartneredLastYearAndHaveNotPartneredThisYearQuery
         .call(cohort:, school_type_codes: SCHOOL_TYPES_TO_INCLUDE)
         .joins(:induction_coordinator_profiles)
-        .includes(:induction_coordinator_profiles)
         .find_each do |school|
-          school.induction_coordinator_profiles.each do |induction_coordinator|
-            email_count += 1
-            next if dry_run
+          email_count += 1
+          next if dry_run
 
-            sit_user = induction_coordinator.user
-            SchoolMailer.with(sit_user:, nomination_link: nomination_url(email: sit_user.email, school:))
-              .launch_ask_sit_to_report_school_training_details
-              .deliver_later
-          end
+          SchoolMailer.with(school:).sit_needs_to_chase_partnership.deliver_later
         end
 
       email_count
