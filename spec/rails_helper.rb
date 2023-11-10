@@ -127,13 +127,6 @@ RSpec.configure do |config|
     end
   end
 
-  # TODO: TEMPORARY CODE to be removed
-  config.around(:each) do |example|
-    FeatureFlag.set_temporary_flags(cohortless_dashboard: "active") do
-      example.run
-    end
-  end
-
   config.around(:each, :with_feature_flags) do |example|
     FeatureFlag.set_temporary_flags(example.metadata.fetch(:with_feature_flags)) do
       example.run
