@@ -336,18 +336,8 @@ This procedure is used after a batch from manual validation has been complete. T
 ## Monitoring, logging, and alerting
 ### Sentry
 We use [sentry.io](https://sentry.io/) for error tracking and performance monitoring. Ask a team member for access - this is done through digi-tools.
-### Logit
-We use a [logit.io](https://logit.io/) ELK stack for log aggregation. This contains logs from all environments except review apps, and is useful for debugging failed deployments.
-Ask a team member for access - this is done through digi-tools.
-### Grafana
-We have a prometheus/grafana stack for metrics and alerting - [production metrics](https://grafana-cpd-monitoring-prod.london.cloudapps.digital/).
-Your DfE google account should work using SSO. See the [terraform](./terraform/monitoring) for details.
 ### Statuscake
 We use statuscake for uptime monitoring. Ask a team member for access - this is done with a service now ticket.
-
-
-## Analytics
-In production, we use a separate postgres database for recording anonymous analytics information. The database is hosted in GCP.
 
 ## Documentation
 We use a gem called `tech_docs_template` to generate govuk-style documentation. It is heavily inspired by Teacher Training API.
