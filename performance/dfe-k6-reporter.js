@@ -1,8 +1,10 @@
 const { readFileSync, writeFileSync } = require("fs");
 const nunjucks = require("nunjucks");
 
+const scriptPath = process.argv[1].replace('/dfe-k6-reporter.js', '');
 const inputPath = process.argv[2] || `./smoke-test-summary.json`;
 const outputPath = process.argv[3] || `./smoke-test-summary.html`;
+const markdownSummaryPath = process.argv[4] || `./smoke-test-summary.md`;
 
 const standardMetricKeys = [
   'grpc_req_duration',
@@ -155,8 +157,8 @@ const summariseReport = (data) => {
 
 nunjucks.configure(
   [
-    "./views",
-    "../node_modules/govuk-frontend/",
+    `${scriptPath}/views`,
+    `${scriptPath}/../node_modules/govuk-frontend/`,
   ],
   {
     autoescape: true,
@@ -168,7 +170,7 @@ const jsonSrc = readFileSync(inputPath, "utf8");
 const jsonReport = JSON.parse(jsonSrc);
 const jsonSummary = summariseReport(jsonReport);
 
-const htmlReport = nunjucks.render('index.njk', {
+const htmlReport = nunjucks.render('report.njk', {
   themeColor: "#003a69",
   assetPath: "https://design-system.service.gov.uk/assets",
   assetUrl: "https://design-system.service.gov.uk/assets",
@@ -179,4 +181,8 @@ const htmlReport = nunjucks.render('index.njk', {
   },
 });
 
+// eslint-disable-next-line no-multi-str
+const markdownSummaryReport = nunjucks.render('summary.njk', jsonSummary);
+
 writeFileSync(outputPath, htmlReport, "utf8");
+writeFileSync(markdownSummaryPath, markdownSummaryReport, "utf8");

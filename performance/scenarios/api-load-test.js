@@ -24,17 +24,17 @@ export const apiLoadTest = () => {
       const apiVersion = `API ${version}`;
 
       group(apiVersion, () => {
-        [1, lastPage]
+        ['first', 'last']
           .forEach(page => {
+            const pageNumber = page === 'first' ? 1 : lastPage;
             const endpoint = `/api/${version}${path}`;
-            const query = `page[page]=${page}&page[per_page]=${fromEnv('PARTICIPANTS_PER_PAGE')}`;
+            const query = `page[page]=${pageNumber}&page[per_page]=${fromEnv('PARTICIPANTS_PER_PAGE')}`;
             const uri = `http://${fromEnv('TARGET_HOSTNAME')}:${fromEnv('TARGET_PORT')}${endpoint}?${query}`;
 
-            const tags = { path, version, endpoint, query, page };
+            const tags = { path, version, endpoint, query, page, pageNumber };
             const params = { headers, tags };
 
-            group(endpoint, () => {
-
+            group(`${path}?page[page]=${page}`, () => {
               const res = http.get(uri, params);
               check(res,
                 {

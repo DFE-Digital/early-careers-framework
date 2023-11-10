@@ -39,9 +39,13 @@ env:
   PERF_SCENARIO: ${{ inputs.scenario }}
   PERF_REPORT_FILE: k6-output.json
 
+  JSON_REPORT_PATH: ./reports/${{ inputs.scenario }}-report.json
+  HTML_REPORT_PATH: ./reports/${{ inputs.scenario }}-report.html
+  MARKDOWN_SUMMARY_PATH: ./reports/${{ inputs.scenario }}-summary.md
+
 jobs:
-  run_performance_test:
-    name: "Run performance test"
+  run_scenario:
+    name: "Run scenario"
     runs-on: ubuntu-latest
 
     steps:
@@ -71,21 +75,30 @@ jobs:
       - name: Extract summary
         run: |
           mkdir ./reports
-          docker compose -f ./performance/docker-compose.yml cp k6:/home/k6/k6-output.json ./reports/${{ inputs.scenario }}-summary.json
-
-      - name: Generate the HTML performance tests report
-        working-directory: ./performance
-        run: |
-          node html-reporter.js ../reports/${{ inputs.scenario }}-summary.json ../reports/${{ inputs.scenario }}-summary.html
+          docker compose -f ./performance/docker-compose.yml cp k6:/home/k6/k6-output.json ${{ env.JSON_REPORT_PATH }}
 
       - name: Shutdown the network
         if: always()
         run: |
           docker-compose -f ./performance/docker-compose.yml down
 
-      - uses: actions/upload-artifact@v3
+      - name: Generate the HTML report and summary
+        run: |
+          node ./performance/dfe-k6-reporter.js ${{ env.JSON_REPORT_PATH }} ${{ env.HTML_REPORT_PATH }} ${{ env.MARKDOWN_SUMMARY_PATH }}
+
+      - name: Upload the reports
+        uses: actions/upload-artifact@v3
         with:
           name: ${{ inputs.scenario }}-report
           path: |
-            ./reports/*.html
-            ./reports/*.json
+            ${{ env.HTML_REPORT_PATH }}
+            ${{ env.JSON_REPORT_PATH }}
+          retention-days: 14
+
+      - name: Update PR comment with summary
+        if: github.event_name == 'pull_request'
+        uses: thollander/actions-comment-pull-request@v2
+        with:
+          filePath: ${{ env.MARKDOWN_SUMMARY_PATH }}
+          pr_number: ${{ github.event.pull_request.number }}
+          comment_tag: ${{ inputs.scenario }}-summary

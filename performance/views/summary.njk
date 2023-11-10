@@ -1,0 +1,22 @@
+# Performance summary
+
+|     | Total | Passed |
+| --- | ----- | ------ |
+| **total requests** | {% if data.metrics.http_reqs %}{{ data.metrics.http_reqs.values.count }}{% endif %}{% if data.metrics.grpc_reqs %}{{ data.metrics.grpc_reqs.values.count }}{% endif %} | |
+| **Failed requests** | {{ data.metrics.http_req_failed.values.passes }} | {% if data.metrics.http_req_failed.values.passes > 0 %}:x:{% else %}:white_check_mark:{% endif %} |
+| **Breached thresholds** | {{ thresholdFailures }} | {% if thresholdFailures > 0 %}:x:{% else %}:white_check_mark:{% endif %} |
+| **Failed checks** | {{ checkFailures }} | {% if checkFailures > 0 %}:x:{% else %}:white_check_mark:{% endif %} |
+
+{% if thresholdFailures %}## Failed thresholds
+
+| Metric | failure |
+| ------ | ------- |
+{% for metricName, metric in data.metrics %}{% if metric.thresholds %}{% for thresholdName, threshold in metric.thresholds %}{% if threshold.ok !== true %}| {{ metricName }} | {{ thresholdName }} |{% endif %}{% endfor %}
+{% endif %}{% endfor %}
+{% else %}## Standard request metrics
+
+|     | Count | Rate | Average | Maximum | Median | Minimum | 90th Percentile | 95th Percentile |
+| --- | ----- | ---- | ------- | ------- | ------ | ------- | --------------- | --------------- |
+{% for row in standardMetricRows %}| {% for cell in row %}{{ cell.text }} | {% endfor %}
+{% endfor %}
+{% endif %}
