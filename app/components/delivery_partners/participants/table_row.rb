@@ -5,14 +5,16 @@ module DeliveryPartners
     class TableRow < BaseComponent
       with_collection_parameter :induction_record
 
-      delegate :user,
-               :teacher_profile,
-               :cohort,
-               :role,
+      delegate :role,
                to: :participant_profile
 
       delegate :full_name,
+               :teacher_profile,
                to: :user
+
+      delegate :cohort,
+               :user,
+               to: :induction_record
 
       delegate :training_status,
                :school,

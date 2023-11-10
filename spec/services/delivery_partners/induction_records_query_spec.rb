@@ -30,12 +30,12 @@ RSpec.describe DeliveryPartners::InductionRecordsQuery do
     context "when there are more induction records for the same delivery partner" do
       let!(:latest_induction_record) { create(:induction_record, participant_profile:, induction_programme:) }
 
-      it "returns latest induction record for appropriate body" do
+      it "returns latest induction record for delivery partner" do
         expect(subject.induction_records).to match_array([latest_induction_record])
       end
     end
 
-    context "when there are newer induction records for a different appropriate body" do
+    context "when there are newer induction records for a different delivery partner" do
       let!(:latest_induction_record) { create(:induction_record, participant_profile:, training_status: "deferred") }
 
       it "returns correct induction record for the delivery partner" do

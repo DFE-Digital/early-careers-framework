@@ -29,14 +29,13 @@ module DeliveryPartners
       InductionRecord.distinct
         .joins("JOIN (#{join.to_sql}) AS latest_induction_records ON latest_induction_records.latest_id = induction_records.id")
         .includes(
-          :induction_programme,
-          :partnership,
           :lead_provider,
           :cohort,
           :preferred_identity,
-          :user,
-          school: [:induction_coordinators],
-          participant_profile: %i[teacher_profile ecf_participant_eligibility ecf_participant_validation_data],
+          :school,
+          user: :teacher_profile,
+          induction_programme: [partnership: :lead_provider],
+          participant_profile: %i[ecf_participant_eligibility ecf_participant_validation_data],
         )
         .select(
           "induction_records.*",
