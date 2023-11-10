@@ -37,8 +37,8 @@ x-env: &env
     PERF_NUM_VIRTUAL_USERS: ${PERF_NUM_VIRTUAL_USERS:-15}
     PERF_DURATION: ${PERF_DURATION:-360s}
 
-    PERF_SCENARIO: smoke-test
-    PERF_REPORT_FILE: k6-output.json
+    PERF_SCENARIO: ${PERF_SCENARIO:-smoke-test}
+    PERF_REPORT_FILE: ${PERF_REPORT_FILE:-k6-output.json}
 
 services:
   db:
