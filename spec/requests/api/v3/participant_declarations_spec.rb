@@ -581,8 +581,7 @@ RSpec.describe "API Participant Declarations", type: :request do
 
       context "when NPQ participant has completed declaration" do
         let(:cpd_lead_provider)     { create(:cpd_lead_provider, :with_npq_lead_provider) }
-        let(:schedule)              { NPQCourse.schedule_for(npq_course:) }
-        let(:declaration_date)      { schedule.milestones.find_by(declaration_type:).start_date + 1.day }
+        let(:declaration_date)      { participant_profile.schedule.milestones.find_by(declaration_type:).start_date + 1.day }
         let(:npq_course) { create(:npq_leadership_course) }
         let(:participant_profile) do
           create(:npq_participant_profile, npq_lead_provider: cpd_lead_provider.npq_lead_provider, npq_course:)

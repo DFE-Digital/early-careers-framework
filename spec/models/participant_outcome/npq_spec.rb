@@ -4,8 +4,13 @@ require "rails_helper"
 
 RSpec.describe ParticipantOutcome::NPQ, type: :model do
   let(:provider) { create :cpd_lead_provider, :with_npq_lead_provider }
-  let(:npq_application) { create :npq_application, :accepted, npq_lead_provider: provider.npq_lead_provider }
-  let(:declaration) { create :npq_participant_declaration, participant_profile: npq_application.profile, cpd_lead_provider: provider }
+  let(:npq_application) { create :npq_application, :accepted, cohort: Cohort.previous, npq_lead_provider: provider.npq_lead_provider }
+  let(:declaration_date) { npq_application.profile.schedule.milestones.find_by(declaration_type: "completed").start_date + 1.day }
+  let(:declaration) do
+    travel_to declaration_date do
+      create(:npq_participant_declaration, participant_profile: npq_application.profile, cpd_lead_provider: provider, declaration_type: "completed", declaration_date:)
+    end
+  end
   subject(:outcome) { create :participant_outcome, participant_declaration: declaration }
 
   describe "associations" do
@@ -82,8 +87,6 @@ RSpec.describe ParticipantOutcome::NPQ, type: :model do
 
   describe ".to_send_to_qualified_teachers_api" do
     subject(:result) { described_class.to_send_to_qualified_teachers_api.map(&:id) }
-
-    let!(:declaration) { create(:npq_participant_declaration, declaration_type: "completed") }
 
     context "when the latest outcome for a declaration has been sent to the qualified teachers API" do
       let!(:outcome_1) { create(:participant_outcome, :passed, :sent_to_qualified_teachers_api, participant_declaration: declaration) }
@@ -169,8 +172,20 @@ RSpec.describe ParticipantOutcome::NPQ, type: :model do
     end
 
     describe ".declarations_where_outcome_passed_and_sent" do
-      let!(:declaration_1) { create(:npq_participant_declaration, declaration_type: "completed") }
-      let!(:declaration_2) { create(:npq_participant_declaration, declaration_type: "completed") }
+      let(:npq_application_1) { create :npq_application, :accepted, cohort: Cohort.previous, npq_lead_provider: provider.npq_lead_provider }
+      let(:declaration_date_1) { npq_application.profile.schedule.milestones.find_by(declaration_type: "completed").start_date + 1.day }
+      let(:npq_application_2) { create :npq_application, :accepted, cohort: Cohort.previous, npq_lead_provider: provider.npq_lead_provider }
+      let(:declaration_date_2) { npq_application.profile.schedule.milestones.find_by(declaration_type: "completed").start_date + 1.day }
+      let!(:declaration_1) do
+        travel_to declaration_date_1 do
+          create(:npq_participant_declaration, participant_profile: npq_application_1.profile, cpd_lead_provider: provider, declaration_type: "completed")
+        end
+      end
+      let!(:declaration_2) do
+        travel_to declaration_date_2 do
+          create(:npq_participant_declaration, participant_profile: npq_application_2.profile, cpd_lead_provider: provider, declaration_type: "completed")
+        end
+      end
       let!(:outcome_1) { create(:participant_outcome, :failed, :sent_to_qualified_teachers_api, participant_declaration: declaration_1) }
       let!(:outcome_2) { create(:participant_outcome, :passed, :not_sent_to_qualified_teachers_api, participant_declaration: declaration_2) }
       let!(:outcome_3) { create(:participant_outcome, :passed, :sent_to_qualified_teachers_api, participant_declaration: declaration_2) }
@@ -183,8 +198,20 @@ RSpec.describe ParticipantOutcome::NPQ, type: :model do
     end
 
     describe ".latest_per_declaration" do
-      let!(:declaration_1) { create(:npq_participant_declaration, declaration_type: "completed") }
-      let!(:declaration_2) { create(:npq_participant_declaration, declaration_type: "completed") }
+      let(:npq_application_1) { create :npq_application, :accepted, cohort: Cohort.previous, npq_lead_provider: provider.npq_lead_provider }
+      let(:declaration_date_1) { npq_application.profile.schedule.milestones.find_by(declaration_type: "completed").start_date + 1.day }
+      let(:npq_application_2) { create :npq_application, :accepted, cohort: Cohort.previous, npq_lead_provider: provider.npq_lead_provider }
+      let(:declaration_date_2) { npq_application.profile.schedule.milestones.find_by(declaration_type: "completed").start_date + 1.day }
+      let!(:declaration_1) do
+        travel_to declaration_date_1 do
+          create(:npq_participant_declaration, participant_profile: npq_application_1.profile, cpd_lead_provider: provider, declaration_type: "completed")
+        end
+      end
+      let!(:declaration_2) do
+        travel_to declaration_date_2 do
+          create(:npq_participant_declaration, participant_profile: npq_application_2.profile, cpd_lead_provider: provider, declaration_type: "completed")
+        end
+      end
       let!(:outcome_1) { create(:participant_outcome, participant_declaration: declaration_1, created_at: 1.day.ago) }
       let!(:outcome_2) { create(:participant_outcome, participant_declaration: declaration_1) }
       let!(:outcome_3) { create(:participant_outcome, participant_declaration: declaration_2) }

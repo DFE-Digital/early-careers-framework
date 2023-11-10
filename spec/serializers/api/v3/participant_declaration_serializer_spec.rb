@@ -124,19 +124,19 @@ RSpec.describe Api::V3::ParticipantDeclarationSerializer do
   end
 
   describe "#has_passed" do
+    let(:cpd_lead_provider) { create :cpd_lead_provider, :with_npq_lead_provider }
+    let(:npq_application) { create(:npq_application, :accepted, npq_lead_provider: cpd_lead_provider.npq_lead_provider) }
     let(:declaration_type) { "completed" }
-    let(:npq_course) { create(:npq_leadership_course) }
-    let(:schedule) { NPQCourse.schedule_for(npq_course:) }
-    let(:declaration_date) { schedule.milestones.find_by(declaration_type:).start_date + 1.day }
+    let(:declaration_date) { npq_application.profile.schedule.milestones.find_by(declaration_type:).start_date + 1.day }
     let(:participant_declaration) do
       travel_to declaration_date do
-        create(:npq_participant_declaration, :eligible, declaration_type:, declaration_date:, has_passed:)
+        create(:npq_participant_declaration, :eligible, declaration_type:, declaration_date:, participant_profile: npq_application.profile, has_passed:, cpd_lead_provider:)
       end
     end
 
     describe "when participant declaration does not have outcome" do
       let(:participant_declaration) do
-        create(:npq_participant_declaration, :eligible, declaration_type: "started")
+        create(:npq_participant_declaration, :eligible, participant_profile: npq_application.profile, declaration_type: "started", cpd_lead_provider:)
       end
 
       it "returns nil" do
