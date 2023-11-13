@@ -28,46 +28,46 @@
       { "threshold": "max<500", "abortOnFail": false }
     ],
 
-    "http_req_failed{scenario:api-load-test,container_group:API v1,container_group:/participants/ecf?page[page]=first}": [
+    "http_req_failed{scenario:api-load-test,group:::API v1::/participants/ecf?page[page]=first}": [
       { "threshold": "rate<0.1", "abortOnFail": false }
     ],
-    "http_req_failed{scenario:api-load-test,container_group:API v1,container_group:/participants/ecf?page[page]=last}": [
+    "http_req_failed{scenario:api-load-test,group:::API v1::/participants/ecf?page[page]=last}": [
       { "threshold": "rate<0.1", "abortOnFail": false }
     ],
-    "http_req_failed{scenario:api-load-test,container_group:API v2,container_group:/participants/ecf?page[page]=first}": [
+    "http_req_failed{scenario:api-load-test,group:::API v2::/participants/ecf?page[page]=first}": [
       { "threshold": "rate<0.1", "abortOnFail": false }
     ],
-    "http_req_failed{scenario:api-load-test,container_group:API v2,container_group:/participants/ecf?page[page]=last}": [
+    "http_req_failed{scenario:api-load-test,group:::API v2::/participants/ecf?page[page]=last}": [
       { "threshold": "rate<0.1", "abortOnFail": false }
     ],
-    "http_req_failed{scenario:api-load-test,container_group:API v3,container_group:/participants/ecf?page[page]=first}": [
+    "http_req_failed{scenario:api-load-test,group:::API v3::/participants/ecf?page[page]=first}": [
       { "threshold": "rate<0.1", "abortOnFail": false }
     ],
-    "http_req_failed{scenario:api-load-test,container_group:API v3,container_group:/participants/ecf?page[page]=last}": [
+    "http_req_failed{scenario:api-load-test,group:::API v3::/participants/ecf?page[page]=last}": [
       { "threshold": "rate<0.1", "abortOnFail": false }
     ],
 
-    "http_req_duration{scenario:api-load-test,container_group:API v1,container_group:/participants/ecf?page[page]=first}": [
+    "http_req_duration{scenario:api-load-test,group:::API v1::/participants/ecf?page[page]=first}": [
       { "threshold": "p(95)<1200", "abortOnFail": false },
       { "threshold": "max<1800", "abortOnFail": false }
     ],
-    "http_req_duration{scenario:api-load-test,container_group:API v1,container_group:/participants/ecf?page[page]=last}": [
+    "http_req_duration{scenario:api-load-test,group:::API v1::/participants/ecf?page[page]=last}": [
       { "threshold": "p(95)<1200", "abortOnFail": false },
       { "threshold": "max<1800", "abortOnFail": false }
     ],
-    "http_req_duration{scenario:api-load-test,container_group:API v2,container_group:/participants/ecf?page[page]=first}": [
+    "http_req_duration{scenario:api-load-test,group:::API v2::/participants/ecf?page[page]=first}": [
       { "threshold": "p(95)<1200", "abortOnFail": false },
       { "threshold": "max<1800", "abortOnFail": false }
     ],
-    "http_req_duration{scenario:api-load-test,container_group:API v2,container_group:/participants/ecf?page[page]=last}": [
+    "http_req_duration{scenario:api-load-test,group:::API v2::/participants/ecf?page[page]=last}": [
       { "threshold": "p(95)<1200", "abortOnFail": false },
       { "threshold": "max<1800", "abortOnFail": false }
     ],
-    "http_req_duration{scenario:api-load-test,container_group:API v3,container_group:/participants/ecf?page[page]=first}": [
+    "http_req_duration{scenario:api-load-test,group:::API v3::/participants/ecf?page[page]=first}": [
       { "threshold": "p(95)<1200", "abortOnFail": false },
       { "threshold": "max<1800", "abortOnFail": false }
     ],
-    "http_req_duration{scenario:api-load-test,container_group:API v3,container_group:/participants/ecf?page[page]=last}": [
+    "http_req_duration{scenario:api-load-test,group:::API v3::/participants/ecf?page[page]=last}": [
       { "threshold": "p(95)<1200", "abortOnFail": false },
       { "threshold": "max<1800", "abortOnFail": false }
     ]

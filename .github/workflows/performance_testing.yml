@@ -39,6 +39,8 @@ env:
   PERF_SCENARIO: ${{ inputs.scenario }}
   PERF_REPORT_FILE: k6-output.json
 
+  K6_LOG_PATH: ./reports/${{ inputs.scenario }}.log
+  JSON_LOG_PATH: ./reports/${{ inputs.scenario }}-log.json
   JSON_REPORT_PATH: ./reports/${{ inputs.scenario }}-report.json
   HTML_REPORT_PATH: ./reports/${{ inputs.scenario }}-report.html
   MARKDOWN_SUMMARY_PATH: ./reports/${{ inputs.scenario }}-summary.md
@@ -64,18 +66,19 @@ jobs:
         run: |
           docker compose -f ./performance/docker-compose.yml up -d web
 
-      - name: Seed the performance database
+      - name: Seed the database
         run: |
           docker compose -f ./performance/docker-compose.yml up seed
 
-      - name: Run the Performance tests
+      - name: Run the tests
         run: |
           docker compose -f ./performance/docker-compose.yml up k6
 
-      - name: Extract summary
+      - name: Extract output files
         run: |
           mkdir ./reports
           docker compose -f ./performance/docker-compose.yml cp k6:/home/k6/k6-output.json ${{ env.JSON_REPORT_PATH }}
+          docker compose -f ./performance/docker-compose.yml cp k6:/home/k6/k6.log ${{ env.K6_LOG_PATH }}
 
       - name: Shutdown the network
         if: always()
@@ -84,6 +87,7 @@ jobs:
 
       - name: Generate the HTML report and summary
         run: |
+          node ./performance/dfe-k6-log-to-json.js ${{ env.K6_LOG_PATH }} ${{ env.JSON_LOG_PATH }}
           node ./performance/dfe-k6-reporter.js ${{ env.JSON_REPORT_PATH }} ${{ env.HTML_REPORT_PATH }} ${{ env.MARKDOWN_SUMMARY_PATH }}
 
       - name: Upload the reports
@@ -93,6 +97,7 @@ jobs:
           path: |
             ${{ env.HTML_REPORT_PATH }}
             ${{ env.JSON_REPORT_PATH }}
+            ${{ env.JSON_LOG_PATH }}
           retention-days: 14
 
       - name: Update PR comment with summary

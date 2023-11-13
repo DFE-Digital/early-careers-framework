@@ -103,7 +103,7 @@ services:
       - web
     networks:
       - performance
-    command: run /scripts/main.js
+    command: run /scripts/main.js --out json=k6.log
 
 volumes:
   db_data:

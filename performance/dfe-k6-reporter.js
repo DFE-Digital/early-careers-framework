@@ -1,3 +1,4 @@
+/* eslint-disable import/no-commonjs */
 const { readFileSync, writeFileSync } = require("fs");
 const nunjucks = require("nunjucks");
 
