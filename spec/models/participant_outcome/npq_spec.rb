@@ -4,7 +4,8 @@ require "rails_helper"
 
 RSpec.describe ParticipantOutcome::NPQ, type: :model do
   let(:provider) { create :cpd_lead_provider, :with_npq_lead_provider }
-  let(:npq_application) { create :npq_application, :accepted, cohort: Cohort.previous, npq_lead_provider: provider.npq_lead_provider }
+  let!(:cohort) { Cohort.find_by(start_year: Cohort.previous.start_year - 1) }
+  let(:npq_application) { create :npq_application, :accepted, cohort:, npq_lead_provider: provider.npq_lead_provider }
   let(:declaration_date) { npq_application.profile.schedule.milestones.find_by(declaration_type: "completed").start_date + 1.day }
   let(:declaration) do
     travel_to declaration_date do
@@ -172,9 +173,9 @@ RSpec.describe ParticipantOutcome::NPQ, type: :model do
     end
 
     describe ".declarations_where_outcome_passed_and_sent" do
-      let(:npq_application_1) { create :npq_application, :accepted, cohort: Cohort.previous, npq_lead_provider: provider.npq_lead_provider }
+      let(:npq_application_1) { create :npq_application, :accepted, cohort:, npq_lead_provider: provider.npq_lead_provider }
       let(:declaration_date_1) { npq_application.profile.schedule.milestones.find_by(declaration_type: "completed").start_date + 1.day }
-      let(:npq_application_2) { create :npq_application, :accepted, cohort: Cohort.previous, npq_lead_provider: provider.npq_lead_provider }
+      let(:npq_application_2) { create :npq_application, :accepted, cohort:, npq_lead_provider: provider.npq_lead_provider }
       let(:declaration_date_2) { npq_application.profile.schedule.milestones.find_by(declaration_type: "completed").start_date + 1.day }
       let!(:declaration_1) do
         travel_to declaration_date_1 do
@@ -198,9 +199,9 @@ RSpec.describe ParticipantOutcome::NPQ, type: :model do
     end
 
     describe ".latest_per_declaration" do
-      let(:npq_application_1) { create :npq_application, :accepted, cohort: Cohort.previous, npq_lead_provider: provider.npq_lead_provider }
+      let(:npq_application_1) { create :npq_application, :accepted, cohort:, npq_lead_provider: provider.npq_lead_provider }
       let(:declaration_date_1) { npq_application.profile.schedule.milestones.find_by(declaration_type: "completed").start_date + 1.day }
-      let(:npq_application_2) { create :npq_application, :accepted, cohort: Cohort.previous, npq_lead_provider: provider.npq_lead_provider }
+      let(:npq_application_2) { create :npq_application, :accepted, cohort:, npq_lead_provider: provider.npq_lead_provider }
       let(:declaration_date_2) { npq_application.profile.schedule.milestones.find_by(declaration_type: "completed").start_date + 1.day }
       let!(:declaration_1) do
         travel_to declaration_date_1 do
