@@ -3,18 +3,20 @@
 require "rails_helper"
 require_relative "./manage_training_steps"
 
-RSpec.describe "Manage No ECT training", js: true, travel_to: Date.new(2022, 3, 1) do
+RSpec.describe "Manage No ECT training", js: true do
   include ManageTrainingSteps
 
   scenario "Manage No ECT Induction Coordinator" do
     given_there_is_a_school_that_has_chosen_no_ect_for_previous_cohort
-    and_i_am_signed_in_as_an_induction_coordinator
-    then_i_can_view_the_no_ect_induction_dashboard
-    then_the_page_should_be_accessible
+    inside_auto_assignment_window(cohort: Cohort.previous) do
+      and_i_am_signed_in_as_an_induction_coordinator
+      then_i_can_view_the_no_ect_induction_dashboard
+      then_the_page_should_be_accessible
 
-    when_i_click_on_tell_us_if_this_has_changed
-    then_i_am_taken_to_setup_my_programme
-    then_the_page_should_be_accessible
+      when_i_click_on_tell_us_if_this_has_changed
+      then_i_am_taken_to_setup_my_programme
+      then_the_page_should_be_accessible
+    end
   end
 
   scenario "Change induction programme to No ECTs" do

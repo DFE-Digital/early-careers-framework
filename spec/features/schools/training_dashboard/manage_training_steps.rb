@@ -1358,8 +1358,8 @@ module ManageTrainingSteps
     then_i_see_the_tab_for_the_cohort(Cohort.current.start_year)
   end
 
-  def then_i_am_on_the_what_we_need_to_know_page
-    expect(page).to have_text("Tell us if any new ECTs or mentors will start training at your school in the #{Cohort.previous.start_year} to #{Cohort.current.start_year} academic year")
+  def then_i_am_on_the_what_we_need_to_know_page(previous_year: Cohort.previous.start_year, current_year: Cohort.current.start_year)
+    expect(page).to have_text("Tell us if any new ECTs or mentors will start training at your school in the #{previous_year} to #{current_year} academic year")
   end
 
   def then_i_am_taken_to_the_what_we_need_to_know_about_this_mentor_page
