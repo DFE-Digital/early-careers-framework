@@ -14,7 +14,7 @@ RSpec.describe "Show ECF statement", :js do
       end
     end
   end
-  let(:cohort) { Cohort.current || create(:cohort, :current) }
+  let!(:cohort) { Cohort.current || create(:cohort, :current) }
   let(:statement) { create(:ecf_payable_statement, cpd_lead_provider:, cohort:) }
   let(:lead_provider) { cpd_lead_provider.lead_provider }
   let(:schedule) { Finance::Schedule.find_by(schedule_identifier: "ecf-standard-september", cohort:) }
@@ -31,6 +31,8 @@ RSpec.describe "Show ECF statement", :js do
   end
 
   context "Statement authorise for payment" do
+    before { statement.deadline_date + 1.day }
+
     scenario "successfully authorising" do
       given_i_am_logged_in_as_a_finance_user
       and_multiple_declarations_exist

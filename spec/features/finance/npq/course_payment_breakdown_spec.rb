@@ -5,7 +5,8 @@ require "rails_helper"
 RSpec.feature "NPQ Course payment breakdown", type: :feature, js: true do
   include FinanceHelper
 
-  let(:cohort) { Cohort.previous || create(:cohort, :previous) }
+  # This needs to be hardcoded to test targetted funding functionality
+  let(:cohort) { Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021) }
 
   let!(:npq_leadership_schedule) { create(:npq_leadership_schedule, cohort:) }
   let!(:npq_specialist_schedule) { create(:npq_specialist_schedule, cohort:) }

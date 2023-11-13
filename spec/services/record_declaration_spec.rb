@@ -403,19 +403,21 @@ RSpec.describe RecordDeclaration do
 
     context "for next cohort" do
       let!(:schedule) { create(:npq_specialist_schedule, cohort:) }
-      let!(:statement) { create(:npq_statement, :output_fee, deadline_date: 6.weeks.from_now, cpd_lead_provider:, cohort:) }
+      let!(:statement) { create(:npq_statement, :output_fee, deadline_date: declaration_date + 6.weeks, cpd_lead_provider:, cohort:) }
       let(:cohort) { Cohort.next || create(:cohort, :next) }
       let(:npq_lead_provider) { cpd_lead_provider.npq_lead_provider }
       let(:participant_profile) { create(:npq_participant_profile, :eligible_for_funding, npq_lead_provider:, npq_course:, schedule:) }
       let(:declaration_date) { participant_profile.schedule.milestones.find_by(declaration_type: "started").start_date }
 
       it "creates declaration to next cohort statement" do
-        expect { service.call }.to change { ParticipantDeclaration.count }.by(1)
+        travel_to declaration_date + 1.day do
+          expect { service.call }.to change { ParticipantDeclaration.count }.by(1)
 
-        declaration = ParticipantDeclaration.last
+          declaration = ParticipantDeclaration.last
 
-        expect(declaration).to be_eligible
-        expect(declaration.statements).to include(statement)
+          expect(declaration).to be_eligible
+          expect(declaration.statements).to include(statement)
+        end
       end
     end
 
