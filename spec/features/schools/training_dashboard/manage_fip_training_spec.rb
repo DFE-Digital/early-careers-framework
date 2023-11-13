@@ -7,14 +7,14 @@ RSpec.describe "Manage FIP training", js: true, travel_to: Time.zone.local(2021,
   include ManageTrainingSteps
 
   scenario "FIP Induction Coordinator with training provider" do
-    given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
+    given_there_is_a_school_that_has_chosen_fip_for_previous_cohort_and_partnered
     and_i_am_signed_in_as_an_induction_coordinator
     then_i_am_taken_to_fip_induction_dashboard
     then_the_page_should_be_accessible
   end
 
   scenario "FIP Induction Coordinator without training provider" do
-    given_there_is_a_school_that_has_chosen_fip_for_2021
+    given_there_is_a_school_that_has_chosen_fip_for_previous_cohort
     and_i_am_signed_in_as_an_induction_coordinator
     then_i_can_view_the_fip_induction_dashboard_without_partnership_details
     then_the_page_should_be_accessible

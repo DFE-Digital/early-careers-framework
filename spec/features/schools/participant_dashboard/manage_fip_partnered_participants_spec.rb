@@ -20,7 +20,7 @@ RSpec.describe "Manage FIP partnered participants with change of circumstances",
 
   context "transferring participants" do
     before do
-      given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
+      given_there_is_a_school_that_has_chosen_fip_for_previous_cohort_and_partnered
       and_i_am_signed_in_as_an_induction_coordinator
     end
 
@@ -71,7 +71,7 @@ RSpec.describe "Manage FIP partnered participants with change of circumstances",
 
   scenario "withdrawn partnership shouldn't cause an error", travel_to: Date.new(2021, 11, 1) do
     expect {
-      given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered_but_challenged
+      given_there_is_a_school_that_has_chosen_fip_for_previous_cohort_and_partnered_but_challenged
       and_i_have_added_an_ect
       and_an_ect_has_been_withdrawn_by_the_provider
       and_i_am_signed_in_as_an_induction_coordinator

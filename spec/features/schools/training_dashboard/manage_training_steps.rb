@@ -56,8 +56,8 @@ module ManageTrainingSteps
     @school_cohort.update!(default_induction_programme: @induction_programme)
   end
 
-  def given_there_is_a_school_that_has_chosen_fip_for_2021
-    @cohort = Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021)
+  def given_there_is_a_school_that_has_chosen_fip_for_previous_cohort
+    @cohort = Cohort.previous || create(:cohort, :previous)
     @school = create(:school, name: "Fip School")
     @school_cohort = create(:school_cohort, school: @school, cohort: @cohort, induction_programme_choice: "full_induction_programme")
     @induction_programme = create(:induction_programme, :fip, school_cohort: @school_cohort, partnership: nil)
@@ -75,27 +75,27 @@ module ManageTrainingSteps
     @school_cohort2.update!(default_induction_programme: @induction_programme2)
   end
 
-  def given_there_is_a_school_that_has_chosen_fip_for_2021_and_2022_and_partnered
-    given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
-    @cohort22 = Cohort.find_or_create_by!(start_year: 2022)
-    @partnership22 = @partnership.dup
-    @partnership22.cohort = @cohort22
-    @partnership22.save!
-    @school_cohort22 = create(:school_cohort, :fip, school: @school, cohort: @cohort22)
-    @induction_programme22 = create(:induction_programme, :fip, school_cohort: @school_cohort22, partnership: @partnership22)
-    @school_cohort22.update!(default_induction_programme: @induction_programme22)
+  def given_there_is_a_school_that_has_chosen_fip_for_previous_and_current_cohort_and_partnered
+    given_there_is_a_school_that_has_chosen_fip_for_previous_cohort_and_partnered
+    @cohort_current = Cohort.current || create(:cohort, :current)
+    @partnership_current = @partnership.dup
+    @partnership_current.cohort = @cohort_current
+    @partnership_current.save!
+    @school_cohort_current = create(:school_cohort, :fip, school: @school, cohort: @cohort_current)
+    @induction_programme_current = create(:induction_programme, :fip, school_cohort: @school_cohort_current, partnership: @partnership_current)
+    @school_cohort_current.update!(default_induction_programme: @induction_programme_current)
   end
 
-  def given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
-    given_there_is_a_school_that_has_chosen_fip_for_2021
+  def given_there_is_a_school_that_has_chosen_fip_for_previous_cohort_and_partnered
+    given_there_is_a_school_that_has_chosen_fip_for_previous_cohort
     @lead_provider = create(:lead_provider, name: "Big Provider Ltd")
     @delivery_partner = create(:delivery_partner, name: "Amazing Delivery Team")
     @partnership = create(:partnership, school: @school, lead_provider: @lead_provider, delivery_partner: @delivery_partner, cohort: @cohort, challenge_deadline: 2.weeks.ago)
     @induction_programme.update!(partnership: @partnership)
   end
 
-  def given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered_but_challenged
-    given_there_is_a_school_that_has_chosen_fip_for_2021
+  def given_there_is_a_school_that_has_chosen_fip_for_previous_cohort_and_partnered_but_challenged
+    given_there_is_a_school_that_has_chosen_fip_for_previous_cohort
     @lead_provider = create(:lead_provider, name: "Big Provider Ltd")
     @delivery_partner = create(:delivery_partner, name: "Amazing Delivery Team")
     @partnership = create(:partnership, school: @school, lead_provider: @lead_provider, delivery_partner: @delivery_partner, cohort: @cohort, challenge_deadline: 1.week.from_now, challenged_at: 1.day.ago, challenge_reason: "mistake")
@@ -111,9 +111,9 @@ module ManageTrainingSteps
     @school_cohort.update!(default_induction_programme: @induction_programme)
   end
 
-  def given_there_is_a_school_that_has_chosen_cip_for_2021(pilot: false)
+  def given_there_is_a_school_that_has_chosen_cip_for_previous_cohort(pilot: false)
     @cip = create(:core_induction_programme, name: "CIP Programme 1")
-    @cohort = Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021)
+    @cohort = Cohort.previous || create(:cohort, :previous)
     @school = create(:school, name: "CIP School")
     @school_cohort = create(:school_cohort, school: @school, cohort: @cohort, induction_programme_choice: "core_induction_programme")
     @induction_programme = create(:induction_programme, :cip, school_cohort: @school_cohort, core_induction_programme: nil)
@@ -160,14 +160,14 @@ module ManageTrainingSteps
     @school_cohort = create(:school_cohort, school: @school, cohort: @cohort, induction_programme_choice: "design_our_own")
   end
 
-  def given_there_is_a_school_that_has_chosen_design_our_own_for_2021
-    @cohort = Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021)
+  def given_there_is_a_school_that_has_chosen_design_our_own_for_previous_cohort
+    @cohort = Cohort.previous || create(:cohort, :previous)
     @school = create(:school, name: "Design Our Own Programme School")
     @school_cohort = create(:school_cohort, school: @school, cohort: @cohort, induction_programme_choice: "design_our_own")
   end
 
-  def given_there_is_a_school_that_has_chosen_no_ect_for_2021
-    @cohort = Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021)
+  def given_there_is_a_school_that_has_chosen_no_ect_for_previous_cohort
+    @cohort = Cohort.previous || create(:cohort, previous)
     @school = create(:school, name: "No ECT Programme School")
     @school_cohort = create(:school_cohort, school: @school, cohort: @cohort, induction_programme_choice: "no_early_career_teachers")
     create(:school_cohort, school: @school, cohort: Cohort.find_by(start_year: 2020) || create(:cohort, start_year: 2020))
@@ -646,12 +646,12 @@ module ManageTrainingSteps
     expect(page).to have_text("Remove")
   end
 
-  def and_cohort_2022_is_created
-    Cohort.find_by(start_year: 2022) || create(:cohort, start_year: 2022)
+  def and_cohort_current_is_created
+    Cohort.current || create(:cohort, :current)
   end
 
-  def and_the_cohort_2022_tab_is_selected
-    expect(page).to have_text("Tell us if any new ECTs or mentors will start training at your school in the 2022 to 2023 academic year")
+  def and_the_current_cohort_tab_is_selected
+    expect(page).to have_text("Tell us if any new ECTs or mentors will start training at your school in the #{Cohort.previous.start_year} to Cohort.current.start_year} academic year")
   end
 
   # When_steps
@@ -668,8 +668,8 @@ module ManageTrainingSteps
     choose option: "other_providers"
   end
 
-  def when_i_choose_summer_term_2023
-    choose "Summer term 2023"
+  def when_i_choose_summer_term_next_cohort
+    choose "Summer term #{Cohort.next.start_year}"
   end
 
   def when_i_choose_yes
@@ -1354,12 +1354,12 @@ module ManageTrainingSteps
   end
 
   def then_i_see_the_cohort_tabs
-    then_i_see_the_tab_for_the_cohort(2021)
-    then_i_see_the_tab_for_the_cohort(2022)
+    then_i_see_the_tab_for_the_cohort(Cohort.previous.start_year)
+    then_i_see_the_tab_for_the_cohort(Cohort.current.start_year)
   end
 
   def then_i_am_on_the_what_we_need_to_know_page
-    expect(page).to have_text("Tell us if any new ECTs or mentors will start training at your school in the 2022 to 2023 academic year")
+    expect(page).to have_text("Tell us if any new ECTs or mentors will start training at your school in the #{Cohort.previous.start_year} to #{Cohort.current.start_year} academic year")
   end
 
   def then_i_am_taken_to_the_what_we_need_to_know_about_this_mentor_page
@@ -1403,7 +1403,7 @@ module ManageTrainingSteps
       date_of_birth: Date.new(1998, 3, 22),
       email: "sally@school.com",
       nino: "AB123456A",
-      start_date: Date.new(2022, 9, 1),
+      start_date: Date.new(Cohort.current.start_year, 9, 1),
       start_term: "summer",
     }
   end

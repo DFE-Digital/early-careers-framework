@@ -7,7 +7,7 @@ RSpec.describe "Manage No ECT training", js: true, travel_to: Date.new(2022, 3, 
   include ManageTrainingSteps
 
   scenario "Manage No ECT Induction Coordinator" do
-    given_there_is_a_school_that_has_chosen_no_ect_for_2021
+    given_there_is_a_school_that_has_chosen_no_ect_for_previous_cohort
     and_i_am_signed_in_as_an_induction_coordinator
     then_i_can_view_the_no_ect_induction_dashboard
     then_the_page_should_be_accessible

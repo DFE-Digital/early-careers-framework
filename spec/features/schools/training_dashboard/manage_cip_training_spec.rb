@@ -7,7 +7,7 @@ RSpec.describe "Manage CIP training", js: true, travel_to: Date.new(2022, 3, 1) 
   include ManageTrainingSteps
 
   scenario "CIP Induction Mentor without materials chosen" do
-    given_there_is_a_school_that_has_chosen_cip_for_2021
+    given_there_is_a_school_that_has_chosen_cip_for_previous_cohort
     and_i_am_signed_in_as_an_induction_coordinator
     then_i_am_taken_to_cip_induction_dashboard
     then_the_page_should_be_accessible
@@ -18,7 +18,7 @@ RSpec.describe "Manage CIP training", js: true, travel_to: Date.new(2022, 3, 1) 
   end
 
   scenario "CIP Induction Mentor with materials chosen" do
-    given_there_is_a_school_that_has_chosen_cip_for_2021
+    given_there_is_a_school_that_has_chosen_cip_for_previous_cohort
     and_i_am_signed_in_as_an_induction_coordinator
     then_i_am_taken_to_cip_induction_dashboard
 
@@ -34,13 +34,13 @@ RSpec.describe "Manage CIP training", js: true, travel_to: Date.new(2022, 3, 1) 
   end
 
   scenario "CIP Induction Mentor who has not added ECT or mentors" do
-    given_there_is_a_school_that_has_chosen_cip_for_2021
+    given_there_is_a_school_that_has_chosen_cip_for_previous_cohort
     and_i_am_signed_in_as_an_induction_coordinator
     then_i_can_manage_ects_and_mentors
   end
 
   scenario "CIP Induction Mentor who has added ECT or mentors" do
-    given_there_is_a_school_that_has_chosen_cip_for_2021
+    given_there_is_a_school_that_has_chosen_cip_for_previous_cohort
     and_i_have_added_an_ect
     and_i_am_signed_in_as_an_induction_coordinator
     then_i_can_manage_ects_and_mentors

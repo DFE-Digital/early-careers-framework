@@ -7,7 +7,7 @@ RSpec.describe "Add participants", js: true do
   include ManageTrainingSteps
 
   before do
-    given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
+    given_there_is_a_school_that_has_chosen_fip_for_previous_cohort_and_partnered
     set_sit_data
     and_i_am_signed_in_as_an_induction_coordinator
     and_i_have_added_an_ect
