@@ -70,7 +70,7 @@ RSpec.describe "Adding previously withdrawn Mentor", type: :feature, js: true do
         and_i_fill_in_all_info
         then_i_am_taken_to_mentor_start_training_page
 
-        when_i_choose_summer_term_next_cohort
+        when_i_choose_summer_term_this_cohort
         when_i_click_on_continue
         then_i_am_taken_to_choose_mentor_partnership_page
 
@@ -107,7 +107,7 @@ RSpec.describe "Adding previously withdrawn Mentor", type: :feature, js: true do
         and_i_fill_in_all_info
         then_i_am_taken_to_mentor_start_training_page
 
-        when_i_choose_summer_term_next_cohort
+        when_i_choose_summer_term_this_cohort
         when_i_click_on_continue
         then_i_am_taken_to_choose_mentor_partnership_page
 
@@ -141,7 +141,7 @@ RSpec.describe "Adding previously withdrawn Mentor", type: :feature, js: true do
         and_i_fill_in_all_info(email: new_email)
         then_i_am_taken_to_mentor_start_training_page
 
-        when_i_choose_summer_term_next_cohort
+        when_i_choose_summer_term_this_cohort
         when_i_click_on_continue
         then_i_am_taken_to_choose_mentor_partnership_page
 
@@ -173,7 +173,7 @@ RSpec.describe "Adding previously withdrawn Mentor", type: :feature, js: true do
         and_i_fill_in_all_info
         then_i_am_taken_to_mentor_start_training_page
 
-        when_i_choose_summer_term_next_cohort
+        when_i_choose_summer_term_this_cohort
         when_i_click_on_continue
         then_i_am_taken_to_choose_mentor_partnership_page
 
@@ -304,8 +304,8 @@ private
     expect(page).to have_selector("h1", text: "When will George Mentor start their mentor training?")
   end
 
-  def when_i_choose_summer_term_next_cohort
-    choose "Summer term #{Cohort.next.start_year}"
+  def when_i_choose_summer_term_this_cohort
+    choose "Summer term #{Cohort.current.start_year + 1}"
   end
 
   def then_i_am_taken_to_the_confirm_appropriate_body_page

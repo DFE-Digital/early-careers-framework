@@ -668,8 +668,8 @@ module ManageTrainingSteps
     choose option: "other_providers"
   end
 
-  def when_i_choose_summer_term_next_cohort
-    choose "Summer term #{Cohort.next.start_year}"
+  def when_i_choose_summer_term_this_cohort
+    choose "Summer term #{Cohort.current.start_year + 1}"
   end
 
   def when_i_choose_yes
