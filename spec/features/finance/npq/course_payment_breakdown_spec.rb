@@ -23,12 +23,12 @@ RSpec.feature "NPQ Course payment breakdown", type: :feature, js: true do
   let(:npq_course_leading_teaching_development) { create(:npq_course, identifier: "npq-leading-teaching-development", name: "Leading Teaching Development") }
 
   let!(:statement) do
-    timestamp = npq_leadership_schedule.milestones.order(start_date: :asc).first.start_date + 1.day
+    timestamp = npq_leadership_schedule.milestones.order(start_date: :asc).first.start_date + 1.month
     create(
       :npq_statement,
       name: "January #{cohort_current.start_year}",
-      deadline_date: timestamp + 1.month,
-      payment_date: timestamp + 1.month,
+      deadline_date: timestamp,
+      payment_date: timestamp,
       cpd_lead_provider:,
       contract_version: npq_leading_teaching_contract.version,
       cohort:,
