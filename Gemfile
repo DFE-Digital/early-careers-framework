@@ -38,7 +38,7 @@ gem "puma", "~> 5.6"
 gem "discard", "~> 1.3"
 
 # Reduces boot times through caching; required in config/boot.rb
-gem "bootsnap", "~> 1.16", require: false
+gem "bootsnap", "~> 1.17", require: false
 
 # Manage multiple processes i.e. web server and webpack
 gem "foreman"
