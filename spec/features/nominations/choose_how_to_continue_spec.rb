@@ -44,8 +44,7 @@ RSpec.feature "School contact making cohort choice journey", type: :feature, js:
 
   context "During the cohortless pilot for 2023/24", travel_to: Date.new(2023, 7, 1) do
     before do
-      cohort = Cohort.current || create(:cohort, :current)
-      allow(Cohort).to receive(:active_registration_cohort).and_return(cohort)
+      disable_cohort_setup_check
     end
 
     include_context "School choosing how to setup their cohort" do
