@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 module Schools
-  class WithEctsWithNoMentorQuery < BaseService
+  class ThatHaveNotAddedParticipantsQuery < BaseService
     def call
-      schools_to_include.where(id: school_cohorts_that_have_ects_without_mentors.select(:school_id))
+      schools_to_include.where(id: school_cohorts_that_have_not_added_participants.select(:school_id))
     end
 
     attr_reader :cohort, :school_type_codes
@@ -20,12 +20,10 @@ module Schools
       scope.where(school_type_code: school_type_codes)
     end
 
-    def school_cohorts_that_have_ects_without_mentors
+    def school_cohorts_that_have_not_added_participants
       scope = SchoolCohort
-        .joins(induction_records: [participant_profile: :ecf_participant_eligibility])
         .where(induction_programme_choice: %w[full_induction_programme core_induction_programme])
-        .where.not(ecf_participant_eligibility: { status: :ineligible })
-        .merge(InductionRecord.ects.active.training_status_active.where(mentor_profile_id: nil))
+        .where.missing(:induction_records)
 
       return scope if cohort.blank?
 

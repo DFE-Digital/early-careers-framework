@@ -4,83 +4,121 @@ require "rails_helper"
 
 RSpec.describe Schools::WithEctsWithNoMentorQuery do
   describe "#call" do
-    subject { described_class.new.call }
+    let(:cohort) { create(:seed_cohort) }
+    let(:query_cohort) { nil }
+    let(:school_type_codes) { [] }
+
+    let(:school_cohort) { create(:seed_school_cohort, :fip, :with_school, cohort:) }
+    let(:induction_programme) { create(:seed_induction_programme, :fip, school_cohort:) }
+    let(:school) { school_cohort.school }
+
+    let(:participant_profile) { create(:seed_ect_participant_profile, :valid, school_cohort:) }
+    let(:mentor_profile) { nil }
+
+    let(:induction_status) { "active" }
+    let(:training_status) { "active" }
+    let!(:induction_record) { create(:seed_induction_record, :valid, induction_status:, training_status:, participant_profile:, induction_programme:, mentor_profile:) }
+
+    let(:eligibility_status) { "eligible" }
+    let!(:eligibility) { create(:seed_ecf_participant_eligibility, participant_profile:, status: eligibility_status) }
+
+    subject(:query_result) { described_class.call(cohort: query_cohort, school_type_codes:) }
 
     context "when there are participants with mentor assigned" do
-      let!(:mentor_profile) { create(:seed_mentor_participant_profile, :valid) }
-      let!(:participant_profile) { create(:seed_ect_participant_profile, :valid, mentor_profile:) }
-      let!(:eligibility) { create(:seed_ecf_participant_eligibility, participant_profile:) }
-      let!(:induction_record) { create(:seed_induction_record, :valid, participant_profile:) }
-      let!(:seed_induction_coordinator_profiles_school) { create(:seed_induction_coordinator_profiles_school, :valid, school: induction_record.school) }
+      let(:mentor_profile) { create(:seed_mentor_participant_profile, :valid, school_cohort:) }
 
-      it "do not include them" do
-        expect(subject).not_to include(induction_record.school)
+      it "do not include the school" do
+        expect(query_result).not_to include(school)
       end
     end
 
     context "when there are participants with withdrawn induction status" do
-      let!(:participant_profile) { create(:seed_ect_participant_profile, :valid, status: :withdrawn) }
-      let!(:eligibility) { create(:seed_ecf_participant_eligibility, participant_profile:) }
-      let!(:induction_record) { create(:seed_induction_record, :valid, participant_profile:) }
-      let!(:seed_induction_coordinator_profiles_school) { create(:seed_induction_coordinator_profiles_school, :valid, school: induction_record.school) }
+      let(:induction_status) { "withdrawn" }
 
-      it "do not include them" do
-        expect(subject).not_to include(induction_record.school)
+      it "do not include the school" do
+        expect(query_result).not_to include(school)
       end
     end
 
     context "when there are participants with withdrawn training induction status" do
-      let!(:participant_profile) { create(:seed_ect_participant_profile, :valid, training_status: :withdrawn) }
-      let!(:eligibility) { create(:seed_ecf_participant_eligibility, participant_profile:) }
-      let!(:induction_record) { create(:seed_induction_record, :valid, participant_profile:) }
-      let!(:seed_induction_coordinator_profiles_school) { create(:seed_induction_coordinator_profiles_school, :valid, school: induction_record.school) }
+      let(:training_status) { "withdrawn" }
 
-      it "do not include them" do
-        expect(subject).not_to include(induction_record.school)
+      it "do not include the school" do
+        expect(query_result).not_to include(school)
       end
     end
 
     context "when there are participants with deferred training induction status" do
-      let!(:participant_profile) { create(:seed_ect_participant_profile, :valid, training_status: :deferred) }
-      let!(:eligibility) { create(:seed_ecf_participant_eligibility, participant_profile:) }
-      let!(:induction_record) { create(:seed_induction_record, :valid, participant_profile:) }
-      let!(:seed_induction_coordinator_profiles_school) { create(:seed_induction_coordinator_profiles_school, :valid, school: induction_record.school) }
+      let(:training_status) { "deferred" }
 
-      it "do not include them" do
-        expect(subject).not_to include(induction_record.school)
+      it "do not include the school" do
+        expect(query_result).not_to include(school)
       end
     end
 
     context "when there are active participants :ineligible and with no mentor associated" do
-      let!(:participant_profile) { create(:seed_ect_participant_profile, :valid) }
-      let!(:eligibility) { create(:seed_ecf_participant_eligibility, :ineligible, participant_profile:) }
-      let!(:induction_record) { create(:seed_induction_record, :valid, participant_profile:) }
-      let!(:seed_induction_coordinator_profiles_school) { create(:seed_induction_coordinator_profiles_school, :valid, school: induction_record.school) }
+      let(:eligibility_status) { "ineligible" }
 
-      it "do not include them" do
-        expect(subject).not_to include(induction_record.school)
+      it "do not include the school" do
+        expect(query_result).not_to include(school)
       end
     end
 
     context "when there are active participants on :matched eligibility and no mentor associated" do
-      let!(:participant_profile) { create(:seed_ect_participant_profile, :valid) }
-      let!(:eligibility) { create(:seed_ecf_participant_eligibility, participant_profile:, status: :matched) }
-      let!(:induction_record) { create(:seed_induction_record, :valid, participant_profile:) }
-      let!(:seed_induction_coordinator_profiles_school) { create(:seed_induction_coordinator_profiles_school, :valid, school: induction_record.school) }
+      let(:eligibility_status) { "matched" }
 
-      it "include them" do
-        expect(subject).to include(induction_record.school => [participant_profile])
+      it "includes the school" do
+        expect(query_result).to include(school)
       end
     end
 
     context "when there are active participants on :manual-check eligibility and no mentor associated" do
-      let!(:participant_profile) { create(:seed_ect_participant_profile, :valid) }
-      let!(:eligibility) { create(:seed_ecf_participant_eligibility, :manual_check, participant_profile:) }
-      let!(:induction_record) { create(:seed_induction_record, :valid, participant_profile:) }
-      let!(:seed_induction_coordinator_profiles_school) { create(:seed_induction_coordinator_profiles_school, :valid, school: induction_record.school) }
+      let(:eligibility_status) { "manual_check" }
 
-      it "include them" do
-        expect(subject).to include(induction_record.school => [participant_profile])
+      it "includes the school" do
+        expect(query_result).to include(school)
+      end
+    end
+
+    context "when a cohort is supplied" do
+      context "and there are active participants with no mentor associated in the cohort" do
+        let(:query_cohort) { cohort }
+
+        it "includes the school" do
+          expect(query_result).to include(school)
+        end
+      end
+
+      context "and there are active participants with no mentor associated in a different cohort" do
+        let(:query_cohort) { create(:seed_cohort, start_year: cohort.start_year + 1) }
+
+        it "does not include the school" do
+          expect(query_result).not_to include(school)
+        end
+      end
+    end
+
+    context "when school type codes are supplied" do
+      let(:school_type_codes) { [1, 2, 3] }
+
+      context "when there are active participants with no mentor associated in matching school types" do
+        before do
+          school.update!(school_type_code: 2)
+        end
+
+        it "includes the school" do
+          expect(query_result).to include(school)
+        end
+      end
+
+      context "when there are active participants with no mentor associated in different school types" do
+        before do
+          school.update!(school_type_code: 5)
+        end
+
+        it "does not include the school" do
+          expect(query_result).not_to include(school)
+        end
       end
     end
   end
