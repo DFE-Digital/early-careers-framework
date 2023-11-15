@@ -5,8 +5,8 @@ require "rails_helper"
 RSpec.describe Statements::MarkAsPaid do
   let(:cpd_lead_provider)             { create(:cpd_lead_provider, :with_npq_lead_provider) }
   let(:cohort)                        { Cohort.current }
-  let(:eligible_statement)            { create(:npq_statement, cpd_lead_provider:, cohort:, deadline_date: 3.months.ago) }
-  let(:statement)                     { create(:npq_statement, cpd_lead_provider:, cohort:, deadline_date: 2.months.ago) }
+  let(:eligible_statement)            { create(:npq_statement, cpd_lead_provider:, cohort:, deadline_date: Cohort.next.registration_start_date - 3.months) }
+  let(:statement)                     { create(:npq_statement, cpd_lead_provider:, cohort:, deadline_date: Cohort.next.registration_start_date - 2.months) }
   let(:awaiting_clawback_declaration) { create(:npq_participant_declaration, :eligible, cpd_lead_provider:) }
 
   subject { described_class.new(statement) }

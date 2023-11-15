@@ -45,11 +45,13 @@ describe ParticipantProfileDeduplicator do
 
       context "when there are declarations on the duplicate" do
         let!(:duplicate_declaration) do
-          create(:ect_participant_declaration,
-                 :submitted,
-                 declaration_type: "retained-1",
-                 participant_profile: duplicate_profile,
-                 cpd_lead_provider: duplicate_profile.lead_provider.cpd_lead_provider)
+          travel_to duplicate_profile.schedule.milestones.find_by(declaration_type: "retained-1").start_date + 2.days do
+            create(:ect_participant_declaration,
+                   :submitted,
+                   declaration_type: "retained-1",
+                   participant_profile: duplicate_profile,
+                   cpd_lead_provider: duplicate_profile.lead_provider.cpd_lead_provider)
+          end
         end
 
         it { expect { dedup! }.to raise_error(described_class::DeduplicationError, "Lead provider change retaining the same school is not supported when there are declarations on the duplicate") }
@@ -261,19 +263,23 @@ describe ParticipantProfileDeduplicator do
       let(:primary_profile) { create(:ect, :eligible_for_funding) }
 
       let!(:duplicate_declaration) do
-        create(:ect_participant_declaration,
-               :submitted,
-               declaration_type: "retained-1",
-               participant_profile: duplicate_profile,
-               cpd_lead_provider: duplicate_profile.lead_provider.cpd_lead_provider)
+        travel_to duplicate_profile.schedule.milestones.find_by(declaration_type: "retained-1").start_date + 2.days do
+          create(:ect_participant_declaration,
+                 :submitted,
+                 declaration_type: "retained-1",
+                 participant_profile: duplicate_profile,
+                 cpd_lead_provider: duplicate_profile.lead_provider.cpd_lead_provider)
+        end
       end
       let!(:conflicting_declaration) do
-        create(:ect_participant_declaration,
-               :submitted,
-               declaration_type: "retained-1",
-               declaration_date: duplicate_declaration.declaration_date + 1.day,
-               participant_profile: primary_profile,
-               cpd_lead_provider: primary_profile.lead_provider.cpd_lead_provider)
+        travel_to primary_profile.schedule.milestones.find_by(declaration_type: "retained-1").start_date + 2.days do
+          create(:ect_participant_declaration,
+                 :submitted,
+                 declaration_type: "retained-1",
+                 declaration_date: duplicate_declaration.declaration_date + 1.day,
+                 participant_profile: primary_profile,
+                 cpd_lead_provider: primary_profile.lead_provider.cpd_lead_provider)
+        end
       end
 
       context "when primary profile only has voided declarations and duplicate does not" do
@@ -331,18 +337,22 @@ describe ParticipantProfileDeduplicator do
 
     context "when the schedules and cohorts are different" do
       let!(:primary_profile_declaration) do
-        create(:ect_participant_declaration,
-               :submitted,
-               declaration_type: "retained-1",
-               participant_profile: primary_profile,
-               cpd_lead_provider: primary_profile.lead_provider.cpd_lead_provider)
+        travel_to primary_profile.schedule.milestones.find_by(declaration_type: "retained-1").start_date + 2.days do
+          create(:ect_participant_declaration,
+                 :submitted,
+                 declaration_type: "retained-1",
+                 participant_profile: primary_profile,
+                 cpd_lead_provider: primary_profile.lead_provider.cpd_lead_provider)
+        end
       end
       let!(:duplicate_profile_declaration) do
-        create(:ect_participant_declaration,
-               :submitted,
-               declaration_type: "retained-2",
-               participant_profile: duplicate_profile,
-               cpd_lead_provider: duplicate_profile.lead_provider.cpd_lead_provider)
+        travel_to duplicate_profile.schedule.milestones.find_by(declaration_type: "retained-2").start_date + 2.days do
+          create(:ect_participant_declaration,
+                 :submitted,
+                 declaration_type: "retained-2",
+                 participant_profile: duplicate_profile,
+                 cpd_lead_provider: duplicate_profile.lead_provider.cpd_lead_provider)
+        end
       end
       let!(:primary_profile_schedule) { primary_profile.latest_induction_record.schedule }
       let(:duplicate_profile_cohort) { create(:cohort, start_year: primary_profile.cohort.start_year + 1) }

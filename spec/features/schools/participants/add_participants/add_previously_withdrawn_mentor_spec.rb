@@ -3,8 +3,8 @@
 require "rails_helper"
 
 RSpec.describe "Adding previously withdrawn Mentor", type: :feature, js: true do
-  let(:previous_cohort) { create(:cohort, start_year: 2021) }
-  let!(:cohort) { Cohort.current || create(:cohort, start_year: 2022) }
+  let(:previous_cohort) { create(:cohort, :previous) }
+  let!(:cohort) { Cohort.current || create(:cohort, :current) }
   let!(:school) { create(:school, name: "Fip School") }
   let!(:appropriate_body) { create :appropriate_body_national_organisation }
   let!(:previous_school_cohort) do
@@ -59,30 +59,32 @@ RSpec.describe "Adding previously withdrawn Mentor", type: :feature, js: true do
     participant_profile = add_and_remove_participant_from_school_cohort(previous_school_cohort)
     the_participant_profile_is_set_up_as_withdrawn_correctly(participant_profile, previous_school_cohort)
 
-    expect {
-      sign_in
+    outside_auto_assignment_window do
+      expect {
+        sign_in
 
-      when_i_go_to_add_new_ect_or_mentor_page
-      and_i_go_through_the_who_do_you_want_to_add_page
-      and_i_go_through_the_what_we_need_from_you_page
+        when_i_go_to_add_new_ect_or_mentor_page
+        and_i_go_through_the_who_do_you_want_to_add_page
+        and_i_go_through_the_what_we_need_from_you_page
 
-      and_i_fill_in_all_info
-      then_i_am_taken_to_mentor_start_training_page
+        and_i_fill_in_all_info
+        then_i_am_taken_to_mentor_start_training_page
 
-      when_i_choose_summer_term_2023
-      when_i_click_on_continue
-      then_i_am_taken_to_choose_mentor_partnership_page
+        when_i_choose_summer_term_this_cohort
+        when_i_click_on_continue
+        then_i_am_taken_to_choose_mentor_partnership_page
 
-      when_i_choose_current_providers
-      when_i_click_on_continue
-      then_i_am_taken_to_the_confirmation_page
-      and_i_see_the_correct_details(joint_provider_details: true)
+        when_i_choose_current_providers
+        when_i_click_on_continue
+        then_i_am_taken_to_the_confirmation_page
+        and_i_see_the_correct_details(joint_provider_details: true)
 
-      when_i_check_the_mentor_details
-      and_i_see_the_correct_details
+        when_i_check_the_mentor_details
+        and_i_see_the_correct_details
 
-      and_the_participant_profile_is_set_up_correctly(participant_profile)
-    }.to_not change { ParticipantProfile.count }
+        and_the_participant_profile_is_set_up_correctly(participant_profile)
+      }.to_not change { ParticipantProfile.count }
+    end
   end
 
   scenario "Adding a Mentor without validation data back to the school it was withdrawn from" do
@@ -94,92 +96,98 @@ RSpec.describe "Adding previously withdrawn Mentor", type: :feature, js: true do
       expected_trn: nil,
     )
 
-    expect {
-      sign_in
+    outside_auto_assignment_window do
+      expect {
+        sign_in
 
-      when_i_go_to_add_new_ect_or_mentor_page
-      and_i_go_through_the_who_do_you_want_to_add_page
-      and_i_go_through_the_what_we_need_from_you_page
+        when_i_go_to_add_new_ect_or_mentor_page
+        and_i_go_through_the_who_do_you_want_to_add_page
+        and_i_go_through_the_what_we_need_from_you_page
 
-      and_i_fill_in_all_info
-      then_i_am_taken_to_mentor_start_training_page
+        and_i_fill_in_all_info
+        then_i_am_taken_to_mentor_start_training_page
 
-      when_i_choose_summer_term_2023
-      when_i_click_on_continue
-      then_i_am_taken_to_choose_mentor_partnership_page
+        when_i_choose_summer_term_this_cohort
+        when_i_click_on_continue
+        then_i_am_taken_to_choose_mentor_partnership_page
 
-      when_i_choose_current_providers
-      when_i_click_on_continue
-      then_i_am_taken_to_the_confirmation_page
-      and_i_see_the_correct_details(joint_provider_details: true)
+        when_i_choose_current_providers
+        when_i_click_on_continue
+        then_i_am_taken_to_the_confirmation_page
+        and_i_see_the_correct_details(joint_provider_details: true)
 
-      when_i_check_the_mentor_details
-      and_i_see_the_correct_details
+        when_i_check_the_mentor_details
+        and_i_see_the_correct_details
 
-      and_the_participant_profile_is_set_up_correctly(participant_profile)
-    }.to_not change { ParticipantProfile.count }
+        and_the_participant_profile_is_set_up_correctly(participant_profile)
+      }.to_not change { ParticipantProfile.count }
+    end
   end
 
   scenario "Adding a Mentor back to the school it was withdrawn from with a different email" do
     participant_profile = add_and_remove_participant_from_school_cohort(previous_school_cohort)
     the_participant_profile_is_set_up_as_withdrawn_correctly(participant_profile, previous_school_cohort)
 
-    expect {
-      new_email = "another_#{ect_email}"
+    outside_auto_assignment_window do
+      expect {
+        new_email = "another_#{ect_email}"
 
-      sign_in
+        sign_in
 
-      when_i_go_to_add_new_ect_or_mentor_page
-      and_i_go_through_the_who_do_you_want_to_add_page
-      and_i_go_through_the_what_we_need_from_you_page
+        when_i_go_to_add_new_ect_or_mentor_page
+        and_i_go_through_the_who_do_you_want_to_add_page
+        and_i_go_through_the_what_we_need_from_you_page
 
-      and_i_fill_in_all_info(email: new_email)
-      then_i_am_taken_to_mentor_start_training_page
+        and_i_fill_in_all_info(email: new_email)
+        then_i_am_taken_to_mentor_start_training_page
 
-      when_i_choose_summer_term_2023
-      when_i_click_on_continue
-      then_i_am_taken_to_choose_mentor_partnership_page
+        when_i_choose_summer_term_this_cohort
+        when_i_click_on_continue
+        then_i_am_taken_to_choose_mentor_partnership_page
 
-      when_i_choose_current_providers
-      when_i_click_on_continue
-      then_i_am_taken_to_the_confirmation_page
-      and_i_see_the_correct_details(joint_provider_details: true, expected_email: new_email)
+        when_i_choose_current_providers
+        when_i_click_on_continue
+        then_i_am_taken_to_the_confirmation_page
+        and_i_see_the_correct_details(joint_provider_details: true, expected_email: new_email)
 
-      when_i_check_the_mentor_details
-      and_i_see_the_correct_details(expected_email: new_email)
+        when_i_check_the_mentor_details
+        and_i_see_the_correct_details(expected_email: new_email)
 
-      and_the_participant_profile_is_set_up_correctly(participant_profile)
-    }.to_not change { ParticipantProfile.count }
+        and_the_participant_profile_is_set_up_correctly(participant_profile)
+      }.to_not change { ParticipantProfile.count }
+    end
   end
 
   scenario "Adding a Mentor to a school different to the one it was withdrawn from" do
     participant_profile = add_and_remove_participant_from_school_cohort(previous_school_cohort_different_school)
     the_participant_profile_is_set_up_as_withdrawn_correctly(participant_profile, previous_school_cohort_different_school)
 
-    expect {
-      sign_in
+    outside_auto_assignment_window do
+      expect {
+        sign_in
 
-      when_i_go_to_add_new_ect_or_mentor_page
-      and_i_go_through_the_who_do_you_want_to_add_page
-      and_i_go_through_the_what_we_need_from_you_page
+        when_i_go_to_add_new_ect_or_mentor_page
+        and_i_go_through_the_who_do_you_want_to_add_page
+        and_i_go_through_the_what_we_need_from_you_page
 
-      and_i_fill_in_all_info
-      then_i_am_taken_to_mentor_start_training_page
+        and_i_fill_in_all_info
+        then_i_am_taken_to_mentor_start_training_page
 
-      when_i_choose_summer_term_2023
-      when_i_click_on_continue
-      then_i_am_taken_to_choose_mentor_partnership_page
+        when_i_choose_summer_term_this_cohort
+        when_i_click_on_continue
+        then_i_am_taken_to_choose_mentor_partnership_page
 
-      when_i_choose_current_providers
-      when_i_click_on_continue
-      then_i_am_taken_to_the_confirmation_page
-      and_i_see_the_correct_details(joint_provider_details: true)
+        when_i_choose_current_providers
+        when_i_click_on_continue
+        then_i_am_taken_to_the_confirmation_page
+        and_i_see_the_correct_details(joint_provider_details: true)
 
-      when_i_check_the_mentor_details
-      and_i_see_the_correct_details
+        when_i_check_the_mentor_details
+        and_i_see_the_correct_details
 
-      and_the_participant_profile_is_set_up_correctly(participant_profile)
-    }.to_not change { ParticipantProfile.count }
+        and_the_participant_profile_is_set_up_correctly(participant_profile)
+      }.to_not change { ParticipantProfile.count }
+    end
   end
 
 private
@@ -296,8 +304,8 @@ private
     expect(page).to have_selector("h1", text: "When will George Mentor start their mentor training?")
   end
 
-  def when_i_choose_summer_term_2023
-    choose "Summer term 2023"
+  def when_i_choose_summer_term_this_cohort
+    choose "Summer term #{Cohort.current.start_year + 1}"
   end
 
   def then_i_am_taken_to_the_confirm_appropriate_body_page

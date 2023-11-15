@@ -3,8 +3,8 @@
 RSpec.describe Induction::AmendParticipantCohort do
   describe "#save" do
     let(:participant_profile) {}
-    let(:source_cohort_start_year) { 2021 }
-    let(:target_cohort_start_year) { 2022 }
+    let(:source_cohort_start_year) { Cohort.previous.start_year }
+    let(:target_cohort_start_year) { Cohort.current.start_year }
 
     subject(:form) do
       described_class.new(participant_profile:, source_cohort_start_year:, target_cohort_start_year:)
@@ -71,12 +71,11 @@ RSpec.describe Induction::AmendParticipantCohort do
     end
 
     context "when the target cohort has not been setup in the service" do
-      let(:source_cohort_start_year) { 2023 }
-      let(:target_cohort_start_year) { 2024 }
+      let!(:source_cohort_start_year) { Cohort.next.start_year }
+      let!(:target_cohort_start_year) { Cohort.next.start_year + 1 }
 
       it "returns false and set errors" do
-        # FIXME: this is temp until cohort specs are reverted back to 1/9
-        travel_to Date.new(Cohort.ordered_by_start_year.last.start_year + 2, 12, 1)
+        travel_to Date.new(Cohort.ordered_by_start_year.last.start_year + 2, 9, 1)
 
         expect(form.save).to be_falsey
         expect(form.errors[:target_cohort]).to_not be_nil
@@ -223,7 +222,7 @@ RSpec.describe Induction::AmendParticipantCohort do
         %i[voided ineligible awaiting_clawback clawed_back].each do |declaration_state|
           context "when the participant has #{declaration_state} declarations and no billable or changeable declarations" do
             before do
-              participant_profile.participant_declarations.create!(declaration_date: Date.new(2021, 10, 10),
+              participant_profile.participant_declarations.create!(declaration_date: Date.new(Cohort.previous.start_year, 10, 10),
                                                                    declaration_type: :started,
                                                                    state: declaration_state,
                                                                    course_identifier: "ecf-induction",

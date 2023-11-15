@@ -152,7 +152,7 @@ RSpec.describe Partnerships::Report do
   end
 
   context "challenge deadline to 31st October from 2023" do
-    let(:cohort) { create(:cohort, start_year: 2023, academic_year_start_date: Date.new(2023, 9, 1)) }
+    let(:cohort) { create(:cohort, start_year: 2023) }
 
     it "sets the challenge deadline to 31st October when the partnership is created before the 17th October", travel_to: Date.new(2023, 5, 1) do
       expect(result.challenge_deadline).to eq(Date.new(2023, 10, 31))
@@ -164,7 +164,7 @@ RSpec.describe Partnerships::Report do
   end
 
   context "challenge deadline to 31st October until 2022" do
-    let(:cohort) { create(:cohort, start_year: 2022, academic_year_start_date: Date.new(2022, 9, 1)) }
+    let(:cohort) { create(:cohort, start_year: 2022) }
 
     it "sets the challenge deadline to two weeks when the partnership is created from the 17th October", travel_to: Date.new(2023, 5, 1) do
       expect(result.challenge_deadline).to eq(Date.new(2023, 5, 15))

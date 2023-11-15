@@ -13,7 +13,7 @@ RSpec.feature "ECT doing CIP: after cohort transfer", type: :feature do
   let(:teacher_reference_number) { teacher_profile.trn }
   let(:training_record_id) { participant_profile.id }
   let(:participant_full_name) { "ECT doing CIP: after cohort transfer" }
-  let(:school_name) { "School chosen CIP in 2022 and 2023" }
+  let(:school_name) { "School chosen CIP in #{Cohort.current.start_year} and #{start_year}" }
   let(:sit_full_name) { "#{school_name} SIT" }
   let(:lead_provider_name) { "" }
   let(:delivery_partner_name) { "" }
@@ -27,7 +27,7 @@ RSpec.feature "ECT doing CIP: after cohort transfer", type: :feature do
   let(:schedule_identifier) { "ecf-standard-september" }
   let(:cip_material_provider) { "Education Development Trust" }
   let(:cip_materials) { "edt" }
-  let(:start_year) { 2023 }
+  let(:start_year) { Cohort.next.start_year }
   let(:previous_start_year) { start_year - 1 }
   let(:registration_completed) { true }
   let(:participant_status) { "active" }

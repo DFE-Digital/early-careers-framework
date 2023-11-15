@@ -82,7 +82,7 @@ RSpec.describe Participants::SyncDQTInductionStartDate, with_feature_flags: { co
 
   context "when the participant was added to the service before 1st Jun 2023" do
     let(:participant_created_at) { Date.new(2023, 5, 31) }
-    let(:dqt_induction_start_date) { Date.new(2022, 12, 1) }
+    let(:dqt_induction_start_date) { Date.new(2022, 10, 1) }
 
     context "when participant's induction start date is present" do
       let(:participant_induction_start_date) { Date.new(2022, 9, 1) }
@@ -121,7 +121,7 @@ RSpec.describe Participants::SyncDQTInductionStartDate, with_feature_flags: { co
     end
 
     context "when the DQT induction start date's related cohort and the participant's cohort are the same" do
-      let(:dqt_induction_start_date) { Date.new(2022, 12, 2) }
+      let(:dqt_induction_start_date) { Date.new(2022, 10, 2) }
       let(:participant_cohort_start_year) { 2022 }
 
       it "changes the participant's induction start date only" do
@@ -133,7 +133,7 @@ RSpec.describe Participants::SyncDQTInductionStartDate, with_feature_flags: { co
     end
 
     context "when the DQT induction start date's related cohort and the participant's cohort are different" do
-      let(:dqt_induction_start_date) { Date.new(Cohort.current.start_year, 12, 2) }
+      let(:dqt_induction_start_date) { Date.new(Cohort.current.start_year, 10, 2) }
       let(:participant_cohort_start_year) { Cohort.previous.start_year }
       let(:target_school_cohort) do
         create(:seed_school_cohort, :fip, cohort: Cohort.current, school: participant_profile.school)
@@ -153,7 +153,7 @@ RSpec.describe Participants::SyncDQTInductionStartDate, with_feature_flags: { co
     end
 
     context "when the cohort can't be amended" do
-      let(:dqt_induction_start_date) { Date.new(Cohort.current.start_year, 12, 2) }
+      let(:dqt_induction_start_date) { Date.new(Cohort.current.start_year, 10, 2) }
       let(:participant_cohort_start_year) { Cohort.previous.start_year }
 
       it "does not change the participant and save the errors" do
@@ -166,7 +166,7 @@ RSpec.describe Participants::SyncDQTInductionStartDate, with_feature_flags: { co
     end
 
     context "when an error is already present from a previous job" do
-      let(:dqt_induction_start_date) { Date.new(Cohort.current.start_year, 12, 2) }
+      let(:dqt_induction_start_date) { Date.new(Cohort.current.start_year, 10, 2) }
       let!(:error) { SyncDQTInductionStartDateError.create!(participant_profile:, message: "test message") }
 
       context "when the participant is successfully processed" do

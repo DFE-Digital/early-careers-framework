@@ -11,7 +11,7 @@ RSpec.describe NPQ::AmendParticipantCohort, type: :model do
   let!(:cohort_current) { Cohort.current }
   let(:cohort_previous) { Cohort.previous }
 
-  let(:target_cohort_start_year) { 2021 }
+  let(:target_cohort_start_year) { cohort_previous.start_year }
 
   subject { described_class.new(npq_application_id:, target_cohort_start_year:) }
 
@@ -55,7 +55,7 @@ RSpec.describe NPQ::AmendParticipantCohort, type: :model do
     context "when the target cohort is already set on the NPQ application" do
       it "returns an error message" do
         expect(subject).to be_invalid
-        expect(subject.errors.messages_for(:target_cohort_start_year)).to include("Invalid value. Must be different to 2021")
+        expect(subject.errors.messages_for(:target_cohort_start_year)).to include("Invalid value. Must be different to #{cohort_previous.start_year}")
       end
     end
 

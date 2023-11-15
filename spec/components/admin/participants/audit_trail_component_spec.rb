@@ -72,7 +72,7 @@ RSpec.describe Admin::Participants::AuditTrailComponent, :with_support_for_ect_e
     it "has the correct lead provider induction programme when a FIP ECT is created" do
       travel_to(Time.zone.now - 1.minute) { fip_ect_only }
 
-      expect(subject).to include "Teach First TF Delivery Partner (2022/23)"
+      expect(subject).to include "Teach First TF Delivery Partner (#{Cohort.current.academic_year})"
     end
 
     it "shows a name change" do

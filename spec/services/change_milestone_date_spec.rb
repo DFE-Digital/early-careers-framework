@@ -61,7 +61,12 @@ describe ChangeMilestoneDate, type: :model do
       it { is_expected.to validate_presence_of(:new_start_date).with_message(/must be specified/) }
 
       context "when the declarations fall within the new milestone dates" do
-        before { create(:ect_participant_declaration, participant_profile:, cpd_lead_provider:, declaration_date: new_milestone_date - 1.day) }
+        let(:declaration_date) { new_milestone_date - 1.day }
+        before do
+          travel_to declaration_date do
+            create(:ect_participant_declaration, participant_profile:, cpd_lead_provider:, declaration_date:)
+          end
+        end
 
         it { expect(errors).not_to have_key(:new_milestone_date) }
       end
