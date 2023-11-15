@@ -226,6 +226,7 @@ RSpec.describe "NPQ Applications API", type: :request, with_feature_flags: { acc
     let(:npq_application) { create(:npq_application, :accepted, npq_lead_provider:) }
 
     before do
+      freeze_time
       default_headers[:Authorization] = bearer_token
       get "/api/v3/npq-applications/#{npq_application.id}"
     end
