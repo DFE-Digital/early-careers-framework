@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "rails_helper"
 RSpec.describe "NPQ Application Status API", type: :request do
   let(:cpd_lead_provider) { create(:cpd_lead_provider) }
