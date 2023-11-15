@@ -32,9 +32,9 @@ module Importers
       from_user = User.find_by(id: row["participant_id 2"])
       if from_user.present? && to_user.present?
         Identity::Transfer.call(from_user:, to_user:)
-        Rails.logger.info("Data is successfully moved from #{from_user.email} to #{to_user.email}")
+        logger.info("Data is successfully moved from #{from_user.email} to #{to_user.email}")
       else
-        Rails.logger.info("Data is not updated because user data is not present")
+        logger.info("Data is not updated because user data is not present")
       end
     end
 
