@@ -2,6 +2,8 @@
 
 module LeadProviders
   class YourSchoolsController < ::LeadProviders::BaseController
+    attr_reader :lead_provider
+
     before_action :set_lead_provider
 
     def index
@@ -24,6 +26,7 @@ module LeadProviders
           relationship: false,
         )
 
+      @participant_counts = Participants::ActiveCountByPartnership.call(partnerships: @partnerships, lead_provider: @lead_provider)
       @total_provider_schools = @partnerships.count
 
       @query = params[:query]

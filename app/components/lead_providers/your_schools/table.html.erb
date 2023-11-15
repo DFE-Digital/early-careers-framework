@@ -10,7 +10,7 @@
       </tr>
     </thead>
     <tbody class="govuk-table__body nhsuk-table__body">
-      <%= render LeadProviders::YourSchools::TableRow.with_collection(partnerships) %>
+      <%= render LeadProviders::YourSchools::TableRow.with_collection(partnerships, participant_counts:) %>
     </tbody>
   </table>
 </div>

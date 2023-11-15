@@ -40,7 +40,7 @@
   <div class="govuk-grid-column-one-third">
     <div class="dashboard-numbers key-number">
       <p class="govuk-heading-l">
-        <%= @school.early_career_teacher_profiles_for(@selected_cohort).count -%>
+        <%= @participant_counts.dig(@partnership.id, :ect_count) %>
       </p>
       <p class="govuk-heading-s">ECTs added</p>
     </div>
@@ -48,7 +48,7 @@
   <div class="govuk-grid-column-one-third">
     <div class="dashboard-numbers key-number">
       <p class="govuk-heading-l">
-        <%= @school.mentor_profiles_for(@selected_cohort).count -%>
+        <%= @participant_counts.dig(@partnership.id, :mentor_count) %>
       </p>
       <p class="govuk-heading-s">mentors added</p>
     </div>
