@@ -7,7 +7,6 @@ module ManageTrainingSteps
 
   def given_there_is_a_school_that_has_chosen_fip_and_partnered
     @cohort = Cohort.current || create(:cohort, :current)
-    # allow(Cohort).to receive(:active_registration_cohort).and_return(@cohort)
     @school = create(:school, name: "Fip School")
     @school_cohort = create(:school_cohort, school: @school, cohort: @cohort, induction_programme_choice: "full_induction_programme")
     @induction_programme = create(:induction_programme, :fip, school_cohort: @school_cohort, partnership: nil)
@@ -51,7 +50,6 @@ module ManageTrainingSteps
 
   def given_there_is_a_school_that_has_chosen_fip
     @cohort = Cohort.current || create(:cohort, :current)
-    # allow(Cohort).to receive(:active_registration_cohort).and_return(@cohort)
     @school = create(:school, name: "Fip School")
     @school_cohort = create(:school_cohort, school: @school, cohort: @cohort, induction_programme_choice: "full_induction_programme")
     @induction_programme = create(:induction_programme, :fip, school_cohort: @school_cohort, partnership: nil)
@@ -107,7 +105,6 @@ module ManageTrainingSteps
   def given_there_is_a_school_that_has_chosen_cip
     @cip = create(:core_induction_programme, name: "CIP Programme 1")
     @cohort = Cohort.current || create(:cohort, :current)
-    # allow(Cohort).to receive(:active_registration_cohort).and_return(@cohort)
     @school = create(:school, name: "CIP School")
     @school_cohort = create(:school_cohort, school: @school, cohort: @cohort, induction_programme_choice: "core_induction_programme")
     @induction_programme = create(:induction_programme, :cip, school_cohort: @school_cohort, core_induction_programme: nil)
@@ -127,7 +124,6 @@ module ManageTrainingSteps
   def given_there_is_a_school_that_has_chosen_cip_for_the_current_year
     @cip = create(:core_induction_programme, name: "CIP Programme 1")
     @cohort = Cohort.current || create(:cohort, :current)
-    # allow(Cohort).to receive(:active_registration_cohort).and_return(@cohort)
     @school = create(:school, name: "CIP School")
     @school_cohort = create(:school_cohort, school: @school, cohort: @cohort, induction_programme_choice: "core_induction_programme")
     @induction_programme = create(:induction_programme, :cip, school_cohort: @school_cohort, core_induction_programme: nil)
@@ -140,12 +136,10 @@ module ManageTrainingSteps
            school: @school_cohort.school,
            cohort: Cohort.previous || create(:cohort, :previous),
            induction_programme_choice: :design_our_own)
-    # allow(Cohort).to receive(:active_registration_cohort).and_return(Cohort.current)
   end
 
   def given_there_are_multiple_schools_and_an_induction_coordinator
     cohort = create :cohort, :current
-    # allow(Cohort).to receive(:active_registration_cohort).and_return(cohort)
 
     first_school = create :school, name: "Test School 1", slug: "111111-test-school-1", urn: "111111"
     create(:school_cohort, :cip, school: first_school, cohort:)
@@ -162,7 +156,6 @@ module ManageTrainingSteps
 
   def given_there_is_a_school_that_has_chosen_design_our_own
     @cohort = Cohort.current || create(:cohort, :current)
-    # allow(Cohort).to receive(:active_registration_cohort).and_return(@cohort)
     @school = create(:school, name: "Design Our Own Programme School")
     @school_cohort = create(:school_cohort, school: @school, cohort: @cohort, induction_programme_choice: "design_our_own")
   end
