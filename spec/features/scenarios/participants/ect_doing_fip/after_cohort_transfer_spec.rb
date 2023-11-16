@@ -185,7 +185,7 @@ RSpec.feature "ECT doing FIP: after cohort transfer", type: :feature do
     expect(delivery_partner_portal).to have_lead_provider_name lead_provider_name
     expect(delivery_partner_portal).to have_school_name school_name
     expect(delivery_partner_portal).to have_school_urn school.urn
-    expect(delivery_partner_portal).to have_academic_year start_year
+    expect(delivery_partner_portal).to have_academic_year new_school_cohort.start_year
     expect(delivery_partner_portal).to have_training_status training_status
     expect(delivery_partner_portal).to have_training_record_status delivery_partner_record_state
   end

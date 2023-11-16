@@ -2,10 +2,10 @@
 
 module StatusTags
   class DeliveryPartnerParticipantStatusTag < BaseComponent
-    def initialize(participant_profile:, induction_record: nil, delivery_partner: nil)
-      @participant_profile = participant_profile
-      @induction_record = induction_record
-      @delivery_partner = delivery_partner
+    attr_reader :training_record_state
+
+    def initialize(training_record_state)
+      @training_record_state = training_record_state
     end
 
     def label
@@ -28,14 +28,12 @@ module StatusTags
 
   private
 
-    attr_reader :participant_profile, :induction_record, :delivery_partner
-
     def translation_scope
       @translation_scope ||= "status_tags.delivery_partner_participant_status.#{record_state}"
     end
 
     def record_state
-      @record_state ||= DetermineTrainingRecordStateLegacy.call(participant_profile:, induction_record:, delivery_partner:)&.record_state || :no_longer_involved
+      @record_state ||= training_record_state&.record_state || :no_longer_involved
     end
   end
 end

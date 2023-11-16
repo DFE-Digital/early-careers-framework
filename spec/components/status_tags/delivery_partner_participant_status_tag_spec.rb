@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe StatusTags::DeliveryPartnerParticipantStatusTag, type: :component do
-  let(:component) { described_class.new participant_profile: ParticipantProfile.new }
+  let(:training_record_state) { instance_double(TrainingRecordState) }
+  let(:component) { described_class.new(training_record_state) }
 
   subject(:label) { render_inline component }
 

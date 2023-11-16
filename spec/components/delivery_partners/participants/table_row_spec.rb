@@ -19,10 +19,11 @@ RSpec.describe DeliveryPartners::Participants::TableRow, type: :component do
     school_cohort.update!(default_induction_programme: induction_programme)
     induction_programme
   end
+  let(:induction_record) { create(:induction_record, participant_profile:, induction_programme:) }
 
-  let!(:induction_record) { create :induction_record, participant_profile:, induction_programme: }
+  let(:training_record_states) { DetermineTrainingRecordState.call(induction_records: induction_record) }
 
-  let(:component) { described_class.new participant_profile:, delivery_partner: }
+  let(:component) { described_class.new induction_record:, training_record_states: }
 
   subject { render_inline(component) }
 
