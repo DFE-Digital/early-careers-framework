@@ -16,8 +16,7 @@ module DeliveryPartners
                :user,
                to: :induction_record
 
-      delegate :training_status,
-               :school,
+      delegate :school,
                :participant_profile,
                to: :induction_record,
                allow_nil: true
