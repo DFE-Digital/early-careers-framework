@@ -10,6 +10,9 @@ FactoryBot.define do
 
     trait(:fip) { induction_programme_choice { "full_induction_programme" } }
     trait(:cip) { induction_programme_choice { "core_induction_programme" } }
+    trait(:no_early_career_teachers) { induction_programme_choice { "no_early_career_teachers" } }
+    trait(:design_our_own) { induction_programme_choice { "design_our_own" } }
+    trait(:school_funded_fip) { induction_programme_choice { "school_funded_fip" } }
 
     trait(:starting_in_2021) { cohort { create(:cohort, start_year: 2021) } }
     trait(:starting_in_2022) { cohort { create(:cohort, start_year: 2022) } }

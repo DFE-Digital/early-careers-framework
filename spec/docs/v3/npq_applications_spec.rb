@@ -184,6 +184,14 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
                   format: :uuid,
                 }
 
+      parameter name: :params,
+                in: :body,
+                style: :deepObject,
+                required: false,
+                schema: {
+                  "$ref": "#/components/schemas/NPQApplicationAcceptRequest",
+                }
+
       response "200", "The NPQ application being accepted" do
         let(:id) { npq_application.id }
 

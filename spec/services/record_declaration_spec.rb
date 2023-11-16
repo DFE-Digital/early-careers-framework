@@ -297,7 +297,7 @@ RSpec.describe RecordDeclaration do
 
   context "when the participant is an ECF" do
     let(:schedule)              { Finance::Schedule::ECF.find_by(schedule_identifier: "ecf-standard-september", cohort: current_cohort) }
-    let(:declaration_date)      { Date.new(current_cohort.start_year, 12, 2) } # FIXME: schedule.milestones.find_by(declaration_type: "started").start_date
+    let(:declaration_date)      { schedule.milestones.find_by(declaration_type: "started").start_date }
     let(:traits)                { [] }
     let(:opts)                  { {} }
     let(:participant_profile) do
@@ -372,7 +372,7 @@ RSpec.describe RecordDeclaration do
 
   context "when the participant is an NPQ" do
     let(:schedule) { NPQCourse.schedule_for(npq_course:, cohort: current_cohort) }
-    let(:declaration_date) { schedule.milestones.find_by(declaration_type:).start_date }
+    let(:declaration_date) { participant_profile.schedule.milestones.find_by(declaration_type:).start_date }
     let(:npq_course) { create(:npq_leadership_course) }
     let(:traits) { [] }
     let(:participant_profile) do
@@ -403,25 +403,27 @@ RSpec.describe RecordDeclaration do
 
     context "for next cohort" do
       let!(:schedule) { create(:npq_specialist_schedule, cohort:) }
-      let!(:statement) { create(:npq_statement, :output_fee, deadline_date: 6.weeks.from_now, cpd_lead_provider:, cohort:) }
+      let!(:statement) { create(:npq_statement, :output_fee, deadline_date: declaration_date + 6.weeks, cpd_lead_provider:, cohort:) }
       let(:cohort) { Cohort.next || create(:cohort, :next) }
       let(:npq_lead_provider) { cpd_lead_provider.npq_lead_provider }
       let(:participant_profile) { create(:npq_participant_profile, :eligible_for_funding, npq_lead_provider:, npq_course:, schedule:) }
-      let(:declaration_date) { schedule.milestones.find_by(declaration_type: "started").start_date }
+      let(:declaration_date) { participant_profile.schedule.milestones.find_by(declaration_type: "started").start_date }
 
       it "creates declaration to next cohort statement" do
-        expect { service.call }.to change { ParticipantDeclaration.count }.by(1)
+        travel_to declaration_date + 1.day do
+          expect { service.call }.to change { ParticipantDeclaration.count }.by(1)
 
-        declaration = ParticipantDeclaration.last
+          declaration = ParticipantDeclaration.last
 
-        expect(declaration).to be_eligible
-        expect(declaration.statements).to include(statement)
+          expect(declaration).to be_eligible
+          expect(declaration.statements).to include(statement)
+        end
       end
     end
 
     context "when submitting completed" do
       let(:declaration_type) { "completed" }
-      let(:declaration_date) { schedule.milestones.find_by(declaration_type:).start_date + 1.day }
+      let(:declaration_date) { participant_profile.schedule.milestones.find_by(declaration_type:).start_date + 1.day }
 
       context "has_passed is nil" do
         let(:has_passed) { nil }
@@ -541,9 +543,11 @@ RSpec.describe RecordDeclaration do
         end
 
         it "raises an InvalidParticipantOutcomeError" do
-          expect(ParticipantDeclaration::NPQ.completed.count).to be(0)
-          expect { service.call }.to raise_error(Api::Errors::InvalidParticipantOutcomeError)
-          expect(ParticipantDeclaration::NPQ.completed.count).to be(0)
+          travel_to declaration_date do
+            expect(ParticipantDeclaration::NPQ.completed.count).to be(0)
+            expect { service.call }.to raise_error(Api::Errors::InvalidParticipantOutcomeError)
+            expect(ParticipantDeclaration::NPQ.completed.count).to be(0)
+          end
         end
       end
     end
@@ -563,7 +567,7 @@ RSpec.describe RecordDeclaration do
     let(:lead_provider) { cpd_lead_provider.lead_provider }
     let(:participant_profile) { create(:ect, :eligible_for_funding, lead_provider:) }
     let(:schedule) { Finance::Schedule::ECF.find_by(schedule_identifier: "ecf-standard-september", cohort: current_cohort) }
-    let(:declaration_date) { schedule.milestones.find_by(declaration_type: "started").start_date }
+    let(:declaration_date) { participant_profile.schedule.milestones.find_by(declaration_type: "started").start_date }
     let(:course_identifier) { "ecf-induction" }
 
     before do

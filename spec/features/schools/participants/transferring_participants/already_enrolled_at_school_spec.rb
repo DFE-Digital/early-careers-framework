@@ -7,7 +7,7 @@ RSpec.describe "Transferring participants", type: :feature, js: true, rutabaga: 
     before do
       set_participant_data
       set_dqt_validation_result
-      given_a_school_has_chosen_fip_for_2021_and_partnered
+      given_a_school_has_chosen_fip_for_previous_cohort_and_partnered
       and_they_have_already_added_this_ect
       and_i_am_signed_in_as_an_induction_coordinator
       and_i_have_selected_my_cohort_tab
@@ -42,11 +42,11 @@ RSpec.describe "Transferring participants", type: :feature, js: true, rutabaga: 
 
   # given
 
-  def given_a_school_has_chosen_fip_for_2021_and_partnered
-    @cohort = Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021)
-    allow(Cohort).to receive(:active_registration_cohort).and_return(@cohort)
+  def given_a_school_has_chosen_fip_for_previous_cohort_and_partnered
+    @cohort = Cohort.previous || create(:cohort, :previous)
+    # allow(Cohort).to receive(:active_registration_cohort).and_return(@cohort)
     @school_one = create(:school, name: "Fip School 1")
-    create(:school_cohort, school: @school_one, cohort: Cohort.find_by(start_year: 2022) || create(:cohort, start_year: 2022), induction_programme_choice: "full_induction_programme")
+    create(:school_cohort, school: @school_one, cohort: Cohort.current || create(:cohort, :current), induction_programme_choice: "full_induction_programme")
     @school_cohort_one = create(:school_cohort, school: @school_one, cohort: @cohort, induction_programme_choice: "full_induction_programme")
     @mentor = create(:mentor_participant_profile, user: create(:user, full_name: "Billy Mentor"), school_cohort: @school_cohort_one)
     @induction_programme_one = create(:induction_programme, :fip, school_cohort: @school_cohort_one, partnership: @partnership_one)

@@ -75,12 +75,12 @@
     <% end %>
   <% end %>
 
-  <% if form.show_default_induction_programme_details? %>
+  <% if form.chosen_lead_provider %>
     <% summary_list.with_row do |row| %>
       <% row.with_key { "Training with" } %>
       <% row.with_value do %>
-        <%= tag.p(form.lead_provider.name, class: "govuk-body") if form.lead_provider.present? %>
-        <%= tag.p(form.delivery_partner.name, class: "govuk-body") if form.delivery_partner.present? %>
+        <%= tag.p(form.chosen_lead_provider.name, class: "govuk-body") %>
+        <%= tag.p(form.chosen_delivery_partner.name, class: "govuk-body") %>
       <% end %>
     <% end %>
   <% end %>

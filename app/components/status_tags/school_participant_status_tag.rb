@@ -19,7 +19,7 @@ module StatusTags
     end
 
     def description
-      Array.wrap(t(:description, scope: translation_scope, contact_us: render(MailToSupportComponent.new("contact us")))).map(&:html_safe)
+      Array.wrap(t(:description, scope: translation_scope, contact_us:, appropriate_body_name:, induction_completion_date:)).map(&:html_safe)
     rescue I18n::MissingTranslationData
       []
     end
@@ -40,6 +40,18 @@ module StatusTags
 
     def record_state
       @record_state ||= DetermineTrainingRecordStateLegacy.call(participant_profile:, induction_record:, school:)&.record_state || :no_longer_involved
+    end
+
+    def appropriate_body_name
+      @induction_record&.appropriate_body_name || "Your appropriate body"
+    end
+
+    def induction_completion_date
+      @participant_profile&.induction_completion_date&.to_fs(:govuk)
+    end
+
+    def contact_us
+      render(MailToSupportComponent.new("contact us"))
     end
   end
 end

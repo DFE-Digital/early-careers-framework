@@ -5,6 +5,7 @@ require "rails_helper"
 RSpec.feature "NPQ Course payment breakdown", type: :feature, js: true do
   include FinanceHelper
 
+  # This needs to be hardcoded to test targetted funding functionality
   let(:cohort) { Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021) }
 
   let!(:npq_leadership_schedule) { create(:npq_leadership_schedule, cohort:) }
@@ -22,18 +23,19 @@ RSpec.feature "NPQ Course payment breakdown", type: :feature, js: true do
   let(:npq_course_leading_teaching_development) { create(:npq_course, identifier: "npq-leading-teaching-development", name: "Leading Teaching Development") }
 
   let!(:statement) do
+    timestamp = npq_leadership_schedule.milestones.order(start_date: :asc).first.start_date + 1.month
     create(
       :npq_statement,
-      name: "January 2022",
-      deadline_date: Date.new(2022, 1, 31),
-      payment_date: Date.new(2022, 2, 16),
+      name: "January #{cohort_current.start_year}",
+      deadline_date: timestamp,
+      payment_date: timestamp,
       cpd_lead_provider:,
       contract_version: npq_leading_teaching_contract.version,
       cohort:,
     )
   end
 
-  let(:cohort_2022) { Cohort.find_by(start_year: 2022) }
+  let(:cohort_current) { Cohort.current }
 
   scenario "See a payment breakdown per NPQ course and a payment breakdown of each individual NPQ courses for each provider" do
     given_i_am_logged_in_as_a_finance_user
@@ -87,7 +89,7 @@ RSpec.feature "NPQ Course payment breakdown", type: :feature, js: true do
     and_the_page_should_be_accessible
   end
 
-  scenario "Duplicate NPQ contract with cohort 2022" do
+  scenario "Duplicate NPQ contract with current cohort" do
     given_i_am_logged_in_as_a_finance_user
     and_those_courses_have_submitted_declarations
     and_a_duplicate_npq_contract_exists
@@ -99,7 +101,7 @@ RSpec.feature "NPQ Course payment breakdown", type: :feature, js: true do
   end
 
   context "Targeted delivery funding" do
-    let(:cohort) { Cohort.find_by(start_year: 2022) || create(:cohort, start_year: 2022) }
+    let(:cohort) { Cohort.current || create(:cohort, :current) }
 
     scenario "See payment breakdown with targeted delivery funding" do
       given_i_am_logged_in_as_a_finance_user
@@ -129,7 +131,7 @@ RSpec.feature "NPQ Course payment breakdown", type: :feature, js: true do
   def and_a_duplicate_npq_contract_exists
     contract1 = statement.npq_lead_provider.npq_contracts.first
     statement.npq_lead_provider.npq_contracts.create!(
-      cohort: cohort_2022,
+      cohort: cohort_current,
       version: contract1.version,
       recruitment_target: contract1.recruitment_target,
       course_identifier: contract1.course_identifier,

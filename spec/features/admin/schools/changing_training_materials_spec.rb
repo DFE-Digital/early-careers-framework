@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.feature "Admin managing school provision", js: true, rutabaga: false do
+RSpec.feature "Admin managing training materials", js: true, rutabaga: false do
   scenario "Admin changes training materials" do
     given_there_is_a_cip_school_in_2021
     and_there_is_another_core_induction_programme

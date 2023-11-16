@@ -7,17 +7,17 @@ protected
 
   def latest_induction_records_join
     InductionRecord
-      .select(Arel.sql("DISTINCT FIRST_VALUE(induction_records.id) OVER (#{latest_induction_record_order}) AS latest_id"))
-      .joins(:participant_profile, { induction_programme: :partnership })
-      .where(
-        induction_programme: {
-          partnerships: {
-            lead_provider_id: lead_provider.id,
-            challenged_at: nil,
-            challenge_reason: nil,
-          },
+    .select(Arel.sql("DISTINCT FIRST_VALUE(induction_records.id) OVER (#{latest_induction_record_order}) AS latest_id"))
+    .joins(:participant_profile, { induction_programme: :partnership })
+    .where(
+      induction_programme: {
+        partnerships: {
+          lead_provider_id: lead_provider.id,
+          challenged_at: nil,
+          challenge_reason: nil,
         },
-      )
+      },
+    )
   end
 
   def latest_induction_record_order

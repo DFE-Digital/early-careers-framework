@@ -2,7 +2,7 @@
 
 class ParticipantProfile::ECFPolicy < ParticipantProfilePolicy
   def show?
-    admin? || (user.induction_coordinator? && same_school?)
+    admin? || (user.induction_coordinator? && (same_school? || mentoring_at_school?))
   end
 
   alias_method :edit_mentor?, :show?
@@ -47,8 +47,20 @@ private
 
   def same_school?
     InductionRecord.joins(:school)
-      .where(school: { id: user.induction_coordinator_profile.schools.select(:id) })
+      .where(school: { id: sit_school_ids })
       .where(participant_profile_id: record.id)
       .any?
+  end
+
+  def mentoring_at_school?
+    record.mentor? && sit_school_ids.intersect?(mentor_school_ids)
+  end
+
+  def sit_school_ids
+    user.induction_coordinator_profile.schools.select(:id).map(&:id)
+  end
+
+  def mentor_school_ids
+    record.school_mentors.select(:school_id).map(&:school_id)
   end
 end

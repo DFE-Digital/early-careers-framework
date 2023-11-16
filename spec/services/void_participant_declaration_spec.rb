@@ -113,8 +113,7 @@ RSpec.describe VoidParticipantDeclaration do
     end
 
     context "when NPQ completed declaration thats paid" do
-      let(:schedule) { NPQCourse.schedule_for(npq_course:) }
-      let(:declaration_date) { schedule.milestones.find_by(declaration_type:).start_date }
+      let(:declaration_date) { participant_profile.schedule.milestones.find_by(declaration_type:).start_date }
       let(:npq_course) { create(:npq_leadership_course) }
       let(:declaration_type) { "completed" }
       let(:participant_profile) do
@@ -127,7 +126,7 @@ RSpec.describe VoidParticipantDeclaration do
       end
 
       before do
-        create(:npq_statement, :output_fee, deadline_date: 6.weeks.from_now, cpd_lead_provider:)
+        create(:npq_statement, :output_fee, deadline_date: declaration_date + 1.month, cpd_lead_provider:)
       end
 
       it "can be voided" do

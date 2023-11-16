@@ -29,6 +29,8 @@ module Schools
             :choose_mentor
           elsif wizard.needs_to_confirm_appropriate_body?
             :confirm_appropriate_body
+          elsif wizard.needs_to_choose_partnership?
+            :choose_partnership
           else
             :check_answers
           end

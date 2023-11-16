@@ -109,6 +109,7 @@ module Finance
           .npq_contracts
           .where(version: statement.contract_version)
           .where(cohort: statement.cohort)
+          .where(special_course: false)
           .order(course_identifier: :asc)
       end
 

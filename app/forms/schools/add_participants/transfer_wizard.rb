@@ -31,7 +31,6 @@ module Schools
         return do_not_join_school_programme! if continue_current_programme?
         return true if [lead_provider, delivery_partner].all? &&
           (lead_provider != existing_lead_provider || delivery_partner != existing_delivery_partner)
-        return false if [current_cohort_lead_provider, current_cohort_delivery_partner].any?(&:blank?)
         return false unless current_providers_training_on_participant_cohort?
 
         (current_cohort_lead_provider != existing_lead_provider ||

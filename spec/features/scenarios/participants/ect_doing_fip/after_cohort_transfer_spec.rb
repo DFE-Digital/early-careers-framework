@@ -13,10 +13,10 @@ RSpec.feature "ECT doing FIP: after cohort transfer", type: :feature do
   let(:teacher_reference_number) { teacher_profile.trn }
   let(:training_record_id) { participant_profile.id }
   let(:participant_full_name) { "ECT doing FIP: after cohort transfer" }
-  let(:school_name) { "School chosen FIP in 2022 and 2023" }
+  let(:school_name) { "School chosen FIP in #{Cohort.current.start_year} and #{start_year}" }
   let(:sit_full_name) { "#{school_name} SIT" }
-  let(:lead_provider_name) { "Lead Provider for FIP in 2022 and 2023" }
-  let(:delivery_partner_name) { "Delivery Partner for FIP in 2022 and 2023" }
+  let(:lead_provider_name) { "Lead Provider for FIP in #{Cohort.current.start_year} and #{start_year}" }
+  let(:delivery_partner_name) { "Delivery Partner for FIP in #{Cohort.current.start_year} and #{start_year}" }
   let(:appropriate_body_name) { "#{school_name} Appropriate Body" }
   let(:participant_type) { "early_career_teacher" }
   let(:long_participant_type) { "Early career teacher" }
@@ -26,7 +26,7 @@ RSpec.feature "ECT doing FIP: after cohort transfer", type: :feature do
   let(:programme_name) { "Full induction programme" }
   let(:schedule_identifier) { "ecf-standard-september" }
   let(:cip_materials) { "none" }
-  let(:start_year) { 2023 }
+  let(:start_year) { Cohort.next.start_year }
   let(:previous_start_year) { start_year - 1 }
   let(:registration_completed) { true }
   let(:participant_status) { "active" }

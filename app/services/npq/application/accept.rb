@@ -7,11 +7,13 @@ module NPQ
       include ActiveModel::Attributes
 
       attribute :npq_application
+      attribute :schedule_identifier
 
       validates :npq_application, presence: { message: I18n.t("npq_application.missing_npq_application") }
       validate :not_already_accepted
       validate :cannot_change_from_rejected
       validate :other_accepted_applications_with_same_course?
+      validate :validate_permitted_schedule_for_course
 
       def call
         return self unless valid?
@@ -65,10 +67,31 @@ module NPQ
           .where.not(id: npq_application.id)
       end
 
+      def alias_search_query
+        Finance::Schedule::NPQ
+          .where.not(identifier_alias: nil)
+          .where(identifier_alias: schedule_identifier, cohort:)
+      end
+
+      def new_schedule
+        Finance::Schedule::NPQ
+          .where(schedule_identifier:, cohort:)
+          .or(alias_search_query)
+          .first
+      end
+
+      def schedule
+        @schedule ||= schedule_identifier.present? ? new_schedule : fallback_schedule
+      end
+
+      def fallback_schedule
+        NPQCourse.schedule_for(npq_course: npq_application.npq_course, cohort:)
+      end
+
       def create_participant_profile!
         ParticipantProfile::NPQ.create!(
           id: npq_application.id,
-          schedule: NPQCourse.schedule_for(npq_course: npq_application.npq_course, cohort:),
+          schedule:,
           npq_course: npq_application.npq_course,
           teacher_profile:,
           school_urn: npq_application.school_urn,
@@ -109,6 +132,15 @@ module NPQ
         return unless same_trn_user
 
         Identity::Transfer.call(from_user: participant_profile.user, to_user: same_trn_user)
+      end
+
+      def validate_permitted_schedule_for_course
+        return if errors.any?
+        return if schedule_identifier.blank?
+
+        unless schedule && schedule.class::PERMITTED_COURSE_IDENTIFIERS.include?(npq_application.npq_course.identifier)
+          errors.add(:schedule_identifier, I18n.t(:schedule_invalid_for_course))
+        end
       end
     end
   end

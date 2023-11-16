@@ -29,7 +29,7 @@ RSpec.describe ApplicationHelper, type: :helper do
       context "when a new registration cohort is active", travel_to: Time.current + 3.years do
         let(:future_cohort) do
           create(:cohort,
-                 start_year: Time.current.year,
+                 start_year: Time.current.year + 1,
                  registration_start_date: Time.current - 1.day)
         end
 

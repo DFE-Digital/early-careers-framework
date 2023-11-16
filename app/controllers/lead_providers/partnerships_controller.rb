@@ -2,6 +2,8 @@
 
 module LeadProviders
   class PartnershipsController < ::LeadProviders::BaseController
+    attr_reader :lead_provider
+
     before_action :set_lead_provider
 
     def show
@@ -12,6 +14,7 @@ module LeadProviders
       @school = @partnership.school
       @selected_cohort = @partnership.cohort
       @delivery_partner = @partnership.delivery_partner
+      @participant_counts = Participants::ActiveCountByPartnership.call(partnerships: @partnership, lead_provider: @lead_provider)
     end
 
     def active

@@ -117,18 +117,6 @@ class School < ApplicationRecord
     partnerships.unchallenged.where(relationship: false).joins(%i[delivery_partner cohort]).find_by(cohorts: { start_year: year })&.delivery_partner
   end
 
-  def participants_for(cohort)
-    school_cohorts.find_by(cohort:)&.active_ecf_participants || []
-  end
-
-  def early_career_teacher_profiles_for(cohort)
-    school_cohorts.find_by(cohort:)&.ecf_participant_profiles&.ects&.active_record || []
-  end
-
-  def mentor_profiles_for(cohort)
-    school_cohorts.find_by(cohort:)&.ecf_participant_profiles&.mentors&.active_record || []
-  end
-
   def mentors
     User.where(id: mentor_profiles.active_record.joins(:user).select("users.id")).order(:full_name)
   end

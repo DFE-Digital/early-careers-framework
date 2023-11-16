@@ -12,6 +12,17 @@ module Api
         render json: json_serializer_class.new(paginate(npq_applications)).serializable_hash.to_json
       end
 
+      # Accepts an NPQ application
+      # Providers can accept an NPQ application via this endpoint
+      #
+      # POST /api/v3/npq-applications/:id/accept
+      #
+      def accept
+        service = ::NPQ::Application::Accept.new({ npq_application: }.merge(accept_npq_application_params["attributes"] || {}))
+
+        render_from_service(service, json_serializer_class)
+      end
+
     private
 
       def npq_applications
@@ -33,6 +44,20 @@ module Api
 
       def json_serializer_class
         Api::V3::NPQApplicationSerializer
+      end
+
+      def accept_npq_application_params
+        return {} unless FeatureFlag.active?(:accept_npq_application_can_change_schedule)
+
+        parameters = params
+          .fetch(:data)
+          .permit(:type, attributes: %i[schedule_identifier])
+
+        return parameters unless parameters["attributes"].empty?
+
+        raise ActionController::BadRequest, I18n.t(:invalid_data_structure)
+      rescue ActionController::ParameterMissing
+        {}
       end
     end
   end

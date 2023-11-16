@@ -55,7 +55,7 @@ module Api
           .includes(
             :cohort,
             :npq_course,
-            :profile,
+            profile: [:schedule],
             participant_identity: [:user],
           )
       end

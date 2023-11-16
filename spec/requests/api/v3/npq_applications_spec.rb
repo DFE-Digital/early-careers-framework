@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "NPQ Applications API", type: :request do
+RSpec.describe "NPQ Applications API", type: :request, with_feature_flags: { accept_npq_application_can_change_schedule: "active" } do
   let(:npq_lead_provider) { create(:npq_lead_provider) }
   let(:cpd_lead_provider) { create(:cpd_lead_provider, npq_lead_provider:) }
   let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
@@ -53,7 +53,7 @@ RSpec.describe "NPQ Applications API", type: :request do
           expect(parsed_response["data"][0]["id"]).to be_in(NPQApplication.pluck(:id))
 
           profile = NPQApplication.find(parsed_response["data"][0]["id"])
-          expect(parsed_response["data"][0]).to eql single_json_application(npq_application: profile)
+          expect(parsed_response["data"][0]).to eql single_json_v3_application(npq_application: profile)
         end
 
         it "can return paginated data" do
@@ -223,15 +223,16 @@ RSpec.describe "NPQ Applications API", type: :request do
   end
 
   describe "GET /api/v3/npq-applications/:id" do
-    let(:npq_application) { create(:npq_application, npq_lead_provider:) }
+    let(:npq_application) { create(:npq_application, :accepted, npq_lead_provider:) }
 
     before do
+      freeze_time
       default_headers[:Authorization] = bearer_token
       get "/api/v3/npq-applications/#{npq_application.id}"
     end
 
     context "when authorized" do
-      let(:expected_response) { expected_single_json_response(npq_application:) }
+      let(:expected_response) { expected_single_json_v3_response(npq_application:) }
 
       it "returns correct jsonapi content type header" do
         expect(response.headers["Content-Type"]).to eql("application/vnd.api+json")
@@ -349,17 +350,125 @@ RSpec.describe "NPQ Applications API", type: :request do
         expect(parsed_response.dig("errors", 0, "detail")).to eql("Once rejected an application cannot change state")
       end
     end
+
+    context "when schedule identifier is in the params", with_feature_flags: { accept_npq_application_can_change_schedule: "active" } do
+      let(:params) do
+        { data: { attributes: { schedule_identifier: "npq-leadership-spring" } } }
+      end
+
+      it "update status to accepted" do
+        expect { post("/api/v3/npq-applications/#{default_npq_application.id}/accept", params:) }
+          .to change { default_npq_application.reload.lead_provider_approval_status }.from("pending").to("accepted")
+      end
+
+      it "responds with 200 and representation of the resource" do
+        post("/api/v3/npq-applications/#{default_npq_application.id}/accept", params:)
+
+        expect(response).to be_successful
+
+        expect(parsed_response.dig("data", "attributes", "status")).to eql("accepted")
+      end
+
+      it "updates npq profile schedule identifier" do
+        post("/api/v3/npq-applications/#{default_npq_application.id}/accept", params:)
+
+        expect(response).to be_successful
+        expect(default_npq_application.profile.schedule.schedule_identifier).to eql("npq-leadership-spring")
+      end
+
+      context "when schedule identifier is empty" do
+        let(:params) do
+          { data: { attributes: { schedule_identifier: "" } } }
+        end
+
+        it "update status to accepted" do
+          expect { post("/api/v3/npq-applications/#{default_npq_application.id}/accept", params:) }
+            .to change { default_npq_application.reload.lead_provider_approval_status }.from("pending").to("accepted")
+        end
+
+        it "responds with 200 and representation of the resource" do
+          post("/api/v3/npq-applications/#{default_npq_application.id}/accept", params:)
+
+          expect(response).to be_successful
+
+          expect(parsed_response.dig("data", "attributes", "status")).to eql("accepted")
+        end
+      end
+
+      context "when schedule identifier has a wrong value" do
+        let(:params) do
+          { data: { attributes: { schedule_identifier: "any-schedule" } } }
+        end
+
+        it "return 422" do
+          post("/api/v3/npq-applications/#{default_npq_application.id}/accept", params:)
+
+          expect(response).to have_http_status(:unprocessable_entity)
+        end
+
+        it "returns error in response" do
+          post("/api/v3/npq-applications/#{default_npq_application.id}/accept", params:)
+
+          expect(parsed_response.key?("errors")).to be_truthy
+          expect(parsed_response.dig("errors", 0, "detail")).to eql("Selected schedule is not valid for the course")
+        end
+      end
+
+      context "when schedule identifier has an invalid schedule for the npq course" do
+        let(:params) do
+          { data: { attributes: { schedule_identifier: "npq-specialist-spring" } } }
+        end
+
+        it "return 422" do
+          post("/api/v3/npq-applications/#{default_npq_application.id}/accept", params:)
+
+          expect(response).to have_http_status(:unprocessable_entity)
+        end
+
+        it "returns error in response" do
+          post("/api/v3/npq-applications/#{default_npq_application.id}/accept", params:)
+
+          expect(parsed_response.key?("errors")).to be_truthy
+          expect(parsed_response.dig("errors", 0, "detail")).to eql("Selected schedule is not valid for the course")
+        end
+      end
+
+      context "when schedule identifier has a wrong key" do
+        let(:params) do
+          { data: { attributes: { schedule_identifier_1: "any-schedule" } } }
+        end
+
+        it "return 400" do
+          post("/api/v3/npq-applications/#{default_npq_application.id}/accept", params:)
+
+          expect(response).to be_bad_request
+        end
+
+        it "returns error in response" do
+          post("/api/v3/npq-applications/#{default_npq_application.id}/accept", params:)
+
+          expect(parsed_response).to eql(HashWithIndifferentAccess.new({
+            "errors": [
+              {
+                "title": "Bad request",
+                "detail": I18n.t(:invalid_data_structure),
+              },
+            ],
+          }))
+        end
+      end
+    end
   end
 end
 
-def expected_single_json_response(npq_application:)
+def expected_single_json_v3_response(npq_application:)
   {
     "data" =>
-        single_json_application(npq_application:),
+        single_json_v3_application(npq_application:),
   }
 end
 
-def single_json_application(npq_application:)
+def single_json_v3_application(npq_application:)
   {
     "id" => npq_application.id,
     "type" => "npq_application",
@@ -391,6 +500,7 @@ def single_json_application(npq_application:)
       "teacher_catchment_iso_country_code" => npq_application.teacher_catchment_iso_country_code,
       "itt_provider" => npq_application.itt_provider,
       "lead_mentor" => npq_application.lead_mentor,
+      "schedule_identifier" => npq_application.profile.schedule.schedule_identifier,
     },
   }
 end

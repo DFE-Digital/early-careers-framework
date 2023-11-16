@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe Finance::NPQ::CourseStatementCalculator do
-  let(:cohort) { Cohort.current || create(:cohort, :current) }
+  let!(:cohort) { Cohort.current || create(:cohort, :current) }
   let!(:npq_leadership_schedule) { create(:npq_leadership_schedule, cohort:) }
   let!(:npq_specialist_schedule) { create(:npq_specialist_schedule, cohort:) }
 
@@ -19,7 +19,7 @@ RSpec.describe Finance::NPQ::CourseStatementCalculator do
   describe "#billable_declarations_count_for_declaration_type" do
     before do
       travel_to statement.deadline_date do
-        create_list(:npq_participant_declaration, 6, :eligible, npq_course:, declaration_type: %w[started retained-1 retained-2 completed].sample, cpd_lead_provider:)
+        create_list(:npq_participant_declaration, 6, :eligible, npq_course:, declaration_type: %w[started retained-1 retained-2 completed].sample, cpd_lead_provider:, cohort:)
       end
     end
 
@@ -40,7 +40,7 @@ RSpec.describe Finance::NPQ::CourseStatementCalculator do
     context "when there are billable declarations" do
       before do
         travel_to statement.deadline_date do
-          create(:npq_participant_declaration, :eligible, npq_course:, cpd_lead_provider:)
+          create(:npq_participant_declaration, :eligible, npq_course:, cpd_lead_provider:, cohort:)
         end
       end
 
@@ -50,11 +50,11 @@ RSpec.describe Finance::NPQ::CourseStatementCalculator do
     end
 
     context "when multiple declarations from same user of one type" do
-      let(:participant_declaration) { create(:npq_participant_declaration, :eligible, participant_profile:, npq_course:, cpd_lead_provider:) }
+      let(:participant_declaration) { create(:npq_participant_declaration, :eligible, participant_profile:, npq_course:, cpd_lead_provider:, cohort:) }
 
       before do
         travel_to statement.deadline_date do
-          create(:npq_participant_declaration, :eligible, npq_course:, cpd_lead_provider:).tap do |pd|
+          create(:npq_participant_declaration, :eligible, npq_course:, cpd_lead_provider:, cohort:).tap do |pd|
             pd.update!(user: participant_declaration.user)
           end
         end
@@ -66,23 +66,24 @@ RSpec.describe Finance::NPQ::CourseStatementCalculator do
     end
 
     context "when multiple declarations from same user of multiple types" do
-      let(:started_participant_declaration)    { create(:npq_participant_declaration, :eligible, npq_course:, cpd_lead_provider:) }
+      let(:started_participant_declaration)    { create(:npq_participant_declaration, :eligible, npq_course:, cpd_lead_provider:, cohort:) }
       let(:retained_1_participant_declaration) do
         create(:npq_participant_declaration,
                :eligible,
                participant_profile: started_participant_declaration.participant_profile,
                declaration_type: "retained-1",
                npq_course:,
-               cpd_lead_provider:)
+               cpd_lead_provider:,
+               cohort:)
       end
 
       before do
         travel_to statement.deadline_date do
-          create(:npq_participant_declaration, :eligible, npq_course:, cpd_lead_provider:).tap do |pd|
+          create(:npq_participant_declaration, :eligible, npq_course:, cpd_lead_provider:, cohort:).tap do |pd|
             pd.update!(user: started_participant_declaration.user)
           end
 
-          create(:npq_participant_declaration, :eligible, npq_course:, cpd_lead_provider:).tap do |pd|
+          create(:npq_participant_declaration, :eligible, npq_course:, cpd_lead_provider:, cohort:).tap do |pd|
             pd.update!(user: retained_1_participant_declaration.user)
           end
         end
@@ -104,7 +105,7 @@ RSpec.describe Finance::NPQ::CourseStatementCalculator do
     context "when there are refundable declarations" do
       let!(:to_be_awaiting_clawed_back) do
         travel_to create(:npq_statement, :next_output_fee, deadline_date: statement.deadline_date - 1.month, cpd_lead_provider:).deadline_date do
-          create(:npq_participant_declaration, :paid, npq_course:, cpd_lead_provider:)
+          create(:npq_participant_declaration, :paid, npq_course:, cpd_lead_provider:, cohort:)
         end
       end
       before do
@@ -121,9 +122,9 @@ RSpec.describe Finance::NPQ::CourseStatementCalculator do
 
   describe "#refundable_declarations_by_type_count" do
     let(:eligible_statement)                  { create(:npq_statement, :next_output_fee, deadline_date: statement.deadline_date - 1.month, cpd_lead_provider:) }
-    let(:to_be_awaiting_claw_back_started)    { create(:npq_participant_declaration,         :eligible, npq_course:, cpd_lead_provider:) }
-    let(:to_be_awaiting_claw_back_retained_1) { create_list(:npq_participant_declaration, 2, :eligible, declaration_type: "retained-1", npq_course:, cpd_lead_provider:) }
-    let(:to_be_awaiting_claw_back_completed)  { create_list(:npq_participant_declaration, 3, :eligible, declaration_type: "retained-2", npq_course:, cpd_lead_provider:) }
+    let(:to_be_awaiting_claw_back_started)    { create(:npq_participant_declaration,         :eligible, npq_course:, cpd_lead_provider:, cohort:) }
+    let(:to_be_awaiting_claw_back_retained_1) { create_list(:npq_participant_declaration, 2, :eligible, declaration_type: "retained-1", npq_course:, cpd_lead_provider:, cohort:) }
+    let(:to_be_awaiting_claw_back_completed)  { create_list(:npq_participant_declaration, 3, :eligible, declaration_type: "retained-2", npq_course:, cpd_lead_provider:, cohort:) }
     let(:declarations) do
       [to_be_awaiting_claw_back_started] + to_be_awaiting_claw_back_retained_1 + to_be_awaiting_claw_back_completed
     end
@@ -159,7 +160,7 @@ RSpec.describe Finance::NPQ::CourseStatementCalculator do
     context "when there are voided declarations" do
       before do
         travel_to statement.deadline_date do
-          create(:npq_participant_declaration, :eligible, :voided, npq_course:, cpd_lead_provider:)
+          create(:npq_participant_declaration, :eligible, :voided, npq_course:, cpd_lead_provider:, cohort:)
         end
       end
 
@@ -181,7 +182,7 @@ RSpec.describe Finance::NPQ::CourseStatementCalculator do
     context "when there are declarations" do
       before do
         travel_to statement.deadline_date do
-          create(:npq_participant_declaration, :eligible, npq_course:, cpd_lead_provider:)
+          create(:npq_participant_declaration, :eligible, npq_course:, cpd_lead_provider:, cohort:)
         end
       end
 
@@ -194,7 +195,7 @@ RSpec.describe Finance::NPQ::CourseStatementCalculator do
       let(:participant_declaration) { create(:npq_participant_declaration, :eligible, npq_course:, cpd_lead_provider:) }
       before do
         travel_to statement.deadline_date do
-          create(:npq_participant_declaration, :eligible, npq_course:, cpd_lead_provider:).tap do |pd|
+          create(:npq_participant_declaration, :eligible, npq_course:, cpd_lead_provider:, cohort:).tap do |pd|
             pd.update!(user: participant_declaration.user)
           end
         end
@@ -314,7 +315,7 @@ RSpec.describe Finance::NPQ::CourseStatementCalculator do
         :eligible_for_funding,
         npq_course:,
         npq_lead_provider:,
-
+        cohort:,
         eligible_for_funding: true,
         targeted_delivery_funding_eligibility: true,
       ).profile
@@ -329,7 +330,7 @@ RSpec.describe Finance::NPQ::CourseStatementCalculator do
     context "when there are targeted delivery funding declarations" do
       before do
         travel_to statement.deadline_date do
-          create(:npq_participant_declaration, :eligible, npq_course:, cpd_lead_provider:, participant_profile:)
+          create(:npq_participant_declaration, :eligible, npq_course:, cpd_lead_provider:, participant_profile:, cohort:)
         end
       end
 
@@ -349,12 +350,13 @@ RSpec.describe Finance::NPQ::CourseStatementCalculator do
           npq_lead_provider:,
           eligible_for_funding: true,
           targeted_delivery_funding_eligibility: true,
+          cohort:,
         ).profile
       end
 
       before do
         travel_to statement.deadline_date do
-          create(:npq_participant_declaration, npq_course:, cpd_lead_provider:, participant_profile:, declaration_type: "retained-1", course_identifier: npq_course.identifier)
+          create(:npq_participant_declaration, npq_course:, cpd_lead_provider:, participant_profile:, declaration_type: "retained-1", course_identifier: npq_course.identifier, cohort:)
         end
       end
 
@@ -377,7 +379,7 @@ RSpec.describe Finance::NPQ::CourseStatementCalculator do
         :eligible_for_funding,
         npq_course:,
         npq_lead_provider:,
-
+        cohort:,
         eligible_for_funding: true,
         targeted_delivery_funding_eligibility: true,
       ).profile
@@ -392,7 +394,7 @@ RSpec.describe Finance::NPQ::CourseStatementCalculator do
     context "when there are targeted delivery funding refundable declarations" do
       let!(:to_be_awaiting_clawed_back) do
         travel_to create(:npq_statement, :next_output_fee, deadline_date: statement.deadline_date - 1.month, cpd_lead_provider:).deadline_date do
-          create(:npq_participant_declaration, :paid, npq_course:, cpd_lead_provider:, participant_profile:)
+          create(:npq_participant_declaration, :paid, npq_course:, cpd_lead_provider:, participant_profile:, cohort:)
         end
       end
 

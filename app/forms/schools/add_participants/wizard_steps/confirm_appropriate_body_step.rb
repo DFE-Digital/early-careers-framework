@@ -17,7 +17,11 @@ module Schools
         end
 
         def next_step
-          :check_answers
+          if wizard.needs_to_choose_partnership?
+            :choose_partnership
+          else
+            :check_answers
+          end
         end
       end
     end

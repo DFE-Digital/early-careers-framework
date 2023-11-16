@@ -103,7 +103,7 @@ RSpec.describe Participants::HistoryBuilder, :with_support_for_ect_examples do
       event_list = described_class.from_participant_profile(fip_ect_only).events
 
       induction_programme_entries = event_list.filter { |ev| ev.type.to_s == "InductionRecord" and ev.predicate == "induction_programme_id" }
-      expect(induction_programme_entries.first.value).to include "Teach First TF Delivery Partner (2022/23)"
+      expect(induction_programme_entries.first.value).to include "Teach First TF Delivery Partner (#{Cohort.current.academic_year})"
     end
 
     it "records a name change at the end" do

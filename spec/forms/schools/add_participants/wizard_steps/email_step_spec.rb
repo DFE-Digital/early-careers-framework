@@ -27,6 +27,7 @@ RSpec.describe Schools::AddParticipants::WizardSteps::EmailStep, type: :model do
     let(:confirm_appropriate_body) { false }
     let(:sit_adding_themself_as_mentor) { false }
     let(:adding_yourself_as_ect) { false }
+    let(:choose_partnership) { false }
 
     before do
       allow(wizard).to receive(:email_in_use?).and_return(email_taken)
@@ -89,6 +90,7 @@ RSpec.describe Schools::AddParticipants::WizardSteps::EmailStep, type: :model do
       before do
         allow(wizard).to receive(:needs_to_confirm_start_term?).and_return(confirm_start_term)
         allow(wizard).to receive(:needs_to_confirm_appropriate_body?).and_return(confirm_appropriate_body)
+        allow(wizard).to receive(:needs_to_choose_partnership?).and_return(choose_partnership)
       end
 
       it "returns :check_answers" do
@@ -132,6 +134,14 @@ RSpec.describe Schools::AddParticipants::WizardSteps::EmailStep, type: :model do
 
         it "returns :cannot_add_yourself_as_ect" do
           expect(step.next_step).to eql :cannot_add_yourself_as_ect
+        end
+      end
+
+      context "when a partnership needs to be chosen" do
+        let(:choose_partnership) { true }
+
+        it "returns :choose_mentor" do
+          expect(step.next_step).to eql :choose_partnership
         end
       end
     end

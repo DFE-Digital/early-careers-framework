@@ -9,7 +9,7 @@ RSpec.describe "transferring participants", type: :feature, js: true do
         set_participant_data
         set_dqt_validation_result
         set_nino_validation_result
-        given_there_are_two_schools_that_have_chosen_fip_for_2021_and_partnered
+        given_there_are_two_schools_that_have_chosen_fip_for_previous_cohort_and_partnered
         and_there_is_an_ect_who_will_be_transferring
         and_i_am_signed_in_as_an_induction_coordinator
         and_i_have_selected_my_cohort_tab
@@ -54,12 +54,12 @@ RSpec.describe "transferring participants", type: :feature, js: true do
 
       # given
 
-      def given_there_are_two_schools_that_have_chosen_fip_for_2021_and_partnered
-        @cohort = Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021)
-        allow(Cohort).to receive(:active_registration_cohort).and_return(@cohort)
+      def given_there_are_two_schools_that_have_chosen_fip_for_previous_cohort_and_partnered
+        @cohort = Cohort.previous || create(:cohort, :previous)
+        # allow(Cohort).to receive(:active_registration_cohort).and_return(@cohort)
         @school_one = create(:school, name: "Fip School 1")
         @school_two = create(:school, name: "Fip School 2")
-        create(:school_cohort, school: @school_one, cohort: Cohort.find_by(start_year: 2022) || create(:cohort, start_year: 2022), induction_programme_choice: "full_induction_programme")
+        create(:school_cohort, school: @school_one, cohort: Cohort.current || create(:cohort, :current), induction_programme_choice: "full_induction_programme")
         @school_cohort_one = create(:school_cohort, school: @school_one, cohort: @cohort, induction_programme_choice: "full_induction_programme")
         @school_cohort_two = create(:school_cohort, school: @school_two, cohort: @cohort, induction_programme_choice: "full_induction_programme")
         @lead_provider = create(:lead_provider, name: "Big Provider Ltd")
