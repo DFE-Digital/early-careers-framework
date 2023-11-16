@@ -27,10 +27,6 @@ end
 RSpec.describe "Choosing how to continue with nominations", type: :request do
   let!(:cohort) { create(:cohort, :current) }
 
-  before do
-    allow(Cohort).to receive(:active_registration_cohort).and_return(cohort)
-  end
-
   describe "GET /nominations/start" do
     it "redirects to /nominations/choose-how-to-continue" do
       get "/nominations/start"
