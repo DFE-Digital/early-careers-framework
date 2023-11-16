@@ -1,28 +1,26 @@
 # frozen_string_literal: true
 
 RSpec.describe StatusTags::DeliveryPartnerParticipantStatusTag, type: :component do
-  let(:training_record_state) { instance_double(TrainingRecordState) }
+  let(:participant_profile) { create(:ect_participant_profile, induction_completion_date: Time.zone.now) }
+  let(:training_record_state) { instance_double(TrainingRecordState, participant_profile:) }
   let(:component) { described_class.new(training_record_state) }
 
-  subject(:label) { render_inline component }
+  subject { render_inline(component) }
 
-  context "The language file" do
-    TrainingRecordState::RECORD_STATES.each_key do |key|
-      it "includes the record_state :#{key} as a language entry" do
-        expect(I18n.t("status_tags.delivery_partner_participant_status").keys).to include key.to_sym
+  TrainingRecordState::RECORD_STATES.each_key do |record_state|
+    it "includes the record_state :#{record_state} as a language entry" do
+      allow(training_record_state).to receive(:record_state) { record_state }
+
+      expect(component.label).to be_present
+
+      expect(component.description).not_to be_empty
+      expect(component.description).to all(be_present)
+
+      is_expected.to have_css("p", text: component.label)
+
+      component.description.each do |description|
+        is_expected.to have_css("p", text: description)
       end
-    end
-  end
-
-  I18n.t("status_tags.delivery_partner_participant_status").each do |key, value|
-    context "when :#{key} is the determined state" do
-      before { allow(component).to receive(:record_state).and_return(key) }
-      it { is_expected.to have_text value[:label] }
-      it { is_expected.to have_text Array.wrap(value[:description]).join(" ") }
-    end
-
-    it "includes :#{key} as a recognised record_state" do
-      expect(TrainingRecordState::RECORD_STATES.keys).to include key.to_s
     end
   end
 end
