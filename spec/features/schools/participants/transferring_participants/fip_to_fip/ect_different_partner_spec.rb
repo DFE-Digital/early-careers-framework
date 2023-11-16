@@ -138,7 +138,6 @@ RSpec.describe "Transferring ECT is with a different lead provider", type: :feat
 
   def given_there_are_two_schools_that_have_chosen_fip_for_previous_cohort_and_partnered
     @cohort = Cohort.previous || create(:cohort, :previous)
-    # allow(Cohort).to receive(:active_registration_cohort).and_return(@cohort)
     @school_one = create(:school, name: "Fip School 1")
     @school_two = create(:school, name: "Fip School 2")
     create(:school_cohort, school: @school_one, cohort: Cohort.current || create(:cohort, :current), induction_programme_choice: "full_induction_programme")
