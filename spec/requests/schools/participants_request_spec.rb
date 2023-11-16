@@ -28,7 +28,6 @@ RSpec.describe "Schools::Participants", type: :request, js: true, with_feature_f
   let(:deliver_partner) { school.deliver_partner_for(cohort.start_year) }
 
   before do
-    allow(Cohort).to receive(:active_registration_cohort).and_return(cohort)
     sign_in user
   end
 
