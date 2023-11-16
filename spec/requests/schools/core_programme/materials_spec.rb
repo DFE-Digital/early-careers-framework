@@ -11,7 +11,6 @@ RSpec.describe "Schools::CoreProgramme::Materials", type: :request do
   let(:cip) { create :core_induction_programme }
 
   before do
-    allow(Cohort).to receive(:active_registration_cohort).and_return(cohort)
     sign_in user
   end
 
