@@ -23,7 +23,6 @@ RSpec.describe Schools::Cohorts::SetupWizard, type: :model do
   end
 
   before do
-    allow(Cohort).to receive(:active_registration_cohort).and_return(cohort)
     allow(data_store).to receive(:store).and_return({ something: "is here" })
     allow(data_store).to receive(:current_user).and_return(sit_user)
     allow(data_store).to receive(:school_id).and_return(school.slug)
