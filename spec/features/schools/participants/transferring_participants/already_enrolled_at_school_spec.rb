@@ -44,7 +44,6 @@ RSpec.describe "Transferring participants", type: :feature, js: true, rutabaga: 
 
   def given_a_school_has_chosen_fip_for_previous_cohort_and_partnered
     @cohort = Cohort.previous || create(:cohort, :previous)
-    # allow(Cohort).to receive(:active_registration_cohort).and_return(@cohort)
     @school_one = create(:school, name: "Fip School 1")
     create(:school_cohort, school: @school_one, cohort: Cohort.current || create(:cohort, :current), induction_programme_choice: "full_induction_programme")
     @school_cohort_one = create(:school_cohort, school: @school_one, cohort: @cohort, induction_programme_choice: "full_induction_programme")
