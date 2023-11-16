@@ -36,13 +36,13 @@ RSpec.feature "School contact making cohort choice journey", type: :feature, js:
     and_the_page_should_be_accessible
   end
 
-  context "Outside of the cohortless pilot", travel_to: Date.new(2022, 10, 1) do
+  context "Outside of the cohortless pilot" do
     include_context "School choosing how to setup their cohort" do
       let(:academic_year_text) { Cohort.current.description }
     end
   end
 
-  context "During the cohortless pilot for 2023/24", travel_to: Date.new(2023, 7, 1) do
+  context "During the cohortless pilot for 2023/24" do
     before do
       disable_cohort_setup_check
     end
