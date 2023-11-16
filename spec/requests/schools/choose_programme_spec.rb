@@ -8,8 +8,6 @@ RSpec.describe "Schools::ChooseProgramme", type: :request do
   let(:cohort) { Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021) }
 
   before do
-    # allow(Cohort).to receive(:active_registration_cohort).and_return(cohort)
-    disable_cohort_setup_check
     sign_in user
   end
 
