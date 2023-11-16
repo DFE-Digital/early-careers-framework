@@ -66,7 +66,6 @@ RSpec.describe "Transferring a mentor weith matching lead provider and delivery 
 
   def given_there_are_two_schools_that_have_chosen_fip_and_partnered
     @cohort = Cohort.current || create(:cohort, :current)
-    allow(Cohort).to receive(:active_registration_cohort).and_return(@cohort)
     @cohort_two = Cohort.next || create(:cohort, :next)
     @school_one = create(:school, name: "Fip School 1")
     @school_two = create(:school, name: "Fip School 2")
