@@ -52,7 +52,7 @@ RSpec.describe "Adding previously withdrawn Mentor", type: :feature, js: true do
   let(:ect_email) { "ect@email.gov.uk" }
 
   before do
-    allow(Cohort).to receive(:active_registration_cohort).and_return(cohort)
+    disable_cohort_setup_check
     school_cohort.update!(default_induction_programme: induction_programme)
   end
 
