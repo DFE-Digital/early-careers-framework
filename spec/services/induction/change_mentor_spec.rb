@@ -22,5 +22,11 @@ RSpec.describe Induction::ChangeMentor do
       service.call(induction_record:, mentor_profile: mentor_profile_2)
       expect(ect_profile.current_induction_record.mentor_profile).to eq mentor_profile_2
     end
+
+    it "touches the mentor user" do
+      expect {
+        service.call(induction_record:, mentor_profile: mentor_profile_2)
+      }.to change(mentor_profile_2.user, :updated_at)
+    end
   end
 end

@@ -49,6 +49,21 @@ RSpec.describe ParticipantProfile::ECF, type: :model do
         expect(induction_record.reload).to be_training_status_deferred
       end
     end
+
+    context "when the mentor profile changes" do
+      let(:mentor_profile) { create(:mentor_participant_profile) }
+
+      it "updates the mentor profile on the active induction record" do
+        profile.update!(mentor_profile:)
+        expect(induction_record.reload.mentor_profile).to eq(mentor_profile)
+      end
+
+      it "touches the mentor user" do
+        expect {
+          profile.update!(mentor_profile:)
+        }.to change(mentor_profile.user, :updated_at)
+      end
+    end
   end
 
   describe "contacted_for_info?" do
