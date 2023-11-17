@@ -55,7 +55,7 @@ tokens
 /config/credentials/*.key
 
 /coverage/
-/reports/
+/reports
 
 /spec/cypress/videos
 /spec/cypress/screenshots

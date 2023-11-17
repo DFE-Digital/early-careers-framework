@@ -25,6 +25,7 @@ on:
       - synchronize
       - reopened
       - opened
+      - labeled
 
 jobs:
   lint:
@@ -97,7 +98,7 @@ jobs:
   smoke_test:
     name: Run Smoke tests
     concurrency: smoke_tests_${{ github.event.pull_request.number }}
-    if: github.event_name == 'pull_request'
+    if: github.event_name == 'pull_request' && github.event.label.name == 'test-performance'
     needs: [docker]
     uses: ./.github/workflows/performance_testing.yml
     with:
@@ -110,7 +111,7 @@ jobs:
   performance_test:
     name: Test API performance
     concurrency: test_api_performance_${{ github.event.pull_request.number }}
-    if: github.event_name == 'pull_request'
+    if: github.event_name == 'pull_request' && github.event.label.name == 'test-performance'
     needs: [docker]
     uses: ./.github/workflows/performance_testing.yml
     with:
