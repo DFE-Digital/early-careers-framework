@@ -185,5 +185,7 @@ const htmlReport = nunjucks.render('report.njk', {
 // eslint-disable-next-line no-multi-str
 const markdownSummaryReport = nunjucks.render('summary.njk', jsonSummary);
 
+console.log(`Generating HTML report (${outputPath}) from ${inputPath}`);
 writeFileSync(outputPath, htmlReport, "utf8");
+console.log(`Generating Markdown summary (${markdownSummaryPath}) from ${inputPath}`);
 writeFileSync(markdownSummaryPath, markdownSummaryReport, "utf8");

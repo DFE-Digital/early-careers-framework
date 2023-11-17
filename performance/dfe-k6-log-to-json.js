@@ -8,4 +8,5 @@ const data = readFileSync(inputPath, 'utf8');
 const log = data.trim().split('\n').map(line => JSON.parse(line));
 
 const serializedLog = JSON.stringify(log);
+console.log(`Serialising k6 log entries (${outputPath}) from (${inputPath})`);
 writeFileSync(outputPath, serializedLog, 'utf8');

@@ -11,8 +11,8 @@
 
 | Metric | failure |
 | ------ | ------- |
-{% for metricName, metric in data.metrics %}{% if metric.thresholds %}{% for thresholdName, threshold in metric.thresholds %}{% if threshold.ok !== true %}| {{ metricName }} | {{ thresholdName }} |{% endif %}{% endfor %}
-{% endif %}{% endfor %}
+{% for metricName, metric in data.metrics %}{% if metric.thresholds %}{% for thresholdName, threshold in metric.thresholds %}{% if threshold.ok !== true %}| {{ metricName }} | {{ thresholdName }} |
+{% endif %}{% endfor %}{% endif %}{% endfor %}
 {% else %}## Standard request metrics
 
 |     | Count | Rate | Average | Maximum | Median | Minimum | 90th Percentile | 95th Percentile |
