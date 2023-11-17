@@ -40,20 +40,49 @@ describe "Rate limiting" do
     end
   end
 
-  context "api requests" do
-    let(:cpd_lead_provider1) { create(:cpd_lead_provider, :with_lead_provider) }
-    let(:token1) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider1) }
+  [
+    [:with_lead_provider, "/api/v3/participants/ecf"],
+    [:with_npq_lead_provider, "/api/v3/participants/npq"],
+  ].each do |(lead_provider_trait, provider_path)|
+    context "api requests (#{lead_provider_trait})" do
+      let(:cpd_lead_provider1) { create(:cpd_lead_provider, lead_provider_trait) }
+      let(:token1) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider1) }
+      let(:bearer_token1) { "Bearer #{token1}" }
+
+      let(:cpd_lead_provider2) { create(:cpd_lead_provider, lead_provider_trait) }
+      let(:token2) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider2) }
+      let(:bearer_token2) { "Bearer #{token2}" }
+
+      let(:path) { provider_path }
+
+      before { set_auth_token(bearer_token1) }
+
+      it_behaves_like "a rate limited endpoint", "API requests by ip", 5.minutes do
+        def perform_request
+          get path
+        end
+
+        def change_condition
+          set_auth_token(bearer_token2)
+        end
+      end
+    end
+  end
+
+  context "api requests for NPQ registration" do
+    let(:token1) { NPQRegistrationApiToken.create_with_random_token! }
     let(:bearer_token1) { "Bearer #{token1}" }
 
-    let(:cpd_lead_provider2) { create(:cpd_lead_provider, :with_lead_provider) }
-    let(:token2) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider2) }
+    let(:token2) { NPQRegistrationApiToken.create_with_random_token! }
     let(:bearer_token2) { "Bearer #{token2}" }
+
+    let(:application) { create(:npq_application) }
 
     before { set_auth_token(bearer_token1) }
 
     it_behaves_like "a rate limited endpoint", "API requests by ip", 5.minutes do
       def perform_request
-        get "/api/v3/participants/ecf"
+        get api_v1_npq_profile_path(application)
       end
 
       def change_condition

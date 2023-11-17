@@ -52,8 +52,27 @@ class Rack::Attack
 end
 
 ActiveSupport::Notifications.subscribe("throttle.rack_attack") do |_name, _start, _finish, request_id, payload|
-  ip = payload[:request].remote_ip
-  path = payload[:request].fullpath
+  request = ActionDispatch::Request.new(payload[:request].env)
+  response = ActionDispatch::Response.new(429)
+
+  ip = request.remote_ip
+  path = request.fullpath
+  user = request.env["warden"]&.user
 
   Rails.logger.warn("[rack-attack] Throttled request #{request_id} from #{ip} to '#{path}'")
+
+  # Web requests are sent to BigQuery via a concern in the ApplicationController.
+  # If Rack intercepts the request it won't reach the controller, so we need
+  # to manually send web requests that are rate limited to BigQuery.
+  if DfE::Analytics.enabled?
+    rate_limit_event = DfE::Analytics::Event.new
+      .with_type(:web_request)
+      .with_request_details(request)
+      .with_response_details(response)
+      .with_request_uuid(request.uuid)
+
+    rate_limit_event.with_user(user) if user.respond_to?(:id)
+
+    DfE::Analytics::SendEvents.do([rate_limit_event])
+  end
 end
