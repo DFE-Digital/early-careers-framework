@@ -143,11 +143,35 @@ const summariseReport = (data) => {
   const sortedMetricRows = Object.keys(sortedMetrics)
     .map(metricName => metricTableRow(metricName, sortedMetrics[metricName]));
 
+  const breachedMetricRows = []
+  Object.keys(data.metrics)
+    .forEach(metricName => {
+      const { thresholds } = data.metrics[metricName];
+
+      if (!thresholds) return;
+
+      Object.keys(thresholds)
+        .forEach(threshold => {
+          const [metric, tagString] = metricName.replace('}', '').split('{');
+          const tags = tagString.split(',')
+              .reduce((out, tag) => {
+                const index = tag.indexOf(':');
+                const key = tag.substring(0, index);
+                // eslint-disable-next-line no-param-reassign
+                out[key] = tag.substring(index + 1);
+                return out;
+              }, {});
+          if (!thresholds[threshold].ok)  breachedMetricRows.push({ threshold, metric, tags });
+        });
+    });
+  breachedMetricRows.sort((a, b) => a.tags.group.localeCompare(b.tags.group) || a.metric.localeCompare(b.metric));
+
   return {
     data,
     standardMetricRows,
     otherMetricRows,
     sortedMetricRows,
+    breachedMetricRows,
 
     thresholdFailures,
     thresholdCount,
@@ -170,6 +194,7 @@ nunjucks.configure(
 const jsonSrc = readFileSync(inputPath, "utf8");
 const jsonReport = JSON.parse(jsonSrc);
 const jsonSummary = summariseReport(jsonReport);
+// writeFileSync('../reports/model.json', JSON.stringify(jsonSummary), "utf8"); // useful for debugging
 
 const htmlReport = nunjucks.render('report.njk', {
   themeColor: "#003a69",
