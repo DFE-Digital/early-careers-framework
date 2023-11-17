@@ -62,6 +62,21 @@ jobs:
       - name: Install node.js dependencies
         run: yarn install --immutable --refresh-lockfile
 
+      - name: Update PR comment with notice of testing
+        uses: thollander/actions-comment-pull-request@v2
+        with:
+          message: |
+            The `${{ inputs.scenario }}` scenario is currently being run, with the following seed numbers;
+
+              - number of local authorities (LA): ${{ inputs.number-authorities }}
+              - number of schools per LA: ${{ inputs.number-schools }}
+              - number of participants per school: ${{ inputs.number-participants }}
+
+            Awaiting results...
+          pr_number: ${{ github.event.pull_request.number }}
+          comment_tag: ${{ inputs.scenario }}-notice
+          mode: delete
+
       - name: Deploy docker container network
         run: |
           docker compose -f ./performance/docker-compose.yml up -d web
@@ -107,3 +122,4 @@ jobs:
           filePath: ${{ env.MARKDOWN_SUMMARY_PATH }}
           pr_number: ${{ github.event.pull_request.number }}
           comment_tag: ${{ inputs.scenario }}-summary
+          mode: recreate

@@ -143,7 +143,7 @@ const summariseReport = (data) => {
   const sortedMetricRows = Object.keys(sortedMetrics)
     .map(metricName => metricTableRow(metricName, sortedMetrics[metricName]));
 
-  const breachedMetricRows = []
+  const breachedMetrics = {}
   Object.keys(data.metrics)
     .forEach(metricName => {
       const { thresholds } = data.metrics[metricName];
@@ -161,17 +161,21 @@ const summariseReport = (data) => {
                 out[key] = tag.substring(index + 1);
                 return out;
               }, {});
-          if (!thresholds[threshold].ok)  breachedMetricRows.push({ threshold, metric, tags });
+
+          if (!thresholds[threshold].ok) {
+            breachedMetrics[tags.group] = breachedMetrics[tags.group] || [];
+            breachedMetrics[tags.group].push({ threshold, metric });
+          }
         });
     });
-  breachedMetricRows.sort((a, b) => a.tags.group.localeCompare(b.tags.group) || a.metric.localeCompare(b.metric));
 
   return {
     data,
     standardMetricRows,
     otherMetricRows,
     sortedMetricRows,
-    breachedMetricRows,
+
+    breachedMetrics,
 
     thresholdFailures,
     thresholdCount,

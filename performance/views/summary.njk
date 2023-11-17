@@ -8,11 +8,13 @@
 | **Failed checks** | {{ checkFailures }} | {% if checkFailures > 0 %}:x:{% else %}:white_check_mark:{% endif %} |
 
 {% if thresholdFailures %}## Failed thresholds
+{% for group, breaches in breachedMetrics %}
+### {{ group }}
 
-| group | Metric | failure |
-| ------ | ----- | ------- |
-{% for breach in breachedMetricRows %}| {{ breach.tags.group }} | {{ breach.metric }} | {{ breach.threshold }} |
-{% endfor %}
+| Metric | Cause |
+| ------ | ----- |
+{% for breach in breaches %}| {{ breach.metric }} | {{ breach.threshold }} |
+{% endfor %}{% endfor %}
 {% else %}## Standard request metrics
 
 |     | Count | Rate | Average | Maximum | Median | Minimum | 90th Percentile | 95th Percentile |

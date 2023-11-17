@@ -13,8 +13,10 @@ Rails.application.configure do
   config.public_file_server.enabled = true
   config.force_ssl = false
   config.action_mailer.perform_deliveries = false
-  config.active_support.deprecation = :log
-  config.log_level = :debug
+
+  # quiet logs to keep file size down during tests
+  config.active_support.deprecation = :silence
+  config.log_level = :error
 
   logger = ActiveSupport::Logger.new("./log/web.log")
   logger.formatter = config.log_formatter

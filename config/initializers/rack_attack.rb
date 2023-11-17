@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# Turn off completely in performance environment so we can test the applications limits
+Rack::Attack.enabled = !Rails.env.performance?
+
 # Throttle general requests by IP
 class Rack::Attack
   class Request < ::Rack::Request
@@ -32,23 +35,21 @@ class Rack::Attack
     request.path == "/check"
   end
 
-  unless Rails.env.performance?
-    throttle("Login attempts by ip", limit: 5, period: 20.seconds) do |request|
-      if request.path == "/users/sign_in" && request.post?
-        request.remote_ip
-      end
+  throttle("Login attempts by ip", limit: 5, period: 20.seconds) do |request|
+    if request.path == "/users/sign_in" && request.post?
+      request.remote_ip
     end
+  end
 
-    throttle("API requests by ip", limit: 1000, period: 5.minutes) do |request|
-      if request.path.starts_with?(API_PATH)
-        request.get_header("HTTP_AUTHORIZATION")
-      end
+  throttle("API requests by ip", limit: 1000, period: 5.minutes) do |request|
+    if request.path.starts_with?(API_PATH)
+      request.get_header("HTTP_AUTHORIZATION")
     end
+  end
 
-    throttle("Non-API requests by ip", limit: 300, period: 5.minutes) do |request|
-      unless request.path.starts_with?(API_PATH)
-        request.remote_ip
-      end
+  throttle("Non-API requests by ip", limit: 300, period: 5.minutes) do |request|
+    unless request.path.starts_with?(API_PATH)
+      request.remote_ip
     end
   end
 end
