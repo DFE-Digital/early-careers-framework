@@ -74,19 +74,21 @@ RSpec.feature "ECT doing CIP: in training", type: :feature do
   let(:preferred_identity) { participant_details.participant_identity }
 
   scenario "The current school induction tutor can locate a record for the ECT" do
-    given_i_sign_in_as_the_user_with_the_full_name sit_full_name
+    inside_registration_window(cohort:) do
+      given_i_sign_in_as_the_user_with_the_full_name sit_full_name
 
-    school_dashboard = Pages::SchoolDashboardPage.load(slug: school.slug)
-    school_dashboard.view_participant_dashboard
+      school_dashboard = Pages::SchoolDashboardPage.load(slug: school.slug)
+      school_dashboard.view_participant_dashboard
 
-    participant_dashboard = Pages::SchoolParticipantsDashboardPage.loaded(slug: school.slug)
-    participant_dashboard.view_participant participant_full_name
+      participant_dashboard = Pages::SchoolParticipantsDashboardPage.loaded(slug: school.slug)
+      participant_dashboard.view_participant participant_full_name
 
-    participant_details = Pages::SchoolParticipantDetailsPage.loaded(slug: school.slug, participant_id: training_record_id)
-    expect(participant_details).to have_participant_name participant_full_name
-    expect(participant_details).to have_email participant_email
-    expect(participant_details).to have_full_name participant_full_name
-    expect(participant_details).to have_status school_record_state
+      participant_details = Pages::SchoolParticipantDetailsPage.loaded(slug: school.slug, participant_id: training_record_id)
+      expect(participant_details).to have_participant_name participant_full_name
+      expect(participant_details).to have_email participant_email
+      expect(participant_details).to have_full_name participant_full_name
+      expect(participant_details).to have_status school_record_state
+    end
   end
 
   scenario "The current appropriate body can locate a record for the ECT", :skip do

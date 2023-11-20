@@ -53,6 +53,7 @@ RSpec.describe "Adding previously withdrawn ECT", type: :feature, js: true do
   let(:ect_email) { "ect@email.gov.uk" }
 
   before do
+    disable_cohort_setup_check
     school_cohort.update!(default_induction_programme: induction_programme)
   end
 

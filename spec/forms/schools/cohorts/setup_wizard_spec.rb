@@ -35,12 +35,6 @@ RSpec.describe Schools::Cohorts::SetupWizard, type: :model do
   end
 
   shared_context "sending the pilot survey" do
-    it "does not send the pilot survey" do
-      expect {
-        wizard.success
-      }.not_to have_enqueued_mail(SchoolMailer, :cohortless_pilot_2023_survey_email)
-    end
-
     context "when the school is in the pilot", with_feature_flags: { cohortless_dashboard: "active" }, travel_to: Date.new(2023, 7, 1) do
       it "sends the pilot survey" do
         expect {

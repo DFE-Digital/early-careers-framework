@@ -9,6 +9,7 @@ RSpec.describe "Schools::ChangeSit", type: :request do
   let!(:school_cohort) { create(:school_cohort, school:, cohort:) }
 
   before do
+    disable_cohort_setup_check
     sign_in user
   end
 

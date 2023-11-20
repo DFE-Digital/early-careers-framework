@@ -227,9 +227,11 @@ RSpec.describe "Users::Sessions", type: :request do
       let!(:cohort) { create :cohort, :current }
 
       it "redirects to correct dashboard" do
-        post "/users/sign_in_with_token", params: { login_token: user.login_token }
-        follow_redirect!
-        expect(response).to redirect_to(schools_choose_programme_path(school_id: school.slug, cohort_id: cohort.start_year))
+        inside_registration_window(cohort:) do
+          post "/users/sign_in_with_token", params: { login_token: user.login_token }
+          follow_redirect!
+          expect(response).to redirect_to(schools_choose_programme_path(school_id: school.slug, cohort_id: cohort.start_year))
+        end
       end
     end
 
@@ -237,8 +239,8 @@ RSpec.describe "Users::Sessions", type: :request do
       let(:user) { create(:user, :induction_coordinator) }
       let(:school) { user.schools.first }
       let(:teacher_profile) { create :teacher_profile, user: }
-      let!(:participant_profile) { create :mentor_participant_profile, teacher_profile: }
-      let!(:cohort) { participant_profile.cohort }
+      let!(:participant_profile) { create :mentor_participant_profile, teacher_profile:, cohort: }
+      let!(:cohort) { Cohort.active_registration_cohort }
 
       it "redirects to correct dashboard" do
         post "/users/sign_in_with_token", params: { login_token: user.login_token }

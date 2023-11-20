@@ -26,9 +26,11 @@ RSpec.describe "Schools::ChooseProgramme", type: :request do
       end
 
       it "redirects to the dashboard" do
-        get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/choose-programme"
-        follow_redirect!
-        expect(response).to redirect_to("/schools/#{school.slug}#_#{cohort.description.parameterize}")
+        inside_registration_window(cohort:) do
+          get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/choose-programme"
+          follow_redirect!
+          expect(response).to redirect_to("/schools/#{school.slug}#_#{cohort.description.parameterize}")
+        end
       end
     end
   end

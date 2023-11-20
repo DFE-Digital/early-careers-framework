@@ -6,6 +6,10 @@ require_relative "../../nominations/nominate_induction_tutor_steps"
 RSpec.describe "Change a school induction tutor (SIT) as a SIT", js: true do
   include NominateInductionTutorSteps
 
+  before do
+    disable_cohort_setup_check
+  end
+
   scenario "a SIT with one school assigns their school to a new SIT" do
     given_there_is_a_school_and_an_induction_coordinator
     and_i_am_signed_in_as_an_induction_coordinator

@@ -76,6 +76,7 @@ RSpec.describe "Reporting participants with a known TRN", type: :feature, js: tr
         3,
       ),
     )
+    allow(Cohort).to receive(:active_registration_cohort).and_return(current_cohort)
   end
 
   scenario "Adding an ECT validates input" do

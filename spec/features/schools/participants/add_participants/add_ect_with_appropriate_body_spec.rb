@@ -38,67 +38,73 @@ RSpec.describe "Adding ECT with appropriate body", type: :feature, js: true do
   end
 
   scenario "Appropriate body is confirmed and appears on the participant detail page" do
-    sign_in
+    inside_auto_assignment_window(cohort:) do
+      sign_in
 
-    when_i_go_to_add_new_ect_page
-    and_i_go_through_the_who_do_you_want_to_add_page
-    and_i_go_through_the_what_we_need_from_you_page
+      when_i_go_to_add_new_ect_page
+      and_i_go_through_the_who_do_you_want_to_add_page
+      and_i_go_through_the_what_we_need_from_you_page
 
-    and_i_fill_in_all_info
-    then_i_am_taken_to_the_confirm_appropriate_body_page
+      and_i_fill_in_all_info
+      then_i_am_taken_to_the_confirm_appropriate_body_page
 
-    when_i_click_on_confirm
-    then_i_am_taken_to_the_confirmation_page
-    and_i_see_the_appropriate_body(appropriate_body)
+      when_i_click_on_confirm
+      then_i_am_taken_to_the_confirmation_page
+      and_i_see_the_appropriate_body(appropriate_body)
 
-    when_i_check_the_ect_details
-    then_i_see_the_school_appropriate_body
+      when_i_check_the_ect_details
+      then_i_see_the_school_appropriate_body
+    end
   end
 
   scenario "Appropriate body for ECT is not confirmed and a different one is selected" do
-    ect_appropriate_body = create(:appropriate_body_national_organisation)
+    inside_auto_assignment_window(cohort:) do
+      ect_appropriate_body = create(:appropriate_body_national_organisation)
 
-    sign_in
+      sign_in
 
-    when_i_go_to_add_new_ect_page
-    and_i_go_through_the_who_do_you_want_to_add_page
-    and_i_go_through_the_what_we_need_from_you_page
+      when_i_go_to_add_new_ect_page
+      and_i_go_through_the_who_do_you_want_to_add_page
+      and_i_go_through_the_what_we_need_from_you_page
 
-    and_i_fill_in_all_info
-    then_i_am_taken_to_the_confirm_appropriate_body_page
+      and_i_fill_in_all_info
+      then_i_am_taken_to_the_confirm_appropriate_body_page
 
-    when_i_choose_a_different_appropriate_body(ect_appropriate_body)
-    then_i_am_taken_to_the_confirmation_page
-    and_i_see_the_appropriate_body(ect_appropriate_body)
+      when_i_choose_a_different_appropriate_body(ect_appropriate_body)
+      then_i_am_taken_to_the_confirmation_page
+      and_i_see_the_appropriate_body(ect_appropriate_body)
 
-    when_i_check_the_ect_details
-    then_i_see_the_appropriate_body(ect_appropriate_body)
+      when_i_check_the_ect_details
+      then_i_see_the_appropriate_body(ect_appropriate_body)
+    end
   end
 
   scenario "Appropriate body is confirmed and then changed in the confirm page" do
-    ect_appropriate_body = create(:appropriate_body_national_organisation)
+    inside_auto_assignment_window(cohort:) do
+      ect_appropriate_body = create(:appropriate_body_national_organisation)
 
-    sign_in
+      sign_in
 
-    when_i_go_to_add_new_ect_page
-    and_i_go_through_the_who_do_you_want_to_add_page
-    and_i_go_through_the_what_we_need_from_you_page
+      when_i_go_to_add_new_ect_page
+      and_i_go_through_the_who_do_you_want_to_add_page
+      and_i_go_through_the_what_we_need_from_you_page
 
-    and_i_fill_in_all_info
-    then_i_am_taken_to_the_confirm_appropriate_body_page
+      and_i_fill_in_all_info
+      then_i_am_taken_to_the_confirm_appropriate_body_page
 
-    when_i_click_on_confirm
-    then_i_am_taken_to_the_confirmation_page
-    and_i_see_the_school_appropriate_body
+      when_i_click_on_confirm
+      then_i_am_taken_to_the_confirmation_page
+      and_i_see_the_school_appropriate_body
 
-    when_i_click_on_change_appropriate_body_link
-    and_i_choose_a_different_appropriate_body(ect_appropriate_body)
+      when_i_click_on_change_appropriate_body_link
+      and_i_choose_a_different_appropriate_body(ect_appropriate_body)
 
-    then_i_am_taken_to_the_confirmation_page
-    and_i_see_the_appropriate_body(ect_appropriate_body)
+      then_i_am_taken_to_the_confirmation_page
+      and_i_see_the_appropriate_body(ect_appropriate_body)
 
-    when_i_check_the_ect_details
-    then_i_see_the_appropriate_body(ect_appropriate_body)
+      when_i_check_the_ect_details
+      then_i_see_the_appropriate_body(ect_appropriate_body)
+    end
   end
 
 private
