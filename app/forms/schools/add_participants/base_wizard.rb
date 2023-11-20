@@ -145,7 +145,7 @@ module Schools
       end
 
       def current_cohort
-        @current_cohort ||= Dashboard::LatestManageableCohort.call(school)
+        @current_cohort ||= Cohort.active_registration_cohort
       end
 
       def previous_cohort
