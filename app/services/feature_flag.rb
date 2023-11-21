@@ -22,7 +22,6 @@ class FeatureFlag
   TEMPORARY_FEATURE_FLAGS = %i[
     eligibility_notifications
     prevent_2023_ect_registrations
-    cohortless_dashboard
     school_participant_status_language
     accept_npq_application_can_change_schedule
   ].freeze
