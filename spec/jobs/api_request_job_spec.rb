@@ -105,24 +105,53 @@ RSpec.describe ApiRequestJob do
     expect(ApiRequest.find_by(request_path: "/api/v1/bar").request_body).to be_nil
   end
 
-  context "when the dfe_analytics feature is enabled" do
-    before { FeatureFlag.activate(:dfe_analytics) }
+  context "when the api request is made by a lead provider" do
+    let(:cpd_lead_provider) { create(:cpd_lead_provider, name: "Ambition") }
+    let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
+    let(:headers) { { "HTTP_AUTHORIZATION" => "Bearer #{token}" } }
 
     let(:request_uuid) { SecureRandom.uuid }
 
-    it "saves the request_uuid on the big query event" do
-      cpd_lead_provider = create(:cpd_lead_provider, name: "Ambition")
-      token = LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:)
-      headers = { "HTTP_AUTHORIZATION" => "Bearer #{token}" }
+    context "when the dfe_analytics feature is enabled" do
+      before { FeatureFlag.activate(:dfe_analytics) }
 
+      it "saves the request_uuid on the big query event" do
+        expect {
+          described_class.new.perform({
+            headers:,
+            body: { "foo" => "meh" }.to_json,
+            path: "/api/v1/bar",
+            method: "POST",
+          }, {}, 500, Time.zone.now, request_uuid)
+        }.to have_enqueued_job(DfE::Analytics::SendEvents).with(array_including(hash_including("request_uuid" => request_uuid))).on_queue("dfe_analytics")
+      end
+    end
+
+    context "when the dfe_analytics feature is not enabled" do
+      before { FeatureFlag.deactivate(:dfe_analytics) }
+
+      it "does not send events to analytics" do
+        expect {
+          described_class.new.perform({
+            headers:,
+            body: { "foo" => "meh" }.to_json,
+            path: "/api/v1/bar",
+            method: "POST",
+          }, {}, 500, Time.zone.now, request_uuid)
+        }.not_to have_enqueued_job(DfE::Analytics::SendEvents)
+      end
+    end
+  end
+
+  context "when the api request is not made by a lead provider" do
+    it "does not send events to analytics" do
       expect {
         described_class.new.perform({
-          headers:,
           body: { "foo" => "meh" }.to_json,
           path: "/api/v1/bar",
           method: "POST",
-        }, {}, 500, Time.zone.now, request_uuid)
-      }.to have_enqueued_job(DfE::Analytics::SendEvents).with(array_including(hash_including("request_uuid" => request_uuid))).on_queue("dfe_analytics")
+        }, {}, 500, Time.zone.now, anything)
+      }.not_to have_enqueued_job(DfE::Analytics::SendEvents)
     end
   end
 end
