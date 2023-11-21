@@ -111,14 +111,13 @@ module ManageTrainingSteps
     @school_cohort.update!(default_induction_programme: @induction_programme)
   end
 
-  def given_there_is_a_school_that_has_chosen_cip_for_previous_cohort(pilot: false)
+  def given_there_is_a_school_that_has_chosen_cip_for_previous_cohort
     @cip = create(:core_induction_programme, name: "CIP Programme 1")
     @cohort = Cohort.previous || create(:cohort, :previous)
     @school = create(:school, name: "CIP School")
     @school_cohort = create(:school_cohort, school: @school, cohort: @cohort, induction_programme_choice: "core_induction_programme")
     @induction_programme = create(:induction_programme, :cip, school_cohort: @school_cohort, core_induction_programme: nil)
     @school_cohort.update!(default_induction_programme: @induction_programme)
-    pilot!(@school) if pilot
   end
 
   def given_there_is_a_school_that_has_chosen_cip_for_the_current_year

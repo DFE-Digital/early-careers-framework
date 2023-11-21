@@ -7,7 +7,7 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
   include ChooseProgrammeSteps
 
   scenario "A school chooses no ECTs expected in next academic year" do
-    given_a_school_with_no_chosen_programme_for_next_academic_year(pilot: true)
+    given_a_school_with_no_chosen_programme_for_next_academic_year
     and_i_am_signed_in_as_an_induction_coordinator
 
     then_i_am_taken_to_what_we_need_to_know_to_setup_academic_year
@@ -27,7 +27,7 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
   end
 
   scenario "A school chooses ECTs expected in next academic year and training DfE funded" do
-    given_a_school_with_no_chosen_programme_for_next_academic_year(pilot: true)
+    given_a_school_with_no_chosen_programme_for_next_academic_year
     and_i_am_signed_in_as_an_induction_coordinator
 
     then_i_am_taken_to_what_we_need_to_know_to_setup_academic_year
@@ -58,7 +58,7 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
   end
 
   scenario "A CIP-only school chooses ECTs expected in next academic year and training school funded" do
-    given_a_school_with_no_chosen_programme_for_next_academic_year(cip_only: true, pilot: true)
+    given_a_school_with_no_chosen_programme_for_next_academic_year(cip_only: true)
     and_i_am_signed_in_as_an_induction_coordinator
 
     then_i_am_taken_to_what_we_need_to_know_to_setup_academic_year
@@ -90,7 +90,7 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
   end
 
   scenario "A school chooses ECTs expected in next academic year and deliver own programme" do
-    given_a_school_with_no_chosen_programme_for_next_academic_year(pilot: true)
+    given_a_school_with_no_chosen_programme_for_next_academic_year
     and_i_am_signed_in_as_an_induction_coordinator
     then_i_am_taken_to_what_we_need_to_know_to_setup_academic_year
     and_the_page_should_be_accessible
@@ -119,7 +119,7 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
   end
 
   scenario "A school chooses ECTs expected in next academic year and design and deliver own programme" do
-    given_a_school_with_no_chosen_programme_for_next_academic_year(pilot: true)
+    given_a_school_with_no_chosen_programme_for_next_academic_year
     and_i_am_signed_in_as_an_induction_coordinator
 
     then_i_am_taken_to_what_we_need_to_know_to_setup_academic_year
@@ -165,7 +165,7 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
     end
 
     scenario "A school chooses to keep the same FIP programme in the new cohort" do
-      given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered(pilot: true)
+      given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
       and_cohort_for_next_academic_year_is_created
       and_a_provider_relationship_exists_for_the_lp_and_dp
       and_i_am_signed_in_as_an_induction_coordinator
@@ -197,7 +197,7 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
     end
 
     scenario "Empty LP and DP names for challenged partnerships" do
-      given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered(pilot: true)
+      given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
       and_cohort_for_next_academic_year_is_created
       and_a_provider_relationship_exists_for_the_lp_and_dp
       and_i_am_signed_in_as_an_induction_coordinator
@@ -232,7 +232,7 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
 
     context "Changing training" do
       scenario "A school chooses to use a different lead provider" do
-        given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered(pilot: true)
+        given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
         and_cohort_for_next_academic_year_is_created
         and_a_provider_relationship_exists_for_the_lp_and_dp
         and_i_am_signed_in_as_an_induction_coordinator
@@ -273,7 +273,7 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
       end
 
       scenario "A school chooses to deliver own programme" do
-        given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered(pilot: true)
+        given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
         and_cohort_for_next_academic_year_is_created
         and_a_provider_relationship_exists_for_the_lp_and_dp
         and_i_am_signed_in_as_an_induction_coordinator
@@ -311,7 +311,7 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
       end
 
       scenario "A school chooses to design and deliver own programme" do
-        given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered(pilot: true)
+        given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
         and_cohort_for_next_academic_year_is_created
         and_a_provider_relationship_exists_for_the_lp_and_dp
         and_i_am_signed_in_as_an_induction_coordinator
@@ -358,7 +358,7 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
     end
 
     scenario "A school does not appoint an appropriate body" do
-      given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered(pilot: true)
+      given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
       and_cohort_for_next_academic_year_is_created
       and_a_provider_relationship_exists_for_the_lp_and_dp
       and_i_am_signed_in_as_an_induction_coordinator
@@ -387,7 +387,7 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
     end
 
     scenario "A school chooses to appoint a local authority as appropriate body" do
-      given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered(pilot: true)
+      given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
       and_cohort_for_next_academic_year_is_created
       and_a_provider_relationship_exists_for_the_lp_and_dp
       and_i_am_signed_in_as_an_induction_coordinator
@@ -424,7 +424,7 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
     end
 
     scenario "A school chooses to appoint a national organisation as appropriate body" do
-      given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered(pilot: true)
+      given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
       and_cohort_for_next_academic_year_is_created
       and_a_provider_relationship_exists_for_the_lp_and_dp
       and_i_am_signed_in_as_an_induction_coordinator
@@ -461,7 +461,7 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
     end
 
     scenario "A school chooses to appoint a teaching school hub as appropriate body" do
-      given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered(pilot: true)
+      given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
       and_cohort_for_next_academic_year_is_created
       and_a_provider_relationship_exists_for_the_lp_and_dp
       and_i_am_signed_in_as_an_induction_coordinator

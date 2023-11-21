@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Participants::SyncDQTInductionStartDate, with_feature_flags: { cohortless_dashboard: "active" } do
+RSpec.describe Participants::SyncDQTInductionStartDate do
   let(:dqt_induction_start_date) {}
   let(:participant_induction_start_date) {}
   let(:participant_created_at) { described_class::FIRST_2023_REGISTRATION_DATE + 1.hour }
@@ -19,18 +19,6 @@ RSpec.describe Participants::SyncDQTInductionStartDate, with_feature_flags: { co
   end
 
   subject { described_class.call(dqt_induction_start_date, participant_profile) }
-
-  context "when 'cohortless_dashboard' feature flag is disabled" do
-    before do
-      FeatureFlag.deactivate(:cohortless_dashboard)
-    end
-
-    it "does not change the participant" do
-      expect { subject }.to not_change(participant_profile, :updated_at)
-                              .and not_change(participant_profile, :induction_start_date)
-                                     .and not_change(SyncDQTInductionStartDateError, :count)
-    end
-  end
 
   context "when DQT induction start date is not present" do
     let(:dqt_induction_start_date) {}

@@ -5,17 +5,16 @@ module ChooseProgrammeSteps
 
   # Given steps
 
-  def given_a_school_with_no_chosen_programme_for_next_academic_year(cip_only: false, pilot: false)
+  def given_a_school_with_no_chosen_programme_for_next_academic_year(cip_only: false)
     name = "NoECTsSchool"
     @previous_cohort = Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021)
     @cohort = Cohort.find_by(start_year: 2022) || create(:cohort, start_year: 2022)
     @school = cip_only ? create(:school, :cip_only, name:) : create(:school, name:)
     create(:school_cohort, :cip, school: @school, cohort: @previous_cohort)
-    pilot!(@school) if pilot
   end
 
-  def given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered(pilot: false)
-    given_there_is_a_school_that_has_chosen_fip_for_2021(pilot:)
+  def given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
+    given_there_is_a_school_that_has_chosen_fip_for_2021
     @lead_provider = create(:lead_provider, name: "Big Provider Ltd")
     @delivery_partner = create(:delivery_partner, name: "Amazing Delivery Team")
     @partnership = create(:partnership, school: @school, lead_provider: @lead_provider, delivery_partner: @delivery_partner, cohort: @cohort, challenge_deadline: 2.weeks.ago)
@@ -25,7 +24,7 @@ module ChooseProgrammeSteps
   end
 
   def given_there_is_a_school_that_has_chosen_fip_for_2021_but_partnership_was_challenged
-    given_there_is_a_school_that_has_chosen_fip_for_2021(pilot: true)
+    given_there_is_a_school_that_has_chosen_fip_for_2021
     @lead_provider = create(:lead_provider, name: "Big Provider Ltd")
     @delivery_partner = create(:delivery_partner, name: "Amazing Delivery Team")
     @partnership = create(:partnership, :challenged, school: @school, lead_provider: @lead_provider, delivery_partner: @delivery_partner, cohort: @cohort, challenge_deadline: 2.weeks.ago)
@@ -34,13 +33,12 @@ module ChooseProgrammeSteps
     @lead_provider.users << @lead_provider_user
   end
 
-  def given_there_is_a_school_that_has_chosen_fip_for_2021(pilot: false)
+  def given_there_is_a_school_that_has_chosen_fip_for_2021
     @cohort = @cohort_2022 = Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021)
     @school = create(:school, name: "Fip School")
     @school_cohort = create(:school_cohort, school: @school, cohort: @cohort, induction_programme_choice: "full_induction_programme")
     @induction_programme = create(:induction_programme, :fip, school_cohort: @school_cohort, partnership: nil)
     @school_cohort.update!(default_induction_programme: @induction_programme)
-    pilot!(@school) if pilot
   end
 
   # Then steps

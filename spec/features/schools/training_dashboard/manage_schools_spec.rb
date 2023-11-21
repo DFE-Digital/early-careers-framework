@@ -30,7 +30,7 @@ RSpec.feature "School Tutors should be able to manage schools", type: :feature, 
 
   context "Multiple cohorts when the new cohort is open for registrations" do
     scenario "Start setting up the new cohort" do
-      given_there_is_a_school_that_has_chosen_cip_for_previous_cohort(pilot: true)
+      given_there_is_a_school_that_has_chosen_cip_for_previous_cohort
       travel_to Cohort.current.registration_start_date + 1.day do
         and_cohort_current_is_created
         and_i_am_signed_in_as_an_induction_coordinator
