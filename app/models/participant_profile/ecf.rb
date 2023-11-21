@@ -146,10 +146,7 @@ private
   def sync_status_with_induction_record
     induction_record = induction_records.latest
     induction_record&.update!(induction_status: status) if saved_change_to_status?
-    if saved_change_to_mentor_profile_id?
-      induction_record&.update!(mentor_profile:)
-      mentor_profile&.user&.touch
-    end
+    induction_record&.update!(mentor_profile:) if saved_change_to_mentor_profile_id?
   end
 end
 

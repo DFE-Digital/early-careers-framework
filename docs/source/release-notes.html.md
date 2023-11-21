@@ -7,7 +7,7 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
-## 20 November 2023
+## 28 November 2023
 
 We've fixed a bug that meant some providers were having issues finding unfunded mentor IDs in GET participants.
 

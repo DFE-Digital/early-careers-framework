@@ -57,12 +57,6 @@ RSpec.describe ParticipantProfile::ECF, type: :model do
         profile.update!(mentor_profile:)
         expect(induction_record.reload.mentor_profile).to eq(mentor_profile)
       end
-
-      it "touches the mentor user" do
-        expect {
-          profile.update!(mentor_profile:)
-        }.to change(mentor_profile.user, :updated_at)
-      end
     end
   end
 
