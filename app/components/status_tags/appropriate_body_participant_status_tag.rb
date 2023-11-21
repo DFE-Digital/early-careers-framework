@@ -17,7 +17,7 @@ module StatusTags
     end
 
     def description
-      Array.wrap(t(:description, scope: translation_scope, contact_us: render(MailToSupportComponent.new("contact us")))).map(&:html_safe)
+      Array.wrap(I18n.t(:description, scope: translation_scope, induction_completion_date:))
     rescue I18n::MissingTranslationData
       []
     end
@@ -27,6 +27,10 @@ module StatusTags
     end
 
   private
+
+    def induction_completion_date
+      training_record_state.participant_profile.induction_completion_date&.strftime("%-e %B %Y")
+    end
 
     def translation_scope
       @translation_scope ||= "status_tags.appropriate_body_participant_status.#{record_state}"

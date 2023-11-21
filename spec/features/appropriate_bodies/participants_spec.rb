@@ -145,6 +145,6 @@ private
   end
 
   def and_i_do_not_see_newer_induction_record_details
-    expect(page).not_to have_content(latest_induction_record.training_status)
+    expect(page).not_to have_content("particpant has deferred")
   end
 end

@@ -152,9 +152,9 @@ en:
         description: "An induction period has been registered with the Teaching Regulation Agency (TRA) for this ECT."
 
       deferred_training:
-        id: "training_or_eligible_for_training"
-        label: "Induction confirmed"
-        description: "An induction period has been registered with the Teaching Regulation Agency (TRA) for this ECT."
+        id: "participant_deferred"
+        label: "Participant deferred"
+        description: "This participant's provider has reported that they've deferred. Contact the provider if you think this is wrong."
 
       withdrawn_training:
         id: "ect_no_longer_linked"
@@ -189,6 +189,6 @@ en:
         description: "This means the ECT has either completed, failed, or is exempt from serving their induction."
 
       completed_training:
-        id: "training_or_eligible_for_training"
-        label: "Induction confirmed"
-        description: "An induction period has been registered with the Teaching Regulation Agency (TRA) for this ECT."
+        id: "induction_completed"
+        label: "Induction completed"
+        description: "The Teaching Regulation Agency has recorded that this ECT completed their induction on %{induction_completion_date}."

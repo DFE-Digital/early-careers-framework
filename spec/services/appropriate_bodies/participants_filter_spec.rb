@@ -51,8 +51,8 @@ RSpec.describe AppropriateBodies::ParticipantsFilter do
   end
 
   context "Status filter" do
-    context "Filter by training_or_eligible_for_training" do
-      let(:params) { { status: "training_or_eligible_for_training" } }
+    context "Filter by participant_deferred" do
+      let(:params) { { status: "participant_deferred" } }
 
       it { is_expected.to match_array([induction_record2]) }
     end
