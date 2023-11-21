@@ -28,6 +28,7 @@ RSpec.describe "Show ECF statement", :js do
     then_i_see("Early career framework (ECF)")
     and_i_see_additional_adjustments_table
     and_i_see_additional_adjustments_total
+    and_i_see_save_as_pdf_link
   end
 
   context "Statement authorise for payment" do
@@ -132,6 +133,11 @@ RSpec.describe "Show ECF statement", :js do
 
   def and_i_see_additional_adjustments_total
     expect(page).to have_css(".finance-panel .finance-panel__summary__total-payment-breakdown p:nth-child(5)", text: "Additional adjustments\n£799.99")
+  end
+
+  def and_i_see_save_as_pdf_link
+    expected_filename = "#{cpd_lead_provider.name} #{statement.name} ECF Statement (#{cohort.start_year} Cohort)"
+    expect(page).to have_css("a[data-filename='#{expected_filename}']", text: "Save as PDF")
   end
 
   def and_multiple_declarations_exist

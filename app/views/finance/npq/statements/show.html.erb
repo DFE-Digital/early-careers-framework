@@ -148,6 +148,11 @@
             </div>
             <div class="govuk-grid-column-one-half govuk-!-text-align-right">
               <p class="govuk-body-s">
+                <%=
+                  print_link("Save as PDF", filename: "#{@npq_lead_provider.name} #{@statement.name} NPQ Statement (#{@statement.cohort.start_year} Cohort)")
+                %>
+              </p>
+              <p class="govuk-body-s">
                 <%= govuk_link_to "Download declarations (CSV)", finance_npq_statement_assurance_report_path(@statement, format: :csv) %>
               </p>
             </div>

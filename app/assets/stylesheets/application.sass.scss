@@ -30,6 +30,8 @@ $govuk-new-link-styles: true;
 @import "components/statement_selector";
 @import "tabs";
 
+@import "print";
+
 .govuk-tag {
   white-space: nowrap;
 }

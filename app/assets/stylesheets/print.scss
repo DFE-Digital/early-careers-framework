@@ -1,0 +1,24 @@
+@media print {
+  // header
+  body > header,
+  .govuk-phase-banner,
+  .govuk-back-link {
+    display: none;
+  }
+
+  // footer
+  body > footer {
+    display: none;
+  }
+
+  // global
+  a {
+    display: none;
+  }
+
+  // statements
+  .statement-selector,
+  .app-application__standalone-course {
+    display: none;
+  }
+}

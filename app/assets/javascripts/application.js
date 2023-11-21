@@ -16,6 +16,7 @@ import "./admin/supplier-users";
 import "./cookie-banner";
 import "./nominations";
 import "./autocomplete";
+import "./print";
 
 window.GOVUKFrontend = GOVUKFrontend;
 
