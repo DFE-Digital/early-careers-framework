@@ -2,7 +2,7 @@
 
 <h1 class="govuk-heading-l"><%= @school.name %></h1>
 <%= render partial: "admin/schools/shared/navigation" %>
-<h2 class="govuk-heading-m">Overview</h2>
+<h2 class="govuk-heading-m">Details</h2>
 
 <% if @induction_coordinator && ImpersonationPolicy.new(current_user, @induction_coordinator).create? %>
   <%= govuk_button_to("Impersonate induction tutor", admin_impersonate_path,
