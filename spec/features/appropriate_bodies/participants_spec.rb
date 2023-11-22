@@ -7,6 +7,7 @@ RSpec.feature "Appropriate body users participants", type: :feature do
   let(:appropriate_body) { appropriate_body_user.appropriate_bodies.first }
 
   let(:participant_profile) { create :ect_participant_profile, training_status: "withdrawn" }
+  let(:mentor_profile) { create :mentor_participant_profile, training_status: "withdrawn" }
   let(:lead_provider) { create(:lead_provider) }
   let(:delivery_partner) { create(:delivery_partner) }
   let(:school) { create(:school) }
@@ -23,6 +24,7 @@ RSpec.feature "Appropriate body users participants", type: :feature do
   end
   let(:induction_programme) { create(:induction_programme, :fip, partnership:, school_cohort:) }
   let!(:induction_record) { create(:induction_record, participant_profile:, appropriate_body:, induction_programme:, training_status: "withdrawn") }
+  let!(:mentor_induction_record) { create(:induction_record, participant_profile: mentor_profile, appropriate_body:, induction_programme:, training_status: "withdrawn") }
 
   let!(:prev_cohort_year) { create(:cohort, start_year: 2020) }
 
@@ -35,12 +37,14 @@ RSpec.feature "Appropriate body users participants", type: :feature do
   scenario "Visit participants page" do
     then_i_see("Participants")
     and_i_see_participant_details
+    and_i_do_not_see_mentor_details
   end
 
   scenario "Download participants CSV" do
     then_i_see("Participants")
     when_i_click_on("Download (csv)")
     and_i_see_participant_details_csv_export
+    and_i_do_not_see_mentor_details_csv_export
   end
 
   context "Search query" do
@@ -118,6 +122,10 @@ private
     expect(page).not_to have_content(participant_profile.user.full_name)
   end
 
+  def and_i_do_not_see_mentor_details
+    expect(page).not_to have_content(mentor_profile.user.full_name)
+  end
+
   def when_i_fill_in(selector, with:)
     page.fill_in selector, with:
   end
@@ -142,6 +150,10 @@ private
     expect(data[3]).to eq(["status", "ECT not currently linked to you"])
     expect(data[4]).to eq(%w[induction_type FIP])
     expect(data[5]).to eq(["induction_tutor", induction_record.school.contact_email])
+  end
+
+  def and_i_do_not_see_mentor_details_csv_export
+    expect(page.body).not_to include(mentor_profile.user.full_name)
   end
 
   def and_i_do_not_see_newer_induction_record_details
