@@ -16,6 +16,8 @@ RSpec.feature "Admin should be able to see the participant's training details", 
     then_i_should_be_on_the_participant_training_page
     and_i_should_see_the_current_schools_details
     and_i_should_see_the_participant_training
+    and_i_should_see_the_participant_cohorts
+    
     and_the_page_title_should_be("Sally Teacher - Training details")
   end
 

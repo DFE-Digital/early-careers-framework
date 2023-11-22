@@ -151,10 +151,6 @@ module ParticipantSteps
     expect(current_path).to eql(admin_participant_induction_records_path(@participant_profile_ect))
   end
 
-  def then_i_should_be_on_the_participant_cohorts_page
-    expect(current_path).to eql(admin_participant_cohorts_path(@participant_profile_ect))
-  end
-
   def then_i_should_be_on_the_participant_declaration_history_page
     expect(current_path).to eql(admin_participant_declaration_history_path(@participant_profile_ect))
   end
