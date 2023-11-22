@@ -132,3 +132,22 @@
         ]
       end,
       ) %>
+
+
+<h2 class="govuk-heading-m">Cohort</h2>
+
+<%= govuk_summary_list do |sl|
+  sl.with_row do |row|
+    row.with_key(text: "Cohort via induction record")
+    row.with_value(text: @participant_presenter.start_year)
+  end
+
+  sl.with_row do |row|
+    row.with_key(text: "Cohort via schedule")
+    row.with_value(text: @participant_presenter&.relevant_induction_record&.schedule&.cohort&.start_year)
+  end
+end %>
+
+<% if policy(@participant_profile).edit_cohort? %>
+  <%= govuk_button_link_to("Change cohort", edit_admin_participant_change_cohort_path(@participant_presenter.participant_profile), secondary: true) %>
+<% end %>

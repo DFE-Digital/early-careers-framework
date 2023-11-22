@@ -319,7 +319,6 @@ Rails.application.routes.draw do
           put ":induction_record_id/update_training_status", action: :update_training_status, as: :update_training_status
         end
       end
-      resource :cohorts, only: :show, controller: "participants/cohorts"
       resource :declaration_history, only: :show, controller: "participants/declaration_history"
       resource :identities, only: :show, controller: "participants/identities"
       resource :change_log, only: :show, controller: "participants/change_log"
