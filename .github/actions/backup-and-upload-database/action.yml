@@ -1,0 +1,70 @@
+name: Backup and Upload production DB
+description: Backup production DB and upload to azure
+
+inputs:
+  azure-credentials:
+    description: Azure credentials
+    required: true
+
+runs:
+  using: composite
+
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ inputs.azure-credentials }}
+
+    - name: Set AKS credentials
+      shell: bash
+      run: az aks get-credentials -g s189p01-tsc-pd-rg -n s189p01-tsc-production-aks
+
+    - name: Install kubectl
+      uses: azure/setup-kubectl@v3
+
+    - name: Install konduit
+      shell: bash
+      run: make install-konduit
+
+    - name: Backup database
+      shell: bash
+      run: |
+        bin/konduit.sh cpd-ecf-production-web -- pg_dump -E utf8 --compress=1 --clean --if-exists --no-privileges --no-owner --verbose -f backup-production.sql.gz
+
+    - name: Set connection string
+      shell: bash
+      run: |
+        STORAGE_CONN_STR=$(az storage account show-connection-string -g s189p01-cpdecf-pd-rg -n s189p01cpdecfdbbkppdsa --query 'connectionString')
+        echo "::add-mask::$STORAGE_CONN_STR"
+        echo "AZURE_STORAGE_CONNECTION_STRING=$STORAGE_CONN_STR" >> $GITHUB_ENV
+
+    - name: Upload backup
+      shell: bash
+      run: |
+        az config set extension.use_dynamic_install=yes_without_prompt
+        az config set core.only_show_errors=true
+        az storage azcopy blob upload \
+          --container database-backup \
+          --source backup-production.sql.gz \
+          --destination $(date +"%F-%H").sql.gz
+
+    - uses: Azure/get-keyvault-secrets@v1
+      if: failure()
+      id: key-vault-secrets
+      with:
+        keyvault: s189p01-cpdecf-pd-app-kv
+        secrets: "SLACK-WEBHOOK"
+
+    - name: Notify Slack channel on job failure
+      if: failure()
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_USERNAME: CI Deployment
+        SLACK_TITLE: Database backup failure
+        SLACK_MESSAGE: Production database backup job failed
+        SLACK_WEBHOOK: ${{ steps.key-vault-secrets.outputs.SLACK-WEBHOOK }}
+        SLACK_COLOR: failure
+        SLACK_FOOTER: Sent from backup-production job in database-backups workflow
