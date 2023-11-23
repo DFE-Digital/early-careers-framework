@@ -147,7 +147,11 @@ module Finance
         pot_size = previous_fill_level_for_declaration_type(declaration_type)
 
         bands.zip(:a..:z).map do |band, letter|
-          band_capacity = band.max - (band.min || 1) + 1
+          # minimum band should always be 1 or more, otherwise band a will go over
+          # its max limit
+          band_min = band.min.to_i.zero? ? 1 : band.min
+
+          band_capacity = band.max - band_min + 1
 
           fill_level = [pot_size, band_capacity].min
 
@@ -157,7 +161,7 @@ module Finance
 
           {
             band: letter,
-            min: band.min || 1,
+            min: band_min,
             max: band.max,
             key_name => fill_level,
           }
