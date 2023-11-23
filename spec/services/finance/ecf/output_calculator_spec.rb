@@ -228,6 +228,54 @@ RSpec.describe Finance::ECF::OutputCalculator do
         ]
         expect(first_statement_calc.banding_breakdown.map { |e| e.slice(*relevant_started_keys) }).to eql(expected)
       end
+
+      context "when band a min is set to zero" do
+        before do
+          contract.participant_bands.find_by!(min: nil).update(min: 0)
+        end
+
+        it "returns correct bands" do
+          expected = [
+            {
+              band: :a,
+              min: 1,
+              max: 2,
+              previous_started_count: 0,
+              started_count: 2,
+              started_additions: 2,
+              started_subtractions: 0,
+            },
+            {
+              band: :b,
+              min: 3,
+              max: 4,
+              previous_started_count: 0,
+              started_count: 0,
+              started_additions: 0,
+              started_subtractions: 0,
+            },
+            {
+              band: :c,
+              min: 5,
+              max: 6,
+              previous_started_count: 0,
+              started_count: 0,
+              started_additions: 0,
+              started_subtractions: 0,
+            },
+            {
+              band: :d,
+              min: 7,
+              max: 8,
+              previous_started_count: 0,
+              started_count: 0,
+              started_additions: 0,
+              started_subtractions: 0,
+            },
+          ]
+          expect(first_statement_calc.banding_breakdown.map { |e| e.slice(*relevant_started_keys) }).to eql(expected)
+        end
+      end
     end
 
     context "when multiple bands" do
