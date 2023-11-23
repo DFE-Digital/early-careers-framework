@@ -37,6 +37,7 @@ Rails.application.routes.draw do
     get "/ect-additional-information", to: redirect("https://www.gov.uk/guidance/guidance-for-early-career-teachers-ects-ecf-based-training")
     get "/mentor-additional-information", to: redirect("https://www.gov.uk/guidance/guidance-for-mentors-how-to-support-ecf-based-training")
     get "/school-leader-additional-information", to: redirect("https://www.gov.uk/guidance/guidance-for-schools-how-to-manage-ecf-based-training")
+    get "/core-materials-info", to: redirect("https://support-for-early-career-teachers.education.gov.uk")
 
     get "/:page", action: :show, as: :page
   end

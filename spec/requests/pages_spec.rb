@@ -5,7 +5,7 @@ RSpec.describe "Static pages", type: :request do
     it "renders the correct template" do
       get "/pages/core-materials-info"
 
-      expect(response).to render_template("pages/core_materials_info")
+      expect(response).to redirect_to("https://support-for-early-career-teachers.education.gov.uk")
     end
   end
 
