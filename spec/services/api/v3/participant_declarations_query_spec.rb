@@ -288,7 +288,7 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery do
     end
   end
 
-  describe "#participant_declarations" do
+  describe "#participant_declarations_from" do
     let!(:participant_declaration1) do
       travel_to(3.days.ago) do
         create(
@@ -343,6 +343,15 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery do
     it "returns all declarations passed in from query in the correct order" do
       paginated_query = ParticipantDeclaration.where(cpd_lead_provider: cpd_lead_provider1)
       expect(subject.participant_declarations_from(paginated_query).to_a).to eq([participant_declaration3, participant_declaration1, participant_declaration2])
+    end
+
+    it "preloads expected NPQ associations" do
+      paginated_query = npq_participant_declarations
+      npq_declarations = subject.participant_declarations_from(paginated_query)
+
+      expect(npq_declarations.map { |d| d.association(:outcomes) }).to all(be_loaded)
+      expect(npq_declarations.map { |d| d.association(:participant_profile) }).to all(be_loaded)
+      expect(npq_declarations.map { |d| d.participant_profile.association(:npq_application) }).to all(be_loaded)
     end
 
     context "with a subset of declarations" do
