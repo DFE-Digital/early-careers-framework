@@ -29,7 +29,9 @@ class ApiRequestMiddleware
 
     begin
       if trace_request?
-        ApiRequestJob.perform_async(request_data.stringify_keys, response_data.stringify_keys, status, Time.zone.now.to_s)
+        # dfe_analytics_request_id is explicitly being sent to ApiRequestJob as sidekiq does not share the same locals of the main app
+        # and dfe_analytics_request_id is used to set request_uuid value for analytics events
+        ApiRequestJob.perform_async(request_data.stringify_keys, response_data.stringify_keys, status, Time.zone.now.to_s, RequestLocals.fetch(:dfe_analytics_request_id) { nil })
       end
     rescue StandardError => e
       Rails.logger.warn e.message

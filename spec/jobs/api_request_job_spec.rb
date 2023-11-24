@@ -7,7 +7,7 @@ RSpec.describe ApiRequestJob do
     it "creates a ApiRequest record" do
       Sidekiq::Testing.inline! do
         expect {
-          described_class.new.perform({}, {}, 401, Time.zone.now)
+          described_class.new.perform({}, {}, 401, Time.zone.now, nil)
         }.to change(ApiRequest, :count).by(1)
       end
     end
@@ -18,7 +18,7 @@ RSpec.describe ApiRequestJob do
       token = LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:)
 
       headers = { "HTTP_AUTHORIZATION" => "Bearer #{token}" }
-      described_class.new.perform({ headers: }, {}, 500, Time.zone.now)
+      described_class.new.perform({ headers: }, {}, 500, Time.zone.now, nil)
 
       expect(ApiRequest.find_by(cpd_lead_provider:)).not_to be_nil
       expect(ApiRequest.find_by(cpd_lead_provider:).user_description).to eq "CPD lead provider: Ambition"
@@ -28,7 +28,7 @@ RSpec.describe ApiRequestJob do
       token = EngageAndLearnApiToken.create_with_random_token!
 
       headers = { "HTTP_AUTHORIZATION" => "Bearer #{token}" }
-      described_class.new.perform({ headers: }, {}, 500, Time.zone.now)
+      described_class.new.perform({ headers: }, {}, 500, Time.zone.now, nil)
 
       expect(ApiRequest.find_by(user_description: "Engage and learn application")).not_to be_nil
     end
@@ -40,6 +40,7 @@ RSpec.describe ApiRequestJob do
       { headers: { "this" => "that" }, body: { "that" => "this" }.to_json },
       500,
       Time.zone.now,
+      nil,
     )
 
     api_request = ApiRequest.find_by(request_path: "/api/v1/foo")
@@ -49,7 +50,7 @@ RSpec.describe ApiRequestJob do
   end
 
   it "saves the request method on the api request" do
-    described_class.new.perform({ headers: {}, path: "/api/v1/bar", method: "GET" }, {}, 500, Time.zone.now)
+    described_class.new.perform({ headers: {}, path: "/api/v1/bar", method: "GET" }, {}, 500, Time.zone.now, nil)
 
     expect(ApiRequest.find_by(request_path: "/api/v1/bar").request_method).to eq("GET")
   end
@@ -59,7 +60,7 @@ RSpec.describe ApiRequestJob do
       params: { "foo" => "meh" },
       path: "/api/v1/bar",
       method: "GET",
-    }, {}, 500, Time.zone.now)
+    }, {}, 500, Time.zone.now, nil)
 
     expect(ApiRequest.find_by(request_path: "/api/v1/bar").request_body).to eq("foo" => "meh")
   end
@@ -69,7 +70,7 @@ RSpec.describe ApiRequestJob do
       body: { "foo" => "meh" }.to_json,
       path: "/api/v1/bar",
       method: "POST",
-    }, {}, 500, Time.zone.now)
+    }, {}, 500, Time.zone.now, nil)
 
     expect(ApiRequest.find_by(request_path: "/api/v1/bar").request_body).to eq("foo" => "meh")
   end
@@ -79,7 +80,7 @@ RSpec.describe ApiRequestJob do
       body: { "foo" => "meh" }.to_json,
       path: "/api/v1/bar",
       method: "PUT",
-    }, {}, 500, Time.zone.now)
+    }, {}, 500, Time.zone.now, nil)
 
     expect(ApiRequest.find_by(request_path: "/api/v1/bar").request_body).to eq("foo" => "meh")
   end
@@ -89,7 +90,7 @@ RSpec.describe ApiRequestJob do
       body: "This is not JSON",
       path: "/api/v1/bar",
       method: "POST",
-    }, {}, 500, Time.zone.now)
+    }, {}, 500, Time.zone.now, nil)
 
     expect(ApiRequest.find_by(request_path: "/api/v1/bar").request_body).to eq("error" => "request data did not contain valid JSON")
   end
@@ -99,8 +100,58 @@ RSpec.describe ApiRequestJob do
       body: "",
       path: "/api/v1/bar",
       method: "POST",
-    }, {}, 500, Time.zone.now)
+    }, {}, 500, Time.zone.now, nil)
 
     expect(ApiRequest.find_by(request_path: "/api/v1/bar").request_body).to be_nil
+  end
+
+  context "when the api request is made by a lead provider" do
+    let(:cpd_lead_provider) { create(:cpd_lead_provider, name: "Ambition") }
+    let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
+    let(:headers) { { "HTTP_AUTHORIZATION" => "Bearer #{token}" } }
+
+    let(:request_uuid) { SecureRandom.uuid }
+
+    context "when the dfe_analytics feature is enabled" do
+      before { FeatureFlag.activate(:dfe_analytics) }
+
+      it "saves the request_uuid on the big query event" do
+        expect {
+          described_class.new.perform({
+            headers:,
+            body: { "foo" => "meh" }.to_json,
+            path: "/api/v1/bar",
+            method: "POST",
+          }, {}, 500, Time.zone.now, request_uuid)
+        }.to have_enqueued_job(DfE::Analytics::SendEvents).with(array_including(hash_including("request_uuid" => request_uuid))).on_queue("dfe_analytics")
+      end
+    end
+
+    context "when the dfe_analytics feature is not enabled" do
+      before { FeatureFlag.deactivate(:dfe_analytics) }
+
+      it "does not send events to analytics" do
+        expect {
+          described_class.new.perform({
+            headers:,
+            body: { "foo" => "meh" }.to_json,
+            path: "/api/v1/bar",
+            method: "POST",
+          }, {}, 500, Time.zone.now, request_uuid)
+        }.not_to have_enqueued_job(DfE::Analytics::SendEvents)
+      end
+    end
+  end
+
+  context "when the api request is not made by a lead provider" do
+    it "does not send events to analytics" do
+      expect {
+        described_class.new.perform({
+          body: { "foo" => "meh" }.to_json,
+          path: "/api/v1/bar",
+          method: "POST",
+        }, {}, 500, Time.zone.now, anything)
+      }.not_to have_enqueued_job(DfE::Analytics::SendEvents)
+    end
   end
 end

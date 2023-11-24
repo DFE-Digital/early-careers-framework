@@ -35,7 +35,7 @@ RSpec.describe ApiRequestMiddleware do
       request.get "/api/v1/participants/ecf", params: { foo: "bar" }
 
       expect(ApiRequestJob).to have_received(:perform_async).with(
-        hash_including("path" => "/api/v1/participants/ecf", "params" => { "foo" => "bar" }, "method" => "GET"), anything, 200, anything
+        hash_including("path" => "/api/v1/participants/ecf", "params" => { "foo" => "bar" }, "method" => "GET"), anything, 200, anything, anything
       )
     end
   end
@@ -45,7 +45,7 @@ RSpec.describe ApiRequestMiddleware do
       request.get "/api/v3/participants/ecf", params: { foo: "bar" }
 
       expect(ApiRequestJob).to have_received(:perform_async).with(
-        hash_including("path" => "/api/v3/participants/ecf", "params" => { "foo" => "bar" }, "method" => "GET"), anything, 200, anything
+        hash_including("path" => "/api/v3/participants/ecf", "params" => { "foo" => "bar" }, "method" => "GET"), anything, 200, anything, anything
       )
     end
   end
@@ -55,7 +55,7 @@ RSpec.describe ApiRequestMiddleware do
       request.post "/api/v1/participant-declarations", as: :json, params: { foo: "bar" }.to_json
 
       expect(ApiRequestJob).to have_received(:perform_async).with(
-        hash_including("path" => "/api/v1/participant-declarations", "body" => '{"foo":"bar"}', "method" => "POST"), anything, 200, anything
+        hash_including("path" => "/api/v1/participant-declarations", "body" => '{"foo":"bar"}', "method" => "POST"), anything, 200, anything, anything
       )
     end
   end
