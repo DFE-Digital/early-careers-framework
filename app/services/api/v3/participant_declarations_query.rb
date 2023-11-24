@@ -52,7 +52,7 @@ module Api
         ActiveRecord::Associations::Preloader.new(
           records: scope.select { |p| p.type == "ParticipantDeclaration::NPQ" },
           associations: [:outcomes, { participant_profile: :npq_application }],
-        )
+        ).call
 
         scope
       end
