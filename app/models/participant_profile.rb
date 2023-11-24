@@ -3,7 +3,7 @@
 class ParticipantProfile < ApplicationRecord
   has_paper_trail
 
-  self.ignored_columns = %w[user_id]
+  # self.ignored_columns = %w[user_id]
 
   attr_reader :participant_type
 

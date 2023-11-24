@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ParticipantProfile::ECF < ParticipantProfile
-  self.ignored_columns = %i[school_id]
+  # self.ignored_columns = %i[school_id]
 
   POST_TRANSITIONAL_INDUCTION_START_DATE_DEADLINE = ActiveSupport::TimeZone["London"].local(2021, 9, 1).freeze
   VALID_EVIDENCE_HELD = %w[training-event-attended self-study-material-completed other].freeze

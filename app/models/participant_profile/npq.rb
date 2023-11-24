@@ -37,7 +37,7 @@ class ParticipantProfile::NPQ < ParticipantProfile
     other
   ].freeze
 
-  self.ignored_columns = %i[mentor_profile_id school_cohort_id]
+  # self.ignored_columns = %i[mentor_profile_id school_cohort_id]
   belongs_to :cohort, optional: true
   belongs_to :school, optional: true
   belongs_to :npq_course, optional: true
