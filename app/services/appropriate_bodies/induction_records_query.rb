@@ -14,7 +14,7 @@ module AppropriateBodies
       join = InductionRecord
         .select(Arel.sql("DISTINCT FIRST_VALUE(induction_records.id) OVER (#{latest_induction_record_order}) AS latest_id"))
         .joins(:participant_profile)
-        .where(appropriate_body:)
+        .where(appropriate_body:, participant_profile: { type: ParticipantProfile::ECT })
 
       InductionRecord.distinct
         .joins("JOIN (#{join.to_sql}) AS latest_induction_records ON latest_induction_records.latest_id = induction_records.id")
@@ -29,8 +29,6 @@ module AppropriateBodies
         .select(
           "induction_records.*",
           latest_email_status_per_participant,
-          mentees_count,
-          current_mentees_count,
         )
     end
 
