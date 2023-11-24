@@ -1,8 +1,8 @@
 name: Production DB nightly backup
 on:
   workflow_dispatch:
-    schedule:
-      - cron: "0 3 * * *" # 03:00 UTC
+  schedule:
+    - cron: "0 3 * * *" # 03:00 UTC
 
 jobs:
   backup-production:
