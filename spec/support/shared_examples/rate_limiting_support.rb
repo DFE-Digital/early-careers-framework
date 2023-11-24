@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "dfe/analytics/rspec/matchers"
+
 shared_examples "a rate limited endpoint", rack_attack: true do |desc, period|
   describe desc do
     let(:limit) { 2 }
@@ -29,6 +31,14 @@ shared_examples "a rate limited endpoint", rack_attack: true do |desc, period|
       let(:request_count) { limit + 1 }
 
       it { is_expected.to have_http_status(:too_many_requests) }
+
+      it { expect { perform_request }.not_to have_sent_analytics_event_types(:web_request) }
+
+      context "when the dfe_analytics feature is enabled" do
+        before { FeatureFlag.activate(:dfe_analytics) }
+
+        it { expect { perform_request }.to have_sent_analytics_event_types(:web_request) }
+      end
 
       it "logs a warning" do
         expect(Rails.logger).to have_received(:warn).with(
