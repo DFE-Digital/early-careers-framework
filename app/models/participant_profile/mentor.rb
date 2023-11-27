@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ParticipantProfile::Mentor < ParticipantProfile::ECF
-  self.ignored_columns = %i[mentor_profile_id school_id]
+  # self.ignored_columns = %i[mentor_profile_id school_id]
 
   COURSE_IDENTIFIERS = %w[ecf-mentor].freeze
 
