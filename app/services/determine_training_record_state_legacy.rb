@@ -243,7 +243,7 @@ private
       FROM "induction_records"
       WHERE
           "induction_records"."mentor_profile_id" = '#{participant_profile_id}'
-          AND ("induction_records"."induction_status" = 'active' OR "induction_records"."induction_status" = 'leaving')
+          AND ("induction_records"."induction_status" = 'active' OR ("induction_records"."induction_status" = 'leaving' AND "induction_records"."end_date" > CURRENT_TIMESTAMP))
       GROUP BY
           "induction_records"."mentor_profile_id",
           "induction_records"."participant_profile_id"
