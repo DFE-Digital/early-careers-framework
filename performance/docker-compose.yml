@@ -1,0 +1,112 @@
+version: "3.8"
+
+x-env: &env
+  environment:
+    RAILS_ENV: performance
+    SERVICE_TYPE: web
+
+    DB_HOSTNAME: db
+    DB_USERNAME: postgres
+    DB_PASSWORD: performancepassword
+    DB_DATABASE: early_careers_framework_performance
+    DB_PORT: 5432
+
+    ANALYTICS_DB_HOSTNAME: db
+    ANALYTICS_DB_USERNAME: postgres
+    ANALYTICS_DB_PASSWORD: performancepassword
+    ANALYTICS_DB_DATABASE: early_careers_framework_analytics_performance
+    ANALYTICS_DB_PORT: 5432
+
+    REDIS_CACHE_URL: redis://redis:6379/1
+    REDIS_URL: redis://redis:6379/1
+
+    GOVUK_NOTIFY_API_KEY:
+    DOMAIN: http://web:3000
+    GOVUK_APP_DOMAIN: http://web:3000
+    GOVUK_WEBSITE_ROOT: http://web:3000
+    RAILS_MASTER_KEY: f5767ded8d5ed0a9074a2be2597ce50a
+
+    PERF_TARGET_HOSTNAME: web
+    PERF_TARGET_PORT: 3000
+    PERF_LEAD_PROVIDER_API_TOKEN: performance-api-token
+
+    PERF_NUM_AUTHORITIES: ${PERF_NUM_AUTHORITIES:-10}
+    PERF_NUM_SCHOOLS: ${PERF_NUM_SCHOOLS:-100}
+    PERF_NUM_PARTICIPANTS: ${PERF_NUM_PARTICIPANTS:-10}
+
+    PERF_NUM_VIRTUAL_USERS: ${PERF_NUM_VIRTUAL_USERS:-15}
+    PERF_DURATION: ${PERF_DURATION:-360s}
+
+    PERF_SCENARIO: ${PERF_SCENARIO:-smoke-test}
+    PERF_REPORT_FILE: ${PERF_REPORT_FILE:-k6-output.json}
+
+services:
+  db:
+    image: postgres:11-alpine
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: performancepassword
+    healthcheck:
+      test: pg_isready -U postgres -d early_careers_framework_performance
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    networks:
+      - performance
+
+  redis:
+    image: redis:alpine
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 1s
+      timeout: 3s
+      retries: 30
+    networks:
+      - performance
+
+  web:
+    image: ${IMAGE:-ghcr.io/dfe-digital/early-careers-framework:main}
+    volumes:
+      - ../log:/app/log
+    <<: *env
+    hostname: web
+    ports:
+      - "3000:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - performance
+    command: /bin/sh -c "rm -f tmp/pids/server.pid && bundle exec rails server -b 0.0.0.0"
+
+  seed:
+    image: ${IMAGE:-ghcr.io/dfe-digital/early-careers-framework:main}
+    <<: *env
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - performance
+    command: bundle exec rails db:setup
+
+  k6:
+    image: grafana/k6:latest
+    volumes:
+      - ./:/scripts
+    <<: *env
+    links:
+      - web
+    networks:
+      - performance
+    command: run /scripts/main.js --out json=k6.log
+
+volumes:
+  db_data:
+
+networks:
+  performance:

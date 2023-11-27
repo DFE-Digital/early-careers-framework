@@ -40,6 +40,7 @@ Rails/UnknownEnv:
     - sandbox
     - staging
     - test
+    - performance
 
 Naming/VariableNumber:
   EnforcedStyle: snake_case

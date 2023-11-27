@@ -4,7 +4,7 @@ FactoryBot.define do
   factory(:seed_lead_provider, class: "LeadProvider") do
     name { Faker::Company.name }
 
-    trait(:with_cpd_lead_provider) { association(:cpd_lead_provider, factory: :seed_cpd_lead_provider) }
+    trait(:with_cpd_lead_provider) { association(:cpd_lead_provider, factory: :seed_cpd_lead_provider, name: :name) }
 
     trait(:valid) { with_cpd_lead_provider }
 

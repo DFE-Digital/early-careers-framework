@@ -21,6 +21,8 @@ if ENV["LEGACY_SEEDS"] == "true"
       FeatureFlag.activate(feature)
     end
   end
+elsif Rails.env.performance?
+  load(Rails.root.join(*%w[db new_seeds performance.rb]).to_s)
 else
   load(Rails.root.join(*%w[db new_seeds run.rb]).to_s)
 end

@@ -25,6 +25,7 @@ on:
       - synchronize
       - reopened
       - opened
+      - labeled
 
 jobs:
   lint:
@@ -89,11 +90,36 @@ jobs:
           statuscake-api-token: ${{ secrets.STATUSCAKE_API_TOKEN }}
 
       - name: Post sticky pull request comment
-        if: github.event_name == 'pull_request'
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           message: |
             Review app deployed to ${{ steps.deploy.outputs.url }}
+
+  smoke_test:
+    name: Run Smoke tests
+    concurrency: smoke_tests_${{ github.event.pull_request.number }}
+    if: github.event_name == 'pull_request' && github.event.label.name == 'test-performance'
+    needs: [docker]
+    uses: ./.github/workflows/performance_testing.yml
+    with:
+      scenario: smoke-test
+      docker-image: ${{ needs.docker.outputs.docker-image }}
+      number-authorities: 1
+      number-schools: 1
+      number-participants: 1
+
+  performance_test:
+    name: Test API performance
+    concurrency: test_api_performance_${{ github.event.pull_request.number }}
+    if: github.event_name == 'pull_request' && github.event.label.name == 'test-performance'
+    needs: [docker]
+    uses: ./.github/workflows/performance_testing.yml
+    with:
+      scenario: api-load-test
+      docker-image: ${{ needs.docker.outputs.docker-image }}
+      number-authorities: 10
+      number-schools: 100
+      number-participants: 10
 
   deploy_staging:
     name: Deploy staging
