@@ -3,7 +3,8 @@
 <% if school_cohort.school_chose_cip? && school_cohort.default_induction_programme&.core_induction_programme.blank? %>
   <h2 class="govuk-heading-m">Choose your training materials</h2>
   <p class="govuk-body"><%= govuk_link_to "Tell us which materials you’ll use", info_schools_core_programme_materials_path(cohort_id: school_cohort.cohort.start_year) %></p>
-  <p class="govuk-body">Read our guidance to <%= govuk_link_to 'compare materials (opens in new tab)', page_path(page: "core-materials-info"), target: "_blank" %>.</p>
+  <p class="govuk-body">Read our guidance
+    to <%= govuk_link_to 'compare materials (opens in new tab)', "https://support-for-early-career-teachers.education.gov.uk", target: "_blank" %>.</p>
 <% end %>
 
 <%= govuk_summary_list do |list| %>
@@ -65,7 +66,8 @@
 <% if latest_partnership&.challenged? == false %>
   <% if latest_partnership&.in_challenge_window? %>
     <p class="govuk-body">
-      If your school is not working with this lead provider or delivery partner, <%= govuk_link_to("tell us before #{latest_partnership.challenge_deadline&.to_date&.to_fs(:govuk)}", challenge_partnership_path(partnership: latest_partnership), id: "challenge-partnership-link") %>. 
+      If your school is not working with this lead provider or delivery
+      partner, <%= govuk_link_to("tell us before #{latest_partnership.challenge_deadline&.to_date&.to_fs(:govuk)}", challenge_partnership_path(partnership: latest_partnership), id: "challenge-partnership-link") %>.
     </p>
   <% else %>
     <p class="govuk-body">
