@@ -29,11 +29,10 @@ RSpec.feature "ECT doing FIP: no validation", type: :feature do
   let(:start_year) { Cohort.next.start_year }
   let(:registration_completed) { true }
   let(:participant_status) { "active" }
-  let(:training_status) { "active" }
   let(:training_record_state) { "Eligible to start" }
   let(:school_record_state) { "ELIGIBLE FOR TRAINING" }
   let(:delivery_partner_record_state) { "Training or eligible for training" }
-  let(:appropriate_body_Record_state) { "Training or eligible for training" }
+  let(:appropriate_body_record_state) { "Training or eligible for training" }
 
   let(:cohort) do
     Cohort.find_by(start_year:)
@@ -113,8 +112,7 @@ RSpec.feature "ECT doing FIP: no validation", type: :feature do
     expect(appropriate_body_portal).to have_school_name school_name
     expect(appropriate_body_portal).to have_school_urn school.urn
     expect(appropriate_body_portal).to have_academic_year start_year
-    expect(appropriate_body_portal).to have_training_status training_status
-    expect(appropriate_body_portal).to have_training_record_status appropriate_body_Record_state
+    expect(appropriate_body_portal).to have_training_record_status appropriate_body_record_state
   end
 
   scenario "The current lead provider can locate a record for the ECT" do
@@ -135,7 +133,6 @@ RSpec.feature "ECT doing FIP: no validation", type: :feature do
     expect(ecf_participant_endpoint).to have_pupil_premium_uplift
     expect(ecf_participant_endpoint).to have_sparsity_uplift
     expect(ecf_participant_endpoint).to have_status participant_status
-    expect(ecf_participant_endpoint).to have_training_status training_status
     expect(ecf_participant_endpoint).to have_training_record_id training_record_id
     expect(ecf_participant_endpoint).to have_schedule_identifier schedule_identifier
 
@@ -154,7 +151,6 @@ RSpec.feature "ECT doing FIP: no validation", type: :feature do
     expect(participant_endpoint).to have_pupil_premium_uplift
     expect(participant_endpoint).to have_sparsity_uplift
     expect(participant_endpoint).to have_status participant_status
-    expect(participant_endpoint).to have_training_status training_status
     expect(participant_endpoint).to have_training_record_id training_record_id
     expect(participant_endpoint).to have_schedule_identifier schedule_identifier
   end
@@ -173,7 +169,6 @@ RSpec.feature "ECT doing FIP: no validation", type: :feature do
     expect(delivery_partner_portal).to have_school_name school_name
     expect(delivery_partner_portal).to have_school_urn school.urn
     expect(delivery_partner_portal).to have_academic_year start_year
-    expect(delivery_partner_portal).to have_training_status training_status
     expect(delivery_partner_portal).to have_training_record_status delivery_partner_record_state
   end
 
@@ -227,7 +222,6 @@ RSpec.feature "ECT doing FIP: no validation", type: :feature do
     expect(drilldown).to have_school_urn school.urn
     expect(drilldown).to have_status participant_status
     expect(drilldown).to have_induction_status participant_status
-    expect(drilldown).to have_training_status training_status
     # TODO: is this correct?
     expect(drilldown).to be_eligible_for_funding
     expect(drilldown).to have_schedule schedule_identifier

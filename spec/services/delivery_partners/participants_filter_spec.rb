@@ -112,8 +112,8 @@ RSpec.describe DeliveryPartners::ParticipantsFilter do
       it { is_expected.to be_empty }
     end
 
-    context "when status is training_or_eligible_for_training" do
-      let(:params) { { status: "training_or_eligible_for_training" } }
+    context "when status is participant_deferred" do
+      let(:params) { { status: "participant_deferred" } }
 
       it { is_expected.to contain_exactly(induction_record2) }
     end

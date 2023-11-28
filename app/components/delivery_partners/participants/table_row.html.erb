@@ -24,9 +24,6 @@
     <%= cohort&.start_year %>
   </td>
   <td class="govuk-table__cell">
-    <%= training_status %>
-  </td>
-  <td class="govuk-table__cell">
     <%= render StatusTags::DeliveryPartnerParticipantStatusTag.new(training_record_states[participant_profile.id]) %>
   </td>
 </tr>

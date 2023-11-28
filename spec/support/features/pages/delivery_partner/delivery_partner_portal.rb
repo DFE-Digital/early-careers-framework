@@ -16,7 +16,6 @@ module Pages
       column :school_name
       column :school_urn
       column :academic_year, format: ->(s) { s.to_i }
-      column :training_status
       column :training_record_status, format: ->(s) { s.split("\n")[0] }
     end
 
@@ -59,10 +58,6 @@ module Pages
 
     def has_academic_year?(expected_value)
       has_attribute_value? "academic_year", expected_value.to_i
-    end
-
-    def has_training_status?(expected_value)
-      has_attribute_value? "training_status", expected_value
     end
 
     def has_training_record_status?(expected_value)
