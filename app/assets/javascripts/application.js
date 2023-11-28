@@ -1,5 +1,5 @@
 /* eslint-disable import/first */
-require.context("govuk-frontend/govuk/assets");
+require.context("govuk-frontend/dist/govuk/assets");
 
 document.body.className = document.body.className
   ? `${document.body.className} js-enabled`
