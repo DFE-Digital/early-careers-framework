@@ -1,3 +1,10 @@
+/**
+ * This stylesheet needs to be explicitly included on pages:
+ *
+ * <% content_for :stylesheets do %>
+ *   <%= stylesheet_link_tag 'print', media: 'print' %>
+ * <% end %>
+ */
 @media print {
   // header
   body > header,
