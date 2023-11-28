@@ -44,6 +44,46 @@ RSpec.describe Api::V3::ECF::ParticipantsQuery do
       it "returns all users that belong to a provider" do
         expect(subject.participants_for_pagination).to match_array([user])
       end
+
+      context "when changing schedule on different cohort" do
+        let!(:another_user) { }
+        let!(:user) { participant_profile.user }
+        let(:participant_profile) { create(:ect, lead_provider: cpd_lead_provider.lead_provider) }
+        let(:participant_id) { participant_profile.participant_identity.external_identifier }
+        let(:schedule_identifier) { "ecf-standard-september" }
+        let(:course_identifier) { "ecf-induction" }
+        let(:new_cohort) { Cohort.next }
+        # let!(:new_schedule) { Finance::Schedule::ECF.find_by(schedule_identifier:, cohort: new_cohort) }
+        let!(:new_school_cohort) { create(:school_cohort, :cip, :with_induction_programme, cohort: new_cohort, lead_provider:, school: participant_profile.school) }
+        let(:change_schedule_params) do
+          {
+            cpd_lead_provider:,
+            participant_id:,
+            course_identifier:,
+            schedule_identifier:,
+            cohort: new_cohort.start_year,
+          }
+        end
+
+        it "returns users for the latest cohort only" do
+          # Change schedule from current cohort to new cohort
+          service = ChangeSchedule.new(change_schedule_params)
+          expect(service).to be_valid
+          service.call
+          expect(participant_profile.induction_records.map{|ir| ir.schedule.cohort.start_year }.sort).to eql([cohort.start_year, new_cohort.start_year])
+          # binding.pry
+
+          # Current cohort
+          current_params = { filter: { cohort: cohort.start_year.to_s } }
+          query = described_class.new(lead_provider:, params: current_params)
+          expect(query.participants_for_pagination).to match_array([user])
+
+          # New cohort
+          new_params = { filter: { cohort: new_cohort.start_year.to_s } }
+          query = described_class.new(lead_provider:, params: new_params)
+          expect(query.participants_for_pagination).to match_array([user])
+        end
+      end
     end
 
     describe "with training_status filter" do
