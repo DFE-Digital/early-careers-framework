@@ -7,6 +7,7 @@ class Induction::ChangeMentor < BaseService
                                             changes: { mentor_profile: })
 
       induction_record.participant_profile.update!(mentor_profile:)
+      mentor_profile&.user&.touch
     end
   end
 

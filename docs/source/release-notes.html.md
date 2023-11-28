@@ -7,6 +7,14 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
+## 28 November 2023
+
+We've fixed a bug that meant some providers were having issues finding unfunded mentor IDs in GET participants.
+
+The `updated_at` value of an unfunded mentor now gets touched when the mentor is linked to an ECT.
+
+An API call to the unfunded mentors endpoint filtered for any updates once the link has been made will return the unfunded mentor in the response.
+
 ## 9 November 2023
 
 We're trialing new functionality in the API v3 sandbox which allows lead providers to add a participant's schedule when accepting NPQ applications.
