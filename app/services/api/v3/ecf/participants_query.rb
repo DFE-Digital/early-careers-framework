@@ -62,14 +62,9 @@ module Api
         end
 
         def latest_induction_records_join
-          # InductionRecord
-          #   .select("induction_records.id AS latest_id")
-          #   .joins("JOIN (#{super.to_sql}) AS latest_induction_records_join ON latest_induction_records_join.latest_id = induction_records.id")
-          #   .joins(:schedule)
-          #   .where(
-          #     schedule: { cohort_id: cohorts.map(&:id) },
-          #   )
-          super
+          InductionRecord
+            .select("induction_records.id AS latest_id")
+            .joins("JOIN (#{super.to_sql}) AS latest_induction_records_join ON latest_induction_records_join.latest_id = induction_records.id")
             .joins(:schedule)
             .where(
               schedule: { cohort_id: cohorts.map(&:id) },

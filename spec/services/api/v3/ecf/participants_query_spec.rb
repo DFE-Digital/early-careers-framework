@@ -83,7 +83,7 @@ RSpec.describe Api::V3::ECF::ParticipantsQuery do
           # Current cohort
           current_params = { filter: { cohort: cohort.start_year.to_s } }
           query = described_class.new(lead_provider:, params: current_params)
-          expect(query.participants_for_pagination).to match_array([user])
+          expect(query.participants_for_pagination).to match_array([]) # without the fix this returns user
 
           # New cohort
           new_params = { filter: { cohort: new_cohort.start_year.to_s } }
