@@ -21,7 +21,7 @@
     "css-minimizer-webpack-plugin": "^3.4.1",
     "es6-promise": "^4.2.8",
     "file-loader": "^6.2.0",
-    "govuk-frontend": "^4.7.0",
+    "govuk-frontend": "5.0.0-beta.2",
     "mini-css-extract-plugin": "^2.7.6",
     "nunjucks": "^3.2.4",
     "sass": "^1.69.4",
