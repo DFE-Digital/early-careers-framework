@@ -46,14 +46,17 @@ RSpec.describe Api::V3::ECF::ParticipantsQuery do
       end
 
       context "when changing schedule on different cohort" do
+        let(:participant_identity) { create(:participant_identity) }
+        let!(:user) { participant_identity.user }
         let!(:another_user) { }
-        let!(:user) { participant_profile.user }
-        let(:participant_profile) { create(:ect, lead_provider: cpd_lead_provider.lead_provider) }
+        let(:lead_provider) { cpd_lead_provider.lead_provider  }
+        let(:participant_profile) { create(:ect, lead_provider:, user:) }
         let(:participant_id) { participant_profile.participant_identity.external_identifier }
         let(:schedule_identifier) { "ecf-standard-september" }
         let(:course_identifier) { "ecf-induction" }
-        let(:new_cohort) { Cohort.next }
-        # let!(:new_schedule) { Finance::Schedule::ECF.find_by(schedule_identifier:, cohort: new_cohort) }
+        let!(:schedule) { Finance::Schedule::ECF.find_by(schedule_identifier: "ecf-standard-september") }
+        let(:new_cohort) { Cohort.previous }
+        let!(:new_schedule) { Finance::Schedule::ECF.find_by(schedule_identifier:, cohort: new_cohort) }
         let!(:new_school_cohort) { create(:school_cohort, :cip, :with_induction_programme, cohort: new_cohort, lead_provider:, school: participant_profile.school) }
         let(:change_schedule_params) do
           {
@@ -65,12 +68,16 @@ RSpec.describe Api::V3::ECF::ParticipantsQuery do
           }
         end
 
+        before do
+          new_school_cohort.update_column(:default_induction_programme_id, induction_programme.id)
+        end
+
         it "returns users for the latest cohort only" do
           # Change schedule from current cohort to new cohort
           service = ChangeSchedule.new(change_schedule_params)
           expect(service).to be_valid
           service.call
-          expect(participant_profile.induction_records.map{|ir| ir.schedule.cohort.start_year }.sort).to eql([cohort.start_year, new_cohort.start_year])
+          expect(participant_profile.induction_records.map{|ir| ir.schedule.cohort.start_year }.sort).to match_array([cohort.start_year, new_cohort.start_year])
           # binding.pry
 
           # Current cohort
