@@ -5,6 +5,7 @@ require "rails_helper"
 RSpec.describe ApplicationHelper, type: :helper do
   include Devise::Test::ControllerHelpers
   include GovukLinkHelper
+  include GovukVisuallyHiddenHelper
 
   let(:admin_user) { create(:user, :admin) }
   let(:induction_coordinator) { create(:user, :induction_coordinator) }
@@ -134,7 +135,7 @@ RSpec.describe ApplicationHelper, type: :helper do
     it "renders a HTML link to print/save via the built-in browser functionality" do
       is_expected.to eq(
         <<~HTML.chomp,
-          <a onclick="window.formattedPrint(this)" data-filename="My Document" class="govuk-link" href="javascript:void(0)">Save as PDF</a>
+          <a class="govuk-link" onclick="window.formattedPrint(this)" data-filename="My Document" href="javascript:void(0)">Save as PDF</a>
         HTML
       )
     end

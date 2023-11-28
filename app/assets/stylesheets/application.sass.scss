@@ -2,7 +2,7 @@ $govuk-images-path: "";
 $govuk-fonts-path: "";
 $govuk-new-link-styles: true;
 
-@import "govuk-frontend/govuk/all";
+@import "govuk-frontend/dist/govuk/all";
 @import "accessible-autocomplete/src/autocomplete";
 
 @import "notification_banner";

@@ -60,7 +60,7 @@ RSpec.describe "Show ECF statement", :js do
 
       when_i_visit_the_ecf_financial_statements_page
 
-      then_i_do_not_see("Authorised for payment at #{statement.marked_as_paid_at.in_time_zone('London').strftime('%-I:%M%P on %-e %b %Y')}".upcase)
+      then_i_do_not_see("Authorised for payment at #{statement.marked_as_paid_at.in_time_zone('London').strftime('%-I:%M%P on %-e %b %Y')}")
     end
 
     scenario "successfully authorised", perform_jobs: true do
@@ -83,7 +83,7 @@ RSpec.describe "Show ECF statement", :js do
 
       when_i_visit_the_ecf_financial_statements_page
 
-      then_i_see("Authorised for payment at #{Finance::Statement.find(statement.id).marked_as_paid_at.in_time_zone('London').strftime('%-I:%M%P on %-e %b %Y')}".upcase)
+      then_i_see("Authorised for payment at #{Finance::Statement.find(statement.id).marked_as_paid_at.in_time_zone('London').strftime('%-I:%M%P on %-e %b %Y')}")
     end
 
     scenario "missing doing assurance checks" do

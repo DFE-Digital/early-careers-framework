@@ -39,7 +39,7 @@
             row.with_cell(text: participant_profile.duplicate_profile_count - 1)
             row.with_cell(text: participant_profile.declaration_count)
             row.with_cell do
-              govuk_link_to "View duplicates", finance_ecf_duplicate_path(participant_profile), { class: govuk_link_classes }
+              govuk_link_to "View duplicates", finance_ecf_duplicate_path(participant_profile), class: govuk_link_classes
             end
           end
         end

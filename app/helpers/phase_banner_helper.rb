@@ -4,7 +4,7 @@ module PhaseBannerHelper
   def phase_banner_tag_text(env = Rails.env)
     return "Beta" if env == "production"
 
-    env
+    env.capitalize
   end
 
   def phase_banner_tag_colour(env = Rails.env)
