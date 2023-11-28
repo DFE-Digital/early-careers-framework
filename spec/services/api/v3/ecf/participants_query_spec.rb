@@ -48,8 +48,8 @@ RSpec.describe Api::V3::ECF::ParticipantsQuery do
       context "when changing schedule on different cohort" do
         let(:participant_identity) { create(:participant_identity) }
         let!(:user) { participant_identity.user }
-        let!(:another_user) { }
-        let(:lead_provider) { cpd_lead_provider.lead_provider  }
+        let!(:another_user) {}
+        let(:lead_provider) { cpd_lead_provider.lead_provider }
         let(:participant_profile) { create(:ect, lead_provider:, user:) }
         let(:participant_id) { participant_profile.participant_identity.external_identifier }
         let(:schedule_identifier) { "ecf-standard-september" }
@@ -77,7 +77,7 @@ RSpec.describe Api::V3::ECF::ParticipantsQuery do
           service = ChangeSchedule.new(change_schedule_params)
           expect(service).to be_valid
           service.call
-          expect(participant_profile.induction_records.map{|ir| ir.schedule.cohort.start_year }.sort).to match_array([cohort.start_year, new_cohort.start_year])
+          expect(participant_profile.induction_records.map { |ir| ir.schedule.cohort.start_year }.sort).to match_array([cohort.start_year, new_cohort.start_year])
           # binding.pry
 
           # Current cohort
