@@ -808,20 +808,20 @@ module ManageTrainingSteps
     choose(@participant_profile_mentor.full_name.to_s, allow_label_click: true)
   end
 
-  def when_i_add_ect_name
-    fill_in "What’s this ECT’s full name?", with: @participant_data[:full_name]
+  def when_i_add_ect_name(full_name: @participant_data[:full_name])
+    fill_in "What’s this ECT’s full name?", with: full_name
   end
 
-  def when_i_add_mentor_name
-    fill_in "What’s this mentor’s full name?", with: @participant_data[:full_name]
+  def when_i_add_mentor_name(full_name: @participant_data[:full_name])
+    fill_in "What’s this mentor’s full name?", with: full_name
   end
 
-  def when_i_add_ect_or_mentor_email
-    fill_in "What’s #{@participant_data[:full_name]}’s email address?", with: @participant_data[:email]
+  def when_i_add_ect_or_mentor_email(full_name: @participant_data[:full_name], email: @participant_data[:email])
+    fill_in "What’s #{full_name}’s email address?", with: email
   end
 
   def when_i_add_sits_email
-    fill_in "What’s #{@participant_data[:full_name]}’s email address?", with: @induction_coordinator_profile.user.email
+    when_i_add_ect_or_mentor_email(full_name: @induction_coordinator_profile.user.full_name, email: @induction_coordinator_profile.user.email)
   end
 
   def when_i_add_ect_or_mentor_nino_for(name)
@@ -851,16 +851,23 @@ module ManageTrainingSteps
     click_on "Continue"
   end
 
-  def when_i_add_the_trn
-    fill_in "What’s #{@participant_data[:full_name]}’s teacher reference number (TRN)?", with: @participant_data[:trn]
+  def when_i_add_the_trn(full_name: @participant_data[:full_name], trn: @participant_data[:trn])
+    fill_in "What’s #{full_name}’s teacher reference number (TRN)?", with: trn
   end
 
   def when_i_add_my_trn
     fill_in "What’s your teacher reference number (TRN)?", with: @sit_data[:trn]
   end
 
-  def when_i_add_a_date_of_birth
-    legend = "What’s #{@participant_data[:full_name]}’s date of birth?"
+  def when_i_add_a_date_of_birth(full_name: @participant_data[:full_name])
+    legend = "What’s #{full_name}’s date of birth?"
+    date = @participant_data[:date_of_birth]
+
+    fill_in_date(legend, with: date)
+  end
+
+  def when_i_add_sits_date_of_birth
+    legend = "What’s #{@induction_coordinator_profile.user.full_name}’s date of birth?"
     date = @participant_data[:date_of_birth]
 
     fill_in_date(legend, with: date)
@@ -996,8 +1003,8 @@ module ManageTrainingSteps
   end
   alias_method :and_i_see_the_participants_sorted_by_induction_start_date, :then_i_see_the_participants_sorted_by_induction_start_date
 
-  def then_i_see_the_sit_name
-    expect(page).to have_text(@induction_coordinator_profile.user.full_name)
+  def then_i_see_the_participant_name(full_name: @participant_data[:full_name])
+    expect(page).to have_text(full_name)
   end
 
   def then_i_am_taken_to_manage_your_training_page
@@ -1079,8 +1086,12 @@ module ManageTrainingSteps
     expect(page).to have_selector("h1", text: "What’s #{@participant_data[:full_name]}’s National Insurance number?")
   end
 
-  def then_i_am_taken_to_add_ect_or_mentor_email_page
-    expect(page).to have_selector("h1", text: "What’s #{@participant_data[:full_name]}’s email address?")
+  def then_i_am_taken_to_add_ect_or_mentor_email_page(full_name: @participant_data[:full_name])
+    expect(page).to have_selector("h1", text: "What’s #{full_name}’s email address?")
+  end
+
+  def then_i_am_taken_to_add_sits_email_page
+    expect(page).to have_selector("h1", text: "What’s #{@induction_coordinator_profile.user.full_name}’s email address?")
   end
 
   def then_i_am_taken_to_change_mentor_name_page
@@ -1160,8 +1171,13 @@ module ManageTrainingSteps
     expect(page).to have_selector("h1", text: "Do you know #{@updated_participant_data[:full_name]}’s teacher reference number (TRN)?")
   end
 
-  def then_i_am_taken_to_add_teachers_trn_page
-    expect(page).to have_selector("h1", text: "What’s #{@participant_data[:full_name]}’s teacher reference number (TRN)?")
+  def then_i_am_taken_to_add_teachers_trn_page(full_name: @participant_data[:full_name])
+    expect(page).to have_selector("h1", text: "What’s #{full_name}’s teacher reference number (TRN)?")
+    expect(page).to have_text("This unique ID:")
+  end
+
+  def then_i_am_taken_to_add_sits_trn_page
+    expect(page).to have_selector("h1", text: "What’s #{@induction_coordinator_profile.user.full_name}’s teacher reference number (TRN)?")
     expect(page).to have_text("This unique ID:")
   end
 
@@ -1174,8 +1190,8 @@ module ManageTrainingSteps
     expect(page).to have_selector("h1", text: "What’s your date of birth?")
   end
 
-  def then_i_am_taken_to_add_date_of_birth_page
-    expect(page).to have_selector("h1", text: "What’s #{@participant_data[:full_name]}’s date of birth?")
+  def then_i_am_taken_to_add_date_of_birth_page(full_name: @participant_data[:full_name])
+    expect(page).to have_selector("h1", text: "What’s #{full_name}’s date of birth?")
   end
 
   def then_i_am_taken_to_choose_start_date_page
@@ -1307,12 +1323,8 @@ module ManageTrainingSteps
     expect(page).to have_selector("h1", text: "When will #{@participant_data[:full_name]} start their mentor training?")
   end
 
-  def then_i_am_taken_to_choose_sit_partnership_page
-    expect(page).to have_selector("h1", text: "Who will #{@induction_coordinator_profile.full_name} do their mentor training with?")
-  end
-
-  def then_i_am_taken_to_choose_mentor_partnership_page
-    expect(page).to have_selector("h1", text: "Who will #{@participant_data[:full_name]} do their mentor training with?")
+  def then_i_am_taken_to_choose_mentor_partnership_page(full_name: @participant_data[:full_name])
+    expect(page).to have_selector("h1", text: "Who will #{full_name} do their mentor training with?")
   end
 
   def then_i_am_taken_to_sit_mentor_start_training_page

@@ -21,7 +21,7 @@ module Schools
                :was_withdrawn_participant?, :complete?, :start_date, :start_term, :last_visited_step,
                :ect_mentor?, :join_school_programme, :join_school_programme?, :join_participant_cohort_school_programme?,
                :join_current_cohort_school_programme?, :current_providers?, :previous_providers?, :providers_chosen?,
-               to: :data_store
+               :full_name, to: :data_store
 
       def initialize(current_step:, data_store:, current_user:, school:, submitted_params: {})
         @current_user = current_user
@@ -74,14 +74,6 @@ module Schools
           "ECT"
         else
           "Mentor"
-        end
-      end
-
-      def full_name
-        if sit_mentor?
-          current_user.full_name
-        else
-          data_store.full_name
         end
       end
 

@@ -11,7 +11,7 @@
     <h1 class="govuk-heading-l"><%= title %></h1>
 
     <p class="govuk-body govuk-!-margin-bottom-7">
-      Our records show this person is already registered on an ECF-based training progamme at a different school.
+      Our records show this person is already registered on an ECF-based training programme at a different school.
     </p>
 
     <%= form_with model: @wizard.form, url: url_for(action: :update), scope: @wizard.form_scope, method: :put do |f| %>

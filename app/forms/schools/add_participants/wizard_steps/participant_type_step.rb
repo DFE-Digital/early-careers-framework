@@ -15,11 +15,7 @@ module Schools
         end
 
         def next_step
-          if participant_type == "self"
-            :yourself
-          else
-            :what_we_need
-          end
+          :what_we_need
         end
       end
     end
