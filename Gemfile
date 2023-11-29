@@ -55,7 +55,7 @@ gem "mail-notify", "~> 1.2"
 # do not rely on host's timezone data, which can be inconsistent
 gem "tzinfo-data"
 
-gem "govuk-components", "~> 5.0.0b3"
+gem "govuk-components", "~> 5.0.0b4"
 gem "govuk_design_system_formbuilder", "~> 4.1.1"
 gem "view_component", require: "view_component/engine"
 
