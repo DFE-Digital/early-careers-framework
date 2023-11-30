@@ -19,6 +19,9 @@ gem "sentry-rails", "~> 5.13"
 gem "sentry-ruby", "~> 5.13"
 gem "sentry-sidekiq"
 
+# Support queries
+gem "zendesk_api"
+
 gem "secure_headers"
 
 # Cleaner logs, one line per request

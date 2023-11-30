@@ -1,0 +1,47 @@
+# frozen_string_literal: true
+
+class SupportController < ApplicationController
+  before_action :authenticate_user!
+
+  def new
+    @form = SupportForm.new(new_params)
+  end
+
+  def create
+    @form = SupportForm.new(create_params)
+
+    if @form.valid? && @form.save
+      flash[:success] = { title: "Success", content: "Your support request has been submitted, our support team will get back to you shortly." }
+      redirect_back fallback_location: root_path
+    else
+      render :new
+    end
+  end
+
+private
+
+  attr_reader :form
+
+  helper_method :subject, :form
+
+  def subject
+    params[:subject]
+  end
+
+  def participant_profile_id
+    params[:participant_profile_id]
+  end
+
+  def new_params
+    {
+      participant_profile_id:,
+      school_id: params[:school_id],
+      current_user:,
+      subject:,
+    }
+  end
+
+  def create_params
+    params.require(:support_form).permit(:subject, :participant_profile_id, :school_id, :message).merge(current_user:)
+  end
+end

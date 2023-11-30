@@ -120,12 +120,19 @@
       <% end %>
 
       <% if @induction_record.enrolled_in_fip? %>
-        <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
+        <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key">
             Lead provider
           </dt>
+
           <dd class="govuk-summary-list__value">
             <%= @induction_record.lead_provider_name %>
+          </dd>
+
+          <dd class="govuk-summary-list__actions">
+            <%= govuk_link_to(support_path(participant_profile_id: @profile.id, school_id: @school.id, subject: :"change-participant-lead-provider")) do %>
+              <%= 'Change' %> <span class="govuk-visually-hidden"> Lead provider</span>
+            <% end %>
           </dd>
         </div>
 

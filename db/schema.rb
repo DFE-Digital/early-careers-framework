@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_24_151523) do
+ActiveRecord::Schema[7.0].define(version: 2023_11_13_161634) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "fuzzystrmatch"
@@ -134,7 +134,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_24_151523) do
     t.index ["start_year"], name: "index_cohorts_on_start_year", unique: true
   end
 
-  create_table "cohorts_lead_providers", force: :cascade do |t|
+  create_table "cohorts_lead_providers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "lead_provider_id", null: false
     t.uuid "cohort_id", null: false
     t.datetime "created_at", null: false
@@ -1034,6 +1034,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_24_151523) do
     t.index ["cpd_lead_provider_id"], name: "index_statements_on_cpd_lead_provider_id"
   end
 
+  create_table "support_queries", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id"
+    t.integer "zendesk_ticket_id"
+    t.string "subject", null: false
+    t.string "message", null: false
+    t.jsonb "additional_information", default: {}, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_support_queries_on_user_id"
+  end
+
   create_table "sync_dqt_induction_start_date_errors", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "participant_profile_id", null: false
     t.text "message"
@@ -1179,6 +1190,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_24_151523) do
   add_foreign_key "school_mentors", "participant_profiles"
   add_foreign_key "school_mentors", "schools"
   add_foreign_key "schools", "networks"
+  add_foreign_key "support_queries", "users"
   add_foreign_key "sync_dqt_induction_start_date_errors", "participant_profiles"
   add_foreign_key "teacher_profiles", "schools"
   add_foreign_key "teacher_profiles", "users"
