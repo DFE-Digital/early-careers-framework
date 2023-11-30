@@ -1184,7 +1184,7 @@ module NewSeeds
               .build
               .with_validation_data
               .with_eligibility
-              .with_induction_record(induction_programme:, mentor_profile: builder.participant_profile, induction_status: "leaving", start_date: 1.day.ago, end_date: Time.zone.now)
+              .with_induction_record(induction_programme:, mentor_profile: builder.participant_profile, induction_status: "leaving", start_date: 1.week.ago, end_date: 1.day.ago)
 
             builder
           end
