@@ -19,7 +19,7 @@ protected
       EXISTS (
         SELECT 1 FROM induction_records as cmir
           WHERE cmir.mentor_profile_id = induction_records.participant_profile_id
-            AND (cmir.induction_status = 'active' OR cmir.induction_status = 'leaving')
+            AND (cmir.induction_status = 'active' OR (cmir.induction_status = 'leaving' AND cmir.end_date > CURRENT_TIMESTAMP))
         ) AS transient_current_mentees
     SQL
   end
