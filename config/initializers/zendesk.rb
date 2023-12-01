@@ -3,8 +3,8 @@
 require "zendesk_api"
 
 Rails.application.config.zendesk_client = ZendeskAPI::Client.new do |config|
-  config.url = ENV.fetch("ZENDESK_URL", "https://teachercpdhelp.zendesk.com/api/v2")
-  config.username = ENV.fetch("ZENDESK_USERNAME", nil)
-  config.token = ENV.fetch("ZENDESK_TOKEN", nil)
+  config.url = Rails.application.config.zendesk_url
+  config.username = Rails.application.config.zendesk_username
+  config.token = Rails.application.config.zendesk_token
   config.raise_error_when_rate_limited = true
 end

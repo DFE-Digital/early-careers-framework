@@ -56,6 +56,10 @@ Rails.application.configure do
   config.gias_api_user = "gias-user"
   config.gias_api_password = "gias-password"
 
+  config.zendesk_url = "https://www.example.com"
+  config.zendesk_username = "zendesk-username"
+  config.zendesk_token = "zendesk-token"
+
   config.action_mailer.default_url_options = { host: "localhost", port: 3000 }
 
   # Print deprecation notices to the stderr.
