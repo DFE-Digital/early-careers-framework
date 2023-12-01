@@ -23,6 +23,7 @@ gem "sentry-sidekiq"
 gem "zendesk_api"
 
 gem "secure_headers"
+gem "omniauth"
 
 # Cleaner logs, one line per request
 gem "lograge", "~> 0.14.0"
@@ -30,6 +31,7 @@ gem "logstash-event"
 
 # Use postgresql as the database for Active Record
 gem "pg", "~> 1.5"
+gem "pg_search"
 
 # Use UUIDs as db primary key by default
 gem "ar-uuid", "~> 0.2.3"
