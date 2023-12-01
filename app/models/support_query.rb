@@ -101,7 +101,7 @@ private
   end
 
   def school_additional_information
-    return "No School Provided" if school.blank?
+    return "No school provided" if school.blank?
 
     <<~BODY
       URN: #{school.urn}
@@ -110,7 +110,7 @@ private
   end
 
   def participant_profile_additional_information
-    return "No Participant profile Provided" if participant_profile.blank?
+    return "No participant profile provided" if participant_profile.blank?
 
     <<~BODY
       ID: #{participant_profile.id}
