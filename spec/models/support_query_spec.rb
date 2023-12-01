@@ -56,10 +56,10 @@ RSpec.describe SupportQuery, type: :model do
           Email: #{support_query.user.email}
 
           School:
-          No School Provided
+          No school provided
 
           Participant Profile:
-          No Participant profile Provided
+          No participant profile provided
 
         BODY
       )
