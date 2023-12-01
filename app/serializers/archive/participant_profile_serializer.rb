@@ -28,12 +28,16 @@ module Archive
     attribute :notes
     attribute :created_at
 
-    attribute :induction_record_ids do |participant_profile|
-      participant_profile.induction_records.map do |induction_record|
-        {
-          id: induction_record.id,
-        }
-      end
+    attribute :induction_records do |participant_profile|
+      InductionRecordSerializer.new(participant_profile.induction_records).serializable_hash[:data]
+    end
+
+    attribute :participant_declarations do |participant_profile|
+      ParticipantDeclarationSerializer.new(participant_profile.participant_declarations).serializable_hash[:data]
+    end
+
+    attribute :participant_profile_states do |participant_profile|
+      ParticipantProfileStateSerializer.new(participant_profile.participant_profile_states).serializable_hash[:data]
     end
   end
 end

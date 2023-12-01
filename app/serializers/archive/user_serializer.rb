@@ -28,24 +28,6 @@ module Archive
       ParticipantProfileSerializer.new(user.participant_profiles).serializable_hash[:data]
     end
 
-    attribute :induction_records do |user|
-      user.participant_profiles.map { |participant_profile|
-        InductionRecordSerializer.new(participant_profile.induction_records).serializable_hash[:data]
-      }.flatten
-    end
-
-    attribute :participant_declarations do |user|
-      user.participant_profiles.map { |participant_profile|
-        ParticipantDeclarationSerializer.new(participant_profile.participant_declarations).serializable_hash[:data]
-      }.flatten
-    end
-
-    attribute :participant_profile_states do |user|
-      user.participant_profiles.map { |participant_profile|
-        ParticipantProfileStateSerializer.new(participant_profile.participant_profile_states).serializable_hash[:data]
-      }.flatten
-    end
-
     attribute :npq_applications do |user|
       NPQApplicationSerializer.new(user.npq_applications).serializable_hash[:data]
     end
