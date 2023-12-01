@@ -19,6 +19,13 @@ class SupportQuery < ApplicationRecord
   def sync_to_support_queue
     return zendesk_ticket_id if zendesk_ticket_id.present?
 
+    # If we can assign it to a user for the submitter then the first message
+    # should be public, as if its from them
+    # Otherwise, we should make it private to make it clear that the user
+    # attached to it is not the user making the request since it will fallback
+    # to the API's logged in user
+    initial_comment_from_user = zendesk_user.present?
+
     ticket = ZendeskAPI::Ticket.create!(
       client,
       submitter_id: zendesk_user&.id,
@@ -26,6 +33,7 @@ class SupportQuery < ApplicationRecord
       subject: localised_subject,
       comment: {
         body: comment_body,
+        public: initial_comment_from_user,
       },
       tags: ["ecf-web-form-support-query", "ecf-web-form-support-query-#{subject}"],
     )
@@ -64,12 +72,14 @@ private
   end
 
   def zendesk_user
-    searched_user = client.users.search(query: "email:#{user.email}").first
-    return searched_user if searched_user.email == user.email
+    @zendesk_user ||= begin
+      searched_user = client.users.search(query: "email:#{user.email}").first
+      return searched_user if searched_user.present? && searched_user.email == user.email
 
-    client.users.create!(name: user.full_name, email: user.email)
-  rescue StandardError
-    nil
+      client.users.create!(name: user.full_name, email: user.email)
+    rescue StandardError
+      nil
+    end
   end
 
   def school_id
