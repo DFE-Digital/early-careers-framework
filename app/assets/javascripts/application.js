@@ -1,9 +1,7 @@
 /* eslint-disable import/first */
 require.context("govuk-frontend/dist/govuk/assets");
 
-document.body.className = document.body.className
-  ? `${document.body.className} js-enabled`
-  : "js-enabled";
+document.body.className += ' js-enabled' + ('noModule' in HTMLScriptElement.prototype ? ' govuk-frontend-supported' : '');
 
 // External dependencies
 import "es6-promise/auto";
