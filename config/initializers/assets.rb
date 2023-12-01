@@ -7,7 +7,7 @@
 Rails.application.config.assets.paths << Rails.root.join("node_modules/govuk-frontend/dist/govuk/assets/images")
 
 # Add the GOVUK Frontend fonts path
-Rails.application.config.assets.paths << Rails.root.join("node_modules/govuk-frontend/dist/gov/assets/fonts")
+Rails.application.config.assets.paths << Rails.root.join("node_modules/govuk-frontend/dist/govuk/assets/fonts")
 
 # Add Yarn node_modules folder to the asset load path.
 Rails.application.config.assets.paths << Rails.root.join("node_modules")
