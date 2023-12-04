@@ -3,7 +3,7 @@
 class Induction::MigrateParticipantsToNewProgramme < BaseService
   def call
     ActiveRecord::Base.transaction do
-      from_programme.induction_records.each do |induction_record|
+      from_programme.active_induction_records.each do |induction_record|
         # this will duplicate the induction record and set the new programme
         Induction::ChangeInductionRecord.call(induction_record:,
                                               changes: { induction_programme_id: to_programme.id })
