@@ -23,8 +23,6 @@
     <%= favicon_link_tag image_path('govuk-icon-mask.svg'), rel: 'mask-icon', color: "#0b0c0c", type: nil %>
     <%= favicon_link_tag image_path('govuk-icon-180.png'), rel: 'apple-touch-icon', type: nil %>
     <%= stylesheet_link_tag 'application', media: 'all' %>
-    <%= javascript_include_tag *javascript_tag_args, defer: true unless params[:nojs] == "nojs" %>
-
     <script>
       dataLayer = <%= data_layer.to_json.html_safe %>;
     </script>
@@ -57,6 +55,7 @@
   </head>
 
   <body class="govuk-template__body">
+    <script>document.body.className += ' js-enabled' + ('noModule' in HTMLScriptElement.prototype ? ' govuk-frontend-supported' : '');</script>
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-N58Z5PG"
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
@@ -98,5 +97,6 @@
     <%= yield %>
 
     <%= render "layouts/footer" %>
+    <%= javascript_include_tag *javascript_tag_args, defer: true unless params[:nojs] == "nojs" %>
   </body>
 </html>

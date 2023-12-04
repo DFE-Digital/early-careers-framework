@@ -1,8 +1,6 @@
 /* eslint-disable import/first */
 require.context("govuk-frontend/dist/govuk/assets");
 
-document.body.className += ' js-enabled' + ('noModule' in HTMLScriptElement.prototype ? ' govuk-frontend-supported' : '');
-
 // External dependencies
 import "es6-promise/auto";
 import "whatwg-fetch";
