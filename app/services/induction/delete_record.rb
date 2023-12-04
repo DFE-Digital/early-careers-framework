@@ -1,15 +1,16 @@
 # frozen_string_literal: true
 
 # This service class has all the logic needed to delete
-# individual induction records and update the end_dates
-# to maintain the induction record history
+# individual induction records in the middle of an induction
+# records history
 class Induction::DeleteRecord < BaseService
   def call
     ActiveRecord::Base.transaction do
+      return unless deletable_record?
+
       update_previous_record
       delete_induction_record
     end
-    nil
   end
 
 private
@@ -20,18 +21,18 @@ private
     @induction_record = induction_record
   end
 
+  # Allow only records in the middle of the induction records
+  # history to be deleted
+  def deletable_record?
+    previous_record && next_record
+  end
+
   def delete_induction_record
     induction_record.destroy
   end
 
   def update_previous_record
-    return unless previous_record
-
-    if next_record
-      previous_record.update!(end_date: next_record.start_date)
-    else
-      previous_record.update!(end_date: nil)
-    end
+    previous_record.update!(end_date: next_record.start_date)
   end
 
   def previous_record
@@ -43,7 +44,10 @@ private
   end
 
   def participant_induction_records
-    induction_record.participant_profile.induction_records.order(start_date: :desc, created_at: :desc)
+    induction_record
+      .participant_profile
+      .induction_records
+      .order(start_date: :desc, created_at: :desc)
   end
 
   def induction_record_index
