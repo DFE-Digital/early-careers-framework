@@ -44,7 +44,7 @@
 
       sl.with_row do |row|
         row.with_key(text: "Training record state")
-        row.with_value(text: govuk_tag(text: @participant_presenter.relevant_induction_record&.training_status.capitalize || "No Induction Record Found", colour: "grey"))
+        row.with_value(text: govuk_tag(text: @participant_presenter.relevant_induction_record&.training_status&.capitalize || "No Induction Record Found", colour: "grey"))
       end
     end %>
   <% end %>
@@ -128,7 +128,7 @@ end %>
 <%= govuk_summary_list(actions: true) do |sl|
   sl.with_row do |row|
     row.with_key(text: "induction status")
-    row.with_value(text: govuk_tag(text: @participant_presenter.relevant_induction_record&.induction_status.capitalize || "No Induction Record Found", colour: "grey"))
+    row.with_value(text: govuk_tag(text: @participant_presenter.relevant_induction_record&.induction_status&.capitalize || "No Induction Record Found", colour: "grey"))
     if allowed_to_change_induction_status?(@participant_presenter)
       row.with_action(
         href: edit_admin_participant_change_induction_status_path(@participant_presenter.participant_profile),
@@ -139,7 +139,7 @@ end %>
 
   sl.with_row do |row|
     row.with_key(text: "training status")
-    row.with_value(text: govuk_tag(text: @participant_presenter.relevant_induction_record&.training_status.capitalize || "No Induction Record Found", colour: "grey"))
+    row.with_value(text: govuk_tag(text: @participant_presenter.relevant_induction_record&.training_status&.capitalize || "No Induction Record Found", colour: "grey"))
   end
 end %>
 
@@ -147,13 +147,13 @@ end %>
 <%= govuk_summary_list(actions: true) do |sl|
   sl.with_row do |row|
     row.with_key(text: "status")
-    row.with_value(text: govuk_tag(text: @participant_presenter.participant_profile.status.capitalize, colour: "grey") +
+    row.with_value(text: govuk_tag(text: @participant_presenter.participant_profile.status&.capitalize, colour: "grey") +
       "<p class=\"govuk-body-s\">A historical status used if the induction_records induction_status is not set. Note: a status of Withdrawn indicates a 'soft delete' of this record.</p>".html_safe)
   end
 
   sl.with_row do |row|
     row.with_key(text: "training status")
-    row.with_value(text: govuk_tag(text: @participant_presenter.participant_profile.training_status.capitalize, colour: "grey") +
+    row.with_value(text: govuk_tag(text: @participant_presenter.participant_profile.training_status&.capitalize, colour: "grey") +
       "<p class=\"govuk-body-s\">A historical status used if the induction_records training_status is not set.</p>".html_safe)
   end
 end %>
