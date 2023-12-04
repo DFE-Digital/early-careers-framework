@@ -134,7 +134,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_13_161634) do
     t.index ["start_year"], name: "index_cohorts_on_start_year", unique: true
   end
 
-  create_table "cohorts_lead_providers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "cohorts_lead_providers", force: :cascade do |t|
     t.uuid "lead_provider_id", null: false
     t.uuid "cohort_id", null: false
     t.datetime "created_at", null: false
