@@ -20,6 +20,8 @@ class TeacherProfile < ApplicationRecord
 
   self.filter_attributes += [:trn]
 
+  scope :oldest_first, -> { order(created_at: "asc") }
+
   def self.trn_matches(search_term)
     return none if search_term.blank?
 

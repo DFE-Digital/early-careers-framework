@@ -118,6 +118,7 @@ module NPQ
         return if teacher_profile&.trn.blank?
 
         @same_trn_user ||= TeacherProfile
+                           .oldest_first
                            .where(trn: teacher_profile.trn)
                            .where.not(id: teacher_profile.id)
                            .first
