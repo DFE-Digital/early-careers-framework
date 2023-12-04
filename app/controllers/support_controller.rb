@@ -11,8 +11,7 @@ class SupportController < ApplicationController
     @form = SupportForm.new(create_params)
 
     if @form.valid? && @form.save
-      flash[:success] = { title: "Success", content: "Your support request has been submitted, our support team will get back to you shortly." }
-      redirect_back fallback_location: root_path
+      redirect_to support_confirmation_path
     else
       render :new
     end
