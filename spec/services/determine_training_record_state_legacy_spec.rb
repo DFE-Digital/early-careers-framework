@@ -1137,6 +1137,30 @@ RSpec.describe DetermineTrainingRecordStateLegacy do
                          "not_yet_mentoring"
       end
 
+      context "and their mentee is leaving" do
+        let!(:participant_profile) { scenarios.mentor_on_fip_leaving_mentee.participant_profile }
+
+        include_examples "determines states as",
+                         "valid",
+                         "eligible_for_mentor_training",
+                         "eligible_for_mentor_funding",
+                         "active_mentoring",
+                         "registered_for_fip_training",
+                         "active_mentoring"
+      end
+
+      context "and their mentee has left" do
+        let!(:participant_profile) { scenarios.mentor_on_fip_mentee_has_left.participant_profile }
+
+        include_examples "determines states as",
+                         "valid",
+                         "eligible_for_mentor_training",
+                         "eligible_for_mentor_funding",
+                         "not_yet_mentoring",
+                         "registered_for_fip_training",
+                         "not_yet_mentoring"
+      end
+
       context "and they have been withdrawn by a training provider through the API" do
         let!(:participant_profile) { scenarios.mentor_on_fip_withdrawn.participant_profile }
 

@@ -1144,6 +1144,52 @@ module NewSeeds
           end
         end
 
+        def mentor_on_fip_leaving_mentee
+          school_cohort = fip_school.school_cohort
+          induction_programme = school_cohort.default_induction_programme
+
+          @mentor_on_fip_leaving_mentee ||= travel_to(2.days.ago) do
+            builder = NewSeeds::Scenarios::Participants::Mentors::MentorWithNoEcts
+                        .new(school_cohort:)
+                        .build
+                        .with_validation_data
+                        .with_eligibility
+                        .with_induction_record(induction_programme: school_cohort.default_induction_programme)
+
+            NewSeeds::Scenarios::Participants::Ects::Ect
+              .new(school_cohort:, full_name: "ECT on FIP: after mentor change")
+              .build
+              .with_validation_data
+              .with_eligibility
+              .with_induction_record(induction_programme:, mentor_profile: builder.participant_profile, induction_status: "leaving", start_date: 1.day.ago, end_date: 1.week.from_now)
+
+            builder
+          end
+        end
+
+        def mentor_on_fip_mentee_has_left
+          school_cohort = fip_school.school_cohort
+          induction_programme = school_cohort.default_induction_programme
+
+          @mentor_on_fip_mentee_has_left ||= travel_to(2.days.ago) do
+            builder = NewSeeds::Scenarios::Participants::Mentors::MentorWithNoEcts
+                        .new(school_cohort:)
+                        .build
+                        .with_validation_data
+                        .with_eligibility
+                        .with_induction_record(induction_programme: school_cohort.default_induction_programme)
+
+            NewSeeds::Scenarios::Participants::Ects::Ect
+              .new(school_cohort:, full_name: "ECT on FIP: after mentor change")
+              .build
+              .with_validation_data
+              .with_eligibility
+              .with_induction_record(induction_programme:, mentor_profile: builder.participant_profile, induction_status: "leaving", start_date: 1.week.ago, end_date: 1.day.ago)
+
+            builder
+          end
+        end
+
         def mentor_on_fip_withdrawn
           school_cohort = fip_school.school_cohort
 

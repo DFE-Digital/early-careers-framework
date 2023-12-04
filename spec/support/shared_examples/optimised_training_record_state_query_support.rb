@@ -25,6 +25,30 @@ shared_examples "a query optimised for calculating training record states" do |e
         end
       end
 
+      context "when there are mentees associated with the participant that are leaving" do
+        let(:participant_profile) { create(:mentor) }
+        let!(:mentee) { create(:ect, mentor_profile: participant_profile) }
+
+        before { mentee.latest_induction_record.update!(induction_status: "leaving", end_date: 1.week.from_now) }
+
+        it "populates transient_current_mentees with true" do
+          expect(subject.induction_records.last).to have_attributes(transient_mentees: true)
+          expect(subject.induction_records.last).to have_attributes(transient_current_mentees: true)
+        end
+      end
+
+      context "when there are mentees associated with the participant that have left" do
+        let(:participant_profile) { create(:mentor) }
+        let!(:mentee) { create(:ect, mentor_profile: participant_profile) }
+
+        before { mentee.latest_induction_record.update!(induction_status: "leaving", end_date: 1.week.ago) }
+
+        it "populates transient_mentees with true" do
+          expect(subject.induction_records.last).to have_attributes(transient_mentees: true)
+          expect(subject.induction_records.last).to have_attributes(transient_current_mentees: false)
+        end
+      end
+
       context "when there are current mentees associated with the participant" do
         let(:participant_profile) { create(:mentor) }
         let!(:mentee) { create(:ect, mentor_profile: participant_profile) }

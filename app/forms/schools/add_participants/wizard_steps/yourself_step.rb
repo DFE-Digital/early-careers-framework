@@ -4,14 +4,6 @@ module Schools
   module AddParticipants
     module WizardSteps
       class YourselfStep < ::WizardStep
-        attr_accessor :participant_type
-
-        def self.permitted_params
-          %i[
-            participant_type
-          ]
-        end
-
         def next_step
           if wizard.transfer?
             if wizard.needs_to_choose_a_mentor?
@@ -34,10 +26,6 @@ module Schools
           else
             :check_answers
           end
-        end
-
-        def before_save
-          @participant_type = "mentor"
         end
       end
     end
