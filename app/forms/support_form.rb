@@ -6,7 +6,7 @@ class SupportForm
   attr_accessor :message, :participant_profile_id, :school_id, :current_user
   attr_reader :subject
 
-  validates :message, presence: { message: "Please provide details of your request" }
+  validates :message, presence: { message: "Enter your message" }
   validate :validate_provided_ids
 
   def save
