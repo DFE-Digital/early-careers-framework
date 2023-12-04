@@ -62,7 +62,7 @@
 
 <p>Next, your school’s registered induction tutor must report the change to DfE. We need this information to pay the correct funding to each training provider.</p>
 
-<p class="govuk-body">Email continuing-professional-development@digital.education.gov.uk and provide:</p>
+<p class="govuk-body">Email <%= govuk_link_to "continuing-professional-development@digital.education.gov.uk", "mailto:continuing-professional-development@digital.education.gov.uk" %> and provide:</p>
 <ul class="govuk-list govuk-list--bullet">
   <li>your school’s name and unique reference number (URN)</li>
   <li>the name of the new lead provider</li>
@@ -104,7 +104,7 @@
 <p class="govuk-body">There are 2 ways to tell us if this information is wrong:</p>
 <ul class="govuk-list govuk-list--bullet">
   <li>use the ‘Report that your school has been signed up incorrectly’ link in the service</li>
-  <li>email "continuing-professional-development@digital.education.gov.uk", "mailto:continuing-professional-development@digital.education.gov.uk" %> to report the error</li>
+  <li>email <%= govuk_link_to "continuing-professional-development@digital.education.gov.uk", "mailto:continuing-professional-development@digital.education.gov.uk" %> to report the error</li>
 </ul>
 
   </div>
