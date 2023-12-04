@@ -855,7 +855,7 @@ en:
 
   support_form:
     introduction:
-      unspecified: "If you have a question about the Early Career Framework (ECF) service, you can contact the DfE using this form."
+      unspecified: "If you have a question about the Manage training for early career teachers service, you can contact the DfE using this form."
       change-participant-lead-provider: "Complete this form to request a change to %{participant_name}’s registered training provider."
     instructions:
       unspecified_html: "Enter your support query and any relevant information below"
