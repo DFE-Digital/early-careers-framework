@@ -128,6 +128,12 @@ class NPQApplication < ApplicationRecord
       .sort { |a, b| b.created_at <=> a.created_at }
   end
 
+  def save_and_dedupe_participant
+    result = save
+    NPQ::DedupeParticipant.new(npq_application: self, trn: teacher_reference_number).call
+    result
+  end
+
 private
 
   def previously_funded?
