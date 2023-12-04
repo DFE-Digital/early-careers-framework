@@ -17,7 +17,7 @@ RSpec.feature "Support Forms: change-participant-lead-provider", type: :feature 
     fill_in "support-form-message-field", with: "Test message"
 
     expect {
-      click_button "Confirm"
+      click_button "Send message to support"
     }.to change(SupportQuery, :count).by(1)
 
     expect(SupportQuery.last.as_json).to include(
@@ -27,7 +27,7 @@ RSpec.feature "Support Forms: change-participant-lead-provider", type: :feature 
       "additional_information" => { "participant_profile_id" => participant_profile.id, "school_id" => school.id },
     )
 
-    expect(page).to have_text("Your support request has been submitted, our support team will get back to you shortly")
+    expect(page).to have_text("Your support request has been submitted")
   end
 
   scenario "User submits a support request with invalid IDs in the URL" do
@@ -41,7 +41,7 @@ RSpec.feature "Support Forms: change-participant-lead-provider", type: :feature 
     fill_in "support-form-message-field", with: "Test message"
 
     expect {
-      click_button "Confirm"
+      click_button "Send message to support"
     }.to_not change(SupportQuery, :count)
   end
 

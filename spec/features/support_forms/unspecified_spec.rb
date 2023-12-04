@@ -14,7 +14,7 @@ RSpec.feature "Support Forms: Unspecified", type: :feature do
     fill_in "support-form-message-field", with: "Test message"
 
     expect {
-      click_button "Confirm"
+      click_button "Send message to support"
     }.to change(SupportQuery, :count).by(1)
 
     expect(SupportQuery.last.as_json).to include(
@@ -24,7 +24,7 @@ RSpec.feature "Support Forms: Unspecified", type: :feature do
       "additional_information" => {},
     )
 
-    expect(page).to have_text("Your support request has been submitted, our support team will get back to you shortly")
+    expect(page).to have_text("Your support request has been submitted")
   end
 
 private
