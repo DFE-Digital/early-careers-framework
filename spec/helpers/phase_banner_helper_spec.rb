@@ -15,7 +15,7 @@ RSpec.describe PhaseBannerHelper, type: :helper do
         let(:other_env) { other_env }
 
         it "for #{other_env} it returns #{other_env}" do
-          expect(phase_banner_tag_text(other_env)).to eql(other_env)
+          expect(phase_banner_tag_text(other_env)).to eql(other_env.capitalize)
         end
       end
     end

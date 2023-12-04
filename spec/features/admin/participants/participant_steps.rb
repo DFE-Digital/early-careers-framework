@@ -224,11 +224,11 @@ module ParticipantSteps
 
   def and_i_should_see_the_induction_statuses_are_active
     within(page.find("dt", text: /^induction status$/).ancestor(".govuk-summary-list__row").find("dd")) do
-      expect(page).to have_text("ACTIVE")
+      expect(page).to have_text("Active")
     end
 
     within(page.find("dt", text: /^status$/).ancestor(".govuk-summary-list__row").find("dd")) do
-      expect(page).to have_text("ACTIVE")
+      expect(page).to have_text("Active")
     end
   end
 
