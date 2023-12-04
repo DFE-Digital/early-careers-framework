@@ -1,1 +1,112 @@
+<% content_for :title, "Change ECF-based training provider for ECTs and their mentors" %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <h1 class="govuk-heading-l">Change ECF-based training provider for ECTs and their mentors</h1>
+
+<ul class="govuk-list">
+  <li>
+    <a class="govuk-link" href="#">Change training provider for ECTs and mentors across 1 or 2 years</a>
+  </li>
+  <li>
+    <a class="govuk-link" href="#">Change training provider for an individual ECT transferring to your school</a>
+  </li>
+  <li>
+    <a class="govuk-link" href="#">Report that the DfE service is showing the wrong training provider for your school </a>
+  </li>
+</ul>
+
+    <p>Find out how to change the lead provider, delivery partner, or both for ECTs and mentors at your school.</p>
+
+    <p>Avoid making training changes during an ECT’s induction unless the change is in their best interest.</p>
+
+     <div class="govuk-inset-text">See guidance on <a class="govuk-link" href="https://www.gov.uk/guidance/how-to-set-up-training-for-early-career-teachers#choose-a-training-option">choosing a training option</a> to find out which lead providers offer DfE-funded training. </div>
+
+<h2 class="govuk-heading-m">Change training provider for ECTs and mentors across 1 or 2 years</h2>    
+
+<h3 class="govuk-heading-s">If you’re changing provider for all ECTs and mentors starting training in the new academic year</h3>
+
+<p>Your school should contact your training providers first.</p> 
+
+<ol class="govuk-list govuk-list--number">
+  <li>Contact the new lead provider you want to work with.</li>
+  <li>Check that they have the capacity to train ECTs, and mentors where relevant, in the new academic year.</li>
+</ol>
+
+<p>Your school’s registered induction tutor is responsible for telling DfE how your school will deliver ECF-based training ahead of each academic year.</p>
+
+<p>We’ll email your school’s registered induction tutor in the summer term when it’s time to sign in to the Manage training for early career teachers service and set up training for the new year.</p>
+
+<p>They should then follow these steps.</p>
+
+<ol class="govuk-list govuk-list--number">
+  <li><a class="govuk-link" href="https://manage-training-for-early-career-teachers.education.gov.uk/users/sign_in">Sign in to the DfE service</a> and report that your school will use a different provider in the new academic year.</li>
+  <li>Register information about new ECTs and mentors who’ll start their training in the new academic year.</li>
+</ol>
+
+<p>They do not need to tell us which provider your school has changed to. Your lead provider will report the information to us directly once you set up training in the DfE service.</p>
+
+<p>We’ll confirm the changes with providers and update the DfE service as soon as possible. This may take a few weeks.</p>
+
+<h3 class="govuk-heading-s">If you’re changing providers for ECTs and mentors who have already started training</h3>
+
+<p>Your school should contact your training providers first.</p>
+
+<ol class="govuk-list govuk-list--number">
+  <li>Contact the new lead provider you want to work with. </li>
+  <li>Check that they have the capacity to train ECTs (and mentors where relevant) in years 1, 2 or both.</li>
+  <li>Confirm the date they can start delivering training for you.</li>
+  <li>Let your existing lead provider know about the change.</li>
+</ol>
+
+<p>Next, your school’s registered induction tutor must report the change to DfE. We need this information to pay the correct funding to each training provider.</p>
+
+<p class="govuk-body">Email continuing-professional-development@digital.education.gov.uk and provide:</p>
+<ul class="govuk-list govuk-list--bullet">
+  <li>your school’s name and unique reference number (URN)</li>
+  <li>the name of the new lead provider</li>
+  <li>the confirmed date the new lead provider will start training your ECTs (and their mentors if relevant)</li>
+  <li>the years you want to apply the change to (year 1, year 2, or both years)<li> 
+</ul>
+
+<p>We’ll confirm the changes with your providers and update the DfE service as soon as possible. This may take a few weeks.</p>
+
+<h2 class="govuk-heading-m">Change training provider for an individual ECT transferring to your school</h2> 
+
+<p>If an ECT transfers to your school after starting their training with another provider, you should choose the best option for their continued training.</p>
+
+<p>If you want the ECT to change to your school’s provider, follow these steps.</p>
+
+<ol class="govuk-list govuk-list--number">
+  <li>Contact the new lead provider you want the ECT to work with.</li>
+  <li>Check that they have the capacity to train the ECT, and their mentor if relevant.</li>
+  <li>Confirm the date they can start delivering training for the ECT.</li>
+  <li>Report the change to the ECT’s appropriate body.</li> 
+</ol>
+
+<p>Your school’s registered induction tutor should then follow these steps.</p>
+
+<ol class="govuk-list govuk-list--number">
+  <li><a class="govuk-link" href="https://manage-training-for-early-career-teachers.education.gov.uk/users/sign_in">Sign in to the Manage training for early career teachers service</a>.</li>
+  <li>Register the ECT using their full name, date of birth, teacher reference number (TRN) and email address.</li>
+  <li>Confirm that the ECT is transferring from another school, and follow the instructions to select the training provider you want them to work with.</li>
+</ol>
+
+<p>We’ll confirm the changes with providers and update the Manage training for early career teachers service as soon as possible. This may take a few weeks.</p>
+
+<h2 class="govuk-heading-m">Report that the DfE service is showing the wrong training provider for your school</h2>
+
+<p>When you agree to work with a lead provider, they’ll report this to DfE.</p>  
+
+<p>Details of your lead provider and delivery partner will then be displayed in the <a class="govuk-link" href="https://manage-training-for-early-career-teachers.education.gov.uk">Manage training for early career teachers</a> service.</p>
+
+<p class="govuk-body">There are 2 ways to tell us if this information is wrong:</p>
+<ul class="govuk-list govuk-list--bullet">
+  <li>use the ‘Report that your school has been signed up incorrectly’ link in the service</li>
+  <li>email "continuing-professional-development@digital.education.gov.uk", "mailto:continuing-professional-development@digital.education.gov.uk" %> to report the error</li>
+</ul>
+
+  </div>
+</div>
 
