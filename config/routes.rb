@@ -60,6 +60,10 @@ Rails.application.routes.draw do
 
   resource :csp_reports, only: %i[create]
 
+  get "/support", to: "support#new", as: :support
+  get "/support/confirmation", to: "support#show", as: :support_confirmation
+  post "/support", to: "support#create"
+
   resource :cookies, only: %i[show update]
   resource :privacy_policy, only: %i[show update], path: "privacy-policy"
   resource :accessibility_statement, only: :show, path: "accessibility-statement"

@@ -1,0 +1,78 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <span class="govuk-caption-l"><%= school.name if school.present? %></span>
+    <h1 class="govuk-heading-l">Contact support</h1>
+
+
+    <%= form_for @form, url: support_path, method: :post do |f| %>
+      <%= f.govuk_error_summary %>
+
+      <p class="govuk-body">
+        <%= t("support_form.introduction.#{subject}", participant_name: participant_profile_full_name) %>
+      </p>
+
+      <p class="govuk-body">We’ll automatically include these details for you: </p>
+
+      <dl class="govuk-summary-list">
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            Your name
+          </dt>
+          <dd class="govuk-summary-list__value">
+            <%= current_user.full_name %>
+          </dd>
+        </div>
+
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            Your email address
+          </dt>
+          <dd class="govuk-summary-list__value">
+            <%= current_user.email %>
+          </dd>
+        </div>
+
+        <% if school.present? %>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              School
+            </dt>
+            <dd class="govuk-summary-list__value">
+              <%= school.name %> <br>
+
+              <span class="govuk-caption-m">URN <%= school.urn %></span>
+            </dd>
+          </div>
+        <% end %>
+
+        <% if participant_profile.present? %>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              Teacher
+            </dt>
+            <dd class="govuk-summary-list__value">
+              <%= participant_profile_full_name %>
+            </dd>
+          </div>
+        <% end %>
+      </dl>
+
+      <p class="govuk-body">
+        <%= t("support_form.instructions.#{subject}_html", participant_name: participant_profile_full_name) %>
+      </p>
+
+      <%= f.hidden_field :subject %>
+      <%= f.hidden_field :participant_profile_id %>
+      <%= f.hidden_field :school_id %>
+
+      <%= f.govuk_text_area(
+            :message,
+            rows: 5,
+            width: "three-quarters",
+            label: { text: "Your message", size: "s" },
+          ) %>
+
+      <%= f.govuk_submit "Send message to support" %>
+    <% end %>
+  </div>
+</div>

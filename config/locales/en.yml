@@ -852,3 +852,22 @@ en:
       statements:
         ecf_statement_selector:
           submit: "View"
+
+  support_form:
+    introduction:
+      unspecified: "If you have a question about the Manage training for early career teachers service, you can contact the DfE using this form."
+      change-participant-lead-provider: "Complete this form to request a change to %{participant_name}’s registered training provider."
+    instructions:
+      unspecified_html: ""
+      change-participant-lead-provider_html: |
+        Tell us:
+        <ul>
+          <li>which training provider they’ll work with instead</li>
+          <li>the date they’ll start training with the new provider</li>
+          <li>the reason for this change</li>
+        </ul>
+
+  support_query:
+    subjects:
+      unspecified: Support request
+      change-participant-lead-provider: Request to change lead provider on a participant profile

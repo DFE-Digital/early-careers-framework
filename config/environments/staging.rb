@@ -71,6 +71,10 @@ Rails.application.configure do
   config.gias_api_user = ENV["GIAS_API_USER"]
   config.gias_api_password = Rails.application.credentials.GIAS_API_PASSWORD
 
+  config.zendesk_url = ENV.fetch("ZENDESK_URL", "https://teachercpdhelp.zendesk.com/api/v2")
+  config.zendesk_username = ENV["ZENDESK_USERNAME"]
+  config.zendesk_token = ENV["ZENDESK_TOKEN"]
+
   config.dqt_client_api_key = Rails.application.credentials.DQT_CLIENT_API_KEY
   config.dqt_client_host = Rails.application.credentials.DQT_CLIENT_HOST
   config.dqt_client_params = Rails.application.credentials.DQT_CLIENT_PARAMS
