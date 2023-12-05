@@ -1,7 +1,7 @@
 <%= govuk_summary_list do |summary_list| %>
   <% summary_list.with_row do |row| %>
     <% row.with_key { "User ID / Participant ID" } %>
-    <% row.with_value { @user.id } %>
+    <% row.with_value { pp.user_id } %>
     <% row.with_action(text: :none) %>
   <% end %>
 
@@ -50,13 +50,13 @@
 
 <h4>Induction records</h4>
 
-<% user.induction_records_for_profile(pp).each do |ir| %>
+<% pp.induction_records.each do |ir| %>
   <%= render partial: "induction_record", locals: { ir: ir } %>
 <% end %>
 
 <h4>Declarations</h4>
 
-<% declarations = user.participant_declarations_for_profile(pp) %>
+<% declarations = pp.participant_declarations %>
 
 <% if declarations.blank? %>
   No declarations have been made

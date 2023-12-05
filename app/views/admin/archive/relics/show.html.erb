@@ -1,34 +1,35 @@
 <% content_for :before_content, govuk_back_link(text: "Back", href: admin_archive_relics_path) %>
 
 <span class="govuk-caption-l">Archive</span>
-<h1 class="govuk-heading-l"><%= @user.full_name %></h1>
+<h1 class="govuk-heading-l"><%= @presenter.full_name %></h1>
 
 <%= govuk_summary_list do |summary_list| %>
   <% summary_list.with_row do |row| %>
     <% row.with_key { "Email" } %>
-    <% row.with_value { @user.email } %>
+    <% row.with_value { @presenter.email } %>
   <% end %>
 
   <% summary_list.with_row do |row| %>
     <% row.with_key { "Teacher reference number" } %>
-    <% row.with_value { @user.trn } %>
+    <% row.with_value { @presenter.trn } %>
   <% end %>
 
   <% summary_list.with_row do |row| %>
     <% row.with_key { "Roles" } %>
-    <% row.with_value { @user.roles } %>
+    <% row.with_value { @presenter.roles } %>
   <% end %>
 <% end %>
 
+<% if @presenter.type == "user" %>
 <h2>Identities</h2>
 
-<% @user.participant_identities.each_with_index do |identity, i| %>
+<% @presenter.participant_identities.each_with_index do |identity, i| %>
   <h3><%= "Identity #{i + 1}" %></h3>
 
   <%= govuk_summary_list do |summary_list| %>
     <% summary_list.with_row do |row| %>
       <% row.with_key { "User ID / Participant ID" } %>
-      <% row.with_value { @user.id } %>
+      <% row.with_value { @presenter.id } %>
     <% end %>
 
     <% summary_list.with_row do |row| %>
@@ -45,9 +46,14 @@
 
 <h2>Profiles</h2>
 
-<% @user.participant_profiles.each do |pp| %>
-  <h3><%= pp.type %></h3>
+<% @presenter.participant_profiles.each do |pp| %>
+  <h3><%= pp.profile_type %></h3>
   <% if pp.ecf? %>
-    <%= render partial: "ecf_profile", locals: { pp: pp, user: @user } %>
+    <%= render partial: "ecf_profile", locals: { pp: } %>
   <% end %>
+<% end %>
+
+<% elsif @presenter.type == "participant_profile" && @presenter.ecf? %>
+  <h3><%= @presenter.profile_type %></h3>
+  <%= render partial: "ecf_profile", locals: { pp: @presenter } %>
 <% end %>

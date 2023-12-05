@@ -2,8 +2,13 @@
 
 module Archive
   class ParticipantProfilePresenter < RelicPresenter
+
     def ecf?
-      attribute(:type).in? %w[ParticipantProfile::ECT ParticipantProfile::Mentor]
+      profile_type.in? %w[ParticipantProfile::ECT ParticipantProfile::Mentor]
+    end
+
+    def profile_type
+      attribute(:type)
     end
 
     def sparsity_uplift?
@@ -20,6 +25,14 @@ module Archive
 
     def schedule
       @schedule ||= Finance::Schedule.find(attribute(:schedule_id))
+    end
+
+    def induction_records
+      @induction_records ||= InductionRecordPresenter.wrap(attribute("induction_records")).sort_by(&:start_date).reverse
+    end
+
+    def participant_declarations
+      @participant_declarations ||= ParticipantDeclarationPresenter.wrap(attribute("participant_declarations")).sort_by(&:declaration_date)
     end
 
     def created_at

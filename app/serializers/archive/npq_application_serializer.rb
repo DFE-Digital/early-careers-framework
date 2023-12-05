@@ -5,6 +5,9 @@ module Archive
     include JSONAPI::Serializer
 
     set_id :id
+    set_type do |object|
+      object.class.name
+    end
 
     attribute :participant_identity_id
     attribute :npq_lead_provider_id
