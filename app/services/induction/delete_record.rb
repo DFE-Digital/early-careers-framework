@@ -1,9 +1,13 @@
 # frozen_string_literal: true
 
 class Induction::DeleteRecord < BaseService
+  class MiddleOfHistoryError < StandardError; end
+  class TransferFlagChangedError < StandardError; end
+  class TrainingStatusChangedError < StandardError; end
+
   def call
     ActiveRecord::Base.transaction do
-      return unless deletable_record?
+      check_record_is_deletable!
 
       update_previous_record
       delete_induction_record
@@ -18,20 +22,22 @@ private
     @induction_record = induction_record
   end
 
-  def deletable_record?
-    middle_of_history? && transfer_flag_unchanged? && training_status_unchanged?
+  def check_record_is_deletable!
+    raise MiddleOfHistoryError, "The record is not in the middle of the induction records history" unless middle_of_history?
+    raise TransferFlagChangedError, "The school transfer flag has changed from the previous record" if transfer_flag_changed?
+    raise TrainingStatusChangedError, "The training status has changed from the previous record" if training_status_changed?
   end
 
   def middle_of_history?
     previous_record && next_record
   end
 
-  def transfer_flag_unchanged?
-    induction_record.school_transfer == previous_record.school_transfer
+  def transfer_flag_changed?
+    induction_record.school_transfer != previous_record.school_transfer
   end
 
-  def training_status_unchanged?
-    induction_record.training_status == previous_record.training_status
+  def training_status_changed?
+    induction_record.training_status != previous_record.training_status
   end
 
   def delete_induction_record

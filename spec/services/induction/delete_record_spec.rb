@@ -12,19 +12,26 @@ RSpec.describe Induction::DeleteRecord do
 
   describe "#call" do
     context "when the record is not deletable" do
-      context "when participant has only one record" do
-        it "does not delete the record" do
-          expect { service.call }.not_to change { InductionRecord.count }
-        end
+      before do
+        allow(service).to receive(:middle_of_history?).and_return(false)
+        allow(service).to receive(:transfer_flag_changed?).and_return(false)
+        allow(service).to receive(:training_status_changed?).and_return(false)
       end
 
-      context "when participant has only two records" do
-        let!(:previous_record) { create(:induction_record, :changed, participant_profile:, start_date: three_days_ago, end_date: two_days_ago) }
+      it "raises MiddleOfHistoryError with a proper message" do
+        expect { service.call }.to raise_error(Induction::DeleteRecord::MiddleOfHistoryError, "The record is not in the middle of the induction records history")
+      end
 
-        it "does not delete the record or update the other record" do
-          expect { service.call }.not_to change { InductionRecord.count }
-          expect { service.call }.not_to change { previous_record }
-        end
+      it "raises TransferFlagChangedError with a proper message" do
+        allow(service).to receive(:middle_of_history?).and_return(true)
+        allow(service).to receive(:transfer_flag_changed?).and_return(true)
+        expect { service.call }.to raise_error(Induction::DeleteRecord::TransferFlagChangedError, "The school transfer flag has changed from the previous record")
+      end
+
+      it "raises TrainingStatusChangedError with a proper message" do
+        allow(service).to receive(:middle_of_history?).and_return(true)
+        allow(service).to receive(:training_status_changed?).and_return(true)
+        expect { service.call }.to raise_error(Induction::DeleteRecord::TrainingStatusChangedError, "The training status has changed from the previous record")
       end
     end
 
