@@ -130,7 +130,7 @@ class NPQApplication < ApplicationRecord
 
   def save_and_dedupe_participant
     result = save
-    NPQ::DedupeParticipant.new(npq_application: self, trn: teacher_reference_number).call
+    NPQ::DedupeParticipant.new(npq_application: self, trn: teacher_reference_number).call if result
     result
   end
 

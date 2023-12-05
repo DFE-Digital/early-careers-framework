@@ -8,9 +8,10 @@ module NPQ
     attribute :npq_application
     attribute :trn
 
-    validates :npq_application, presence: true
-    validates :trn, presence: true
-    validates :to_user, :from_user, presence: true
+    validates :npq_application, presence: { message: I18n.t(:missing_npq_application) }
+    validates :trn, presence: { message: I18n.t(:missing_trn) }
+    validates :to_user, presence: { message: I18n.t(:missing_to_user) }
+    validates :from_user, presence: { message: I18n.t(:missing_from_user) }
     validate :trn_validated
     validate :dedupe_already_taken
 
@@ -23,26 +24,22 @@ module NPQ
   private
 
     def from_user
-      @from_user ||= participant_profile&.user
+      @from_user ||= User.find_by(id: npq_application&.user_id)
     end
 
     def to_user
-      return if participant_profile&.teacher_profile.blank?
-
       @to_user ||= TeacherProfile
+        .joins(:user)
+        .includes(:user)
         .oldest_first
         .where(trn:)
-        .where.not(id: participant_profile.teacher_profile.id)
+        .where.not(users: { id: from_user&.id })
         .first
         &.user
     end
 
-    def participant_profile
-      @participant_profile ||= ParticipantProfile.find_by(id: npq_application.id)
-    end
-
     def trn_validated
-      return if npq_application.teacher_reference_number_verified?
+      return if npq_application&.teacher_reference_number_verified?
 
       errors.add(:trn, I18n.t(:trn_not_validated))
     end

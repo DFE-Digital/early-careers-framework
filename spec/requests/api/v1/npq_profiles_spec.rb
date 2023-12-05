@@ -298,6 +298,15 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
           expect(parsed_response["errors"]).to be_present
         end
       end
+
+      context "when another user with same TRN exists" do
+        let!(:same_trn_user) { create(:teacher_profile, trn: "1234567").user }
+
+        it "transfers participation record onto the previous same trn user" do
+          expect { post "/api/v1/npq-profiles", params: json }
+            .to change { same_trn_user.reload.participant_identities.count }.by(1)
+        end
+      end
     end
 
     context "when unauthorized" do
