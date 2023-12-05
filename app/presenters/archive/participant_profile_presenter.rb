@@ -2,7 +2,6 @@
 
 module Archive
   class ParticipantProfilePresenter < RelicPresenter
-
     def ecf?
       profile_type.in? %w[ParticipantProfile::ECT ParticipantProfile::Mentor]
     end
