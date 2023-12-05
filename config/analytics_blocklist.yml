@@ -166,8 +166,14 @@
   - created_at
   - updated_at
   :support_queries:
+  - id
+  - user_id
+  - zendesk_ticket_id
+  - subject
   - message
   - additional_information
+  - created_at
+  - updated_at
   :school_links:
   - id
   - school_id
