@@ -47,5 +47,12 @@ RSpec.describe Induction::MigrateParticipantsToNewProgramme do
       expect(ect_profile.current_induction_record.induction_programme).to eq induction_programme_2
       expect(mentor_profile.current_induction_record.induction_programme).to eq induction_programme_2
     end
+
+    it "does not migrate historical induction records" do
+      service.call(from_programme: induction_programme,
+                   to_programme: induction_programme_2)
+
+      expect(mentor_profile.induction_records.where(induction_programme: induction_programme_2).count).to eq 1
+    end
   end
 end
