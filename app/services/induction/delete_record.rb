@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-# This service class has all the logic needed to delete
-# individual induction records in the middle of an induction
-# records history
 class Induction::DeleteRecord < BaseService
   def call
     ActiveRecord::Base.transaction do
@@ -21,10 +18,20 @@ private
     @induction_record = induction_record
   end
 
-  # Allow only records in the middle of the induction records
-  # history to be deleted
   def deletable_record?
+    middle_of_history? && transfer_flag_unchanged? && training_status_unchanged?
+  end
+
+  def middle_of_history?
     previous_record && next_record
+  end
+
+  def transfer_flag_unchanged?
+    induction_record.school_transfer == previous_record.school_transfer
+  end
+
+  def training_status_unchanged?
+    induction_record.training_status == previous_record.training_status
   end
 
   def delete_induction_record
