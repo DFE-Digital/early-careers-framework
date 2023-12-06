@@ -45,6 +45,8 @@ services:
     image: postgres:11-alpine
     volumes:
       - db_data:/var/lib/postgresql/data
+      # copy the sql script to create the performance database
+      - ./db/create_performance_database.sql:/docker-entrypoint-initdb.d/create_database.sql
     environment:
       POSTGRES_PASSWORD: performancepassword
     healthcheck:
@@ -81,18 +83,6 @@ services:
     networks:
       - performance
     command: /bin/sh -c "rm -f tmp/pids/server.pid && bundle exec rails server -b 0.0.0.0"
-
-  seed:
-    image: ${IMAGE:-ghcr.io/dfe-digital/early-careers-framework:main}
-    <<: *env
-    depends_on:
-      db:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-    networks:
-      - performance
-    command: bundle exec rails db:setup
 
   k6:
     image: grafana/k6:latest

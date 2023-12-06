@@ -32,7 +32,8 @@ runs:
     - name: Backup database
       shell: bash
       run: |
-        bin/konduit.sh cpd-ecf-production-web -- pg_dump -E utf8 --compress=1 --clean --if-exists --no-privileges --no-owner --verbose -f backup-production.sql.gz
+        bin/konduit.sh cpd-ecf-production-web -- pg_dump -E utf8 --clean --if-exists --no-privileges --no-owner --verbose --no-password -f backup-production.sql
+        tar -cvzf backup-production.sql.gz backup-production.sql
 
     - name: Set connection string
       shell: bash
@@ -50,6 +51,36 @@ runs:
           --container database-backup \
           --source backup-production.sql.gz \
           --destination $(date +"%F-%H").sql.gz
+
+    - name: Sanitise the Database backup
+      run: |
+        echo "::group::Restore backup to intermediate database"
+        createdb ${DATABASE_NAME} && psql -d ${DATABASE_NAME} -f backup-production.sql
+        echo "::endgroup::"
+        echo "::group::Sanitise data"
+        psql -d ${DATABASE_NAME} -f db/scripts/sanitise.sql
+        echo "::endgroup::"
+
+        echo "::group::Backup Sanitised Database"
+        pg_dump -E utf8 --clean --if-exists --no-privileges --no-owner --verbose --no-password -d ${DATABASE_NAME} -f sanitised-production.sql
+        tar -cvzf sanitised-production.sql.gz sanitised-production.sql
+        echo "::endgroup::"
+      env:
+        DATABASE_NAME: early-careers-framework
+        PGUSER:  postgres
+        PGPASSWORD: postgres
+        PGHOST: localhost
+        PGPORT: 5432
+
+    - name: Upload sanitised version
+      shell: bash
+      run: |
+        az config set extension.use_dynamic_install=yes_without_prompt
+        az config set core.only_show_errors=true
+        az storage azcopy blob upload \
+          --container database-backup \
+          --source sanitised-production.sql.gz \
+          --destination $(date +"%F-%H")-sanitised.sql.gz
 
     - uses: Azure/get-keyvault-secrets@v1
       if: failure()
