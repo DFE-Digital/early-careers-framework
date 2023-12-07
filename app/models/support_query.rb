@@ -5,6 +5,7 @@ class SupportQuery < ApplicationRecord
     unspecified
     change-participant-lead-provider
     change-cohort-lead-provider
+    change-cohort-delivery-partner
   ].freeze
 
   belongs_to :user
