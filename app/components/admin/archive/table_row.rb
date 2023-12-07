@@ -5,16 +5,14 @@ module Admin
     class TableRow < BaseComponent
       with_collection_parameter :relic
 
+      delegate :email, :full_name, to: :presenter
+
       def initialize(relic:)
         @relic = relic
       end
 
-      def email
-        relic.data.dig("meta", "email")
-      end
-
-      def full_name
-        relic.data.dig("meta", "full_name")
+      def relic_type
+        @relic.object_type
       end
 
       def created_date
@@ -26,11 +24,7 @@ module Admin
       attr_reader :relic
 
       def presenter
-        if relic.object_type == "User"
-          ::Archive::UserPresenter.new(relic.data)
-        else
-          raise "Do not know how to present #{relic.object_type}"
-        end
+        @presenter ||= ::Archive::RelicPresenter.presenter_for(relic["data"])
       end
     end
   end

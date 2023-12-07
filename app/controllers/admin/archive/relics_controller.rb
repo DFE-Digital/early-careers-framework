@@ -15,7 +15,7 @@ module Admin
       end
 
       def show
-        @user = ::Archive::UserPresenter.new(@relic.data)
+        @presenter = ::Archive::RelicPresenter.presenter_for(@relic["data"])
       end
 
     private

@@ -52,4 +52,18 @@ RSpec.describe Archive::ParticipantProfilePresenter do
       expect(presenter.created_at).to be_within(1.second).of profile.created_at
     end
   end
+
+  describe "#induction_records" do
+    it "returns the user's induction records" do
+      induction_records = Archive::InductionRecordPresenter.wrap(serialized_profile.dig("attributes", "induction_records"))
+      expect(presenter.induction_records.map(&:id)).to match_array induction_records.map(&:id)
+    end
+  end
+
+  describe "#participant_declarations" do
+    it "returns the user's declaration records" do
+      declarations = Archive::ParticipantDeclarationPresenter.wrap(serialized_profile.dig("attributes", "participant_declarations"))
+      expect(presenter.participant_declarations.map(&:id)).to match_array declarations.map(&:id)
+    end
+  end
 end

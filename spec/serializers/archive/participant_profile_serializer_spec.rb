@@ -42,7 +42,9 @@ RSpec.describe Archive::ParticipantProfileSerializer do
       expect(attrs[:profile_duplicity]).to eq profile.profile_duplicity
       expect(attrs[:notes]).to eq profile.notes
       expect(attrs[:created_at]).to eq profile.created_at
-      expect(attrs[:induction_record_ids]).to match_array profile.induction_records.map { |ir| { id: ir.id } }
+      expect(attrs[:induction_records]).to match_array Archive::InductionRecordSerializer.new(profile.induction_records).serializable_hash[:data]
+      expect(attrs[:participant_declarations]).to match_array Archive::ParticipantDeclarationSerializer.new(profile.participant_declarations).serializable_hash[:data]
+      expect(attrs[:participant_profile_states]).to match_array Archive::ParticipantProfileStateSerializer.new(profile.participant_profile_states).serializable_hash[:data]
     end
   end
 end
