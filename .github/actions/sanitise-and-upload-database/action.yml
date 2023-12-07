@@ -1,0 +1,108 @@
+name: Sanitise and Upload sanitised DB
+description: Sanitise production DB and upload to azure
+
+inputs:
+  azure-credentials:
+    description: Azure credentials
+    required: true
+  postgres-user:
+    description: Temporary database user
+    default: postgres
+  postgres-password:
+    description: Temporary database user password
+    default: postgres
+  postgres-db:
+    description: Temporary database name
+    default: postgres
+  postgres-host:
+    description: Temporary database server hostname
+    default: localhost
+  postgres-port:
+    description: Temporary database server port
+    default: '5432'
+
+runs:
+  using: composite
+
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ inputs.azure-credentials }}
+
+    - name: Set AKS credentials
+      shell: bash
+      run: az aks get-credentials -g s189p01-tsc-pd-rg -n s189p01-tsc-production-aks
+
+    - name: Install kubectl
+      uses: azure/setup-kubectl@v3
+
+    - name: Install konduit
+      shell: bash
+      run: make install-konduit
+
+    - name: Backup database
+      shell: bash
+      run: |
+        bin/konduit.sh cpd-ecf-production-web -- pg_dump -E utf8 --clean --if-exists --no-privileges --no-owner --verbose --no-password -f backup-production.sql
+        tar -cvzf backup-production.sql.gz backup-production.sql
+
+    - name: Set connection string
+      shell: bash
+      run: |
+        STORAGE_CONN_STR=$(az storage account show-connection-string -g s189p01-cpdecf-pd-rg -n s189p01cpdecfdbbkppdsa --query 'connectionString')
+        echo "::add-mask::$STORAGE_CONN_STR"
+        echo "AZURE_STORAGE_CONNECTION_STRING=$STORAGE_CONN_STR" >> $GITHUB_ENV
+
+    - name: Sanitise the Database backup
+      shell: bash
+      run: |
+        echo "::group::Restore backup to intermediate database"
+        createdb ${DATABASE_NAME} && psql -d ${DATABASE_NAME} -f backup-production.sql
+        echo "::endgroup::"
+        echo "::group::Sanitise data"
+        psql -d ${DATABASE_NAME} -f db/scripts/sanitise.sql
+        echo "::endgroup::"
+
+        echo "::group::Backup Sanitised Database"
+        pg_dump -E utf8 --clean --if-exists --no-privileges --no-owner --verbose --no-password -d ${DATABASE_NAME} -f sanitised-production.sql
+        tar -cvzf sanitised-production.sql.gz sanitised-production.sql
+        echo "::endgroup::"
+      env:
+        DATABASE_NAME: ${{ inputs.postgres-db }}
+        PGUSER: ${{ inputs.postgres-user }}
+        PGPASSWORD: ${{ inputs.postgres-password }}
+        PGHOST: ${{ inputs.postgres-host }}
+        PGPORT: ${{ inputs.postgres-port }}
+
+    - name: Upload sanitised version
+      shell: bash
+      run: |
+        az config set extension.use_dynamic_install=yes_without_prompt
+        az config set core.only_show_errors=true
+        az storage azcopy blob upload \
+          --container database-backup \
+          --source sanitised-production.sql.gz \
+          --destination sanitised-production.sql.gz \
+          --overwrite
+
+    - uses: Azure/get-keyvault-secrets@v1
+      if: failure()
+      id: key-vault-secrets
+      with:
+        keyvault: s189p01-cpdecf-pd-app-kv
+        secrets: "SLACK-WEBHOOK"
+
+    - name: Notify Slack channel on job failure
+      if: failure()
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_USERNAME: CI Deployment
+        SLACK_TITLE: Database backup failure
+        SLACK_MESSAGE: Production database backup job failed
+        SLACK_WEBHOOK: ${{ steps.key-vault-secrets.outputs.SLACK-WEBHOOK }}
+        SLACK_COLOR: failure
+        SLACK_FOOTER: Sent from backup-production job in database-backups workflow
