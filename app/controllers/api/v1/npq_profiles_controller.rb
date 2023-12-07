@@ -13,7 +13,7 @@ module Api
       def create
         @npq_application = build_npq_application
 
-        if @npq_application.save
+        if @npq_application.save_and_dedupe_participant
           render status: :created,
                  content_type: "application/vnd.api+json",
                  json: NPQValidationDataSerializer.new(@npq_application).serializable_hash

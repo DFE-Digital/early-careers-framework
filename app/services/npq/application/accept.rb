@@ -130,9 +130,7 @@ module NPQ
       end
 
       def deduplicate_by_trn!
-        return unless same_trn_user
-
-        Identity::Transfer.call(from_user: participant_profile.user, to_user: same_trn_user)
+        NPQ::DedupeParticipant.new(npq_application:, trn: teacher_profile.trn).call
       end
 
       def validate_permitted_schedule_for_course
