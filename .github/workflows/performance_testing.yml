@@ -53,6 +53,15 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Set AKS credentials
+        shell: bash
+        run: az aks get-credentials -g s189p01-tsc-pd-rg -n s189p01-tsc-production-aks
+
       - name: Set up Node
         uses: actions/setup-node@v4.0.0
         with:
@@ -61,6 +70,13 @@ jobs:
 
       - name: Install node.js dependencies
         run: yarn install --immutable --refresh-lockfile
+
+      - name: Set connection string
+        shell: bash
+        run: |
+          STORAGE_CONN_STR=$(az storage account show-connection-string -g s189p01-cpdecf-pd-rg -n s189p01cpdecfdbbkppdsa --query 'connectionString')
+          echo "::add-mask::$STORAGE_CONN_STR"
+          echo "AZURE_STORAGE_CONNECTION_STRING=$STORAGE_CONN_STR" >> $GITHUB_ENV
 
       - name: Update PR comment with notice of testing
         uses: thollander/actions-comment-pull-request@v2
@@ -77,13 +93,24 @@ jobs:
           comment_tag: ${{ inputs.scenario }}-notice
           mode: delete
 
+      - name: Download sanitised database seed
+        shell: bash
+        run: |
+          az config set extension.use_dynamic_install=yes_without_prompt
+          az config set core.only_show_errors=true
+          az storage azcopy blob download \
+            --container database-backup \
+            --source sanitised-production.sql.gz \
+            --destination ./performance/db/sanitised-production.sql.gz
+
+      - name: Deploy docker container network
+        shell: bash
+        run: |
+          tar -zxvf ./performance/db/sanitised-production.sql.gz -C ./performance/db sanitised-production.sql
+
       - name: Deploy docker container network
         run: |
           docker compose -f ./performance/docker-compose.yml up -d web
-
-      - name: Seed the database
-        run: |
-          docker compose -f ./performance/docker-compose.yml up seed
 
       - name: Run the tests
         run: |
