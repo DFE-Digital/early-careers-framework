@@ -66,7 +66,7 @@ runs:
         tar -cvzf sanitised-production.sql.gz sanitised-production.sql
         echo "::endgroup::"
       env:
-        DATABASE_NAME: early-careers-framework
+        DATABASE_NAME: early-careers-framework-sanitised
         PGUSER:  postgres
         PGPASSWORD: postgres
         PGHOST: localhost
@@ -80,7 +80,8 @@ runs:
         az storage azcopy blob upload \
           --container database-backup \
           --source sanitised-production.sql.gz \
-          --destination $(date +"%F-%H")-sanitised.sql.gz
+          --destination sanitised-production.sql.gz \
+          --overwrite
 
     - uses: Azure/get-keyvault-secrets@v1
       if: failure()
