@@ -47,7 +47,7 @@ runs:
     - name: Backup database
       shell: bash
       run: |
-        bin/konduit.sh cpd-ecf-production-web -- pg_dump -E utf8 --clean --if-exists --no-privileges --no-owner --verbose --no-password -f backup-production.sql
+        bin/konduit.sh -d s189p01-cpdecf-pd-pg-snapshot -k s189p01-cpdecf-pd-app-kv cpd-ecf-production-web -- pg_dump -E utf8 --clean --if-exists --no-privileges --no-owner --verbose --no-password -f backup-production.sql
         tar -cvzf backup-production.sql.gz backup-production.sql
 
     - name: Set connection string
