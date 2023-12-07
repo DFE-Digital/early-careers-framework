@@ -172,8 +172,10 @@
     <div class="app-application__panel">
       <div class="moj-filter-layout__content">
         <% @npq_contracts.each do |npq_contract| %>
-          <%= render Finance::NPQ::PaymentOverviews::Course.new(statement: @statement, contract: npq_contract) %>
-          <br/>
+          <div class="npq-contract-summary">
+            <%= render Finance::NPQ::PaymentOverviews::Course.new(statement: @statement, contract: npq_contract) %>
+            <br/>
+          </div>
         <% end %>
       </div>
     </div>
@@ -183,8 +185,10 @@
       <div class="app-application__panel">
         <div class="moj-filter-layout__content">
           <% @npq_special_contracts.each do |npq_contract| %>
-            <%= render Finance::NPQ::PaymentOverviews::Course.new(statement: @statement, contract: npq_contract) %>
-            <br/>
+            <div class="npq-contract-summary">
+              <%= render Finance::NPQ::PaymentOverviews::Course.new(statement: @statement, contract: npq_contract) %>
+              <br/>
+            </div>
           <% end %>
         </div>
       </div>

@@ -29,4 +29,18 @@
   .contract-information {
     display: none;
   }
+
+  .npq-contract-summary {
+    &:nth-child(odd) {
+      page-break-before: always;
+    }
+
+    header {
+      gap: 30px;
+    }
+  }
+
+  .print-page-break {
+    page-break-before: always;
+  }
 }
