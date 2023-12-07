@@ -4,16 +4,6 @@ module Induction
   class AmendParticipantCohort
     include ActiveModel::Model
 
-    class ActiveValidator < ActiveModel::EachValidator
-      def validate_each(record, attribute, value)
-        record.errors.add(attribute, I18n.t("errors.participant_profile.not_active")) unless active?(value)
-      end
-
-      def active?(participant_profile)
-        participant_profile&.active_record? && participant_profile&.training_status_active?
-      end
-    end
-
     ECF_FIRST_YEAR = 2020
 
     attr_accessor :participant_profile, :source_cohort_start_year, :target_cohort_start_year
@@ -26,7 +16,9 @@ module Induction
                 message: :invalid,
                 start: ECF_FIRST_YEAR,
                 end: Date.current.year,
-              }
+              },
+              on: :start
+
     validates :target_cohort_start_year,
               numericality: {
                 only_integer: true,
@@ -35,19 +27,30 @@ module Induction
                 message: :invalid,
                 start: ECF_FIRST_YEAR,
                 end: Date.current.year,
-              }
+              },
+              on: :start
+
     validates :target_cohort,
               presence: {
                 message: ->(form, _) { I18n.t("errors.cohort.blank", year: form.target_cohort_start_year, where: "the service") },
-              }
+              },
+              on: :start
+
     validates :participant_profile,
               presence: true,
+              on: :start
+
+    validates :participant_profile,
               participant_profile_active: true
-    validates :participant_declarations, absence: { message: :billable_or_submitted }
+
+    validates :participant_declarations,
+              absence: { message: :billable_or_submitted }
+
     validates :induction_record,
               presence: {
                 message: ->(form, _) { I18n.t("errors.induction_record.blank", year: form.source_cohort_start_year) },
               }
+
     validates :target_school_cohort,
               presence: {
                 message: ->(form, _) { I18n.t("errors.cohort.blank", year: form.target_cohort_start_year, where: form.school&.name) },
@@ -61,10 +64,19 @@ module Induction
     delegate :school, to: :induction_record, allow_nil: true
 
     def save
+      return false unless valid?(:start)
+      return true if all_records_in_target_cohort?
+
       valid? && current_induction_record_changed? && historical_records_changed?
     end
 
   private
+
+    def all_records_in_target_cohort?
+      historical_records.all? do |induction_record|
+        in_target_cohort?(induction_record)
+      end
+    end
 
     def current_induction_record_changed?
       return true if in_target_cohort?(induction_record)
