@@ -137,7 +137,8 @@ UPDATE npq_applications
     SET school_ukprn=schools_ref.uk_prn,
         school_urn=schools_ref.urn,
         teacher_reference_number=teacher_profiles_ref.trn,
-        date_of_birth=NULL
+        date_of_birth=NULL,
+        nino=NULL
     FROM schools_ref, teacher_profiles_ref
     WHERE npq_applications.school_urn = schools_ref.original_urn
         AND npq_applications.teacher_reference_number = teacher_profiles_ref.original_trn;
