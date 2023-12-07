@@ -25,8 +25,8 @@ FROM teacher_profiles
 
 SELECT
     local_authority_districts.code as original_code,
-    RIGHT(CONCAT('E09000000', CAST(rows.index AS VARCHAR(9))), 9) as code,
-    CONCAT('Local Authority District ', RIGHT(CONCAT('E09000000', CAST(rows.index AS VARCHAR(9))), 9)) as name
+    CONCAT('E09', RIGHT(CONCAT('000000', CAST(rows.index AS VARCHAR(6))), 6)) as code,
+    CONCAT('Local Authority District E09', RIGHT(CONCAT('000000', CAST(rows.index AS VARCHAR(6))), 6)) as name
     INTO local_authority_districts_ref
 FROM local_authority_districts
     LEFT OUTER JOIN (
@@ -99,9 +99,9 @@ TRUNCATE TABLE emails CASCADE;
 UPDATE finance_adjustments
     SET amount=1000;
 
-TRUNCATE TABLE finance_profiles;
+/* KEEP finance_profiles INTACT */
 
-/* KEEP friendly_id_slugs INTACT */
+TRUNCATE TABLE friendly_id_slugs;
 
 /* KEEP induction_coordinator_profiles INTACT */
 /* KEEP induction_coordinator_profiles_schools INTACT */
@@ -138,10 +138,21 @@ UPDATE npq_applications
         school_urn=schools_ref.urn,
         teacher_reference_number=teacher_profiles_ref.trn,
         date_of_birth=NULL,
-        nino=NULL
+        nino=NULL,
+        notes=NULL
     FROM schools_ref, teacher_profiles_ref
     WHERE npq_applications.school_urn = schools_ref.original_urn
         AND npq_applications.teacher_reference_number = teacher_profiles_ref.original_trn;
+
+UPDATE npq_applications
+    SET employer_name=CASE WHEN npq_applications.employer_name IS NOT NULL
+        THEN CONCAT('Employer ', npq_applications.id)
+        ELSE npq_applications.employer_name
+    END,
+    employment_role=CASE WHEN npq_applications.employment_role IS NOT NULL
+        THEN 'Employee'
+        ELSE npq_applications.employment_role
+    END;
 
 /* reset all NPQ contracts to default values */
 UPDATE npq_contracts
