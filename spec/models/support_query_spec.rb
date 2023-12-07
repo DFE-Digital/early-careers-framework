@@ -108,6 +108,9 @@ RSpec.describe SupportQuery, type: :model do
           Current Induction Status: #{participant_profile.latest_induction_record.induction_status}
           Current Training Status: #{participant_profile.latest_induction_record.training_status}
           Current Type: #{participant_profile.participant_type}
+
+          Cohort:
+          Start Year: #{cohort_year}
         BODY
       )
     end

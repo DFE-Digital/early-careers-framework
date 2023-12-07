@@ -9,6 +9,7 @@ class SupportFormComponent < BaseComponent
            :school,
            :participant_profile,
            :current_user,
+           :cohort_year,
            to: :form
   delegate :full_name,
            to: :participant_profile,

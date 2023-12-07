@@ -4,6 +4,7 @@ class SupportQuery < ApplicationRecord
   VALID_SUBJECTS = %w[
     unspecified
     change-participant-lead-provider
+    change-cohort-lead-provider
   ].freeze
 
   belongs_to :user
@@ -59,6 +60,8 @@ class SupportQuery < ApplicationRecord
       #{school_additional_information&.strip}
 
       #{participant_profile_additional_information&.strip}
+
+      #{cohort_additional_information&.strip}
     BODY
 
     additional_information_string.strip
@@ -145,6 +148,15 @@ private
       User ID: #{participant_profile.user.id}
       Participant Profile ID: #{participant_profile.id}
       #{current_information.map { |key, value| "Current #{key.to_s.titleize}: #{value}" }.join("\n")}
+    BODY
+  end
+
+  def cohort_additional_information
+    return if cohort_year.blank?
+
+    <<~BODY
+      Cohort:
+      Start Year: #{cohort_year}
     BODY
   end
 end

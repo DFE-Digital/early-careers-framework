@@ -48,7 +48,7 @@
       <% else %>
         <% row.with_value(text: school_cohort_lead_provider_name(school_cohort)) %>
       <% end %>
-      <% row.with_action(text: :none) %>
+      <% row.with_action(text: 'Change', href: support_path(cohort_year: school_cohort.start_year, school_id: @school.id, subject: :"change-cohort-lead-provider")) %>
     <% end %>
 
     <% list.with_row do |row| %>

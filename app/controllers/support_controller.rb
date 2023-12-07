@@ -35,12 +35,13 @@ private
     {
       participant_profile_id:,
       school_id: params[:school_id],
+      cohort_year: params[:cohort_year],
       current_user:,
       subject:,
     }
   end
 
   def create_params
-    params.require(:support_form).permit(:subject, :participant_profile_id, :school_id, :message).merge(current_user:)
+    params.require(:support_form).permit(:subject, :participant_profile_id, :school_id, :cohort_year, :message).merge(current_user:)
   end
 end
