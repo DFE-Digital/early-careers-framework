@@ -26,7 +26,7 @@ FROM teacher_profiles
 SELECT
     local_authority_districts.code as original_code,
     RIGHT(CONCAT('E09000000', CAST(rows.index AS VARCHAR(9))), 9) as code,
-    CONCAT('Local Authority District ', local_authority_districts.id) as name
+    CONCAT('Local Authority District ', RIGHT(CONCAT('E09000000', CAST(rows.index AS VARCHAR(9))), 9)) as name
     INTO local_authority_districts_ref
 FROM local_authority_districts
     LEFT OUTER JOIN (
@@ -211,20 +211,20 @@ UPDATE school_links
 /* KEEP school_mentors INTACT */
 
 UPDATE schools
-    SET name=CONCAT('School ', id),
+    SET name=CONCAT('School ', schools_ref.urn),
         urn=schools_ref.urn,
-        address_line1=CONCAT(id, ' School Lane'),
-        address_line2=CONCAT('School Town ', id),
-        address_line3=CONCAT('School County ', id),
+        address_line1=CONCAT(schools_ref.urn, ' School Lane'),
+        address_line2=CONCAT('School Town ', schools_ref.urn),
+        address_line3=CONCAT('School County ', schools_ref.urn),
         postcode='AA01 AAA',
         domains=array[]::varchar[],
         ukprn=schools_ref.uk_prn,
-        school_website=CONCAT('school-', id, '.school'),
-        secondary_contact_email=CONCAT('school-', id, '-primary@example.com'),
-        primary_contact_email=CONCAT('school-', id, '-secondary@example.com'),
+        school_website=CONCAT('school-', schools_ref.urn, '.school'),
+        secondary_contact_email=CONCAT('school-', schools_ref.urn, '-primary@example.com'),
+        primary_contact_email=CONCAT('school-', schools_ref.urn, '-secondary@example.com'),
         administrative_district_name=local_authority_districts_ref.name,
         administrative_district_code=local_authority_districts_ref.code,
-        slug=CONCAT(schools_ref.urn, '-', CONCAT('school-', id))
+        slug=CONCAT(schools_ref.urn, '-', CONCAT('school-', schools_ref.urn))
     FROM schools_ref, local_authority_districts_ref
     WHERE schools_ref.original_urn = schools.urn
         AND local_authority_districts_ref.original_code = schools.administrative_district_code;

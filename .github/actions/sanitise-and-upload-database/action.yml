@@ -1,5 +1,5 @@
-name: Backup and Upload production DB
-description: Backup production DB and upload to azure
+name: Sanitise and Upload sanitised DB
+description: Sanitise production DB and upload to azure
 
 inputs:
   azure-credentials:

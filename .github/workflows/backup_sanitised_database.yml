@@ -1,4 +1,4 @@
-name: Production DB nightly backup
+name: Production DB sanitised backup
 on:
   workflow_dispatch:
 
