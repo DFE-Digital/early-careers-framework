@@ -73,7 +73,6 @@ sandbox:
   npq_registration:
     <<: *default_npq_registration
 
-
 production:
   primary:
     <<: *default_primary

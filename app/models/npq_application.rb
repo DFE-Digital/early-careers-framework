@@ -78,6 +78,7 @@ class NPQApplication < ApplicationRecord
 
   delegate :id, :name, to: :npq_course, prefix: true
   delegate :id, :name, to: :npq_lead_provider, prefix: true
+  alias_method :ecf_id, :id
 
   self.filter_attributes += [:teacher_reference_number]
 

@@ -13,6 +13,12 @@ class NPQRegistration::User < NPQRegistration::BaseRecord
          .where(provider: "tra_openid_connect")
   }
 
+  def get_an_identity_id
+    return nil unless provider == "tra_openid_connect"
+
+    uid
+  end
+
   def self.find_by_get_an_identity_id(get_an_identity_id)
     with_get_an_identity_id.find_by(uid: get_an_identity_id)
   end
