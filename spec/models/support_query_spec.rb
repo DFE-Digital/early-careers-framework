@@ -54,13 +54,60 @@ RSpec.describe SupportQuery, type: :model do
           User ID: #{support_query.user.id}
           Name: #{support_query.user.full_name}
           Email: #{support_query.user.email}
+        BODY
+      )
+    end
+
+    it "includes additional information" do
+      school = create(:school)
+      cohort_year = rand(2020..2030)
+      cohort = NewSeeds::Scenarios::Cohorts::Cohort.new(start_year: cohort_year)
+                                                   .build
+                                                   .with_schedule_and_milestone
+                                                   .cohort
+      school_cohort = NewSeeds::Scenarios::SchoolCohorts::Fip
+        .new(cohort:, school:)
+        .build
+        .with_partnership(lead_provider: create(:lead_provider), delivery_partner: create(:delivery_partner))
+        .with_programme(default_induction_programme: true)
+        .school_cohort
+      participant_profile = NewSeeds::Scenarios::Participants::Ects::EctInTraining
+                              .new(school_cohort:)
+                              .build
+                              .participant_profile
+
+      support_query = build(:support_query, additional_information: {
+        participant_profile_id: participant_profile.id,
+        school_id: school.id,
+        cohort_year:,
+      })
+
+      expect(support_query.comment_body).to match(
+        <<~BODY,
+          #{support_query.message}
+
+          ---
+
+          Ticket Created By:
+          User ID: #{support_query.user.id}
+          Name: #{support_query.user.full_name}
+          Email: #{support_query.user.email}
 
           School:
-          No school provided
+          URN: #{school.urn}
+          Name: #{school.name}
 
           Participant Profile:
-          No participant profile provided
-
+          User ID: #{participant_profile.user.id}
+          Participant Profile ID: #{participant_profile.id}
+          Current Name: #{participant_profile.user.full_name}
+          Current Email: #{participant_profile.user.email}
+          Current Lead Provider: #{participant_profile.lead_provider.name}
+          Current Delivery Partner: #{participant_profile.delivery_partner.name}
+          Current Cohort: #{participant_profile.cohort_start_year}
+          Current Induction Status: #{participant_profile.latest_induction_record.induction_status}
+          Current Training Status: #{participant_profile.latest_induction_record.training_status}
+          Current Type: #{participant_profile.participant_type}
         BODY
       )
     end
