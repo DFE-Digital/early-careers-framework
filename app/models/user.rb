@@ -46,6 +46,9 @@ class User < ApplicationRecord
 
   after_update :sync_email_with_identity
 
+  delegate :trn, to: :teacher_profile, allow_nil: true
+  alias_method :ecf_id, :id
+
   validates :full_name, presence: true
   validates :email, presence: true, uniqueness: true, notify_email: true
   validates :get_an_identity_id, uniqueness: { allow_blank: true }
