@@ -5,6 +5,21 @@ inputs:
   azure-credentials:
     description: Azure credentials
     required: true
+  postgres-user:
+    description: Temporary database user
+    default: postgres
+  postgres-password:
+    description: Temporary database user password
+    default: postgres
+  postgres-db:
+    description: Temporary database name
+    default: postgres
+  postgres-host:
+    description: Temporary database server hostname
+    default: localhost
+  postgres-port:
+    description: Temporary database server port
+    default: '5432'
 
 runs:
   using: composite
@@ -32,7 +47,8 @@ runs:
     - name: Backup database
       shell: bash
       run: |
-        bin/konduit.sh cpd-ecf-production-web -- pg_dump -E utf8 --compress=1 --clean --if-exists --no-privileges --no-owner --verbose -f backup-production.sql.gz
+        bin/konduit.sh cpd-ecf-production-web -- pg_dump -E utf8 --clean --if-exists --no-privileges --no-owner --verbose --no-password -f backup-production.sql
+        tar -cvzf backup-production.sql.gz backup-production.sql
 
     - name: Set connection string
       shell: bash
@@ -41,15 +57,37 @@ runs:
         echo "::add-mask::$STORAGE_CONN_STR"
         echo "AZURE_STORAGE_CONNECTION_STRING=$STORAGE_CONN_STR" >> $GITHUB_ENV
 
-    - name: Upload backup
+    - name: Sanitise the Database backup
+      shell: bash
+      run: |
+        echo "::group::Restore backup to intermediate database"
+        createdb ${DATABASE_NAME} && psql -d ${DATABASE_NAME} -f backup-production.sql
+        echo "::endgroup::"
+        echo "::group::Sanitise data"
+        psql -d ${DATABASE_NAME} -f db/scripts/sanitise.sql
+        echo "::endgroup::"
+
+        echo "::group::Backup Sanitised Database"
+        pg_dump -E utf8 --clean --if-exists --no-privileges --no-owner --verbose --no-password -d ${DATABASE_NAME} -f sanitised-production.sql
+        tar -cvzf sanitised-production.sql.gz sanitised-production.sql
+        echo "::endgroup::"
+      env:
+        DATABASE_NAME: ${{ inputs.postgres-db }}
+        PGUSER: ${{ inputs.postgres-user }}
+        PGPASSWORD: ${{ inputs.postgres-password }}
+        PGHOST: ${{ inputs.postgres-host }}
+        PGPORT: ${{ inputs.postgres-port }}
+
+    - name: Upload sanitised version
       shell: bash
       run: |
         az config set extension.use_dynamic_install=yes_without_prompt
         az config set core.only_show_errors=true
         az storage azcopy blob upload \
           --container database-backup \
-          --source backup-production.sql.gz \
-          --destination $(date +"%F-%H").sql.gz
+          --source sanitised-production.sql.gz \
+          --destination sanitised-production.sql.gz \
+          --overwrite
 
     - uses: Azure/get-keyvault-secrets@v1
       if: failure()

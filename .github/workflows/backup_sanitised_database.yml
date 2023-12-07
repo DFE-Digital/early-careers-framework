@@ -1,0 +1,34 @@
+name: Production DB nightly backup
+on:
+  workflow_dispatch:
+
+jobs:
+  sanitise-production:
+    name: Sanitise production database
+    runs-on: ubuntu-20.04
+    environment: production
+
+    services:
+      postgres:
+        image: postgres:14-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Backup and upload database
+        uses: ./.github/actions/sanitise-and-upload-database
+        with:
+          azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
+          postgres-user: postgres
+          postgres-password: postgres
+          postgres-db: early-careers-framework-sanitised
+          postgres-host: postgres
+          postgres-port: postgres
