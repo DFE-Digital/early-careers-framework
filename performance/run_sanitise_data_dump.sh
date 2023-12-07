@@ -10,7 +10,7 @@ docker compose up -d web
 
 if [ -f ./db/${SERVICE_NAME}-full.sql ]; then
   echo "::group::Restore backup to intermediate database"
-  docker compose exec -T db psql --username postgres ${DATABASE_NAME} < ./db/${SERVICE_NAME}-full.sql
+  docker compose exec -T db psql --username postgres ${DATABASE_NAME} < ../../${SERVICE_NAME}-full.sql
   echo "::endgroup::"
 
   echo "::group::Sanitise data"
@@ -18,8 +18,8 @@ if [ -f ./db/${SERVICE_NAME}-full.sql ]; then
   echo "::endgroup::"
 
   echo "::group::Backup Sanitised Database"
-  docker compose exec db pg_dump --username postgres ${DATABASE_NAME} > ./db/${SERVICE_NAME}-sanitised.sql
-  tar -cvzf ./db/${SERVICE_NAME}-sanitised.tar.gz ./db/${SERVICE_NAME}-sanitised.sql
+  docker compose exec db pg_dump --username postgres ${DATABASE_NAME} > ../../${SERVICE_NAME}-sanitised.sql
+  tar -cvzf ../../${SERVICE_NAME}-sanitised.tar.gz ../../${SERVICE_NAME}-sanitised.sql
   echo "::endgroup::"
 fi
 
