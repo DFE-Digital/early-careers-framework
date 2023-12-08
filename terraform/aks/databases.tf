@@ -82,8 +82,6 @@ module "postgres-snapshot" {
 }
 
 resource "azurerm_postgresql_flexible_server_database" "analytics" {
-  count = var.deploy_azure_backing_services ? 1 : 0
-
   name      = "analytics"
   server_id = module.postgres.azure_server_id
   collation = "en_US.utf8"
