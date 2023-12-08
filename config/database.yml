@@ -45,8 +45,12 @@ test:
       idle_in_transaction_session_timeout: 0
 
 review:
-  <<: *default_primary
-  sslmode: <%= ENV.fetch("DB_SSLMODE") { "require" } %>
+  primary:
+    <<: *default_primary
+    database: 'early_careers_framework_performance'
+  analytics:
+    <<: *default_analytics
+    database: 'early_careers_framework_analytics_performance'
 
 performance:
   primary:
