@@ -103,7 +103,7 @@ jobs:
             --source sanitised-production.sql.gz \
             --destination ./performance/db/sanitised-production.sql.gz
 
-      - name: Deploy docker container network
+      - name: Extract sanitised dataset
         shell: bash
         run: |
           tar -zxvf ./performance/db/sanitised-production.sql.gz -C ./performance/db sanitised-production.sql
@@ -111,6 +111,10 @@ jobs:
       - name: Deploy docker container network
         run: |
           docker compose -f ./performance/docker-compose.yml up -d web
+
+      - name: Seed the performance database
+        run: |
+          docker compose -f ./performance/docker-compose.yml exec -T db psql --username postgres ${DATABASE_NAME} < ./performance/db/sanitised-production.sql
 
       - name: Run the tests
         run: |

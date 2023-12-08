@@ -8,4 +8,7 @@
 .github/*
 .githooks/*
 /coverage/*
+
+/reports
 /performance/reports
+/performance/db/*.gz

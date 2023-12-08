@@ -47,7 +47,6 @@ services:
       - db_data:/var/lib/postgresql/data
       # copy the sql script to create the performance database
       - ./db/create_performance_database.sql:/docker-entrypoint-initdb.d/create_database.sql
-      - ./db/sanitised-production.sql:/docker-entrypoint-initdb.d/create_tables.sql
     environment:
       POSTGRES_PASSWORD: performancepassword
     healthcheck:
