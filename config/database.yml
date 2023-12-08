@@ -31,31 +31,6 @@ development:
     <<: *default_analytics
     database: "early_careers_framework_analytics_development"
 
-review:
-  <<: *default_primary
-  sslmode: <%= ENV.fetch("DB_SSLMODE") { "require" } %>
-
-performance:
-  primary:
-    <<: *default_primary
-    database: 'early_careers_framework_performance'
-  analytics:
-    <<: *default_analytics
-    database: 'early_careers_framework_analytics_performance'
-
-sandbox:
-  primary:
-    <<: *default_primary
-    url: <%= ENV["DATABASE_URL"] %>
-  analytics:
-    <<: *default_analytics
-    migrations_paths: db/analytics_migrate
-    pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-    url: <%= ENV["ANALYTICS_DATABASE_URL"] %>
-    variables:
-      statement_timeout: 20000
-      idle_in_transaction_session_timeout: 10000
-
 test:
   <<: *default
   primary:
@@ -69,11 +44,36 @@ test:
     variables:
       idle_in_transaction_session_timeout: 0
 
+review:
+  <<: *default_primary
+  sslmode: <%= ENV.fetch("DB_SSLMODE") { "require" } %>
+
+performance:
+  primary:
+    <<: *default_primary
+    database: 'early_careers_framework_performance'
+  analytics:
+    <<: *default_analytics
+    database: 'early_careers_framework_analytics_performance'
+
 staging:
   primary:
     <<: *default_primary
     url: <%= ENV["DATABASE_URL"] %>
     pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  analytics:
+    <<: *default_analytics
+    migrations_paths: db/analytics_migrate
+    pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+    url: <%= ENV["ANALYTICS_DATABASE_URL"] %>
+    variables:
+      statement_timeout: 20000
+      idle_in_transaction_session_timeout: 10000
+
+sandbox:
+  primary:
+    <<: *default_primary
+    url: <%= ENV["DATABASE_URL"] %>
   analytics:
     <<: *default_analytics
     migrations_paths: db/analytics_migrate
