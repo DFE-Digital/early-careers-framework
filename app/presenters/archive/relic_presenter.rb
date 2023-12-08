@@ -25,6 +25,8 @@ module Archive
         when "ParticipantProfile::Mentor"
           ::Archive::ParticipantProfilePresenter.new(relic_data)
         end
+      when "participant_declaration"
+        ::Archive::ParticipantDeclarationPresenter.new(relic_data)
       when "induction_record"
         ::Archive::InductionRecordPresenter.new(relic_data)
       else
