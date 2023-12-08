@@ -11,6 +11,7 @@ AllCops:
     - 'vendor/**/*'
     - 'db/seeds/cip_*.rb'
     - 'db/data/**/*.csv'
+    - 'db/migrate/*'
 
 Style/FrozenStringLiteralComment:
   Enabled: true
