@@ -49,7 +49,7 @@ review:
     <<: *default_primary
     database: 'early_careers_framework_performance'
   analytics:
-    <<: *default_analytics
+    <<: *default_primary
     database: 'early_careers_framework_analytics_performance'
 
 performance:
