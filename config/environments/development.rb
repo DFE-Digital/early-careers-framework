@@ -31,7 +31,7 @@ Rails.application.configure do
   config.gias_api_user = ENV["GIAS_API_USER"]
   config.gias_api_password = ENV["GIAS_API_PASSWORD"]
 
-  config.zendesk_url = ENV.fetch("ZENDESK_URL", "https://teachercpdhelp.zendesk.com/api/v2")
+  config.zendesk_url = ENV.fetch("ZENDESK_URL", "https://becomingateacher.zendesk.com/api/v2")
   config.zendesk_username = ENV["ZENDESK_USERNAME"]
   config.zendesk_token = ENV["ZENDESK_TOKEN"]
 
