@@ -30,13 +30,6 @@ x-env: &env
     PERF_TARGET_PORT: 3000
     PERF_LEAD_PROVIDER_API_TOKEN: performance-api-token
 
-    PERF_NUM_AUTHORITIES: ${PERF_NUM_AUTHORITIES:-10}
-    PERF_NUM_SCHOOLS: ${PERF_NUM_SCHOOLS:-100}
-    PERF_NUM_PARTICIPANTS: ${PERF_NUM_PARTICIPANTS:-10}
-
-    PERF_NUM_VIRTUAL_USERS: ${PERF_NUM_VIRTUAL_USERS:-15}
-    PERF_DURATION: ${PERF_DURATION:-360s}
-
     PERF_SCENARIO: ${PERF_SCENARIO:-smoke-test}
     PERF_REPORT_FILE: ${PERF_REPORT_FILE:-k6-output.json}
 
@@ -45,8 +38,6 @@ services:
     image: postgres:14-alpine
     volumes:
       - db_data:/var/lib/postgresql/data
-      # copy the sql script to create the performance database
-      - ./db/create_performance_database.sql:/docker-entrypoint-initdb.d/create_database.sql
     environment:
       POSTGRES_PASSWORD: performancepassword
     healthcheck:

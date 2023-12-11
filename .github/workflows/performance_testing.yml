@@ -1,156 +1,29 @@
 name: "Performance Testing"
 
 on:
-  workflow_call:
+  workflow_dispatch:
     inputs:
       scenario:
         description: The performance test scenario to run
-        required: true
         default: smoke-test
-        type: string
       docker-image:
         description: The docker image to run the tests against
-        required: true
-        default: early-career-framework
-        type: string
-      number-authorities:
-        description: the number of authorities to create
-        required: true
-        default: 1
-        type: number
-      number-schools:
-        description: the number of schools per authority to create
-        required: true
-        default: 1
-        type: number
-      number-participants:
-        description: the number of participants per school to create
-        required: true
-        default: 1
-        type: number
-
-env:
-  IMAGE: ${{ inputs.docker-image }}
-
-  PERF_NUM_AUTHORITIES: ${{ inputs.number-authorities }}
-  PERF_NUM_SCHOOLS: ${{ inputs.number-schools }}
-  PERF_NUM_PARTICIPANTS: ${{ inputs.number-participants }}
-
-  PERF_SCENARIO: ${{ inputs.scenario }}
-  PERF_REPORT_FILE: k6-output.json
-
-  K6_LOG_PATH: ./reports/${{ inputs.scenario }}.log
-  JSON_LOG_PATH: ./reports/${{ inputs.scenario }}-log.json
-  JSON_REPORT_PATH: ./reports/${{ inputs.scenario }}-report.json
-  HTML_REPORT_PATH: ./reports/${{ inputs.scenario }}-report.html
-  MARKDOWN_SUMMARY_PATH: ./reports/${{ inputs.scenario }}-summary.md
+        default: ghcr.io/dfe-digital/early-careers-framework:main
 
 jobs:
-  run_scenario:
-    name: "Run scenario"
-    runs-on: ubuntu-latest
+  test_performance:
+    name: "Run performance scenario"
+    runs-on: ubuntu-20.04
+    environment:
+      name: production
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      - name: Login
-        uses: azure/login@v1
+      - name: Run performance scenario
+        uses: ./.github/actions/test-performance
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-      - name: Set AKS credentials
-        shell: bash
-        run: az aks get-credentials -g s189p01-tsc-pd-rg -n s189p01-tsc-production-aks
-
-      - name: Set up Node
-        uses: actions/setup-node@v4.0.0
-        with:
-          node-version: "18.18.x"
-          cache: "yarn"
-
-      - name: Install node.js dependencies
-        run: yarn install --immutable --refresh-lockfile
-
-      - name: Set connection string
-        shell: bash
-        run: |
-          STORAGE_CONN_STR=$(az storage account show-connection-string -g s189p01-cpdecf-pd-rg -n s189p01cpdecfdbbkppdsa --query 'connectionString')
-          echo "::add-mask::$STORAGE_CONN_STR"
-          echo "AZURE_STORAGE_CONNECTION_STRING=$STORAGE_CONN_STR" >> $GITHUB_ENV
-
-      - name: Update PR comment with notice of testing
-        uses: thollander/actions-comment-pull-request@v2
-        with:
-          message: |
-            The `${{ inputs.scenario }}` scenario is currently being run, with the following seed numbers;
-
-              - number of local authorities (LA): ${{ inputs.number-authorities }}
-              - number of schools per LA: ${{ inputs.number-schools }}
-              - number of participants per school: ${{ inputs.number-participants }}
-
-            Awaiting results...
-          pr_number: ${{ github.event.pull_request.number }}
-          comment_tag: ${{ inputs.scenario }}-notice
-          mode: delete
-
-      - name: Download sanitised database seed
-        shell: bash
-        run: |
-          az config set extension.use_dynamic_install=yes_without_prompt
-          az config set core.only_show_errors=true
-          az storage azcopy blob download \
-            --container database-backup \
-            --source sanitised-production.sql.gz \
-            --destination ./performance/db/sanitised-production.sql.gz
-
-      - name: Extract sanitised dataset
-        shell: bash
-        run: |
-          tar -zxvf ./performance/db/sanitised-production.sql.gz -C ./performance/db sanitised-production.sql
-
-      - name: Deploy docker container network
-        run: |
-          docker compose -f ./performance/docker-compose.yml up -d web
-
-      - name: Seed the performance database
-        run: |
-          docker compose -f ./performance/docker-compose.yml exec -T db psql --username postgres ${DATABASE_NAME} < ./performance/db/sanitised-production.sql
-
-      - name: Run the tests
-        run: |
-          docker compose -f ./performance/docker-compose.yml up k6
-
-      - name: Extract output files
-        run: |
-          mkdir ./reports
-          docker compose -f ./performance/docker-compose.yml cp k6:/home/k6/k6-output.json ${{ env.JSON_REPORT_PATH }}
-          docker compose -f ./performance/docker-compose.yml cp k6:/home/k6/k6.log ${{ env.K6_LOG_PATH }}
-
-      - name: Shutdown the network
-        if: always()
-        run: |
-          docker-compose -f ./performance/docker-compose.yml down
-
-      - name: Generate the HTML report and summary
-        run: |
-          node ./performance/dfe-k6-log-to-json.js ${{ env.K6_LOG_PATH }} ${{ env.JSON_LOG_PATH }}
-          node ./performance/dfe-k6-reporter.js ${{ env.JSON_REPORT_PATH }} ${{ env.HTML_REPORT_PATH }} ${{ env.MARKDOWN_SUMMARY_PATH }}
-
-      - name: Upload the reports
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{ inputs.scenario }}-report
-          path: |
-            ${{ env.HTML_REPORT_PATH }}
-            ${{ env.JSON_REPORT_PATH }}
-            ${{ env.JSON_LOG_PATH }}
-          retention-days: 14
-
-      - name: Update PR comment with summary
-        if: github.event_name == 'pull_request'
-        uses: thollander/actions-comment-pull-request@v2
-        with:
-          filePath: ${{ env.MARKDOWN_SUMMARY_PATH }}
-          pr_number: ${{ github.event.pull_request.number }}
-          comment_tag: ${{ inputs.scenario }}-summary
-          mode: recreate
+          scenario: ${{ inputs.scenario }}
+          docker-image: ${{ inputs.docker-image }}
+          azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}

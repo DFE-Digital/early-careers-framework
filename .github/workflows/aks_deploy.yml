@@ -22,10 +22,10 @@ on:
     branches:
       - main
     types:
+      - labeled
+      - opened
       - synchronize
       - reopened
-      - opened
-      - labeled
 
 jobs:
   lint:
@@ -95,31 +95,45 @@ jobs:
           message: |
             Review app deployed to ${{ steps.deploy.outputs.url }}
 
-  smoke_test:
+  run_smoke_tests:
     name: Run Smoke tests
-    concurrency: smoke_tests_${{ github.event.pull_request.number }}
-    if: github.event_name == 'pull_request' && github.event.label.name == 'test-performance'
-    needs: [docker]
-    uses: ./.github/workflows/performance_testing.yml
-    with:
-      scenario: smoke-test
-      docker-image: ${{ needs.docker.outputs.docker-image }}
-      number-authorities: 1
-      number-schools: 1
-      number-participants: 1
+    needs: [ docker ]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'test-performance')
+    concurrency: run_smoke_tests_${{ github.event.pull_request.number }}
+    environment:
+      name: production
 
-  performance_test:
-    name: Test API performance
-    concurrency: test_api_performance_${{ github.event.pull_request.number }}
-    if: github.event_name == 'pull_request' && github.event.label.name == 'test-performance'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - uses: ./.github/actions/test-performance
+        id: smoke-test
+        with:
+          scenario: smoke-test
+          docker-image: ${{ needs.docker.outputs.docker-image }}
+          azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
+
+  run_api_performance_tests:
+    name: Run API performance tests
     needs: [docker]
-    uses: ./.github/workflows/performance_testing.yml
-    with:
-      scenario: api-load-test
-      docker-image: ${{ needs.docker.outputs.docker-image }}
-      number-authorities: 10
-      number-schools: 100
-      number-participants: 10
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'test-performance')
+    concurrency: run_api_performance_tests_${{ github.event.pull_request.number }}
+    environment:
+      name: production
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - uses: ./.github/actions/test-performance
+        id: api-load-test
+        with:
+          scenario: api-load-test
+          docker-image: ${{ needs.docker.outputs.docker-image }}
+          azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
 
   deploy_staging:
     name: Deploy staging

@@ -23,7 +23,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Backup and upload database
+      - name: Sanitise and upload database
         uses: ./.github/actions/sanitise-and-upload-database
         with:
           azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}

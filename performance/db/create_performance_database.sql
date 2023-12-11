@@ -1,2 +1,0 @@
-CREATE DATABASE early_careers_framework_performance;
-CREATE DATABASE early_careers_framework_analytics_performance;
