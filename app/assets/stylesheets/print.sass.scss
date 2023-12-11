@@ -6,6 +6,12 @@
  * <% end %>
  */
 @media print {
+  // page
+  @page {
+    size: A4;
+    margin: 20mm 10mm;
+  }
+
   // header
   body > header,
   .govuk-phase-banner,
@@ -26,7 +32,8 @@
   // statements
   .statement-selector,
   .app-application__standalone-course,
-  .contract-information {
+  .contract-information,
+  .app-application__panel__actions {
     display: none;
   }
 
@@ -38,6 +45,12 @@
     header {
       gap: 30px;
     }
+  }
+
+  .app-application__panel__summary,
+  .finance-panel {
+    padding: 0;
+    background: transparent;
   }
 
   .print-page-break {
