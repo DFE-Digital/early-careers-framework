@@ -883,6 +883,6 @@ en:
   support_query:
     subjects:
       unspecified: Support request
-      change-participant-lead-provider: Request to change lead provider on a participant profile
+      change-participant-lead-provider: Request to change lead provider for a participant profile
       change-cohort-lead-provider: Request to change lead provider for a cohort
       change-cohort-delivery-partner: Request to change delivery partner for a cohort
