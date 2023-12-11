@@ -4,6 +4,7 @@ require "rails_helper"
 
 RSpec.describe ApplicationHelper, type: :helper do
   include Devise::Test::ControllerHelpers
+  include GovukLinkHelper
 
   let(:admin_user) { create(:user, :admin) }
   let(:induction_coordinator) { create(:user, :induction_coordinator) }
@@ -124,6 +125,18 @@ RSpec.describe ApplicationHelper, type: :helper do
     it "displays the default service name" do
       helper.request.path = "/"
       expect(helper.service_name).to eq "Manage training for early career teachers"
+    end
+  end
+
+  describe "#print_link" do
+    subject { print_link("Save as PDF", filename: "My Document") }
+
+    it "renders a HTML link to print/save via the built-in browser functionality" do
+      is_expected.to eq(
+        <<~HTML.chomp,
+          <a onclick="window.formattedPrint(this)" data-filename="My Document" class="govuk-link" href="javascript:void(0)">Save as PDF</a>
+        HTML
+      )
     end
   end
 end

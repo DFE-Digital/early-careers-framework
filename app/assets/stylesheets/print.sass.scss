@@ -1,0 +1,59 @@
+/**
+ * This stylesheet needs to be explicitly included on pages:
+ *
+ * <% content_for :stylesheets do %>
+ *   <%= stylesheet_link_tag 'print', media: 'print' %>
+ * <% end %>
+ */
+@media print {
+  // page
+  @page {
+    size: A4;
+    margin: 20mm 10mm;
+  }
+
+  // header
+  body > header,
+  .govuk-phase-banner,
+  .govuk-back-link {
+    display: none;
+  }
+
+  // footer
+  body > footer {
+    display: none;
+  }
+
+  // global
+  a {
+    display: none;
+  }
+
+  // statements
+  .statement-selector,
+  .app-application__standalone-course,
+  .contract-information,
+  .app-application__panel__actions {
+    display: none;
+  }
+
+  .npq-contract-summary {
+    &:nth-child(odd) {
+      page-break-before: always;
+    }
+
+    header {
+      gap: 30px;
+    }
+  }
+
+  .app-application__panel__summary,
+  .finance-panel {
+    padding: 0;
+    background: transparent;
+  }
+
+  .print-page-break {
+    page-break-before: always;
+  }
+}

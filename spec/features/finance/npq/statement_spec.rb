@@ -22,6 +22,7 @@ RSpec.describe "Show NPQ statement", :js do
       then_i_see("National professional qualifications (NPQs)")
 
       and_i_see_authorise_for_payment_button
+      and_i_see_save_as_pdf_link
       when_i_click_the_authorise_for_payment_button
 
       then_i_see("Check #{statement.name} statement details before authorising for payment")
@@ -153,6 +154,11 @@ RSpec.describe "Show NPQ statement", :js do
 
   def and_i_see_authorise_for_payment_button
     expect(page).to have_button("Authorise for payment")
+  end
+
+  def and_i_see_save_as_pdf_link
+    expected_filename = "#{npq_lead_provider.name} #{statement.name} NPQ Statement (#{cohort.start_year} Cohort)"
+    expect(page).to have_css("a[data-filename='#{expected_filename}']", text: "Save as PDF")
   end
 
   def when_i_click_the_authorise_for_payment_button

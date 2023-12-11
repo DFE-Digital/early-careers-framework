@@ -93,6 +93,10 @@ module ApplicationHelper
     ]
   end
 
+  def print_link(title, filename:)
+    govuk_link_to title, "javascript:void(0)", onclick: "window.formattedPrint(this)", data: { filename: }
+  end
+
 private
 
   def post_2020_ecf_participant?(user)
