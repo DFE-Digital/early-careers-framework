@@ -48,7 +48,7 @@
       <% else %>
         <% row.with_value(text: school_cohort_lead_provider_name(school_cohort)) %>
       <% end %>
-      <% row.with_action(text: :none) %>
+      <% row.with_action(text: 'Change', visually_hidden_text: "lead provider", href: support_path(cohort_year: school_cohort.start_year, school_id: @school.id, subject: :"change-cohort-lead-provider")) %>
     <% end %>
 
     <% list.with_row do |row| %>
@@ -58,7 +58,7 @@
       <% else %>
         <% row.with_value(text: school_cohort_delivery_partner_name(school_cohort)) %>
       <% end %>
-      <% row.with_action(text: :none) %>
+      <% row.with_action(text: 'Change', visually_hidden_text: "delivery partner", href: support_path(cohort_year: school_cohort.start_year, school_id: @school.id, subject: :"change-cohort-delivery-partner")) %>
     <% end %>
   <% end %>
 <% end %>
@@ -68,10 +68,6 @@
     <p class="govuk-body">
       If your school is not working with this lead provider or delivery
       partner, <%= govuk_link_to("tell us before #{latest_partnership.challenge_deadline&.to_date&.to_fs(:govuk)}", challenge_partnership_path(partnership: latest_partnership), id: "challenge-partnership-link") %>.
-    </p>
-  <% else %>
-    <p class="govuk-body">
-      If this does not look right, contact: <%= render MailToSupportComponent.new %>
     </p>
   <% end %>
 <% end %>

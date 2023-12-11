@@ -863,6 +863,8 @@ en:
     introduction:
       unspecified: "If you have a question about the Manage training for early career teachers service, you can contact the DfE using this form."
       change-participant-lead-provider: "Complete this form to request a change to %{participant_name}’s registered training provider."
+      change-cohort-lead-provider: "Complete this form to tell us about a change of provider for ECTs and mentors who started their training in the %{cohort_year_range} academic year."
+      change-cohort-delivery-partner: "Complete this form to tell us about a change of partner for ECTs and mentors who started their training in the %{cohort_year_range} academic year."
     instructions:
       unspecified_html: ""
       change-participant-lead-provider_html: |
@@ -870,10 +872,23 @@ en:
         <ul>
           <li>which training provider they’ll work with instead</li>
           <li>the date they’ll start training with the new provider</li>
-          <li>the reason for this change</li>
+        </ul>
+      change-cohort-delivery-partner_html: |
+        Tell us:
+        <ul>
+          <li>which delivery partner this cohort will work with instead</li>
+          <li>the date they’ll start training with the new delivery partner</li>
+        </ul>
+      change-cohort-lead-provider_html: |
+        Tell us:
+        <ul>
+        <li>which training provider this cohort will work with instead</li>
+        <li>the date they’ll start training with the new provider</li>
         </ul>
 
   support_query:
     subjects:
       unspecified: Support request
-      change-participant-lead-provider: Request to change lead provider on a participant profile
+      change-participant-lead-provider: Request to change lead provider for a participant profile
+      change-cohort-lead-provider: Request to change lead provider for a cohort
+      change-cohort-delivery-partner: Request to change delivery partner for a cohort

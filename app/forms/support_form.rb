@@ -3,7 +3,7 @@
 class SupportForm
   include ActiveModel::Model
 
-  attr_accessor :message, :participant_profile_id, :school_id, :current_user
+  attr_accessor :message, :participant_profile_id, :school_id, :current_user, :cohort_year
   attr_reader :subject
 
   validates :message, presence: { message: "Enter your message" }
@@ -42,6 +42,7 @@ class SupportForm
     {
       school_id: school&.id,
       participant_profile_id: participant_profile&.id,
+      cohort_year:,
     }.reject { |_k, v| v.blank? }
   end
 

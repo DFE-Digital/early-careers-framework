@@ -4,6 +4,8 @@ class SupportQuery < ApplicationRecord
   VALID_SUBJECTS = %w[
     unspecified
     change-participant-lead-provider
+    change-cohort-lead-provider
+    change-cohort-delivery-partner
   ].freeze
 
   belongs_to :user
@@ -53,16 +55,17 @@ class SupportQuery < ApplicationRecord
   end
 
   def expanded_additional_information
-    <<~BODY
-      Ticket Created By:
+    additional_information_string = <<~BODY
       #{user_additional_information.strip}
 
-      School:
-      #{school_additional_information.strip}
+      #{school_additional_information&.strip}
 
-      Participant Profile:
-      #{participant_profile_additional_information.strip}
+      #{participant_profile_additional_information&.strip}
+
+      #{cohort_additional_information&.strip}
     BODY
+
+    additional_information_string.strip
   end
 
 private
@@ -94,6 +97,10 @@ private
     additional_information["participant_profile_id"]
   end
 
+  def cohort_year
+    additional_information["cohort_year"]
+  end
+
   def participant_profile
     @participant_profile ||= ParticipantProfile.find_by(id: participant_profile_id) if participant_profile_id.present?
   end
@@ -104,6 +111,7 @@ private
 
   def user_additional_information
     <<~BODY
+      Ticket Created By:
       User ID: #{user.id}
       Name: #{user.full_name}
       Email: #{user.email}
@@ -111,21 +119,45 @@ private
   end
 
   def school_additional_information
-    return "No school provided" if school.blank?
+    return if school.blank?
 
     <<~BODY
+      School:
       URN: #{school.urn}
       Name: #{school.name}
     BODY
   end
 
   def participant_profile_additional_information
-    return "No participant profile provided" if participant_profile.blank?
+    return if participant_profile.blank?
+
+    latest_induction_record = participant_profile.latest_induction_record
+
+    current_information = {
+      name: participant_profile.full_name,
+      email: participant_profile.user.email,
+      lead_provider: participant_profile.lead_provider&.name,
+      delivery_partner: participant_profile.delivery_partner&.name,
+      cohort: participant_profile.cohort_start_year,
+      induction_status: latest_induction_record&.induction_status,
+      training_status: latest_induction_record&.training_status,
+      type: participant_profile.participant_type,
+    }
 
     <<~BODY
-      ID: #{participant_profile.id}
-      Current Name: #{participant_profile.full_name}
-      Current Email: #{participant_profile.user.email}
+      Participant Profile:
+      User ID: #{participant_profile.user.id}
+      Participant Profile ID: #{participant_profile.id}
+      #{current_information.map { |key, value| "Current #{key.to_s.titleize}: #{value}" }.join("\n")}
+    BODY
+  end
+
+  def cohort_additional_information
+    return if cohort_year.blank?
+
+    <<~BODY
+      Cohort:
+      Start Year: #{cohort_year}
     BODY
   end
 end

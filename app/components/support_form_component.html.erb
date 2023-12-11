@@ -3,12 +3,11 @@
     <span class="govuk-caption-l"><%= school.name if school.present? %></span>
     <h1 class="govuk-heading-l">Contact support</h1>
 
-
     <%= form_for @form, url: support_path, method: :post do |f| %>
       <%= f.govuk_error_summary %>
 
       <p class="govuk-body">
-        <%= t("support_form.introduction.#{subject}", participant_name: participant_profile_full_name) %>
+        <%= t("support_form.introduction.#{subject}", **i18n_params) %>
       </p>
 
       <p class="govuk-body">We’ll automatically include these details for you: </p>
@@ -55,15 +54,27 @@
             </dd>
           </div>
         <% end %>
+
+        <% if cohort_year.present? %>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              Cohort
+            </dt>
+            <dd class="govuk-summary-list__value">
+              <%= cohort_year %>
+            </dd>
+          </div>
+        <% end %>
       </dl>
 
       <p class="govuk-body">
-        <%= t("support_form.instructions.#{subject}_html", participant_name: participant_profile_full_name) %>
+        <%= t("support_form.instructions.#{subject}_html", **i18n_params) %>
       </p>
 
       <%= f.hidden_field :subject %>
       <%= f.hidden_field :participant_profile_id %>
       <%= f.hidden_field :school_id %>
+      <%= f.hidden_field :cohort_year %>
 
       <%= f.govuk_text_area(
             :message,
