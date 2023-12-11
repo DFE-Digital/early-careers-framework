@@ -9,6 +9,15 @@
       "exec": "smokeTest"
     },
 
+    "warm-up": {
+      "executor": "constant-arrival-rate",
+      "rate": 1,
+      "timeUnit": "1s",
+      "duration": "30s",
+      "preAllocatedVUs": 1,
+      "exec": "apiLoadTest"
+    },
+
     "api-load-test": {
       "executor": "constant-arrival-rate",
       "rate": 1,

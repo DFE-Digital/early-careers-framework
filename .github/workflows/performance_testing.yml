@@ -114,7 +114,9 @@ jobs:
 
       - name: Seed the performance database
         run: |
+          docker compose -f ./performance/docker-compose.yml exec -T db createdb --username postgres ${DATABASE_NAME}
           docker compose -f ./performance/docker-compose.yml exec -T db psql --username postgres ${DATABASE_NAME} < ./performance/db/sanitised-production.sql
+          docker compose -f ./performance/docker-compose.yml exec web bundle exec rails db:migrate db:seed
 
       - name: Run the tests
         run: |
