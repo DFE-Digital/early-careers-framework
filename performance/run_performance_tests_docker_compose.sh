@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export IMAGE=ghcr.io/dfe-digital/early-careers-framework:0d52390bbcbf2a6ae1a2865b95869c5db9af5147
+export IMAGE=ghcr.io/dfe-digital/early-careers-framework:main
 
 export PERF_SCENARIO=smoke-test
 
