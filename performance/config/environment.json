@@ -1,6 +1,6 @@
 {
-  "HOSTNAME": "localhost",
-  "PORT": 3000,
+  "TARGET_HOSTNAME": "localhost",
+  "TARGET_PORT": 3000,
   "REPORT_FILE": "k6-output.json",
   "LEAD_PROVIDER_API_TOKEN": "performance-api-token",
   "PARTICIPANTS_PER_PAGE": 2000,

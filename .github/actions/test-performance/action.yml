@@ -1,0 +1,142 @@
+name: Test performance
+description: Run a K6 performance test
+
+inputs:
+  scenario:
+    description: The performance test scenario to run
+    default: smoke-test
+  docker-image:
+    description: The docker image to run the tests against
+    default: ghcr.io/dfe-digital/early-careers-framework:main
+  azure-credentials:
+    description: Azure credentials
+    required: true
+
+runs:
+  using: composite
+
+  steps:
+    - name: Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ inputs.azure-credentials }}
+
+    - name: Set connection string
+      shell: bash
+      run: |
+        STORAGE_CONN_STR=$(az storage account show-connection-string -g s189p01-cpdecf-pd-rg -n s189p01cpdecfdbbkppdsa --query 'connectionString')
+        echo "::add-mask::$STORAGE_CONN_STR"
+        echo "AZURE_STORAGE_CONNECTION_STRING=$STORAGE_CONN_STR" >> $GITHUB_ENV
+
+    - name: Set up Node
+      uses: actions/setup-node@v4.0.0
+      with:
+        node-version: "18.18.x"
+        cache: "yarn"
+
+    - name: Install node.js dependencies
+      shell: bash
+      run: yarn install --immutable --refresh-lockfile
+
+    - name: Update PR comment with notice of testing
+      uses: thollander/actions-comment-pull-request@v2
+      with:
+        message: |
+          The `${{ inputs.scenario }}` scenario is currently being run, with the following seed numbers;
+
+            - number of local authorities (LA): ${{ inputs.number-authorities }}
+            - number of schools per LA: ${{ inputs.number-schools }}
+            - number of participants per school: ${{ inputs.number-participants }}
+
+          Awaiting results...
+        pr_number: ${{ github.event.pull_request.number }}
+        comment_tag: ${{ inputs.scenario }}-notice
+        mode: delete
+
+    - name: Download sanitised database seed
+      shell: bash
+      run: |
+        az config set extension.use_dynamic_install=yes_without_prompt
+        az config set core.only_show_errors=true
+        az storage azcopy blob download \
+          --container database-backup \
+          --source sanitised-production.sql.gz \
+          --destination ./performance/db/sanitised-production.sql.gz
+
+    - name: Extract sanitised dataset
+      shell: bash
+      run: |
+        tar -zxvf ./performance/db/sanitised-production.sql.gz -C ./performance/db sanitised-production.sql
+
+    - name: Deploy docker container network
+      shell: bash
+      run: |
+        docker compose -f ./performance/docker-compose.yml up -d web
+        sleep 5
+      env:
+        IMAGE: ${{ inputs.docker-image }}
+
+        PERF_SCENARIO: ${{ inputs.scenario }}
+        PERF_REPORT_FILE: k6-output.json
+
+    - name: Seed the performance database
+      shell: bash
+      run: |
+        docker compose -f ./performance/docker-compose.yml exec -T db createdb --username postgres early_careers_framework_performance
+        docker compose -f ./performance/docker-compose.yml exec -T db createdb --username postgres early_careers_framework_analytics_performance
+        docker compose -f ./performance/docker-compose.yml exec -T db psql --username postgres early_careers_framework_performance < ./performance/db/sanitised-production.sql
+        docker compose -f ./performance/docker-compose.yml exec web bundle exec rails db:migrate db:seed
+      env:
+        IMAGE: ${{ inputs.docker-image }}
+
+        PERF_SCENARIO: ${{ inputs.scenario }}
+        PERF_REPORT_FILE: k6-output.json
+
+    - name: Run the tests
+      shell: bash
+      run: |
+        mkdir ./reports
+        docker compose -f ./performance/docker-compose.yml up k6
+        docker compose -f ./performance/docker-compose.yml cp k6:/home/k6/k6-output.json ./reports/${{ inputs.scenario }}-report.json
+        docker compose -f ./performance/docker-compose.yml cp k6:/home/k6/k6.log ./reports/${{ inputs.scenario }}.log
+      env:
+        IMAGE: ${{ inputs.docker-image }}
+
+        PERF_SCENARIO: ${{ inputs.scenario }}
+        PERF_REPORT_FILE: k6-output.json
+
+    - name: Shutdown the network
+      shell: bash
+      if: always()
+      run: |
+        docker-compose -f ./performance/docker-compose.yml down
+      env:
+        IMAGE: ${{ inputs.docker-image }}
+
+        PERF_SCENARIO: ${{ inputs.scenario }}
+        PERF_REPORT_FILE: k6-output.json
+
+    - name: Generate the HTML report and summary
+      shell: bash
+      run: |
+        node ./performance/dfe-k6-log-to-json.js ./reports/${{ inputs.scenario }}.log ./reports/${{ inputs.scenario }}-log.json
+        node ./performance/dfe-k6-reporter.js ./reports/${{ inputs.scenario }}-report.json ./reports/${{ inputs.scenario }}-report.html ./reports/${{ inputs.scenario }}-summary.md
+
+    - name: Upload the reports
+      uses: actions/upload-artifact@v3
+      with:
+        name: ${{ inputs.scenario }}-report
+        path: |
+          ./reports/${{ inputs.scenario }}-report.html
+          ./reports/${{ inputs.scenario }}-report.json
+          ./reports/${{ inputs.scenario }}-log.json
+        retention-days: 14
+
+    - name: Update PR comment with summary
+      if: github.event_name == 'pull_request'
+      uses: thollander/actions-comment-pull-request@v2
+      with:
+        filePath: ./reports/${{ inputs.scenario }}-summary.md
+        pr_number: ${{ github.event.pull_request.number }}
+        comment_tag: ${{ inputs.scenario }}-summary
+        mode: recreate

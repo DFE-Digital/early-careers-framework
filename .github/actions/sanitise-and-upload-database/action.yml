@@ -47,8 +47,19 @@ runs:
     - name: Backup database
       shell: bash
       run: |
-        bin/konduit.sh cpd-ecf-production-web -- pg_dump -E utf8 --clean --if-exists --no-privileges --no-owner --verbose --no-password -f backup-production.sql
-        tar -cvzf backup-production.sql.gz backup-production.sql
+        bin/konduit.sh -d s189p01-cpdecf-pd-pg-snapshot -k s189p01-cpdecf-pd-app-kv cpd-ecf-production-web -- pg_dump -E utf8 --clean --if-exists --no-privileges --no-owner --verbose --no-password -f backup-production.sql \
+          --exclude-table-data api_request_audits \
+          --exclude-table-data api_requests \
+          --exclude-table-data deleted_duplicates \
+          --exclude-table-data ecf_participant_validation_data \
+          --exclude-table-data npq_application_eligibility_imports \
+          --exclude-table-data npq_application_exports \
+          --exclude-table-data participant_declaration_attempts \
+          --exclude-table-data participant_outcome_api_requests \
+          --exclude-table-data profile_validation_decisions \
+          --exclude-table-data sessions \
+          --exclude-table-data sync_dqt_induction_start_date_errors \
+          --exclude-table-data versions
 
     - name: Set connection string
       shell: bash
@@ -86,8 +97,7 @@ runs:
         az storage azcopy blob upload \
           --container database-backup \
           --source sanitised-production.sql.gz \
-          --destination sanitised-production.sql.gz \
-          --overwrite
+          --destination sanitised-production.sql.gz
 
     - uses: Azure/get-keyvault-secrets@v1
       if: failure()

@@ -1,9 +1,13 @@
 #!/bin/bash
 
-export SERVICE_NAME=early-careers-framework
-export DATABASE_NAME=early_careers_framework_performance
+export RAILS_ENV=performance
 
-export IMAGE=ghcr.io/dfe-digital/early-careers-framework:main
+export SERVICE_NAME=early-careers-framework
+export DATABASE_NAME=${SERVICE_NAME}_${RAILS_ENV}
+
+export PERF_TARGET_HOSTNAME=localhost
+export PERF_TARGET_PORT=3000
+export PERF_LEAD_PROVIDER_API_TOKEN=performance-api-token
 
 export PERF_NUM_AUTHORITIES=10
 export PERF_NUM_SCHOOLS=10
@@ -12,29 +16,26 @@ export PERF_NUM_PARTICIPANTS=10
 export PERF_SCENARIO=api-load-test
 export PERF_REPORT_FILE=k6-output.json
 
-mkdir ../reports
-rm -fr ../reports/${PERF_SCENARIO}*
+mkdir ./reports
+rm -fr ./reports/${PERF_SCENARIO}*
 
-# docker compose build
-docker compose up -d web
+tar -zxvf ./performance/db/sanitised-production.sql.gz -C ./performance/db sanitised-production.sql
 
-if [ -f ./db/${SERVICE_NAME}-full.sql ]; then
-  echo "restoring performance database from dump"
-  docker compose exec -T db psql --username postgres ${DATABASE_NAME} < ./db/${SERVICE_NAME}-full.sql
+createdb ${DATABASE_NAME}
+psql ${DATABASE_NAME} < ./performance/db/sanitised-production.sql
+bundle exec rails db:migrate db:seed
+bundle exec rails server -d
 
-  echo "Migrating db schema"
-  docker compose exec web bundle exec rails db:migrate:primary
-else
-  echo "Running db seed"
-  docker compose exec web bundle exec rails db:create db:schema:load
-  docker compose exec web bundle exec rails db:seed
-fi
+cd ./performance || exit
 
-docker compose up k6
-docker compose cp k6:/home/k6/${PERF_REPORT_FILE} ../reports/${PERF_SCENARIO}-report.json
-docker compose cp k6:/home/k6/k6.log ../reports/${PERF_SCENARIO}.log
+k6 run ./main.js --out json=../reports/${PERF_SCENARIO}.log
+mv ./${PERF_REPORT_FILE} ../reports/${PERF_SCENARIO}-report.json
 
 node dfe-k6-log-to-json.js ../reports/${PERF_SCENARIO}.log ../reports/${PERF_SCENARIO}-log.json
 node dfe-k6-reporter.js ../reports/${PERF_SCENARIO}-report.json ../reports/${PERF_SCENARIO}-report.html ../reports/${PERF_SCENARIO}-summary.md
 
-docker compose down -v
+cd .. || exit
+
+# shellcheck disable=SC2046
+kill -9 $(cat tmp/pids/server.pid)
+rm -fr ./db/sanitised-production.sql
