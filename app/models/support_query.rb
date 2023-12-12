@@ -4,6 +4,7 @@ class SupportQuery < ApplicationRecord
   VALID_SUBJECTS = %w[
     unspecified
     change-participant-lead-provider
+    change-participant-date-of-birth
     change-cohort-lead-provider
     change-cohort-delivery-partner
   ].freeze
