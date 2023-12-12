@@ -5,6 +5,7 @@ class SupportQuery < ApplicationRecord
     unspecified
     change-participant-lead-provider
     change-participant-date-of-birth
+    change-participant-trn
     change-cohort-lead-provider
     change-cohort-delivery-partner
   ].freeze

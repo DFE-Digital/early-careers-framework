@@ -864,6 +864,7 @@ en:
       unspecified: "If you have a question about the Manage training for early career teachers service, you can contact the DfE using this form."
       change-participant-lead-provider: "Complete this form to request a change to %{participant_name}’s registered training provider."
       change-participant-date-of-birth: "Complete this request form to change an ECT or mentor's date of birth"
+      change-participant-trn: "Complete this request form to change an ECT or mentor's TRN"
       change-cohort-lead-provider: "Complete this form to tell us about a change of provider for ECTs and mentors who started their training in the %{cohort_year_range} academic year."
       change-cohort-delivery-partner: "Complete this form to tell us about a change of partner for ECTs and mentors who started their training in the %{cohort_year_range} academic year."
     instructions:
@@ -876,6 +877,8 @@ en:
         </ul>
       change-participant-date-of-birth_html: |
         Enter the correct date of birth for this person.
+      change-participant-trn_html: |
+        Enter the correct TRN for this person.
       change-cohort-delivery-partner_html: |
         Tell us:
         <ul>
@@ -894,5 +897,6 @@ en:
       unspecified: Support request
       change-participant-lead-provider: Request to change lead provider for a participant profile
       change-participant-date-of-birth: Request to change Date of Birth for a participant profile
+      change-participant-trn: Request to change TRN for a participant profile
       change-cohort-lead-provider: Request to change lead provider for a cohort
       change-cohort-delivery-partner: Request to change delivery partner for a cohort
