@@ -33,6 +33,12 @@ RSpec.describe Induction::DeleteRecord do
         allow(service).to receive(:training_status_changed?).and_return(true)
         expect { service.call }.to raise_error(Induction::DeleteRecord::DeleteInductionRecordRestrictionError, "Cannot delete record because the training status does not matches the previous record")
       end
+
+      it "raises DeleteInductionRecordRestrictionError the mentor has changed from the previous record" do
+        allow(service).to receive(:middle_of_history?).and_return(true)
+        allow(service).to receive(:mentor_changed?).and_return(true)
+        expect { service.call }.to raise_error(Induction::DeleteRecord::DeleteInductionRecordRestrictionError, "Cannot delete record because the mentor does not matches the previous record")
+      end
     end
 
     context "when the record is deletable" do

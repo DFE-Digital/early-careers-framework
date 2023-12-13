@@ -24,6 +24,7 @@ private
     raise DeleteInductionRecordRestrictionError, "Cannot delete record because it is not in the middle of the induction records history" unless middle_of_history?
     raise DeleteInductionRecordRestrictionError, "Cannot delete record because the school transfer flag does not matches the previous record" if transfer_flag_changed?
     raise DeleteInductionRecordRestrictionError, "Cannot delete record because the training status does not matches the previous record" if training_status_changed?
+    raise DeleteInductionRecordRestrictionError, "Cannot delete record because the mentor does not matches the previous record" if mentor_changed?
   end
 
   def middle_of_history?
@@ -36,6 +37,10 @@ private
 
   def training_status_changed?
     induction_record.training_status != previous_record.training_status
+  end
+
+  def mentor_changed?
+    induction_record.mentor_profile != previous_record.mentor_profile
   end
 
   def delete_induction_record
