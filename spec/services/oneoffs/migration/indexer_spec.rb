@@ -49,11 +49,28 @@ describe Oneoffs::Migration::Indexer do
       it { is_expected.to contain_exactly(objects[3], objects[4], objects[5]) }
     end
 
-    context "when an object cannot be indexed" do
-      let(:obj) { OpenStruct.new(baz: :qux) }
-      let(:objects) { [obj] }
+    context "when an object cannot be indexed as it doesn't respond to any of the indexed attributes" do
+      let(:obj) { OpenStruct.new(bar: :qux) }
+      let(:objects) { [OpenStruct.new(baz: :qux)] }
 
       it { expect { perform_lookup }.to raise_error(described_class::UnindexableError, /unable to index/) }
+    end
+
+    context "when indexing on an array" do
+      let(:indexes) { %i[foos] }
+      let(:obj) { objects[0] }
+      let(:objects) do
+        [
+          OpenStruct.new(foos: %i[bar]),
+          OpenStruct.new(foos: %i[bar baz]),
+          OpenStruct.new(foos: %i[baz]),
+          OpenStruct.new(foos: %i[qux]),
+        ]
+      end
+
+      it "indexes on array values individually (and performs the same inference)" do
+        is_expected.to contain_exactly(objects[0], objects[1], objects[2])
+      end
     end
   end
 end

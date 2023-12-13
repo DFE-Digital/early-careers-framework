@@ -31,11 +31,11 @@ module Oneoffs::Migration
       end
     end
 
-  protected
-
     def indexes
       raise NoMethodError, "subclass must implemented #indexes"
     end
+
+  protected
 
     def all_objects
       raise NoMethodError, "subclass must implement #all_objects"
