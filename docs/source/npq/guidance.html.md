@@ -829,6 +829,8 @@ For more detailed information see the specifications for this [notify DfE that a
 
 Notify the DfE that a participant has completed their course by submitting a `completed` declaration in line with [milestone dates](/api-reference/npq/schedules-and-milestone-dates).
 
+You can do this for all NPQs and the Early headship coaching offer.
+
 ```
 POST /api/v{n}/participant-declarations
 ```
