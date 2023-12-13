@@ -2,5 +2,6 @@
 
 module Analytics
   class ECFParticipant < BaseRecord
+    self.table_name = "analytics_participants"
   end
 end
