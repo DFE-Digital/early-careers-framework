@@ -24,14 +24,19 @@ module Oneoffs::Migration
       looked_up_objects.add(obj)
 
       indexes
-        .map { |attr| index.dig(attr, sanitize(obj, attr)) }
-        .compact
+        .map { |attr| fetch(obj, attr) }
+        .flatten
         .reduce(Set.new, &:merge)
         .flat_map { |matching_obj| lookup(matching_obj, looked_up_objects) }
         .reduce(Set.new, &:merge)
     end
 
   private
+
+    def fetch(obj, attr)
+      keys = sanitize_keys(obj, attr)
+      keys.map { |k| index.dig(attr, k) }.compact
+    end
 
     def index
       @index ||= indexes.index_with { {} }.tap do |index|
@@ -46,17 +51,20 @@ module Oneoffs::Migration
     end
 
     def index_object_attribute(obj, index, attr)
-      value = sanitize(obj, attr)
-      return if value.blank?
+      keys = sanitize_keys(obj, attr)
+      return if keys.blank?
 
-      index[attr][value] ||= Set.new
-      index[attr][value].add(obj)
+      keys.each do |key|
+        index[attr][key] ||= Set.new
+        index[attr][key].add(obj)
+      end
     end
 
-    def sanitize(obj, attr)
-      return unless obj.respond_to?(attr)
+    def sanitize_keys(obj, attr)
+      return Set.new unless obj.respond_to?(attr)
 
-      obj.send(attr).to_s.downcase
+      keys = Array.wrap(obj.send(attr))
+      keys.map { |v| v.to_s.downcase }
     end
   end
 end

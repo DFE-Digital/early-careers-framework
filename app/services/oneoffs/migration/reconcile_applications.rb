@@ -2,8 +2,6 @@
 
 module Oneoffs::Migration
   class ReconcileApplications < Reconciler
-  protected
-
     # We index on id to ensure all applications can be
     # indexed (as not all have an ecf_id).
     def indexes
@@ -12,6 +10,8 @@ module Oneoffs::Migration
         ecf_id
       ].freeze
     end
+
+  protected
 
     def all_objects
       @all_objects ||= ecf_applications + npq_applications

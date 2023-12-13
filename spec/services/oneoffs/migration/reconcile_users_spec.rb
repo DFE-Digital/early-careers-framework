@@ -63,11 +63,39 @@ describe Oneoffs::Migration::ReconcileUsers do
       it { is_expected.to include(an_object_having_attributes(matches: array_including(npq_user, ecf_user))) }
     end
 
-    context "when there are ECF and NPQ users that match on email" do
-      let!(:ecf_user) { create(:npq_application).user }
-      let!(:npq_user) { create(:npq_reg_user, email: ecf_user.email) }
+    context "when there are ECF and NPQ users sharing NPQ applications" do
+      context "when there is only one, shared NPQ application" do
+        let!(:ecf_user) { ecf_application.user }
+        let(:ecf_application) { create(:npq_application) }
 
-      it { is_expected.to include(an_object_having_attributes(matches: array_including(npq_user, ecf_user))) }
+        let!(:npq_user) { npq_application.user }
+        let(:npq_application) { create(:npq_reg_application, ecf_id: ecf_application.id) }
+
+        it { is_expected.to include(an_object_having_attributes(matches: array_including(npq_user, ecf_user))) }
+      end
+
+      context "when there are multiple, shared NPQ applications" do
+        let(:ecf_user) { create(:user) }
+        let!(:ecf_application) { create(:npq_application, user: ecf_user) }
+        let!(:other_ecf_application) { create(:npq_application, user: ecf_user) }
+
+        let(:npq_user) { create(:npq_reg_user) }
+        let!(:npq_application) { create(:npq_reg_application, ecf_id: ecf_application.id, user: npq_user) }
+        let!(:other_npq_application) { create(:npq_reg_application, ecf_id: other_ecf_application.id, user: npq_user) }
+
+        it { is_expected.to include(an_object_having_attributes(matches: array_including(npq_user, ecf_user))) }
+      end
+
+      context "when there are multiple NPQ applications and only a subset are shared" do
+        let(:ecf_user) { create(:user) }
+        let!(:ecf_application) { create(:npq_application, user: ecf_user) }
+
+        let(:npq_user) { create(:npq_reg_user) }
+        let!(:npq_application) { create(:npq_reg_application, ecf_id: ecf_application.id, user: npq_user) }
+        let!(:other_npq_application) { create(:npq_reg_application, ecf_id: SecureRandom.uuid, user: npq_user) }
+
+        it { is_expected.to include(an_object_having_attributes(matches: array_including(npq_user, ecf_user))) }
+      end
     end
   end
 

@@ -14,16 +14,17 @@ module Oneoffs::Migration
       orphaned.select { |m| m.orphan.is_a?(NPQRegistration::User) }
     end
 
-  protected
-
     def indexes
       %i[
+        id
         ecf_id
         get_an_identity_id
         trn
-        email
+        npq_application_ecf_ids
       ].freeze
     end
+
+  protected
 
     def all_objects
       @all_objects ||= ecf_users + npq_users
@@ -47,12 +48,17 @@ module Oneoffs::Migration
     end
 
     def ecf_users
-      @ecf_users ||= User.all
-        .includes(:teacher_profile, participant_identities: :npq_applications)
+      @ecf_users ||= begin
+        applications_query = NPQApplication.joins(:participant_identity).where("participant_identities.user_id = users.id").select("ARRAY_AGG(npq_applications.id)")
+        User.all.includes(:teacher_profile, participant_identities: :npq_applications).select("users.*", "(#{applications_query.to_sql}) AS npq_application_ecf_ids")
+      end
     end
 
     def npq_users
-      @npq_users ||= NPQRegistration::User.all
+      @npq_users ||= begin
+        applications_query = NPQRegistration::Application.where("user_id = users.id AND ecf_id IS NOT NULL").select("ARRAY_AGG(ecf_id)")
+        NPQRegistration::User.all.select("users.*", "(#{applications_query.to_sql}) AS npq_application_ecf_ids")
+      end
     end
   end
 end
