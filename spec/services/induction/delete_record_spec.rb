@@ -13,6 +13,7 @@ RSpec.describe Induction::DeleteRecord do
   describe "#call" do
     context "when the record is not deletable" do
       before do
+        allow(service).to receive(:active?).and_return(false)
         allow(service).to receive(:middle_of_history?).and_return(false)
         allow(service).to receive(:transfer_flag_changed?).and_return(false)
         allow(service).to receive(:training_status_changed?).and_return(false)
@@ -21,6 +22,11 @@ RSpec.describe Induction::DeleteRecord do
 
       it "raises DeleteInductionRecordRestrictionError when doesn't have two sibling records" do
         expect { service.call }.to raise_error(Induction::DeleteRecord::DeleteInductionRecordRestrictionError, "Cannot delete record because it is not in the middle of the induction records history")
+      end
+
+      it "raises DeleteInductionRecordRestrictionError when the record is active" do
+        allow(service).to receive(:active?).and_return(true)
+        expect { service.call }.to raise_error(Induction::DeleteRecord::DeleteInductionRecordRestrictionError, "Cannot delete record because it is active")
       end
 
       it "raises DeleteInductionRecordRestrictionError when the school transfer flag has changed from the previous record" do

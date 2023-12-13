@@ -21,10 +21,15 @@ private
   end
 
   def check_record_is_deletable!
+    raise DeleteInductionRecordRestrictionError, "Cannot delete record because it is active" if active?
     raise DeleteInductionRecordRestrictionError, "Cannot delete record because it is not in the middle of the induction records history" unless middle_of_history?
     raise DeleteInductionRecordRestrictionError, "Cannot delete record because the school transfer flag does not matches the previous record" if transfer_flag_changed?
     raise DeleteInductionRecordRestrictionError, "Cannot delete record because the training status does not matches the previous record" if training_status_changed?
     raise DeleteInductionRecordRestrictionError, "Cannot delete record because the mentor does not matches the previous record" if mentor_changed?
+  end
+
+  def active?
+    induction_record.active?
   end
 
   def middle_of_history?
