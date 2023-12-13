@@ -18,20 +18,20 @@ RSpec.describe Induction::DeleteRecord do
         allow(service).to receive(:training_status_changed?).and_return(false)
       end
 
-      it "raises MiddleOfHistoryError with a proper message" do
-        expect { service.call }.to raise_error(Induction::DeleteRecord::MiddleOfHistoryError, "The record is not in the middle of the induction records history")
+      it "raises DeleteInductionRecordRestrictionError with a proper message" do
+        expect { service.call }.to raise_error(Induction::DeleteRecord::DeleteInductionRecordRestrictionError, "Cannot delete record because it is not in the middle of the induction records history")
       end
 
-      it "raises TransferFlagChangedError with a proper message" do
+      it "raises DeleteInductionRecordRestrictionError with a proper message" do
         allow(service).to receive(:middle_of_history?).and_return(true)
         allow(service).to receive(:transfer_flag_changed?).and_return(true)
-        expect { service.call }.to raise_error(Induction::DeleteRecord::TransferFlagChangedError, "The school transfer flag has changed from the previous record")
+        expect { service.call }.to raise_error(Induction::DeleteRecord::DeleteInductionRecordRestrictionError, "Cannot delete record because the school transfer flag does not matches the previous record")
       end
 
-      it "raises TrainingStatusChangedError with a proper message" do
+      it "raises DeleteInductionRecordRestrictionError with a proper message" do
         allow(service).to receive(:middle_of_history?).and_return(true)
         allow(service).to receive(:training_status_changed?).and_return(true)
-        expect { service.call }.to raise_error(Induction::DeleteRecord::TrainingStatusChangedError, "The training status has changed from the previous record")
+        expect { service.call }.to raise_error(Induction::DeleteRecord::DeleteInductionRecordRestrictionError, "Cannot delete record because the training status does not matches the previous record")
       end
     end
 
