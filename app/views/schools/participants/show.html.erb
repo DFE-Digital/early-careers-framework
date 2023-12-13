@@ -35,6 +35,11 @@
         <dd class="govuk-summary-list__value">
           <%= @induction_record.trn %>
         </dd>
+        <dd class="govuk-summary-list__actions">
+          <%= govuk_link_to support_path(participant_profile_id: @induction_record.participant_profile.id, school_id: @school.id, subject: :"change-participant-trn") do %>
+            Change <span class="govuk-visually-hidden">TRN</span>
+          <% end %>
+        </dd>
       </div>
 
       <div class="govuk-summary-list__row">
@@ -43,6 +48,11 @@
         </dt>
         <dd class="govuk-summary-list__value">
           <%= @induction_record.participant_profile.ecf_participant_validation_data&.date_of_birth&.to_fs(:govuk) %>
+        </dd>
+        <dd class="govuk-summary-list__actions">
+          <%= govuk_link_to support_path(participant_profile_id: @induction_record.participant_profile.id, school_id: @school.id, subject: :"change-participant-date-of-birth") do %>
+            Change <span class="govuk-visually-hidden">date of birth</span>
+          <% end %>
         </dd>
       </div>
 
