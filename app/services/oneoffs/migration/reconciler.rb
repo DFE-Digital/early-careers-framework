@@ -32,7 +32,11 @@ module Oneoffs::Migration
     end
 
     def indexes
-      raise NoMethodError, "subclass must implemented #indexes"
+      raise NoMethodError, "subclass must implement #indexes"
+    end
+
+    def orphan_matches
+      raise NoMethodError, "subclass must implement #orphan_matches"
     end
 
   protected

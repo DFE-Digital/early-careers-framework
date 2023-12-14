@@ -76,6 +76,7 @@ class User < ApplicationRecord
   def npq_applications
     NPQApplication.joins(:participant_identity).where(participant_identity: { user_id: id })
   end
+  alias_method :applications, :npq_applications
 
   def admin?
     admin_profile.present?
