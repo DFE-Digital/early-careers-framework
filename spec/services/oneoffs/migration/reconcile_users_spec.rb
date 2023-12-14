@@ -183,4 +183,21 @@ describe Oneoffs::Migration::ReconcileUsers do
       it { is_expected.to include(an_object_having_attributes(matches: array_including(npq_user))) }
     end
   end
+
+  context "#orphaned_matches" do
+    subject { instance.orphaned_matches }
+
+    context "when an NPQ user has the same first name as an ECF user and has an application at the same school" do
+      let!(:ecf_user) { create(:user, full_name: "Sam Smith") }
+      let!(:ecf_school) { create(:school, name: "ABC School") }
+      let!(:ecf_application) { create(:npq_application, user: ecf_user, school: ecf_school) }
+
+      let!(:npq_user) { create(:npq_reg_user, full_name: "Sam Jones") }
+      let!(:npq_school) { create(:npq_reg_school, name: "abc school") }
+      let!(:npq_application) { create(:npq_reg_application, user: npq_user, school: npq_school) }
+
+      it { is_expected.to include(an_object_having_attributes(orphan: ecf_user, potential_matches: array_including(npq_user))) }
+      it { is_expected.to include(an_object_having_attributes(orphan: npq_user, potential_matches: array_including(ecf_user))) }
+    end
+  end
 end

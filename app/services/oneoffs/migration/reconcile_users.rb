@@ -6,12 +6,16 @@ module Oneoffs::Migration
       @matches ||= super.reject { |match| ecf_orphan_with_no_applications?(match) }
     end
 
+    def orphaned_matches
+      @orphaned_matches ||= orphaned.map { |match| OrphanMatch.new(match.orphan, find_tentative_matches(match.orphan)) }
+    end
+
     def orphaned_ecf
-      orphaned.select { |m| m.orphan.is_a?(User) }
+      @orphaned_ecf ||= orphaned.select { |m| m.orphan.is_a?(User) }
     end
 
     def orphaned_npq
-      orphaned.select { |m| m.orphan.is_a?(NPQRegistration::User) }
+      @orphaned_npq ||= orphaned.select { |m| m.orphan.is_a?(NPQRegistration::User) }
     end
 
     def indexes
@@ -31,6 +35,26 @@ module Oneoffs::Migration
     end
 
   private
+
+    def find_tentative_matches(orphan)
+      orphan_first_name = orphan.full_name.split.first
+
+      opposite_user_class(orphan)
+        .where("full_name ILIKE (?)", "%#{orphan_first_name}%")
+        .reject { |u| u.applications.empty? }
+        .select { |u| share_school?(u, orphan) }
+    end
+
+    def share_school?(user_a, user_b)
+      user_a_school_names = user_a.applications.map { |a| a.school&.name&.downcase }.compact
+      user_b_school_names = user_b.applications.map { |b| b.school&.name&.downcase }.compact
+
+      user_a_school_names.any? { |school_name| school_name.in?(user_b_school_names) }
+    end
+
+    def opposite_user_class(user)
+      user.is_a?(User) ? NPQRegistration::User : User
+    end
 
     def ecf_orphan_with_no_applications?(match)
       return unless match.orphaned?

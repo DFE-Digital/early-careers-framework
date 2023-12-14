@@ -36,9 +36,11 @@ class NPQRegistration::Application < NPQRegistration::BaseRecord
     %w[yes_when_course_starts yes_in_first_five_years yes_in_first_two_years].include?(headteacher_status)
   end
 
-  def school
-    School.find_by(urn: school_urn)
-  end
+  # TODO: not sure why this is here but it breaks the belongs_to relationship! its
+  # been removed from the latest version of the model in NPQ reg.
+  # def school
+  #   School.find_by(urn: school_urn)
+  # end
 
   def employer_name_to_display
     employer_name || private_childcare_provider&.provider_name || school&.name || ""
