@@ -15,7 +15,7 @@ RSpec.describe "Manage CIP training", js: true do
       then_the_page_should_be_accessible
 
       when_i_click_on_change_programme
-      then_i_am_taken_to_cip_programme_choice_info_page
+      then_i_am_taken_to_the_support_form_for_changing_an_induction_programme
       then_the_page_should_be_accessible
     end
   end

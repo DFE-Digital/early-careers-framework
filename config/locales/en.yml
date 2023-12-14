@@ -868,6 +868,7 @@ en:
       change-participant-trn: "Complete this request form to change an ECT or mentor's TRN"
       change-cohort-lead-provider: "Complete this form to tell us about a change of provider for ECTs and mentors who started their training in the %{cohort_year_range} academic year."
       change-cohort-delivery-partner: "Complete this form to tell us about a change of partner for ECTs and mentors who started their training in the %{cohort_year_range} academic year."
+      change-cohort-induction-programme-choice: "Complete this form to tell us about a change of provider for ECTs and mentors who started their training in the %{cohort_year_range} academic year."
     instructions:
       unspecified_html: ""
       change-participant-lead-provider_html: |
@@ -892,6 +893,13 @@ en:
         <li>which training provider this cohort will work with instead</li>
         <li>the date they’ll start training with the new provider</li>
         </ul>
+      change-cohort-induction-programme-choice_html: |
+        Tell us:
+        <ul>
+        <li>the name of the new lead provider</li>
+        <li>the confirmed date the new lead provider will start training your ECTs (and their mentors if relevant)</li>
+        <li>the years you want to apply the change to (year 1, year 2, or both years)</li>
+        </ul>
 
   support_query:
     subjects:
@@ -901,3 +909,4 @@ en:
       change-participant-trn: Request to change TRN for a participant profile
       change-cohort-lead-provider: Request to change lead provider for a cohort
       change-cohort-delivery-partner: Request to change delivery partner for a cohort
+      change-cohort-induction-programme-choice: Request to change induction programme choice for a cohort
