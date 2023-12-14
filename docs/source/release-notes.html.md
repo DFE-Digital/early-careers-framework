@@ -9,7 +9,7 @@ If you have any questions or comments about these notes, please contact DfE via 
 
 ## 28 November 2023
 
-We've fixed a bug that meant some providers were having issues finding unfunded mentor IDs in GET participants.
+We've fixed a bug that meant some providers were having issues finding unfunded mentor IDs when using the `updated_at` filter on the [GET unfunded mentors endpoint](/api-reference/reference-v3.html#api-v3-unfunded-mentors-ecf-get).
 
 The `updated_at` value of an unfunded mentor now gets touched when the mentor is linked to an ECT.
 
