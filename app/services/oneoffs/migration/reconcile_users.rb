@@ -7,7 +7,11 @@ module Oneoffs::Migration
     end
 
     def orphaned_matches
+      i = 0
+      total = orphaned.size
       @orphaned_matches ||= orphaned.map do |match|
+        puts "#{i} / #{total}"
+        i += 1
         OrphanMatch.new(match.orphan, find_tentative_matches(match.orphan))
       end
     end
@@ -39,12 +43,14 @@ module Oneoffs::Migration
   private
 
     def find_tentative_matches(orphan)
-      orphan_first_name = orphan.full_name.split.first
-
-      opposite_user_class(orphan)
-        .where("full_name ILIKE (?)", "%#{orphan_first_name}%")
+      opposite_users(orphan)
         .reject { |u| u.applications.empty? }
-        .select { |u| share_school?(u, orphan) }
+        .select { |u| same_first_name?(u, orphan) && share_school?(u, orphan) }
+    end
+
+    def same_first_name?(user_a, user_b)
+      user_a_first_name = user_a.full_name.split.first.downcase
+      user_b.full_name.downcase.include?(user_a_first_name)
     end
 
     def share_school?(user_a, user_b)
@@ -54,8 +60,8 @@ module Oneoffs::Migration
       user_a_school_names.any? { |school_name| school_name.in?(user_b_school_names) }
     end
 
-    def opposite_user_class(user)
-      user.is_a?(User) ? NPQRegistration::User : User
+    def opposite_users(user)
+      user.is_a?(User) ? npq_users : ecf_users
     end
 
     def ecf_orphan_with_no_applications?(match)
@@ -76,14 +82,14 @@ module Oneoffs::Migration
     def ecf_users
       @ecf_users ||= begin
         applications_query = NPQApplication.joins(:participant_identity).where("participant_identities.user_id = users.id").select("ARRAY_AGG(npq_applications.id)")
-        User.all.includes(:teacher_profile, participant_identities: :npq_applications).select("users.*", "(#{applications_query.to_sql}) AS npq_application_ecf_ids")
+        User.all.includes(:teacher_profile, participant_identities: :npq_applications).select("users.*", "(#{applications_query.to_sql}) AS npq_application_ecf_ids").to_a
       end
     end
 
     def npq_users
       @npq_users ||= begin
         applications_query = NPQRegistration::Application.where("user_id = users.id AND ecf_id IS NOT NULL").select("ARRAY_AGG(ecf_id)")
-        NPQRegistration::User.all.select("users.*", "(#{applications_query.to_sql}) AS npq_application_ecf_ids")
+        NPQRegistration::User.all.select("users.*", "(#{applications_query.to_sql}) AS npq_application_ecf_ids").to_a
       end
     end
   end
