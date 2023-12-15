@@ -3,7 +3,9 @@
 module Oneoffs::Migration
   class ReconcileApplications < Reconciler
     def orphaned_matches
-      @orphaned_matches ||= orphaned.map { |match| OrphanMatch.new(match.orphan, find_tentative_matches(match.orphan)) }
+      @orphaned_matches ||= orphaned.map do |match|
+        OrphanMatch.new(match.orphan, find_tentative_matches(match.orphan))
+      end
     end
 
     def indexes
@@ -34,11 +36,11 @@ module Oneoffs::Migration
     end
 
     def ecf_applications
-      @ecf_applications ||= NPQApplication.all
+      @ecf_applications ||= NPQApplication.includes(:npq_course, participant_identity: :user).all.to_a
     end
 
     def npq_applications
-      @npq_applications ||= NPQRegistration::Application.all
+      @npq_applications ||= NPQRegistration::Application.includes(:course, :user).all.to_a
     end
   end
 end
