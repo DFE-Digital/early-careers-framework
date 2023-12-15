@@ -64,6 +64,14 @@ FactoryBot.define do
     service_fee_installments { 25 }
   end
 
+  trait :npq_leading_primary_mathematics do
+    course_identifier { "npq-leading-primary-mathematics" }
+    recruitment_target { 400 }
+    number_of_payment_periods { 3 }
+    per_participant { 902.00 }
+    service_fee_installments { 540 }
+  end
+
   trait :with_monthly_service_fee do
     monthly_service_fee { 5432.10 }
   end
