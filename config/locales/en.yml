@@ -327,6 +327,7 @@ en:
               invalid: "Invalid value. Must be an integer between %{start} and %{end}"
             target_cohort_start_year:
               excluded: "Invalid value. Must be different to %{year}"
+              incompatible_with_schedule: "Invalid value. Must match that of the schedule"
               invalid: "Invalid value. Must be an integer between %{start} and %{end}"
         edit_induction_tutor_form:
           attributes:

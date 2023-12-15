@@ -99,6 +99,25 @@ RSpec.describe Induction::AmendParticipantCohort do
                                                     programme_choice: source_school_cohort.induction_programme_choice)
       end
 
+      context "when the target_cohort_start_year is not matching that of the schedule" do
+        let(:schedule) { Finance::Schedule::ECF.default_for(cohort: Cohort.previous) }
+
+        subject(:form) do
+          described_class.new(participant_profile:, source_cohort_start_year:, target_cohort_start_year:, schedule:)
+        end
+
+        before do
+          Induction::Enrol.call(participant_profile:,
+                                induction_programme: source_school_cohort.default_induction_programme)
+        end
+
+        it "returns false and set errors" do
+          expect(form.save).to be_falsey
+          expect(form.errors.first.attribute).to eq(:target_cohort_start_year)
+          expect(form.errors.first.message).to eq("Invalid value. Must match that of the schedule")
+        end
+      end
+
       context "when there is no participant" do
         let(:participant_profile) {}
 
@@ -277,6 +296,37 @@ RSpec.describe Induction::AmendParticipantCohort do
               participant_profile.reload.induction_records.each do |induction_record|
                 expect(induction_record.cohort_start_year).to eq(target_cohort_start_year)
               end
+            end
+          end
+        end
+
+        context "when some of the induction records are not in the target schedule" do
+          let(:historical_school_source_cohort) { create(:school_cohort, cohort: source_cohort) }
+          let(:historical_school) { historical_school_source_cohort.school }
+          let!(:induction_programme) { create(:induction_programme, school_cohort: historical_school_source_cohort) }
+          let!(:historical_record) do
+            create(:induction_record,
+                   participant_profile:,
+                   induction_programme:,
+                   schedule: create(:ecf_schedule))
+          end
+
+          let(:schedule) { Finance::Schedule::ECF.default_for(cohort: Cohort.current) }
+
+          subject(:form) do
+            described_class.new(participant_profile:, source_cohort_start_year:, schedule:)
+          end
+
+          before do
+            create(:school_cohort, :with_induction_programme, cohort: target_cohort, school: historical_school)
+          end
+
+          it "moves all the historical records to the target schedule" do
+            expect(form.save).to be_truthy
+            expect(form.errors).to be_empty
+
+            participant_profile.reload.induction_records.each do |induction_record|
+              expect(induction_record.schedule).to eq(schedule)
             end
           end
         end
