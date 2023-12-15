@@ -87,6 +87,30 @@ describe Oneoffs::Migration::ReconcileApplications do
     end
   end
 
+  describe "#orphaned_ecf" do
+    subject { instance.orphaned_ecf }
+
+    context "when there are orphaned ECF and NPQ applications" do
+      let!(:ecf_application) { create(:npq_application) }
+      let!(:npq_application) { create(:npq_reg_application) }
+
+      it { is_expected.to include(an_object_having_attributes(matches: array_including(ecf_application))) }
+      it { is_expected.not_to include(an_object_having_attributes(matches: array_including(npq_application))) }
+    end
+  end
+
+  describe "#orphaned_npq" do
+    subject { instance.orphaned_npq }
+
+    context "when there are orphaned ECF and NPQ applications" do
+      let!(:ecf_application) { create(:npq_application) }
+      let!(:npq_application) { create(:npq_reg_application) }
+
+      it { is_expected.not_to include(an_object_having_attributes(matches: array_including(ecf_application))) }
+      it { is_expected.to include(an_object_having_attributes(matches: array_including(npq_application))) }
+    end
+  end
+
   context "#orphaned_matches" do
     subject { instance.orphaned_matches }
 
