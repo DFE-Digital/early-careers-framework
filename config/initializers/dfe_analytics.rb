@@ -38,6 +38,9 @@ DfE::Analytics.configure do |config|
   #
   # config.bigquery_timeout = 120
 
+  # enable EntityTableCheckJob
+  config.entity_table_checks_enabled = true
+
   # A proc which returns true or false depending on whether you want to
   # enable analytics. You might want to hook this up to a feature flag or
   # environment variable.
