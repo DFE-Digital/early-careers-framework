@@ -7,11 +7,7 @@ module Oneoffs::Migration
     end
 
     def orphaned_matches
-      i = 0
-      total = orphaned.size
       @orphaned_matches ||= orphaned.map do |match|
-        puts "#{i} / #{total}"
-        i += 1
         OrphanMatch.new(match.orphan, find_tentative_matches(match.orphan))
       end
     end
