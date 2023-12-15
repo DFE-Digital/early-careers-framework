@@ -13,8 +13,8 @@ module Admin
 
         def index
           query_string = params[:query]
-          funding_eligiblity_status_code = params[:FundingEligiblityStatusCode]
-          employment_type = params[:EmploymentType]
+          funding_eligiblity_status_code = params["Funding eligiblity status code"]
+          employment_type = params["Employment type"]
           # Currently the component used is set up to build date parameters in the following manner
           # date(3i) = day, date(2i) = month, date(1i) = year
           start_date = convert_date(params["start_date(3i)"], params["start_date(2i)"], params["start_date(1i)"])
