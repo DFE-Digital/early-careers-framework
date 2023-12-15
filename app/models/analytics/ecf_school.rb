@@ -2,5 +2,6 @@
 
 module Analytics
   class ECFSchool < BaseRecord
+    self.table_name = "analytics_schools"
   end
 end

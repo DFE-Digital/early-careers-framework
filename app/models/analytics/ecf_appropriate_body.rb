@@ -2,5 +2,6 @@
 
 module Analytics
   class ECFAppropriateBody < BaseRecord
+    self.table_name = "analytics_appropriate_bodies"
   end
 end

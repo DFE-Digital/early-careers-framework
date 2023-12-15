@@ -368,7 +368,7 @@
   - subject
   - created_at
   - updated_at
-  :ecf_school_cohorts:
+  :analytics_school_cohorts:
   - id
   - school_cohort_id
   - school_id
@@ -381,34 +381,7 @@
   - created_at
   - updated_at
   - appropriate_body_id
-  :ecf_schools:
-  - id
-  - name
-  - urn
-  - nomination_email_opened_at
-  - induction_tutor_nominated
-  - tutor_nominated_time
-  - induction_tutor_signed_in
-  - induction_programme_choice
-  - in_partnership
-  - partnership_time
-  - partnership_challenge_reason
-  - partnership_challenge_time
-  - lead_provider
-  - delivery_partner
-  - chosen_cip
-  - school_type_name
-  - school_phase_type
-  - school_phase_name
-  - school_status_code
-  - school_status_name
-  - postcode
-  - administrative_district_code
-  - administrative_district_name
-  - active_participants
-  - pupil_premium
-  - sparsity
-  :ecf_partnerships:
+  :analytics_partnerships:
   - id
   - partnership_id
   - school_id
@@ -428,7 +401,7 @@
   - relationship
   - created_at
   - updated_at
-  :ecf_participants:
+  :analytics_participants:
   - id
   - user_id
   - user_created_at
@@ -454,7 +427,7 @@
   - pupil_premium
   - schedule_identifier
   - external_id
-  :ecf_inductions:
+  :analytics_inductions:
   - id
   - induction_record_id
   - external_id
@@ -479,7 +452,7 @@
   - participant_type
   - induction_record_created_at
   - partnership_id
-  :ecf_appropriate_bodies:
+  :analytics_appropriate_bodies:
   - id
   - appropriate_body_id
   - name
