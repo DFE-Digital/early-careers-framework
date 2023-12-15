@@ -86,4 +86,21 @@ describe Oneoffs::Migration::ReconcileApplications do
       it { is_expected.to be_empty }
     end
   end
+
+  context "#orphaned_matches" do
+    subject { instance.orphaned_matches }
+
+    context "when an NPQ/ECF application share a course name and user" do
+      let!(:ecf_user) { create(:user) }
+      let!(:ecf_course) { create(:npq_course, name: "course-a") }
+      let!(:ecf_application) { create(:npq_application, user: ecf_user, npq_course: ecf_course) }
+
+      let!(:npq_user) { create(:npq_reg_user, ecf_id: ecf_user.id) }
+      let!(:npq_course) { create(:npq_reg_course, name: "COURSE-A") }
+      let!(:npq_application) { create(:npq_reg_application, user: npq_user, course: npq_course) }
+
+      it { is_expected.to include(an_object_having_attributes(orphan: ecf_application, potential_matches: array_including(npq_application))) }
+      it { is_expected.to include(an_object_having_attributes(orphan: npq_application, potential_matches: array_including(ecf_application))) }
+    end
+  end
 end

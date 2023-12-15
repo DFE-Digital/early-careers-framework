@@ -28,6 +28,8 @@ class NPQApplication < ApplicationRecord
   belongs_to :cohort, optional: true
   belongs_to :eligible_for_funding_updated_by, class_name: "User", optional: true
 
+  alias_method :course, :npq_course
+
   after_commit :push_enrollment_to_big_query
 
   UK_CATCHMENT_AREA = %w[jersey_guernsey_isle_of_man england northern_ireland scotland wales].freeze

@@ -187,7 +187,7 @@ describe Oneoffs::Migration::ReconcileUsers do
   context "#orphaned_matches" do
     subject { instance.orphaned_matches }
 
-    context "when an NPQ user has the same first name as an ECF user and has an application at the same school" do
+    context "when an NPQ/ECF user share a first name and application at the same school" do
       let!(:ecf_user) { create(:user, full_name: "Sam Smith") }
       let!(:ecf_school) { create(:school, name: "ABC School") }
       let!(:ecf_application) { create(:npq_application, user: ecf_user, school: ecf_school) }
