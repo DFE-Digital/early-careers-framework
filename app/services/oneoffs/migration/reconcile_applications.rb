@@ -15,6 +15,14 @@ module Oneoffs::Migration
       ].freeze
     end
 
+    def orphaned_ecf
+      @orphaned_ecf ||= orphaned.select { |m| m.orphan.is_a?(NPQApplication) }
+    end
+
+    def orphaned_npq
+      @orphaned_npq ||= orphaned.select { |m| m.orphan.is_a?(NPQRegistration::Application) }
+    end
+
   protected
 
     def all_objects
