@@ -9,7 +9,7 @@ module Oneoffs::Migration
     end
 
     def to_yaml
-      orphan_matches.map { |orphan_match|
+      orphaned_matches.map { |orphan_match|
         {
           orphan: extract_attributes(orphan_match.orphan),
           potential_matches: orphan_match.potential_matches.map(&method(:extract_attributes)),
@@ -27,8 +27,8 @@ module Oneoffs::Migration
       %i[class] + reconciler.indexes
     end
 
-    def orphan_matches
-      reconciler.orphan_matches
+    def orphaned_matches
+      reconciler.orphaned_matches
     end
   end
 end

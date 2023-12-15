@@ -7,7 +7,9 @@ module Oneoffs::Migration
     end
 
     def orphaned_matches
-      @orphaned_matches ||= orphaned.map { |match| OrphanMatch.new(match.orphan, find_tentative_matches(match.orphan)) }
+      @orphaned_matches ||= orphaned.map do |match|
+        OrphanMatch.new(match.orphan, find_tentative_matches(match.orphan))
+      end
     end
 
     def orphaned_ecf
