@@ -5,7 +5,7 @@ require "rails_helper"
 RSpec.describe DQTRecordCheck do
   shared_context "build fake DQT response" do
     before do
-      allow_any_instance_of(FullDQT::V1::Client).to(receive(:get_record).and_return(fake_api_response || default_api_response))
+      allow_any_instance_of(FullDQT::V3::Client).to(receive(:get_record).and_return(fake_api_response || default_api_response))
     end
   end
 
@@ -16,11 +16,16 @@ RSpec.describe DQTRecordCheck do
   let(:kwargs) { { full_name:, trn:, date_of_birth:, nino: } }
   let(:default_api_response) do
     {
-      "state_name" => "Active",
       "trn" => trn,
-      "name" => full_name,
-      "ni_number" => nino,
-      "dob" => 25.years.ago.to_date,
+      "firstName" => "Mr Nelson",
+      "middleName" => "",
+      "lastName" => "Muntz",
+      "dateOfBirth" => 25.years.ago.to_date,
+      "nationalInsuranceNumber" => nino,
+      "email" => "anonymous@anonymousdomain.org.net.co.uk",
+      "qts" => nil,
+      "eyts" => nil,
+      "induction" => nil
     }
   end
   let(:fake_api_response) { nil }

@@ -35,11 +35,15 @@ private
   end
 
   def dqt_record(trn, nino)
-    full_dqt_client.get_record(trn:, birthdate: date_of_birth, nino:)
+    record = full_dqt_client.get_record(trn:)
+    # return nil unless record
+    # return nil if record["nationalInsuranceNumber"] != nino
+    # return nil if record["dateOfBirth"] != date_of_birth.to_date
+    record
   end
 
   def full_dqt_client
-    @full_dqt_client ||= FullDQT::V1::Client.new
+    @full_dqt_client ||= FullDQT::V3::Client.new
   end
 
   def check_record
