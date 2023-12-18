@@ -3,40 +3,53 @@
 class DQTRecordPresenter < SimpleDelegator
   INDUCTION_IN_PROGRESS = ["InProgress", "In Progress", "NotYetCompleted", "Not Yet Completed"].freeze
 
-  def name
-    dqt_record["name"]
+  def first_name
+    dqt_record["firstName"]
+  end
+
+  def middle_name
+    dqt_record["middleName"]
+  end
+
+  def last_name
+    dqt_record["lastName"]
+  end
+
+  def full_name
+    @full_name ||= [first_name, middle_name, last_name].filter(&:present?).join(" ")
   end
 
   def trn
     dqt_record["trn"]
   end
 
-  def active?
-    dqt_record["state_name"] == "Active"
-  end
-
   def dob
-    dqt_record["dob"]
+    dqt_record["dateOfBirth"]
   end
 
   def ni_number
-    dqt_record["ni_number"]
+    dqt_record["nationalInsuranceNumber"]
   end
 
-  def active_alert?
-    dqt_record["active_alert"].present?
-  end
+  # TODO: field not present in V3
+  # def active_alert?
+  #   dqt_record["active_alert"].present?
+  # end
 
   def qts_date
-    dqt_record.dig("qualified_teacher_status", "qts_date")
+    # dqt_record.dig("qualified_teacher_status", "qts_date")
+    # TODO: check right record
+    dqt_record.dig("qts", "awarded")
   end
 
   def induction_start_date
-    dqt_record.dig("induction", "start_date")
+    dqt_record.dig("induction", "startDate")
   end
 
   def induction_completion_date
     dqt_record.dig("induction", "completion_date")
+    # TODO: check right record
+    dqt_record.dig("induction", "endDate")
   end
 
   def exempt?

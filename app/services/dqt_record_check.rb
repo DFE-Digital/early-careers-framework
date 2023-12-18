@@ -34,12 +34,11 @@ private
     @check_first_name_only = check_first_name_only
   end
 
-  def dqt_record(trn, nino)
-    record = full_dqt_client.get_record(trn:)
+  def dqt_record(trn, _nino)
+    full_dqt_client.get_record(trn:)
     # return nil unless record
     # return nil if record["nationalInsuranceNumber"] != nino
     # return nil if record["dateOfBirth"] != date_of_birth.to_date
-    record
   end
 
   def full_dqt_client
@@ -55,10 +54,12 @@ private
     dqt_record = DQTRecordPresenter.new(dqt_record(padded_trn, nino))
 
     return check_failure(:no_match_found) if dqt_record.blank?
-    return check_failure(:found_but_not_active) unless dqt_record.active?
+
+    # TODO: verify what to do when the record is not returned. It can be not found or not active.
+    # return check_failure(:found_but_not_active) unless dqt_record.active?
 
     trn_matches = dqt_record.trn == padded_trn
-    name_matches = name_matches?(dqt_name: dqt_record.name)
+    name_matches = name_matches?(dqt_record.full_name)
     dob_matches = dqt_record.dob == date_of_birth
     nino_matches = nino.present? && nino.downcase == dqt_record.ni_number&.downcase
 
@@ -81,12 +82,12 @@ private
     end
   end
 
-  def name_matches?(dqt_name:)
+  def name_matches?(dqt_full_name)
     return false if full_name.blank?
     return false if full_name.in?(TITLES)
-    return false if dqt_name.blank?
+    return false if dqt_full_name.blank?
 
-    NameMatcher.new(full_name, dqt_name, check_first_name_only:).matches?
+    NameMatcher.new(full_name, dqt_full_name, check_first_name_only:).matches?
   end
 
   def check_failure(reason)

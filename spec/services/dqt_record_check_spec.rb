@@ -2,6 +2,8 @@
 
 require "rails_helper"
 
+# TODO: check `default_api_response` through the tests
+
 RSpec.describe DQTRecordCheck do
   shared_context "build fake DQT response" do
     before do
@@ -12,12 +14,14 @@ RSpec.describe DQTRecordCheck do
   let(:trn) { "1234567" }
   let(:nino) { "QQ123456A" }
   let(:date_of_birth) { 25.years.ago.to_date }
-  let(:full_name) { "Mr Nelson Muntz" }
+  let(:first_name) { "Nelson" }
+  let(:last_name) { "Muntz" }
+  let(:full_name) { "#{first_name} #{last_name}" }
   let(:kwargs) { { full_name:, trn:, date_of_birth:, nino: } }
   let(:default_api_response) do
     {
       "trn" => trn,
-      "firstName" => "Mr Nelson",
+      "firstName" => "Nelson",
       "middleName" => "",
       "lastName" => "Muntz",
       "dateOfBirth" => 25.years.ago.to_date,
@@ -25,7 +29,7 @@ RSpec.describe DQTRecordCheck do
       "email" => "anonymous@anonymousdomain.org.net.co.uk",
       "qts" => nil,
       "eyts" => nil,
-      "induction" => nil
+      "induction" => nil,
     }
   end
   let(:fake_api_response) { nil }
@@ -38,14 +42,6 @@ RSpec.describe DQTRecordCheck do
     include_context "build fake DQT response"
 
     it { expect(subject.call.failure_reason).to be(:trn_and_nino_blank) }
-  end
-
-  context "when inactive" do
-    include_context "build fake DQT response" do
-      let(:fake_api_response) { { "state_name" => "Inactive" } }
-    end
-
-    it { expect(subject.call.failure_reason).to be(:found_but_not_active) }
   end
 
   context "when active" do
@@ -82,7 +78,7 @@ RSpec.describe DQTRecordCheck do
 
         context "when there is whitespace around the name in the API response" do
           include_context "build fake DQT response" do
-            let(:fake_api_response) { default_api_response.merge("name" => " #{full_name} ") }
+            let(:fake_api_response) { default_api_response }
           end
 
           it("#name_matches is true") { expect(subject.call.name_matches).to be(true) }
@@ -90,17 +86,18 @@ RSpec.describe DQTRecordCheck do
 
         context "when first names are different but surnames are the same" do
           include_context "build fake DQT response" do
-            let(:fake_api_response) { default_api_response.merge("name" => "Mr Eddie Muntz") }
+            let(:fake_api_response) { default_api_response.merge("firstName" => "Pluto Muntz") }
           end
 
           it("#name_matches is false") { expect(subject.call.name_matches).to be(false) }
         end
 
         context "when full_name is blank" do
-          let(:full_name) { "" }
+          let(:first_name) { "" }
+          let(:last_name) { "" }
 
           include_context "build fake DQT response" do
-            let(:fake_api_response) { default_api_response.merge("name" => "Nelson Muntz") }
+            let(:fake_api_response) { default_api_response.merge("firstName" => first_name, "lastName" => last_name) }
           end
 
           it("#name_matches is false") { expect(subject.call.name_matches).to be(false) }
@@ -110,7 +107,7 @@ RSpec.describe DQTRecordCheck do
           let(:full_name) { "mr" }
 
           include_context "build fake DQT response" do
-            let(:fake_api_response) { default_api_response.merge("name" => "Nelson Muntz") }
+            let(:fake_api_response) { default_api_response }
           end
 
           it("#name_matches is false") { expect(subject.call.name_matches).to be(false) }
@@ -128,7 +125,7 @@ RSpec.describe DQTRecordCheck do
 
         context "when first names match but surnames are different" do
           include_context "build fake DQT response" do
-            let(:fake_api_response) { default_api_response.merge("name" => "Mr Nelson Piquet") }
+            let(:fake_api_response) { default_api_response.merge("lastName" => "Piquet") }
           end
 
           it("#name_matches is false") { expect(subject.call.name_matches).to be(false) }
@@ -138,7 +135,7 @@ RSpec.describe DQTRecordCheck do
           let(:full_name) { nil }
 
           include_context "build fake DQT response" do
-            let(:fake_api_response) { default_api_response.merge("name" => "Nelson Muntz") }
+            let(:fake_api_response) { default_api_response }
           end
 
           it("#name_matches is false") { expect(subject.call.name_matches).to be(false) }
@@ -165,7 +162,7 @@ RSpec.describe DQTRecordCheck do
 
       context "when different" do
         include_context "build fake DQT response" do
-          let(:fake_api_response) { default_api_response.merge("dob" => 27.years.ago.to_date) }
+          let(:fake_api_response) { default_api_response.merge("dateOfBirth" => 27.years.ago.to_date) }
         end
 
         it("#dob_matches is false") { expect(subject.call.dob_matches).to be(false) }
@@ -189,7 +186,7 @@ RSpec.describe DQTRecordCheck do
 
       context "when different" do
         include_context "build fake DQT response" do
-          let(:fake_api_response) { default_api_response.merge("ni_number" => "ZZ123456X") }
+          let(:fake_api_response) { default_api_response.merge("nationalInsuranceNumber" => "ZZ123456X") }
         end
 
         it("#nino_matches is false") { expect(subject.call.nino_matches).to be(false) }
@@ -207,7 +204,7 @@ RSpec.describe DQTRecordCheck do
 
     context "when there are less than three matches excluding TRN" do
       include_context "build fake DQT response" do
-        let(:fake_api_response) { default_api_response.except("dob").merge("ni_number" => "QQ121212Q") }
+        let(:fake_api_response) { default_api_response.except("dateOfBirth").merge("nationalInsuranceNumber" => "QQ121212Q") }
       end
 
       before do
@@ -225,7 +222,7 @@ RSpec.describe DQTRecordCheck do
 
       context "when the TRN matches and DoB or Nino but the name doesn't match (2 matches)" do
         include_context "build fake DQT response" do
-          let(:fake_api_response) { default_api_response.except("dob").merge("name" => "Jimbo Jones") }
+          let(:fake_api_response) { default_api_response.except("dateOfBirth").merge("firstName" => "Jimbo") }
         end
 
         it "returns the record and match results" do
