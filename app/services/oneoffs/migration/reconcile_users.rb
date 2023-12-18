@@ -45,6 +45,8 @@ module Oneoffs::Migration
     end
 
     def same_first_name?(user_a, user_b)
+      return false unless user_a.full_name.present? && user_b.full_name.present?
+
       user_a_first_name = user_a.full_name.split.first.downcase
       user_b.full_name.downcase.include?(user_a_first_name)
     end
@@ -78,14 +80,14 @@ module Oneoffs::Migration
     def ecf_users
       @ecf_users ||= begin
         applications_query = NPQApplication.joins(:participant_identity).where("participant_identities.user_id = users.id").select("ARRAY_AGG(npq_applications.id)")
-        User.all.includes(:teacher_profile, participant_identities: :npq_applications).select("users.*", "(#{applications_query.to_sql}) AS npq_application_ecf_ids").to_a
+        User.includes(:teacher_profile, participant_identities: { npq_applications: :school }).all.select("users.*", "(#{applications_query.to_sql}) AS npq_application_ecf_ids").to_a
       end
     end
 
     def npq_users
       @npq_users ||= begin
         applications_query = NPQRegistration::Application.where("user_id = users.id AND ecf_id IS NOT NULL").select("ARRAY_AGG(ecf_id)")
-        NPQRegistration::User.all.select("users.*", "(#{applications_query.to_sql}) AS npq_application_ecf_ids").to_a
+        NPQRegistration::User.includes(applications: :school).all.select("users.*", "(#{applications_query.to_sql}) AS npq_application_ecf_ids").to_a
       end
     end
   end
