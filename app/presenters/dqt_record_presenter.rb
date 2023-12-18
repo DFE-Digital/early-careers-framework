@@ -32,9 +32,10 @@ class DQTRecordPresenter < SimpleDelegator
   end
 
   # TODO: field not present in V3
-  # def active_alert?
-  #   dqt_record["active_alert"].present?
-  # end
+  def active_alert?
+    # dqt_record["active_alert"].present?
+    true
+  end
 
   def qts_date
     # dqt_record.dig("qualified_teacher_status", "qts_date")
