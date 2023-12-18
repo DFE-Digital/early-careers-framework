@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_12_13_155849) do
+ActiveRecord::Schema[7.0].define(version: 2023_12_18_115100) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "fuzzystrmatch"
@@ -133,6 +133,35 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_13_155849) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.uuid "appropriate_body_id"
+  end
+
+  create_table "analytics_schools", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name"
+    t.string "urn", null: false
+    t.datetime "nomination_email_opened_at", precision: nil
+    t.boolean "induction_tutor_nominated"
+    t.datetime "tutor_nominated_time", precision: nil
+    t.boolean "induction_tutor_signed_in"
+    t.string "induction_programme_choice"
+    t.boolean "in_partnership"
+    t.datetime "partnership_time", precision: nil
+    t.string "partnership_challenge_reason"
+    t.string "partnership_challenge_time"
+    t.string "lead_provider"
+    t.string "delivery_partner"
+    t.string "chosen_cip"
+    t.string "school_type_name"
+    t.integer "school_phase_type"
+    t.string "school_phase_name"
+    t.integer "school_status_code"
+    t.string "school_status_name"
+    t.string "postcode"
+    t.string "administrative_district_code"
+    t.string "administrative_district_name"
+    t.boolean "active_participants"
+    t.boolean "pupil_premium"
+    t.boolean "sparsity"
+    t.index ["urn"], name: "index_analytics_schools_on_urn", unique: true
   end
 
   create_table "api_request_audits", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
