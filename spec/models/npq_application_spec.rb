@@ -12,6 +12,13 @@ RSpec.describe NPQApplication, type: :model do
     ).backed_by_column_of_type(:text)
   }
 
+  describe "migration convenience methods" do
+    subject(:instance) { create(:npq_application) }
+
+    it { expect(instance.ecf_id).to eq(instance.id) }
+    it { expect(instance.course).to eq(instance.npq_course) }
+  end
+
   describe "callbacks" do
     subject { create(:npq_application) }
 

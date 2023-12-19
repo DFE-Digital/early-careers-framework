@@ -74,12 +74,16 @@ class User < ApplicationRecord
   # and it is possible that there are applications on one or more of the user's
   # participant_identity records
   def npq_applications
-    @npq_applications ||= NPQApplication.joins(:participant_identity)
-      .includes(:school)
-      .where(participant_identity: { user_id: id })
-      .to_a
+    NPQApplication.joins(:participant_identity).where(participant_identity: { user_id: id })
   end
-  alias_method :applications, :npq_applications
+
+  def migration_npq_applications
+    @migration_npq_applications ||= NPQApplication.joins(:participant_identity)
+    .includes(:school)
+    .where(participant_identity: { user_id: id })
+    .to_a
+  end
+  alias_method :applications, :migration_npq_applications
 
   def admin?
     admin_profile.present?

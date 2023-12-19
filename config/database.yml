@@ -41,7 +41,8 @@ test:
       idle_in_transaction_session_timeout: 0
   npq_registration:
     <<: *default_npq_registration
-    database: npq_registration_test
+    <<: *default_primary # As the test database is shared
+    database: npq_registration_test<%= ENV['TEST_ENV_NUMBER'] %>
     variables:
       idle_in_transaction_session_timeout: 0
 
@@ -78,4 +79,3 @@ production:
     <<: *default_primary
   npq_registration:
     <<: *default_npq_registration
-

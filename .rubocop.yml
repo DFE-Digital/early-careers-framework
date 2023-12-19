@@ -5,6 +5,9 @@ inherit_gem:
 
 AllCops:
   Exclude:
+    - app/models/migration/**/*
+    - db/npq_registration_schema.rb
+    - db/npq_registration_migrate/**/*
     - 'node_modules/**/*'
     - 'bin/**/*'
     - 'db/schema.rb'

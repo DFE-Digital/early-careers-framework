@@ -12,7 +12,7 @@ describe Oneoffs::Migration::ReconcileUsers do
 
     context "when there are ECF users without an application that do not match an NPQ user" do
       let!(:ecf_user) { create(:user) }
-      let!(:npq_user) { create(:npq_reg_user) }
+      let!(:npq_user) { create(:npq_reg_source_user) }
 
       it { is_expected.not_to include(an_object_having_attributes(matches: [ecf_user])) }
       it { is_expected.to include(an_object_having_attributes(matches: [npq_user])) }
@@ -20,14 +20,14 @@ describe Oneoffs::Migration::ReconcileUsers do
 
     context "when there are ECF users without an application that match an NPQ user" do
       let!(:ecf_user) { create(:user) }
-      let!(:npq_user) { create(:npq_reg_user, ecf_id: ecf_user.id) }
+      let!(:npq_user) { create(:npq_reg_source_user, ecf_id: ecf_user.id) }
 
       it { is_expected.to include(an_object_having_attributes(matches: array_including(npq_user, ecf_user))) }
     end
 
     context "when there are ECF users with an application and NPQ users that do not match" do
       let!(:ecf_user) { create(:npq_application).user }
-      let!(:npq_user) { create(:npq_reg_user) }
+      let!(:npq_user) { create(:npq_reg_source_user) }
 
       it { is_expected.to include(an_object_having_attributes(matches: [ecf_user])) }
       it { is_expected.to include(an_object_having_attributes(matches: [npq_user])) }
@@ -35,7 +35,7 @@ describe Oneoffs::Migration::ReconcileUsers do
 
     context "when there are ECF and NPQ users that match on ecf_id" do
       let!(:ecf_user) { create(:npq_application).user }
-      let!(:npq_user) { create(:npq_reg_user, ecf_id: ecf_user.id) }
+      let!(:npq_user) { create(:npq_reg_source_user, ecf_id: ecf_user.id) }
 
       it { is_expected.to include(an_object_having_attributes(matches: array_including(npq_user, ecf_user))) }
     end
@@ -47,7 +47,7 @@ describe Oneoffs::Migration::ReconcileUsers do
           user.update!(get_an_identity_id:)
         end
       end
-      let!(:npq_user) { create(:npq_reg_user, get_an_identity_id:) }
+      let!(:npq_user) { create(:npq_reg_source_user, get_an_identity_id:) }
 
       it { is_expected.to include(an_object_having_attributes(matches: array_including(npq_user, ecf_user))) }
     end
@@ -58,7 +58,7 @@ describe Oneoffs::Migration::ReconcileUsers do
           create(:npq_application, user:)
         end
       end
-      let!(:npq_user) { create(:npq_reg_user, trn: ecf_user.teacher_profile.trn) }
+      let!(:npq_user) { create(:npq_reg_source_user, trn: ecf_user.teacher_profile.trn) }
 
       it { is_expected.to include(an_object_having_attributes(matches: array_including(npq_user, ecf_user))) }
     end
@@ -69,7 +69,7 @@ describe Oneoffs::Migration::ReconcileUsers do
         let(:ecf_application) { create(:npq_application) }
 
         let!(:npq_user) { npq_application.user }
-        let(:npq_application) { create(:npq_reg_application, ecf_id: ecf_application.id) }
+        let(:npq_application) { create(:npq_reg_source_application, ecf_id: ecf_application.id) }
 
         it { is_expected.to include(an_object_having_attributes(matches: array_including(npq_user, ecf_user))) }
       end
@@ -79,9 +79,9 @@ describe Oneoffs::Migration::ReconcileUsers do
         let!(:ecf_application) { create(:npq_application, user: ecf_user) }
         let!(:other_ecf_application) { create(:npq_application, user: ecf_user) }
 
-        let(:npq_user) { create(:npq_reg_user) }
-        let!(:npq_application) { create(:npq_reg_application, ecf_id: ecf_application.id, user: npq_user) }
-        let!(:other_npq_application) { create(:npq_reg_application, ecf_id: other_ecf_application.id, user: npq_user) }
+        let(:npq_user) { create(:npq_reg_source_user) }
+        let!(:npq_application) { create(:npq_reg_source_application, ecf_id: ecf_application.id, user: npq_user) }
+        let!(:other_npq_application) { create(:npq_reg_source_application, ecf_id: other_ecf_application.id, user: npq_user) }
 
         it { is_expected.to include(an_object_having_attributes(matches: array_including(npq_user, ecf_user))) }
       end
@@ -90,9 +90,9 @@ describe Oneoffs::Migration::ReconcileUsers do
         let(:ecf_user) { create(:user) }
         let!(:ecf_application) { create(:npq_application, user: ecf_user) }
 
-        let(:npq_user) { create(:npq_reg_user) }
-        let!(:npq_application) { create(:npq_reg_application, ecf_id: ecf_application.id, user: npq_user) }
-        let!(:other_npq_application) { create(:npq_reg_application, ecf_id: SecureRandom.uuid, user: npq_user) }
+        let(:npq_user) { create(:npq_reg_source_user) }
+        let!(:npq_application) { create(:npq_reg_source_application, ecf_id: ecf_application.id, user: npq_user) }
+        let!(:other_npq_application) { create(:npq_reg_source_application, ecf_id: SecureRandom.uuid, user: npq_user) }
 
         it { is_expected.to include(an_object_having_attributes(matches: array_including(npq_user, ecf_user))) }
       end
@@ -104,7 +104,7 @@ describe Oneoffs::Migration::ReconcileUsers do
 
     context "when there are no orphaned matches" do
       let!(:ecf_user) { create(:npq_application).user }
-      let!(:npq_user) { create(:npq_reg_user, ecf_id: ecf_user.id) }
+      let!(:npq_user) { create(:npq_reg_source_user, ecf_id: ecf_user.id) }
 
       it { is_expected.to be_empty }
     end
@@ -121,15 +121,15 @@ describe Oneoffs::Migration::ReconcileUsers do
 
     context "when there are no duplicated matches" do
       let!(:ecf_user) { create(:npq_application).user }
-      let!(:npq_user) { create(:npq_reg_user, ecf_id: ecf_user.id) }
+      let!(:npq_user) { create(:npq_reg_source_user, ecf_id: ecf_user.id) }
 
       it { is_expected.to be_empty }
     end
 
     context "when there are duplicated matches" do
       let!(:ecf_user) { create(:npq_application).user }
-      let!(:npq_user) { create(:npq_reg_user, ecf_id: ecf_user.id) }
-      let!(:duplicate_npq_user) { create(:npq_reg_user, ecf_id: ecf_user.id) }
+      let!(:npq_user) { create(:npq_reg_source_user, ecf_id: ecf_user.id) }
+      let!(:duplicate_npq_user) { create(:npq_reg_source_user, ecf_id: ecf_user.id) }
 
       it { is_expected.to include(an_object_having_attributes(matches: array_including(ecf_user, npq_user, duplicate_npq_user))) }
     end
@@ -140,15 +140,15 @@ describe Oneoffs::Migration::ReconcileUsers do
 
     context "when there are matches" do
       let!(:ecf_user) { create(:npq_application).user }
-      let!(:npq_user) { create(:npq_reg_user, ecf_id: ecf_user.id) }
+      let!(:npq_user) { create(:npq_reg_source_user, ecf_id: ecf_user.id) }
 
       it { is_expected.to include(an_object_having_attributes(matches: array_including(ecf_user, npq_user))) }
     end
 
     context "when there are duplicates" do
       let!(:ecf_user) { create(:npq_application).user }
-      let!(:npq_user) { create(:npq_reg_user, ecf_id: ecf_user.id) }
-      let!(:duplicate_npq_user) { create(:npq_reg_user, ecf_id: ecf_user.id) }
+      let!(:npq_user) { create(:npq_reg_source_user, ecf_id: ecf_user.id) }
+      let!(:duplicate_npq_user) { create(:npq_reg_source_user, ecf_id: ecf_user.id) }
 
       it { is_expected.to be_empty }
     end
@@ -165,7 +165,7 @@ describe Oneoffs::Migration::ReconcileUsers do
 
     context "when there are orphaned ECF and NPQ users" do
       let!(:ecf_user) { create(:npq_application).user }
-      let!(:npq_user) { create(:npq_reg_user) }
+      let!(:npq_user) { create(:npq_reg_source_user) }
 
       it { is_expected.to include(an_object_having_attributes(matches: array_including(ecf_user))) }
       it { is_expected.not_to include(an_object_having_attributes(matches: array_including(npq_user))) }
@@ -177,7 +177,7 @@ describe Oneoffs::Migration::ReconcileUsers do
 
     context "when there are orphaned ECF and NPQ users" do
       let!(:ecf_user) { create(:npq_application).user }
-      let!(:npq_user) { create(:npq_reg_user) }
+      let!(:npq_user) { create(:npq_reg_source_user) }
 
       it { is_expected.not_to include(an_object_having_attributes(matches: array_including(ecf_user))) }
       it { is_expected.to include(an_object_having_attributes(matches: array_including(npq_user))) }
@@ -192,9 +192,9 @@ describe Oneoffs::Migration::ReconcileUsers do
       let!(:ecf_school) { create(:school, name: "ABC School") }
       let!(:ecf_application) { create(:npq_application, user: ecf_user, school: ecf_school) }
 
-      let!(:npq_user) { create(:npq_reg_user, full_name: "Sam Jones") }
-      let!(:npq_school) { create(:npq_reg_school, name: "abc school") }
-      let!(:npq_application) { create(:npq_reg_application, user: npq_user, school: npq_school) }
+      let!(:npq_user) { create(:npq_reg_source_user, full_name: "Sam Jones") }
+      let!(:npq_school) { create(:npq_reg_source_school, name: "abc school") }
+      let!(:npq_application) { create(:npq_reg_source_application, user: npq_user, school: npq_school) }
 
       it { is_expected.to include(an_object_having_attributes(orphan: ecf_user, potential_matches: array_including(npq_user))) }
       it { is_expected.to include(an_object_having_attributes(orphan: npq_user, potential_matches: array_including(ecf_user))) }
@@ -204,9 +204,9 @@ describe Oneoffs::Migration::ReconcileUsers do
         let!(:ecf_school) { create(:school, name: "ABC School") }
         let!(:ecf_application) { create(:npq_application, user: ecf_user, school: ecf_school) }
 
-        let!(:npq_user) { create(:npq_reg_user, full_name: "Sam Jones") }
-        let!(:npq_school) { create(:npq_reg_school, name: nil) }
-        let!(:npq_application) { create(:npq_reg_application, user: npq_user, school: npq_school) }
+        let!(:npq_user) { create(:npq_reg_source_user, full_name: "Sam Jones") }
+        let!(:npq_school) { create(:npq_reg_source_school, name: nil) }
+        let!(:npq_application) { create(:npq_reg_source_application, user: npq_user, school: npq_school) }
 
         it { is_expected.to include(an_object_having_attributes(orphan: ecf_user, potential_matches: [])) }
         it { is_expected.to include(an_object_having_attributes(orphan: npq_user, potential_matches: [])) }

@@ -10,18 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_11_09_124740) do
+ActiveRecord::Schema[7.0].define(version: 2023_12_08_141230) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
 
-  create_table "applications", force: :cascade do |t|
+  create_table "applications", id: false, force: :cascade do |t|
+    t.serial :id, primary_key: true
     t.bigint "user_id", null: false
     t.bigint "course_id", null: false
     t.bigint "lead_provider_id", null: false
-    t.text "school_urn"
+    t.text "DEPRECATED_school_urn"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "ecf_id"
@@ -34,7 +35,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_09_124740) do
     t.boolean "works_in_school"
     t.string "employer_name"
     t.string "employment_role"
-    t.text "private_childcare_provider_urn"
+    t.text "DEPRECATED_private_childcare_provider_urn"
     t.boolean "works_in_nursery"
     t.boolean "works_in_childcare"
     t.text "kind_of_nursery"
@@ -45,7 +46,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_09_124740) do
     t.text "work_setting"
     t.boolean "teacher_catchment_synced_to_ecf", default: false
     t.string "employment_type"
-    t.string "itt_provider"
+    t.string "DEPRECATED_itt_provider"
     t.boolean "lead_mentor", default: false
     t.boolean "primary_establishment", default: false
     t.integer "number_of_pupils", default: 0
@@ -53,12 +54,19 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_09_124740) do
     t.boolean "tsf_primary_plus_eligibility", default: false
     t.text "lead_provider_approval_status"
     t.text "participant_outcome_state"
+    t.bigint "private_childcare_provider_id"
+    t.bigint "itt_provider_id"
+    t.bigint "school_id"
     t.index ["course_id"], name: "index_applications_on_course_id"
+    t.index ["itt_provider_id"], name: "index_applications_on_itt_provider_id"
     t.index ["lead_provider_id"], name: "index_applications_on_lead_provider_id"
+    t.index ["private_childcare_provider_id"], name: "index_applications_on_private_childcare_provider_id"
+    t.index ["school_id"], name: "index_applications_on_school_id"
     t.index ["user_id"], name: "index_applications_on_user_id"
   end
 
-  create_table "courses", force: :cascade do |t|
+  create_table "courses", id: false, force: :cascade do |t|
+    t.serial :id, primary_key: true
     t.text "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -69,7 +77,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_09_124740) do
     t.string "identifier"
   end
 
-  create_table "delayed_jobs", force: :cascade do |t|
+  create_table "delayed_jobs", id: false, force: :cascade do |t|
+    t.serial :id, primary_key: true
     t.integer "priority", default: 0, null: false
     t.integer "attempts", default: 0, null: false
     t.text "handler", null: false
@@ -85,7 +94,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_09_124740) do
     t.index ["priority", "run_at"], name: "delayed_jobs_priority"
   end
 
-  create_table "ecf_sync_request_logs", force: :cascade do |t|
+  create_table "ecf_sync_request_logs", id: false, force: :cascade do |t|
+    t.serial :id, primary_key: true
     t.integer "syncable_id", null: false
     t.string "syncable_type", null: false
     t.string "status", null: false
@@ -97,14 +107,16 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_09_124740) do
     t.index ["syncable_id", "syncable_type"], name: "index_ecf_sync_request_logs_on_syncable_id_and_syncable_type"
   end
 
-  create_table "flipper_features", force: :cascade do |t|
+  create_table "flipper_features", id: false, force: :cascade do |t|
+    t.serial :id, primary_key: true
     t.string "key", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["key"], name: "index_flipper_features_on_key", unique: true
   end
 
-  create_table "flipper_gates", force: :cascade do |t|
+  create_table "flipper_gates", id: false, force: :cascade do |t|
+    t.serial :id, primary_key: true
     t.string "feature_key", null: false
     t.string "key", null: false
     t.string "value"
@@ -113,7 +125,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_09_124740) do
     t.index ["feature_key", "key", "value"], name: "index_flipper_gates_on_feature_key_and_key_and_value", unique: true
   end
 
-  create_table "get_an_identity_webhook_messages", force: :cascade do |t|
+  create_table "get_an_identity_webhook_messages", id: false, force: :cascade do |t|
+    t.serial :id, primary_key: true
     t.jsonb "raw"
     t.jsonb "message"
     t.string "message_id"
@@ -126,7 +139,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_09_124740) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "itt_providers", force: :cascade do |t|
+  create_table "itt_providers", id: false, force: :cascade do |t|
+    t.serial :id, primary_key: true
     t.text "legal_name"
     t.text "operating_name"
     t.datetime "removed_at", precision: nil
@@ -136,7 +150,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_09_124740) do
     t.index ["legal_name"], name: "index_itt_providers_on_legal_name", unique: true
   end
 
-  create_table "lead_providers", force: :cascade do |t|
+  create_table "lead_providers", id: false, force: :cascade do |t|
+    t.serial :id, primary_key: true
     t.text "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -144,7 +159,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_09_124740) do
     t.string "hint"
   end
 
-  create_table "local_authorities", force: :cascade do |t|
+  create_table "local_authorities", id: false, force: :cascade do |t|
+    t.serial :id, primary_key: true
     t.text "ukprn"
     t.text "name"
     t.text "address_1"
@@ -160,7 +176,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_09_124740) do
     t.index ["ukprn"], name: "index_local_authorities_on_ukprn"
   end
 
-  create_table "private_childcare_providers", force: :cascade do |t|
+  create_table "private_childcare_providers", id: false, force: :cascade do |t|
+    t.serial :id, primary_key: true
     t.text "provider_urn", null: false
     t.text "provider_name"
     t.text "registered_person_urn"
@@ -185,7 +202,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_09_124740) do
     t.index ["provider_urn"], name: "index_private_childcare_providers_on_provider_urn"
   end
 
-  create_table "registration_interests", force: :cascade do |t|
+  create_table "registration_interests", id: false, force: :cascade do |t|
+    t.serial :id, primary_key: true
     t.citext "email", null: false
     t.boolean "notified", default: false
     t.datetime "created_at", null: false
@@ -193,14 +211,16 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_09_124740) do
     t.index ["email"], name: "index_registration_interests_on_email", unique: true
   end
 
-  create_table "reports", force: :cascade do |t|
+  create_table "reports", id: false, force: :cascade do |t|
+    t.serial :id, primary_key: true
     t.text "identifier", null: false
     t.text "data"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "schools", force: :cascade do |t|
+  create_table "schools", id: false, force: :cascade do |t|
+    t.serial :id, primary_key: true
     t.text "urn", null: false
     t.text "la_code"
     t.text "la_name"
@@ -235,7 +255,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_09_124740) do
     t.index ["urn"], name: "index_schools_on_urn"
   end
 
-  create_table "sessions", force: :cascade do |t|
+  create_table "sessions", id: false, force: :cascade do |t|
+    t.serial :id, primary_key: true
     t.string "session_id", null: false
     t.text "data"
     t.datetime "created_at", null: false
@@ -244,7 +265,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_09_124740) do
     t.index ["updated_at"], name: "index_sessions_on_updated_at"
   end
 
-  create_table "users", force: :cascade do |t|
+  create_table "users", id: false, force: :cascade do |t|
+    t.serial :id, primary_key: true
     t.string "email", default: "", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -273,7 +295,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_09_124740) do
     t.index ["uid"], name: "index_users_on_uid", unique: true
   end
 
-  create_table "versions", force: :cascade do |t|
+  create_table "versions", id: false, force: :cascade do |t|
+    t.serial :id, primary_key: true
     t.string "item_type", null: false
     t.bigint "item_id", null: false
     t.string "event", null: false
@@ -283,4 +306,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_09_124740) do
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
   end
 
+  add_foreign_key "applications", "courses"
+  add_foreign_key "applications", "itt_providers"
+  add_foreign_key "applications", "lead_providers"
+  add_foreign_key "applications", "private_childcare_providers"
+  add_foreign_key "applications", "schools"
+  add_foreign_key "applications", "users"
 end

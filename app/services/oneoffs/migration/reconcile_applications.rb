@@ -20,7 +20,7 @@ module Oneoffs::Migration
     end
 
     def orphaned_npq
-      @orphaned_npq ||= orphaned.select { |m| m.orphan.is_a?(NPQRegistration::Application) }
+      @orphaned_npq ||= orphaned.select { |m| m.orphan.is_a?(Migration::NPQRegistration::Source::Application) }
     end
 
   protected
@@ -48,7 +48,7 @@ module Oneoffs::Migration
     end
 
     def npq_applications
-      @npq_applications ||= NPQRegistration::Application.includes(:course, :user).all.to_a
+      @npq_applications ||= Migration::NPQRegistration::Source::Application.includes(:course, :user).all.to_a
     end
   end
 end

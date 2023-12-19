@@ -12,7 +12,7 @@ describe Oneoffs::Migration::ReconcileApplications do
 
     context "when there are ECF and NPQ applications that do not match" do
       let!(:ecf_application) { create(:npq_application) }
-      let!(:npq_application) { create(:npq_reg_application) }
+      let!(:npq_application) { create(:npq_reg_source_application) }
 
       it { is_expected.to include(an_object_having_attributes(matches: [ecf_application])) }
       it { is_expected.to include(an_object_having_attributes(matches: [npq_application])) }
@@ -20,7 +20,7 @@ describe Oneoffs::Migration::ReconcileApplications do
 
     context "when there are ECF and NPQ applications that match on ecf_id" do
       let!(:ecf_application) { create(:npq_application) }
-      let!(:npq_application) { create(:npq_reg_application, ecf_id: ecf_application.id) }
+      let!(:npq_application) { create(:npq_reg_source_application, ecf_id: ecf_application.id) }
 
       it { is_expected.to include(an_object_having_attributes(matches: array_including(npq_application, ecf_application))) }
     end
@@ -31,7 +31,7 @@ describe Oneoffs::Migration::ReconcileApplications do
 
     context "when there are no orphaned matches" do
       let!(:ecf_application) { create(:npq_application) }
-      let!(:npq_application) { create(:npq_reg_application, ecf_id: ecf_application.id) }
+      let!(:npq_application) { create(:npq_reg_source_application, ecf_id: ecf_application.id) }
 
       it { is_expected.to be_empty }
     end
@@ -48,15 +48,15 @@ describe Oneoffs::Migration::ReconcileApplications do
 
     context "when there are no duplicated matches" do
       let!(:ecf_application) { create(:npq_application) }
-      let!(:npq_application) { create(:npq_reg_application, ecf_id: ecf_application.id) }
+      let!(:npq_application) { create(:npq_reg_source_application, ecf_id: ecf_application.id) }
 
       it { is_expected.to be_empty }
     end
 
     context "when there are duplicated matches" do
       let!(:ecf_application) { create(:npq_application) }
-      let!(:npq_application) { create(:npq_reg_application, ecf_id: ecf_application.id) }
-      let!(:duplicate_npq_application) { create(:npq_reg_application, ecf_id: ecf_application.id) }
+      let!(:npq_application) { create(:npq_reg_source_application, ecf_id: ecf_application.id) }
+      let!(:duplicate_npq_application) { create(:npq_reg_source_application, ecf_id: ecf_application.id) }
 
       it { is_expected.to include(an_object_having_attributes(matches: array_including(ecf_application, npq_application, duplicate_npq_application))) }
     end
@@ -67,15 +67,15 @@ describe Oneoffs::Migration::ReconcileApplications do
 
     context "when there are matches" do
       let!(:ecf_application) { create(:npq_application) }
-      let!(:npq_application) { create(:npq_reg_application, ecf_id: ecf_application.id) }
+      let!(:npq_application) { create(:npq_reg_source_application, ecf_id: ecf_application.id) }
 
       it { is_expected.to include(an_object_having_attributes(matches: array_including(ecf_application, npq_application))) }
     end
 
     context "when there are duplicates" do
       let!(:ecf_application) { create(:npq_application) }
-      let!(:npq_application) { create(:npq_reg_application, ecf_id: ecf_application.id) }
-      let!(:duplicate_npq_application) { create(:npq_reg_application, ecf_id: ecf_application.id) }
+      let!(:npq_application) { create(:npq_reg_source_application, ecf_id: ecf_application.id) }
+      let!(:duplicate_npq_application) { create(:npq_reg_source_application, ecf_id: ecf_application.id) }
 
       it { is_expected.to be_empty }
     end
@@ -92,7 +92,7 @@ describe Oneoffs::Migration::ReconcileApplications do
 
     context "when there are orphaned ECF and NPQ applications" do
       let!(:ecf_application) { create(:npq_application) }
-      let!(:npq_application) { create(:npq_reg_application) }
+      let!(:npq_application) { create(:npq_reg_source_application) }
 
       it { is_expected.to include(an_object_having_attributes(matches: array_including(ecf_application))) }
       it { is_expected.not_to include(an_object_having_attributes(matches: array_including(npq_application))) }
@@ -104,7 +104,7 @@ describe Oneoffs::Migration::ReconcileApplications do
 
     context "when there are orphaned ECF and NPQ applications" do
       let!(:ecf_application) { create(:npq_application) }
-      let!(:npq_application) { create(:npq_reg_application) }
+      let!(:npq_application) { create(:npq_reg_source_application) }
 
       it { is_expected.not_to include(an_object_having_attributes(matches: array_including(ecf_application))) }
       it { is_expected.to include(an_object_having_attributes(matches: array_including(npq_application))) }
@@ -119,9 +119,9 @@ describe Oneoffs::Migration::ReconcileApplications do
       let!(:ecf_course) { create(:npq_course, name: "course-a") }
       let!(:ecf_application) { create(:npq_application, user: ecf_user, npq_course: ecf_course) }
 
-      let!(:npq_user) { create(:npq_reg_user, ecf_id: ecf_user.id) }
-      let!(:npq_course) { create(:npq_reg_course, name: "COURSE-A") }
-      let!(:npq_application) { create(:npq_reg_application, user: npq_user, course: npq_course) }
+      let!(:npq_user) { create(:npq_reg_source_user, ecf_id: ecf_user.id) }
+      let!(:npq_course) { create(:npq_reg_source_course, name: "COURSE-A") }
+      let!(:npq_application) { create(:npq_reg_source_application, user: npq_user, course: npq_course) }
 
       it { is_expected.to include(an_object_having_attributes(orphan: ecf_application, potential_matches: array_including(npq_application))) }
       it { is_expected.to include(an_object_having_attributes(orphan: npq_application, potential_matches: array_including(ecf_application))) }

@@ -205,10 +205,10 @@ aks-copy-tmp-file: get-cluster-credentials
 
 # Removes explicit postgres database URLs from database.yml
 konduit-cleanup-ecf:
-	sed -i '' -e '/\*default_primary/,/analytics:/{/url: \"postgres/d;}' config/database.yml; \
+	sed -i '' -e '/\*default_primary/,/url:/{/url: \"postgres/d;}' config/database.yml; \
 	exit 0
 konduit-cleanup-npq:
-	sed -i '' -e '/\*default_npq_registration/,/review:/{/url: \"postgres/d;}' config/database.yml; \
+	sed -i '' -e '/\*default_npq_registration/,/url:/{/url: \"postgres/d;}' config/database.yml; \
 	exit 0
 
 # Creates a konduit to the snapshot DB and points development to
