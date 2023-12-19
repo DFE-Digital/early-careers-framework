@@ -21,7 +21,7 @@
         <p class="govuk-body">You can usually find your TRN on your payslip, teachers’ pension documents or teacher training records.</p>
       <% end %>
 
-      <p class="govuk-body"><%= govuk_link_to "I cannot find my TRN", { action: :no_trn }, class: 'govuk-link--no-visit-state'  %></p>
+      <p class="govuk-body"><%= govuk_link_to "I cannot find my TRN", participants_validation_no_trn_path, no_visited_state: true  %></p>
 
       <%= f.govuk_submit "Continue" %>
     <% end %>

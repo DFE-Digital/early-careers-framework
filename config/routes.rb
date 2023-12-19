@@ -617,7 +617,7 @@ Rails.application.routes.draw do
     end
 
     multistep_form :validation, Participants::ParticipantValidationForm, controller: :validations do
-      get :no_trn, as: nil
+      get :no_trn, as: "no_trn"
       get :already_completed, as: nil
     end
   end
