@@ -3,12 +3,19 @@
 import { fromEnv } from './common/utils.js';
 
 export { smokeTest } from './scenarios/smoke-test.js';
+export { apiSmokeTest } from './scenarios/api-smoke-test.js';
 export { apiLoadTest } from './scenarios/api-load-test.js';
+export { breakpointTest } from './scenarios/breakpoint-test.js';
+export { apiBreakpointTest } from './scenarios/api-breakpoint-test.js';
 
 // eslint-disable-next-line no-undef
 globalThis.PAUSE_MIN = Math.max(1 * (__ENV.PAUSE_MIN || 1), 1);
 // eslint-disable-next-line no-undef
-globalThis.PAUSE_MAX = Math.max(1 * (__ENV.PAUSE_MAX || 5), 1);
+globalThis.PAUSE_MAX = Math.max(1 * (__ENV.PAUSE_MAX || 1), 1);
+
+const defaultConfig = {
+  insecureSkipTlsVerify: false, // set to true to ignore certificate errors (e.g. self-signed test certs)
+};
 
 // load test config, used to populate exported options object:
 // eslint-disable-next-line no-restricted-globals
@@ -37,9 +44,7 @@ if (scenario) {
 // combine the above with options set directly:
 // eslint-disable-next-line prefer-object-spread
 export const options = Object.assign(
-  {
-    insecureSkipTlsVerify: false // set to true to ignore certificate errors (e.g. self-signed test certs)
-  },
+  defaultConfig,
   testConfig
 );
 

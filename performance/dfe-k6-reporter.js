@@ -1,11 +1,27 @@
 /* eslint-disable import/no-commonjs */
-const { readFileSync, writeFileSync } = require("fs");
+const { readFileSync, writeFileSync, unlinkSync } = require('node:fs');
+const util = require('node:util');
+const exec = util.promisify(require('node:child_process').exec);
 const nunjucks = require("nunjucks");
 
 const scriptPath = process.argv[1].replace('/dfe-k6-reporter.js', '');
-const inputPath = process.argv[2] || `./smoke-test-summary.json`;
-const outputPath = process.argv[3] || `./smoke-test-summary.html`;
-const markdownSummaryPath = process.argv[4] || `./smoke-test-summary.md`;
+const reportFolder = process.argv[2] || './reports';
+const scenario = process.argv[3] || 'smoke-test';
+
+const reportPath = `${reportFolder}/${scenario}-report.json`;
+const logPath = `${reportFolder}/${scenario}-log.json`;
+const outputPath = reportPath.replace('.json', '.html');
+const summaryPath = reportPath.replace('-report.json', '-summary.md');
+
+nunjucks.configure(
+  [
+    `${scriptPath}/views`,
+    `${scriptPath}/../node_modules/govuk-frontend/`,
+  ],
+  {
+    autoescape: true,
+  }
+);
 
 const standardMetricKeys = [
   'grpc_req_duration',
@@ -51,16 +67,16 @@ const checkFailed = (metric, valName) => {
 };
 
 const metricTableRow = (metricName, metric) => [
-    { text: metricName, classes: "govuk-body-s" },
-    { text: metric.values.count ? metric.values.count : "-", format: "numeric", classes: `govuk-body-s ${checkFailed(metric, "count")}` },
-    { text: metric.values.rate ? metric.values.rate.toFixed(2) : "-", format: "numeric", classes: `govuk-body-s ${checkFailed(metric, "rate")}` },
-    { text: metric.values.avg ? metric.values.avg.toFixed(2) : "-", format: "numeric", classes: `govuk-body-s ${checkFailed(metric, "avg")}` },
-    { text: metric.values.max ? metric.values.max.toFixed(2) : "-", format: "numeric", classes: `govuk-body-s ${checkFailed(metric, "max")}` },
-    { text: metric.values.med ? metric.values.med.toFixed(2) : "-", format: "numeric", classes: `govuk-body-s ${checkFailed(metric, "med")}` },
-    { text: metric.values.min ? metric.values.min.toFixed(2) : "-", format: "numeric", classes: `govuk-body-s ${checkFailed(metric, "min")}` },
-    { text: metric.values['p(90)'] ? metric.values['p(90)'].toFixed(2) : "-", format: "numeric", classes: `govuk-body-s ${checkFailed(metric, "p(90)")}` },
-    { text: metric.values['p(95)'] ? metric.values['p(95)'].toFixed(2) : "-", format: "numeric", classes: `govuk-body-s ${checkFailed(metric, "p(95)")}` }
-  ];
+  { text: metricName, classes: "govuk-body-s" },
+  { text: metric.values.count ? metric.values.count : "-", format: "numeric", classes: `govuk-body-s ${checkFailed(metric, "count")}` },
+  { text: metric.values.rate ? metric.values.rate.toFixed(2) : "-", format: "numeric", classes: `govuk-body-s ${checkFailed(metric, "rate")}` },
+  { text: metric.values.avg ? metric.values.avg.toFixed(2) : "-", format: "numeric", classes: `govuk-body-s ${checkFailed(metric, "avg")}` },
+  { text: metric.values.max ? metric.values.max.toFixed(2) : "-", format: "numeric", classes: `govuk-body-s ${checkFailed(metric, "max")}` },
+  { text: metric.values.med ? metric.values.med.toFixed(2) : "-", format: "numeric", classes: `govuk-body-s ${checkFailed(metric, "med")}` },
+  { text: metric.values.min ? metric.values.min.toFixed(2) : "-", format: "numeric", classes: `govuk-body-s ${checkFailed(metric, "min")}` },
+  { text: metric.values['p(90)'] ? metric.values['p(90)'].toFixed(2) : "-", format: "numeric", classes: `govuk-body-s ${checkFailed(metric, "p(90)")}` },
+  { text: metric.values['p(95)'] ? metric.values['p(95)'].toFixed(2) : "-", format: "numeric", classes: `govuk-body-s ${checkFailed(metric, "p(95)")}` }
+];
 
 const countChecks = (checks) => {
   let passes = 0;
@@ -74,20 +90,165 @@ const countChecks = (checks) => {
   return { passes, fails };
 }
 
-const summariseReport = (data) => {
-  data.metrics.vus = data.metrics.vus || { values: { min: 1, max: 1 } };
-  data.metrics.http_reqs = data.metrics.http_reqs || { values: { count: 0, rate: 0 } };
-  data.metrics.data_received = data.metrics.data_received || { values: { count: 0, rate: 0 } };
-  data.metrics.data_sent = data.metrics.data_sent || { values: { count: 0, rate: 0 } };
+const chartTextPath = './chart.md';
+const chartImagePath = './chart.svg';
+const chartActualImagePath = './chart-1.svg';
+const mermaidTextToSvg = async (input) => {
+  writeFileSync(chartTextPath, input, 'utf8');
+
+  // eslint-disable-next-line no-await-in-loop
+  const { stderr } = await exec(`../node_modules/.bin/mmdc -i ${chartTextPath} -o ${chartImagePath} --theme neutral`);
+  if (stderr) console.error('stderr:', stderr);
+  const svg = readFileSync(chartActualImagePath, 'utf8');
+
+  unlinkSync(chartActualImagePath);
+  unlinkSync(chartTextPath);
+
+  return svg;
+}
+
+const mermaidConfigToText = (config) => [
+  "```mermaid",
+  `---
+config:
+  theme: base
+  themeVariables:
+    xyChart:
+      backgroundColor: "#FFFFFF"
+      titleColor: "#0B0B0C"
+      xAxisLabelColor: "#0B0B0C"
+      xAxisTitleColor: "#0B0B0C"
+      xAxisTickColor: "#B1B4B6"
+      xAxisLineColor: "#B1B4B6"
+      yAxisLabelColor: "#0B0B0C"
+      yAxisTitleColor: "#0B0B0C"
+      yAxisTickColor: "#B1B4B6"
+      yAxisLineColor: "#B1B4B6"
+      plotColorPalette: "#1D70B8"
+--- `,
+  "xychart-beta",
+  `  title "${config.title}"`,
+  `  x-axis "${config.xAxis[0]}" ${config.xAxis[1]} --> ${config.xAxis[2]}`,
+  `  y-axis "${config.yAxis[0]}" ${config.yAxis[1]} --> ${config.yAxis[2]}`,
+  ...config.lines.map(line => `  line [${line.join(', ')}]`),
+  "```",
+  ""
+].join('\n');
+
+const processChart = (data, timeline) => {
+  let minimum;
+  let maximum;
+  let total = 0;
+
+  const log = timeline.reduce((previous, timestamp) => {
+    let value = 0;
+
+    switch (data.type) {
+      case 'counter':
+      case 'rate':
+        // sum the values for the period
+        value = data.log.reduce((current, entry) =>
+          entry.timestamp === timestamp ? current + entry.value : current,
+        0);
+        break;
+      default:
+        // find the highest value for the period
+        value = data.log.reduce((current, entry) =>
+          entry.timestamp === timestamp && entry.value > current ? entry.value : current,
+        0);
+    }
+
+    total += value;
+    if (!maximum || value > maximum) maximum = value;
+    if (!minimum || value < minimum) minimum = value;
+    return { ...previous, [timestamp]: { timestamp, value } };
+  }, {});
+
+  const average = parseInt(`${total / timeline.length}`, 10);
+  const median = parseInt(minimum + ((maximum - minimum) / 2), 10);
+
+  const yPadding = (maximum * 0.1);
+  const config = {
+    title: `${data.name} ${data.type}`,
+    theme: 'base',
+    xAxis: ["Time elapsed", 0, timeline.length],
+    yAxis: ["Total per second", (minimum < 0 ? minimum : 0) - yPadding, maximum + yPadding],
+    lines: [
+      timeline.map(timestamp => log[timestamp].value),
+    ],
+  }
+
+  return {
+    total,
+    minimum,
+    maximum,
+    average,
+    median,
+
+    config,
+    log,
+  };
+};
+
+const generateCharts = async (log) => {
+  const timeline = [];
+  const chartNames = [];
+  const charts = {};
+  const out = {};
+
+  log.forEach(entry => {
+    const chartName = entry.metric;
+
+    if (entry.type === "Point") {
+      const timestamp = new Date(Date.parse(entry.data.time)).toTimeString().split(' ')[0];
+
+      if (timeline.indexOf(timestamp) < 0) timeline.push(timestamp);
+      if (chartNames.indexOf(chartName) < 0) chartNames.push(chartName);
+
+      charts[chartName].log.push({ ...entry.data, timestamp });
+      return;
+    }
+
+    if (entry.type === 'Metric') {
+      charts[chartName] = { ...entry.data, name: chartName, log: [] };
+      return;
+    }
+
+    console.error(entry);
+  });
+
+  for (let i = 0; i < chartNames.length; i += 1) {
+    const chartName = chartNames[i];
+    const chart = processChart(charts[chartName], timeline);
+
+    chart.markdown = mermaidConfigToText(chart.config);
+    // eslint-disable-next-line no-await-in-loop
+    chart.svg = await mermaidTextToSvg(chart.markdown);
+
+    out[chartName] = chart;
+  }
+
+  return out;
+}
+
+const summariseReport = (report, charts) => {
+  // eslint-disable-next-line no-param-reassign
+  report.metrics.vus = report.metrics.vus || { values: { min: 1, max: 1 } };
+  // eslint-disable-next-line no-param-reassign
+  report.metrics.http_reqs = report.metrics.http_reqs || { values: { count: 0, rate: 0 } };
+  // eslint-disable-next-line no-param-reassign
+  report.metrics.data_received = report.metrics.data_received || { values: { count: 0, rate: 0 } };
+  // eslint-disable-next-line no-param-reassign
+  report.metrics.data_sent = report.metrics.data_sent || { values: { count: 0, rate: 0 } };
 
   // Count the thresholds and those that have failed
   let thresholdFailures = 0
   let thresholdCount = 0
 
-  Object.keys(data.metrics).forEach(metricName => {
-    if (data.metrics[metricName].thresholds) {
+  Object.keys(report.metrics).forEach(metricName => {
+    if (report.metrics[metricName].thresholds) {
       thresholdCount += 1
-      const { thresholds } = data.metrics[metricName];
+      const { thresholds } = report.metrics[metricName];
 
       Object.keys(thresholds).forEach(thresholdName => {
         if (thresholds[thresholdName].ok) return;
@@ -100,14 +261,14 @@ const summariseReport = (data) => {
   // NOTE. Nested groups are not checked!
   let checkFailures = 0
   let checkPasses = 0
-  if (data.root_group.checks) {
-    const { passes, fails } = countChecks(data.root_group.checks)
+  if (report.root_group.checks) {
+    const { passes, fails } = countChecks(report.root_group.checks)
 
     checkFailures += fails
     checkPasses += passes
   }
 
-  data.root_group.groups.forEach(group => {
+  report.root_group.groups.forEach(group => {
     if (!group.checks) return;
 
     const { passes, fails } = countChecks(group.checks);
@@ -118,8 +279,8 @@ const summariseReport = (data) => {
 
   const standardMetrics = {};
   standardMetricKeys.forEach(metricName => {
-    if (!data.metrics[metricName]) return;
-    standardMetrics[metricName] = data.metrics[metricName];
+    if (!report.metrics[metricName]) return;
+    standardMetrics[metricName] = report.metrics[metricName];
   });
 
   const standardMetricRows = Object.keys(standardMetrics)
@@ -127,50 +288,53 @@ const summariseReport = (data) => {
 
   const otherMetrics = {};
   otherMetricKeys.forEach(metricName => {
-    if (!data.metrics[metricName]) return;
-    otherMetrics[metricName] = data.metrics[metricName];
+    if (!report.metrics[metricName]) return;
+    otherMetrics[metricName] = report.metrics[metricName];
   });
 
   const otherMetricRows = Object.keys(otherMetrics)
     .map(metricName => metricTableRow(metricName, otherMetrics[metricName]));
 
   const sortedMetrics = {};
-  const sortedMetricsKeys = Object.keys(data.metrics).filter(metricName => !(standardMetricKeys.includes(metricName) || otherMetricKeys.includes(metricName))).sort();
+  const sortedMetricsKeys = Object.keys(report.metrics).filter(metricName => !(standardMetricKeys.includes(metricName) || otherMetricKeys.includes(metricName))).sort();
   sortedMetricsKeys.forEach(metricName => {
-    sortedMetrics[metricName] = data.metrics[metricName];
+    sortedMetrics[metricName] = report.metrics[metricName];
   });
 
   const sortedMetricRows = Object.keys(sortedMetrics)
     .map(metricName => metricTableRow(metricName, sortedMetrics[metricName]));
 
   const breachedMetrics = {}
-  Object.keys(data.metrics)
-    .forEach(metricName => {
-      const { thresholds } = data.metrics[metricName];
+  Object.keys(report.metrics).forEach(metricName => {
+    const { thresholds } = report.metrics[metricName];
 
-      if (!thresholds) return;
+    if (!thresholds) return;
 
-      Object.keys(thresholds)
-        .forEach(threshold => {
-          const [metric, tagString] = metricName.replace('}', '').split('{');
-          const tags = tagString.split(',')
-              .reduce((out, tag) => {
-                const index = tag.indexOf(':');
-                const key = tag.substring(0, index);
-                // eslint-disable-next-line no-param-reassign
-                out[key] = tag.substring(index + 1);
-                return out;
-              }, {});
+    Object.keys(thresholds).forEach(threshold => {
+      const [metric, tagString] = metricName.replace('}', '').split('{');
+      const tags = tagString.split(',')
+          .reduce((out, tag) => {
+            const index = tag.indexOf(':');
+            const key = tag.substring(0, index);
+            // eslint-disable-next-line no-param-reassign
+            out[key] = tag.substring(index + 1);
+            return out;
+          }, {});
 
-          if (!thresholds[threshold].ok) {
-            breachedMetrics[tags.group] = breachedMetrics[tags.group] || [];
-            breachedMetrics[tags.group].push({ threshold, metric });
-          }
-        });
+      if (!thresholds[threshold].ok) {
+        breachedMetrics[tags.group] = breachedMetrics[tags.group] || [];
+        breachedMetrics[tags.group].push({ threshold, metric });
+      }
     });
+  });
+
+  Object.keys(report.metrics).forEach(metricName => {
+    // eslint-disable-next-line no-param-reassign
+    report.metrics[metricName] = { ...report.metrics[metricName], ...charts[metricName] };
+  });
 
   return {
-    data,
+    data: report,
     standardMetricRows,
     otherMetricRows,
     sortedMetricRows,
@@ -184,37 +348,44 @@ const summariseReport = (data) => {
   };
 };
 
-nunjucks.configure(
-  [
-    `${scriptPath}/views`,
-    `${scriptPath}/../node_modules/govuk-frontend/`,
-  ],
-  {
-    autoescape: true,
-  }
-);
+(async () => {
+  console.log(`Loading JSON report (${reportPath})`);
+  // eslint-disable-next-line import/no-unresolved
+  const jsonReportSrc = readFileSync(reportPath, "utf8");
+  const jsonReport = JSON.parse(jsonReportSrc);
 
-// eslint-disable-next-line import/no-unresolved
-const jsonSrc = readFileSync(inputPath, "utf8");
-const jsonReport = JSON.parse(jsonSrc);
-const jsonSummary = summariseReport(jsonReport);
-// writeFileSync('../reports/model.json', JSON.stringify(jsonSummary), "utf8"); // useful for debugging
+  console.log(`Loading JSON log (${logPath})`);
+  // eslint-disable-next-line import/no-unresolved
+  const jsonLogSrc = readFileSync(logPath, "utf8");
+  const jsonLog = JSON.parse(jsonLogSrc);
 
-const htmlReport = nunjucks.render('report.njk', {
-  themeColor: "#003a69",
-  assetPath: "https://design-system.service.gov.uk/assets",
-  assetUrl: "https://design-system.service.gov.uk/assets",
-  service: { name: "Continuing Professional Development" },
-  report: {
-    name: "Performance summary",
-    summary: jsonSummary,
-  },
-});
+  console.log(`Generating metric charts`);
+  const charts = await generateCharts(jsonLog);
 
-// eslint-disable-next-line no-multi-str
-const markdownSummaryReport = nunjucks.render('summary.njk', jsonSummary);
+  console.log(`Generating JSON summary of report`);
+  const jsonSummary = summariseReport(jsonReport, charts);
 
-console.log(`Generating HTML report (${outputPath}) from ${inputPath}`);
-writeFileSync(outputPath, htmlReport, "utf8");
-console.log(`Generating Markdown summary (${markdownSummaryPath}) from ${inputPath}`);
-writeFileSync(markdownSummaryPath, markdownSummaryReport, "utf8");
+  console.log(`Generating HTML report (${outputPath})`);
+  const style = readFileSync('./public/main.css', 'utf8');
+  const script = readFileSync('./public/application.js', 'utf8');
+  const ctx = {
+    themeColor: "#003a69",
+    assetPath: "https://design-system.service.gov.uk/assets",
+    assetUrl: "https://design-system.service.gov.uk/assets",
+    service: { name: "Continuing Professional Development" },
+    report: {
+      name: "Performance summary",
+      summary: jsonSummary,
+    },
+    style,
+    script,
+  };
+  // const serializedCtx = JSON.stringify(ctx, null, 2);
+  // writeFileSync(`${reportFolder}/${scenario}-ctx.json`, serializedCtx, "utf8");
+  const htmlReport = nunjucks.render('report.njk', ctx);
+  writeFileSync(outputPath, htmlReport, "utf8");
+
+  console.log(`Generating Markdown summary (${summaryPath})`);
+  const markdownSummary = nunjucks.render('summary.njk', jsonSummary);
+  writeFileSync(summaryPath, markdownSummary, "utf8");
+})();

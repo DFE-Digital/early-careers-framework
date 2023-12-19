@@ -11,6 +11,7 @@
     "@babel/plugin-transform-runtime": "^7.23.7",
     "@babel/preset-env": "^7.23.8",
     "@babel/runtime": "^7.23.8",
+    "@mermaid-js/mermaid-cli": "^10.6.1",
     "@sentry/browser": "^6.19.7",
     "@sentry/tracing": "^6.19.7",
     "accessible-autocomplete": "^2.0.3",

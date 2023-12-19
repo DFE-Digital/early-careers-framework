@@ -7,16 +7,21 @@ import { randomIntBetween, fromEnv } from '../common/utils.js';
 
 // eslint-disable-next-line import/prefer-default-export
 export const apiLoadTest = () => {
-  const path = '/participants/ecf';
-  const totalParticipants = fromEnv('NUM_AUTHORITIES') * fromEnv('NUM_SCHOOLS') * fromEnv('NUM_PARTICIPANTS');
-  const lastPage = Math.ceil(totalParticipants / 2000);
+  const targetDomain = `http://${fromEnv('TARGET_HOSTNAME')}:${fromEnv('TARGET_PORT')}`;
+  const targetPath = '/participants/ecf';
+
+  const totalParticipants = fromEnv('TOTAL_PARTICIPANTS');
+  const participantsPerPage = fromEnv('PARTICIPANTS_PER_PAGE');
+  const lastPage = Math.ceil(totalParticipants / participantsPerPage);
+
+  const apiToken = fromEnv('LEAD_PROVIDER_API_TOKEN');
 
   // test params
   const headers= {
-    'Authorization': `Bearer ${fromEnv('LEAD_PROVIDER_API_TOKEN')}`,
+    'Authorization': `Bearer ${apiToken}`,
     'Content-Type': 'application/json',
     'Accept': 'application/json',
-    'X-With-Server-Date': '2023-02-10T02:21:32.000Z',
+  //'X-With-Server-Date': '2023-02-10T02:21:32.000Z',
   };
 
   ['v1', 'v2', 'v3']
@@ -27,14 +32,14 @@ export const apiLoadTest = () => {
         ['first', 'last']
           .forEach(page => {
             const pageNumber = page === 'first' ? 1 : lastPage;
-            const endpoint = `/api/${version}${path}`;
-            const query = `page[page]=${pageNumber}&page[per_page]=${fromEnv('PARTICIPANTS_PER_PAGE')}`;
-            const uri = `http://${fromEnv('TARGET_HOSTNAME')}:${fromEnv('TARGET_PORT')}${endpoint}?${query}`;
+            const endpoint = `/api/${version}${targetPath}`;
+            const query = `page[page]=${pageNumber}&page[per_page]=${participantsPerPage}`;
+            const uri = `${targetDomain}${endpoint}?${query}`;
 
-            const tags = { path, version, endpoint, query, page, pageNumber };
+            const tags = { path: targetPath, version, endpoint, query, page, pageNumber };
             const params = { headers, tags };
 
-            group(`${path}?page[page]=${page}`, () => {
+            group(`${targetPath}?page[page]=${page}`, () => {
               const res = http.get(uri, params);
               check(res,
                 {

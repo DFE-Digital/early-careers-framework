@@ -75,7 +75,6 @@ runs:
         sleep 5
       env:
         IMAGE: ${{ inputs.docker-image }}
-
         PERF_SCENARIO: ${{ inputs.scenario }}
         PERF_REPORT_FILE: k6-output.json
 
@@ -88,7 +87,6 @@ runs:
         docker compose -f ./performance/docker-compose.yml exec web bundle exec rails db:migrate db:seed
       env:
         IMAGE: ${{ inputs.docker-image }}
-
         PERF_SCENARIO: ${{ inputs.scenario }}
         PERF_REPORT_FILE: k6-output.json
 
@@ -101,7 +99,6 @@ runs:
         docker compose -f ./performance/docker-compose.yml cp k6:/home/k6/k6.log ./reports/${{ inputs.scenario }}.log
       env:
         IMAGE: ${{ inputs.docker-image }}
-
         PERF_SCENARIO: ${{ inputs.scenario }}
         PERF_REPORT_FILE: k6-output.json
 
@@ -112,15 +109,14 @@ runs:
         docker-compose -f ./performance/docker-compose.yml down
       env:
         IMAGE: ${{ inputs.docker-image }}
-
         PERF_SCENARIO: ${{ inputs.scenario }}
         PERF_REPORT_FILE: k6-output.json
 
     - name: Generate the HTML report and summary
       shell: bash
       run: |
-        node ./performance/dfe-k6-log-to-json.js ./reports/${{ inputs.scenario }}.log ./reports/${{ inputs.scenario }}-log.json
-        node ./performance/dfe-k6-reporter.js ./reports/${{ inputs.scenario }}-report.json ./reports/${{ inputs.scenario }}-report.html ./reports/${{ inputs.scenario }}-summary.md
+        node ./performance/dfe-k6-log-to-json.js ./reports ${{ inputs.scenario }}
+        node ./performance/dfe-k6-reporter.js ./reports ${{ inputs.scenario }}
 
     - name: Upload the reports
       uses: actions/upload-artifact@v3

@@ -58,7 +58,7 @@ tokens
 
 /reports
 /performance/reports/*
-/performance/db/*.gz
+/performance/db
 
 /spec/cypress/videos
 /spec/cypress/screenshots

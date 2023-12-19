@@ -1,12 +1,18 @@
 /* eslint-disable import/no-commonjs */
 const { readFileSync, writeFileSync } = require("fs");
 
-const inputPath = process.argv[2] || `./smoke-test.log`;
-const outputPath = process.argv[3] || `./smoke-test-log.json`;
+const reportFolder = process.argv[2] || './reports';
+const scenario = process.argv[3] || 'smoke-test';
 
-const data = readFileSync(inputPath, 'utf8');
+const logPath = `${reportFolder}/${scenario}.log`;
+const outputPath = `${reportFolder}/${scenario}-log.json`;
+
+console.log(`Loading k6 log file (${logPath})`);
+const data = readFileSync(logPath, 'utf8');
+
+console.log(`Serialising k6 log`);
 const log = data.trim().split('\n').map(line => JSON.parse(line));
 
-const serializedLog = JSON.stringify(log);
-console.log(`Serialising k6 log entries (${outputPath}) from (${inputPath})`);
+console.log(`Writing k6 JSON log file (${outputPath})`);
+const serializedLog = JSON.stringify(log, null, 2);
 writeFileSync(outputPath, serializedLog, 'utf8');

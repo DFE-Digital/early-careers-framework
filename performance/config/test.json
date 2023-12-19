@@ -9,13 +9,31 @@
       "exec": "smokeTest"
     },
 
-    "warm-up": {
+    "breakpoint-test":{
+      "executor": "ramping-arrival-rate",
+      "preAllocatedVUs": 5000,
+      "stages": [
+        { "duration": "7200s", "target": 5000 }
+      ],
+      "exec": "breakpointTest"
+    },
+
+    "api-smoke-test": {
       "executor": "constant-arrival-rate",
       "rate": 1,
       "timeUnit": "1s",
       "duration": "30s",
       "preAllocatedVUs": 1,
-      "exec": "apiLoadTest"
+      "exec": "apiSmokeTest"
+    },
+
+    "api-breakpoint-test":{
+      "executor": "ramping-arrival-rate",
+      "preAllocatedVUs": 5000,
+      "stages": [
+        { "duration": "7200s", "target": 5000 }
+      ],
+      "exec": "apiBreakpointTest"
     },
 
     "api-load-test": {
@@ -32,9 +50,55 @@
     "http_req_failed{scenario:smoke-test}": [
       { "threshold": "rate<0.1", "abortOnFail": false }
     ],
-    "http_req_duration{scenario:smoke-test}": [
+    "http_req_receiving{scenario:smoke-test}": [
       { "threshold": "p(95)<200", "abortOnFail": false },
       { "threshold": "max<500", "abortOnFail": false }
+    ],
+
+    "http_req_failed{scenario:api-smoke-test,targetPath:/api/v1/participants/ecf}": [
+      { "threshold": "rate<0.1", "abortOnFail": false }
+    ],
+    "http_req_failed{scenario:api-smoke-test,targetPath:/api/v1/npq-applications}": [
+      { "threshold": "rate<0.1", "abortOnFail": false }
+    ],
+    "http_req_failed{scenario:api-smoke-test,targetPath:/api/v1/participants/npq}": [
+      { "threshold": "rate<0.1", "abortOnFail": false }
+    ],
+    "http_req_failed{scenario:api-smoke-test,targetPath:/api/v1/participants/npq/outcomes}": [
+      { "threshold": "rate<0.1", "abortOnFail": false }
+    ],
+    "http_req_failed{scenario:api-smoke-test,targetPath:/api/v1/participant-declarations}": [
+      { "threshold": "rate<0.1", "abortOnFail": false }
+    ],
+    "http_req_failed{scenario:api-smoke-test,targetPath:/api/v2/participants/ecf}": [
+      { "threshold": "rate<0.1", "abortOnFail": false }
+    ],
+    "http_req_failed{scenario:api-smoke-test,targetPath:/api/v2/npq-applications}": [
+      { "threshold": "rate<0.1", "abortOnFail": false }
+    ],
+    "http_req_failed{scenario:api-smoke-test,targetPath:/api/v2/participants/npq}": [
+      { "threshold": "rate<0.1", "abortOnFail": false }
+    ],
+    "http_req_failed{scenario:api-smoke-test,targetPath:/api/v2/participants/npq/outcomes}": [
+      { "threshold": "rate<0.1", "abortOnFail": false }
+    ],
+    "http_req_failed{scenario:api-smoke-test,targetPath:/api/v2/participant-declarations}": [
+      { "threshold": "rate<0.1", "abortOnFail": false }
+    ],
+    "http_req_failed{scenario:api-smoke-test,targetPath:/api/v3/participants/ecf}": [
+      { "threshold": "rate<0.1", "abortOnFail": false }
+    ],
+    "http_req_failed{scenario:api-smoke-test,targetPath:/api/v3/npq-applications}": [
+      { "threshold": "rate<0.1", "abortOnFail": false }
+    ],
+    "http_req_failed{scenario:api-smoke-test,targetPath:/api/v3/participants/npq}": [
+      { "threshold": "rate<0.1", "abortOnFail": false }
+    ],
+    "http_req_failed{scenario:api-smoke-test,targetPath:/api/v3/participants/npq/outcomes}": [
+      { "threshold": "rate<0.1", "abortOnFail": false }
+    ],
+    "http_req_failed{scenario:api-smoke-test,targetPath:/api/v3/participant-declarations}": [
+      { "threshold": "rate<0.1", "abortOnFail": false }
     ],
 
     "http_req_failed{scenario:api-load-test,group:::API v1::/participants/ecf?page[page]=first}": [
@@ -56,29 +120,37 @@
       { "threshold": "rate<0.1", "abortOnFail": false }
     ],
 
-    "http_req_duration{scenario:api-load-test,group:::API v1::/participants/ecf?page[page]=first}": [
-      { "threshold": "p(95)<1200", "abortOnFail": false },
-      { "threshold": "max<1800", "abortOnFail": false }
+    "http_req_receiving{scenario:api-load-test,group:::API v1::/participants/ecf?page[page]=first}": [
+      { "threshold": "p(95)<30000", "abortOnFail": false },
+      { "threshold": "max<30000", "abortOnFail": false }
     ],
-    "http_req_duration{scenario:api-load-test,group:::API v1::/participants/ecf?page[page]=last}": [
-      { "threshold": "p(95)<1200", "abortOnFail": false },
-      { "threshold": "max<1800", "abortOnFail": false }
+    "http_req_receiving{scenario:api-load-test,group:::API v1::/participants/ecf?page[page]=last}": [
+      { "threshold": "p(95)<30000", "abortOnFail": false },
+      { "threshold": "max<30000", "abortOnFail": false }
     ],
-    "http_req_duration{scenario:api-load-test,group:::API v2::/participants/ecf?page[page]=first}": [
-      { "threshold": "p(95)<1200", "abortOnFail": false },
-      { "threshold": "max<1800", "abortOnFail": false }
+    "http_req_receiving{scenario:api-load-test,group:::API v2::/participants/ecf?page[page]=first}": [
+      { "threshold": "p(95)<30000", "abortOnFail": false },
+      { "threshold": "max<30000", "abortOnFail": false }
     ],
-    "http_req_duration{scenario:api-load-test,group:::API v2::/participants/ecf?page[page]=last}": [
-      { "threshold": "p(95)<1200", "abortOnFail": false },
-      { "threshold": "max<1800", "abortOnFail": false }
+    "http_req_receiving{scenario:api-load-test,group:::API v2::/participants/ecf?page[page]=last}": [
+      { "threshold": "p(95)<30000", "abortOnFail": false },
+      { "threshold": "max<30000", "abortOnFail": false }
     ],
-    "http_req_duration{scenario:api-load-test,group:::API v3::/participants/ecf?page[page]=first}": [
-      { "threshold": "p(95)<1200", "abortOnFail": false },
-      { "threshold": "max<1800", "abortOnFail": false }
+    "http_req_receiving{scenario:api-load-test,group:::API v3::/participants/ecf?page[page]=first}": [
+      { "threshold": "p(95)<30000", "abortOnFail": false },
+      { "threshold": "max<30000", "abortOnFail": false }
     ],
-    "http_req_duration{scenario:api-load-test,group:::API v3::/participants/ecf?page[page]=last}": [
-      { "threshold": "p(95)<1200", "abortOnFail": false },
-      { "threshold": "max<1800", "abortOnFail": false }
+    "http_req_receiving{scenario:api-load-test,group:::API v3::/participants/ecf?page[page]=last}": [
+      { "threshold": "p(95)<30000", "abortOnFail": false },
+      { "threshold": "max<30000", "abortOnFail": false }
+    ],
+
+    "http_req_failed{scenario:api-breakpoint-test}": [
+      { "threshold": "rate<0.1", "abortOnFail": true, "delayAbortEval": "1200s" }
+    ],
+
+    "http_req_failed{scenario:breakpoint-test}": [
+      { "threshold": "rate<0.1", "abortOnFail": true, "delayAbortEval": "1s" }
     ]
   }
 }

@@ -8,7 +8,9 @@
 {% block pageTitle %}Performance test report - EDUCATION.GOV.UK{% endblock %}
 
 {% block head %}
-  <link href="https://design-system.service.gov.uk/stylesheets/main-302bcc7bda33eed8f5e6726a2d42cbde.css" rel="stylesheet">
+  <style>
+{{ style | safe }}
+  </style>
 
   <style>
     .app-card {
@@ -257,91 +259,237 @@
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-one-half">
-      {% if data.metrics.checks %}
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          {{ data.metrics.http_reqs.svg | safe }}
+        </div>
+      </div>
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
         {{ govukTable({
           firstCellIsHeader: true,
-          head: [ { text: "" }, { text: "Passed", format: "numeric" }, { text: "Failed", format: "numeric" } ],
+          head: [
+            { text: "", classes: "govuk-!-width-one-half govuk-body-s" },
+            { text: "Total", format: "numeric", classes: "govuk-!-width-one-quarter govuk-body-s" },
+            { text: "Rate", format: "numeric", classes: "govuk-!-width-one-quarter govuk-body-s" }
+          ],
           rows: [
             [
-              { text: "Checks", classes: "govuk-!-width-one-half" },
-              { text: data.metrics.checks.values.passes, format: "numeric", classes: "govuk-!-width-one-quarter" },
-              { text: data.metrics.checks.values.fails, format: "numeric", classes: "govuk-!-width-one-quarter" }
+              { text: "Requests", classes: "govuk-!-width-one-half govuk-body-s" },
+              { text: data.metrics.http_reqs.values.count, format: "numeric", classes: "govuk-!-width-one-quarter govuk-body-s" },
+              { text: data.metrics.http_reqs.values.rate.toFixed(2) + "/sec", format: "numeric", classes: "govuk-!-width-one-quarter govuk-body-s" }
             ]
           ]
         }) }}
-      {% endif %}
+        </div>
+      </div>
     </div>
 
     <div class="govuk-grid-column-one-half">
-      {% if data.metrics.iterations %}
-        {{ govukTable({
-          firstCellIsHeader: true,
-          head: [ { text: "" }, { text: "Total", format: "numeric" }, { text: "Rate", format: "numeric" } ],
-          rows: [
-            [
-              { text: "Iterations", classes: "govuk-!-width-one-half" },
-              { text: data.metrics.iterations.values.count, format: "numeric", classes: "govuk-!-width-one-quarter" },
-              { text: data.metrics.iterations.values.rate.toFixed(2), format: "numeric", classes: "govuk-!-width-one-quarter" }
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          {{ data.metrics.checks.svg | safe }}
+        </div>
+      </div>
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+        {% if data.metrics.checks %}
+          {{ govukTable({
+            firstCellIsHeader: true,
+            head: [
+              { text: "", classes: "govuk-!-width-one-half govuk-body-s" },
+              { text: "Passed", format: "numeric", classes: "govuk-!-width-one-sixth govuk-body-s" },
+              { text: "Failed", format: "numeric", classes: "govuk-!-width-one-sixth govuk-body-s" },
+              { text: "Rate", format: "numeric", classes: "govuk-!-width-one-sixth govuk-body-s" }
+            ],
+            rows: [
+              [
+                { text: "Checks", classes: "govuk-!-width-one-half govuk-body-s" },
+                { text: data.metrics.checks.values.passes, format: "numeric", classes: "govuk-!-width-one-sixth govuk-body-s" },
+                { text: data.metrics.checks.values.fails, format: "numeric", classes: "govuk-!-width-one-sixth govuk-body-s" },
+                { text: data.metrics.checks.values.rate.toFixed(2) + "/sec", format: "numeric", classes: "govuk-!-width-one-sixth govuk-body-s" }
+              ]
             ]
-          ]
-        }) }}
-      {% endif %}
+          }) }}
+        {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          {{ data.metrics.iterations.svg | safe }}
+        </div>
+      </div>
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          {% if data.metrics.iterations %}
+            {{ govukTable({
+              firstCellIsHeader: true,
+              head: [
+                { text: "", classes: "govuk-!-width-one-half govuk-body-s" },
+                { text: "Total", format: "numeric", classes: "govuk-!-width-one-quarter govuk-body-s" },
+                { text: "Rate", format: "numeric", classes: "govuk-!-width-one-quarter govuk-body-s" }
+              ],
+              rows: [
+                [
+                  { text: "Iterations", classes: "govuk-!-width-one-half govuk-body-s" },
+                  { text: data.metrics.iterations.values.count, format: "numeric", classes: "govuk-!-width-one-quarter govuk-body-s" },
+                  { text: data.metrics.iterations.values.rate.toFixed(2) + "/sec", format: "numeric", classes: "govuk-!-width-one-quarter govuk-body-s" }
+                ]
+              ]
+            }) }}
+          {% endif %}
+        </div>
+      </div>
     </div>
 
     <div class="govuk-grid-column-one-half">
-      {{ govukTable({
-        firstCellIsHeader: true,
-        head: [ { text: "" }, { text: "Min", format: "numeric" }, { text: "Max", format: "numeric" } ],
-        rows: [
-          [
-            { text: "Virtual Users", classes: "govuk-!-width-one-half" },
-            { text: data.metrics.vus.values.min, format: "numeric", classes: "govuk-!-width-one-quarter" },
-            { text: data.metrics.vus.values.max, format: "numeric", classes: "govuk-!-width-one-quarter" }
-          ]
-        ]
-      }) }}
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          {{ data.metrics.dropped_iterations.svg | safe }}
+        </div>
+      </div>
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          {% if data.metrics.dropped_iterations %}
+            {{ govukTable({
+              firstCellIsHeader: true,
+              head: [
+                { text: "", classes: "govuk-!-width-one-half govuk-body-s" },
+                { text: "Total", format: "numeric", classes: "govuk-!-width-one-quarter govuk-body-s" },
+                { text: "Rate", format: "numeric", classes: "govuk-!-width-one-quarter govuk-body-s" }
+              ],
+              rows: [
+                [
+                  { text: "Dropped Iterations", classes: "govuk-!-width-one-half govuk-body-s" },
+                  { text: data.metrics.dropped_iterations.values.count, format: "numeric", classes: "govuk-!-width-one-quarter govuk-body-s" },
+                  { text: data.metrics.dropped_iterations.values.rate.toFixed(2) + "/sec", format: "numeric", classes: "govuk-!-width-one-quarter govuk-body-s" }
+                ]
+              ]
+            }) }}
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          {{ data.metrics.vus.svg | safe }}
+        </div>
+      </div>
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          {{ govukTable({
+            firstCellIsHeader: true,
+            head: [
+              { text: "", classes: "govuk-!-width-one-half govuk-body-s" },
+              { text: "Value", format: "numeric", classes: "govuk-!-width-one-sixth govuk-body-s" },
+              { text: "Min", format: "numeric", classes: "govuk-!-width-one-sixth govuk-body-s" },
+              { text: "Max", format: "numeric", classes: "govuk-!-width-one-sixth govuk-body-s" }
+            ],
+            rows: [
+              [
+                { text: "Virtual Users", classes: "govuk-!-width-one-half govuk-body-s" },
+                { text: data.metrics.vus.values.value, format: "numeric", classes: "govuk-!-width-one-sixth govuk-body-s" },
+                { text: data.metrics.vus.values.min, format: "numeric", classes: "govuk-!-width-one-sixth govuk-body-s" },
+                { text: data.metrics.vus.values.max, format: "numeric", classes: "govuk-!-width-one-sixth govuk-body-s" }
+              ]
+            ]
+          }) }}
+        </div>
+      </div>
     </div>
 
     <div class="govuk-grid-column-one-half">
-      {{ govukTable({
-        firstCellIsHeader: true,
-        head: [ { text: "" }, { text: "Total", format: "numeric" }, { text: "Rate", format: "numeric" } ],
-        rows: [
-          [
-            { text: "Requests", classes: "govuk-!-width-one-half" },
-            { text: data.metrics.iterations.values.count, format: "numeric", classes: "govuk-!-width-one-quarter" },
-            { text: data.metrics.iterations.values.rate.toFixed(2) + "/sec", format: "numeric", classes: "govuk-!-width-one-quarter" }
-          ]
-        ]
-      }) }}
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          {{ data.metrics.vus_max.svg | safe }}
+        </div>
+      </div>
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          {{ govukTable({
+            firstCellIsHeader: true,
+            head: [
+              { text: "", classes: "govuk-!-width-one-half govuk-body-s" },
+              { text: "Value", format: "numeric", classes: "govuk-!-width-one-sixth govuk-body-s" },
+              { text: "Min", format: "numeric", classes: "govuk-!-width-one-sixth govuk-body-s" },
+              { text: "Max", format: "numeric", classes: "govuk-!-width-one-sixth govuk-body-s" }
+            ],
+            rows: [
+              [
+                { text: "Max Virtual Users", classes: "govuk-!-width-one-half govuk-body-s" },
+                { text: data.metrics.vus_max.values.value, format: "numeric", classes: "govuk-!-width-one-sixth govuk-body-s" },
+                { text: data.metrics.vus_max.values.min, format: "numeric", classes: "govuk-!-width-one-sixth govuk-body-s" },
+                { text: data.metrics.vus_max.values.max, format: "numeric", classes: "govuk-!-width-one-sixth govuk-body-s" }
+              ]
+            ]
+          }) }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          {{ data.metrics.data_sent.svg | safe }}
+        </div>
+      </div>
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          {{ govukTable({
+            firstCellIsHeader: true,
+            head: [
+              { text: "", classes: "govuk-!-width-one-half govuk-body-s" },
+              { text: "Total", format: "numeric", classes: "govuk-!-width-one-quarter govuk-body-s" },
+              { text: "Rate", format: "numeric", classes: "govuk-!-width-one-quarter govuk-body-s" }
+            ],
+            rows: [
+              [
+                { text: "Data Sent", classes: "govuk-!-width-one-half govuk-body-s" },
+                { text: (data.metrics.data_sent.values.count/1000000).toFixed(2) + " MB", format: "numeric", classes: "govuk-!-width-one-quarter govuk-body-s" },
+                { text: (data.metrics.data_sent.values.rate/1000000).toFixed(2) + " mB/s", format: "numeric", classes: "govuk-!-width-one-quarter govuk-body-s" }
+              ]
+            ]
+          }) }}
+        </div>
+      </div>
     </div>
 
     <div class="govuk-grid-column-one-half">
-      {{ govukTable({
-        firstCellIsHeader: true,
-        head: [ { text: "" }, { text: "Total", format: "numeric" }, { text: "Rate", format: "numeric" } ],
-        rows: [
-          [
-            { text: "Data Received", classes: "govuk-!-width-one-half" },
-            { text: (data.metrics.data_received.values.count/1000000).toFixed(2) + " MB", format: "numeric", classes: "govuk-!-width-one-quarter" },
-            { text: (data.metrics.data_received.values.rate/1000000).toFixed(2) + " mB/s", format: "numeric", classes: "govuk-!-width-one-quarter" }
-          ]
-        ]
-      }) }}
-    </div>
-
-    <div class="govuk-grid-column-one-half">
-      {{ govukTable({
-        firstCellIsHeader: true,
-        head: [ { text: "" }, { text: "Total", format: "numeric" }, { text: "Rate", format: "numeric" } ],
-        rows: [
-          [
-            { text: "Data Sent", classes: "govuk-!-width-one-half" },
-            { text: (data.metrics.data_sent.values.count/1000000).toFixed(2) + " MB", format: "numeric", classes: "govuk-!-width-one-quarter" },
-            { text: (data.metrics.data_sent.values.rate/1000000).toFixed(2) + " mB/s", format: "numeric", classes: "govuk-!-width-one-quarter" }
-          ]
-        ]
-      }) }}
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          {{ data.metrics.data_received.svg | safe }}
+        </div>
+      </div>
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          {{ govukTable({
+            firstCellIsHeader: true,
+            head: [
+              { text: "", classes: "govuk-!-width-one-half govuk-body-s" },
+              { text: "Total", format: "numeric", classes: "govuk-!-width-one-sixth govuk-body-s" },
+              { text: "Rate", format: "numeric", classes: "govuk-!-width-one-sixth govuk-body-s" }
+            ],
+            rows: [
+              [
+                { text: "Data Received", classes: "govuk-!-width-one-half govuk-body-s" },
+                { text: (data.metrics.data_received.values.count/1000000).toFixed(2) + " MB", format: "numeric", classes: "govuk-!-width-one-quarter govuk-body-s" },
+                { text: (data.metrics.data_received.values.rate/1000000).toFixed(2) + " mB/s", format: "numeric", classes: "govuk-!-width-one-quarter govuk-body-s" }
+              ]
+            ]
+          }) }}
+        </div>
+      </div>
     </div>
   </div>
 
@@ -394,6 +542,8 @@
 
 {% block bodyEnd %}
   {# Run JavaScript at end of the <body>, to avoid blocking the initial render. #}
-  <script src="https://design-system.service.gov.uk/javascripts/govuk-frontend-3fd28735caeb425364803058abf8f291.js"></script>
+  <script>
+{{ script | safe }}
+  </script>
   <script>window.GOVUKFrontend.initAll()</script>
 {% endblock %}
