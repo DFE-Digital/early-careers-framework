@@ -12,7 +12,7 @@
 
       <%= govuk_inset_text(text: @wizard.school_cohort.appropriate_body.name) %>
 
-      <%= govuk_link_to "They have a different appropriate body", url_for({ action: :change_appropriate_body }) %>
+      <%= govuk_link_to "They have a different appropriate body", schools_add_change_appropriate_body_path(@school) %>
 
       <%= form_with model: @wizard.form, url: url_for(action: :update), scope: @wizard.form_scope, method: :put do |f| %>
         <%= f.govuk_error_summary %>
