@@ -2,8 +2,6 @@
 
 require "rails_helper"
 
-# TODO: check `default_api_response` through the tests
-
 RSpec.describe DQTRecordCheck do
   shared_context "build fake DQT response" do
     before do

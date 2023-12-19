@@ -89,7 +89,7 @@ module Pages
 
     def setup_response_from_dqt(participant_name, dob, trn)
       birth_date = "#{dob.year}-#{sprintf('%02i', dob.month)}-#{sprintf('%02i', dob.day)}"
-      stub_request(:get, "https://dtqapi.example.com/dqt-crm/v1/teachers/#{trn}?birthdate=#{birth_date}")
+      stub_request(:get, "https://dtqapi.example.com/dqt-crm/v3/teachers/#{trn}")
         .with(
           headers: {
             "Accept" => "*/*",

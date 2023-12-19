@@ -38,8 +38,6 @@ class DQTRecordPresenter < SimpleDelegator
   end
 
   def qts_date
-    # dqt_record.dig("qualified_teacher_status", "qts_date")
-    # TODO: check right record
     dqt_record.dig("qts", "awarded")
   end
 
@@ -48,8 +46,6 @@ class DQTRecordPresenter < SimpleDelegator
   end
 
   def induction_completion_date
-    dqt_record.dig("induction", "completion_date")
-    # TODO: check right record
     dqt_record.dig("induction", "endDate")
   end
 
