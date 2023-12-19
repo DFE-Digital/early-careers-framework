@@ -28,17 +28,17 @@ on:
       - reopened
 
 jobs:
-  # lint:
-  #   name: Lint
-  #   uses: ./.github/workflows/lint.yml
+  lint:
+    name: Lint
+    uses: ./.github/workflows/lint.yml
 
-  # rspec:
-  #   name: Run the RSpec tests
-  #   uses: ./.github/workflows/rspec.yml
+  rspec:
+    name: Run the RSpec tests
+    uses: ./.github/workflows/rspec.yml
 
-  # cypress:
-  #   name: Run the Cypress tests
-  #   uses: ./.github/workflows/cypress.yml
+  cypress:
+    name: Run the Cypress tests
+    uses: ./.github/workflows/cypress.yml
 
   permit-merge:
     name: Permit merge
@@ -68,32 +68,32 @@ jobs:
     with:
       ruby-version: "3.2.2"
 
-  # deploy_review:
-  #   name: Deploy review
-  #   concurrency: deploy_review_${{ github.event.pull_request.number }}
-  #   if: github.actor != 'dependabot[bot]' && github.event_name == 'pull_request'
-  #   needs: [docker, brakeman]
-  #   runs-on: ubuntu-latest
-  #   environment:
-  #     name: review
-  #   steps:
-  #     - uses: actions/checkout@v3
+  deploy_review:
+    name: Deploy review
+    concurrency: deploy_review_${{ github.event.pull_request.number }}
+    if: github.actor != 'dependabot[bot]' && github.event_name == 'pull_request'
+    needs: [docker, brakeman]
+    runs-on: ubuntu-latest
+    environment:
+      name: review
+    steps:
+      - uses: actions/checkout@v3
 
-  #     - uses: ./.github/actions/deploy-environment-to-aks
-  #       id: deploy
-  #       with:
-  #         environment: review
-  #         docker-image: ${{ needs.docker.outputs.docker-image }}
-  #         azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
-  #         pull-request-number: ${{ github.event.pull_request.number }}
-  #         current-commit-sha: ${{ github.event.pull_request.head.sha }}
-  #         statuscake-api-token: ${{ secrets.STATUSCAKE_API_TOKEN }}
+      - uses: ./.github/actions/deploy-environment-to-aks
+        id: deploy
+        with:
+          environment: review
+          docker-image: ${{ needs.docker.outputs.docker-image }}
+          azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
+          pull-request-number: ${{ github.event.pull_request.number }}
+          current-commit-sha: ${{ github.event.pull_request.head.sha }}
+          statuscake-api-token: ${{ secrets.STATUSCAKE_API_TOKEN }}
 
-  #     - name: Post sticky pull request comment
-  #       uses: marocchino/sticky-pull-request-comment@v2
-  #       with:
-  #         message: |
-  #           Review app deployed to ${{ steps.deploy.outputs.url }}
+      - name: Post sticky pull request comment
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          message: |
+            Review app deployed to ${{ steps.deploy.outputs.url }}
 
   run_smoke_tests:
     name: Run Smoke tests

@@ -17,7 +17,7 @@ module Oneoffs::Migration
     end
 
     def orphaned_npq
-      @orphaned_npq ||= orphaned.select { |m| m.orphan.is_a?(NPQRegistration::User) }
+      @orphaned_npq ||= orphaned.select { |m| m.orphan.is_a?(Migration::NPQRegistration::Source::User) }
     end
 
     def indexes
@@ -86,8 +86,8 @@ module Oneoffs::Migration
 
     def npq_users
       @npq_users ||= begin
-        applications_query = NPQRegistration::Application.where("user_id = users.id AND ecf_id IS NOT NULL").select("ARRAY_AGG(ecf_id)")
-        NPQRegistration::User.includes(applications: :school).all.select("users.*", "(#{applications_query.to_sql}) AS npq_application_ecf_ids").to_a
+        applications_query = Migration::NPQRegistration::Source::Application.where("user_id = users.id AND ecf_id IS NOT NULL").select("ARRAY_AGG(ecf_id)")
+        Migration::NPQRegistration::Source::User.includes(applications: :school).all.select("users.*", "(#{applications_query.to_sql}) AS npq_application_ecf_ids").to_a
       end
     end
   end

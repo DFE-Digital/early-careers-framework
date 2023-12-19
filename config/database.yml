@@ -30,7 +30,7 @@ development:
     database: npq_registration_development
 
 migration:
-  <<: *default
+  <<: *default_primary
   database: "early_careers_framework_migration"
 
 test:
@@ -41,7 +41,8 @@ test:
       idle_in_transaction_session_timeout: 0
   npq_registration:
     <<: *default_npq_registration
-    database: npq_registration_test
+    <<: *default_primary # As the test database is shared
+    database: npq_registration_test<%= ENV['TEST_ENV_NUMBER'] %>
     variables:
       idle_in_transaction_session_timeout: 0
 

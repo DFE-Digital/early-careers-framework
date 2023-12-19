@@ -3,6 +3,20 @@
 require "rails_helper"
 
 RSpec.describe User, type: :model do
+  describe "migration convenience methods" do
+    let(:user) { create(:user, :teacher) }
+
+    it { expect(user.ecf_id).to eq(user.id) }
+    it { expect(user.trn).to eq(user.teacher_profile.trn) }
+
+    describe "#applications" do
+      let!(:applications) { 3.times.collect { create(:npq_application, user:) } }
+
+      it { expect(user.applications).to match_array(applications) }
+      it { expect(user.applications).to match_array(user.migration_npq_applications) }
+    end
+  end
+
   it "enables paper trail" do
     is_expected.to be_versioned
   end

@@ -2,20 +2,20 @@
 
 describe Oneoffs::Migration::OrphanReport do
   let(:indexes) { %i[foo bar] }
-  let(:reconciler) { instance_double(Oneoffs::Migration::Reconciler, indexes:, orphan_matches:) }
+  let(:reconciler) { instance_double(Oneoffs::Migration::Reconciler, indexes:, orphaned_matches:) }
   let(:instance) { described_class.new(reconciler) }
 
   describe "#to_yaml" do
     subject { instance.to_yaml }
 
     context "when there are no orphans" do
-      let(:orphan_matches) { [] }
+      let(:orphaned_matches) { [] }
 
       it { is_expected.to eq([].to_yaml) }
     end
 
     context "when there are orphans" do
-      let(:orphan_matches) do
+      let(:orphaned_matches) do
         [
           create_orphaned_match(foo: :baz, bar: :qux),
           create_orphaned_match(foo: :quux),

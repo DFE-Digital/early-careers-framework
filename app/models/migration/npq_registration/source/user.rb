@@ -1,6 +1,4 @@
-class NPQRegistration::User < NPQRegistration::BaseRecord
-  devise :omniauthable, omniauth_providers: [:tra_openid_connect]
-
+class Migration::NPQRegistration::Source::User < Migration::NPQRegistration::Source::BaseRecord
   has_many :applications, dependent: :destroy
   has_many :ecf_sync_request_logs, as: :syncable, dependent: :destroy
 
@@ -13,11 +11,10 @@ class NPQRegistration::User < NPQRegistration::BaseRecord
          .where(provider: "tra_openid_connect")
   }
 
-  def get_an_identity_id
-    return nil unless provider == "tra_openid_connect"
-
-    uid
-  end
+  # TODO: for investigation of the GAI error, we currently have very small number of duplicated emails
+  # rubocop:disable Rails/UniqueValidationWithoutIndex
+  validates :email, uniqueness: true
+  # rubocop:enable Rails/UniqueValidationWithoutIndex
 
   def self.find_by_get_an_identity_id(get_an_identity_id)
     with_get_an_identity_id.find_by(uid: get_an_identity_id)
@@ -26,14 +23,21 @@ class NPQRegistration::User < NPQRegistration::BaseRecord
   def self.find_or_create_from_provider_data(provider_data, feature_flag_id:)
     user = find_or_create_from_tra_data_on_uid(provider_data, feature_flag_id:)
 
-    return user if user.persisted?
+    if user.persisted?
+      unless user.valid?
+        Rails.logger.info("[GAI] User persisted BUT not valid, #{user.errors.full_messages.join(';')}, ID=#{user.id}, UID=#{provider_data.uid}, trying to join account")
+      end
+
+      return user
+    end
+
+    Rails.logger.info("[GAI] User not persisted, #{user.errors.full_messages.join(';')}, ID=#{user.id}, UID=#{provider_data.uid}, trying to join account")
 
     find_or_create_from_tra_data_on_unclaimed_email(provider_data, feature_flag_id:)
   end
 
   def self.find_or_create_from_tra_data_on_uid(provider_data, feature_flag_id:)
     user_from_provider_data = find_or_initialize_by(provider: provider_data.provider, uid: provider_data.uid)
-
     user_from_provider_data.feature_flag_id = feature_flag_id
 
     trn = provider_data.info.trn
@@ -71,7 +75,11 @@ class NPQRegistration::User < NPQRegistration::BaseRecord
       updated_from_tra_at: Time.zone.now,
     )
 
-    user_from_provider_data.tap(&:save)
+    unless user_from_provider_data.save
+      Rails.logger.info("[GAI] User not persisted, #{user_from_provider_data.errors.full_messages.join(';')}, ID=#{user_from_provider_data.id}, UID=#{provider_data.uid}, trying to reclaim email failed")
+    end
+
+    user_from_provider_data
   end
 
   def get_an_identity_user

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module NPQRegistration
+module Migration::NPQRegistration::Source
   class BaseRecord < ApplicationRecord
     self.abstract_class = true
 

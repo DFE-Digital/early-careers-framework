@@ -1,4 +1,4 @@
-class NPQRegistration::LeadProvider < NPQRegistration::BaseRecord
+class Migration::NPQRegistration::Source::LeadProvider < Migration::NPQRegistration::Source::BaseRecord
   ALL_PROVIDERS = {
     "Ambition Institute" => "9e35e998-c63b-4136-89c4-e9e18ddde0ea",
     "Best Practice Network (home of Outstanding Leaders Partnership)" => "57ba9e86-559f-4ff4-a6d2-4610c7259b67",

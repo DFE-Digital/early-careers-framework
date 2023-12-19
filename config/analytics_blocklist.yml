@@ -54,6 +54,16 @@
   - user_id
   - created_at
   - updated_at
+  :npq_application_eligibility_imports:
+  - id
+  - user_id
+  - filename
+  - status
+  - updated_records
+  - import_errors
+  - processed_at
+  - created_at
+  - updated_at
   :statement_line_items:
   - id
   - statement_id
@@ -155,6 +165,9 @@
   - message
   - created_at
   - updated_at
+  :support_queries:
+  - message
+  - additional_information
   :school_links:
   - id
   - school_id
@@ -163,31 +176,6 @@
   - link_reason
   - created_at
   - updated_at
-  :schools:
-  - la_code
-  - la_name
-  - establishment_number
-  - establishment_status_code
-  - establishment_status_name
-  - close_date
-  - last_changed_date
-  - address_1
-  - address_2
-  - address_3
-  - town
-  - county
-  - easting
-  - northing
-  - region
-  - country
-  - establishment_type_code
-  - establishment_type_name
-  - high_pupil_premium
-  - postcode_without_spaces
-  - number_of_pupils
-  - eyl_funding_eligible
-  - phase_type
-  - phase_name
   :profile_validation_decisions:
   - id
   - participant_profile_id
@@ -296,16 +284,6 @@
   - updated_at
   - code
   - name
-  :local_authorities:
-  - ukprn
-  - address_1
-  - address_2
-  - address_3
-  - town
-  - county
-  - postcode
-  - postcode_without_spaces
-  - high_pupil_premium
   :lead_provider_profiles:
   - id
   - user_id
@@ -320,9 +298,6 @@
   - core_induction_programme_id
   - created_at
   - updated_at
-  :lead_providers:
-  - ecf_id
-  - hint
   :finance_profiles:
   - id
   - user_id
@@ -370,6 +345,37 @@
   - status
   - delivered_at
   - tags
+  :ecf_participant_validation_data:
+  - id
+  - participant_profile_id
+  - full_name
+  - date_of_birth
+  - trn
+  - nino
+  - api_failure
+  - created_at
+  - updated_at
+  :ecf_participant_eligibilities:
+  - id
+  - participant_profile_id
+  - qts
+  - active_flags
+  - previous_participation
+  - previous_induction
+  - manually_validated
+  - status
+  - created_at
+  - updated_at
+  - reason
+  - different_trn
+  - no_induction
+  - exempt_from_induction
+  :ecf_ineligible_participants:
+  - id
+  - trn
+  - reason
+  - created_at
+  - updated_at
   :district_sparsities:
   - id
   - local_authority_district_id
@@ -457,100 +463,45 @@
   - get_an_identity_id
   - archived_email
   - archived_at
-  - ecf_id
-  - trn
-  - otp_hash
-  - otp_expires_at
-  - date_of_birth
-  - trn_verified
-  - active_alert
-  - national_insurance_number
-  - trn_auto_verified
-  - admin
-  - feature_flag_id
-  - provider
-  - uid
-  - raw_tra_provider_data
-  - get_an_identity_id_synced_to_ecf
-  - super_admin
-  - updated_from_tra_at
-  - trn_lookup_status
-  :npq_application_eligibility_imports:
-  - id
-  - user_id
-  - filename
-  - status
-  - updated_records
-  - import_errors
-  - processed_at
-  - created_at
-  - updated_at
-  :ecf_ineligible_participants:
-  - id
-  - trn
-  - reason
-  - created_at
-  - updated_at
-  :ecf_participant_validation_data:
-  - id
-  - participant_profile_id
-  - full_name
-  - date_of_birth
-  - trn
-  - nino
-  - api_failure
-  - created_at
-  - updated_at
-  :ecf_participant_eligibilities:
-  - id
-  - participant_profile_id
-  - qts
-  - active_flags
-  - previous_participation
-  - previous_induction
-  - manually_validated
-  - status
-  - created_at
-  - updated_at
-  - reason
-  - different_trn
-  - no_induction
-  - exempt_from_induction
-  :reports:
-  - id
-  - identifier
-  - data
-  - created_at
-  - updated_at
-  :registration_interests:
-  - id
-  - email
-  - notified
-  - created_at
-  - updated_at
-  :private_childcare_providers:
-  - id
-  - provider_urn
-  - provider_name
-  - registered_person_urn
-  - registered_person_name
-  - registration_date
-  - provider_status
+  # NPQ Registration
+  :schools:
+  - la_code
+  - la_name
+  - establishment_number
+  - establishment_status_code
+  - establishment_status_name
+  - close_date
+  - last_changed_date
   - address_1
   - address_2
   - address_3
   - town
+  - county
+  - easting
+  - northing
+  - region
+  - country
+  - establishment_type_code
+  - establishment_type_name
+  - high_pupil_premium
+  - postcode_without_spaces
+  - number_of_pupils
+  - eyl_funding_eligible
+  - phase_type
+  - phase_name
+  :local_authorities:
+  - ukprn
+  - address_1
+  - address_2
+  - address_3
+  - town
+  - county
   - postcode
   - postcode_without_spaces
-  - region
-  - local_authority
-  - ofsted_region
-  - early_years_individual_registers
-  - provider_early_years_register_flag
-  - provider_compulsory_childcare_register_flag
-  - places
-  - created_at
-  - updated_at
+  - high_pupil_premium
+  :lead_providers:
+  - ecf_id
+  - hint
   :itt_providers:
   - id
   - legal_name
@@ -584,7 +535,7 @@
   - user_id
   - course_id
   - lead_provider_id
-  - school_urn
+  - DEPRECATED_school_urn
   - created_at
   - updated_at
   - ecf_id
@@ -597,7 +548,7 @@
   - works_in_school
   - employer_name
   - employment_role
-  - private_childcare_provider_urn
+  - DEPRECATED_private_childcare_provider_urn
   - works_in_nursery
   - works_in_childcare
   - kind_of_nursery
@@ -607,7 +558,7 @@
   - work_setting
   - teacher_catchment_synced_to_ecf
   - employment_type
-  - itt_provider
+  - DEPRECATED_itt_provider
   - lead_mentor
   - primary_establishment
   - number_of_pupils
@@ -615,3 +566,45 @@
   - tsf_primary_plus_eligibility
   - lead_provider_approval_status
   - participant_outcome_state
+  - private_childcare_provider_id
+  - itt_provider_id
+  - school_id
+  - school_urn
+  - private_childcare_provider_urn
+  - itt_provider
+  :users:
+  - id
+  - full_name
+  - email
+  - login_token
+  - login_token_valid_until
+  - remember_created_at
+  - last_sign_in_at
+  - current_sign_in_at
+  - current_sign_in_ip
+  - last_sign_in_ip
+  - sign_in_count
+  - created_at
+  - updated_at
+  - discarded_at
+  - get_an_identity_id
+  - archived_email
+  - archived_at
+  - ecf_id
+  - trn
+  - otp_hash
+  - otp_expires_at
+  - date_of_birth
+  - trn_verified
+  - active_alert
+  - national_insurance_number
+  - trn_auto_verified
+  - admin
+  - feature_flag_id
+  - provider
+  - uid
+  - raw_tra_provider_data
+  - get_an_identity_id_synced_to_ecf
+  - super_admin
+  - updated_from_tra_at
+  - trn_lookup_status

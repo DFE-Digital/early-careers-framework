@@ -1,19 +1,6 @@
-class NPQRegistration::School < NPQRegistration::BaseRecord
-  include PgSearch::Model
+class Migration::NPQRegistration::Source::School < Migration::NPQRegistration::Source::BaseRecord
   PRIMARY_PHASE = "Primary".freeze
   MIDDLE_DEEMED_PRIMARY_PHASE = "Middle deemed primary".freeze
-
-  pg_search_scope :search_by_name,
-                  against: [:name],
-                  using: {
-                    tsearch: {
-                      prefix: true,
-                      dictionary: "english",
-                    },
-                  }
-
-  pg_search_scope :search_by_location,
-                  against: %i[la_name address_1 address_2 address_3 town county postcode postcode_without_spaces region]
 
   # 1 => establishment_status_name: "Open"
   # 2 => establishment_status_name: "Closed"
