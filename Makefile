@@ -214,7 +214,7 @@ konduit-snapshot: get-cluster-credentials
 			(tail -f -n0 "$$tmp_file" & ) | grep -q "postgres://"; \
 			postgres_url=$$(grep -o 'postgres://[^ ]*' "$$tmp_file"); \
 			echo "$$postgres_url"; \
-			sed -i '' -e "s|database: \"early_careers_framework_development\"|&\\n    url: \"$$postgres_url\"|g" config/database.yml; \
+			sed -i '' -e "s|database: \"early_careers_framework_development\"|&\\n  url: \"$$postgres_url\"|g" config/database.yml; \
 	} & \
 	bin/konduit.sh -d s189p01-cpdecf-pd-pg-snapshot -k s189p01-cpdecf-pd-app-kv cpd-ecf-production-web -- psql > "$$tmp_file"
 	exit 0
