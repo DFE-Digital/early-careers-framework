@@ -34,7 +34,7 @@ class DQTRecordPresenter < SimpleDelegator
   # TODO: field not present in V3
   def active_alert?
     # dqt_record["active_alert"].present?
-    true
+    false
   end
 
   def qts_date

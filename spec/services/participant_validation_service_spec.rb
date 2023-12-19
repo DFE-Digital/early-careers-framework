@@ -10,29 +10,27 @@ RSpec.describe ParticipantValidationService do
   describe "#validate" do
     let(:trn) { "1234567" }
     let(:nino) { "QQ123456A" }
-    let(:full_name) { "John Smith" }
+    let(:first_name) { "John" }
+    let(:last_name) { "Smith" }
+    let(:full_name) { [first_name, last_name].join(" ") }
     let(:dob) { Date.new(1970, 1, 2) }
     let(:qts_date) { 6.weeks.ago.to_date }
     let(:qts) do
       {
-        "name" => "Qualified teacher (trained)",
-        "qts_date" => qts_date,
-        "state" => 0,
-        "state_name" => "Active",
+        "awarded" => qts_date,
+        "statusDescription" => "Active",
       }
     end
-    let(:alert) { false }
     let(:induction_start_date) { Date.parse("2021-07-01T00:00:00Z") }
     let(:induction_completion_date) { Date.parse("2021-07-05T00:00:00Z") }
     let(:induction) { nil }
-    let(:inactive_record) { false }
-    let(:dqt_record) { build_dqt_record(trn:, nino:, full_name:, dob:, alert:, qts:, induction:, inactive: inactive_record) }
+    let(:dqt_record) { build_dqt_record(trn:, nino:, first_name:, last_name:, dob:, qts:, induction:) }
     let(:dqt_records) { [dqt_record] }
 
     let(:validation_result) { ParticipantValidationService.validate(trn:, nino:, full_name:, date_of_birth: dob) }
 
     it "calls get_record on the DQT API client" do
-      expect_any_instance_of(FullDQT::V1::Client).to receive(:get_record).with({ trn:, birthdate: dob, nino: })
+      expect_any_instance_of(FullDQT::V3::Client).to receive(:get_record).with({ trn: })
 
       validation_result
     end
@@ -50,14 +48,14 @@ RSpec.describe ParticipantValidationService do
       let(:trn) { nil }
 
       it "queries dqt with fake trn" do
-        expect_any_instance_of(FullDQT::V1::Client).to receive(:get_record).with({ trn: "0000001", birthdate: dob, nino: })
+        expect_any_instance_of(FullDQT::V3::Client).to receive(:get_record).with({ trn: "0000001" })
         validation_result
       end
     end
 
     context "given that it calls the API" do
       before do
-        expect_any_instance_of(FullDQT::V1::Client).to receive(:get_record).and_return(*dqt_records)
+        expect_any_instance_of(FullDQT::V3::Client).to receive(:get_record).and_return(*dqt_records)
       end
 
       context "when the participant cannot be found" do
@@ -65,14 +63,6 @@ RSpec.describe ParticipantValidationService do
 
         it "returns nil" do
           expect(validation_result).to eql nil
-        end
-      end
-
-      context "when an inactive record is returned" do
-        let(:inactive_record) { true }
-
-        it "returns nil" do
-          expect(validation_result).to be_nil
         end
       end
 
@@ -146,11 +136,11 @@ RSpec.describe ParticipantValidationService do
         end
 
         context "when config check_first_name_only: true" do
-          let(:validation_result) do
+          let!(:validation_result) do
             ParticipantValidationService.validate(
               trn:,
               nino: "WRONG",
-              full_name: full_name.split(" ").first.to_s,
+              full_name: first_name,
               date_of_birth: dob,
               config: { check_first_name_only: true },
             )
@@ -168,9 +158,9 @@ RSpec.describe ParticipantValidationService do
         let(:record_for_other_trn) do
           build_dqt_record(trn: other_trn,
                            nino: "AA654321A",
-                           full_name: "Jenny Mathews",
+                           first_name: "Jenny",
+                           last_name: "Jenny Mathews",
                            dob: Date.new(1990, 2, 1),
-                           alert: false,
                            qts: nil,
                            induction: nil)
         end
@@ -194,13 +184,14 @@ RSpec.describe ParticipantValidationService do
         end
       end
 
-      context "when the participant has an active alert" do
-        let(:alert) { true }
-
-        it "returns returns the correct alert details" do
-          expect(validation_result).to eql(build_validation_result(trn:, options: { active_alert: true }))
-        end
-      end
+      # TODO: investigate on active alerts in V3 apis
+      # context "when the participant has an active alert" do
+      #   let(:alert) { true }
+      #
+      #   it "returns returns the correct alert details" do
+      #     expect(validation_result).to eql(build_validation_result(trn:, options: { active_alert: true }))
+      #   end
+      # end
 
       context "when the DQT nino is blank" do
         let(:nino) { "" }
@@ -222,11 +213,9 @@ RSpec.describe ParticipantValidationService do
       context "when the participant has previously had an induction" do
         let(:induction) do
           {
-            "start_date" => induction_start_date,
-            "completion_date" => induction_completion_date,
+            "startDate" => induction_start_date,
+            "endDate" => induction_completion_date,
             "status" => "Pass",
-            "state" => 0,
-            "state_name" => "Active",
           }
         end
 
@@ -238,7 +227,7 @@ RSpec.describe ParticipantValidationService do
       context "when the participant has an induction with nil start_date" do
         let(:induction) do
           {
-            "start_date" => nil,
+            "startDate" => nil,
           }
         end
 
@@ -262,7 +251,7 @@ RSpec.describe ParticipantValidationService do
       context "when the participant's induction status is InProgress" do
         let(:induction) do
           {
-            "start_date" => induction_start_date,
+            "startDate" => induction_start_date,
             "status" => "InProgress",
           }
         end
@@ -287,7 +276,7 @@ RSpec.describe ParticipantValidationService do
       context "when the participant's induction status is Not Yet Completed" do
         let(:induction) do
           {
-            "start_date" => induction_start_date,
+            "startDate" => induction_start_date,
             "status" => "Not Yet Completed",
           }
         end
@@ -313,11 +302,9 @@ RSpec.describe ParticipantValidationService do
         let!(:eligibility) { create(:ineligible_participant, trn:, reason: :previous_participation) }
         let(:induction) do
           {
-            "start_date" => induction_start_date,
-            "completion_date" => induction_completion_date,
+            "startDate" => induction_start_date,
+            "endDate" => induction_completion_date,
             "status" => "Pass",
-            "state" => 0,
-            "state_name" => "Active",
           }
         end
 
@@ -331,11 +318,9 @@ RSpec.describe ParticipantValidationService do
         let(:induction_completion_date) { nil }
         let(:induction) do
           {
-            "start_date" => induction_start_date,
-            "completion_date" => induction_completion_date,
+            "startDate" => induction_start_date,
+            "endDate" => induction_completion_date,
             "status" => "Pass",
-            "state" => 0,
-            "state_name" => "Active",
           }
         end
 
@@ -349,11 +334,9 @@ RSpec.describe ParticipantValidationService do
         let(:induction_completion_date) { nil }
         let(:induction) do
           {
-            "start_date" => induction_start_date,
-            "completion_date" => induction_completion_date,
+            "startDate" => induction_start_date,
+            "endDate" => induction_completion_date,
             "status" => "Pass",
-            "state" => 0,
-            "state_name" => "Active",
           }
         end
 
@@ -367,11 +350,9 @@ RSpec.describe ParticipantValidationService do
         let(:induction_completion_date) { nil }
         let(:induction) do
           {
-            "start_date" => induction_start_date,
-            "completion_date" => induction_completion_date,
+            "startDate" => induction_start_date,
+            "endDate" => induction_completion_date,
             "status" => "Pass",
-            "state" => 0,
-            "state_name" => "Active",
           }
         end
 
@@ -383,11 +364,9 @@ RSpec.describe ParticipantValidationService do
       context "when the participant has an induction with the status of 'Exempt'" do
         let(:induction) do
           {
-            "start_date" => nil,
-            "completion_date" => nil,
+            "startDate" => nil,
+            "endDate" => nil,
             "status" => "Exempt",
-            "state" => 0,
-            "state_name" => "Exempt",
           }
         end
 
@@ -411,59 +390,15 @@ RSpec.describe ParticipantValidationService do
     }.merge(options)
   end
 
-  def build_dqt_record(trn:, nino:, full_name:, dob:, alert:, qts:, induction:, inactive: false)
+  def build_dqt_record(trn:, nino:, first_name:, last_name:, qts:, dob:, induction:)
     {
       "trn" => trn,
-      "ni_number" => nino,
-      "name" => full_name,
-      "dob" => dob,
-      "active_alert" => alert,
-      "state" => (inactive ? 1 : 0),
-      "state_name" => (inactive ? "Inactive" : "Active"),
-      "qualified_teacher_status" => qts,
+      "nationalInsuranceNumber" => nino,
+      "firstName" => first_name,
+      "lastName" => last_name,
+      "dateOfBirth" => dob,
+      "qts" => qts,
       "induction" => induction,
-      "initial_teacher_training" => {
-        "programme_start_date" => "2021-06-27T00:00:00Z",
-        "programme_end_date" => "2021-07-04T00:00:00Z",
-        "programme_type" => "Overseas Trained Teacher Programme",
-        "result" => "Pass",
-        "subject1" => "applied biology",
-        "subject2" => "applied chemistry",
-        "subject3" => "applied computing",
-        "qualification" => "BA (Hons)",
-        "state" => 0,
-        "state_name" => "Active",
-      },
-      "qualifications" => [
-        {
-          "name" => "Higher Education",
-          "date_awarded" => nil,
-        },
-        {
-          "name" => "NPQH",
-          "date_awarded" => "2021-07-05T00:00:00Z",
-        },
-        {
-          "name" => "Mandatory Qualification",
-          "date_awarded" => nil,
-        },
-        {
-          "name" => "HLTA",
-          "date_awarded" => nil,
-        },
-        {
-          "name" => "NPQML",
-          "date_awarded" => "2021-07-05T00:00:00Z",
-        },
-        {
-          "name" => "NPQSL",
-          "date_awarded" => "2021-07-04T00:00:00Z",
-        },
-        {
-          "name" => "NPQEL",
-          "date_awarded" => "2021-07-04T00:00:00Z",
-        },
-      ],
     }
   end
 end
