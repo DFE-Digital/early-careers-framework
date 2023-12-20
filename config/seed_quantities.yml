@@ -40,6 +40,9 @@ development:
 sandbox:
   <<: *default
 
+migration:
+  <<: *default
+
 test:
   <<: *default
   local_authorities: 1

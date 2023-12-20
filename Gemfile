@@ -148,7 +148,7 @@ group :development, :test do
   gem "erb_lint", ">= 0.1.1", require: false
 end
 
-group :development, :test, :staging, :sandbox, :review, :performance do
+group :development, :test, :staging, :sandbox, :review, :performance, :migration do
   gem "factory_bot_rails", "~> 6.4.2"
   gem "faker"
   gem "timecop"
