@@ -34,11 +34,12 @@ private
     @check_first_name_only = check_first_name_only
   end
 
-  def dqt_record(trn, _nino)
-    full_dqt_client.get_record(trn:)
-    # return nil unless record
-    # return nil if record["nationalInsuranceNumber"] != nino
-    # return nil if record["dateOfBirth"] != date_of_birth.to_date
+  def dqt_record(trn)
+    record = full_dqt_client.get_record(trn:)
+    return nil unless record
+    return nil if record["nationalInsuranceNumber"] != nino
+    return nil if record["dateOfBirth"] != date_of_birth.to_date
+    record
   end
 
   def full_dqt_client
@@ -51,7 +52,7 @@ private
     @trn = "0000001" if trn.blank?
 
     padded_trn = TeacherReferenceNumber.new(trn).formatted_trn
-    dqt_record = DQTRecordPresenter.new(dqt_record(padded_trn, nino))
+    dqt_record = DQTRecordPresenter.new(dqt_record(padded_trn))
 
     return check_failure(:no_match_found) if dqt_record.blank?
 
