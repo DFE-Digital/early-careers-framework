@@ -6,6 +6,10 @@ module Migration::NPQRegistration
 
     connects_to database: { reading: :npq_registration, writing: :npq_registration }
 
+    def readonly?
+      !Rails.env.development?
+    end
+
     def send_event(type, data)
       # We don't want to send any events for migration models!
     end
