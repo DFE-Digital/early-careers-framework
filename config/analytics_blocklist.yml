@@ -176,6 +176,31 @@
   - link_reason
   - created_at
   - updated_at
+  :schools:
+  - la_code
+  - la_name
+  - establishment_number
+  - establishment_status_code
+  - establishment_status_name
+  - close_date
+  - last_changed_date
+  - address_1
+  - address_2
+  - address_3
+  - town
+  - county
+  - easting
+  - northing
+  - region
+  - country
+  - establishment_type_code
+  - establishment_type_name
+  - high_pupil_premium
+  - postcode_without_spaces
+  - number_of_pupils
+  - eyl_funding_eligible
+  - phase_type
+  - phase_name
   :profile_validation_decisions:
   - id
   - participant_profile_id
@@ -298,6 +323,9 @@
   - core_induction_programme_id
   - created_at
   - updated_at
+  :lead_providers:
+  - ecf_id
+  - hint
   :finance_profiles:
   - id
   - user_id
@@ -463,3 +491,70 @@
   - get_an_identity_id
   - archived_email
   - archived_at
+  - ecf_id
+  - trn
+  - otp_hash
+  - otp_expires_at
+  - date_of_birth
+  - trn_verified
+  - active_alert
+  - national_insurance_number
+  - trn_auto_verified
+  - admin
+  - feature_flag_id
+  - provider
+  - uid
+  - raw_tra_provider_data
+  - get_an_identity_id_synced_to_ecf
+  - super_admin
+  - updated_from_tra_at
+  - trn_lookup_status
+  :courses:
+  - id
+  - name
+  - created_at
+  - updated_at
+  - ecf_id
+  - description
+  - position
+  - display
+  - identifier
+  :applications:
+  - id
+  - user_id
+  - course_id
+  - lead_provider_id
+  - DEPRECATED_school_urn
+  - created_at
+  - updated_at
+  - ecf_id
+  - headteacher_status
+  - eligible_for_funding
+  - funding_choice
+  - ukprn
+  - teacher_catchment
+  - teacher_catchment_country
+  - works_in_school
+  - employer_name
+  - employment_role
+  - DEPRECATED_private_childcare_provider_urn
+  - works_in_nursery
+  - works_in_childcare
+  - kind_of_nursery
+  - targeted_delivery_funding_eligibility
+  - funding_eligiblity_status_code
+  - raw_application_data
+  - work_setting
+  - teacher_catchment_synced_to_ecf
+  - employment_type
+  - DEPRECATED_itt_provider
+  - lead_mentor
+  - primary_establishment
+  - number_of_pupils
+  - tsf_primary_eligibility
+  - tsf_primary_plus_eligibility
+  - lead_provider_approval_status
+  - participant_outcome_state
+  - private_childcare_provider_id
+  - itt_provider_id
+  - school_id
