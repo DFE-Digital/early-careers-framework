@@ -48,13 +48,13 @@ RSpec.describe "Admin::Participants::ValidateDetailsController", type: :request 
     context "when the participant has a DQT match" do
       let(:dqt_response) do
         JSON.generate({
-                        "firstName": first_name,
-                        "lastName": last_name,
-                        "dateOfBirth": "#{date_of_birth}T00:00:00",
+          "firstName": first_name,
+          "lastName": last_name,
+          "dateOfBirth": "#{date_of_birth}T00:00:00",
           "trn": trn,
-                        "nationalInsuranceNumber": "AB123456D",
-                        "qts": {
-                          "awarded": "2021-07-05T00:00:00Z",
+          "nationalInsuranceNumber": "AB123456D",
+          "qts": {
+            "awarded": "2021-07-05T00:00:00Z",
           },
           "induction": {
             "startDate": "2021-09-02T00:00:00Z",
@@ -86,13 +86,13 @@ RSpec.describe "Admin::Participants::ValidateDetailsController", type: :request 
     context "when the participant does not have a DQT match" do
       let(:dqt_response) do
         JSON.generate({
-                        "firstName": first_name,
-                        "lastName": "#{last_name}-mismatch",
-                        "dateOfBirth": "#{date_of_birth}T00:00:00",
+          "firstName": first_name,
+          "lastName": "#{last_name}-mismatch",
+          "dateOfBirth": "#{date_of_birth}T00:00:00",
           "trn": trn.reverse,
-                        "nationalInsuranceNumber": SecureRandom.uuid,
-                        "qts": {
-                          "awarded": "2021-07-05T00:00:00Z",
+          "nationalInsuranceNumber": SecureRandom.uuid,
+          "qts": {
+            "awarded": "2021-07-05T00:00:00Z",
           },
           "induction": {
             "startDate": "2021-09-02T00:00:00Z",
