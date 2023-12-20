@@ -39,6 +39,7 @@ private
     return nil unless record
     return nil if record["nationalInsuranceNumber"] != nino
     return nil if record["dateOfBirth"] != date_of_birth.to_date
+
     record
   end
 
