@@ -61,18 +61,18 @@ staging:
     <<: *default_primary
   npq_registration:
     <<: *default_npq_registration
-    url: "<%= ENV['NPQ_DATABASE_URL'] %>"
+    # url: "<%= ENV['NPQ_DATABASE_URL'] %>"
 
 sandbox:
   primary:
     <<: *default_primary
   npq_registration:
     <<: *default_npq_registration
-    url: "<%= ENV['NPQ_DATABASE_URL'] %>"
+    # url: "<%= ENV['NPQ_DATABASE_URL'] %>"
 
 production:
   primary:
     <<: *default_primary
   npq_registration:
     <<: *default_npq_registration
-    url: "<%= ENV['NPQ_DATABASE_URL'] %>"
+    # url: "<%= ENV['NPQ_DATABASE_URL'] %>"
