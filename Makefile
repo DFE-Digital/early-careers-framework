@@ -200,21 +200,37 @@ aks-copy-tmp-file: get-cluster-credentials
 	kubectl -n ${NAMESPACE} exec -ti --tty deployment/cpd-ecf-${APP_ID}-web -- cat /app/tmp/${FILENAME} > ${FILENAME}
 
 # Removes explicit postgres database URLs from database.yml
-konduit-cleanup:
-	sed -i '' -e '/url\: "postgres/d' config/database.yml; \
+konduit-cleanup-ecf:
+	sed -i '' -e '/\*default_primary/,/url:/{/url: \"postgres/d;}' config/database.yml; \
+	exit 0
+konduit-cleanup-npq:
+	sed -i '' -e '/\*default_npq_registration/,/url:/{/url: \"postgres/d;}' config/database.yml; \
 	exit 0
 
 # Creates a konduit to the snapshot DB and points development to
 # it. The konduit URL is removed when the konduit is closed.
-konduit-snapshot: get-cluster-credentials
-	trap 'make konduit-cleanup' INT; \
+konduit-snapshot-ecf: get-cluster-credentials
+	trap 'make konduit-cleanup-ecf' INT; \
 	tmp_file=$$(mktemp); \
-	$(MAKE) konduit-cleanup; \
+	$(MAKE) konduit-cleanup-ecf; \
 	{ \
 			(tail -f -n0 "$$tmp_file" & ) | grep -q "postgres://"; \
 			postgres_url=$$(grep -o 'postgres://[^ ]*' "$$tmp_file"); \
 			echo "$$postgres_url"; \
-			sed -i '' -e "s|database: \"early_careers_framework_development\"|&\\n  url: \"$$postgres_url\"|g" config/database.yml; \
+			sed -i '' -e "s|database: early_careers_framework_development|&\\n    url: \"$$postgres_url\"|g" config/database.yml; \
 	} & \
 	bin/konduit.sh -d s189p01-cpdecf-pd-pg-snapshot -k s189p01-cpdecf-pd-app-kv cpd-ecf-production-web -- psql > "$$tmp_file"
+	exit 0
+
+konduit-snapshot-npq: get-cluster-credentials
+	trap 'make konduit-cleanup-npq' INT; \
+	tmp_file=$$(mktemp); \
+	$(MAKE) konduit-cleanup-npq; \
+	{ \
+			(tail -f -n0 "$$tmp_file" & ) | grep -q "postgres://"; \
+			postgres_url=$$(grep -o 'postgres://[^ ]*' "$$tmp_file"); \
+			echo "$$postgres_url"; \
+			sed -i '' -e "s|database: npq_registration_development|&\\n    url: \"$$postgres_url\"|g" config/database.yml; \
+	} & \
+	bin/konduit.sh -d s189p01-cpdnpq-pd-pg-snapshot -k s189p01-cpdnpq-pd-app-kv npq-registration-production-web -- psql > "$$tmp_file"
 	exit 0

@@ -25,6 +25,11 @@ variable "deploy_snapshot_database" {
   default = false
 }
 
+variable "deploy_npq_registration_database" {
+  type    = string
+  default = false
+}
+
 variable "azure_sp_credentials_json" {
   type    = string
   default = null
@@ -61,6 +66,10 @@ variable "postgres_flexible_server_sku" {
 
 variable "postgres_snapshot_flexible_server_sku" {
   default = "GP_Standard_D2ds_v4"
+}
+
+variable "postgres_npq_registration_flexible_server_sku" {
+  default = "B_Standard_B2ms"
 }
 
 variable "postgres_enable_high_availability" {
