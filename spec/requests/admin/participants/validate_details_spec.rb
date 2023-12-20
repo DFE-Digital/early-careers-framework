@@ -16,7 +16,9 @@ RSpec.describe "Admin::Participants::ValidateDetailsController", type: :request 
   end
   let(:validation_result) { { a: "value" } }
 
-  let(:full_name) { "John Doe" }
+  let(:first_name) { "John" }
+  let(:last_name) { "Doe" }
+  let(:full_name) { [first_name, last_name].join(" ") }
   let(:trn) { "1234567" }
   let(:date_of_birth) { Date.new(1987, 12, 13) }
 
@@ -30,7 +32,7 @@ RSpec.describe "Admin::Participants::ValidateDetailsController", type: :request 
   # despite all that, nothing gets persisted to the database.
   describe "GET /admin/participants/:participant_id/validation-data" do
     before do
-      stub_request(:get, "https://dtqapi.example.com/dqt-crm/v3/teachers/#{trn}")
+      stub_request(:get, "https://dtqapi.example.com/dqt-crm/v3/teachers/#{trn}?include=induction")
         .with(
           headers: {
             "Accept" => "*/*",
@@ -46,17 +48,16 @@ RSpec.describe "Admin::Participants::ValidateDetailsController", type: :request 
     context "when the participant has a DQT match" do
       let(:dqt_response) do
         JSON.generate({
-          "name": full_name,
-          "dob": "#{date_of_birth}T00:00:00",
+                        "firstName": first_name,
+                        "lastName": last_name,
+                        "dateOfBirth": "#{date_of_birth}T00:00:00",
           "trn": trn,
-          "ni_number": "AB123456D",
-          "active_alert": false,
-          "state_name": "Active",
-          "qualified_teacher_status": {
-            "qts_date": "2021-07-05T00:00:00Z",
+                        "nationalInsuranceNumber": "AB123456D",
+                        "qts": {
+                          "awarded": "2021-07-05T00:00:00Z",
           },
           "induction": {
-            "start_date": "2021-09-02T00:00:00Z",
+            "startDate": "2021-09-02T00:00:00Z",
           },
         })
       end
@@ -85,17 +86,16 @@ RSpec.describe "Admin::Participants::ValidateDetailsController", type: :request 
     context "when the participant does not have a DQT match" do
       let(:dqt_response) do
         JSON.generate({
-          "name": "#{full_name}-mismatch",
-          "dob": "#{date_of_birth}T00:00:00",
+                        "firstName": first_name,
+                        "lastName": "#{last_name}-mismatch",
+                        "dateOfBirth": "#{date_of_birth}T00:00:00",
           "trn": trn.reverse,
-          "ni_number": SecureRandom.uuid,
-          "active_alert": false,
-          "state_name": "Active",
-          "qualified_teacher_status": {
-            "qts_date": "2021-07-05T00:00:00Z",
+                        "nationalInsuranceNumber": SecureRandom.uuid,
+                        "qts": {
+                          "awarded": "2021-07-05T00:00:00Z",
           },
           "induction": {
-            "start_date": "2021-09-02T00:00:00Z",
+            "startDate": "2021-09-02T00:00:00Z",
           },
         })
       end
