@@ -1,5 +1,29 @@
 # frozen_string_literal: true
 
+# Put all the induction records of an ECF participant into the same cohort.
+# In doing so it will update the induction_programme and schedule of the induction records affected
+# as well as the ParticipantProfile instance itself.
+# The induction_programme is the default one for the induction record's school.
+# The schedule is the provided one or the default for the cohort of start year :target_cohort_start_year
+#
+# This has the effect of moving the participant to a new cohort (if their latest induction record is affected)
+# or simply moving some/all of the historical induction records into the cohort given by the :target_cohort_start_year
+# param or obtained from the :schedule param.
+#
+# Examples:
+#  - This will set induction_programme and schedule for all the induction records of the participant_profile
+#    not in an induction_programme and schedule in 2022/23 cohort
+#       Induction::AmendParticipantCohort.new(participant_profile:,
+#                                             source_cohort_start_year: 2021,
+#                                             target_cohort_start_year: 2022).save
+#
+#  - This will set induction_programme and schedule for all the induction records of the participant_profile
+#    not in an induction_programme in the cohort of :schedule or with an schedule other than the one provided.
+#       Induction::AmendParticipantCohort.new(participant_profile:,
+#                                             source_cohort_start_year: 2021,
+#                                             schedule:).save
+#
+
 module Induction
   class AmendParticipantCohort
     include ActiveModel::Model
@@ -7,6 +31,7 @@ module Induction
     ECF_FIRST_YEAR = 2020
 
     attr_accessor :participant_profile, :source_cohort_start_year, :target_cohort_start_year
+    attr_writer :schedule
 
     validates :source_cohort_start_year,
               numericality: {
@@ -40,6 +65,8 @@ module Induction
               presence: true,
               on: :start
 
+    validate :target_cohort_start_year_matches_schedule
+
     validates :participant_profile,
               participant_profile_active: true
 
@@ -65,21 +92,26 @@ module Induction
 
     def save
       return false unless valid?(:start)
-      return true if all_records_in_target_cohort?
+      return true if all_records_in_target?
 
       valid? && current_induction_record_changed? && historical_records_changed?
     end
 
   private
 
-    def all_records_in_target_cohort?
+    def initialize(*)
+      super
+      @target_cohort_start_year ||= @schedule&.cohort_start_year
+    end
+
+    def all_records_in_target?
       historical_records.all? do |induction_record|
-        in_target_cohort?(induction_record)
+        in_target?(induction_record)
       end
     end
 
     def current_induction_record_changed?
-      return true if in_target_cohort?(induction_record)
+      return true if in_target?(induction_record)
 
       ActiveRecord::Base.transaction do
         induction_record.update!(induction_programme:, schedule:)
@@ -93,10 +125,10 @@ module Induction
 
     def historical_records_changed?
       historical_records.all? do |historical_record|
-        next true if in_target_cohort?(historical_record)
+        next true if in_target?(historical_record)
 
         begin
-          historical_record.update!(induction_programme: historical_default_induction_programme(historical_record),
+          historical_record.update!(induction_programme: historical_induction_programme(historical_record),
                                     schedule:)
         rescue ActiveRecord::RecordInvalid
           false
@@ -110,7 +142,9 @@ module Induction
       @historical_records ||= participant_profile.induction_records.order(created_at: :desc)
     end
 
-    def historical_default_induction_programme(historical_record)
+    def historical_induction_programme(historical_record)
+      return historical_record.induction_programme if in_target_cohort?(historical_record)
+
       historical_target_school_cohort(historical_record.school).default_induction_programme.tap do |induction_programme|
         if induction_programme.nil?
           errors.add(:historical_records,
@@ -135,7 +169,11 @@ module Induction
     end
 
     def induction_programme
-      @induction_programme ||= target_school_cohort&.default_induction_programme
+      @induction_programme ||= if induction_record && in_target_cohort?(induction_record)
+                                 induction_record.induction_programme
+                               else
+                                 target_school_cohort&.default_induction_programme
+                               end
     end
 
     def induction_record
@@ -149,8 +187,16 @@ module Induction
                                                .latest
     end
 
+    def in_target?(induction_record)
+      in_target_cohort?(induction_record) && in_target_schedule?(induction_record)
+    end
+
     def in_target_cohort?(induction_record)
       induction_record.cohort_start_year == target_cohort_start_year.to_i
+    end
+
+    def in_target_schedule?(induction_record)
+      induction_record.schedule == schedule
     end
 
     def participant_declarations
@@ -176,6 +222,13 @@ module Induction
 
     def target_school_cohort
       @target_school_cohort ||= SchoolCohort.find_by(school:, cohort: target_cohort)
+    end
+
+    # Validations
+    def target_cohort_start_year_matches_schedule
+      if schedule && target_cohort_start_year != schedule.cohort_start_year
+        errors.add(:target_cohort_start_year, :incompatible_with_schedule)
+      end
     end
   end
 end

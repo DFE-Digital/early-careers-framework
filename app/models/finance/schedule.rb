@@ -8,6 +8,9 @@ module Finance
     has_many :participant_profiles
 
     validates :schedule_identifier, presence: true
+
+    # cohort_start_year
+    delegate :start_year, to: :cohort, prefix: true
   end
 end
 
