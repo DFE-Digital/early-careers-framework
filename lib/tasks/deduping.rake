@@ -30,12 +30,12 @@ namespace :deduping do
 
     dup_induction_records.in_batches(of: 500).each_record do |induction_record|
       # Try to safely delete the record without breaking the induction records sequence
-      Induction::DeleteRecord.new(induction_record:).call unless dry_run
+      Induction::DeleteDupRecord.new(induction_record:).call unless dry_run
 
       puts "### Removed #{induction_record.id} record from #{induction_record.participant_profile_id} participant"
       deleted << induction_record.id
     rescue StandardError => e
-      puts "### #{induction_record.id}: #{e.inspect}"
+      puts "### Failed to remove #{induction_record.id} record from #{induction_record.participant_profile_id} participant: #{e.inspect}"
       failed << induction_record.id
     end
 

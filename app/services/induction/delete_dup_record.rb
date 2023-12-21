@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
-class Induction::DeleteRecord < BaseService
+class Induction::DeleteDupRecord < BaseService
+  COMPARE_ATTRIBUTES = %(induction_programme_id participant_profile_id schedule_id training_status preferred_identity_id school_transfer appropriate_body_id)
+
   class DeleteInductionRecordRestrictionError < StandardError; end
 
   def call
@@ -23,9 +25,8 @@ private
   def check_record_is_deletable!
     raise DeleteInductionRecordRestrictionError, "Cannot delete record because it is active" if active?
     raise DeleteInductionRecordRestrictionError, "Cannot delete record because it is not in the middle of the induction records history" unless middle_of_history?
-    raise DeleteInductionRecordRestrictionError, "Cannot delete record because the school transfer flag does not matches the previous record" if transfer_flag_changed?
-    raise DeleteInductionRecordRestrictionError, "Cannot delete record because the training status does not matches the previous record" if training_status_changed?
-    raise DeleteInductionRecordRestrictionError, "Cannot delete record because the mentor does not matches the previous record" if mentor_changed?
+    raise DeleteInductionRecordRestrictionError, "Cannot delete record because it has been diverted from the previous record" if record_changed?
+    raise DeleteInductionRecordRestrictionError, "Cannot delete record because the mentor does not matches the previous record" unless mentor_removed?
   end
 
   def active?
@@ -36,16 +37,12 @@ private
     previous_record && next_record
   end
 
-  def transfer_flag_changed?
-    induction_record.school_transfer != previous_record.school_transfer
+  def record_changed?
+    induction_record.attributes.slice(*COMPARE_ATTRIBUTES) != previous_record.attributes.slice(*COMPARE_ATTRIBUTES)
   end
 
-  def training_status_changed?
-    induction_record.training_status != previous_record.training_status
-  end
-
-  def mentor_changed?
-    induction_record.mentor_profile != previous_record.mentor_profile
+  def mentor_removed?
+    induction_record.mentor_profile.nil? && previous_record.mentor_profile.present?
   end
 
   def delete_induction_record
