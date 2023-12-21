@@ -101,7 +101,7 @@ module Induction
 
     def initialize(*)
       super
-      @target_cohort_start_year ||= @schedule&.cohort_start_year
+      @target_cohort_start_year = (@target_cohort_start_year || @schedule&.cohort_start_year).to_i
     end
 
     def all_records_in_target?
@@ -192,7 +192,7 @@ module Induction
     end
 
     def in_target_cohort?(induction_record)
-      induction_record.cohort_start_year == target_cohort_start_year.to_i
+      induction_record.cohort_start_year == target_cohort_start_year
     end
 
     def in_target_schedule?(induction_record)
