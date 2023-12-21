@@ -25,7 +25,6 @@ staging: aks test-cluster
 .PHONY: sandbox
 sandbox: production-cluster
 	$(eval include global_config/sandbox_aks.sh)
-	$(eval SPACE=early-careers-framework-sandbox)
 
 .PHONY: migration
 migration: production-cluster
@@ -34,7 +33,6 @@ migration: production-cluster
 .PHONY: production
 production: production-cluster
 	$(eval include global_config/production_aks.sh)
-	$(eval SPACE=early-careers-framework-prod)
 	$(if $(or ${SKIP_CONFIRM}, ${CONFIRM_PRODUCTION}), , $(error Production can only run with CONFIRM_PRODUCTION))
 
 load-domain-config:
