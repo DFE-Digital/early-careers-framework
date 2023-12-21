@@ -26,7 +26,7 @@
           <dt class="govuk-summary-list__key">National Insurance Number</dt>
           <dd class="govuk-summary-list__value"><%= validation_form.nino %></dd>
           <dd class="govuk-summary-list__actions">
-            <%= govuk_link_to "Change", { action: :show, step: :nino } %>
+            <%= govuk_link_to "Change", participants_validation_step_path(step: :nino) %>
             <span class="govuk-visually-hidden">your National Insurance number</span>
           </dd>
         </div>
@@ -36,7 +36,7 @@
         <dt class="govuk-summary-list__key">Date of birth</dt>
         <dd class="govuk-summary-list__value"><%= validation_form.dob.to_fs(:govuk) %></dd>
         <dd class="govuk-summary-list__actions">
-          <%= govuk_link_to "Change", { action: :show, step: :dob } %>
+          <%= govuk_link_to "Change", participants_validation_step_path(step: :dob) %>
           <span class="govuk-visually-hidden">your date of birth</span>
         </dd>
       </div>
@@ -46,7 +46,7 @@
           <dt class="govuk-summary-list__key">Name</dt>
           <dd class="govuk-summary-list__value"><%= validation_form.full_name %></dd>
           <dd class="govuk-summary-list__actions">
-            <%= govuk_link_to "Change", { action: :show, step: :name } %>
+            <%= govuk_link_to "Change", participants_validation_step_path(step: :name) %>
             <span class="govuk-visually-hidden">your name</span>
           </dd>
         </div>
