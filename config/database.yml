@@ -14,6 +14,10 @@ development:
   <<: *default
   database: "early_careers_framework_development"
 
+migration:
+  <<: *default
+  database: "early_careers_framework_migration"
+
 test:
   <<: *default
   database: early_careers_framework_test<%= ENV['TEST_ENV_NUMBER'] %>
