@@ -51,7 +51,7 @@ RSpec.describe Induction::AmendParticipantCohort do
     end
 
     context "when the target_cohort_start_year is older than 2020" do
-      let(:target_cohort_start_year) { 2019 }
+      let(:target_cohort_start_year) { "2019" }
 
       it "returns false and set errors" do
         expect(form.save).to be_falsey
