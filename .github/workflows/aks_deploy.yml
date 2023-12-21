@@ -175,6 +175,25 @@ jobs:
           current-commit-sha: ${{ github.sha }}
           statuscake-api-token: ${{ secrets.STATUSCAKE_API_TOKEN }}
 
+  deploy_migration:
+    name: Deploy migration
+    needs: [deploy_staging]
+    runs-on: ubuntu-latest
+    environment:
+      name: migration
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: ./.github/actions/deploy-environment-to-aks
+        id: deploy
+        with:
+          environment: migration
+          docker-image: ${{ needs.deploy_staging.outputs.docker-image }}
+          azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
+          current-commit-sha: ${{ github.sha }}
+          statuscake-api-token: ${{ secrets.STATUSCAKE_API_TOKEN }}
+
   deploy_production:
     name: Deploy production
     needs: [deploy_staging]
