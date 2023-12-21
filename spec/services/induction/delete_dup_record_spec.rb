@@ -16,7 +16,7 @@ RSpec.describe Induction::DeleteDupRecord do
         allow(service).to receive(:active?).and_return(false)
         allow(service).to receive(:middle_of_history?).and_return(false)
         allow(service).to receive(:record_changed?).and_return(false)
-        allow(service).to receive(:mentor_removed?).and_return(true)
+        allow(service).to receive(:valid_mentor_change?).and_return(true)
       end
 
       it "raises DeleteInductionRecordRestrictionError when not in the middle of the inductionr record history" do
@@ -36,7 +36,7 @@ RSpec.describe Induction::DeleteDupRecord do
 
       it "raises DeleteInductionRecordRestrictionError when the mentor is not the same with the previous record" do
         allow(service).to receive(:middle_of_history?).and_return(true)
-        allow(service).to receive(:mentor_removed?).and_return(false)
+        allow(service).to receive(:valid_mentor_change?).and_return(false)
         expect { service.call }.to raise_error(described_class::DeleteInductionRecordRestrictionError, "Cannot delete record because the mentor does not matches the previous record")
       end
     end

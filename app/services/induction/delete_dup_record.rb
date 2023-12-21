@@ -26,7 +26,7 @@ private
     raise DeleteInductionRecordRestrictionError, "Cannot delete record because it is active" if active?
     raise DeleteInductionRecordRestrictionError, "Cannot delete record because it is not in the middle of the induction records history" unless middle_of_history?
     raise DeleteInductionRecordRestrictionError, "Cannot delete record because it has been diverted from the previous record" if record_changed?
-    raise DeleteInductionRecordRestrictionError, "Cannot delete record because the mentor does not matches the previous record" unless mentor_removed?
+    raise DeleteInductionRecordRestrictionError, "Cannot delete record because the mentor does not matches the previous record" unless valid_mentor_change?
   end
 
   def active?
@@ -41,8 +41,8 @@ private
     induction_record.attributes.slice(*COMPARE_ATTRIBUTES) != previous_record.attributes.slice(*COMPARE_ATTRIBUTES)
   end
 
-  def mentor_removed?
-    induction_record.mentor_profile.nil? && previous_record.mentor_profile.present?
+  def valid_mentor_change?
+    induction_record.mentor_profile.nil? && (previous_record.mentor_profile.present? || previous_record.mentor_profile.nil?)
   end
 
   def delete_induction_record
