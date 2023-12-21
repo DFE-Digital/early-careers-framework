@@ -65,7 +65,7 @@ private
   end
 
   def participant_induction_records
-    induction_record
+    @participant_induction_records ||= induction_record
       .participant_profile
       .induction_records
       .order(start_date: :desc, created_at: :desc)
