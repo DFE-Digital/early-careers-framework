@@ -27,6 +27,10 @@ sandbox: production-cluster
 	$(eval include global_config/sandbox_aks.sh)
 	$(eval SPACE=early-careers-framework-sandbox)
 
+.PHONY: migration
+migration: production-cluster
+	$(eval include global_config/migration_aks.sh)
+
 .PHONY: production
 production: production-cluster
 	$(eval include global_config/production_aks.sh)
