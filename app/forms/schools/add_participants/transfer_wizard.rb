@@ -150,15 +150,23 @@ module Schools
       end
 
       def transfer_fip_participant_to_schools_programme(profile)
-        chosen_school_cohort = join_current_cohort_school_programme? ? school_current_cohort : school_cohort
+        if join_current_cohort_school_programme?
+          partnership = Partnership.create_with(relationship: true)
+                                   .find_or_create_by!(school:,
+                                                       cohort: participant_cohort,
+                                                       lead_provider: current_cohort_lead_provider,
+                                                       delivery_partner: current_cohort_delivery_partner)
+          induction_programme = InductionProgramme.full_induction_programme
+                                                  .find_or_create_by!(school_cohort:, partnership:)
+        else
+          induction_programme = school_cohort.default_induction_programme
+        end
 
-        Induction::TransferToSchoolsProgramme.call(
-          participant_profile: profile,
-          induction_programme: chosen_school_cohort.default_induction_programme,
-          start_date:,
-          email:,
-          mentor_profile:,
-        )
+        Induction::TransferToSchoolsProgramme.call(participant_profile: profile,
+                                                   induction_programme:,
+                                                   start_date:,
+                                                   email:,
+                                                   mentor_profile:)
       end
 
       def transfer_sit_to_mentor_profile
