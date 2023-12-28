@@ -1,6 +1,13 @@
 # frozen_string_literal: true
 
 RSpec.describe Induction::Enrol do
+  shared_examples "creates a new active participant_profile_state record" do
+    it "creates a new participant_profile_state record with active state" do
+      expect { subject.call(participant_profile:, induction_programme:) }.to change { ParticipantProfileState.count }.by(1)
+      expect(participant_profile.reload.participant_profile_state.state).to eql("active")
+    end
+  end
+
   describe "#call" do
     let(:school_cohort) { create :school_cohort, appropriate_body: create(:appropriate_body_local_authority) }
     let!(:induction_programme) { create(:induction_programme, :fip, school_cohort:) }
@@ -13,8 +20,33 @@ RSpec.describe Induction::Enrol do
       expect { service.call(participant_profile:, induction_programme:) }.to change { induction_programme.induction_records.count }.by 1
     end
 
-    it "creates a participant_profile_state" do
-      expect { subject.call(participant_profile:, induction_programme:) }.to change { ParticipantProfileState.count }.by(1)
+    it_behaves_like "creates a new active participant_profile_state record"
+
+    context "when a participant_profile_state already exists" do
+      let(:cpd_lead_provider_id) { induction_programme.lead_provider&.cpd_lead_provider_id }
+      let!(:existing_participant_profile_state) { create(:participant_profile_state, participant_profile:, state: existing_state, cpd_lead_provider_id:) }
+
+      context "when the state is active" do
+        let(:existing_state) { :active }
+
+        context "when enroling to a programme with the same cpd lead provider" do
+          it "does not create a duplicate record" do
+            expect { subject.call(participant_profile:, induction_programme:) }.to change { ParticipantProfileState.count }.by(0)
+          end
+        end
+
+        context "when enroling to a programme with a different cpd lead provider" do
+          let(:cpd_lead_provider_id) { "1234" }
+
+          it_behaves_like "creates a new active participant_profile_state record"
+        end
+      end
+
+      context "when the state is not active" do
+        let(:existing_state) { :withdrawn }
+
+        it_behaves_like "creates a new active participant_profile_state record"
+      end
     end
 
     context "when the participant profile training_status is withdrawn" do
