@@ -101,10 +101,10 @@ RSpec.describe Participants::SyncDQTInductionStartDate do
     context "when the DQT induction start date related cohort does not exist" do
       let(:dqt_induction_start_date) { Date.new(2090, 9, 1) }
 
-      it "does not change the participant but persist the error" do
-        expect { subject }.to not_change(participant_profile, :updated_at)
-                                .and not_change(participant_profile, :induction_start_date)
-                                       .and change(SyncDQTInductionStartDateError, :count).by(1)
+      it "persist the induction start date and the error" do
+        expect { subject }.to change(participant_profile, :induction_start_date)
+                                .to(dqt_induction_start_date)
+                                .and change(SyncDQTInductionStartDateError, :count).by(1)
       end
     end
 
@@ -144,8 +144,9 @@ RSpec.describe Participants::SyncDQTInductionStartDate do
       let(:dqt_induction_start_date) { Date.new(Cohort.current.start_year, 10, 2) }
       let(:participant_cohort_start_year) { Cohort.previous.start_year }
 
-      it "does not change the participant and save the errors" do
-        expect { subject }.to not_change(participant_profile, :induction_start_date)
+      it "updates the induction start date in the participant and save the errors" do
+        expect { subject }.to change(participant_profile, :induction_start_date)
+                                .to(dqt_induction_start_date)
                                 .and not_change { participant_profile.induction_records.latest.cohort.start_year }
 
         expect(SyncDQTInductionStartDateError.find_by(participant_profile:).message)
@@ -171,8 +172,9 @@ RSpec.describe Participants::SyncDQTInductionStartDate do
       context "when the participant fails processing" do
         let(:participant_cohort_start_year) { Cohort.previous.start_year }
 
-        it "updates the error if the process fails" do
-          expect { subject }.to not_change(participant_profile, :induction_start_date)
+        it "updates the induction start and the error if the process fails" do
+          expect { subject }.to change(participant_profile, :induction_start_date)
+                                  .to(dqt_induction_start_date)
                                   .and not_change { participant_profile.induction_records.latest.cohort.start_year }
 
           expect(SyncDQTInductionStartDateError.where(participant_profile:, message: "test message")).not_to exist
