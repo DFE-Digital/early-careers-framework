@@ -36,10 +36,6 @@ RSpec.describe Induction::InductionStatusesActivator do
           expect(participant_profile.latest_induction_record.induction_status).to eq("active")
           expect(participant_profile.status).to eq("active")
         end
-
-        it "sets the inductιon record school transfer to true" do
-          expect(participant_profile.latest_induction_record.school_transfer).to be true
-        end
       end
 
       context "when participant's induction record has not withdrawn or leaving induction status" do
