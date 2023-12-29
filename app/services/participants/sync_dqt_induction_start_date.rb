@@ -11,8 +11,8 @@ module Participants
     end
 
     def call
-      return false unless dqt_induction_start_date
-      return update_induction_start_date if mentor? || pre_2021_dqt_induction_start_date? || pre_2023_participant?
+      return false unless update_induction_start_date
+      return true if mentor? || pre_2021_dqt_induction_start_date? || pre_2023_participant?
       return cohort_missing unless target_cohort
 
       update_participant
@@ -63,12 +63,12 @@ module Participants
     end
 
     def update_induction_start_date
-      participant_profile.update!(induction_start_date: dqt_induction_start_date)
+      participant_profile.update!(induction_start_date: dqt_induction_start_date) if dqt_induction_start_date
     end
 
     def update_participant
       clear_participant_sync_errors
-      amend_cohort.save ? update_induction_start_date : save_errors(*amend_cohort.errors.full_messages)
+      save_errors(*amend_cohort.errors.full_messages) unless amend_cohort.save
     end
   end
 end
