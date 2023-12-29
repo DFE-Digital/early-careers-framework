@@ -22,12 +22,9 @@ private
   end
 
   def update_the_induction_record
-    changes = { induction_status: :active }
-    changes[:school_transfer] = true if induction_record&.leaving_induction_status?
-
     Induction::ChangeInductionRecord.call(
       induction_record:,
-      changes:,
+      changes: { induction_status: :active },
     )
   end
 

@@ -38,7 +38,6 @@ RSpec.feature "Super user admins should be able to update participants induction
       then_i_should_be_in_the_admin_participants_statuses_dashboard
       and_admin_should_be_shown_a_success_message
       and_i_should_see_the_induction_statuses_are_active
-      and_the_induction_record_should_have_school_transfer_true
     end
   end
 
