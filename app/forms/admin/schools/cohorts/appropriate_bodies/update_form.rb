@@ -22,7 +22,7 @@ module Admin
           end
 
           def radio_options
-            [
+            @radio_options ||= [
               istip_appropriate_body,
               nta_appropriate_body,
               OpenStruct.new(id: TEACHING_SCHOOL_HUB_ID, name: "A teaching school hub"),

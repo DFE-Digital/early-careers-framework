@@ -15,7 +15,7 @@
         ) do
       %>
         <% @form.radio_options.each do |radio_option| %>
-          <%= form.govuk_radio_divider if radio_option.id == @form.class::TEACHING_SCHOOL_HUB_ID %>
+          <%= form.govuk_radio_divider if !@form.radio_options.one? && radio_option.id == @form.class::TEACHING_SCHOOL_HUB_ID %>
 
           <%= form.govuk_radio_button(:appropriate_body_id, radio_option.id, label: { text: radio_option.name }) do %>
             <% if radio_option.id == @form.class::TEACHING_SCHOOL_HUB_ID %>
