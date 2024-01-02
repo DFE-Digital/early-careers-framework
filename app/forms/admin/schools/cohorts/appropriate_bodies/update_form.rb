@@ -59,11 +59,11 @@ module Admin
           end
 
           def istip_appropriate_body
-            appropriate_bodies.find_by(name: "Independent Schools Teacher Induction Panel (IStip)")
+            appropriate_bodies.find_by(name: "Independent Schools Teacher Induction Panel (Istip)")
           end
 
           def nta_appropriate_body
-            appropriate_bodies.find_by(name: "National Teacher Accreditation (NTA)")
+            appropriate_bodies.find_by(name: "National Teacher Accreditation")
           end
         end
       end

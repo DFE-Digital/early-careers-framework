@@ -3,31 +3,31 @@
 require "rails_helper"
 
 RSpec.feature "Admin managing appropriate bodies", js: true, rutabaga: false do
-  scenario "Admin changes appropriate body for a 2021 cohort to IStip" do
+  scenario "Admin changes appropriate body for a 2021 cohort to Istip" do
     given_there_is_a_cip_school_in(2021)
     i_should_be_able_to_navigate_to_the_edit_page(2021)
-    and_there_should_be_a_radio_button_for "Independent Schools Teacher Induction Panel (IStip)"
-    and_there_should_be_a_radio_button_for "National Teacher Accreditation (NTA)"
+    and_there_should_be_a_radio_button_for "Independent Schools Teacher Induction Panel (Istip)"
+    and_there_should_be_a_radio_button_for "National Teacher Accreditation"
     and_there_should_be_a_radio_button_for "A teaching school hub"
 
-    and_i_should_be_able_to_update_the_appropriate_body("Independent Schools Teacher Induction Panel (IStip)", 2021)
+    and_i_should_be_able_to_update_the_appropriate_body("Independent Schools Teacher Induction Panel (Istip)", 2021)
   end
 
   scenario "Admin changes appropriate body for a 2021 cohort to NTA" do
     given_there_is_a_cip_school_in(2021)
     i_should_be_able_to_navigate_to_the_edit_page(2021)
-    and_there_should_be_a_radio_button_for "Independent Schools Teacher Induction Panel (IStip)"
-    and_there_should_be_a_radio_button_for "National Teacher Accreditation (NTA)"
+    and_there_should_be_a_radio_button_for "Independent Schools Teacher Induction Panel (Istip)"
+    and_there_should_be_a_radio_button_for "National Teacher Accreditation"
     and_there_should_be_a_radio_button_for "A teaching school hub"
 
-    and_i_should_be_able_to_update_the_appropriate_body("National Teacher Accreditation (NTA)", 2021)
+    and_i_should_be_able_to_update_the_appropriate_body("National Teacher Accreditation", 2021)
   end
 
   scenario "Admin changes appropriate body for a 2021 cohort to a teaching school hub" do
     given_there_is_a_cip_school_in(2021)
     i_should_be_able_to_navigate_to_the_edit_page(2021)
-    and_there_should_be_a_radio_button_for "Independent Schools Teacher Induction Panel (IStip)"
-    and_there_should_be_a_radio_button_for "National Teacher Accreditation (NTA)"
+    and_there_should_be_a_radio_button_for "Independent Schools Teacher Induction Panel (Istip)"
+    and_there_should_be_a_radio_button_for "National Teacher Accreditation"
     and_there_should_be_a_radio_button_for "A teaching school hub"
 
     and_i_should_be_able_to_select_a_teaching_school_hub(2021)
@@ -36,21 +36,21 @@ RSpec.feature "Admin managing appropriate bodies", js: true, rutabaga: false do
   scenario "Admin changes appropriate body for a 2023 cohort" do
     given_there_is_a_cip_school_in(2023)
     i_should_be_able_to_navigate_to_the_edit_page(2023)
-    and_there_should_be_a_radio_button_for "Independent Schools Teacher Induction Panel (IStip)"
+    and_there_should_be_a_radio_button_for "Independent Schools Teacher Induction Panel (Istip)"
     and_there_should_be_a_radio_button_for "A teaching school hub"
-    and_there_should_not_be_a_radio_button_for "National Teacher Accreditation (NTA)"
+    and_there_should_not_be_a_radio_button_for "National Teacher Accreditation"
 
-    and_i_should_be_able_to_update_the_appropriate_body("Independent Schools Teacher Induction Panel (IStip)", 2023)
+    and_i_should_be_able_to_update_the_appropriate_body("Independent Schools Teacher Induction Panel (Istip)", 2023)
   end
 
   scenario "Admin changes appropriate body for a DIY cohort" do
     given_there_is_a_cip_school_in(2023, induction_programme_choice: "design_our_own")
     i_should_be_able_to_navigate_to_the_edit_page(2023)
-    and_there_should_be_a_radio_button_for "Independent Schools Teacher Induction Panel (IStip)"
+    and_there_should_be_a_radio_button_for "Independent Schools Teacher Induction Panel (Istip)"
     and_there_should_be_a_radio_button_for "A teaching school hub"
-    and_there_should_not_be_a_radio_button_for "National Teacher Accreditation (NTA)"
+    and_there_should_not_be_a_radio_button_for "National Teacher Accreditation"
 
-    and_i_should_be_able_to_update_the_appropriate_body("Independent Schools Teacher Induction Panel (IStip)", 2023)
+    and_i_should_be_able_to_update_the_appropriate_body("Independent Schools Teacher Induction Panel (Istip)", 2023)
   end
 
 private
@@ -72,8 +72,8 @@ private
   end
 
   def and_there_are_the_required_appropriate_bodies
-    create(:appropriate_body_national_organisation, name: "Independent Schools Teacher Induction Panel (IStip)")
-    create(:appropriate_body_national_organisation, name: "National Teacher Accreditation (NTA)", disable_from_year: 2023)
+    create(:appropriate_body_national_organisation, name: "Independent Schools Teacher Induction Panel (Istip)")
+    create(:appropriate_body_national_organisation, name: "National Teacher Accreditation", disable_from_year: 2023)
     create(:appropriate_body_teaching_school_hub, name: "Example teaching school hub")
   end
 
