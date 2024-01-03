@@ -20,7 +20,7 @@ class Email < ApplicationRecord
       Association.create!(
         email: self,
         object:,
-        name: (as || object.model_name.singular),
+        name: as || object.model_name.singular,
       )
     end
   end

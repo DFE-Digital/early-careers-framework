@@ -22,7 +22,8 @@ module Api
           ecf_participant_eligibility_status = record.ecf_participant_eligibility_status
           return if ecf_participant_eligibility_status.nil?
           return true if ecf_participant_eligibility_status == "eligible"
-          return false if ecf_participant_eligibility_status == "ineligible"
+
+          false if ecf_participant_eligibility_status == "ineligible"
         end
       end
 

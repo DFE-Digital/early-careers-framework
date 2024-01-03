@@ -316,7 +316,7 @@ RSpec.describe "API ECF Participants", type: :request do
               "updated_at": Time.zone.local(2022, 7, 22, 11, 30, 0).rfc3339,
               "ecf_enrolments": [{
                 "training_record_id": early_career_teacher_profile.id,
-                "email": (early_career_teacher_profile.induction_records[0].preferred_identity&.email || early_career_teacher_profile.user.email),
+                "email": early_career_teacher_profile.induction_records[0].preferred_identity&.email || early_career_teacher_profile.user.email,
                 "mentor_id": early_career_teacher_profile.mentor_profile&.participant_identity&.external_identifier,
                 "school_urn": early_career_teacher_profile.induction_records[0].school_cohort.school.urn,
                 "participant_type": early_career_teacher_profile.participant_type.to_s,
