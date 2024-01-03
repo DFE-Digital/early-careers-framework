@@ -28,7 +28,7 @@ module Importers
     def create_default_call_off_contracts
       raise "Do not seed default Call off Contracts in Production!" if Rails.env.production?
 
-      LeadProvider.all.each do |lead_provider|
+      LeadProvider.find_each do |lead_provider|
         [cohort_current, cohort_previous, cohort_next].each do |cohort|
           create_call_off_contract_and_bands(lead_provider:, cohort:, contract_data: example_contract_data)
         end

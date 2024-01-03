@@ -12,12 +12,12 @@ module Oneoffs::NPQ
       ActiveRecord::Base.transaction do
         old_contracts = []
 
-        statements.each do |statement|
+        statements.find_each do |statement|
           NPQContract.where(
             version: statement.contract_version,
             npq_lead_provider: statement.npq_lead_provider,
             cohort: statement.cohort,
-          ).each do |contract|
+          ).find_each do |contract|
             # Contract already set to true
             next if contract.special_course
 

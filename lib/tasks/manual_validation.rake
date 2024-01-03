@@ -8,7 +8,7 @@ namespace :manual_validation do
                            .active_record
                            .joins(:ecf_participant_eligibility)
                            .where(ecf_participant_eligibility: { status: "manual_check", reason: "no_qts" })
-                           .each do |profile|
+                           .find_each do |profile|
       Participants::ParticipantValidationForm.call(profile)
     end
   end
@@ -19,7 +19,7 @@ namespace :manual_validation do
                            .active_record
                            .joins(:ecf_participant_eligibility)
                            .where(ecf_participant_eligibility: { status: "ineligible", reason: "previous_induction" })
-                           .each do |profile|
+                           .find_each do |profile|
       Participants::ParticipantValidationForm.call(profile)
     end
   end

@@ -254,7 +254,7 @@ module ValidTestDataGenerator
     end
 
     def remove_old_data(created_at:)
-      lead_provider.ecf_participants.where(created_at:).each(&:destroy)
+      lead_provider.ecf_participants.where(created_at:).find_each(&:destroy)
       schools = lead_provider.schools.where(created_at:)
       schools.each do |school|
         partnership = Partnership.find_by(lead_provider:, school:, cohort: Cohort.current)

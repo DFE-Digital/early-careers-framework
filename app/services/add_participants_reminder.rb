@@ -14,7 +14,7 @@ class AddParticipantsReminder
     Rails.logger.info "Sending reminder to fip SITs"
 
     SchoolCohort.includes(school: :induction_coordinators)
-                .where(induction_programme_choice: :full_induction_programme, cohort:).each do |school_cohort|
+                .where(induction_programme_choice: :full_induction_programme, cohort:).find_each do |school_cohort|
       next if school_cohort.ecf_participant_profiles.any?
 
       school_cohort.school.induction_coordinator_profiles.each do |sit|
@@ -32,7 +32,7 @@ class AddParticipantsReminder
     Rails.logger.info "Sending reminder to cip SITs"
 
     SchoolCohort.includes(school: :induction_coordinators)
-                .where(induction_programme_choice: :core_induction_programme, cohort:).each do |school_cohort|
+                .where(induction_programme_choice: :core_induction_programme, cohort:).find_each do |school_cohort|
       next if school_cohort.ecf_participant_profiles.any?
 
       school_cohort.school.induction_coordinator_profiles.each do |sit|

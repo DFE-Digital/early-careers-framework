@@ -23,7 +23,7 @@ module NewSeeds
         def add_delivery_partners
           delivery_partner = DeliveryPartner.order(Arel.sql("RANDOM()")).first
 
-          Cohort.all.each do |cohort|
+          Cohort.find_each do |cohort|
             FactoryBot.create(
               :seed_provider_relationship,
               lead_provider:,

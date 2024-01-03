@@ -22,7 +22,7 @@ namespace :data do
   namespace :historical_states do
     desc "Updates the participant declaration with missing submitted states"
     task populate: :environment do
-      DeclarationState.where(state: "eligible").all.each do |declaration_state|
+      DeclarationState.where(state: "eligible").find_each do |declaration_state|
         participant_declaration = declaration_state.participant_declaration
         unless participant_declaration.nil? || participant_declaration.declaration_states.any?(state: "submitted")
           DeclarationState.create!(participant_declaration:, state: "submitted", created_at: participant_declaration.created_at)

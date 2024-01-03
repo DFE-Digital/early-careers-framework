@@ -37,7 +37,7 @@ module Identity
       if from_user.induction_coordinator?
         if to_user.induction_coordinator?
           to_profile = to_user.induction_coordinator_profile
-          InductionCoordinatorProfilesSchool.where(induction_coordinator_profile: from_user.induction_coordinator_profile).each do |profiles_school|
+          InductionCoordinatorProfilesSchool.where(induction_coordinator_profile: from_user.induction_coordinator_profile).find_each do |profiles_school|
             profiles_school.update!(induction_coordinator_profile: to_profile)
           end
         else

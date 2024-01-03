@@ -130,7 +130,7 @@ class Admin::SchoolTransferForm
     if new_school_cohort.present?
       programmes << new_school_cohort.default_induction_programme if new_school_cohort.default_induction_programme.present?
 
-      new_school_programmes.where.not(id: new_school_cohort.default_induction_programme).each { |ip| programmes << ip }
+      new_school_programmes.where.not(id: new_school_cohort.default_induction_programme).find_each { |ip| programmes << ip }
     end
 
     programmes.select { |ip| ip.full_induction_programme? || ip.core_induction_programme? }.map do |induction_programme|

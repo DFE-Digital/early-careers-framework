@@ -11,7 +11,7 @@ module Mentors
           school_mentor&.destroy!
 
           # remove from mentees at the school
-          InductionRecord.for_school(school).ects.current.where(mentor_profile:).each do |induction_record|
+          InductionRecord.for_school(school).ects.current.where(mentor_profile:).find_each do |induction_record|
             Induction::ChangeMentor.call(induction_record:)
           end
         end

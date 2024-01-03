@@ -35,7 +35,7 @@ module Identity
     def add_participant_profiles_to_identity
       return unless user.teacher_profile&.participant_profiles&.any?
 
-      user.teacher_profile.participant_profiles.where(participant_identity: nil).each do |profile|
+      user.teacher_profile.participant_profiles.where(participant_identity: nil).find_each do |profile|
         profile.update!(participant_identity: identity)
       end
     end

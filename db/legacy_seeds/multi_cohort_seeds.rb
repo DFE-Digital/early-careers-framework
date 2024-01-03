@@ -66,7 +66,7 @@ Partnership.find_or_create_by!(school: fip2_school,
   partnership.challenge_deadline = Date.new(2021, 12, 1)
 end
 
-Cohort.all.each do |cohort|
+Cohort.find_each do |cohort|
   ProviderRelationship.find_or_create_by!(cohort:,
                                           lead_provider:,
                                           delivery_partner:)
