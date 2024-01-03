@@ -18,12 +18,14 @@ RSpec.feature "NPQ view contract" do
   def and_there_is_an_npq_lead_provider_with_contracts
     @npq_leading_teaching = create(:npq_course, identifier: "npq-leading-teaching")
     @npq_leading_behaviour_culture = create(:npq_course, identifier: "npq-leading-behaviour-culture")
+    @npq_leading_primary_mathematics = create(:npq_course, identifier: "npq-leading-primary-mathematics")
     @npq_schedule = create(:npq_leadership_schedule)
     @npq_specialist_schedule = create(:npq_specialist_schedule)
 
     @npq_lt = create(:npq_contract, :npq_leading_teaching)
     @npq_lead_provider = @npq_lt.npq_lead_provider
     @npq_lbc = create(:npq_contract, :npq_leading_behaviour_culture, npq_lead_provider: @npq_lead_provider)
+    @npq_lpm = create(:npq_contract, :npq_leading_primary_mathematics, npq_lead_provider: @npq_lead_provider)
 
     create(
       :npq_statement,
@@ -61,6 +63,9 @@ RSpec.feature "NPQ view contract" do
       expect(page).to have_content("npq-leading-behaviour-culture")
       expect(page).to have_content(@npq_lbc.recruitment_target)
       expect(page).to have_content(number_to_pounds(@npq_lbc.per_participant))
+      expect(page).to have_content("npq-leading-primary-mathematics")
+      expect(page).to have_content(@npq_lpm.recruitment_target)
+      expect(page).to have_content(number_to_pounds(@npq_lpm.per_participant))
     end
   end
 end

@@ -195,7 +195,7 @@
     <% end %>
   </div>
 
-  <%= render Finance::NPQ::PaymentOverviews::ContractInfo.new(@npq_contracts, @npq_lead_provider) %>
+  <%= render Finance::NPQ::PaymentOverviews::ContractInfo.new(@npq_contracts_for_information, @npq_lead_provider) %>
 
   <%= render partial: "finance/statements/calculation_rounding_message" %>
 </div>
