@@ -1839,19 +1839,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-transform-runtime@npm:^7.23.6":
-  version: 7.23.6
-  resolution: "@babel/plugin-transform-runtime@npm:7.23.6"
+"@babel/plugin-transform-runtime@npm:^7.23.7":
+  version: 7.23.7
+  resolution: "@babel/plugin-transform-runtime@npm:7.23.7"
   dependencies:
     "@babel/helper-module-imports": "npm:^7.22.15"
     "@babel/helper-plugin-utils": "npm:^7.22.5"
-    babel-plugin-polyfill-corejs2: "npm:^0.4.6"
-    babel-plugin-polyfill-corejs3: "npm:^0.8.5"
-    babel-plugin-polyfill-regenerator: "npm:^0.5.3"
+    babel-plugin-polyfill-corejs2: "npm:^0.4.7"
+    babel-plugin-polyfill-corejs3: "npm:^0.8.7"
+    babel-plugin-polyfill-regenerator: "npm:^0.5.4"
     semver: "npm:^6.3.1"
   peerDependencies:
     "@babel/core": ^7.0.0-0
-  checksum: 94a7ee92f073df53fd8bebf9ed391a95553716077da1c6c3a57f10f042358c938495d55e6b09b4b50544c01f03560c4770c17698e1c24817a15d3668e8231249
+  checksum: 0d5038462a5762c3a88d820785f685ce1b659075527a3ad538647fd9ce486052777d5aea3d62e626639d60441a04dd0ded2ed32c86b92cf8afbdbd3d54460c13
   languageName: node
   linkType: hard
 
@@ -5391,7 +5391,7 @@ __metadata:
   dependencies:
     "@babel/core": "npm:^7.23.7"
     "@babel/plugin-proposal-object-rest-spread": "npm:^7.20.7"
-    "@babel/plugin-transform-runtime": "npm:^7.23.6"
+    "@babel/plugin-transform-runtime": "npm:^7.23.7"
     "@babel/preset-env": "npm:^7.23.7"
     "@babel/runtime": "npm:^7.23.7"
     "@sentry/browser": "npm:^6.19.7"
