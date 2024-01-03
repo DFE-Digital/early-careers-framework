@@ -24,6 +24,35 @@ class SchoolMailer < ApplicationMailer
   FINANCE_ERRORS_WITH_THE_ECF_YEAR_2_GRANT = "2324145f-b679-4c40-b64a-08b0c05990d5"
   FINANCE_ERRORS_WITH_NQT_PLUS_ONE_AND_ECF_YEAR_2_SCHOOLS_VERSION = "94bec423-027b-4cf4-a501-9de61dde4905"
   FINANCE_ERRORS_WITH_NQT_PLUS_ONE_AND_ECF_YEAR_2_LOCAL_AUTHORITY_VERSION = "9953ed6b-4853-4be2-9ac2-692f07906166"
+  NOTIFY_SIT_WE_HAVE_ARCHIVED_PARTICIPANT = "558eafd2-7f8f-407d-a3a8-60649fb26ea8"
+
+  def notify_sit_we_have_archived_participant
+    school = params[:school]
+    induction_coordinator = params[:induction_coordinator]
+    participant_name = params[:participant_name]
+    role = params[:role]
+    sign_in = params[:sign_in_url]
+
+    school_name = school.name
+    sit_name = induction_coordinator.user.full_name
+    email_address = induction_coordinator.user.email
+
+    template_mail(
+      NOTIFY_SIT_WE_HAVE_ARCHIVED_PARTICIPANT,
+      to: email_address,
+      rails_mailer: mailer_name,
+      rails_mail_template: action_name,
+      personalisation: {
+        school_name:,
+        sit_name:,
+        participant_name:,
+        role:,
+        sign_in:,
+      },
+    ).tag(:notify_sit_we_have_archived_participant)
+        .associate_with(school)
+        .associate_with(induction_coordinator, as: :induction_coordinator_profile)
+  end
 
   def ask_gias_contact_to_validate_sit_details
     school = params[:school]

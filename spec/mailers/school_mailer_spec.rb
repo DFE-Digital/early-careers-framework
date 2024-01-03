@@ -3,6 +3,36 @@
 require "rails_helper"
 
 RSpec.describe SchoolMailer, type: :mailer do
+  describe "#notify_sit_we_have_archived_participant" do
+    let(:school) { create(:seed_school, :valid) }
+    let(:induction_coordinator) { create(:seed_induction_coordinator_profile, :with_user) }
+    let(:sign_in_url) { "https://ecf-dev.london.cloudapps" }
+    let(:participant_name) { "Jessica Walnut" }
+    let(:role) { "Early career teacher" }
+
+    let(:email) do
+      SchoolMailer
+        .with(school:, induction_coordinator:, sign_in_url:, participant_name:, role:)
+        .notify_sit_we_have_archived_participant
+        .deliver_now
+    end
+
+    it "renders the right headers" do
+      expect(email.from).to eq(["mail@example.com"])
+      expect(email.to).to eq([induction_coordinator.user.email])
+    end
+
+    it "has the correct personalisation" do
+      personalisation = email[:personalisation].unparsed_value
+
+      expect(personalisation[:school_name]).to eq school.name
+      expect(personalisation[:sit_name]).to eq induction_coordinator.user.full_name
+      expect(personalisation[:participant_name]).to eq participant_name
+      expect(personalisation[:role]).to eq role
+      expect(personalisation[:sign_in]).to eq sign_in_url
+    end
+  end
+
   describe "#ask_gias_contact_to_validate_sit_details" do
     let(:school) { create(:seed_school, :valid, primary_contact_email: "mary.gias@example.com") }
     let(:induction_coordinator) { create(:seed_induction_coordinator_profile, :with_user) }
