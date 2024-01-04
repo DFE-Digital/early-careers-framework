@@ -5,8 +5,8 @@ class DeleteCompletedInductionRecordsJob < ApplicationJob
     bug_introduced_at = "2023-09-04"
     job_running_window = { from: "00:00:00", to: "11:00:00" }
 
-    deleted = []
-    failed = []
+    deleted_count = 0
+    failed_count = 0
 
     # Potential dup records created by the bug that was running from 4 Sept 2023, between midnight and 11am
     dup_induction_records = InductionRecord
@@ -24,13 +24,13 @@ class DeleteCompletedInductionRecordsJob < ApplicationJob
       Induction::DeleteDupRecord.new(induction_record:).call
 
       Rails.logger.info "### Removed #{induction_record.id} record from #{induction_record.participant_profile_id} participant"
-      deleted << induction_record.id
+      deleted_count += 1
     rescue StandardError
       Rails.logger.debug "### Failed to remove #{induction_record.id} record from #{induction_record.participant_profile_id} participant: #{e.inspect}"
-      failed << induction_record.id
+      failed_count += 1
     end
 
-    Rails.logger.info "### Records deleted: #{deleted.count}"
-    Rails.logger.info "### Records failed to delete: #{failed.count}"
+    Rails.logger.info "### Records deleted: #{deleted_count}"
+    Rails.logger.info "### Records failed to delete: #{failed_count}"
   end
 end

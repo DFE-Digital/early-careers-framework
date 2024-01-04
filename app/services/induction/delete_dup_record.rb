@@ -69,7 +69,7 @@ private
   end
 
   def induction_record_index
-    participant_induction_records.index(induction_record)
+    @induction_record_index ||= participant_induction_records.index(induction_record)
   end
 
   def first_record?
