@@ -149,7 +149,7 @@ group :development, :test do
 end
 
 group :development, :test, :staging, :sandbox, :review, :performance, :migration do
-  gem "factory_bot_rails", "~> 6.4.2"
+  gem "factory_bot_rails", "~> 6.4.3"
   gem "faker"
   gem "timecop"
 end
