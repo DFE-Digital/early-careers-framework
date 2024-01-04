@@ -862,13 +862,16 @@ en:
 
   support_form:
     introduction:
-      unspecified: "If you have a question about the Manage training for early career teachers service, you can contact the DfE using this form."
-      change-participant-lead-provider: "Complete this form to request a change to %{participant_name}’s registered training provider."
-      change-participant-date-of-birth: "Complete this request form to change an ECT or mentor's date of birth"
-      change-participant-trn: "Complete this request form to change an ECT or mentor's TRN"
-      change-cohort-lead-provider: "Complete this form to tell us about a change of provider for ECTs and mentors who started their training in the %{cohort_year_range} academic year."
-      change-cohort-delivery-partner: "Complete this form to tell us about a change of partner for ECTs and mentors who started their training in the %{cohort_year_range} academic year."
-      change-cohort-induction-programme-choice: "Complete this form to tell us about a change of provider for ECTs and mentors who started their training in the %{cohort_year_range} academic year."
+      unspecified_html: "If you have a question about the Manage training for early career teachers service, you can contact the DfE using this form."
+      change-participant-lead-provider_html: "Complete this form to request a change to %{participant_name}’s registered training provider."
+      change-participant-date-of-birth_html: "Complete this request form to change an ECT or mentor's date of birth"
+      change-participant-trn_html: "Complete this request form to change an ECT or mentor's TRN"
+      change-cohort-lead-provider_html: "Complete this form to tell us about a change of provider for ECTs and mentors who started their training in the %{cohort_year_range} academic year."
+      change-cohort-delivery-partner_html: "Complete this form to tell us about a change of partner for ECTs and mentors who started their training in the %{cohort_year_range} academic year."
+      change-cohort-induction-programme-choice_html: |
+        Complete this form to tell us that you want to use a different training programme option for ECTs and mentors who started their training in the %{cohort_year_range} academic year.
+        <br><br>
+        You can view your options here: <a class="govuk-link" target="_blank" rel="noopener noreferrer" href="https://www.gov.uk/guidance/how-to-set-up-training-for-early-career-teachers#choose-a-training-option">https://www.gov.uk/guidance/how-to-set-up-training-for-early-career-teachers#choose-a-training-option</a>.
     instructions:
       unspecified_html: ""
       change-participant-lead-provider_html: |
@@ -896,9 +899,9 @@ en:
       change-cohort-induction-programme-choice_html: |
         Tell us:
         <ul>
-        <li>the name of the new lead provider</li>
-        <li>the confirmed date the new lead provider will start training your ECTs (and their mentors if relevant)</li>
-        <li>the years you want to apply the change to (year 1, year 2, or both years)</li>
+          <li>which training option you want change to</li>
+          <li>the confirmed date when the programme will change for ECTs (and their mentors if relevant)</li>
+          <li>the years you want to apply the change to (year 1, year 2, or both years)</li>
         </ul>
 
   support_query:

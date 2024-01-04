@@ -1143,7 +1143,7 @@ module ManageTrainingSteps
   end
 
   def then_i_am_taken_to_the_support_form_for_changing_an_induction_programme
-    expect(page).to have_text("Complete this form to tell us about a change of provider for ECTs and mentors who started their training in the 2022 to 2023 academic year.")
+    expect(page).to have_text("Complete this form to tell us that you want to use a different training programme option for ECTs and mentors who started their training in the 2022 to 2023 academic year.")
   end
 
   def then_i_am_taken_to_sign_up_to_training_provider_page
