@@ -45,6 +45,7 @@ class SchoolMailer < ApplicationMailer
       personalisation: {
         school_name:,
         sit_name:,
+        sit_email_address: email_address,
         participant_name:,
         role:,
         sign_in:,

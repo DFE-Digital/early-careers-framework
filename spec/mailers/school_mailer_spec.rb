@@ -27,6 +27,7 @@ RSpec.describe SchoolMailer, type: :mailer do
 
       expect(personalisation[:school_name]).to eq school.name
       expect(personalisation[:sit_name]).to eq induction_coordinator.user.full_name
+      expect(personalisation[:sit_email_address]).to eq induction_coordinator.user.email
       expect(personalisation[:participant_name]).to eq participant_name
       expect(personalisation[:role]).to eq role
       expect(personalisation[:sign_in]).to eq sign_in_url
