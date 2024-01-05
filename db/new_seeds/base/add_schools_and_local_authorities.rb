@@ -99,7 +99,7 @@ ur_school = FactoryBot.create(:seed_school,
                               primary_contact_email: "ur_school@digital.education.gov.uk")
 ur_local_authority = local_authorities.sample
 fhtsh_ab = AppropriateBody.find_by(name: "Flying High Teaching School Hub")
-nta_ab = AppropriateBody.find_by(name: "National Teacher Accreditation")
+nta_ab = AppropriateBody.find_by(name: "National Teacher Accreditation (NTA)")
 
 ur_cohorts = @cohorts
 ur_cohort_2021 = ur_cohorts.detect { |cohort| cohort.start_year == 2021 }
