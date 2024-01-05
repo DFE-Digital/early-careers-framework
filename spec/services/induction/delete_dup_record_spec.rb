@@ -69,7 +69,7 @@ RSpec.describe Induction::DeleteDupRecord do
 
   describe "COMPARE_ATTRIBUTES" do
     it "returns which attributes should be compared to determine a record is a dup of the previous one" do
-      expect(described_class::COMPARE_ATTRIBUTES).to eq %(induction_programme_id participant_profile_id schedule_id training_status preferred_identity_id school_transfer appropriate_body_id)
+      expect(described_class::COMPARE_ATTRIBUTES).to eq %w(induction_programme_id participant_profile_id schedule_id training_status preferred_identity_id school_transfer appropriate_body_id)
     end
   end
 end

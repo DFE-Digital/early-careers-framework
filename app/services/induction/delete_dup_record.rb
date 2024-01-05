@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Induction::DeleteDupRecord < BaseService
-  COMPARE_ATTRIBUTES = %(induction_programme_id participant_profile_id schedule_id training_status preferred_identity_id school_transfer appropriate_body_id)
+  COMPARE_ATTRIBUTES = %w(induction_programme_id participant_profile_id schedule_id training_status preferred_identity_id school_transfer appropriate_body_id)
 
   class DeleteInductionRecordRestrictionError < StandardError; end
 
