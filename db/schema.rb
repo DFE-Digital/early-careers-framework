@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_12_18_115100) do
+ActiveRecord::Schema[7.0].define(version: 2024_01_05_142733) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "fuzzystrmatch"
@@ -206,6 +206,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_18_115100) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "disable_from_year"
+    t.boolean "listed", default: false, null: false
     t.index ["body_type", "name"], name: "index_appropriate_bodies_on_body_type_and_name", unique: true
   end
 
