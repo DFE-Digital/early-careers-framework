@@ -23,10 +23,9 @@ module Admin
 
           def radio_options
             @radio_options ||= [
-              istip_appropriate_body,
-              nta_appropriate_body,
+              appropriate_bodies.where(listed: true),
               OpenStruct.new(id: TEACHING_SCHOOL_HUB_ID, name: "A teaching school hub"),
-            ].compact
+            ].flatten.compact
           end
 
           def selected_appropriate_body_id
@@ -56,14 +55,6 @@ module Admin
 
           def cohort_start_year
             school_cohort.start_year
-          end
-
-          def istip_appropriate_body
-            appropriate_bodies.find_by(name: "Independent Schools Teacher Induction Panel (IStip)")
-          end
-
-          def nta_appropriate_body
-            appropriate_bodies.find_by(name: "National Teacher Accreditation (NTA)")
           end
         end
       end
