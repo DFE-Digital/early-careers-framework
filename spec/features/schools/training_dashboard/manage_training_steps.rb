@@ -565,10 +565,6 @@ module ManageTrainingSteps
   end
 
   def and_see_the_other_programs_before_choosing(labels:, choice:)
-    expect(page).to have_text "Change how you run your training programme"
-    expect(page).to be_accessible
-    click_on "Check the other options available"
-
     expect(page).to have_text "How do you want to run your training"
     labels.each { |label| expect(page).to have_selector(:label, text: label) }
     expect(page).to be_accessible
@@ -1144,6 +1140,10 @@ module ManageTrainingSteps
 
   def then_i_am_taken_to_cip_programme_choice_info_page
     expect(page).to have_text("Your school has chosen to deliver your own programme using DfE-accredited materials")
+  end
+
+  def then_i_am_taken_to_the_support_form_for_changing_an_induction_programme
+    expect(page).to have_text("Complete this form to tell us that you want to use a different training programme option for ECTs and mentors who started their training in the 2022 to 2023 academic year.")
   end
 
   def then_i_am_taken_to_sign_up_to_training_provider_page

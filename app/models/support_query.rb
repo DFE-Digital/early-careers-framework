@@ -8,6 +8,7 @@ class SupportQuery < ApplicationRecord
     change-participant-trn
     change-cohort-lead-provider
     change-cohort-delivery-partner
+    change-cohort-induction-programme-choice
   ].freeze
 
   belongs_to :user
