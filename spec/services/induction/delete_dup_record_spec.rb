@@ -45,7 +45,7 @@ RSpec.describe Induction::DeleteDupRecord do
 
     context "when the record is deletable" do
       let!(:first_induction_record) { create(:induction_record, :changed, participant_profile:, start_date: three_days_ago, end_date: two_days_ago, mentor_profile: create(:mentor_participant_profile), induction_programme:, schedule:) }
-      let!(:latest_induction_record) { create(:induction_record, participant_profile:, start_date: one_day_ago, induction_programme:, schedule: ) }
+      let!(:latest_induction_record) { create(:induction_record, participant_profile:, start_date: one_day_ago, induction_programme:, schedule:) }
 
       it "updates the previous record and deletes the provided record" do
         expect { service.call }.to change { InductionRecord.count }.by(-1)
