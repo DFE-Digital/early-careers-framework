@@ -7,6 +7,7 @@ class Induction::DeleteDupRecord < BaseService
 
   def call
     ActiveRecord::Base.transaction do
+      # binding.pry
       check_record_is_deletable!
 
       update_previous_record
