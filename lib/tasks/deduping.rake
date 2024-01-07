@@ -5,4 +5,9 @@ namespace :deduping do
   task dedup_users: :environment do
     DeduplicationService.call
   end
+
+  desc "Delete the dup completed induction records created by the set participant completion date bug"
+  task dedup_completed_induction_records: :environment do
+    DeleteCompletedInductionRecordsJob.perform_later
+  end
 end
