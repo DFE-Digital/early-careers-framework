@@ -7,7 +7,7 @@ namespace :deduping do
   end
 
   desc "Delete the dup completed induction records created by the set participant completion date bug"
-  task dedup_completed_induction_records: :environment do
-    DeleteCompletedInductionRecordsJob.perform_later
+  task :dedup_completed_induction_records, [:no_of_participants] => :environment do |_task, args|
+    DeleteCompletedInductionRecordsJob.perform_later(no_of_participants: args.no_of_participants&.to_i)
   end
 end
