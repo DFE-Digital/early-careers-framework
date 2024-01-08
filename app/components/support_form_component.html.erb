@@ -85,5 +85,7 @@
 
       <%= f.govuk_submit "Send message to support" %>
     <% end %>
+
+    <p class="govuk-body-s">If you do not want to use this form, you can email <%= render(MailToSupportComponent.new(Rails.application.config.support_email)) %></p>
   </div>
 </div>
