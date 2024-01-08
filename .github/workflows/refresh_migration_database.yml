@@ -1,0 +1,25 @@
+name: Refresh migration DB from production DB
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: GitHub environment to refresh from
+        type: choice
+        default: production
+        options:
+          - production
+        required: true
+
+jobs:
+  refresh-migration-db:
+    runs-on: ubuntu-20.04
+    environment: production
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Refresh migration DB
+        uses: ./.github/actions/refresh-migration-database
+        with:
+          environment: production
+          azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
