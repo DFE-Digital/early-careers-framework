@@ -285,6 +285,97 @@ RSpec.describe ChangeSchedule do
           expect { service.call }.not_to change { participant_profile.reload.current_induction_record.induction_programme.school_cohort.cohort.start_year }
         end
       end
+
+      context "when changing schedule and cohort" do
+        let(:schedule_identifier) { "ecf-standard-september" }
+        let!(:schedule) { Finance::Schedule::ECF.find_by(schedule_identifier: "ecf-standard-september") }
+        let(:new_cohort) { Cohort.previous }
+        let!(:new_schedule) { Finance::Schedule::ECF.find_by(schedule_identifier:, cohort: new_cohort) }
+        let!(:new_school_cohort) { create(:school_cohort, :cip, :with_induction_programme, cohort: new_cohort, lead_provider: cpd_lead_provider.lead_provider, school: participant_profile.school) }
+        let(:params) do
+          {
+            cpd_lead_provider:,
+            participant_id:,
+            course_identifier:,
+            schedule_identifier:,
+            cohort: new_cohort.start_year,
+          }
+        end
+
+        context "with relationship partnership" do
+          before { participant_profile.school.active_partnerships.find_by(cohort: new_cohort).update(relationship: true) }
+
+          it "is invalid and returns an error message" do
+            is_expected.to be_invalid
+
+            expect(service.errors.messages_for(:cohort)).to include("You cannot change a participant to this cohort as you do not have a partnership with the school for the cohort. Contact the DfE for assistance.")
+          end
+        end
+
+        context "without relationship partnership" do
+          before { participant_profile.school.active_partnerships.find_by(cohort: new_cohort).update(relationship: false) }
+
+          it "updates the schedule on the relevant induction record" do
+            relevant_induction_record = participant_profile.current_induction_record
+            expect(relevant_induction_record.schedule).to_not eq(new_schedule)
+
+            service.call
+
+            relevant_induction_record = participant_profile.current_induction_record
+            expect(relevant_induction_record.schedule).to eq(new_schedule)
+          end
+        end
+      end
+
+      context "when changing schedule only" do
+        let(:cohort) { Cohort.current }
+        let!(:new_schedule) { create(:ecf_schedule, cohort:, schedule_identifier: "ecf-replacement-april") }
+        let(:params) do
+          {
+            cpd_lead_provider:,
+            participant_id:,
+            course_identifier:,
+            schedule_identifier: new_schedule.schedule_identifier,
+            cohort:,
+          }
+        end
+
+        context "with relationship partnership" do
+          before { participant_profile.school.active_partnerships.find_by(cohort:).update(relationship: true) }
+
+          it "updates the schedule on the relevant induction record" do
+            old_relevant_induction_record = participant_profile.current_induction_record
+            old_induction_programme = old_relevant_induction_record.induction_programme
+            expect(old_relevant_induction_record.schedule).to_not eq(new_schedule)
+
+            service.call
+
+            relevant_induction_record = participant_profile.current_induction_record
+            expect(relevant_induction_record.schedule).to eq(new_schedule)
+
+            expect(relevant_induction_record).to_not eq(old_relevant_induction_record)
+            expect(relevant_induction_record.induction_programme).to eq(old_induction_programme)
+          end
+        end
+
+        context "without relationship partnership" do
+          before { participant_profile.school.active_partnerships.find_by(cohort:).update(relationship: false) }
+
+          it "updates the schedule on the relevant induction record" do
+            old_relevant_induction_record = participant_profile.current_induction_record
+            expect(old_relevant_induction_record.schedule).to_not eq(new_schedule)
+
+            target_school_cohort = SchoolCohort.find_by(school: participant_profile.school, cohort:)
+            default_induction_programme = target_school_cohort.default_induction_programme
+
+            service.call
+
+            relevant_induction_record = participant_profile.current_induction_record
+            expect(relevant_induction_record.schedule).to eq(new_schedule)
+            expect(relevant_induction_record.induction_programme).to eq(default_induction_programme)
+          end
+        end
+      end
     end
   end
 

@@ -95,7 +95,12 @@ private
   end
 
   def induction_programme
-    @induction_programme ||= target_school_cohort&.default_induction_programme
+    @induction_programme ||=
+      if school_partnership&.relationship
+        relevant_induction_record&.induction_programme
+      else
+        target_school_cohort&.default_induction_programme
+      end
   end
 
   def update_participant_profile_schedule_references!
@@ -221,16 +226,37 @@ private
 
   def validate_school_cohort_exists
     return unless participant_profile&.ecf?
-    return if school_default_partnership.present?
+    return if school_partnership.present?
 
     errors.add(:cohort, I18n.t(:missing_school_cohort_default_partnership))
   end
 
-  def school_default_partnership
+  def school_partnership
     return if school.blank?
 
-    school
-      .active_partnerships
-      .find_by(cohort:, relationship: false, lead_provider_id: cpd_lead_provider.lead_provider_id)
+    @school_partnership ||= school_partnership_without_relationship || school_partnership_including_relationship
+  end
+
+  def school_partnership_without_relationship
+    school.active_partnerships.find_by(
+      cohort:,
+      lead_provider_id: cpd_lead_provider.lead_provider_id,
+      relationship: false,
+    )
+  end
+
+  def school_partnership_including_relationship
+    return unless change_schedule_identifier_only?
+
+    # We are assuming there is only ever one partnership record
+    school.active_partnerships.find_by(
+      cohort:,
+      lead_provider_id: cpd_lead_provider.lead_provider_id,
+    )
+  end
+
+  def change_schedule_identifier_only?
+    cohort == schedule.cohort &&
+      new_schedule != schedule
   end
 end
