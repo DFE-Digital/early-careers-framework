@@ -208,17 +208,25 @@ konduit-cleanup:
 	sed -i '' -e '/url\: "postgres/d' config/database.yml; \
 	exit 0
 
-# Creates a konduit to the snapshot DB and points development to
-# it. The konduit URL is removed when the konduit is closed.
-konduit-snapshot: get-cluster-credentials
+define KONDUIT_CONNECT
 	trap 'make konduit-cleanup' INT; \
 	tmp_file=$$(mktemp); \
 	$(MAKE) konduit-cleanup; \
 	{ \
-			(tail -f -n0 "$$tmp_file" & ) | grep -q "postgres://"; \
-			postgres_url=$$(grep -o 'postgres://[^ ]*' "$$tmp_file"); \
-			echo "$$postgres_url"; \
-			sed -i '' -e "s|database: \"early_careers_framework_development\"|&\\n  url: \"$$postgres_url\"|g" config/database.yml; \
+		(tail -f -n0 "$$tmp_file" & ) | grep -q "postgres://"; \
+		postgres_url=$$(grep -o 'postgres://[^ ]*' "$$tmp_file"); \
+		echo "$$postgres_url"; \
+		sed -i '' -e "s|database: \"early_careers_framework_development\"|&\\n  url: \"$$postgres_url\"|g" config/database.yml; \
 	} & \
-	bin/konduit.sh -d s189p01-cpdecf-pd-pg-snapshot -k s189p01-cpdecf-pd-app-kv cpd-ecf-production-web -- psql > "$$tmp_file"
+	bin/konduit.sh -d
+endef
+
+# Creates a konduit to the DB and points development to it. The konduit URL is removed when the konduit is closed.
+konduit: get-cluster-credentials
+	$(KONDUIT_CONNECT) ${AZURE_RESOURCE_PREFIX}-${SERVICE_SHORT}-${CONFIG_SHORT}-pg -k ${AZURE_RESOURCE_PREFIX}-${SERVICE_SHORT}-${CONFIG_SHORT}-app-kv cpd-ecf-${CONFIG_LONG}-web -- psql > "$$tmp_file"
+	exit 0
+
+# Creates a konduit to the snapshot DB and points development to it. The konduit URL is removed when the konduit is closed.
+konduit-snapshot: get-cluster-credentials
+	$(KONDUIT_CONNECT) ${AZURE_RESOURCE_PREFIX}-${SERVICE_SHORT}-${CONFIG_SHORT}-pg-snapshot -k ${AZURE_RESOURCE_PREFIX}-${SERVICE_SHORT}-${CONFIG_SHORT}-app-kv cpd-ecf-${CONFIG_LONG}-web -- psql > "$$tmp_file"
 	exit 0
