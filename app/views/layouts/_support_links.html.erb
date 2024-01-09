@@ -3,7 +3,7 @@
   <% if current_user.present? %>
     If you have a question, or you’ve had a problem using this service, please <%= govuk_link_to("click here", support_path) %> to contact us.
   <% else %>
-    If you have a question, or you’ve had a problem using this service, please contact us at
+    If you have a question, or you’ve had a problem using this service, contact us at
     <%= mail_to Rails.application.config.support_email, Rails.application.config.support_email, class: "govuk-footer__link govuk-link--no-visited-state" %>
   <% end %>
 </p>
