@@ -18,6 +18,10 @@ check_no_induction_or_no_qts_participants:
   cron: "0 7 * * 1"
   class: "CheckParticipantsInductionAndQtsJob"
   queue: default
+check_eligible_ects_that_failed_permanent_cohort_setup:
+  cron: "0 11 * * 1"
+  class: "CheckEligibleEctsThatFailedPermanentCohortSetupJob"
+  queue: default
 enrol_school_cohorts:
   cron: "0 3 * * *"
   class: "EnrolSchoolCohortsJob"
