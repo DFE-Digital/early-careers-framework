@@ -40,7 +40,7 @@ class DeleteCompletedInductionRecordsJob < ApplicationJob
           Rails.logger.info "### Removed #{induction_record.id} record from #{induction_record.participant_profile_id} participant"
           deleted_count += 1
       rescue StandardError => e
-        Rails.logger.debug "### Failed to remove #{induction_record.id} record from #{induction_record.participant_profile_id} participant: #{e.inspect}"
+        Rails.logger.info "### Failed to remove #{induction_record.id} record from #{induction_record.participant_profile_id} participant: #{e.inspect}"
         failed_count += 1
         end
     end
