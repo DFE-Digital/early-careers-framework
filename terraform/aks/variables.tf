@@ -130,3 +130,8 @@ variable "azure_storage_mb" {
   type    = number
   default = 32768
 }
+
+variable "azure_cpu_threshold" {
+  type    = number
+  default = 60
+}
