@@ -32,7 +32,7 @@ RSpec.feature "ECT doing CIP: in training", type: :feature do
   let(:participant_status) { "active" }
   let(:training_status) { "active" }
   let(:training_record_state) { "Eligible to start" }
-  let(:school_record_state) { "ELIGIBLE FOR TRAINING" }
+  let(:school_record_state) { "Eligible for training" }
   let(:delivery_partner_record_state) { "" }
   let(:appropriate_body_Record_state) { "Training or eligible for training" }
 
