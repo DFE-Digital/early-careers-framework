@@ -32,7 +32,7 @@ RSpec.feature "ECT doing CIP: no validation", type: :feature do
   let(:participant_status) { "active" }
   let(:training_status) { "active" }
   let(:training_record_state) { "Validation not started" }
-  let(:school_record_state) { "WAITING FOR TRN" }
+  let(:school_record_state) { "Waiting for TRN" }
   let(:delivery_partner_record_state) { "" }
   let(:appropriate_body_Record_state) { "Training or eligible for training" }
 
