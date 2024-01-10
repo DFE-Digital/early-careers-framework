@@ -20,6 +20,7 @@ class SupportFormComponent < BaseComponent
     @i18n_params ||= {
       participant_name: participant_profile_full_name,
       cohort_year_range:,
+      support_email: Rails.application.config.support_email,
     }
   end
 

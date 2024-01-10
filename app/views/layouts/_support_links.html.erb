@@ -1,7 +1,11 @@
 <h2 class="govuk-heading-m">Support and guidance</h2>
 <p class="govuk-body-s">
-  If you have a question, or you’ve had a problem using this service, please contact us at
-  <%= mail_to Rails.application.config.support_email, Rails.application.config.support_email, class: "govuk-footer__link govuk-link--no-visited-state" %>
+  <% if current_user.present? %>
+    If you have a question, or you’ve had a problem using this service,  <%= govuk_link_to("contact support", support_path) %>.
+  <% else %>
+    If you have a question, or you’ve had a problem using this service, contact us at
+    <%= mail_to Rails.application.config.support_email, Rails.application.config.support_email, class: "govuk-footer__link govuk-link--no-visited-state" %>
+  <% end %>
 </p>
 <ul class="govuk-footer__inline-list">
   <li class="govuk-footer__inline-list-item">
