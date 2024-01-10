@@ -16,7 +16,7 @@ development:
 
 migration:
   <<: *default
-  database: "early_careers_framework_migration"
+  url: <%= ENV["DATABASE_URL"] %>
 
 test:
   <<: *default
