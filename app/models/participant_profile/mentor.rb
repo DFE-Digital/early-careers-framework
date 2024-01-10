@@ -14,6 +14,19 @@ class ParticipantProfile::Mentor < ParticipantProfile::ECF
   has_many :school_mentors, dependent: :destroy, foreign_key: :participant_profile_id
   has_many :schools, through: :school_mentors
 
+  enum mentor_completion_reason: {
+    completed_declaration_received: "completed_declaration_received",
+    completed_during_early_roll_out: "completed_during_early_roll_out",
+    two_years_without_completed_declaration: "two_years_without_completed_declaration",
+    two_years_association_but_not_yet_started: "two_years_association_but_not_yet_started",
+  }
+
+  def complete_training!(completion_date:, completion_reason:)
+    self.mentor_completion_date = completion_date
+    self.mentor_completion_reason = completion_reason
+    save!
+  end
+
   def mentor?
     true
   end

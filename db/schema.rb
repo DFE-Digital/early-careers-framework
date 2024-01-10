@@ -933,6 +933,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_25_143240) do
     t.string "notes"
     t.date "induction_start_date"
     t.date "induction_completion_date"
+    t.date "mentor_completion_date"
+    t.string "mentor_completion_reason"
     t.index ["cohort_id"], name: "index_participant_profiles_on_cohort_id"
     t.index ["core_induction_programme_id"], name: "index_participant_profiles_on_core_induction_programme_id"
     t.index ["mentor_profile_id"], name: "index_participant_profiles_on_mentor_profile_id"

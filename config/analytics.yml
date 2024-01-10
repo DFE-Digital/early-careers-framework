@@ -179,6 +179,8 @@
   - notes
   - induction_start_date
   - induction_completion_date
+  - mentor_completion_date
+  - mentor_completion_reason
   :cohorts_lead_providers:
   - id
   - lead_provider_id
