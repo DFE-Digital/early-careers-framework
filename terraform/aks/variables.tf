@@ -125,3 +125,8 @@ variable "worker_memory_max" {
   type    = string
   default = "1Gi"
 }
+
+variable "azure_storage_mb" {
+  type    = number
+  default = 32768
+}

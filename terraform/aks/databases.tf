@@ -52,6 +52,7 @@ module "postgres" {
   cluster_configuration_map = module.cluster_data.configuration_map
 
   azure_sku_name                 = var.postgres_flexible_server_sku
+  azure_storage_mb               = var.azure_storage_mb
   azure_enable_high_availability = var.postgres_enable_high_availability
   azure_enable_backup_storage    = var.azure_enable_backup_storage
   use_azure                      = var.deploy_azure_backing_services
