@@ -1,16 +1,14 @@
 # frozen_string_literal: true
 
 describe Oneoffs::NPQ::CleanupParticipantDeclaration do
-  # create declaration with participant profile and participant identity
-  # create second user
-  # attach profile to the second user via user_id
-  # run script and see that participant declaration belongs to correct user
   let(:npq_participant_declaration) { create(:npq_participant_declaration) }
   let(:user) { npq_participant_declaration.participant_profile.participant_identity.user }
+  let(:participant_identity) { user.participant_identities.first }
   let(:npq_user) { create(:user, :npq) }
 
   before do
-    npq_participant_declaration.update(user_id: npq_user.id)
+    npq_participant_declaration.update!(user_id: npq_user.id)
+    participant_identity.update!(external_identifier: npq_user.id)
   end
 
   it "reassigns records properly" do
