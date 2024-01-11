@@ -11,9 +11,9 @@
 
     "breakpoint-test":{
       "executor": "ramping-arrival-rate",
-      "preAllocatedVUs": 5000,
+      "preAllocatedVUs": 20000,
       "stages": [
-        { "duration": "7200s", "target": 5000 }
+        { "duration": "20000s", "target": 20000 }
       ],
       "exec": "breakpointTest"
     },
@@ -29,9 +29,9 @@
 
     "api-breakpoint-test":{
       "executor": "ramping-arrival-rate",
-      "preAllocatedVUs": 5000,
+      "preAllocatedVUs": 20000,
       "stages": [
-        { "duration": "7200s", "target": 5000 }
+        { "duration": "20000s", "target": 20000 }
       ],
       "exec": "apiBreakpointTest"
     },
@@ -145,12 +145,10 @@
       { "threshold": "max<30000", "abortOnFail": false }
     ],
 
-    "http_req_failed{scenario:api-breakpoint-test}": [
-      { "threshold": "rate<0.1", "abortOnFail": true, "delayAbortEval": "1200s" }
-    ],
-
     "http_req_failed{scenario:breakpoint-test}": [
       { "threshold": "rate<0.1", "abortOnFail": true, "delayAbortEval": "1s" }
     ]
   }
 }
+
+

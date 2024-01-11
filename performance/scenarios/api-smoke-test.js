@@ -9,7 +9,6 @@ import { fromEnv, randomIntBetween } from '../common/utils.js';
 const paths = [
   // Version 1
   '/api/v1/participants/ecf',
-  /*
   '/api/v1/npq-applications',
   '/api/v1/participants/npq',
   '/api/v1/participants/npq/outcomes',
@@ -28,7 +27,6 @@ const paths = [
   '/api/v3/participants/npq',
   '/api/v3/participants/npq/outcomes',
   '/api/v3/participant-declarations',
-  */
 ];
 
 // eslint-disable-next-line import/prefer-default-export

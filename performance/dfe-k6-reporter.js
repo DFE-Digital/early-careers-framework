@@ -1,6 +1,7 @@
-/* eslint-disable import/no-commonjs */
-const { readFileSync, writeFileSync, unlinkSync } = require('node:fs');
+/* eslint-disable import/no-commonjs,no-case-declarations */
+const { readdirSync , readFileSync, writeFileSync, unlinkSync } = require('node:fs');
 const util = require('node:util');
+const path = require('node:path');
 const exec = util.promisify(require('node:child_process').exec);
 const nunjucks = require("nunjucks");
 
@@ -22,6 +23,27 @@ nunjucks.configure(
     autoescape: true,
   }
 );
+
+// eslint-disable-next-line no-console
+const logInfo = (...params) => console.log(...params);
+// eslint-disable-next-line no-console
+const logError = (...params) => console.error(...params);
+
+const getVersionedFilename = (folder, search, ext) => {
+  const filenames = readdirSync(folder);
+  const filename = filenames.filter(foundFilename => foundFilename.startsWith(search) && foundFilename.endsWith(ext))[0];
+  return path.join(folder, filename);
+};
+
+const getStyle = () => {
+  const filepath = getVersionedFilename("../public/assets", "application", ".css");
+  return readFileSync(filepath, "utf8");
+};
+
+const getScript = () => {
+  const filepath = getVersionedFilename("../public/assets", "application", ".js");
+  return readFileSync(filepath, "utf8");
+};
 
 const standardMetricKeys = [
   'grpc_req_duration',
@@ -67,7 +89,7 @@ const checkFailed = (metric, valName) => {
 };
 
 const metricTableRow = (metricName, metric) => [
-  { text: metricName, classes: "govuk-body-s" },
+  { text: metricName.replace('{', ' '), classes: "govuk-body-s" },
   { text: metric.values.count ? metric.values.count : "-", format: "numeric", classes: `govuk-body-s ${checkFailed(metric, "count")}` },
   { text: metric.values.rate ? metric.values.rate.toFixed(2) : "-", format: "numeric", classes: `govuk-body-s ${checkFailed(metric, "rate")}` },
   { text: metric.values.avg ? metric.values.avg.toFixed(2) : "-", format: "numeric", classes: `govuk-body-s ${checkFailed(metric, "avg")}` },
@@ -98,7 +120,7 @@ const mermaidTextToSvg = async (input) => {
 
   // eslint-disable-next-line no-await-in-loop
   const { stderr } = await exec(`../node_modules/.bin/mmdc -i ${chartTextPath} -o ${chartImagePath} --theme neutral`);
-  if (stderr) console.error('stderr:', stderr);
+  if (stderr) logError('stderr:', stderr);
   const svg = readFileSync(chartActualImagePath, 'utf8');
 
   unlinkSync(chartActualImagePath);
@@ -136,58 +158,164 @@ config:
 ].join('\n');
 
 const processChart = (data, timeline) => {
-  let minimum;
-  let maximum;
-  let total = 0;
+  const values = data.log.map(entry => entry.value);
+  const sortedValues = [...values].sort((a, b) => a - b);
+  let firstFail;
 
-  const log = timeline.reduce((previous, timestamp) => {
-    let value = 0;
+  const log = timeline
+    .reduce((previous, timestamp) => {
+      let value;
 
-    switch (data.type) {
-      case 'counter':
-      case 'rate':
-        // sum the values for the period
-        value = data.log.reduce((current, entry) =>
-          entry.timestamp === timestamp ? current + entry.value : current,
-        0);
-        break;
-      default:
-        // find the highest value for the period
-        value = data.log.reduce((current, entry) =>
-          entry.timestamp === timestamp && entry.value > current ? entry.value : current,
-        0);
+      switch (data.type) {
+        case 'counter':
+        // case 'rate':
+          // sum the values for the period
+          value = data.log
+            .filter(entry => entry.timestamp === timestamp)
+            .reduce((current, entry) => current + entry.value, 0);
+          break;
+        case 'rate':
+          // sum the values for the period
+          value = {
+            checks: 0,
+            passes: 0,
+            fails: 0
+          };
+
+          data.log
+            .filter(entry => entry.timestamp === timestamp)
+            .forEach(entry => {
+              value.checks += 1;
+
+              if (entry.value === 1) {
+                // eslint-disable-next-line no-param-reassign
+                value.passes += 1;
+              } else {
+                // eslint-disable-next-line no-param-reassign
+                value.fails -= 1;
+                if (!firstFail) firstFail = timestamp;
+              }
+            });
+          break;
+        case 'gauge':
+        case 'trend':
+          // find the highest value for the period
+          value = data.log
+            .filter(entry => entry.timestamp === timestamp)
+            .reduce((current, entry) => entry.value > current ? entry.value : current, 0);
+          break;
+        default:
+          throw new Error(`Metric type of "${data.type}" not recognised`);
+      }
+
+      return { ...previous, [timestamp]: { timestamp, value } };
+    }, {});
+
+  const countedValues = values.filter(value => value > 0);
+  const minimum = Math.min(...sortedValues);
+  const maximum = Math.max(...sortedValues);
+  const totalValues = values.length;
+
+  // const timelineValues = timeline.map(timestamp => log[timestamp].value || 0);
+  const timelineValues = timeline.map(timestamp => {
+    if (typeof log[timestamp].value === "object") {
+      return log[timestamp].value.checks || 0;
     }
 
-    total += value;
-    if (!maximum || value > maximum) maximum = value;
-    if (!minimum || value < minimum) minimum = value;
-    return { ...previous, [timestamp]: { timestamp, value } };
-  }, {});
+    return log[timestamp].value || 0;
+  });
 
-  const average = parseInt(`${total / timeline.length}`, 10);
-  const median = parseInt(minimum + ((maximum - minimum) / 2), 10);
+  const timelineMinimum = Math.min(...timelineValues);
+  const timelineMaximum = Math.max(...timelineValues);
+  const yPadding = timelineMaximum * 0.1;
 
-  const yPadding = (maximum * 0.1);
-  const config = {
-    title: `${data.name} ${data.type}`,
-    theme: 'base',
-    xAxis: ["Time elapsed", 0, timeline.length],
-    yAxis: ["Total per second", (minimum < 0 ? minimum : 0) - yPadding, maximum + yPadding],
-    lines: [
-      timeline.map(timestamp => log[timestamp].value),
-    ],
+  switch (data.type) {
+    case 'counter':
+      return {
+        values: {
+          count: values.reduce((total, value) => total + value, 0),
+          rate: timeline.reduce((total, timestamp) => total + log[timestamp].value, 0) / timeline.length,
+        },
+        config: {
+          title: `${data.name} ${data.type}`,
+          theme: 'base',
+          xAxis: ["Time elapsed", 0, timelineValues.length],
+          yAxis: ["Total per second", (timelineMinimum < 0 ? timelineMinimum : 0) - yPadding, timelineMaximum + yPadding],
+          lines: [
+            timelineValues,
+          ],
+        },
+        log,
+      };
+    case 'rate':
+      const ratePasses = timeline.map(timestamp => log[timestamp].value.passes || 0);
+      const rateFails = timeline.map(timestamp => log[timestamp].value.fails || 0);
+
+      const rateMinimum = Math.min(...rateFails);
+      const rateMaximum = Math.max(...ratePasses);
+      const rateYPadding = rateMaximum * 0.1;
+
+      return {
+        values: {
+          rate: values.reduce((total, value) => total + value, 0) / totalValues,
+          passes: values.filter(value => value === 1).length,
+          fails: values.filter(value => value === 0).length,
+          firstFail,
+        },
+        config: {
+          title: `${data.name} ${data.type}`,
+          theme: 'base',
+          xAxis: ["Time elapsed", 0, timelineValues.length],
+          yAxis: ["Total per second", (rateMinimum < 0 ? rateMinimum : 0) - rateYPadding, rateMaximum + rateYPadding],
+          lines: [
+            ratePasses,
+            rateFails,
+          ],
+        },
+        log,
+      };
+    case 'trend':
+      return {
+        values: {
+          "p(90)": sortedValues[Math.ceil(totalValues * 0.90) - 1],
+          "p(95)": sortedValues[Math.ceil(totalValues * 0.95) - 1],
+          avg: values.reduce((total, value) => total + value, 0) / totalValues,
+          min: minimum,
+          med: (sortedValues[Math.floor(totalValues / 2)] + sortedValues[Math.ceil(totalValues / 2)]) / 2,
+          max: maximum
+        },
+        config: {
+          title: `${data.name} ${data.type}`,
+          theme: 'base',
+          xAxis: ["Time elapsed", 0, timelineValues.length],
+          yAxis: ["Total per second", (timelineMinimum < 0 ? timelineMinimum : 0) - yPadding, timelineMaximum + yPadding],
+          lines: [
+            timelineValues,
+          ],
+        },
+        log,
+      };
+    case 'gauge':
+      return {
+        values: {
+          value: countedValues[totalValues - 1],
+          min: Math.min(...countedValues),
+          max: Math.max(...countedValues)
+        },
+        config: {
+          title: `${data.name} ${data.type}`,
+          theme: 'base',
+          xAxis: ["Time elapsed", 0, timelineValues.length],
+          yAxis: ["Total per second", (timelineMinimum < 0 ? timelineMinimum : 0) - yPadding, timelineMaximum + yPadding],
+          lines: [
+            timelineValues,
+          ],
+        },
+        log,
+      };
+    default:
+      throw new Error(`Metric type of "${data.type}" not recognised`);
   }
-
-  return {
-    total,
-    minimum,
-    maximum,
-    average,
-    median,
-
-    config,
-    log,
-  };
 };
 
 const generateCharts = async (log) => {
@@ -214,13 +342,15 @@ const generateCharts = async (log) => {
       return;
     }
 
-    console.error(entry);
+    logError(entry);
   });
 
   for (let i = 0; i < chartNames.length; i += 1) {
     const chartName = chartNames[i];
-    const chart = processChart(charts[chartName], timeline);
+    const chartData = charts[chartName];
+    const chart = processChart(chartData, timeline);
 
+    chart.name = chartName;
     chart.markdown = mermaidConfigToText(chart.config);
     // eslint-disable-next-line no-await-in-loop
     chart.svg = await mermaidTextToSvg(chart.markdown);
@@ -231,88 +361,107 @@ const generateCharts = async (log) => {
   return out;
 }
 
-const summariseReport = (report, charts) => {
-  // eslint-disable-next-line no-param-reassign
-  report.metrics.vus = report.metrics.vus || { values: { min: 1, max: 1 } };
-  // eslint-disable-next-line no-param-reassign
-  report.metrics.http_reqs = report.metrics.http_reqs || { values: { count: 0, rate: 0 } };
-  // eslint-disable-next-line no-param-reassign
-  report.metrics.data_received = report.metrics.data_received || { values: { count: 0, rate: 0 } };
-  // eslint-disable-next-line no-param-reassign
-  report.metrics.data_sent = report.metrics.data_sent || { values: { count: 0, rate: 0 } };
+const defaultJsonReport = {
+  metrics: {
+    vus: { values: { min: 1, max: 1 } },
+    http_reqs: { values: { count: 0, rate: 0 } },
+    data_received: { values: { count: 0, rate: 0 } },
+    data_sent: { values: { count: 0, rate: 0 } },
+  }
+}
 
-  // Count the thresholds and those that have failed
-  let thresholdFailures = 0
-  let thresholdCount = 0
+const collateThresholdMetrics = (metrics) => {
+  let totalFailures = 0
+  let totalThresholds = 0
 
-  Object.keys(report.metrics).forEach(metricName => {
-    if (report.metrics[metricName].thresholds) {
-      thresholdCount += 1
-      const { thresholds } = report.metrics[metricName];
+  Object.keys(metrics).forEach(metricName => {
+    if (metrics[metricName].thresholds) {
+      totalThresholds += 1
+      const { thresholds } = metrics[metricName];
 
       Object.keys(thresholds).forEach(thresholdName => {
         if (thresholds[thresholdName].ok) return;
-        thresholdFailures += 1
+        totalFailures += 1
       });
     }
   });
 
-  // Count the checks and those that have passed or failed
-  // NOTE. Nested groups are not checked!
-  let checkFailures = 0
-  let checkPasses = 0
-  if (report.root_group.checks) {
-    const { passes, fails } = countChecks(report.root_group.checks)
+  const totalPasses = totalThresholds - totalFailures;
 
-    checkFailures += fails
-    checkPasses += passes
+  return [totalFailures, totalPasses, totalThresholds];
+};
+
+const collateCheckMetrics = (root) => {
+// Count the checks and those that have passed or failed
+// NOTE. Nested groups are not checked!
+  let totalFailures = 0
+  let totalPasses = 0
+  if (root.checks) {
+    const { passes, fails } = countChecks(root.checks)
+
+    totalFailures += fails
+    totalPasses += passes
   }
 
-  report.root_group.groups.forEach(group => {
+  root.groups.forEach(group => {
     if (!group.checks) return;
 
     const { passes, fails } = countChecks(group.checks);
 
-    checkFailures += fails;
-    checkPasses += passes;
+    totalFailures += fails;
+    totalPasses += passes;
   });
 
-  const standardMetrics = {};
-  standardMetricKeys.forEach(metricName => {
-    if (!report.metrics[metricName]) return;
-    standardMetrics[metricName] = report.metrics[metricName];
+  const totalChecks = totalFailures + totalPasses;
+
+  return [totalFailures, totalPasses, totalChecks];
+};
+
+const sumeriseGroupReport = async (group, logEntries) => {
+  const charts = await generateCharts(logEntries, group.path);
+  const chartNames = Object.keys(charts);
+
+  // Count the thresholds and those that have failed
+  const [thresholdFailures, , thresholdCount] = collateThresholdMetrics(charts);
+  const [checkFailures, checkPasses] = collateCheckMetrics(group);
+
+  // assign charts to correct metrics
+  const metrics = {}
+  chartNames.forEach(metricName => {
+    const metric = charts[metricName];
+
+    // eslint-disable-next-line no-param-reassign
+    metrics[metricName] = {
+      ...metric,
+      tableRow: metricTableRow(metricName, metric),
+    };
   });
 
-  const standardMetricRows = Object.keys(standardMetrics)
-    .map(metricName => metricTableRow(metricName, standardMetrics[metricName]));
+  const standardMetricRows = standardMetricKeys
+    .filter(metricName => metrics[metricName])
+    .map(metricName => metrics[metricName].tableRow);
 
-  const otherMetrics = {};
-  otherMetricKeys.forEach(metricName => {
-    if (!report.metrics[metricName]) return;
-    otherMetrics[metricName] = report.metrics[metricName];
-  });
+  const otherMetricRows = otherMetricKeys
+    .filter(metricName => metrics[metricName])
+    .map(metricName => metrics[metricName].tableRow);
 
-  const otherMetricRows = Object.keys(otherMetrics)
-    .map(metricName => metricTableRow(metricName, otherMetrics[metricName]));
-
-  const sortedMetrics = {};
-  const sortedMetricsKeys = Object.keys(report.metrics).filter(metricName => !(standardMetricKeys.includes(metricName) || otherMetricKeys.includes(metricName))).sort();
-  sortedMetricsKeys.forEach(metricName => {
-    sortedMetrics[metricName] = report.metrics[metricName];
-  });
-
-  const sortedMetricRows = Object.keys(sortedMetrics)
-    .map(metricName => metricTableRow(metricName, sortedMetrics[metricName]));
+  const customMetricsKeys = Object.keys(metrics)
+    .filter(metricName => !(standardMetricKeys.includes(metricName) || otherMetricKeys.includes(metricName)))
+    .sort();
+  const customMetricRows = customMetricsKeys
+    .map(metricName => metrics[metricName].tableRow);
 
   const breachedMetrics = {}
-  Object.keys(report.metrics).forEach(metricName => {
-    const { thresholds } = report.metrics[metricName];
+  const breachedMetricsKeys = Object.keys(metrics)
+    .filter(metricName => metrics[metricName].threshold !== undefined)
+    .sort();
+  breachedMetricsKeys
+    .forEach(metricName => {
+      const { thresholds } = charts[metricName];
 
-    if (!thresholds) return;
-
-    Object.keys(thresholds).forEach(threshold => {
-      const [metric, tagString] = metricName.replace('}', '').split('{');
-      const tags = tagString.split(',')
+      Object.keys(thresholds).forEach(threshold => {
+        const [metric, tagString] = metricName.replace('}', '').split('{');
+        const tags = (tagString || '').split(',')
           .reduce((out, tag) => {
             const index = tag.indexOf(':');
             const key = tag.substring(0, index);
@@ -321,23 +470,18 @@ const summariseReport = (report, charts) => {
             return out;
           }, {});
 
-      if (!thresholds[threshold].ok) {
-        breachedMetrics[tags.group] = breachedMetrics[tags.group] || [];
-        breachedMetrics[tags.group].push({ threshold, metric });
-      }
+        if (!thresholds[threshold].ok) {
+          breachedMetrics[tags.group] = breachedMetrics[tags.group] || [];
+          breachedMetrics[tags.group].push({ threshold, metric });
+        }
+      });
     });
-  });
-
-  Object.keys(report.metrics).forEach(metricName => {
-    // eslint-disable-next-line no-param-reassign
-    report.metrics[metricName] = { ...report.metrics[metricName], ...charts[metricName] };
-  });
 
   return {
-    data: report,
+    metrics,
     standardMetricRows,
     otherMetricRows,
-    sortedMetricRows,
+    customMetricRows,
 
     breachedMetrics,
 
@@ -348,44 +492,50 @@ const summariseReport = (report, charts) => {
   };
 };
 
+const summariseReport = async (rootGroup, logEntries) => {
+  const groupReport = await sumeriseGroupReport(rootGroup, logEntries);
+
+  return {
+    rootGroup: {
+      ...rootGroup,
+      ...groupReport,
+    },
+  };
+};
+
 (async () => {
-  console.log(`Loading JSON report (${reportPath})`);
+  logInfo(`Loading JSON report (${reportPath})`);
   // eslint-disable-next-line import/no-unresolved
   const jsonReportSrc = readFileSync(reportPath, "utf8");
-  const jsonReport = JSON.parse(jsonReportSrc);
+  const jsonReport = Object.assign(defaultJsonReport, JSON.parse(jsonReportSrc));
 
-  console.log(`Loading JSON log (${logPath})`);
+  logInfo(`Loading JSON log (${logPath})`);
   // eslint-disable-next-line import/no-unresolved
   const jsonLogSrc = readFileSync(logPath, "utf8");
   const jsonLog = JSON.parse(jsonLogSrc);
 
-  console.log(`Generating metric charts`);
-  const charts = await generateCharts(jsonLog);
-
-  console.log(`Generating JSON summary of report`);
-  const jsonSummary = summariseReport(jsonReport, charts);
-
-  console.log(`Generating HTML report (${outputPath})`);
-  const style = readFileSync('./public/main.css', 'utf8');
-  const script = readFileSync('./public/application.js', 'utf8');
+  logInfo(`Generating JSON context for reports`);
+  const report = await summariseReport(jsonReport.root_group, jsonLog);
+  const style = getStyle();
+  const script = getScript();
   const ctx = {
+    title: "Performance summary",
     themeColor: "#003a69",
     assetPath: "https://design-system.service.gov.uk/assets",
     assetUrl: "https://design-system.service.gov.uk/assets",
     service: { name: "Continuing Professional Development" },
-    report: {
-      name: "Performance summary",
-      summary: jsonSummary,
-    },
+    report,
     style,
     script,
   };
-  // const serializedCtx = JSON.stringify(ctx, null, 2);
-  // writeFileSync(`${reportFolder}/${scenario}-ctx.json`, serializedCtx, "utf8");
+  const serializedCtx = JSON.stringify(ctx, null, 2);
+  writeFileSync(`${reportFolder}/${scenario}-ctx.json`, serializedCtx, "utf8");
+
+  logInfo(`Generating HTML report (${outputPath})`);
   const htmlReport = nunjucks.render('report.njk', ctx);
   writeFileSync(outputPath, htmlReport, "utf8");
 
-  console.log(`Generating Markdown summary (${summaryPath})`);
-  const markdownSummary = nunjucks.render('summary.njk', jsonSummary);
+  logInfo(`Generating Markdown summary (${summaryPath})`);
+  const markdownSummary = nunjucks.render('summary.njk', ctx);
   writeFileSync(summaryPath, markdownSummary, "utf8");
 })();

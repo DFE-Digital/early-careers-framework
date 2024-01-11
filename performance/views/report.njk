@@ -3,9 +3,10 @@
 {% from "govuk/components/tabs/macro.njk" import govukTabs %}
 {% from "govuk/components/table/macro.njk" import govukTable %}
 
-{% set data = report.summary.data %}
+{% set rootGroup = report.rootGroup %}
+{% set allMetrics = rootGroup.metrics %}
 
-{% block pageTitle %}Performance test report - EDUCATION.GOV.UK{% endblock %}
+{% block pageTitle %}{{ title }} for {{ service.name }} - EDUCATION.GOV.UK{% endblock %}
 
 {% block head %}
   <style>
@@ -179,37 +180,37 @@
     <div class="govuk-grid-column-two-thirds">
       <h1 class="govuk-heading-xl">
         <span class="govuk-caption-xl">{{ service.name }}</span>
-        {{ report.name }}
+        {{ title }}
       </h1>
     </div>
   </div>
 
   <div class="govuk-!-margin-bottom-4">
     <div class="app-card app-card--blue">
-      <span class="app-card__count">{% if data.metrics.http_reqs %}{{ data.metrics.http_reqs.values.count }}{% endif %}</span>
-      <span class="app-card__count">{% if data.metrics.grpc_reqs %}{{ data.metrics.grpc_reqs.values.count }}{% endif %}</span>
+      <span class="app-card__count">{% if allMetrics.http_reqs %}{{ allMetrics.http_reqs.values.count }}{% endif %}</span>
+      <span class="app-card__count">{% if allMetrics.grpc_reqs %}{{ allMetrics.grpc_reqs.values.count }}{% endif %}</span>
         Total Requests
     </div>
   </div>
 
   <div class="govuk-grid-row govuk-!-margin-bottom-4">
     <div class="govuk-grid-column-one-third">
-      <div class="app-card app-card--{% if data.metrics.http_req_failed.values.passes > 0 %}red{% else %}grey{% endif %}">
-        <span class="app-card__count">{{ data.metrics.http_req_failed.values.passes }}</span>
+      <div class="app-card app-card--{% if allMetrics.http_req_failed.values.passes > 0 %}red{% else %}grey{% endif %}">
+        <span class="app-card__count">{{ allMetrics.http_req_failed.values.passes }}</span>
           Failed Requests
       </div>
     </div>
 
     <div class="govuk-grid-column-one-third">
-      <div class="app-card app-card--{% if report.summary.thresholdFailures > 0 %}red{% else %}grey{% endif %}">
-        <span class="app-card__count">{{ report.summary.thresholdFailures }}</span>
+      <div class="app-card app-card--{% if rootGroup.thresholdFailures > 0 %}red{% else %}grey{% endif %}">
+        <span class="app-card__count">{{ rootGroup.thresholdFailures }}</span>
           Breached Thresholds
       </div>
     </div>
 
     <div class="govuk-grid-column-one-third">
-      <div class="app-card app-card--{% if report.summary.checkFailures > 0 %}red{% else %}grey{% endif %}">
-        <span class="app-card__count">{{ report.summary.checkFailures }}</span>
+      <div class="app-card app-card--{% if rootGroup.checkFailures > 0 %}red{% else %}grey{% endif %}">
+        <span class="app-card__count">{{ rootGroup.checkFailures }}</span>
           Failed Checks
       </div>
     </div>
@@ -230,10 +231,10 @@
       { text: "90th Percentile", format: "numeric" },
       { text: "95th Percentile", format: "numeric" }
     ],
-    rows: report.summary.standardMetricRows
+    rows: rootGroup.standardMetricRows
   }) }}
 
-  {% if report.summary.sortedMetricRows.length > 0 %}
+  {% if report.customMetricRows.length > 0 %}
     {{ govukTable({
       caption: "Custom request metrics",
       captionClasses: "govuk-table__caption--m",
@@ -249,7 +250,7 @@
         { text: "90th Percentile", format: "numeric" },
         { text: "95th Percentile", format: "numeric" }
       ],
-      rows: report.summary.sortedMetricRows
+      rows: rootGroup.customMetricRows
     }) }}
   {% endif %}
 
@@ -261,7 +262,7 @@
     <div class="govuk-grid-column-one-half">
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
-          {{ data.metrics.http_reqs.svg | safe }}
+          {{ allMetrics.http_reqs.svg | safe }}
         </div>
       </div>
       <div class="govuk-grid-row">
@@ -276,8 +277,8 @@
           rows: [
             [
               { text: "Requests", classes: "govuk-!-width-one-half govuk-body-s" },
-              { text: data.metrics.http_reqs.values.count, format: "numeric", classes: "govuk-!-width-one-quarter govuk-body-s" },
-              { text: data.metrics.http_reqs.values.rate.toFixed(2) + "/sec", format: "numeric", classes: "govuk-!-width-one-quarter govuk-body-s" }
+              { text: allMetrics.http_reqs.values.count, format: "numeric", classes: "govuk-!-width-one-quarter govuk-body-s" },
+              { text: allMetrics.http_reqs.values.rate.toFixed(2) + "/sec", format: "numeric", classes: "govuk-!-width-one-quarter govuk-body-s" }
             ]
           ]
         }) }}
@@ -288,12 +289,12 @@
     <div class="govuk-grid-column-one-half">
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
-          {{ data.metrics.checks.svg | safe }}
+          {{ allMetrics.checks.svg | safe }}
         </div>
       </div>
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
-        {% if data.metrics.checks %}
+        {% if allMetrics.checks %}
           {{ govukTable({
             firstCellIsHeader: true,
             head: [
@@ -305,9 +306,9 @@
             rows: [
               [
                 { text: "Checks", classes: "govuk-!-width-one-half govuk-body-s" },
-                { text: data.metrics.checks.values.passes, format: "numeric", classes: "govuk-!-width-one-sixth govuk-body-s" },
-                { text: data.metrics.checks.values.fails, format: "numeric", classes: "govuk-!-width-one-sixth govuk-body-s" },
-                { text: data.metrics.checks.values.rate.toFixed(2) + "/sec", format: "numeric", classes: "govuk-!-width-one-sixth govuk-body-s" }
+                { text: allMetrics.checks.values.passes, format: "numeric", classes: "govuk-!-width-one-sixth govuk-body-s" },
+                { text: allMetrics.checks.values.fails, format: "numeric", classes: "govuk-!-width-one-sixth govuk-body-s" },
+                { text: allMetrics.checks.values.rate.toFixed(2) + "/sec", format: "numeric", classes: "govuk-!-width-one-sixth govuk-body-s" }
               ]
             ]
           }) }}
@@ -321,12 +322,12 @@
     <div class="govuk-grid-column-one-half">
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
-          {{ data.metrics.iterations.svg | safe }}
+          {{ allMetrics.iterations.svg | safe }}
         </div>
       </div>
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
-          {% if data.metrics.iterations %}
+          {% if allMetrics.iterations %}
             {{ govukTable({
               firstCellIsHeader: true,
               head: [
@@ -337,8 +338,8 @@
               rows: [
                 [
                   { text: "Iterations", classes: "govuk-!-width-one-half govuk-body-s" },
-                  { text: data.metrics.iterations.values.count, format: "numeric", classes: "govuk-!-width-one-quarter govuk-body-s" },
-                  { text: data.metrics.iterations.values.rate.toFixed(2) + "/sec", format: "numeric", classes: "govuk-!-width-one-quarter govuk-body-s" }
+                  { text: allMetrics.iterations.values.count, format: "numeric", classes: "govuk-!-width-one-quarter govuk-body-s" },
+                  { text: allMetrics.iterations.values.rate.toFixed(2) + "/sec", format: "numeric", classes: "govuk-!-width-one-quarter govuk-body-s" }
                 ]
               ]
             }) }}
@@ -350,12 +351,12 @@
     <div class="govuk-grid-column-one-half">
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
-          {{ data.metrics.dropped_iterations.svg | safe }}
+          {{ allMetrics.dropped_iterations.svg | safe }}
         </div>
       </div>
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
-          {% if data.metrics.dropped_iterations %}
+          {% if allMetrics.dropped_iterations %}
             {{ govukTable({
               firstCellIsHeader: true,
               head: [
@@ -366,8 +367,8 @@
               rows: [
                 [
                   { text: "Dropped Iterations", classes: "govuk-!-width-one-half govuk-body-s" },
-                  { text: data.metrics.dropped_iterations.values.count, format: "numeric", classes: "govuk-!-width-one-quarter govuk-body-s" },
-                  { text: data.metrics.dropped_iterations.values.rate.toFixed(2) + "/sec", format: "numeric", classes: "govuk-!-width-one-quarter govuk-body-s" }
+                  { text: allMetrics.dropped_iterations.values.count, format: "numeric", classes: "govuk-!-width-one-quarter govuk-body-s" },
+                  { text: allMetrics.dropped_iterations.values.rate.toFixed(2) + "/sec", format: "numeric", classes: "govuk-!-width-one-quarter govuk-body-s" }
                 ]
               ]
             }) }}
@@ -381,7 +382,7 @@
     <div class="govuk-grid-column-one-half">
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
-          {{ data.metrics.vus.svg | safe }}
+          {{ allMetrics.vus.svg | safe }}
         </div>
       </div>
       <div class="govuk-grid-row">
@@ -397,9 +398,9 @@
             rows: [
               [
                 { text: "Virtual Users", classes: "govuk-!-width-one-half govuk-body-s" },
-                { text: data.metrics.vus.values.value, format: "numeric", classes: "govuk-!-width-one-sixth govuk-body-s" },
-                { text: data.metrics.vus.values.min, format: "numeric", classes: "govuk-!-width-one-sixth govuk-body-s" },
-                { text: data.metrics.vus.values.max, format: "numeric", classes: "govuk-!-width-one-sixth govuk-body-s" }
+                { text: allMetrics.vus.values.value, format: "numeric", classes: "govuk-!-width-one-sixth govuk-body-s" },
+                { text: allMetrics.vus.values.min, format: "numeric", classes: "govuk-!-width-one-sixth govuk-body-s" },
+                { text: allMetrics.vus.values.max, format: "numeric", classes: "govuk-!-width-one-sixth govuk-body-s" }
               ]
             ]
           }) }}
@@ -410,7 +411,7 @@
     <div class="govuk-grid-column-one-half">
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
-          {{ data.metrics.vus_max.svg | safe }}
+          {{ allMetrics.vus_max.svg | safe }}
         </div>
       </div>
       <div class="govuk-grid-row">
@@ -426,9 +427,9 @@
             rows: [
               [
                 { text: "Max Virtual Users", classes: "govuk-!-width-one-half govuk-body-s" },
-                { text: data.metrics.vus_max.values.value, format: "numeric", classes: "govuk-!-width-one-sixth govuk-body-s" },
-                { text: data.metrics.vus_max.values.min, format: "numeric", classes: "govuk-!-width-one-sixth govuk-body-s" },
-                { text: data.metrics.vus_max.values.max, format: "numeric", classes: "govuk-!-width-one-sixth govuk-body-s" }
+                { text: allMetrics.vus_max.values.value, format: "numeric", classes: "govuk-!-width-one-sixth govuk-body-s" },
+                { text: allMetrics.vus_max.values.min, format: "numeric", classes: "govuk-!-width-one-sixth govuk-body-s" },
+                { text: allMetrics.vus_max.values.max, format: "numeric", classes: "govuk-!-width-one-sixth govuk-body-s" }
               ]
             ]
           }) }}
@@ -441,7 +442,7 @@
     <div class="govuk-grid-column-one-half">
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
-          {{ data.metrics.data_sent.svg | safe }}
+          {{ allMetrics.data_sent.svg | safe }}
         </div>
       </div>
       <div class="govuk-grid-row">
@@ -456,8 +457,8 @@
             rows: [
               [
                 { text: "Data Sent", classes: "govuk-!-width-one-half govuk-body-s" },
-                { text: (data.metrics.data_sent.values.count/1000000).toFixed(2) + " MB", format: "numeric", classes: "govuk-!-width-one-quarter govuk-body-s" },
-                { text: (data.metrics.data_sent.values.rate/1000000).toFixed(2) + " mB/s", format: "numeric", classes: "govuk-!-width-one-quarter govuk-body-s" }
+                { text: (allMetrics.data_sent.values.count/1000000).toFixed(2) + " MB", format: "numeric", classes: "govuk-!-width-one-quarter govuk-body-s" },
+                { text: (allMetrics.data_sent.values.rate/1000000).toFixed(2) + " mB/s", format: "numeric", classes: "govuk-!-width-one-quarter govuk-body-s" }
               ]
             ]
           }) }}
@@ -468,7 +469,7 @@
     <div class="govuk-grid-column-one-half">
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
-          {{ data.metrics.data_received.svg | safe }}
+          {{ allMetrics.data_received.svg | safe }}
         </div>
       </div>
       <div class="govuk-grid-row">
@@ -483,8 +484,8 @@
             rows: [
               [
                 { text: "Data Received", classes: "govuk-!-width-one-half govuk-body-s" },
-                { text: (data.metrics.data_received.values.count/1000000).toFixed(2) + " MB", format: "numeric", classes: "govuk-!-width-one-quarter govuk-body-s" },
-                { text: (data.metrics.data_received.values.rate/1000000).toFixed(2) + " mB/s", format: "numeric", classes: "govuk-!-width-one-quarter govuk-body-s" }
+                { text: (allMetrics.data_received.values.count/1000000).toFixed(2) + " MB", format: "numeric", classes: "govuk-!-width-one-quarter govuk-body-s" },
+                { text: (allMetrics.data_received.values.rate/1000000).toFixed(2) + " mB/s", format: "numeric", classes: "govuk-!-width-one-quarter govuk-body-s" }
               ]
             ]
           }) }}
@@ -493,50 +494,39 @@
     </div>
   </div>
 
-  {% if data.flattened_groups.length > 0 %}
-      <h2 class="govuk-heading-m">Checks and groups</h2>
+  {% if rootGroup.groups.length > 0 %}
+  <h2 class="govuk-heading-m">Checks and groups</h2>
 
-      {% set tab_list = [] %}
-      {% for group in data.flattened_groups.groups %}
-        {% set group_checks = [] %}
-        {% for check in group.checks %}
-          {% if check.fails > 0 %}
-            {% set check_class = "failed" %}
-          {% else %}
-            {% set check_class = "" %}
-          {% endif %}
+    {% for group in rootGroup.groups %}
+    {% set group_checks = [] %}
+    {% for check in group.checks %}
+      {% if check.fails > 0 %}
+        {% set check_class = "failed" %}
+      {% else %}
+        {% set check_class = "" %}
+      {% endif %}
 
-          {% set group_check = [
-              { classes: check_class, text: check.name },
-              { classes: check_class, format: "numeric", text: check.passes },
-              { classes: check_class, format: "numeric", text: check.fails }
-          ] %}
-          {% set group_checks = (group_checks.push(group_check), group_checks) %}
-        {% endfor %}
+      {% set group_check = [
+          { classes: check_class, text: check.name },
+          { classes: check_class, format: "numeric", text: check.passes },
+          { classes: check_class, format: "numeric", text: check.fails }
+      ] %}
+      {% set group_checks = (group_checks.push(group_check), group_checks) %}
+    {% endfor %}
 
-        {% set panel_title = "Group - " + group.name %}
-        {% set panelHtml %}
-        <h2 class="govuk-heading-l">{{ panel_title }}</h2>
+    {% set panel_title = "Group - " + group.name %}
+    <h3 class="govuk-heading-s">{{ panel_title }}</h2>
 
-        {{ govukTable({
-          firstCellIsHeader: true,
-          head: [
-            { text: "Check Name" },
-            { text: "Passes", format: "numeric" },
-            { text: "Failures", format: "numeric" }
-          ],
-          rows: group_checks
-        }) }}
-        {% endset -%}
-
-        {% set tab_list = (tab_list.push({
-          label: panel_title,
-          id: "tab" + loop.index,
-          panel: { html: panelHtml }
-        }), tab_list) %}
-      {% endfor %}
-
-      {{ govukTabs({ items: tab_list }) }}
+    {{ govukTable({
+      firstCellIsHeader: true,
+      head: [
+        { text: "Check Name" },
+        { text: "Passes", format: "numeric" },
+        { text: "Failures", format: "numeric" }
+      ],
+      rows: group_checks
+    }) }}
+    {% endfor %}
   {% endif %}
 {% endblock %}
 
