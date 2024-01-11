@@ -49,3 +49,7 @@ detect_sidekiq_metrics_issues_job:
   cron: "0 * * * *"
   class: "DetectSidekiqMetricsIssuesJob"
   queue: slack_alerts
+send_entity_table_checks_to_bigquery:
+  cron: "30 0 * * *"
+  class: "DfE::Analytics::EntityTableCheckJob"
+  queue: dfe_analytics
