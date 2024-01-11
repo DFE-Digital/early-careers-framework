@@ -88,7 +88,7 @@ RSpec.shared_examples "manage fip participants example", js: true do
       when_i_navigate_to_participants_dashboard
       when_i_click_on_the_participants_name "Eligible With-mentor"
       then_i_am_taken_to_view_details_page
-      then_i_can_view_participant_with_status(:active_fip_training)
+      then_i_can_view_participant_with_status(:registered_for_fip_training)
       and_the_participant_is_displayed_mentored_by(@contacted_for_info_mentor.full_name)
     end
   end
@@ -105,7 +105,7 @@ RSpec.shared_examples "manage fip participants example", js: true do
       when_i_navigate_to_participants_dashboard
       when_i_click_on_the_participants_name "Eligible Without-mentor"
       then_i_am_taken_to_view_details_page
-      then_i_can_view_participant_with_status(:active_fip_training)
+      then_i_can_view_participant_with_status(:registered_for_fip_training)
     end
   end
 

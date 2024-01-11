@@ -30,7 +30,7 @@ RSpec.feature "ECT doing FIP: no validation", type: :feature do
   let(:registration_completed) { true }
   let(:participant_status) { "active" }
   let(:training_record_state) { "Eligible to start" }
-  let(:school_record_state) { "ELIGIBLE FOR TRAINING" }
+  let(:school_record_state) { "Eligible for training" }
   let(:delivery_partner_record_state) { "Training or eligible for training" }
   let(:appropriate_body_record_state) { "Training or eligible for training" }
 

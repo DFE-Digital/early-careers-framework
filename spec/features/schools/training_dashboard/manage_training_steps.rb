@@ -979,7 +979,7 @@ module ManageTrainingSteps
   alias_method :and_i_see_the_participants_filtered_by, :then_i_see_the_participants_filtered_by
 
   def and_i_see_mentors_not_training_and_ects_not_being_trained_sorted_by_name
-    expect(page).to have_content("Not mentoring or being mentored\nDeferred participant TRAINING DEFERRED")
+    expect(page).to have_content("Not mentoring or being mentored\nDeferred participant Training deferred")
   end
 
   def and_i_see_ects_with_induction_completed_sorted_by_decreasing_completion_date
@@ -989,13 +989,13 @@ module ManageTrainingSteps
   def then_i_see_the_participants_sorted_by_mentor
     expect(page).to have_content("Sort by: Mentor (A-Z)")
     expect(page).to have_link(text: "Induction start date")
-    expect(page).to have_content("You need to assign a mentor to these ECTs.\nEligible Without-mentor\n\nMentor group\nMentor\n- Billy Mentor\nBilly Mentor MENTORING\nECTs\nmentored by Billy Mentor\nTraining ECT With-mentor PENDING\nInduction started #{2.years.ago.to_date.to_fs(:govuk)}\n\nMentor group\nMentor\n- CFI Mentor\nCFI Mentor WAITING FOR TRN\nECTs\nmentored by CFI Mentor\nAnother training With-mentor TRAINING\nInduction started #{1.year.ago.to_date.to_fs(:govuk)}")
+    expect(page).to have_content("You need to assign a mentor to these ECTs.\nEligible Without-mentor\n\nMentor group\nMentor\n- Billy Mentor\nBilly Mentor Mentoring\nECTs\nmentored by Billy Mentor\nTraining ECT With-mentor Pending\nInduction started #{2.years.ago.to_date.to_fs(:govuk)}\n\nMentor group\nMentor\n- CFI Mentor\nCFI Mentor Waiting for TRN\nECTs\nmentored by CFI Mentor\nAnother training With-mentor Training\nInduction started #{1.year.ago.to_date.to_fs(:govuk)}")
   end
   alias_method :and_i_see_the_participants_sorted_by_mentor, :then_i_see_the_participants_sorted_by_mentor
 
   def then_i_see_the_participants_sorted_by_induction_start_date
     expect(page).to have_link("Mentor (A-Z)")
-    expect(page).to have_content("Eligible Without-mentor\nStatus ELIGIBLE FOR TRAINING\nMentor\nNo mentor assigned\nAssign a mentor\nAnother training With-mentor\nStatus TRAINING\nInduction started #{1.year.ago.to_date.to_fs(:govuk)}\nMentor CFI Mentor\nTraining ECT With-mentor\nStatus PENDING\nInduction started #{2.years.ago.to_date.to_fs(:govuk)}\nMentor Billy Mentor")
+    expect(page).to have_content("Eligible Without-mentor\nStatus Eligible for training\nMentor\nNo mentor assigned\nAssign a mentor\nAnother training With-mentor\nStatus Training\nInduction started #{1.year.ago.to_date.to_fs(:govuk)}\nMentor CFI Mentor\nTraining ECT With-mentor\nStatus Pending\nInduction started #{2.years.ago.to_date.to_fs(:govuk)}\nMentor Billy Mentor")
   end
   alias_method :and_i_see_the_participants_sorted_by_induction_start_date, :then_i_see_the_participants_sorted_by_induction_start_date
 
@@ -1262,7 +1262,7 @@ module ManageTrainingSteps
     label = I18n.t(:label, scope: "status_tags.school_participant_status.#{status_key}")
     description = I18n.t(:description, scope: "status_tags.school_participant_status.#{status_key}")
 
-    expect(page).to have_text(label.upcase)
+    expect(page).to have_text(label)
     expect(page).to have_text(Array.wrap(description).first)
   end
 
