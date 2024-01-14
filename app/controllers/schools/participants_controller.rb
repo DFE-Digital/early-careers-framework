@@ -5,6 +5,7 @@ class Schools::ParticipantsController < Schools::BaseController
 
   before_action :set_school
   before_action :set_participant, except: %i[index email_used]
+  before_action :set_possible_ects, only: %i[show new_ect add_ect]
   before_action :build_mentor_form, only: :edit_mentor
   before_action :set_mentors_added, only: %i[index show]
   before_action :authorize_induction_record, only: %i[edit_name
@@ -64,6 +65,19 @@ class Schools::ParticipantsController < Schools::BaseController
   end
 
   def email_used; end
+
+  def new_ect; end
+
+  def add_ect
+    render(:new_ect) and return if params[:induction_record_id].blank?
+
+    @ect_induction_record = InductionRecord.find(params[:induction_record_id])
+    authorize(@ect_induction_record, :update_mentor?)
+    Induction::ChangeMentor.call(induction_record: @ect_induction_record, mentor_profile: @profile)
+    @message = "#{@profile.full_name} has been assigned to #{@ect_induction_record.participant_full_name}"
+
+    render :ect_added_confirmation
+  end
 
   def edit_mentor; end
 
@@ -131,6 +145,18 @@ private
     @profile = ParticipantProfile.find(params[:participant_id] || params[:id])
     authorize @profile, policy_class: @profile.policy_class
     @induction_record = @profile.induction_records.for_school(@school).latest
+  end
+
+  def set_possible_ects
+    return unless @profile.mentor?
+
+    active_ects = Dashboard::Participants.new(school: @school, user: current_user)
+                                         .ects
+                                         .sort_by(&:full_name)
+                                         .map(&:induction_record)
+    current_ects = InductionRecord.where(mentor_profile_id: @profile.id).to_a
+
+    @possible_ects = active_ects - current_ects
   end
 
   def participant_mentor_form_params

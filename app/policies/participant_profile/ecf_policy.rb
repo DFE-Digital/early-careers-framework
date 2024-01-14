@@ -8,6 +8,11 @@ class ParticipantProfile::ECFPolicy < ParticipantProfilePolicy
   alias_method :edit_mentor?, :show?
   alias_method :update_mentor?, :show?
 
+  def new_ect?
+    record.mentor? && show?
+  end
+  alias_method :add_ect?, :new_ect?
+
   def update?
     return true if admin?
     return false if record.contacted_for_info?

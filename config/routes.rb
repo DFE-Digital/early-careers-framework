@@ -707,6 +707,8 @@ Rails.application.routes.draw do
       get :edit_email, path: "edit-email"
       put :update_email, path: "update-email"
       get :email_used, path: "email-used"
+      get :new_ect, path: "new-ect"
+      put :add_ect, path: "add-ect"
       get :edit_mentor, path: "edit-mentor"
       put :update_mentor, path: "update-mentor"
       get :add_appropriate_body, path: "add-appropriate-body"

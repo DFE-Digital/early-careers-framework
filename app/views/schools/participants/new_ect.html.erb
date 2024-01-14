@@ -1,0 +1,33 @@
+<% content_for :title, "Add ECT" %>
+
+<% content_for :before_content,
+               govuk_back_link(text: "Back",
+                               href: school_participant_path(id: params[:from_mentor].presence || @profile)) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <span class="govuk-caption-l"><%= @school.name %></span>
+
+    <%= form_with url: school_participant_add_ect_path(participant_id: @profile, from_mentor: params[:from_mentor]),
+                  method: :put,
+                  id: "ect" do |f| %>
+      <%= f.govuk_radio_buttons_fieldset :induction_record_id,
+                                         legend: { text: "Who would you like to assign to #{@profile.user.full_name}?",
+                                                   tag: 'h1',
+                                                   size: 'l' } do %>
+        <% @possible_ects.each do |induction_record| %>
+          <%= f.govuk_radio_button :induction_record_id,
+                                   induction_record.id,
+                                   label: { text: induction_record.participant_full_name },
+                                   hint: { text: induction_record.mentor_full_name ?
+                                                     "Currently mentored by #{induction_record.mentor_full_name}" :
+                                                     "Not currently being mentored" } %>
+        <% end %>
+      <% end %>
+
+      <%= f.govuk_submit %>
+    <% end %>
+
+  </div>
+</div>

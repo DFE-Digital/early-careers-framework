@@ -109,6 +109,51 @@ RSpec.describe "Schools::Participants", type: :request, js: true, with_feature_f
     end
   end
 
+  describe "GET /schools/:school_id/participants/:id/new-ect" do
+    let!(:new_ect) { create(:ect, school_cohort:, lead_provider:) }
+
+    it "renders new ect template" do
+      get "/schools/#{school.slug}/participants/#{mentor_profile.id}/new-ect"
+
+      expect(response).to render_template("schools/participants/new_ect")
+    end
+
+    it "renders the correct ects" do
+      get "/schools/#{school.slug}/participants/#{mentor_profile.id}/new-ect"
+
+      expect(response.body).to include(CGI.escapeHTML(new_ect.full_name))
+      expect(response.body).not_to include(CGI.escapeHTML(withdrawn_ect.full_name))
+      expect(response.body).not_to include(CGI.escapeHTML(ect_profile.full_name))
+    end
+  end
+
+  describe "PUT /schools/:school_id/participants/:id/add-ect" do
+    let!(:new_ect) { create(:ect, school_cohort:, lead_provider:) }
+
+    it "adds the ect to the mentor" do
+      params = { induction_record_id: new_ect.latest_induction_record.id }
+
+      put("/schools/#{school.slug}/participants/#{mentor_profile.id}/add-ect", params:)
+
+      expect(response).to render_template("schools/participants/ect_added_confirmation")
+      expect(new_ect.reload.mentor).to eq(mentor_user)
+    end
+
+    it "back to choose ect when no one is submitted" do
+      put "/schools/#{school.slug}/participants/#{mentor_profile.id}/add-ect"
+
+      expect(response).to render_template("schools/participants/new_ect")
+    end
+
+    it "updates analytics" do
+      params = { induction_record_id: new_ect.latest_induction_record.id }
+
+      expect {
+        put "/schools/#{school.slug}/participants/#{mentor_profile.id}/add-ect", params:
+      }.to have_enqueued_job(Analytics::UpsertECFParticipantProfileJob).with(participant_profile: new_ect)
+    end
+  end
+
   describe "GET /schools/:school_id/participants/:id/edit-mentor" do
     it "renders edit mentor template" do
       get "/schools/#{school.slug}/participants/#{ect_profile.id}/edit-mentor"
