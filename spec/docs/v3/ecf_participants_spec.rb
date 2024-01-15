@@ -200,8 +200,8 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
                         ],
                         participant_id_changes: [
                           {
-                            from_participant_id: "db3a7848-7308-4879-942a-c4a70ced400a",
-                            to_participant_id: "23dd8d66-e11f-4139-9001-86b4f9abcb02",
+                            from_participant_id: "23dd8d66-e11f-4139-9001-86b4f9abcb02",
+                            to_participant_id: "db3a7848-7308-4879-942a-c4a70ced400a",
                             changed_at: "2023-09-23T02:22:32.000Z",
                           },
                         ],
@@ -362,8 +362,8 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
                         ],
                         participant_id_changes: [
                           {
-                            from_participant_id: "db3a7848-7308-4879-942a-c4a70ced400a",
-                            to_participant_id: "23dd8d66-e11f-4139-9001-86b4f9abcb02",
+                            from_participant_id: "23dd8d66-e11f-4139-9001-86b4f9abcb02",
+                            to_participant_id: "db3a7848-7308-4879-942a-c4a70ced400a",
                             changed_at: "2023-09-23T02:22:32.000Z",
                           },
                         ],
