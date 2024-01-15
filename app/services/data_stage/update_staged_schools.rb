@@ -21,8 +21,8 @@ module DataStage
       @la_cache = {}
       @lad_cache = {}
 
-      LocalAuthority.all.each { |la| @la_cache[la.code] = la }
-      LocalAuthorityDistrict.all.each { |lad| @lad_cache[lad.code] = lad }
+      LocalAuthority.find_each { |la| @la_cache[la.code] = la }
+      LocalAuthorityDistrict.find_each { |lad| @lad_cache[lad.code] = lad }
     end
 
     def update_schools

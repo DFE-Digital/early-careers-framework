@@ -106,7 +106,8 @@ module Importers
         case field_info.header
         when "type"
           return Finance::Statement::ECF if value.downcase == "ecf"
-          return Finance::Statement::NPQ if value.downcase == "npq"
+
+          Finance::Statement::NPQ if value.downcase == "npq"
         when "deadline_date", "payment_date"
           Date.parse(value)
         when "output_fee"

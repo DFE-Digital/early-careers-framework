@@ -18,7 +18,7 @@ module Oneoffs::ECF
             version: statement.contract_version,
             lead_provider: statement.cpd_lead_provider.lead_provider,
             cohort: statement.cohort,
-          ).each do |contract|
+          ).find_each do |contract|
             # Contract already has Band C
             next if contract.bands.count > 2
 

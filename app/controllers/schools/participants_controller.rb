@@ -26,7 +26,7 @@ class Schools::ParticipantsController < Schools::BaseController
   end
 
   def show
-    @induction_record = (@profile.induction_records.for_school(@school).latest || @profile.latest_induction_record)
+    @induction_record = @profile.induction_records.for_school(@school).latest || @profile.latest_induction_record
     @first_induction_record = @profile.induction_records.oldest
     @mentor_profile = @induction_record.mentor_profile
     @ects = Dashboard::Participants.new(school: @school, user: current_user)

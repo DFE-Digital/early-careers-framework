@@ -136,7 +136,8 @@ class User < ApplicationRecord
 
   def core_induction_programme
     return early_career_teacher_profile.core_induction_programme if early_career_teacher?
-    return mentor_profile.core_induction_programme if mentor?
+
+    mentor_profile.core_induction_programme if mentor?
   end
 
   def user_description
@@ -180,7 +181,8 @@ class User < ApplicationRecord
   def school
     return early_career_teacher_profile.school if early_career_teacher?
     return mentor_profile.school if mentor?
-    return induction_coordinator_profile.schools.first if induction_coordinator?
+
+    induction_coordinator_profile.schools.first if induction_coordinator?
   end
 
   scope :name_order, -> { order("UPPER(full_name)") }

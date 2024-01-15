@@ -11,7 +11,7 @@ module Admin::Participants
     def save
       return false if invalid?
 
-      return true if Mentors::AddToSchool.call(mentor_profile:, school:)
+      true if Mentors::AddToSchool.call(mentor_profile:, school:)
     end
 
   private

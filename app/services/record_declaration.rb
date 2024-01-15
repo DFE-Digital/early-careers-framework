@@ -90,7 +90,7 @@ private
   delegate :cohort, to: :schedule
 
   def participant_profile_for_course_identifier
-    return unless participant_identity
+    nil unless participant_identity
   end
 
   def declaration_attempt

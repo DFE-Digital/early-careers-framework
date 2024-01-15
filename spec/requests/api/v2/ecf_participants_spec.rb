@@ -409,7 +409,7 @@ RSpec.describe "Participants API", type: :request do
             "id" => early_career_teacher_profile.participant_identity.external_identifier,
             "type" => "participant",
             "attributes" => {
-              "email" => (early_career_teacher_profile.induction_records[0].preferred_identity&.email || early_career_teacher_profile.user.email),
+              "email" => early_career_teacher_profile.induction_records[0].preferred_identity&.email || early_career_teacher_profile.user.email,
               "full_name" => early_career_teacher_profile.user.full_name,
               "mentor_id" => early_career_teacher_profile.mentor_profile&.participant_identity&.external_identifier,
               "school_urn" => early_career_teacher_profile.induction_records[0].school_cohort.school.urn,

@@ -75,9 +75,9 @@ module DataStage
     def move_assets_from!(school:, successor:)
       raise ActiveRecord::Rollback if successor.school_cohorts.any?
 
-      Partnership.active.where(school:).each { |partnership| partnership.update!(school: successor) }
+      Partnership.active.where(school:).find_each { |partnership| partnership.update!(school: successor) }
 
-      SchoolCohort.where(school:).each do |school_cohort|
+      SchoolCohort.where(school:).find_each do |school_cohort|
         school_cohort.update!(school: successor)
         school_cohort.ecf_participant_profiles.each do |profile|
           RectifyParticipantSchool.call(participant_profile: profile,
@@ -87,7 +87,7 @@ module DataStage
         end
       end
 
-      InductionCoordinatorProfilesSchool.where(school:).each { |link_record| link_record.update!(school: successor) }
+      InductionCoordinatorProfilesSchool.where(school:).find_each { |link_record| link_record.update!(school: successor) }
     end
   end
 end

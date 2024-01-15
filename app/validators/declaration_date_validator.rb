@@ -13,8 +13,8 @@ private
   def date_has_the_right_format(record)
     return if record.raw_declaration_date.blank?
     return if record.raw_declaration_date.match?(RFC3339_DATE_REGEX) && begin
-      record.raw_declaration_date&.to_datetime
-    rescue Date::Error
+      Time.zone.parse(record.raw_declaration_date.to_s)
+    rescue ArgumentError
       false
     end
 

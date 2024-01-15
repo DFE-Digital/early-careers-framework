@@ -78,10 +78,10 @@ all_provider_names.each do |name|
   CpdLeadProvider.find_or_create_by!(name:)
 end
 
-LeadProvider.all.each do |lp|
+LeadProvider.find_each do |lp|
   lp.update!(cpd_lead_provider: CpdLeadProvider.find_by(name: lp.name))
 end
 
-NPQLeadProvider.all.each do |lp|
+NPQLeadProvider.find_each do |lp|
   lp.update!(cpd_lead_provider: CpdLeadProvider.find_by(name: lp.name))
 end

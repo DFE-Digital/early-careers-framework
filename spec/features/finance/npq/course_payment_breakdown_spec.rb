@@ -200,7 +200,7 @@ RSpec.feature "NPQ Course payment breakdown", type: :feature, js: true do
 
     ParticipantDeclaration::NPQ
       .where(state: %w[ineligible voided eligible payable])
-      .each do |declaration|
+      .find_each do |declaration|
         Finance::StatementLineItem.create(
           statement: declaration.cpd_lead_provider.npq_lead_provider.statements.first,
           participant_declaration: declaration,

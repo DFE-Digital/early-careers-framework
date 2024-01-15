@@ -64,7 +64,7 @@ module Finance
       end
 
       event_types.each do |event_type|
-        band_mapping.each do |letter, _number|
+        band_mapping.each_key do |letter|
           define_method "#{event_type}_band_#{letter}_count" do
             output_calculator.banding_breakdown.find { |e| e[:band] == letter }[:"#{event_type}_count"]
           end
@@ -91,7 +91,7 @@ module Finance
         end
       end
 
-      band_mapping.each do |letter, _number|
+      band_mapping.each_key do |letter|
         define_method "extended_band_#{letter}_additions" do
           send("extended_1_band_#{letter}_additions") +
             send("extended_2_band_#{letter}_additions") +

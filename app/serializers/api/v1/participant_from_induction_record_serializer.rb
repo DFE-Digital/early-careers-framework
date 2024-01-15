@@ -22,7 +22,8 @@ module Api
           ecf_participant_eligibility = profile.ecf_participant_eligibility
           return if ecf_participant_eligibility.nil?
           return true if ecf_participant_eligibility.eligible_status?
-          return false if ecf_participant_eligibility.ineligible_status?
+
+          false if ecf_participant_eligibility.ineligible_status?
         end
       end
 

@@ -7,7 +7,7 @@ FactoryBot.define do
     end
 
     after(:create) do |email, evaluator|
-      Array.wrap(evaluator.associated_with).each do |object, as: nil|
+      Array.wrap(evaluator.associated_with).each do |object, as: nil| # rubocop:disable Style/HashEachMethods
         email.create_association_with(object, as:)
       end
     end
