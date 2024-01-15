@@ -1,0 +1,20 @@
+{
+  "scenarios": {
+    "smoke-test": {
+      "executor": "shared-iterations",
+      "vus": 3,
+      "iterations": 90,
+      "maxDuration": "30s",
+      "gracefulStop": "600s",
+      "exec": "smokeTest"
+    }
+  },
+
+  "thresholds": {
+    "http_req_failed": [
+      { "threshold": "rate<0.01", "abortOnFail": false }
+    ]
+  }
+}
+
+

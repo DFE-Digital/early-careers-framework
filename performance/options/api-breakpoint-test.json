@@ -1,0 +1,22 @@
+{
+  "scenarios": {
+    "api-breakpoint-test":{
+      "executor": "ramping-vus",
+      "startVUs": 0,
+      "stages": [
+        { "duration": "20000s", "target": 2000 }
+      ],
+      "gracefulRampDown": "300s",
+      "gracefulStop": "600s",
+      "exec": "getSuccessfulResponseFromEndpoint"
+    }
+  },
+
+  "thresholds": {
+    "response_status_200": [
+      { "threshold": "rate>0.999", "abortOnFail": true }
+    ]
+  }
+}
+
+

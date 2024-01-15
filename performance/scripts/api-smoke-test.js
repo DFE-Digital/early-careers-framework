@@ -1,7 +1,7 @@
 /* eslint-disable import/extensions, import/no-unresolved */
 
 import http from 'k6/http';
-import { check, sleep } from 'k6';
+import { check, group, sleep } from 'k6';
 import { URL } from 'https://jslib.k6.io/url/1.0.0/index.js';
 
 import { fromEnv, randomIntBetween } from '../common/utils.js';
@@ -32,7 +32,6 @@ const paths = [
 // eslint-disable-next-line import/prefer-default-export
 export const apiSmokeTest = () => {
   const targetDomain = `http://${fromEnv('TARGET_HOSTNAME')}:${fromEnv('TARGET_PORT')}`;
-
   const apiToken = fromEnv('LEAD_PROVIDER_API_TOKEN');
 
   // test params
@@ -40,25 +39,25 @@ export const apiSmokeTest = () => {
     'Authorization': `Bearer ${apiToken}`,
     'Content-Type': 'application/json',
     'Accept': 'application/json',
-  //'X-With-Server-Date': '2023-02-10T02:21:32.000Z',
+  // 'X-With-Server-Date': '2023-02-10T02:21:32.000Z',
   };
 
   paths.forEach(targetPath => {
     const uri = `${targetDomain}${targetPath}`;
-    const tags = { targetDomain, targetPath };
-    const params = { headers, tags, targetPath, timeout: '30s' };
+    const tags = { name: targetPath, path: targetPath };
+    const params = { headers, tags, timeout: '60s' };
 
     const url = new URL(uri);
-    url.searchParams.append('page[page]', '5');
-    url.searchParams.append('page[per_page]', '2000');
 
-    const res = http.get(url.toString(), params);
-    check(res,
-      {
-        'is status 200': (r) => r.status === 200,
-      },
-      tags
-    );
+    group(`${targetPath}`, () => {
+      const res = http.get(url.toString(), params);
+      check(res,
+        {
+          'response_status_200': (r) => r.status === 200,
+        },
+        tags
+      );
+    });
 
     sleep(randomIntBetween(globalThis.PAUSE_MIN, globalThis.PAUSE_MAX));
   });

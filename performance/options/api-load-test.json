@@ -1,0 +1,21 @@
+{
+  "scenarios": {
+    "average-load": {
+      "executor": "ramping-vus",
+      "startVUs": 0,
+      "stages": [
+        { "duration": "60s", "target": 100 },
+        { "duration": "520s", "target": 100 }
+      ],
+      "exec": "getSuccessfulResponseFromEndpoint"
+    }
+  },
+
+  "thresholds": {
+    "response_status_200": [
+      { "threshold": "rate>0.99", "abortOnFail": false }
+    ]
+  }
+}
+
+
