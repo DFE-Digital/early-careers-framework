@@ -106,5 +106,23 @@ RSpec.describe ParticipantIdentityResolver, :with_support_for_ect_examples do
         expect(result).to eql(participant_identity)
       end
     end
+
+    context "when participant has multiple npq applications to the same course and multiple identities" do
+      let(:participant_identity_1) { create(:participant_identity, id: "zz0a97ff-d2a9-4779-a397-9bfd9063072e", user:, email: Faker::Internet.email) } # id defined to ensure it is selected second in lookup order
+      let(:participant_identity_2) { create(:participant_identity, :secondary, id: "000a97ff-d2a9-4779-a397-9bfd9063072e", user:) } # id defined to ensure it is selected first in lookup order
+      let(:npq_senior_leadership) { create(:npq_course, identifier: "npq-senior-leadership") }
+      let(:npq_leading_teaching) { create(:npq_course, identifier: "npq-leading-teaching") }
+
+      let!(:npq_application_1) { create(:npq_application, :accepted, participant_identity: participant_identity_1, npq_lead_provider:, npq_course: npq_senior_leadership) }
+      let!(:npq_application_2) { create(:npq_application, :accepted, participant_identity: participant_identity_2, npq_lead_provider:, npq_course: npq_leading_teaching) }
+      let!(:rejected_npq_application) { create(:npq_application, :rejected, participant_identity: participant_identity_2, npq_lead_provider:, npq_course: npq_senior_leadership) }
+      let!(:course_identifier) { npq_senior_leadership.identifier }
+
+      it "correctly selects npq participant identity" do
+        result = subject.call
+
+        expect(result).to eql(participant_identity_1)
+      end
+    end
   end
 end

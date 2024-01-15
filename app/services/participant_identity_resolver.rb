@@ -31,7 +31,7 @@ class ParticipantIdentityResolver
         ParticipantIdentity
          .joins(:npq_participant_profiles, npq_applications: [:npq_course, { npq_lead_provider: :cpd_lead_provider }])
          .where(npq_courses: { identifier: course_identifier })
-         .where(npq_applications: { npq_lead_providers: { cpd_lead_provider: } })
+         .where(npq_applications: { lead_provider_approval_status: "accepted", npq_lead_providers: { cpd_lead_provider: } })
          .where(user_id: participant_id)
          .first
       end
