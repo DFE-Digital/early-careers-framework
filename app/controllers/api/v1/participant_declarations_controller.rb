@@ -22,7 +22,18 @@ module Api
         respond_to do |format|
           format.json do
             participant_declarations_hash = serializer_class.new(paginate(query_scope)).serializable_hash
-            render json: participant_declarations_hash.to_json
+
+            res = NPQRegistrationProxy.new(request).perform
+            npq_declarations = JSON.parse(res.body)
+            # binding.pry
+
+            combined = {
+              data: (
+                participant_declarations_hash[:data] + npq_declarations["data"]
+              ),
+            }
+
+            render json: combined.to_json
           end
 
           format.csv do

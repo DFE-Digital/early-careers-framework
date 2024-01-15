@@ -683,6 +683,57 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         end
       end
 
+      describe "NPQ Registration Proxy JSON API" do
+        let(:expected_response) do
+          resp = expected_json_response(declaration: participant_declaration, profile: participant_profile)
+          resp["data"] << npq_response_body[:data][0].deep_stringify_keys
+          resp
+        end
+
+        let(:npq_response_body) do
+          {
+            data:             [
+              {
+                id: "9c0c67ca-5efd-4106-91ef-0c94412b1748",
+                type: "participant-declaration",
+                attributes: {
+                  participant_id: "dc5bc897-1dec-495e-bdfa-c4cd058b3fba",
+                  declaration_type: "started",
+                  course_identifier: "npq-headship",
+                  eligible_for_payment: false,
+                  declaration_date: "2022-10-21T00:00:00Z",
+                  updated_at: "2023-11-13T15:36:04Z",
+                  voided: false,
+                  state: "submitted",
+                  has_passed: nil,
+                },
+              },
+            ],
+          }
+        end
+
+        before do
+          stub_request(:get, "http://npq_registration.example.com:443/api/v1/participant-declarations")
+            .with(
+              headers: {
+                "Accept"=>"*/*",
+                "Accept-Encoding"=>"gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
+                "Authorization" => bearer_token,
+                "Host"=>"npq_registration.example.com",
+                "User-Agent"=>"Ruby",
+              },
+            )
+              .to_return(status: 200, body: npq_response_body.to_json, headers: {})
+        end
+
+        it "returns both ECF and NPQ declarations" do
+          get "/api/v1/participant-declarations"
+          expect(response.status).to eq 200
+
+          expect(parsed_response).to eq(expected_response)
+        end
+      end
+
       context "when there is a voided declaration" do
         let(:expected_response) do
           expected_json_response(declaration: participant_declaration, profile: participant_profile, state: "voided")

@@ -138,6 +138,68 @@ RSpec.describe "NPQ Applications API", type: :request do
         end
       end
 
+      describe "NPQ Registration Proxy JSON API" do
+        let(:npq_response_body) do
+          {
+            "data"=> [
+              {
+                "id"=>"dacd1e38-50e7-48fc-bd3a-1a18d69586f0",
+                "type"=>"npq_application",
+                "attributes"=> {
+                  "course_identifier"=>"npq-headship",
+                  "email"=>"participant-identity-e91ea672@example.com",
+                  "email_validated"=>true,
+                  "employer_name"=>"Learning Partnership West Independent School",
+                  "employment_role"=>"Vocational Leader",
+                  "full_name"=>"Librada Boehm VM",
+                  "funding_choice"=>"self",
+                  "headteacher_status"=>"yes_in_first_five_years",
+                  "ineligible_for_funding_reason"=>"establishment-ineligible",
+                  "participant_id"=>"1a61653f-79f4-47dc-87cb-c9e876c298bb",
+                  "private_childcare_provider_urn"=>nil,
+                  "teacher_reference_number"=>nil,
+                  "teacher_reference_number_validated"=>false,
+                  "school_urn"=>nil,
+                  "school_ukprn"=>nil,
+                  "status"=>"pending",
+                  "works_in_school"=>false,
+                  "created_at"=>"1968-06-12T00:00:00Z",
+                  "updated_at"=>"2023-11-13T15:36:07Z",
+                  "cohort"=>"2021",
+                  "eligible_for_funding"=>false,
+                  "targeted_delivery_funding_eligibility"=>false,
+                  "teacher_catchment"=>true,
+                  "teacher_catchment_iso_country_code"=>nil,
+                  "teacher_catchment_country"=>nil,
+                  "itt_provider"=>nil,
+                  "lead_mentor"=>false,
+                },
+              },
+            ],
+          }
+        end
+
+        before do
+          stub_request(:get, "http://npq_registration.example.com:443/api/v1/npq-applications").with(
+            headers: {
+              "Accept"=>"*/*",
+              "Accept-Encoding"=>"gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
+              "Authorization" => bearer_token,
+              "Host"=>"npq_registration.example.com",
+              "User-Agent"=>"Ruby",
+            },
+          ).to_return(status: 200, body: npq_response_body.to_json, headers: {})
+        end
+
+        it "returns correct jsonapi content type header" do
+          get "/api/v1/npq-applications"
+          expect(response.headers["Content-Type"]).to eql("application/vnd.api+json")
+          expect(parsed_response["data"].size).to eql(1)
+          expect(parsed_response["data"][0]["id"]).to eql(npq_response_body["data"][0]["id"])
+          expect(parsed_response["data"][0]).to have_type("npq_application")
+        end
+      end
+
       describe "CSV API" do
         let(:parsed_response) { CSV.parse(response.body, headers: true) }
 
@@ -375,6 +437,42 @@ RSpec.describe "NPQ Applications API", type: :request do
 
         expect(parsed_response.key?("errors")).to be_truthy
         expect(parsed_response.dig("errors", 0, "detail")).to eql("Once rejected an application cannot change state")
+      end
+    end
+
+    describe "NPQ Registration Proxy JSON API" do
+      let(:npq_response_body) do
+        {
+          "data"=> {
+            "id"=> default_npq_application.id,
+            "type"=>"npq_application",
+            "attributes"=> {
+              "status"=>"accepted",
+            },
+          },
+        }
+      end
+
+      before do
+        stub_request(:post, "http://npq_registration.example.com:443/api/v1/npq-applications/#{default_npq_application.id}/accept")
+          .with(
+            headers: {
+              "Accept"=>"*/*",
+              "Accept-Encoding"=>"gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
+              "Authorization" => bearer_token,
+              "Host"=>"npq_registration.example.com",
+              "User-Agent"=>"Ruby",
+            },
+          )
+            .to_return(status: 200, body: npq_response_body.to_json, headers: {})
+      end
+
+      it "responds with 200 and representation of the resource" do
+        post "/api/v1/npq-applications/#{default_npq_application.id}/accept"
+
+        expect(response).to be_successful
+
+        expect(parsed_response.dig("data", "attributes", "status")).to eql("accepted")
       end
     end
   end

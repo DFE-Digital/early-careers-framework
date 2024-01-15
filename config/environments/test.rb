@@ -90,4 +90,5 @@ Rails.application.configure do
   config.qualified_teachers_api_url = "https://qualified-teachers-api.example.com"
   config.qualified_teachers_api_key = "some-apikey-guid"
   config.slack_alerts_webhook_urls = "https://example.com/slack-webhook,https://example.com/slack-webhook"
+  config.npq_registration_api_url = "https://npq_registration.example.com"
 end

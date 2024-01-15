@@ -52,6 +52,8 @@ Rails.application.configure do
 
   config.slack_alerts_webhook_urls = ENV["SLACK_ALERTS_WEBHOOK_URLS"]
 
+  config.npq_registration_api_url = ENV["NPQ_REGISTRATION_API_URL"]
+
   # Don't care if the mailer can't send.
   # config.action_mailer.raise_delivery_errors = true
 
