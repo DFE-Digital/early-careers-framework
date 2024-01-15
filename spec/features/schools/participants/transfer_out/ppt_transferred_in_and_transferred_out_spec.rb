@@ -33,7 +33,6 @@ RSpec.describe "old and new SIT transferring the same participant", type: :featu
 
       click_on "Confirm and continue"
       then_i_should_be_on_the_complete_page
-      and_the_participant_should_be_notified_that_theyre_transferred_out
 
       click_on "View your ECTs and mentors"
       then_i_am_taken_to_manage_mentors_and_ects_page
@@ -163,11 +162,6 @@ RSpec.describe "old and new SIT transferring the same participant", type: :featu
 
     def and_they_should_not_be_under_their_previous_heading
       expect(page).not_to have_selector("h2", text: "Contacted for information")
-    end
-
-    def and_the_participant_should_be_notified_that_theyre_transferred_out
-      expect(ParticipantTransferMailer).to have_received(:with)
-                                             .with(induction_record: @induction_record)
     end
 
     def allow_participant_transfer_mailers

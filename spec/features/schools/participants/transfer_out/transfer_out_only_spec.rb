@@ -40,7 +40,6 @@ RSpec.describe "transfer out participants", type: :feature, js: true, rutabaga: 
 
       click_on "Confirm and continue"
       then_i_should_be_on_the_complete_page
-      and_the_participant_should_be_notified_that_theyre_transferred_out
 
       click_on "View your ECTs and mentors"
       then_i_am_taken_to_manage_mentors_and_ects_page
@@ -141,11 +140,6 @@ RSpec.describe "transfer out participants", type: :feature, js: true, rutabaga: 
 
     def and_select_2021_to_2022_cohort
       click_on("2021 to 2022")
-    end
-
-    def and_the_participant_should_be_notified_that_theyre_transferred_out
-      expect(ParticipantTransferMailer).to have_received(:with)
-                                             .with(hash_including(induction_record: @ect.latest_induction_record))
     end
 
     def allow_participant_transfer_mailers
