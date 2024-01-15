@@ -65,7 +65,6 @@ RSpec.describe "Transferring a mentor with a different provider", type: :feature
 
     click_on "Confirm and add"
     then_i_should_be_on_the_complete_page
-    and_the_participant_should_be_notified
     and_the_schools_current_provider_is_notified
     and_the_participants_current_provider_is_notified
 
@@ -114,7 +113,6 @@ RSpec.describe "Transferring a mentor with a different provider", type: :feature
 
     click_on "Confirm and add"
     then_i_should_be_on_the_complete_page_for_an_existing_induction
-    and_the_participant_should_be_notified
     and_the_participants_current_provider_is_notified
 
     click_on "View your ECTs and mentors"
@@ -299,10 +297,6 @@ RSpec.describe "Transferring a mentor with a different provider", type: :feature
 
     create(:ecf_participant_validation_data, participant_profile: @participant_profile_mentor, full_name: "Sally Mentor", trn: "1001000", date_of_birth: Date.new(1990, 10, 24))
     @participant_profile_mentor.teacher_profile.update!(trn: "1001000")
-  end
-
-  def and_the_participant_should_be_notified
-    expect(ParticipantTransferMailer).to have_received(:with).with(induction_record: @participant_profile_mentor.induction_records.latest)
   end
 
   def and_the_participants_current_provider_is_notified

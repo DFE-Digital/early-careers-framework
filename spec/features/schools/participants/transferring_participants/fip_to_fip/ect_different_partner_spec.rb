@@ -71,7 +71,6 @@ RSpec.describe "Transferring ECT is with a different lead provider", type: :feat
     click_on "Confirm and add"
 
     then_i_should_be_on_the_complete_page
-    and_the_participant_should_be_notified
     and_the_schools_current_provider_is_notified
     and_the_participants_current_provider_is_notified
 
@@ -127,7 +126,6 @@ RSpec.describe "Transferring ECT is with a different lead provider", type: :feat
 
     click_on "Confirm and add"
     then_i_should_be_on_the_complete_page_for_an_existing_induction
-    and_the_participant_should_be_notified
     and_the_participants_current_provider_is_notified
 
     click_on "View your ECTs and mentors"
@@ -322,10 +320,6 @@ RSpec.describe "Transferring ECT is with a different lead provider", type: :feat
 
   def and_it_should_list_the_schools_mentors
     expect(page).to have_text(@mentor.user.full_name)
-  end
-
-  def and_the_participant_should_be_notified
-    expect(ParticipantTransferMailer).to have_received(:with).with(induction_record: @participant_profile_ect.induction_records.latest)
   end
 
   def and_the_participants_current_provider_is_notified

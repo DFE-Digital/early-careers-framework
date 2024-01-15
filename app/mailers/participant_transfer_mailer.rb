@@ -2,14 +2,6 @@
 
 # NOTE: These are currently all for FIP <> FIP.
 class ParticipantTransferMailer < ApplicationMailer
-  # participant_transfer_out_notification
-  TRANSFER_OUT_FOR_ECT_TEMPLATE         = "7d46c3d2-bf80-4b48-a8cd-94902bbb31b8"
-  TRANSFER_OUT_FOR_MENTOR_TEMPLATE      = "5341d978-1d81-45d7-9734-4f799f6742ab"
-
-  # participant_transfer_in_notification
-  TRANSFER_IN_FOR_ECT_TEMPLATE          = "1f7baa1d-d684-4499-be8c-7cdeaa967f1b"
-  TRANSFER_IN_FOR_MENTOR_TEMPLATE       = "19bd6887-0313-4e74-8945-5c8f627fec97"
-
   # provider_transfer_out_notification
   TRANSFER_OUT_FOR_PROVIDER_TEMPLATE    = "17d23e1f-9e71-4f27-8b33-33c05958c566"
 
@@ -21,63 +13,6 @@ class ParticipantTransferMailer < ApplicationMailer
 
   # provider_existing_school_transfer_notification
   EXISTING_SCHOOL_TRANSFER_FOR_PROVIDER = "80cae2bf-658b-44ed-b3f6-337cc77fb953"
-
-  # This mailer switches on ECT and mentor-specific templates, though the inputs are the same,
-  # there are minor copy changes between the templates.
-  #
-  # Reference: 1, 2
-  def participant_transfer_out_notification
-    induction_record = params[:induction_record]
-
-    participant_profile = induction_record.participant_profile
-    preferred_identity_email = induction_record.preferred_identity.email
-
-    template_id = if induction_record.participant_profile.ect?
-                    TRANSFER_OUT_FOR_ECT_TEMPLATE
-                  else
-                    TRANSFER_OUT_FOR_MENTOR_TEMPLATE
-                  end
-
-    template_mail(
-      template_id,
-      to: preferred_identity_email,
-      rails_mailer: mailer_name,
-      rails_mail_template: action_name,
-      personalisation: {
-        transferring_ppt_name: participant_profile.user.full_name,
-        current_school_name: induction_record.school.name,
-      },
-    ).tag(:participant_transfer_out_notification).associate_with(participant_profile, as: :participant_profile)
-  end
-
-  # This mailer switches on ECT and mentor-specific templates, though the inputs are the same,
-  # there are minor copy changes between the templates.
-  #
-  # Reference: 3, 4
-  def participant_transfer_in_notification
-    induction_record = params[:induction_record]
-
-    participant_profile = induction_record.participant_profile
-    preferred_identity_email = induction_record.preferred_identity.email
-
-    template_id = if participant_profile.ect?
-                    TRANSFER_IN_FOR_ECT_TEMPLATE
-                  else
-                    TRANSFER_IN_FOR_MENTOR_TEMPLATE
-                  end
-
-    template_mail(
-      template_id,
-      to: preferred_identity_email,
-      rails_mailer: mailer_name,
-      rails_mail_template: action_name,
-      personalisation: {
-        transferring_ppt_name: participant_profile.user.full_name,
-        joining_date: induction_record.start_date.to_date.to_fs(:govuk),
-        new_school_name: induction_record.school.name,
-      },
-    ).tag(:participant_transfer_in_notification).associate_with(participant_profile, as: :participant_profile)
-  end
 
   # Sent to the *outgoing* lead provider, when it changes.
   #

@@ -10,21 +10,6 @@ RSpec.describe(Induction::SendTransferNotificationEmails) do
 
   before do
     allow(ParticipantTransferMailer).to receive(template).and_return(provider_mailer)
-    allow(ParticipantTransferMailer).to receive(:participant_transfer_in_notification).and_return(participant_mailer)
-  end
-
-  shared_examples "notifying the participant" do
-    it "sends a 'particicpant transfter in notification' email to the participant" do
-      expect {
-        subject.call
-      }.to have_enqueued_mail(ParticipantTransferMailer, :participant_transfer_in_notification)
-        .with(
-          params: {
-            induction_record:,
-          },
-          args: [],
-        ).once
-    end
   end
 
   # defaults
@@ -102,8 +87,6 @@ RSpec.describe(Induction::SendTransferNotificationEmails) do
           ).once
       end
     end
-
-    include_examples "notifying the participant"
   end
 
   context "when it's a switch to schools programme" do
@@ -147,8 +130,6 @@ RSpec.describe(Induction::SendTransferNotificationEmails) do
         end
       end
     end
-
-    include_examples "notifying the participant"
   end
 
   context "when it's a new school transfer" do
@@ -168,7 +149,5 @@ RSpec.describe(Induction::SendTransferNotificationEmails) do
           ).once
       end
     end
-
-    include_examples "notifying the participant"
   end
 end
