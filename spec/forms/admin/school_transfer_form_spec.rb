@@ -71,7 +71,6 @@ RSpec.describe Admin::SchoolTransferForm, type: :model do
        .and have_enqueued_mail(ParticipantTransferMailer, :provider_transfer_out_notification)
               .with(params: hash_including(lead_provider_profile: lead_provider_out.lead_provider_profiles.first),
                     args: [])
-       .and have_enqueued_mail(ParticipantTransferMailer, :participant_transfer_in_notification)
     end
 
     context "when continuing current programme" do
@@ -89,7 +88,6 @@ RSpec.describe Admin::SchoolTransferForm, type: :model do
         }.to have_enqueued_mail(ParticipantTransferMailer, :provider_existing_school_transfer_notification)
                .with(params: hash_including(lead_provider_profile: lead_provider_out.lead_provider_profiles.first),
                      args: [])
-         .and have_enqueued_mail(ParticipantTransferMailer, :participant_transfer_in_notification)
       end
 
       context "when a matching programme already exists" do

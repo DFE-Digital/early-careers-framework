@@ -55,7 +55,6 @@ module Induction
 
     def call
       send_provider_notifications!
-      send_participant_notification!
     end
 
   private
@@ -75,10 +74,6 @@ module Induction
 
     def matching_lead_provider_and_delivery_partner?
       same_provider? && same_delivery_partner?
-    end
-
-    def send_participant_notification!
-      ParticipantTransferMailer.with(induction_record:).participant_transfer_in_notification.deliver_later
     end
 
     # emails to current lead provider profiles

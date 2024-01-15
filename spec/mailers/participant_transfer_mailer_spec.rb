@@ -7,19 +7,6 @@ RSpec.describe ParticipantTransferMailer, type: :mailer do
   let(:induction_record)      { participant_profile.current_induction_record }
   let(:lead_provider_profile) { create(:lead_provider_profile) }
 
-  describe "#participant_transfer_in_notification" do
-    let(:participant_transfer_in_notification) do
-      ParticipantTransferMailer.with(
-        induction_record:,
-      ).participant_transfer_in_notification
-    end
-
-    it "renders the right headers" do
-      expect(participant_transfer_in_notification.from).to eq(["mail@example.com"])
-      expect(participant_transfer_in_notification.to).to eq([induction_record.preferred_identity.email])
-    end
-  end
-
   describe "#participant_transfer_out_notification" do
     let(:participant_profile) { create(:ect_participant_profile) }
     let(:induction_programme) { create(:induction_programme) }
