@@ -184,7 +184,7 @@ private
   end
 
   def record_event(date, action, entity, key, value, actor)
-    return if value.nil? || %w[created_at updated_at notes school_ukprn start_date end_date login_token login_token_valid_until].include?(key) || (key == "induction_status" && value == "changed")
+    return if value.nil? || %w[created_at updated_at school_ukprn start_date end_date login_token login_token_valid_until].include?(key) || (key == "induction_status" && value == "changed")
 
     value = value.is_a?(Array) ? value[1] : value
 

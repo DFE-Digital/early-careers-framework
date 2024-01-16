@@ -56,20 +56,12 @@ module ParticipantSteps
     click_on("Change email", visible: false)
   end
 
-  def when_i_click_on_add_notes
-    click_on("Add notes")
-  end
-
   def when_i_update_the_name_with(name)
     fill_in "Full name", with: name
   end
 
   def when_i_update_the_email_with(email)
     fill_in "Email address", with: email
-  end
-
-  def when_i_add_notes_to_the_participants_record
-    fill_in "notes", with: "The participants notes have been updated"
   end
 
   def when_i_click_on_tab(text)
@@ -117,10 +109,6 @@ module ParticipantSteps
 
   def then_i_should_be_in_the_admin_participants_statuses_dashboard
     expect(page).to have_css(active_tab_selector, text: "Statuses")
-  end
-
-  def then_i_should_be_on_the_edit_notes_page
-    expect(page).to have_selector("h1", text: "Add notes")
   end
 
   def then_the_participants_email_should_have_updated(email)
@@ -234,15 +222,6 @@ module ParticipantSteps
 
   def and_the_page_should_have_the_updated_name(name)
     expect(page).to have_text(name)
-  end
-
-  def and_the_page_should_have_no_notes
-    expect(page).to have_text("No notes")
-    expect(page).to have_text("Add notes")
-  end
-
-  def and_the_notes_that_have_been_added
-    expect(page).to have_text("The participants notes have been updated")
   end
 
   def and_i_should_see_the_current_schools_details

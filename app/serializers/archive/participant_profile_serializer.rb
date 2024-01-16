@@ -25,7 +25,6 @@ module Archive
     attribute :induction_start_date
     attribute :induction_completion_date
     attribute :profile_duplicity
-    attribute :notes
     attribute :created_at
 
     attribute :induction_records do |participant_profile|

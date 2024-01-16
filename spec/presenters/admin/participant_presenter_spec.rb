@@ -38,8 +38,6 @@ RSpec.describe(Admin::ParticipantPresenter) do
     it { is_expected.to delegate_method(:full_name).to(:mentor_profile).with_prefix(:mentor).allow_nil }
     it { is_expected.to delegate_method(:mentor_profile).to(:relevant_induction_record).allow_nil }
     it { is_expected.to delegate_method(:mentor?).to(:participant_profile) }
-    it { is_expected.to delegate_method(:notes).to(:participant_profile) }
-    it { is_expected.to delegate_method(:notes?).to(:participant_profile) }
     it { is_expected.to delegate_method(:participant_identities).to(:user) }
     it { is_expected.to delegate_method(:participant_identity).to(:participant_profile) }
     it { is_expected.to delegate_method(:school).to(:school_cohort).allow_nil }

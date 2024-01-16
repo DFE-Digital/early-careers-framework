@@ -90,8 +90,6 @@ class Admin::ParticipantPresenter
 
   delegate :mentor_profile, to: :relevant_induction_record, allow_nil: true
   delegate :mentor?, to: :participant_profile
-  delegate :notes, to: :participant_profile
-  delegate :notes?, to: :participant_profile
   delegate :participant_identities, to: :user
   delegate :participant_identity, to: :participant_profile
 

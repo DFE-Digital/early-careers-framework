@@ -98,24 +98,4 @@
     row.with_key(text: "Associated email addresses")
     row.with_value(text: html_list(all_emails_associated_with_a_user(@participant_profile.user)))
   end
-
-  sl.with_row do |row|
-    row.with_key(text: "Notes")
-
-    row.with_value do
-      if @participant_presenter.notes?
-        simple_format(@participant_presenter.notes, class: "govuk-body")
-      else
-        "No notes"
-      end
-    end
-
-    notes_present = @participant_presenter.notes.present?
-
-    row.with_action(
-      text: notes_present ? "Change notes" : "Add notes",
-      href: edit_admin_note_path(@participant_profile),
-      visually_hidden_text: notes_present ? "on #{@participant_presenter.full_name}'s profile" : "to #{@participant_presenter.full_name}'s profile",
-    )
-  end
 end %>
