@@ -31,7 +31,7 @@ class NPQRegistrationProxy
   end
 
   def get
-    Net::HTTP.start(uri.hostname, uri.port) do |http|
+    Net::HTTP.start(uri.hostname, uri.port, use_ssl: (uri.scheme == 'https')) do |http|
       request = Net::HTTP::Get.new(uri)
       request["Authorization"] = authorization
 
@@ -40,7 +40,7 @@ class NPQRegistrationProxy
   end
 
   def put(request_body)
-    Net::HTTP.start(uri.hostname, uri.port) do |http|
+    Net::HTTP.start(uri.hostname, uri.port, use_ssl: (uri.scheme == 'https')) do |http|
       request = Net::HTTP::Put.new(uri)
       request["Authorization"] = authorization
 
@@ -49,7 +49,7 @@ class NPQRegistrationProxy
   end
 
   def post(request_body)
-    Net::HTTP.start(uri.hostname, uri.port) do |http|
+    Net::HTTP.start(uri.hostname, uri.port, use_ssl: (uri.scheme == 'https')) do |http|
       request = Net::HTTP::Post.new(uri)
       request["Authorization"] = authorization
 
