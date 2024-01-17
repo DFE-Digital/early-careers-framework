@@ -67,7 +67,7 @@ describe Oneoffs::NPQ::MigrateDeclarationsBetweenStatements do
 
         expect(to_statement.reload).to have_attributes(to_statement_updates)
         expect(instance).to have_recorded_info([
-          "Statement #{to_statement.name} updated with #{to_statement_updates}",
+          "Statement #{to_statement.name} for #{to_statement.npq_lead_provider.name} updated with #{to_statement_updates}",
         ])
       end
     end

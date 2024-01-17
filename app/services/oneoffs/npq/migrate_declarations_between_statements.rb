@@ -39,7 +39,7 @@ module Oneoffs::NPQ
 
       to_statements_by_provider.each_value do |statement|
         statement.update!(to_statement_updates)
-        record_info("Statement #{statement.name} updated with #{to_statement_updates}")
+        record_info("Statement #{statement.name} for #{statement.npq_lead_provider.name} updated with #{to_statement_updates}")
       end
     end
 
