@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-module Admin
-  class HomeController < Admin::BaseController
+module Admin::Performance
+  class OverviewController < Admin::BaseController
     skip_after_action :verify_authorized, only: :show
     skip_after_action :verify_policy_scoped, only: :show
 
