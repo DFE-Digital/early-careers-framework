@@ -12,16 +12,23 @@ RSpec.describe Mentors::CompleteTraining do
 
     it "sets the mentor_completion_date to 19/4/2021" do
       service_call
-      expect(mentor_profile.reload.mentor_completion_date).to eq Date.new(2021, 4, 19)
+      expect(mentor_profile.mentor_completion_date).to eq Date.new(2021, 4, 19)
     end
   end
 
   context "when the mentor has a completed declaration" do
+    let!(:declaration) { create(:seed_ecf_participant_declaration, :with_cpd_lead_provider, :completed, user: mentor_profile.user, participant_profile: mentor_profile) }
+
+    it "sets the mentor_completion_date to the declaration date" do
+      service_call
+      expect(mentor_profile.mentor_completion_date.to_date).to eq declaration.declaration_date.to_date
+    end
   end
 
   context "when the mentor has not completed training" do
-  end
-
-  context "when a mentor profile is not supplied" do
+    it "does not set the mentor_completion_date" do
+      service_call
+      expect(mentor_profile.mentor_completion_date).to be_nil
+    end
   end
 end

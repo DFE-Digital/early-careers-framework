@@ -5,9 +5,7 @@ module Mentors
     EARLY_ROLL_OUT_COMPLETION_DATE = Date.new(2021, 4, 19)
 
     def call
-      if mentor_can_complete?
-        set_completion!
-      end
+      set_completion! if mentor_can_complete?
     end
 
   private
