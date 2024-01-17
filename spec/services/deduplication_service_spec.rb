@@ -71,7 +71,7 @@ RSpec.describe DeduplicationService do
       end
 
       it "is not included in deletion" do
-        expect(users_to_delete).not_to include(participant_declaration_user)
+        expect(users_to_delete).to include(participant_declaration_user)
       end
     end
 

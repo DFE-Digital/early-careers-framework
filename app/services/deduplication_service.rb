@@ -17,7 +17,6 @@ private
     ids_to_exclude << FinanceProfile.where(user_id: ids).pluck(:user_id)
     ids_to_exclude << InductionCoordinatorProfile.where(user_id: ids).pluck(:user_id)
     ids_to_exclude << LeadProviderProfile.where(user_id: ids).pluck(:user_id)
-    ids_to_exclude << ParticipantDeclaration.where(user_id: ids).pluck(:user_id)
 
     ids -= ids_to_exclude.flatten.uniq
     User.where(id: ids)
