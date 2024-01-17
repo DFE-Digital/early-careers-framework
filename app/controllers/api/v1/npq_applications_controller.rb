@@ -13,6 +13,7 @@ module Api
       def index
         respond_to do |format|
           format.json do
+            # render json: json_serializer_class.new(paginate(query_scope)).serializable_hash
             res = NPQRegistrationProxy.new(request).perform
             render json: res.body
           end

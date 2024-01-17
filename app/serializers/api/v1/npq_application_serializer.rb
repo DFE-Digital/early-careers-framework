@@ -16,7 +16,7 @@ module Api
                  :full_name,
                  :funding_choice,
                  :headteacher_status,
-                 :ineligible_for_funding_reason,
+                 # :ineligible_for_funding_reason,
                  :participant_id,
                  :private_childcare_provider_urn,
                  :teacher_reference_number,
@@ -64,14 +64,14 @@ module Api
       attribute(:status, &:lead_provider_approval_status)
 
       attribute :cohort do |object|
-        object.cohort.start_year.to_s
+        # object.cohort.start_year.to_s
       end
 
       attribute(:eligible_for_funding, &:eligible_for_dfe_funding)
       attribute(:targeted_delivery_funding_eligibility)
 
       attribute :teacher_catchment, &:in_uk_catchment_area?
-      attribute :teacher_catchment_iso_country_code
+      # attribute :teacher_catchment_iso_country_code
       attribute :teacher_catchment_country
       attribute :itt_provider
       attribute :lead_mentor

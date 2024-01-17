@@ -63,7 +63,7 @@ private
     @uri ||=
       begin
         uri = URI("#{Rails.configuration.npq_registration_api_url}#{path}")
-        uri.query = URI.encode_www_form(params) if params.present?
+        uri.query = params.to_query if params.present?
         uri
       end
   end
