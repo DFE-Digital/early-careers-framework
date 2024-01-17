@@ -188,7 +188,7 @@
           <% end %>
           <% row.with_value do %>
             <% if @ects.present? %>
-              <%= govuk_summary_list(classes: ["govuk-!-margin-bottom-7"], borders: false) do |list| %>
+              <%= govuk_summary_list(borders: false) do |list| %>
                 <% @ects.each do |ect| %>
                   <% list.with_row do |row| %>
                     <% row.with_key(text: ect.full_name,
@@ -213,7 +213,7 @@
                 <% end %>
               <% end %>
             <% else %>
-              <%= govuk_summary_list(classes: ["govuk-!-margin-bottom-7"], borders: false) do |list| %>
+              <%= govuk_summary_list(borders: false) do |list| %>
                 <% list.with_row do |row| %>
                   <% row.with_key(text: "Not currently mentoring", classes: ["govuk-!-font-weight-regular"]) %>
                 <% end %>
