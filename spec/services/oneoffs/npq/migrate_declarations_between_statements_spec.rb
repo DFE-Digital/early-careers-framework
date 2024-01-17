@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 describe Oneoffs::NPQ::MigrateDeclarationsBetweenStatements do
+  let(:to_statement_updates) { {} }
   let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_npq_lead_provider) }
   let(:npq_lead_provider) { cpd_lead_provider.npq_lead_provider }
   let(:from_statement) { create(:npq_statement, name: "April 2023", cpd_lead_provider:, cohort:, output_fee: true) }
@@ -9,7 +10,7 @@ describe Oneoffs::NPQ::MigrateDeclarationsBetweenStatements do
   let(:to_statement_name) { to_statement.name }
   let(:cohort) { Cohort.current }
 
-  let(:instance) { described_class.new(cohort:, from_statement_name:, to_statement_name:) }
+  let(:instance) { described_class.new(cohort:, from_statement_name:, to_statement_name:, to_statement_updates:) }
 
   before { allow(Rails.logger).to receive(:info) }
 
@@ -22,6 +23,10 @@ describe Oneoffs::NPQ::MigrateDeclarationsBetweenStatements do
 
     it "sets output_fee to false on the from statements" do
       expect { migrate }.to change { from_statement.reload.output_fee }.to(false)
+    end
+
+    it "does not change the to statements" do
+      expect { migrate }.not_to change { to_statement.reload.output_fee }
     end
 
     context "when there are declarations" do
@@ -50,6 +55,19 @@ describe Oneoffs::NPQ::MigrateDeclarationsBetweenStatements do
           "Migrating declarations from #{from_statement_name} to #{to_statement_name} for 2 providers",
           "Migrating 1 declarations for #{npq_lead_provider.name}",
           "Migrating 1 declarations for #{npq_lead_provider2.name}",
+        ])
+      end
+    end
+
+    context "when to_statement_updates are provided" do
+      let(:to_statement_updates) { { deadline_date: 5.days.from_now.to_date, payment_date: 2.days.from_now.to_date } }
+
+      it "updates the to statements" do
+        migrate
+
+        expect(to_statement.reload).to have_attributes(to_statement_updates)
+        expect(instance).to have_recorded_info([
+          "Statement #{to_statement.name} updated with #{to_statement_updates}",
         ])
       end
     end

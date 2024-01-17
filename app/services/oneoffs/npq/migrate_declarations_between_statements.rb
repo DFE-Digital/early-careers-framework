@@ -8,10 +8,11 @@ module Oneoffs::NPQ
 
     include HasRecordableInformation
 
-    def initialize(cohort:, from_statement_name:, to_statement_name:)
+    def initialize(cohort:, from_statement_name:, to_statement_name:, to_statement_updates: {})
       @cohort = cohort
       @from_statement_name = from_statement_name
       @to_statement_name = to_statement_name
+      @to_statement_updates = to_statement_updates
     end
 
     def migrate(dry_run: true)
@@ -21,6 +22,7 @@ module Oneoffs::NPQ
 
       ActiveRecord::Base.transaction do
         migrate_declarations_between_statements!
+        update_to_statement_attributes!
 
         raise ActiveRecord::Rollback if dry_run
       end
@@ -30,7 +32,16 @@ module Oneoffs::NPQ
 
   private
 
-    attr_reader :cohort, :from_statement_name, :to_statement_name
+    attr_reader :cohort, :from_statement_name, :to_statement_name, :to_statement_updates
+
+    def update_to_statement_attributes!
+      return if to_statement_updates.blank?
+
+      to_statements_by_provider.each_value do |statement|
+        statement.update!(to_statement_updates)
+        record_info("Statement #{statement.name} updated with #{to_statement_updates}")
+      end
+    end
 
     def migrate_declarations_between_statements!
       each_statements_by_provider do |provider, from_statement, to_statement|
@@ -82,7 +93,7 @@ module Oneoffs::NPQ
 
     def statements_by_provider(statement_name)
       Finance::Statement::NPQ
-        .includes(:cohort)
+        .includes(:cohort, :participant_declarations)
         .where(cohort:, name: statement_name)
         .output
         .group_by(&:npq_lead_provider)
