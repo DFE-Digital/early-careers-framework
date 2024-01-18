@@ -7,6 +7,14 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
+## 17 January 2024
+
+We’ve fixed a bug that had prevented some providers from changing schedules for participants they are training who have not been registered in a default partnership. In such instances they’d have seen the following 422 error message:
+
+* ‘You cannot change a participant to this cohort as you do not have a partnership with the school for the cohort. Contact the DfE for assistance.’
+
+This error message should now only apply where a lead provider is attempting to the use the [change schedule endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-id-change-schedule-put) to change the participant's cohort.
+
 ## 28 November 2023
 
 We've fixed a bug that meant some providers were having issues finding unfunded mentor IDs when using the `updated_at` filter on the [GET unfunded mentors endpoint](/api-reference/reference-v3.html#api-v3-unfunded-mentors-ecf-get).
