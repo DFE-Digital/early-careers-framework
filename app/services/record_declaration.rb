@@ -48,6 +48,8 @@ class RecordDeclaration
       declaration_attempt.update!(participant_declaration:)
 
       create_participant_outcome!
+
+      set_mentor_completion
     end
 
     participant_declaration
@@ -257,5 +259,15 @@ private
     else
       raise Api::Errors::InvalidParticipantOutcomeError, I18n.t(:cannot_create_completed_declaration)
     end
+  end
+
+  def set_mentor_completion
+    Mentors::CompleteTraining.call(mentor_profile: participant_profile) if mentor_completion_event?
+  end
+
+  def mentor_completion_event?
+    participant_profile.mentor? &&
+      participant_profile.mentor_completion_date.blank? &&
+      participant_declaration.declaration_type == "completed"
   end
 end
