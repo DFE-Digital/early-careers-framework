@@ -139,7 +139,7 @@ RSpec.describe BulkMailers::SchoolReminderComms, type: :mailer do
     end
   end
 
-  describe "#contact_sits_that_have_chosen_fip_but_not_partnered" do
+  describe "#contact_sits_that_have_chosen_fip_but_not_partnered_at_year_start" do
     context "when the school has chosen fip but not partnered" do
       let(:previous_cohort) { create(:seed_cohort, start_year: cohort.start_year - 1) }
 
@@ -148,7 +148,7 @@ RSpec.describe BulkMailers::SchoolReminderComms, type: :mailer do
 
         it "mails the induction coordinator" do
           expect {
-            service.contact_sits_that_have_chosen_fip_but_not_partnered
+            service.contact_sits_that_have_chosen_fip_but_not_partnered_at_year_start
           }.to have_enqueued_mail(SchoolMailer, :sit_needs_to_chase_partnership)
             .with(params: { school: }, args: [])
         end
@@ -158,12 +158,12 @@ RSpec.describe BulkMailers::SchoolReminderComms, type: :mailer do
 
           it "does not mail the induction coordinator" do
             expect {
-              service.contact_sits_that_have_chosen_fip_but_not_partnered
+              service.contact_sits_that_have_chosen_fip_but_not_partnered_at_year_start
             }.not_to have_enqueued_mail
           end
 
           it "returns the count of emails that would be sent" do
-            expect(service.contact_sits_that_have_chosen_fip_but_not_partnered).to eq 1
+            expect(service.contact_sits_that_have_chosen_fip_but_not_partnered_at_year_start).to eq 1
           end
         end
       end
@@ -174,8 +174,33 @@ RSpec.describe BulkMailers::SchoolReminderComms, type: :mailer do
 
         it "does not mail the induction coordinator" do
           expect {
+            service.contact_sits_that_have_chosen_fip_but_not_partnered_at_year_start
+          }.not_to have_enqueued_mail
+        end
+      end
+    end
+  end
+
+  describe "#contact_sits_that_have_chosen_fip_but_not_partnered" do
+    context "when the school has chosen fip but not partnered" do
+      it "mails the induction coordinator" do
+        expect {
+          service.contact_sits_that_have_chosen_fip_but_not_partnered
+        }.to have_enqueued_mail(SchoolMailer, :sit_needs_to_chase_partnership)
+          .with(params: { school: }, args: [])
+      end
+
+      context "when the dry_run flag is set" do
+        let(:dry_run) { true }
+
+        it "does not mail the induction coordinator" do
+          expect {
             service.contact_sits_that_have_chosen_fip_but_not_partnered
           }.not_to have_enqueued_mail
+        end
+
+        it "returns the count of emails that would be sent" do
+          expect(service.contact_sits_that_have_chosen_fip_but_not_partnered).to eq 1
         end
       end
     end
