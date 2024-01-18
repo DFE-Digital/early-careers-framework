@@ -76,7 +76,7 @@ class Schools::ParticipantsController < Schools::BaseController
     Induction::ChangeMentor.call(induction_record: @ect_induction_record, mentor_profile: @profile)
     @message = "#{@profile.full_name} has been assigned to #{@ect_induction_record.participant_full_name}"
 
-    render :ect_added_confirmation
+    redirect_to school_participant_path(id: @profile.id, school_id: @school.slug)
   end
 
   def edit_mentor; end
@@ -96,7 +96,8 @@ class Schools::ParticipantsController < Schools::BaseController
       new_mentor_profile = @mentor_form.mentor&.mentor_profile
       Induction::ChangeMentor.call(induction_record:, mentor_profile: new_mentor_profile)
       @message = "#{new_mentor_profile.full_name} has been assigned to #{@profile.full_name}"
-      render :mentor_change_confirmation
+
+      redirect_to school_participant_path(id: @profile.id, school_id: @school.slug)
     else
       render :edit_mentor
     end

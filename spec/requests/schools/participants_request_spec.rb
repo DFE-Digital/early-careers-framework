@@ -135,7 +135,7 @@ RSpec.describe "Schools::Participants", type: :request, js: true, with_feature_f
 
       put("/schools/#{school.slug}/participants/#{mentor_profile.id}/add-ect", params:)
 
-      expect(response).to render_template("schools/participants/ect_added_confirmation")
+      expect(response).to redirect_to school_participant_path(id: mentor_profile.id, school_id: school.slug)
       expect(new_ect.reload.mentor).to eq(mentor_user)
     end
 
@@ -174,7 +174,7 @@ RSpec.describe "Schools::Participants", type: :request, js: true, with_feature_f
       params = { participant_mentor_form: { mentor_id: mentor_user_2.id } }
       put("/schools/#{school.slug}/participants/#{ect_profile.id}/update-mentor", params:)
 
-      expect(response).to render_template("schools/participants/mentor_change_confirmation")
+      expect(response).to redirect_to school_participant_path(id: ect_profile.id, school_id: school.slug)
       expect(ect_user.reload.early_career_teacher_profile.mentor).to eq(mentor_user_2)
     end
 
