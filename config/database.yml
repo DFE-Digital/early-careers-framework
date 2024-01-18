@@ -30,8 +30,12 @@ development:
     database: npq_registration_development
 
 migration:
-  <<: *default
-  url: <%= ENV["DATABASE_URL"] %>
+  primary:
+    <<: *default_primary
+    database: early_careers_framework_migration
+  npq_registration:
+    <<: *default_npq_registration
+    database: npq_registration_migration
 
 test:
   primary:
