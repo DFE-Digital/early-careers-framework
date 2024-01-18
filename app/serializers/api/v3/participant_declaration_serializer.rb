@@ -59,7 +59,9 @@ module Api
         end
       end
 
-      attribute(:uplift_paid, &:uplift_paid?)
+      attribute :uplift_paiddo do |declaration|
+        # declaration.uplift_paid?
+      end
 
       attribute :evidence_held do |declaration|
         if declaration.ecf?

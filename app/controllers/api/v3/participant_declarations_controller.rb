@@ -13,7 +13,22 @@ module Api
       # GET /api/v3/participant-declarations?filter[cohort]=2021,2022
       #
       def index
-        render json: serializer_class.new(participant_declarations).serializable_hash.to_json
+        if params[:use_proxy] == "yes"
+          participant_declarations_hash = serializer_class.new(participant_declarations).serializable_hash
+
+          res = NPQRegistrationProxy.new(request).perform
+          npq_declarations = JSON.parse(res.body)
+
+          combined = {
+            data: (
+              participant_declarations_hash[:data] + npq_declarations["data"]
+            ),
+          }
+
+          render json: combined.to_json
+        else
+          render json: serializer_class.new(participant_declarations).serializable_hash.to_json
+        end
       end
 
       # Creates new participant declaration
@@ -62,6 +77,7 @@ module Api
         ParticipantDeclarationsQuery.new(
           cpd_lead_provider:,
           params: query_params,
+          use_proxy: (params[:use_proxy] == "yes"),
         )
       end
 

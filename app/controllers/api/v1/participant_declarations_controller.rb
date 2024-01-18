@@ -25,7 +25,6 @@ module Api
 
             res = NPQRegistrationProxy.new(request).perform
             npq_declarations = JSON.parse(res.body)
-            # binding.pry
 
             combined = {
               data: (

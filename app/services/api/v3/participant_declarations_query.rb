@@ -6,16 +6,17 @@ module Api
       include Api::Concerns::FilterCohorts
       include Api::Concerns::FilterUpdatedSince
 
-      attr_reader :cpd_lead_provider, :params
+      attr_reader :cpd_lead_provider, :params, :use_proxy
 
-      def initialize(cpd_lead_provider:, params:)
+      def initialize(cpd_lead_provider:, params:, use_proxy: false)
         @cpd_lead_provider = cpd_lead_provider
         @params = params
+        @use_proxy = use_proxy
       end
 
       def participant_declarations_for_pagination
-        filterable_attributes = %i[id created_at user_id updated_at delivery_partner_id]
-        scope = ParticipantDeclaration.union(
+        filterable_attributes = %i[id created_at user_id updated_at delivery_partner_id type]
+        scope = klass.union(
           declarations_scope.select(*filterable_attributes),
           ecf_previous_declarations_scope.select(*filterable_attributes),
         )
@@ -38,7 +39,7 @@ module Api
       end
 
       def participant_declarations_from(paginated_join)
-        scope = ParticipantDeclaration
+        scope = klass
             .includes(
               :statement_line_items,
               :declaration_states,
@@ -58,7 +59,7 @@ module Api
       end
 
       def participant_declaration(id)
-        ParticipantDeclaration.union(
+        klass.union(
           declarations_scope,
           ecf_previous_declarations_scope,
         ).find(id)
@@ -75,7 +76,7 @@ module Api
       end
 
       def declarations_scope
-        scope = ParticipantDeclaration.for_lead_provider(cpd_lead_provider)
+        scope = klass.for_lead_provider(cpd_lead_provider)
 
         if cohort_years.present?
           scope = ecf_cohort_for(scope).or(npq_cohort_for(scope))
@@ -85,19 +86,19 @@ module Api
       end
 
       def ecf_cohort_for(scope)
-        return ParticipantDeclaration.none if lead_provider.blank?
+        return klass.none if lead_provider.blank?
 
         with_joins(scope).where(participant_profile: { induction_records: { cohorts: { start_year: cohort_years } } })
       end
 
       def npq_cohort_for(scope)
-        return ParticipantDeclaration.none if npq_lead_provider.blank?
+        return klass.none if npq_lead_provider.blank?
 
         with_joins(scope).where(participant_profile: { type: "ParticipantProfile::NPQ", schedule: { cohorts: { start_year: cohort_years } } })
       end
 
       def ecf_previous_declarations_scope
-        scope = with_joins(ParticipantDeclaration)
+        scope = with_joins(klass)
           .where(participant_profile: { induction_records: { induction_programme: { partnerships: { lead_provider_id: lead_provider&.id } } } })
           .where(participant_profile: { induction_records: { induction_status: "active" } }) # only want induction records that are the winning latest ones
           .where(state: %w[submitted eligible payable paid])
@@ -127,6 +128,14 @@ module Api
             ] },
           ],
         )
+      end
+
+      def klass
+        if use_proxy
+          ParticipantDeclaration::ECF
+        else
+          ParticipantDeclaration
+        end
       end
     end
   end
