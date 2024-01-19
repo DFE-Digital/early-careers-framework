@@ -53,3 +53,7 @@ $govuk-new-link-styles: true;
 .govuk-notification-banner__content--full-width > * {
   max-width: 100%;
 }
+
+.govuk-summary-list__key--align-top {
+  vertical-align: top;
+}
