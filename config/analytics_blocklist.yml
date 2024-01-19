@@ -530,3 +530,11 @@
   - participant_type
   - induction_record_created_at
   - partnership_id
+  :validation_errors:
+  - id
+  - form_object
+  - user_id
+  - request_path
+  - details
+  - created_at
+  - updated_at
