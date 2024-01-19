@@ -36,11 +36,19 @@ module Api
       # POST /api/v3/participant-declarations
       #
       def create
-        service = RecordDeclaration.new({ cpd_lead_provider: }.merge(permitted_params["attributes"] || {}))
+        attributes = (permitted_params["attributes"] || {})
 
-        log_schema_validation_results
+        if params[:use_proxy] == "yes" && attributes[:course_identifier].to_s.starts_with?("npq-")
+          res = NPQRegistrationProxy.new(request).perform
 
-        render_from_service(service, serializer_class)
+          render json: res.body
+        else
+          service = RecordDeclaration.new({ cpd_lead_provider: }.merge(attributes))
+
+          log_schema_validation_results
+
+          render_from_service(service, serializer_class)
+        end
       end
 
       # Returns a single participant declaration
@@ -48,7 +56,19 @@ module Api
       # GET /api/v3/participant-declarations/:id
       #
       def show
-        render json: serializer_class.new(participant_declaration_from_query).serializable_hash.to_json
+        if params[:use_proxy] == "yes"
+          res = NPQRegistrationProxy.new(request).perform
+
+          if res.is_a?(Net::HTTPSuccess)
+            # Found in NPQ app
+            render json: res.body
+          else
+            # Not found in NPQ app
+            render json: serializer_class.new(participant_declaration_from_query).serializable_hash.to_json
+          end
+        else
+          render json: serializer_class.new(participant_declaration_from_query).serializable_hash.to_json
+        end
       end
 
       # Void a participant declaration
@@ -56,7 +76,19 @@ module Api
       # PUT /api/v3/participant-declarations/:id/void
       #
       def void
-        render json: serializer_class.new(VoidParticipantDeclaration.new(participant_declaration_for_lead_provider).call).serializable_hash.to_json
+        if params[:use_proxy] == "yes"
+          res = NPQRegistrationProxy.new(request).perform
+
+          if res.is_a?(Net::HTTPSuccess)
+            # Found in NPQ app
+            render json: res.body
+          else
+            # Not found in NPQ app
+            render json: serializer_class.new(participant_declaration_from_query).serializable_hash.to_json
+          end
+        else
+          render json: serializer_class.new(VoidParticipantDeclaration.new(participant_declaration_for_lead_provider).call).serializable_hash.to_json
+        end
       end
 
     private

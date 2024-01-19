@@ -44,7 +44,7 @@ class NPQRegistrationProxy
       request = Net::HTTP::Put.new(uri)
       request["Authorization"] = authorization
 
-      http.request(request, request_body)
+      http.request(request, request_body.read)
     end
   end
 
@@ -53,7 +53,7 @@ class NPQRegistrationProxy
       request = Net::HTTP::Post.new(uri)
       request["Authorization"] = authorization
 
-      http.request(request, request_body)
+      http.request(request, request_body.read)
     end
   end
 
