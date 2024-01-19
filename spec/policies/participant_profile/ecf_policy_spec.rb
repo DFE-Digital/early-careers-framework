@@ -12,6 +12,10 @@ RSpec.describe ParticipantProfile::ECFPolicy, type: :policy do
     let(:user) { create(:user, :admin) }
 
     it { is_expected.to permit_action(:show) }
+    it { is_expected.to permit_action(:edit_mentor) }
+    it { is_expected.to permit_action(:update_mentor) }
+    it { is_expected.to forbid_action(:new_ect) }
+    it { is_expected.to forbid_action(:add_ect) }
     it { is_expected.to permit_action(:withdraw_record) }
     it { is_expected.to permit_action(:edit_name) }
     it { is_expected.to permit_action(:update_name) }
@@ -22,6 +26,11 @@ RSpec.describe ParticipantProfile::ECFPolicy, type: :policy do
     context "after the participant has provided validation data" do
       let(:participant_profile) { create(:ect, :eligible_for_funding, lead_provider: cpd_lead_provider.lead_provider) }
 
+      it { is_expected.to permit_action(:show) }
+      it { is_expected.to permit_action(:edit_mentor) }
+      it { is_expected.to permit_action(:update_mentor) }
+      it { is_expected.to forbid_action(:new_ect) }
+      it { is_expected.to forbid_action(:add_ect) }
       it { is_expected.to forbid_action(:withdraw_record) }
       it { is_expected.to permit_action(:edit_name) }
       it { is_expected.to permit_action(:update_name) }
@@ -33,6 +42,11 @@ RSpec.describe ParticipantProfile::ECFPolicy, type: :policy do
     context "when the participant is found to be ineligible" do
       let(:participant_profile) { create(:ect, :ineligible, lead_provider: cpd_lead_provider.lead_provider) }
 
+      it { is_expected.to permit_action(:show) }
+      it { is_expected.to permit_action(:edit_mentor) }
+      it { is_expected.to permit_action(:update_mentor) }
+      it { is_expected.to forbid_action(:new_ect) }
+      it { is_expected.to forbid_action(:add_ect) }
       it { is_expected.to permit_action(:withdraw_record) }
       it { is_expected.to permit_action(:edit_name) }
       it { is_expected.to permit_action(:update_name) }
@@ -53,6 +67,11 @@ RSpec.describe ParticipantProfile::ECFPolicy, type: :policy do
         ).call
       end
 
+      it { is_expected.to permit_action(:show) }
+      it { is_expected.to permit_action(:edit_mentor) }
+      it { is_expected.to permit_action(:update_mentor) }
+      it { is_expected.to forbid_action(:new_ect) }
+      it { is_expected.to forbid_action(:add_ect) }
       it { is_expected.to forbid_action(:withdraw_record) }
       it { is_expected.to permit_action(:edit_name) }
       it { is_expected.to permit_action(:update_name) }
@@ -71,6 +90,11 @@ RSpec.describe ParticipantProfile::ECFPolicy, type: :policy do
           create(:ect_participant_declaration, participant_profile:, cpd_lead_provider:)
         end
 
+        it { is_expected.to permit_action(:show) }
+        it { is_expected.to permit_action(:edit_mentor) }
+        it { is_expected.to permit_action(:update_mentor) }
+        it { is_expected.to forbid_action(:new_ect) }
+        it { is_expected.to forbid_action(:add_ect) }
         it { is_expected.to forbid_action(:withdraw_record) }
         it { is_expected.to permit_action(:edit_name) }
         it { is_expected.to permit_action(:update_name) }
@@ -83,6 +107,11 @@ RSpec.describe ParticipantProfile::ECFPolicy, type: :policy do
           create(:ect_participant_declaration, :voided, participant_profile:, cpd_lead_provider:)
         end
 
+        it { is_expected.to permit_action(:show) }
+        it { is_expected.to permit_action(:edit_mentor) }
+        it { is_expected.to permit_action(:update_mentor) }
+        it { is_expected.to forbid_action(:new_ect) }
+        it { is_expected.to forbid_action(:add_ect) }
         it { is_expected.to permit_action(:withdraw_record) }
         it { is_expected.to permit_action(:edit_name) }
         it { is_expected.to permit_action(:update_name) }
@@ -96,6 +125,11 @@ RSpec.describe ParticipantProfile::ECFPolicy, type: :policy do
         create(:npq_application, participant_identity: participant_profile.participant_identity)
       end
 
+      it { is_expected.to permit_action(:show) }
+      it { is_expected.to permit_action(:edit_mentor) }
+      it { is_expected.to permit_action(:update_mentor) }
+      it { is_expected.to forbid_action(:new_ect) }
+      it { is_expected.to forbid_action(:add_ect) }
       it { is_expected.to permit_action(:withdraw_record) }
       it { is_expected.to permit_action(:edit_name) }
       it { is_expected.to permit_action(:update_name) }
@@ -107,6 +141,10 @@ RSpec.describe ParticipantProfile::ECFPolicy, type: :policy do
   context "induction tutor at the correct school" do
     let(:user) { create(:user, :induction_coordinator, schools: [participant_profile.school]) }
     it { is_expected.to permit_action(:show) }
+    it { is_expected.to permit_action(:edit_mentor) }
+    it { is_expected.to permit_action(:update_mentor) }
+    it { is_expected.to forbid_action(:new_ect) }
+    it { is_expected.to forbid_action(:add_ect) }
     it { is_expected.to permit_action(:withdraw_record) }
     it { is_expected.to forbid_action(:edit_name) }
     it { is_expected.to forbid_action(:update_name) }
@@ -118,6 +156,11 @@ RSpec.describe ParticipantProfile::ECFPolicy, type: :policy do
         create(:ecf_participant_validation_data, participant_profile:)
       end
 
+      it { is_expected.to permit_action(:show) }
+      it { is_expected.to permit_action(:edit_mentor) }
+      it { is_expected.to permit_action(:update_mentor) }
+      it { is_expected.to forbid_action(:new_ect) }
+      it { is_expected.to forbid_action(:add_ect) }
       it { is_expected.to forbid_action(:withdraw_record) }
       it { is_expected.to permit_action(:edit_name) }
       it { is_expected.to permit_action(:update_name) }
@@ -128,6 +171,11 @@ RSpec.describe ParticipantProfile::ECFPolicy, type: :policy do
     context "when the participant is found to be ineligible" do
       let(:participant_profile) { create(:ect, :ineligible, lead_provider: cpd_lead_provider.lead_provider) }
 
+      it { is_expected.to permit_action(:show) }
+      it { is_expected.to permit_action(:edit_mentor) }
+      it { is_expected.to permit_action(:update_mentor) }
+      it { is_expected.to forbid_action(:new_ect) }
+      it { is_expected.to forbid_action(:add_ect) }
       it { is_expected.to permit_action(:withdraw_record) }
       it { is_expected.to permit_action(:edit_name) }
       it { is_expected.to permit_action(:update_name) }
@@ -140,6 +188,12 @@ RSpec.describe ParticipantProfile::ECFPolicy, type: :policy do
       before do
         create(:ect_participant_declaration, participant_profile:, cpd_lead_provider:)
       end
+
+      it { is_expected.to permit_action(:show) }
+      it { is_expected.to permit_action(:edit_mentor) }
+      it { is_expected.to permit_action(:update_mentor) }
+      it { is_expected.to forbid_action(:new_ect) }
+      it { is_expected.to forbid_action(:add_ect) }
       it { is_expected.to forbid_action(:withdraw_record) }
       it { is_expected.to permit_action(:edit_name) }
       it { is_expected.to permit_action(:update_name) }
@@ -152,6 +206,11 @@ RSpec.describe ParticipantProfile::ECFPolicy, type: :policy do
         create(:ect_participant_declaration, :voided, participant_profile:, cpd_lead_provider:)
       end
 
+      it { is_expected.to permit_action(:show) }
+      it { is_expected.to permit_action(:edit_mentor) }
+      it { is_expected.to permit_action(:update_mentor) }
+      it { is_expected.to forbid_action(:new_ect) }
+      it { is_expected.to forbid_action(:add_ect) }
       it { is_expected.to permit_action(:withdraw_record) }
       it { is_expected.to forbid_action(:edit_name) }
       it { is_expected.to forbid_action(:update_name) }
@@ -164,6 +223,11 @@ RSpec.describe ParticipantProfile::ECFPolicy, type: :policy do
         create(:npq_application, participant_identity: participant_profile.participant_identity)
       end
 
+      it { is_expected.to permit_action(:show) }
+      it { is_expected.to permit_action(:edit_mentor) }
+      it { is_expected.to permit_action(:update_mentor) }
+      it { is_expected.to forbid_action(:new_ect) }
+      it { is_expected.to forbid_action(:add_ect) }
       it { is_expected.to permit_action(:withdraw_record) }
       it { is_expected.to forbid_action(:edit_name) }
       it { is_expected.to forbid_action(:update_name) }
@@ -180,6 +244,11 @@ RSpec.describe ParticipantProfile::ECFPolicy, type: :policy do
       end
 
       it { is_expected.to permit_action(:show) }
+      it { is_expected.to permit_action(:edit_mentor) }
+      it { is_expected.to permit_action(:update_mentor) }
+      it { is_expected.to permit_action(:new_ect) }
+      it { is_expected.to permit_action(:add_ect) }
+      it { is_expected.to permit_action(:show) }
       it { is_expected.to forbid_action(:edit_name) }
       it { is_expected.to forbid_action(:update_name) }
       it { is_expected.to forbid_action(:edit_email) }
@@ -195,6 +264,10 @@ RSpec.describe ParticipantProfile::ECFPolicy, type: :policy do
 
     let(:user) { create(:user, :induction_coordinator) }
     it { is_expected.to forbid_action(:show) }
+    it { is_expected.to forbid_action(:edit_mentor) }
+    it { is_expected.to forbid_action(:update_mentor) }
+    it { is_expected.to forbid_action(:new_ect) }
+    it { is_expected.to forbid_action(:add_ect) }
     it { is_expected.to forbid_action(:withdraw_record) }
     it { is_expected.to forbid_action(:edit_name) }
     it { is_expected.to forbid_action(:update_name) }
