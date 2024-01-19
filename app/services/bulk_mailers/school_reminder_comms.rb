@@ -101,10 +101,30 @@ module BulkMailers
       email_count
     end
 
+    def contact_sits_that_have_chosen_fip_but_not_partnered_at_year_start
+      email_count = 0
+
+      # we don't email those that partnered last year but havent this year
+      # as yet
+      Schools::UnpartneredLastYearAndHaveNotPartneredThisYearQuery
+        .call(cohort:, school_type_codes: SCHOOL_TYPES_TO_INCLUDE)
+        .joins(:induction_coordinator_profiles)
+        .find_each do |school|
+          email_count += 1
+          next if dry_run
+
+          SchoolMailer.with(school:).sit_needs_to_chase_partnership.deliver_later
+        end
+
+      email_count
+    end
+
     def contact_sits_that_have_chosen_fip_but_not_partnered
       email_count = 0
 
-      Schools::UnpartneredLastYearAndHaveNotPartneredThisYearQuery
+      # in year we want to email if they haven't partnered regardless
+      # of whether they partnered last year or not
+      Schools::UnpartneredQuery
         .call(cohort:, school_type_codes: SCHOOL_TYPES_TO_INCLUDE)
         .joins(:induction_coordinator_profiles)
         .find_each do |school|
