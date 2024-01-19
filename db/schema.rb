@@ -1254,6 +1254,16 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_25_143240) do
     t.index ["get_an_identity_id"], name: "index_users_on_get_an_identity_id", unique: true
   end
 
+  create_table "validation_errors", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "form_object", null: false
+    t.uuid "user_id"
+    t.string "request_path", null: false
+    t.jsonb "details"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["form_object"], name: "index_validation_errors_on_form_object"
+  end
+
   create_table "versions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "item_type", null: false
     t.string "event", null: false
