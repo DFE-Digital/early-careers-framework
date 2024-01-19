@@ -16,7 +16,7 @@ module Oneoffs::NPQ
 
   private
 
-    def incorrect_teacher_profiles
+    def teacher_profiles_without_trns
       TeacherProfile.where(trn: nil)
     end
   end
