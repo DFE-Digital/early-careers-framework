@@ -36,7 +36,7 @@ module Api
       # POST /api/v3/participant-declarations
       #
       def create
-        attributes = (permitted_params["attributes"] || {})
+        attributes = permitted_params["attributes"] || {}
 
         if params[:use_proxy] == "yes" && attributes[:course_identifier].to_s.starts_with?("npq-")
           res = NPQRegistrationProxy.new(request).perform
