@@ -7,8 +7,9 @@ module Oneoffs::NPQ
       teacher_profiles_without_trns.in_batches.each_record do |profile|
         trns = profile.user.npq_applications.map(&:teacher_reference_number).uniq
         # check if they are correct
-        if trns.count == 1 && TeacherReferenceNumber.new(trns.first).valid?
-          profile.trn = trns.first
+        trn = TeacherReferenceNumber.new(trns.first)
+        if trns.count == 1 && trn.valid?
+          profile.trn = trn.formatted_trn
           profile.save!
         end
       end
