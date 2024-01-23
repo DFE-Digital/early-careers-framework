@@ -8,7 +8,7 @@ class DeduplicationService < ::BaseService
 private
 
   def select_users_to_archive
-    ids = User.left_joins(:participant_identities).where(participant_identities: { user_id: nil }).pluck(:id)
+    ids = User.left_joins(:participant_identities).where(participant_identities: { user_id: nil }).where("archived_at is null").pluck(:id)
 
     ids_to_exclude = []
     ids_to_exclude << AdminProfile.where(user_id: ids).pluck(:user_id)

@@ -6,6 +6,7 @@ RSpec.describe DeduplicationService do
   let(:user) { create(:user, email: "user@example.org") }
   let(:deletable_user) { create(:teacher_profile, user:).user }
   let(:admin_user) { create(:user, :admin) }
+  let(:archived_user) { create(:user, archived_at: 1.day.ago) }
   let(:appropriate_body_user) { create(:user, :appropriate_body) }
   let(:delivery_partner_user) { create(:user, :delivery_partner) }
   let(:finance_user) { create(:user, :finance) }
@@ -18,6 +19,7 @@ RSpec.describe DeduplicationService do
     deletable_user
 
     admin_user
+    archived_user
     appropriate_body_user
     delivery_partner_user
     finance_user
@@ -28,6 +30,10 @@ RSpec.describe DeduplicationService do
 
   describe ".select_users_to_archive" do
     let(:users_to_delete) { DeduplicationService.new.send(:select_users_to_archive) }
+
+    it "does not include admin user" do
+      expect(users_to_delete).not_to include(archived_user)
+    end
 
     it "does not include admin user" do
       expect(users_to_delete).not_to include(admin_user)
