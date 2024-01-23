@@ -24,6 +24,9 @@ module Identity
 
     def transfer_identities!
       teacher_profile = TeacherProfile.find_or_create_by!(user: to_user)
+      unless teacher_profile.trn
+        teacher_profile.update!(trn: from_user.teacher_profile&.trn)
+      end
 
       from_user.participant_identities.each do |identity|
         identity.update!(user: to_user)

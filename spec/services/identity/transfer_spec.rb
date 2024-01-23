@@ -19,7 +19,7 @@ RSpec.describe Identity::Transfer do
 
     context "when participant profiles are attached to the user" do
       let(:school_cohort) { create(:school_cohort) }
-      let(:teacher_profile1) { create(:teacher_profile, user: user1) }
+      let(:teacher_profile1) { create(:teacher_profile, user: user1, trn: "1234567") }
       let!(:participant_profile) { create(:ect_participant_profile, teacher_profile: teacher_profile1, school_cohort:) }
 
       context "when the receiver does not have a teacher_profile" do
@@ -27,6 +27,11 @@ RSpec.describe Identity::Transfer do
           expect {
             service.call(from_user: user1, to_user: user2)
           }.to change { TeacherProfile.count }.by(1)
+        end
+
+        it "copies trn from from user to new teacher profile" do
+          service.call(from_user: user1, to_user: user2)
+          expect(user2.teacher_profile.trn).to eq(teacher_profile1.trn)
         end
 
         it "moves the participant_profiles to the new teacher_profile" do
