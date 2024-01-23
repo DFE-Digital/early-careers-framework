@@ -14,7 +14,7 @@ module Admin::Participants
         content: "#{@participant_profile.user.full_name}'s induction status was changed to active",
       }
 
-      redirect_to(admin_participant_statuses_path(@participant_profile))
+      redirect_to(admin_participant_school_path(@participant_profile))
     end
 
   private

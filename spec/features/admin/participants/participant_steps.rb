@@ -40,8 +40,8 @@ module ParticipantSteps
     visit admin_participants_path
   end
 
-  def when_i_visit_the_satuses_page_for_participant(participant_profile)
-    visit admin_participant_statuses_path(participant_profile)
+  def when_i_visit_the_training_page_for_participant(participant_profile)
+    visit admin_participant_school_path(participant_profile)
   end
 
   def when_i_click_on_the_participants_name(name)
@@ -115,10 +115,6 @@ module ParticipantSteps
     expect(page).to have_selector("h1", text: "Participants")
   end
 
-  def then_i_should_be_in_the_admin_participants_statuses_dashboard
-    expect(page).to have_css(active_tab_selector, text: "Statuses")
-  end
-
   def then_i_should_be_on_the_edit_notes_page
     expect(page).to have_selector("h1", text: "Add notes")
   end
@@ -145,10 +141,6 @@ module ParticipantSteps
 
   def then_i_should_be_on_the_participant_training_page
     expect(current_path).to eql(admin_participant_school_path(@participant_profile_ect))
-  end
-
-  def then_i_should_be_on_the_participant_induction_records_page
-    expect(current_path).to eql(admin_participant_induction_records_path(@participant_profile_ect))
   end
 
   def then_i_should_be_on_the_participant_declaration_history_page
@@ -197,18 +189,6 @@ module ParticipantSteps
   end
   alias_method :given_the_mentor_is_mentoring_the_ect, :and_the_mentor_is_mentoring_the_ect
 
-  def and_the_mentors_name_should_be_a_link_to_their_profile
-    within(page.find("dt", text: /^Mentor$/).ancestor(".govuk-summary-list__row").find("dd")) do
-      expect(page).to have_link(@participant_profile_mentor.full_name, href: admin_participant_path(@participant_profile_mentor))
-    end
-  end
-
-  def and_the_mentees_names_should_be_links_to_their_profiles
-    within(page.find("dt", text: /^Mentoring$/).ancestor(".govuk-summary-list__row").find("dd > ul > li")) do
-      expect(page).to have_link(@participant_profile_ect.full_name, href: admin_participant_path(@participant_profile_ect))
-    end
-  end
-
   def and_i_click_on_confirm
     click_on("Confirm")
   end
@@ -224,10 +204,6 @@ module ParticipantSteps
 
   def and_i_should_see_the_induction_statuses_are_active
     within(page.find("dt", text: /^induction status$/).ancestor(".govuk-summary-list__row").find("dd")) do
-      expect(page).to have_text("Active")
-    end
-
-    within(page.find("dt", text: /^status$/).ancestor(".govuk-summary-list__row").find("dd")) do
       expect(page).to have_text("Active")
     end
   end
@@ -246,7 +222,6 @@ module ParticipantSteps
   end
 
   def and_i_should_see_the_current_schools_details
-    expect(page).to have_text(@school.urn)
     expect(page).to have_text(@school.name)
   end
 
@@ -255,7 +230,7 @@ module ParticipantSteps
   end
 
   def and_i_should_see_the_participant_induction_records
-    expect(page).to have_css(active_tab_selector, text: "Induction records")
+    expect(page).to have_css(active_tab_selector, text: "Training")
   end
 
   def and_i_should_see_the_participant_cohorts
