@@ -1,0 +1,82 @@
+<% training_record_states = DetermineTrainingRecordState.call(induction_records: induction_record) %>
+
+<%=
+  govuk_summary_list do |sl|
+    sl.with_row do |row|
+      row.with_key(text: "Cohort")
+      row.with_value(text: induction_record.cohort.start_year)
+    end
+
+    sl.with_row do |row|
+      row.with_key(text: "Status")
+      row.with_value(text: induction_record.training_status)
+      if policy(induction_record).edit_training_status? &&
+          @participant_presenter.school_latest_induction_record?(induction_record)
+        row.with_action(
+            href: edit_training_status_admin_participant_induction_records_path(@participant_profile, induction_record),
+            visually_hidden_text: "status"
+        )
+      end
+    end
+
+    sl.with_row do |row|
+      row.with_key(text: "Start date")
+      row.with_value(text: induction_record.start_date.to_formatted_s(:govuk))
+    end
+
+    sl.with_row do |row|
+      row.with_key(text: "School")
+      row.with_value do
+        govuk_link_to(
+          induction_record.school_name,
+          admin_school_path(induction_record.school.friendly_id)
+        )
+      end
+    end
+
+
+    sl.with_row do |row|
+      row.with_key(text: "Training programme")
+      row.with_value(text: induction_programme_friendly_name(induction_record.training_programme))
+    end
+
+    if induction_record.enrolled_in_fip?
+      sl.with_row do |row|
+        row.with_key(text: "Lead provider")
+        row.with_value(text: induction_record.lead_provider_name || "No lead provider")
+      end
+
+      sl.with_row do |row|
+        row.with_key(text: "Delivery partner")
+        row.with_value(text: induction_record.delivery_partner_name || "No delivery partner")
+      end
+    end
+
+    sl.with_row do |row|
+      row.with_key(text: "Mentor")
+      row.with_value(text: induction_record.mentor_full_name)
+    end
+
+    sl.with_row do |row|
+      row.with_key(text: "Appropriate body")
+      row.with_value(text: induction_record.appropriate_body_name)
+    end
+
+    if induction_record.appropriate_body.present?
+      sl.with_row do |row|
+        row.with_key(text: "Appropriate body record state")
+        row.with_value(text: render(StatusTags::AppropriateBodyParticipantStatusTag.new(training_record_states[induction_record.participant_profile_id])))
+      end
+    end
+
+    sl.with_row do |row|
+      row.with_key(text: "Record ID")
+      row.with_value(text: tag.code(induction_record.id))
+    end
+
+    sl.with_row do |row|
+      row.with_key(text: "Created at")
+      row.with_value(text: induction_record.created_at&.to_fs(:govuk))
+    end
+  end
+%>
