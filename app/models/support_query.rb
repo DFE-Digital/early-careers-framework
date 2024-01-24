@@ -14,6 +14,7 @@ class SupportQuery < ApplicationRecord
     add-participant-requires-manual-transfer-mentor
     add-participant-dqt-mismatch-ect
     add-participant-dqt-mismatch-mentor
+    partnership-issue
   ].freeze
 
   belongs_to :user

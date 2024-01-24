@@ -883,7 +883,7 @@ en:
       add-participant-requires-manual-transfer-mentor_html: "Complete this request form to register %{teacher_name} as a mentor at your school."
       add-participant-dqt-mismatch-ect_html: "Complete this request form to register %{teacher_name} as an ECT at your school."
       add-participant-dqt-mismatch-mentor_html:  "Complete this request form to register %{teacher_name} as a mentor at your school."
-
+      partnership-issue_html: "If you there is an issue with %{cohort_year_range}'s partnership, you can contact the DfE using this form."
 
     instructions:
       unspecified_html: ""
@@ -968,6 +968,7 @@ en:
           <li>start date at your school</li>
           <li>previous school's name</li>
         </ul>
+      partnership-issue_html: "Tell us the delivery partner and lead provider your school will be working with."
 
   support_query:
     subjects:
@@ -982,3 +983,4 @@ en:
       add-participant-requires-manual-transfer-mentor: Request to add a mentor that requires a manual transfer
       add-participant-dqt-mismatch-ect: Request to add a mentor with a DQT mismatch
       add-participant-dqt-mismatch-mentor: Request to add a mentor with a DQT mismatch
+      partnership-issue: SIT reporting issue with a partnership
