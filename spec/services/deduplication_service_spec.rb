@@ -31,7 +31,7 @@ RSpec.describe DeduplicationService do
   describe ".select_users_to_archive" do
     let(:users_to_delete) { DeduplicationService.new.send(:select_users_to_archive) }
 
-    it "does not include admin user" do
+    it "does not include archived user" do
       expect(users_to_delete).not_to include(archived_user)
     end
 
