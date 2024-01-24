@@ -7,65 +7,71 @@
 
 <%= render partial: "admin/participants/nav" %>
 
-<% if @participant_presenter.all_induction_records.any? %>
-  <h2 class="govuk-heading-m">Current training record</h2>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-three-quarters">
 
-  <%= render partial: "admin/participants/induction_records/show", locals: { induction_record:  @participant_presenter.all_induction_records[0] } %>
-<% else %>
-  <p>No training records for  for <%= @participant_presenter.full_name %>.</p>
-<% end %>
+    <% if @participant_presenter.all_induction_records.any? %>
+      <h2 class="govuk-heading-m">Current training record</h2>
 
-<% if @participant_presenter.historical_induction_records.present? %>
-<h2 class="govuk-heading-m">Previous training records</h2>
-  <% @participant_presenter.historical_induction_records.each do |induction_record| %>
-    <%= render partial: "admin/participants/induction_records/show", locals: { induction_record: induction_record } %>
-  <% end %>
-<% end %>
+      <%= render partial: "admin/participants/induction_records/show", locals: { induction_record:  @participant_presenter.all_induction_records[0] } %>
+    <% else %>
+      <p>No training records for  for <%= @participant_presenter.full_name %>.</p>
+    <% end %>
 
-<%=
-  govuk_button_link_to(
-    "Transfer to another school",
-    select_school_admin_participant_school_transfer_path(@participant_profile),
-    secondary: true,
-    )
-%>
+    <% if @participant_presenter.historical_induction_records.present? %>
+    <h2 class="govuk-heading-m">Previous training records</h2>
+      <% @participant_presenter.historical_induction_records.each do |induction_record| %>
+        <%= render partial: "admin/participants/induction_records/show", locals: { induction_record: induction_record } %>
+      <% end %>
+    <% end %>
 
-<%=
-  govuk_button_link_to(
-    "Add to a school mentor pool",
-    new_admin_participant_add_to_school_mentor_pool_path(@participant_profile),
-    secondary: true,
-    ) if @participant_presenter.mentor?
-%>
+    <%=
+      govuk_button_link_to(
+        "Transfer to another school",
+        select_school_admin_participant_school_transfer_path(@participant_profile),
+        secondary: true,
+        )
+    %>
 
-<h2 class="govuk-heading-m">Cohort</h2>
+    <%=
+      govuk_button_link_to(
+        "Add to a school mentor pool",
+        new_admin_participant_add_to_school_mentor_pool_path(@participant_profile),
+        secondary: true,
+        ) if @participant_presenter.mentor?
+    %>
 
-<%= govuk_summary_list do |sl|
-  sl.with_row do |row|
-    row.with_key(text: "Cohort via induction record")
-    row.with_value(text: @participant_presenter.start_year)
-  end
+    <h2 class="govuk-heading-m">Cohort</h2>
 
-  sl.with_row do |row|
-    row.with_key(text: "Cohort via schedule")
-    row.with_value(text: @participant_presenter&.relevant_induction_record&.schedule&.cohort&.start_year)
-  end
-end %>
+    <%= govuk_summary_list do |sl|
+      sl.with_row do |row|
+        row.with_key(text: "Cohort via induction record")
+        row.with_value(text: @participant_presenter.start_year)
+      end
 
-<% if policy(@participant_profile).edit_cohort? %>
-  <%= govuk_button_link_to("Change cohort", edit_admin_participant_change_cohort_path(@participant_presenter.participant_profile), secondary: true) %>
-<% end %>
+      sl.with_row do |row|
+        row.with_key(text: "Cohort via schedule")
+        row.with_value(text: @participant_presenter&.relevant_induction_record&.schedule&.cohort&.start_year)
+      end
+    end %>
 
-<h3 class="govuk-heading-m">Relevant induction record statuses</h3>
-<%= govuk_summary_list(actions: true) do |sl|
-  sl.with_row do |row|
-    row.with_key(text: "induction status")
-    row.with_value(text: govuk_tag(text: @participant_presenter.relevant_induction_record&.induction_status&.capitalize || "No Induction Record Found", colour: "grey"))
-    if allowed_to_change_induction_status?(@participant_presenter)
-      row.with_action(
-        href: edit_admin_participant_change_induction_status_path(@participant_presenter.participant_profile),
-        visually_hidden_text: "induction status"
-      )
-    end
-  end
-end %>
+    <% if policy(@participant_profile).edit_cohort? %>
+      <%= govuk_button_link_to("Change cohort", edit_admin_participant_change_cohort_path(@participant_presenter.participant_profile), secondary: true) %>
+    <% end %>
+
+    <h3 class="govuk-heading-m">Relevant induction record statuses</h3>
+    <%= govuk_summary_list(actions: true) do |sl|
+      sl.with_row do |row|
+        row.with_key(text: "induction status")
+        row.with_value(text: govuk_tag(text: @participant_presenter.relevant_induction_record&.induction_status&.capitalize || "No Induction Record Found", colour: "grey"))
+        if allowed_to_change_induction_status?(@participant_presenter)
+          row.with_action(
+            href: edit_admin_participant_change_induction_status_path(@participant_presenter.participant_profile),
+            visually_hidden_text: "induction status"
+          )
+        end
+      end
+    end %>
+
+  </div>
+</div>

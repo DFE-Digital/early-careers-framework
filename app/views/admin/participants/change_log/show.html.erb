@@ -7,8 +7,14 @@
 
 <%= render partial: "admin/participants/nav" %>
 
-<% if @event_list.present? %>
-  <%= render Admin::Participants::AuditTrailComponent.new(audited_thing: @event_list) %>
-<% else %>
-  <p>No audit trail available for <%= @participant_profile.full_name %>.</p>
-<% end %>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-three-quarters">
+
+    <% if @event_list.present? %>
+      <%= render Admin::Participants::AuditTrailComponent.new(audited_thing: @event_list) %>
+    <% else %>
+      <p>No audit trail available for <%= @participant_profile.full_name %>.</p>
+    <% end %>
+
+  </div>
+</div>
