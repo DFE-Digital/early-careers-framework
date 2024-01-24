@@ -7,15 +7,27 @@
     Training
   <% end %>
 
+  <%= component.with_nav_item(path: admin_participant_statuses_path(@participant_profile)) do %>
+    Statuses
+  <% end %>
+
+  <%= component.with_nav_item(path: admin_participant_induction_records_path(@participant_profile)) do %>
+    Induction records
+  <% end %>
+
   <%= component.with_nav_item(path: admin_participant_declaration_history_path(@participant_profile)) do %>
-    Declarations
+    Declaration history
   <% end %>
 
   <%= component.with_nav_item(path: admin_participant_validation_data_path(@participant_profile)) do %>
-    DQT Matching
+    Validation data
+  <% end %>
+
+  <%= component.with_nav_item(path: admin_participant_identities_path(@participant_profile)) do %>
+    Identities
   <% end %>
 
   <%= component.with_nav_item(path: admin_participant_change_log_path(@participant_profile)) do %>
-    Audit log
+    Change log
   <% end %>
 <% end %>
