@@ -10,6 +10,10 @@ class SupportQuery < ApplicationRecord
     change-cohort-delivery-partner
     change-cohort-induction-programme-choice
     trouble-nominating-induction-coordinator
+    add-participant-requires-manual-transfer-ect
+    add-participant-requires-manual-transfer-mentor
+    add-participant-dqt-mismatch-ect
+    add-participant-dqt-mismatch-mentor
   ].freeze
 
   belongs_to :user
