@@ -14,5 +14,10 @@
       <%= f.govuk_submit "Continue" %>
     <% end %>
 
+    <% if @induction_tutor_form.errors.present? %>
+      <p class="govuk-body">
+        Having trouble? <%= govuk_link_to("Contact support", support_path(school_id: @induction_tutor_form.school.id, subject: :"trouble-nominating-induction-coordinator")) %>
+      </p>
+    <% end %>
   </div>
 </div>
