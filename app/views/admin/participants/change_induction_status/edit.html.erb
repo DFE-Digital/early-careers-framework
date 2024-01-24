@@ -1,4 +1,4 @@
-<% content_for :before_content, govuk_back_link( text: "Back", href: admin_participant_school_path(@participant_profile)) %>
+<% content_for :before_content, govuk_back_link( text: "Back", href: admin_participant_statuses_path(@participant_profile)) %>
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-heading-l">New induction status for <%= @participant_profile.full_name %></h1>
@@ -21,3 +21,4 @@
       <%= govuk_button_link_to "Confirm",  confirm_induction_status_admin_participant_change_induction_status_path %>
   </div>
 </div>
+

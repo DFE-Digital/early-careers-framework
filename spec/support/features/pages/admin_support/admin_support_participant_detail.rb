@@ -14,11 +14,15 @@ module Pages
     end
 
     def has_full_name?(full_name)
-      element_has_content? self, "Name#{full_name}Change name"
+      element_has_content? self, "Full name#{full_name}Change name"
     end
 
     def has_email_address?(email_address)
-      element_has_content? self, "Email address#{email_address}Change email"
+      element_has_content? self, "User email address#{email_address}Change email"
+    end
+
+    def has_user_id?(user_id)
+      element_has_content? self, "User ID#{user_id}"
     end
 
     def has_trn?(trn)
@@ -45,6 +49,10 @@ module Pages
       click_on "Training"
 
       Pages::AdminSupportParticipantTraining.loaded
+    end
+
+    def open_statuses_tab
+      click_on "Statuses"
     end
   end
 end

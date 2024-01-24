@@ -7,19 +7,90 @@
 
 <%= render partial: "admin/participants/nav" %>
 
-<% if @participant_presenter.all_induction_records.any? %>
-  <h2 class="govuk-heading-m">Current training record</h2>
+<h2 class="govuk-heading-m">Training details</h2>
 
-  <%= render partial: "admin/participants/induction_records/show", locals: { induction_record:  @participant_presenter.all_induction_records[0] } %>
+<% if @participant_presenter.school.blank? %>
+  <p>No school details for <%= @participant_presenter.full_name %>.</p>
 <% else %>
-  <p>No training records for  for <%= @participant_presenter.full_name %>.</p>
-<% end %>
+  <%= govuk_summary_list(actions: true) do |sl|
+    sl.with_row do |row|
+      row.with_key(text: "School name")
+      row.with_value do
+        govuk_link_to(
+          @participant_presenter.school_name,
+          admin_school_path(@participant_presenter.school_friendly_id)
+        )
+      end
+    end
 
-<% if @participant_presenter.historical_induction_records.present? %>
-<h2 class="govuk-heading-m">Previous training records</h2>
-  <% @participant_presenter.historical_induction_records.each do |induction_record| %>
-    <%= render partial: "admin/participants/induction_records/show", locals: { induction_record: induction_record } %>
-  <% end %>
+    sl.with_row do |row|
+      row.with_key(text: "School URN")
+      row.with_value(text: @participant_presenter.school_urn)
+    end
+
+    if @participant_profile.ect?
+      sl.with_row do |row|
+        row.with_key(text: "Mentor")
+        row.with_value(
+          text: if @participant_presenter.has_mentor?
+                  govuk_link_to(
+                    @participant_presenter.mentor_full_name,
+                    admin_participant_path(@participant_presenter.mentor_profile),
+                    )
+                else
+                  'Not yet assigned'
+                end
+        )
+      end
+    end
+
+    sl.with_row do |row|
+      row.with_key(text: "School record state")
+      row.with_value(text: render(StatusTags::SchoolParticipantStatusTag.new(participant_profile: @participant_presenter.participant_profile, school: @participant_presenter.school)))
+    end
+
+    if @participant_presenter.relevant_induction_record&.enrolled_in_fip?
+      sl.with_row do |row|
+        row.with_key(text: "Lead provider")
+        row.with_value(text: @participant_presenter.lead_provider_name)
+      end
+
+      sl.with_row do |row|
+        row.with_key(text: "Delivery partner")
+        row.with_value(text: @participant_presenter.delivery_partner_name)
+      end
+    elsif @participant_presenter.relevant_induction_record&.enrolled_in_cip?
+      sl.with_row do |row|
+        row.with_key(text: "Materials supplier")
+        row.with_value(text: @participant_presenter.relevant_induction_record.core_induction_programme_name)
+      end
+    end
+
+    sl.with_row do |row|
+      row.with_key(text: "Appropriate body")
+      row.with_value(text: @participant_presenter.appropriate_body_name)
+    end
+
+    if @participant_presenter.mentor?
+      sl.with_row do |row|
+        row.with_key(text: "Mentoring")
+        row.with_value do
+          if @participant_presenter.mentees_by_school.any?
+            html_list(
+              @participant_presenter.mentees_by_school.map do |school, mentees|
+                safe_join([
+                  tag.h2(school.name, class: "govuk-heading-s"),
+                  html_list(
+                    mentees.map { |m| govuk_link_to(m.full_name, admin_participant_path(m)) }
+                  )
+                ])
+              end
+            )
+          end
+        end
+      end
+    end
+  end %>
 <% end %>
 
 <%=
@@ -38,6 +109,31 @@
     ) if @participant_presenter.mentor?
 %>
 
+<h2 class="govuk-heading-m">Key events</h2>
+
+<%= govuk_summary_list(
+      rows: [
+        {
+          key: { text: "Added to the service" },
+          value: { text: @participant_presenter.user_created_at }
+        }
+      ]
+    ) %>
+
+<%= govuk_table(
+      caption: "Previous schools",
+      head: ["School name", "Induction programme", "Start date", "End date"],
+      rows: @participant_presenter.historical_induction_records.map do |r|
+        [
+          r.school_cohort.school.name,
+          r.induction_programme.training_programme.humanize,
+          r.start_date.to_date.to_fs(:govuk),
+          r.end_date&.to_date&.to_fs(:govuk),
+        ]
+      end,
+      ) %>
+
+
 <h2 class="govuk-heading-m">Cohort</h2>
 
 <%= govuk_summary_list do |sl|
@@ -55,17 +151,3 @@ end %>
 <% if policy(@participant_profile).edit_cohort? %>
   <%= govuk_button_link_to("Change cohort", edit_admin_participant_change_cohort_path(@participant_presenter.participant_profile), secondary: true) %>
 <% end %>
-
-<h3 class="govuk-heading-m">Relevant induction record statuses</h3>
-<%= govuk_summary_list(actions: true) do |sl|
-  sl.with_row do |row|
-    row.with_key(text: "induction status")
-    row.with_value(text: govuk_tag(text: @participant_presenter.relevant_induction_record&.induction_status&.capitalize || "No Induction Record Found", colour: "grey"))
-    if allowed_to_change_induction_status?(@participant_presenter)
-      row.with_action(
-        href: edit_admin_participant_change_induction_status_path(@participant_presenter.participant_profile),
-        visually_hidden_text: "induction status"
-      )
-    end
-  end
-end %>

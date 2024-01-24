@@ -543,6 +543,9 @@ module Steps
       participant_detail.has_primary_heading? "The Participant"
       participant_detail.has_full_name? "The Participant"
 
+      training_record_state = scenario.participant_type == "ECT" ? "Eligible to start" : "Not yet mentoring"
+      participant_detail.has_training_record_state? training_record_state
+
       # now the school data is on a sibling page, we need to navigate
       # there before checking the school/lead provider contents
       participant_training = participant_detail.open_training_tab
@@ -552,6 +555,8 @@ module Steps
 
       if scenario.new_programme == "FIP"
         participant_training.has_lead_provider? scenario.new_lead_provider_name
+      elsif scenario.new_programme == "CIP"
+        participant_training.has_materials_supplier? ""
       end
 
       sign_out
