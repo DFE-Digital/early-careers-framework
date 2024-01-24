@@ -158,7 +158,7 @@ RSpec.describe "Nominating an induction coordinator", type: :request do
       context "when an induction coordinator already exists with the provided email" do
         let!(:existing_induction_coordinator) { create(:user, :induction_coordinator, email:) }
 
-        it "redirects to the name-different page when the form name does not match our records" do
+        it "does not set the coordinator" do
           expect {
             put "/nominations/email", params: { nominate_induction_tutor_form: {
               full_name: "Different Name",
@@ -169,13 +169,16 @@ RSpec.describe "Nominating an induction coordinator", type: :request do
 
           expect(existing_induction_coordinator.schools.count).to eql 1
           expect(existing_induction_coordinator.schools).not_to include nomination_email.school
+
+          expect(response).to render_template("nominations/nominate_induction_coordinator/email")
+          expect(response.body).to include(CGI.escapeHTML("There is a problem"))
         end
       end
 
       context "when an ECT user already exists with the provided email" do
         let!(:existing_user) { create(:ect_participant_profile, user: create(:user, email:)).user }
 
-        it "redirects to the email-used page" do
+        it "does not set the coordinator" do
           expect {
             put "/nominations/email", params: { nominate_induction_tutor_form: {
               full_name: name,
@@ -183,6 +186,9 @@ RSpec.describe "Nominating an induction coordinator", type: :request do
               token:,
             } }
           }.not_to(change { User.count })
+
+          expect(response).to render_template("nominations/nominate_induction_coordinator/email")
+          expect(response.body).to include(CGI.escapeHTML("There is a problem"))
         end
       end
     end
