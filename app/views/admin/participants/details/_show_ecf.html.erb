@@ -82,11 +82,6 @@
   end
 
   sl.with_row do |row|
-    row.with_key(text: "User ID")
-    row.with_value(text: tag.code(@participant_presenter.user_id))
-  end
-
-  sl.with_row do |row|
     row.with_key(text: "Notes")
 
     row.with_value do

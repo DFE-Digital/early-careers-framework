@@ -25,10 +25,6 @@ module Pages
       element_has_content? self, "TRN#{trn}"
     end
 
-    def has_user_id?(user_id)
-      element_has_content? self, "User ID#{user_id}"
-    end
-
     def has_cohort?(start_year)
       element_has_content? self, "Cohort: #{start_year}"
     end

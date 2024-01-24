@@ -210,7 +210,6 @@ RSpec.feature "ECT doing FIP: after cohort transfer", type: :feature do
     expect(participant_detail).to have_email_address participant_email
     expect(participant_detail).to have_trn teacher_reference_number
     expect(participant_detail).to have_cohort previous_start_year
-    expect(participant_detail).to have_user_id participant_id
 
     participant_detail.open_training_tab
 
