@@ -18,6 +18,7 @@ module Schools
         wizard.save!
         redirect_to wizard.next_step_path
       else
+        track_validation_error(wizard.form)
         render wizard.current_step
       end
     end
