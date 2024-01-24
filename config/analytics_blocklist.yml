@@ -463,3 +463,12 @@
   - get_an_identity_id
   - archived_email
   - archived_at
+  :email_schedules:
+  - id
+  - mailer_name
+  - scheduled_at
+  - status
+  - actual_email_count
+  - failed_email_count
+  - created_at
+  - updated_at
