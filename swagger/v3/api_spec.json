@@ -3313,13 +3313,13 @@
             "description": "The unique identifier of the changed from participant training record.",
             "type": "string",
             "format": "uuid",
-            "example": "000a97ff-d2a9-4779-a397-9bfd9063072e"
+            "example": "23dd8d66-e11f-4139-9001-86b4f9abcb02"
           },
           "to_participant_id": {
             "description": "The unique identifier of the changed to participant training record.",
             "type": "string",
             "format": "uuid",
-            "example": "000a97ff-d2a9-4779-a397-9bfd9063072e"
+            "example": "ac3d1243-7308-4879-942a-c4a70ced400a"
           },
           "changed_at": {
             "description": "The date and time the Participant ID change",
@@ -3342,7 +3342,7 @@
             "description": "The unique identifier of the participant record",
             "type": "string",
             "format": "uuid",
-            "example": "db3a7848-7308-4879-942a-c4a70ced400a"
+            "example": "ac3d1243-7308-4879-942a-c4a70ced400a"
           },
           "type": {
             "description": "The data type",
