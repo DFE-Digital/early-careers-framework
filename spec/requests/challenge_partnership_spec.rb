@@ -36,14 +36,14 @@ RSpec.describe "Challenging a partnership", type: :request do
       it "redirects to already-challenged" do
         get "/report-incorrect-partnership", params: { token: partnership_notification_email.token }
 
-        expect(response).to redirect_to(/\/report-incorrect-partnership\/already-challenged\?school_name=.*/)
+        expect(response).to redirect_to(/\/report-incorrect-partnership\/already-challenged\?cohort=.*&school_id=.*&school_name=.*/)
       end
 
       it "redirects to already-challenged even if the token has expired" do
         travel 15.days
         get "/report-incorrect-partnership", params: { token: partnership_notification_email.token }
 
-        expect(response).to redirect_to(/\/report-incorrect-partnership\/already-challenged\?school_name=.*/)
+        expect(response).to redirect_to(/\/report-incorrect-partnership\/already-challenged\?cohort=.*&school_id=.*&school_name=.*/)
       end
     end
   end
@@ -76,14 +76,14 @@ RSpec.describe "Challenging a partnership", type: :request do
       it "redirects to already-challenged" do
         get "/report-incorrect-partnership", params: { partnership: partnership.id }
 
-        expect(response).to redirect_to(/\/report-incorrect-partnership\/already-challenged\?school_name=.*/)
+        expect(response).to redirect_to(/\/report-incorrect-partnership\/already-challenged\?cohort=.*&school_id=.*&school_name=.*/)
       end
 
       it "redirect to already-challenged even if it is outside the challenge window" do
         travel 15.days
         get "/report-incorrect-partnership", params: { partnership: partnership.id }
 
-        expect(response).to redirect_to(/\/report-incorrect-partnership\/already-challenged\?school_name=.*/)
+        expect(response).to redirect_to(/\/report-incorrect-partnership\/already-challenged\?cohort=.*&school_id=.*&school_name=.*/)
       end
     end
   end
