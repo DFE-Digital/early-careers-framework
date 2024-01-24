@@ -863,6 +863,7 @@ en:
   support_form:
     introduction:
       unspecified_html: "If you have a question about the Manage training for early career teachers service, you can contact the DfE using this form."
+      trouble-nominating-induction-coordinator_html: "Complete this form to request a change to %{school_name}'s induction coordinator."
       change-participant-lead-provider_html: "Complete this form to request a change to %{participant_name}’s registered training provider."
       change-participant-date-of-birth_html: "Complete this request form to change an ECT or mentor's date of birth"
       change-participant-trn_html: "Complete this request form to change an ECT or mentor's TRN"
@@ -874,6 +875,8 @@ en:
         You can view your options here: <a class="govuk-link" target="_blank" rel="noopener noreferrer" href="https://www.gov.uk/guidance/how-to-set-up-training-for-early-career-teachers#choose-a-training-option">https://www.gov.uk/guidance/how-to-set-up-training-for-early-career-teachers#choose-a-training-option</a>.
     instructions:
       unspecified_html: ""
+      trouble-nominating-induction-coordinator_html: |
+        Enter the name and email for the new induction coordinator.
       change-participant-lead-provider_html: |
         Tell us:
         <ul>

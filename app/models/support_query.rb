@@ -9,6 +9,7 @@ class SupportQuery < ApplicationRecord
     change-cohort-lead-provider
     change-cohort-delivery-partner
     change-cohort-induction-programme-choice
+    trouble-nominating-induction-coordinator
   ].freeze
 
   belongs_to :user
