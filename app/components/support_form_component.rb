@@ -26,7 +26,7 @@ class SupportFormComponent < BaseComponent
       participant_name: participant_profile_full_name,
       cohort_year_range:,
       support_email: Rails.application.config.support_email,
-      school_name: school_name,
+      school_name:,
       teacher_name:,
     }
   end
