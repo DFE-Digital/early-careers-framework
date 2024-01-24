@@ -2,60 +2,66 @@
 
 <h1 class="govuk-heading-l"><%= @school.name %></h1>
 <%= render partial: "admin/schools/shared/navigation" %>
-<h2 class="govuk-heading-m">Details</h2>
 
-<% if @induction_coordinator && ImpersonationPolicy.new(current_user, @induction_coordinator).create? %>
-  <%= govuk_button_to("Impersonate induction tutor", admin_impersonate_path,
-                      params: {
-                        impersonated_user_id: @induction_coordinator.id,
-                      },
-                      "data-test": "impersonate-button") %>
-<% end %>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-three-quarters">
 
-<%=
-  govuk_summary_list do |sl|
-    sl.with_row do |row|
-      row.with_key(text: "URN")
-      row.with_value(text: @school.urn)
-      if @school.urn.present?
-        row.with_action(
-          text: "Open in GIAS",
-          href: "https://get-information-schools.service.gov.uk/Establishments/Establishment/Details/#{@school.urn}",
-          html_attributes: { rel: "noreferrer noopener", target: "_blank" },
-        )
-      end
-    end
+    <h2 class="govuk-heading-m">Details</h2>
 
-    sl.with_row do |row|
-      row.with_key(text: "Induction tutor")
-      row.with_value do
-        if @induction_coordinator.present?
-          safe_join([@induction_coordinator.full_name, tag.br, govuk_mail_to(@induction_coordinator.email, @induction_coordinator.email)])
+    <% if @induction_coordinator && ImpersonationPolicy.new(current_user, @induction_coordinator).create? %>
+      <%= govuk_button_to("Impersonate induction tutor", admin_impersonate_path,
+                          params: {
+                            impersonated_user_id: @induction_coordinator.id,
+                          },
+                          "data-test": "impersonate-button") %>
+    <% end %>
+
+    <%=
+      govuk_summary_list do |sl|
+        sl.with_row do |row|
+          row.with_key(text: "URN")
+          row.with_value(text: @school.urn)
+          if @school.urn.present?
+            row.with_action(
+              text: "Open in GIAS",
+              href: "https://get-information-schools.service.gov.uk/Establishments/Establishment/Details/#{@school.urn}",
+              html_attributes: { rel: "noreferrer noopener", target: "_blank" },
+            )
+          end
+        end
+
+        sl.with_row do |row|
+          row.with_key(text: "Induction tutor")
+          row.with_value do
+            if @induction_coordinator.present?
+              safe_join([@induction_coordinator.full_name, tag.br, govuk_mail_to(@induction_coordinator.email, @induction_coordinator.email)])
+            end
+          end
+
+          if @induction_coordinator.present?
+            row.with_action(text: "Change", visually_hidden_text: "induction tutor", href: admin_school_replace_or_update_induction_tutor_path(@school))
+          else
+            row.with_action(text: "Add", visually_hidden_text: "induction tutor", href: new_admin_school_induction_coordinator_path(@school))
+          end
+        end
+
+        sl.with_row do |row|
+          row.with_key(text: "Local authority")
+          row.with_value(text: @school.local_authority&.name)
+        end
+
+        sl.with_row do |row|
+          row.with_key(text: "Address")
+          row.with_value(
+            text: format_address(
+              @school.address_line1,
+              @school.address_line2,
+              @school.address_line3,
+              @school.postcode,
+            )
+          )
         end
       end
-
-      if @induction_coordinator.present?
-        row.with_action(text: "Change", visually_hidden_text: "induction tutor", href: admin_school_replace_or_update_induction_tutor_path(@school))
-      else
-        row.with_action(text: "Add", visually_hidden_text: "induction tutor", href: new_admin_school_induction_coordinator_path(@school))
-      end
-    end
-
-    sl.with_row do |row|
-      row.with_key(text: "Local authority")
-      row.with_value(text: @school.local_authority&.name)
-    end
-
-    sl.with_row do |row|
-      row.with_key(text: "Address")
-      row.with_value(
-        text: format_address(
-          @school.address_line1,
-          @school.address_line2,
-          @school.address_line3,
-          @school.postcode,
-        )
-      )
-    end
-  end
-%>
+    %>
+  </div>
+</div>
