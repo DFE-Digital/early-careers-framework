@@ -1,4 +1,4 @@
 <% content_for :title, "Error: mistake reported" %>
 
 <h1 class="govuk-heading-l">Someone at <%= @school_name %> has already reported this issue</h1>
-<p class="govuk-body">If you still need to report that your school has been confirmed incorrectly contact: <%= render MailToSupportComponent.new %></p>
+<p class="govuk-body">If you still need to report that your school has been confirmed incorrectly <%= govuk_link_to "contact support", support_path(cohort_year: params[:cohort], school_id: params[:school_id], subject: :"partnership-already-challenged") %>.

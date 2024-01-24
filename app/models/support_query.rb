@@ -15,6 +15,7 @@ class SupportQuery < ApplicationRecord
     add-participant-dqt-mismatch-ect
     add-participant-dqt-mismatch-mentor
     partnership-issue
+    partnership-already-challenged
   ].freeze
 
   belongs_to :user

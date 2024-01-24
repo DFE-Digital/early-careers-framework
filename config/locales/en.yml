@@ -883,7 +883,8 @@ en:
       add-participant-requires-manual-transfer-mentor_html: "Complete this request form to register %{teacher_name} as a mentor at your school."
       add-participant-dqt-mismatch-ect_html: "Complete this request form to register %{teacher_name} as an ECT at your school."
       add-participant-dqt-mismatch-mentor_html:  "Complete this request form to register %{teacher_name} as a mentor at your school."
-      partnership-issue_html: "If you there is an issue with %{cohort_year_range}'s partnership, you can contact the DfE using this form."
+      partnership-issue_html: "Complete this request form to change your training provider for the %{cohort_year_range} academic year."
+      partnership-already-challenged_html: "Complete this request form to amend your school's training partnership details for the %{cohort_year_range} academic year."
 
     instructions:
       unspecified_html: ""
@@ -968,6 +969,12 @@ en:
           <li>start date at your school</li>
           <li>previous school's name</li>
         </ul>
+      partnership-already-challenged_html: |
+        <p class="govuk-body">Tell us:</p>
+        <ul class="govuk-list govuk-list--bullet">
+          <li>which details are incorrect</li>
+          <li>the correct partnership details</li>
+        </ul>
       partnership-issue_html: "Tell us the delivery partner and lead provider your school will be working with."
 
   support_query:
@@ -984,3 +991,4 @@ en:
       add-participant-dqt-mismatch-ect: Request to add a mentor with a DQT mismatch
       add-participant-dqt-mismatch-mentor: Request to add a mentor with a DQT mismatch
       partnership-issue: SIT reporting issue with a partnership
+      partnership-already-challenged: Request related to a challenged partnership
