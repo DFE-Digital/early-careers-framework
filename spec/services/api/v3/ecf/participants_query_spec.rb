@@ -47,16 +47,26 @@ RSpec.describe Api::V3::ECF::ParticipantsQuery do
 
       context "when the user has induction records against multiple cohorts" do
         let(:new_cohort) { Cohort.next }
-        let(:new_schedule) { create(:schedule, name: "new-schedule", cohort: new_cohort) }
 
         before do
-          Induction::ChangeInductionRecord.call(
-            induction_record:,
-            changes: {
-              schedule: new_schedule,
-              induction_programme:,
-            },
-          )
+          create(:school_cohort,
+                 default_induction_programme: induction_programme,
+                 school: induction_record.school,
+                 cohort: new_cohort)
+          create(:partnership,
+                 school: induction_record.school,
+                 lead_provider:,
+                 cohort: new_cohort,
+                 relationship: false)
+          new_schedule = create(:ecf_schedule, name: "new-schedule", cohort: new_cohort)
+
+          ChangeSchedule.new({
+            cpd_lead_provider:,
+            participant_id: participant_profile.participant_identity.external_identifier,
+            course_identifier: "ecf-induction",
+            schedule_identifier: new_schedule.schedule_identifier,
+            cohort: new_cohort.start_year,
+          }).call
         end
 
         context "when filtering by a historical cohort" do
