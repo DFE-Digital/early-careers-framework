@@ -1,0 +1,33 @@
+<%= render partial: "admin/performance/nav" %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-three-quarters">
+
+    <h1 class="govuk-heading-l">Validation errors</h1>
+
+    <table class="govuk-table">
+      <caption class="govuk-table__caption govuk-table__caption--m">Common errors shown</caption>
+      <thead class="govuk-table__head">
+      <tr class="govuk-table__row">
+        <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Page</th>
+        <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Field</th>
+        <th scope="col" class="govuk-table__header">Error</th>
+        <th scope="col" class="govuk-table__header  govuk-table__header--numeric">Count</th>
+      </tr>
+      </thead>
+      <tbody class="govuk-table__body">
+
+      <% @validation_errors.each do |(object, attribute, message), count| %>
+        <tr class="govuk-table__row">
+          <th scope="row" class="govuk-table__header govuk-!-font-weight-regular"><%= govuk_link_to object, admin_performance_validation_error_path(object, attribute) %></th>
+          <td class="govuk-table__cell"><%= attribute %></td>
+          <td class="govuk-table__cell"><%= message %></td>
+          <td class="govuk-table__cell  govuk-table__cell--numeric"><%= count %></td>
+        </tr>
+      <% end %>
+
+      </tbody>
+    </table>
+
+  </div>
+</div>

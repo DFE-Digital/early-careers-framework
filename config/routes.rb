@@ -289,6 +289,8 @@ Rails.application.routes.draw do
   namespace :admin do
     namespace :performance do
       resource :overview, only: :show, controller: :overview
+      get "/errors", to: "validation_errors#index", as: "validation_errors"
+      get "/errors/:form/:attribute", to: "validation_errors#show", as: "validation_error"
       resource :support_queries, only: :show, controller: :support_queries
     end
     resources :schools, only: %i[index show] do
