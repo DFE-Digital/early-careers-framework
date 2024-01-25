@@ -25,7 +25,6 @@ class ValidationError < ApplicationRecord
     scope = scope.where(user_id: params[:user_id]) if params[:user_id]
     scope = scope.where(id: params[:id]) if params[:id]
     scope = scope.where("details->? IS NOT NULL", params[:attribute]) if params[:attribute]
-    scope = scope.order(created_at: :desc)
-    scope
+    scope.order(created_at: :desc)
   end
 end

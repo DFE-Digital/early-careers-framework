@@ -2,16 +2,17 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-three-quarters">
-    <h1 class="govuk-heading-l"><%= params[:id] %></h1>
+    <h1 class="govuk-heading-l"><%= params[:form] %></h1>
     <h2 class="govuk-heading-m">Validation errors</h2>
 
     <% @validation_errors.each do |error| %>
       <div class="govuk-summary-card">
         <div class="govuk-summary-card__title-wrapper">
           <h2 class="govuk-summary-card__title govuk-!-font-weight-regular">
-            Validation error <a href="#" class="govuk-link">#<%= error.id.slice(0, 8) %></a> –
+            Validation error #<%= error.id.slice(0, 8) %> –
             <%= error.created_at.strftime("%d %B %Y at %H:%M") %>
-            by user <a href="#"><%= error.user.full_name %></a></h2>
+            by user <%= error.user.full_name %>
+          </h2>
         </div>
         <div class="govuk-summary-card__content">
           <dl class="govuk-summary-list">

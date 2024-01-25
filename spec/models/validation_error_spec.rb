@@ -11,7 +11,7 @@ RSpec.describe ValidationError do
 
   describe ".list_of_distinct_errors_with_count" do
     it "returns a list of grouped errors" do
-      create_list(:validation_error, 2)
+      create_list(:validation_error, 2, form_object: "RefereeInterface::ReferenceFeedbackForm", details: { feedback: { messages: ["Enter feedback"], value: "" } })
 
       expect(described_class.list_of_distinct_errors_with_count).to contain_exactly(
         [
@@ -27,7 +27,7 @@ RSpec.describe ValidationError do
 
     it "sorts the list of errors by occurrence" do
       create(:validation_error, form_object: "PersonalDetailsForm", details: { date_of_birth: { messages: ["Enter a date of birth"], value: "" } })
-      create_list(:validation_error, 2)
+      create_list(:validation_error, 2, form_object: "RefereeInterface::ReferenceFeedbackForm", details: { feedback: { messages: ["Enter feedback"], value: "" } })
 
       expect(described_class.list_of_distinct_errors_with_count).to contain_exactly(
         [
@@ -79,14 +79,14 @@ RSpec.describe ValidationError do
     end
 
     it "returns validation errors scoped to error attribute" do
-      validation_error = create(:validation_error)
-      params = { attribute: "feedback" }
+      validation_error = create(:validation_error, details: { full_name: { messages: ["Enter a valid full name"], value: "JustTheName" } })
+      params = { attribute: "full_name" }
 
       expect(described_class.search(params)).to contain_exactly(validation_error)
     end
 
     it "returns validation errors scoped to multiple parameters" do
-      validation_error = create(:validation_error)
+      validation_error = create(:validation_error, form_object: "RefereeInterface::ReferenceFeedbackForm")
 
       create(:validation_error, form_object: "PersonalDetailsForm", user: validation_error.user)
 
