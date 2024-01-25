@@ -3,6 +3,106 @@
 require "rails_helper"
 
 RSpec.describe SchoolMailer, type: :mailer do
+  describe "#remind_sit_that_ab_has_not_registered_ect" do
+    let(:school) { create(:seed_school, :valid) }
+    let(:induction_coordinator) { create(:seed_induction_coordinator_profile, :with_user) }
+    let(:ect_name) { "Neville Southall" }
+    let(:appropriate_body_name) { "Super AB" }
+    let(:lead_provider_name) { "Major Providers Ltd" }
+    let(:delivery_partner_name) { "Amazing Delivery Inc." }
+
+    let(:email) do
+      SchoolMailer
+        .with(school:, induction_coordinator:, ect_name:, appropriate_body_name:, lead_provider_name:, delivery_partner_name:)
+        .remind_sit_that_ab_has_not_registered_ect
+        .deliver_now
+    end
+
+    it "renders the right headers" do
+      expect(email.from).to eq(["mail@example.com"])
+      expect(email.to).to eq([induction_coordinator.user.email])
+    end
+
+    it "has the correct personalisation" do
+      personalisation = email[:personalisation].unparsed_value
+
+      expect(personalisation[:school_name]).to eq school.name
+      expect(personalisation[:sit_name]).to eq induction_coordinator.user.full_name
+      expect(personalisation[:sit_email_address]).to eq induction_coordinator.user.email
+      expect(personalisation[:ect_name]).to eq ect_name
+      expect(personalisation[:lead_provider]).to eq lead_provider_name
+      expect(personalisation[:delivery_partner]).to eq delivery_partner_name
+      expect(personalisation[:appropriate_body_name]).to eq appropriate_body_name
+    end
+
+    context "when lead provider name is blank" do
+      let(:lead_provider_name) { nil }
+
+      it "uses Unconfirmed instead" do
+        personalisation = email[:personalisation].unparsed_value
+        expect(personalisation[:lead_provider]).to eq "Unconfirmed"
+      end
+    end
+
+    context "when delivery partner name is blank" do
+      let(:delivery_partner_name) { nil }
+
+      it "uses Unconfirmed instead" do
+        personalisation = email[:personalisation].unparsed_value
+        expect(personalisation[:delivery_partner]).to eq "Unconfirmed"
+      end
+    end
+  end
+
+  describe "#remind_sit_to_appoint_ab_for_unregistered_ect" do
+    let(:school) { create(:seed_school, :valid) }
+    let(:induction_coordinator) { create(:seed_induction_coordinator_profile, :with_user) }
+    let(:ect_name) { "Sepp Maier" }
+    let(:lead_provider_name) { "Major Providers Ltd" }
+    let(:delivery_partner_name) { "Amazing Delivery Inc." }
+
+    let(:email) do
+      SchoolMailer
+        .with(school:, induction_coordinator:, ect_name:, lead_provider_name:, delivery_partner_name:)
+        .remind_sit_to_appoint_ab_for_unregistered_ect
+        .deliver_now
+    end
+
+    it "renders the right headers" do
+      expect(email.from).to eq(["mail@example.com"])
+      expect(email.to).to eq([induction_coordinator.user.email])
+    end
+
+    it "has the correct personalisation" do
+      personalisation = email[:personalisation].unparsed_value
+
+      expect(personalisation[:school_name]).to eq school.name
+      expect(personalisation[:sit_name]).to eq induction_coordinator.user.full_name
+      expect(personalisation[:email_address]).to eq induction_coordinator.user.email
+      expect(personalisation[:ect_name]).to eq ect_name
+      expect(personalisation[:lead_provider]).to eq lead_provider_name
+      expect(personalisation[:delivery_partner]).to eq delivery_partner_name
+    end
+
+    context "when lead provider name is blank" do
+      let(:lead_provider_name) { nil }
+
+      it "uses Unconfirmed instead" do
+        personalisation = email[:personalisation].unparsed_value
+        expect(personalisation[:lead_provider]).to eq "Unconfirmed"
+      end
+    end
+
+    context "when delivery partner name is blank" do
+      let(:delivery_partner_name) { nil }
+
+      it "uses Unconfirmed instead" do
+        personalisation = email[:personalisation].unparsed_value
+        expect(personalisation[:delivery_partner]).to eq "Unconfirmed"
+      end
+    end
+  end
+
   describe "#notify_sit_we_have_archived_participant" do
     let(:school) { create(:seed_school, :valid) }
     let(:induction_coordinator) { create(:seed_induction_coordinator_profile, :with_user) }
