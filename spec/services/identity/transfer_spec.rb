@@ -43,6 +43,21 @@ RSpec.describe Identity::Transfer do
           expect(user2.teacher_profile.participant_profiles).to match_array [participant_profile]
         end
       end
+
+      context "when the previous user has declarations" do
+        let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
+        let!(:participant_profile) { create(:ect, lead_provider: cpd_lead_provider.lead_provider, user: user1) }
+        let!(:declaration) { create(:ect_participant_declaration, participant_profile:, user: user1, cpd_lead_provider:) }
+        let!(:another_participant_profile) { create(:mentor, lead_provider: cpd_lead_provider.lead_provider, user: user1) }
+        let!(:another_declaration) { create(:mentor_participant_declaration, participant_profile: another_participant_profile, user: user1, cpd_lead_provider:) }
+
+        it "moves the declarations to the new user" do
+          service.call(from_user: user1, to_user: user2)
+
+          expect(declaration.reload.user).to eq(user2)
+          expect(another_declaration.reload.user).to eq(user2)
+        end
+      end
     end
 
     context "when the from user is an induction coordinator" do
