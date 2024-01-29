@@ -92,8 +92,10 @@ class InductionRecord < ApplicationRecord
   end
 
   # Instance Methods
-  # appropriate_body_name
-  delegate :name, to: :appropriate_body, allow_nil: true, prefix: true
+
+  def appropriate_body_name
+    appropriate_body&.name || school_cohort.appropriate_body&.name
+  end
 
   def active?
     active_induction_status? && (end_unknown? || end_date.future?) && !transferring_in?

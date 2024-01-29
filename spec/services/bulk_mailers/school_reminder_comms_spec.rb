@@ -8,14 +8,156 @@ RSpec.describe BulkMailers::SchoolReminderComms, type: :mailer do
   let(:dry_run) { false }
 
   let(:school_cohort) { create(:seed_school_cohort, :fip, :with_school, cohort:) }
-  let(:induction_programme) { create(:seed_induction_programme, :fip, school_cohort:) }
   let(:school) { school_cohort.school }
+  let(:lead_provider) { create(:seed_lead_provider, :valid) }
+  let(:delivery_partner) { create(:seed_delivery_partner, :valid) }
+  let(:partnership) { create(:seed_partnership, lead_provider:, delivery_partner:, cohort:, school:) }
+  let(:induction_programme) { create(:seed_induction_programme, :fip, partnership:, school_cohort:) }
   let!(:sit_profile) { create(:seed_induction_coordinator_profiles_school, :valid, school:).induction_coordinator_profile }
 
   subject(:service) { described_class.new(cohort: query_cohort, dry_run:) }
 
   before do
     school.update!(school_type_code: 1)
+  end
+
+  describe "#contact_sits_that_need_to_chase_their_ab_to_register_ects" do
+    let(:participant_profile) { create(:seed_ect_participant_profile, :valid, school_cohort:) }
+    let(:ect_name) { participant_profile.user.full_name }
+
+    let(:ect_appropriate_body) { nil }
+    let(:school_appropriate_body) { nil }
+    let!(:induction_record) { create(:seed_induction_record, :valid, participant_profile:, induction_programme:, appropriate_body: ect_appropriate_body) }
+
+    before do
+      school_cohort.update!(appropriate_body: school_appropriate_body)
+    end
+
+    context "when a school has ECTs without an induction start date" do
+      context "when there is an AB appointed" do
+        let(:school_appropriate_body) { create(:seed_appropriate_body, :valid) }
+
+        it "mails the induction coordinator" do
+          expect {
+            service.contact_sits_that_need_to_chase_their_ab_to_register_ects
+          }.to have_enqueued_mail(SchoolMailer, :remind_sit_that_ab_has_not_registered_ect)
+            .with(params: { school:, induction_coordinator: sit_profile, ect_name:, appropriate_body_name: school_appropriate_body.name, lead_provider_name: lead_provider.name, delivery_partner_name: delivery_partner.name }, args: [])
+        end
+
+        it "returns the count of emails sent" do
+          expect(service.contact_sits_that_need_to_chase_their_ab_to_register_ects).to eq 1
+        end
+
+        context "when the AB is set at the participant level" do
+          let(:ect_appropriate_body) { create(:seed_appropriate_body, :valid) }
+
+          it "mails the induction coordinator using the participant-level AB" do
+            expect {
+              service.contact_sits_that_need_to_chase_their_ab_to_register_ects
+            }.to have_enqueued_mail(SchoolMailer, :remind_sit_that_ab_has_not_registered_ect)
+              .with(params: { school:, induction_coordinator: sit_profile, ect_name:, appropriate_body_name: ect_appropriate_body.name, lead_provider_name: lead_provider.name, delivery_partner_name: delivery_partner.name }, args: [])
+          end
+
+          it "returns the count of emails sent" do
+            expect(service.contact_sits_that_need_to_chase_their_ab_to_register_ects).to eq 1
+          end
+        end
+
+        context "when the dry_run flag is set" do
+          let(:dry_run) { true }
+
+          it "does not mail the induction coordinator" do
+            expect {
+              service.contact_sits_that_need_to_chase_their_ab_to_register_ects
+            }.not_to have_enqueued_mail
+          end
+
+          it "returns the count of emails that would have been sent" do
+            expect(service.contact_sits_that_need_to_chase_their_ab_to_register_ects).to eq 1
+          end
+        end
+      end
+
+      context "when no AB has been appointed" do
+        it "does not mail the induction coordinator" do
+          expect {
+            service.contact_sits_that_need_to_chase_their_ab_to_register_ects
+          }.not_to have_enqueued_mail(SchoolMailer, :remind_sit_that_ab_has_not_registered_ect)
+        end
+
+        it "returns the count of emails sent" do
+          expect(service.contact_sits_that_need_to_chase_their_ab_to_register_ects).to eq 0
+        end
+      end
+    end
+  end
+
+  describe "#contact_sits_that_need_to_appoint_an_ab_for_unregistered_ects" do
+    let(:participant_profile) { create(:seed_ect_participant_profile, :valid, school_cohort:) }
+    let(:ect_name) { participant_profile.user.full_name }
+
+    let(:ect_appropriate_body) { nil }
+    let(:school_appropriate_body) { nil }
+    let!(:induction_record) { create(:seed_induction_record, :valid, participant_profile:, induction_programme:, appropriate_body: ect_appropriate_body) }
+
+    before do
+      school_cohort.update!(appropriate_body: school_appropriate_body)
+    end
+
+    context "when a school has ECTs without an AB and induction start date" do
+      it "mails the induction coordinator" do
+        expect {
+          service.contact_sits_that_need_to_appoint_an_ab_for_unregistered_ects
+        }.to have_enqueued_mail(SchoolMailer, :remind_sit_to_appoint_ab_for_unregistered_ect)
+          .with(params: { school:, induction_coordinator: sit_profile, ect_name:, lead_provider_name: lead_provider.name, delivery_partner_name: delivery_partner.name }, args: [])
+      end
+
+      it "returns the count of emails sent" do
+        expect(service.contact_sits_that_need_to_appoint_an_ab_for_unregistered_ects).to eq 1
+      end
+
+      context "when the AB is set at the school level" do
+        let(:school_appropriate_body) { create(:seed_appropriate_body, :valid) }
+
+        it "does not mail the induction coordinator" do
+          expect {
+            service.contact_sits_that_need_to_appoint_an_ab_for_unregistered_ects
+          }.not_to have_enqueued_mail(SchoolMailer, :remind_sit_to_appoint_ab_for_unregistered_ect)
+        end
+
+        it "returns the count of emails sent" do
+          expect(service.contact_sits_that_need_to_appoint_an_ab_for_unregistered_ects).to eq 0
+        end
+      end
+
+      context "when the AB is set at the participant level" do
+        let(:school_appropriate_body) { create(:seed_appropriate_body, :valid) }
+
+        it "does not mail the induction coordinator" do
+          expect {
+            service.contact_sits_that_need_to_appoint_an_ab_for_unregistered_ects
+          }.not_to have_enqueued_mail(SchoolMailer, :remind_sit_to_appoint_ab_for_unregistered_ect)
+        end
+
+        it "returns the count of emails sent" do
+          expect(service.contact_sits_that_need_to_appoint_an_ab_for_unregistered_ects).to eq 0
+        end
+      end
+
+      context "when the dry_run flag is set" do
+        let(:dry_run) { true }
+
+        it "does not mail the induction coordinator" do
+          expect {
+            service.contact_sits_that_need_to_appoint_an_ab_for_unregistered_ects
+          }.not_to have_enqueued_mail(SchoolMailer, :remind_sit_to_appoint_ab_for_unregistered_ect)
+        end
+
+        it "returns the count of emails that would have been sent" do
+          expect(service.contact_sits_that_need_to_appoint_an_ab_for_unregistered_ects).to eq 1
+        end
+      end
+    end
   end
 
   describe "#contact_sits_that_need_to_assign_mentors" do

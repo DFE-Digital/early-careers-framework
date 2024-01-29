@@ -12,6 +12,59 @@ module BulkMailers
       @dry_run = dry_run
     end
 
+    def contact_sits_that_need_to_chase_their_ab_to_register_ects
+      email_count = 0
+
+      Ects::WithAnAppropriateBodyAndUnregisteredQuery
+        .call(include_cip: false)
+        .includes(:user, :school)
+        .find_each do |induction_record|
+          ect_name = induction_record.user.full_name
+          school = induction_record.school
+          appropriate_body_name = induction_record.appropriate_body_name
+          lead_provider_name = induction_record.lead_provider_name
+          delivery_partner_name = induction_record.delivery_partner_name
+
+          school.induction_coordinator_profiles.each do |induction_coordinator|
+            email_count += 1
+            next if dry_run
+
+            SchoolMailer
+              .with(school:, induction_coordinator:, ect_name:, appropriate_body_name:, lead_provider_name:, delivery_partner_name:)
+              .remind_sit_that_ab_has_not_registered_ect
+              .deliver_later
+          end
+        end
+
+      email_count
+    end
+
+    def contact_sits_that_need_to_appoint_an_ab_for_unregistered_ects
+      email_count = 0
+
+      Ects::WithoutAnAppropriateBodyAndUnregisteredQuery
+        .call(include_cip: false)
+        .includes(:user)
+        .find_each do |induction_record|
+          ect_name = induction_record.user.full_name
+          school = induction_record.school
+          lead_provider_name = induction_record.lead_provider_name
+          delivery_partner_name = induction_record.delivery_partner_name
+
+          school.induction_coordinator_profiles.each do |induction_coordinator|
+            email_count += 1
+            next if dry_run
+
+            SchoolMailer
+              .with(school:, induction_coordinator:, ect_name:, lead_provider_name:, delivery_partner_name:)
+              .remind_sit_to_appoint_ab_for_unregistered_ect
+              .deliver_later
+          end
+        end
+
+      email_count
+    end
+
     def contact_sits_that_need_to_assign_mentors
       email_count = 0
 
