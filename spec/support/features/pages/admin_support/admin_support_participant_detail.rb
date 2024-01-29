@@ -21,8 +21,16 @@ module Pages
       element_has_content? self, "Email address#{email_address}Change email"
     end
 
+    def has_associated_email_address?(email_address)
+      element_has_content? self, "Associated email addresses\n#{email_address}"
+    end
+
     def has_trn?(trn)
       element_has_content? self, "TRN#{trn}"
+    end
+
+    def has_user_id?(user_id)
+      element_has_content? self, "User ID#{user_id}"
     end
 
     def has_cohort?(start_year)

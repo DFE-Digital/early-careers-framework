@@ -73,5 +73,17 @@
       end
     end %>
 
+    <%= govuk_table(
+      caption: "Previous schools",
+      head: ["School name", "Induction programme", "Start date", "End date"],
+      rows: @participant_presenter.historical_induction_records.map do |r|
+        [
+          r.school_cohort.school.name,
+          r.induction_programme.training_programme.humanize,
+          r.start_date.to_date.to_fs(:govuk),
+          r.end_date&.to_date&.to_fs(:govuk),
+        ]
+      end,
+      ) %>
   </div>
 </div>

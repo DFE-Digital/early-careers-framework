@@ -196,6 +196,9 @@ RSpec.feature "ECT doing FIP: no validation", type: :feature do
     expect(participant_detail).to have_email_address participant_email
     expect(participant_detail).to have_trn teacher_reference_number
     expect(participant_detail).to have_cohort start_year
+    expect(participant_detail).to have_training_record_state training_record_state
+    expect(participant_detail).to have_user_id participant_id
+    expect(participant_detail).to have_associated_email_address participant_email
 
     participant_detail.open_training_tab
 
