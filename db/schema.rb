@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_01_23_152026) do
+ActiveRecord::Schema[7.0].define(version: 2024_01_25_143240) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "fuzzystrmatch"
@@ -1209,6 +1209,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_23_152026) do
     t.jsonb "additional_information", default: {}, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["subject"], name: "index_support_queries_on_subject"
+    t.index ["user_id", "subject"], name: "index_support_queries_on_user_id_and_subject"
     t.index ["user_id"], name: "index_support_queries_on_user_id"
   end
 
