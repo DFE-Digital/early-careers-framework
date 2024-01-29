@@ -472,3 +472,61 @@
   - failed_email_count
   - created_at
   - updated_at
+  :analytics_school_cohorts:
+  - id
+  - school_cohort_id
+  - school_id
+  - school_name
+  - school_urn
+  - cohort_id
+  - cohort
+  - induction_programme_choice
+  - default_induction_programme_training_choice
+  - created_at
+  - updated_at
+  - appropriate_body_id
+  :analytics_partnerships:
+  - id
+  - partnership_id
+  - school_id
+  - school_name
+  - school_urn
+  - lead_provider_id
+  - lead_provider_name
+  - cohort_id
+  - cohort
+  - delivery_partner_id
+  - delivery_partner_name
+  - challenged_at
+  - challenge_reason
+  - challenge_deadline
+  - pending
+  - report_id
+  - relationship
+  - created_at
+  - updated_at
+  :analytics_inductions:
+  - id
+  - induction_record_id
+  - external_id
+  - participant_profile_id
+  - induction_programme_id
+  - induction_programme_type
+  - school_name
+  - school_urn
+  - schedule_id
+  - mentor_id
+  - appropriate_body_id
+  - appropriate_body_name
+  - start_date
+  - end_date
+  - induction_status
+  - training_status
+  - school_transfer
+  - created_at
+  - updated_at
+  - cohort_id
+  - user_id
+  - participant_type
+  - induction_record_created_at
+  - partnership_id
