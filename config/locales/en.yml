@@ -996,11 +996,11 @@ en:
     stats:
       unspecified: User visited support form directly
       change-participant-lead-provider: Change lead provider for a participant
-      change-participant-date-of-birth: Change Date of Birth for a participant
+      change-participant-date-of-birth: Change date of birth for a participant
       change-participant-trn: Change TRN for a participant
-      change-cohort-lead-provider: Change lead provider for a cohort
-      change-cohort-delivery-partner: Change delivery partner for a cohort
-      change-cohort-induction-programme-choice: Change induction programme choice for a cohort
+      change-cohort-lead-provider: Change lead provider for an academic year
+      change-cohort-delivery-partner: Change delivery partner for an academic year
+      change-cohort-induction-programme-choice: Change training programme choice for an academic year
       add-participant-requires-manual-transfer-ect: ECT needs a manual transfer
       add-participant-requires-manual-transfer-mentor: Mentor needs a manual transfer
       add-participant-dqt-mismatch-ect: Adding an ECT encountered a DQT mismatch

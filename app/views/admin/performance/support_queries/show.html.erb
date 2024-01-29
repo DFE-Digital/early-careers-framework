@@ -1,3 +1,5 @@
+<% content_for :title, "Support form stats" %>
+
 <%= render partial: "admin/performance/nav" %>
 
 <div class="govuk-grid-row">
@@ -18,8 +20,8 @@
         <% @subjects.each do |support_query_subject| %>
           <% body.with_row(html_attributes: { data: { subject: support_query_subject }}) do |row| %>
             <% row.with_cell(text: t("support_query.stats.#{support_query_subject}")) %>
-            <% row.with_cell(html_attributes: { data: { stat: :total } }, text: @support_query_counts[support_query_subject] || 0, numeric: true) %>
-            <% row.with_cell(html_attributes: { data: { stat: :users } }, text: @support_query_user_counts[support_query_subject] || 0, numeric: true) %>
+            <% row.with_cell(html_attributes: { data: { stat: :total } }, text: number_with_delimiter(@support_query_counts[support_query_subject] || 0), numeric: true) %>
+            <% row.with_cell(html_attributes: { data: { stat: :users } }, text: number_with_delimiter(@support_query_user_counts[support_query_subject] || 0), numeric: true) %>
           <% end %>
         <% end %>
       <% end %>

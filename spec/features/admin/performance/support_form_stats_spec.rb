@@ -24,11 +24,11 @@ private
 
     expect(page).to have_content("User visited support form directly 2 1")
     expect(page).to have_content("Change lead provider for a participant 2 2")
-    expect(page).to have_content("Change Date of Birth for a participant 0 0")
+    expect(page).to have_content("Change date of birth for a participant 0 0")
     expect(page).to have_content("Change TRN for a participant 0 0")
-    expect(page).to have_content("Change lead provider for a cohort 0 0")
-    expect(page).to have_content("Change delivery partner for a cohort 0 0")
-    expect(page).to have_content("Change induction programme choice for a cohort 0 0")
+    expect(page).to have_content("Change lead provider for an academic year 0 0")
+    expect(page).to have_content("Change delivery partner for an academic year 0 0")
+    expect(page).to have_content("Change training programme choice for an academic year 0 0")
   end
 
   def setup_support_queries
