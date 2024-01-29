@@ -38,7 +38,7 @@ jobs:
             echo "TF_STATE_EXISTS=true" >> $GITHUB_ENV
           fi
 
-      - uses: DFE-Digital/github-actions/set-arm-environment-variables@master
+      - uses: DFE-Digital/github-actions/set-kubelogin-environment@master
         if: env.TF_STATE_EXISTS == 'true'
         with:
           azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
