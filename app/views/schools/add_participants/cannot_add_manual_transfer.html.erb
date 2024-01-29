@@ -3,28 +3,15 @@
 
 <% content_for :before_content, govuk_back_link( text: "Back", href: wizard_back_link_path) %>
 
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <span class="govuk-caption-l"><%= @school.name %></span>
-    <h1 class="govuk-heading-l"><%= title %></h1>
+<%=
+  render SupportFormComponent.new(
+    form: SupportForm.new(
+      school_id: @wizard.school.id,
+      teacher_name: @wizard.full_name,
+      current_user:,
+      subject: @wizard.ect_participant? ? :"add-participant-requires-manual-transfer-ect" : :"add-participant-requires-manual-transfer-mentor",
+    )
+  )
+%>
 
-    <p class="govuk-body"><%= @wizard.possessive_name %> record needs to be transferred manually.</p>
-    <p class="govuk-body">Contact us for help to register this person at your school: <%= render MailToSupportComponent.new %></p>
-    <p class="govuk-body">Include their:</p>
-    <ul class="govuk-list govuk-list--bullet">
-      <li>full name</li>
-      <li>teacher reference number</li>
-      <li>date of birth</li>
-      <li>email address (personal or school)</li>
-      <li>start date at your school</li>
-      <li>previous school's name</li>
-    </ul>
-    <p class="govuk-body">Tell us:</p>
-    <ul class="govuk-list govuk-list--bullet">
-      <li>how <%= @wizard.full_name %> will continue their ECF-based training at your school - for example, with a DfE-funded training provider</li>
-      <li>the lead provider and delivery partner you’ve chosen for their training, if applicable</li>
-    </ul>
-
-    <%= govuk_link_to "Return to your ECTs and mentors", @wizard.dashboard_path, no_visited_state: true %>
-  </div>
-</div>
+<%= govuk_link_to "Return to your ECTs and mentors", @wizard.dashboard_path, no_visited_state: true %>

@@ -10,9 +10,14 @@ class SupportFormComponent < BaseComponent
            :participant_profile,
            :current_user,
            :cohort_year,
+           :teacher_name,
            to: :form
   delegate :full_name,
            to: :participant_profile,
+           prefix: true,
+           allow_nil: true
+  delegate :name,
+           to: :school,
            prefix: true,
            allow_nil: true
 
@@ -21,6 +26,8 @@ class SupportFormComponent < BaseComponent
       participant_name: participant_profile_full_name,
       cohort_year_range:,
       support_email: Rails.application.config.support_email,
+      school_name:,
+      teacher_name:,
     }
   end
 

@@ -24,6 +24,6 @@
   </p>
 <% else %>
   <p class="govuk-body">
-    If this doesn’t look right, contact: <%= render MailToSupportComponent.new %>
+    If this doesn’t look right, <%= govuk_link_to "contact support", support_path(cohort_year: @partnership.cohort.start_year, school_id: @partnership.school.id, subject: :"partnership-issue") %>.
   </p>
 <% end %>

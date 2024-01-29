@@ -9,6 +9,13 @@ class SupportQuery < ApplicationRecord
     change-cohort-lead-provider
     change-cohort-delivery-partner
     change-cohort-induction-programme-choice
+    trouble-nominating-induction-coordinator
+    add-participant-requires-manual-transfer-ect
+    add-participant-requires-manual-transfer-mentor
+    add-participant-dqt-mismatch-ect
+    add-participant-dqt-mismatch-mentor
+    partnership-issue
+    partnership-already-challenged
   ].freeze
 
   belongs_to :user

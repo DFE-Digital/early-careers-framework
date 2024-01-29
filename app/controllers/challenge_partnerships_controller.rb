@@ -42,7 +42,7 @@ private
 
   def set_form
     @school_name = @partnership.school.name
-    redirect_to already_challenged_challenge_partnership_path(school_name: @school_name) and return if @partnership.challenged?
+    redirect_to already_challenged_challenge_partnership_path(school_name: @school_name, cohort: @partnership.cohort.start_year, school_id: @partnership.school.id) and return if @partnership.challenged?
 
     redirect_to link_expired_challenge_partnership_path and return unless @partnership.in_challenge_window?
 

@@ -861,8 +861,14 @@ en:
           submit: "View"
 
   support_form:
+    title:
+      unspecified: Contact support
+      add-participant-requires-manual-transfer: "Contact Support: You cannot add %{teacher_name}"
+      add-participant-dqt-mismatch-ect: "Contact Support: You cannot add %{teacher_name}"
+      add-participant-dqt-mismatch-mentor: "Contact Support: You cannot add %{teacher_name}"
     introduction:
       unspecified_html: "If you have a question about the Manage training for early career teachers service, you can contact the DfE using this form."
+      trouble-nominating-induction-coordinator_html: "Complete this form to request a change to %{school_name}’s induction coordinator."
       change-participant-lead-provider_html: "Complete this form to request a change to %{participant_name}’s registered training provider."
       change-participant-date-of-birth_html: "Complete this request form to change an ECT or mentor's date of birth"
       change-participant-trn_html: "Complete this request form to change an ECT or mentor's TRN"
@@ -872,8 +878,18 @@ en:
         Complete this form to tell us that you want to use a different training programme option for ECTs and mentors who started their training in the %{cohort_year_range} academic year.
         <br><br>
         You can view your options here: <a class="govuk-link" target="_blank" rel="noopener noreferrer" href="https://www.gov.uk/guidance/how-to-set-up-training-for-early-career-teachers#choose-a-training-option">https://www.gov.uk/guidance/how-to-set-up-training-for-early-career-teachers#choose-a-training-option</a>.
+
+      add-participant-requires-manual-transfer-ect_html: "Complete this request form to register %{teacher_name} as an ECT at your school."
+      add-participant-requires-manual-transfer-mentor_html: "Complete this request form to register %{teacher_name} as a mentor at your school."
+      add-participant-dqt-mismatch-ect_html: "Complete this request form to register %{teacher_name} as an ECT at your school."
+      add-participant-dqt-mismatch-mentor_html:  "Complete this request form to register %{teacher_name} as a mentor at your school."
+      partnership-issue_html: "Complete this request form to change your training provider for the %{cohort_year_range} academic year."
+      partnership-already-challenged_html: "Complete this request form to amend your school’s training partnership details for the %{cohort_year_range} academic year."
+
     instructions:
       unspecified_html: ""
+      trouble-nominating-induction-coordinator_html: |
+        Enter the name and email for the new induction coordinator.
       change-participant-lead-provider_html: |
         Tell us:
         <ul>
@@ -903,6 +919,63 @@ en:
           <li>the confirmed date when the programme will change for ECTs (and their mentors if relevant)</li>
           <li>the years you want to apply the change to (year 1, year 2, or both years)</li>
         </ul>
+      add-participant-requires-manual-transfer-ect_html: |
+        <p class="govuk-body">Include their:</p>
+        <ul class="govuk-list govuk-list--bullet">
+          <li>full name</li>
+          <li>teacher reference number (TRN)</li>
+          <li>date of birth</li>
+          <li>email address (personal or school)</li>
+          <li>start date at your school</li>
+          <li>previous school’s name</li>
+        </ul>
+
+        <p class="govuk-body">Tell us:
+          <li>how they’ll continue their ECF-based training at your school (for example, with a DfE-funded training provider)</li>
+          <li>which lead provider and delivery partner you’ve chosen for their training, if applicable</li>
+        </ul>
+      add-participant-requires-manual-transfer-mentor_html: |
+        <p class="govuk-body">Include their:</p>
+        <ul class="govuk-list govuk-list--bullet">
+          <li>full name</li>
+          <li>teacher reference number (TRN)</li>
+          <li>date of birth</li>
+          <li>email address (personal or school)</li>
+          <li>start date at your school</li>
+          <li>previous school’s name</li>
+        </ul>
+
+        <p class="govuk-body">Tell us:
+          <li>how they’ll continue their ECF-based training at your school (for example, with a DfE-funded training provider)</li>
+          <li>which lead provider and delivery partner you’ve chosen for their training, if applicable</li>
+        </ul>
+      add-participant-dqt-mismatch-ect_html: |
+        <p class="govuk-body">Include their:</p>
+        <ul class="govuk-list govuk-list--bullet">
+          <li>full name</li>
+          <li>teacher reference number (TRN)</li>
+          <li>date of birth</li>
+          <li>email address (personal or school)</li>
+          <li>start date at your school</li>
+          <li>previous school’s name</li>
+        </ul>
+      add-participant-dqt-mismatch-mentor_html: |
+        <p class="govuk-body">Include their:</p>
+        <ul class="govuk-list govuk-list--bullet">
+          <li>full name</li>
+          <li>teacher reference number (TRN)</li>
+          <li>date of birth</li>
+          <li>email address (personal or school)</li>
+          <li>start date at your school</li>
+          <li>previous school’s name</li>
+        </ul>
+      partnership-already-challenged_html: |
+        <p class="govuk-body">Tell us:</p>
+        <ul class="govuk-list govuk-list--bullet">
+          <li>which details are incorrect</li>
+          <li>the correct partnership details</li>
+        </ul>
+      partnership-issue_html: "Tell us the delivery partner and lead provider your school will be working with."
 
   support_query:
     subjects:
@@ -910,6 +983,13 @@ en:
       change-participant-lead-provider: Request to change lead provider for a participant profile
       change-participant-date-of-birth: Request to change Date of Birth for a participant profile
       change-participant-trn: Request to change TRN for a participant profile
-      change-cohort-lead-provider: Request to change lead provider for a cohort
-      change-cohort-delivery-partner: Request to change delivery partner for a cohort
-      change-cohort-induction-programme-choice: Request to change induction programme choice for a cohort
+      change-cohort-lead-provider: Request to change lead provider for an academic year
+      change-cohort-delivery-partner: Request to change delivery partner for an academic year
+      change-cohort-induction-programme-choice: Request to change induction programme choice for an academic year
+      add-participant-requires-manual-transfer-ect: Request to add an ECT that requires a manual transfer
+      add-participant-requires-manual-transfer-mentor: Request to add a mentor that requires a manual transfer
+      add-participant-dqt-mismatch-ect: Request to add a mentor with a DQT mismatch
+      add-participant-dqt-mismatch-mentor: Request to add a mentor with a DQT mismatch
+      partnership-issue: SIT reporting issue with a partnership
+      partnership-already-challenged: Request related to a challenged partnership
+      trouble-nominating-induction-coordinator: Request to change induction coordinator for a school

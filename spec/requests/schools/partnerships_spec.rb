@@ -98,7 +98,7 @@ RSpec.describe "Schools::Partnerships", type: :request do
 
             expect(response.body).not_to include("This link will expire on")
             expect(response.body).not_to include("?token=abc123")
-            expect(response.body).to include("contact: ")
+            expect(response.body).to include("contact support")
           end
         end
       end
