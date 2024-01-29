@@ -988,8 +988,23 @@ en:
       change-cohort-induction-programme-choice: Request to change induction programme choice for an academic year
       add-participant-requires-manual-transfer-ect: Request to add an ECT that requires a manual transfer
       add-participant-requires-manual-transfer-mentor: Request to add a mentor that requires a manual transfer
-      add-participant-dqt-mismatch-ect: Request to add a mentor with a DQT mismatch
+      add-participant-dqt-mismatch-ect: Request to add an ECT with a DQT mismatch
       add-participant-dqt-mismatch-mentor: Request to add a mentor with a DQT mismatch
       partnership-issue: SIT reporting issue with a partnership
       partnership-already-challenged: Request related to a challenged partnership
       trouble-nominating-induction-coordinator: Request to change induction coordinator for a school
+    stats:
+      unspecified: User visited support form directly
+      change-participant-lead-provider: Change lead provider for a participant
+      change-participant-date-of-birth: Change Date of Birth for a participant
+      change-participant-trn: Change TRN for a participant
+      change-cohort-lead-provider: Change lead provider for a cohort
+      change-cohort-delivery-partner: Change delivery partner for a cohort
+      change-cohort-induction-programme-choice: Change induction programme choice for a cohort
+      add-participant-requires-manual-transfer-ect: ECT needs a manual transfer
+      add-participant-requires-manual-transfer-mentor: Mentor needs a manual transfer
+      add-participant-dqt-mismatch-ect: Adding an ECT encountered a DQT mismatch
+      add-participant-dqt-mismatch-mentor: Adding a Mentor encountered a DQT mismatch
+      partnership-issue: SIT reporting issue with a partnership
+      partnership-already-challenged: Partnership challenge
+      trouble-nominating-induction-coordinator: Changing an induction coordinator
