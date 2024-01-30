@@ -7,6 +7,14 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
+## 30 January 2024
+
+We’ve fixed an issue with merging duplicate user accounts that meant existing declarations were not being redirected to the newly merged account correctly.
+
+Participant records in merged accounts will now point to the right declarations in the [ECF](/api-reference/reference-v3.html#api-v3-participants-ecf-get) and [NPQ](/api-reference/reference-v3.html#api-v3-participants-npq-get) GET participant endpoints.
+
+This will ensure that all participant declarations are consistent.
+
 ## 17 January 2024
 
 We’ve fixed a bug that had prevented some providers from changing schedules for participants they are training who have not been registered in a default partnership. In such instances they’d have seen the following 422 error message:

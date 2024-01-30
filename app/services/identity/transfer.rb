@@ -27,8 +27,9 @@ module Identity
 
       from_user.participant_identities.each do |identity|
         identity.update!(user: to_user)
-        identity.participant_profiles.each do |profile|
-          profile.update!(teacher_profile:)
+        identity.participant_profiles.each do |participant_profile|
+          participant_profile.update!(teacher_profile:)
+          transfer_declarations!(participant_profile:)
         end
       end
     end
@@ -57,6 +58,12 @@ module Identity
         from_user.update_attribute(:get_an_identity_id, nil) # rubocop:disable Rails/SkipsModelValidations
         to_user.update!(get_an_identity_id: from_id)
       end
+    end
+
+    def transfer_declarations!(participant_profile:)
+      return unless participant_profile.participant_declarations
+
+      participant_profile.participant_declarations.update!(user: to_user)
     end
 
     def create_participant_id_change!
