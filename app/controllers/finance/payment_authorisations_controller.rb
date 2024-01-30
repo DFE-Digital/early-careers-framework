@@ -8,7 +8,7 @@ module Finance
     def new; end
 
     def create
-      if @payment_authorisation_form
+      if @payment_authorisation_form.save_form
         redirect_to @payment_authorisation_form.back_link
       else
         track_validation_error(@payment_authorisation_form)
