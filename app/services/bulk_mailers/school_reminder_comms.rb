@@ -21,7 +21,7 @@ module BulkMailers
         .find_each do |induction_record|
           ect_name = induction_record.user.full_name
           school = induction_record.school
-          appropriate_body_name = induction_record.appropriate_body_name
+          appropriate_body_name = appropriate_body_name(induction_record)
           lead_provider_name = induction_record.lead_provider_name
           delivery_partner_name = induction_record.delivery_partner_name
 
@@ -204,6 +204,10 @@ module BulkMailers
     def opt_in_out_url(email:, school:)
       Rails.application.routes.url_helpers.choose_how_to_continue_url(token: nomination_token(email:, school:),
                                                                       host: Rails.application.config.domain)
+    end
+
+    def appropriate_body_name(induction_record)
+      induction_record.appropriate_body&.name || induction_record.school_cohort.appropriate_body&.name
     end
   end
 end
