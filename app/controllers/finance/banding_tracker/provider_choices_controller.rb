@@ -11,7 +11,11 @@ module Finance
       def create
         choose_provider_form.attributes = choose_provider_params
 
-        return redirect_to finance_banding_tracker_provider_path(id: choose_provider_form.id) if choose_provider_form.valid?
+        if choose_provider_form.valid?
+          return redirect_to finance_banding_tracker_provider_path(id: choose_provider_form.id)
+        else
+          track_validation_error(choose_provider_form)
+        end
 
         @providers = LeadProvider.name_order
         render :new
