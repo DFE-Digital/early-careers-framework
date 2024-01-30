@@ -218,7 +218,7 @@ GEM
       representable (~> 3.0)
       retriable (>= 2.0, < 4.a)
       rexml
-    google-apis-drive_v3 (0.47.0)
+    google-apis-drive_v3 (0.48.0)
       google-apis-core (>= 0.12.0, < 2.a)
     google-cloud-bigquery (1.46.1)
       concurrent-ruby (~> 1.0)
