@@ -54,6 +54,7 @@ module Finance
       if @adjustment.save_step
         redirect_to @adjustment.redirect_to
       else
+        track_validation_error(@adjustment)
         render :new, status: :unprocessable_entity
       end
     end
