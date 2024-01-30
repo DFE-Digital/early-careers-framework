@@ -35,6 +35,7 @@ module AppropriateBodySelection
           submit_appropriate_body_selection
         end
       else
+        track_validation_error(appropriate_body_form)
         render "/appropriate_body_selection/body_appointed"
       end
     end
@@ -48,6 +49,7 @@ module AppropriateBodySelection
         store_appropriate_body_form
         redirect_to action: :appropriate_body
       else
+        track_validation_error(appropriate_body_form)
         render "/appropriate_body_selection/body_type"
       end
     end
@@ -64,6 +66,7 @@ module AppropriateBodySelection
       if appropriate_body_form.valid? :body
         submit_appropriate_body_selection
       else
+        track_validation_error(appropriate_body_form)
         render "/appropriate_body_selection/body_selection"
       end
     end
