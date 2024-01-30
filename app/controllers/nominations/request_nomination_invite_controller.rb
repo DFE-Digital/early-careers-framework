@@ -18,6 +18,7 @@ class Nominations::RequestNominationInviteController < ApplicationController
       session[:nomination_request_form] = @nomination_request_form.serializable_hash
       redirect_to choose_school_request_nomination_invite_path
     else
+      track_validation_error(@nomination_request_form)
       @local_authorities = LocalAuthority.all
       render :choose_location
     end
@@ -26,7 +27,11 @@ class Nominations::RequestNominationInviteController < ApplicationController
   def choose_school; end
 
   def receive_school
-    render :choose_school and return unless @nomination_request_form.valid?(:school)
+    if !@nomination_request_form.valid?(:school)
+      track_validation_error(@nomination_request_form)
+      render :choose_school
+      return
+    end
 
     session[:nomination_request_form] = @nomination_request_form.serializable_hash
 
