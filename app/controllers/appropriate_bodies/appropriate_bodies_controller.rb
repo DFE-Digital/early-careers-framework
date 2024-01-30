@@ -16,6 +16,7 @@ module AppropriateBodies
       if choose_organisation_form.valid?
         redirect_to appropriate_body_participants_path(choose_organisation_form.appropriate_body)
       else
+        track_validation_error(choose_organisation_form)
         render :index
       end
     end
