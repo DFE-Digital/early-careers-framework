@@ -22,6 +22,7 @@ class Nominations::ChooseHowToContinueController < ApplicationController
     if @how_to_continue_form.valid?
       record_opt_out_state_and_redirect!
     else
+      track_validation_error(@how_to_continue_form)
       @how_to_continue_form.school = school
       @how_to_continue_form.cohort = cohort
       render :new
