@@ -24,6 +24,7 @@ class Nominations::NominateInductionCoordinatorController < ApplicationControlle
       store_nominate_induction_tutor_form
       redirect_to action: :email
     else
+      track_validation_error(@nominate_induction_tutor_form)
       render :full_name
     end
   end
@@ -35,6 +36,7 @@ class Nominations::NominateInductionCoordinatorController < ApplicationControlle
       store_nominate_induction_tutor_form
       redirect_to action: :check
     else
+      track_validation_error(@nominate_induction_tutor_form)
       render :email
     end
   end
