@@ -15,6 +15,7 @@ module Finance
       if @change_lead_provider_approval_status_form.save
         redirect_to finance_participant_path(@npq_application.user)
       else
+        track_validation_error(@change_lead_provider_approval_status_form)
         render :new
       end
     end
