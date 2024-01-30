@@ -8,9 +8,10 @@ module Finance
     def new; end
 
     def create
-      if @payment_authorisation_form.save_form
+      if @payment_authorisation_form
         redirect_to @payment_authorisation_form.back_link
       else
+        track_validation_error(@payment_authorisation_form)
         render :new, status: :unprocessable_entity
       end
     end
