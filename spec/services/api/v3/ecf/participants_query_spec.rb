@@ -49,15 +49,16 @@ RSpec.describe Api::V3::ECF::ParticipantsQuery do
         let(:new_cohort) { Cohort.next }
 
         before do
+          partnership = create(:partnership,
+                               school: induction_record.school,
+                               lead_provider:,
+                               cohort: new_cohort,
+                               relationship: false)
+          default_induction_programme = create(:induction_programme, :fip, partnership:)
           create(:school_cohort,
-                 default_induction_programme: induction_programme,
+                 default_induction_programme:,
                  school: induction_record.school,
                  cohort: new_cohort)
-          create(:partnership,
-                 school: induction_record.school,
-                 lead_provider:,
-                 cohort: new_cohort,
-                 relationship: false)
           new_schedule = create(:ecf_schedule, name: "new-schedule", cohort: new_cohort)
 
           ChangeSchedule.new({
