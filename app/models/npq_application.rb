@@ -129,9 +129,11 @@ class NPQApplication < ApplicationRecord
   end
 
   def save_and_dedupe_participant
-    result = save
-    NPQ::DedupeParticipant.new(npq_application: self, trn: teacher_reference_number).call if result
-    result
+    ActiveRecord::Base.transaction do
+      result = save
+      NPQ::DedupeParticipant.new(npq_application: self, trn: teacher_reference_number).call if result
+      result
+    end
   end
 
 private
