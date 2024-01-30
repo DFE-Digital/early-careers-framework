@@ -11,7 +11,11 @@ module Finance
     def select_programme; end
 
     def choose_programme
-      render "select_programme" and return unless @choose_programme_form.valid?(:choose_programme)
+      if !@choose_programme_form.valid?(:choose_programme)
+        track_validation_error(@choose_programme_form)
+        render "select_programme"
+        return
+      end
 
       if @choose_programme_form.programme == "ecf"
         redirect_to action: :select_provider_ecf
@@ -23,7 +27,11 @@ module Finance
     def select_provider_ecf; end
 
     def choose_provider_ecf
-      render "select_provider_ecf" and return unless @choose_programme_form.valid?(:choose_provider)
+      if !@choose_programme_form.valid?(:choose_provider)
+        track_validation_error(@choose_programme_form)
+        render "select_provider_ecf"
+        return
+      end
 
       lead_provider = LeadProvider.find(@choose_programme_form.provider)
 
@@ -33,7 +41,11 @@ module Finance
     def select_provider_npq; end
 
     def choose_provider_npq
-      render "select_provider_npq" and return unless @choose_programme_form.valid?(:choose_provider)
+      if !@choose_programme_form.valid?(:choose_provider)
+        track_validation_error(@choose_programme_form)
+        render "select_provider_npq"
+        return
+      end
 
       npq_lead_provider = NPQLeadProvider.find(@choose_programme_form.provider)
 
