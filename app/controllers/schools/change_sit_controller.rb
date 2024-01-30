@@ -14,6 +14,7 @@ module Schools
 
     def set_name
       unless @induction_tutor_form.valid?(:full_name)
+        track_validation_error(@induction_tutor_form)
         return render :name
       end
 
@@ -25,6 +26,7 @@ module Schools
 
     def set_email
       unless @induction_tutor_form.valid?(:email)
+        track_validation_error(@induction_tutor_form)
         return render :email
       end
 
