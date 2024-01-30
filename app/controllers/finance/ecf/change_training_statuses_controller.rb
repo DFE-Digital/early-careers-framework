@@ -14,6 +14,7 @@ module Finance
           set_success_message(heading: "Training status updated successfully.")
           redirect_to finance_participant_path(participant_profile.user)
         else
+          track_validation_error(change_training_status_form)
           render :new
         end
       end
