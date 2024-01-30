@@ -16,6 +16,7 @@ module DeliveryPartners
       if choose_organisation_form.valid?
         redirect_to delivery_partner_participants_path(choose_organisation_form.delivery_partner)
       else
+        track_validation_error(choose_organisation_form)
         render :index
       end
     end
