@@ -11,7 +11,7 @@ module Finance
     def select_programme; end
 
     def choose_programme
-      if !@choose_programme_form.valid?(:choose_programme)
+      unless @choose_programme_form.valid?(:choose_programme)
         track_validation_error(@choose_programme_form)
         render "select_programme"
         return
@@ -27,7 +27,7 @@ module Finance
     def select_provider_ecf; end
 
     def choose_provider_ecf
-      if !@choose_programme_form.valid?(:choose_provider)
+      unless @choose_programme_form.valid?(:choose_provider)
         track_validation_error(@choose_programme_form)
         render "select_provider_ecf"
         return
@@ -41,7 +41,7 @@ module Finance
     def select_provider_npq; end
 
     def choose_provider_npq
-      if !@choose_programme_form.valid?(:choose_provider)
+      unless @choose_programme_form.valid?(:choose_provider)
         track_validation_error(@choose_programme_form)
         render "select_provider_npq"
         return

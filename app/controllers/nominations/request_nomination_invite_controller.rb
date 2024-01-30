@@ -27,7 +27,7 @@ class Nominations::RequestNominationInviteController < ApplicationController
   def choose_school; end
 
   def receive_school
-    if !@nomination_request_form.valid?(:school)
+    unless @nomination_request_form.valid?(:school)
       track_validation_error(@nomination_request_form)
       render :choose_school
       return
