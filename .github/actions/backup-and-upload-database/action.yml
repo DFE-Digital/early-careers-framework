@@ -18,9 +18,13 @@ runs:
       with:
         creds: ${{ inputs.azure-credentials }}
 
+    - uses: DFE-Digital/github-actions/set-kubelogin-environment@master
+      with:
+        azure-credentials: ${{ inputs.azure-credentials }}
+
     - name: Set AKS credentials
       shell: bash
-      run: az aks get-credentials -g s189p01-tsc-pd-rg -n s189p01-tsc-production-aks
+      run: make ci production get-cluster-credentials
 
     - name: Install kubectl
       uses: azure/setup-kubectl@v3

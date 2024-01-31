@@ -39,7 +39,7 @@ runs:
         terraform_version: 1.5.4
         terraform_wrapper: false
 
-    - uses: DFE-Digital/github-actions/set-arm-environment-variables@master
+    - uses: DFE-Digital/github-actions/set-kubelogin-environment@master
       with:
         azure-credentials: ${{ inputs.azure-credentials }}
 
@@ -63,8 +63,11 @@ runs:
       if: ${{ inputs.pull-request-number != '' }}
       shell: bash
       run: |
-        az aks get-credentials --resource-group s189t01-tsc-ts-rg --name s189t01-tsc-test-aks
+        make ci review get-cluster-credentials
         kubectl exec -n cpd-development deployment/cpd-ecf-review-${{ inputs.pull-request-number }}-web -- sh -c "cd /app && /usr/local/bin/bundle exec rails db:safe_reset"
+      env:
+        PULL_REQUEST_NUMBER: ${{ inputs.pull-request-number }}
+
 
     - uses: ./.github/actions/smoke-test
       with:
