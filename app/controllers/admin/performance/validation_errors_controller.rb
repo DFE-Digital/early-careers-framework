@@ -6,7 +6,7 @@ module Admin::Performance
     skip_after_action :verify_policy_scoped
 
     def index
-      @validation_errors = ValidationError.list_of_distinct_errors_with_count
+      @pagy, @validation_errors = pagy_array(ValidationError.list_of_distinct_errors_with_count, items: 10)
     end
 
     def show

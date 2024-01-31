@@ -25,9 +25,8 @@
           <td class="govuk-table__cell  govuk-table__cell--numeric"><%= count %></td>
         </tr>
       <% end %>
-
       </tbody>
     </table>
-
+    <%= govuk_pagination(pagy: @pagy) %>
   </div>
 </div>
