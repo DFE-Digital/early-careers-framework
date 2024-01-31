@@ -259,8 +259,10 @@ RSpec.describe Induction::AmendParticipantCohort do
         context "when some of the historical records are not in the target cohort" do
           let(:historical_school_source_cohort) { create(:school_cohort, cohort: source_cohort) }
           let(:historical_school) { historical_school_source_cohort.school }
-          let!(:induction_programme) { create(:induction_programme, school_cohort: historical_school_source_cohort) }
+          let!(:induction_programme) { create(:induction_programme, :fip, school_cohort: historical_school_source_cohort) }
           let!(:historical_record) { create(:induction_record, participant_profile:, induction_programme:) }
+          let!(:historical_lead_provider) { historical_record.lead_provider }
+          let!(:historical_delivery_partner) { historical_record.delivery_partner }
 
           context "when the historical school has not setup the target cohort" do
             it "returns false and set errors" do
@@ -274,6 +276,10 @@ RSpec.describe Induction::AmendParticipantCohort do
           context "when the historical school has not setup default induction programme for the target cohort" do
             let!(:historical_school_target_cohort) do
               create(:school_cohort, cohort: target_cohort, school: historical_school)
+            end
+
+            before do
+              induction_programme.update!(partnership: nil)
             end
 
             it "returns false and set errors" do
@@ -296,6 +302,13 @@ RSpec.describe Induction::AmendParticipantCohort do
               participant_profile.reload.induction_records.each do |induction_record|
                 expect(induction_record.cohort_start_year).to eq(target_cohort_start_year)
               end
+            end
+
+            it "keep providers on FIP historical induction records with providers" do
+              expect(form.save).to be_truthy
+
+              expect(historical_record.reload.lead_provider).to eq(historical_lead_provider)
+              expect(historical_record.reload.delivery_partner).to eq(historical_delivery_partner)
             end
           end
         end
