@@ -12,7 +12,7 @@ module Admin::Performance
     def show
       @form_object = params[:form]
       @attribute = params[:attribute]
-      @pagy, @validation_errors = pagy(ValidationError.search({ form_object: @form_object, attribute: @attribute }), items: 20)
+      @pagy, @validation_errors = pagy(ValidationError.search({ form_object: @form_object, attribute: @attribute }), items: 50)
     end
   end
 end
