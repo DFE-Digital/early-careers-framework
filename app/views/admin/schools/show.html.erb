@@ -8,7 +8,7 @@
 
     <h2 class="govuk-heading-m">Details</h2>
 
-    <% if @induction_coordinator && ImpersonationPolicy.new(current_user, @induction_coordinator).create? %>
+    <% if @can_impersonate_sit %>
       <%= govuk_button_to("Impersonate induction tutor", admin_impersonate_path,
                           params: {
                             impersonated_user_id: @induction_coordinator.id,

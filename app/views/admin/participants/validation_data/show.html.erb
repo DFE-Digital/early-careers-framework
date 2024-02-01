@@ -9,17 +9,12 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-three-quarters">
-
-
-    <% can_be_updated = policy(@participant_profile).update_validation_data? %>
-    <% states = DetermineTrainingRecordStateLegacy.call(participant_profile: @participant_profile) %>
-
     <%= govuk_summary_list(actions: true) do |sl|
       sl.with_row do |row|
         row.with_key(text: "Full name")
         row.with_value(text: @participant_presenter.validation_data.full_name)
 
-        if can_be_updated
+        if @can_be_updated
           row.with_action(
             href: full_name_admin_participant_validation_data_path(@participant_presenter.validation_data.participant_profile),
             visually_hidden_text: "name used for validation"
@@ -30,7 +25,7 @@
       sl.with_row do |row|
         row.with_key(text: "Teacher Reference Number (TRN)")
         row.with_value(text: @participant_presenter.validation_data.trn)
-        if can_be_updated
+        if @can_be_updated
           row.with_action(
             href: trn_admin_participant_validation_data_path(@participant_presenter.validation_data.participant_profile),
             visually_hidden_text: "teacher reference number"
@@ -41,7 +36,7 @@
       sl.with_row do |row|
         row.with_key(text: "Date of birth")
         row.with_value(text: @participant_presenter.validation_data.date_of_birth&.to_fs(:govuk))
-        if can_be_updated
+        if @can_be_updated
           row.with_action(
             href: date_of_birth_admin_participant_validation_data_path(@participant_presenter.validation_data.participant_profile),
             visually_hidden_text: "date of birth"
@@ -52,7 +47,7 @@
       sl.with_row do |row|
         row.with_key(text: "National Insurance Number")
         row.with_value(text: @participant_presenter.validation_data.nino)
-        if can_be_updated
+        if @can_be_updated
           row.with_action(
             href: nino_admin_participant_validation_data_path(@participant_presenter.validation_data.participant_profile),
             visually_hidden_text: "National Insurance number"
@@ -62,11 +57,11 @@
 
       sl.with_row do |row|
         row.with_key(text: "Validation state")
-        row.with_value(text: states.validation_state)
+        row.with_value(text: @states.validation_state)
       end
     end %>
 
-    <% if !states.validation_status_valid? || current_user.super_user? %>
+    <% if !@states.validation_status_valid? || current_user.super_user? %>
       <% if @participant_presenter.eligibility_data.present? %>
         <h3 class="govuk-heading-m">Eligibility data</h3>
         <%= govuk_summary_list(actions: true) do |sl|
@@ -130,7 +125,7 @@
           button_label,
           new_admin_participant_validate_details_path(participant_id: params[:participant_id]),
           class: "govuk-button"
-        ) if can_be_updated
+        ) if @can_be_updated
       %>
     <% end %>
   </div>
