@@ -12,6 +12,42 @@ RSpec.describe NPQApplication, type: :model do
     ).backed_by_column_of_type(:text)
   }
 
+  describe "#save_and_dedupe_participant" do
+    let(:user) { create(:user, :teacher) }
+    let(:instance) { build(:npq_application, user:) }
+
+    subject(:save_and_dedupe_participant) { instance.save_and_dedupe_participant }
+
+    it { expect { save_and_dedupe_participant }.to change(NPQApplication, :count).by(1) }
+    it { expect { save_and_dedupe_participant }.not_to change(ParticipantIdChange, :count) }
+    it { is_expected.to eq(true) }
+
+    context "when a participant with the same TRN exists" do
+      let(:duplicate_trn) { user.teacher_profile.trn }
+
+      before do
+        create(:user, :teacher).tap { |user| user.teacher_profile.update!(trn: duplicate_trn) }
+      end
+
+      it { expect { save_and_dedupe_participant }.to change(NPQApplication, :count).by(1) }
+      it { expect { save_and_dedupe_participant }.to change(ParticipantIdChange, :count).by(1) }
+      it { is_expected.to eq(true) }
+
+      context "when an error is raised during deduping" do
+        before do
+          dedupe_double = instance_double(NPQ::DedupeParticipant)
+          allow(dedupe_double).to receive(:call).and_raise(Identity::TransferError)
+          allow(NPQ::DedupeParticipant).to receive(:new) { dedupe_double }
+        end
+
+        it "does not create a new NPQApplication" do
+          expect { save_and_dedupe_participant }.to raise_error(Identity::TransferError)
+          expect(instance).not_to be_persisted
+        end
+      end
+    end
+  end
+
   describe "callbacks" do
     subject { create(:npq_application) }
 
