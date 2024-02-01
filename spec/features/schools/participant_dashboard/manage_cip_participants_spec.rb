@@ -22,7 +22,7 @@ RSpec.describe "Manage CIP participants", js: true, with_feature_flags: { eligib
       and_i_click_on(Cohort.current.description)
       when_i_navigate_to_participants_dashboard
       when_i_click_on_the_participants_name "Ineligible With-mentor"
-      then_i_am_taken_to_view_details_page
+      then_i_am_taken_to_view_ect_details_page
       then_i_can_view_participant_with_status(:not_allowed)
     end
   end
@@ -38,7 +38,7 @@ RSpec.describe "Manage CIP participants", js: true, with_feature_flags: { eligib
       and_i_click_on(Cohort.current.description)
       when_i_navigate_to_participants_dashboard
       when_i_click_on_the_participants_name "Ineligible Without-mentor"
-      then_i_am_taken_to_view_details_page
+      then_i_am_taken_to_view_ect_details_page
       then_i_can_view_participant_with_status(:not_allowed)
     end
   end
@@ -54,8 +54,8 @@ RSpec.describe "Manage CIP participants", js: true, with_feature_flags: { eligib
       and_i_click_on(Cohort.current.description)
       when_i_navigate_to_participants_dashboard
       when_i_click_on_the_participants_name "Ineligible mentor"
-      then_i_am_taken_to_view_details_page
       then_i_can_view_participant_with_status(:not_allowed)
+      then_i_am_taken_to_view_mentor_details_page
     end
   end
 
@@ -70,8 +70,8 @@ RSpec.describe "Manage CIP participants", js: true, with_feature_flags: { eligib
       and_i_click_on(Cohort.current.description)
       when_i_navigate_to_participants_dashboard
       when_i_click_on_the_participants_name "ero mentor"
-      then_i_am_taken_to_view_details_page
       then_i_can_view_participant_with_status(:not_yet_mentoring_ero)
+      then_i_am_taken_to_view_mentor_details_page
     end
   end
 
@@ -87,7 +87,7 @@ RSpec.describe "Manage CIP participants", js: true, with_feature_flags: { eligib
       and_i_click_on(Cohort.current.description)
       when_i_navigate_to_participants_dashboard
       when_i_click_on_the_participants_name "Eligible With-mentor"
-      then_i_am_taken_to_view_details_page
+      then_i_am_taken_to_view_ect_details_page
       then_i_can_view_participant_with_status(:registered_for_cip_training)
     end
   end
@@ -103,7 +103,7 @@ RSpec.describe "Manage CIP participants", js: true, with_feature_flags: { eligib
       and_i_click_on(Cohort.current.description)
       when_i_navigate_to_participants_dashboard
       when_i_click_on_the_participants_name "Eligible Without-mentor"
-      then_i_am_taken_to_view_details_page
+      then_i_am_taken_to_view_ect_details_page
       then_i_can_view_participant_with_status(:registered_for_cip_training)
     end
   end
@@ -119,8 +119,8 @@ RSpec.describe "Manage CIP participants", js: true, with_feature_flags: { eligib
       and_i_click_on(Cohort.current.description)
       when_i_navigate_to_participants_dashboard
       when_i_click_on_the_participants_name "Eligible mentor"
-      then_i_am_taken_to_view_details_page
       then_i_can_view_participant_with_status(:not_yet_mentoring)
+      then_i_am_taken_to_view_mentor_details_page
     end
   end
 
@@ -136,7 +136,7 @@ RSpec.describe "Manage CIP participants", js: true, with_feature_flags: { eligib
       and_i_click_on(Cohort.current.description)
       when_i_navigate_to_participants_dashboard
       when_i_click_on_the_participants_name "CFI With-mentor"
-      then_i_am_taken_to_view_details_page
+      then_i_am_taken_to_view_ect_details_page
       then_i_can_view_participant_with_status(:request_for_details_delivered)
     end
   end
@@ -152,7 +152,7 @@ RSpec.describe "Manage CIP participants", js: true, with_feature_flags: { eligib
       and_i_click_on(Cohort.current.description)
       when_i_navigate_to_participants_dashboard
       when_i_click_on_the_participants_name "CFI Without-mentor"
-      then_i_am_taken_to_view_details_page
+      then_i_am_taken_to_view_ect_details_page
       then_i_can_view_participant_with_status(:request_for_details_failed)
     end
   end
@@ -168,8 +168,8 @@ RSpec.describe "Manage CIP participants", js: true, with_feature_flags: { eligib
       and_i_click_on(Cohort.current.description)
       when_i_navigate_to_participants_dashboard
       when_i_click_on_the_participants_name "CFI Mentor"
-      then_i_am_taken_to_view_details_page
       then_i_can_view_participant_with_status(:request_for_details_delivered)
+      then_i_am_taken_to_view_mentor_details_page
     end
   end
 
@@ -185,8 +185,8 @@ RSpec.describe "Manage CIP participants", js: true, with_feature_flags: { eligib
       and_i_click_on(Cohort.current.description)
       when_i_navigate_to_participants_dashboard
       when_i_click_on_the_participants_name "CFI Mentor"
-      then_i_am_taken_to_view_details_page
       then_i_can_view_participant_with_status(:request_for_details_delivered)
+      then_i_am_taken_to_view_mentor_details_page
       and_i_see_the_cip_programme
       and_i_dont_see_the_lead_provider
       and_i_dont_see_the_delivery_partner
@@ -204,7 +204,7 @@ RSpec.describe "Manage CIP participants", js: true, with_feature_flags: { eligib
       and_i_click_on(Cohort.current.description)
       when_i_navigate_to_participants_dashboard
       when_i_click_on_the_participants_name "DBC Without-Mentor"
-      then_i_am_taken_to_view_details_page
+      then_i_am_taken_to_view_ect_details_page
       then_i_can_view_participant_with_status(:different_trn)
     end
   end
@@ -220,8 +220,8 @@ RSpec.describe "Manage CIP participants", js: true, with_feature_flags: { eligib
       and_i_click_on(Cohort.current.description)
       when_i_navigate_to_participants_dashboard
       when_i_click_on_the_participants_name "DBC Mentor"
-      then_i_am_taken_to_view_details_page
       then_i_can_view_participant_with_status(:different_trn)
+      then_i_am_taken_to_view_mentor_details_page
     end
   end
 end

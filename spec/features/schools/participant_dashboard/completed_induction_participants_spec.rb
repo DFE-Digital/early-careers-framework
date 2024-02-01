@@ -27,7 +27,7 @@ RSpec.describe "Manage currently training participants", js: true do
     and_i_see_ects_with_induction_completed_sorted_by_decreasing_completion_date
 
     when_i_click_on_the_participants_name "Eligible Without-mentor"
-    then_i_am_taken_to_view_details_page
+    then_i_am_taken_to_view_ect_details_page
     and_i_see_the_completion_status_tag
   end
 end

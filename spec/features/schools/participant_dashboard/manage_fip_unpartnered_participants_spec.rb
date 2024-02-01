@@ -22,7 +22,7 @@ RSpec.describe "Manage FIP unpartnered participants", js: true, with_feature_fla
       given_i_can_view_the_fip_induction_dashboard_without_partnership_details
       when_i_navigate_to_participants_dashboard
       when_i_click_on_the_participants_name "Ineligible With-mentor"
-      then_i_am_taken_to_view_details_page
+      then_i_am_taken_to_view_ect_details_page
       then_i_can_view_participant_with_status(:not_allowed)
     end
   end
@@ -38,7 +38,7 @@ RSpec.describe "Manage FIP unpartnered participants", js: true, with_feature_fla
       given_i_can_view_the_fip_induction_dashboard_without_partnership_details
       when_i_navigate_to_participants_dashboard
       when_i_click_on_the_participants_name "Ineligible Without-mentor"
-      then_i_am_taken_to_view_details_page
+      then_i_am_taken_to_view_ect_details_page
       then_i_can_view_participant_with_status(:not_allowed)
     end
   end
@@ -54,8 +54,8 @@ RSpec.describe "Manage FIP unpartnered participants", js: true, with_feature_fla
       given_i_can_view_the_fip_induction_dashboard_without_partnership_details
       when_i_navigate_to_participants_dashboard
       when_i_click_on_the_participants_name "Ineligible mentor"
-      then_i_am_taken_to_view_details_page
       then_i_can_view_participant_with_status(:not_allowed)
+      then_i_am_taken_to_view_mentor_details_page
     end
   end
 
@@ -71,7 +71,7 @@ RSpec.describe "Manage FIP unpartnered participants", js: true, with_feature_fla
       given_i_can_view_the_fip_induction_dashboard_without_partnership_details
       when_i_navigate_to_participants_dashboard
       when_i_click_on_the_participants_name "Eligible With-mentor"
-      then_i_am_taken_to_view_details_page
+      then_i_am_taken_to_view_ect_details_page
       then_i_can_view_participant_with_status(:registered_for_fip_no_partner)
       and_the_participant_is_displayed_unpartnered
     end
@@ -89,7 +89,7 @@ RSpec.describe "Manage FIP unpartnered participants", js: true, with_feature_fla
       when_i_navigate_to_participants_dashboard
       when_i_click_on_the_participants_name "Eligible Without-mentor"
 
-      then_i_am_taken_to_view_details_page
+      then_i_am_taken_to_view_ect_details_page
       then_i_can_view_participant_with_status(:registered_for_fip_no_partner)
       and_the_participant_is_displayed_unpartnered
     end
@@ -106,8 +106,8 @@ RSpec.describe "Manage FIP unpartnered participants", js: true, with_feature_fla
       given_i_can_view_the_fip_induction_dashboard_without_partnership_details
       when_i_navigate_to_participants_dashboard
       when_i_click_on_the_participants_name "Eligible mentor"
-      then_i_am_taken_to_view_details_page
       then_i_can_view_participant_with_status(:not_yet_mentoring)
+      then_i_am_taken_to_view_mentor_details_page
       and_the_participant_is_displayed_unpartnered
     end
   end
@@ -124,7 +124,7 @@ RSpec.describe "Manage FIP unpartnered participants", js: true, with_feature_fla
       given_i_can_view_the_fip_induction_dashboard_without_partnership_details
       when_i_navigate_to_participants_dashboard
       when_i_click_on_the_participants_name "CFI With-mentor"
-      then_i_am_taken_to_view_details_page
+      then_i_am_taken_to_view_ect_details_page
       then_i_can_view_participant_with_status(:request_for_details_delivered)
     end
   end
@@ -140,7 +140,7 @@ RSpec.describe "Manage FIP unpartnered participants", js: true, with_feature_fla
       given_i_can_view_the_fip_induction_dashboard_without_partnership_details
       when_i_navigate_to_participants_dashboard
       when_i_click_on_the_participants_name "CFI Without-mentor"
-      then_i_am_taken_to_view_details_page
+      then_i_am_taken_to_view_ect_details_page
       then_i_can_view_participant_with_status(:request_for_details_failed)
     end
   end
@@ -156,8 +156,8 @@ RSpec.describe "Manage FIP unpartnered participants", js: true, with_feature_fla
       given_i_can_view_the_fip_induction_dashboard_without_partnership_details
       when_i_navigate_to_participants_dashboard
       when_i_click_on_the_participants_name "CFI Mentor"
-      then_i_am_taken_to_view_details_page
       then_i_can_view_participant_with_status(:request_for_details_delivered)
+      then_i_am_taken_to_view_mentor_details_page
     end
   end
 
@@ -173,7 +173,7 @@ RSpec.describe "Manage FIP unpartnered participants", js: true, with_feature_fla
       given_i_can_view_the_fip_induction_dashboard_without_partnership_details
       when_i_navigate_to_participants_dashboard
       when_i_click_on_the_participants_name "DBC With-Mentor"
-      then_i_am_taken_to_view_details_page
+      then_i_am_taken_to_view_ect_details_page
       then_i_can_view_participant_with_status(:different_trn)
     end
   end
@@ -189,7 +189,7 @@ RSpec.describe "Manage FIP unpartnered participants", js: true, with_feature_fla
       given_i_can_view_the_fip_induction_dashboard_without_partnership_details
       when_i_navigate_to_participants_dashboard
       when_i_click_on_the_participants_name "DBC Without-Mentor"
-      then_i_am_taken_to_view_details_page
+      then_i_am_taken_to_view_ect_details_page
       then_i_can_view_participant_with_status(:different_trn)
     end
   end
@@ -205,8 +205,8 @@ RSpec.describe "Manage FIP unpartnered participants", js: true, with_feature_fla
       given_i_can_view_the_fip_induction_dashboard_without_partnership_details
       when_i_navigate_to_participants_dashboard
       when_i_click_on_the_participants_name "DBC Mentor"
-      then_i_am_taken_to_view_details_page
       then_i_can_view_participant_with_status(:different_trn)
+      then_i_am_taken_to_view_mentor_details_page
     end
   end
 
@@ -222,7 +222,7 @@ RSpec.describe "Manage FIP unpartnered participants", js: true, with_feature_fla
       given_i_can_view_the_fip_induction_dashboard_without_partnership_details
       when_i_navigate_to_participants_dashboard
       when_i_click_on_the_participants_name "No-qts With-Mentor"
-      then_i_am_taken_to_view_details_page
+      then_i_am_taken_to_view_ect_details_page
       then_i_can_view_participant_with_status(:not_qualified)
     end
   end
@@ -238,7 +238,7 @@ RSpec.describe "Manage FIP unpartnered participants", js: true, with_feature_fla
       given_i_can_view_the_fip_induction_dashboard_without_partnership_details
       when_i_navigate_to_participants_dashboard
       when_i_click_on_the_participants_name "No-qts Without-Mentor"
-      then_i_am_taken_to_view_details_page
+      then_i_am_taken_to_view_ect_details_page
       then_i_can_view_participant_with_status(:not_qualified)
     end
   end
