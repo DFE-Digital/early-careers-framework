@@ -18,6 +18,11 @@
     <% row.with_key { "Roles" } %>
     <% row.with_value { @presenter.roles } %>
   <% end %>
+
+  <% summary_list.with_row do |row| %>
+    <% row.with_key { "Archive reason" } %>
+    <% row.with_value { @relic.reason } %>
+  <% end %>
 <% end %>
 
 <% if @presenter.type == "user" %>
