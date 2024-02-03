@@ -9,6 +9,8 @@ class EmailSchedule < ApplicationRecord
 
   validates :mailer_name, inclusion: { in: MAILERS.keys.map(&:to_s) }
   validates :scheduled_at, presence: true
+  validate :validate_future_schedule_date, if: -> { scheduled_at_changed? }
+  validate :valdate_one_schedule_per_day, if: -> { scheduled_at_changed? }
 
   enum status: {
     queued: "queued",
@@ -17,4 +19,20 @@ class EmailSchedule < ApplicationRecord
   }
 
   scope :to_send_today, -> { queued.where(scheduled_at: ..Date.current) }
+
+private
+
+  def validate_future_schedule_date
+    errors.add(:scheduled_at, "The schedule date must be in the future") unless scheduled_at&.future?
+  end
+
+  def valdate_one_schedule_per_day
+    if scheduled_at.present?
+      existing_record = EmailSchedule.where("DATE(scheduled_at) = ?", scheduled_at.to_date).limit(1).first
+
+      if existing_record
+        errors.add(:scheduled_at, "Only one mailer is allowed per day")
+      end
+    end
+  end
 end
