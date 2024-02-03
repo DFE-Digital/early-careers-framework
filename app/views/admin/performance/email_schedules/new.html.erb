@@ -1,0 +1,23 @@
+<% content_for :title, "Schedule an email" %>
+<%= render partial: "admin/performance/nav" %>
+<%= govuk_back_link(text: "Back", href: admin_performance_email_schedules_path) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= form_with(model: @email_schedule, url: admin_performance_email_schedules_path) do |f| %>
+      <%= f.govuk_error_summary %>
+
+      <h1>Schedule an email</h1>
+
+      <%= f.govuk_radio_buttons_fieldset :mailer_name, legend: { text: "Type of email" } do %>
+        <% EmailSchedule::MAILERS.keys.map(&:to_s).each_with_index do |mailer, i| %>
+          <%= f.govuk_radio_button :mailer_name, mailer, label: { text: mailer.humanize }, link_errors: i == 0 %>
+        <% end %>
+      <% end %>
+
+      <%= f.govuk_date_field :scheduled_at, legend: { text: 'When should this be sent?' } %>
+
+      <%= f.govuk_submit "Schedule email" %>
+    <% end %>
+  </div>
+</div>
