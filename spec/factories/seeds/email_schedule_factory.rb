@@ -3,7 +3,7 @@
 FactoryBot.define do
   factory(:seed_email_factory, class: "EmailSchedule") do
     mailer_name { EmailSchedule::MAILERS.keys.sample.to_s }
-    scheduled_at { 1.week.from_now }
+    scheduled_at { rand(1..10).weeks.from_now }
     status { "queued" }
 
     trait :skip_validations do
