@@ -1,0 +1,17 @@
+<%
+summary_list.with_row do |row|
+  row.with_key(text: 'GOV.UK Notify Template')
+  row.with_value(text: govuk_link_to_notify("Chosen FIP but provider not registered with DfE", "c640e594-21f6-4de3-be41-ebb74b2c8306"))
+end
+
+summary_list.with_row do |row|
+  row.with_key(text: 'Recipient criteria')
+  row.with_value do %>
+    School induction tutors who:
+    <ul>
+      <li>SITs receive on per relevant school</li>
+      <li>School selected FIP for the current academic year</li>
+      <li>No partnership has been reported yet</li>
+    </ul>
+  <% end %>
+<% end %>
