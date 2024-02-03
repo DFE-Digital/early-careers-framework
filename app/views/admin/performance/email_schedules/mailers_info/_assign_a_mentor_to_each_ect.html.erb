@@ -1,0 +1,17 @@
+<%
+summary_list.with_row do |row|
+  row.with_key(text: 'GOV.UK Notify Template')
+  row.with_value(text: govuk_link_to_notify("Added ECTs but not assigned mentors", "ae0b1c48-de11-4231-b394-0288bb779987"))
+end
+
+summary_list.with_row do |row|
+  row.with_key(text: 'Recipient criteria')
+  row.with_value do %>
+    School induction tutors who:
+    <ul>
+      <li>SITs receive one per relevant school</li>
+      <li>School selected FIP or CIP for the current academic year</li>
+      <li>School has one or more ECTs in current year who are not paired with a mentor</li>
+    </ul>
+  <% end %>
+<% end %>
