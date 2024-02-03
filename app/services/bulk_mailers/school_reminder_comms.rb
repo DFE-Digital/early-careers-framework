@@ -4,12 +4,13 @@ module BulkMailers
   class SchoolReminderComms
     SCHOOL_TYPES_TO_INCLUDE = [1, 2, 3, 5, 6, 7, 8, 12, 28, 33, 34, 35, 36, 40, 44].freeze
 
-    attr_reader :cohort, :dry_run
+    attr_reader :cohort, :dry_run, :email_schedule
 
     # Set dry_run = true to just return the number of emails that would be sent but don't send any emails
-    def initialize(cohort:, dry_run: false)
+    def initialize(cohort:, dry_run: false, email_schedule: nil)
       @cohort = cohort
       @dry_run = dry_run
+      @email_schedule = email_schedule
     end
 
     def contact_sits_that_need_to_chase_their_ab_to_register_ects
@@ -77,7 +78,7 @@ module BulkMailers
             email_count += 1
             next if dry_run
 
-            SchoolMailer.with(school:, induction_coordinator:).remind_sit_to_assign_mentors_to_ects_email.deliver_later
+            SchoolMailer.with(school:, induction_coordinator:, email_schedule:).remind_sit_to_assign_mentors_to_ects_email.deliver_later
           end
         end
 
@@ -98,7 +99,7 @@ module BulkMailers
             email_count += 1
             next if dry_run
 
-            SchoolMailer.with(school:, induction_coordinator:).remind_sit_to_add_ects_and_mentors_email.deliver_later
+            SchoolMailer.with(school:, induction_coordinator:, email_schedule:).remind_sit_to_add_ects_and_mentors_email.deliver_later
           end
         end
 
@@ -184,7 +185,7 @@ module BulkMailers
           email_count += 1
           next if dry_run
 
-          SchoolMailer.with(school:).sit_needs_to_chase_partnership.deliver_later
+          SchoolMailer.with(school:, email_schedule:).sit_needs_to_chase_partnership.deliver_later
         end
 
       email_count

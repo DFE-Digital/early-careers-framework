@@ -6,6 +6,7 @@ RSpec.describe BulkMailers::SchoolReminderComms, type: :mailer do
   let(:cohort) { create(:seed_cohort) }
   let(:query_cohort) { cohort }
   let(:dry_run) { false }
+  let(:email_schedule) { nil }
 
   let(:school_cohort) { create(:seed_school_cohort, :fip, :with_school, cohort:) }
   let(:school) { school_cohort.school }
@@ -202,7 +203,7 @@ RSpec.describe BulkMailers::SchoolReminderComms, type: :mailer do
         expect {
           service.contact_sits_that_need_to_assign_mentors
         }.to have_enqueued_mail(SchoolMailer, :remind_sit_to_assign_mentors_to_ects_email)
-          .with(params: { school:, induction_coordinator: sit_profile }, args: [])
+          .with(params: { school:, induction_coordinator: sit_profile, email_schedule: }, args: [])
       end
 
       context "when the dry_run flag is set" do
@@ -237,7 +238,7 @@ RSpec.describe BulkMailers::SchoolReminderComms, type: :mailer do
         expect {
           service.contact_sits_that_have_not_added_participants
         }.to have_enqueued_mail(SchoolMailer, :remind_sit_to_add_ects_and_mentors_email)
-          .with(params: { school:, induction_coordinator: sit_profile }, args: [])
+          .with(params: { school:, induction_coordinator: sit_profile, email_schedule: }, args: [])
       end
     end
 
@@ -359,7 +360,7 @@ RSpec.describe BulkMailers::SchoolReminderComms, type: :mailer do
         expect {
           service.contact_sits_that_have_chosen_fip_but_not_partnered
         }.to have_enqueued_mail(SchoolMailer, :sit_needs_to_chase_partnership)
-          .with(params: { school: }, args: [])
+          .with(params: { school:, email_schedule: }, args: [])
       end
 
       context "when the dry_run flag is set" do
