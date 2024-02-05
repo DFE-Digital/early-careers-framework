@@ -12,13 +12,12 @@ module Finance
         choose_provider_form.attributes = choose_provider_params
 
         if choose_provider_form.valid?
-          return redirect_to finance_banding_tracker_provider_path(id: choose_provider_form.id)
+          redirect_to finance_banding_tracker_provider_path(id: choose_provider_form.id)
         else
           track_validation_error(choose_provider_form)
+          @providers = LeadProvider.name_order
+          render :new
         end
-
-        @providers = LeadProvider.name_order
-        render :new
       end
 
     private
