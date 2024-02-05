@@ -1254,8 +1254,12 @@ module ManageTrainingSteps
     expect(page).to have_content @updated_participant_data[:email]
   end
 
-  def then_i_am_taken_to_view_details_page
-    expect(page).to have_title("ECT or mentor details - Manage training for early career teachers")
+  def then_i_am_taken_to_view_mentor_details_page
+    expect(page).to have_title("Mentor details - Manage training for early career teachers")
+  end
+
+  def then_i_am_taken_to_view_ect_details_page
+    expect(page).to have_title("ECT details - Manage training for early career teachers")
   end
 
   def then_i_can_view_participant_with_status(status_key)

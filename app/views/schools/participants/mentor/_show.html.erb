@@ -1,0 +1,16 @@
+<% content_for :title, "Mentor details" %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <span class="govuk-caption-l"><%= school.name %></span>
+    <h1 class="govuk-heading-l"><%= profile.full_name %></h1>
+
+    <%= render("schools/participants/mentor/personal_details", profile:, induction_record:, school:) %>
+
+    <%= render("schools/participants/mentor/mentoring", profile:, school:, ects:, possible_ects:, mentors_added:) %>
+
+    <%= render("schools/participants/mentor/mentor_training", profile:, school:, induction_record:) %>
+
+    <%= render("schools/participants/mentor/no_longer_training", profile:, induction_record:) %>
+  </div>
+</div>

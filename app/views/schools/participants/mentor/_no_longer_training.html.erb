@@ -1,0 +1,14 @@
+<% unless induction_record.leaving_induction_status? && induction_record.school_transfer %>
+  <h3 class="govuk-heading-m">No longer training?</h3>
+  <p class="govuk-body">
+    Tell us if <%= govuk_link_to "#{profile.user.full_name} is transferring to another school",
+                                 check_transfer_school_participant_transfer_out_path(participant_id: profile.id) %>
+  </p>
+<% end %>
+
+<% unless induction_record.training_status_withdrawn? %>
+  <p class="govuk-body">
+    <%= render Schools::Participants::RemoveFromCohortComponent.new(induction_record: induction_record,
+                                                                    current_user: current_user) %>
+  </p>
+<% end %>

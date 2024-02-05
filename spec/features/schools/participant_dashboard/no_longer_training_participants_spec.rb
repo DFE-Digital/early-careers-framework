@@ -30,6 +30,6 @@ RSpec.describe "Manage currently training participants", js: true do
     and_i_see_mentors_not_training_and_ects_not_being_trained_sorted_by_name
 
     when_i_click_on_the_participants_name "Deferred participant"
-    then_i_am_taken_to_view_details_page
+    then_i_am_taken_to_view_ect_details_page
   end
 end

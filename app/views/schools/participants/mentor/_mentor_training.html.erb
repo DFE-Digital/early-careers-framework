@@ -1,0 +1,49 @@
+<h3 class="govuk-heading-m">Mentor training</h3>
+
+<dl class="govuk-summary-list govuk-!-margin-bottom-7">
+  <% if induction_record.enrolled_in_cip? %>
+    <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
+      <dt class="govuk-summary-list__key">
+        Programme
+      </dt>
+      <dd class="govuk-summary-list__value">
+        DfE accredited materials
+      </dd>
+    </div>
+    <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
+      <dt class="govuk-summary-list__key">
+        Materials supplier
+      </dt>
+      <dd class="govuk-summary-list__value">
+        <%= induction_record.core_induction_programme_name %>
+      </dd>
+    </div>
+  <% end %>
+
+  <% if induction_record.enrolled_in_fip? %>
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">
+        Lead provider
+      </dt>
+
+      <dd class="govuk-summary-list__value">
+        <%= induction_record.lead_provider_name %>
+      </dd>
+
+      <dd class="govuk-summary-list__actions">
+        <%= govuk_link_to(support_path(participant_profile_id: profile.id, school_id: school.id, subject: :"change-participant-lead-provider")) do %>
+          <%= 'Change' %> <span class="govuk-visually-hidden"> Lead provider</span>
+        <% end %>
+      </dd>
+    </div>
+
+    <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
+      <dt class="govuk-summary-list__key">
+        Delivery partner
+      </dt>
+      <dd class="govuk-summary-list__value">
+        <%= induction_record.delivery_partner_name %>
+      </dd>
+    </div>
+  <% end %>
+</dl>

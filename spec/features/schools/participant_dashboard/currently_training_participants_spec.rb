@@ -27,7 +27,7 @@ RSpec.describe "Manage currently training participants", js: true do
       then_i_see_the_participants_sorted_by_mentor
 
       when_i_click_on_the_participants_name "Billy Mentor"
-      then_i_am_taken_to_view_details_page
+      then_i_am_taken_to_view_mentor_details_page
     end
 
     scenario "Sorted by induction start date" do
@@ -35,7 +35,7 @@ RSpec.describe "Manage currently training participants", js: true do
       then_i_see_the_participants_sorted_by_induction_start_date
 
       when_i_click_on_the_participants_name "Training ECT With-mentor"
-      then_i_am_taken_to_view_details_page
+      then_i_am_taken_to_view_ect_details_page
     end
   end
 end
