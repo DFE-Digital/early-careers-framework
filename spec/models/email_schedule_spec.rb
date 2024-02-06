@@ -8,8 +8,8 @@ RSpec.describe EmailSchedule, type: :model do
 
   describe "custom validations" do
     describe "#validate_future_schedule_date" do
-      let(:past_scheduled_email) { build(:seed_email_factory, scheduled_at: Time.current.yesterday.midday) }
-      let(:future_scheduled_email) { build(:seed_email_factory, scheduled_at: Time.current.tomorrow.midday) }
+      let(:past_scheduled_email) { build(:seed_email_factory, scheduled_at: Date.yesterday) }
+      let(:future_scheduled_email) { build(:seed_email_factory, scheduled_at: Date.tomorrow) }
 
       it "adds an error when scheduled_at is not in the future" do
         past_scheduled_email.valid?
@@ -47,6 +47,24 @@ RSpec.describe EmailSchedule, type: :model do
       it "does not include schedules that have already been sent" do
         expect(described_class.to_send_today).not_to include [already_sent]
       end
+    end
+  end
+
+  describe "#mailer_method" do
+    let(:email_schedule) { build(:seed_email_factory, mailer_name: :assign_a_mentor_to_each_ect) }
+
+    it "returns the name of the mapped bulk mailer method to be called" do
+      expect(email_schedule.mailer_method).to eq(:contact_sits_that_need_to_assign_mentors)
+    end
+  end
+
+  describe ".MAILERS" do
+    it "returns a hash that associates each mailer name with its corresponding bulk mailer method" do
+      expect(described_class::MAILERS).to eq({
+        assign_a_mentor_to_each_ect: :contact_sits_that_need_to_assign_mentors,
+        register_ects_and_mentors: :contact_sits_that_have_not_added_participants,
+        contract_with_a_training_provider: :contact_sits_that_have_chosen_fip_but_not_partnered,
+      })
     end
   end
 end
