@@ -131,6 +131,64 @@ private
 
     update_school_cohort_and_schedule!
     update_induction_records!
+    update_historical_induction_records!
+  end
+
+  def in_target?(induction_record)
+    in_target_cohort?(induction_record) && in_target_schedule?(induction_record)
+  end
+
+  def in_target_cohort?(induction_record)
+    induction_record.cohort_start_year == new_schedule.cohort_start_year
+  end
+
+  def in_target_schedule?(induction_record)
+    induction_record.schedule == new_schedule
+  end
+
+  def historical_target_school_cohort(school)
+    school.school_cohorts.for_year(new_schedule.cohort_start_year).first
+  end
+
+  def historical_school_cohort_partnership(historical_record)
+    Partnership.create_with(relationship: true)
+    .find_or_create_by!(school: historical_record.school,
+                        cohort: new_schedule.cohort,
+                        lead_provider: historical_record.lead_provider,
+                        delivery_partner: historical_record.delivery_partner)
+  end
+
+  def historical_school_cohort_induction_programme(historical_record, partnership)
+    school_cohort = historical_target_school_cohort(historical_record.school)
+
+    InductionProgramme.full_induction_programme.find_or_create_by!(school_cohort:, partnership:)
+  end
+
+  def historical_induction_programme(historical_record)
+    return historical_record.induction_programme if in_target_cohort?(historical_record)
+
+    partnership = historical_school_cohort_partnership(historical_record)
+
+    historical_school_cohort_induction_programme(historical_record, partnership)
+  end
+
+  def update_historical_induction_records!
+    historical_records.all? do |historical_record|
+      next true if in_target?(historical_record)
+
+      begin
+        historical_record.update!(induction_programme: historical_induction_programme(historical_record),
+                                  schedule: new_schedule)
+      rescue ActiveRecord::RecordInvalid
+        false
+      end
+    end
+  end
+
+  def historical_records
+    return [] unless participant_profile
+
+    @historical_records ||= participant_profile.induction_records.order(created_at: :desc)
   end
 
   def update_schedule!

@@ -199,6 +199,32 @@ RSpec.describe ChangeSchedule do
                 service.call
               }.to change { participant_profile.reload.school_cohort }.to(new_school_cohort)
             end
+
+            it "updates the cohort on the historic induction record induction programme" do
+              service.call
+
+              historic_induction_record = participant_profile.induction_records.order(created_at: :desc).last
+
+              expect(historic_induction_record.reload.induction_programme.cohort).to eq(new_school_cohort.cohort)
+            end
+
+            it "updates the cohort on the historic induction record schedule" do
+              service.call
+
+              historic_induction_record = participant_profile.induction_records.order(created_at: :desc).last
+
+              expect(historic_induction_record.reload.schedule.cohort).to eq(new_school_cohort.cohort)
+            end
+
+            it "creates a relationship partnership for the historic induction record school cohort" do
+              historic_induction_record = participant_profile.induction_records.order(created_at: :desc).last
+
+              expect(historic_induction_record.partnership.cohort).not_to eq(new_schedule.cohort)
+
+              service.call
+
+              expect(historic_induction_record.reload.partnership.cohort).to eq(new_schedule.cohort)
+            end
           end
         end
 
@@ -445,6 +471,32 @@ RSpec.describe ChangeSchedule do
               expect {
                 service.call
               }.to change { participant_profile.reload.school_cohort }.to(new_school_cohort)
+            end
+
+            it "updates the cohort on the historic induction record induction programme" do
+              service.call
+
+              historic_induction_record = participant_profile.induction_records.order(created_at: :desc).last
+
+              expect(historic_induction_record.reload.induction_programme.cohort).to eq(new_school_cohort.cohort)
+            end
+
+            it "updates the cohort on the historic induction record schedule" do
+              service.call
+
+              historic_induction_record = participant_profile.induction_records.order(created_at: :desc).last
+
+              expect(historic_induction_record.reload.schedule.cohort).to eq(new_school_cohort.cohort)
+            end
+
+            it "creates a relationship partnership for the historic induction record school cohort" do
+              historic_induction_record = participant_profile.induction_records.order(created_at: :desc).last
+
+              expect(historic_induction_record.partnership.cohort).not_to eq(new_schedule.cohort)
+
+              service.call
+
+              expect(historic_induction_record.reload.partnership.cohort).to eq(new_schedule.cohort)
             end
           end
         end
