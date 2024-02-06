@@ -370,8 +370,6 @@ RSpec.describe RecordDeclaration do
 
       describe "mentor completion" do
         let(:completion_event) { false }
-        let(:declaration_type) { "completed" }
-        let(:declaration_date) { participant_profile.schedule.milestones.find_by(declaration_type:).start_date }
 
         before do
           allow(service).to receive(:mentor_completion_event?)
@@ -381,20 +379,16 @@ RSpec.describe RecordDeclaration do
         context "when mentor_completion_event? is true" do
           let(:completion_event) { true }
 
-          it "calls the Mentors::CompleteTraining service" do
-            travel_to(declaration_date + 1.day) do
-              expect_any_instance_of(Mentors::CompleteTraining).to receive(:call)
-              service.call
-            end
+          it "calls the Mentors::CheckTrainingCompletion service" do
+            expect_any_instance_of(Mentors::CheckTrainingCompletion).to receive(:call)
+            service.call
           end
         end
 
         context "when mentor_completion_event? is false" do
-          it "does not call the Mentors::CompleteTraining service" do
-            travel_to(declaration_date + 1.day) do
-              expect_any_instance_of(Mentors::CompleteTraining).not_to receive(:call)
-              service.call
-            end
+          it "does not call the Mentors::CheckTrainingCompletion service" do
+            expect_any_instance_of(Mentors::CheckTrainingCompletion).not_to receive(:call)
+            service.call
           end
         end
       end

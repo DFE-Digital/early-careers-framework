@@ -39,6 +39,31 @@ RSpec.describe VoidParticipantDeclaration do
       }.to raise_error Api::Errors::InvalidTransitionError
     end
 
+    describe "mentor completion" do
+      let(:completion_event) { false }
+
+      before do
+        allow(subject).to receive(:mentor_completion_event?)
+          .and_return(completion_event)
+      end
+
+      context "when mentor_completion_event? is true" do
+        let(:completion_event) { true }
+
+        it "calls the Mentors::CheckTrainingCompletion service" do
+          expect_any_instance_of(Mentors::CheckTrainingCompletion).to receive(:call)
+          subject.call
+        end
+      end
+
+      context "when mentor_completion_event? is false" do
+        it "does not call the Mentors::CheckTrainingCompletion service" do
+          expect_any_instance_of(Mentors::CheckTrainingCompletion).not_to receive(:call)
+          subject.call
+        end
+      end
+    end
+
     context "when declaration is payable" do
       let(:participant_declaration) do
         create(

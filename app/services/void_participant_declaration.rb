@@ -14,6 +14,8 @@ class VoidParticipantDeclaration
 
     NPQ::VoidParticipantOutcome.new(participant_declaration).call
 
+    check_mentor_completion
+
     participant_declaration
   end
 
@@ -44,5 +46,17 @@ private
 
   def line_item
     participant_declaration.statement_line_items.find_by(state: %w[eligible payable submitted])
+  end
+
+  def participant_profile
+    @participant_profile ||= participant_declaration.participant_profile
+  end
+
+  def check_mentor_completion
+    Mentors::CheckTrainingCompletion.call(mentor_profile: participant_profile) if mentor_completion_event?
+  end
+
+  def mentor_completion_event?
+    participant_profile.mentor? && participant_declaration.declaration_type == "completed"
   end
 end
