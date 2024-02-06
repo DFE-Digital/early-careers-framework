@@ -20,6 +20,10 @@ class EmailSchedule < ApplicationRecord
 
   scope :to_send_today, -> { queued.where(scheduled_at: ..Date.current) }
 
+  def mailer_method
+    MAILERS[mailer_name.to_sym]
+  end
+
 private
 
   def validate_future_schedule_date

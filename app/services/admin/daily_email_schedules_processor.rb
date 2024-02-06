@@ -12,12 +12,12 @@ module Admin
 
     def call
       email_schedules.find_each do |email_schedule|
-        mailer_name = email_schedule.mailer_name.to_sym
-        mailer_method = EmailSchedule::MAILERS[mailer_name]
-        cohort = Cohort.current
-
         email_schedule.sending!
-        BulkMailers::SchoolReminderComms.new(cohort:, email_schedule:).send(mailer_method)
+
+        BulkMailers::SchoolReminderComms
+          .new(cohort: Cohort.current, email_schedule:)
+          .send(email_schedule.mailer_method)
+
         email_schedule.sent!
       end
     end

@@ -25,7 +25,11 @@
       if @email_schedule.queued?
         summary_list.with_row do |row|
           row.with_key(text: 'Estimated size')
-          row.with_value(text: BulkMailers::SchoolReminderComms.new(cohort: Cohort.containing_date(@email_schedule.scheduled_at), dry_run: true).send(EmailSchedule::MAILERS[@email_schedule.mailer_name.to_sym]))
+          row.with_value(text:
+            BulkMailers::SchoolReminderComms
+              .new(cohort: Cohort.containing_date(@email_schedule.scheduled_at), dry_run: true)
+              .send(@email_schedule.mailer_method)
+          )
         end
       else
         summary_list.with_row do |row|
