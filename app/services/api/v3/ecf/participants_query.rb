@@ -18,7 +18,7 @@ module Api
         def participants_for_pagination
           scope = User
                     .select("users.id", "users.created_at", "users.updated_at")
-                    .joins(participant_profiles: :induction_records)
+                    .joins(participant_profiles: { induction_records: :schedule })
                     .joins("JOIN (#{latest_induction_records_join.to_sql}) AS latest_induction_records_join ON latest_induction_records_join.latest_id = induction_records.id")
                     .left_joins(:participant_id_changes)
                     .order(sort_order(default: :created_at, model: User))
@@ -26,7 +26,8 @@ module Api
           scope = scope.where(users: { updated_at: updated_since.. }) if updated_since_filter.present?
           scope = scope.where(induction_records: { training_status: }) if training_status.present?
           scope = scope.where(participant_id_changes: { from_participant_id: }) if from_participant_id.present?
-          scope
+
+          scope.where(induction_records: { schedules: { cohort_id: cohorts.map(&:id) } })
         end
 
         def participants_from(paginated_join)
@@ -59,14 +60,6 @@ module Api
 
         def from_participant_id
           filter[:from_participant_id].to_s
-        end
-
-        def latest_induction_records_join
-          super
-            .joins(:schedule)
-            .where(
-              schedule: { cohort_id: cohorts.map(&:id) },
-            )
         end
 
         def left_outer_join_teacher_profiles

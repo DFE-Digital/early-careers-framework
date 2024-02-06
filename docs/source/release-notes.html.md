@@ -7,6 +7,14 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
+## 6 February 2024
+
+We’ve done an update to ensure that early career teacher (ECT) participant records only ever appear in one cohort. 
+
+Some providers had found it confusing because participants who’d moved cohort were appearing multiple times when they filtered by cohort in the ‘GET participants’ endpoint. 
+
+Training providers will now only see the ECT in the latest cohort they’ve been assigned to.
+
 ## 30 January 2024
 
 We’ve fixed an issue with merging duplicate user accounts that meant existing declarations were not being redirected to the newly merged account correctly.

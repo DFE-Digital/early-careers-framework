@@ -38,11 +38,47 @@ RSpec.describe Api::V3::ECF::ParticipantsQuery do
       end
     end
 
-    context "with cohort filter" do
+    context "when filtering by cohort" do
       let(:params) { { filter: { cohort: cohort.start_year.to_s } } }
 
-      it "returns all users that belong to a provider" do
+      it "only returns users with induction records in the specified cohort" do
         expect(subject.participants_for_pagination).to match_array([user])
+      end
+
+      context "when the user has induction records against multiple cohorts" do
+        let(:new_cohort) { Cohort.next }
+
+        before do
+          partnership = create(:partnership,
+                               school: induction_record.school,
+                               lead_provider:,
+                               cohort: new_cohort,
+                               relationship: false)
+          default_induction_programme = create(:induction_programme, :fip, partnership:)
+          create(:school_cohort,
+                 default_induction_programme:,
+                 school: induction_record.school,
+                 cohort: new_cohort)
+          new_schedule = create(:ecf_schedule, name: "new-schedule", cohort: new_cohort)
+
+          ChangeSchedule.new({
+            cpd_lead_provider:,
+            participant_id: participant_profile.participant_identity.external_identifier,
+            course_identifier: "ecf-induction",
+            schedule_identifier: new_schedule.schedule_identifier,
+            cohort: new_cohort.start_year,
+          }).call
+        end
+
+        context "when filtering by a historical cohort" do
+          it { expect(subject.participants_for_pagination).to be_empty }
+        end
+
+        context "when filtering by their latest cohort" do
+          let(:params) { { filter: { cohort: new_cohort.start_year.to_s } } }
+
+          it { expect(subject.participants_for_pagination).to match_array([user]) }
+        end
       end
     end
 
@@ -281,32 +317,6 @@ RSpec.describe Api::V3::ECF::ParticipantsQuery do
       it "returns the user id" do
         result = subject.participants_from(User.where(id: user.id))
         expect(result.first.id).to eq(user_id)
-      end
-    end
-
-    describe "cohort filter" do
-      context "with correct value" do
-        let(:params) { { filter: { cohort: cohort.display_name } } }
-
-        it "returns all user records for the specific cohort" do
-          expect(subject.participants_from(User.all)).to match_array([user])
-        end
-      end
-
-      context "with multiple values" do
-        let(:params) { { filter: { cohort: "#{cohort.start_year},#{another_cohort.start_year}" } } }
-
-        it "returns all user records for the specific cohort" do
-          expect(subject.participants_from(User.all)).to match_array([user, another_user])
-        end
-      end
-
-      context "with incorrect value" do
-        let(:params) { { filter: { cohort: "2017" } } }
-
-        it "returns no user records" do
-          expect(subject.participants_from(User.all)).to be_empty
-        end
       end
     end
   end
