@@ -8,7 +8,11 @@ class ChallengePartnershipsController < ApplicationController
   def show; end
 
   def create
-    render :show and return unless @challenge_partnership_form.valid?
+    unless @challenge_partnership_form.valid?
+      track_validation_error(@challenge_partnership_form)
+      render :show
+      return
+    end
 
     @challenge_partnership_form.challenge!
     redirect_to success_challenge_partnership_path

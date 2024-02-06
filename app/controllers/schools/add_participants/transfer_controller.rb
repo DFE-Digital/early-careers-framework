@@ -12,6 +12,7 @@ module Schools
           needs_user_dedup_sign_in?
           redirect_to @wizard.next_step_path
         else
+          track_validation_error(@form)
           render @wizard.current_step
         end
       end

@@ -16,6 +16,7 @@ class ChooseRolesController < ApplicationController
     if @choose_role_form.valid?
       redirect_to @choose_role_form.redirect_path(helpers:)
     else
+      track_validation_error(@choose_role_form)
       render :show
     end
   end

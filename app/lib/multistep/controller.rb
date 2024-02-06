@@ -78,6 +78,7 @@ module Multistep
         store_form_in_session
         redirect_to action: :show, step: step_param(form.next_step)
       else
+        track_validation_error(form)
         render current_step
       end
     end

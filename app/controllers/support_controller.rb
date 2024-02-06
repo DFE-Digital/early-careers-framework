@@ -13,6 +13,7 @@ class SupportController < ApplicationController
     if @form.valid? && @form.save
       redirect_to support_confirmation_path
     else
+      track_validation_error(@form)
       render :new
     end
   end

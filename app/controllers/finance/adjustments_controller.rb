@@ -22,6 +22,7 @@ module Finance
       if @add_another_form.valid?
         redirect_to @add_another_form.redirect_to
       else
+        track_validation_error(@add_another_form)
         render :index, status: :unprocessable_entity
       end
     end
@@ -38,6 +39,7 @@ module Finance
       if @adjustment.save_step
         redirect_to @adjustment.redirect_to
       else
+        track_validation_error(@adjustment)
         render :new, status: :unprocessable_entity
       end
     end
@@ -54,6 +56,7 @@ module Finance
       if @adjustment.save_step
         redirect_to @adjustment.redirect_to
       else
+        track_validation_error(@adjustment)
         render :new, status: :unprocessable_entity
       end
     end

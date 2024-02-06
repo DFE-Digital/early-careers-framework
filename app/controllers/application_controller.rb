@@ -83,4 +83,15 @@ protected
 
     Sentry.set_user(id: current_user.id)
   end
+
+  def track_validation_error(form)
+    ValidationError.create!(
+      form_object: form.class.name,
+      request_path: request.path,
+      user: current_user,
+      details: form.errors.messages.to_h { |field, messages| [field, { messages:, value: (form.public_send(field) if form.respond_to?(field)) }] },
+    )
+  rescue StandardError => e
+    Rails.logger.error("validation error not saved: #{e.message}")
+  end
 end

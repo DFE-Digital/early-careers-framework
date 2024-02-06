@@ -17,7 +17,11 @@ class Schools::ChooseProgrammeController < Schools::BaseController
   end
 
   def create
-    render :show and return unless @induction_choice_form.valid?
+    unless @induction_choice_form.valid?
+      track_validation_error(@induction_choice_form)
+      render :show
+      return
+    end
 
     save_induction_choice_form
     redirect_to action: :confirm_programme

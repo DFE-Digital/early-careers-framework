@@ -14,6 +14,7 @@ module LeadProviders
           report_schools_form.source = "csv"
           redirect_to lead_providers_report_schools_csv_path
         else
+          track_validation_error(report_schools_form)
           render :show
         end
       end

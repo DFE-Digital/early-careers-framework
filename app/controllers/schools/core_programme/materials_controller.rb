@@ -17,7 +17,11 @@ class Schools::CoreProgramme::MaterialsController < Schools::BaseController
       params.require(:core_induction_programme_choice_form).permit(:core_induction_programme_id),
     )
 
-    render :edit and return unless @form.valid?
+    unless @form.valid?
+      track_validation_error(@form)
+      render :edit
+      return
+    end
 
     @school_cohort.update!(
       core_induction_programme_id: @form.core_induction_programme_id,

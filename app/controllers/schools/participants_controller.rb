@@ -46,6 +46,7 @@ class Schools::ParticipantsController < Schools::BaseController
     if @profile.user.update(full_name: params[:full_name])
       render :update_name
     else
+      track_validation_error(@profile.user)
       @profile.user.full_name = @old_name
       render "schools/participants/edit_name"
     end
@@ -58,7 +59,11 @@ class Schools::ParticipantsController < Schools::BaseController
     identity.assign_attributes(email: params[:email])
     redirect_to action: :email_used and return if email_used?(identity.email)
 
-    render "schools/participants/edit_email" and return if identity.invalid?
+    if identity.invalid?
+      track_validation_error(identity)
+      render "schools/participants/edit_email"
+      return
+    end
 
     Induction::ChangePreferredEmail.call(induction_record: @induction_record,
                                          preferred_email: identity.email)
@@ -99,6 +104,7 @@ class Schools::ParticipantsController < Schools::BaseController
 
       redirect_to school_participant_path(id: @profile.id, school_id: @school.slug)
     else
+      track_validation_error(@mentor_form)
       render :edit_mentor
     end
   end

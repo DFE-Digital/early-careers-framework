@@ -13,6 +13,7 @@ module Finance
         if change_lead_provider_form.valid?
           render :confirm
         else
+          track_validation_error(change_lead_provider_form)
           render :new
         end
       end
@@ -27,6 +28,7 @@ module Finance
           )
           redirect_to finance_participant_path(participant_profile.user)
         else
+          track_validation_error(change_lead_provider_form)
           render :new
         end
       end
