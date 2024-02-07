@@ -54,7 +54,7 @@ jobs:
           ruby-version: "3.2.2"
 
       - name: Set up Node
-        uses: actions/setup-node@v4.0.1
+        uses: actions/setup-node@v4.0.2
         with:
           node-version: "18.18.x"
           cache: "yarn"
