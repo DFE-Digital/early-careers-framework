@@ -23,4 +23,40 @@ describe ParticipantProfile::Mentor, type: :model do
   describe "#participant_type" do
     it { expect(instance.participant_type).to eq(:mentor) }
   end
+
+  describe "#complete_training!" do
+    subject(:mentor_profile) { create(:seed_mentor_participant_profile, :valid) }
+    let(:completion_date) { 1.week.ago.to_date }
+    let(:completion_reason) { described_class.mentor_completion_reasons.values.sample }
+
+    before do
+      mentor_profile.complete_training!(completion_date:, completion_reason:)
+    end
+
+    it "sets the mentor completion date" do
+      expect(mentor_profile.mentor_completion_date).to eq(completion_date)
+    end
+
+    it "sets the mentor completion reason" do
+      expect(mentor_profile.mentor_completion_reason).to eq(completion_reason)
+    end
+  end
+
+  describe "#completed_training?" do
+    context "when a completion date is present" do
+      before do
+        instance.mentor_completion_date = 1.week.ago.to_date
+      end
+
+      it "returns true" do
+        expect(instance).to be_completed_training
+      end
+    end
+
+    context "when a completion date is not present" do
+      it "returns false" do
+        expect(instance).not_to be_completed_training
+      end
+    end
+  end
 end

@@ -27,6 +27,10 @@ class ParticipantProfile::Mentor < ParticipantProfile::ECF
     save!
   end
 
+  def completed_training?
+    mentor_completion_date.present?
+  end
+
   def mentor?
     true
   end
