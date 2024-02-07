@@ -159,6 +159,10 @@ install-konduit: ## Install the konduit script, for accessing backend services
 terraform-refresh: terraform-init
 	terraform -chdir=terraform/application refresh -var-file config/$(CONFIG)/variables.tfvars.json
 
+define SET_APP_ID_FROM_PULL_REQUEST_NUMBER
+	$(if $(PULL_REQUEST_NUMBER), $(eval export APP_ID=review-$(PULL_REQUEST_NUMBER)) , $(eval export APP_ID=$(CONFIG_LONG)))
+endef
+
 action-group-resources: set-azure-account # make env_aks action-group-resources ACTION_GROUP_EMAIL=notificationemail@domain.com . Must be run before setting enable_monitoring=true for each subscription
 	$(if $(ACTION_GROUP_EMAIL), , $(error Please specify a notification email for the action group))
 	echo ${AZURE_RESOURCE_PREFIX}-${SERVICE_SHORT}-mn-rg
@@ -166,23 +170,33 @@ action-group-resources: set-azure-account # make env_aks action-group-resources 
 	az monitor action-group create -n ${AZURE_RESOURCE_PREFIX}-cpd-ecf -g ${AZURE_RESOURCE_PREFIX}-${SERVICE_SHORT}-mn-rg --action email ${AZURE_RESOURCE_PREFIX}-${SERVICE_SHORT}-email ${ACTION_GROUP_EMAIL}
 
 aks-console: get-cluster-credentials
-	$(if $(PULL_REQUEST_NUMBER), $(eval export APP_ID=review-$(PULL_REQUEST_NUMBER)) , $(eval export APP_ID=$(CONFIG_LONG)))
+	$(SET_APP_ID_FROM_PULL_REQUEST_NUMBER)
 	kubectl -n ${NAMESPACE} exec -ti --tty deployment/cpd-ecf-${APP_ID}-web -- /bin/sh -c "cd /app && bundle exec rails c"
 
 aks-ssh: get-cluster-credentials
-	$(if $(PULL_REQUEST_NUMBER), $(eval export APP_ID=review-$(PULL_REQUEST_NUMBER)) , $(eval export APP_ID=$(CONFIG_LONG)))
+	$(SET_APP_ID_FROM_PULL_REQUEST_NUMBER)
 	kubectl -n ${NAMESPACE} exec -ti --tty deployment/cpd-ecf-${APP_ID}-web -- /bin/sh
 
 aks-worker-ssh: get-cluster-credentials
-	$(if $(PULL_REQUEST_NUMBER), $(eval export APP_ID=review-$(PULL_REQUEST_NUMBER))-worker , $(eval export APP_ID=$(CONFIG_LONG)))
+	$(SET_APP_ID_FROM_PULL_REQUEST_NUMBER)
 	kubectl -n ${NAMESPACE} exec -ti --tty deployment/cpd-ecf-${APP_ID}-worker -- /bin/sh
 
-## ie: FILENAME=restart.txt make staging aks-copy-tmp-file
-## ie: FILENAME=restart.txt make ci production aks-copy-tmp-file
-aks-copy-tmp-file: get-cluster-credentials
-	$(if $(PULL_REQUEST_NUMBER), $(eval export APP_ID=review-$(PULL_REQUEST_NUMBER)) , $(eval export APP_ID=$(CONFIG_LONG)))
-	$(if $(FILENAME), , $(error Usage: FILENAME=restart.txt make staging aks-copy-tmp-file))
-	kubectl -n ${NAMESPACE} exec -ti --tty deployment/cpd-ecf-${APP_ID}-web -- cat /app/tmp/${FILENAME} > ${FILENAME}
+# downloads the given file from the app/tmp directory of all
+# pods in the cluster to the local computer (in a subdirectory matching the pod name).
+## ie: FILENAME=restart.txt make staging aks-download-tmp-file
+## ie: FILENAME=restart.txt make ci production aks-download-tmp-file
+aks-download-tmp-file: get-cluster-credentials
+	$(SET_APP_ID_FROM_PULL_REQUEST_NUMBER)
+	$(if $(FILENAME), , $(error Usage: FILENAME=restart.txt make staging aks-download-tmp-file))
+	kubectl get pods -n ${NAMESPACE} -l app=cpd-ecf-${APP_ID}-web -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}' | xargs -I {} sh -c 'mkdir -p {}/ && kubectl cp ${NAMESPACE}/{}:/app/tmp/${FILENAME} {}/${FILENAME}'
+
+# uploads the given file to the app/tmp directory of all
+# pods in the cluster.
+## ie: FILENAME=local_file.txt make staging aks-upload-tmp-file
+aks-upload-tmp-file: get-cluster-credentials
+	$(SET_APP_ID_FROM_PULL_REQUEST_NUMBER)
+	$(if $(FILENAME), , $(error Usage: FILENAME=restart.txt make staging aks-upload-tmp-file))
+	kubectl get pods -n ${NAMESPACE} -l app=cpd-ecf-${APP_ID}-web -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}' | xargs -I {} kubectl cp ${FILENAME} ${NAMESPACE}/{}:/app/tmp/${FILENAME}
 
 # Removes explicit postgres database URLs from database.yml
 konduit-cleanup:
