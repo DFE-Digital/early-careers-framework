@@ -158,18 +158,21 @@ private
                         delivery_partner: historical_record.delivery_partner)
   end
 
-  def historical_school_cohort_induction_programme(historical_record, partnership)
-    school_cohort = historical_target_school_cohort(historical_record.school)
-
-    InductionProgramme.full_induction_programme.find_or_create_by!(school_cohort:, partnership:)
-  end
-
   def historical_induction_programme(historical_record)
     return historical_record.induction_programme if in_target_cohort?(historical_record)
 
-    partnership = historical_school_cohort_partnership(historical_record)
+    historical_school_cohort = historical_target_school_cohort(historical_record.school)
 
-    historical_school_cohort_induction_programme(historical_record, partnership)
+    set_default_programme = !historical_record.enrolled_in_fip? || !historical_record.lead_provider_id || !historical_record.delivery_partner_id
+
+    if set_default_programme
+      historical_school_cohort.default_induction_programme
+    else
+      historical_partnership = historical_school_cohort_partnership(historical_record)
+      historical_partnership.induction_programmes.first.presence || InductionProgramme
+                                                                    .full_induction_programme
+                                                                    .find_or_create_by!(school_cohort: historical_school_cohort, partnership: historical_partnership)
+    end
   end
 
   def update_historical_induction_records!
