@@ -259,8 +259,10 @@ RSpec.describe Induction::AmendParticipantCohort do
         context "when some of the historical records are not in the target cohort" do
           let(:historical_school_source_cohort) { create(:school_cohort, cohort: source_cohort) }
           let(:historical_school) { historical_school_source_cohort.school }
-          let!(:induction_programme) { create(:induction_programme, school_cohort: historical_school_source_cohort) }
+          let!(:induction_programme) { create(:induction_programme, :fip, school_cohort: historical_school_source_cohort) }
           let!(:historical_record) { create(:induction_record, participant_profile:, induction_programme:) }
+          let!(:historical_lead_provider) { historical_record.lead_provider }
+          let!(:historical_delivery_partner) { historical_record.delivery_partner }
 
           context "when the historical school has not setup the target cohort" do
             it "returns false and set errors" do
@@ -274,6 +276,10 @@ RSpec.describe Induction::AmendParticipantCohort do
           context "when the historical school has not setup default induction programme for the target cohort" do
             let!(:historical_school_target_cohort) do
               create(:school_cohort, cohort: target_cohort, school: historical_school)
+            end
+
+            before do
+              induction_programme.update!(partnership: nil)
             end
 
             it "returns false and set errors" do
@@ -295,6 +301,47 @@ RSpec.describe Induction::AmendParticipantCohort do
 
               participant_profile.reload.induction_records.each do |induction_record|
                 expect(induction_record.cohort_start_year).to eq(target_cohort_start_year)
+              end
+            end
+
+            context "when the school is already partnered with the providers" do
+              let(:existing_providers_partnership) do
+                create(:seed_partnership,
+                       school: historical_school,
+                       cohort: target_cohort,
+                       lead_provider: historical_lead_provider,
+                       delivery_partner: historical_delivery_partner)
+              end
+
+              before do
+                NewSeeds::Scenarios::InductionProgrammes::Fip.new(school_cohort: historical_school_target_cohort)
+                                                             .build(default_induction_programme: false)
+                                                             .with_partnership(partnership: existing_providers_partnership)
+              end
+
+              it "link historical records to the existing partnership" do
+                expect(form.save).to be_truthy
+                expect(historical_record.reload.partnership).to eq(existing_providers_partnership)
+              end
+            end
+
+            context "when the school is FIP not partnered with the providers" do
+              it "link historical records to a new relationship with the providers" do
+                expect(form.save).to be_truthy
+
+                expect(historical_record.reload.partnership).to be_relationship
+                expect(historical_record.lead_provider).to eq(historical_lead_provider)
+                expect(historical_record.delivery_partner).to eq(historical_delivery_partner)
+              end
+            end
+
+            context "when the school is not FIP" do
+              let!(:induction_programme) { create(:induction_programme, :cip, school_cohort: historical_school_source_cohort) }
+
+              it "link historical records to the default induction programme" do
+                expect(form.save).to be_truthy
+
+                expect(historical_record.reload.induction_programme).to eq(historical_school_target_cohort.default_induction_programme)
               end
             end
           end

@@ -123,12 +123,23 @@ module Induction
       end
     end
 
+    def fip_historical_induction_programme_for(school_cohort, lead_provider_id, delivery_partner_id)
+      partnership = Partnership.create_with(relationship: true)
+                               .find_or_create_by!(school_id: school_cohort.school_id,
+                                                   cohort_id: school_cohort.cohort_id,
+                                                   lead_provider_id:,
+                                                   delivery_partner_id:)
+
+      partnership.induction_programmes.first ||
+        InductionProgramme.full_induction_programme.create!(school_cohort:, partnership:)
+    end
+
     def historical_records_changed?
       historical_records.all? do |historical_record|
         next true if in_target?(historical_record)
 
         begin
-          historical_record.update!(induction_programme: historical_induction_programme(historical_record),
+          historical_record.update!(induction_programme: historical_induction_programme_for(historical_record),
                                     schedule:)
         rescue ActiveRecord::RecordInvalid
           false
@@ -142,10 +153,22 @@ module Induction
       @historical_records ||= participant_profile.induction_records.order(created_at: :desc)
     end
 
-    def historical_induction_programme(historical_record)
+    def historical_induction_programme_for(historical_record)
       return historical_record.induction_programme if in_target_cohort?(historical_record)
 
-      historical_target_school_cohort(historical_record.school).default_induction_programme.tap do |induction_programme|
+      historical_school_cohort = historical_target_school_cohort(historical_record.school)
+      historical_lead_provider_id = historical_record.lead_provider_id
+      historical_delivery_partner_id = historical_record.delivery_partner_id
+      set_default_programme = !historical_record.enrolled_in_fip? || !historical_lead_provider_id || !historical_delivery_partner_id
+      historical_induction_programme = if set_default_programme
+                                         historical_school_cohort.default_induction_programme
+                                       else
+                                         fip_historical_induction_programme_for(historical_school_cohort,
+                                                                                historical_lead_provider_id,
+                                                                                historical_delivery_partner_id)
+                                       end
+
+      historical_induction_programme.tap do |induction_programme|
         if induction_programme.nil?
           errors.add(:historical_records,
                      :no_default_induction_programme,
