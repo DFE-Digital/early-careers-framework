@@ -5,13 +5,14 @@ module Oneoffs::NPQ
     def migrate
       # locate all TeacherProfiles with empty TRN
       teacher_profiles_without_trns.in_batches.each_record do |profile|
-        trns = profile.user.npq_applications.map(&:teacher_reference_number).uniq
+        trns = profile.user.npq_applications
+          .where(teacher_reference_number_verified: true)
+          .pluck(:teacher_reference_number)
+          .uniq
+
         # check if they are correct
         trn = TeacherReferenceNumber.new(trns.first)
-        if trns.count == 1 && trn.valid?
-          profile.trn = trn.formatted_trn
-          profile.save!
-        end
+        profile.update!(trn: trn.formatted_trn) if trns.count == 1 && trn.valid?
       end
     end
 
