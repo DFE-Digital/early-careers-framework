@@ -6,6 +6,7 @@ class Induction::Enrol < BaseService
       record_active_profile_participant_state! unless participant_profile_state_already_correct?
 
       participant_profile.training_status_active!
+      participant_profile.update!(status: :active)
 
       participant_profile.induction_records.create!(
         induction_programme:,

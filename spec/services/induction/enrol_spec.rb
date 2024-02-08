@@ -50,11 +50,12 @@ RSpec.describe Induction::Enrol do
     end
 
     context "when the participant profile training_status is withdrawn" do
-      let(:participant_profile) { create(:ect_participant_profile, training_status: :withdrawn) }
+      let(:participant_profile) { create(:ect_participant_profile, training_status: :withdrawn, status: :withdrawn) }
 
       it "it changes it to active" do
         service.call(participant_profile:, induction_programme:)
         expect(participant_profile.training_status).to eql "active"
+        expect(participant_profile.status).to eql "active"
       end
     end
 

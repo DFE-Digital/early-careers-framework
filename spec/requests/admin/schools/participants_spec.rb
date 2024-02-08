@@ -53,9 +53,9 @@ RSpec.describe "Admin::Schools::Participants", type: :request do
       expect(assigns(:participant_profiles)).to include mentor_profile
       expect(assigns(:participant_profiles)).to include ect_profile
       expect(assigns(:participant_profiles)).to include ect_profile_next_cohort
+      expect(assigns(:participant_profiles)).to include withdrawn_profile_record
       expect(assigns(:participant_profiles)).not_to include npq_profile
       expect(assigns(:participant_profiles)).not_to include unrelated_profile
-      expect(assigns(:participant_profiles)).not_to include withdrawn_profile_record
     end
   end
 end
