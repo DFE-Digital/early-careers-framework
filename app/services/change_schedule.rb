@@ -146,8 +146,10 @@ private
     induction_record.schedule == new_schedule
   end
 
-  def historical_target_school_cohort(school)
-    school.school_cohorts.for_year(new_schedule.cohort_start_year).first
+  def historical_target_school_cohort(historical_record)
+    historical_record.school.school_cohorts.for_year(new_schedule.cohort_start_year).first.presence || SchoolCohort.create!(school: historical_record.school,
+                                                                                                                            cohort: new_schedule.cohort,
+                                                                                                                            induction_programme_choice: historical_record.induction_programme&.training_programme)
   end
 
   def historical_school_cohort_partnership(historical_record)
@@ -161,12 +163,14 @@ private
   def historical_induction_programme(historical_record)
     return historical_record.induction_programme if in_target_cohort?(historical_record)
 
-    historical_school_cohort = historical_target_school_cohort(historical_record.school)
+    historical_school_cohort = historical_target_school_cohort(historical_record)
 
     set_default_programme = !historical_record.enrolled_in_fip? || !historical_record.lead_provider_id || !historical_record.delivery_partner_id
 
     if set_default_programme
-      historical_school_cohort.default_induction_programme
+      historical_school_cohort.default_induction_programme.presence || InductionProgramme.create_with(partnership: historical_record.partnership)
+                                                                                          .find_or_create_by!(school_cohort: historical_school_cohort,
+                                                                                                              training_programme: historical_record.induction_programme.training_programme)
     else
       historical_partnership = historical_school_cohort_partnership(historical_record)
       historical_partnership.induction_programmes.first.presence || InductionProgramme
