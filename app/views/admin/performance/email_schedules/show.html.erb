@@ -46,8 +46,12 @@
     end
     %>
 
-    <div>
-      <%= govuk_button_link_to "Remove this from the schedule", delete_admin_performance_email_schedule_path(@email_schedule), class: "govuk-button--warning" if @email_schedule.queued? %>
-    </div>
+    <% if @email_schedule.queued? %>
+      <div>
+        <%= form_for :delete, url: admin_performance_email_schedule_path(@email_schedule), method: :delete do |f| %>
+          <%= f.govuk_submit "Remove this from the schedule", class: "govuk-button--warning" %>
+        <% end %>
+      </div>
+    <% end %>
   </div>
 </div>
