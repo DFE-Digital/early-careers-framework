@@ -3,7 +3,7 @@
 class Admin::Performance::EmailSchedulesController < Admin::BaseController
   skip_after_action :verify_authorized
   skip_after_action :verify_policy_scoped
-  before_action :set_email_schedule, only: %i[show edit update delete]
+  before_action :set_email_schedule, only: %i[show edit update destroy]
 
   def index
     @upcoming_emails = EmailSchedule.queued.order(:scheduled_at)
@@ -38,9 +38,10 @@ class Admin::Performance::EmailSchedulesController < Admin::BaseController
     end
   end
 
-  def delete
+  def destroy
     @email_schedule.destroy!
-    redirect_to admin_performance_email_schedules_url, status: :see_other
+    set_success_message(content: "Email schedule deleted", title: "Success")
+    redirect_to admin_performance_email_schedules_url
   end
 
 private

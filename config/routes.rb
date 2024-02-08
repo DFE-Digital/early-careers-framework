@@ -288,11 +288,7 @@ Rails.application.routes.draw do
   get "admin/performance", to: "admin/performance/overview#show"
   namespace :admin do
     namespace :performance do
-      resources :email_schedules do
-        member do
-          get "delete", action: :delete
-        end
-      end
+      resources :email_schedules
       resource :overview, only: :show, controller: :overview
       get "/errors", to: "validation_errors#index", as: "validation_errors"
       get "/errors/:form/:attribute", to: "validation_errors#show", as: "validation_error"
