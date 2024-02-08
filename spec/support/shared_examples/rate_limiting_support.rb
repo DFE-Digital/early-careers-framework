@@ -38,6 +38,14 @@ shared_examples "a rate limited endpoint", rack_attack: true do |desc, period|
         before { FeatureFlag.activate(:dfe_analytics) }
 
         it { expect { perform_request }.to have_sent_analytics_event_types(:web_request) }
+
+        it "sends the current user id to dfe_analytics" do
+          perform_request
+
+          job = queue_adapter.enqueued_jobs.first
+          user_id = job.dig("arguments", 0, 0, "user_id") if job
+          expect(user_id).to eql(current_user&.id)
+        end
       end
 
       it "logs a warning" do
