@@ -46,6 +46,40 @@ RSpec.describe Cohort, type: :model do
     end
   end
 
+  describe ".for_induction_start_date" do
+    subject { Cohort.for_induction_start_date(induction_start_date) }
+
+    context "when the provided date is earlier than 2021" do
+      let(:induction_start_date) { Date.new(2020, 5, 1) }
+
+      it { is_expected.to eq(Cohort.current) }
+    end
+
+    context "when the provided date is in 2021 before September" do
+      let(:induction_start_date) { Date.new(2021, 6, 1) }
+
+      it { is_expected.to eq(Cohort.current) }
+    end
+
+    context "when the provided date is in 2021 since September" do
+      let(:induction_start_date) { Date.new(2021, 9, 1) }
+
+      it { is_expected.to eq(Cohort.find_by_start_year(2021)) }
+    end
+
+    context "when the provided date is later than 2021 before June" do
+      let(:induction_start_date) { Date.new(2023, 3, 1) }
+
+      it { is_expected.to eq(Cohort.find_by_start_year(induction_start_date.year - 1)) }
+    end
+
+    context "when the provided date is later than 2021 since June" do
+      let(:induction_start_date) { Date.new(2022, 7, 1) }
+
+      it { is_expected.to eq(Cohort.find_by_start_year(induction_start_date.year)) }
+    end
+  end
+
   describe ".next" do
     describe "when the current date matches the academic year start date" do
       it "returns the cohort with start_year the next year" do

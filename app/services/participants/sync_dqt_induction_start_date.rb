@@ -12,7 +12,7 @@ module Participants
 
     def call
       return false unless update_induction_start_date
-      return true if mentor? || pre_2021_dqt_induction_start_date? || pre_2023_participant?
+      return true if mentor? || pre_2021_dqt_induction_start_date?
       return cohort_missing unless target_cohort
 
       update_participant
@@ -55,7 +55,7 @@ module Participants
     alias_method :save_error, :save_errors
 
     def target_cohort
-      @target_cohort ||= Cohort.containing_date(dqt_induction_start_date)
+      @target_cohort ||= Cohort.for_induction_start_date(dqt_induction_start_date)
     end
 
     def cohort_missing
