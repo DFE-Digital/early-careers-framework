@@ -5,6 +5,9 @@ module Identity
 
   class Transfer < BaseService
     def call
+      return if to_user == from_user
+      return unless [to_user, from_user].all?(&:present?)
+
       ActiveRecord::Base.transaction do
         transfer_identities!
         transfer_induction_coordinator_profile!

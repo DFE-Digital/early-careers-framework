@@ -173,5 +173,16 @@ RSpec.describe Identity::Transfer do
         end
       end
     end
+
+    context "when the to_user and from_user are the same" do
+      let(:user2) { user1 }
+
+      it { expect { service.call(from_user: user1, to_user: user2) }.not_to change(ParticipantIdChange, :count) }
+    end
+
+    context "when the to_user or from_user are nil" do
+      it { expect { service.call(from_user: user1, to_user: nil) }.not_to change(ParticipantIdChange, :count) }
+      it { expect { service.call(from_user: nil, to_user: user2) }.not_to change(ParticipantIdChange, :count) }
+    end
   end
 end
