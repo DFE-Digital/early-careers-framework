@@ -3698,10 +3698,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axe-core@npm:^4.8.3":
-  version: 4.8.3
-  resolution: "axe-core@npm:4.8.3"
-  checksum: 762392d03e49b5613e0d58c19bfe0bb0df253a56d6296b07d6d968729acef4ad25822e560f067c563368ac52a62c48cb341e6940b58252ca573334cd74cf8622
+"axe-core@npm:^4.8.4":
+  version: 4.8.4
+  resolution: "axe-core@npm:4.8.4"
+  checksum: 1100ac42c4b8cde1fb7c428d2b76e5a14e20d9d41fe635c55048e4ba27f1eded729b838379a036b5ef9cf25ba7f7bedeef01ebd3b4accd2afee397b10b0265c4
   languageName: node
   linkType: hard
 
@@ -5455,7 +5455,7 @@ __metadata:
     "@sentry/browser": "npm:^6.19.7"
     "@sentry/tracing": "npm:^6.19.7"
     accessible-autocomplete: "npm:^2.0.3"
-    axe-core: "npm:^4.8.3"
+    axe-core: "npm:^4.8.4"
     babel-loader: "npm:^8.3.0"
     babel-plugin-macros: "npm:^3.1.0"
     compression-webpack-plugin: "npm:^9.2.0"
