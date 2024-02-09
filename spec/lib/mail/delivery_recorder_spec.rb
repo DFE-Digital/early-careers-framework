@@ -29,6 +29,7 @@ RSpec.describe Mail::DeliveryRecorder do
   before do
     ActionMailer::Base.wrap_delivery_behavior(mail, :notify, api_key: "SomeKey")
     mail.delivery_method.response = response
+    mail.original_to = mail.to
   end
 
   it "records the sent email into the database" do
