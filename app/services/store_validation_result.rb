@@ -76,19 +76,8 @@ private
     participant_profile.ecf_participant_validation_data&.destroy!
   end
 
-  def primary_user_for_trn
-    @primary_user_for_trn ||= TeacherProfile
-      .joins(:user)
-      .includes(:user)
-      .oldest_first
-      .where(trn: participant_profile.teacher_profile.trn)
-      .first
-      &.user
-  end
-
   def deduplicate_by_trn!
-    return unless primary_user_for_trn && primary_user_for_trn != participant_profile.user
-
+    primary_user_for_trn = Identity::PrimaryUser.find_by(trn: participant_profile.teacher_profile.trn)
     Identity::Transfer.call(from_user: participant_profile.user, to_user: primary_user_for_trn)
   end
 end

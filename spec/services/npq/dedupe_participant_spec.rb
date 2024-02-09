@@ -2,74 +2,34 @@
 
 require "rails_helper"
 
-RSpec.describe NPQ::DedupeParticipant do
-  let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider) }
-  let(:npq_lead_provider) { cpd_lead_provider.npq_lead_provider }
-  let(:npq_application) { create(:npq_application, :eligible_for_funding, npq_lead_provider:) }
-  let(:trn) { npq_application&.teacher_reference_number }
-  let!(:application_teacher_profile) { travel_to(1.day.from_now) { create(:teacher_profile, user: npq_application.user, trn:) } }
-  let!(:primary_teacher_profile) { create(:teacher_profile, trn:) }
+RSpec.describe NPQ::DedupeParticipant, type: :model do
+  let(:npq_application) { create(:npq_application) }
+  let(:trn) { npq_application.teacher_reference_number }
 
-  subject(:service) { described_class.new(npq_application:, trn:) }
-
-  def expect_error(attribute, message)
-    expect(service).to be_invalid
-    expect(service.errors.messages_for(attribute)).to include(message)
-  end
+  let(:instance) { described_class.new(npq_application:, trn:) }
 
   describe "validations" do
-    it { is_expected.to be_valid }
+    it { expect(instance).to be_valid }
 
-    context "when the npq application is missing" do
-      let(:application_teacher_profile) {}
-      let(:npq_application) {}
+    it { is_expected.to validate_presence_of(:npq_application) }
+    it { is_expected.to validate_presence_of(:trn) }
 
-      it { expect_error(:npq_application, "The npq application must be present") }
-    end
+    context "when the application TRN is not verified" do
+      let(:npq_application) { create(:npq_application, teacher_reference_number_verified: false) }
 
-    context "when the trn is missing" do
-      let(:trn) {}
-
-      it { expect_error(:trn, "The teacher reference number (TRN) must be present") }
-    end
-
-    context "when the application user is missing" do
-      before { allow(npq_application).to receive(:user_id).and_return(nil) }
-
-      it { expect_error(:application_user, "The application must have a user") }
-    end
-
-    context "when the primary_user_for_trn is missing" do
-      before { TeacherProfile.destroy_all }
-
-      it { expect_error(:primary_user_for_trn, "There must be a primary user for this trn") }
-    end
-
-    context "when the TRN has not been validated yet" do
-      before { npq_application.update!(teacher_reference_number_verified: false) }
-
-      it { expect_error(:trn, "Teacher reference number (TRN) has not been validated") }
-    end
-
-    context "when there application_user is the primary_user_for_trn (not a duplicate)" do
-      let!(:application_teacher_profile) {}
-      let!(:primary_teacher_profile) { create(:teacher_profile, trn:, user: npq_application.user) }
-
-      it { expect_error(:trn, "There is no duplication in this instance") }
+      it { expect(instance).to be_invalid }
     end
   end
 
-  describe "#call" do
-    it "calls Identity::Transfer" do
-      expect(Identity::Transfer).to receive(:call).with(from_user: application_teacher_profile.user, to_user: primary_teacher_profile.user)
+  context "#call" do
+    subject(:call) { instance.call }
 
-      service.call
-    end
+    let(:primary_user_for_trn) { travel_to(1.day.ago) { create(:teacher_profile, trn:).user } }
 
-    context "when the dedupe has previously been performed" do
-      before { described_class.new(npq_application:, trn:).call }
+    it "performs an Identity::Transfer to the primary user" do
+      expect(Identity::Transfer).to receive(:call).with(from_user: npq_application.user, to_user: primary_user_for_trn)
 
-      it { expect { service.call }.not_to change(ParticipantIdChange, :count) }
+      call
     end
   end
 end
