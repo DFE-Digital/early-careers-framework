@@ -95,11 +95,16 @@ RSpec.describe StoreValidationResult do
       end
 
       context "when another teacher profile exists with the same trn number" do
-        let!(:older_teacher_profile) { create(:teacher_profile, trn: dqt_response[:trn]) }
+        it "transfers the participant identity onto the previous record if it is older" do
+          older_teacher_profile = travel_to(1.day.ago) { create(:teacher_profile, trn: dqt_response[:trn]) }
 
-        it "transfers the participant identity onto the previous record" do
-          expect { result }
-            .to change { participant_profile.reload.teacher_profile }.from(teacher_profile).to(older_teacher_profile)
+          expect { result }.to change { participant_profile.reload.teacher_profile }.from(teacher_profile).to(older_teacher_profile)
+        end
+
+        it "does not transfer the participant identity onto more recent teacher profiles" do
+          travel_to(1.day.from_now) { create(:teacher_profile, trn: dqt_response[:trn]) }
+
+          expect { result }.not_to change { participant_profile.reload.teacher_profile }
         end
       end
     end
@@ -155,8 +160,8 @@ RSpec.describe StoreValidationResult do
         expect { result }.to change { teacher_profile.reload.trn }.to dqt_response[:trn]
       end
 
-      context "when another teacher profile exists with the same trn number" do
-        let!(:older_teacher_profile) { create(:teacher_profile, trn: dqt_response[:trn]) }
+      context "when another, other teacher profile exists with the same trn number" do
+        let!(:older_teacher_profile) { travel_to(1.day.ago) { create(:teacher_profile, trn: dqt_response[:trn]) } }
 
         it "transfers the participant identity onto the previous record" do
           expect { result }
