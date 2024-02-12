@@ -7,6 +7,10 @@
     Training
   <% end %>
 
+  <%= component.with_nav_item(path: admin_participant_statuses_path(@participant_profile)) do %>
+    Statuses
+  <% end %>
+
   <%= component.with_nav_item(path: admin_participant_declaration_history_path(@participant_profile)) do %>
     Declarations
   <% end %>

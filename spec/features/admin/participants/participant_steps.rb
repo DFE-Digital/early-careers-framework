@@ -44,6 +44,10 @@ module ParticipantSteps
     visit admin_participant_school_path(participant_profile)
   end
 
+  def when_i_visit_the_satuses_page_for_participant(participant_profile)
+    visit admin_participant_statuses_path(participant_profile)
+  end
+
   def when_i_click_on_the_participants_name(name)
     click_on name
   end
@@ -113,6 +117,10 @@ module ParticipantSteps
 
   def then_i_should_be_in_the_admin_participants_dashboard
     expect(page).to have_selector("h1", text: "Participants")
+  end
+
+  def then_i_should_be_in_the_admin_participants_statuses_dashboard
+    expect(page).to have_css(active_tab_selector, text: "Statuses")
   end
 
   def then_i_should_be_on_the_edit_notes_page

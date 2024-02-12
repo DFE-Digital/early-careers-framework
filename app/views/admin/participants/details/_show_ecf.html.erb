@@ -77,6 +77,11 @@
   end
 
   sl.with_row do |row|
+    row.with_key(text: "Induction completion date")
+    row.with_value(text: @participant_presenter.induction_completion_date)
+  end
+
+  sl.with_row do |row|
     row.with_key(text: "Added to the service")
     row.with_value(text: @participant_presenter.user_created_at)
   end
