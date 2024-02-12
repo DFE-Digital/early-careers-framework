@@ -43,7 +43,7 @@ module Mentors
       mentor_profile
         .participant_declarations
         .for_declaration("completed")
-        .where(state: %w[submitted eligible payable paid])
+        .billable_or_changeable
         .order(declaration_date: :desc)
         .first
     end

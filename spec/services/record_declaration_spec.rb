@@ -2,6 +2,13 @@
 
 require "rails_helper"
 
+RSpec.shared_examples "checks for mentor completion event" do
+  it "calls the ParticipantDeclarations::HandleMentorCompletion service" do
+    expect_any_instance_of(ParticipantDeclarations::HandleMentorCompletion).to receive(:call)
+    subject.call
+  end
+end
+
 RSpec.shared_examples "validates the declaration for a withdrawn participant" do
   context "when a participant has been withdrawn" do
     before do
@@ -355,6 +362,7 @@ RSpec.describe RecordDeclaration do
       it_behaves_like "validates the participant milestone"
       it_behaves_like "creates a participant declaration"
       it_behaves_like "creates participant declaration attempt"
+      it_behaves_like "checks for mentor completion event"
     end
 
     context "when the participant is a Mentor" do
@@ -367,31 +375,7 @@ RSpec.describe RecordDeclaration do
       it_behaves_like "validates the participant milestone"
       it_behaves_like "creates a participant declaration"
       it_behaves_like "creates participant declaration attempt"
-
-      describe "mentor completion" do
-        let(:completion_event) { false }
-
-        before do
-          allow(service).to receive(:mentor_completion_event?)
-            .and_return(completion_event)
-        end
-
-        context "when mentor_completion_event? is true" do
-          let(:completion_event) { true }
-
-          it "calls the Mentors::CheckTrainingCompletion service" do
-            expect_any_instance_of(Mentors::CheckTrainingCompletion).to receive(:call)
-            service.call
-          end
-        end
-
-        context "when mentor_completion_event? is false" do
-          it "does not call the Mentors::CheckTrainingCompletion service" do
-            expect_any_instance_of(Mentors::CheckTrainingCompletion).not_to receive(:call)
-            service.call
-          end
-        end
-      end
+      it_behaves_like "checks for mentor completion event"
     end
   end
 
@@ -425,6 +409,7 @@ RSpec.describe RecordDeclaration do
     it_behaves_like "validates the participant milestone"
     it_behaves_like "creates a participant declaration"
     it_behaves_like "creates participant declaration attempt"
+    it_behaves_like "checks for mentor completion event"
 
     context "for next cohort" do
       let!(:schedule) { create(:npq_specialist_schedule, cohort:) }

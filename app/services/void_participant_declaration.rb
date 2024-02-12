@@ -14,8 +14,6 @@ class VoidParticipantDeclaration
 
     NPQ::VoidParticipantOutcome.new(participant_declaration).call
 
-    check_mentor_completion
-
     participant_declaration
   end
 
@@ -26,6 +24,8 @@ class VoidParticipantDeclaration
     if clawback.errors.any?
       raise Api::Errors::InvalidTransitionError, clawback.errors.full_messages.join(", ")
     end
+
+    check_mentor_completion
   end
 
   def make_voided
@@ -37,6 +37,7 @@ class VoidParticipantDeclaration
     ApplicationRecord.transaction do
       participant_declaration.make_voided!
       line_item.voided! if line_item
+      check_mentor_completion
     end
   end
 
@@ -48,15 +49,7 @@ private
     participant_declaration.statement_line_items.find_by(state: %w[eligible payable submitted])
   end
 
-  def participant_profile
-    @participant_profile ||= participant_declaration.participant_profile
-  end
-
   def check_mentor_completion
-    Mentors::CheckTrainingCompletion.call(mentor_profile: participant_profile) if mentor_completion_event?
-  end
-
-  def mentor_completion_event?
-    participant_profile.mentor? && participant_declaration.declaration_type == "completed"
+    ParticipantDeclarations::HandleMentorCompletion.call(participant_declaration:)
   end
 end

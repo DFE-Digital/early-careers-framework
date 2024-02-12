@@ -262,10 +262,6 @@ private
   end
 
   def check_mentor_completion
-    Mentors::CheckTrainingCompletion.call(mentor_profile: participant_profile) if mentor_completion_event?
-  end
-
-  def mentor_completion_event?
-    participant_profile.mentor? && participant_declaration.declaration_type == "completed"
+    ParticipantDeclarations::HandleMentorCompletion.call(participant_declaration:)
   end
 end
