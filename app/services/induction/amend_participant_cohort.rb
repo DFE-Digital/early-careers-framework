@@ -105,9 +105,7 @@ module Induction
     end
 
     def all_records_in_target?
-      historical_records.all? do |induction_record|
-        in_target?(induction_record)
-      end
+      induction_records.all? { |induction_record| in_target?(induction_record) }
     end
 
     def current_induction_record_changed?
@@ -148,9 +146,7 @@ module Induction
     end
 
     def historical_records
-      return [] unless participant_profile
-
-      @historical_records ||= participant_profile.induction_records.order(created_at: :desc)
+      @historical_records ||= induction_records - [induction_record]
     end
 
     def historical_induction_programme_for(historical_record)
@@ -208,6 +204,10 @@ module Induction
                                                .joins(induction_programme: { school_cohort: :cohort })
                                                .where(cohorts: { start_year: source_cohort_start_year })
                                                .latest
+    end
+
+    def induction_records
+      @induction_records ||= participant_profile&.induction_records.to_a
     end
 
     def in_target?(induction_record)
