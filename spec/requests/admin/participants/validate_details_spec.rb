@@ -109,27 +109,26 @@ RSpec.describe "Admin::Participants::ValidateDetailsController", type: :request 
   end
 
   describe "POST /admin/participants/:participant_id/validate-details" do
-    before do
-      allow(Participants::ParticipantValidationForm).to receive_message_chain(:build, call: validation_result)
+    before { allow(Participants::ParticipantValidationForm).to receive_message_chain(:build, call: validation_result) }
+
+    subject(:perform_request) do
       post("/admin/participants/#{ect_profile.id}/validate-details")
+      response
     end
 
-    it "validates the validation data" do
-      expect(response).to redirect_to("/admin/participants/#{ect_profile.id}/validation-data")
+    it { is_expected.to redirect_to("/admin/participants/#{ect_profile.id}/validation-data") }
+    it { expect { perform_request }.to change { ect_profile.teacher_profile.reload.trn }.to(nil) }
+
+    it "does not clear the trn when an NPQ profile is present" do
+      create(:npq_participant_profile, trn: "1234567", user:)
+
+      expect { perform_request }.not_to change { ect_profile.teacher_profile.reload.trn }
     end
 
-    it "clears the TRN prior to validation" do
-      expect(ect_profile.reload.teacher_profile.reload.trn).to be_nil
-    end
+    it "does not clear the trn when a participant profile has declarations" do
+      create(:ect_participant_declaration, participant_profile: ect_profile, cpd_lead_provider: ect_profile.lead_provider.cpd_lead_provider)
 
-    context "when an NPQ profile is present" do
-      before do
-        create(:npq_participant_profile, trn: "1234567", user:)
-      end
-
-      it "does not remove the TRN prior to validation" do
-        expect(ect_profile.teacher_profile.trn).to eq "1234567"
-      end
+      expect { perform_request }.not_to change { ect_profile.teacher_profile.reload.trn }
     end
   end
 end

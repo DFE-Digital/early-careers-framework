@@ -61,7 +61,10 @@ private
     # reset TRN if present on teacher profile to avoid "different trn" errors
     # unless already set via NPQ
     teacher_profile = participant_profile.teacher_profile
-    if teacher_profile.trn.present? && teacher_profile.participant_profiles.npqs.none?
+    npq_profiles = teacher_profile.participant_profiles.npqs.any?
+    declarations = teacher_profile.has_participant_profile_with_declarations?
+
+    if teacher_profile.trn.present? && !npq_profiles && !declarations
       teacher_profile.update!(trn: nil)
     end
 

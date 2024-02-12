@@ -9,33 +9,53 @@ RSpec.describe Importers::ECFManualValidation do
   subject(:importer) { described_class }
 
   describe ".call" do
-    context "when participants exist" do
-      before do
-        users = []
-        CSV.read(example_csv_file, headers: true).each { |row| users << create(:user, id: row["id"], full_name: row["name"]) }
-        users.each do |user|
-          tp = create(:teacher_profile, user:)
-          create(:ect_participant_profile, teacher_profile: tp)
-        end
+    before { allow(Participants::ParticipantValidationForm).to receive(:call) }
 
-        allow(Participants::ParticipantValidationForm).to receive(:call).exactly(6).times
+    subject(:call) { importer.call(path_to_csv: example_csv_file) }
+
+    context "when participants exist" do
+      let!(:existing_users) do
+        CSV.read(example_csv_file, headers: true).map do |row|
+          create(:user, id: row["id"], full_name: row["name"]).tap { |user| create(:ect, :eligible_for_funding, user:) }
+        end
       end
 
       it "calls the validation service for each participant" do
-        importer.call(path_to_csv: example_csv_file)
+        expect(Participants::ParticipantValidationForm).to receive(:call).exactly(existing_users.size).times
+        call
       end
 
       it "handles bad or empty dates" do
-        expect {
-          importer.call(path_to_csv: example_csv_file)
-        }.not_to raise_error
+        expect { call }.not_to raise_error
+      end
+
+      it "clears the teacher profile trns" do
+        expect(existing_users.map { |u| u.teacher_profile.trn }).to all(be_present)
+        call
+        expect(existing_users.map { |u| u.teacher_profile.reload.trn }).to all(be_nil)
+      end
+
+      it "does not clear the trn when an NPQ profile is present" do
+        user = existing_users.first
+        create(:npq_participant_profile, user:)
+
+        expect { call }.not_to change { user.teacher_profile.reload.trn }
+      end
+
+      it "does not clear the trn when a participant profile has declarations" do
+        user = existing_users.first
+        participant_profile = user.participant_profiles.first
+        cpd_lead_provider = participant_profile.lead_provider.cpd_lead_provider
+        create(:ect_participant_declaration, participant_profile:, cpd_lead_provider:)
+
+        expect { call }.not_to change { participant_profile.teacher_profile.reload.trn }
       end
     end
 
     context "when matching participants do not exist" do
       it "does not call the validation service" do
         expect(Participants::ParticipantValidationForm).not_to receive(:call)
-        importer.call(path_to_csv: example_csv_file)
+        call
       end
     end
   end

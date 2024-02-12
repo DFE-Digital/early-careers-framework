@@ -31,4 +31,8 @@ class TeacherProfile < ApplicationRecord
   def self.ransackable_attributes(_auth_object = nil)
     %w[trn]
   end
+
+  def has_participant_profile_with_declarations?
+    participant_profiles.any? { |profile| profile.participant_declarations.any? }
+  end
 end

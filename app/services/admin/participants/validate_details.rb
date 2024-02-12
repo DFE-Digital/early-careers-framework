@@ -34,8 +34,7 @@ module Admin
         return unless validation_data_permits_validation?
 
         ActiveRecord::Base.transaction do
-          @participant_profile.teacher_profile.update!(trn: nil) unless has_npq_profile?
-          @participant_profile.ecf_participant_eligibility&.destroy!
+          clear_existing_validation_data!
           # this returns either nil, false on failure or an ECFParticipantEligibility record on success
           @validation_form = build_validation_form
           run_validation
@@ -89,12 +88,11 @@ module Admin
         validation_data.present? && validation_data.can_validate_participant?
       end
 
-      def has_npq_profile?
-        @participant_profile.teacher_profile.npq_profiles.any?
-      end
+      def clear_existing_validation_data!
+        npq_profiles = @participant_profile.teacher_profile.participant_profiles.npqs.any?
+        declarations = @participant_profile.teacher_profile.has_participant_profile_with_declarations?
 
-      def clear_existing_validation_data
-        @participant_profile.teacher_profile.update!(trn: nil) unless has_npq_profile?
+        @participant_profile.teacher_profile.update!(trn: nil) unless npq_profiles || declarations
         @participant_profile.ecf_participant_eligibility&.destroy!
       end
 
