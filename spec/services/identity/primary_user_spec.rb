@@ -25,5 +25,14 @@ RSpec.describe Identity::PrimaryUser do
         is_expected.to eq(oldest_matching_teacher_profile.user)
       end
     end
+
+    context "when there are matching users that are archived" do
+      it "excludes archived users" do
+        create(:teacher_profile, trn:)
+        travel_to(4.weeks.ago) { create(:teacher_profile, trn:, user: create(:user, :archived)) }
+
+        is_expected.to eq(teacher_profile.user)
+      end
+    end
   end
 end
