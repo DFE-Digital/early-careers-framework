@@ -194,36 +194,121 @@ RSpec.describe ChangeSchedule do
               expect(relevant_induction_record.induction_programme).to eq(new_school_cohort.default_induction_programme)
             end
 
-            it "updates the participant profiler school cohort" do
+            it "updates the participant profile school cohort" do
               expect {
                 service.call
               }.to change { participant_profile.reload.school_cohort }.to(new_school_cohort)
             end
 
-            it "updates the cohort on the historic induction record induction programme" do
-              service.call
+            context "when some of the historical records are not in the target cohort" do
+              let(:historical_school_source_cohort) { create(:school_cohort) }
+              let(:historical_school) { historical_school_source_cohort.school }
+              let!(:induction_programme) { create(:induction_programme, :fip, school_cohort: historical_school_source_cohort) }
+              let!(:historical_record) { create(:induction_record, participant_profile:, induction_programme:) }
+              let!(:historical_lead_provider) { historical_record.lead_provider }
+              let!(:historical_delivery_partner) { historical_record.delivery_partner }
 
-              historic_induction_record = participant_profile.induction_records.order(created_at: :desc).last
+              context "when the historical school is all setup for the target cohort" do
+                let!(:historical_school_target_cohort) do
+                  create(:school_cohort, :with_induction_programme, cohort: new_cohort, school: historical_school)
+                end
 
-              expect(historic_induction_record.reload.induction_programme.cohort).to eq(new_school_cohort.cohort)
+                it "moves all the historical records to the target cohort" do
+                  service.call
+
+                  participant_profile.reload.induction_records.active.each do |induction_record|
+                    expect(induction_record.cohort_start_year).to eq(new_cohort.start_year)
+                  end
+                end
+
+                context "when the school is already partnered with the providers" do
+                  let(:existing_providers_partnership) do
+                    create(:seed_partnership,
+                           school: historical_school,
+                           cohort: new_cohort,
+                           lead_provider: historical_lead_provider,
+                           delivery_partner: historical_delivery_partner)
+                  end
+
+                  before do
+                    NewSeeds::Scenarios::InductionProgrammes::Fip.new(school_cohort: historical_school_target_cohort)
+                                                                 .build(default_induction_programme: false)
+                                                                 .with_partnership(partnership: existing_providers_partnership)
+                  end
+
+                  it "links historical records to the existing partnership" do
+                    service.call
+
+                    expect(historical_record.reload.partnership).to eq(existing_providers_partnership)
+                  end
+                end
+
+                context "when the school is FIP not partnered with the providers" do
+                  it "links historical records to a new relationship with the providers" do
+                    service.call
+
+                    expect(historical_record.reload.partnership).to be_relationship
+                    expect(historical_record.lead_provider).to eq(historical_lead_provider)
+                    expect(historical_record.delivery_partner).to eq(historical_delivery_partner)
+                  end
+                end
+
+                context "when the school is not FIP" do
+                  let!(:induction_programme) { create(:induction_programme, :cip, school_cohort: historical_school_source_cohort) }
+
+                  it "links historical records to the default induction programme" do
+                    service.call
+
+                    expect(historical_record.reload.induction_programme).to eq(historical_school_target_cohort.default_induction_programme)
+                  end
+                end
+              end
+
+              context "when the historical school is not setup for the target cohort" do
+                it "links historical records to a new school cohort in target cohort" do
+                  historical_school_cohort = SchoolCohort.find_by(cohort: new_cohort, school: historical_school)
+                  expect(historical_school_cohort).to be_nil
+
+                  service.call
+
+                  historical_school_cohort = SchoolCohort.find_by(cohort: new_cohort, school: historical_school)
+                  expect(historical_school_cohort).not_to be_nil
+                end
+
+                it "moves all the historical records to the target cohort" do
+                  service.call
+
+                  participant_profile.reload.induction_records.active.each do |induction_record|
+                    expect(induction_record.cohort_start_year).to eq(new_cohort.start_year)
+                  end
+                end
+              end
             end
 
-            it "updates the cohort on the historic induction record schedule" do
-              service.call
+            context "when some of the induction records are not in the target schedule" do
+              let(:historical_school_source_cohort) { create(:school_cohort) }
+              let(:historical_school) { historical_school_source_cohort.school }
+              let!(:induction_programme) { create(:induction_programme, school_cohort: historical_school_source_cohort) }
+              let!(:historical_record) do
+                create(:induction_record,
+                       participant_profile:,
+                       induction_programme:,
+                       schedule: create(:ecf_schedule))
+              end
 
-              historic_induction_record = participant_profile.induction_records.order(created_at: :desc).last
+              let(:schedule) { Finance::Schedule::ECF.default_for(cohort: Cohort.current) }
 
-              expect(historic_induction_record.reload.schedule.cohort).to eq(new_school_cohort.cohort)
-            end
+              before do
+                create(:school_cohort, :with_induction_programme, cohort: new_cohort, school: historical_school)
+              end
 
-            it "creates a relationship partnership for the historic induction record school cohort" do
-              historic_induction_record = participant_profile.induction_records.order(created_at: :desc).last
+              it "moves all the historical records to the target schedule" do
+                service.call
 
-              expect(historic_induction_record.partnership.cohort).not_to eq(new_schedule.cohort)
-
-              service.call
-
-              expect(historic_induction_record.reload.partnership.cohort).to eq(new_schedule.cohort)
+                participant_profile.reload.induction_records.active.each do |induction_record|
+                  expect(induction_record.schedule).to eq(new_schedule)
+                end
+              end
             end
           end
         end
@@ -473,30 +558,115 @@ RSpec.describe ChangeSchedule do
               }.to change { participant_profile.reload.school_cohort }.to(new_school_cohort)
             end
 
-            it "updates the cohort on the historic induction record induction programme" do
-              service.call
+            context "when some of the historical records are not in the target cohort" do
+              let(:historical_school_source_cohort) { create(:school_cohort) }
+              let(:historical_school) { historical_school_source_cohort.school }
+              let!(:induction_programme) { create(:induction_programme, :fip, school_cohort: historical_school_source_cohort) }
+              let!(:historical_record) { create(:induction_record, participant_profile:, induction_programme:) }
+              let!(:historical_lead_provider) { historical_record.lead_provider }
+              let!(:historical_delivery_partner) { historical_record.delivery_partner }
 
-              historic_induction_record = participant_profile.induction_records.order(created_at: :desc).last
+              context "when the historical school is all setup for the target cohort" do
+                let!(:historical_school_target_cohort) do
+                  create(:school_cohort, :with_induction_programme, cohort: new_cohort, school: historical_school)
+                end
 
-              expect(historic_induction_record.reload.induction_programme.cohort).to eq(new_school_cohort.cohort)
+                it "moves all the historical records to the target cohort" do
+                  service.call
+
+                  participant_profile.reload.induction_records.active.each do |induction_record|
+                    expect(induction_record.cohort_start_year).to eq(new_cohort.start_year)
+                  end
+                end
+
+                context "when the school is already partnered with the providers" do
+                  let(:existing_providers_partnership) do
+                    create(:seed_partnership,
+                           school: historical_school,
+                           cohort: new_cohort,
+                           lead_provider: historical_lead_provider,
+                           delivery_partner: historical_delivery_partner)
+                  end
+
+                  before do
+                    NewSeeds::Scenarios::InductionProgrammes::Fip.new(school_cohort: historical_school_target_cohort)
+                                                                 .build(default_induction_programme: false)
+                                                                 .with_partnership(partnership: existing_providers_partnership)
+                  end
+
+                  it "links historical records to the existing partnership" do
+                    service.call
+
+                    expect(historical_record.reload.partnership).to eq(existing_providers_partnership)
+                  end
+                end
+
+                context "when the school is FIP not partnered with the providers" do
+                  it "links historical records to a new relationship with the providers" do
+                    service.call
+
+                    expect(historical_record.reload.partnership).to be_relationship
+                    expect(historical_record.lead_provider).to eq(historical_lead_provider)
+                    expect(historical_record.delivery_partner).to eq(historical_delivery_partner)
+                  end
+                end
+
+                context "when the school is not FIP" do
+                  let!(:induction_programme) { create(:induction_programme, :cip, school_cohort: historical_school_source_cohort) }
+
+                  it "links historical records to the default induction programme" do
+                    service.call
+
+                    expect(historical_record.reload.induction_programme).to eq(historical_school_target_cohort.default_induction_programme)
+                  end
+                end
+              end
+
+              context "when the historical school is not setup for the target cohort" do
+                it "links historical records to a new school cohort in target cohort" do
+                  historical_school_cohort = SchoolCohort.find_by(cohort: new_cohort, school: historical_school)
+                  expect(historical_school_cohort).to be_nil
+
+                  service.call
+
+                  historical_school_cohort = SchoolCohort.find_by(cohort: new_cohort, school: historical_school)
+                  expect(historical_school_cohort).not_to be_nil
+                end
+
+                it "moves all the historical records to the target cohort" do
+                  service.call
+
+                  participant_profile.reload.induction_records.active.each do |induction_record|
+                    expect(induction_record.cohort_start_year).to eq(new_cohort.start_year)
+                  end
+                end
+              end
             end
 
-            it "updates the cohort on the historic induction record schedule" do
-              service.call
+            context "when some of the induction records are not in the target schedule" do
+              let(:historical_school_source_cohort) { create(:school_cohort) }
+              let(:historical_school) { historical_school_source_cohort.school }
+              let!(:induction_programme) { create(:induction_programme, school_cohort: historical_school_source_cohort) }
+              let!(:historical_record) do
+                create(:induction_record,
+                       participant_profile:,
+                       induction_programme:,
+                       schedule: create(:ecf_schedule))
+              end
 
-              historic_induction_record = participant_profile.induction_records.order(created_at: :desc).last
+              let(:schedule) { Finance::Schedule::ECF.default_for(cohort: Cohort.current) }
 
-              expect(historic_induction_record.reload.schedule.cohort).to eq(new_school_cohort.cohort)
-            end
+              before do
+                create(:school_cohort, :with_induction_programme, cohort: new_cohort, school: historical_school)
+              end
 
-            it "creates a relationship partnership for the historic induction record school cohort" do
-              historic_induction_record = participant_profile.induction_records.order(created_at: :desc).last
+              it "moves all the historical records to the target schedule" do
+                service.call
 
-              expect(historic_induction_record.partnership.cohort).not_to eq(new_schedule.cohort)
-
-              service.call
-
-              expect(historic_induction_record.reload.partnership.cohort).to eq(new_schedule.cohort)
+                participant_profile.reload.induction_records.active.each do |induction_record|
+                  expect(induction_record.schedule).to eq(new_schedule)
+                end
+              end
             end
           end
         end
