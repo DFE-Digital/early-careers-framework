@@ -224,6 +224,7 @@ class User < ApplicationRecord
       self.archived_email = email
       self.email = "user#{id}@example.org"
       self.archived_at = Time.zone.now
+      teacher_profile&.update!(trn: nil)
       save!
     end
   end

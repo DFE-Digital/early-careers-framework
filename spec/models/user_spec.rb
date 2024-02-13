@@ -486,6 +486,15 @@ RSpec.describe User, type: :model do
         user.archive!
         expect(user.archived_at).to be_within(2.seconds).of(Time.zone.now)
       end
+
+      it "clears the teacher profile trn" do
+        expect { user.archive! }.to change { user.teacher_profile.reload.trn }.to(nil)
+      end
+
+      it "does not raise an error when the teacher_profile is nil" do
+        user.teacher_profile.destroy!
+        expect { user.reload.archive! }.not_to raise_error
+      end
     end
 
     describe "#archived?" do
