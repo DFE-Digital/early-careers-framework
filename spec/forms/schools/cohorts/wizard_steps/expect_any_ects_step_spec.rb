@@ -59,6 +59,10 @@ RSpec.describe Schools::Cohorts::WizardSteps::ExpectAnyEctsStep, type: :model do
   end
 
   describe "#next_step" do
+    before do
+      allow(wizard).to receive(:cip_only_school?).and_return(false)
+    end
+
     context "when no ects are expected" do
       it "returns :no_expected_ects" do
         step.expect_any_ects = "no"
@@ -69,6 +73,16 @@ RSpec.describe Schools::Cohorts::WizardSteps::ExpectAnyEctsStep, type: :model do
     context "when ects are expected" do
       before do
         step.expect_any_ects = "yes"
+      end
+
+      context "when cip only school" do
+        before do
+          allow(wizard).to receive(:cip_only_school?).and_return(true)
+        end
+
+        it "returns :how_will_you_run_training" do
+          expect(step.next_step).to eq :how_will_you_run_training
+        end
       end
 
       context "when not previously fip" do
