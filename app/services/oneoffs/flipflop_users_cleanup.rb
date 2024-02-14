@@ -17,7 +17,7 @@ module Oneoffs
           next
         end
 
-        to_user = primary_user(from_trn)
+        to_user = Identity::PrimaryUser.find_by(trn: from_trn)
 
         if from_user == to_user
           result << [from_user.id, "already the primary user"]
@@ -36,25 +36,12 @@ module Oneoffs
       result
     end
 
-    def primary_user(trn)
-      TeacherProfile
-        .joins(:user)
-        .includes(:user)
-        .oldest_first
-        .where(trn:)
-        .first&.user
-    end
-
     def flip_flop_users
-      users = []
-
-      ParticipantIdChange.find_each do |pic|
-        if ParticipantIdChange.where(to_participant_id: pic.from_participant_id, from_participant_id: pic.to_participant_id).exists?
-          users << pic.user
-        end
-      end
-
-      users.uniq
+      ids = ParticipantIdChange
+        .joins("INNER JOIN participant_id_changes a ON participant_id_changes.from_participant_id = a.to_participant_id")
+        .joins("INNER JOIN participant_id_changes b ON participant_id_changes.to_participant_id = b.from_participant_id")
+        .pluck(:user_id)
+      User.where(id: ids)
     end
   end
 end
