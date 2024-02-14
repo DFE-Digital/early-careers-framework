@@ -8,47 +8,24 @@ module NPQ
     attribute :npq_application
     attribute :trn
 
-    validates :npq_application, presence: { message: I18n.t(:missing_npq_application) }
-    validates :trn, presence: { message: I18n.t(:missing_trn) }
-    validates :to_user, presence: { message: I18n.t(:missing_to_user) }
-    validates :from_user, presence: { message: I18n.t(:missing_from_user) }
+    validates :trn, presence: true
+    validates :npq_application, presence: true
     validate :trn_validated
-    validate :dedupe_already_taken
 
     def call
       return if invalid?
 
-      Identity::Transfer.call(from_user:, to_user:)
+      Identity::Transfer.call(from_user: npq_application.user, to_user: primary_user_for_trn)
     end
 
   private
 
-    def from_user
-      @from_user ||= User.find_by(id: npq_application&.user_id)
-    end
-
-    def to_user
-      @to_user ||= TeacherProfile
-        .joins(:user)
-        .includes(:user)
-        .oldest_first
-        .where(trn:)
-        .where.not(users: { id: from_user&.id })
-        .first
-        &.user
+    def primary_user_for_trn
+      Identity::PrimaryUser.find_by(trn:)
     end
 
     def trn_validated
-      return if npq_application&.teacher_reference_number_verified?
-
-      errors.add(:trn, I18n.t(:trn_not_validated))
-    end
-
-    def dedupe_already_taken
-      return if from_user&.participant_id_changes.blank?
-      return unless from_user.participant_id_changes.where(from_participant: [from_user, to_user], to_participant: [from_user, to_user]).any?
-
-      errors.add(:trn, I18n.t(:dedupe_has_already_taken_place))
+      errors.add(:trn, I18n.t(:trn_not_validated)) unless npq_application&.teacher_reference_number_verified?
     end
   end
 end

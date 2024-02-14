@@ -2,103 +2,34 @@
 
 require "rails_helper"
 
-RSpec.describe NPQ::DedupeParticipant do
-  let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider) }
-  let(:npq_lead_provider) { cpd_lead_provider.npq_lead_provider }
-  let(:npq_application) { create(:npq_application, :eligible_for_funding, npq_lead_provider:) }
-  let(:trn) { npq_application&.teacher_reference_number }
-  let(:user) { npq_application&.user.presence || create(:user) }
-  let!(:teacher_profile) { create(:teacher_profile, user:, trn:) }
-  let!(:same_trn_teacher_profile) { create(:teacher_profile, trn:) }
+RSpec.describe NPQ::DedupeParticipant, type: :model do
+  let(:npq_application) { create(:npq_application) }
+  let(:trn) { npq_application.teacher_reference_number }
 
-  let(:params) do
-    {
-      npq_application:,
-      trn:,
-    }
+  let(:instance) { described_class.new(npq_application:, trn:) }
+
+  describe "validations" do
+    it { expect(instance).to be_valid }
+
+    it { is_expected.to validate_presence_of(:npq_application) }
+    it { is_expected.to validate_presence_of(:trn) }
+
+    context "when the application TRN is not verified" do
+      let(:npq_application) { create(:npq_application, teacher_reference_number_verified: false) }
+
+      it { expect(instance).to be_invalid }
+    end
   end
 
-  subject(:service) { described_class.new(params) }
+  context "#call" do
+    subject(:call) { instance.call }
 
-  describe "#call" do
-    context "when the npq application is missing" do
-      let(:npq_application) {}
+    let(:primary_user_for_trn) { travel_to(1.day.ago) { create(:teacher_profile, trn:).user } }
 
-      it "is invalid returning a meaningful error message" do
-        is_expected.to be_invalid
+    it "performs an Identity::Transfer to the primary user" do
+      expect(Identity::Transfer).to receive(:call).with(from_user: npq_application.user, to_user: primary_user_for_trn)
 
-        expect(service.errors.messages_for(:npq_application)).to include("The npq application must be present")
-      end
-    end
-
-    context "when the trn is missing" do
-      let(:trn) {}
-
-      it "is invalid returning a meaningful error message" do
-        is_expected.to be_invalid
-
-        expect(service.errors.messages_for(:trn)).to include("The teacher reference number (TRN) must be present")
-      end
-    end
-
-    context "when the from_user is missing" do
-      before do
-        allow(npq_application).to receive(:user_id).and_return(nil)
-      end
-
-      it "is invalid returning a meaningful error message" do
-        is_expected.to be_invalid
-
-        expect(service.errors.messages_for(:from_user)).to include("The user to be deduped from must be present")
-      end
-    end
-
-    context "when the to_user is missing" do
-      before do
-        same_trn_teacher_profile.update!(trn: "A23456")
-      end
-
-      it "is invalid returning a meaningful error message" do
-        is_expected.to be_invalid
-
-        expect(service.errors.messages_for(:to_user)).to include("The user to be deduped to must be present")
-      end
-    end
-
-    context "when the TRN has not been validated yet" do
-      before do
-        npq_application.update!(teacher_reference_number_verified: false)
-      end
-
-      it "is invalid returning a meaningful error message" do
-        is_expected.to be_invalid
-
-        expect(service.errors.messages_for(:trn)).to include("Teacher reference number (TRN) has not been validated")
-      end
-    end
-
-    context "when a dedupe with same users already took place" do
-      before do
-        user.participant_id_changes.create!(from_participant: user, to_participant: same_trn_teacher_profile.user)
-      end
-
-      it "is invalid returning a meaningful error message" do
-        is_expected.to be_invalid
-
-        expect(service.errors.messages_for(:trn)).to include("Deduplication has already taken place from these users")
-      end
-    end
-
-    context "with correct params" do
-      it "is valid" do
-        is_expected.to be_valid
-      end
-
-      it "calls Identity::Transfer with correct params" do
-        expect(Identity::Transfer).to receive(:call).with(from_user: user, to_user: same_trn_teacher_profile.user)
-
-        subject.call
-      end
+      call
     end
   end
 end

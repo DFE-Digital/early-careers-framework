@@ -76,17 +76,8 @@ private
     participant_profile.ecf_participant_validation_data&.destroy!
   end
 
-  def same_trn_user
-    @same_trn_user ||= User
-      .left_outer_joins(:teacher_profile)
-      .where(teacher_profile: { trn: participant_profile.teacher_profile.trn })
-      .where.not(teacher_profile: { id: participant_profile.teacher_profile.id })
-      .first
-  end
-
   def deduplicate_by_trn!
-    return unless same_trn_user
-
-    Identity::Transfer.call(from_user: participant_profile.user, to_user: same_trn_user)
+    primary_user_for_trn = Identity::PrimaryUser.find_by(trn: participant_profile.teacher_profile.trn)
+    Identity::Transfer.call(from_user: participant_profile.user, to_user: primary_user_for_trn)
   end
 end
