@@ -18,6 +18,10 @@ module Schools
         schools_cohort_setup_show_change_path(**path_options(step:))
       end
 
+      def cip_only_school?
+        school.cip_only?
+      end
+
       def data_store_class
         FormData::CohortSetupStore
       end

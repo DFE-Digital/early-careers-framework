@@ -57,8 +57,40 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
     and_i_see_delivery_partner_to_be_confirmed
   end
 
-  scenario "A CIP-only school chooses ECTs expected in next academic year and training school funded" do
+  scenario "A CIP-only non-previously_fip school chooses ECTs expected in next academic year and training school funded" do
     given_a_school_with_no_chosen_programme_for_next_academic_year(cip_only: true)
+    and_i_am_signed_in_as_an_induction_coordinator
+
+    then_i_am_taken_to_what_we_need_to_know_to_setup_academic_year
+    and_the_page_should_be_accessible
+
+    when_i_click_continue
+    then_i_am_taken_to_ects_expected_in_next_academic_year_page
+
+    when_i_choose_ects_expected
+    and_i_click_continue
+    then_i_am_taken_to_the_how_will_you_run_training_page
+
+    when_i_choose_use_a_training_provider_funded_by_your_school
+    and_i_click_continue
+    then_i_am_taken_to_the_training_confirmation_page
+
+    when_i_click_the_confirm_button
+    then_i_am_taken_to_the_appropriate_body_appointed_page
+
+    when_i_choose_no
+    and_i_click_continue
+    then_i_am_on_the_school_funded_fip_training_submitted_page
+    and_the_page_should_be_accessible
+    and_i_can_get_guidance_about_an_arrangement_with_a_training_provider_on_the_school_funded_fip_training_submitted_page
+    and_i_can_email_cpd_for_help_on_the_school_funded_fip_training_submitted_page
+
+    when_i_click_on_the_return_to_your_training_link
+    then_i_am_taken_to_the_manage_your_training_page
+  end
+
+  scenario "A CIP-Only previously_fip school chooses ECTs expected in next academic year and training school funded" do
+    given_a_school_with_no_chosen_programme_for_next_academic_year(cip_only: true, previously_fip: true)
     and_i_am_signed_in_as_an_induction_coordinator
 
     then_i_am_taken_to_what_we_need_to_know_to_setup_academic_year
