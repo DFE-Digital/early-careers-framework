@@ -232,7 +232,11 @@ module Induction
     end
 
     def schedule
-      @schedule ||= Finance::Schedule::ECF.default_for(cohort: target_cohort)
+      @schedule ||= if induction_record && in_target_cohort?(induction_record)
+                      induction_record.schedule
+                    else
+                      Finance::Schedule::ECF.default_for(cohort: target_cohort)
+                    end
     end
 
     def source_cohort
