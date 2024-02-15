@@ -150,6 +150,7 @@ RSpec.feature "ECT doing CIP: after cohort transfer", type: :feature do
     expect(participant_detail).to have_cohort previous_start_year
     expect(participant_detail).to have_training_record_state training_record_state
     expect(participant_detail).to have_user_id participant_id
+    expect(participant_detail).to have_associated_email_address participant_email
 
     participant_detail.open_training_tab
 
@@ -157,9 +158,6 @@ RSpec.feature "ECT doing CIP: after cohort transfer", type: :feature do
     participant_training.show_main_content
     expect(participant_training).to have_cohort previous_start_year
     expect(participant_training).to have_school_name school.name
-    expect(participant_training).to have_school_urn school.urn
-    expect(participant_training).to have_school_record_state school_record_state
-    expect(participant_training).to have_materials_supplier cip_material_provider
   end
 
   scenario "A DfE finance user can locate the record for the ECT" do

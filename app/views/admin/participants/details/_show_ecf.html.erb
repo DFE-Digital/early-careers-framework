@@ -1,6 +1,8 @@
+<% can_be_updated = policy(@participant_profile).update_validation_data? %>
+
 <%= govuk_summary_list do |sl|
   sl.with_row do |row|
-    row.with_key(text: "Full name")
+    row.with_key(text: "Name")
     row.with_value(text: @participant_presenter.full_name)
     unless @participant_profile.user.get_an_identity_id.present?
       row.with_action(
@@ -11,7 +13,7 @@
   end
 
   sl.with_row do |row|
-    row.with_key(text: "User email address")
+    row.with_key(text: "Email address")
     row.with_value(text: @participant_presenter.email)
     unless @participant_profile.user.get_an_identity_id.present?
       row.with_action(
@@ -80,6 +82,11 @@
   end
 
   sl.with_row do |row|
+    row.with_key(text: "Added to the service")
+    row.with_value(text: @participant_presenter.user_created_at)
+  end
+
+  sl.with_row do |row|
     row.with_key(text: "Profile ID")
     row.with_value(text: tag.code(@participant_presenter.id))
   end
@@ -87,11 +94,6 @@
   sl.with_row do |row|
     row.with_key(text: "User ID")
     row.with_value(text: tag.code(@participant_presenter.user_id))
-  end
-
-  sl.with_row do |row|
-    row.with_key(text: "External ID")
-    row.with_value(text: tag.code(@participant_presenter.participant_identity.external_identifier))
   end
 
   sl.with_row do |row|

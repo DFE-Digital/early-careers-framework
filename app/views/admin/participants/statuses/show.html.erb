@@ -4,9 +4,7 @@
     section: "Training record states"
   )
 %>
-
 <%= render partial: "admin/participants/nav" %>
-
 <% states = DetermineTrainingRecordStateLegacy.call(participant_profile: @participant_profile, school: @participant_presenter.school) %>
 
 <h2 class="govuk-heading-m">School</h2>
@@ -30,7 +28,6 @@
     end
   end %>
 <% end %>
-
 <% if @participant_presenter.relevant_induction_record&.enrolled_in_fip? %>
   <h2 class="govuk-heading-m">Lead provider</h2>
   <% if @participant_presenter.lead_provider_name.blank? %>

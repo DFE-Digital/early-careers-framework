@@ -14,6 +14,7 @@ module Admin
       @school = School.eligible_or_cip_only.friendly.find(params[:id])
       authorize @school
       @induction_coordinator = @school.induction_coordinators&.first
+      @can_impersonate_sit = @induction_coordinator && ImpersonationPolicy.new(current_user, @induction_coordinator).create?
     end
 
   private

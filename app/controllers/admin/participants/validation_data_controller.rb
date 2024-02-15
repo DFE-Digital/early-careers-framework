@@ -10,6 +10,8 @@ module Admin::Participants
 
     def show
       @participant_presenter = Admin::ParticipantPresenter.new(@participant_profile)
+      @can_be_updated = policy(@participant_profile).update_validation_data?
+      @states = DetermineTrainingRecordStateLegacy.call(participant_profile: @participant_profile)
 
       add_breadcrumb(
         school.name,

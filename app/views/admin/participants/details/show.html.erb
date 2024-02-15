@@ -5,14 +5,20 @@
   )
 %>
 
-<% if @participant_profile.npq? %>
-  <%= render partial: "show_npq" %>
-<% else %>
-  <%= render partial: "admin/participants/nav" %>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-three-quarters">
 
-  <%= render partial: "show_ecf" %>
-<% end %>
+    <% if @participant_profile.npq? %>
+      <%= render partial: "show_npq" %>
+    <% else %>
+      <%= render partial: "admin/participants/nav" %>
 
-<% if @participant_profile.policy_class.new(current_user, @participant_profile).withdraw_record? %>
-  <%= govuk_button_link_to "Delete participant", remove_admin_participant_path(@participant_profile), warning: true %>
-<% end %>
+      <%= render partial: "show_ecf" %>
+    <% end %>
+
+    <% if @participant_profile.policy_class.new(current_user, @participant_profile).withdraw_record? %>
+      <%= govuk_button_link_to "Delete participant", remove_admin_participant_path(@participant_profile), warning: true %>
+    <% end %>
+
+  </div>
+</div>

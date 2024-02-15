@@ -2,32 +2,36 @@
 
 <h1 class="govuk-heading-l"><%= @school.name %></h1>
 <%= render partial: "admin/schools/shared/navigation" %>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-three-quarters">
 
-<h2 class="govuk-heading-m">Participants</h2>
+    <h2 class="govuk-heading-m">Participants</h2>
 
-<% if @participant_profiles.present? %>
-  <table class="govuk-table">
-    <thead class="govuk-table__head">
-      <tr class="govuk-table__row">
-        <th scope="col" class="govuk-table__header">Full name</th>
-        <th scope="col" class="govuk-table__header">Type</th>
-        <th scope="col" class="govuk-table__header">Cohort</th>
-        <th scope="col" class="govuk-table__header">Validation status</th>
-      </tr>
-    </thead>
-    <tbody class="govuk-table__body">
-      <% @participant_profiles.each do |participant| %>
-        <tr class="govuk-table__row">
-          <th scope="row" class="govuk-table__header"><%= govuk_link_to participant.user.full_name, admin_participant_path(participant) %></th>
-          <td class="govuk-table__cell"><%= t participant.participant_type, scope: "schools.participants.type" %></td>
-          <td class="govuk-table__cell"><%= participant.cohort&.start_year %></td>
-          <td class="govuk-table__cell">
-            <%= render StatusTags::AdminParticipantStatusTag.new(participant_profile: participant, school: @school) %>
-          </td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-<% else %>
-  <p class="govuk-body">No participants found for this school.</p>
-<% end %>
+    <% if @participant_profiles.present? %>
+      <table class="govuk-table">
+        <thead class="govuk-table__head">
+          <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header">Full name</th>
+            <th scope="col" class="govuk-table__header">Type</th>
+            <th scope="col" class="govuk-table__header">Cohort</th>
+            <th scope="col" class="govuk-table__header">Validation status</th>
+          </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+          <% @participant_profiles.each do |participant| %>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header"><%= govuk_link_to participant.user.full_name, admin_participant_path(participant) %></th>
+              <td class="govuk-table__cell"><%= t participant.participant_type, scope: "schools.participants.type" %></td>
+              <td class="govuk-table__cell"><%= participant.cohort&.start_year %></td>
+              <td class="govuk-table__cell">
+                <%= render StatusTags::AdminParticipantStatusTag.new(participant_profile: participant, school: @school) %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% else %>
+      <p class="govuk-body">No participants found for this school.</p>
+    <% end %>
+  </div>
+</div>

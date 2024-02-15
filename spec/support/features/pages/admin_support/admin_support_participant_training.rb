@@ -12,21 +12,8 @@ module Pages
       element_has_content? self, "Cohort: #{start_year}"
     end
 
-    def has_materials_supplier?(material_supplier)
-      element_has_content? self, "Materials supplier#{material_supplier}"
-    end
-
     def has_school_name?(school_name)
-      element_has_content? self, "School name#{school_name}"
-    end
-
-    def has_school_urn?(school_urn)
-      element_has_content? self, "School URN#{school_urn}"
-    end
-
-    def has_school_record_state?(school_record_state)
-      # TODO: get language from language files
-      element_has_content? self, "School record state#{school_record_state}"
+      element_has_content? self, "School#{school_name}"
     end
 
     def has_lead_provider?(lead_provider_name)

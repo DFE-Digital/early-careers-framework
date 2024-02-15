@@ -12,9 +12,9 @@ RSpec.feature "Admin should be able to see the participant's declaration history
     when_i_click_on_the_participants_name "Sally Teacher"
     then_i_should_see_the_ects_details
 
-    when_i_click_on_tab("Declaration history")
+    when_i_click_on_tab("Declarations")
     then_i_should_be_on_the_participant_declaration_history_page
     and_i_should_see_the_participant_declaration_history
-    and_the_page_title_should_be("Sally Teacher - Declaration history")
+    and_the_page_title_should_be("Sally Teacher - Declarations")
   end
 end
