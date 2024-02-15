@@ -175,12 +175,16 @@ private
     entity.versions&.each do |version|
       # TODO: if the version is of type "create" then we need to record the default values that were not overridden
 
-      user = User.find_by(id: version.whodunnit) || version.whodunnit
+      user = whodunnit(version)
 
       version.object_changes&.each do |key, value|
         record_event(version.created_at, version.event, entity, key, value, user)
       end
     end
+  end
+
+  def whodunnit(version)
+    User.find_by(id: version.whodunnit) || CpdLeadProvider.find_by(id: version.whodunnit) || version.whodunnit
   end
 
   def record_event(date, action, entity, key, value, actor)

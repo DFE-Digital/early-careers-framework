@@ -23,6 +23,7 @@ module Admin
 
         return "(Unknown user)" if user.nil?
         return "#{user} (Unknown user)" if user.is_a?(String)
+        return "#{user.name} (Lead Provider)" if user.is_a?(CpdLeadProvider)
 
         if user.induction_coordinator?
           "#{user.email} (SIT user)"
