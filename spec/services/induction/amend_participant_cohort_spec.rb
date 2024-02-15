@@ -260,7 +260,13 @@ RSpec.describe Induction::AmendParticipantCohort do
           let(:historical_school_source_cohort) { create(:school_cohort, cohort: source_cohort) }
           let(:historical_school) { historical_school_source_cohort.school }
           let!(:induction_programme) { create(:induction_programme, :fip, school_cohort: historical_school_source_cohort) }
-          let!(:historical_record) { create(:induction_record, participant_profile:, induction_programme:) }
+          let!(:historical_record) do
+            create(:induction_record,
+                   participant_profile:,
+                   induction_programme:,
+                   induction_status: :changed,
+                   end_date: participant_profile.latest_induction_record.start_date)
+          end
           let!(:historical_lead_provider) { historical_record.lead_provider }
           let!(:historical_delivery_partner) { historical_record.delivery_partner }
 
@@ -358,7 +364,7 @@ RSpec.describe Induction::AmendParticipantCohort do
                    schedule: create(:ecf_schedule))
           end
 
-          let(:schedule) { Finance::Schedule::ECF.default_for(cohort: Cohort.current) }
+          let(:schedule) { create(:ecf_extended_schedule, cohort: target_cohort) }
 
           subject(:form) do
             described_class.new(participant_profile:, source_cohort_start_year:, schedule:)
@@ -375,6 +381,53 @@ RSpec.describe Induction::AmendParticipantCohort do
             participant_profile.reload.induction_records.each do |induction_record|
               expect(induction_record.schedule).to eq(schedule)
             end
+          end
+        end
+
+        context "when source_cohort_start_year matches target_cohort_start_year" do
+          let(:current_induction_record) { participant_profile.induction_records.latest }
+          let(:historical_induction_record) { (participant_profile.induction_records - [current_induction_record]).first }
+
+          subject(:form) do
+            described_class.new(participant_profile:,
+                                source_cohort_start_year: target_cohort_start_year,
+                                target_cohort_start_year:)
+          end
+
+          before do
+            participant_profile.update!(schedule: create(:ecf_extended_schedule, cohort: target_cohort))
+            Induction::ChangeProgramme.call(participant_profile:,
+                                            end_date: Date.current,
+                                            new_induction_programme: target_school_cohort.default_induction_programme,
+                                            start_date: Date.current)
+          end
+
+          it "returns true and set no errors" do
+            expect(form.save).to be_truthy
+            expect(form.errors).to be_empty
+          end
+
+          it "keeps the current induction record in the same schedule and cohort" do
+            expect { form.save }.to not_change { current_induction_record.reload.schedule }
+                                      .and not_change { current_induction_record.reload.cohort_start_year }
+                                             .and not_change { current_induction_record.reload.induction_programme }
+          end
+
+          it "keeps the participant profile in the same schedule and cohort" do
+            expect { form.save }.to not_change { participant_profile.schedule }
+                                      .and not_change { participant_profile.school_cohort }
+          end
+
+          it "changes the historical induction records to the participant schedule" do
+            expect { form.save }.to change { historical_induction_record.reload.schedule }
+                                      .from(historical_induction_record.schedule)
+                                      .to(current_induction_record.schedule)
+          end
+
+          it "changes the historical induction records to the participant cohort" do
+            expect { form.save }.to change { historical_induction_record.reload.cohort_start_year }
+                                      .from(historical_induction_record.cohort_start_year)
+                                      .to(current_induction_record.cohort_start_year)
           end
         end
       end
