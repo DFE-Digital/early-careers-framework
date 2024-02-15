@@ -210,7 +210,7 @@ GEM
       raabro (~> 1.4)
     globalid (1.2.1)
       activesupport (>= 6.1)
-    google-apis-bigquery_v2 (0.63.0)
+    google-apis-bigquery_v2 (0.64.0)
       google-apis-core (>= 0.12.0, < 2.a)
     google-apis-core (0.13.0)
       addressable (~> 2.5, >= 2.5.1)
@@ -222,7 +222,7 @@ GEM
       rexml
     google-apis-drive_v3 (0.48.0)
       google-apis-core (>= 0.12.0, < 2.a)
-    google-cloud-bigquery (1.48.0)
+    google-cloud-bigquery (1.48.1)
       concurrent-ruby (~> 1.0)
       google-apis-bigquery_v2 (~> 0.62)
       google-apis-core (~> 0.13)
