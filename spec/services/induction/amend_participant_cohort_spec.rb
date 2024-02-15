@@ -385,6 +385,9 @@ RSpec.describe Induction::AmendParticipantCohort do
         end
 
         context "when source_cohort_start_year matches target_cohort_start_year" do
+          let(:current_induction_record) { participant_profile.induction_records.latest }
+          let(:historical_induction_record) { (participant_profile.induction_records - [current_induction_record]).first }
+
           subject(:form) do
             described_class.new(participant_profile:,
                                 source_cohort_start_year: target_cohort_start_year,
@@ -404,21 +407,27 @@ RSpec.describe Induction::AmendParticipantCohort do
             expect(form.errors).to be_empty
           end
 
-          it "keeps the participant in the same schedule and cohort" do
-            current_induction_record = participant_profile.induction_records.latest
-            historical_induction_record = (participant_profile.induction_records - [current_induction_record]).first
-
+          it "keeps the current induction record in the same schedule and cohort" do
             expect { form.save }.to not_change { current_induction_record.reload.schedule }
                                       .and not_change { current_induction_record.reload.cohort_start_year }
                                              .and not_change { current_induction_record.reload.induction_programme }
-                                                    .and not_change { current_induction_record.reload.participant_profile.schedule }
-                                                           .and not_change { current_induction_record.reload.participant_profile.school_cohort }
-                                                                  .and change { historical_induction_record.reload.schedule }
-                                                                         .from(historical_induction_record.schedule)
-                                                                         .to(current_induction_record.schedule)
-                                                                         .and change { historical_induction_record.reload.cohort_start_year }
-                                                                                .from(historical_induction_record.cohort_start_year)
-                                                                                .to(current_induction_record.cohort_start_year)
+          end
+
+          it "keeps the participant profile in the same schedule and cohort" do
+            expect { form.save }.to not_change { participant_profile.schedule }
+                                      .and not_change { participant_profile.school_cohort }
+          end
+
+          it "changes the historical induction records to the participant schedule" do
+            expect { form.save }.to change { historical_induction_record.reload.schedule }
+                                      .from(historical_induction_record.schedule)
+                                      .to(current_induction_record.schedule)
+          end
+
+          it "changes the historical induction records to the participant cohort" do
+            expect { form.save }.to change { historical_induction_record.reload.cohort_start_year }
+                                      .from(historical_induction_record.cohort_start_year)
+                                      .to(current_induction_record.cohort_start_year)
           end
         end
       end
