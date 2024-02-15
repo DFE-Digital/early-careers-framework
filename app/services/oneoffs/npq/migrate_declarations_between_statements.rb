@@ -8,11 +8,12 @@ module Oneoffs::NPQ
 
     include HasRecordableInformation
 
-    def initialize(cohort:, from_statement_name:, to_statement_name:, to_statement_updates: {})
+    def initialize(cohort:, from_statement_name:, to_statement_name:, to_statement_updates: {}, restrict_to_lead_providers: nil)
       @cohort = cohort
       @from_statement_name = from_statement_name
       @to_statement_name = to_statement_name
       @to_statement_updates = to_statement_updates
+      @restrict_to_lead_providers = restrict_to_lead_providers
     end
 
     def migrate(dry_run: true)
@@ -32,7 +33,7 @@ module Oneoffs::NPQ
 
   private
 
-    attr_reader :cohort, :from_statement_name, :to_statement_name, :to_statement_updates
+    attr_reader :cohort, :from_statement_name, :to_statement_name, :to_statement_updates, :restrict_to_lead_providers
 
     def update_to_statement_attributes!
       return if to_statement_updates.blank?
@@ -92,9 +93,11 @@ module Oneoffs::NPQ
     end
 
     def statements_by_provider(statement_name)
+      npq_lead_provider = restrict_to_lead_providers || NPQLeadProvider.all
+
       Finance::Statement::NPQ
-        .includes(:cohort, :participant_declarations)
-        .where(cohort:, name: statement_name)
+        .includes(:cohort, :participant_declarations, cpd_lead_provider: :npq_lead_provider)
+        .where(cohort:, name: statement_name, cpd_lead_provider: { npq_lead_provider: })
         .output
         .group_by(&:npq_lead_provider)
         .transform_values(&:first)

@@ -9,8 +9,9 @@ describe Oneoffs::NPQ::MigrateDeclarationsBetweenStatements do
   let(:from_statement_name) { from_statement.name }
   let(:to_statement_name) { to_statement.name }
   let(:cohort) { Cohort.current }
+  let(:restrict_to_lead_providers) { nil }
 
-  let(:instance) { described_class.new(cohort:, from_statement_name:, to_statement_name:, to_statement_updates:) }
+  let(:instance) { described_class.new(cohort:, from_statement_name:, to_statement_name:, to_statement_updates:, restrict_to_lead_providers:) }
 
   before { allow(Rails.logger).to receive(:info) }
 
@@ -56,6 +57,26 @@ describe Oneoffs::NPQ::MigrateDeclarationsBetweenStatements do
           "Migrating 1 declarations for #{npq_lead_provider.name}",
           "Migrating 1 declarations for #{npq_lead_provider2.name}",
         ])
+      end
+
+      context "when restrict_to_lead_providers is provided" do
+        let(:restrict_to_lead_providers) { [npq_lead_provider] }
+
+        it "migrates only the declarations for the given lead provider to the new statement" do
+          migrate
+
+          expect(declaration.statement_line_items.map(&:statement)).to all(eq(to_statement))
+          expect(declaration2.statement_line_items.map(&:statement)).to all(eq(from_statement2))
+        end
+
+        it "records information" do
+          migrate
+
+          expect(instance).to have_recorded_info([
+            "Migrating declarations from #{from_statement_name} to #{to_statement_name} for 1 providers",
+            "Migrating 1 declarations for #{npq_lead_provider.name}",
+          ])
+        end
       end
     end
 
