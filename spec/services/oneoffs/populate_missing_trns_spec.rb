@@ -110,14 +110,13 @@ describe Oneoffs::PopulateMissingTrns do
       let!(:npq_application_2) { create(:npq_application, user:, teacher_reference_number_verified: true) }
       let(:trns) { [npq_application_1.teacher_reference_number, npq_application_2.teacher_reference_number] }
 
-      it { expect { perform_change }.to change { teacher_profile.reload.trn }.from(nil).to(npq_application_1.teacher_reference_number) }
+      it { expect { perform_change }.not_to change { teacher_profile.reload.trn } }
 
       it "logs out information" do
         perform_change
 
         expect(instance).to have_recorded_info([
-          "teacher profile TRN updated to #{npq_application_1.teacher_reference_number} for teacher profile #{teacher_profile.id}",
-          "multiple TRNs found for teacher profile #{teacher_profile.id}: #{trns.join}",
+          "multiple TRNs found for teacher profile #{teacher_profile.id} - ignoring: #{trns.join}",
         ])
       end
     end

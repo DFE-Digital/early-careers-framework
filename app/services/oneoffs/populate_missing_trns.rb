@@ -14,12 +14,13 @@ module Oneoffs
       ActiveRecord::Base.transaction do
         teacher_profiles_without_trns.find_each do |teacher_profile|
           trns = lookup_trns(teacher_profile)
-          next if trns.empty?
+
+          record_info("multiple TRNs found for teacher profile #{teacher_profile.id} - ignoring: #{trns.join}") if trns.count > 1
+
+          next unless trns.size == 1
 
           teacher_profile.update!(trn: trns.first)
-
           record_info("teacher profile TRN updated to #{teacher_profile.trn} for teacher profile #{teacher_profile.id}")
-          record_info("multiple TRNs found for teacher profile #{teacher_profile.id}: #{trns.join}") if trns.count > 1
         end
 
         raise ActiveRecord::Rollback if dry_run
