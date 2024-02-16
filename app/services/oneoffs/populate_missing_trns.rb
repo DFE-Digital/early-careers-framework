@@ -15,7 +15,7 @@ module Oneoffs
         teacher_profiles_without_trns.find_each do |teacher_profile|
           trns = lookup_trns(teacher_profile)
 
-          record_info("multiple TRNs found for teacher profile #{teacher_profile.id} - ignoring: #{trns.join}") if trns.count > 1
+          record_info("multiple TRNs found for teacher profile #{teacher_profile.id} - ignoring: #{trns.join(', ')}") if trns.count > 1
 
           next unless trns.size == 1
 
@@ -47,13 +47,17 @@ module Oneoffs
       users.map { |user|
         user
           .npq_applications
+          .order(:created_at)
           .where(teacher_reference_number_verified: true)
           .pluck(:teacher_reference_number)
       }.flatten
     end
 
     def lookup_trns_from_ecf_validation(users)
-      participant_profiles = users.map(&:participant_profiles).flatten
+      participant_profiles = users
+        .map(&:participant_profiles)
+        .flatten
+        .select(&method(:trn_verified?))
 
       participant_profiles.map { |participant_profile|
         participant_profile.ecf_participant_validation_data&.trn
@@ -61,7 +65,16 @@ module Oneoffs
     end
 
     def lookup_trns_from_teacher_profiles(users)
-      users.map { |user| user.teacher_profile&.trn }
+      users
+        .map(&:teacher_profile)
+        .compact
+        .select { |teacher_profile| teacher_profile.participant_profiles.any?(&method(:trn_verified?)) }
+        .map { |teacher_profile| teacher_profile&.trn }
+    end
+
+    def trn_verified?(participant_profile)
+      eligibility = participant_profile.ecf_participant_eligibility
+      eligibility.present? && !eligibility.different_trn_reason?
     end
 
     def associated_users(user_id)

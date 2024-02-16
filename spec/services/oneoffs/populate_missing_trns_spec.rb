@@ -51,7 +51,18 @@ describe Oneoffs::PopulateMissingTrns do
       it { expect { perform_change }.not_to change { teacher_profile.reload.trn } }
     end
 
-    context "when the teacher profile is associated with participant validation data containing a valid trn" do
+    context "when the teacher profile is associated with participant validation data containing a valid, unverified trn" do
+      let!(:participant_profile) { create(:ect, :eligible_for_funding, teacher_profile:) }
+
+      before do
+        teacher_profile.update!(trn: nil)
+        participant_profile.ecf_participant_eligibility.different_trn_reason!
+      end
+
+      it { expect { perform_change }.not_to change { teacher_profile.reload.trn } }
+    end
+
+    context "when the teacher profile is associated with participant validation data containing a valid, verified trn" do
       let!(:participant_profile) { create(:ect, :eligible_for_funding, teacher_profile:) }
 
       before { teacher_profile.update!(trn: nil) }
@@ -74,9 +85,15 @@ describe Oneoffs::PopulateMissingTrns do
       it { expect { perform_change }.not_to change { teacher_profile.reload.trn } }
     end
 
-    context "when the teacher profile is associated with another teacher profile a valid trn" do
+    context "when the teacher profile is associated with another teacher profile that has a valid, verified trn" do
       let(:other_teacher_profile) { create(:teacher_profile) }
+      let!(:other_participant_profile) { create(:ect, :eligible_for_funding, teacher_profile: other_teacher_profile) }
       let!(:participant_id_change) { create(:participant_id_change, from_participant_id: other_teacher_profile.user_id, to_participant_id: user.id) }
+
+      before do
+        other_participant_profile.ecf_participant_validation_data.update!(trn: nil)
+        other_participant_profile.ecf_participant_eligibility.no_qts_reason!
+      end
 
       it { expect { perform_change }.to change { teacher_profile.reload.trn }.from(nil).to(other_teacher_profile.trn) }
 
@@ -106,8 +123,8 @@ describe Oneoffs::PopulateMissingTrns do
     end
 
     context "when there are multiple, verified trns associated with the teacher profile" do
-      let!(:npq_application_1) { create(:npq_application, user:, teacher_reference_number_verified: true) }
-      let!(:npq_application_2) { create(:npq_application, user:, teacher_reference_number_verified: true) }
+      let!(:npq_application_1) { create(:npq_application, user:, teacher_reference_number: "1234567", teacher_reference_number_verified: true) }
+      let!(:npq_application_2) { travel_to(1.day.from_now) { create(:npq_application, user:, teacher_reference_number: "7654321", teacher_reference_number_verified: true) } }
       let(:trns) { [npq_application_1.teacher_reference_number, npq_application_2.teacher_reference_number] }
 
       it { expect { perform_change }.not_to change { teacher_profile.reload.trn } }
@@ -116,7 +133,7 @@ describe Oneoffs::PopulateMissingTrns do
         perform_change
 
         expect(instance).to have_recorded_info([
-          "multiple TRNs found for teacher profile #{teacher_profile.id} - ignoring: #{trns.join}",
+          "multiple TRNs found for teacher profile #{teacher_profile.id} - ignoring: #{trns.join(', ')}",
         ])
       end
     end
