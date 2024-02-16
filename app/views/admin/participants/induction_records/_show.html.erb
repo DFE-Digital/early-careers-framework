@@ -1,5 +1,6 @@
 <% training_record_states = DetermineTrainingRecordState.call(induction_records: induction_record) %>
 
+<div class="govuk-!-margin-bottom-9">
 <%=
   govuk_summary_list do |sl|
     sl.with_row do |row|
@@ -94,3 +95,4 @@
     end
   end
 %>
+</div>
