@@ -8,10 +8,11 @@ module Oneoffs::NPQ
 
     include HasRecordableInformation
 
-    def initialize(cohort:, from_statement_name:, to_statement_name:, to_statement_updates: {}, restrict_to_lead_providers: nil, restrict_to_declaration_types: nil)
+    def initialize(cohort:, from_statement_name:, to_statement_name:, from_statement_output_fee: false, to_statement_updates: {}, restrict_to_lead_providers: nil, restrict_to_declaration_types: nil)
       @cohort = cohort
       @from_statement_name = from_statement_name
       @to_statement_name = to_statement_name
+      @from_statement_output_fee = from_statement_output_fee
       @to_statement_updates = to_statement_updates
       @restrict_to_lead_providers = restrict_to_lead_providers
       @restrict_to_declaration_types = restrict_to_declaration_types
@@ -34,7 +35,7 @@ module Oneoffs::NPQ
 
   private
 
-    attr_reader :cohort, :from_statement_name, :to_statement_name, :to_statement_updates, :restrict_to_lead_providers, :restrict_to_declaration_types
+    attr_reader :cohort, :from_statement_name, :to_statement_name, :to_statement_updates, :restrict_to_lead_providers, :restrict_to_declaration_types, :from_statement_output_fee
 
     def update_to_statement_attributes!
       return if to_statement_updates.blank?
@@ -48,7 +49,7 @@ module Oneoffs::NPQ
     def migrate_declarations_between_statements!
       each_statements_by_provider do |provider, from_statement, to_statement|
         migrate_line_items!(provider, from_statement, to_statement)
-        from_statement.update!(output_fee: false)
+        from_statement.update!(output_fee: from_statement_output_fee) if from_statement.output_fee != from_statement_output_fee
       end
     end
 

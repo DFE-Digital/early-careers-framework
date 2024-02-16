@@ -8,11 +8,12 @@ describe Oneoffs::NPQ::MigrateDeclarationsBetweenStatements do
   let(:to_statement) { create(:npq_statement, name: "May 2023", cpd_lead_provider:, cohort:, output_fee: true) }
   let(:from_statement_name) { from_statement.name }
   let(:to_statement_name) { to_statement.name }
+  let(:from_statement_output_fee) { false }
   let(:cohort) { Cohort.current }
   let(:restrict_to_lead_providers) { nil }
   let(:restrict_to_declaration_types) { nil }
 
-  let(:instance) { described_class.new(cohort:, from_statement_name:, to_statement_name:, to_statement_updates:, restrict_to_lead_providers:, restrict_to_declaration_types:) }
+  let(:instance) { described_class.new(cohort:, from_statement_name:, to_statement_name:, from_statement_output_fee:, to_statement_updates:, restrict_to_lead_providers:, restrict_to_declaration_types:) }
 
   before { allow(Rails.logger).to receive(:info) }
 
@@ -58,6 +59,12 @@ describe Oneoffs::NPQ::MigrateDeclarationsBetweenStatements do
           "Migrating 1 declarations for #{npq_lead_provider.name}",
           "Migrating 1 declarations for #{npq_lead_provider2.name}",
         ])
+      end
+
+      context "when from_statement_output_fee result in no changes" do
+        let(:from_statement_output_fee) { from_statement.output_fee }
+
+        it { expect { migrate }.not_to change { from_statement.reload.output_fee } }
       end
 
       context "when restrict_to_lead_providers is provided" do
