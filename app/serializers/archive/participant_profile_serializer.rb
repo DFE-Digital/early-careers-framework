@@ -39,5 +39,10 @@ module Archive
     attribute :participant_profile_states do |participant_profile|
       ParticipantProfileStateSerializer.new(participant_profile.participant_profile_states).serializable_hash[:data]
     end
+
+    attribute :deleted_duplicates do |participant_profile|
+      # these are already serialized so just take the JSON data
+      participant_profile.deleted_duplicates.map { |deleted_duplicate| deleted_duplicate.data["data"] }
+    end
   end
 end

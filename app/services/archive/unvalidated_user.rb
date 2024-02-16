@@ -92,16 +92,7 @@ module Archive
     end
 
     def destroy_profile_data!(participant_profile)
-      participant_profile.ecf_participant_validation_data&.destroy!
-      participant_profile.ecf_participant_eligibility&.destroy!
-      participant_profile.participant_profile_states.destroy_all
-      participant_profile.participant_profile_schedules.destroy_all
-      participant_profile.participant_declarations.destroy_all
-      participant_profile.induction_records.destroy_all
-      participant_profile.validation_decisions.destroy_all
-
-      participant_profile.school_mentors.destroy_all if participant_profile.mentor?
-      participant_profile.destroy!
+      DestroyECFProfileData.call(participant_profile:)
     end
   end
 end
