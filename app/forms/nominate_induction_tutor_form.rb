@@ -63,10 +63,7 @@ private
 
   def remove_current_sits
     school.induction_coordinators.each do |sit|
-      next sit.induction_coordinator_profile.schools.delete(school) if sit.schools.count > 1
-      next sit.induction_coordinator_profile.destroy! if sit.teacher_profile.present? || sit.npq_registered?
-
-      sit.destroy!
+      sit.induction_coordinator_profile.schools.delete(school)
     end
   end
 
