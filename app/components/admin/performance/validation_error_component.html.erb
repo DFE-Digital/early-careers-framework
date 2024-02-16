@@ -1,0 +1,23 @@
+<div class="govuk-summary-card">
+  <div class="govuk-summary-card__title-wrapper">
+    <h2 class="govuk-summary-card__title govuk-!-font-weight-regular">
+      <%= header_label %>
+    </h2>
+  </div>
+  <div class="govuk-summary-card__content">
+    <dl class="govuk-summary-list">
+      <% error.details.each do |field, info| %>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            <%= field %>
+          </dt>
+          <dd class="govuk-summary-list__value">
+            <div class="govuk-error-message govuk-!-font-weight-regular"><%= info['messages'].join(", ") %></div>
+            <code class="app-user-input-example"><%= info['value'] %></code>
+            <br>
+          </dd>
+        </div>
+      <% end %>
+    </dl>
+  </div>
+</div>

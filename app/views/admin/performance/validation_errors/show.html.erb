@@ -6,31 +6,7 @@
     <h2 class="govuk-heading-m">Validation errors</h2>
 
     <% @validation_errors.each do |error| %>
-      <div class="govuk-summary-card">
-        <div class="govuk-summary-card__title-wrapper">
-          <h2 class="govuk-summary-card__title govuk-!-font-weight-regular">
-            Validation error #<%= error.id.slice(0, 8) %> –
-            <%= error.created_at.strftime("%d %B %Y at %H:%M") %>
-            by user <%= error.user.full_name %>
-          </h2>
-        </div>
-        <div class="govuk-summary-card__content">
-          <dl class="govuk-summary-list">
-            <% error.details.each do |field, info| %>
-              <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">
-                  <%= field %>
-                </dt>
-                <dd class="govuk-summary-list__value">
-                  <div class="govuk-error-message govuk-!-font-weight-regular"><%= info['messages'].join(", ") %></div>
-                  <code class="app-user-input-example"><%= info['value'] %></code>
-                  <br>
-                </dd>
-              </div>
-            <% end %>
-          </dl>
-        </div>
-      </div>
+      <%= render Admin::Performance::ValidationErrorComponent.new(error: error)%>
     <% end %>
     <%= govuk_pagination(pagy: @pagy) %>
   </div>
