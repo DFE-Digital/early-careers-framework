@@ -73,6 +73,11 @@
     end
 
     sl.with_row do |row|
+      row.with_key(text: "Schedule")
+      row.with_value(text: induction_record.schedule_identifier)
+    end
+
+    sl.with_row do |row|
       row.with_key(text: "Appropriate body")
       row.with_value(text: induction_record.appropriate_body_name)
     end

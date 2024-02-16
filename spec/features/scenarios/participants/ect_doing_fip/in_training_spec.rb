@@ -205,6 +205,7 @@ RSpec.feature "ECT doing FIP: in training", type: :feature do
     expect(participant_training).to have_cohort start_year
     expect(participant_training).to have_school_name school.name
     expect(participant_training).to have_lead_provider lead_provider_name
+    expect(participant_training).to have_schedule_identifier schedule_identifier
   end
 
   scenario "A DfE finance user can locate the record for the ECT" do
