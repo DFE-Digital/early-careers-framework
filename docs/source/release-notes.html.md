@@ -7,6 +7,12 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
+## 16 February 2024
+
+We’ve found and fixed a bug that meant for a small number of NPQ applications the value in the `itt_provider` field was incorrectly set, so was not showing the name of the provider.
+
+The full legal name of the initial teacher training provider can now be seen on all applications impacted by this bug.
+
 ## 6 February 2024
 
 We’ve done an update to ensure that early career teacher (ECT) participant records only ever appear in one cohort. 
