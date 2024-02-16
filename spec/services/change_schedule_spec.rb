@@ -302,10 +302,10 @@ RSpec.describe ChangeSchedule do
                 create(:school_cohort, :with_induction_programme, cohort: new_cohort, school: historical_school)
               end
 
-              it "moves all the historical records to the target schedule" do
+              it "moves all the other historical records to the target schedule" do
                 service.call
 
-                participant_profile.reload.induction_records.active.each do |induction_record|
+                participant_profile.reload.induction_records.active.excluding(historical_record).each do |induction_record|
                   expect(induction_record.schedule).to eq(new_schedule)
                 end
               end
@@ -660,10 +660,10 @@ RSpec.describe ChangeSchedule do
                 create(:school_cohort, :with_induction_programme, cohort: new_cohort, school: historical_school)
               end
 
-              it "moves all the historical records to the target schedule" do
+              it "moves all the other historical records to the target schedule" do
                 service.call
 
-                participant_profile.reload.induction_records.active.each do |induction_record|
+                participant_profile.reload.induction_records.active.excluding(historical_record).each do |induction_record|
                   expect(induction_record.schedule).to eq(new_schedule)
                 end
               end

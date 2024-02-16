@@ -117,13 +117,17 @@ private
   def update_induction_records!
     return unless relevant_induction_record
 
-    Induction::ChangeInductionRecord.call(
-      induction_record: relevant_induction_record,
-      changes: {
-        schedule: new_schedule,
-        induction_programme:,
-      },
-    )
+    if in_target_schedule?(relevant_induction_record) && !in_target_cohort?(relevant_induction_record)
+      relevant_induction_record.update!(induction_programme:, schedule: new_schedule)
+    else
+      Induction::ChangeInductionRecord.call(
+        induction_record: relevant_induction_record,
+        changes: {
+          schedule: new_schedule,
+          induction_programme:,
+        },
+      )
+    end
   end
 
   def update_ecf_records!
@@ -183,14 +187,21 @@ private
     end
   end
 
+  def historical_schedule(historical_record)
+    Finance::Schedule::ECF.find_by(cohort: new_schedule.cohort, schedule_identifier: historical_record.schedule_identifier)
+  end
+
   def update_historical_induction_records!
     historical_records.all? do |historical_record|
       next true if in_target?(historical_record)
+      next true if !in_target_schedule?(relevant_induction_record) && in_target_cohort?(relevant_induction_record)
 
       historical_induction_programme = historical_induction_programme(historical_record)
-      if historical_induction_programme.present?
-        historical_record.update!(induction_programme: historical_induction_programme,
-                                  schedule: new_schedule)
+      historical_schedule = historical_schedule(historical_record)
+
+      if historical_induction_programme && historical_schedule
+        historical_record.update!(induction_programme: historical_induction_programme(historical_record),
+                                  schedule: historical_schedule(historical_record))
       end
     end
   end
