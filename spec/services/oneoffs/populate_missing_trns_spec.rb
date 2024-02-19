@@ -6,8 +6,8 @@ describe Oneoffs::PopulateMissingTrns do
   before { allow(Rails.logger).to receive(:info) }
 
   describe "#perform_change" do
-    let(:user) { create(:user) }
-    let!(:teacher_profile) { create(:teacher_profile, user:, trn: nil) }
+    let(:user) { create(:user, :npq) }
+    let!(:teacher_profile) { user.teacher_profile.tap { |tp| tp.update(trn: nil) } }
     let(:dry_run) { false }
 
     subject(:perform_change) { instance.perform_change(dry_run:) }
@@ -38,87 +38,29 @@ describe Oneoffs::PopulateMissingTrns do
           "teacher profile TRN updated to #{npq_application.teacher_reference_number} for teacher profile #{teacher_profile.id}",
         ])
       end
-    end
 
-    context "when the teacher profile is associated with participant validation data containing an invalid trn" do
-      let!(:participant_profile) { create(:ect, :eligible_for_funding, teacher_profile:) }
+      context "when another teacher profile has the same TRN" do
+        let!(:other_teacher_profile) { create(:teacher_profile, trn: npq_application.teacher_reference_number) }
 
-      before do
-        participant_profile.ecf_participant_validation_data.update!(trn: "invalid-trn")
-        teacher_profile.update!(trn: nil)
+        it { expect { perform_change }.not_to change { teacher_profile.reload.trn } }
       end
 
-      it { expect { perform_change }.not_to change { teacher_profile.reload.trn } }
-    end
+      context "when the TRN is not formatted correctly" do
+        let!(:npq_application) { create(:npq_application, user:, teacher_reference_number_verified: true, teacher_reference_number: "1 2 3 4 5 6 7") }
 
-    context "when the teacher profile is associated with participant validation data containing a valid, unverified trn" do
-      let!(:participant_profile) { create(:ect, :eligible_for_funding, teacher_profile:) }
-
-      before do
-        teacher_profile.update!(trn: nil)
-        participant_profile.ecf_participant_eligibility.different_trn_reason!
+        it { expect { perform_change }.to change { teacher_profile.reload.trn }.from(nil).to("1234567") }
       end
 
-      it { expect { perform_change }.not_to change { teacher_profile.reload.trn } }
-    end
+      context "when it is an ECT teacher profile" do
+        let(:user) { create(:user, :early_career_teacher) }
 
-    context "when the teacher profile is associated with participant validation data containing a valid, verified trn" do
-      let!(:participant_profile) { create(:ect, :eligible_for_funding, teacher_profile:) }
-
-      before { teacher_profile.update!(trn: nil) }
-
-      it { expect { perform_change }.to change { teacher_profile.reload.trn }.from(nil).to(participant_profile.ecf_participant_validation_data.trn) }
-
-      it "logs out information" do
-        perform_change
-
-        expect(instance).to have_recorded_info([
-          "teacher profile TRN updated to #{participant_profile.ecf_participant_validation_data.trn} for teacher profile #{teacher_profile.id}",
-        ])
-      end
-    end
-
-    context "when the teacher profile is associated with another teacher profile with an invalid trn" do
-      let(:other_teacher_profile) { create(:teacher_profile, trn: "invalid-trn") }
-      let!(:participant_id_change) { create(:participant_id_change, from_participant_id: other_teacher_profile.user_id, to_participant_id: user.id) }
-
-      it { expect { perform_change }.not_to change { teacher_profile.reload.trn } }
-    end
-
-    context "when the teacher profile is associated with another teacher profile that has a valid, verified trn" do
-      let(:other_teacher_profile) { create(:teacher_profile) }
-      let!(:other_participant_profile) { create(:ect, :eligible_for_funding, teacher_profile: other_teacher_profile) }
-      let!(:participant_id_change) { create(:participant_id_change, from_participant_id: other_teacher_profile.user_id, to_participant_id: user.id) }
-
-      before do
-        other_participant_profile.ecf_participant_validation_data.update!(trn: nil)
-        other_participant_profile.ecf_participant_eligibility.no_qts_reason!
+        it { expect { perform_change }.not_to change { teacher_profile.reload.trn } }
       end
 
-      it { expect { perform_change }.to change { teacher_profile.reload.trn }.from(nil).to(other_teacher_profile.trn) }
+      context "when it is a mentor teacher profile" do
+        let(:user) { create(:user, :mentor) }
 
-      it "logs out information" do
-        perform_change
-
-        expect(instance).to have_recorded_info([
-          "teacher profile TRN updated to #{other_teacher_profile.trn} for teacher profile #{teacher_profile.id}",
-        ])
-      end
-    end
-
-    context "when a participant id change exists and the other user has a valid/verified trn" do
-      let(:other_user) { create(:user) }
-      let!(:other_user_npq_application) { create(:npq_application, user: other_user, teacher_reference_number_verified: true) }
-      let!(:participant_id_change) { create(:participant_id_change, from_participant_id: user.id, to_participant_id: other_user.id) }
-
-      it { expect { perform_change }.to change { teacher_profile.reload.trn }.from(nil).to(other_user_npq_application.teacher_reference_number) }
-
-      it "logs out information" do
-        perform_change
-
-        expect(instance).to have_recorded_info([
-          "teacher profile TRN updated to #{other_user_npq_application.teacher_reference_number} for teacher profile #{teacher_profile.id}",
-        ])
+        it { expect { perform_change }.not_to change { teacher_profile.reload.trn } }
       end
     end
 

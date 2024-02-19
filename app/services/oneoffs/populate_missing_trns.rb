@@ -12,8 +12,8 @@ module Oneoffs
       record_info("~~~ DRY RUN ~~~") if dry_run
 
       ActiveRecord::Base.transaction do
-        teacher_profiles_without_trns.find_each do |teacher_profile|
-          trns = lookup_trns(teacher_profile)
+        npq_teacher_profiles_without_trns.find_each do |teacher_profile|
+          trns = lookup_trns(teacher_profile.user)
 
           record_info("multiple TRNs found for teacher profile #{teacher_profile.id} - ignoring: #{trns.join(', ')}") if trns.count > 1
 
@@ -31,64 +31,30 @@ module Oneoffs
 
   private
 
-    def lookup_trns(teacher_profile)
-      users = associated_users(teacher_profile.user_id)
+    def lookup_trns(user)
+      trns_from_npq_applications = lookup_trns_from_npq_applications(user)
 
-      trns_from_npq_applications = lookup_trns_from_npq_appliations(users)
-      trns_from_ecf_validation = lookup_trns_from_ecf_validation(users)
-      trns_from_teacher_profiles = lookup_trns_from_teacher_profiles(users)
-
-      (trns_from_npq_applications + trns_from_ecf_validation + trns_from_teacher_profiles).uniq.select do |trn|
-        TeacherReferenceNumber.new(trn).valid?
-      end
-    end
-
-    def lookup_trns_from_npq_appliations(users)
-      users.map { |user|
-        user
-          .npq_applications
-          .order(:created_at)
-          .where(teacher_reference_number_verified: true)
-          .pluck(:teacher_reference_number)
-      }.flatten
-    end
-
-    def lookup_trns_from_ecf_validation(users)
-      participant_profiles = users
-        .map(&:participant_profiles)
-        .flatten
-        .select(&method(:trn_verified?))
-
-      participant_profiles.map { |participant_profile|
-        participant_profile.ecf_participant_validation_data&.trn
-      }.flatten
-    end
-
-    def lookup_trns_from_teacher_profiles(users)
-      users
-        .map(&:teacher_profile)
-        .compact
-        .select { |teacher_profile| teacher_profile.participant_profiles.any?(&method(:trn_verified?)) }
-        .map { |teacher_profile| teacher_profile&.trn }
-    end
-
-    def trn_verified?(participant_profile)
-      eligibility = participant_profile.ecf_participant_eligibility
-      eligibility.present? && !eligibility.different_trn_reason?
-    end
-
-    def associated_users(user_id)
-      associated_user_ids = ParticipantIdChange
-        .where(from_participant_id: user_id).or(ParticipantIdChange.where(to_participant_id: user_id))
-        .pluck(:from_participant_id, :to_participant_id)
-        .flatten
-        .append(user_id)
+      trns_from_npq_applications
         .uniq
-      User.where(id: associated_user_ids)
+        .map { |trn| TeacherReferenceNumber.new(trn) }
+        .select(&:valid?)
+        .map(&:formatted_trn)
     end
 
-    def teacher_profiles_without_trns
-      TeacherProfile.where(trn: nil)
+    def lookup_trns_from_npq_applications(user)
+      user
+        .npq_applications
+        .order(:created_at)
+        .joins("LEFT JOIN teacher_profiles ON teacher_profiles.trn = npq_applications.teacher_reference_number")
+        .where(teacher_reference_number_verified: true, teacher_profiles: { trn: nil })
+        .pluck(:teacher_reference_number)
+    end
+
+    def npq_teacher_profiles_without_trns
+      TeacherProfile
+        .includes(:npq_profiles)
+        .where(trn: nil)
+        .where.not(npq_profiles: { id: nil })
     end
   end
 end
