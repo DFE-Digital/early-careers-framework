@@ -68,7 +68,7 @@ const elements = {
 const get = (element) => cy.get(elements[element] || element);
 
 When("I set {string} to {string}", (element, value) => {
-  get(element).get(`[value="${value}"]`).click();
+  get(element).get(`[value="${value}"]`).click({ force: true });
 });
 
 When("I clear {string}", (element) => {
@@ -80,7 +80,7 @@ When("I type {string} into {string}", (value, element) => {
 });
 
 When("I type {string} into field labelled {string}", (value, label) => {
-  cy.get("label").contains(label).click();
+  cy.get("label").contains(label).click({ force: true });
   cy.focused().clear(); // eslint-disable-line cypress/unsafe-to-chain-command
   cy.focused().type(value); // eslint-disable-line cypress/unsafe-to-chain-command
 });
@@ -90,19 +90,19 @@ When("I press enter in {string}", (element) => {
 });
 
 When("I click on {string}", (element) => {
-  get(element).click();
+  get(element).click({ force: true });
 });
 
 When("I click on first {string}", (element) => {
-  get(element).first().click();
+  get(element).first().click({ force: true });
 });
 
 When("I click on {string} containing {string}", (element, containing) => {
-  get(element).contains(containing).click();
+  get(element).contains(containing).click({ force: true });
 });
 
 When("I click on {string} label", (text) => {
-  cy.get("label").contains(text).click();
+  cy.get("label").contains(text).click({ force: true });
 });
 
 When("I click the submit button", () => {
@@ -128,7 +128,7 @@ When("I add a school urn csv with errors to the file input", () => {
 });
 
 When("I click on the delivery partner radio button", () => {
-  cy.get('[type="radio"].govuk-radios__input').first().check();
+  cy.get('[type="radio"].govuk-radios__input').first().check({ force: true });
 });
 
 Then("{string} should be unchecked", (element) => {
