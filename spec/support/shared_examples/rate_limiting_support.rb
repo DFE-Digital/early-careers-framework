@@ -42,7 +42,7 @@ shared_examples "a rate limited endpoint", rack_attack: true do |desc, period|
         it "sends the current user id to dfe_analytics" do
           perform_request
 
-          job = queue_adapter.enqueued_jobs.first
+          job = queue_adapter.enqueued_jobs.detect { |j| j.dig("arguments", 0, 0, "request_path") == path }
           user_id = job.dig("arguments", 0, 0, "user_id") if job
           expect(user_id).to eql(current_user&.id)
         end
