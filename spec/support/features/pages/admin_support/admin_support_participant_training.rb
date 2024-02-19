@@ -20,6 +20,10 @@ module Pages
       element_has_content? self, "Lead provider#{lead_provider_name}"
     end
 
+    def has_schedule_identifier?(schedule)
+      element_has_content? self, "Schedule#{schedule}"
+    end
+
     def has_school_transfer?(school_name)
       # School transfers
       # | School name | Induction Programme | Start Date | End Date |
