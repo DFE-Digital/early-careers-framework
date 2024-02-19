@@ -242,11 +242,11 @@ GEM
       multi_json (~> 1.11)
       os (>= 0.9, < 2.0)
       signet (>= 0.16, < 2.a)
-    govuk-components (5.0.2)
+    govuk-components (5.1.0)
       html-attributes-utils (~> 1.0.0, >= 1.0.0)
       pagy (~> 6.0)
-      view_component (>= 3.9, < 3.10)
-    govuk_design_system_formbuilder (5.0.0)
+      view_component (>= 3.9, < 3.11)
+    govuk_design_system_formbuilder (5.1.0)
       actionview (>= 6.1)
       activemodel (>= 6.1)
       activesupport (>= 6.1)
@@ -669,8 +669,8 @@ DEPENDENCIES
   google-apis-drive_v3
   google-cloud-bigquery
   googleauth
-  govuk-components (~> 5.0.1)
-  govuk_design_system_formbuilder (~> 5.0.0)
+  govuk-components (~> 5.1.0)
+  govuk_design_system_formbuilder (~> 5.1.0)
   httpclient (~> 2.8, >= 2.8.3)
   jsbundling-rails
   json-diff (~> 0.4.1)
