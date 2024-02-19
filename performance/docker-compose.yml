@@ -32,6 +32,7 @@ x-env: &env
 
     PERF_SCENARIO: ${PERF_SCENARIO:-smoke-test}
     PERF_REPORT_FILE: ${PERF_REPORT_FILE:-k6-output.json}
+    PERF_TARGET_PATH: ${PERF_TARGET_PATH:-/}
 
 services:
   db:

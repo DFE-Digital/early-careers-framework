@@ -95,26 +95,6 @@ jobs:
           message: |
             Review app deployed to ${{ steps.deploy.outputs.url }}
 
-  run_smoke_tests:
-    name: Run Smoke tests
-    needs: [ docker ]
-    runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'test-performance')
-    concurrency: run_smoke_tests_${{ github.event.pull_request.number }}
-    environment:
-      name: production
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - uses: ./.github/actions/test-performance
-        id: smoke-test
-        with:
-          scenario: smoke-test
-          docker-image: ${{ needs.docker.outputs.docker-image }}
-          azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
-
   run_api_performance_tests:
     name: Run API performance tests
     needs: [docker]

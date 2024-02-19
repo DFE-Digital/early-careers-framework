@@ -22,6 +22,7 @@
     "file-loader": "^6.2.0",
     "govuk-frontend": "^5.0.0",
     "nunjucks": "^3.2.4",
+    "openapilint": "^0.9.0",
     "sass": "^1.69.7",
     "terser-webpack-plugin": "^5.3.10",
     "webpack": "^5.89",
@@ -30,7 +31,8 @@
     "webpack-merge": "^5.10.0",
     "webpack-remove-empty-scripts": "^1.0.4",
     "webpack-sources": "^3.2.3",
-    "whatwg-fetch": "^3.6.20"
+    "whatwg-fetch": "^3.6.20",
+    "yarn": "^1.22.21"
   },
   "devDependencies": {
     "axe-core": "^4.8.3",

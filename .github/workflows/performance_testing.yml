@@ -5,15 +5,16 @@ on:
     inputs:
       scenario:
         description: The performance test scenario to run
-        default: smoke-test
+        default: api-load-test
       docker-image:
         description: The docker image to run the tests against
         default: ghcr.io/dfe-digital/early-careers-framework:main
 
 jobs:
   test_performance:
-    name: "Run performance scenario"
-    runs-on: ubuntu-20.04
+    name: Run performance tests
+    runs-on: ubuntu-latest
+    concurrency: test_performance
     environment:
       name: production
 
@@ -21,8 +22,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Run performance scenario
-        uses: ./.github/actions/test-performance
+      - uses: ./.github/actions/test-performance
         with:
           scenario: ${{ inputs.scenario }}
           docker-image: ${{ inputs.docker-image }}

@@ -85,6 +85,7 @@ runs:
         docker compose -f ./performance/docker-compose.yml exec -T db createdb --username postgres early_careers_framework_analytics_performance
         docker compose -f ./performance/docker-compose.yml exec -T db psql --username postgres early_careers_framework_performance < ./performance/db/sanitised-production.sql
         docker compose -f ./performance/docker-compose.yml exec web bundle exec rails db:migrate db:seed
+        sleep 5
       env:
         IMAGE: ${{ inputs.docker-image }}
         PERF_SCENARIO: ${{ inputs.scenario }}
@@ -95,8 +96,8 @@ runs:
       run: |
         mkdir ./reports
         docker compose -f ./performance/docker-compose.yml up k6
-        docker compose -f ./performance/docker-compose.yml cp k6:/home/k6/k6-output.json ./reports/${{ inputs.scenario }}-report.json
-        docker compose -f ./performance/docker-compose.yml cp k6:/home/k6/k6.log ./reports/${{ inputs.scenario }}.log
+        docker compose -f ./performance/docker-compose.yml cp k6:/home/k6/k6-output.json ../reports/${{ inputs.scenario }}-report.json
+        docker compose -f ./performance/docker-compose.yml cp k6:/home/k6/k6.log ../reports/${{ inputs.scenario }}.log
       env:
         IMAGE: ${{ inputs.docker-image }}
         PERF_SCENARIO: ${{ inputs.scenario }}
@@ -115,8 +116,10 @@ runs:
     - name: Generate the HTML report and summary
       shell: bash
       run: |
-        node ./performance/dfe-k6-log-to-json.js ./reports ${{ inputs.scenario }}
-        node ./performance/dfe-k6-reporter.js ./reports ${{ inputs.scenario }}
+        cd ./performance
+        node dfe-k6-log-to-json.js ../reports ${{ inputs.scenario }}
+        node dfe-k6-reporter.js ../reports ${{ inputs.scenario }}
+        cd ..
 
     - name: Upload the reports
       uses: actions/upload-artifact@v3
