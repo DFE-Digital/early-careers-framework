@@ -16,6 +16,10 @@ describe "Rate limiting" do
     def change_condition
       set_request_ip(other_ip)
     end
+
+    def current_user
+      nil
+    end
   end
 
   context "login attempts" do
@@ -27,6 +31,10 @@ describe "Rate limiting" do
       def change_condition
         set_request_ip(other_ip)
       end
+
+      def current_user
+        nil
+      end
     end
   end
 
@@ -37,6 +45,10 @@ describe "Rate limiting" do
 
     def change_condition
       set_request_ip(other_ip)
+    end
+
+    def current_user
+      nil
     end
   end
 
@@ -65,6 +77,10 @@ describe "Rate limiting" do
         def change_condition
           set_auth_token(bearer_token2)
         end
+
+        def current_user
+          cpd_lead_provider1
+        end
       end
     end
   end
@@ -87,6 +103,10 @@ describe "Rate limiting" do
 
       def change_condition
         set_auth_token(bearer_token2)
+      end
+
+      def current_user
+        nil
       end
     end
   end

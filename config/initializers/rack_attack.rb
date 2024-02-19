@@ -62,6 +62,14 @@ ActiveSupport::Notifications.subscribe("throttle.rack_attack") do |_name, _start
   path = request.fullpath
   user = request.env["warden"]&.user
 
+  unless user
+    bearer_token = request.authorization.to_s.split("Bearer ").last
+    if bearer_token.present?
+      current_api_token = ApiToken.find_by_unhashed_token(bearer_token)
+      user = current_api_token&.owner
+    end
+  end
+
   Rails.logger.warn("[rack-attack] Throttled request #{request_id} from #{ip} to '#{path}'")
 
   # Web requests are sent to BigQuery via a concern in the ApplicationController.
