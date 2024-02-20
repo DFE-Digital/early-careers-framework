@@ -20,6 +20,19 @@
     </div>
   <% end %>
 
+  <% if profile.completed_training? %>
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">
+        Status
+      </dt>
+      <dd class="govuk-summary-list__value">
+        <strong class="govuk-tag govuk-tag--green">
+          Training completed
+        </strong>
+      </dd>
+    </div>
+  <% end %>
+
   <% if induction_record.enrolled_in_fip? %>
     <div class="govuk-summary-list__row">
       <dt class="govuk-summary-list__key">
