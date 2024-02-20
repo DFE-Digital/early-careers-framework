@@ -27,6 +27,7 @@ RSpec.describe BulkMailers::SchoolReminderComms, type: :mailer do
 
     let(:ect_appropriate_body) { nil }
     let(:school_appropriate_body) { nil }
+    let!(:eligibility) { create(:seed_ecf_participant_eligibility, :no_induction, participant_profile:) }
     let!(:induction_record) { create(:seed_induction_record, :valid, participant_profile:, induction_programme:, appropriate_body: ect_appropriate_body) }
 
     before do
@@ -89,6 +90,20 @@ RSpec.describe BulkMailers::SchoolReminderComms, type: :mailer do
           expect(service.contact_sits_that_need_to_chase_their_ab_to_register_ects).to eq 0
         end
       end
+
+      context "when there are no eligible participants without a registered induction" do
+        let!(:eligibility) { create(:seed_ecf_participant_eligibility, :no_induction, :no_qts, participant_profile:) }
+
+        it "does not mail the induction coordinator" do
+          expect {
+            service.contact_sits_that_need_to_chase_their_ab_to_register_ects
+          }.not_to have_enqueued_mail(SchoolMailer, :remind_sit_that_ab_has_not_registered_ect)
+        end
+
+        it "returns the count of emails sent" do
+          expect(service.contact_sits_that_need_to_chase_their_ab_to_register_ects).to eq 0
+        end
+      end
     end
   end
 
@@ -98,6 +113,7 @@ RSpec.describe BulkMailers::SchoolReminderComms, type: :mailer do
 
     let(:ect_appropriate_body) { nil }
     let(:school_appropriate_body) { nil }
+    let!(:eligibility) { create(:seed_ecf_participant_eligibility, :no_induction, participant_profile:) }
     let!(:induction_record) { create(:seed_induction_record, :valid, participant_profile:, induction_programme:, appropriate_body: ect_appropriate_body) }
 
     before do
@@ -155,6 +171,20 @@ RSpec.describe BulkMailers::SchoolReminderComms, type: :mailer do
 
         it "returns the count of emails that would have been sent" do
           expect(service.contact_sits_that_need_to_appoint_an_ab_for_unregistered_ects).to eq 1
+        end
+      end
+
+      context "when there are no eligible participants without a registered induction" do
+        let!(:eligibility) { create(:seed_ecf_participant_eligibility, :no_induction, :no_qts, participant_profile:) }
+
+        it "does not mail the induction coordinator" do
+          expect {
+            service.contact_sits_that_need_to_chase_their_ab_to_register_ects
+          }.not_to have_enqueued_mail(SchoolMailer, :remind_sit_that_ab_has_not_registered_ect)
+        end
+
+        it "returns the count of emails sent" do
+          expect(service.contact_sits_that_need_to_chase_their_ab_to_register_ects).to eq 0
         end
       end
     end
