@@ -144,7 +144,7 @@ module Finance
       end
 
       def previous_banding_for_declaration_type(declaration_type)
-        pot_size = previous_fill_level_for_declaration_type(declaration_type)
+        pot_size = [previous_fill_level_for_declaration_type(declaration_type), current_refundable_orphans_count_declaration_type(declaration_type)].max
 
         bands.zip(:a..:z).map do |band, letter|
           # minimum band should always be 1 or more, otherwise band a will go over
@@ -176,22 +176,26 @@ module Finance
         bands.zip(:a..:z).map { |e| e[1] }
       end
 
-      def previous_fill_level_for_declaration_type(declaration_type)
-        billable = Finance::StatementLineItem
+      def previous_billable_count_for_declaration_type(declaration_type)
+        Finance::StatementLineItem
           .where(statement: statement.previous_statements)
           .billable
           .joins(:participant_declaration)
           .where(participant_declarations: { declaration_type: })
           .count
+      end
 
-        refundable = Finance::StatementLineItem
+      def previous_refundable_count_for_declaration_type(declaration_type)
+        Finance::StatementLineItem
           .where(statement: statement.previous_statements)
           .refundable
           .joins(:participant_declaration)
           .where(participant_declarations: { declaration_type: })
           .count
+      end
 
-        billable - refundable
+      def previous_fill_level_for_declaration_type(declaration_type)
+        previous_billable_count_for_declaration_type(declaration_type) - previous_refundable_count_for_declaration_type(declaration_type)
       end
 
       def previous_fill_level_for_uplift
@@ -220,6 +224,10 @@ module Finance
           .joins(:participant_declaration)
           .where(participant_declarations: { declaration_type: })
           .count
+      end
+
+      def current_refundable_orphans_count_declaration_type(declaration_type)
+        current_refundable_count_declaration_type(declaration_type) - previous_billable_count_for_declaration_type(declaration_type)
       end
 
       def current_refundable_count_declaration_type(declaration_type)

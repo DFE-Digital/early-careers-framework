@@ -868,6 +868,73 @@ RSpec.describe Finance::ECF::OutputCalculator do
       end
     end
 
+    context "when there is a clawback for a declaration made in a past cohort" do
+      let(:participant_profile) { create(:ect, :eligible_for_funding, lead_provider: cpd_lead_provider.lead_provider) }
+      let(:first_statement) { create(:ecf_statement, cpd_lead_provider:, cohort: Cohort.previous, payment_date: 13.months.ago) }
+
+      let!(:participant_declaration) do
+        travel_to first_statement.deadline_date do
+          create(:ect_participant_declaration, :paid, participant_profile:, cpd_lead_provider:)
+        end
+      end
+
+      before do
+        travel_to second_statement.deadline_date do
+          Finance::ClawbackDeclaration.new(participant_declaration.reload).call
+        end
+
+        participant_declaration.clawed_back!
+        participant_declaration
+          .statement_line_items
+          .awaiting_clawback
+          .first
+          .clawed_back!
+      end
+
+      it "can calculate refunds correctly" do
+        third_statement_expectation = [
+          {
+            band: :a,
+            min: 1,
+            max: 2,
+            previous_started_count: 1,
+            started_count: -1,
+            started_additions: 0,
+            started_subtractions: 1,
+          },
+          {
+            band: :b,
+            min: 3,
+            max: 4,
+            previous_started_count: 0,
+            started_count: 0,
+            started_additions: 0,
+            started_subtractions: 0,
+          },
+          {
+            band: :c,
+            min: 5,
+            max: 6,
+            previous_started_count: 0,
+            started_count: 0,
+            started_additions: 0,
+            started_subtractions: 0,
+          },
+          {
+            band: :d,
+            min: 7,
+            max: 8,
+            previous_started_count: 0,
+            started_count: 0,
+            started_additions: 0,
+            started_subtractions: 0,
+          },
+        ]
+
+        expect(second_statement_calc.banding_breakdown.map { |e| e.slice(*relevant_started_keys) }).to eql(third_statement_expectation)
+      end
+    end
+
     context "uplifts" do
       context "when there an no uplifts" do
         let(:expected) do
