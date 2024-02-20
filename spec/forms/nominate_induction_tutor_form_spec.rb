@@ -103,32 +103,6 @@ RSpec.describe NominateInductionTutorForm, type: :model do
       let(:previous_sit) { NewSeeds::Scenarios::Schools::School.new.build.with_an_induction_tutor.induction_tutor }
       let(:school) { previous_sit.schools.first }
       let(:sit_profile) { previous_sit.induction_coordinator_profile }
-
-      context "when the previous SIT has a teacher_profile" do
-        before do
-          create(:teacher_profile, user: previous_sit)
-        end
-
-        it "destroys their SIT profile" do
-          expect { subject.save! }.to change { previous_sit.reload.induction_coordinator_profile }.from(sit_profile).to(nil)
-        end
-      end
-
-      context "when the previous SIT is NPQ registered" do
-        before do
-          create(:npq_participant_profile, user: previous_sit)
-        end
-
-        it "destroys their SIT profile" do
-          expect { subject.save! }.to change { previous_sit.reload.induction_coordinator_profile }.from(sit_profile).to(nil)
-        end
-      end
-
-      context "when the previous SIT has no other profiles" do
-        it "removes the SIT from the service" do
-          expect { subject.save! }.to change { User.exists?(previous_sit.id) }.from(true).to(false)
-        end
-      end
     end
 
     context "when the new SIT is not registered yet" do

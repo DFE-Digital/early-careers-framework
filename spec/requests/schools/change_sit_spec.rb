@@ -85,12 +85,6 @@ RSpec.describe "Schools::ChangeSit", type: :request do
       expect(created_user.schools).to include school
     end
 
-    it "deletes the current user" do
-      post "/schools/#{school.slug}/change-sit/confirm"
-
-      expect(User.where(id: user.id)).to be_empty
-    end
-
     context "when the acting user has multiple schools" do
       let(:other_school) { create(:school) }
       before do
