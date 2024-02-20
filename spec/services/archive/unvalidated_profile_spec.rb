@@ -141,4 +141,16 @@ RSpec.describe Archive::UnvalidatedProfile do
       }.to change { ParticipantProfileState.count }.by(-3)
     end
   end
+
+  context "when the profile has deleted duplicates" do
+    before do
+      Finance::ECF::DeletedDuplicate.create!(data: { some: "data" }.to_json, primary_participant_profile: participant_profile)
+    end
+
+    it "removes the deleted duplicates" do
+      expect {
+        service_call
+      }.to change { Finance::ECF::DeletedDuplicate.count }.by(-1)
+    end
+  end
 end

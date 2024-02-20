@@ -4,17 +4,21 @@ require "rails_helper"
 
 RSpec.describe Archive::ParticipantProfileSerializer do
   let(:profile) { create(:seed_ect_participant_profile, :valid) }
+  let(:duplicate) { create(:seed_ect_participant_profile, :valid) }
+  let(:duplicate_data) { Finance::ECF::DuplicateSerializer.new(duplicate).serializable_hash }
   let!(:induction_record) { create(:seed_induction_record, :with_induction_programme, participant_profile: profile) }
 
   subject { described_class.new(profile) }
 
   before do
     profile.participant_identity.update!(user: profile.teacher_profile.user)
+    Finance::ECF::DeletedDuplicate.create!(data: duplicate_data, primary_participant_profile: profile)
   end
 
   describe "#serializable_hash" do
     it "generates the correct hash" do
       data = subject.serializable_hash[:data]
+
       expect(data[:id]).to eq profile.id
       expect(data[:type]).to eq :participant_profile
 
@@ -45,6 +49,7 @@ RSpec.describe Archive::ParticipantProfileSerializer do
       expect(attrs[:induction_records]).to match_array Archive::InductionRecordSerializer.new(profile.induction_records).serializable_hash[:data]
       expect(attrs[:participant_declarations]).to match_array Archive::ParticipantDeclarationSerializer.new(profile.participant_declarations).serializable_hash[:data]
       expect(attrs[:participant_profile_states]).to match_array Archive::ParticipantProfileStateSerializer.new(profile.participant_profile_states).serializable_hash[:data]
+      expect(attrs[:deleted_duplicates]).to match_array [JSON.parse(duplicate_data.to_json)["data"]]
     end
   end
 end
