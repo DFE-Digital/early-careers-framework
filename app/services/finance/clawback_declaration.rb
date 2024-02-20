@@ -17,6 +17,7 @@ module Finance
       ApplicationRecord.transaction do
         DeclarationState.awaiting_clawback!(participant_declaration)
         DeclarationStatementAttacher.new(participant_declaration).call
+        ParticipantDeclarations::HandleMentorCompletion.call(participant_declaration:)
       end
     end
 

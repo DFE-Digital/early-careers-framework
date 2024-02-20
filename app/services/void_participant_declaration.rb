@@ -35,6 +35,7 @@ class VoidParticipantDeclaration
     ApplicationRecord.transaction do
       participant_declaration.make_voided!
       line_item.voided! if line_item
+      ParticipantDeclarations::HandleMentorCompletion.call(participant_declaration:)
     end
   end
 

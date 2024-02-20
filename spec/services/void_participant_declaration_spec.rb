@@ -39,6 +39,19 @@ RSpec.describe VoidParticipantDeclaration do
       }.to raise_error Api::Errors::InvalidTransitionError
     end
 
+    describe "mentor completion" do
+      let(:mock_service) { instance_double(ParticipantDeclarations::HandleMentorCompletion) }
+
+      before do
+        allow(ParticipantDeclarations::HandleMentorCompletion).to receive(:new).with(participant_declaration:).and_return(mock_service)
+      end
+
+      it "calls the ParticipantDeclarations::HandleMentorCompletion service" do
+        expect(mock_service).to receive(:call)
+        subject.call
+      end
+    end
+
     context "when declaration is payable" do
       let(:participant_declaration) do
         create(

@@ -54,6 +54,11 @@ RSpec.describe Finance::ClawbackDeclaration do
 
         expect(subject.errors[:participant_declaration]).to be_present
       end
+
+      it "does not call the ParticipantDeclarations::HandleMentorCompletion service" do
+        expect_any_instance_of(ParticipantDeclarations::HandleMentorCompletion).not_to receive(:call)
+        subject.call
+      end
     end
 
     shared_examples "declaration cannot be clawed back in certain state" do
@@ -65,6 +70,11 @@ RSpec.describe Finance::ClawbackDeclaration do
         subject.call
 
         expect(subject.errors[:participant_declaration]).to be_present
+      end
+
+      it "does not call the ParticipantDeclarations::HandleMentorCompletion service" do
+        expect_any_instance_of(ParticipantDeclarations::HandleMentorCompletion).not_to receive(:call)
+        subject.call
       end
     end
 
@@ -94,6 +104,11 @@ RSpec.describe Finance::ClawbackDeclaration do
 
     it_behaves_like "declaration cannot be clawed back in certain state" do
       let!(:participant_declaration) { create(:ect_participant_declaration, :clawed_back, cpd_lead_provider:) }
+    end
+
+    it "calls the ParticipantDeclarations::HandleMentorCompletion service" do
+      expect_any_instance_of(ParticipantDeclarations::HandleMentorCompletion).to receive(:call)
+      subject.call
     end
   end
 end

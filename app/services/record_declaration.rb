@@ -48,6 +48,8 @@ class RecordDeclaration
       declaration_attempt.update!(participant_declaration:)
 
       create_participant_outcome!
+
+      check_mentor_completion
     end
 
     participant_declaration
@@ -257,5 +259,9 @@ private
     else
       raise Api::Errors::InvalidParticipantOutcomeError, I18n.t(:cannot_create_completed_declaration)
     end
+  end
+
+  def check_mentor_completion
+    ParticipantDeclarations::HandleMentorCompletion.call(participant_declaration:)
   end
 end

@@ -2,6 +2,13 @@
 
 require "rails_helper"
 
+RSpec.shared_examples "checks for mentor completion event" do
+  it "calls the ParticipantDeclarations::HandleMentorCompletion service" do
+    expect_any_instance_of(ParticipantDeclarations::HandleMentorCompletion).to receive(:call)
+    subject.call
+  end
+end
+
 RSpec.shared_examples "validates the declaration for a withdrawn participant" do
   context "when a participant has been withdrawn" do
     before do
@@ -355,6 +362,7 @@ RSpec.describe RecordDeclaration do
       it_behaves_like "validates the participant milestone"
       it_behaves_like "creates a participant declaration"
       it_behaves_like "creates participant declaration attempt"
+      it_behaves_like "checks for mentor completion event"
     end
 
     context "when the participant is a Mentor" do
@@ -367,6 +375,7 @@ RSpec.describe RecordDeclaration do
       it_behaves_like "validates the participant milestone"
       it_behaves_like "creates a participant declaration"
       it_behaves_like "creates participant declaration attempt"
+      it_behaves_like "checks for mentor completion event"
     end
   end
 
@@ -400,6 +409,7 @@ RSpec.describe RecordDeclaration do
     it_behaves_like "validates the participant milestone"
     it_behaves_like "creates a participant declaration"
     it_behaves_like "creates participant declaration attempt"
+    it_behaves_like "checks for mentor completion event"
 
     context "for next cohort" do
       let!(:schedule) { create(:npq_specialist_schedule, cohort:) }
