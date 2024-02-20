@@ -45,7 +45,7 @@ jobs:
   docker:
     name: Build and push Docker image
     runs-on: ubuntu-latest
-    if: github.actor != 'dependabot[bot]'
+    if: github.actor != 'dependabot[bot]' && github.event_name != 'merge_group'
     outputs:
       docker-image: ${{ steps.build-docker-image.outputs.image }}
     steps:
