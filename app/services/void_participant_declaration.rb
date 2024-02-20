@@ -24,8 +24,6 @@ class VoidParticipantDeclaration
     if clawback.errors.any?
       raise Api::Errors::InvalidTransitionError, clawback.errors.full_messages.join(", ")
     end
-
-    check_mentor_completion
   end
 
   def make_voided
@@ -37,7 +35,7 @@ class VoidParticipantDeclaration
     ApplicationRecord.transaction do
       participant_declaration.make_voided!
       line_item.voided! if line_item
-      check_mentor_completion
+      ParticipantDeclarations::HandleMentorCompletion.call(participant_declaration:)
     end
   end
 
@@ -47,9 +45,5 @@ private
 
   def line_item
     participant_declaration.statement_line_items.find_by(state: %w[eligible payable submitted])
-  end
-
-  def check_mentor_completion
-    ParticipantDeclarations::HandleMentorCompletion.call(participant_declaration:)
   end
 end
