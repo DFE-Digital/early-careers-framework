@@ -38,7 +38,7 @@ send_outcomes_to_qualified_teachers_api:
   class: "ParticipantOutcomes::BatchSendLatestOutcomesJob"
   queue: participant_outcomes
 build_completion_candidates_list_job:
-  cron: "15 23 * * *"
+  cron: "15 23 * * 1,4"
   class: "BuildCompletionCandidatesListJob"
   queue: default
 set_participant_completion_date_job:
