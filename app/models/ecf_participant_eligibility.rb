@@ -31,6 +31,7 @@ class ECFParticipantEligibility < ApplicationRecord
 
   # Scopes
   scope :updated_before, ->(timestamp) { where(updated_at: ..timestamp) }
+  scope :waiting_for_induction, -> { manual_check_status.no_induction_reason }
 
   # Instance Methods
   def duplicate_profile?
