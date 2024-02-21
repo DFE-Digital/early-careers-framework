@@ -6,9 +6,8 @@ module Ects
       InductionRecord
         .active
         .training_status_active
-        .joins(participant_profile: :ecf_participant_eligibility)
-        .where(participant_profile: { induction_start_date: nil, type: "ParticipantProfile::ECT" })
-        .where(ecf_participant_eligibility: { qts: true, active_flags: false, different_trn: false, previous_induction: false, no_induction: true })
+        .joins(:participant_profile)
+        .merge(ParticipantProfile::ECT.awaiting_induction_registration)
         .joins(induction_programme: :school_cohort)
         .where(induction_programme: { training_programme: training_programme_types })
         .where(appropriate_body_id: nil)

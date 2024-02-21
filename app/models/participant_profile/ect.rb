@@ -6,9 +6,9 @@ class ParticipantProfile::ECT < ParticipantProfile::ECF
   belongs_to :mentor_profile, class_name: "Mentor", optional: true
   has_one :mentor, through: :mentor_profile, source: :user
 
-  scope :awaiting_induction_registration, -> do
+  scope :awaiting_induction_registration, lambda {
     where(induction_start_date: nil).joins(:ecf_participant_eligibility).merge(ECFParticipantEligibility.waiting_for_induction)
-  end
+  }
 
   def ect?
     true

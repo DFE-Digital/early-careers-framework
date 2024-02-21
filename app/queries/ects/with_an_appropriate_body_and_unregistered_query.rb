@@ -6,7 +6,7 @@ module Ects
       InductionRecord
         .active
         .training_status_active
-        .joins(:particpant_profile)
+        .joins(:participant_profile)
         .merge(ParticipantProfile::ECT.awaiting_induction_registration)
         .joins(induction_programme: :school_cohort)
         .where(induction_programme: { training_programme: training_programme_types })
