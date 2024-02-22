@@ -8,11 +8,14 @@ module Oneoffs::NPQ
 
     include HasRecordableInformation
 
-    def initialize(cohort:, from_statement_name:, to_statement_name:, to_statement_updates: {})
+    def initialize(cohort:, from_statement_name:, to_statement_name:, from_statement_output_fee: false, to_statement_updates: {}, restrict_to_lead_providers: nil, restrict_to_declaration_types: nil)
       @cohort = cohort
       @from_statement_name = from_statement_name
       @to_statement_name = to_statement_name
+      @from_statement_output_fee = from_statement_output_fee
       @to_statement_updates = to_statement_updates
+      @restrict_to_lead_providers = restrict_to_lead_providers
+      @restrict_to_declaration_types = restrict_to_declaration_types
     end
 
     def migrate(dry_run: true)
@@ -32,7 +35,7 @@ module Oneoffs::NPQ
 
   private
 
-    attr_reader :cohort, :from_statement_name, :to_statement_name, :to_statement_updates
+    attr_reader :cohort, :from_statement_name, :to_statement_name, :to_statement_updates, :restrict_to_lead_providers, :restrict_to_declaration_types, :from_statement_output_fee
 
     def update_to_statement_attributes!
       return if to_statement_updates.blank?
@@ -45,14 +48,23 @@ module Oneoffs::NPQ
 
     def migrate_declarations_between_statements!
       each_statements_by_provider do |provider, from_statement, to_statement|
-        record_declarations_info(provider, from_statement.participant_declarations)
-        migrate_line_items!(from_statement, to_statement)
-        from_statement.update!(output_fee: false)
+        migrate_line_items!(provider, from_statement, to_statement)
+        from_statement.update!(output_fee: from_statement_output_fee) if from_statement.output_fee != from_statement_output_fee
       end
     end
 
-    def migrate_line_items!(from_statement, to_statement)
-      from_statement.statement_line_items.update!(statement_id: to_statement.id)
+    def migrate_line_items!(provider, from_statement, to_statement)
+      statement_line_items = from_statement.statement_line_items
+
+      if restrict_to_declaration_types
+        statement_line_items = statement_line_items
+          .includes(:participant_declaration)
+          .where(participant_declaration: { declaration_type: restrict_to_declaration_types })
+      end
+
+      record_line_items_info(provider, statement_line_items)
+
+      statement_line_items.update!(statement_id: to_statement.id)
     end
 
     def each_statements_by_provider
@@ -67,8 +79,8 @@ module Oneoffs::NPQ
       record_info("Migrating declarations from #{from_statement_name} to #{to_statement_name} for #{provider_count} providers")
     end
 
-    def record_declarations_info(provider, declarations)
-      record_info("Migrating #{declarations.size} declarations for #{provider.name}")
+    def record_line_items_info(provider, statement_line_items)
+      record_info("Migrating #{statement_line_items.size} declarations for #{provider.name}")
     end
 
     def ensure_statements_align!
@@ -92,9 +104,11 @@ module Oneoffs::NPQ
     end
 
     def statements_by_provider(statement_name)
+      npq_lead_provider = restrict_to_lead_providers || NPQLeadProvider.all
+
       Finance::Statement::NPQ
-        .includes(:cohort, :participant_declarations)
-        .where(cohort:, name: statement_name)
+        .includes(:cohort, :participant_declarations, cpd_lead_provider: :npq_lead_provider)
+        .where(cohort:, name: statement_name, cpd_lead_provider: { npq_lead_provider: })
         .output
         .group_by(&:npq_lead_provider)
         .transform_values(&:first)
