@@ -13,12 +13,16 @@ module Api
       def create
         @npq_application = build_npq_application
 
-        if @npq_application.save_and_dedupe_participant
-          render status: :created,
-                 content_type: "application/vnd.api+json",
-                 json: NPQValidationDataSerializer.new(@npq_application).serializable_hash
-        else
-          render json: { errors: Api::ErrorFactory.new(model: @npq_application).call }, status: :bad_request
+        begin
+          if @npq_application.save_and_dedupe_participant
+            render status: :created,
+                   content_type: "application/vnd.api+json",
+                   json: NPQValidationDataSerializer.new(@npq_application).serializable_hash
+          else
+            render json: { errors: Api::ErrorFactory.new(model: @npq_application).call }, status: :bad_request
+          end
+        rescue StandardError
+          render json: { error: "Identity ids present on both User records" }, status: :internal_server_error
         end
       end
 
