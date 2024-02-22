@@ -27,20 +27,12 @@ module Participants
           SELECT pp.id
           FROM participant_profiles pp
           JOIN teacher_profiles tp ON tp.id = pp.teacher_profile_id
-          JOIN schedules s ON s.id = pp.schedule_id
-          JOIN cohorts c ON c.id = s.cohort_id
           WHERE pp.type = 'ParticipantProfile::ECT'
-          AND c.start_year IN (2020,2021,2022)
           AND pp.induction_start_date IS NOT NULL
           AND pp.induction_completion_date IS NULL
-          AND pp.created_at < '#{registration_start_date}'
           AND tp.trn IS NOT NULL;
         SQL
       )
-    end
-
-    def registration_start_date
-      Cohort.find_by(start_year: 2023).registration_start_date.to_date.to_s
     end
   end
 end

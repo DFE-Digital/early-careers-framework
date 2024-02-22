@@ -9,11 +9,17 @@ class SetParticipantCompletionDateJob < ApplicationJob
   MAX_CANDIDATES = 200
 
   def perform
-    CompletionCandidate.limit(MAX_CANDIDATES).each do |candidate|
+    candidates.each do |candidate|
       Participants::CheckAndSetCompletionDate.call(participant_profile: candidate.participant_profile)
       candidate.destroy!
     end
   rescue StandardError => e
     Rails.logger.error("SetParticipantCompletionDateJob: #{e.message}")
+  end
+
+private
+
+  def candidates
+    @candidates ||= CompletionCandidate.includes(participant_profile: :teacher_profile).limit(MAX_CANDIDATES)
   end
 end
