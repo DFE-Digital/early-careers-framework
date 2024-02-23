@@ -109,7 +109,7 @@ RSpec.describe Ects::WithAnAppropriateBodyAndUnregisteredQuery do
 
     context "when there is no QTS" do
       let!(:fip_eligibility) do
-        create(:seed_ecf_participant_eligibility, :no_induction, :no_qts, participant_profile: fip_participant_profile)
+        create(:seed_ecf_participant_eligibility, :no_qts, no_induction: true, participant_profile: fip_participant_profile)
       end
 
       it "does not return those participants" do
@@ -127,7 +127,7 @@ RSpec.describe Ects::WithAnAppropriateBodyAndUnregisteredQuery do
 
     context "when there are active flags" do
       let!(:fip_eligibility) do
-        create(:seed_ecf_participant_eligibility, :no_induction, :active_flags, participant_profile: fip_participant_profile)
+        create(:seed_ecf_participant_eligibility, :active_flags, no_induction: true, participant_profile: fip_participant_profile)
       end
 
       it "does not return those participants" do
@@ -137,7 +137,7 @@ RSpec.describe Ects::WithAnAppropriateBodyAndUnregisteredQuery do
 
     context "when a previous induction is flagged" do
       let!(:fip_eligibility) do
-        create(:seed_ecf_participant_eligibility, :no_induction, :previous_induction, participant_profile: fip_participant_profile)
+        create(:seed_ecf_participant_eligibility, :previous_induction, no_induction: true, participant_profile: fip_participant_profile)
       end
 
       it "does not return those participants" do
