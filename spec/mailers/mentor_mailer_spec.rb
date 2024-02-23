@@ -13,11 +13,10 @@ RSpec.describe MentorMailer, type: :mailer do
 
     let(:training_materials_email) do
       MentorMailer.with(
-        mentor_email: mentor_profile.user.email,
-        mentor_name: mentor_profile.user.full_name,
+        mentor_profile:,
         school_name: induction_record.school.name,
         ect_name: induction_record.participant_profile.user.full_name,
-        lead_provider_name: induction_record.lead_provider.name,
+        cip_materials_name: "Core Induction Programme",
         sit_name: induction_record.school.induction_tutor.full_name,
       ).training_materials.deliver_now
     end

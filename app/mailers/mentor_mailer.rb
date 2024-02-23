@@ -4,11 +4,11 @@ class MentorMailer < ApplicationMailer
   MATERIALS_TEMPLATE = "d5409fd3-bad6-4e98-97d7-69363d2921c8"
 
   def training_materials
-    mentor_email = params[:mentor_email]
-    mentor_name = params[:mentor_name]
-    school_name = params[:school_name]
+    mentor_profile = params[:mentor_profile]
+    mentor_email = mentor_profile.user.email
+    mentor_name = mentor_profile.user.full_name
     ect_name = params[:ect_name]
-    lead_provider_name = params[:lead_provider_name]
+    cip_materials_name = params[:cip_materials_name]
     sit_name = params[:sit_name]
 
     template_mail(
@@ -18,13 +18,11 @@ class MentorMailer < ApplicationMailer
       rails_mail_template: action_name,
       personalisation: {
         subject: "Access training materials for your new early career teacher",
-        mentor_email:,
         mentor_name:,
-        school_name:,
         ect_name:,
-        lead_provider_name:,
+        cip_materials_name:,
         sit_name:,
       },
-    )
+    ).tag(:send_cip_materials_to_mentor).associate_with(mentor_profile, as: :mentor_profile)
   end
 end
