@@ -11,6 +11,8 @@ FactoryBot.define do
     previous_participation { false }
     previous_induction { false }
     no_induction { false }
+    different_trn { false }
+    exempt_from_induction { false }
 
     status { :eligible }
     reason { :none }

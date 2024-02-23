@@ -23,6 +23,14 @@ RSpec.describe Ects::WithoutAnAppropriateBodyAndUnregisteredQuery do
       create(:seed_induction_record, :valid, participant_profile: cip_participant_profile, induction_programme: cip_induction_programme)
     end
 
+    let!(:fip_eligibility) do
+      create(:seed_ecf_participant_eligibility, :no_induction, participant_profile: fip_participant_profile)
+    end
+
+    let!(:cip_eligibility) do
+      create(:seed_ecf_participant_eligibility, :no_induction, participant_profile: cip_participant_profile)
+    end
+
     subject(:query_result) { described_class.call(include_fip:, include_cip:) }
 
     context "when there are ECTs without induction start dates" do
@@ -76,6 +84,44 @@ RSpec.describe Ects::WithoutAnAppropriateBodyAndUnregisteredQuery do
 
       it "does not return those participants" do
         expect(query_result).to match_array [fip_induction_record]
+      end
+    end
+
+    context "when there is no QTS" do
+      let!(:fip_eligibility) do
+        create(:seed_ecf_participant_eligibility, :no_qts, no_induction: true, participant_profile: fip_participant_profile)
+      end
+
+      it "does not return those participants" do
+        expect(query_result).to match_array [cip_induction_record]
+      end
+    end
+
+    context "when there is no eligibility record" do
+      let!(:fip_eligibility)  { nil }
+
+      it "does not return those participants" do
+        expect(query_result).to match_array [cip_induction_record]
+      end
+    end
+
+    context "when there are active flags" do
+      let!(:fip_eligibility) do
+        create(:seed_ecf_participant_eligibility, :active_flags, no_induction: true, participant_profile: fip_participant_profile)
+      end
+
+      it "does not return those participants" do
+        expect(query_result).to match_array [cip_induction_record]
+      end
+    end
+
+    context "when a previous induction is flagged" do
+      let!(:fip_eligibility) do
+        create(:seed_ecf_participant_eligibility, :previous_induction, no_induction: true, participant_profile: fip_participant_profile)
+      end
+
+      it "does not return those participants" do
+        expect(query_result).to match_array [cip_induction_record]
       end
     end
   end

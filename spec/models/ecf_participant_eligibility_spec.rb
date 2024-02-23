@@ -75,4 +75,32 @@ RSpec.describe ECFParticipantEligibility, type: :model do
       end
     end
   end
+
+  describe ".waiting_for_induction scope" do
+    let(:status) { :manual_check }
+    let(:reason) { :no_induction }
+    let!(:eligibility) { create(:seed_ecf_participant_eligibility, :with_participant_profile, status:, reason:) }
+
+    it "returns records that would be valid if they had an induction registered" do
+      expect(described_class.waiting_for_induction).to match_array [eligibility]
+    end
+
+    context "when the status is not manual_check" do
+      it "does not return awaiting induction records" do
+        described_class.statuses.except(:manual_check).each_value do |status|
+          eligibility.update!(status:)
+          expect(described_class.waiting_for_induction).not_to include eligibility
+        end
+      end
+    end
+
+    context "when the reason is not no_induction" do
+      it "does not return awaiting induction records" do
+        described_class.reasons.except(:no_induction).each_value do |reason|
+          eligibility.update!(reason:)
+          expect(described_class.waiting_for_induction).not_to include eligibility
+        end
+      end
+    end
+  end
 end

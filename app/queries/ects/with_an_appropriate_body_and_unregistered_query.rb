@@ -7,7 +7,7 @@ module Ects
         .active
         .training_status_active
         .joins(:participant_profile)
-        .where(participant_profile: { induction_start_date: nil, type: "ParticipantProfile::ECT" })
+        .merge(ParticipantProfile::ECT.awaiting_induction_registration)
         .joins(induction_programme: :school_cohort)
         .where(induction_programme: { training_programme: training_programme_types })
         .where("induction_records.appropriate_body_id IS NOT NULL OR school_cohorts.appropriate_body_id IS NOT NULL")
