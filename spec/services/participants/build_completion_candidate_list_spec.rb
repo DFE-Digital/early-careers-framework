@@ -14,13 +14,8 @@ RSpec.describe Participants::BuildCompletionCandidateList do
   subject(:service_call) { described_class.call }
 
   describe "#call" do
-    it "adds eligible ECTs from 2021 and 2022 to the list" do
-      expect { service_call }.to change { CompletionCandidate.count }.by(2)
-    end
-
-    it "does not add ECTs from 2023" do
-      service_call
-      expect(CompletionCandidate.all).not_to include ect_23
+    it "adds eligible ECTs from to the list" do
+      expect { service_call }.to change { CompletionCandidate.count }.by(3)
     end
 
     context "when an ECT does not have an induction start date" do
@@ -30,7 +25,7 @@ RSpec.describe Participants::BuildCompletionCandidateList do
 
       it "does not add them to the list" do
         service_call
-        expect(CompletionCandidate.all).not_to include ect_22
+        expect(CompletionCandidate.exists?(participant_profile_id: ect_22.id)).to be_falsey
       end
     end
 
@@ -41,7 +36,7 @@ RSpec.describe Participants::BuildCompletionCandidateList do
 
       it "does not add them to the list" do
         service_call
-        expect(CompletionCandidate.all).not_to include ect_22
+        expect(CompletionCandidate.exists?(participant_profile_id: ect_22.id)).to be_falsey
       end
     end
   end
