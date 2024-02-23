@@ -36,14 +36,17 @@ module Archive
       ActiveRecord::Base.transaction do
         participant_profile.ecf_participant_validation_data&.destroy!
         participant_profile.ecf_participant_eligibility&.destroy!
-        participant_profile.participant_profile_states.destroy_all
-        participant_profile.participant_profile_schedules.destroy_all
-        participant_profile.participant_declarations.destroy_all
-        participant_profile.induction_records.destroy_all
-        participant_profile.validation_decisions.destroy_all
-        participant_profile.deleted_duplicates.destroy_all
+        # for some reason .destroy_all doesn't always seems to destroy the objects and
+        # doesn't fail loudly. Don't want to use .delete_all either as we want callbacks
+        # to trigger for analytics at least
+        participant_profile.participant_profile_states.each(&:destroy!)
+        participant_profile.participant_profile_schedules.each(&:destroy!)
+        participant_profile.participant_declarations.each(&:destroy!)
+        participant_profile.induction_records.each(&:destroy!)
+        participant_profile.validation_decisions.each(&:destroy!)
+        participant_profile.deleted_duplicates.each(&:destroy!)
 
-        participant_profile.school_mentors.destroy_all if participant_profile.mentor?
+        participant_profile.school_mentors.each(&:destroy!) if participant_profile.mentor?
         participant_profile.destroy!
       end
     end
