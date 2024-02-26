@@ -28,5 +28,43 @@ RSpec.describe Induction::ChangeMentor do
         service.call(induction_record:, mentor_profile: mentor_profile_2)
       }.to change(mentor_profile_2.user, :updated_at)
     end
+
+    it "does not send material email" do
+      allow(MentorMailer).to receive(:with).and_call_original
+
+      service.call(induction_record:, mentor_profile: mentor_profile_2)
+
+      expect(MentorMailer).not_to have_received(:with)
+    end
+
+    context "with CIP induction programme" do
+      let!(:sit) { create(:induction_coordinator_profile, schools: [induction_record.school]).user }
+      context "with SIT" do
+        let(:induction_programme) { create(:induction_programme, :cip, school_cohort:) }
+
+        it "sends the email" do
+          allow(MentorMailer).to receive(:with).and_call_original
+
+          service.call(induction_record:, mentor_profile: mentor_profile_2)
+
+          expect(MentorMailer).to have_received(:with).with({
+            ect_name: ect_profile.user.full_name,
+            sit_name: sit.full_name,
+            mentor_profile: mentor_profile_2,
+            cip_materials_name: induction_record.induction_programme.core_induction_programme.name,
+          })
+        end
+      end
+
+      context "without SIT" do
+        it "does not send material email" do
+          allow(MentorMailer).to receive(:with).and_call_original
+
+          service.call(induction_record:, mentor_profile: mentor_profile_2)
+
+          expect(MentorMailer).not_to have_received(:with)
+        end
+      end
+    end
   end
 end
