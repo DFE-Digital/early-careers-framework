@@ -56,6 +56,7 @@ module Api
                       deferral: nil,
                       created_at: ect_profile.created_at.rfc3339,
                       induction_end_date: "2022-01-12",
+                      mentor_funding_end_date: nil,
                     },
                   ],
                 participant_id_changes: [],
@@ -75,6 +76,8 @@ module Api
 
             context "when there are multiple profiles involved" do
               let!(:mentor_profile) { create(:mentor, school_cohort:, user: participant) }
+
+              before { mentor_profile.update!(mentor_completion_date: Date.new(2021, 4, 19)) }
 
               it "includes the second profile data" do
                 expect(result[:data][0][:attributes][:ecf_enrolments].find { |efce| efce[:participant_type] == :mentor }).to eq({
@@ -96,6 +99,7 @@ module Api
                   deferral: nil,
                   created_at: mentor_profile.created_at.rfc3339,
                   induction_end_date: nil,
+                  mentor_funding_end_date: Date.new(2021, 4, 19).to_s,
                 })
               end
             end

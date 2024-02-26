@@ -7,6 +7,16 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
+## [PLACEHOLDER] 26 February 2024
+
+Lead providers integrated with v3 of the API can now view details of when a mentor training was completed.
+
+We've added a new field, `mentor_funding_end_date`, to [ECFEnrolment](/api-reference/reference-v3.html#schema-ecfenrolment).
+
+A mentor training is deemed complete if as mentor has completed their mentor training OR has completed training on Early Roll Out (ERO) on the ECF.
+
+The declaration date of a "completed" declaration will be used as the completion date for a mentor's training.
+
 ## 16 February 2024
 
 We’ve found and fixed a bug that meant for a small number of NPQ applications the value in the `itt_provider` field was incorrectly set, so was not showing the name of the provider.
@@ -15,9 +25,9 @@ The full legal name of the initial teacher training provider can now be seen on 
 
 ## 6 February 2024
 
-We’ve done an update to ensure that early career teacher (ECT) participant records only ever appear in one cohort. 
+We’ve done an update to ensure that early career teacher (ECT) participant records only ever appear in one cohort.
 
-Some providers had found it confusing because participants who’d moved cohort were appearing multiple times when they filtered by cohort in the ‘GET participants’ endpoint. 
+Some providers had found it confusing because participants who’d moved cohort were appearing multiple times when they filtered by cohort in the ‘GET participants’ endpoint.
 
 Training providers will now only see the ECT in the latest cohort they’ve been assigned to.
 

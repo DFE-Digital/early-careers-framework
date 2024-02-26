@@ -2446,7 +2446,8 @@
                                 "date": "2021-06-31T02:22:32.000Z"
                               },
                               "created_at": "2021-05-31T02:22:32.000Z",
-                              "induction_end_date": "2022-01-12"
+                              "induction_end_date": "2022-01-12",
+                              "mentor_funding_end_date": "2021-04-19"
                             }
                           ],
                           "participant_id_changes": [
@@ -2591,7 +2592,8 @@
                                 "date": "2021-06-31T02:22:32.000Z"
                               },
                               "created_at": "2021-05-31T02:22:32.000Z",
-                              "induction_end_date": "2022-01-12"
+                              "induction_end_date": "2022-01-12",
+                              "mentor_funding_end_date": "2021-04-19"
                             }
                           ],
                           "participant_id_changes": [
@@ -3288,6 +3290,13 @@
             "nullable": true,
             "format": "date",
             "example": "2022-01-12"
+          },
+          "mentor_funding_end_date": {
+            "description": "The ECF participant mentor training completion date",
+            "type": "string",
+            "nullable": true,
+            "format": "date",
+            "example": "2021-04-19"
           }
         }
       },

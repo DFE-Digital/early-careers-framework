@@ -122,3 +122,9 @@ properties:
     format: date
     nullable: true
     example: "2022-01-12"
+  mentor_funding_end_date:
+    description: The ECF participant mentor training completion date
+    type: string
+    format: date
+    nullable: true
+    example: "2021-04-19"

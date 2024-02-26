@@ -333,6 +333,7 @@ RSpec.describe "API ECF Participants", type: :request do
                 "deferral": nil,
                 "created_at": early_career_teacher_profile.created_at.rfc3339,
                 "induction_end_date": "2022-01-12",
+                "mentor_funding_end_date": nil,
               }],
               "participant_id_changes": [],
             },
