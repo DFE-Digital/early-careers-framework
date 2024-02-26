@@ -7,12 +7,24 @@ module GiasTypes
   ELIGIBLE_STATUS_CODES = [1, 3].freeze
   CIP_ONLY_TYPE_CODES = [10, 11, 30, 37].freeze
   CIP_ONLY_EXCEPT_WELSH_CODES = [10, 11, 37].freeze
+  INDEPENDENT_SCHOOLS_TYPE_CODES = [10, 11].freeze
 
   # Types that *are* eligible but we would prefer not to send communications to.
   NO_INVITATIONS_TYPE_CODES = [47, 48].freeze
 
   OPEN_STATUS_CODES = ELIGIBLE_STATUS_CODES
   CLOSED_STATUS_CODES = [2, 4].freeze
+
+  ALL_TYPE_CODES = (
+    ELIGIBLE_TYPE_CODES +
+    ELIGIBLE_STATUS_CODES +
+    CIP_ONLY_TYPE_CODES +
+    CIP_ONLY_EXCEPT_WELSH_CODES +
+    INDEPENDENT_SCHOOLS_TYPE_CODES +
+    NO_INVITATIONS_TYPE_CODES +
+    OPEN_STATUS_CODES +
+    CLOSED_STATUS_CODES
+  ).uniq.sort.freeze
 
   MAJOR_CHANGE_ATTRIBUTES = %w[
     school_status_code

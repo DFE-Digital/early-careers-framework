@@ -23,7 +23,7 @@ module Admin
 
           def radio_options
             @radio_options ||= [
-              appropriate_bodies.where(listed: true),
+              listed_appropriate_bodies,
               OpenStruct.new(id: TEACHING_SCHOOL_HUB_ID, name: "A teaching school hub"),
             ].flatten.compact
           end
@@ -51,6 +51,10 @@ module Admin
 
           def appropriate_bodies
             AppropriateBody.active_in_year(cohort_start_year)
+          end
+
+          def listed_appropriate_bodies
+            appropriate_bodies.where(listed: true).where("listed_for_school_type_codes @> '{?}'", school_cohort.school.school_type_code)
           end
 
           def cohort_start_year

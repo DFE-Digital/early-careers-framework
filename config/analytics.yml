@@ -154,6 +154,7 @@
   - updated_at
   - disable_from_year
   - listed
+  - listed_for_school_type_codes
   :participant_profiles:
   - id
   - school_id

@@ -22,5 +22,13 @@ FactoryBot.define do
       end
       body_type { "national" }
     end
+
+    trait :supports_independent_schools_only do
+      listed_for_school_type_codes { GiasTypes::INDEPENDENT_SCHOOLS_TYPE_CODES }
+    end
+
+    trait :supports_all_schools do
+      listed_for_school_type_codes { GiasTypes::ALL_TYPE_CODES }
+    end
   end
 end
