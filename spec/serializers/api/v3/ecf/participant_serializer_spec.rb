@@ -77,30 +77,64 @@ module Api
             context "when there are multiple profiles involved" do
               let!(:mentor_profile) { create(:mentor, school_cohort:, user: participant) }
 
-              before { mentor_profile.update!(mentor_completion_date: Date.new(2021, 4, 19)) }
+              before do
+                mentor_profile.update!(mentor_completion_date: Date.new(2021, 4, 19))
+                allow(Rails).to receive(:env).and_return ActiveSupport::EnvironmentInquirer.new(environment.to_s)
+              end
 
-              it "includes the second profile data" do
-                expect(result[:data][0][:attributes][:ecf_enrolments].find { |efce| efce[:participant_type] == :mentor }).to eq({
-                  training_record_id: mentor_profile.id,
-                  email: participant.email,
-                  mentor_id: nil,
-                  school_urn: school.urn,
-                  participant_type: :mentor,
-                  cohort: school_cohort.cohort.start_year&.to_s,
-                  training_status: "active",
-                  participant_status: "active",
-                  teacher_reference_number_validated: false,
-                  eligible_for_funding: nil,
-                  pupil_premium_uplift: mentor_profile.pupil_premium_uplift,
-                  sparsity_uplift: mentor_profile.sparsity_uplift,
-                  schedule_identifier: mentor_profile.schedule&.schedule_identifier,
-                  delivery_partner_id: delivery_partner.id,
-                  withdrawal: nil,
-                  deferral: nil,
-                  created_at: mentor_profile.created_at.rfc3339,
-                  induction_end_date: nil,
-                  mentor_funding_end_date: Date.new(2021, 4, 19).to_s,
-                })
+              context "in non-production environment" do
+                let(:environment) { :sandbox }
+
+                it "includes the second profile data" do
+                  expect(result[:data][0][:attributes][:ecf_enrolments].find { |efce| efce[:participant_type] == :mentor }).to eq({
+                    training_record_id: mentor_profile.id,
+                    email: participant.email,
+                    mentor_id: nil,
+                    school_urn: school.urn,
+                    participant_type: :mentor,
+                    cohort: school_cohort.cohort.start_year&.to_s,
+                    training_status: "active",
+                    participant_status: "active",
+                    teacher_reference_number_validated: false,
+                    eligible_for_funding: nil,
+                    pupil_premium_uplift: mentor_profile.pupil_premium_uplift,
+                    sparsity_uplift: mentor_profile.sparsity_uplift,
+                    schedule_identifier: mentor_profile.schedule&.schedule_identifier,
+                    delivery_partner_id: delivery_partner.id,
+                    withdrawal: nil,
+                    deferral: nil,
+                    created_at: mentor_profile.created_at.rfc3339,
+                    induction_end_date: nil,
+                    mentor_funding_end_date: "2021-04-19",
+                  })
+                end
+              end
+
+              context "in production environment" do
+                let(:environment) { :production }
+
+                it "includes the second profile data" do
+                  expect(result[:data][0][:attributes][:ecf_enrolments].find { |efce| efce[:participant_type] == :mentor }).to eq({
+                    training_record_id: mentor_profile.id,
+                    email: participant.email,
+                    mentor_id: nil,
+                    school_urn: school.urn,
+                    participant_type: :mentor,
+                    cohort: school_cohort.cohort.start_year&.to_s,
+                    training_status: "active",
+                    participant_status: "active",
+                    teacher_reference_number_validated: false,
+                    eligible_for_funding: nil,
+                    pupil_premium_uplift: mentor_profile.pupil_premium_uplift,
+                    sparsity_uplift: mentor_profile.sparsity_uplift,
+                    schedule_identifier: mentor_profile.schedule&.schedule_identifier,
+                    delivery_partner_id: delivery_partner.id,
+                    withdrawal: nil,
+                    deferral: nil,
+                    created_at: mentor_profile.created_at.rfc3339,
+                    induction_end_date: nil,
+                  })
+                end
               end
             end
 

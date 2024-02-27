@@ -7,15 +7,13 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
-## [PLACEHOLDER] 26 February 2024
+## 4 March 2024
 
-Lead providers integrated with v3 of the API can now view details of when a mentor training was completed.
+We're trialing new functionality in the API v3 sandbox which surfaces the `mentor_funding_end_date` field in the [ ECF participant endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-get).
 
-We've added a new field, `mentor_funding_end_date`, to [ECFEnrolment](/api-reference/reference-v3.html#schema-ecfenrolment).
+When a declaration is submitted for a mentor the completed date will equal the declaration date. When a declaration is voided the completed date will be cleared. Completed dates for early roll-out mentors will be set to 19 April 2021 regardless of any completed declarations.
 
-A mentor training is deemed complete if as mentor has completed their mentor training OR has completed training on Early Roll Out (ERO) on the ECF.
-
-The declaration date of a "completed" declaration will be used as the completion date for a mentor's training.
+We'd welcome feedback on this sandbox update before it goes into production.
 
 ## 16 February 2024
 
