@@ -151,6 +151,27 @@ jobs:
           current-commit-sha: ${{ github.sha }}
           statuscake-api-token: ${{ secrets.STATUSCAKE_API_TOKEN }}
 
+  deploy_migration:
+    name: Deploy migration
+    needs: [docker, rspec, cypress, lint, brakeman]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    environment:
+      name: migration
+    outputs:
+      docker-image: ${{ needs.docker.outputs.docker-image }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: ./.github/actions/deploy-environment-to-aks
+        id: deploy
+        with:
+          environment: migration
+          docker-image: ${{ needs.docker.outputs.docker-image }}
+          azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
+          current-commit-sha: ${{ github.sha }}
+          statuscake-api-token: ${{ secrets.STATUSCAKE_API_TOKEN }}
+
   deploy_sandbox:
     name: Deploy sandbox
     needs: [deploy_staging]
