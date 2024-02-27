@@ -35,17 +35,17 @@ module Archive
     def destroy_profile!
       ActiveRecord::Base.transaction do
         ActiveRecord::Base.no_touching do
-          participant_profile.ecf_participant_validation_data&.delete
-          participant_profile.ecf_participant_eligibility&.delete
+          participant_profile.ecf_participant_validation_data&.destroy!
+          participant_profile.ecf_participant_eligibility&.destroy!
 
-          participant_profile.participant_profile_states.delete_all(:delete_all)
-          participant_profile.participant_profile_schedules.delete_all(:delete_all)
-          participant_profile.participant_declarations.delete_all(:delete_all)
-          participant_profile.induction_records.delete_all(:delete_all)
-          participant_profile.validation_decisions.delete_all(:delete_all)
-          participant_profile.deleted_duplicates.delete_all(:delete_all)
+          participant_profile.participant_profile_states.destroy_all
+          participant_profile.participant_profile_schedules.destroy_all
+          participant_profile.participant_declarations.destroy_all
+          participant_profile.induction_records.destroy_all
+          participant_profile.validation_decisions.destroy_all
+          participant_profile.deleted_duplicates.destroy_all
 
-          participant_profile.school_mentors.delete_all(:delete_all) if participant_profile.mentor?
+          participant_profile.school_mentors.destroy_all if participant_profile.mentor?
         end
 
         # allow callbacks and touching for this bit so we get analytics
