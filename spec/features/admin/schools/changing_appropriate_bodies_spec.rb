@@ -9,6 +9,18 @@ RSpec.feature "Admin managing appropriate bodies", js: true, rutabaga: false do
     and_there_should_be_a_radio_button_for @listed_ab.name
     and_there_should_be_a_radio_button_for @listed_ab_2023_disabled.name
     and_there_should_be_a_radio_button_for "A teaching school hub"
+    and_there_should_not_be_a_radio_button_for @listed_independent_schools_ab.name
+
+    and_i_should_be_able_to_update_the_appropriate_body(@listed_ab.name, 2021)
+  end
+
+  scenario "Admin changes appropriate body of an independent school to IStip" do
+    given_there_is_an_independent_cip_school_in(2021)
+    i_should_be_able_to_navigate_to_the_edit_page(2021)
+    and_there_should_be_a_radio_button_for @listed_ab.name
+    and_there_should_be_a_radio_button_for @listed_ab_2023_disabled.name
+    and_there_should_be_a_radio_button_for "A teaching school hub"
+    and_there_should_be_a_radio_button_for @listed_independent_schools_ab.name
 
     and_i_should_be_able_to_update_the_appropriate_body(@listed_ab.name, 2021)
   end
@@ -55,8 +67,12 @@ RSpec.feature "Admin managing appropriate bodies", js: true, rutabaga: false do
 
 private
 
-  def given_there_is_a_cip_school_in(year, induction_programme_choice: "core_induction_programme")
-    @school = create(:school, name: "Test school")
+  def given_there_is_a_cip_school_in(year, induction_programme_choice: "core_induction_programme", independent_school: false)
+    @school = if independent_school
+                create(:school, :independent_school, name: "Test school")
+              else
+                create(:school, name: "Test school")
+              end
     cohort = Cohort.find_by(start_year: year) || create(:cohort, start_year: year)
     create(:seed_partnership, :with_lead_provider, :valid, cohort:, school: @school)
 
@@ -71,9 +87,14 @@ private
                             core_induction_programme: chosen_cip)
   end
 
+  def given_there_is_an_independent_cip_school_in(year)
+    given_there_is_a_cip_school_in(year, induction_programme_choice: "core_induction_programme", independent_school: true)
+  end
+
   def and_there_are_the_required_appropriate_bodies
-    @listed_ab = create(:appropriate_body_national_organisation, listed: true)
-    @listed_ab_2023_disabled = create(:appropriate_body_national_organisation, listed: true, disable_from_year: 2023)
+    @listed_ab = create(:appropriate_body_national_organisation, :supports_all_schools, listed: true)
+    @listed_ab_2023_disabled = create(:appropriate_body_national_organisation, :supports_all_schools, listed: true, disable_from_year: 2023)
+    @listed_independent_schools_ab = create(:appropriate_body_national_organisation, :supports_independent_schools_only, listed: true, name: "independent schools only")
     create(:appropriate_body_teaching_school_hub, name: "Example teaching school hub")
   end
 

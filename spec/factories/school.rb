@@ -60,6 +60,10 @@ FactoryBot.define do
       school_type_code { GiasTypes::CIP_ONLY_TYPE_CODES.sample }
     end
 
+    trait :independent_school do
+      school_type_code   { GiasTypes::INDEPENDENT_SCHOOLS_TYPE_CODES.sample }
+    end
+
     factory :school_with_consecutive_cohorts do
       transient do
         school_cohorts_count { 5 }

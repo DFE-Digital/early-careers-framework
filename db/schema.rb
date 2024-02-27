@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_02_06_170145) do
+ActiveRecord::Schema[7.0].define(version: 2024_02_26_135601) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "fuzzystrmatch"
@@ -207,6 +207,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_06_170145) do
     t.datetime "updated_at", null: false
     t.integer "disable_from_year"
     t.boolean "listed", default: false, null: false
+    t.integer "listed_for_school_type_codes", default: [], array: true
     t.index ["body_type", "name"], name: "index_appropriate_bodies_on_body_type_and_name", unique: true
   end
 
