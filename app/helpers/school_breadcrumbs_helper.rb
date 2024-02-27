@@ -4,7 +4,14 @@ module SchoolBreadcrumbsHelper
   def breadcrumbs(active_school = nil, active_participant = nil)
     breadcrumbs = base_breadcrumbs
     breadcrumbs.merge!({ active_school.name => schools_dashboard_path(school_id: active_school) }) if active_school.present?
-    breadcrumbs.merge!({ "Manage mentors and ECTs" => school_participants_path(school_id: active_school) }) if active_participant.present?
+    if active_participant.present?
+      if active_participant.mentor?
+        breadcrumbs.merge!({ "Manage mentors" => school_mentors_path(school_id: active_school) })
+      else
+        breadcrumbs.merge!({ "Manage ECTs" => school_early_career_teachers_path(school_id: active_school) })
+      end
+    end
+
     breadcrumbs
   end
 

@@ -147,7 +147,7 @@ private
   end
 
   def when_i_go_to_the_teacher_profile_page
-    click_on "Manage mentors and ECTs"
+    click_on "Early career teachers"
     click_on "Sally Teacher"
   end
 

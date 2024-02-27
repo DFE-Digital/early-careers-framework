@@ -14,8 +14,8 @@ RSpec.describe "old and new SIT transferring the same participant", type: :featu
     end
 
     scenario "Induction tutor only sees the transfer once they’ve done it themselves" do
-      when_i_click_to_view_ects_and_mentors
-      then_i_am_taken_to_manage_mentors_and_ects_page
+      when_i_click_to_view_ects
+      then_i_am_taken_to_manage_ects_page
 
       when_i_click_on_an_ect
       then_i_should_be_on_the_ect_details_page
@@ -34,8 +34,8 @@ RSpec.describe "old and new SIT transferring the same participant", type: :featu
       click_on "Confirm and continue"
       then_i_should_be_on_the_complete_page
 
-      click_on "View your ECTs and mentors"
-      then_i_am_taken_to_manage_mentors_and_ects_page
+      click_on "View your ECTs"
+      then_i_am_taken_to_manage_ects_page
 
       when_i_click_on_an_ect
       then_i_should_still_see_the_transferring_participant
@@ -67,8 +67,12 @@ RSpec.describe "old and new SIT transferring the same participant", type: :featu
 
     # when
 
-    def when_i_click_to_view_ects_and_mentors
-      click_on("Manage mentors and ECTs")
+    def when_i_click_to_view_ects
+      click_on "Early career teachers"
+    end
+
+    def when_i_click_to_view_mentors
+      click_on "Mentors"
     end
 
     def when_i_click_on_an_ect
@@ -91,9 +95,14 @@ RSpec.describe "old and new SIT transferring the same participant", type: :featu
 
     # then
 
-    def then_i_am_taken_to_manage_mentors_and_ects_page
-      expect(page).to have_selector("h1", text: "Manage mentors and ECTs")
-      expect(page).to have_text("Add ECT or mentor")
+    def then_i_am_taken_to_manage_ects_page
+      expect(page).to have_selector("h1", text: "Early career teachers (ECTs)")
+      expect(page).to have_text("Add ECT")
+    end
+
+    def then_i_am_taken_to_manage_mentors_page
+      expect(page).to have_selector("h1", text: "Mentors")
+      expect(page).to have_text("Add Mentor")
     end
 
     def then_i_should_still_see_the_participant_in_my_active_participants

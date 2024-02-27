@@ -1,0 +1,71 @@
+<% content_for :title, "Mentors" %>
+
+<%= render "schools/dashboard/nav", selected: school_mentors_path %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <span class="govuk-caption-l"><%= @school.name %></span>
+    <h1 class="govuk-heading-l">Mentors</h1>
+
+    <%= govuk_button_link_to("Add Mentor",
+                             schools_who_to_add_start_path(school_id: @school.slug), no_visited_state: true) %>
+
+  </div>
+</div>
+
+<div class="govuk-grid-row wrapper-dashboard-v2">
+  <% if @filter.filter_options.many? %>
+    <div class="govuk-grid-column-one-third">
+      <div class="app-filter">
+        <%= form_for @filter, as: '', url: school_mentors_path(@school), method: :get do |f| %>
+          <%= f.govuk_collection_radio_buttons(
+                :filtered_by,
+                @filter.filter_options,
+                :id,
+                :label,
+                legend: { text: 'Show', tag: 'h2', size: 's' },
+                include_hidden: false,
+                small: true,
+                ) %>
+          <%= f.govuk_submit "Apply", secondary: true %>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="govuk-grid-column-two-thirds">
+    <div class="manage-mentors-ects govuk-!-margin-bottom-8">
+      <%
+        filtered_participants = case @filter.filtered_by.to_s
+                                when "currently_mentoring"
+                                  @participants.currently_mentoring_mentors
+                                when "not_mentoring"
+                                  @participants.not_mentoring_mentors
+                                end
+      %>
+      <% if filtered_participants.any? %>
+        <% filtered_participants.each do |mentor| %>
+          <%=
+            govuk_summary_card(title: link_to_participant(mentor.participant_profile, @school, index_filter: @filter.filtered_by.to_s)) do |card|
+              card.with_summary_list(
+                rows: [
+                  {
+                    key: {
+                      text: "Mentoring",
+                    },
+                    value: {
+                      text: render("schools/mentors/mentee_information", participants: @participants, participant: mentor.participant_profile)
+                    },
+                  },
+                ],
+                classes: ["govuk-summary-list--no-border", "govuk-!-margin-bottom-0"]
+              )
+            end
+          %>
+        <% end %>
+      <% else %>
+        <p class="govuk-body">No mentors found</p>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -1,6 +1,6 @@
 <% content_for :title, "Confirm you want to remove #{@profile.user.full_name}" %>
 
-<% content_for :before_content, govuk_back_link(text: "Back", href: school_participant_path(id: @profile)) %>
+<% content_for :before_content, govuk_back_link(text: "Back", href: path_to_participant(@profile, @profile.school)) %>
 
 <h1 class="govuk-heading-l">Confirm you want to remove <%= @profile.user.full_name %></h1>
 

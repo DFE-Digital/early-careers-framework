@@ -21,8 +21,8 @@ RSpec.describe "SIT adding mentor", js: true do
       and_i_click_on(Cohort.current.description)
       then_i_am_taken_to_fip_induction_dashboard
 
-      when_i_navigate_to_participants_dashboard
-      when_i_click_to_add_a_new_ect_or_mentor
+      when_i_navigate_to_mentors_dashboard
+      when_i_click_to_add_a_new_mentor
       then_i_should_be_on_the_who_to_add_page
 
       when_i_select_to_add_a "Mentor"
@@ -62,7 +62,7 @@ RSpec.describe "SIT adding mentor", js: true do
       when_i_click_confirm_and_add
       then_i_am_taken_to_sit_mentor_added_confirmation_page
 
-      when_i_click_on "View your ECTs and mentors"
+      when_i_click_on "View your mentors"
       then_i_see_the_participant_name(full_name: @induction_coordinator_profile.full_name)
     end
   end
@@ -75,8 +75,8 @@ RSpec.describe "SIT adding mentor", js: true do
       and_i_click_on(Cohort.current.description)
       then_i_am_taken_to_fip_induction_dashboard
 
-      when_i_navigate_to_participants_dashboard
-      and_i_click_to_add_a_new_ect_or_mentor
+      when_i_navigate_to_mentors_dashboard
+      when_i_click_to_add_a_new_mentor
       then_i_should_be_on_the_who_to_add_page
 
       when_i_select_to_add_a "Mentor"
@@ -117,7 +117,7 @@ RSpec.describe "SIT adding mentor", js: true do
       when_i_click_confirm_and_add
       then_i_am_taken_to_yourself_as_mentor_confirmation_page
 
-      when_i_click_on "View your ECTs and mentors"
+      when_i_click_on "View your mentors"
       then_i_see_the_transferred_mentor_name
     end
   end
@@ -130,8 +130,8 @@ RSpec.describe "SIT adding mentor", js: true do
       and_i_click_on(Cohort.current.description)
       then_i_am_taken_to_fip_induction_dashboard
 
-      when_i_navigate_to_participants_dashboard
-      and_i_click_to_add_a_new_ect_or_mentor
+      when_i_navigate_to_mentors_dashboard
+      and_i_click_to_add_a_new_mentor
       then_i_should_be_on_the_who_to_add_page
 
       when_i_select_to_add_a "Mentor"
@@ -168,7 +168,7 @@ RSpec.describe "SIT adding mentor", js: true do
       when_i_click_confirm_and_add
       then_i_am_taken_to_mentor_added_confirmation_page
 
-      when_i_click_on "View your ECTs and mentors"
+      when_i_click_on "View your mentors"
       then_i_see_the_mentor_name
     end
   end

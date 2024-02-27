@@ -705,7 +705,13 @@ Rails.application.routes.draw do
   end
 
   resources :schools, only: [] do
-    resources :participants, only: %i[index show destroy], module: :schools do
+    resources :early_career_teachers, only: %i[index show], controller: "schools/early_career_teachers"
+    resources :mentors, only: %i[index show], controller: "schools/mentors"
+
+    # Redirect old joint participants index page to the school dashboard
+    get "participants", to: redirect("/schools/%{school_id}", status: 302)
+
+    resources :participants, only: %i[show destroy], module: :schools do
       get :remove
       get :edit_name, path: "edit-name"
       put :update_name, path: "update-name"

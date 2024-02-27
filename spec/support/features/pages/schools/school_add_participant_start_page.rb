@@ -10,7 +10,7 @@ module Pages
     def continue
       click_on "Continue"
 
-      Pages::SchoolParticipantsDashboardPage.loaded
+      Pages::SchoolDashboardPage.loaded
     end
   end
 end

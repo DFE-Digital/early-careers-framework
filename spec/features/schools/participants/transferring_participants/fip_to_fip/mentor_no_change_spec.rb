@@ -11,11 +11,11 @@ RSpec.describe "Transferring a mentor weith matching lead provider and delivery 
     and_there_is_a_mentor_who_will_be_transferring
     and_i_am_signed_in_as_an_induction_coordinator
     and_i_click_on(Cohort.current.description)
-    when_i_navigate_to_participants_dashboard
+    when_i_navigate_to_mentors_dashboard
   end
 
   scenario "Induction tutor can transfer an Mentor to their school" do
-    when_i_click_to_add_a_new_ect_or_mentor
+    when_i_click_to_add_a_new_mentor
     then_i_should_be_on_the_who_to_add_page
 
     when_i_select_the_mentor_option
@@ -57,8 +57,8 @@ RSpec.describe "Transferring a mentor weith matching lead provider and delivery 
     then_i_should_be_on_the_complete_page
     and_the_schools_current_provider_is_notified
 
-    click_on "View your ECTs and mentors"
-    then_i_am_taken_to_manage_mentors_and_ects_page
+    click_on "View your mentors"
+    then_i_am_taken_to_manage_mentors_page
   end
 
   # given
@@ -86,13 +86,22 @@ RSpec.describe "Transferring a mentor weith matching lead provider and delivery 
 
   # when
 
-  def when_i_click_to_add_a_new_ect_or_mentor
-    click_on "Add ECT or mentor"
+  def when_i_click_to_add_a_new_ect
+    click_on "Add ECT"
   end
 
-  def when_i_navigate_to_participants_dashboard
-    click_on("Manage mentors and ECTs")
-    then_i_am_taken_to_manage_mentors_and_ects_page
+  def when_i_click_to_add_a_new_mentor
+    click_on "Add Mentor"
+  end
+
+  def when_i_navigate_to_ect_dashboard
+    click_on("Early career teachers")
+    then_i_am_taken_to_manage_ects_page
+  end
+
+  def when_i_navigate_to_mentors_dashboard
+    click_on("Mentors")
+    then_i_am_taken_to_manage_mentors_page
   end
 
   def when_i_select_the_mentor_option
@@ -129,9 +138,14 @@ RSpec.describe "Transferring a mentor weith matching lead provider and delivery 
 
   # then
 
-  def then_i_am_taken_to_manage_mentors_and_ects_page
-    expect(page).to have_selector("h1", text: "Manage mentors and ECTs")
-    expect(page).to have_text("Add ECT or mentor")
+  def then_i_am_taken_to_manage_ects_page
+    expect(page).to have_selector("h1", text: "Early career teachers (ECTs)")
+    expect(page).to have_text("Add ECT")
+  end
+
+  def then_i_am_taken_to_manage_mentors_page
+    expect(page).to have_selector("h1", text: "Mentors")
+    expect(page).to have_text("Add Mentor")
   end
 
   def then_i_am_taken_to_a_dashboard_page

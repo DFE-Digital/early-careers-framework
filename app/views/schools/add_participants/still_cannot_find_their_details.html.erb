@@ -41,7 +41,7 @@
 
     <h3 class="govuk-heading-m">Contact the <%= @wizard.ect_participant? ? "ECT" : "mentor" %> to check you have the correct information for them</h3>
     <p class="govuk-body">
-      If their details are incorrect, try to register them again with the correct information.  
+      If their details are incorrect, try to register them again with the correct information.
     </p>
 
    <h3 class="govuk-heading-m">If you're sure this information is correct</h3>
@@ -49,6 +49,10 @@
       Contact us for help to register this <%= @wizard.ect_participant? ? "ECT" : "mentor" %> at your school: <%= render MailToSupportComponent.new %>
     </p>
 
-    <%= govuk_link_to "Return to your ECTs and mentors", @wizard.dashboard_path, no_visited_state: true %>
+    <% if @wizard.ect_participant? %>
+      <%= govuk_link_to "Return to your ECTs", school_early_career_teachers_path, no_visited_state: true %>
+    <% else %>
+      <%= govuk_link_to "Return to your mentors", school_mentors_path, no_visited_state: true %>
+    <% end %>
   </div>
 </div>

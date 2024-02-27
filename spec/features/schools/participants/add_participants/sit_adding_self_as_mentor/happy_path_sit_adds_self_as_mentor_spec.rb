@@ -18,8 +18,8 @@ RSpec.describe "Add participants", type: :feature, js: true do
   end
 
   xscenario "Induction tutor can add themselves as a mentor and validates" do
-    when_i_navigate_to_participants_dashboard
-    when_i_click_to_add_a_new_participant
+    when_i_navigate_to_mentors_dashboard
+    when_i_click_to_add_a_new_mentor
     when_i_choose_to_add_yourself_as_a_mentor
     click_on "Continue"
     then_i_am_taken_to_are_you_sure_page

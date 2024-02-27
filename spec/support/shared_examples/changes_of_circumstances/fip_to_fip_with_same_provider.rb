@@ -12,7 +12,7 @@ RSpec.shared_examples "FIP to FIP with same provider" do |scenario, participant_
     else
       it Steps::ChangesOfCircumstanceSteps.then_sit_can_see_context(scenario, is_training: false),
          :aggregate_failures do
-        then_sit_can_see_not_training_in_school_portal subject, scenario
+        then_sit_can_see_mentors_in_school_portal subject, scenario
       end
     end
   end

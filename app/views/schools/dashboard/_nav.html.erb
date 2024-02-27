@@ -1,0 +1,17 @@
+<% selected ||= nil %>
+
+<% content_for :nav_bar do %>
+  <%= render PrimaryNavComponent.new(reversed: true) do |component| %>
+    <%= component.with_nav_item(path: schools_dashboard_path, selected: selected == schools_dashboard_path) do %>
+      Home
+    <% end %>
+
+    <%= component.with_nav_item(path: school_early_career_teachers_path, selected: selected == school_early_career_teachers_path) do %>
+      Early career teachers
+    <% end %>
+
+    <%= component.with_nav_item(path: school_mentors_path, selected: selected == school_mentors_path) do %>
+      Mentors
+    <% end %>
+  <% end %>
+<% end %>

@@ -28,7 +28,7 @@ RSpec.describe SchoolBreadcrumbsHelper, type: :helper do
         expect(helper.breadcrumbs(school, participant)).to(
           eql({
             school.name => schools_dashboard_path(school_id: school.slug),
-            "Manage mentors and ECTs" => school_participants_path(school_id: school.slug),
+            "Manage ECTs" => school_early_career_teachers_path(school_id: school.slug),
           }),
         )
       end
@@ -56,7 +56,7 @@ RSpec.describe SchoolBreadcrumbsHelper, type: :helper do
           eql({
             "Manage your schools" => schools_dashboard_index_path,
             school.name => schools_dashboard_path(school_id: school.slug),
-            "Manage mentors and ECTs" => school_participants_path(school_id: school.slug),
+            "Manage ECTs" => school_early_career_teachers_path(school_id: school.slug),
           }),
         )
       end

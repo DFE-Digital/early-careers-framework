@@ -20,22 +20,7 @@ RSpec.describe "Manage currently training participants", js: true do
       and_i_am_signed_in_as_an_induction_coordinator
       and_i_click(Cohort.current.description)
       given_i_am_taken_to_the_induction_dashboard
-      when_i_navigate_to_participants_dashboard
-    end
-
-    scenario "Sorted by mentor name" do
-      then_i_see_the_participants_sorted_by_mentor
-
-      when_i_click_on_the_participants_name "Billy Mentor"
-      then_i_am_taken_to_view_mentor_details_page
-    end
-
-    scenario "Sorted by induction start date" do
-      when_i_sort_participants_by_induction_start_date
-      then_i_see_the_participants_sorted_by_induction_start_date
-
-      when_i_click_on_the_participants_name "Training ECT With-mentor"
-      then_i_am_taken_to_view_ect_details_page
+      when_i_navigate_to_mentors_dashboard
     end
   end
 end

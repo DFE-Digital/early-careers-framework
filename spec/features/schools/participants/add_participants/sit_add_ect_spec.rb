@@ -21,8 +21,8 @@ RSpec.describe "SIT adding themself as ECT", js: true do
 
   scenario "SIT aborts process as it can't add themself as ECT" do
     outside_auto_assignment_window do
-      when_i_navigate_to_participants_dashboard
-      when_i_click_to_add_a_new_ect_or_mentor
+      when_i_navigate_to_ect_dashboard
+      when_i_click_to_add_a_new_ect
       then_i_should_be_on_the_who_to_add_page
 
       when_i_select_to_add_a "ECT"
@@ -57,8 +57,8 @@ RSpec.describe "SIT adding themself as ECT", js: true do
 
   scenario "SIT chooses to add themself as Mentor instead" do
     outside_auto_assignment_window do
-      when_i_navigate_to_participants_dashboard
-      when_i_click_to_add_a_new_ect_or_mentor
+      when_i_navigate_to_ect_dashboard
+      when_i_click_to_add_a_new_ect
       then_i_should_be_on_the_who_to_add_page
 
       when_i_select_to_add_a "ECT"
@@ -103,7 +103,7 @@ RSpec.describe "SIT adding themself as ECT", js: true do
       when_i_click_confirm_and_add
       then_i_am_taken_to_yourself_as_mentor_confirmation_page
 
-      when_i_click_on_view_ects_and_mentors
+      when_i_click_on_view_mentors
       then_i_see_the_participant_name
     end
   end

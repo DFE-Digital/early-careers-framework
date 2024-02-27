@@ -38,6 +38,8 @@ class InductionRecord < ApplicationRecord
   has_one :school, through: :school_cohort
   has_one :user, through: :participant_profile
 
+  has_many :mentee_profiles, through: :mentor_profile, source: :mentee_profiles
+
   # Validations
   validates :start_date, presence: true
 

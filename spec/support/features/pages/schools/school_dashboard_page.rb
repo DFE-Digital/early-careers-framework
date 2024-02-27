@@ -46,16 +46,22 @@ module Pages
       element_without_content? self, "If your school is not working with this lead provider or delivery partner,"
     end
 
-    def view_participant_dashboard
-      click_on("Manage mentors and ECTs")
+    def view_ect_dashboard
+      click_on("Early career teachers")
 
-      Pages::SchoolParticipantsDashboardPage.loaded
+      Pages::SchoolEarlyCareerTeachersDashboardPage.loaded
     end
 
-    def add_participant_details
-      click_on("Manage mentors and ECTs")
+    def view_mentor_dashboard
+      click_on("Mentor")
 
-      Pages::SchoolParticipantsDashboardPage.loaded
+      Pages::SchoolMentorsDashboardPage.loaded
+    end
+
+    def add_mentor_details
+      click_on("Mentors")
+
+      Pages::SchoolMentorsDashboardPage.loaded
     end
   end
 end

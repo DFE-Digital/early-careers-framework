@@ -64,7 +64,7 @@ RSpec.describe "Adding previously withdrawn Mentor", type: :feature, js: true do
       expect {
         sign_in
 
-        when_i_go_to_add_new_ect_or_mentor_page
+        when_i_go_to_add_new_mentor_page
         and_i_go_through_the_who_do_you_want_to_add_page
         and_i_go_through_the_what_we_need_from_you_page
 
@@ -101,7 +101,7 @@ RSpec.describe "Adding previously withdrawn Mentor", type: :feature, js: true do
       expect {
         sign_in
 
-        when_i_go_to_add_new_ect_or_mentor_page
+        when_i_go_to_add_new_mentor_page
         and_i_go_through_the_who_do_you_want_to_add_page
         and_i_go_through_the_what_we_need_from_you_page
 
@@ -135,7 +135,7 @@ RSpec.describe "Adding previously withdrawn Mentor", type: :feature, js: true do
 
         sign_in
 
-        when_i_go_to_add_new_ect_or_mentor_page
+        when_i_go_to_add_new_mentor_page
         and_i_go_through_the_who_do_you_want_to_add_page
         and_i_go_through_the_what_we_need_from_you_page
 
@@ -167,7 +167,7 @@ RSpec.describe "Adding previously withdrawn Mentor", type: :feature, js: true do
       expect {
         sign_in
 
-        when_i_go_to_add_new_ect_or_mentor_page
+        when_i_go_to_add_new_mentor_page
         and_i_go_through_the_who_do_you_want_to_add_page
         and_i_go_through_the_what_we_need_from_you_page
 
@@ -248,9 +248,14 @@ private
     sign_in_as user
   end
 
-  def when_i_go_to_add_new_ect_or_mentor_page
-    click_on "Manage mentors and ECTs"
-    click_on "Add ECT or mentor"
+  def when_i_go_to_add_new_ect_page
+    click_on "Early Career Teacher"
+    click_on "Add ECT"
+  end
+
+  def when_i_go_to_add_new_mentor_page
+    click_on "Mentors"
+    click_on "Add Mentor"
   end
 
   def and_i_go_through_the_who_do_you_want_to_add_page
@@ -392,7 +397,7 @@ private
 
   def when_i_check_the_mentor_details
     click_on "Confirm and add"
-    click_on "View your ECTs and mentors"
+    click_on "View your mentors"
     click_on "George Mentor"
   end
 

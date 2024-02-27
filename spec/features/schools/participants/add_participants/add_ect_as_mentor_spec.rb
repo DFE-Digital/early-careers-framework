@@ -20,8 +20,8 @@ RSpec.describe "Add ECT as mentor", js: true do
 
   scenario "Induction tutor tries to add an ECT that's a mentor in another school" do
     outside_auto_assignment_window do
-      when_i_navigate_to_participants_dashboard
-      when_i_click_to_add_a_new_ect_or_mentor
+      when_i_navigate_to_mentors_dashboard
+      when_i_click_to_add_a_new_mentor
       then_i_should_be_on_the_who_to_add_page
 
       when_i_select_to_add_a "Mentor"
@@ -58,7 +58,8 @@ RSpec.describe "Add ECT as mentor", js: true do
       when_i_click_confirm_and_add
       then_i_am_taken_to_mentor_added_confirmation_page
 
-      click_on "View your ECTs and mentors"
+      click_on "View your mentors"
+      when_i_filter_by("Not mentoring (1)")
       then_i_see_the_mentor_name
     end
   end

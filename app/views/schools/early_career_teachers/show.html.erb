@@ -1,4 +1,16 @@
+<%
+  profile = @profile
+  mentor_profile = @mentor_profile
+  school = @school
+  induction_record = @induction_record
+  mentors_added = @mentors_added
+%>
+
 <% content_for :title, "ECT details" %>
+
+<%= render "schools/dashboard/nav", selected: school_early_career_teachers_path %>
+
+<% content_for :before_content, govuk_back_link(text: "Back to ECTs", href: school_early_career_teachers_path(filtered_by: params[:filtered_by])) %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
@@ -78,7 +90,7 @@
           </dt>
           <dd class="govuk-summary-list__value">
             <% if mentor_profile %>
-              <%= govuk_link_to mentor_profile.full_name, school_participant_path(id: mentor_profile.id) %>
+              <%= govuk_link_to mentor_profile.full_name, school_mentor_path(id: mentor_profile.id) %>
             <% else %>
               Not yet assigned
             <% end %>

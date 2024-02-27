@@ -10,7 +10,7 @@ RSpec.describe "Changing participant details from check answers", type: :feature
     given_there_is_a_school_that_has_chosen_fip_for_two_consecutive_years_and_partnered
     and_i_have_added_an_ect
     and_i_am_signed_in_as_an_induction_coordinator
-    when_i_navigate_to_participants_dashboard
+    when_i_navigate_to_ect_dashboard
     and_i_have_added_a_mentor
   end
 
@@ -19,7 +19,7 @@ RSpec.describe "Changing participant details from check answers", type: :feature
 
     set_dqt_validation_result
 
-    when_i_click_to_add_a_new_ect_or_mentor
+    when_i_click_to_add_a_new_ect
     then_i_am_taken_to_the_who_do_you_want_to_add_page
 
     when_i_decide_i_want_to_add_an_ect
@@ -58,7 +58,7 @@ RSpec.describe "Changing participant details from check answers", type: :feature
 
     set_dqt_validation_result
 
-    when_i_click_to_add_a_new_ect_or_mentor
+    when_i_click_to_add_a_new_ect
     then_i_am_taken_to_the_who_do_you_want_to_add_page
 
     when_i_decide_i_want_to_add_an_ect
@@ -100,7 +100,7 @@ RSpec.describe "Changing participant details from the dashboard", type: :feature
     given_there_is_a_school_that_has_chosen_fip_and_partnered
     and_i_have_added_an_ect
     and_i_am_signed_in_as_an_induction_coordinator
-    when_i_navigate_to_participants_dashboard
+    when_i_navigate_to_ect_dashboard
     and_i_have_added_a_mentor
   end
 
@@ -109,7 +109,7 @@ RSpec.describe "Changing participant details from the dashboard", type: :feature
     when_i_visit_manage_training_dashboard
     and_i_click(Cohort.current.description)
 
-    when_i_navigate_to_participants_dashboard
+    when_i_navigate_to_ect_dashboard
     when_i_filter_by("No longer training (1)")
     when_i_click_on_the_participants_name "Sally Teacher"
     then_i_am_taken_to_view_ect_details_page
@@ -118,13 +118,14 @@ RSpec.describe "Changing participant details from the dashboard", type: :feature
   end
 
   scenario "Induction tutor can't change ECT / mentor name or email for a participant contacted for info" do
-    when_i_view_participant_from_the_school_participants_dashboard_page "Sally Teacher"
+    when_i_filter_by_from_the_school_early_career_teachers_dashboard_page "Currently Training"
+    and_i_view_participant_from_the_school_early_career_teachers_dashboard_page "Sally Teacher"
     and_it_should_not_allow_a_sit_to_edit_the_participant_details
   end
 
   scenario "Induction tutor can change ECT / mentor name form the profile page when their name has changed" do
     given_the_ect_has_been_validated
-    when_i_view_participant_from_the_school_participants_dashboard_page "Sally Teacher"
+    when_i_view_participant_from_the_school_early_career_teachers_dashboard_page "Sally Teacher"
     then_the_page_should_be_accessible
 
     when_i_click_on_change_name
@@ -144,13 +145,13 @@ RSpec.describe "Changing participant details from the dashboard", type: :feature
     then_i_see_a_confirmation_message_on_the_school_participant_name_updated_page_with_old_name_and_new_name "Sally Teacher", "Jane Teacher"
     then_the_page_should_be_accessible
 
-    when_i_return_to_the_participant_profile_from_the_school_participant_name_updated_page
-    then_i_confirm_participant_name_on_the_school_participant_details_page_with_name "Sally Teacher"
+    when_i_return_to_the_ect_profile_from_the_school_participant_name_updated_page
+    then_i_confirm_participant_name_on_the_school_early_career_teacher_details_page_with_name "Sally Teacher"
   end
 
   scenario "Induction tutor can change ECT / mentor name form the profile page when their name was incorrect" do
     given_the_ect_has_been_validated
-    when_i_view_participant_from_the_school_participants_dashboard_page "Sally Teacher"
+    when_i_view_participant_from_the_school_early_career_teachers_dashboard_page "Sally Teacher"
     when_i_click_on_change_name
     when_i_choose_name_is_incorrect_from_the_reason_to_change_school_participant_name_page
     then_i_am_on_the_edit_school_participant_name_page
@@ -159,13 +160,13 @@ RSpec.describe "Changing participant details from the dashboard", type: :feature
     when_i_set_the_name_on_the_edit_school_participant_name_page_with_new_name "Jane Teacher"
     then_i_see_a_confirmation_message_on_the_school_participant_name_updated_page_with_old_name_and_new_name "Sally Teacher", "Jane Teacher"
 
-    when_i_return_to_the_ect_and_mentors_from_the_school_participant_name_updated_page
-    then_i_view_participant_on_the_school_participants_dashboard_page "Jane Teacher"
+    when_i_return_to_the_ects_from_the_school_participant_name_updated_page
+    then_i_view_participant_on_the_school_early_career_teachers_dashboard_page "Jane Teacher"
   end
 
   scenario "Induction tutor can't remove an ECT / mentor by changing their name in participant profile page" do
     given_the_ect_has_been_validated
-    when_i_view_participant_from_the_school_participants_dashboard_page "Sally Teacher"
+    when_i_view_participant_from_the_school_early_career_teachers_dashboard_page "Sally Teacher"
     when_i_click_on_change_name
     when_i_choose_should_not_be_registered_from_the_reason_to_change_school_participant_name_page
     then_i_cant_edit_the_participant_name_on_the_school_participant_should_not_have_been_registered_page "Sally Teacher"
@@ -174,7 +175,7 @@ RSpec.describe "Changing participant details from the dashboard", type: :feature
 
   scenario "Induction tutor can't replace an ECT / mentor by changing their name in participant profile page" do
     given_the_ect_has_been_validated
-    when_i_view_participant_from_the_school_participants_dashboard_page "Sally Teacher"
+    when_i_view_participant_from_the_school_early_career_teachers_dashboard_page "Sally Teacher"
     when_i_click_on_change_name
     when_i_choose_replaced_by_a_different_person_from_the_reason_to_change_school_participant_name_page
     then_i_cant_edit_the_participant_name_on_the_school_participant_replaced_by_a_different_person_page "Sally Teacher"
@@ -185,7 +186,7 @@ RSpec.describe "Changing participant details from the dashboard", type: :feature
   scenario "Induction tutor can change ECT / mentor email from participant profile page" do
     given_the_ect_has_been_validated
     and_the_ect_has_multiple_identities
-    when_i_view_participant_from_the_school_participants_dashboard_page "Sally Teacher"
+    when_i_view_participant_from_the_school_early_career_teachers_dashboard_page "Sally Teacher"
     when_i_click_on_change_email
     then_i_am_on_the_edit_school_participant_email_page
     then_the_page_should_be_accessible
@@ -201,13 +202,13 @@ RSpec.describe "Changing participant details from the dashboard", type: :feature
     then_i_see_a_confirmation_message_on_the_school_participant_email_updated_page_with_name "Sally Teacher"
     then_the_page_should_be_accessible
 
-    when_i_return_to_the_participant_profile_from_the_school_participant_email_updated_page
-    then_i_confirm_participant_name_on_the_school_participant_details_page_with_name "Sally Teacher"
+    when_i_return_to_the_ect_profile_from_the_school_participant_email_updated_page
+    then_i_confirm_participant_name_on_the_school_early_career_teacher_details_page_with_name "Sally Teacher"
 
     when_i_click_on_change_email
     when_i_set_the_email_on_the_edit_school_participant_email_page_with_new_email @ect_alternative_identity.email
     then_i_see_a_confirmation_message_on_the_school_participant_email_updated_page_with_name
-    when_i_return_to_the_participant_profile_from_the_school_participant_email_updated_page
+    when_i_return_to_the_ect_profile_from_the_school_participant_email_updated_page
   end
 
   context "When the school cohort does not have an appropriate body assigned" do

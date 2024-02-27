@@ -1,4 +1,4 @@
-<div class="primary-nav-container">
+<div class="primary-nav-container <%= "primary-nav-container--reversed" if reversed %>">
   <div class="govuk-width-container <%= "govuk-width-container__wide" if wide %>">
     <div class="primary-nav">
       <% nav_items.each do |item| %>

@@ -12,10 +12,10 @@ module Pages
       self
     end
 
-    def view_your_ects_and_mentors
-      click_on "View your ECTs and mentors"
+    def view_your_ects
+      click_on "Early career teacher"
 
-      Pages::SchoolParticipantsDashboardPage.loaded
+      Pages::SchoolEarlyCareerTeachersDashboardPage.loaded
     end
   end
 end

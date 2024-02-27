@@ -5,29 +5,26 @@ module Dashboard
     class Filter
       include ActiveModel::Model
 
-      attr_accessor :dashboard_participants, :filtered_by, :sorted_by
+      attr_accessor :dashboard_participants, :filtered_by, :options
 
-      FILTER_OPTIONS = %w[
+      ECT_FILTER_OPTIONS = %w[
         currently_training
         completed_induction
         no_longer_training
       ].freeze
 
-      SORT_OPTIONS = %w[
-        mentor
-        induction_start_date
+      MENTOR_FILTER_OPTIONS = %w[
+        currently_mentoring
+        not_mentoring
       ].freeze
 
       def initialize(*)
         super
-        self.filtered_by = filter_option_ids.first unless filter_option_ids.include?(filtered_by)
-        self.sorted_by = SORT_OPTIONS.first unless SORT_OPTIONS.include?(sorted_by)
+        self.filtered_by = default_filter unless filter_option_ids.include?(filtered_by)
       end
 
       def filter_option_ids
-        @filter_option_ids ||= FILTER_OPTIONS.select do |filter_option|
-          dashboard_participants.send("#{filter_option}_count").positive?
-        end
+        @filter_option_ids ||= options
       end
 
       def filter_options
@@ -36,8 +33,16 @@ module Dashboard
         end
       end
 
-      def sorted_by?(sort_option)
-        sorted_by == sort_option.to_s
+    private
+
+      def default_filter
+        first_populated_participant_collection || filter_option_ids.first
+      end
+
+      def first_populated_participant_collection
+        filter_option_ids.select { |filter_option|
+          dashboard_participants.send("#{filter_option}_count").positive?
+        }.first
       end
     end
   end

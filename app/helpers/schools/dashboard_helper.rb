@@ -10,12 +10,19 @@ module Schools
       school_cohorts.sum { |sc| sc.current_induction_records.ects.where(mentor_profile: nil).count }
     end
 
-    def link_to_participant(participant_profile, school, regular_font: true)
+    def link_to_participant(participant_profile, school, regular_font: true, index_filter: nil)
       govuk_link_to(participant_profile.full_name,
-                    school_participant_path(id: participant_profile.id,
-                                            school_id: school.slug),
+                    path_to_participant(participant_profile, school, index_filter:),
                     no_visited_state: true,
                     class: ("govuk-!-font-weight-regular" if regular_font))
+    end
+
+    def path_to_participant(participant_profile, school, index_filter: nil)
+      if participant_profile.mentor?
+        school_mentor_path(id: participant_profile.id, school_id: school.slug, filtered_by: index_filter)
+      else
+        school_early_career_teacher_path(id: participant_profile.id, school_id: school.slug, filtered_by: index_filter)
+      end
     end
 
     def manage_ects_and_mentors?(school_cohorts)

@@ -14,7 +14,7 @@
                 <div class="govuk-grid-column-two-thirds">
                   <div class="<%= ect.participant_profile.induction_start_date ? '' : 'govuk-!-margin-bottom-3' %>">
                     <%= govuk_link_to(ect.full_name,
-                                      school_participant_path(id: ect.participant_profile_id, school_id: school.slug),
+                                      school_early_career_teachers_path(id: ect.participant_profile_id, school_id: school.slug),
                                       no_visited_state: true) %>
                   </div>
                   <% if ect.participant_profile.induction_start_date %>

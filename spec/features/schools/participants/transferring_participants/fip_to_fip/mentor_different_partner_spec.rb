@@ -11,12 +11,12 @@ RSpec.describe "Transferring a mentor with a different provider", type: :feature
     and_there_is_a_mentor_who_will_be_transferring
     and_i_am_signed_in_as_an_induction_coordinator
     and_i_have_selected_my_cohort_tab
-    when_i_click_to_view_ects_and_mentors
-    then_i_am_taken_to_manage_mentors_and_ects_page
+    when_i_click_to_view_mentors
+    then_i_am_taken_to_manage_mentors_page
   end
 
   scenario "Induction tutor can transfer an Mentor to their schools programme" do
-    when_i_click_to_add_a_new_ect_or_mentor
+    when_i_click_to_add_a_new_mentor
     then_i_should_be_on_the_who_to_add_page
 
     when_i_select_the_mentor_option
@@ -68,12 +68,12 @@ RSpec.describe "Transferring a mentor with a different provider", type: :feature
     and_the_schools_current_provider_is_notified
     and_the_participants_current_provider_is_notified
 
-    click_on "View your ECTs and mentors"
-    then_i_am_taken_to_manage_mentors_and_ects_page
+    click_on "View your mentors"
+    then_i_am_taken_to_manage_mentors_page
   end
 
   scenario "Induction tutor can transfer an Mentor and they can continue their current programme" do
-    when_i_click_to_add_a_new_ect_or_mentor
+    when_i_click_to_add_a_new_mentor
     then_i_should_be_on_the_who_to_add_page
 
     when_i_select_the_mentor_option
@@ -115,8 +115,8 @@ RSpec.describe "Transferring a mentor with a different provider", type: :feature
     then_i_should_be_on_the_complete_page_for_an_existing_induction
     and_the_participants_current_provider_is_notified
 
-    click_on "View your ECTs and mentors"
-    then_i_am_taken_to_manage_mentors_and_ects_page
+    click_on "View your mentors"
+    then_i_am_taken_to_manage_mentors_page
   end
 
   # given
@@ -146,12 +146,20 @@ RSpec.describe "Transferring a mentor with a different provider", type: :feature
 
   # when
 
-  def when_i_click_to_view_ects_and_mentors
-    click_on("Manage mentors and ECTs")
+  def when_i_click_to_view_ects
+    click_on "Early career teachers"
   end
 
-  def when_i_click_to_add_a_new_ect_or_mentor
-    click_on "Add ECT or mentor"
+  def when_i_click_to_view_mentors
+    click_on "Mentors"
+  end
+
+  def when_i_click_to_add_a_new_ect
+    click_on "Add ECT"
+  end
+
+  def when_i_click_to_add_a_new_mentor
+    click_on "Add Mentor"
   end
 
   def when_i_select_the_mentor_option
@@ -188,9 +196,14 @@ RSpec.describe "Transferring a mentor with a different provider", type: :feature
 
   # then
 
-  def then_i_am_taken_to_manage_mentors_and_ects_page
-    expect(page).to have_selector("h1", text: "Manage mentors and ECTs")
-    expect(page).to have_text("Add ECT or mentor")
+  def then_i_am_taken_to_manage_ects_page
+    expect(page).to have_selector("h1", text: "Early career teachers (ECTs)")
+    expect(page).to have_text("Add ECT")
+  end
+
+  def then_i_am_taken_to_manage_mentors_page
+    expect(page).to have_selector("h1", text: "Mentors")
+    expect(page).to have_text("Add Mentor")
   end
 
   def then_i_am_taken_to_a_dashboard_page

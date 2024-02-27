@@ -3,6 +3,33 @@ $primaryNavHeight: 2.5rem;
 .primary-nav-container {
   background-color: govuk-colour("light-grey");
   border-bottom: 1px $govuk-border-colour solid;
+
+  &.primary-nav-container--reversed {
+    background-color: govuk-colour("blue");
+
+    .govuk-link {
+      color: govuk-colour("white");
+    }
+
+    .nav-item {
+      text-decoration: none;
+
+      &:not(.nav-item__selected) .govuk-link:hover {
+        text-decoration: underline;
+        text-decoration-color: govuk-colour("white");
+        text-decoration-thickness: max(3px, .1875rem, .12em);
+        text-decoration-skip-ink: none;
+      }
+
+      .govuk-link:focus {
+        box-shadow: none;
+      }
+    }
+
+    .nav-item__selected {
+      border-bottom: solid govuk-colour("white") 4px;
+    }
+  }
 }
 
 .primary-nav {

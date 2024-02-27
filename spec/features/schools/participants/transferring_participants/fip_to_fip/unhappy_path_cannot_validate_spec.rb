@@ -13,12 +13,12 @@ RSpec.describe "transferring participants", type: :feature, js: true do
         and_there_is_an_ect_who_will_be_transferring
         and_i_am_signed_in_as_an_induction_coordinator
         and_i_have_selected_my_cohort_tab
-        when_i_click_to_view_ects_and_mentors
-        then_i_am_taken_to_manage_mentors_and_ects_page
+        when_i_click_to_view_ects
+        then_i_am_taken_to_manage_ects_page
       end
 
       scenario "Details are not matched but SIT still tries to add participant" do
-        when_i_click_to_add_a_new_ect_or_mentor
+        when_i_click_to_add_a_new_ect
         then_i_should_be_on_the_who_to_add_page
 
         when_i_select_the_ect_option
@@ -77,12 +77,20 @@ RSpec.describe "transferring participants", type: :feature, js: true do
 
       # when
 
-      def when_i_click_to_view_ects_and_mentors
-        click_on("Manage mentors and ECTs")
+      def when_i_click_to_view_ects
+        click_on "Early career teachers"
       end
 
-      def when_i_click_to_add_a_new_ect_or_mentor
-        click_on "Add ECT or mentor"
+      def when_i_click_to_view_mentors
+        click_on "Mentors"
+      end
+
+      def when_i_click_to_add_a_new_ect
+        click_on "Add ECT"
+      end
+
+      def when_i_click_to_add_a_new_mentor
+        click_on "Add mentor"
       end
 
       def when_i_select_the_ect_option
@@ -121,9 +129,9 @@ RSpec.describe "transferring participants", type: :feature, js: true do
 
       # then
 
-      def then_i_am_taken_to_manage_mentors_and_ects_page
-        expect(page).to have_selector("h1", text: "Manage mentors and ECTs")
-        expect(page).to have_text("Add ECT or mentor")
+      def then_i_am_taken_to_manage_ects_page
+        expect(page).to have_selector("h1", text: "Early career teachers")
+        expect(page).to have_text("Add ECT")
       end
 
       def then_i_should_be_on_what_we_need_page

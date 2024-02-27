@@ -69,8 +69,8 @@ module Steps
         given_i_sign_in_as_the_user_with_the_full_name sit_name
 
         wizard = Pages::SchoolDashboardPage.loaded
-                                           .add_participant_details
-                                           .choose_to_add_an_ect_or_mentor
+                                           .add_mentor_details
+                                           .choose_to_add_a_mentor
         participant_start_date = Date.new(2021, 9, 1)
 
         allow(DQTRecordCheck).to receive(:call).and_return(
@@ -199,8 +199,8 @@ module Steps
         given_i_sign_in_as_the_user_with_the_full_name sit_name
 
         page_object = Pages::SchoolDashboardPage.loaded
-                                                .add_participant_details
-                                                .choose_to_add_an_ect_or_mentor
+                                                .add_mentor_details
+                                                .choose_to_add_a_mentor
 
         if participant_profile.ect?
           page_object.transfer_ect participant_name, participant_email, 1.day.from_now, same_provider, participant_trn, participant_dob
@@ -361,7 +361,12 @@ module Steps
       given_i_sign_in_as_the_user_with_the_full_name sit_name
 
       school_dashboard = Pages::SchoolDashboardPage.loaded
-      participant_dashboard = school_dashboard.view_participant_dashboard
+
+      participant_dashboard = if scenario.participant_type.to_sym == :Mentor
+                                school_dashboard.view_mentor_dashboard
+                              else
+                                school_dashboard.view_ect_dashboard
+                              end
 
       participant_details = participant_dashboard.view_participant("The Participant")
       expect(participant_details).to have_participant_name "The Participant"
@@ -371,11 +376,16 @@ module Steps
       sign_out
     end
 
-    def then_sit_can_see_not_training_in_school_portal(sit_name, scenario)
+    def then_sit_can_see_mentors_in_school_portal(sit_name, scenario)
       given_i_sign_in_as_the_user_with_the_full_name sit_name
 
       school_dashboard = Pages::SchoolDashboardPage.loaded
-      participant_dashboard = school_dashboard.view_participant_dashboard
+
+      participant_dashboard = if scenario.participant_type.to_sym == :Mentor
+                                school_dashboard.view_mentor_dashboard
+                              else
+                                school_dashboard.view_ect_dashboard
+                              end
 
       participant_details = participant_dashboard.view_participant("The Participant")
       expect(participant_details).to have_participant_name "The Participant"

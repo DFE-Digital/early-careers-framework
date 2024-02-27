@@ -10,9 +10,13 @@
     </ul>
     <% if @profile.mentor? %>
       <p>Remember to assign this person’s ECT(s) to another mentor.</p>
+      <p><%= govuk_link_to "Return to manage mentors",
+                            school_mentors_path,
+                            no_visited_state: true %></p>
+    <% else %>
+      <li><%= govuk_link_to "Return to manage ECTs",
+                            school_early_career_teachers_path,
+                            no_visited_state: true %></li>
     <% end %>
-    <%= govuk_link_to "Return to manage mentors and ECTs",
-                      { action: :index },
-                      no_visited_state: true %>
   </div>
 </div>

@@ -134,7 +134,6 @@ private
 
   def and_i_should_be_able_to_select_a_teaching_school_hub(year)
     when_i_select "A teaching school hub"
-    puts page.text
     fill_in "admin-schools-cohorts-appropriate-bodies-update-form-teaching-school-hub-id-field", with: "Example teaching school hub"
     find("#admin-schools-cohorts-appropriate-bodies-update-form-teaching-school-hub-id-field__option--0").click
     and_i_click_the_continue_button
