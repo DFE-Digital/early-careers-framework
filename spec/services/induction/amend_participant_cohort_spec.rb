@@ -182,6 +182,27 @@ RSpec.describe Induction::AmendParticipantCohort do
         end
       end
 
+      context "when the participant is in the target cohort but not in the target schedule" do
+        let(:target_cohort_start_year) { source_cohort_start_year }
+        let(:schedule) { create(:ecf_extended_schedule, cohort: target_cohort) }
+
+        subject(:form) do
+          described_class.new(participant_profile:, source_cohort_start_year:, schedule:)
+        end
+
+        before do
+          Induction::Enrol.call(participant_profile:,
+                                induction_programme: source_school_cohort.default_induction_programme)
+        end
+
+        it "moves the current induction record and participant profile to the target schedule" do
+          expect(form.save).to be_truthy
+          expect(form.errors).to be_empty
+          expect(participant_profile.schedule).to eq(schedule)
+          expect(participant_profile.latest_induction_record.schedule).to eq(schedule)
+        end
+      end
+
       context "when the school has not setup a default induction programme for the target cohort" do
         let!(:target_school_cohort) { create(:school_cohort, :fip, cohort: target_cohort, school:) }
 
@@ -216,7 +237,7 @@ RSpec.describe Induction::AmendParticipantCohort do
           it "returns false and set errors" do
             expect(form.save).to be_falsey
             expect(form.errors.first.attribute).to eq(:induction_record)
-            expect(form.errors.first.message).to eq("Schedule must exist")
+            expect(form.errors.first.message).to eq("Validation failed: Schedule must exist")
           end
         end
 
@@ -256,137 +277,8 @@ RSpec.describe Induction::AmendParticipantCohort do
           end
         end
 
-        context "when some of the historical records are not in the target cohort" do
-          let(:historical_school_source_cohort) { create(:school_cohort, cohort: source_cohort) }
-          let(:historical_school) { historical_school_source_cohort.school }
-          let!(:induction_programme) { create(:induction_programme, :fip, school_cohort: historical_school_source_cohort) }
-          let!(:historical_record) do
-            create(:induction_record,
-                   participant_profile:,
-                   induction_programme:,
-                   induction_status: :changed,
-                   end_date: participant_profile.latest_induction_record.start_date)
-          end
-          let!(:historical_lead_provider) { historical_record.lead_provider }
-          let!(:historical_delivery_partner) { historical_record.delivery_partner }
-
-          context "when the historical school has not setup the target cohort" do
-            it "returns false and set errors" do
-              expect(form.save).to be_falsey
-              expect(form.errors.first.attribute).to eq(:historical_records)
-              expect(form.errors.first.message)
-                .to eq("#{target_cohort_start_year} academic year not setup by school #{historical_school.name}")
-            end
-          end
-
-          context "when the historical school has not setup default induction programme for the target cohort" do
-            let!(:historical_school_target_cohort) do
-              create(:school_cohort, cohort: target_cohort, school: historical_school)
-            end
-
-            before do
-              induction_programme.update!(partnership: nil)
-            end
-
-            it "returns false and set errors" do
-              expect(form.save).to be_falsey
-              expect(form.errors.first.attribute).to eq(:historical_records)
-              expect(form.errors.first.message)
-                .to eq("No default induction programme set for #{target_cohort_start_year} academic year by school #{historical_school.name}")
-            end
-          end
-
-          context "when the historical school is all setup for the target cohort" do
-            let!(:historical_school_target_cohort) do
-              create(:school_cohort, :with_induction_programme, cohort: target_cohort, school: historical_school)
-            end
-
-            it "moves all the historical records to the target cohort" do
-              expect(form.save).to be_truthy
-              expect(form.errors).to be_empty
-
-              participant_profile.reload.induction_records.each do |induction_record|
-                expect(induction_record.cohort_start_year).to eq(target_cohort_start_year)
-              end
-            end
-
-            context "when the school is already partnered with the providers" do
-              let(:existing_providers_partnership) do
-                create(:seed_partnership,
-                       school: historical_school,
-                       cohort: target_cohort,
-                       lead_provider: historical_lead_provider,
-                       delivery_partner: historical_delivery_partner)
-              end
-
-              before do
-                NewSeeds::Scenarios::InductionProgrammes::Fip.new(school_cohort: historical_school_target_cohort)
-                                                             .build(default_induction_programme: false)
-                                                             .with_partnership(partnership: existing_providers_partnership)
-              end
-
-              it "link historical records to the existing partnership" do
-                expect(form.save).to be_truthy
-                expect(historical_record.reload.partnership).to eq(existing_providers_partnership)
-              end
-            end
-
-            context "when the school is FIP not partnered with the providers" do
-              it "link historical records to a new relationship with the providers" do
-                expect(form.save).to be_truthy
-
-                expect(historical_record.reload.partnership).to be_relationship
-                expect(historical_record.lead_provider).to eq(historical_lead_provider)
-                expect(historical_record.delivery_partner).to eq(historical_delivery_partner)
-              end
-            end
-
-            context "when the school is not FIP" do
-              let!(:induction_programme) { create(:induction_programme, :cip, school_cohort: historical_school_source_cohort) }
-
-              it "link historical records to the default induction programme" do
-                expect(form.save).to be_truthy
-
-                expect(historical_record.reload.induction_programme).to eq(historical_school_target_cohort.default_induction_programme)
-              end
-            end
-          end
-        end
-
-        context "when some of the induction records are not in the target schedule" do
-          let(:historical_school_source_cohort) { create(:school_cohort, cohort: source_cohort) }
-          let(:historical_school) { historical_school_source_cohort.school }
-          let!(:induction_programme) { create(:induction_programme, school_cohort: historical_school_source_cohort) }
-          let!(:historical_record) do
-            create(:induction_record,
-                   participant_profile:,
-                   induction_programme:,
-                   schedule: create(:ecf_schedule))
-          end
-
-          let(:schedule) { create(:ecf_extended_schedule, cohort: target_cohort) }
-
-          subject(:form) do
-            described_class.new(participant_profile:, source_cohort_start_year:, schedule:)
-          end
-
-          before do
-            create(:school_cohort, :with_induction_programme, cohort: target_cohort, school: historical_school)
-          end
-
-          it "moves all the historical records to the target schedule" do
-            expect(form.save).to be_truthy
-            expect(form.errors).to be_empty
-
-            participant_profile.reload.induction_records.each do |induction_record|
-              expect(induction_record.schedule).to eq(schedule)
-            end
-          end
-        end
-
         context "when source_cohort_start_year matches target_cohort_start_year" do
           let(:current_induction_record) { participant_profile.induction_records.latest }
-          let(:historical_induction_record) { (participant_profile.induction_records - [current_induction_record]).first }
 
           subject(:form) do
             described_class.new(participant_profile:,
@@ -416,18 +308,6 @@ RSpec.describe Induction::AmendParticipantCohort do
           it "keeps the participant profile in the same schedule and cohort" do
             expect { form.save }.to not_change { participant_profile.schedule }
                                       .and not_change { participant_profile.school_cohort }
-          end
-
-          it "changes the historical induction records to the participant schedule" do
-            expect { form.save }.to change { historical_induction_record.reload.schedule }
-                                      .from(historical_induction_record.schedule)
-                                      .to(current_induction_record.schedule)
-          end
-
-          it "changes the historical induction records to the participant cohort" do
-            expect { form.save }.to change { historical_induction_record.reload.cohort_start_year }
-                                      .from(historical_induction_record.cohort_start_year)
-                                      .to(current_induction_record.cohort_start_year)
           end
         end
       end

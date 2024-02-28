@@ -1,29 +1,27 @@
 # frozen_string_literal: true
 
-# Put all the induction records of an ECF participant into the same cohort.
-# In doing so it will update the induction_programme and schedule of the induction records affected
-# as well as the ParticipantProfile instance itself.
-# The induction_programme is the default one for the induction record's school.
-# The schedule is the provided one or the default for the cohort of start year :target_cohort_start_year
+# Change the current cohort of an ECF participant.
+# In doing so it will add an IR with an induction_programme and schedule on the new cohort.
+# Also, the participant profile will get their cohort and schedule updated.
 #
-# This has the effect of moving the participant to a new cohort (if their latest induction record is affected)
-# or simply moving some/all of the historical induction records into the cohort given by the :target_cohort_start_year
-# param or obtained from the :schedule param.
+# The induction_programme will be the default one for the new cohort in the current school.
+# The schedule will be the provided one or the equivalent to the current but in destination cohort with start year :target_cohort_start_year
+#
+# Several validations are run before allowing the change. Specially important are existing declarations.
 #
 # Examples:
-#  - This will set induction_programme and schedule for all the induction records of the participant_profile
-#    not in an induction_programme and schedule in 2022/23 cohort
+#  - This will set induction_programme and schedule for the participant_profile to 2022/23 cohort checking they sits currently
+#      in 2021/2022
 #       Induction::AmendParticipantCohort.new(participant_profile:,
 #                                             source_cohort_start_year: 2021,
 #                                             target_cohort_start_year: 2022).save
 #
-#  - This will set induction_programme and schedule for all the induction records of the participant_profile
-#    not in an induction_programme in the cohort of :schedule or with an schedule other than the one provided.
+#  - This will set induction_programme and schedule for the participant_profile
+#    to the cohort of :schedule checking they sits currently in 2021/2022
 #       Induction::AmendParticipantCohort.new(participant_profile:,
 #                                             source_cohort_start_year: 2021,
 #                                             schedule:).save
 #
-
 module Induction
   class AmendParticipantCohort
     include ActiveModel::Model
@@ -92,9 +90,9 @@ module Induction
 
     def save
       return false unless valid?(:start)
-      return true if all_records_in_target?
+      return true if in_target?(induction_record)
 
-      valid? && current_induction_record_changed? && historical_records_changed?
+      valid? && current_induction_record_updated?
     end
 
   private
@@ -104,86 +102,15 @@ module Induction
       @target_cohort_start_year = (@target_cohort_start_year || @schedule&.cohort_start_year).to_i
     end
 
-    def all_records_in_target?
-      induction_records.all? { |induction_record| in_target?(induction_record) }
-    end
-
-    def current_induction_record_changed?
-      return true if in_target?(induction_record)
-
+    def current_induction_record_updated?
       ActiveRecord::Base.transaction do
-        induction_record.update!(induction_programme:, schedule:)
+        Induction::ChangeInductionRecord.call(induction_record:, changes: { induction_programme:, schedule: })
         participant_profile.update!(school_cohort: target_school_cohort, schedule:)
-      rescue ActiveRecord::RecordInvalid
+      rescue ActiveRecord::RecordInvalid => e
         errors.add(:induction_record, induction_record.errors.full_messages.first) if induction_record.errors.any?
         errors.add(:participant_profile, participant_profile.errors.full_messages.first) if participant_profile.errors.any?
+        errors.add(:induction_record, e.message) if errors.empty?
         false
-      end
-    end
-
-    def fip_historical_induction_programme_for(school_cohort, lead_provider_id, delivery_partner_id)
-      partnership = Partnership.create_with(relationship: true)
-                               .find_or_create_by!(school_id: school_cohort.school_id,
-                                                   cohort_id: school_cohort.cohort_id,
-                                                   lead_provider_id:,
-                                                   delivery_partner_id:)
-
-      partnership.induction_programmes.first ||
-        InductionProgramme.full_induction_programme.create!(school_cohort:, partnership:)
-    end
-
-    def historical_records_changed?
-      historical_records.all? do |historical_record|
-        next true if in_target?(historical_record)
-
-        begin
-          historical_record.update!(induction_programme: historical_induction_programme_for(historical_record),
-                                    schedule:)
-        rescue ActiveRecord::RecordInvalid
-          false
-        end
-      end
-    end
-
-    def historical_records
-      @historical_records ||= induction_records - [induction_record]
-    end
-
-    def historical_induction_programme_for(historical_record)
-      return historical_record.induction_programme if in_target_cohort?(historical_record)
-
-      historical_school_cohort = historical_target_school_cohort(historical_record.school)
-      historical_lead_provider_id = historical_record.lead_provider_id
-      historical_delivery_partner_id = historical_record.delivery_partner_id
-      set_default_programme = !historical_record.enrolled_in_fip? || !historical_lead_provider_id || !historical_delivery_partner_id
-      historical_induction_programme = if set_default_programme
-                                         historical_school_cohort.default_induction_programme
-                                       else
-                                         fip_historical_induction_programme_for(historical_school_cohort,
-                                                                                historical_lead_provider_id,
-                                                                                historical_delivery_partner_id)
-                                       end
-
-      historical_induction_programme.tap do |induction_programme|
-        if induction_programme.nil?
-          errors.add(:historical_records,
-                     :no_default_induction_programme,
-                     start_academic_year: target_cohort_start_year,
-                     school_name: historical_record.school.name)
-          raise ActiveRecord::RecordInvalid
-        end
-      end
-    end
-
-    def historical_target_school_cohort(school)
-      school.school_cohorts.for_year(target_cohort_start_year).first.tap do |school_cohort|
-        if school_cohort.nil?
-          errors.add(:historical_records,
-                     :school_cohort_not_setup,
-                     start_academic_year: target_cohort_start_year,
-                     school_name: school.name)
-          raise ActiveRecord::RecordInvalid
-        end
       end
     end
 
@@ -204,10 +131,6 @@ module Induction
                                                .joins(induction_programme: { school_cohort: :cohort })
                                                .where(cohorts: { start_year: source_cohort_start_year })
                                                .latest
-    end
-
-    def induction_records
-      @induction_records ||= participant_profile&.induction_records.to_a
     end
 
     def in_target?(induction_record)
@@ -235,7 +158,9 @@ module Induction
       @schedule ||= if induction_record && in_target_cohort?(induction_record)
                       induction_record.schedule
                     else
-                      Finance::Schedule::ECF.default_for(cohort: target_cohort)
+                      Finance::Schedule::ECF.find_by(cohort: target_cohort,
+                                                     schedule_identifier: induction_record&.schedule_identifier) ||
+                        Finance::Schedule::ECF.default_for(cohort: target_cohort)
                     end
     end
 
