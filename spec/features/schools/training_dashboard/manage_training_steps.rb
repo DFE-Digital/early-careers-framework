@@ -210,7 +210,8 @@ module ManageTrainingSteps
   end
 
   def and_i_can_manage_ects_and_mentors
-    expect(page).to have_link("Manage mentors and ECTs")
+    expect(page).to have_link("Early career teachers")
+    expect(page).to have_link("Mentors")
   end
 
   alias_method :then_i_can_manage_ects_and_mentors, :and_i_can_manage_ects_and_mentors
@@ -432,6 +433,7 @@ module ManageTrainingSteps
   end
 
   def and_the_participant_is_displayed_mentored_by(name)
+    puts page.html
     expect(page).to have_summary_row("Mentor", name)
   end
 
@@ -694,8 +696,12 @@ module ManageTrainingSteps
     click_on("Apply")
   end
 
-  def when_i_click_on_view_ects_and_mentors
-    click_on "View your ECTs and mentors"
+  def when_i_click_on_view_ects
+    click_on "View your ECTs"
+  end
+
+  def when_i_click_on_view_mentors
+    click_on "View your mentors"
   end
 
   def when_i_submit_an_empty_form
@@ -748,11 +754,15 @@ module ManageTrainingSteps
     choose("Yourself as a mentor", allow_label_click: true)
   end
 
-  def when_i_click_to_add_a_new_ect_or_mentor
-    click_on "Add ECT or mentor"
+  def when_i_click_to_add_a_new_ect
+    click_on "Add ECT"
   end
-  alias_method :when_i_click_to_add_a_new_participant, :when_i_click_to_add_a_new_ect_or_mentor
-  alias_method :and_i_click_to_add_a_new_ect_or_mentor, :when_i_click_to_add_a_new_ect_or_mentor
+  alias_method :and_i_click_to_add_a_new_ect, :when_i_click_to_add_a_new_ect
+
+  def when_i_click_to_add_a_new_mentor
+    click_on "Add Mentor"
+  end
+  alias_method :and_i_click_to_add_a_new_mentor, :when_i_click_to_add_a_new_mentor
 
   def when_i_select_to_add_a(participant_type)
     choose(participant_type, allow_label_click: true)
@@ -909,9 +919,14 @@ module ManageTrainingSteps
     click_on "Manage #{name}"
   end
 
-  def when_i_navigate_to_participants_dashboard
-    click_on("Manage mentors and ECTs")
-    then_i_am_taken_to_manage_mentors_and_ects_page
+  def when_i_navigate_to_ect_dashboard
+    click_on("Early career teachers")
+    then_i_am_taken_to_manage_ects_page
+  end
+
+  def when_i_navigate_to_mentors_dashboard
+    click_on("Mentors")
+    then_i_am_taken_to_manage_mentors_page
   end
 
   def when_i_change_ect_email
@@ -965,7 +980,7 @@ module ManageTrainingSteps
     expect(page).to have_text(@mentor.full_name)
   end
 
-  def then_i_see_the_participants_filter_with_counts(currently_training: 0, completed_induction: 0, no_longer_training: 0)
+  def then_i_see_the_ects_filter_with_counts(currently_training: 0, completed_induction: 0, no_longer_training: 0)
     return unless [currently_training, completed_induction, no_longer_training].map(&:positive?).many?
 
     expect(page).to have_content("Currently training (#{currently_training})") if currently_training.positive?
@@ -973,12 +988,19 @@ module ManageTrainingSteps
     expect(page).to have_content("No longer training (#{no_longer_training})") if no_longer_training.positive?
   end
 
+  def then_i_see_the_mentors_filter_with_counts(currently_mentoring: 1, not_mentoring: 0)
+    return unless [currently_mentoring, not_mentoring].map(&:positive?).many?
+
+    expect(page).to have_content("Currently mentoring (#{currently_mentoring})") if currently_mentoring.positive?
+    expect(page).to have_content("Not mentoring (#{not_mentoring})") if not_mentoring.positive?
+  end
+
   def then_i_see_the_participants_filtered_by(selected_option)
     expect(page).to have_field("filtered-by-#{selected_option.downcase.parameterize}-field", checked: true, visible: false, type: :radio)
   end
   alias_method :and_i_see_the_participants_filtered_by, :then_i_see_the_participants_filtered_by
 
-  def and_i_see_mentors_not_training_and_ects_not_being_trained_sorted_by_name
+  def and_i_see_ects_not_being_trained
     expect(page).to have_content("Not mentoring or being mentored\nDeferred participant Training deferred")
   end
 
@@ -986,18 +1008,13 @@ module ManageTrainingSteps
     expect(page).to have_content("Teachers who have completed their induction\nEligible Without-mentor\nCompleted #{2.days.ago.to_date.to_fs(:govuk)}\nCFI Without-mentor\nCompleted #{1.week.ago.to_date.to_fs(:govuk)}")
   end
 
-  def then_i_see_the_participants_sorted_by_mentor
-    expect(page).to have_content("Sort by: Mentor (A-Z)")
-    expect(page).to have_link(text: "Induction start date")
-    expect(page).to have_content("You need to assign a mentor to these ECTs.\nEligible Without-mentor\n\nMentor group\nMentor\n- Billy Mentor\nBilly Mentor Mentoring\nECTs\nmentored by Billy Mentor\nTraining ECT With-mentor Pending\nInduction started #{2.years.ago.to_date.to_fs(:govuk)}\n\nMentor group\nMentor\n- CFI Mentor\nCFI Mentor Waiting for TRN\nECTs\nmentored by CFI Mentor\nAnother training With-mentor Training\nInduction started #{1.year.ago.to_date.to_fs(:govuk)}")
+  def and_i_see_mentors_not_mentoring
+    expect(page).to have_content("CFI Mentor\nMentoring Not currently mentoring")
   end
-  alias_method :and_i_see_the_participants_sorted_by_mentor, :then_i_see_the_participants_sorted_by_mentor
 
-  def then_i_see_the_participants_sorted_by_induction_start_date
-    expect(page).to have_link("Mentor (A-Z)")
-    expect(page).to have_content("Eligible Without-mentor\nStatus Eligible for training\nMentor\nNo mentor assigned\nAssign a mentor\nAnother training With-mentor\nStatus Training\nInduction started #{1.year.ago.to_date.to_fs(:govuk)}\nMentor CFI Mentor\nTraining ECT With-mentor\nStatus Pending\nInduction started #{2.years.ago.to_date.to_fs(:govuk)}\nMentor Billy Mentor")
+  def and_i_see_mentors_currently_mentoring
+    expect(page).to have_content("Billy Mentor\nMentoring\nTraining ECT With-mentor\nInduction started #{2.years.ago.to_date.to_fs(:govuk)}")
   end
-  alias_method :and_i_see_the_participants_sorted_by_induction_start_date, :then_i_see_the_participants_sorted_by_induction_start_date
 
   def then_i_see_the_participant_name(full_name: @participant_data[:full_name])
     expect(page).to have_text(full_name)
@@ -1028,9 +1045,14 @@ module ManageTrainingSteps
     expect(page).to have_text("What we need to know about this mentor")
   end
 
-  def then_i_am_taken_to_manage_mentors_and_ects_page
-    expect(page).to have_selector("h1", text: "Manage mentors and ECTs")
-    expect(page).to have_text("Add ECT or mentor")
+  def then_i_am_taken_to_manage_ects_page
+    expect(page).to have_selector("h1", text: "Early career teachers (ECTs)")
+    expect(page).to have_text("Add ECT")
+  end
+
+  def then_i_am_taken_to_manage_mentors_page
+    expect(page).to have_selector("h1", text: "Mentors")
+    expect(page).to have_text("Add Mentor")
   end
 
   def then_i_am_taken_to_are_you_sure_page

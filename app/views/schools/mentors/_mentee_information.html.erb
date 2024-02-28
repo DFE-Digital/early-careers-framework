@@ -1,0 +1,18 @@
+<% mentees = participants.ects_mentored_by(participant) %>
+
+<% if mentees.present? %>
+  <ul class="govuk-list govuk-list--spaced">
+    <% mentees.each do |mentee| %>
+      <li>
+        <%= mentee.full_name %>
+        <% if mentee.induction_start_date.present? %>
+          <p class="govuk-hint govuk-!-margin-top-1 govuk-!-margin-bottom-4">
+            Induction started <%= mentee.induction_start_date.to_formatted_s(:govuk) %>
+          </p>
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  Not currently mentoring
+<% end %>

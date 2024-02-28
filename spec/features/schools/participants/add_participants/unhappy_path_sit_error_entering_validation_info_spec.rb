@@ -14,8 +14,8 @@ RSpec.describe "Add participants", js: true do
   end
 
   scenario "Induction tutor can add new ECT participant" do
-    when_i_navigate_to_participants_dashboard
-    when_i_click_to_add_a_new_ect_or_mentor
+    when_i_navigate_to_ect_dashboard
+    when_i_click_to_add_a_new_ect
     then_i_should_be_on_the_who_to_add_page
 
     when_i_select_to_add_a "ECT"

@@ -30,7 +30,7 @@ RSpec.describe "SIT removing participants from the cohort", js: true, with_featu
     click_on "Sign out"
 
     sign_in_as sit_profile.user
-    visit school_participants_path(school_cohort.school)
+    visit school_mentors_path(school_cohort.school)
     click_on mentor_profile.user.full_name
     click_on "Remove #{mentor_profile.user.full_name}"
 
@@ -44,8 +44,13 @@ RSpec.describe "SIT removing participants from the cohort", js: true, with_featu
       .to have_content("#{mentor_profile.user.full_name} has been removed from this cohort")
       .and be_accessible
 
-    click_on "Return to manage mentors and ECTs"
+    click_on "Return to manage mentors"
+    choose("Currently mentoring", allow_label_click: true)
+    click_on("Apply")
     expect(page).to have_no_content mentor_profile.user.full_name
+    choose("Not mentoring", allow_label_click: true)
+    click_on("Apply")
+    expect(page).to have_content mentor_profile.user.full_name
     click_on "Sign out"
 
     sign_in_as mentor_profile.user
@@ -54,7 +59,7 @@ RSpec.describe "SIT removing participants from the cohort", js: true, with_featu
 
   scenario "removing ineligible participant" do
     sign_in_as sit_profile.user
-    visit school_participants_path(school_cohort.school)
+    visit school_early_career_teachers_path(school_cohort.school)
 
     click_on ineligible_user.full_name
     click_on "Remove #{ineligible_user.full_name}"
@@ -63,7 +68,7 @@ RSpec.describe "SIT removing participants from the cohort", js: true, with_featu
     expect { click_on "Confirm and remove" }.to change { ineligible_ect_profile.reload.status }.from("active").to("withdrawn")
     expect(page).to have_content("#{ineligible_user.full_name} has been removed from this cohort")
 
-    click_on "Return to manage mentors and ECTs"
+    click_on "Return to manage ECTs"
     expect(page).to have_no_content ineligible_user.full_name
     when_i_select("No longer training")
     click_on("Apply")

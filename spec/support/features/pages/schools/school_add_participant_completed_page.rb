@@ -21,10 +21,16 @@ module Pages
       self
     end
 
-    def view_your_ects_and_mentors
-      click_on "View your ECTs and mentors"
+    def view_your_ects
+      click_on "View your ECTs"
 
-      Pages::SchoolParticipantsDashboardPage.loaded
+      Pages::SchoolEarlyCareerTeachersDashboardPage.loaded
+    end
+
+    def view_your_mentors
+      click_on "View your mentors"
+
+      Pages::SchoolMentorsDashboardPage.loaded
     end
   end
 end

@@ -1,0 +1,30 @@
+<%
+  profile = @profile
+  mentor_profile = @mentor_profile
+  school = @school
+  induction_record = @induction_record
+  ects = @ects
+  mentors_added = @mentors_added
+  possible_ects = @possible_ects
+%>
+
+<% content_for :title, "Mentor details" %>
+
+<% content_for :before_content, govuk_back_link(text: "Back to mentors", href: school_mentors_path(filtered_by: params[:filtered_by])) %>
+
+<%= render "schools/dashboard/nav", selected: school_mentors_path %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <span class="govuk-caption-l"><%= school.name %></span>
+    <h1 class="govuk-heading-l"><%= profile.full_name %></h1>
+
+    <%= render("schools/mentors/personal_details", profile:, induction_record:, school:) %>
+
+    <%= render("schools/mentors/mentoring", profile:, school:, ects:, possible_ects:, mentors_added:) %>
+
+    <%= render("schools/mentors/mentor_training", profile:, school:, induction_record:) %>
+
+    <%= render("schools/mentors/no_longer_training", profile:, induction_record:) %>
+  </div>
+</div>

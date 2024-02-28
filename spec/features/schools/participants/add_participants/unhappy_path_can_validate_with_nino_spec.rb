@@ -17,8 +17,8 @@ RSpec.describe "Add participants", js: true do
   end
 
   scenario "Induction tutor can add new ECT participant when dqt returns a match with nino" do
-    when_i_navigate_to_participants_dashboard
-    and_i_choose_to_add_an_ect_or_mentor_on_the_school_participants_dashboard_page
+    when_i_navigate_to_ect_dashboard
+    and_i_choose_to_add_an_ect_on_the_school_early_career_teachers_dashboard_page
     and_i_choose_to_add_a_new_ect_on_the_school_add_participant_wizard
 
     when_i_add_full_name_to_the_school_add_participant_wizard @participant_data[:full_name]
@@ -37,8 +37,8 @@ RSpec.describe "Add participants", js: true do
 
   scenario "Induction tutor can add new mentor participant when dqt returns a match with nino inside the auto assignment window" do
     inside_auto_assignment_window do
-      when_i_navigate_to_participants_dashboard
-      and_i_choose_to_add_an_ect_or_mentor_on_the_school_participants_dashboard_page
+      when_i_navigate_to_mentors_dashboard
+      and_i_choose_to_add_a_mentor_on_the_school_mentors_dashboard_page
       and_i_choose_to_add_a_new_mentor_on_the_school_add_participant_wizard
 
       when_i_add_mentor_full_name_to_the_school_add_participant_wizard @participant_data[:full_name]
@@ -58,8 +58,8 @@ RSpec.describe "Add participants", js: true do
 
   scenario "Induction tutor can add new mentor participant when dqt returns a match with nino outside the auto assignment window" do
     outside_auto_assignment_window do
-      when_i_navigate_to_participants_dashboard
-      and_i_choose_to_add_an_ect_or_mentor_on_the_school_participants_dashboard_page
+      when_i_navigate_to_mentors_dashboard
+      and_i_choose_to_add_a_mentor_on_the_school_mentors_dashboard_page
       and_i_choose_to_add_a_new_mentor_on_the_school_add_participant_wizard
 
       when_i_add_mentor_full_name_to_the_school_add_participant_wizard @participant_data[:full_name]

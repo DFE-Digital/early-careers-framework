@@ -1,12 +1,13 @@
 # frozen_string_literal: true
 
 class PrimaryNavComponent < ViewComponent::Base
-  attr_reader :wide
+  attr_reader :wide, :reversed
 
   renders_many :nav_items, "NavItemComponent"
 
-  def initialize(wide: false)
+  def initialize(wide: false, reversed: false)
     @wide = wide
+    @reversed = reversed
   end
 
   class NavItemComponent < ViewComponent::Base

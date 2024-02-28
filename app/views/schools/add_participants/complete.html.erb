@@ -42,6 +42,10 @@
       <% end %>
     <% end %>
 
-    <%= govuk_link_to "View your ECTs and mentors", @wizard.dashboard_path, no_visited_state: true %>
+    <% if @wizard.ect_participant? %>
+      <%= govuk_link_to "View your ECTs", school_early_career_teachers_path, no_visited_state: true %>
+    <% else %>
+      <%= govuk_link_to "View your mentors", school_mentors_path, no_visited_state: true %>
+    <% end %>
   </div>
 </div>

@@ -31,84 +31,6 @@ RSpec.describe "Schools::Participants", type: :request, js: true, with_feature_f
     sign_in user
   end
 
-  describe "GET /schools/:school_id/participants" do
-    it "renders participants template" do
-      get "/schools/#{school.slug}/participants"
-
-      expect(response).to render_template("schools/participants/index")
-    end
-
-    it "renders participant details" do
-      get "/schools/#{school.slug}/participants"
-
-      expect(response.body).to include(CGI.escapeHTML(ect_user.full_name))
-      expect(response.body).to include(CGI.escapeHTML(mentor_user.full_name))
-      expect(response.body).not_to include(CGI.escapeHTML(unrelated_mentor.full_name))
-      expect(response.body).not_to include(CGI.escapeHTML(unrelated_ect.full_name))
-    end
-
-    it "renders participant details when they have been withdrawn by the provider" do
-      ect_profile.training_status_withdrawn!
-      get "/schools/#{school.slug}/participants"
-
-      expect(response).to render_template("schools/participants/index")
-      expect(response.body).to include(CGI.escapeHTML(ect_user.full_name))
-    end
-
-    it "does not list participants with withdrawn profile records" do
-      get "/schools/#{school.slug}/participants"
-
-      expect(response.body).not_to include(CGI.escapeHTML(withdrawn_ect.full_name))
-    end
-  end
-
-  describe "GET /schools/:school_id/participants/:id" do
-    it "renders participant template" do
-      get "/schools/#{school.slug}/participants/#{ect_profile.id}"
-
-      expect(response).to render_template("schools/participants/show")
-    end
-
-    it "renders participant details" do
-      get "/schools/#{school.slug}/participants/#{ect_profile.id}"
-
-      expect(response.body).to include(CGI.escapeHTML(ect_user.full_name))
-      expect(response.body).to include(CGI.escapeHTML(mentor_user.full_name))
-    end
-
-    context "when the participant is an ECT" do
-      before do
-        ect_profile.current_induction_record.update!(mentor_profile: mentor_profile_2)
-      end
-
-      it "uses the mentor from the induction record" do
-        get "/schools/#{school.slug}/participants/#{ect_profile.id}"
-        expect(assigns(:mentor_profile)).to eq mentor_profile_2
-      end
-
-      context "when there are mentors in the pool" do
-        it "mentors_added is true" do
-          get "/schools/#{school.slug}/participants/#{ect_profile.id}"
-          expect(assigns(:mentors_added)).to be true
-        end
-      end
-
-      context "when there are no mentors in the pool" do
-        let!(:school_mentors) { [mentor_profile, mentor_profile_2, unrelated_mentor_profile] }
-        before do
-          school_mentors.each do |mentor|
-            Mentors::RemoveFromSchool.call(mentor_profile: mentor, school:)
-          end
-        end
-
-        it "mentors_added is false" do
-          get "/schools/#{school.slug}/participants/#{ect_profile.id}"
-          expect(assigns(:mentors_added)).to be false
-        end
-      end
-    end
-  end
-
   describe "GET /schools/:school_id/participants/:id/new-ect" do
     let!(:new_ect) { create(:ect, school_cohort:, lead_provider:) }
 
@@ -135,7 +57,7 @@ RSpec.describe "Schools::Participants", type: :request, js: true, with_feature_f
 
       put("/schools/#{school.slug}/participants/#{mentor_profile.id}/add-ect", params:)
 
-      expect(response).to redirect_to school_participant_path(id: mentor_profile.id, school_id: school.slug)
+      expect(response).to redirect_to school_mentor_path(id: mentor_profile.id, school_id: school.slug)
       expect(new_ect.reload.mentor).to eq(mentor_user)
     end
 
@@ -174,7 +96,7 @@ RSpec.describe "Schools::Participants", type: :request, js: true, with_feature_f
       params = { participant_mentor_form: { mentor_id: mentor_user_2.id } }
       put("/schools/#{school.slug}/participants/#{ect_profile.id}/update-mentor", params:)
 
-      expect(response).to redirect_to school_participant_path(id: ect_profile.id, school_id: school.slug)
+      expect(response).to redirect_to school_early_career_teacher_path(id: ect_profile.id, school_id: school.slug)
       expect(ect_user.reload.early_career_teacher_profile.mentor).to eq(mentor_user_2)
     end
 

@@ -1,0 +1,30 @@
+<% if participants.ects.any? %>
+  <% participants.ects.each do |ect| %>
+    <%= govuk_summary_card(title: link_to_participant(ect.participant_profile, school, index_filter: filter.filtered_by.to_s)) do |card|
+      card.with_summary_list(
+        rows: [
+          { key: {
+            text: "Status",
+          },
+            value: {
+              text: render(StatusTags::SchoolParticipantStatusTag.new(
+                participant_profile: ect.participant_profile,
+                induction_record: ect.induction_record,
+                display_description: false,
+                display_induction_start_date: true)),
+            },
+          },
+          { key: {
+            text: "Mentor",
+          },
+            value: {
+              text: (ect.mentored? ? ect.mentor.full_name : missing_mentor_html(ect.participant_profile)),
+            },
+          },
+        ],
+        classes: ["govuk-summary-list--no-border", "govuk-!-margin-bottom-0"])
+    end %>
+  <% end %>
+<% else %>
+  <p class="govuk-body">No early career teachers currently training.</p>
+<% end %>

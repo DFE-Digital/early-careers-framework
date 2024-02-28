@@ -10,6 +10,7 @@
 
     <p class="govuk-body">If you reported this by mistake, email our support team for help: <%= govuk_mail_to "continuing-professional-development@digital.education.gov.uk" %></p>
 
-    <%= govuk_link_to "View your ECTs and mentors", @wizard.dashboard_path, no_visited_state: true %>
+    <%= govuk_link_to "View your ECTs", school_early_career_teachers_path, no_visited_state: true %>
+    <%= govuk_link_to "View your mentors", school_mentors_path, no_visited_state: true %>
   </div>
 </div>

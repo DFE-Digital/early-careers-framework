@@ -18,10 +18,10 @@ module Pages
       element_has_content?(self, "Confirm you want to remove #{name}")
     end
 
-    def return_to_the_ect_and_mentors
-      click_on "Return to your ECTs and mentors"
+    def return_to_the_ects
+      click_on "Return to your ECTs"
 
-      Pages::SchoolParticipantsDashboardPage.loaded
+      Pages::SchoolEarlyCareerTeachersDashboardPage.loaded
     end
   end
 end

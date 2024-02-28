@@ -11,16 +11,22 @@ module Pages
       element_has_content?(header, "#{old_name}’s name has been edited to #{new_name}")
     end
 
-    def return_to_the_participant_profile
+    def return_to_the_ect_profile
       click_on "Return to their details"
 
-      Pages::SchoolParticipantDetailsPage.loaded
+      Pages::SchoolEarlyCareerTeacherDetailsPage.loaded
     end
 
-    def return_to_the_ect_and_mentors
-      click_on("Return to manage mentors and ECTs")
+    def return_to_the_mentor_profile
+      click_on "Return to their details"
 
-      Pages::SchoolParticipantsDashboardPage.loaded
+      Pages::SchoolMentorDetailsPage.loaded
+    end
+
+    def return_to_the_ects
+      click_on("Return to manage ECTs")
+
+      Pages::SchoolEarlyCareerTeachersDashboardPage.loaded
     end
   end
 end

@@ -31,4 +31,12 @@ class TeacherProfile < ApplicationRecord
   def self.ransackable_attributes(_auth_object = nil)
     %w[trn]
   end
+
+  def ect?
+    participant_profiles.any?(&:ect?)
+  end
+
+  def mentor?
+    participant_profiles.any?(&:mentor?)
+  end
 end

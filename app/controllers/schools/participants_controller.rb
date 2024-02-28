@@ -2,12 +2,13 @@
 
 class Schools::ParticipantsController < Schools::BaseController
   include AppropriateBodySelection::Controller
+  include Schools::DashboardHelper
 
   before_action :set_school
-  before_action :set_participant, except: %i[index email_used]
+  before_action :set_participant, except: :email_used
   before_action :set_possible_ects, only: %i[show new_ect add_ect]
   before_action :build_mentor_form, only: :edit_mentor
-  before_action :set_mentors_added, only: %i[index show]
+  before_action :set_mentors_added, only: :show
   before_action :authorize_induction_record, only: %i[edit_name
                                                       update_name
                                                       edit_email
@@ -19,19 +20,10 @@ class Schools::ParticipantsController < Schools::BaseController
 
   helper_method :can_appropriate_body_be_changed?, :participant_has_appropriate_body?
 
-  def index
-    @participants = Dashboard::Participants.new(school: @school, user: current_user)
-    @filter = Dashboard::Participants::Filter.new(dashboard_participants: @participants,
-                                                  filtered_by: params[:filtered_by],
-                                                  sorted_by: params[:sorted_by])
-  end
-
+  # This page has been split into /schools/:school_id/early_career_teachers/:id and /schools/:school_id/mentors/:id
+  # To preserve bookmarks I've added a redirect to the correct page.
   def show
-    @induction_record = @profile.induction_records.for_school(@school).latest || @profile.latest_induction_record
-    @first_induction_record = @profile.induction_records.oldest
-    @mentor_profile = @induction_record.mentor_profile
-    @ects = Dashboard::Participants.new(school: @school, user: current_user)
-                                   .ects_mentored_by(@profile)
+    redirect_to path_to_participant(@profile, @school)
   end
 
   def edit_name
@@ -81,7 +73,7 @@ class Schools::ParticipantsController < Schools::BaseController
     Induction::ChangeMentor.call(induction_record: @ect_induction_record, mentor_profile: @profile)
     @message = "#{@profile.full_name} has been assigned to #{@ect_induction_record.participant_full_name}"
 
-    redirect_to school_participant_path(id: @profile.id, school_id: @school.slug)
+    redirect_to path_to_participant(@profile, @school)
   end
 
   def edit_mentor; end
@@ -102,7 +94,7 @@ class Schools::ParticipantsController < Schools::BaseController
       Induction::ChangeMentor.call(induction_record:, mentor_profile: new_mentor_profile)
       @message = "#{new_mentor_profile.full_name} has been assigned to #{@profile.full_name}"
 
-      redirect_to school_participant_path(id: @profile.id, school_id: @school.slug)
+      redirect_to path_to_participant(@profile, @school)
     else
       track_validation_error(@mentor_form)
       render :edit_mentor
@@ -113,7 +105,7 @@ class Schools::ParticipantsController < Schools::BaseController
     if can_appropriate_body_be_changed?
       start_appropriate_body_selection
     else
-      redirect_to school_participant_path(id: @profile.id)
+      redirect_to path_to_participant(@profile, @school)
     end
   end
 
@@ -176,7 +168,7 @@ private
 
   def start_appropriate_body_selection
     super action_name: @induction_record.appropriate_body_id.present? ? :change : :add,
-          from_path: school_participant_path(id: @profile.id),
+          from_path: path_to_participant(@profile, @school),
           submit_action: :save_appropriate_body,
           school_name: @profile.user.full_name,
           ask_appointed: false,

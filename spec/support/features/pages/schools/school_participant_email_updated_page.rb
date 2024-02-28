@@ -11,16 +11,22 @@ module Pages
       element_has_content?(header, "#{name}’s email address has been updated")
     end
 
-    def return_to_the_participant_profile
+    def return_to_the_ect_profile
       click_on "Return to their details"
 
-      Pages::SchoolParticipantDetailsPage.loaded
+      Pages::SchoolEarlyCareerTeacherDetailsPage.loaded
     end
 
-    def return_to_the_ect_and_mentors
-      click_on "Return to your ECTs and mentors"
+    def return_to_the_mentor_profile
+      click_on "Return to their details"
 
-      Pages::SchoolParticipantsDashboardPage.loaded
+      Pages::SchoolMentorDetailsPage.loaded
+    end
+
+    def return_to_the_ects
+      click_on "Return to your ECTs"
+
+      Pages::SchoolEarlyCareerTeachersDashboardPage.loaded
     end
   end
 end

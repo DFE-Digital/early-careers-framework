@@ -5,9 +5,8 @@
     <% participants.no_longer_training.sort_by(&:full_name).each do |participant| %>
       <% list.with_row do |row| %>
         <% row.with_key(text: govuk_link_to(participant.full_name,
-                                       school_participant_path(id: participant.participant_profile_id,
-                                                               school_id: school.slug),
-                                       no_visited_state: true),
+                                            path_to_participant(participant.participant_profile, school, index_filter: filter.filtered_by.to_s),
+                                            no_visited_state: true),
                    classes: ["govuk-!-font-weight-regular", "govuk-\!-padding-bottom-static-0"]) %>
         <% row.with_value(
                text: render(StatusTags::SchoolParticipantStatusTag.new(
@@ -18,4 +17,6 @@
       <% end %>
     <% end %>
   <% end %>
+<% else %>
+  <p class="govuk-body">No early career teachers not in training.</p>
 <% end %>

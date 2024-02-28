@@ -17,8 +17,8 @@ RSpec.describe "Add participants", js: true do
   end
 
   scenario "Induction tutor cannot add new ECT participant when dqt returns no match" do
-    when_i_navigate_to_participants_dashboard
-    and_i_choose_to_add_an_ect_or_mentor_on_the_school_participants_dashboard_page
+    when_i_navigate_to_ect_dashboard
+    and_i_choose_to_add_an_ect_on_the_school_early_career_teachers_dashboard_page
     and_i_choose_to_add_a_new_ect_on_the_school_add_participant_wizard
     and_i_add_full_name_to_the_school_add_participant_wizard @participant_data[:full_name]
     and_i_add_teacher_reference_number_to_the_school_add_participant_wizard @participant_data[:full_name], @participant_data[:trn]
@@ -28,12 +28,12 @@ RSpec.describe "Add participants", js: true do
     then_i_am_on_the_school_add_participant_still_cannot_find_their_details_page
     then_the_page_should_be_accessible
     then_i_cant_add_participant_on_the_school_add_participant_still_cannot_find_their_details_page
-    then_i_can_view_my_ects_and_mentors_on_the_school_add_participant_still_cannot_find_their_details_page
+    then_i_can_view_my_ects_on_the_school_add_participant_still_cannot_find_their_details_page
   end
 
   scenario "Induction tutor cannot add new mentor participant when dqt returns no match" do
-    when_i_navigate_to_participants_dashboard
-    and_i_choose_to_add_an_ect_or_mentor_on_the_school_participants_dashboard_page
+    when_i_navigate_to_mentors_dashboard
+    and_i_choose_to_add_a_mentor_on_the_school_mentors_dashboard_page
     and_i_choose_to_add_a_new_mentor_on_the_school_add_participant_wizard
     and_i_add_mentor_full_name_to_the_school_add_participant_wizard @participant_data[:full_name]
     and_i_add_teacher_reference_number_to_the_school_add_participant_wizard @participant_data[:full_name], @participant_data[:trn]
@@ -43,6 +43,6 @@ RSpec.describe "Add participants", js: true do
     then_i_am_on_the_school_add_participant_still_cannot_find_their_details_page
     then_the_page_should_be_accessible
     then_i_cant_add_participant_on_the_school_add_participant_still_cannot_find_their_details_page
-    then_i_can_view_my_ects_and_mentors_on_the_school_add_participant_still_cannot_find_their_details_page
+    then_i_can_view_my_mentors_on_the_school_add_participant_still_cannot_find_their_details_page
   end
 end

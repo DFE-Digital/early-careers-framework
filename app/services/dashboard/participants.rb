@@ -2,18 +2,29 @@
 
 module Dashboard
   class Participants
-    attr_reader :completed_induction, :mentors, :orphan_ects, :school, :user, :latest_year, :active_mentors
+    attr_reader :completed_induction,
+                :mentors,
+                :orphan_ects,
+                :active_mentors,
+                :currently_mentoring_mentors,
+                :not_mentoring_mentors,
+                :school,
+                :user,
+                :latest_year,
+                :type
 
-    def initialize(school:, user:)
+    def initialize(school:, user:, type: :all)
       @active_mentors = []
       @completed_induction = []
       @currently_training_ects = []
       @no_longer_training_ects = []
-      @no_longer_training_mentors = []
+      @currently_mentoring_mentors = []
+      @not_mentoring_mentors = []
       @latest_year = Cohort.active_registration_cohort.start_year
       @orphan_ects = []
       @school = school
       @user = user
+      @type = type
 
       process_participants
     end
@@ -23,7 +34,7 @@ module Dashboard
     end
 
     def currently_training_count
-      (currently_training_ects + orphan_ects + active_mentors).size
+      (currently_training_ects + orphan_ects).size
     end
 
     def no_longer_training_count
@@ -47,12 +58,12 @@ module Dashboard
     end
 
     def no_longer_training
-      @no_longer_training ||= (no_longer_training_mentors + no_longer_training_ects).sort_by(&:full_name)
+      @no_longer_training ||= no_longer_training_ects.sort_by(&:full_name)
     end
 
   private
 
-    attr_reader :currently_training_ects, :no_longer_training_ects, :no_longer_training_mentors
+    attr_reader :currently_training_ects, :no_longer_training_ects
 
     def dashboard_mentor(mentor)
       return mentor if mentor.is_a?(Dashboard::Participant)
@@ -117,10 +128,6 @@ module Dashboard
       @orphan_ects << dashboard_participant(induction_record.participant_profile_id, induction_record:)
     end
 
-    def no_longer_training_mentor(induction_record)
-      @no_longer_training_mentors << dashboard_participant(induction_record.participant_profile_id, induction_record:)
-    end
-
     def process_participants
       process_ects
       process_mentors
@@ -146,7 +153,7 @@ module Dashboard
       induction_records
         .reject(&:ect?)
         .each do |induction_record|
-          next no_longer_training_mentor(induction_record) if induction_record.deferred_or_transferred_or_withdrawn?
+          next if induction_record.deferred_or_transferred_or_withdrawn?
 
           @active_mentors << dashboard_participant(induction_record.participant_profile_id, induction_record:)
         end
@@ -162,11 +169,37 @@ module Dashboard
       orphan_mentor_ids.each do |mentor_profile_id|
         @mentors[dashboard_participant(mentor_profile_id)] = nil
       end
+
+      induction_records
+        .select(&:mentor?)
+        .each do |induction_record|
+          mentees = ects_mentored_by(induction_record.participant_profile)
+          next currently_mentoring_mentor(induction_record) if mentees.present?
+
+          not_mentoring_mentor(induction_record)
+        end
+    end
+
+    def currently_mentoring_mentor(induction_record)
+      @currently_mentoring_mentors << dashboard_participant(induction_record.participant_profile_id, induction_record:)
+    end
+
+    def not_mentoring_mentor(induction_record)
+      @not_mentoring_mentors << dashboard_participant(induction_record.participant_profile_id, induction_record:)
+    end
+
+    def currently_mentoring_count
+      currently_mentoring_mentors.size
+    end
+
+    def not_mentoring_count
+      not_mentoring_mentors.size
     end
 
     def sorted_ects
       ects = (currently_training_ects + orphan_ects).sort_by do |ect|
-        [ect.induction_start_date || Float::INFINITY, ect.full_name]
+        has_mentor = ect.mentor_profile_id.present? ? 0 : 1
+        [has_mentor, ect.induction_start_date || Float::INFINITY, ect.full_name]
       end
 
       ects.reverse

@@ -99,12 +99,12 @@ RSpec.feature "ECT doing FIP: after cohort transfer", type: :feature do
     given_i_sign_in_as_the_user_with_the_full_name sit_full_name
 
     school_dashboard = Pages::SchoolDashboardPage.load(slug: school.slug)
-    school_dashboard.view_participant_dashboard
+    school_dashboard.view_ect_dashboard
 
-    participant_dashboard = Pages::SchoolParticipantsDashboardPage.loaded(slug: school.slug)
+    participant_dashboard = Pages::SchoolEarlyCareerTeachersDashboardPage.loaded(slug: school.slug)
     participant_dashboard.view_participant participant_full_name
 
-    participant_details = Pages::SchoolParticipantDetailsPage.loaded(slug: school.slug, participant_id: training_record_id)
+    participant_details = Pages::SchoolEarlyCareerTeacherDetailsPage.loaded(slug: school.slug, participant_id: training_record_id)
     expect(participant_details).to have_participant_name participant_full_name
     expect(participant_details).to have_email participant_email
     expect(participant_details).to have_full_name participant_full_name

@@ -9,12 +9,21 @@
     </div>
 
     <ul class="govuk-list">
-      <li><%= govuk_link_to "Return to their details",
-                            school_participant_path(id: @profile),
+      <% if @profile.mentor? %>
+        <li><%= govuk_link_to "Return to their details",
+                            school_mentor_path(id: @profile),
                             no_visited_state: true %></li>
-      <li><%= govuk_link_to "Return to manage mentors and ECTs",
-                            school_participants_path,
-                            no_visited_state: true %></li>
+        <li><%= govuk_link_to "Return to manage mentors",
+                              school_mentors_path,
+                              no_visited_state: true %></li>
+      <% else %>
+        <li><%= govuk_link_to "Return to their details",
+                              school_early_career_teacher_path(id: @profile),
+                              no_visited_state: true %></li>
+        <li><%= govuk_link_to "Return to manage ECTs",
+                              school_early_career_teachers_path,
+                              no_visited_state: true %></li>
+      <% end %>
     </ul>
   </div>
 </div>

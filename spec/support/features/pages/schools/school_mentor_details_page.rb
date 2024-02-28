@@ -3,8 +3,8 @@
 require_relative "../base_page"
 
 module Pages
-  class SchoolParticipantDetailsPage < ::Pages::BasePage
-    set_url "/schools/{slug}/participants/{participant_id}"
+  class SchoolMentorDetailsPage < ::Pages::BasePage
+    set_url "/schools/{slug}/mentors/{participant_id}"
     set_primary_heading(/^.*$/)
 
     def has_participant_name?(full_name)

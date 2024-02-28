@@ -3,18 +3,18 @@
 require_relative "../base_page"
 
 module Pages
-  class SchoolParticipantsDashboardPage < ::Pages::BasePage
-    set_url "/schools/{slug}/participants"
-    set_primary_heading "Manage mentors and ECTs"
+  class SchoolEarlyCareerTeachersDashboardPage < ::Pages::BasePage
+    set_url "/schools/{slug}/early_career_teachers"
+    set_primary_heading "Early career teachers (ECTs)"
 
-    def choose_to_add_an_ect_or_mentor
-      click_on "Add ECT or mentor"
+    def choose_to_add_an_ect
+      click_on "Add ECT"
 
       Pages::SchoolAddParticipantWizard.loaded
     end
 
-    def choose_to_transfer_an_ect_or_mentor
-      click_on "Add ECT or mentor"
+    def choose_to_transfer_an_ect
+      click_on "Add ECT"
 
       Pages::SchoolTransferParticipantWizard.loaded
     end
@@ -28,7 +28,7 @@ module Pages
       find_participant(participant_name)
       click_on(participant_name)
 
-      Pages::SchoolParticipantDetailsPage.loaded
+      Pages::SchoolEarlyCareerTeacherDetailsPage.loaded
     end
 
   private

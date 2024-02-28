@@ -90,7 +90,7 @@ module Schools
       end
 
       def abandon_path
-        school_participants_path
+        school_dashboard_path
       end
 
       def change_path_for(step:)

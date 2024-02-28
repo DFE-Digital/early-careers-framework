@@ -73,14 +73,15 @@
       end
     end %>
 
+    <%= render "layouts/phase_banner" unless params[:controller].starts_with?("admin") %>
+
     <%= yield(:nav_bar) %>
 
-    <%= render "layouts/phase_banner" unless params[:controller].starts_with?("admin") %>
     <%= render "layouts/maintenance_notification_banner" %>
 
     <% if current_user != true_user %>
       <div class="govuk-width-container">
-        <%= render GovukComponent::NotificationBannerComponent.new(title_text: 'Important', classes: 'govuk-!-margin-top-0 govuk-!-margin-bottom-5', html_attributes: { data: { test: "notification-banner"} }) do |banner| %>
+        <%= render GovukComponent::NotificationBannerComponent.new(title_text: 'Important', classes: 'govuk-!-margin-top-5 govuk-!-margin-bottom-5', html_attributes: { data: { test: "notification-banner"} }) do |banner| %>
           <p class="govuk-notification-banner__heading">
             You are impersonating <%= govuk_link_to current_user.full_name %> (<%= current_user.email %>)
           </p>

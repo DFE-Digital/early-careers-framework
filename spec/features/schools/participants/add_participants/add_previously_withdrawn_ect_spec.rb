@@ -213,8 +213,8 @@ private
   end
 
   def when_i_go_to_add_new_ect_page
-    click_on "Manage mentors and ECTs"
-    click_on "Add ECT or mentor"
+    click_on "Early career teachers"
+    click_on "Add ECT"
   end
 
   def and_i_go_through_the_who_do_you_want_to_add_page
@@ -346,7 +346,7 @@ private
 
   def when_i_check_the_ect_details
     click_on "Confirm and add"
-    click_on "View your ECTs and mentors"
+    click_on "View your ECTs"
     click_on "George ECT"
   end
 
