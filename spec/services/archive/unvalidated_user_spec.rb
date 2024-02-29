@@ -216,4 +216,15 @@ RSpec.describe Archive::UnvalidatedUser do
       }.to raise_error Archive::ArchiveError
     end
   end
+
+  context "when the user is a mentor user on a participants declaration" do
+    let(:participant_profile) { create(:mentor_participant_profile) }
+    let!(:declaration) { create(:seed_ecf_participant_declaration, :valid, mentor_user_id: user.id) }
+
+    it "raises an ArchiveError" do
+      expect {
+        service_call
+      }.to raise_error Archive::ArchiveError
+    end
+  end
 end

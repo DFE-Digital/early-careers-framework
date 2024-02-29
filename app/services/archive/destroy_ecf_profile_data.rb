@@ -40,7 +40,12 @@ module Archive
 
           participant_profile.participant_profile_states.destroy_all
           participant_profile.participant_profile_schedules.destroy_all
-          participant_profile.participant_declarations.destroy_all
+          participant_profile.participant_declarations.each do |declaration|
+            declaration.participant_declaration_attempts.destroy_all
+            declaration.declaration_states.destroy_all
+            declaration.statement_line_items.destroy_all
+            declaration.destroy!
+          end
           participant_profile.induction_records.destroy_all
           participant_profile.validation_decisions.destroy_all
           participant_profile.deleted_duplicates.destroy_all
