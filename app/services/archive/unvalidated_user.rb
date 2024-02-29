@@ -45,6 +45,8 @@ module Archive
         raise ArchiveError, "User #{user.id} has transfer records"
       elsif user_has_gai_id?
         raise ArchiveError, "User #{user.id} has a Get an Identity ID"
+      elsif user_is_mentor_on_declarations?
+        raise ArchiveError, "User #{user.id} is mentor on declarations"
       end
     end
 
@@ -78,6 +80,10 @@ module Archive
 
     def user_has_gai_id?
       user.get_an_identity_id.present?
+    end
+
+    def user_is_mentor_on_declarations?
+      ParticipantDeclaration.where(mentor_user_id: user.id).any?
     end
 
     def destroy_user!
