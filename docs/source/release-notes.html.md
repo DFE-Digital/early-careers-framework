@@ -7,6 +7,14 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
+## 4 March 2024
+
+We're trialing new functionality in the API v3 sandbox which surfaces the `mentor_funding_end_date` field in the [ ECF participant endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-get).
+
+When a declaration is submitted for a mentor the completed date will equal the declaration date. When a declaration is voided the completed date will be cleared. Completed dates for early roll-out mentors will be set to 19 April 2021 regardless of any completed declarations.
+
+We'd welcome feedback on this sandbox update before it goes into production.
+
 ## 16 February 2024
 
 We’ve found and fixed a bug that meant for a small number of NPQ applications the value in the `itt_provider` field was incorrectly set, so was not showing the name of the provider.
@@ -15,9 +23,9 @@ The full legal name of the initial teacher training provider can now be seen on 
 
 ## 6 February 2024
 
-We’ve done an update to ensure that early career teacher (ECT) participant records only ever appear in one cohort. 
+We’ve done an update to ensure that early career teacher (ECT) participant records only ever appear in one cohort.
 
-Some providers had found it confusing because participants who’d moved cohort were appearing multiple times when they filtered by cohort in the ‘GET participants’ endpoint. 
+Some providers had found it confusing because participants who’d moved cohort were appearing multiple times when they filtered by cohort in the ‘GET participants’ endpoint.
 
 Training providers will now only see the ECT in the latest cohort they’ve been assigned to.
 

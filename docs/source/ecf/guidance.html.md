@@ -428,7 +428,8 @@ For more detailed information see the specifications for this [view multiple ECF
             "withdrawal": null,
             "deferral": null,
             "created_at": "2021-05-31T02:22:32.000Z",
-            "induction_end_date": "2022-01-12"
+            "induction_end_date": "2022-01-12",
+            "mentor_funding_end_date": "2021-04-19"
           }
         ],
         "participant_id_changes": [
@@ -489,7 +490,8 @@ For more detailed information see the specifications for this [view a single ECF
           "withdrawal": null,
           "deferral": null,
           "created_at": "2021-05-31T02:22:32.000Z",
-          "induction_end_date": "2022-01-12"
+          "induction_end_date": "2022-01-12",
+          "mentor_funding_end_date": "2021-04-19"
         }
       ],
       "participant_id_changes": [
