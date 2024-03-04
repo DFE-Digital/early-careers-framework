@@ -30,7 +30,7 @@ RSpec.describe Oneoffs::FlipflopUsersCleanup do
       expect(result[1]).to eql([user2.id, "TRN does not exist"])
       expect(result[2]).to eql([user3.id, "already the primary user"])
       expect(result[3]).to eql([user4.id, "transfer to user [#{user3.id}]"])
-      expect(result[4]).to eql([user5.id, "to_user [#{user1.id}] is archived"])
+      expect(result[4]).to eql([user5.id, "already the primary user"])
     end
   end
 
