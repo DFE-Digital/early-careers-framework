@@ -61,6 +61,15 @@ RSpec.describe User, type: :model do
         expect(described_class.email_matches("xyz").to_sql).to include("users.email like '%xyz%'")
       end
     end
+
+    describe "#archived" do
+      subject { described_class.archived }
+
+      let!(:archived_user) { create(:user).tap(&:archive!) }
+      let!(:active_user) { create(:user) }
+
+      it { is_expected.to contain_exactly(archived_user) }
+    end
   end
 
   describe "whitespace stripping" do

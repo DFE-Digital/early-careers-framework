@@ -32,6 +32,10 @@ FactoryBot.define do
       end
     end
 
+    trait :archived do
+      archived_email { Faker::Internet.unique.email }
+    end
+
     trait :lead_provider do
       lead_provider_profile
     end

@@ -190,6 +190,7 @@ class User < ApplicationRecord
   scope :for_lead_provider, -> { includes(:lead_provider).joins(:lead_provider) }
   scope :admins, -> { joins(:admin_profile) }
   scope :finance_users, -> { joins(:finance_profile) }
+  scope :archived, -> { where.not(archived_email: nil) }
 
   scope :changed_since, lambda { |timestamp|
     if timestamp.present?

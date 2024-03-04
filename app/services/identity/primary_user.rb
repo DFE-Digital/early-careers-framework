@@ -8,6 +8,7 @@ module Identity
           .includes(:user)
           .oldest_first
           .where(trn:)
+          .where(user: { archived_email: nil })
           .first
           &.user
       end
