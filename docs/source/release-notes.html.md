@@ -9,6 +9,10 @@ If you have any questions or comments about these notes, please contact DfE via 
 
 ## 4 March 2024
 
+We’ve found and fixed a bug that meant ‘participant IDs’ had been wrongly changed for a very small subset of ECF and NPQ participants with multiple profiles. We’ve now switched all users to the right profile IDs.
+
+## 4 March 2024
+
 We're trialing new functionality in the API v3 sandbox which surfaces the `mentor_funding_end_date` field in the [ ECF participant endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-get).
 
 When a declaration is submitted for a mentor the completed date will equal the declaration date. When a declaration is voided the completed date will be cleared. Completed dates for early roll-out mentors will be set to 19 April 2021 regardless of any completed declarations.
