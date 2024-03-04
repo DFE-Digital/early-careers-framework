@@ -45,9 +45,8 @@ RSpec.feature "ECT doing FIP: no validation", type: :feature do
 
   let(:appropriate_body) do
     FactoryBot.create(:seed_appropriate_body, :teaching_school_hub, name: appropriate_body_name)
-              .tap { |appropriate_body| NewSeeds::Scenarios::Users::AppropriateBodyUser.new(appropriate_body:).build }
+              .tap { |appropriate_body| NewSeeds::Scenarios::Users::AppropriateBodyUser.new(full_name: appropriate_body_name, appropriate_body:).build }
   end
-  let(:ab_full_name) { appropriate_body.appropriate_body_profiles.first.full_name }
 
   let(:lead_provider_details) do
     NewSeeds::Scenarios::LeadProviders::LeadProvider
@@ -99,7 +98,7 @@ RSpec.feature "ECT doing FIP: no validation", type: :feature do
   end
 
   scenario "The current appropriate body can locate a record for the ECT", :skip do
-    given_i_sign_in_as_the_user_with_the_full_name ab_full_name
+    given_i_sign_in_as_the_user_with_the_full_name appropriate_body_name
 
     appropriate_body_portal = Pages::AppropriateBodyPortal.loaded
     appropriate_body_portal.get_participant(participant_full_name)
@@ -118,7 +117,7 @@ RSpec.feature "ECT doing FIP: no validation", type: :feature do
   scenario "The current lead provider can locate a record for the ECT" do
     lead_provider_token = LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: lead_provider_details.cpd_lead_provider)
 
-    ecf_participant_endpoint = APIs::ECFParticipantsEndpoint.load(lead_provider_token)
+    ecf_participant_endpoint = APIs::V1::ECFParticipantsEndpoint.load(lead_provider_token)
     ecf_participant_endpoint.get_participant participant_id
 
     expect(ecf_participant_endpoint).to have_email_address participant_email
@@ -136,7 +135,7 @@ RSpec.feature "ECT doing FIP: no validation", type: :feature do
     expect(ecf_participant_endpoint).to have_training_record_id training_record_id
     expect(ecf_participant_endpoint).to have_schedule_identifier schedule_identifier
 
-    participant_endpoint = APIs::ParticipantsEndpoint.load(lead_provider_token)
+    participant_endpoint = APIs::V1::ParticipantsEndpoint.load(lead_provider_token)
     participant_endpoint.get_participant participant_id
 
     expect(participant_endpoint).to have_email_address participant_email

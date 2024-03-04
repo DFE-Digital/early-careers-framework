@@ -3,7 +3,7 @@
 require_relative "../base_page"
 
 module Pages
-  class FinancePortal < ::Pages::BasePage
+  class AppropriateBodyPortal < ::Pages::BasePage
     set_url "/appropriate-bodies/{appropriate_body_id}/participants"
     set_primary_heading(/^.* Participants$/)
 

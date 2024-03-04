@@ -53,9 +53,8 @@ RSpec.feature "ECT doing CIP: after cohort transfer", type: :feature do
 
   let(:appropriate_body) do
     FactoryBot.create(:seed_appropriate_body, :teaching_school_hub, name: appropriate_body_name)
-              .tap { |appropriate_body| NewSeeds::Scenarios::Users::AppropriateBodyUser.new(appropriate_body:).build }
+              .tap { |appropriate_body| NewSeeds::Scenarios::Users::AppropriateBodyUser.new(full_name: appropriate_body_name, appropriate_body:).build }
   end
-  let(:ab_full_name) { appropriate_body.appropriate_body_profiles.first.full_name }
 
   let(:school_details) do
     NewSeeds::Scenarios::Schools::School
@@ -106,7 +105,7 @@ RSpec.feature "ECT doing CIP: after cohort transfer", type: :feature do
   end
 
   scenario "The current appropriate body can locate a record for the ECT", :skip do
-    given_i_sign_in_as_the_user_with_the_full_name ab_full_name
+    given_i_sign_in_as_the_user_with_the_full_name appropriate_body_name
 
     appropriate_body_portal = Pages::AppropriateBodyPortal.loaded
     appropriate_body_portal.get_participant(participant_full_name)

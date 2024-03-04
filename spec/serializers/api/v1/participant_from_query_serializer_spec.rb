@@ -32,6 +32,7 @@ module Api
             {
               preferred_identity_email: nil,
               user_email: "firsts_email@example.com",
+              can_view_personal_details: true,
             }
           end
 
@@ -45,6 +46,7 @@ module Api
             {
               preferred_identity_email: "preferred_email@example.com",
               user_email: "firsts_email@example.com",
+              can_view_personal_details: true,
             }
           end
 
@@ -56,7 +58,12 @@ module Api
 
       describe "#full_name" do
         let(:full_name) { "John Doe" }
-        let(:fields) { { full_name: } }
+        let(:fields) do
+          {
+            full_name:,
+            can_view_personal_details: true,
+          }
+        end
 
         it "returns the full name" do
           expect(subject.serializable_hash[:data][:attributes][:full_name]).to eql(full_name)
@@ -404,6 +411,38 @@ module Api
 
           it "considers updated_at of identity" do
             expect(Time.zone.parse(subject.serializable_hash[:data][:attributes][:updated_at])).to eq(participant_identity_updated_at.rfc3339)
+          end
+        end
+      end
+
+      context "when a GDPR Request to restrict processing" do
+        let(:full_name) { "Johnny Cash" }
+        let(:user_email) { "johnny_cash_2@example.com" }
+        let(:fields) do
+          {
+            full_name:,
+            user_email:,
+            can_view_personal_details:,
+          }
+        end
+
+        context "is not present" do
+          let(:can_view_personal_details) { true }
+
+          it "does include personal information" do
+            expect(subject.serializable_hash[:data][:attributes][:email]).to eq(user_email)
+            expect(subject.serializable_hash[:data][:attributes][:full_name]).to eq(full_name)
+            expect(subject.serializable_hash[:data][:attributes][:can_view_personal_details]).to be_blank
+          end
+        end
+
+        context "is present" do
+          let(:can_view_personal_details) { false }
+
+          it "does not include personal information" do
+            expect(subject.serializable_hash[:data][:attributes][:email]).to be_blank
+            expect(subject.serializable_hash[:data][:attributes][:full_name]).to be_blank
+            expect(subject.serializable_hash[:data][:attributes][:can_view_personal_details]).to be_blank
           end
         end
       end

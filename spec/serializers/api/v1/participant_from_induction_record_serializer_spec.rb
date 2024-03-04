@@ -137,6 +137,37 @@ module Api
           end
         end
       end
+
+      context "when a GDPR Request to restrict processing" do
+        let(:user) { induction_record.participant_profile.user }
+        let(:cpd_lead_provider) { induction_record.cpd_lead_provider }
+
+        context "is not present" do
+          it "does include personal information" do
+            expect(subject.serializable_hash[:data][:attributes][:email]).to eq(user.email)
+            expect(subject.serializable_hash[:data][:attributes][:full_name]).to eq(user.full_name)
+          end
+        end
+
+        context "is present for the current lead provider" do
+          let!(:gdpr_request) { GDPRRequest.create(teacher_profile: ect.teacher_profile, cpd_lead_provider:, reason: :restrict_processing) }
+
+          it "does not include personal information" do
+            expect(subject.serializable_hash[:data][:attributes][:email]).to be_blank
+            expect(subject.serializable_hash[:data][:attributes][:full_name]).to be_blank
+          end
+        end
+
+        context "is present for another lead provider" do
+          let(:other_cpd_lead_provider) { create(:cpd_lead_provider) }
+          let!(:gdpr_request) { GDPRRequest.create(teacher_profile: ect.teacher_profile, cpd_lead_provider: other_cpd_lead_provider, reason: :restrict_processing) }
+
+          it "does include personal information" do
+            expect(subject.serializable_hash[:data][:attributes][:email]).to eq(user.email)
+            expect(subject.serializable_hash[:data][:attributes][:full_name]).to eq(user.full_name)
+          end
+        end
+      end
     end
   end
 end

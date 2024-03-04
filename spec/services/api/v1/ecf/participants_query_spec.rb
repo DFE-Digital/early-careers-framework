@@ -201,4 +201,34 @@ RSpec.describe Api::V1::ECF::ParticipantsQuery do
       end
     end
   end
+
+  context "when a GDPR Request to restrict processing" do
+    subject { Api::V1::ParticipantFromQuerySerializer.new(described_class.new(lead_provider:, params:).induction_records).serializable_hash }
+
+    context "is not present" do
+      it "does not include the GDPR request details" do
+        expect(subject[:data][0][:attributes][:full_name]).to eq(participant_profile.user.full_name)
+        expect(subject[:data][0][:attributes][:email]).to eq(participant_profile.user.email)
+      end
+    end
+
+    context "is present for the current lead provider" do
+      let!(:gdpr_request) { GDPRRequest.create(teacher_profile: participant_profile.teacher_profile, cpd_lead_provider:, reason: :restrict_processing) }
+
+      it "does include the GDPR request details" do
+        expect(subject[:data][0][:attributes][:full_name]).to be_blank
+        expect(subject[:data][0][:attributes][:email]).to be_blank
+      end
+    end
+
+    context "is present for another lead provider" do
+      let(:other_cpd_lead_provider) { create(:cpd_lead_provider) }
+      let!(:gdpr_request) { GDPRRequest.create(teacher_profile: participant_profile.teacher_profile, cpd_lead_provider: other_cpd_lead_provider, reason: :restrict_processing) }
+
+      it "does not include the GDPR request details" do
+        expect(subject[:data][0][:attributes][:full_name]).to eq(participant_profile.user.full_name)
+        expect(subject[:data][0][:attributes][:email]).to eq(participant_profile.user.email)
+      end
+    end
+  end
 end

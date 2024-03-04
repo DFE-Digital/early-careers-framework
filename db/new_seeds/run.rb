@@ -43,6 +43,7 @@ end
   "add_training_record_state_examples.rb",
   "add_schools_for_cohortless_testing.rb",
   "add_environment_specific_data.rb",
+  "add_gdpr_request_scenarios.rb",
 ].each do |file|
   Rails.logger.info("seeding #{file}")
   load_base_file(file)

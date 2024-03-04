@@ -3,15 +3,15 @@
 require_relative "./base_endpoint"
 
 module APIs
-  class ParticipantsEndpoint < APIs::BaseEndpoint
+  class NPQApplicationsEndpoint < APIs::BaseEndpoint
     def initialize(args)
       super args
-      call_participants_endpoint
+      call_applications_endpoint
     end
 
-    def get_participant(participant_id)
-      @current_id = participant_id
-      select_participant
+    def get_application(application_id)
+      @current_id = application_id
+      select_application
     end
 
     def has_full_name?(expected_value)
@@ -26,55 +26,43 @@ module APIs
       has_attribute_value? "teacher_reference_number", expected_value
     end
 
-    def has_school_urn?(expected_value)
-      has_attribute_value? "school_urn", expected_value
+    def has_school_ukprn?(expected_value)
+      has_attribute_value? "school_ukprn", expected_value
     end
 
-    def has_participant_type?(expected_value)
-      has_attribute_value? "participant_type", expected_value
+    def has_school_urn?(expected_value)
+      has_attribute_value? "school_urn", expected_value
     end
 
     def has_status?(expected_value)
       has_attribute_value? "status", expected_value
     end
 
-    def has_training_status?(expected_value)
-      has_attribute_value? "training_status", expected_value
-    end
-
     def has_cohort?(expected_value)
       has_attribute_value? "cohort", expected_value.to_s
     end
 
-    def has_schedule_identifier?(expected_value)
-      has_attribute_value? "schedule_identifier", expected_value
+    def has_participant_id?(expected_value)
+      has_attribute_value? "participant_id", expected_value
     end
 
-    def has_training_record_id?(expected_value)
-      has_attribute_value? "training_record_id", expected_value
+    def has_course_identifier?(expected_value)
+      has_attribute_value? "course_identifier", expected_value
     end
 
     def eligible_for_funding?
       has_attribute_value? "eligible_for_funding", true
     end
 
-    def has_pupil_premium_uplift?
-      has_attribute_value? "pupil_premium_uplift", true
-    end
-
-    def has_sparsity_uplift?
-      has_attribute_value? "sparsity_uplift", true
-    end
-
-    def has_mentor_id?(expected_value)
-      has_attribute_value? "mentor_id", expected_value
+    def working_in_a_school?
+      has_attribute_value? "works_in_school", true
     end
 
   private
 
-    def url = "/api/v1/participants"
+    def url = "/api/v1/npq-applications"
 
-    def call_participants_endpoint
+    def call_applications_endpoint
       @current_record = nil
       @current_id = nil
       @response = nil
@@ -93,7 +81,7 @@ module APIs
       end
     end
 
-    def select_participant
+    def select_application
       @current_record = @response.select { |record| record["id"] == @current_id }.first
 
       if @current_record.nil?
@@ -103,7 +91,7 @@ module APIs
 
     def has_attribute_value?(attribute_name, expected_value)
       if @current_record.nil?
-        raise "No record selected, Must call <APIs::ECFParticipantsEndpoint::get_participant> with a valid \"participant_id\" first"
+        raise "No record selected, Must call <APIs::NPQApplicationsEndpoint::get_application> with a valid \"application_id\" first"
       end
 
       value = @current_record.dig("attributes", attribute_name)
