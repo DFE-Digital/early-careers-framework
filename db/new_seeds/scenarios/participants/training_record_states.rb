@@ -998,6 +998,7 @@ module NewSeeds
             .build
             .with_validation_data
             .with_eligibility(previous_participation: true, status: "ineligible", reason: "previous_participation")
+            .with_ecf_ineligible_participant
             .with_induction_record(induction_programme: school_cohort.default_induction_programme)
             .add_mentee(induction_programme: school_cohort.default_induction_programme)
         end
@@ -1010,6 +1011,7 @@ module NewSeeds
             .build
             .with_validation_data
             .with_eligibility(previous_participation: true, status: "eligible", reason: "previous_participation")
+            .with_ecf_ineligible_participant
             .with_induction_record(induction_programme: school_cohort.default_induction_programme)
             .add_mentee(induction_programme: school_cohort.default_induction_programme)
         end
@@ -1519,6 +1521,7 @@ module NewSeeds
             .new(school_cohort:, full_name: "ERO Mentor on CIP")
             .build
             .with_validation_data
+            .with_ecf_ineligible_participant
             .with_eligibility(previous_participation: true, status: "ineligible", reason: "previous_participation")
             .with_induction_record(induction_programme: school_cohort.default_induction_programme)
             .add_mentee(induction_programme: school_cohort.default_induction_programme)
@@ -1531,6 +1534,7 @@ module NewSeeds
             .new(school_cohort:, full_name: "ERO Mentor on CIP: made eligible by DfE")
             .build
             .with_validation_data
+            .with_ecf_ineligible_participant
             .with_eligibility(previous_participation: true, status: "eligible", reason: "previous_participation")
             .with_induction_record(induction_programme: school_cohort.default_induction_programme)
             .add_mentee(induction_programme: school_cohort.default_induction_programme)

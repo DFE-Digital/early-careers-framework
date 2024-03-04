@@ -100,6 +100,11 @@ module NewSeeds
             self
           end
 
+          def with_ecf_ineligible_participant
+            FactoryBot.create(:seed_ecf_ineligible_participant, trn: teacher_profile.trn)
+            self
+          end
+
           def add_email(**args)
             email_data = {
               tags: args[:tags],
