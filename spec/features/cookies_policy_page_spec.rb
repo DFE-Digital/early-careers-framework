@@ -57,6 +57,30 @@ RSpec.feature "Cookie policy page", type: :feature, js: true do
 
     then_i_confirm_cookie_consent_is_not_given_on_the_cookie_policy_page
   end
+
+  private
+
+  def given_i_am_on_the_start_page
+    @page = Pages::StartPage.new
+    @page.load
+  end
+
+  def when_i_view_cookie_policy_from_the_start_page
+    @page.view_cookie_policy
+  end
+
+  def then_i_am_on_the_cookie_policy_page
+    @page = Pages::CookiePolicyPage.new
+    @page.loaded
+  end
+
+  def when_i_go_back_from_the_cookie_policy_page
+    @page.go_back
+  end
+
+  def then_i_am_on_the_start_page
+    Pages::StartPage.loaded
+  end
 end
 
 RSpec.feature "Cookie banner without JavaScript", type: :feature, js: false do
