@@ -5,7 +5,7 @@ describe Oneoffs::NPQ::MigrateDeclarationsBetweenStatements do
   let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_npq_lead_provider) }
   let(:npq_lead_provider) { cpd_lead_provider.npq_lead_provider }
   let(:from_statement) { create(:npq_statement, name: "April 2023", cpd_lead_provider:, cohort:, output_fee: true) }
-  let(:to_statement) { create(:npq_statement, name: "May 2023", cpd_lead_provider:, cohort:, output_fee: true) }
+  let(:to_statement) { create(:npq_statement, :next_output_fee, name: "May 2023", cpd_lead_provider:, cohort:) }
   let(:from_statement_name) { from_statement.name }
   let(:to_statement_name) { to_statement.name }
   let(:from_statement_output_fee) { false }
@@ -40,7 +40,7 @@ describe Oneoffs::NPQ::MigrateDeclarationsBetweenStatements do
       let(:npq_lead_provider2) { cpd_lead_provider2.npq_lead_provider }
       let(:declaration2) { create(:npq_participant_declaration, :payable, cohort:, declaration_type: :"retained-1") }
       let!(:from_statement2) { declaration2.statements.first.tap { |s| s.update!(name: from_statement.name) } }
-      let!(:to_statement2) { create(:npq_statement, name: to_statement.name, cpd_lead_provider: cpd_lead_provider2, cohort:, output_fee: true) }
+      let!(:to_statement2) { create(:npq_statement, :next_output_fee, name: to_statement.name, cpd_lead_provider: cpd_lead_provider2, cohort:) }
 
       let(:declarations) { [declaration1, declaration2] }
 
@@ -152,6 +152,12 @@ describe Oneoffs::NPQ::MigrateDeclarationsBetweenStatements do
         let!(:mismatched_statement) { create(:npq_statement, cohort:, name: from_statement.name, output_fee: true) }
 
         it { expect { migrate }.to raise_error(described_class::StatementMismatchError, "There is a mismatch between to/from statements") }
+      end
+
+      context "when a to statement has a deadline date in the past" do
+        before { to_statement.update!(deadline_date: 1.day.ago) }
+
+        it { expect { migrate }.to raise_error(described_class::ToStatementDeadlineDateHasPastError, "To statements must be future dated") }
       end
 
       context "when attempting to migrate between statements on different cohorts" do
