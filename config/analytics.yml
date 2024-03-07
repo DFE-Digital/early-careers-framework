@@ -432,3 +432,21 @@
   - active_participants
   - pupil_premium
   - sparsity
+  :statements:
+  - id
+  - type
+  - name
+  - cpd_lead_provider_id
+  - deadline_date
+  - payment_date
+  - created_at
+  - updated_at
+  - cohort_id
+  - output_fee
+  :statement_line_items:
+  - id
+  - statement_id
+  - participant_declaration_id
+  - state
+  - created_at
+  - updated_at
