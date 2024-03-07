@@ -4,7 +4,8 @@ require "has_recordable_information"
 
 module Oneoffs::NPQ
   class MigrateDeclarationsBetweenStatements
-    class StatementMismatchError < StandardError; end
+    class StatementMismatchError < RuntimeError; end
+    class ToStatementDeadlineDateHasPastError < RuntimeError; end
 
     include HasRecordableInformation
 
@@ -20,6 +21,7 @@ module Oneoffs::NPQ
 
     def migrate(dry_run: true)
       reset_recorded_info
+      ensure_to_statements_are_future_dated!
       ensure_statements_align!
       record_summary_info(dry_run)
 
@@ -81,6 +83,10 @@ module Oneoffs::NPQ
 
     def record_line_items_info(provider, statement_line_items)
       record_info("Migrating #{statement_line_items.size} declarations for #{provider.name}")
+    end
+
+    def ensure_to_statements_are_future_dated!
+      raise ToStatementDeadlineDateHasPastError, "To statements must be future dated" if to_statements_by_provider.values.any? { |statement| statement.deadline_date.past? }
     end
 
     def ensure_statements_align!
