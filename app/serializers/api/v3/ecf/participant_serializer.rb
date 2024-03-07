@@ -139,9 +139,8 @@ module Api
               deferral: deferral(profile:, cpd_lead_provider: params[:cpd_lead_provider], latest_induction_record:),
               created_at: profile.created_at.rfc3339,
               induction_end_date: profile.induction_completion_date&.strftime("%Y-%m-%d"),
-            }.tap do |hash|
-              hash.merge!(mentor_funding_end_date: profile.mentor_completion_date&.strftime("%Y-%m-%d")) unless Rails.env.production?
-            end
+              mentor_funding_end_date: profile.mentor_completion_date&.strftime("%Y-%m-%d"),
+            }
           }.compact
         end
 
