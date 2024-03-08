@@ -256,11 +256,11 @@ module ManageTrainingSteps
   end
 
   def and_i_see_the_status_training_completed
-    expect(page).to have_summary_row("Status", "TRAINING COMPLETED")
+    expect(page).to have_summary_row("Status", "Training completed")
   end
 
   def and_i_dont_see_the_status_training
-    expect(page).to_not have_summary_row("Status", "TRAINING COMPLETED")
+    expect(page).to_not have_summary_row("Status", "Training completed")
   end
 
   def and_i_have_added_an_eligible_ect_with_mentor
