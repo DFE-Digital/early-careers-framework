@@ -250,6 +250,19 @@ module ManageTrainingSteps
     Mentors::AddToSchool.call(mentor_profile: @participant_profile_mentor, school: @school)
   end
 
+  def and_i_have_added_a_mentor_who_completed_training
+    and_i_have_added_a_mentor
+    @participant_profile_mentor.complete_training! completion_date: Time.zone.today, completion_reason: "completed_declaration_received"
+  end
+
+  def and_i_see_the_status_training_completed
+    expect(page).to have_summary_row("Status", "Training completed")
+  end
+
+  def and_i_dont_see_the_status_training
+    expect(page).to_not have_summary_row("Status", "Training completed")
+  end
+
   def and_i_have_added_an_eligible_ect_with_mentor
     user = create(:user, full_name: "Eligible With-mentor")
     teacher_profile = create(:teacher_profile, user:)
