@@ -7,6 +7,12 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
+## 8 March 2024
+
+Lead providers can now use the new `mentor_funding_end_date` field in the Live environment’s [ECF participant endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-get). 
+
+Further details are available in the release note of [4 March 2024](/api-reference/release-notes.html#4-march-2024).
+
 ## 4 March 2024
 
 We’ve found and fixed a bug that meant ‘participant IDs’ had been wrongly changed for a very small subset of ECF and NPQ participants with multiple profiles. We’ve now switched all users to the right profile IDs.
