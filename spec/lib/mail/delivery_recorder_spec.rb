@@ -89,7 +89,10 @@ RSpec.describe Mail::DeliveryRecorder do
     let(:original_to) { [Faker::Internet.email] }
 
     before do
-      allow(mail).to receive(:original_to).and_return(original_to)
+      without_partial_double_verification do
+        allow(mail).to receive(:original_to).and_return(original_to)
+      end
+
       recorder.delivered_email(mail)
     end
 
