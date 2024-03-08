@@ -16,7 +16,7 @@ RSpec.describe "Mentor training dashboard", js: true do
       and_i_am_signed_in_as_an_induction_coordinator
       and_i_click(Cohort.current.description)
       given_i_am_taken_to_the_induction_dashboard
-      when_i_navigate_to_participants_dashboard
+      when_i_navigate_to_mentors_dashboard
     end
 
     scenario "SIT can see the mentor training status as completed" do
@@ -32,7 +32,7 @@ RSpec.describe "Mentor training dashboard", js: true do
       and_i_am_signed_in_as_an_induction_coordinator
       and_i_click(Cohort.current.description)
       given_i_am_taken_to_the_induction_dashboard
-      when_i_navigate_to_participants_dashboard
+      when_i_navigate_to_mentors_dashboard
     end
 
     scenario "SIT doesn't see the mentor training info" do
