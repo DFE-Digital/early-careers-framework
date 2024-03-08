@@ -29,7 +29,6 @@ RSpec.describe Mail::DeliveryRecorder do
   before do
     ActionMailer::Base.wrap_delivery_behavior(mail, :notify, api_key: "SomeKey")
     mail.delivery_method.response = response
-    mail.original_to = mail.to
   end
 
   it "records the sent email into the database" do
@@ -83,6 +82,29 @@ RSpec.describe Mail::DeliveryRecorder do
 
     it "records the sent email into the database" do
       expect { recorder.delivered_email(mail) }.to change(Email, :count).by 1
+    end
+  end
+
+  context "when an email message has original_to set" do
+    let(:original_to) { [Faker::Internet.email] }
+
+    before do
+      allow(mail).to receive(:original_to).and_return(original_to)
+      recorder.delivered_email(mail)
+    end
+
+    it "records the sent email into the database with the original destination address" do
+      expect(Email.last.to).to eq(original_to)
+    end
+  end
+
+  context "when the email has not been redirected" do
+    before do
+      recorder.delivered_email(mail)
+    end
+
+    it "records the sent email into the database with the destination address" do
+      expect(Email.last.to).to eq(mail.to)
     end
   end
 end
