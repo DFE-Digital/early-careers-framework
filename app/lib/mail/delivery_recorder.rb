@@ -20,7 +20,7 @@ module Mail
         email = Email.create!(
           id: response.id,
           from: response.content["from_email"],
-          to: mail.original_to,
+          to: to_address(mail),
           template_id: response.template["id"],
           template_version: response.template["version"],
           uri: response.uri,
@@ -41,6 +41,10 @@ module Mail
 
     def enabled?
       !!@enabled
+    end
+
+    def to_address(mail)
+      mail.try(:original_to).presence || mail.to
     end
 
     module MessageExtension
