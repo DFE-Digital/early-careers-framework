@@ -10,36 +10,17 @@
 #    For production or test environments, the entry added is empty:
 #        subject_tags: ""
 #
-# Also, for non production or test environments, emails with a :subject personalisation field are modified to
-# prepend the Rails.env and the list of destination emails addresses
-# like this:
-#       subject: "[development to:aaa@d1.md1,bbb@d2.md2] original_subject_content"
-#
 module Mail
   module Personalisation
     class << self
       def delivering_email(mail)
         set_personalisation(mail, :subject_tags, subject_tags(mail))
-
-        # TODO: This enforces backward compatibility with existing emails and should be deleted as soon as all the emails
-        # are modified to use `subject_tags` instead
-        override_personalisation(mail, :subject) { |subject| new_subject(mail, subject) } if enabled?
       end
 
     private
 
       def enabled?
         !Rails.env.production? && !Rails.env.test?
-      end
-
-      def new_subject(mail, subject)
-        "#{tags(mail)} #{subject}"
-      end
-
-      def override_personalisation(mail, key, &block)
-        value = mail.header["personalisation"]&.unparsed_value&.fetch(key, nil)
-
-        set_personalisation(mail, key, block.call(value)) if value.present?
       end
 
       def set_personalisation(mail, key, value)
