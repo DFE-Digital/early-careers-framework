@@ -5,15 +5,15 @@
 #
 # It adds the :subject_tags personalisation field:
 #    For non-production or test emails it adds a personalisation entry like this:
-#        subject_tags: "[local to:aaa@d1.md1,bbb@d2.md2]"
+#        subject_tags: "[staging to:aaa@d1.md1,bbb@d2.md2]"
 #
 #    For production or test environments, the entry added is empty:
 #        subject_tags: ""
 #
 # Also, for non production or test environments, emails with a :subject personalisation field are modified to
-# preprend the app_name (from ENV['VCAP_APPLICATION'] || 'local') and the list of destination emails addresses
+# prepend the Rails.env and the list of destination emails addresses
 # like this:
-#       subject: "[app_name to:aaa@d1.md1,bbb@d2.md2] original_subject_content"
+#       subject: "[development to:aaa@d1.md1,bbb@d2.md2] original_subject_content"
 #
 module Mail
   module Personalisation
@@ -27,10 +27,6 @@ module Mail
       end
 
     private
-
-      def app_name
-        ENV["VCAP_APPLICATION"] ? JSON.parse(ENV["VCAP_APPLICATION"])["application_name"] : "local"
-      end
 
       def enabled?
         !Rails.env.production? && !Rails.env.test?
@@ -55,7 +51,7 @@ module Mail
       end
 
       def tags(mail)
-        "[#{app_name} to:#{mail.to.join(',')}] "
+        "[#{Rails.env} to:#{mail.to.join(',')}] "
       end
     end
   end

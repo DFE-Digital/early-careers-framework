@@ -62,11 +62,11 @@ RSpec.describe Mail::Personalisation, type: :mailer do
   end
 
   context "environments other than testing or production" do
-    let(:app_name) { "local" }
-    let(:subject_tags) { "[#{app_name} to:#{mail.to.join(',')}]  " }
+    let(:environment_name) { "staging" }
+    let(:subject_tags) { "[#{environment_name} to:#{mail.to.join(',')}]  " }
 
     before do
-      allow(Rails).to receive(:env).and_return(ActiveSupport::StringInquirer.new("development"))
+      allow(Rails).to receive(:env).and_return(ActiveSupport::StringInquirer.new(environment_name))
     end
 
     it "do not modify email addresses or body" do
@@ -75,7 +75,7 @@ RSpec.describe Mail::Personalisation, type: :mailer do
       expect(mail.body.encoded).to match("Hello #{user_name}")
     end
 
-    it "adds a :subject_tags entry to the personalisation header of emails sent including app name and destination addresses" do
+    it "adds a :subject_tags entry to the personalisation header of emails sent including environment name and destination addresses" do
       expect(mail["personalisation"].unparsed_value).to include(subject_tags:)
     end
 
