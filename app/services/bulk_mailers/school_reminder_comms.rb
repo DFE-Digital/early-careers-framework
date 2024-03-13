@@ -190,6 +190,26 @@ module BulkMailers
       email_count
     end
 
+    def contact_sits_pre_term_to_report_any_changes
+      email_count = 0
+
+      # this could send a lot of email at the cohort start and may break Notify limits
+      # numbers should be checked before running this (dry_run = true) and maybe changes made/different approach to batch these
+      Schools::PreTermReminderToReportAnyChangesQuery
+        .call(cohort:, school_type_codes: SCHOOL_TYPES_TO_INCLUDE)
+        .joins(:induction_coordinator_profiles)
+        .find_each do |school|
+          school.induction_coordinator_profiles.each do |induction_coordinator|
+            email_count += 1
+            next if dry_run
+
+            SchoolMailer.with(induction_coordinator:).sit_pre_term_reminder_to_report_any_changes.deliver_later
+          end
+        end
+
+      email_count
+    end
+
   private
 
     def nomination_token(email:, school:)
