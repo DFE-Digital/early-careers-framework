@@ -60,7 +60,7 @@ module Identity
 
       if from_id.present?
         # validations prevent changes to this value under normal circumstances
-        from_user.update_column(:get_an_identity_id, nil) # rubocop:disable Rails/SkipsModelValidations
+        from_user.update_column(:get_an_identity_id, nil)
         to_user.update_column(:get_an_identity_id, from_id)
       end
     end
@@ -77,10 +77,11 @@ module Identity
 
       to_user.participant_id_changes.find_or_create_by!(from_participant: from_user, to_participant: to_user)
     end
+
     def get_a_latest_identity_id(from_id, to_id)
       from_user = User.find_by!(get_an_identity_id: from_id)
       to_user = User.find_by!(get_an_identity_id: to_id)
-  
+
       from_user.created_at > to_user.created_at ? from_user.get_an_identity_id : to_user.get_an_identity_id
     end
   end

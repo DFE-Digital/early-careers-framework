@@ -118,10 +118,9 @@ RSpec.describe Identity::Transfer do
           user2.update!(get_an_identity_id: get_an_identity_id_2)
         end
 
-        it "raises an error" do
-          expect {
-            service.call(from_user: user1, to_user: user2)
-          }.to raise_error(Identity::TransferError, "Identity ids present on both User records: #{user1.id} -> #{user2.id}")
+        it "transfer the id to latest user" do
+          expect(Sentry).to receive(:capture_exception).with("Identity ids present on both User records: #{user1.id} -> #{user2.id}")
+          service.call(from_user: user1, to_user: user2)
         end
       end
     end
