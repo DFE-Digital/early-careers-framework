@@ -1,8 +1,9 @@
 <% content_for :title, "Change mentor" %>
+<% from_mentor = params[:from_mentor].present? ? ParticipantProfile.find(params[:from_mentor]) : nil %>
 
 <% content_for :before_content,
                govuk_back_link(text: "Back",
-                               href: path_to_participant(params[:from_mentor].presence || @profile, @school)) %>
+                               href: path_to_participant(from_mentor || @profile, @school)) %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
