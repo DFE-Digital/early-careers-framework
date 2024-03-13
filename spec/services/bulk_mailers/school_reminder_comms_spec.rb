@@ -377,4 +377,29 @@ RSpec.describe BulkMailers::SchoolReminderComms, type: :mailer do
       end
     end
   end
+
+  describe "#contact_sits_pre_term_to_report_any_changes" do
+    context "when a school rans FIP or CIP and has not opted out of updates" do
+      it "mails the induction coordinator" do
+        expect {
+          service.contact_sits_pre_term_to_report_any_changes
+        }.to have_enqueued_mail(SchoolMailer, :sit_pre_term_reminder_to_report_any_changes)
+          .with(params: { induction_coordinator: sit_profile }, args: [])
+      end
+    end
+
+    context "when the dry_run flag is set" do
+      let(:dry_run) { true }
+
+      it "does not mail the induction coordinator" do
+        expect {
+          service.contact_sits_pre_term_to_report_any_changes
+        }.not_to have_enqueued_mail
+      end
+
+      it "returns the count of emails that would be sent" do
+        expect(service.contact_sits_pre_term_to_report_any_changes).to eq 1
+      end
+    end
+  end
 end

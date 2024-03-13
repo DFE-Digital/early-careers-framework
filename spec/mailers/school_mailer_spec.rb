@@ -498,4 +498,24 @@ RSpec.describe SchoolMailer, type: :mailer do
       expect(SchoolMailer::FINANCE_ERRORS_WITH_NQT_PLUS_ONE_AND_ECF_YEAR_2_LOCAL_AUTHORITY_VERSION).to eq("9953ed6b-4853-4be2-9ac2-692f07906166")
     end
   end
+
+  describe "#sit_pre_term_reminder_to_report_any_changes" do
+    let(:induction_coordinator) { create(:seed_induction_coordinator_profile, :with_user) }
+    let(:email_address) { induction_coordinator.user.email }
+
+    let(:sit_pre_term_reminder_to_report_any_changes) do
+      SchoolMailer.with(
+        induction_coordinator:,
+      ).sit_pre_term_reminder_to_report_any_changes.deliver_now
+    end
+
+    it "renders the right headers" do
+      expect(sit_pre_term_reminder_to_report_any_changes.to).to eq([email_address])
+      expect(sit_pre_term_reminder_to_report_any_changes.from).to eq(["mail@example.com"])
+    end
+
+    it "uses the correct Notify template" do
+      expect(SchoolMailer::SIT_PRE_TERM_REMINDER_TO_REPORT_ANY_CHANGES).to eq("59983db6-678f-4a7d-9a3b-80bed4f6ef17")
+    end
+  end
 end

@@ -27,6 +27,7 @@ class SchoolMailer < ApplicationMailer
   NOTIFY_SIT_WE_HAVE_ARCHIVED_PARTICIPANT = "558eafd2-7f8f-407d-a3a8-60649fb26ea8"
   REMIND_SIT_THAT_AB_HAS_NOT_REGISTERED_ECT = "a9dbd93e-4358-414d-832c-b0aea585a72b"
   REMIND_SIT_TO_APPOINT_AB_FOR_UNREGISTERED_ECT = "e697e076-a0f6-4738-a421-ae507d804499"
+  SIT_PRE_TERM_REMINDER_TO_REPORT_ANY_CHANGES = "59983db6-678f-4a7d-9a3b-80bed4f6ef17"
 
   def remind_sit_that_ab_has_not_registered_ect
     school = params[:school]
@@ -511,5 +512,22 @@ class SchoolMailer < ApplicationMailer
         local_authority_name:,
       },
     ).tag(:finance_errors_with_nqt_plus_one_and_ecf_year_2_local_authority_version)
+  end
+
+  def sit_pre_term_reminder_to_report_any_changes
+    induction_coordinator = params[:induction_coordinator]
+    sit_name = induction_coordinator.user.full_name
+    email_address = induction_coordinator.user.email
+
+    template_mail(
+      SIT_PRE_TERM_REMINDER_TO_REPORT_ANY_CHANGES,
+      to: email_address,
+      rails_mailer: mailer_name,
+      rails_mail_template: action_name,
+      personalisation: {
+        name: sit_name,
+        email_address:,
+      },
+    ).tag(:sit_pre_term_reminder_to_report_any_changes).associate_with(induction_coordinator, as: :induction_coordinator_profile)
   end
 end
