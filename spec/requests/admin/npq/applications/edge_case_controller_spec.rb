@@ -80,7 +80,7 @@ RSpec.describe "Admin::NPQ::Applications::EdgeCasesController", type: :request d
       get("/admin/npq/applications/edge_cases")
 
       # only 4 users should appear as edge cases
-      expect(response.parsed_body.scan(/John Doe/).length).to eq(4)
+      expect(response.parsed_body.to_html.scan(/John Doe/).length).to eq(4)
     end
   end
 

@@ -47,7 +47,7 @@ RSpec.describe "Admin::NPQ::Applications::NotesController", type: :request do
         patch("/admin/npq/applications/notes/#{application.id}", params:)
         expect(flash[:alert]).not_to be_empty
         expect(response.status).to eq(400)
-        expect(response.parsed_body.include?(new_notes)).to eq(true)
+        expect(response.parsed_body.to_html.include?(new_notes)).to eq(true)
         application.reload
         expect(application.notes).to eq(notes)
       end
