@@ -218,10 +218,10 @@ endef
 
 # Creates a konduit to the DB and points development to it. The konduit URL is removed when the konduit is closed.
 konduit: get-cluster-credentials
-	$(KONDUIT_CONNECT) ${AZURE_RESOURCE_PREFIX}-${SERVICE_SHORT}-${CONFIG_SHORT}-pg -k ${AZURE_RESOURCE_PREFIX}-${SERVICE_SHORT}-${CONFIG_SHORT}-app-kv cpd-ecf-${CONFIG_LONG}-web -- psql > "$$tmp_file"
+	$(KONDUIT_CONNECT) ${AZURE_RESOURCE_PREFIX}-${SERVICE_SHORT}-${CONFIG_SHORT}-pg -n ${NAMESPACE} -k ${AZURE_RESOURCE_PREFIX}-${SERVICE_SHORT}-${CONFIG_SHORT}-app-kv cpd-ecf-${CONFIG_LONG}-web -- psql > "$$tmp_file"
 	exit 0
 
 # Creates a konduit to the snapshot DB and points development to it. The konduit URL is removed when the konduit is closed.
 konduit-snapshot: get-cluster-credentials
-	$(KONDUIT_CONNECT) ${AZURE_RESOURCE_PREFIX}-${SERVICE_SHORT}-${CONFIG_SHORT}-pg-snapshot -k ${AZURE_RESOURCE_PREFIX}-${SERVICE_SHORT}-${CONFIG_SHORT}-app-kv cpd-ecf-${CONFIG_LONG}-web -- psql > "$$tmp_file"
+	$(KONDUIT_CONNECT) ${AZURE_RESOURCE_PREFIX}-${SERVICE_SHORT}-${CONFIG_SHORT}-pg-snapshot -n ${NAMESPACE} -k ${AZURE_RESOURCE_PREFIX}-${SERVICE_SHORT}-${CONFIG_SHORT}-app-kv cpd-ecf-${CONFIG_LONG}-web -- psql > "$$tmp_file"
 	exit 0
