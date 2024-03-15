@@ -14,10 +14,10 @@ RSpec.feature "Reporting an error with a partnership", type: :feature, js: true,
     scenario "Can see challenge options from an email link" do
       given_a_fip_school_with_a_partnership_that_can_be_challenged "test-sit@example.com", "Test school", "111111-test-school", "abc1234"
 
-      when_i_use_the_report_incorrect_partnership_token "abc1234"
+      Pages::ReportIncorrectPartnershipPage.load_from_email "abc1234"
 
-      then_i_am_on_the_report_incorrect_partnership_page_with_token "abc1234"
-      and_the_page_is_accessible
+      Pages::ReportIncorrectPartnershipPage.loaded token: "abc1234"
+      expect(page).to be_accessible
     end
 
     scenario "Can challenge a partnership from an email link" do

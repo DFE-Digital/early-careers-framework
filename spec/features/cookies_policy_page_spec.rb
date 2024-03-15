@@ -12,9 +12,10 @@ RSpec.feature "Cookie policy page", type: :feature, js: true do
   end
 
   scenario "Reading the cookie policy" do
-    given_i_am_on_the_start_page
-    when_i_view_cookie_policy_from_the_start_page
-    then_i_am_on_the_cookie_policy_page
+    start_page = Pages::StartPage.load
+    start_page.view_cookie_policy
+
+    expect(Pages::CookiePolicyPage.new).to be_displayed
   end
 
   scenario "Returning from the cookie policy" do
