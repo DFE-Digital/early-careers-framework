@@ -7,6 +7,8 @@ module Pages
     set_url "/schools/{slug}/early_career_teachers"
     set_primary_heading "Early career teachers (ECTs)"
 
+    section :summary_list,Sections::SummaryListSection, 'main'
+
     def choose_to_add_an_ect
       click_on "Add ECT"
 
@@ -29,6 +31,12 @@ module Pages
       click_on(participant_name)
 
       Pages::SchoolEarlyCareerTeacherDetailsPage.loaded
+    end
+
+    def shows_appropriate_body(appropriate_body_name)
+      return true if summary_list.have_key_value('Appropriate body', appropriate_body_name)
+
+      raise RSpec::Expectations::ExpectationNotMetError, "Appropriate body with name '#{appropriate_body_name}' not found"
     end
 
   private

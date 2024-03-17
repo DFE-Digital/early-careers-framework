@@ -1,11 +1,14 @@
 # frozen_string_literal: true
 
 require_relative "../base_page"
+require_relative "../../sections/summary_list_section"
 
 module Pages
   class SchoolDashboardPage < ::Pages::BasePage
     set_url "/schools/{slug}"
     set_primary_heading "Manage your training"
+
+    section :summary_list,Sections::SummaryListSection, 'main'
 
     def has_induction_tutor?(sit)
       full_name = case sit.class
@@ -30,6 +33,12 @@ module Pages
 
     def confirm_is_using_dfe_accredited_materials
       element_has_content? self, "Programme DfE-accredited materials"
+    end
+
+    def shows_appropriate_body(appropriate_body_name)
+      return true if summary_list.have_key_value('Appropriate body', appropriate_body_name)
+
+      raise RSpec::Expectations::ExpectationNotMetError, "Appropriate body with name '#{appropriate_body_name}' not found"
     end
 
     def report_school_has_been_confirmed_incorrectly
@@ -62,6 +71,10 @@ module Pages
       click_on("Mentors")
 
       Pages::SchoolMentorsDashboardPage.loaded
+    end
+
+    def add_appropriate_body
+      summary_list.click_action('Appropriate body', 'Add')
     end
   end
 end
