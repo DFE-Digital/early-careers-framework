@@ -54,7 +54,7 @@ module Identity
       from_id = from_user.get_an_identity_id
       to_id = to_user.get_an_identity_id
 
-      Sentry.capture_exception("Identity ids present on both User records: #{from_user.id} -> #{to_user.id}") if from_id.present? && to_id.present? # Log on sentry if get_an_identity_id exist on both user
+      # Sentry.capture_exception("Identity ids present on both User records: #{from_user.id} -> #{to_user.id}") if from_id.present? && to_id.present? # Log on sentry if get_an_identity_id exist on both user
 
       from_id = get_a_latest_identity_id(from_id, to_id) if from_id.present? && to_id.present? # Dedup the user if get_an_identity_id exist on both user
 

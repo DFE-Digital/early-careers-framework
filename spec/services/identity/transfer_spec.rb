@@ -119,8 +119,9 @@ RSpec.describe Identity::Transfer do
         end
 
         it "transfer the id to latest user" do
-          expect(Sentry).to receive(:capture_exception).with("Identity ids present on both User records: #{user1.id} -> #{user2.id}")
           service.call(from_user: user1, to_user: user2)
+          expect(user1.get_an_identity_id).to be_nil
+          expect(user2.get_an_identity_id).to eq get_an_identity_id
         end
       end
     end
