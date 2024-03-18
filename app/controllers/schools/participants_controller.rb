@@ -91,8 +91,12 @@ class Schools::ParticipantsController < Schools::BaseController
     if @mentor_form.valid?
       induction_record = @profile.induction_records.for_school(@school).latest
       new_mentor_profile = @mentor_form.mentor&.mentor_profile
-      Induction::ChangeMentor.call(induction_record:, mentor_profile: new_mentor_profile)
-      @message = "#{new_mentor_profile.full_name} has been assigned to #{@profile.full_name}"
+      if new_mentor_profile.id == induction_record.mentor_profile_id
+        @message = "#{new_mentor_profile.full_name} still assigned to #{@profile.full_name}"
+      else
+        Induction::ChangeMentor.call(induction_record:, mentor_profile: new_mentor_profile)
+        @message = "#{new_mentor_profile.full_name} has been assigned to #{@profile.full_name}"
+      end
 
       redirect_to path_to_participant(@profile, @school)
     else
