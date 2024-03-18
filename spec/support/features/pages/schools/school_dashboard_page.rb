@@ -41,6 +41,12 @@ module Pages
       raise RSpec::Expectations::ExpectationNotMetError, "Appropriate body with name '#{appropriate_body_name}' not found"
     end
 
+    def has_appropriate_body?(appropriate_body_name)
+      return true if summary_list.have_key_value('Appropriate body', appropriate_body_name)
+
+      raise RSpec::Expectations::ExpectationNotMetError, "Appropriate body with name '#{appropriate_body_name}' not found"
+    end
+
     def report_school_has_been_confirmed_incorrectly
       click_on "challenge-partnership-link"
 
@@ -75,6 +81,7 @@ module Pages
 
     def add_appropriate_body
       summary_list.click_action('Appropriate body', 'Add')
+      Pages::AddAppropriateBody::TypePage.loaded
     end
   end
 end

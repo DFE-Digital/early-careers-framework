@@ -10,6 +10,7 @@ module Pages::AddAppropriateBody
     def choose_national_organisation
       choose "National organisation"
       click_on "Continue"
+      Pages::AddAppropriateBody::SelectNationalOrganisationPage.loaded
     end
 
     def choose_teaching_school_hub
@@ -25,6 +26,7 @@ module Pages::AddAppropriateBody
     def choose_element(element)
       choose element
       click_on "Continue"
+      Pages::AddAppropriateBody::ConfirmationPage.loaded
     end
   end
 

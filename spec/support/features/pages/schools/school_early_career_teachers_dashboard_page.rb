@@ -33,7 +33,7 @@ module Pages
       Pages::SchoolEarlyCareerTeacherDetailsPage.loaded
     end
 
-    def shows_appropriate_body(appropriate_body_name)
+    def has_appropriate_body?(appropriate_body_name)
       return true if summary_list.have_key_value('Appropriate body', appropriate_body_name)
 
       raise RSpec::Expectations::ExpectationNotMetError, "Appropriate body with name '#{appropriate_body_name}' not found"
