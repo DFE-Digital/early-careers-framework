@@ -51,7 +51,7 @@
       <% else %>
         <p class="govuk-body govuk-!-margin-bottom-4">Not currently mentoring</p>
 
-        <% if possible_ects.present? %>
+        <% if profile.active_record? && possible_ects.present? %>
           <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds">
               <div>
