@@ -5,3 +5,6 @@
   - primary_contact_email
   :nomination_emails:
   - sent_to
+  :emails:
+  - to
+  - personalisation

@@ -450,3 +450,24 @@
   - state
   - created_at
   - updated_at
+  :email_associations:
+  - id
+  - email_id
+  - object_type
+  - object_id
+  - name
+  - created_at
+  - updated_at
+  :emails:
+  - id
+  - from
+  - to
+  - template_id
+  - template_version
+  - uri
+  - personalisation
+  - created_at
+  - updated_at
+  - status
+  - delivered_at
+  - tags
