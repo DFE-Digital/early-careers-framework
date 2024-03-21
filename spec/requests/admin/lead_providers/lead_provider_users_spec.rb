@@ -15,20 +15,20 @@ RSpec.describe "Admin::LeadProviders::LeadProviderUsers", type: :request do
     lead_provider_user_two
   end
 
-  describe "GET /admin/suppliers/lead_providers/users/:id/edit" do
+  describe "GET /admin/suppliers/lead_providers/:lead_provider_id/users/:id/edit" do
     it "renders the index template" do
-      get "/admin/suppliers/lead-providers/users/#{lead_provider_user.id}/edit"
+      get "/admin/suppliers/lead-providers/#{lead_provider_user.lead_provider.id}/users/#{lead_provider_user.id}/edit"
 
       expect(response.body).to include("Edit user details")
       expect(response).to render_template("admin/suppliers/lead_provider_users/edit")
     end
   end
 
-  describe "PATCH /admin/suppliers/lead_providers/users/:id" do
+  describe "PATCH /admin/suppliers/lead_providers/:lead_provider_id/users/:id" do
     let(:email) { "user@example.com" }
 
     it "updates the user and redirects to users page" do
-      patch "/admin/suppliers/lead-providers/users/#{lead_provider_user.id}", params: {
+      patch "/admin/suppliers/lead-providers/#{lead_provider_user.lead_provider.id}/users/#{lead_provider_user.id}", params: {
         user: { email: },
       }
 
@@ -39,7 +39,7 @@ RSpec.describe "Admin::LeadProviders::LeadProviderUsers", type: :request do
 
     context "when the user params are invalid" do
       it "renders error messages" do
-        patch "/admin/suppliers/lead-providers/users/#{lead_provider_user.id}", params: {
+        patch "/admin/suppliers/lead-providers/#{lead_provider_user.lead_provider.id}/users/#{lead_provider_user.id}", params: {
           user: { email: nil },
         }
 
@@ -52,7 +52,7 @@ RSpec.describe "Admin::LeadProviders::LeadProviderUsers", type: :request do
       let(:current_admin) { admin_user }
 
       before do
-        patch "/admin/suppliers/lead-providers/users/#{lead_provider_user.id}", params: {
+        patch "/admin/suppliers/lead-providers/#{lead_provider_user.lead_provider.id}/users/#{lead_provider_user.id}", params: {
           user: { email: },
         }
       end
@@ -61,9 +61,9 @@ RSpec.describe "Admin::LeadProviders::LeadProviderUsers", type: :request do
     end
   end
 
-  describe "DELETE /admin/suppliers/lead_providers/users/:id/", versioning: true do
+  describe "DELETE /admin/suppliers/lead_providers/:lead_provider_id/users/:id/", versioning: true do
     before do
-      delete "/admin/suppliers/lead-providers/users/#{lead_provider_user_two.id}"
+      delete "/admin/suppliers/lead-providers/#{lead_provider_user.lead_provider.id}/users/#{lead_provider_user_two.id}"
     end
 
     it "deletes the lead_provider" do

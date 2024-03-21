@@ -459,7 +459,7 @@ Rails.application.routes.draw do
         end
       end
 
-      scope path: "lead-providers" do
+      resources :lead_providers, only: :show, path: "lead-providers" do
         resources :lead_provider_users, only: %i[edit update destroy], path: "users" do
           member do
             get "delete", action: :delete
