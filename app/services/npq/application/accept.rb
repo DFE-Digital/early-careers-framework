@@ -106,6 +106,10 @@ module NPQ
         @participant_profile ||= ParticipantProfile.find(npq_application.id)
       end
 
+      def trn
+        @trn ||= npq_application.teacher_reference_number_verified? ? npq_application.teacher_reference_number : teacher_profile&.trn
+      end
+
       def teacher_profile
         @teacher_profile ||= user.teacher_profile || user.build_teacher_profile
       end
@@ -115,11 +119,11 @@ module NPQ
       end
 
       def same_trn_user
-        return if teacher_profile&.trn.blank?
+        return if trn.blank?
 
         @same_trn_user ||= TeacherProfile
                            .oldest_first
-                           .where(trn: teacher_profile.trn)
+                           .where(trn:)
                            .where.not(id: teacher_profile.id)
                            .first
                            &.user

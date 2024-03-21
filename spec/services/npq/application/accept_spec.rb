@@ -194,6 +194,41 @@ RSpec.describe NPQ::Application::Accept do
           expect(service.errors.messages_for(:npq_application)).to include("The participant has already had an application accepted for this course.")
         end
       end
+
+      context "when the other npq applicaton belongs to the same participant with a different user without a teacher profile" do
+        let(:user) { create(:user, email: "peterpan@example.com") }
+        let(:same_user) { create(:user, email: "peter_pan@example.com") }
+        let!(:teacher_profile) { create(:teacher_profile, trn:, user:) }
+        let!(:identity) { create(:participant_identity, user:) }
+        let!(:another_identity) { create(:participant_identity, user: same_user) }
+
+        let(:other_npq_application) do
+          create(:npq_application,
+                 teacher_reference_number: trn,
+                 participant_identity: another_identity,
+                 npq_course:,
+                 npq_lead_provider: other_npq_lead_provider,
+                 school_urn: "123456",
+                 school_ukprn: "12345678",
+                 cohort: cohort_2021)
+        end
+
+        before do
+          npq_application.update!(lead_provider_approval_status: "accepted")
+        end
+
+        it "does not allow 2 applications with same course to be accepted" do
+          expect {
+            described_class.new(npq_application: other_npq_application).call
+          }.not_to change { other_npq_application.reload.lead_provider_approval_status }
+        end
+
+        it "attaches errors to the object" do
+          service = described_class.new(npq_application: other_npq_application).call
+
+          expect(service.errors.messages_for(:npq_application)).to include("The participant has already had an application accepted for this course.")
+        end
+      end
     end
 
     context "when user has applied for different course" do
