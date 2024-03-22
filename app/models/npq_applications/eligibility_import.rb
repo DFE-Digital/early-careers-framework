@@ -47,6 +47,8 @@ module NPQApplications
   private
 
     def validate_user_is_admin
+      return if user.blank?
+
       errors.add(:user, :not_admin) unless user.admin?
     end
   end
