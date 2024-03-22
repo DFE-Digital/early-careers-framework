@@ -37,15 +37,15 @@ RSpec.describe EmailSchedule, type: :model do
       end
 
       it "does not include schedules for a later date" do
-        expect(described_class.to_send_today).not_to include [scheduled_later]
+        expect(described_class.to_send_today).not_to include(scheduled_later)
       end
 
       it "does not include schedules that are in progress" do
-        expect(described_class.to_send_today).not_to include [currently_sending]
+        expect(described_class.to_send_today).not_to include(currently_sending)
       end
 
       it "does not include schedules that have already been sent" do
-        expect(described_class.to_send_today).not_to include [already_sent]
+        expect(described_class.to_send_today).not_to include(already_sent)
       end
     end
   end
