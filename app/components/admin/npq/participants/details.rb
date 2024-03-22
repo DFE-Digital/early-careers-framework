@@ -29,7 +29,7 @@ module Admin
 
         def last_updated
           [profile.updated_at, user.updated_at, npq_application.updated_at]
-            &.compact
+            .compact
             &.max
             &.to_formatted_s(:govuk)
         end
