@@ -28,8 +28,8 @@ module Admin::Participants
     def email; end
 
     def check_answers
-      @school_transfer_form.perform_transfer!
       clear_session_data
+      @school_transfer_form.perform_transfer!
 
       set_success_message content: "#{@school_transfer_form.participant_name} has been successfully transferred"
       redirect_to admin_participant_path(@participant_profile)
