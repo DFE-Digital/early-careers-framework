@@ -32,8 +32,6 @@ FactoryBot.define do
       skip_validations
     end
 
-    trait(:valid) {}
-
     after(:build) do
       Rails.logger.debug("created email schedule")
     end
