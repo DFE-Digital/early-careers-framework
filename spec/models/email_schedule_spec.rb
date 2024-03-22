@@ -48,6 +48,46 @@ RSpec.describe EmailSchedule, type: :model do
         expect(described_class.to_send_today).not_to include(already_sent)
       end
     end
+
+    describe ".upcoming_emails" do
+      it "returns all the queued schedules" do
+        expect(described_class.upcoming_emails).to match_array [scheduled_today, scheduled_later]
+      end
+
+      it "does not include schedules that are in progress" do
+        expect(described_class.upcoming_emails).not_to include(currently_sending)
+      end
+
+      it "does not include schedules that have already been sent" do
+        expect(described_class.upcoming_emails).not_to include(already_sent)
+      end
+    end
+
+    describe ".recently_sent" do
+      it "does not include the queued schedules" do
+        expect(described_class.recently_sent).not_to include(scheduled_today)
+      end
+
+      it "does not include schedules for a later date" do
+        expect(described_class.recently_sent).not_to include(scheduled_later)
+      end
+
+      it "returns schedules that are in progress" do
+        expect(described_class.recently_sent).to include(currently_sending)
+      end
+
+      it "returns schedules that have already been sent" do
+        expect(described_class.recently_sent).to include(already_sent)
+      end
+
+      context "when more than 20 results" do
+        before { create_list(:seed_email_factory, 21, :sent) }
+
+        it "returns 20 results" do
+          expect(described_class.recently_sent.count).to eq(20)
+        end
+      end
+    end
   end
 
   describe "#mailer_method" do
