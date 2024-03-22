@@ -19,6 +19,8 @@ class EmailSchedule < ApplicationRecord
   }
 
   scope :to_send_today, -> { queued.where(scheduled_at: ..Date.current) }
+  scope :upcoming_emails, -> { queued.order(:scheduled_at) }
+  scope :recently_sent, -> { sending.or(sent).order(scheduled_at: :desc).limit(20) }
 
   def mailer_method
     MAILERS[mailer_name.to_sym]
