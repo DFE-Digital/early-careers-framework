@@ -6,8 +6,8 @@ class Admin::Performance::EmailSchedulesController < Admin::BaseController
   before_action :set_email_schedule, only: %i[show edit update destroy]
 
   def index
-    @upcoming_emails = EmailSchedule.queued.order(:scheduled_at)
-    @recently_sent = EmailSchedule.where.not(status: :queued).order(scheduled_at: :desc).limit(20)
+    @upcoming_emails = EmailSchedule.upcoming_emails
+    @recently_sent = EmailSchedule.recently_sent
   end
 
   def show; end
