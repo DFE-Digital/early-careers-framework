@@ -25,7 +25,7 @@
       if @email_schedule.queued?
         summary_list.with_row do |row|
           row.with_key(text: 'Estimated size')
-          row.with_value(text: estimate_bulk_emails_count(@email_schedule))
+          row.with_value(text: email_schedule_estimated(@email_schedule))
         end
       else
         summary_list.with_row do |row|
@@ -33,14 +33,14 @@
           if @email_schedule.sending?
             row.with_value(text: "Sending")
           else
-            row.with_value(text: @email_schedule.actual_email_count)
+            row.with_value(text: email_schedule_sent(@email_schedule))
           end
         end
       end
       if @email_schedule.sent?
         summary_list.with_row do |row|
           row.with_key(text: 'Bounced')
-          row.with_value(text: @email_schedule.failed_email_count)
+          row.with_value(text: email_schedule_bounced(@email_schedule))
         end
       end
     end

@@ -10,6 +10,7 @@ class Email < ApplicationRecord
 
   scope :associated_with, ->(object) { where(id: Association.where(object:).select(:email_id)) }
   scope :tagged_with, ->(*tags) { tags.inject(self) { |scope, tag| scope.where("? = ANY (tags)", tag) } }
+  scope :failed, -> { where(status: FAILED_STATUSES) }
 
   FAILED_STATUSES = %w[permanent-failure temporary-failure technical-failure].freeze
 

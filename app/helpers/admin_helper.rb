@@ -127,4 +127,8 @@ module AdminHelper
       .new(cohort: Cohort.containing_date(email_schedule.scheduled_at), dry_run: true)
       .send(email_schedule.mailer_method)
   end
+
+  def bounced_bulk_emails_count(email_schedule)
+    Email.failed.associated_with(email_schedule).count
+  end
 end
