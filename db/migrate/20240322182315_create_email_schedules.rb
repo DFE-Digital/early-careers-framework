@@ -6,8 +6,7 @@ class CreateEmailSchedules < ActiveRecord::Migration[7.0]
       t.string :mailer_name, null: false
       t.date :scheduled_at, null: false
       t.string :status, null: false, default: "queued"
-      t.integer :actual_email_count
-      t.integer :failed_email_count
+      t.integer :emails_sent_count
       t.timestamps
     end
   end

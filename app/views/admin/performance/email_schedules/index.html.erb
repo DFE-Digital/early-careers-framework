@@ -43,7 +43,7 @@
             if email_schedule.sending?
               row.with_cell(text: "Sending")
             else
-              row.with_cell(text: email_schedule.actual_email_count)
+              row.with_cell(text: email_schedule.emails_sent_count)
             end
           end
         end
