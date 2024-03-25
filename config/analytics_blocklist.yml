@@ -430,8 +430,7 @@
   - mailer_name
   - scheduled_at
   - status
-  - actual_email_count
-  - failed_email_count
+  - emails_sent_count
   - created_at
   - updated_at
   :analytics_school_cohorts:

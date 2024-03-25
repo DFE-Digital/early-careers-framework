@@ -27,7 +27,7 @@ FactoryBot.define do
     trait(:sent) do
       scheduled_at { 1.month.ago }
       status { "sent" }
-      actual_email_count { rand(15_000) }
+      emails_sent_count { rand(15_000) }
 
       skip_validations
     end

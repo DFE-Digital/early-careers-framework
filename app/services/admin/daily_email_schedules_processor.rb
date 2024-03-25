@@ -14,11 +14,11 @@ module Admin
       email_schedules.find_each do |email_schedule|
         email_schedule.sending!
 
-        BulkMailers::SchoolReminderComms
+        emails_sent = BulkMailers::SchoolReminderComms
           .new(cohort: Cohort.current, email_schedule:)
           .send(email_schedule.mailer_method)
 
-        email_schedule.sent!
+        email_schedule.update!(status: :sent, emails_sent_count: emails_sent.to_i)
       end
     end
   end
