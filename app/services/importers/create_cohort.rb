@@ -31,12 +31,15 @@ module Importers
       start_year = row["start-year"].to_i
       logger.info "CreateCohort: Creating cohort for starting year #{start_year}"
 
+      default_automatic_assignment_period_end_date = Date.new(start_year + 1, 3, 31)
+
       Cohort.upsert(
         {
           start_year:,
           registration_start_date: safe_parse(row["registration-start-date"]),
           academic_year_start_date: safe_parse(row["academic-year-start-date"]),
           npq_registration_start_date: safe_parse(row["npq-registration-start-date"]),
+          automatic_assignment_period_end_date: safe_parse(row["automatic-assignment-period-end-date"]) || default_automatic_assignment_period_end_date,
           created_at: Time.zone.now,
           updated_at: Time.zone.now,
         },
@@ -56,7 +59,7 @@ module Importers
     end
 
     def check_headers!
-      unless %w[start-year registration-start-date academic-year-start-date npq-registration-start-date].all? { |header| rows.headers.include?(header) }
+      unless %w[start-year registration-start-date academic-year-start-date npq-registration-start-date automatic-assignment-period-end-date].all? { |header| rows.headers.include?(header) }
         raise NameError, "Invalid headers"
       end
     end
