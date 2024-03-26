@@ -35,7 +35,7 @@ module BulkMailers
             SchoolMailer
               .with(school:, induction_coordinator:, ect_name:, appropriate_body_name:, lead_provider_name:, delivery_partner_name:)
               .remind_sit_that_ab_has_not_registered_ect
-              .deliver_later
+              .deliver_later(wait: get_waiting_time(email_count))
           end
         end
 
@@ -63,7 +63,7 @@ module BulkMailers
             SchoolMailer
               .with(school:, induction_coordinator:, ect_name:, lead_provider_name:, delivery_partner_name:)
               .remind_sit_to_appoint_ab_for_unregistered_ect
-              .deliver_later
+              .deliver_later(wait: get_waiting_time(email_count))
           end
         end
 
@@ -84,7 +84,7 @@ module BulkMailers
           school.induction_coordinator_profiles.each do |induction_coordinator|
             email_count += 1
 
-            SchoolMailer.with(school:, induction_coordinator:, email_schedule:).remind_sit_to_assign_mentors_to_ects_email.deliver_later
+            SchoolMailer.with(school:, induction_coordinator:, email_schedule:).remind_sit_to_assign_mentors_to_ects_email.deliver_later(wait: get_waiting_time(email_count))
           end
         end
 
@@ -107,7 +107,7 @@ module BulkMailers
           school.induction_coordinator_profiles.each do |induction_coordinator|
             email_count += 1
 
-            SchoolMailer.with(school:, induction_coordinator:, email_schedule:).remind_sit_to_add_ects_and_mentors_email.deliver_later
+            SchoolMailer.with(school:, induction_coordinator:, email_schedule:).remind_sit_to_add_ects_and_mentors_email.deliver_later(wait: get_waiting_time(email_count))
           end
         end
 
@@ -133,7 +133,7 @@ module BulkMailers
             sit_user = induction_coordinator.user
             SchoolMailer.with(sit_user:, nomination_link: nomination_url(email: sit_user.email, school:))
               .launch_ask_sit_to_report_school_training_details
-              .deliver_later
+              .deliver_later(wait: get_waiting_time(email_count))
           end
         end
 
@@ -162,7 +162,7 @@ module BulkMailers
 
           SchoolMailer.with(school:, gias_contact_email:, opt_in_out_link: opt_in_out_url(email: gias_contact_email, school:))
             .launch_ask_gias_contact_to_report_school_training_details
-            .deliver_later
+            .deliver_later(wait: get_waiting_time(email_count))
         end
 
       email_count
@@ -183,7 +183,7 @@ module BulkMailers
           email_count += 1
           next if dry_run
 
-          SchoolMailer.with(school:).sit_needs_to_chase_partnership.deliver_later
+          SchoolMailer.with(school:).sit_needs_to_chase_partnership.deliver_later(wait: get_waiting_time(email_count))
         end
 
       email_count
@@ -204,7 +204,7 @@ module BulkMailers
           email_count += 1
           next if dry_run
 
-          SchoolMailer.with(school:, email_schedule:).sit_needs_to_chase_partnership.deliver_later
+          SchoolMailer.with(school:, email_schedule:).sit_needs_to_chase_partnership.deliver_later(wait: get_waiting_time(email_count))
         end
 
       email_count
@@ -225,7 +225,7 @@ module BulkMailers
           school.induction_coordinator_profiles.each do |induction_coordinator|
             email_count += 1
 
-            SchoolMailer.with(induction_coordinator:).sit_pre_term_reminder_to_report_any_changes.deliver_later
+            SchoolMailer.with(induction_coordinator:).sit_pre_term_reminder_to_report_any_changes.deliver_later(wait: get_waiting_time(email_count))
           end
         end
 
@@ -250,6 +250,11 @@ module BulkMailers
 
     def appropriate_body_name(induction_record)
       induction_record.appropriate_body&.name || induction_record.school_cohort.appropriate_body&.name
+    end
+
+    # 5 minutes every 2500 emails
+    def get_waiting_time(email_count)
+      email_count / 2500 * 5.minutes
     end
   end
 end
