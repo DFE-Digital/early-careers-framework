@@ -35,6 +35,7 @@ class School < ApplicationRecord
   has_many :pupil_premiums
   has_many :nomination_emails, -> { order(created_at: :desc) }
 
+  has_many :induction_records, through: :school_cohorts
   has_many :induction_coordinator_profiles_schools, dependent: :destroy
   has_many :induction_coordinator_profiles, through: :induction_coordinator_profiles_schools
   has_many :induction_coordinators, through: :induction_coordinator_profiles, source: :user
