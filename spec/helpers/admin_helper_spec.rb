@@ -141,20 +141,4 @@ RSpec.describe AdminHelper, type: :helper do
       end
     end
   end
-
-  describe "#estimate_bulk_emails_count" do
-    let(:school_reminder_comms) { instance_double(BulkMailers::SchoolReminderComms) }
-    let(:mailer_name) { EmailSchedule::MAILERS.keys.sample }
-    let(:today_schedule) { create(:seed_email_factory, :scheduled_for_today, mailer_name:) }
-    let(:cohort) { Cohort.current }
-
-    before do
-      allow(BulkMailers::SchoolReminderComms).to receive(:new).with(cohort:, dry_run: true).and_return(school_reminder_comms)
-      allow(school_reminder_comms).to receive(today_schedule.mailer_method).and_return(10)
-    end
-
-    it "calls the school reminder bulk mailer to send comms" do
-      expect(estimate_bulk_emails_count(today_schedule)).to eq(10)
-    end
-  end
 end
