@@ -117,6 +117,9 @@ module Api
             funding_eligiblity_status_code
             teacher_catchment
             teacher_catchment_country
+            primary_establishment
+            number_of_pupils
+            tsf_primary_plus_eligibility
           ])
       end
     end
