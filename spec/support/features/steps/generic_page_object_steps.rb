@@ -4,32 +4,32 @@ module Steps
   module GenericPageObjectSteps
     include RSpec::Matchers
 
-    def method_missing(method_symbol, *query_values)
-      match_data = method_symbol.to_s.match(generic_step_matcher)
-      return super if match_data.nil?
-
-      gwt_term = match_data[1]&.to_sym
-      method_name = match_data[2]&.to_sym
-      page_object_name, query_params = match_data[3].split("_with_")
-      return super if page_object_name.nil? || method_name.nil?
-
-      page_object = Pages.const_get(page_object_name.camelize)
-      query_params = query_params&.split("_and_") || []
-
-      if method_name == :am && %i[given when].include?(gwt_term)
-        method_name = :load
-      elsif method_name == :am && %i[then and].include?(gwt_term)
-        method_name = :loaded
-      else
-        page_object = page_object.new
-      end
-
-      generic_call page_object, method_name, query_params, query_values
-    end
-
-    def respond_to_missing?(method_symbol, include_private = false)
-      method_symbol.to_s.match?(generic_step_matcher) || super
-    end
+    # def method_missing(method_symbol, *query_values)
+    #   match_data = method_symbol.to_s.match(generic_step_matcher)
+    #   return super if match_data.nil?
+    #
+    #   gwt_term = match_data[1]&.to_sym
+    #   method_name = match_data[2]&.to_sym
+    #   page_object_name, query_params = match_data[3].split("_with_")
+    #   return super if page_object_name.nil? || method_name.nil?
+    #
+    #   page_object = Pages.const_get(page_object_name.camelize)
+    #   query_params = query_params&.split("_and_") || []
+    #
+    #   if method_name == :am && %i[given when].include?(gwt_term)
+    #     method_name = :load
+    #   elsif method_name == :am && %i[then and].include?(gwt_term)
+    #     method_name = :loaded
+    #   else
+    #     page_object = page_object.new
+    #   end
+    #
+    #   generic_call page_object, method_name, query_params, query_values
+    # end
+    #
+    # def respond_to_missing?(method_symbol, include_private = false)
+    #   method_symbol.to_s.match?(generic_step_matcher) || super
+    # end
 
   private
 

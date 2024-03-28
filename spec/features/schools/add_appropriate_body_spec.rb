@@ -20,16 +20,20 @@ RSpec.describe "Add a school cohort appropriate body", type: :feature, js: true,
       given_there_is_a_school_and_an_induction_coordinator
       and_i_have_added_an_ect
       and_i_am_signed_in_as_an_induction_coordinator
-      then_i_am_on_the_manage_your_training_page
 
-      when_i_choose_appropriate_body(appropriate_body)
-      then_i_see_the_confirmation_page
+      dashboard = Pages::SchoolDashboardPage.loaded
+      type_page = dashboard.add_appropriate_body
 
-      when_i_go_back_to_manage_your_training_page
-      then_i_see_appropriate_body(appropriate_body)
+      national_organisations_page = type_page.choose_national_organisation
+      confirmation_page = national_organisations_page.choose_element appropriate_body.name
+      confirmation_page.return_to_manage_training
 
-      when_i_go_to_the_teacher_profile_page
-      then_i_see_appropriate_body(appropriate_body)
+      expect(dashboard).to be_displayed
+      expect(dashboard).to have_appropriate_body(appropriate_body.name)
+
+      ect_dashboard = dashboard.view_ect_dashboard
+      ect_dashboard.view_participant "Sally Teacher"
+      expect(ect_dashboard).to have_appropriate_body(appropriate_body.name)
     end
   end
 
