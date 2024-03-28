@@ -72,8 +72,20 @@ class InductionRecord < ApplicationRecord
 
   scope :for_school, ->(school) { joins(:school).where(school: { id: school.id }) }
 
-  scope :oldest_first, -> { order(Arel.sql("CASE WHEN induction_records.end_date IS NULL THEN 1 ELSE 0 END"), start_date: :asc, end_date: :asc, created_at: :asc) }
-  scope :newest_first, -> { order(Arel.sql("CASE WHEN induction_records.end_date IS NULL THEN 0 ELSE 1 END"), start_date: :desc, end_date: :desc, created_at: :desc) }
+  # sorting
+  scope :completed_first, -> { order(Arel.sql("CASE WHEN induction_records.induction_status = 'completed' THEN 0 ELSE 1 END")) }
+
+  scope :with_no_end_date_first, -> { order(Arel.sql("CASE WHEN induction_records.end_date IS NULL THEN 0 ELSE 1 END")) }
+  scope :with_end_date_first, -> { order(Arel.sql("CASE WHEN induction_records.end_date IS NULL THEN 1 ELSE 0 END")) }
+
+  scope :oldest_start_date_first, -> { order(start_date: :asc) }
+  scope :newest_start_date_first, -> { order(start_date: :desc) }
+
+  scope :oldest_end_date_first, -> { order(end_date: :asc) }
+  scope :newest_end_date_first, -> { order(end_date: :desc) }
+
+  scope :oldest_created_first, -> { order(created_at: :asc) }
+  scope :newest_created_first, -> { order(created_at: :desc) }
 
   scope :oldest, -> { oldest_first.first }
 
@@ -83,6 +95,28 @@ class InductionRecord < ApplicationRecord
   # Class Methods
   def self.latest
     newest_first.first
+  end
+
+  def self.newest_first
+    with_no_end_date_first
+      .newest_start_date_first
+      .newest_end_date_first
+      .newest_created_first
+  end
+
+  def self.oldest_first
+    with_end_date_first
+      .oldest_start_date_first
+      .oldest_end_date_first
+      .oldest_created_first
+  end
+
+  def self.inverse_induction_order
+    with_no_end_date_first
+      .completed_first
+      .newest_start_date_first
+      .newest_end_date_first
+      .newest_created_first
   end
 
   def self.ransackable_attributes(_auth_object = nil)

@@ -86,18 +86,25 @@ module Dashboard
     # List of relevant (current or transferring_in or transferred) induction record of each of the participant of
     # the school in the cohorts displayed by the dashboard
     def induction_records
-      @induction_records ||= dashboard_school_cohorts.flat_map { |school_cohort|
-        InductionRecordPolicy::Scope
-          .new(user,
-               school_cohort
-                 .induction_records
-                 .school_dashboard_relevant
-                 .eager_load(induction_programme: %i[school core_induction_programme lead_provider delivery_partner],
-                             participant_profile: %i[user ecf_participant_eligibility ecf_participant_validation_data])
-                 .order("users.full_name"))
-          .resolve
-          .order(start_date: :desc, created_at: :desc)
-      }.uniq(&:participant_profile_id)
+      @induction_records ||= InductionRecordPolicy::Scope
+                               .new(user,
+                                    school
+                                      .induction_records
+                                      .school_dashboard_relevant
+                                      .eager_load(induction_programme: %i[school
+                                                                          core_induction_programme
+                                                                          lead_provider
+                                                                          delivery_partner],
+                                                  participant_profile: %i[user
+                                                                          ecf_participant_eligibility
+                                                                          ecf_participant_validation_data])
+                                      .where(induction_programmes: {
+                                        school_cohort_id: dashboard_school_cohorts.map(&:id),
+                                      }))
+                               .resolve
+                               .order("users.full_name")
+                               .inverse_induction_order
+                               .uniq(&:participant_profile_id)
     end
 
     def no_qts?(induction_record)
@@ -135,14 +142,14 @@ module Dashboard
 
     def process_ects
       induction_records
-        .select(&:ect?)
-        .each do |induction_record|
-          next completed_induction_ect(induction_record) if induction_record.completed_induction_status?
-          next no_longer_training_ect(induction_record) if induction_record.deferred_or_transferred_or_withdrawn?
-          next orphan_ect(induction_record) if induction_record.mentor_profile_id.blank?
+      .select(&:ect?)
+      .each do |induction_record|
+        next completed_induction_ect(induction_record) if induction_record.completed_induction_status?
+        next no_longer_training_ect(induction_record) if induction_record.deferred_or_transferred_or_withdrawn?
+        next orphan_ect(induction_record) if induction_record.mentor_profile_id.blank?
 
-          currently_training_ect(induction_record)
-        end
+        currently_training_ect(induction_record)
+      end
     end
 
     # Discover all the relevant mentors of the school, including:
@@ -151,12 +158,12 @@ module Dashboard
     # - mentors linked to the school's ects, but not in the school's mentor pool
     def process_mentors
       induction_records
-        .reject(&:ect?)
-        .each do |induction_record|
-          next if induction_record.deferred_or_transferred_or_withdrawn?
+      .reject(&:ect?)
+      .each do |induction_record|
+        next if induction_record.deferred_or_transferred_or_withdrawn?
 
-          @active_mentors << dashboard_participant(induction_record.participant_profile_id, induction_record:)
-        end
+        @active_mentors << dashboard_participant(induction_record.participant_profile_id, induction_record:)
+      end
 
       # Create a hash with the format below, to display the mentors in the "Currently training" filter
       # { mentor_dashboard_participant => [ect_dashboard_participant_1, ect_dashboard_participant_2] }
@@ -171,13 +178,13 @@ module Dashboard
       end
 
       induction_records
-        .select(&:mentor?)
-        .each do |induction_record|
-          mentees = ects_mentored_by(induction_record.participant_profile)
-          next currently_mentoring_mentor(induction_record) if mentees.present?
+      .select(&:mentor?)
+      .each do |induction_record|
+        mentees = ects_mentored_by(induction_record.participant_profile)
+        next currently_mentoring_mentor(induction_record) if mentees.present?
 
-          not_mentoring_mentor(induction_record)
-        end
+        not_mentoring_mentor(induction_record)
+      end
     end
 
     def currently_mentoring_mentor(induction_record)

@@ -11,6 +11,27 @@ RSpec.describe Dashboard::Participants do
     Induction::TransferToSchoolsProgramme.call(participant_profile:,
                                                induction_programme: ect_1_induction_record_1.induction_programme)
   end
+  let!(:ect_2_induction_record_1) do
+    NewSeeds::Scenarios::Participants::Ects::Ect
+      .new(school_cohort: ect_1_induction_record_1.school_cohort)
+      .build
+      .add_induction_record(induction_programme: transfer_1.induction_programme_from, induction_status: :active)
+  end
+  let!(:ect_2_induction_record_2) do
+    Induction::ChangeProgramme.call(participant_profile: ect_2_induction_record_1.participant_profile,
+                                    end_date: Time.current,
+                                    new_induction_programme: NewSeeds::Scenarios::InductionProgrammes::Fip
+                                                               .new(school_cohort: ect_2_induction_record_1.school_cohort)
+                                                               .build
+                                                               .induction_programme)
+    ect_2_induction_record_1.participant_profile.induction_records.reload.order(:created_at).last
+  end
+  let!(:ect_2_induction_record_3) do
+    Induction::ChangeInductionRecord.call(induction_record: ect_2_induction_record_1.reload,
+                                          changes: { training_status: :withdrawn })
+    ect_2_induction_record_1.participant_profile.induction_records.reload.order(:created_at).last
+  end
+
   let!(:withdrawn_induction_record) do
     NewSeeds::Scenarios::Participants::Ects::Ect
       .new(school_cohort: ect_1_induction_record_1.school_cohort)
@@ -39,8 +60,8 @@ RSpec.describe Dashboard::Participants do
 
     travel_to(2.months.ago) do
       builder = NewSeeds::Scenarios::Participants::Ects::Ect
-        .new(school_cohort: ect_1_induction_record_1.school_cohort)
-        .build
+                  .new(school_cohort: ect_1_induction_record_1.school_cohort)
+                  .build
       relevant_induction_record = builder.add_induction_record(induction_programme: ect_1_induction_record_1.induction_programme, induction_status: "leaving", end_date: transfer_date, school_transfer: true)
       builder.add_induction_record(induction_programme: transferred_to_school_cohort.default_induction_programme, start_date: transfer_date, school_transfer: true)
       relevant_induction_record
@@ -61,7 +82,7 @@ RSpec.describe Dashboard::Participants do
     end
 
     it "returns a unique entry per ect currently active or transferring in or transferred from the school" do
-      expect(subject).to contain_exactly(ect_1_induction_record_3)
+      expect(subject).to contain_exactly(ect_1_induction_record_3, ect_2_induction_record_2)
     end
   end
 

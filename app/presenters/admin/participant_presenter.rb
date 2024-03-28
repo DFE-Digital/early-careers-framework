@@ -158,7 +158,7 @@ private
         },
         mentor_profile: :user,
       )
-      .order(start_date: :desc, created_at: :desc)
+      .inverse_induction_order
   end
 
   def school_latest_induction_records
