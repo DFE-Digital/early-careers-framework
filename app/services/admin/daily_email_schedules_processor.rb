@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-# This service doesn't have any  protections against triggering the mailers
-# multiple times. Does it need a safeguard to send each mailer only once?
 module Admin
   class DailyEmailSchedulesProcessor < BaseService
     attr_reader :email_schedules
