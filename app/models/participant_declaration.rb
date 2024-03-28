@@ -26,6 +26,7 @@ class ParticipantDeclaration < ApplicationRecord
            through: :billable_statement_line_items,
            source: :statement
 
+  attribute :state, :string
   enum state: {
     submitted: "submitted",
     eligible: "eligible",
