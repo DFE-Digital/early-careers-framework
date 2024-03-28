@@ -72,8 +72,29 @@ class InductionRecord < ApplicationRecord
 
   scope :for_school, ->(school) { joins(:school).where(school: { id: school.id }) }
 
-  scope :oldest_first, -> { order(Arel.sql("CASE WHEN induction_records.end_date IS NULL THEN 1 ELSE 0 END"), start_date: :asc, end_date: :asc, created_at: :asc) }
-  scope :newest_first, -> { order(Arel.sql("CASE WHEN induction_records.end_date IS NULL THEN 0 ELSE 1 END"), start_date: :desc, end_date: :desc, created_at: :desc) }
+  # sorting
+  scope :completed_first, -> { order(Arel.sql("CASE WHEN induction_records.induction_status = 'completed' THEN 0 ELSE 1 END")) }
+
+  scope :no_end_date_first, -> { order(Arel.sql("CASE WHEN induction_records.end_date IS NULL THEN 0 ELSE 1 END")) }
+  scope :with_end_date_first, -> { order(Arel.sql("CASE WHEN induction_records.end_date IS NULL THEN 1 ELSE 0 END")) }
+
+  scope :less_recent_start_date_first, -> { order(start_date: :asc) }
+  scope :most_recent_start_date_first, -> { order(start_date: :desc) }
+
+  scope :less_recent_end_date_first, -> { order(end_date: :asc) }
+  scope :most_recent_end_date_first, -> { order(end_date: :desc) }
+
+  scope :less_recent_first, -> { order(created_at: :asc) }
+  scope :most_recent_first, -> { order(created_at: :desc) }
+
+  scope :oldest_first, -> { with_end_date_first
+                              .less_recent_start_date_first
+                              .less_recent_end_date_first
+                              .less_recent_first }
+  scope :newest_first, -> { no_end_date_first
+                              .most_recent_start_date_first
+                              .most_recent_end_date_first
+                              .most_recent_first }
 
   scope :oldest, -> { oldest_first.first }
 

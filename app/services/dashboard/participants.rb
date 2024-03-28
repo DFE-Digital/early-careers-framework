@@ -91,15 +91,23 @@ module Dashboard
                                     school
                                       .induction_records
                                       .school_dashboard_relevant
-                                      .eager_load(induction_programme: %i[school core_induction_programme lead_provider delivery_partner],
-                                                  participant_profile: %i[user ecf_participant_eligibility ecf_participant_validation_data])
-                                      .where(induction_programmes: { school_cohort_id: dashboard_school_cohorts.map(&:id) }))
+                                      .eager_load(induction_programme: %i[school
+                                                                          core_induction_programme
+                                                                          lead_provider
+                                                                          delivery_partner],
+                                                  participant_profile: %i[user
+                                                                          ecf_participant_eligibility
+                                                                          ecf_participant_validation_data])
+                                      .where(induction_programmes: {
+                                        school_cohort_id: dashboard_school_cohorts.map(&:id),
+                                      }))
                                .resolve
-                               .order("users.full_name",
-                                      Arel.sql("CASE WHEN induction_records.end_date IS NULL THEN 0 ELSE 1 END"),
-                                      Arel.sql("CASE WHEN induction_records.induction_status = 'completed' THEN 0 ELSE 1 END"),
-                                      start_date: :desc,
-                                      created_at: :desc)
+                               .order("users.full_name")
+                               .no_end_date_first
+                               .completed_first
+                               .most_recent_start_date_first
+                               .most_recent_end_date_first
+                               .most_recent_first
                                .uniq(&:participant_profile_id)
     end
 
