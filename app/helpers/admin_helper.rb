@@ -121,14 +121,4 @@ module AdminHelper
 
     govuk_link_to(text, template_url, target: "_blank")
   end
-
-  def estimate_bulk_emails_count(email_schedule)
-    BulkMailers::SchoolReminderComms
-      .new(cohort: Cohort.containing_date(email_schedule.scheduled_at), dry_run: true)
-      .send(email_schedule.mailer_method)
-  end
-
-  def bounced_bulk_emails_count(email_schedule)
-    Email.failed.associated_with(email_schedule).count
-  end
 end
