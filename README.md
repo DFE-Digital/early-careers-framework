@@ -1,5 +1,7 @@
 ![Tests](https://github.com/DFE-Digital/early-careers-framework/workflows/Test/badge.svg)
 
+This is a test
+
 # Early careers framework
 
 ## Development Setup

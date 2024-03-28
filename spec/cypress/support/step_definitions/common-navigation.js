@@ -80,7 +80,8 @@ const pagePaths = {
   "new lead provider user": "/admin/suppliers/users/new",
   "new lead provider user details": "/admin/suppliers/users/new/user-details",
   "new lead provider user review": "/admin/suppliers/users/new/review",
-  "lead provider user delete": "/lead-providers/users/:id/delete",
+  "lead provider user delete":
+    "/lead-providers/:lead_provider_id/users/:id/delete",
   "choose programme": "/schools/:school_id/cohorts/:cohort_id/choose-programme",
   "choose programme advisory":
     "/schools/:school_id/cohorts/:cohort_id/choose-programme/advisory",
