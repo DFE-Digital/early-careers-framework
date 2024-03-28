@@ -1,0 +1,15 @@
+<% content_for :title, "Schedule an email" %>
+<%= render partial: "admin/performance/nav" %>
+<%= govuk_back_link(text: "Back", href: admin_performance_email_schedules_path) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= form_with(model: @email_schedule, url: admin_performance_email_schedule_path(@email_schedule), method: :patch) do |f| %>
+      <%= f.govuk_error_summary %>
+
+      <%= f.govuk_date_field :scheduled_at, legend: { text: 'When should this be sent?', size: 'l'}, caption: { text: @email_schedule.mailer_name.humanize } %>
+
+      <%= f.govuk_submit "Update scheduled email" %>
+    <% end %>
+  </div>
+</div>
