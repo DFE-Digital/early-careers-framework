@@ -103,11 +103,7 @@ module Dashboard
                                       }))
                                .resolve
                                .order("users.full_name")
-                               .no_end_date_first
-                               .completed_first
-                               .most_recent_start_date_first
-                               .most_recent_end_date_first
-                               .most_recent_first
+                               .inverse_induction_order
                                .uniq(&:participant_profile_id)
     end
 

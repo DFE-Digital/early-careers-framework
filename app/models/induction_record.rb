@@ -75,26 +75,17 @@ class InductionRecord < ApplicationRecord
   # sorting
   scope :completed_first, -> { order(Arel.sql("CASE WHEN induction_records.induction_status = 'completed' THEN 0 ELSE 1 END")) }
 
-  scope :no_end_date_first, -> { order(Arel.sql("CASE WHEN induction_records.end_date IS NULL THEN 0 ELSE 1 END")) }
+  scope :with_no_end_date_first, -> { order(Arel.sql("CASE WHEN induction_records.end_date IS NULL THEN 0 ELSE 1 END")) }
   scope :with_end_date_first, -> { order(Arel.sql("CASE WHEN induction_records.end_date IS NULL THEN 1 ELSE 0 END")) }
 
-  scope :less_recent_start_date_first, -> { order(start_date: :asc) }
-  scope :most_recent_start_date_first, -> { order(start_date: :desc) }
+  scope :oldest_start_date_first, -> { order(start_date: :asc) }
+  scope :newest_start_date_first, -> { order(start_date: :desc) }
 
-  scope :less_recent_end_date_first, -> { order(end_date: :asc) }
-  scope :most_recent_end_date_first, -> { order(end_date: :desc) }
+  scope :oldest_end_date_first, -> { order(end_date: :asc) }
+  scope :newest_end_date_first, -> { order(end_date: :desc) }
 
-  scope :less_recent_first, -> { order(created_at: :asc) }
-  scope :most_recent_first, -> { order(created_at: :desc) }
-
-  scope :oldest_first, -> { with_end_date_first
-                              .less_recent_start_date_first
-                              .less_recent_end_date_first
-                              .less_recent_first }
-  scope :newest_first, -> { no_end_date_first
-                              .most_recent_start_date_first
-                              .most_recent_end_date_first
-                              .most_recent_first }
+  scope :oldest_created_first, -> { order(created_at: :asc) }
+  scope :newest_created_first, -> { order(created_at: :desc) }
 
   scope :oldest, -> { oldest_first.first }
 
@@ -104,6 +95,28 @@ class InductionRecord < ApplicationRecord
   # Class Methods
   def self.latest
     newest_first.first
+  end
+
+  def self.newest_first
+    with_no_end_date_first
+      .newest_start_date_first
+      .newest_end_date_first
+      .newest_created_first
+  end
+
+  def self.oldest_first
+    with_end_date_first
+      .oldest_start_date_first
+      .oldest_end_date_first
+      .oldest_created_first
+  end
+
+  def self.inverse_induction_order
+    with_no_end_date_first
+      .completed_first
+      .newest_start_date_first
+      .newest_end_date_first
+      .newest_created_first
   end
 
   def self.ransackable_attributes(_auth_object = nil)
