@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Admin::MailScheduleJob do
+RSpec.describe Admin::EmailSchedulesJob do
   subject(:job) { described_class.perform_later }
 
   describe "#perform" do

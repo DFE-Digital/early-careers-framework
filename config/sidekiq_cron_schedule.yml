@@ -55,5 +55,5 @@ send_entity_table_checks_to_bigquery:
   queue: dfe_analytics
 send_email_schedules:
   cron: "0 12 * * *"
-  class: "Admin::MailScheduleJob"
+  class: "Admin::EmailScheduleJob"
   queue: default
