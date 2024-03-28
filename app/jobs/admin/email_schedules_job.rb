@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Admin::MailScheduleJob < ApplicationJob
+class Admin::EmailSchedulesJob < ApplicationJob
   def perform
     Admin::DailyEmailSchedulesProcessor.call
   end
