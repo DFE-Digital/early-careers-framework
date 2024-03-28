@@ -4,6 +4,17 @@ require "csv"
 
 module Importers
   class CreateNPQContract
+    AVAILABLE_HEADERS = %w[
+      provider_name
+      cohort_year
+      course_identifier
+      recruitment_target
+      per_participant
+      service_fee_installments
+      special_course
+      monthly_service_fee
+    ].freeze
+
     attr_reader :path_to_csv, :set_to_latest_version
 
     def initialize(path_to_csv:, set_to_latest_version: false)
@@ -32,7 +43,7 @@ module Importers
           )
 
           contract.update!(
-            monthly_service_fee: 0.0,
+            monthly_service_fee: row["monthly_service_fee"] || 0.0,
             recruitment_target: row["recruitment_target"].to_i,
             per_participant: row["per_participant"],
             service_fee_installments: row["service_fee_installments"].to_i,
@@ -85,7 +96,7 @@ module Importers
     end
 
     def check_headers
-      unless rows.headers == %w[provider_name cohort_year course_identifier recruitment_target per_participant service_fee_installments special_course]
+      unless rows.headers.all? { |h| h.in?(AVAILABLE_HEADERS) }
         raise NameError, "Invalid headers"
       end
     end

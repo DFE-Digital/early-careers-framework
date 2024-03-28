@@ -30,10 +30,12 @@ RSpec.describe Importers::CreateNPQContract do
     end
 
     context "when new contract" do
+      let(:monthly_service_fee) { 12.34 }
+
       before do
-        csv.write "provider_name,cohort_year,course_identifier,recruitment_target,per_participant,service_fee_installments,special_course"
+        csv.write "provider_name,cohort_year,course_identifier,recruitment_target,per_participant,service_fee_installments,special_course,monthly_service_fee"
         csv.write "\n"
-        csv.write "Ambition Institute,#{cohort.start_year},npq-leading-teaching,123,456.78,13,TRUE"
+        csv.write "Ambition Institute,#{cohort.start_year},npq-leading-teaching,123,456.78,13,TRUE,#{monthly_service_fee}"
         csv.write "\n"
         csv.close
       end
@@ -53,8 +55,20 @@ RSpec.describe Importers::CreateNPQContract do
         expect(contract.number_of_payment_periods).to eql(3)
         expect(contract.cohort).to eql(cohort)
         expect(contract.version).to eql("0.0.1")
-        expect(contract.monthly_service_fee).to eql(0.0)
+        expect(contract.monthly_service_fee).to eql(12.34)
         expect(contract.special_course).to eql(true)
+      end
+
+      context "when the monthly_service_fee is not specified" do
+        let(:monthly_service_fee) { nil }
+
+        it "defaults it to 0.0" do
+          expect { subject.call }.to change { NPQContract.count }.by(1)
+
+          contract = NPQContract.last
+
+          expect(contract.monthly_service_fee).to be_zero
+        end
       end
     end
 
