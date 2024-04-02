@@ -142,6 +142,7 @@ class SchoolMailer < ApplicationMailer
   def remind_sit_to_assign_mentors_to_ects_email
     induction_coordinator = params[:induction_coordinator]
     school = params[:school]
+    email_schedule = params[:email_schedule]
     school_name = school.name
     email_address = induction_coordinator.user.email
     name = induction_coordinator.user.full_name
@@ -156,12 +157,13 @@ class SchoolMailer < ApplicationMailer
         email_address:,
         school_name:,
       },
-    ).tag(:remind_sits_to_assign_mentors_to_ects).associate_with(induction_coordinator, as: :induction_coordinator_profile)
+    ).tag(:remind_sits_to_assign_mentors_to_ects).associate_with(email_schedule, induction_coordinator, as: :induction_coordinator_profile)
   end
 
   def remind_sit_to_add_ects_and_mentors_email
     induction_coordinator = params[:induction_coordinator]
     school = params[:school]
+    email_schedule = params[:email_schedule]
     school_name = school.name
     email_address = induction_coordinator.user.email
     name = induction_coordinator.user.full_name
@@ -176,7 +178,7 @@ class SchoolMailer < ApplicationMailer
         email_address:,
         school_name:,
       },
-    ).tag(:remind_sits_to_add_ects_and_mentors).associate_with(induction_coordinator, as: :induction_coordinator_profile)
+    ).tag(:remind_sits_to_add_ects_and_mentors).associate_with(email_schedule, induction_coordinator, as: :induction_coordinator_profile)
   end
 
   def cohortless_pilot_2023_survey_email
@@ -433,6 +435,7 @@ class SchoolMailer < ApplicationMailer
 
   def sit_needs_to_chase_partnership
     school = params[:school]
+    email_schedule = params[:email_schedule]
     induction_coordinator = school.induction_coordinators.first
     sit_name = induction_coordinator.full_name
     sit_email_address = induction_coordinator.email
@@ -450,7 +453,7 @@ class SchoolMailer < ApplicationMailer
     )
     email
       .tag(:sit_needs_to_chase_partnership)
-      .associate_with(induction_coordinator, as: :induction_coordinator)
+      .associate_with(email_schedule, induction_coordinator, as: :induction_coordinator)
   end
 
   ## Finance amendments mailers - One off mailers

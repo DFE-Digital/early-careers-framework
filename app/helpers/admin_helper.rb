@@ -115,4 +115,10 @@ module AdminHelper
     policy(participant_presenter.participant_profile).edit_induction_status? &&
       %w[withdrawn leaving].include?(participant_presenter.relevant_induction_record&.induction_status)
   end
+
+  def govuk_link_to_notify(text, template_id)
+    template_url = "https://www.notifications.service.gov.uk/services/d1207ebf-ac0c-47b8-b1bf-16dc899e0923/templates/#{template_id}"
+
+    govuk_link_to(text, template_url, target: "_blank")
+  end
 end
