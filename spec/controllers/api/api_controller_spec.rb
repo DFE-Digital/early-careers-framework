@@ -4,14 +4,16 @@ require "rails_helper"
 
 class DummyController < Api::ApiController
   include ApiTokenAuthenticatable
+
+  def fake_action; end
 end
 
 describe DummyController, type: :controller do
   describe "#authenticate" do
     before do
-      controller.response              = response
+      routes.draw { get "fake_action" => "dummy#fake_action" }
       request.headers["Authorization"] = bearer_token
-      controller.authenticate
+      get :fake_action
     end
 
     context "when authorization header not provided or invalid" do
@@ -28,7 +30,7 @@ describe DummyController, type: :controller do
       let(:bearer_token) { "Bearer #{token}" }
 
       it "requests authentication via the http header" do
-        expect(response.status).to eq(200)
+        expect(response.status).to eq(204)
       end
     end
   end
