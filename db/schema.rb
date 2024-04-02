@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_02_26_135601) do
+ActiveRecord::Schema[7.0].define(version: 2024_03_22_182315) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "fuzzystrmatch"
@@ -460,10 +460,9 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_26_135601) do
     t.string "mailer_name", null: false
     t.date "scheduled_at", null: false
     t.string "status", default: "queued", null: false
-    t.integer "actual_email_count"
-    t.integer "failed_email_count"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "emails_sent_count"
   end
 
   create_table "emails", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
