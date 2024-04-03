@@ -4,16 +4,15 @@ require "rails_helper"
 
 class DummyController < Api::ApiController
   include ApiTokenAuthenticatable
-
-  def fake_action; end
 end
 
 describe DummyController, type: :controller do
+  controller { def index; end }
+
   describe "#authenticate" do
     before do
-      routes.draw { get "fake_action" => "dummy#fake_action" }
       request.headers["Authorization"] = bearer_token
-      get :fake_action
+      get :index
     end
 
     context "when authorization header not provided or invalid" do
