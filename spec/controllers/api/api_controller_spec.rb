@@ -2,14 +2,14 @@
 
 require "rails_helper"
 
-class DummyController < Api::ApiController
-  include ApiTokenAuthenticatable
-end
-
-describe DummyController, type: :controller do
-  controller { def index; end }
-
+describe Api::ApiController, type: :controller do
   describe "#authenticate" do
+    controller do
+      include ApiTokenAuthenticatable
+
+      def index; end
+    end
+
     before do
       request.headers["Authorization"] = bearer_token
       get :index
