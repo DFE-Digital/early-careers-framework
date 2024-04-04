@@ -52,4 +52,8 @@ private
   def then_i_cannot_use_this_service
     expect(page.find("h1")).to have_content "You cannot use this service yet"
   end
+
+  def given_i_am_on_the_participant_registration_start_page
+    visit "/participants/start-registration"
+  end
 end
