@@ -3,7 +3,7 @@
 module Support
   module Participants
     module Mentors
-      class Remove < Support::BaseService
+      class Withdraw < Support::BaseService
         class << self
           def call(participant_profile_id:, school_urn:)
             new(participant_profile_id:, school_urn:).call

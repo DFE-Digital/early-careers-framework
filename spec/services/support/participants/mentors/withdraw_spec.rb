@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Support::Participants::Mentors::Remove do
+RSpec.describe Support::Participants::Mentors::Withdraw do
   def new_remover
     described_class.new(participant_profile_id: participant_profile.id, school_urn: school.urn)
   end

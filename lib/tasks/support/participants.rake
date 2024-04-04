@@ -27,7 +27,7 @@ namespace :support do
           participant_profile_id = args.participant_profile_id
           school_urn = args.school_urn
 
-          Support::Participants::Mentors::Remove.call(participant_profile_id:, school_urn:)
+          Support::Participants::Mentors::Withdraw.call(participant_profile_id:, school_urn:)
         end
 
         desc "DRY RUN (rolls back on completion): Removes a participant from a school"
@@ -35,7 +35,7 @@ namespace :support do
           participant_profile_id = args.participant_profile_id
           school_urn = args.school_urn
 
-          Support::Participants::Mentors::Remove.new(participant_profile_id:, school_urn:).dry_run
+          Support::Participants::Mentors::Withdraw.new(participant_profile_id:, school_urn:).dry_run
         end
       end
     end
