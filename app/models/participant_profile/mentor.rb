@@ -17,8 +17,7 @@ class ParticipantProfile::Mentor < ParticipantProfile::ECF
   enum mentor_completion_reason: {
     completed_declaration_received: "completed_declaration_received",
     completed_during_early_roll_out: "completed_during_early_roll_out",
-    two_years_without_completed_declaration: "two_years_without_completed_declaration",
-    two_years_association_but_not_yet_started: "two_years_association_but_not_yet_started",
+    started_not_completed: "started_not_completed",
   }
 
   def complete_training!(completion_date:, completion_reason:)
