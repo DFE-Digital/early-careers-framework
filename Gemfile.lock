@@ -130,7 +130,7 @@ GEM
       erubi (~> 1.4)
       parser (>= 2.4)
       smart_properties
-    bigdecimal (3.1.6)
+    bigdecimal (3.1.7)
     bindex (0.8.1)
     bootsnap (1.18.3)
       msgpack (~> 1.2)
@@ -353,6 +353,8 @@ GEM
     nkf (0.2.0)
     nokogiri (1.16.3-arm64-darwin)
       racc (~> 1.4)
+    nokogiri (1.16.3-x86_64-darwin)
+      racc (~> 1.4)
     nokogiri (1.16.3-x86_64-linux)
       racc (~> 1.4)
     nori (2.7.0)
@@ -563,7 +565,7 @@ GEM
     sentry-rails (5.17.1)
       railties (>= 5.0)
       sentry-ruby (~> 5.17.1)
-    sentry-ruby (5.17.1)
+    sentry-ruby (5.17.2)
       bigdecimal
       concurrent-ruby (~> 1.0, >= 1.0.2)
     sentry-sidekiq (5.17.1)
@@ -681,6 +683,7 @@ GEM
 
 PLATFORMS
   arm64-darwin-22
+  x86_64-darwin-22
   x86_64-linux
 
 DEPENDENCIES
