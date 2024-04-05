@@ -21,6 +21,7 @@ class FeatureFlag
   # Short-lived feature flags
   TEMPORARY_FEATURE_FLAGS = %i[
     registration_pilot
+    registration_pilot_school
     eligibility_notifications
     prevent_2023_ect_registrations
     school_participant_status_language

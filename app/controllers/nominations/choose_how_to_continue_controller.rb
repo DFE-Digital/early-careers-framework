@@ -30,8 +30,8 @@ class Nominations::ChooseHowToContinueController < ApplicationController
   end
 
   def choice_saved
-    @cohort = cohort
     @school = school
+    @cohort = cohort
     render "shared/choice_saved_no_early_career_teachers"
   end
 
@@ -61,6 +61,7 @@ private
   end
 
   def cohort
-    Cohort.active_registration_cohort
+    Schools::LatestManageableCohort.call(school:)
+    # Cohort.active_registration_cohort
   end
 end

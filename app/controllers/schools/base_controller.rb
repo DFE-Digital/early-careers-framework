@@ -19,7 +19,7 @@ private
   def check_cohort_year
     return if params[:cohort_id].blank?
 
-    if params[:cohort_id].to_i > Cohort.active_registration_cohort&.start_year
+    if params[:cohort_id].to_i > latest_manageable_cohort.start_year
       redirect_to schools_dashboard_path
     end
   end
@@ -28,7 +28,7 @@ private
     return unless current_user.induction_coordinator?
     return unless active_school
 
-    latest_manageable_cohort = Schools::LatestManageableCohort.call(school: active_school)
+    # latest_manageable_cohort = Schools::LatestManageableCohort.call(school: active_school)
 
     # latest_manageable_cohort = Cohort.active_registration_cohort
     return if active_school.chosen_programme?(latest_manageable_cohort)
@@ -66,7 +66,11 @@ private
     redirect_to schools_choose_programme_path(cohort_id: @cohort) unless @school_cohort
   end
 
-  def start_year
-    Cohort.active_registration_cohort.start_year
+  def latest_manageable_cohort
+    @latest_manageable_cohort ||= Schools::LatestManageableCohort.call(school: active_school)
   end
+
+  # def start_year
+  #   Cohort.active_registration_cohort.start_year
+  # end
 end
