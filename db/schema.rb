@@ -742,6 +742,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_09_131835) do
     t.boolean "tsf_primary_plus_eligibility", default: false
     t.uuid "eligible_for_funding_updated_by_id"
     t.datetime "eligible_for_funding_updated_at"
+    t.boolean "funded_place"
     t.index ["cohort_id"], name: "index_npq_applications_on_cohort_id"
     t.index ["npq_course_id"], name: "index_npq_applications_on_npq_course_id"
     t.index ["npq_lead_provider_id"], name: "index_npq_applications_on_npq_lead_provider_id"

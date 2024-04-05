@@ -16,7 +16,7 @@ class NPQApplication < ApplicationRecord
     marked_ineligible_by_policy
   ].freeze
 
-  has_paper_trail only: %i[eligible_for_funding funding_eligiblity_status_code user_id npq_lead_provider_id npq_course_id created_at updated_at lead_provider_approval_status]
+  has_paper_trail only: %i[eligible_for_funding funded_place funding_eligiblity_status_code user_id npq_lead_provider_id npq_course_id created_at updated_at lead_provider_approval_status]
 
   self.ignored_columns = %w[user_id]
 

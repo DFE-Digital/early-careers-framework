@@ -131,6 +131,7 @@
   - tsf_primary_plus_eligibility
   - eligible_for_funding_updated_by_id
   - eligible_for_funding_updated_at
+  - funded_place
   :induction_records:
   - id
   - induction_programme_id
