@@ -121,5 +121,35 @@ RSpec.describe Induction::ChangeInductionRecord do
         expect(ect_profile.current_induction_record).to be_training_status_withdrawn
       end
     end
+
+    context "when the induction record already has an end date" do
+      let(:end_date) { 1.month.ago }
+
+      before do
+        @subsequent_record = induction_record.dup
+        @subsequent_record.start_date = end_date
+        @subsequent_record.save!
+        induction_record.changing!(end_date)
+        service.call(induction_record:, changes: { training_status: ParticipantProfileState.states[:withdrawn] })
+      end
+
+      it "adjusts the end date to make space for the new record" do
+        expect(induction_record.end_date).to be_within(1.second).of(end_date - 1.minute)
+      end
+
+      it "inserts the new record" do
+        new_record = ect_profile.induction_records.reload.order(created_at: :desc).first
+        expect(new_record.start_date).to be_within(1.second).of(induction_record.end_date)
+        expect(new_record.end_date).to be_within(1.second).of(end_date)
+        expect(new_record).to be_training_status_withdrawn
+      end
+
+      it "does not change the subsequent induction_record" do
+        expect(@subsequent_record.start_date).to be_within(1.second).of(end_date)
+        expect(@subsequent_record.end_date).to be_nil
+        expect(@subsequent_record).to be_active_induction_status
+        expect(@subsequent_record).to be_training_status_active
+      end
+    end
   end
 end
