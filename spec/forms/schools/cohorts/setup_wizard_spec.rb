@@ -34,15 +34,16 @@ RSpec.describe Schools::Cohorts::SetupWizard, type: :model do
     allow(data_store).to receive(:appropriate_body_appointed?).and_return(true)
   end
 
-  shared_context "sending the pilot survey" do
-    context "when the school is in the pilot", travel_to: Date.new(2023, 7, 1) do
-      it "sends the pilot survey" do
-        expect {
-          wizard.success
-        }.to have_enqueued_mail(SchoolMailer, :cohortless_pilot_2023_survey_email)
-      end
-    end
-  end
+  # FIXME: removing while decision is made whether to keep/update/remove the survey for 2024
+  # shared_context "sending the pilot survey" do
+  #   context "when the school is in the pilot", travel_to: Date.new(2023, 7, 1) do
+  #     it "sends the pilot survey" do
+  #       expect {
+  #         wizard.success
+  #       }.to have_enqueued_mail(SchoolMailer, :cohortless_pilot_2023_survey_email)
+  #     end
+  #   end
+  # end
 
   describe "#success" do
     let(:expect_any_ects) { false }
@@ -84,7 +85,7 @@ RSpec.describe Schools::Cohorts::SetupWizard, type: :model do
                                   appropriate_body_appointed: true)
       end
 
-      include_context "sending the pilot survey"
+      # include_context "sending the pilot survey"
     end
 
     context "when the SIT chooses to keep providers" do
@@ -107,7 +108,7 @@ RSpec.describe Schools::Cohorts::SetupWizard, type: :model do
                                   appropriate_body_appointed: true)
       end
 
-      include_context "sending the pilot survey"
+      # include_context "sending the pilot survey"
     end
 
     context "when the SIT chooses to change something" do
@@ -119,7 +120,7 @@ RSpec.describe Schools::Cohorts::SetupWizard, type: :model do
         expect(wizard).to receive(:previously_fip?).and_return(false)
       end
 
-      include_context "sending the pilot survey"
+      # include_context "sending the pilot survey"
     end
 
     context "when the SIT chooses to change something" do
@@ -188,7 +189,7 @@ RSpec.describe Schools::Cohorts::SetupWizard, type: :model do
         end
       end
 
-      include_context "sending the pilot survey"
+      # include_context "sending the pilot survey"
     end
   end
 
