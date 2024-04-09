@@ -144,7 +144,7 @@ module Schools
         @latest_manageable_cohort ||= Schools::LatestManageableCohort.call(school:)
       end
 
-      def school_within_registration_period?
+      def school_within_next_registration_period?
         latest_manageable_cohort != Cohort.current
       end
 
