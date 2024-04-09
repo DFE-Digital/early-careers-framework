@@ -11,6 +11,7 @@ module Participants
     end
 
     def call
+      return false if school_cannot_manage_target_cohort?
       return false unless update_induction_start_date
       return true if mentor? || pre_2021_dqt_induction_start_date?
       return cohort_missing unless target_cohort
@@ -62,6 +63,10 @@ module Participants
       save_error("Cohort containing date #{dqt_induction_start_date.to_fs(:govuk)} not setup in the service!")
     end
 
+    def school_cannot_manage_target_cohort?
+      target_cohort && target_cohort.start_year > Schools::LatestManageableCohort.call(school:).start_year
+    end
+
     def update_induction_start_date
       participant_profile.update!(induction_start_date: dqt_induction_start_date) if dqt_induction_start_date
     end
@@ -69,6 +74,10 @@ module Participants
     def update_participant
       clear_participant_sync_errors
       save_errors(*amend_cohort.errors.full_messages) unless amend_cohort.save
+    end
+
+    def school
+      @school ||= Induction::FindBy.call(participant_profile:).school
     end
   end
 end

@@ -30,6 +30,40 @@ RSpec.describe Participants::SyncDQTInductionStartDate do
     end
   end
 
+  context "when the registration pilot is active", with_feature_flags: { registration_pilot: "active" } do
+    let(:target_cohort) { cohort.next }
+    let(:dqt_induction_start_date) { target_cohort.academic_year_start_date + 1.week }
+    let(:target_school_cohort) do
+      create(:seed_school_cohort, :fip, cohort: cohort.next, school: participant_profile.school)
+    end
+
+    before do
+      NewSeeds::Scenarios::InductionProgrammes::Fip.new(school_cohort: target_school_cohort).build.induction_programme
+    end
+
+    context "when the school is not in the pilot" do
+      it "does not change the participant" do
+        inside_registration_window(cohort: target_cohort) do
+          expect { subject }.to not_change(participant_profile, :updated_at)
+                                  .and not_change(participant_profile, :induction_start_date)
+                                         .and not_change(SyncDQTInductionStartDateError, :count)
+        end
+      end
+    end
+
+    context "when the school is in the pilot", with_feature_flags: { registration_pilot_school: "active" } do
+      it "changes the participant's induction start date and cohort" do
+        inside_registration_window(cohort: target_cohort) do
+          expect { subject }.to change(participant_profile, :induction_start_date)
+            .to(dqt_induction_start_date)
+            .and change { participant_profile.induction_records.latest.cohort }
+            .to(target_cohort)
+            .and not_change(SyncDQTInductionStartDateError, :count)
+        end
+      end
+    end
+  end
+
   context "when the participant is a mentor" do
     let(:dqt_induction_start_date) { Date.new(2021, 8, 31) }
 
