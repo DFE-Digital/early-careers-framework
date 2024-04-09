@@ -100,7 +100,9 @@ module Schools
         end
 
         def should_send_the_pilot_survey?
-          cohort.start_year == 2023 && expect_any_ects? && current_user.induction_coordinator?
+          # FIXME: question raised if we should keep this/reuse/modify for 2024
+          # cohort.start_year == 2023 && expect_any_ects? && current_user.induction_coordinator?
+          false
         end
       end
     end

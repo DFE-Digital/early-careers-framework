@@ -116,7 +116,7 @@ module Schools
 
       # path to the most appropriate start point to set up training for the transfer
       def need_training_path
-        if cohort_to_place_participant == Cohort.active_registration_cohort
+        if cohort_to_place_participant == latest_manageable_cohort
           schools_cohort_setup_start_path(school_id: school.slug, cohort_id: cohort_to_place_participant)
         else
           schools_choose_programme_path(school_id: school.slug, cohort_id: cohort_to_place_participant)
@@ -137,7 +137,15 @@ module Schools
       end
 
       def current_cohort
-        @current_cohort ||= Cohort.active_registration_cohort
+        @current_cohort ||= latest_manageable_cohort
+      end
+
+      def latest_manageable_cohort
+        @latest_manageable_cohort ||= Schools::LatestManageableCohort.call(school:)
+      end
+
+      def school_within_registration_period?
+        latest_manageable_cohort != Cohort.current
       end
 
       def previous_cohort

@@ -201,7 +201,7 @@ class SchoolMailer < ApplicationMailer
     nomination_url = params[:nomination_url]
     expiry_date = params[:expiry_date]
 
-    academic_year = Cohort.active_registration_cohort.description
+    academic_year = Schools::LatestManageableCohort.call(school:).description
 
     template_mail(
       NOMINATION_EMAIL_WITH_ACADEMIC_YEAR_TEMPLATE,
