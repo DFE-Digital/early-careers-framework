@@ -41,9 +41,7 @@ module Schools
       def registration_open_for_participant_cohort?
         desired_cohort = cohort_to_place_participant
 
-        return true if desired_cohort.start_year <= Cohort.current.start_year
-
-        Cohort.within_next_registration_period? && desired_cohort == Cohort.next
+        desired_cohort.start_year <= latest_manageable_cohort.start_year
       end
 
       def next_step_path
