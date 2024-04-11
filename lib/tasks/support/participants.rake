@@ -39,5 +39,25 @@ namespace :support do
         end
       end
     end
+
+    namespace :induction_programmes do
+      namespace :transfer do
+        desc "Transfers a participant to a new induction programme"
+        task :run, %i[participant_profile_id induction_programme_id] => :environment do |_task, args|
+          participant_profile_id = args.participant_profile_id
+          induction_programme_id = args.induction_programme_id
+
+          Support::Participants::TransferInductionProgramme.call(participant_profile_id:, induction_programme_id:)
+        end
+
+        desc "DRY RUN (rolls back on completion): Transfers a participant to a new induction programme"
+        task :dry_run, %i[participant_profile_id induction_programme_id] => :environment do |_task, args|
+          participant_profile_id = args.participant_profile_id
+          induction_programme_id = args.induction_programme_id
+
+          Support::Participants::TransferInductionProgramme.new(participant_profile_id:, induction_programme_id:).dry_run
+        end
+      end
+    end
   end
 end

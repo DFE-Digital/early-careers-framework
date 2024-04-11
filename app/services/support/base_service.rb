@@ -2,6 +2,8 @@
 
 module Support
   class BaseService
+    include ActiveModel::Validations
+
   private
 
     def log_message(message)
