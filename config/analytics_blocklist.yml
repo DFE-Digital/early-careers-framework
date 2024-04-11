@@ -246,6 +246,7 @@
   - monthly_service_fee
   - targeted_delivery_funding_per_participant
   - special_course
+  - funding_cap
   :npq_applications:
   - date_of_birth
   - nino

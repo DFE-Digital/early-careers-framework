@@ -13,6 +13,7 @@ module Importers
       service_fee_installments
       special_course
       monthly_service_fee
+      funding_cap
     ].freeze
 
     attr_reader :path_to_csv, :set_to_latest_version
@@ -51,6 +52,7 @@ module Importers
             service_fee_percentage: service_fee_percentage_for(course:),
             output_payment_percentage: output_payment_percentage_for(course:),
             special_course: (row["special_course"].to_s.upcase == "TRUE"),
+            funding_cap: row["funding_cap"],
           )
         end
       end
