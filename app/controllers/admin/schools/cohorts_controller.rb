@@ -18,7 +18,7 @@ module Admin
         @cohorts = Cohort
           .where
           .not(start_year: 2020)
-          .where(start_year: ..Cohort.active_registration_cohort.start_year)
+          .where(start_year: ..::Schools::LatestManageableCohort.call(school: @school).start_year)
           .order(start_year: :desc)
       end
     end
