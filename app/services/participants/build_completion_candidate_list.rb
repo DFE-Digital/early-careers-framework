@@ -2,8 +2,6 @@
 
 # This service builds a list of candidates to check for an induction completion date
 # The list will be processed by the SetParticipantCompletionDateJob
-# This could be improved later to more intelligently select which records to include
-# as at the moment it's just including all 2021 and 2022 ECTs
 module Participants
   class BuildCompletionCandidateList < BaseService
     def call
