@@ -121,8 +121,8 @@ class SchoolMailer < ApplicationMailer
     start_page_url = params[:start_page_url]
     nomination_url = params[:nomination_link]
     induction_coordinator = params[:induction_coordinator]
-
-    email_address = school.primary_contact_email || school.secondary_contact_email
+    email_address = params[:primary_contact_email] || params[:secondary_contact_email]
+    email_address ||= school.primary_contact_email || school.secondary_contact_email
 
     template_mail(
       LAUNCH_ASK_GIAS_CONTACT_TO_VALIDATE_SIT_DETAILS_TEMPLATE,
