@@ -682,6 +682,7 @@ GEM
       multipart-post (~> 2.0)
 
 PLATFORMS
+  arm64-darwin-21
   arm64-darwin-22
   x86_64-darwin-22
   x86_64-linux
