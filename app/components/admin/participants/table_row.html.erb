@@ -27,6 +27,7 @@
   </td>
   <td class="govuk-table__cell nhsuk-table__cell">
     <span class="nhsuk-table-responsive__heading">Training record state</span>
-    <%= render StatusTags::AdminParticipantStatusTag.new(participant_profile: profile) %>
+    <%= render StatusTags::AdminParticipantStatusTag.new(participant_profile: profile,
+                                                         induction_record: profile.latest_current_induction_record) %>
   </td>
 </tr>
