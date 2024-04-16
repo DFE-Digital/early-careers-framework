@@ -18,7 +18,7 @@ RSpec.describe Schools::LatestManageableCohort do
       end
 
       context "during the next registration period" do
-        it "returns the current cohort" do
+        it "returns the active registration cohort" do
           inside_registration_window do
             expect(service_call).to eq Cohort.active_registration_cohort
           end
@@ -36,7 +36,7 @@ RSpec.describe Schools::LatestManageableCohort do
       end
 
       context "during the next registration period" do
-        it "returns the active registration cohort" do
+        it "returns the current cohort" do
           inside_registration_window do
             expect(service_call).to eq Cohort.current
           end
@@ -53,7 +53,7 @@ RSpec.describe Schools::LatestManageableCohort do
         end
 
         context "during the next registration period" do
-          it "returns the current cohort" do
+          it "returns the active registration cohort" do
             inside_registration_window do
               expect(service_call).to eq Cohort.active_registration_cohort
             end
