@@ -57,22 +57,22 @@ RSpec.describe Schools::Cohorts::SetupWizard, type: :model do
     end
 
     # FIXME: removing while decision is made whether to keep/update/remove the survey for 2024
-    # context "when the SIT does not expect any ECTs" do
-    #   it "does not send the pilot survey" do
-    #     expect(Induction::SetCohortInductionProgramme)
-    #       .to receive(:call).with(programme_choice: :no_early_career_teachers,
-    #                               school_cohort:,
-    #                               opt_out_of_updates: true,
-    #                               delivery_partner_to_be_confirmed: false)
-    #     expect(Induction::SetSchoolCohortAppropriateBody)
-    #       .to receive(:call).with(school_cohort:,
-    #                               appropriate_body_id: 3,
-    #                               appropriate_body_appointed: true)
-    #     expect {
-    #       wizard.success
-    #     }.not_to have_enqueued_mail(SchoolMailer, :cohortless_pilot_2023_survey_email)
-    #   end
-    # end
+    xcontext "when the SIT does not expect any ECTs" do
+      it "does not send the pilot survey" do
+        expect(Induction::SetCohortInductionProgramme)
+          .to receive(:call).with(programme_choice: :no_early_career_teachers,
+                                  school_cohort:,
+                                  opt_out_of_updates: true,
+                                  delivery_partner_to_be_confirmed: false)
+        expect(Induction::SetSchoolCohortAppropriateBody)
+          .to receive(:call).with(school_cohort:,
+                                  appropriate_body_id: 3,
+                                  appropriate_body_appointed: true)
+        expect {
+          wizard.success
+        }.not_to have_enqueued_mail(SchoolMailer, :cohortless_pilot_2023_survey_email)
+      end
+    end
 
     context "when the SIT chooses to keep providers" do
       let(:expect_any_ects) { true }
