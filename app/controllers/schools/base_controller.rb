@@ -28,9 +28,6 @@ private
     return unless current_user.induction_coordinator?
     return unless active_school
 
-    # latest_manageable_cohort = Schools::LatestManageableCohort.call(school: active_school)
-
-    # latest_manageable_cohort = Cohort.active_registration_cohort
     return if active_school.chosen_programme?(latest_manageable_cohort)
 
     if latest_manageable_cohort == Cohort.active_registration_cohort
@@ -69,8 +66,4 @@ private
   def latest_manageable_cohort
     @latest_manageable_cohort ||= Schools::LatestManageableCohort.call(school: active_school)
   end
-
-  # def start_year
-  #   Cohort.active_registration_cohort.start_year
-  # end
 end

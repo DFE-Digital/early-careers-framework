@@ -26,19 +26,13 @@ class Schools::DashboardController < Schools::BaseController
 
 private
 
-  # def active_registration_cohort_visible?
-  #   @school_cohorts.map(&:cohort_id).include?(Cohort.active_registration_cohort.id)
-  # end
-
   def latest_manageable_cohort_visible?
     @school_cohorts.where(cohort: latest_manageable_cohort).any?
-    # @school_cohorts.map(&:cohort_id).include?(Cohort.active_registration_cohort.id)
   end
 
   def check_school_cohorts
     if @school_cohorts.empty?
       redirect_to schools_choose_programme_path(cohort_id: latest_manageable_cohort.start_year)
-      # redirect_to schools_choose_programme_path(cohort_id: Cohort.active_registration_cohort.start_year)
     end
   end
 
@@ -54,12 +48,10 @@ private
 
   def set_up_new_cohort?
     latest_manageable_cohort_visible? && !@school.chosen_programme?(latest_manageable_cohort)
-    # active_registration_cohort_visible? && !@school.chosen_programme?(Cohort.active_registration_cohort)
   end
 
   def previous_school_cohort
     @school.school_cohorts.find_by(cohort: latest_manageable_cohort.previous)
-    # @school.school_cohorts.find_by(cohort: Cohort.active_registration_cohort.previous)
   end
 
   def previous_lead_provider(school_cohort)

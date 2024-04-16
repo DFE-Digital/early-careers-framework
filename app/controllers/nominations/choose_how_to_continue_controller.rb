@@ -62,6 +62,5 @@ private
 
   def cohort
     Schools::LatestManageableCohort.call(school:)
-    # Cohort.active_registration_cohort
   end
 end
