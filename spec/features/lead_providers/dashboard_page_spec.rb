@@ -16,6 +16,38 @@ RSpec.feature "Lead Provider Dashboard", type: :feature, js: true, rutabaga: fal
     ecf_lead_provider
   end
 
+  def and_i_confirm_lead_provider_name_on_the_lead_provider_dashboard(lead_provider_name)
+    page.find("h1").has_content? lead_provider_name
+  end
+
+  def when_i_check_schools_from_the_lead_provider_dashboard
+    click_on "Check your schools"
+  end
+
+  def and_i_am_on_the_lead_provider_dashboard
+    expect(page).to have_current_path "/dashboard"
+    expect(page).to have_title "Manage training for early career teachers"
+  end
+
+  def then_i_am_on_the_check_schools_page
+    expect(page).to have_current_path "/lead-providers/your-schools?cohort=2023"
+    expect(page).to have_title "Your schools - Manage training for early career teachers"
+  end
+
+  def then_i_am_on_the_confirm_schools_wizard
+    expect(page).to have_current_path "/lead-providers/report-schools/start?cohort=2021"
+    expect(page).to have_title "Manage training for early career teachers"
+  end
+
+  def then_i_am_on_the_lead_provider_dashboard
+    expect(page).to have_current_path "/dashboard"
+    expect(page).to have_title "Manage training for early career teachers"
+  end
+
+  def when_i_confirm_schools_from_the_lead_provider_dashboard
+    click_on "Confirm your schools for the 2021 to 2022 academic year"
+  end
+
   scenario "Lead provider dashboard is accessible" do
     given_i_sign_in_as_the_user_with_the_email email_address
     and_i_confirm_lead_provider_name_on_the_lead_provider_dashboard lead_provider_name
