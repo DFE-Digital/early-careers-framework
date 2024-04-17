@@ -16,10 +16,10 @@ Note, the above process has been streamlined by moving the `\copy` command into 
 
 Now we can `cd /tmp/exports` and run the ones we need:
 
-konduit cpd-ecf-production-web -- psql --file=declarations.sql
-konduit cpd-ecf-production-web -- psql --file=induction_records.sql
-konduit cpd-ecf-production-web -- psql --file=participants.sql
-konduit cpd-ecf-production-web -- psql --file=partnerships.sql
-konduit cpd-ecf-production-web -- psql --file=schools.sql
+konduit -n cpd-production cpd-ecf-production-web -- psql --file=declarations.sql
+konduit -n cpd-production cpd-ecf-production-web -- psql --file=induction_records.sql
+konduit -n cpd-production cpd-ecf-production-web -- psql --file=participants.sql
+konduit -n cpd-production cpd-ecf-production-web -- psql --file=partnerships.sql
+konduit -n cpd-production cpd-ecf-production-web -- psql --file=schools.sql
 
 The CSV files will be deposited in our `/tmp/exports` folder. We can zip, password and upload them as normal.
