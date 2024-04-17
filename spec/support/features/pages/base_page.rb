@@ -21,7 +21,7 @@ module Pages
       page_object = new
       page_object.load(*args)
 
-      raise "Expected #{page_object.current_path} to be accessible" unless accessible?
+      raise "Expected #{page_object.current_path} to be accessible" unless page_object.is_accessible
 
       page_object
     end
@@ -32,7 +32,7 @@ module Pages
       is_loaded = page_object.loaded?
 
       raise "Expected #{page_object.url_matcher} to match #{page_object.current_path}" unless is_displayed && is_loaded
-      raise "Expected #{page_object.current_path} to be accessible" unless is_accessible
+      raise "Expected #{page_object.current_path} to be accessible" unless page_object.is_accessible
 
       page_object
     end
