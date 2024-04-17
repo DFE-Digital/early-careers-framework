@@ -20,6 +20,9 @@ module Pages
     def self.load(*args)
       page_object = new
       page_object.load(*args)
+
+      raise "Expected #{page_object.current_path} to be accessible" unless accessible?
+
       page_object
     end
 
@@ -28,11 +31,10 @@ module Pages
       is_displayed = page_object.displayed?(*args)
       is_loaded = page_object.loaded?
 
-      if is_displayed && is_loaded
-        page_object
-      else
-        raise "Expected #{page_object.url_matcher} to match #{page_object.current_path}"
-      end
+      raise "Expected #{page_object.url_matcher} to match #{page_object.current_path}" unless is_displayed && is_loaded
+      raise "Expected #{page_object.current_path} to be accessible" unless is_accessible
+
+      page_object
     end
 
     class << self
@@ -110,6 +112,10 @@ module Pages
 
     def go_back
       click_on "Back"
+    end
+
+    def is_accessible
+      expect(page).to be_accessible
     end
 
     # helpers that can show what capybara sees
