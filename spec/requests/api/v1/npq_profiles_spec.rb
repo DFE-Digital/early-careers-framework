@@ -210,6 +210,7 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
             updated_at
             participant_identity_id
             targeted_support_funding_eligibility
+            funded_place
           ])
 
           expect(application_as_json).to match({
