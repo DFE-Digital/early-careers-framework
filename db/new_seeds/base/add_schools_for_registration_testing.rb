@@ -7,6 +7,7 @@ end
 previous_cohort = Cohort.within_next_registration_period? ? Cohort.current : Cohort.previous
 current_cohort = Cohort.active_registration_cohort
 
+pilot_schools = []
 next_urn = 110
 
 ActiveRecord::Base.transaction do
@@ -49,7 +50,7 @@ ActiveRecord::Base.transaction do
 
   # School that ran DIY "last" year
   begin
-    school = NewSeeds::Scenarios::Schools::School.new(name: "Reg - DIY #{previous_cohort.academic_year} School", urn: padded_urn(next_urn))
+    NewSeeds::Scenarios::Schools::School.new(name: "Reg - DIY #{previous_cohort.academic_year} School", urn: padded_urn(next_urn))
       .build
       .with_an_induction_tutor(full_name: "Debbie Diy", email: "debbie.diy@example.com")
       .chosen_diy_in(cohort: previous_cohort)
@@ -59,7 +60,7 @@ ActiveRecord::Base.transaction do
 
   # School that had no ECTs "last" year
   begin
-    school = NewSeeds::Scenarios::Schools::School.new(name: "Reg - No ECTs #{previous_cohort.academic_year} School", urn: padded_urn(next_urn))
+    NewSeeds::Scenarios::Schools::School.new(name: "Reg - No ECTs #{previous_cohort.academic_year} School", urn: padded_urn(next_urn))
       .build
       .with_an_induction_tutor(full_name: "Norma Noects", email: "norma.noects@example.com")
       .chosen_no_ects_in(cohort: previous_cohort)
@@ -69,7 +70,7 @@ ActiveRecord::Base.transaction do
 
   # School that didnt engage "last" year
   begin
-    school = NewSeeds::Scenarios::Schools::School.new(name: "Reg - Cohortless #{previous_cohort.academic_year} School", urn: padded_urn(next_urn))
+    NewSeeds::Scenarios::Schools::School.new(name: "Reg - Cohortless #{previous_cohort.academic_year} School", urn: padded_urn(next_urn))
       .build
       .with_an_induction_tutor(full_name: "Claire Cohortless", email: "claire.cohortless@example.com")
 
@@ -93,6 +94,8 @@ ActiveRecord::Base.transaction do
       .with_validation_data
       .with_eligibility
       .with_mentees
+
+    pilot_schools << school
   end
 
   # School that has chosen CIP
@@ -111,6 +114,8 @@ ActiveRecord::Base.transaction do
       .with_validation_data
       .with_eligibility
       .with_mentees
+
+    pilot_schools << school
   end
 
   # School that has chosen DIY
@@ -121,6 +126,8 @@ ActiveRecord::Base.transaction do
       .chosen_diy_in(cohort: current_cohort)
 
     next_urn += 1
+
+    pilot_schools << school
   end
 
   # School that had no ECTs "last" year
@@ -131,6 +138,8 @@ ActiveRecord::Base.transaction do
       .chosen_no_ects_in(cohort: current_cohort)
 
     next_urn += 1
+
+    pilot_schools << school
   end
 
   # School that hasn't engaged
@@ -141,5 +150,8 @@ ActiveRecord::Base.transaction do
 
     next_urn += 1
 
+    pilot_schools << school
   end
 end
+
+pilot_schools.each { |school| FeatureFlag.activate(:registration_pilot_school, for: school.school) }

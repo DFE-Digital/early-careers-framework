@@ -144,7 +144,6 @@ module NewSeeds
                       :teacher_profile,
                       :participant_identity,
                       :user
-
         end
       end
     end
