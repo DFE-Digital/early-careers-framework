@@ -5671,7 +5671,7 @@ __metadata:
     eslint-plugin-import: "npm:^2.29.1"
     eslint-plugin-no-only-tests: "npm:^2.6.0"
     file-loader: "npm:^6.2.0"
-    govuk-frontend: "npm:^5.3.0"
+    govuk-frontend: "npm:^5.3.1"
     nunjucks: "npm:^3.2.4"
     prettier: "npm:^2.8.8"
     sass: "npm:^1.75.0"
@@ -6984,10 +6984,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"govuk-frontend@npm:^5.3.0":
-  version: 5.3.0
-  resolution: "govuk-frontend@npm:5.3.0"
-  checksum: 3195fa74b16a0053680979b0813e9b155f9db0c84f276e26b86ddb1144e9da67c766dba911e9bf51867b58a0004cb234bfc92a26feaa092084973d80edbf20e4
+"govuk-frontend@npm:^5.3.1":
+  version: 5.3.1
+  resolution: "govuk-frontend@npm:5.3.1"
+  checksum: 15e36df6155b609b4f48e2e90c3c0bb837d4a1a0206420588eff5f97f1171439dfd45e0caa4e25e1d27093216ab44d3ff66949a8216c34d04fd03e0722c38163
   languageName: node
   linkType: hard
 
