@@ -59,6 +59,14 @@ FactoryBot.define do
       funding_eligiblity_status_code { :funded }
     end
 
+    trait :funded_place do
+      funded_place { true }
+    end
+
+    trait :no_funded_place do
+      funded_place { false }
+    end
+
     trait :eligible_for_funding do
       funded
     end
