@@ -49,10 +49,10 @@ module NewSeeds
         # adds a school_cohort and a default induction programme (FIP) for the given cohort
         # will also add a partnership to that cohort and induction programme
         ###
-        def chosen_fip_and_partnered_in(cohort:, partnership: nil)
+        def chosen_fip_and_partnered_in(cohort:, partnership: nil, with_appropriate_body: false)
           supplied_partnership = partnership
           fip = NewSeeds::Scenarios::SchoolCohorts::Fip
-            .new(cohort:, school:)
+            .new(cohort:, school:, with_appropriate_body:)
             .build
             .with_programme(partnership: supplied_partnership || partnerships[cohort.start_year])
           partnerships[cohort.start_year] = fip.school_cohort.default_induction_programme.partnership
@@ -65,8 +65,8 @@ module NewSeeds
         # adds a school_cohort and a default induction programme (FIP) for the given cohort
         # but does not add a partnership to that cohort and induction programme
         ###
-        def chosen_fip_but_not_partnered(cohort:)
-          fip = NewSeeds::Scenarios::SchoolCohorts::Fip.new(cohort:, school:)
+        def chosen_fip_but_not_partnered(cohort:, with_appropriate_body: false)
+          fip = NewSeeds::Scenarios::SchoolCohorts::Fip.new(cohort:, school:, with_appropriate_body:)
                                                        .build
           NewSeeds::Scenarios::InductionProgrammes::Fip.new(school_cohort: fip.school_cohort)
                                                        .build(default_induction_programme: true)
@@ -80,9 +80,9 @@ module NewSeeds
         # adds a school_cohort and a default induction programme (CIP) for the given cohort
         # will also add CIP materials to that school_cohort and induction programme
         ###
-        def chosen_cip_with_materials_in(cohort:, materials: nil)
+        def chosen_cip_with_materials_in(cohort:, materials: nil, with_appropriate_body: false)
           school_cohorts[cohort.start_year] = NewSeeds::Scenarios::SchoolCohorts::Cip
-                                                .new(cohort:, school:)
+                                                .new(cohort:, school:, with_appropriate_body:)
                                                 .build
                                                 .with_programme(core_induction_programme: materials)
                                                 .school_cohort

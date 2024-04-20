@@ -7,86 +7,52 @@ end
 previous_cohort = Cohort.within_next_registration_period? ? Cohort.current : Cohort.previous
 current_cohort = Cohort.active_registration_cohort
 
-pilot_schools = []
+# pilot_schools = []
 next_urn = 110
 
+school_data = [
+  #   cohort, name, with AB, in pilot
+  [
+    [previous_cohort, "Freddy", false, false],
+    [previous_cohort, "Colin", false, false],
+    [previous_cohort, "Debbie", false, false],
+    [previous_cohort, "Norma", false, false],
+    [previous_cohort, "Claire", false, false],
+  ],
+  [
+    [previous_cohort, "Felicity", true, false],
+    [previous_cohort, "Cathy", true, false],
+    [previous_cohort, "Daniel", true, false],
+    [previous_cohort, "Nancy", true, false],
+    [previous_cohort, "Cuthbert", true, false],
+  ],
+  [
+    [current_cohort, "Francis", false, true],
+    [current_cohort, "Charlie", false, true],
+    [current_cohort, "David", false, true],
+    [current_cohort, "Neil", false, true],
+    [current_cohort, "Christine", false, true],
+  ],
+  [
+    [current_cohort, "Fiona", true, true],
+    [current_cohort, "Chloe", true, true],
+    [current_cohort, "Dexter", true, true],
+    [current_cohort, "Nigel", true, true],
+    [current_cohort, "Casper", true, true],
+  ],
+]
+
 ActiveRecord::Base.transaction do
-  # Previous cohort
-  # School that ran FIP "last" year
-  begin
-    school = NewSeeds::Scenarios::Schools::School.new(name: "Reg - FIP #{previous_cohort.academic_year} School", urn: padded_urn(next_urn))
+  school_data.each do |row|
+    # FIP School
+    cohort, sit_name, with_appropriate_body, in_pilot = row[0]
+    school = NewSeeds::Scenarios::Schools::School.new(name: "Reg - FIP #{cohort.academic_year} School", urn: padded_urn(next_urn))
       .build
-      .with_an_induction_tutor(full_name: "Freddy Fip", email: "freddy.fip@example.com")
-      .chosen_fip_and_partnered_in(cohort: previous_cohort)
+      .with_an_induction_tutor(full_name: "#{sit_name} Fip", email: "#{sit_name.downcase}.fip@example.com")
+      .chosen_fip_and_partnered_in(cohort:, with_appropriate_body:)
 
     next_urn += 1
-    school_cohort = school.school_cohorts[previous_cohort.start_year]
-
-    NewSeeds::Scenarios::Participants::Mentors::MentorWithSomeEcts.new(school_cohort:)
-      .build
-      .with_induction_record(induction_programme: school_cohort.default_induction_programme)
-      .with_validation_data
-      .with_eligibility
-      .with_mentees
-  end
-
-  # School that ran CIP "last" year
-  begin
-    school = NewSeeds::Scenarios::Schools::School.new(name: "Reg - CIP #{previous_cohort.academic_year} School", urn: padded_urn(next_urn))
-      .build
-      .with_an_induction_tutor(full_name: "Colin Cip", email: "colin.cip@example.com")
-      .chosen_cip_with_materials_in(cohort: previous_cohort)
-
-    next_urn += 1
-    school_cohort = school.school_cohorts[previous_cohort.start_year]
-
-    NewSeeds::Scenarios::Participants::Mentors::MentorWithSomeEcts.new(school_cohort:)
-      .build
-      .with_induction_record(induction_programme: school_cohort.default_induction_programme)
-      .with_validation_data
-      .with_eligibility
-      .with_mentees
-  end
-
-  # School that ran DIY "last" year
-  begin
-    NewSeeds::Scenarios::Schools::School.new(name: "Reg - DIY #{previous_cohort.academic_year} School", urn: padded_urn(next_urn))
-      .build
-      .with_an_induction_tutor(full_name: "Debbie Diy", email: "debbie.diy@example.com")
-      .chosen_diy_in(cohort: previous_cohort)
-
-    next_urn += 1
-  end
-
-  # School that had no ECTs "last" year
-  begin
-    NewSeeds::Scenarios::Schools::School.new(name: "Reg - No ECTs #{previous_cohort.academic_year} School", urn: padded_urn(next_urn))
-      .build
-      .with_an_induction_tutor(full_name: "Norma Noects", email: "norma.noects@example.com")
-      .chosen_no_ects_in(cohort: previous_cohort)
-
-    next_urn += 1
-  end
-
-  # School that didnt engage "last" year
-  begin
-    NewSeeds::Scenarios::Schools::School.new(name: "Reg - Cohortless #{previous_cohort.academic_year} School", urn: padded_urn(next_urn))
-      .build
-      .with_an_induction_tutor(full_name: "Claire Cohortless", email: "claire.cohortless@example.com")
-
-    next_urn += 1
-  end
-
-  #### Current registration cohort
-  # School that has chosen FIP
-  begin
-    school = NewSeeds::Scenarios::Schools::School.new(name: "Reg - FIP #{current_cohort.academic_year} School", urn: padded_urn(next_urn))
-      .build
-      .with_an_induction_tutor(full_name: "Felicity Fip", email: "felicity.fip@example.com")
-      .chosen_fip_and_partnered_in(cohort: current_cohort)
-
-    next_urn += 1
-    school_cohort = school.school_cohorts[current_cohort.start_year]
+    school_cohort = school.school_cohorts[cohort.start_year]
 
     NewSeeds::Scenarios::Participants::Mentors::MentorWithSomeEcts.new(school_cohort:)
       .build
@@ -95,18 +61,17 @@ ActiveRecord::Base.transaction do
       .with_eligibility
       .with_mentees
 
-    pilot_schools << school
-  end
+    FeatureFlag.activate(:registration_pilot_school, for: school.school) if in_pilot
 
-  # School that has chosen CIP
-  begin
-    school = NewSeeds::Scenarios::Schools::School.new(name: "Reg - CIP #{current_cohort.academic_year} School", urn: padded_urn(next_urn))
+    # CIP School
+    cohort, sit_name, with_appropriate_body, in_pilot = row[1]
+    school = NewSeeds::Scenarios::Schools::School.new(name: "Reg - CIP #{cohort.academic_year} School", urn: padded_urn(next_urn))
       .build
-      .with_an_induction_tutor(full_name: "Cathy Cip", email: "cathy.cip@example.com")
-      .chosen_cip_with_materials_in(cohort: current_cohort)
+      .with_an_induction_tutor(full_name: "#{sit_name} Cip", email: "#{sit_name.downcase}.cip@example.com")
+      .chosen_cip_with_materials_in(cohort:, with_appropriate_body:)
 
     next_urn += 1
-    school_cohort = school.school_cohorts[current_cohort.start_year]
+    school_cohort = school.school_cohorts[cohort.start_year]
 
     NewSeeds::Scenarios::Participants::Mentors::MentorWithSomeEcts.new(school_cohort:)
       .build
@@ -115,43 +80,35 @@ ActiveRecord::Base.transaction do
       .with_eligibility
       .with_mentees
 
-    pilot_schools << school
-  end
+    FeatureFlag.activate(:registration_pilot_school, for: school.school) if in_pilot
 
-  # School that has chosen DIY
-  begin
-    school = NewSeeds::Scenarios::Schools::School.new(name: "Reg - DIY #{current_cohort.academic_year} School", urn: padded_urn(next_urn))
+    # DIY School
+    cohort, sit_name, _, in_pilot = row[2]
+    school = NewSeeds::Scenarios::Schools::School.new(name: "Reg - DIY #{cohort.academic_year} School", urn: padded_urn(next_urn))
       .build
-      .with_an_induction_tutor(full_name: "Daniel Diy", email: "daniel.diy@example.com")
-      .chosen_diy_in(cohort: current_cohort)
+      .with_an_induction_tutor(full_name: "#{sit_name} Diy", email: "#{sit_name.downcase}.diy@example.com")
+      .chosen_diy_in(cohort:)
 
     next_urn += 1
+    FeatureFlag.activate(:registration_pilot_school, for: school.school) if in_pilot
 
-    pilot_schools << school
-  end
-
-  # School that had no ECTs "last" year
-  begin
-    school = NewSeeds::Scenarios::Schools::School.new(name: "Reg - No ECTs #{current_cohort.academic_year} School", urn: padded_urn(next_urn))
+    # School with no ECTs
+    cohort, sit_name, _, in_pilot = row[3]
+    school = NewSeeds::Scenarios::Schools::School.new(name: "Reg - No ECTs #{cohort.academic_year} School", urn: padded_urn(next_urn))
       .build
-      .with_an_induction_tutor(full_name: "Nigel Noects", email: "nigel.noects@example.com")
-      .chosen_no_ects_in(cohort: current_cohort)
+      .with_an_induction_tutor(full_name: "#{sit_name} Noects", email: "#{sit_name.downcase}.noects@example.com")
+      .chosen_no_ects_in(cohort:)
 
     next_urn += 1
+    FeatureFlag.activate(:registration_pilot_school, for: school.school) if in_pilot
 
-    pilot_schools << school
-  end
-
-  # School that hasn't engaged
-  begin
-    school = NewSeeds::Scenarios::Schools::School.new(name: "Reg - Cohortless #{current_cohort.academic_year} School", urn: padded_urn(next_urn))
+    # School that hasn't engaged
+    cohort, sit_name, _, in_pilot = row[4]
+    school = NewSeeds::Scenarios::Schools::School.new(name: "Reg - Cohortless #{cohort.academic_year} School", urn: padded_urn(next_urn))
       .build
-      .with_an_induction_tutor(full_name: "Craig Cohortless", email: "craig.cohortless@example.com")
+      .with_an_induction_tutor(full_name: "#{sit_name} Cohortless", email: "#{sit_name.downcase}.cohortless@example.com")
 
     next_urn += 1
-
-    pilot_schools << school
+    FeatureFlag.activate(:registration_pilot_school, for: school.school) if in_pilot
   end
 end
-
-pilot_schools.each { |school| FeatureFlag.activate(:registration_pilot_school, for: school.school) }

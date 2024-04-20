@@ -62,6 +62,7 @@ module NewSeeds
               induction_status:,
               training_status:,
               school_transfer:,
+              appropriate_body: school_cohort.appropriate_body,
             )
           end
 
@@ -125,12 +126,14 @@ module NewSeeds
 
           def add_mentee(induction_programme:)
             mentee = NewSeeds::Scenarios::Participants::Ects::Ect
-                       .new(school_cohort:)
-                       .build
-                       .with_eligibility
-                       .with_validation_data
-                       .with_induction_record(induction_programme:, mentor_profile: @participant_profile)
-                       .participant_profile
+              .new(school_cohort:)
+              .build
+              .with_eligibility
+              .with_validation_data
+              .with_induction_record(induction_programme:,
+                                     mentor_profile: @participant_profile,
+                                     appropriate_body: school_cohort.appropriate_body)
+              .participant_profile
 
             @mentees.push(mentee)
 
