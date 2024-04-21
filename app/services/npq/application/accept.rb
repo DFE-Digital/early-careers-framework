@@ -8,6 +8,7 @@ module NPQ
 
       attribute :npq_application
       attribute :schedule_identifier
+      attribute :funded_place
 
       validates :npq_application, presence: { message: I18n.t("npq_application.missing_npq_application") }
       validate :not_already_accepted
@@ -24,6 +25,9 @@ module NPQ
           npq_application.update!(lead_provider_approval_status: "accepted")
           other_applications_in_same_cohort.update(lead_provider_approval_status: "rejected") # rubocop:disable Rails/SaveBang
           deduplicate_by_trn!
+          if FeatureFlag.active?("npq_capping")
+            npq_application.update!(funded_place:)
+          end
         end
 
         npq_application

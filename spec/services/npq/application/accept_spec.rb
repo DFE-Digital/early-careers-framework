@@ -442,5 +442,44 @@ RSpec.describe NPQ::Application::Accept do
         end
       end
     end
+
+    describe "NPQ capping" do
+      context "when feature flag `npq_capping` is enabled" do
+        before { FeatureFlag.activate(:npq_capping) }
+
+        context "when funded_place is true" do
+          let(:params) { { npq_application:, funded_place: true } }
+
+          it "sets the funded place to true" do
+            service.call
+
+            expect(npq_application.reload.funded_place).to be_truthy
+          end
+        end
+
+        context "when funded_place is false" do
+          let(:params) { { npq_application:, funded_place: false } }
+
+          it "sets the funded place to false" do
+            service.call
+
+            expect(npq_application.reload.funded_place).to be_falsey
+          end
+        end
+      end
+
+      context "when feature flag `npq_capping` is disabled" do
+        before { FeatureFlag.deactivate(:npq_capping) }
+
+        let(:params) { { npq_application:, funded_place: true } }
+
+        it "does not set the `funded_place` attribute" do
+          npq_application.update!(funded_place: nil)
+
+          service.call
+          expect(npq_application.reload.funded_place).to be_nil
+        end
+      end
+    end
   end
 end
