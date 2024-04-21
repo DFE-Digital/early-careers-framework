@@ -12,6 +12,10 @@ RSpec.describe "NPQ Applications API", type: :request do
   let(:npq_course) { create(:npq_course, identifier: "npq-senior-leadership") }
   let(:another_npq_course) { create(:npq_course, identifier: "npq-leading-teaching") }
 
+  before do
+    default_headers[:CONTENT_TYPE] = "application/json"
+  end
+
   describe "GET /api/v1/npq-applications" do
     let(:other_npq_lead_provider) { create(:npq_lead_provider) }
 
@@ -323,7 +327,7 @@ RSpec.describe "NPQ Applications API", type: :request do
   end
 
   describe "POST /api/v1/npq-applications/:id/accept" do
-    let(:default_npq_application) { create(:npq_application, npq_lead_provider:, npq_course:) }
+    let(:default_npq_application) { create(:npq_application, npq_lead_provider:, npq_course:, funded_place: nil) }
     let(:user) { default_npq_application.user }
 
     before do
@@ -333,6 +337,30 @@ RSpec.describe "NPQ Applications API", type: :request do
     it "update status to accepted" do
       expect { post "/api/v1/npq-applications/#{default_npq_application.id}/accept" }
         .to change { default_npq_application.reload.lead_provider_approval_status }.from("pending").to("accepted")
+    end
+
+    describe 'NPQ capping' do
+      let(:params) { { data: { type: "npq-application-accept", attributes: { funded_place: true } } } }
+
+      context "when feature flag `npq_capping` is disabled" do
+        before { FeatureFlag.deactivate(:npq_capping) }
+
+        it "updates funded place attribute" do
+          post "/api/v1/npq-applications/#{default_npq_application.id}/accept", params: params.to_json
+
+          expect(default_npq_application.reload.funded_place).to be_nil
+        end
+      end
+
+      context "when feature flag `npq_capping` is enabled" do
+        before { FeatureFlag.activate(:npq_capping) }
+
+        it "updates funded place attribute" do
+          post "/api/v1/npq-applications/#{default_npq_application.id}/accept", params: params.to_json
+
+          expect(default_npq_application.reload.funded_place).to be_truthy
+        end
+      end
     end
 
     it "responds with 200 and representation of the resource" do
@@ -383,7 +411,7 @@ end
 def expected_single_json_v1_response(npq_application:)
   {
     "data" =>
-        single_json_v1_application(npq_application:),
+      single_json_v1_application(npq_application:),
   }
 end
 
