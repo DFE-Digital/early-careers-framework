@@ -339,7 +339,7 @@ RSpec.describe "NPQ Applications API", type: :request do
         .to change { default_npq_application.reload.lead_provider_approval_status }.from("pending").to("accepted")
     end
 
-    describe 'NPQ capping' do
+    describe "NPQ capping" do
       let(:params) { { data: { type: "npq-application-accept", attributes: { funded_place: true } } } }
 
       context "when feature flag `npq_capping` is disabled" do

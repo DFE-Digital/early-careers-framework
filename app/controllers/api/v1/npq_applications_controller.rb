@@ -33,7 +33,7 @@ module Api
       end
 
       def accept
-        service = ::NPQ::Application::Accept.new(npq_application:, funded_place: funded_place)
+        service = ::NPQ::Application::Accept.new(npq_application:, funded_place:)
 
         render_from_service(service, json_serializer_class)
       end
@@ -70,7 +70,7 @@ module Api
       end
 
       def funded_place
-        permitted_params.dig('attributes', 'funded_place')
+        permitted_params.dig("attributes", "funded_place")
       end
 
       def permitted_params
