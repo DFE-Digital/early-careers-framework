@@ -26,7 +26,7 @@ module Api
                  :status,
                  :works_in_school
 
-      attribute :funded_place, if: -> { FeatureFlag.active?("npq_capping") }, &:funded_place?
+      attribute :funded_place, if: -> { FeatureFlag.active?("npq_capping") }, &:funded_place
 
       attribute(:participant_id) do |object|
         object.participant_identity.user_id

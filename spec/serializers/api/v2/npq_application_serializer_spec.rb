@@ -119,6 +119,14 @@ module Api
                 expect(result[:data][:attributes][:funded_place]).to be false
               end
             end
+
+            context "when the `funded_place` attribute does not have a value" do
+              let(:npq_application) { create(:npq_application, funded_place: nil) }
+
+              it "returns nil" do
+                expect(result[:data][:attributes][:funded_place]).to be_nil
+              end
+            end
           end
 
           context "when npq_capping feature flag is not active" do
@@ -131,7 +139,6 @@ module Api
             end
           end
         end
-
       end
     end
   end
