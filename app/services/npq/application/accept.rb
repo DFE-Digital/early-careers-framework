@@ -15,6 +15,8 @@ module NPQ
       validate :cannot_change_from_rejected
       validate :other_accepted_applications_with_same_course?
       validate :validate_permitted_schedule_for_course
+      validate :eligible_for_funded_place
+      validate :funding_cap_available
 
       def call
         return self unless valid?
@@ -148,6 +150,27 @@ module NPQ
         unless schedule && schedule.class::PERMITTED_COURSE_IDENTIFIERS.include?(npq_application.npq_course.identifier)
           errors.add(:schedule_identifier, I18n.t(:schedule_invalid_for_course))
         end
+      end
+
+      def eligible_for_funded_place
+        return unless FeatureFlag.active?("npq_capping")
+        return if errors.any?
+        return if funded_place.nil?
+
+        unless npq_application.eligible_for_funding && funded_place
+          errors.add(:npq_application, I18n.t("npq_application.not_eligible_for_funded_place"))
+        end
+      end
+
+      def funding_cap_available
+        return unless FeatureFlag.active?("npq_capping")
+        return if errors.any?
+        return if funded_place.nil?
+
+        funding_cap = npq_application.cohort.npq_contracts.first.funding_cap
+        return if funded_place && funding_cap.present? && funding_cap.positive?
+
+        errors.add(:npq_application, I18n.t("npq_application.no_funding_cap_available"))
       end
     end
   end
