@@ -136,12 +136,6 @@ class NPQApplication < ApplicationRecord
     end
   end
 
-  def funded_place?
-    require "awesome_print"
-    Rails.logger.debug self
-    funded_place.present?
-  end
-
 private
 
   def previously_funded?
