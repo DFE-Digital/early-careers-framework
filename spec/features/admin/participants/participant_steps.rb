@@ -113,6 +113,9 @@ module ParticipantSteps
   def then_i_should_see_a_list_of_participants
     expect(page).to have_text("Fip School")
     expect(page).to have_text("Sally Teacher")
+    expect(page).to have_text("Billy Mentor")
+    expect(page).to have_text("Early career teacher")
+    expect(page).to have_text("Mentor")
   end
 
   def then_i_should_be_in_the_admin_participants_dashboard

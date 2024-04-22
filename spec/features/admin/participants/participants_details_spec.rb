@@ -3,7 +3,7 @@
 require "rails_helper"
 require_relative "./participant_steps"
 
-RSpec.feature "Admin should be able to update participants details", js: true, rutabaga: false do
+RSpec.feature "Admin should be able to manage participants details", js: true, rutabaga: false do
   include ParticipantSteps
 
   before do
@@ -59,5 +59,37 @@ RSpec.feature "Admin should be able to update participants details", js: true, r
 
     when_i_click_on_the_participants_name "Billy Mentor"
     then_the_participants_email_should_have_updated "billy@mentor-example.com"
+  end
+
+  scenario "Admin can validate the identity of NPQ participants" do
+    npq = NewSeeds::Scenarios::NPQ.new.build
+
+    when_i_visit_the_details_page_of_the_participant(npq.participant_profile.id)
+    and_i_click_on_the_identity_confirmation(npq.participant_profile.id)
+    and_i_approve_the_identity_confirmation
+    then_i_should_see_the_confirmation_message
+  end
+
+  def when_i_visit_the_details_page_of_the_participant(participant_id)
+    @details_page = Pages::AdminSupportParticipantDetail.load(participant_id:)
+  end
+
+  def and_i_click_on_the_identity_confirmation(participant_id)
+    @details_page.edit_identity_confirmation
+    @identity_confirmation_page = Pages::AdminParticipantIdentityValidation.loaded(participant_id:)
+  end
+
+  def and_i_click_on_the_override_decision
+    @details_page.edit_decision
+  end
+
+  def and_i_approve_the_identity_confirmation
+    @identity_confirmation_page.approved.click
+    @identity_confirmation_page.decision_notes.set "Looks good"
+    @identity_confirmation_page.confirm_button.click
+  end
+
+  def then_i_should_see_the_confirmation_message
+    expect(page).to have_text("Participant task 'Identity' has been approved")
   end
 end
