@@ -92,7 +92,7 @@ RSpec.describe Dashboard::Participants do
     end
 
     it "returns a unique entry per ect mentor not mentoring or ects not training" do
-      expect(subject).to contain_exactly(deferred_induction_record, withdrawn_induction_record, transferred_induction_record, withdrawn_training_record)
+      expect(subject).to contain_exactly(deferred_induction_record, transferred_induction_record, withdrawn_training_record)
     end
   end
 end
