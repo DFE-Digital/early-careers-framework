@@ -95,6 +95,59 @@ RSpec.describe Importers::CreateStatement do
       end
     end
 
+    context "when existing statements have newer version" do
+      let!(:ecf_contract) { create(:call_off_contract, lead_provider:, version: "0.0.1", cohort: cohort_2023) }
+      let!(:npq_contract) { create(:npq_contract, npq_course:, cohort: cohort_2023, npq_lead_provider:) }
+
+      before do
+        Finance::Statement::ECF.create!(
+          name: "December 2023",
+          cpd_lead_provider:,
+          cohort: cohort_2023,
+          deadline_date: "2023-11-30",
+          payment_date: "2023-12-25",
+          output_fee: false,
+          contract_version: "0.0.5",
+        )
+
+        Finance::Statement::NPQ.create!(
+          name: "December 2023",
+          cpd_lead_provider:,
+          cohort: cohort_2023,
+          deadline_date: "2023-11-30",
+          payment_date: "2023-12-25",
+          output_fee: false,
+          contract_version: "0.0.9",
+        )
+      end
+
+      it "creates ECF statement with latest version" do
+        importer.call
+
+        st = Finance::Statement::ECF.find_by(
+          name: "January 2024",
+          cohort: cohort_2023,
+          deadline_date: Date.new(2023, 12, 31),
+          payment_date: Date.new(2024, 1, 25),
+        )
+
+        expect(st.contract_version).to eql("0.0.5")
+      end
+
+      it "creates NPQ statement with latest version" do
+        importer.call
+
+        st = Finance::Statement::NPQ.find_by(
+          name: "January 2024",
+          cohort: cohort_2023,
+          deadline_date: Date.new(2023, 12, 25),
+          payment_date: Date.new(2024, 1, 25),
+        )
+
+        expect(st.contract_version).to eql("0.0.9")
+      end
+    end
+
     context "when contracts for the cohort does not exist" do
       it "does not create any ECF statement" do
         expect {

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# This class provides a mechnism to import genesis statements
+# This class provides a mechanism to import genesis statements
 # It is not designed to keep statements in sync
 # For that should be done by hand
 # We only create/update version 0.0.1 for initial values
@@ -47,6 +47,9 @@ module Importers
 
           next if statement
 
+          contract_version = Finance::Statement::ECF.order(payment_date: :desc).first&.contract_version
+          contract_version ||= "0.0.1"
+
           Finance::Statement::ECF.create!(
             name: statement_data.name,
             cpd_lead_provider:,
@@ -55,7 +58,7 @@ module Importers
             payment_date: statement_data.payment_date,
             output_fee: statement_data.output_fee,
             type: class_for(statement_data, namespace: statement_data.type),
-            contract_version: "0.0.1",
+            contract_version:,
           )
 
           logger.info "CreateStatement: #{statement_data.cohort.start_year} cohort ECF statements for #{cpd_lead_provider.name} successfully created!"
@@ -78,6 +81,9 @@ module Importers
 
           next if statement
 
+          contract_version = Finance::Statement::NPQ.order(payment_date: :desc).first&.contract_version
+          contract_version ||= "0.0.1"
+
           Finance::Statement::NPQ.create!(
             name: statement_data.name,
             cpd_lead_provider:,
@@ -86,7 +92,7 @@ module Importers
             cohort: statement_data.cohort,
             output_fee: statement_data.output_fee,
             type: class_for(statement_data, namespace: statement_data.type),
-            contract_version: "0.0.1",
+            contract_version:,
           )
 
           logger.info "CreateStatement: #{statement_data.cohort.start_year} cohort NPQ statements for #{cpd_lead_provider.name} successfully created!"
