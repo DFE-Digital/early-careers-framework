@@ -11,7 +11,7 @@ current_cohort = Cohort.active_registration_cohort
 next_urn = 110
 
 school_data = [
-  #   cohort, name, with AB, in pilot
+  #   cohort, name, with AB?, in pilot?
   [
     [previous_cohort, "Freddy", false, false],
     [previous_cohort, "Colin", false, false],
@@ -25,6 +25,13 @@ school_data = [
     [previous_cohort, "Daniel", true, false],
     [previous_cohort, "Nancy", true, false],
     [previous_cohort, "Cuthbert", true, false],
+  ],
+  [
+    [previous_cohort, "Frank", false, true],
+    [previous_cohort, "Carla", false, true],
+    [previous_cohort, "Daphne", false, true],
+    [previous_cohort, "Nicola", false, true],
+    [previous_cohort, "Carlton", false, true],
   ],
   [
     [current_cohort, "Francis", false, true],
@@ -46,7 +53,9 @@ ActiveRecord::Base.transaction do
   school_data.each do |row|
     # FIP School
     cohort, sit_name, with_appropriate_body, in_pilot = row[0]
-    school = NewSeeds::Scenarios::Schools::School.new(name: "Reg - FIP #{cohort.academic_year} School", urn: padded_urn(next_urn))
+    ab = with_appropriate_body ? " - AB" : ""
+    pilot = in_pilot ? " - PILOT" : ""
+    school = NewSeeds::Scenarios::Schools::School.new(name: "Reg - FIP #{cohort.academic_year} School#{ab}#{pilot}", urn: padded_urn(next_urn))
       .build
       .with_an_induction_tutor(full_name: "#{sit_name} Fip", email: "#{sit_name.downcase}.fip@example.com")
       .chosen_fip_and_partnered_in(cohort:, with_appropriate_body:)
@@ -65,7 +74,9 @@ ActiveRecord::Base.transaction do
 
     # CIP School
     cohort, sit_name, with_appropriate_body, in_pilot = row[1]
-    school = NewSeeds::Scenarios::Schools::School.new(name: "Reg - CIP #{cohort.academic_year} School", urn: padded_urn(next_urn))
+    ab = with_appropriate_body ? " - AB" : ""
+    pilot = in_pilot ? " - PILOT" : ""
+    school = NewSeeds::Scenarios::Schools::School.new(name: "Reg - CIP #{cohort.academic_year} School#{ab}#{pilot}", urn: padded_urn(next_urn))
       .build
       .with_an_induction_tutor(full_name: "#{sit_name} Cip", email: "#{sit_name.downcase}.cip@example.com")
       .chosen_cip_with_materials_in(cohort:, with_appropriate_body:)
@@ -84,7 +95,8 @@ ActiveRecord::Base.transaction do
 
     # DIY School
     cohort, sit_name, _, in_pilot = row[2]
-    school = NewSeeds::Scenarios::Schools::School.new(name: "Reg - DIY #{cohort.academic_year} School", urn: padded_urn(next_urn))
+    pilot = in_pilot ? " - PILOT" : ""
+    school = NewSeeds::Scenarios::Schools::School.new(name: "Reg - DIY #{cohort.academic_year} School#{pilot}", urn: padded_urn(next_urn))
       .build
       .with_an_induction_tutor(full_name: "#{sit_name} Diy", email: "#{sit_name.downcase}.diy@example.com")
       .chosen_diy_in(cohort:)
@@ -94,7 +106,8 @@ ActiveRecord::Base.transaction do
 
     # School with no ECTs
     cohort, sit_name, _, in_pilot = row[3]
-    school = NewSeeds::Scenarios::Schools::School.new(name: "Reg - No ECTs #{cohort.academic_year} School", urn: padded_urn(next_urn))
+    pilot = in_pilot ? " - PILOT" : ""
+    school = NewSeeds::Scenarios::Schools::School.new(name: "Reg - No ECTs #{cohort.academic_year} School#{pilot}", urn: padded_urn(next_urn))
       .build
       .with_an_induction_tutor(full_name: "#{sit_name} Noects", email: "#{sit_name.downcase}.noects@example.com")
       .chosen_no_ects_in(cohort:)
@@ -104,7 +117,8 @@ ActiveRecord::Base.transaction do
 
     # School that hasn't engaged
     cohort, sit_name, _, in_pilot = row[4]
-    school = NewSeeds::Scenarios::Schools::School.new(name: "Reg - Cohortless #{cohort.academic_year} School", urn: padded_urn(next_urn))
+    pilot = in_pilot ? " - PILOT" : ""
+    school = NewSeeds::Scenarios::Schools::School.new(name: "Reg - Cohortless #{cohort.academic_year} School#{pilot}", urn: padded_urn(next_urn))
       .build
       .with_an_induction_tutor(full_name: "#{sit_name} Cohortless", email: "#{sit_name.downcase}.cohortless@example.com")
 
