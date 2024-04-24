@@ -3,7 +3,7 @@
 module Api
   module V3
     class NPQApplicationSerializer < V1::NPQApplicationSerializer
-      attribute(:schedule_identifier, if: -> { FeatureFlag.active?(:accept_npq_application_can_change_schedule) }) do |object|
+      attribute(:schedule_identifier) do |object|
         object.profile&.schedule&.schedule_identifier
       end
     end
