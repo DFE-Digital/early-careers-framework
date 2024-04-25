@@ -79,6 +79,14 @@ class NPQApplication < ApplicationRecord
   delegate :id, :name, to: :npq_course, prefix: true
   delegate :id, :name, to: :npq_lead_provider, prefix: true
 
+  def current_contract
+    return unless cohort.npq_contracts.any?
+
+    cohort
+      .npq_contracts
+      .max_by { |c| Finance::ECF::ContractVersion.new(c.version).numerical_value }
+  end
+
   self.filter_attributes += [:teacher_reference_number]
 
   # this builds upon #eligible_for_funding
