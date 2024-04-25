@@ -167,8 +167,9 @@ module NPQ
         return if errors.any?
         return if funded_place.nil?
 
-        funding_cap = npq_application.cohort.npq_contracts.first.funding_cap
-        return if funded_place && funding_cap.present? && funding_cap.positive?
+        contract = npq_application.current_contract
+
+        return if funded_place && contract.funding_cap.present? && contract.funding_cap.positive?
 
         errors.add(:npq_application, I18n.t("npq_application.no_funding_cap_available"))
       end

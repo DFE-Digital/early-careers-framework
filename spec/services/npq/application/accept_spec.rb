@@ -448,7 +448,7 @@ RSpec.describe NPQ::Application::Accept do
         before do
           FeatureFlag.activate(:npq_capping)
           npq_application.update!(eligible_for_funding: true)
-          npq_application.cohort.npq_contracts.first.update!(funding_cap: 10)
+          npq_application.cohort.npq_contracts.last.update!(version: "9.9.9", funding_cap: 10)
         end
 
         context "when funded_place is true" do
@@ -468,14 +468,14 @@ RSpec.describe NPQ::Application::Accept do
           end
 
           it "does not set the value if the contract funded_cap is 0" do
-            npq_application.cohort.npq_contracts.first.update!(funding_cap: 0)
+            npq_application.current_contract.update!(funding_cap: 0)
 
             service.call
             expect(service.errors.messages_for(:npq_application)).to include("No funding cap (copy pending)")
           end
 
           it "does not set the value if the contract funded_cap is nil" do
-            npq_application.cohort.npq_contracts.first.update!(funding_cap: nil)
+            npq_application.current_contract.update!(funding_cap: nil)
 
             service.call
             expect(service.errors.messages_for(:npq_application)).to include("No funding cap (copy pending)")
