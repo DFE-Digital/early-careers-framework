@@ -38,6 +38,16 @@ module Api
         render_from_service(service, json_serializer_class)
       end
 
+      def change_funded_place
+        if FeatureFlag.active?(:npq_capping)
+          service = ::NPQ::Application::ChangeFundedPlace.new(npq_application:, funded_place:)
+
+          render_from_service(service, json_serializer_class)
+        else
+          head :forbidden
+        end
+      end
+
     private
 
       def json_serializer_class

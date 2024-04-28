@@ -12,10 +12,6 @@ RSpec.describe "NPQ Applications API", type: :request do
   let(:npq_course) { create(:npq_course, identifier: "npq-senior-leadership") }
   let(:another_npq_course) { create(:npq_course, identifier: "npq-leading-teaching") }
 
-  before do
-    default_headers[:CONTENT_TYPE] = "application/json"
-  end
-
   describe "GET /api/v1/npq-applications" do
     let(:other_npq_lead_provider) { create(:npq_lead_provider) }
 
@@ -406,6 +402,60 @@ RSpec.describe "NPQ Applications API", type: :request do
         expect(parsed_response.dig("errors", 0, "detail")).to eql("Once rejected an application cannot change state")
       end
     end
+  end
+
+  describe "POST /api/v1/npq-applications/:id/change-funded-place" do
+    let(:default_npq_application) { create(:npq_application, npq_lead_provider:, npq_course:, funded_place: nil) }
+    let(:user) { default_npq_application.user }
+    let(:accepted_application) { create(:npq_application, npq_lead_provider:, lead_provider_approval_status: "accepted", npq_course:) }
+    let(:params) { { data: { type: "npq-application-change-funded-status", attributes: { funded_place: true } } } }
+
+    before do
+      default_headers[:Authorization] = bearer_token
+    end
+
+    context "when feature flag `npq_capping` is disabled" do
+      before { FeatureFlag.deactivate(:npq_capping) }
+
+      it "returns 403" do
+        put "/api/v1/npq-applications/#{default_npq_application.id}/change-funded-place", params: params.to_json
+
+        expect(response).to have_http_status(:forbidden)
+      end
+    end
+
+    context "when feature flag `npq_capping` is enabled" do
+      before { FeatureFlag.activate(:npq_capping) }
+
+      before do
+        accepted_application.update!(funded_place: false)
+        put "/api/v1/npq-applications/#{accepted_application.id}/change-funded-place", params: params.to_json
+      end
+
+      it "returns 200" do
+        expect(response).to have_http_status(:ok)
+      end
+
+      it "updates funded place" do
+        expect(accepted_application.reload.funded_place).to be_truthy
+      end
+
+      it "returns jsonapi content type header" do
+        expect(response.headers["Content-Type"]).to eql("application/vnd.api+json")
+      end
+    end
+
+    # before { FeatureFlag.deactivate(:npq_capping) }
+    # it "updates funded place attribute" do
+    #   post "/api/v1/npq-applications/#{default_npq_application.id}/accept", params: params.to_json
+    #
+    #   expect(default_npq_application.reload.funded_place).to be_nil
+    # end
+
+    # it "update status to accepted" do
+    #   expect { post "/api/v1/npq-applications/#{default_npq_application.id}/accept" }
+    #     .to change { default_npq_application.reload.lead_provider_approval_status }.from("pending").to("accepted")
+    # end
   end
 end
 
