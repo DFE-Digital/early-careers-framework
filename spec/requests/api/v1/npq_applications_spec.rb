@@ -366,6 +366,7 @@ RSpec.describe "NPQ Applications API", type: :request do
     it "responds with 200 and representation of the resource" do
       post "/api/v1/npq-applications/#{default_npq_application.id}/accept"
 
+      puts response.body
       expect(response).to be_successful
 
       expect(parsed_response.dig("data", "attributes", "status")).to eql("accepted")

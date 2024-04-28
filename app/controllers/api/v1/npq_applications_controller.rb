@@ -70,12 +70,17 @@ module Api
       end
 
       def funded_place
-        permitted_params.dig("attributes", "funded_place")
+        binding.pry
+        # permitted_params.dig("attributes", "funded_place")
       end
 
       def permitted_params
+        binding.pry
         params.require(:data).permit(:type, attributes: %i[schedule_identifier funded_place])
       rescue ActionController::ParameterMissing => e
+        puts params
+        puts e.message
+        puts e.stacktrace
         if e.param == :data
           raise ActionController::BadRequest, I18n.t(:invalid_data_structure)
         else
