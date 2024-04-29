@@ -530,7 +530,7 @@ RSpec.describe "NPQ Applications API", type: :request do
       before { FeatureFlag.deactivate(:npq_capping) }
 
       it "returns 403" do
-        put "/api/v1/npq-applications/#{accepted_application.id}/change-funded-place", params: params.to_json
+        post "/api/v1/npq-applications/#{accepted_application.id}/change-funded-place", params: params.to_json
 
         expect(response).to have_http_status(:forbidden)
       end
@@ -541,7 +541,7 @@ RSpec.describe "NPQ Applications API", type: :request do
 
       before do
         accepted_application.update!(funded_place: false)
-        put "/api/v1/npq-applications/#{accepted_application.id}/change-funded-place", params: params.to_json
+        post "/api/v1/npq-applications/#{accepted_application.id}/change-funded-place", params: params.to_json
       end
 
       it "returns 200" do
