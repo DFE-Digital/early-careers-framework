@@ -448,7 +448,7 @@ RSpec.describe NPQ::Application::Accept do
         before do
           FeatureFlag.activate(:npq_capping)
           npq_application.update!(eligible_for_funding: true)
-          npq_application.cohort.npq_contracts.last.update!(version: "9.9.9", funding_cap: 10)
+          npq_application.cohort.npq_contracts << create(:npq_contract, npq_course:, version: "1.0", funding_cap: 10)
         end
 
         context "when funded_place is true" do

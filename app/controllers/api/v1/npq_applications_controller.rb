@@ -33,7 +33,11 @@ module Api
       end
 
       def accept
-        service = ::NPQ::Application::Accept.new(npq_application:, funded_place:)
+        service = if FeatureFlag.active?(:npq_capping)
+                    ::NPQ::Application::Accept.new(npq_application:, funded_place:)
+                  else
+                    ::NPQ::Application::Accept.new(npq_application:)
+                  end
 
         render_from_service(service, json_serializer_class)
       end

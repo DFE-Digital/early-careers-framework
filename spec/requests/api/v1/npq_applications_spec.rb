@@ -342,6 +342,11 @@ RSpec.describe "NPQ Applications API", type: :request do
     describe "NPQ capping" do
       let(:params) { { data: { type: "npq-application-accept", attributes: { funded_place: true } } } }
 
+      before do
+        default_npq_application.cohort.npq_contracts << create(:npq_contract, npq_course:, version: "1.0", funding_cap: 10)
+        default_npq_application.update!(eligible_for_funding: true)
+      end
+
       context "when feature flag `npq_capping` is disabled" do
         before { FeatureFlag.deactivate(:npq_capping) }
 
@@ -359,6 +364,12 @@ RSpec.describe "NPQ Applications API", type: :request do
           post "/api/v1/npq-applications/#{default_npq_application.id}/accept", params: params.to_json
 
           expect(default_npq_application.reload.funded_place).to be_truthy
+        end
+
+        it "returns 200" do
+          post "/api/v1/npq-applications/#{default_npq_application.id}/accept", params: params.to_json
+
+          expect(response).to be_successful
         end
       end
     end
