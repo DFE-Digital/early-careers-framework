@@ -595,6 +595,58 @@ RSpec.describe ChangeSchedule do
               service.call
               expect(participant_profile.npq_application.cohort).to eq(new_cohort)
             end
+
+            context "when moving from a previous cohort" do
+              let(:new_cohort) { Cohort.current }
+              let!(:statement) do
+                create(
+                  :npq_statement,
+                  :next_output_fee,
+                  cpd_lead_provider: npq_lead_provider.cpd_lead_provider,
+                  cohort: participant_profile.npq_application.cohort,
+                )
+              end
+
+              it "updates the cohort on the npq application" do
+                service.call
+                expect(participant_profile.npq_application.cohort).to eq(new_cohort)
+              end
+
+              context "when moving from non funding cohort to funding cohort" do
+                before do
+                  npq_contract.update!(funding_cap: 0)
+                  npq_contract_new_cohort.update!(funding_cap: 10)
+                end
+
+                context "when feature flag `npq_capping` is disabled" do
+                  before { FeatureFlag.deactivate(:npq_capping) }
+
+                  it "does not change funding place" do
+                    expect { service.call }.not_to change { participant_profile.reload.npq_application.reload.funded_place }
+                  end
+                end
+
+                context "when feature flag `npq_capping` is enabled" do
+                  before { FeatureFlag.activate(:npq_capping) }
+
+                  it "sets funding place to `true` if `eligible_for_funding` is true" do
+                    participant_profile.npq_application.update!(eligible_for_funding: true)
+
+                    service.call
+
+                    expect(participant_profile.reload.npq_application.reload.funded_place).to be_truthy
+                  end
+
+                  it "sets funding place to `false` if `eligible_for_funding` is false" do
+                    participant_profile.npq_application.update!(eligible_for_funding: false)
+
+                    service.call
+
+                    expect(participant_profile.reload.npq_application.reload.funded_place).to be_falsey
+                  end
+                end
+              end
+            end
           end
         end
       end
