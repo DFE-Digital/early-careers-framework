@@ -434,6 +434,48 @@ RSpec.describe "NPQ Applications API", type: :request do
       end
     end
   end
+
+  describe "POST /api/v1/npq-applications/:id/change-funded-place" do
+    let(:user) { default_npq_application.user }
+    let(:accepted_application) { create(:npq_application, :accepted, npq_lead_provider:, npq_course:, eligible_for_funding: true) }
+    let(:params) { { data: { type: "npq-application-change-funded-status", attributes: { funded_place: true } } } }
+
+    before do
+      default_headers[:Authorization] = bearer_token
+    end
+
+    context "when feature flag `npq_capping` is disabled" do
+      before { FeatureFlag.deactivate(:npq_capping) }
+
+      it "returns 403" do
+        put "/api/v1/npq-applications/#{accepted_application.id}/change-funded-place", params: params.to_json
+
+        expect(response).to have_http_status(:forbidden)
+      end
+    end
+
+    context "when feature flag `npq_capping` is enabled" do
+      before { FeatureFlag.activate(:npq_capping) }
+
+      before do
+        accepted_application.update!(funded_place: false)
+        put "/api/v1/npq-applications/#{accepted_application.id}/change-funded-place", params: params.to_json
+      end
+
+      it "returns 200" do
+        puts response.body
+        expect(response).to have_http_status(:ok)
+      end
+
+      it "updates funded place" do
+        expect(accepted_application.reload.funded_place).to be_truthy
+      end
+
+      it "returns jsonapi content type header" do
+        expect(response.headers["Content-Type"]).to eql("application/vnd.api+json")
+      end
+    end
+  end
 end
 
 def expected_single_json_v1_response(npq_application:)

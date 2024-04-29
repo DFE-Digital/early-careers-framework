@@ -115,6 +115,11 @@ en:
     cannot_change_from_rejected: Once rejected an application cannot change state
     not_eligible_for_funded_place: "The participant is not eligible for funding, so '#/funded_place' cannot be set to true."
     funded_place_required: "Set '#/funded_place' to true or false."
+    cannot_change_funded_status_from_non_accepted: The application is not accepted (pending)
+    cannot_change_funded_status_non_eligible: The application is not eligible for funding (pending)
+    cannot_remove_funding_voided_declaration: Cannot remove funding as there is a voided declaration (pending)
+    cannot_remove_funding_awaiting_clawback_declaration: Cannot remove funding as there is an awaiting claw back declaration (pending)
+    cannot_remove_funding_clawed_back_declaration: Cannot remove funding as there is a clawed back declaration (pending)
   errors:
     email: &email_error_messages
       blank: "Enter an email address"
