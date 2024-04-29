@@ -99,46 +99,5 @@ RSpec.describe NPQ::Application::ChangeFundedPlace do
         end
       end
     end
-
-    # describe "validations" do
-    #   context "when the npq application is missing" do
-    #     let(:npq_application) {}
-    #
-    #     it "is invalid and returns an error message" do
-    #       is_expected.to be_invalid
-    #
-    #       expect(service.errors.messages_for(:npq_application)).to include("The entered '#/npq_application' is missing from your request. Check details and try again.")
-    #     end
-    #   end
-    #
-    #   context "when the npq application is already accepted" do
-    #     let(:npq_application) { create(:npq_application, :accepted) }
-    #
-    #     it "is invalid and returns an error message" do
-    #       is_expected.to be_invalid
-    #
-    #       expect(service.errors.messages_for(:npq_application)).to include("This NPQ application has already been accepted")
-    #     end
-    #   end
-    #
-    #   context "when the npq application is rejected" do
-    #     let(:npq_application) { create(:npq_application, :rejected) }
-    #
-    #     it "is invalid and returns an error message" do
-    #       is_expected.to be_invalid
-    #
-    #       expect(service.errors.messages_for(:npq_application)).to include("Once rejected an application cannot change state")
-    #     end
-    #   end
-    #
-    #   context "when the existing data is invalid" do
-    #     let(:npq_application) { create(:npq_application) }
-    #
-    #     it "throws ActiveRecord::RecordInvalid" do
-    #       npq_application.eligible_for_funding = nil
-    #       expect { service.call }.to raise_error(ActiveRecord::RecordInvalid)
-    #     end
-    #   end
-    # end
   end
 end

@@ -18,10 +18,6 @@ module NPQ
       def call
         return self unless valid?
 
-        Rails.logger.debug "*" * 100
-        Rails.logger.debug npq_application.funded_place
-        Rails.logger.debug funded_place
-
         ApplicationRecord.transaction do
           if FeatureFlag.active?("npq_capping")
             npq_application.update!(funded_place:)
