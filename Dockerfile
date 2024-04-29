@@ -101,7 +101,7 @@ COPY --from=middleman /public/ /app/public/
 RUN echo export PATH=/usr/local/bin:\$PATH > /root/.ashrc
 ENV ENV="/root/.ashrc"
 
-RUN echo "cd /app && bundle exec rails c" > /root/.ash_history
+RUN echo "cd /app && PAGER=more bundle exec rails c" > /root/.ash_history
 RUN echo "IRB.conf[:USE_AUTOCOMPLETE] = false" > /root/.irbrc
 
 WORKDIR /app
