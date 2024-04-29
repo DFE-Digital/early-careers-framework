@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "NPQ Applications API", type: :request, with_feature_flags: { accept_npq_application_can_change_schedule: "active" } do
+RSpec.describe "NPQ Applications API", type: :request do
   let(:npq_lead_provider) { create(:npq_lead_provider) }
   let(:cpd_lead_provider) { create(:cpd_lead_provider, npq_lead_provider:) }
   let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
@@ -351,7 +351,7 @@ RSpec.describe "NPQ Applications API", type: :request, with_feature_flags: { acc
       end
     end
 
-    context "when schedule identifier is in the params", with_feature_flags: { accept_npq_application_can_change_schedule: "active" } do
+    context "when schedule identifier is in the params" do
       let(:params) do
         { data: { attributes: { schedule_identifier: "npq-leadership-spring" } } }
       end

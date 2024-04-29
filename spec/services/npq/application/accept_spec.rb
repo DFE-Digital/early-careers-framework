@@ -328,7 +328,7 @@ RSpec.describe NPQ::Application::Accept do
         end
       end
 
-      context "when the schedule identifier is present in the params", with_feature_flags: { accept_npq_application_can_change_schedule: "active" } do
+      context "when the schedule identifier is present in the params" do
         let(:params) do
           {
             npq_application:,

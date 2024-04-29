@@ -47,8 +47,6 @@ module Api
       end
 
       def accept_npq_application_params
-        return {} unless FeatureFlag.active?(:accept_npq_application_can_change_schedule)
-
         parameters = params
           .fetch(:data)
           .permit(:type, attributes: %i[schedule_identifier])
