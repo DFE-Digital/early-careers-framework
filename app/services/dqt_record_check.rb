@@ -50,7 +50,6 @@ private
     dqt_record = DQTRecordPresenter.new(fetch_dqt_record(padded_trn))
 
     return check_failure(:no_match_found) if dqt_record.blank?
-    return check_failure(:found_but_not_active) unless dqt_record.active?
 
     trn_matches = dqt_record.trn == padded_trn
     name_matches = name_matches?(dqt_name: dqt_record.full_name)
