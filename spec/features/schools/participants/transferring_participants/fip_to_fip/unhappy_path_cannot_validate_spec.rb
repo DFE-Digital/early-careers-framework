@@ -223,7 +223,7 @@ RSpec.describe "transferring participants", type: :feature, js: true do
           "dob" => participant_data[:date_of_birth],
           "qualified_teacher_status" => { "qts_date" => 1.year.ago },
           "induction" => {
-            "start_date" => 1.month.ago,
+            "periods" => [{ "startDate" => 1.month.ago }],
             "status" => "Active",
           },
         })

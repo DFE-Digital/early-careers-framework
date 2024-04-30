@@ -31,8 +31,17 @@ class DQTRecordPresenter < SimpleDelegator
     dqt_record.dig("qualified_teacher_status", "qts_date")
   end
 
+  # This is a patch until we migrate this presenter from DQT::V1 to DQT::V3
+  # The "induction", "start_date" coming in DQT::V1 is not the more accurate one so,
+  # either we get it from the "induction" "periods" coming V1 or V3
   def induction_start_date
-    dqt_record.dig("induction", "start_date")
+    @induction_start_date ||= (
+      dqt_record.dig("induction", "periods") ||
+        FullDQT::V3::Client.new.get_record(trn:)&.dig("induction", "periods")
+    ).to_a
+     .map { |period| period["startDate"] }
+     .compact
+     .min
   end
 
   def induction_completion_date

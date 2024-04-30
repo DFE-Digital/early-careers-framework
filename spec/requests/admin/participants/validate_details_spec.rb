@@ -56,7 +56,7 @@ RSpec.describe "Admin::Participants::ValidateDetailsController", type: :request 
             "qts_date": "2021-07-05T00:00:00Z",
           },
           "induction": {
-            "start_date": "2021-09-02T00:00:00Z",
+            "periods" => [{ "startDate" => "2021-09-02T00:00:00Z" }],
           },
         })
       end
@@ -95,7 +95,7 @@ RSpec.describe "Admin::Participants::ValidateDetailsController", type: :request 
             "qts_date": "2021-07-05T00:00:00Z",
           },
           "induction": {
-            "start_date": "2021-09-02T00:00:00Z",
+            "periods" => [{ "startDate" => "2021-09-02T00:00:00Z" }],
           },
         })
       end
