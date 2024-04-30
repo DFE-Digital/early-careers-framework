@@ -3,8 +3,20 @@
 class DQTRecordPresenter < SimpleDelegator
   INDUCTION_IN_PROGRESS = ["InProgress", "In Progress", "NotYetCompleted", "Not Yet Completed"].freeze
 
-  def name
-    dqt_record["name"]
+  def full_name
+    [first_name, middle_name, last_name].filter(&:present?).join(" ")
+  end
+
+  def first_name
+    dqt_record["firstName"]
+  end
+
+  def middle_name
+    dqt_record["middleName"]
+  end
+
+  def last_name
+    dqt_record["lastName"]
   end
 
   def trn
@@ -12,42 +24,31 @@ class DQTRecordPresenter < SimpleDelegator
   end
 
   def active?
-    dqt_record["state_name"] == "Active"
+    dqt_record.present?
   end
 
   def dob
-    dqt_record["dob"]
+    dqt_record["dateOfBirth"]
   end
 
   def ni_number
-    dqt_record["ni_number"]
+    dqt_record["nationalInsuranceNumber"]
   end
 
   def active_alert?
-    dqt_record["active_alert"].present?
+    dqt_record["alerts"]&.any?
   end
 
   def qts_date
-    dqt_record.dig("qualified_teacher_status", "qts_date")
+    dqt_record.dig("qts", "awarded")
   end
 
-  # This is a patch until we migrate this presenter from DQT::V1 to DQT::V3
-  # The "induction", "start_date" coming in DQT::V1 is not the more accurate one so,
-  # either we get it from the "induction" "periods" coming V1 or V3
   def induction_start_date
-    return @induction_start_date if instance_variable_defined?(:@induction_start_date)
-
-    @induction_start_date = (
-      dqt_record.dig("induction", "periods") ||
-        FullDQT::V3::Client.new.get_record(trn:)&.dig("induction", "periods")
-    ).to_a
-     .map { |period| period["startDate"] }
-     .compact
-     .min
+    dqt_record.dig("induction", "startDate")
   end
 
   def induction_completion_date
-    dqt_record.dig("induction", "completion_date")
+    dqt_record.dig("induction", "endDate")
   end
 
   def exempt?
