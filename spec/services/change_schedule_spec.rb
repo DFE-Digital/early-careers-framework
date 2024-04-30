@@ -94,14 +94,14 @@ RSpec.shared_examples "changing the schedule of a participant" do
     expect(participant_profile.reload.schedule_id).to eq(new_schedule.id)
   end
 
-  it "sets the correct attributes to the new participant profile schedule" do
+  it "sets the correct attributes to the historical participant profile schedule" do
     service.call
 
     latest_participant_profile_schedule = participant_profile.participant_profile_schedules.last
 
     expect(latest_participant_profile_schedule).to have_attributes(
       participant_profile_id: participant_profile.id,
-      schedule_id: Finance::Schedule.find_by(schedule_identifier:, cohort: new_cohort).id,
+      schedule_id: service.schedule.id,
     )
   end
 

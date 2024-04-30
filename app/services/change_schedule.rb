@@ -31,7 +31,7 @@ class ChangeSchedule
     return if invalid?
 
     ActiveRecord::Base.transaction do
-      ParticipantProfileSchedule.create!(participant_profile:, schedule: new_schedule)
+      ParticipantProfileSchedule.create!(participant_profile:, schedule:)
 
       update_participant_profile_schedule_references!
     end

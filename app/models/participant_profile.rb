@@ -45,6 +45,7 @@ class ParticipantProfile < ApplicationRecord
   has_many :induction_records
   has_many :participant_declarations
   has_many :participant_profile_schedules
+  has_many :historical_schedules, through: :participant_profile_schedules, source: :schedule
   has_many :participant_profile_states
   has_many :sync_dqt_induction_start_date_errors
   has_many :validation_decisions, class_name: "ProfileValidationDecision"
