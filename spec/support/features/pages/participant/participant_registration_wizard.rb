@@ -89,7 +89,7 @@ module Pages
 
     def setup_response_from_dqt(participant_name, dob, trn)
       birth_date = "#{dob.year}-#{sprintf('%02i', dob.month)}-#{sprintf('%02i', dob.day)}"
-      stub_request(:get, "https://dtqapi.example.com/dqt-crm/v1/teachers/#{trn}?birthdate=#{birth_date}")
+      stub_request(:get, "https://dtqapi.example.com/dqt-crm/v3/teachers/#{trn}?include=induction")
         .with(
           headers: {
             "Accept" => "*/*",
@@ -100,14 +100,14 @@ module Pages
           },
         )
         .to_return(status: 200, body: JSON.generate({
-          "name": participant_name,
-          "dob": "#{birth_date}T00:00:00",
+          "firstName": participant_name.split(" ").first,
+          "lastName": participant_name.split(" ").last,
+          "dateOfBirth": "#{birth_date}T00:00:00",
           "trn": trn,
-          "ni_number": "AB123456D",
-          "active_alert": false,
-          "state_name": "Active",
-          "qualified_teacher_status": {
-            "qts_date": "2021-07-05T00:00:00Z",
+          "nationalInsuranceNumber": "AB123456D",
+          "alerts": [],
+          "qts": {
+            "awarded": "2021-07-05T00:00:00Z",
           },
           "induction": {
             "periods" => [{ "startDate" => "2021-09-02T00:00:00Z" }],

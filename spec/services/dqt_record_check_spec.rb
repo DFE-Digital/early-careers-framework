@@ -5,27 +5,30 @@ require "rails_helper"
 RSpec.describe DQTRecordCheck do
   shared_context "build fake DQT response" do
     before do
-      allow_any_instance_of(FullDQT::V1::Client).to(receive(:get_record).and_return(fake_api_response || default_api_response))
+      allow_any_instance_of(FullDQT::V3::Client).to(receive(:get_record).and_return(fake_api_response || default_api_response))
     end
   end
 
+  let(:first_name) { "Nelson" }
+  let(:last_name) { "Muntz" }
+  let(:full_name) { [first_name, last_name].join(" ") }
   let(:trn) { "1234567" }
   let(:nino) { "QQ123456A" }
   let(:date_of_birth) { 25.years.ago.to_date }
-  let(:full_name) { "Mr Nelson Muntz" }
-  let(:kwargs) { { full_name:, trn:, date_of_birth:, nino: } }
   let(:default_api_response) do
     {
       "state_name" => "Active",
       "trn" => trn,
-      "name" => full_name,
-      "ni_number" => nino,
-      "dob" => 25.years.ago.to_date,
+      "firstName" => first_name,
+      "middleName" => nil,
+      "lastName" => last_name,
+      "nationalInsuranceNumber" => nino,
+      "dateOfBirth" => date_of_birth,
     }
   end
   let(:fake_api_response) { nil }
 
-  subject { DQTRecordCheck.new(**kwargs) }
+  subject { DQTRecordCheck.new(full_name:, date_of_birth:, trn:, nino:) }
 
   context "when trn and national insurance number are blank" do
     let(:trn) { "" }
@@ -40,7 +43,7 @@ RSpec.describe DQTRecordCheck do
       let(:fake_api_response) { { "state_name" => "Inactive" } }
     end
 
-    it { expect(subject.call.failure_reason).to be(:found_but_not_active) }
+    it { expect(subject.call.failure_reason).to be(:no_match_found) }
   end
 
   context "when active" do
@@ -77,7 +80,7 @@ RSpec.describe DQTRecordCheck do
 
         context "when there is whitespace around the name in the API response" do
           include_context "build fake DQT response" do
-            let(:fake_api_response) { default_api_response.merge("name" => " #{full_name} ") }
+            let(:fake_api_response) { default_api_response.merge("lastName" => " #{last_name} ") }
           end
 
           it("#name_matches is true") { expect(subject.call.name_matches).to be(true) }
@@ -85,7 +88,7 @@ RSpec.describe DQTRecordCheck do
 
         context "when first names are different but surnames are the same" do
           include_context "build fake DQT response" do
-            let(:fake_api_response) { default_api_response.merge("name" => "Mr Eddie Muntz") }
+            let(:fake_api_response) { default_api_response.merge("firstName" => "Eddie") }
           end
 
           it("#name_matches is false") { expect(subject.call.name_matches).to be(false) }
@@ -113,7 +116,7 @@ RSpec.describe DQTRecordCheck do
       end
 
       context "when check_first_name_only: false" do
-        let(:kwargs) { { full_name:, trn:, date_of_birth:, nino:, check_first_name_only: false } }
+        subject { DQTRecordCheck.new(full_name:, date_of_birth:, trn:, nino:, check_first_name_only: false) }
 
         context "when exact" do
           include_context "build fake DQT response"
@@ -123,7 +126,7 @@ RSpec.describe DQTRecordCheck do
 
         context "when first names match but surnames are different" do
           include_context "build fake DQT response" do
-            let(:fake_api_response) { default_api_response.merge("name" => "Mr Nelson Piquet") }
+            let(:fake_api_response) { default_api_response.merge("lastName" => "Piquet") }
           end
 
           it("#name_matches is false") { expect(subject.call.name_matches).to be(false) }
@@ -133,7 +136,7 @@ RSpec.describe DQTRecordCheck do
           let(:full_name) { nil }
 
           include_context "build fake DQT response" do
-            let(:fake_api_response) { default_api_response.merge("name" => "Nelson Muntz") }
+            let(:fake_api_response) { default_api_response.merge("firstName" => "Nelson", "lastName" => "Muntz") }
           end
 
           it("#name_matches is false") { expect(subject.call.name_matches).to be(false) }
@@ -160,7 +163,7 @@ RSpec.describe DQTRecordCheck do
 
       context "when different" do
         include_context "build fake DQT response" do
-          let(:fake_api_response) { default_api_response.merge("dob" => 27.years.ago.to_date) }
+          let(:fake_api_response) { default_api_response.merge("dateOfBirth" => 27.years.ago.to_date) }
         end
 
         it("#dob_matches is false") { expect(subject.call.dob_matches).to be(false) }
@@ -184,7 +187,7 @@ RSpec.describe DQTRecordCheck do
 
       context "when different" do
         include_context "build fake DQT response" do
-          let(:fake_api_response) { default_api_response.merge("ni_number" => "ZZ123456X") }
+          let(:fake_api_response) { default_api_response.merge("nationalInsuranceNumber" => "ZZ123456X") }
         end
 
         it("#nino_matches is false") { expect(subject.call.nino_matches).to be(false) }
@@ -202,7 +205,7 @@ RSpec.describe DQTRecordCheck do
 
     context "when there are less than three matches excluding TRN" do
       include_context "build fake DQT response" do
-        let(:fake_api_response) { default_api_response.except("dob").merge("ni_number" => "QQ121212Q") }
+        let(:fake_api_response) { default_api_response.except("dateOfBirth").merge("nationalInsuranceNumber" => "QQ121212Q") }
       end
 
       before do
@@ -220,7 +223,9 @@ RSpec.describe DQTRecordCheck do
 
       context "when the TRN matches and DoB or Nino but the name doesn't match (2 matches)" do
         include_context "build fake DQT response" do
-          let(:fake_api_response) { default_api_response.except("dob").merge("name" => "Jimbo Jones") }
+          let(:fake_api_response) do
+            default_api_response.except("dateOfBirth").merge("firstName" => "Jimbo", "lastName" => "Jones")
+          end
         end
 
         it "returns the record and match results" do
@@ -230,6 +235,21 @@ RSpec.describe DQTRecordCheck do
           expect(result.dqt_record).to be_present
           expect(result.total_matched).to eql(2)
         end
+      end
+    end
+
+    context "when date of birth matches magic test data" do
+      include_context "build fake DQT response" do
+        let(:date_of_birth) { Time.zone.local(1900, 1, 5) }
+      end
+
+      before do
+        allow(subject).to receive(:production_or_test_env?).and_return(false)
+      end
+
+      it "calls the magic_dqt_record_check method" do
+        expect(MagicDQTRecordCheck).to receive(:new).and_call_original
+        expect(subject.call).to be_a(DQTRecordCheck::CheckResult)
       end
     end
   end
