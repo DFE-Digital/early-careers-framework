@@ -34,7 +34,7 @@ private
   end
 
   def dqt_api_client
-    @dqt_api_client ||= FullDQT::V3::Client.new
+    @dqt_api_client ||= DQT::V3::Client.new
   end
 
   def fetch_dqt_record(trn)

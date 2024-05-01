@@ -2,12 +2,10 @@
 
 require "net/http"
 
-# NOTE: Use this API for validation of participant data
-#
-module FullDQT
+module DQT
   class Client
     def get_record(**_args)
-      raise NotImplementedError "Called abstract method: FullDQT::Client#get_record directly, please use a subclass to implement this method"
+      raise NotImplementedError "Called abstract method: DQT::Client#get_record directly, please use a subclass to implement this method"
     end
 
   private

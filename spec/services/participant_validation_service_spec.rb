@@ -41,7 +41,7 @@ RSpec.describe ParticipantValidationService do
     end
 
     let(:dqt_records) { [dqt_record] }
-    let(:dqt_api_client) { FullDQT::V3::Client }
+    let(:dqt_api_client) { DQT::V3::Client }
 
     let(:validation_result) { ParticipantValidationService.validate(trn:, nino:, full_name:, date_of_birth: dob) }
 

@@ -3,17 +3,13 @@
 require "net/http"
 
 # NOTE: Use this API client for looking up information on a participant once
-# we have validated their information using the V1 API.
+# we have validated their information using the V3 API.
 #
 # DO NOT USE THIS CLIENT FOR VALIDATION
 #
-# (in theory at some point in the future we could use this for validation,
-# but using the V1 API keeps the id matching logic on the API side whereas
-# using the V3 API we would need to match and validate everything our side)
-#
-module FullDQT
+module DQT
   module V3
-    class Client < FullDQT::Client
+    class Client < DQT::Client
       def get_record(trn:, sections: %w[induction])
         call_api(uri: endpoint_uri(trn:, sections:))
       end
