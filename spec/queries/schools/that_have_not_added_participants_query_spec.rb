@@ -50,6 +50,16 @@ RSpec.describe Schools::ThatHaveNotAddedParticipantsQuery do
           expect(query_result).to include(school)
         end
       end
+
+      context "and there are programmes with and without participants" do
+        let!(:induction_programme_2) { create(:seed_induction_programme, :fip, school_cohort:) }
+        let!(:induction_record) { create(:seed_induction_record, :valid, participant_profile:, induction_programme:) }
+        let(:query_cohort) { cohort }
+
+        it "does not include the school" do
+          expect(query_result).not_to include(school)
+        end
+      end
     end
 
     context "when school type codes are supplied" do
@@ -71,6 +81,15 @@ RSpec.describe Schools::ThatHaveNotAddedParticipantsQuery do
         context "when there are cohorts without participants" do
           it "includes the school" do
             expect(query_result).to include(school)
+          end
+        end
+
+        context "and there are programmes with and without participants" do
+          let!(:induction_programme_2) { create(:seed_induction_programme, :fip, school_cohort:) }
+          let!(:induction_record) { create(:seed_induction_record, :valid, participant_profile:, induction_programme:) }
+
+          it "does not include the school" do
+            expect(query_result).not_to include(school)
           end
         end
       end
