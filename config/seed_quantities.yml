@@ -60,6 +60,7 @@ test:
   npq_applications_edge_cases: 1
 
 review:
+  <<: *default
   local_authorities: 3
   npq_applications_pending: 3
   npq_application_with_declarations: 3

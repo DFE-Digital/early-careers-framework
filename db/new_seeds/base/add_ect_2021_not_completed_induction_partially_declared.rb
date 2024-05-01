@@ -1,40 +1,24 @@
 # frozen_string_literal: true
 
-seed_quantity(:ects_2021_not_completed_induction_partially_declared).times do |i|
-  lead_provider = LeadProvider.find_by(name: "Ambition Institute")
-  cohort = Cohort.find_by(start_year: 2021)
-  school = NewSeeds::Scenarios::Schools::School
-    .new
-    .build
-    .with_partnership_in(cohort:, lead_provider:)
-    .chosen_fip_and_partnered_in(cohort:)
+lead_provider = LeadProvider.find_by!(name: "Ambition Institute")
+cpd_lead_provider = lead_provider.cpd_lead_provider
 
-  mentor_school = NewSeeds::Scenarios::Schools::School
-    .new
-    .build
-    .with_partnership_in(cohort:, lead_provider:)
-    .chosen_fip_and_partnered_in(cohort:)
+cohort_2021 = Cohort.find_by!(start_year: 2021)
+cohort_2024 = Cohort.find_by!(start_year: 2024)
 
-  ect_builder = NewSeeds::Scenarios::Participants::Ects::Ect
-    .new(school_cohort: school.school_cohort, email: "cohort-21-ect-#{i}@email.com")
-    .build
-    .with_validation_data
-    .with_eligibility
-    .with_induction_record(induction_programme: school.induction_programme)
-    .with_becoming_a_mentor(
-      mentor_school_cohort: mentor_school.school_cohort,
-      mentor_induction_programme: mentor_school.induction_programme,
-    )
+course_identifier = "ecf-induction"
 
-  npq_lead_providers = NPQLeadProvider.all
-  NewSeeds::Scenarios::NPQ
-    .new(
-      lead_provider: npq_lead_providers.sample,
-      cohort:,
-      participant_profile: ect_builder.participant_profile,
-      user: ect_builder.user,
-    )
-    .build
-    .accept_application
-    .add_declaration
+seed_quantity(:ects_2021_not_completed_induction_partially_declared).times do
+  # Create participant in 2021 cohort.
+  participant_identity = FactoryBot.create(:participant_identity)
+  user = participant_identity.user
+  participant_profile = FactoryBot.create(:ect, cohort: cohort_2021, lead_provider:, user:)
+
+  # Create declarations against 2021.
+  state = ParticipantDeclaration.states.values.sample
+  FactoryBot.create(:participant_declaration, participant_profile:, state:, course_identifier:, cpd_lead_provider:)
+
+  # Setup 2024 induction programme to allow change schedule.
+  school = participant_profile.school
+  FactoryBot.create(:school_cohort, :cip, :with_induction_programme, cohort: cohort_2024, lead_provider:, school:)
 end

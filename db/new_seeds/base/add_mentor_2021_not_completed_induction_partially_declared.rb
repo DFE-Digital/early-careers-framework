@@ -1,38 +1,29 @@
 # frozen_string_literal: true
 
-seed_quantity(:mentors_2021_not_completed_training_partially_declared).times do |i|
-  lead_provider = LeadProvider.find_by(name: "Ambition Institute")
-  cohort = Cohort.find_by(start_year: 2021)
-  edt = CoreInductionProgramme.find_by!(name: "Education Development Trust")
+lead_provider = LeadProvider.find_by!(name: "Ambition Institute")
+cpd_lead_provider = lead_provider.cpd_lead_provider
 
-  mentor_school = NewSeeds::Scenarios::Schools::School
-    .new
-    .build
-    .with_partnership_in(cohort:, lead_provider:)
-    .chosen_fip_and_partnered_in(cohort:)
+cohort_2021 = Cohort.find_by!(start_year: 2021)
+cohort_2024 = Cohort.find_by!(start_year: 2024)
 
-  induction_programme = NewSeeds::Scenarios::InductionProgrammes::Cip
-    .new(school_cohort: mentor_school.school_cohort)
-    .build
-    .with_core_induction_programme(core_induction_programme: edt)
-    .induction_programme
+course_identifier = "ecf-mentor"
 
-  mentor_builder = NewSeeds::Scenarios::Participants::Mentors::MentorWithNoEcts
-    .new(school_cohort: mentor_school.school_cohort, email: "cohort-21-mentor-#{i}@email.com")
-    .build(schedule: Finance::Schedule::ECF.default_for(cohort:))
-    .with_validation_data
-    .with_eligibility
-    .with_induction_record(induction_programme:)
+seed_quantity(:mentors_2021_not_completed_training_partially_declared).times do
+  # Create participant in 2021 cohort.
+  participant_identity = FactoryBot.create(:participant_identity)
+  user = participant_identity.user
+  participant_profile = FactoryBot.create(:mentor, cohort: cohort_2021, lead_provider:, user:)
 
-  npq_lead_providers = NPQLeadProvider.all
-  NewSeeds::Scenarios::NPQ
-    .new(
-      lead_provider: npq_lead_providers.sample,
-      cohort:,
-      participant_profile: mentor_builder.participant_profile,
-      user: mentor_builder.user,
-    )
-    .build
-    .accept_application
-    .add_declaration
+  # Switch to Mentor schedule (not sure why the factory puts it as ECF in the first place).
+  schedule = Finance::Schedule::Mentor.find_by!(cohort: cohort_2021)
+  participant_profile.update!(schedule:)
+  participant_profile.induction_records.update!(schedule:)
+
+  # Create declarations against 2021.
+  state = ParticipantDeclaration.states.values.sample
+  FactoryBot.create(:participant_declaration, participant_profile:, state:, course_identifier:, cpd_lead_provider:)
+
+  # Setup 2024 induction programme to allow change schedule.
+  school = participant_profile.school
+  FactoryBot.create(:school_cohort, :cip, :with_induction_programme, cohort: cohort_2024, lead_provider:, school:)
 end
