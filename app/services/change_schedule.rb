@@ -174,6 +174,7 @@ private
 
     update_schedule!
     update_npq_application_cohort!
+    update_funded_place!
   end
 
   def relevant_induction_record
