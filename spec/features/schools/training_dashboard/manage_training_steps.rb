@@ -1489,6 +1489,9 @@ module ManageTrainingSteps
       "induction" => {
         "startDate" => 1.month.ago,
         "status" => "Active",
+        "periods" => [
+          { "startDate" => 1.month.ago, "endDate" => nil },
+        ],
       },
     })
   end

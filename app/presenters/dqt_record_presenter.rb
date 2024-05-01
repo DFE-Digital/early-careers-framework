@@ -44,11 +44,17 @@ class DQTRecordPresenter < SimpleDelegator
   end
 
   def induction_start_date
-    dqt_record.dig("induction", "startDate")
+    induction_periods.to_a
+                     .map { |period| period["startDate"] }
+                     .compact
+                     .min
   end
 
   def induction_completion_date
-    dqt_record.dig("induction", "endDate")
+    induction_periods.to_a
+                     .map { |period| period["endDate"] }
+                     .compact
+                     .max
   end
 
   def exempt?
@@ -60,6 +66,10 @@ class DQTRecordPresenter < SimpleDelegator
   end
 
 private
+
+  def induction_periods
+    dqt_record.dig("induction", "periods")
+  end
 
   def dqt_record
     __getobj__

@@ -54,14 +54,14 @@ private
     }
   end
 
-  def dqt_record(with_induction: true, qts_date: 2.years.ago, induction_start_date: 1.month.ago)
+  def dqt_record(with_induction: true, qts_date: 2.years.ago, induction_start_date: 1.month.ago, active_alert: false)
     record = {
       "trn" => TeacherReferenceNumber.new(trn).formatted_trn,
       "firstName" => full_name.split(" ").first,
       "lastName" => full_name.split(" ").last,
       "dateOfBirth" => date_of_birth,
       "nationalInsuranceNumber" => nino,
-      "alerts" => %w[Alert],
+      "alerts" => active_alert ? %w[Alert] : [],
       "qts" => {
         "awarded" => qts_date,
         "statusDescription" => "Active",
@@ -72,6 +72,7 @@ private
       record.merge!("induction" => {
         "startDate" => induction_start_date,
         "status" => "In Progress",
+        "periods" => [{ "startDate" => induction_start_date, "endDate" => 1.day.ago }],
       })
     end
     DQTRecordPresenter.new(record)

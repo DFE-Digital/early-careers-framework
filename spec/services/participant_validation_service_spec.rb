@@ -224,179 +224,230 @@ RSpec.describe ParticipantValidationService do
         end
       end
 
-      context "when the participant has previously had an induction" do
+      context "with induction data" do
+        let(:induction_status) { "Pass" }
+        let(:induction_periods) do
+          [{ "startDate" => induction_start_date, "endDate" => induction_completion_date }]
+        end
         let(:induction) do
           {
-            "periods" => [{ "startDate" => induction_start_date }],
-            "status" => "Pass",
-            "state" => 0,
-            "state_name" => "Active",
+            "startDate" => induction_start_date,
+            "endDate" => induction_completion_date,
+            "status" => induction_status,
+            "periods" => induction_periods,
           }
         end
 
-        it "returns returns the correct previous_participation flags" do
-          expect(validation_result).to eql(build_validation_result(trn:, options: { previous_induction: true, no_induction: false, induction_start_date: }))
-        end
-      end
-
-      context "when the participant has an induction with nil start_date" do
-        let(:induction) do
-          {
-            "periods" => [{ "startDate" => nil }],
-          }
+        context "when the participant has previously had an induction" do
+          it "returns returns the correct previous_participation flags" do
+            expect(validation_result).to eql(build_validation_result(trn:, options: { previous_induction: true, no_induction: false, induction_start_date: }))
+          end
         end
 
-        it "does not raise an error" do
-          expect { validation_result }.not_to raise_error
+        context "when the participant has an induction with nil start_date" do
+          let(:induction_start_date) { nil }
+          let(:induction_completion_date) { nil }
+          let(:induction_periods) { [] }
+
+          it "does not raise an error" do
+            expect { validation_result }.not_to raise_error
+          end
+
+          it "returns previous_induction as false" do
+            expect(validation_result[:previous_induction]).to eq false
+          end
+
+          it "returns no_induction as true" do
+            expect(validation_result[:no_induction]).to eq true
+          end
+
+          it "returns induction_start_date as nil" do
+            expect(validation_result[:induction_start_date]).to be_nil
+          end
         end
 
-        it "returns previous_induction as false" do
-          expect(validation_result[:previous_induction]).to eq false
+        context "when the participant's induction status is InProgress" do
+          let(:induction_status) { "InProgress" }
+          let(:induction_completion_date) { nil }
+
+          it "does not raise an error" do
+            expect { validation_result }.not_to raise_error
+          end
+
+          it "returns previous_induction as false" do
+            expect(validation_result[:previous_induction]).to eq false
+          end
+
+          it "returns no_induction as false" do
+            expect(validation_result[:no_induction]).to eq false
+          end
+
+          it "returns induction_start_date" do
+            expect(validation_result[:induction_start_date]).to eq(induction_start_date)
+          end
         end
 
-        it "returns no_induction as true" do
-          expect(validation_result[:no_induction]).to eq true
+        context "when the participant's induction status is Not Yet Completed" do
+          let(:induction_status) { "Not Yet Completed" }
+          let(:induction_completion_date) { nil }
+
+          it "does not raise an error" do
+            expect { validation_result }.not_to raise_error
+          end
+
+          it "returns previous_induction as false" do
+            expect(validation_result[:previous_induction]).to eq false
+          end
+
+          it "returns no_induction as false" do
+            expect(validation_result[:no_induction]).to eq false
+          end
+
+          it "returns induction_start_date" do
+            expect(validation_result[:induction_start_date]).to eq(induction_start_date)
+          end
         end
 
-        it "returns induction_start_date as nil" do
-          expect(validation_result[:induction_start_date]).to be_nil
-        end
-      end
+        context "when the participant has previously had an induction and participation" do
+          let!(:eligibility) { create(:ineligible_participant, trn:, reason: :previous_participation) }
 
-      context "when the participant's induction status is InProgress" do
-        let(:induction) do
-          {
-            "periods" => [{ "startDate" => induction_start_date }],
-            "status" => "InProgress",
-          }
+          it "returns returns both flags" do
+            expect(validation_result).to eql(build_validation_result(trn:, options: { previous_induction: true, previous_participation: true, no_induction: false, induction_start_date: }))
+          end
         end
 
-        it "does not raise an error" do
-          expect { validation_result }.not_to raise_error
+        context "when the participant has an induction start date in or after September this year" do
+          let(:induction_start_date) { Time.zone.parse("2021-09-01T00:00:00Z") }
+          let(:induction_completion_date) { nil }
+
+          it "returns false for previous induction" do
+            expect(validation_result).to eql(build_validation_result(trn:, options: { previous_induction: false, no_induction: false, induction_start_date: }))
+          end
         end
 
-        it "returns previous_induction as false" do
-          expect(validation_result[:previous_induction]).to eq false
+        context "when the participant has an induction start date is exactly on the threshold" do
+          let(:induction_start_date) { Time.zone.parse("2021-08-31T23:00:00Z") }
+          let(:induction_completion_date) { nil }
+
+          it "returns false for previous induction and parses timezones correctly" do
+            expect(validation_result).to eql(build_validation_result(trn:, options: { previous_induction: false, no_induction: false, induction_start_date: }))
+          end
         end
 
-        it "returns no_induction as false" do
-          expect(validation_result[:no_induction]).to eq false
+        context "when the participant has an induction start date before September 2021" do
+          let(:induction_start_date) { Time.zone.parse("2021-08-31T22:59:59Z") }
+          let(:induction_completion_date) { nil }
+
+          it "returns true for previous induction" do
+            expect(validation_result).to eql(build_validation_result(trn:, options: { previous_induction: true, no_induction: false, induction_start_date: }))
+          end
         end
 
-        it "returns induction_start_date" do
-          expect(validation_result[:induction_start_date]).to eq(induction_start_date)
-        end
-      end
+        context "when the participant has an induction with the status of 'Exempt'" do
+          let(:induction_status) { "Exempt" }
+          let(:induction_start_date) { nil }
+          let(:induction_completion_date) { nil }
+          let(:induction_periods) { [] }
 
-      context "when the participant's induction status is Not Yet Completed" do
-        let(:induction) do
-          {
-            "periods" => [{ "startDate" => induction_start_date }],
-            "status" => "Not Yet Completed",
-          }
+          it "sets exempt_from_induction to true" do
+            expect(validation_result).to eql(build_validation_result(trn:, options: { exempt_from_induction: true, no_induction: true }))
+          end
         end
 
-        it "does not raise an error" do
-          expect { validation_result }.not_to raise_error
+        context "when the participant's induction status is Not Yet Completed" do
+          let(:induction) do
+            {
+              "periods" => [{ "startDate" => induction_start_date }],
+              "status" => "Not Yet Completed",
+            }
+          end
+
+          it "does not raise an error" do
+            expect { validation_result }.not_to raise_error
+          end
+
+          it "returns previous_induction as false" do
+            expect(validation_result[:previous_induction]).to eq false
+          end
+
+          it "returns no_induction as false" do
+            expect(validation_result[:no_induction]).to eq false
+          end
+
+          it "returns induction_start_date" do
+            expect(validation_result[:induction_start_date]).to eq(induction_start_date)
+          end
         end
 
-        it "returns previous_induction as false" do
-          expect(validation_result[:previous_induction]).to eq false
+        context "when the participant has previously had an induction and participation" do
+          let!(:eligibility) { create(:ineligible_participant, trn:, reason: :previous_participation) }
+          let(:induction) do
+            {
+              "periods" => [{ "startDate" => induction_start_date }],
+              "completion_date" => induction_completion_date,
+              "status" => "Pass",
+              "state" => 0,
+              "state_name" => "Active",
+            }
+          end
+
+          it "returns returns both flags" do
+            expect(validation_result).to eql(build_validation_result(trn:, options: { previous_induction: true, previous_participation: true, no_induction: false, induction_start_date: }))
+          end
         end
 
-        it "returns no_induction as false" do
-          expect(validation_result[:no_induction]).to eq false
+        context "when the participant has an induction start date in or after September this year" do
+          let(:induction_start_date) { Time.zone.parse("2021-09-01T00:00:00Z") }
+          let(:induction_completion_date) { nil }
+          let(:induction) do
+            {
+              "periods" => [{ "startDate" => induction_start_date }],
+              "completion_date" => induction_completion_date,
+              "status" => "Pass",
+              "state" => 0,
+              "state_name" => "Active",
+            }
+          end
+
+          it "returns false for previous induction" do
+            expect(validation_result).to eql(build_validation_result(trn:, options: { previous_induction: false, no_induction: false, induction_start_date: }))
+          end
         end
 
-        it "returns induction_start_date" do
-          expect(validation_result[:induction_start_date]).to eq(induction_start_date)
-        end
-      end
+        context "when the participant has an induction start date is exactly on the threshold" do
+          let(:induction_start_date) { Time.zone.parse("2021-08-31T23:00:00Z") }
+          let(:induction_completion_date) { nil }
+          let(:induction) do
+            {
+              "periods" => [{ "startDate" => induction_start_date }],
+              "completion_date" => induction_completion_date,
+              "status" => "Pass",
+              "state" => 0,
+              "state_name" => "Active",
+            }
+          end
 
-      context "when the participant has previously had an induction and participation" do
-        let!(:eligibility) { create(:ineligible_participant, trn:, reason: :previous_participation) }
-        let(:induction) do
-          {
-            "periods" => [{ "startDate" => induction_start_date }],
-            "completion_date" => induction_completion_date,
-            "status" => "Pass",
-            "state" => 0,
-            "state_name" => "Active",
-          }
-        end
-
-        it "returns returns both flags" do
-          expect(validation_result).to eql(build_validation_result(trn:, options: { previous_induction: true, previous_participation: true, no_induction: false, induction_start_date: }))
-        end
-      end
-
-      context "when the participant has an induction start date in or after September this year" do
-        let(:induction_start_date) { Time.zone.parse("2021-09-01T00:00:00Z") }
-        let(:induction_completion_date) { nil }
-        let(:induction) do
-          {
-            "periods" => [{ "startDate" => induction_start_date }],
-            "completion_date" => induction_completion_date,
-            "status" => "Pass",
-            "state" => 0,
-            "state_name" => "Active",
-          }
+          it "returns false for previous induction and parses timezones correctly" do
+            expect(validation_result).to eql(build_validation_result(trn:, options: { previous_induction: false, no_induction: false, induction_start_date: }))
+          end
         end
 
-        it "returns false for previous induction" do
-          expect(validation_result).to eql(build_validation_result(trn:, options: { previous_induction: false, no_induction: false, induction_start_date: }))
-        end
-      end
+        context "when the participant has an induction start date before September 2021" do
+          let(:induction_start_date) { Time.zone.parse("2021-08-31T22:59:59Z") }
+          let(:induction_completion_date) { nil }
+          let(:induction) do
+            {
+              "periods" => [{ "startDate" => induction_start_date }],
+              "completion_date" => induction_completion_date,
+              "status" => "Pass",
+              "state" => 0,
+              "state_name" => "Active",
+            }
+          end
 
-      context "when the participant has an induction start date is exactly on the threshold" do
-        let(:induction_start_date) { Time.zone.parse("2021-08-31T23:00:00Z") }
-        let(:induction_completion_date) { nil }
-        let(:induction) do
-          {
-            "periods" => [{ "startDate" => induction_start_date }],
-            "completion_date" => induction_completion_date,
-            "status" => "Pass",
-            "state" => 0,
-            "state_name" => "Active",
-          }
-        end
-
-        it "returns false for previous induction and parses timezones correctly" do
-          expect(validation_result).to eql(build_validation_result(trn:, options: { previous_induction: false, no_induction: false, induction_start_date: }))
-        end
-      end
-
-      context "when the participant has an induction start date before September 2021" do
-        let(:induction_start_date) { Time.zone.parse("2021-08-31T22:59:59Z") }
-        let(:induction_completion_date) { nil }
-        let(:induction) do
-          {
-            "periods" => [{ "startDate" => induction_start_date }],
-            "completion_date" => induction_completion_date,
-            "status" => "Pass",
-            "state" => 0,
-            "state_name" => "Active",
-          }
-        end
-
-        it "returns true for previous induction" do
-          expect(validation_result).to eql(build_validation_result(trn:, options: { previous_induction: true, no_induction: false, induction_start_date: }))
-        end
-      end
-
-      context "when the participant has an induction with the status of 'Exempt'" do
-        let(:induction) do
-          {
-            "periods" => [{ "startDate" => nil }],
-            "completion_date" => nil,
-            "status" => "Exempt",
-            "state" => 0,
-            "state_name" => "Exempt",
-          }
-        end
-
-        it "sets exempt_from_induction to true" do
-          expect(validation_result).to eql(build_validation_result(trn:, options: { exempt_from_induction: true, no_induction: true }))
+          it "returns true for previous induction" do
+            expect(validation_result).to eql(build_validation_result(trn:, options: { previous_induction: true, no_induction: false, induction_start_date: }))
+          end
         end
       end
     end
