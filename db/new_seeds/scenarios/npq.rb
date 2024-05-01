@@ -5,11 +5,12 @@ module NewSeeds
     class NPQ
       attr_reader :user, :application, :participant_identity, :npq_lead_provider, :npq_course, :cohort, :declaration
 
-      def initialize(user: nil, lead_provider: nil, npq_course: nil, cohort: nil)
+      def initialize(user: nil, lead_provider: nil, npq_course: nil, cohort: nil, participant_profile: nil)
         @supplied_user = user
         @supplied_lead_provider = lead_provider
         @supplied_npq_course = npq_course
         @supplied_cohort = cohort
+        @participant_profile = participant_profile
       end
 
       def build
