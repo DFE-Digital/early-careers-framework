@@ -252,12 +252,11 @@ private
 
   def valid_dqt_response
     DQTRecordPresenter.new(
-      "name" => "George ECT",
+      "firstName" => "George",
+      "lastName" => "ECT",
       "trn" => ect_trn,
-      "state_name" => "Active",
-      "dob" => Date.new(1998, 11, 22),
-      "qualified_teacher_status" => { "qts_date" => 1.year.ago },
-      "induction_start_date" => induction_start_date.to_date,
+      "dateOfBirth" => Date.new(1998, 11, 22),
+      "qts" => { "awarded" => 1.year.ago },
       "induction" => {
         "periods" => [{ "startDate" => induction_start_date }],
         "status" => "Active",
