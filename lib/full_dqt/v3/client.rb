@@ -13,7 +13,7 @@ require "net/http"
 #
 module FullDQT
   module V3
-    class Client < V1::Client
+    class Client < FullDQT::Client
       def get_record(trn:, sections: %w[induction])
         call_api(uri: endpoint_uri(trn:, sections:))
       end

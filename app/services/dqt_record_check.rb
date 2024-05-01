@@ -33,12 +33,12 @@ private
     @check_first_name_only = check_first_name_only
   end
 
-  def fetch_dqt_record(trn)
-    full_dqt_client.get_record(trn:)
+  def dqt_api_client
+    @dqt_api_client ||= FullDQT::V3::Client.new
   end
 
-  def full_dqt_client
-    @full_dqt_client ||= FullDQT::V3::Client.new
+  def fetch_dqt_record(trn)
+    dqt_api_client.get_record(trn:)
   end
 
   def check_record
