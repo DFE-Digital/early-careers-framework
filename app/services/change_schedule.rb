@@ -9,6 +9,7 @@ class ChangeSchedule
   attribute :course_identifier
   attribute :schedule_identifier
   attribute :cohort, :integer
+  attribute :migrate_declarations, :boolean, default: true
 
   delegate :participant_profile_state, to: :participant_profile, allow_nil: true
   delegate :lead_provider, to: :cpd_lead_provider, allow_nil: true
@@ -180,6 +181,8 @@ private
   end
 
   def applicable_declarations
+    return [] unless migrate_declarations
+
     @applicable_declarations ||= participant_profile.participant_declarations
       .where(state: %w[submitted eligible payable paid])
   end

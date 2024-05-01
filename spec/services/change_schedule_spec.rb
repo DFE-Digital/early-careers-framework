@@ -122,6 +122,7 @@ RSpec.describe ChangeSchedule do
       participant_id:,
       course_identifier:,
       schedule_identifier:,
+      migrate_declarations:,
     }
   end
   let(:participant_identity) { create(:participant_identity) }
@@ -132,6 +133,7 @@ RSpec.describe ChangeSchedule do
   end
 
   context "ECT participant profile" do
+    let(:migrate_declarations) { true }
     let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
     let(:participant_profile) { create(:ect, lead_provider: cpd_lead_provider.lead_provider, user:) }
     let(:schedule_identifier) { "ecf-standard-september" }
@@ -157,6 +159,7 @@ RSpec.describe ChangeSchedule do
             course_identifier:,
             schedule_identifier:,
             cohort: new_cohort.start_year,
+            migrate_declarations:,
           }
         end
 
@@ -169,6 +172,12 @@ RSpec.describe ChangeSchedule do
                 is_expected.to be_invalid
 
                 expect(service.errors.messages_for(:cohort)).to include("The property '#/cohort' cannot be changed")
+              end
+
+              context "when not migrating declarations" do
+                let(:migrate_declarations) { false }
+
+                it { is_expected.to be_valid }
               end
             end
           end
@@ -299,6 +308,7 @@ RSpec.describe ChangeSchedule do
             course_identifier:,
             schedule_identifier:,
             cohort: new_cohort.start_year,
+            migrate_declarations:,
           }
         end
 
@@ -337,6 +347,7 @@ RSpec.describe ChangeSchedule do
             course_identifier:,
             schedule_identifier: new_schedule.schedule_identifier,
             cohort:,
+            migrate_declarations:,
           }
         end
 
@@ -386,6 +397,7 @@ RSpec.describe ChangeSchedule do
     let(:course_identifier) { "ecf-mentor" }
     let(:new_cohort) { Cohort.previous }
     let!(:schedule) { create(:ecf_mentor_schedule, schedule_identifier: "ecf-extended-april") }
+    let(:migrate_declarations) { true }
 
     describe "validations" do
       it_behaves_like "validating a participant for a change schedule"
@@ -404,6 +416,7 @@ RSpec.describe ChangeSchedule do
             course_identifier:,
             schedule_identifier:,
             cohort: new_cohort.start_year,
+            migrate_declarations:,
           }
         end
 
@@ -416,6 +429,12 @@ RSpec.describe ChangeSchedule do
                 is_expected.to be_invalid
 
                 expect(service.errors.messages_for(:cohort)).to include("The property '#/cohort' cannot be changed")
+              end
+
+              context "when not migrating declarations" do
+                let(:migrate_declarations) { false }
+
+                it { is_expected.to be_valid }
               end
             end
           end
@@ -536,6 +555,7 @@ RSpec.describe ChangeSchedule do
   end
 
   context "NPQ participant profile" do
+    let(:migrate_declarations) { true }
     let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_npq_lead_provider) }
     let(:npq_lead_provider) { cpd_lead_provider.npq_lead_provider }
     let(:npq_course) { create(:npq_course, identifier: "npq-senior-leadership") }
@@ -564,6 +584,7 @@ RSpec.describe ChangeSchedule do
             course_identifier:,
             schedule_identifier:,
             cohort: new_cohort.start_year,
+            migrate_declarations:,
           }
         end
 
@@ -578,6 +599,12 @@ RSpec.describe ChangeSchedule do
                 is_expected.to be_invalid
 
                 expect(service.errors.messages_for(:cohort)).to include("The property '#/cohort' cannot be changed")
+              end
+
+              context "when not migrating declarations" do
+                let(:migrate_declarations) { false }
+
+                it { is_expected.to be_valid }
               end
             end
           end
