@@ -35,7 +35,9 @@ class DQTRecordPresenter < SimpleDelegator
   # The "induction", "start_date" coming in DQT::V1 is not the more accurate one so,
   # either we get it from the "induction" "periods" coming V1 or V3
   def induction_start_date
-    @induction_start_date ||= (
+    return @induction_start_date if instance_variable_defined?(:@induction_start_date)
+
+    @induction_start_date = (
       dqt_record.dig("induction", "periods") ||
         FullDQT::V3::Client.new.get_record(trn:)&.dig("induction", "periods")
     ).to_a

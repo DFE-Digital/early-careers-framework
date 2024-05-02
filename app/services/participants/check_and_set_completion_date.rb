@@ -40,6 +40,7 @@ module Participants
           dqt_value: start_date,
           participant_value: participant_start_date,
         },
+        unique_by: :participant_profile_id,
       )
     end
 
