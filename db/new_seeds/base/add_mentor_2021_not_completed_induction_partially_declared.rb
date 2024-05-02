@@ -4,7 +4,7 @@ lead_provider = LeadProvider.find_by!(name: "Ambition Institute")
 cpd_lead_provider = lead_provider.cpd_lead_provider
 
 cohort_2021 = Cohort.find_by!(start_year: 2021)
-cohort_2024 = Cohort.find_by!(start_year: 2024)
+Cohort.find_by!(start_year: 2024)
 
 course_identifier = "ecf-mentor"
 
@@ -20,14 +20,15 @@ created_partnership = Partnerships::Create.new({
 }).call
 raise RuntimeError unless created_partnership
 
-ProviderRelationship.create!(delivery_partner:, lead_provider:, cohort: cohort_2024)
-created_partnership = Partnerships::Create.new({
-  cohort: 2024,
-  school_id: school.id,
-  lead_provider_id: lead_provider.id,
-  delivery_partner_id: delivery_partner.id,
-}).call
-raise RuntimeError unless created_partnership
+# Commenting out so that we can do this as a provider would.
+# ProviderRelationship.create!(delivery_partner:, lead_provider:, cohort: cohort_2024)
+# created_partnership = Partnerships::Create.new({
+#   cohort: 2024,
+#   school_id: school.id,
+#   lead_provider_id: lead_provider.id,
+#   delivery_partner_id: delivery_partner.id,
+# }).call
+# raise RuntimeError unless created_partnership
 
 seed_quantity(:mentors_2021_not_completed_training_partially_declared).times do
   # Create participant in 2021 cohort.

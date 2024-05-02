@@ -230,7 +230,7 @@ private
   def validate_school_cohort_exists
     return unless participant_profile&.ecf?
     return if school_partnership.present?
-    
+
     errors.add(:cohort, I18n.t(:missing_school_cohort_default_partnership))
   end
 
