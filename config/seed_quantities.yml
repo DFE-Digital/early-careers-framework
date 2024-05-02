@@ -33,8 +33,8 @@ default: &default
   npq_applications_eligible_for_transfer: 10
   npq_applications_edge_cases: 25
   ects_becoming_mentors: 10
-  ects_2021_not_completed_induction_partially_declared: 10
-  mentors_2021_not_completed_training_partially_declared: 10
+  ects_2021_not_completed_induction_partially_declared: 1
+  mentors_2021_not_completed_training_partially_declared: 1
 
 development:
   <<: *default
