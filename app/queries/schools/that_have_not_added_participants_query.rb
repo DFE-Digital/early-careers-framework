@@ -21,9 +21,12 @@ module Schools
     end
 
     def school_cohorts_that_have_not_added_participants
+      # need to ensure that there are no induction programmes in the school/cohort with participants
+      # lots of schools have programmes without participants and programmes with participants
+      # and just using .missing(:induction_records) missed this nuance and gave us false positives
       scope = SchoolCohort
         .where(induction_programme_choice: %w[full_induction_programme core_induction_programme])
-        .where.missing(:induction_records)
+        .where.not(id: InductionProgramme.joins(:induction_records).select(:school_cohort_id))
 
       return scope if cohort.blank?
 
