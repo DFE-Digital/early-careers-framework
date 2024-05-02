@@ -2,6 +2,7 @@
 
 class DQTRecordCheck < ::BaseService
   TITLES = %w[mr mrs miss ms dr prof rev].freeze
+  NUMBER_OF_MATCHES_REQUIRED = 3
   UNMATCHED_TRN = "0000001"
 
   CheckResult = Struct.new(
@@ -33,21 +34,16 @@ private
     @check_first_name_only = check_first_name_only
   end
 
-  def dqt_api_client
-    @dqt_api_client ||= DQT::V3::Client.new
+  def fetch_dqt_record(trn:, date_of_birth:, nino: nil)
+    DQT::GetTeacherRecord.call(trn:, date_of_birth:, nino:)
   end
 
-  def fetch_dqt_record(trn)
-    dqt_api_client.get_record(trn:)
-  end
-
-  def check_record
+  def check_record(with_nino: false)
     return check_failure(:trn_and_nino_blank) if trn.blank? && nino.blank?
 
-    @trn = UNMATCHED_TRN if trn.blank?
-
     padded_trn = TeacherReferenceNumber.new(trn).formatted_trn
-    dqt_record = DQTRecordPresenter.new(fetch_dqt_record(padded_trn))
+    fetch_args = with_nino ? { trn: UNMATCHED_TRN, date_of_birth:, nino: } : { trn: padded_trn, date_of_birth: }
+    dqt_record = DQTRecordPresenter.new(fetch_dqt_record(**fetch_args))
 
     return check_failure(:no_match_found) if dqt_record.blank?
 
@@ -58,19 +54,17 @@ private
 
     matches = [trn_matches, name_matches, dob_matches, nino_matches].count(true)
 
-    if matches >= 3
+    if matches >= NUMBER_OF_MATCHES_REQUIRED
       CheckResult.new(dqt_record, trn_matches, name_matches, dob_matches, nino_matches, matches)
-    elsif matches < 3 && (trn_matches && trn != "1")
-      if matches == 2 && !name_matches && check_first_name_only?
+    elsif NUMBER_OF_MATCHES_REQUIRED - matches == 1
+      if !name_matches && check_first_name_only?
         CheckResult.new(dqt_record, trn_matches, name_matches, dob_matches, nino_matches, matches)
+      elsif !with_nino && !trn_matches
+        check_record(with_nino: true)
       else
-        # If a participant mistypes their TRN and enters someone else's, we should search by NINO instead
-        # The API first matches by (mandatory) TRN, then by NINO if it finds no results. This works around that.
-        @trn = UNMATCHED_TRN
-        check_record
+        check_failure(:no_match_found)
       end
     else
-      # we found a record but not enough matched
       check_failure(:no_match_found)
     end
   end

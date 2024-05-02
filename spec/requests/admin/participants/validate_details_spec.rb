@@ -32,7 +32,7 @@ RSpec.describe "Admin::Participants::ValidateDetailsController", type: :request 
   # despite all that, nothing gets persisted to the database.
   describe "GET /admin/participants/:participant_id/validation-data" do
     before do
-      stub_request(:get, "https://dtqapi.example.com/dqt-crm/v3/teachers/#{trn}?include=induction")
+      stub_request(:get, "https://dtqapi.example.com/dqt-crm/v3/teachers/#{trn}?&date_of_birth=1987-12-13&include=induction")
         .with(
           headers: {
             "Accept" => "*/*",

@@ -17,7 +17,6 @@ RSpec.describe DQTRecordCheck do
   let(:date_of_birth) { 25.years.ago.to_date }
   let(:default_api_response) do
     {
-      "state_name" => "Active",
       "trn" => trn,
       "firstName" => first_name,
       "middleName" => nil,
@@ -203,22 +202,31 @@ RSpec.describe DQTRecordCheck do
       end
     end
 
-    context "when there are less than three matches excluding TRN" do
-      include_context "build fake DQT response" do
-        let(:fake_api_response) { default_api_response.except("dateOfBirth").merge("nationalInsuranceNumber" => "QQ121212Q") }
-      end
+    context "when there are less than three matches" do
+      context "and TRN does not match but there are 2 other matches" do
+        subject { DQTRecordCheck.new(full_name:, date_of_birth: date_of_birth + 1, trn: "9988776", nino:) }
 
-      before do
-        allow_any_instance_of(DQTRecordCheck).to receive(:check_record).and_call_original
-      end
+        include_context "build fake DQT response"
 
-      it "sets trn to 0000001 and calls check_record again" do
-        expect(subject.send(:trn)).to eql(trn)
+        before do
+          allow_any_instance_of(DQTRecordCheck).to receive(:check_record).and_call_original
+          allow_any_instance_of(DQT::V1::Client)
+            .to receive(:get_record)
+            .and_return(default_api_response.merge("trn" => "9988776"))
+        end
 
-        subject.call
+        it "calls check_record again with_nino: true" do
+          result = subject.call
 
-        expect(subject.send(:trn)).to eql("0000001")
-        expect(subject).to have_received(:check_record).twice
+          expect(subject).to have_received(:check_record).once.with(no_args)
+          expect(subject).to have_received(:check_record).once.with(with_nino: true)
+          expect(result.total_matched).to eq(3)
+          expect(result.failure_reason).to be_nil
+          expect(result.trn_matches).to be(true)
+          expect(result.name_matches).to be(true)
+          expect(result.dob_matches).to be(false)
+          expect(result.nino_matches).to be(true)
+        end
       end
 
       context "when the TRN matches and DoB or Nino but the name doesn't match (2 matches)" do

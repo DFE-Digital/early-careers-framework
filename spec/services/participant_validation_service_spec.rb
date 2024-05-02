@@ -40,16 +40,11 @@ RSpec.describe ParticipantValidationService do
       }
     end
 
-    let(:dqt_records) { [dqt_record] }
-    let(:dqt_api_client) { DQT::V3::Client }
-
+    let(:check_service) { instance_double(DQTRecordCheck) }
+    let(:presented_dqt_record) { DQTRecordPresenter.new(dqt_record) }
+    let(:check_result) { DQTRecordCheck::CheckResult.new(presented_dqt_record, true, true, true, true, 4, nil) }
+    let(:no_result) { DQTRecordCheck::CheckResult.new(nil, false, false, false, false, 0, :no_match_found) }
     let(:validation_result) { ParticipantValidationService.validate(trn:, nino:, full_name:, date_of_birth: dob) }
-
-    it "calls get_record on the DQT API client" do
-      expect_any_instance_of(dqt_api_client).to receive(:get_record).with({ trn: })
-
-      validation_result
-    end
 
     context "when neither trn nor nino is provided" do
       let(:trn) { nil }
@@ -60,22 +55,14 @@ RSpec.describe ParticipantValidationService do
       end
     end
 
-    context "when trn is not provided, but nino is" do
-      let(:trn) { nil }
-
-      it "queries dqt with fake trn" do
-        expect_any_instance_of(dqt_api_client).to receive(:get_record).with({ trn: "0000001" })
-        validation_result
-      end
-    end
-
-    context "given that it calls the API" do
+    context "given that it calls DQTCheckRecord" do
       before do
-        expect_any_instance_of(dqt_api_client).to receive(:get_record).and_return(*dqt_records)
+        allow(DQTRecordCheck).to receive(:new).and_return(check_service)
+        allow(check_service).to receive(:call).and_return(check_result)
       end
 
       context "when the participant cannot be found" do
-        let(:dqt_records) { [nil] }
+        let(:check_result) { no_result }
 
         it "returns nil" do
           expect(validation_result).to eql nil
@@ -136,19 +123,21 @@ RSpec.describe ParticipantValidationService do
         end
       end
 
-      context "when 3 of 4 things match and only first name matches" do
-        let(:validation_result) do
-          ParticipantValidationService.validate(
-            trn:,
-            nino: "WRONG",
-            full_name: full_name.split(" ").first.to_s,
-            date_of_birth: dob,
-          )
-        end
-        let(:dqt_records) { [dqt_record, nil] }
+      context "when 3 of 4 things match" do
+        context "when only first name matches" do
+          let(:check_result) { no_result }
+          let(:validation_result) do
+            ParticipantValidationService.validate(
+              trn:,
+              nino: "WRONG",
+              full_name: full_name.split(" ").first.to_s,
+              date_of_birth: dob,
+            )
+          end
 
-        it "returns nil" do
-          expect(validation_result).to be_nil
+          it "returns nil" do
+            expect(validation_result).to be_nil
+          end
         end
 
         context "when config check_first_name_only: true" do
@@ -161,33 +150,10 @@ RSpec.describe ParticipantValidationService do
               config: { check_first_name_only: true },
             )
           end
-          let(:dqt_records) { [dqt_record] }
 
           it "returns validated details" do
             expect(validation_result).to eql(build_validation_result(trn:))
           end
-        end
-      end
-
-      context "when the wrong trn is provided" do
-        let(:other_trn) { "7654321" }
-        let(:record_for_other_trn) do
-          dqt_record.merge("trn" => other_trn,
-                           "nino" => "AA654321A",
-                           "firstName" => "Jenny",
-                           "lastName" => "Jenny Mathews",
-                           "dateOfBirth" => Date.new(1990, 2, 1),
-                           "alerts" => [])
-        end
-        let(:dqt_records) { [record_for_other_trn, dqt_record] }
-
-        it "returns the correct details" do
-          expect(ParticipantValidationService.validate(
-                   trn: other_trn,
-                   nino:,
-                   full_name:,
-                   date_of_birth: dob,
-                 )).to eql(build_validation_result(trn:))
         end
       end
 
@@ -204,15 +170,6 @@ RSpec.describe ParticipantValidationService do
 
         it "returns returns the correct alert details" do
           expect(validation_result).to eql(build_validation_result(trn:, options: { active_alert: true }))
-        end
-      end
-
-      context "when the DQT nino is blank" do
-        let(:nino) { "" }
-        let(:dqt_records) { [dqt_record, nil] }
-
-        it "does not count blank NINos as matching" do
-          expect(ParticipantValidationService.validate(trn:, nino: "", full_name: "John Smithe", date_of_birth: dob)).to be_nil
         end
       end
 
