@@ -16,7 +16,15 @@ RSpec.describe Participants::CheckAndSetCompletionDate do
   let(:completion_date) { 1.month.ago.to_date }
   let(:start_date) { 2.months.ago.to_date }
   let(:induction_start_date) { start_date }
-  let(:dqt_induction_record) { { "endDate" => completion_date, "startDate" => start_date } }
+  let(:dqt_induction_record) do
+    { "endDate" => completion_date,
+      "periods" => [
+        { "startDate" => start_date,
+          "endDate" => start_date + 1.week },
+        { "startDate" => start_date + 1.week,
+          "endDate" => start_date + 2.weeks },
+      ] }
+  end
 
   subject(:service_call) { described_class.call(participant_profile:) }
 

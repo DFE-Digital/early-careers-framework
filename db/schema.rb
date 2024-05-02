@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_04_11_160127) do
+ActiveRecord::Schema[7.1].define(version: 2024_05_02_102913) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "fuzzystrmatch"
@@ -904,7 +904,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_11_160127) do
     t.date "participant_value"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["participant_profile_id"], name: "idx_on_participant_profile_id_77e3f2fe02"
+    t.index ["participant_profile_id"], name: "idx_on_participant_profile_id_77e3f2fe02", unique: true
   end
 
   create_table "participant_profile_states", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
