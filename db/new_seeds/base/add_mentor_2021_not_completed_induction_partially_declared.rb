@@ -1,48 +1,41 @@
 # frozen_string_literal: true
 
+auto_onboard_to_2024_cohort = false
 lead_provider = LeadProvider.find_by!(name: "Ambition Institute")
 cpd_lead_provider = lead_provider.cpd_lead_provider
-
-cohort_2021 = Cohort.find_by!(start_year: 2021)
-Cohort.find_by!(start_year: 2024)
-
 course_identifier = "ecf-mentor"
-
 delivery_partner = FactoryBot.create(:delivery_partner, name: "Test Mentor Delivery Partner")
-school = FactoryBot.create(:school, name: "Test Mentor School")
+school = NewSeeds::Scenarios::Schools::School.new(name: "Test Mentor School", urn: "7891234")
+  .build
+  .with_an_induction_tutor(full_name: "SIT 1", email: "mentor@example.com")
+  .school
 
-ProviderRelationship.create!(delivery_partner:, lead_provider:, cohort: cohort_2021)
-created_partnership = Partnerships::Create.new({
-  cohort: 2021,
-  school_id: school.id,
-  lead_provider_id: lead_provider.id,
-  delivery_partner_id: delivery_partner.id,
-}).call
-raise RuntimeError unless created_partnership
+Cohort.find_each do |cohort|
+  # Nathan creates via admin console
+  ProviderRelationship.create!(delivery_partner:, lead_provider:, cohort:)
 
-# Commenting out so that we can do this as a provider would.
-# ProviderRelationship.create!(delivery_partner:, lead_provider:, cohort: cohort_2024)
-# created_partnership = Partnerships::Create.new({
-#   cohort: 2024,
-#   school_id: school.id,
-#   lead_provider_id: lead_provider.id,
-#   delivery_partner_id: delivery_partner.id,
-# }).call
-# raise RuntimeError unless created_partnership
+  if cohort.start_year != 2024 || auto_onboard_to_2024_cohort
+    SchoolCohort.create!(school_id: school.id, cohort_id: cohort.id, induction_programme_choice: "full_induction_programme")
 
-seed_quantity(:mentors_2021_not_completed_training_partially_declared).times do
+    created_partnership = Partnerships::Create.new({
+      cohort: cohort.start_year,
+      school_id: school.id,
+      lead_provider_id: lead_provider.id,
+      delivery_partner_id: delivery_partner.id,
+    }).call
+    raise RuntimeError unless created_partnership
+  end
+end
+
+seed_quantity(:ects_2021_not_completed_induction_partially_declared).times do
   # Create participant in 2021 cohort.
   participant_identity = FactoryBot.create(:participant_identity)
   user = participant_identity.user
-  school_cohort_2021 = SchoolCohort.find_by!(school:, cohort: cohort_2021)
-  participant_profile = FactoryBot.create(:mentor, cohort: cohort_2021, school_cohort: school_cohort_2021, lead_provider:, user:)
-
-  # Switch to Mentor schedule (not sure why the factory puts it as ECF in the first place).
-  schedule = Finance::Schedule::Mentor.find_by!(cohort: cohort_2021)
-  participant_profile.update!(schedule:)
-  participant_profile.induction_records.update!(schedule:)
+  school_cohort = SchoolCohort.includes(:cohort).find_by!(school:, cohort: { start_year: 2021 })
+  cohort = school_cohort.cohort
+  participant_profile = FactoryBot.create(:mentor, :eligible_for_funding, cohort:, school_cohort:, lead_provider:, user:)
 
   # Create declarations against 2021.
   state = ParticipantDeclaration.states.values.sample
-  FactoryBot.create(:participant_declaration, participant_profile:, state:, course_identifier:, cpd_lead_provider:)
+  FactoryBot.create(:ect_participant_declaration, :eligible, participant_profile:, state:, course_identifier:, cpd_lead_provider:)
 end
