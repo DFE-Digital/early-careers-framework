@@ -94,8 +94,7 @@ module Api
       def npq_cohort_for(scope)
         return ParticipantDeclaration.none if npq_lead_provider.blank?
 
-        with_joins(scope)
-          .where(participant_profile: { type: "ParticipantProfile::NPQ", schedule: { cohorts_induction_records: { start_year: cohort_years } } })
+        with_joins(scope).where(participant_profile: { type: "ParticipantProfile::NPQ", cohorts_schedules: { start_year: cohort_years } })
       end
 
       def ecf_previous_declarations_scope
@@ -120,15 +119,26 @@ module Api
       end
 
       def with_joins(scope)
-        scope.left_outer_joins(
-          participant_profile: [
-            [schedule: :cohort],
-            { induction_records: [
-              :cohort,
-              { induction_programme: :partnership },
-            ] },
-          ],
-        )
+        # Get the latest induction record for each participant declaration (kind of - may need more thought)
+        subquery = InductionRecord
+          .joins(:cohort, participant_profile: :participant_declarations)
+          .select("participant_declarations.id AS declaration_id", "induction_records.*, ROW_NUMBER() OVER(PARTITION BY participant_declarations.id ORDER BY induction_records.created_at DESC) AS row_number")
+          .where("induction_records.created_at <= participant_declarations.created_at")
+
+        scope
+          .left_outer_joins(
+            participant_profile: [
+              [schedule: :cohort],
+              { induction_records: [
+                :cohort,
+                { induction_programme: :partnership },
+              ] },
+            ],
+          )
+          # Join on the latest induction record for each participant declaration, so that
+          # we can filter on the cohort start year.
+          .joins("LEFT OUTER JOIN (#{subquery.to_sql}) AS filtered_induction_records ON filtered_induction_records.id = induction_records.id AND filtered_induction_records.declaration_id = participant_declarations.id")
+          .where("filtered_induction_records.row_number = 1 OR participant_declarations.type = 'ParticipantDeclaration::NPQ'")
       end
     end
   end

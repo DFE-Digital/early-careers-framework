@@ -32,6 +32,8 @@ class ChangeSchedule
     return if invalid?
 
     ActiveRecord::Base.transaction do
+      # Create a historical schedule record if the schedule is changing and we are
+      # leaving behind declarations against the previous schedule.
       ParticipantProfileSchedule.create!(participant_profile:, schedule:)
 
       update_participant_profile_schedule_references!

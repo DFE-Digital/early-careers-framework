@@ -128,6 +128,80 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery do
       it "returns all participant declarations for the specific cohort" do
         expect(subject.participant_declarations_for_pagination.to_a).to eq([participant_declaration3])
       end
+
+      context "when the participant has declarations in multiple cohorts" do
+        before do
+          school = school_cohort2.school
+          ProviderRelationship.create!(delivery_partner: delivery_partner1, lead_provider: cpd_lead_provider1.lead_provider, cohort: cohort1)
+          SchoolCohort.create!(school_id: school.id, cohort_id: cohort1.id, induction_programme_choice: "full_induction_programme")
+
+          service = Partnerships::Create.new({
+            cohort: cohort1.start_year,
+            school_id: school.id,
+            lead_provider_id: cpd_lead_provider1.lead_provider_id,
+            delivery_partner_id: delivery_partner1.id,
+          })
+
+          created_partnership = service.call
+
+          raise RuntimeError unless created_partnership
+
+          schedule = participant_profile3.latest_induction_record.schedule
+          service = ChangeSchedule.new({
+            cpd_lead_provider: cpd_lead_provider1,
+            participant_id: participant_profile3.user_id,
+            course_identifier: "ecf-induction",
+            schedule_identifier: schedule.schedule_identifier,
+            migrate_declarations: false,
+            cohort: cohort1.start_year,
+          })
+          service.call
+
+          ParticipantDeclaration.where.not(id: participant_declaration3.id).destroy_all
+        end
+
+        let!(:declaration_in_23_cohort) do
+          create(
+            :ect_participant_declaration,
+            :eligible,
+            declaration_type: "retained-1",
+            cpd_lead_provider: cpd_lead_provider1,
+            participant_profile: participant_profile3,
+            delivery_partner: delivery_partner2,
+          )
+        end
+        let!(:declaration_in_22_cohort) { participant_declaration3 }
+
+        # 2022, 2023
+
+        # Declarations (created at):
+        # Sun, 28 Apr 2024 09:32:48.000000000 UTC +00:00 -> 2022 cohort
+        # Fri, 03 May 2024 09:32:48.905957000 UTC +00:00 -> 2023 cohort (migrated to this)
+
+        # Induction records (created at):
+        # Sun, 28 Apr 2024 09:32:48.000000000 UTC +00:00 -> 2022
+        # Fri, 03 May 2024 09:32:48.881087000 UTC +00:00 -> 2023
+
+        # where("induction_records.created_at <= participant_declarations.created_at")
+
+        context "when filtering by 2022" do
+          let(:params) { { filter: { cohort: "2022" } } }
+
+          it { expect(subject.participant_declarations_for_pagination.to_a.map(&:id)).to match_array([declaration_in_22_cohort].map(&:id)) }
+        end
+
+        context "when filtering by 2023" do
+          let(:params) { { filter: { cohort: "2023" } } }
+
+          it { expect(subject.participant_declarations_for_pagination.to_a.map(&:id)).to match_array([declaration_in_23_cohort].map(&:id)) }
+        end
+
+        context "when filtering by 2022,2023" do
+          let(:params) { { filter: { cohort: "2022,2023" } } }
+
+          it { expect(subject.participant_declarations_for_pagination.to_a.map(&:id)).to match_array([declaration_in_22_cohort, declaration_in_23_cohort].map(&:id)) }
+        end
+      end
     end
 
     context "with multiple cohort filter" do
