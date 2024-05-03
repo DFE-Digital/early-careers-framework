@@ -110,7 +110,7 @@ module Pages
             "qts_date": "2021-07-05T00:00:00Z",
           },
           "induction": {
-            "periods" => [{ "startDate" => "2021-09-02T00:00:00Z" }],
+            "start_date": "2021-09-02T00:00:00Z",
           },
         }), headers: {})
 

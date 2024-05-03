@@ -21,16 +21,16 @@ module Participants
       induction&.fetch("endDate", nil)
     end
 
-    def induction
-      @induction ||= DQT::GetInductionRecord.call(trn: participant_profile.teacher_profile.trn)
-    end
-
-    def induction_periods
-      Array(induction&.dig("periods"))
+    def start_date
+      induction&.fetch("startDate", nil)
     end
 
     def participant_start_date
       participant_profile.induction_start_date
+    end
+
+    def induction
+      @induction ||= DQT::GetInductionRecord.call(trn: participant_profile.teacher_profile.trn)
     end
 
     def record_start_date_inconsistency
@@ -40,13 +40,7 @@ module Participants
           dqt_value: start_date,
           participant_value: participant_start_date,
         },
-        unique_by: :participant_profile_id,
       )
-    end
-
-    # returns the minimum start date of all the induction periods
-    def start_date
-      @start_date ||= induction_periods.map { |period| period["startDate"] }.compact.min
     end
   end
 end

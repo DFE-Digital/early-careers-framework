@@ -259,7 +259,7 @@ private
       "qualified_teacher_status" => { "qts_date" => 1.year.ago },
       "induction_start_date" => induction_start_date.to_date,
       "induction" => {
-        "periods" => [{ "startDate" => induction_start_date }],
+        "start_date" => induction_start_date,
         "status" => "Active",
       },
     )

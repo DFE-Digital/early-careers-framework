@@ -24,7 +24,7 @@ RSpec.describe ParticipantValidationService do
     let(:alert) { false }
     let(:induction_start_date) { Date.parse("2021-07-01T00:00:00Z") }
     let(:induction_completion_date) { Date.parse("2021-07-05T00:00:00Z") }
-    let(:induction) { { "periods" => [{ "startDate" => nil }] } }
+    let(:induction) { nil }
     let(:inactive_record) { false }
     let(:dqt_record) { build_dqt_record(trn:, nino:, full_name:, dob:, alert:, qts:, induction:, inactive: inactive_record) }
     let(:dqt_records) { [dqt_record] }
@@ -172,7 +172,7 @@ RSpec.describe ParticipantValidationService do
                            dob: Date.new(1990, 2, 1),
                            alert: false,
                            qts: nil,
-                           induction: { "periods" => [{ "startDate" => nil }] })
+                           induction: nil)
         end
         let(:dqt_records) { [record_for_other_trn, dqt_record] }
 
@@ -222,7 +222,7 @@ RSpec.describe ParticipantValidationService do
       context "when the participant has previously had an induction" do
         let(:induction) do
           {
-            "periods" => [{ "startDate" => induction_start_date }],
+            "start_date" => induction_start_date,
             "completion_date" => induction_completion_date,
             "status" => "Pass",
             "state" => 0,
@@ -238,7 +238,7 @@ RSpec.describe ParticipantValidationService do
       context "when the participant has an induction with nil start_date" do
         let(:induction) do
           {
-            "periods" => [{ "startDate" => nil }],
+            "start_date" => nil,
           }
         end
 
@@ -262,7 +262,7 @@ RSpec.describe ParticipantValidationService do
       context "when the participant's induction status is InProgress" do
         let(:induction) do
           {
-            "periods" => [{ "startDate" => induction_start_date }],
+            "start_date" => induction_start_date,
             "status" => "InProgress",
           }
         end
@@ -287,7 +287,7 @@ RSpec.describe ParticipantValidationService do
       context "when the participant's induction status is Not Yet Completed" do
         let(:induction) do
           {
-            "periods" => [{ "startDate" => induction_start_date }],
+            "start_date" => induction_start_date,
             "status" => "Not Yet Completed",
           }
         end
@@ -313,7 +313,7 @@ RSpec.describe ParticipantValidationService do
         let!(:eligibility) { create(:ineligible_participant, trn:, reason: :previous_participation) }
         let(:induction) do
           {
-            "periods" => [{ "startDate" => induction_start_date }],
+            "start_date" => induction_start_date,
             "completion_date" => induction_completion_date,
             "status" => "Pass",
             "state" => 0,
@@ -331,7 +331,7 @@ RSpec.describe ParticipantValidationService do
         let(:induction_completion_date) { nil }
         let(:induction) do
           {
-            "periods" => [{ "startDate" => induction_start_date }],
+            "start_date" => induction_start_date,
             "completion_date" => induction_completion_date,
             "status" => "Pass",
             "state" => 0,
@@ -349,7 +349,7 @@ RSpec.describe ParticipantValidationService do
         let(:induction_completion_date) { nil }
         let(:induction) do
           {
-            "periods" => [{ "startDate" => induction_start_date }],
+            "start_date" => induction_start_date,
             "completion_date" => induction_completion_date,
             "status" => "Pass",
             "state" => 0,
@@ -367,7 +367,7 @@ RSpec.describe ParticipantValidationService do
         let(:induction_completion_date) { nil }
         let(:induction) do
           {
-            "periods" => [{ "startDate" => induction_start_date }],
+            "start_date" => induction_start_date,
             "completion_date" => induction_completion_date,
             "status" => "Pass",
             "state" => 0,
@@ -383,7 +383,7 @@ RSpec.describe ParticipantValidationService do
       context "when the participant has an induction with the status of 'Exempt'" do
         let(:induction) do
           {
-            "periods" => [{ "startDate" => nil }],
+            "start_date" => nil,
             "completion_date" => nil,
             "status" => "Exempt",
             "state" => 0,

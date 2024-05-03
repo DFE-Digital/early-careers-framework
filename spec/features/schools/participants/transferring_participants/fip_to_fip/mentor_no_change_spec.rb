@@ -268,7 +268,7 @@ RSpec.describe "Transferring a mentor weith matching lead provider and delivery 
       "dob" => participant_data[:date_of_birth],
       "qualified_teacher_status" => { "qts_date" => 1.year.ago },
       "induction" => {
-        "periods" => [{ "startDate" => 1.month.ago }],
+        "start_date" => 1.month.ago,
         "status" => "Active",
       },
     })
