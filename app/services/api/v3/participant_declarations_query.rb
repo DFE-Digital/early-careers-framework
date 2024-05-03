@@ -87,13 +87,15 @@ module Api
       def ecf_cohort_for(scope)
         return ParticipantDeclaration.none if lead_provider.blank?
 
-        with_joins(scope).where(participant_profile: { induction_records: { cohorts: { start_year: cohort_years } } })
+        with_joins(scope)
+          .where(participant_profile: { induction_records: { cohorts_induction_records: { start_year: cohort_years } } })
       end
 
       def npq_cohort_for(scope)
         return ParticipantDeclaration.none if npq_lead_provider.blank?
 
-        with_joins(scope).where(participant_profile: { type: "ParticipantProfile::NPQ", schedule: { cohorts: { start_year: cohort_years } } })
+        with_joins(scope)
+          .where(participant_profile: { type: "ParticipantProfile::NPQ", schedule: { cohorts_induction_records: { start_year: cohort_years } } })
       end
 
       def ecf_previous_declarations_scope
@@ -103,7 +105,7 @@ module Api
           .where(state: %w[submitted eligible payable paid])
 
         if cohort_years.present? && lead_provider.present?
-          scope = scope.where(participant_profile: { induction_records: { cohorts: { start_year: cohort_years } } })
+          scope = scope.where(participant_profile: { induction_records: { cohorts_induction_records: { start_year: cohort_years } } })
         end
 
         scope
