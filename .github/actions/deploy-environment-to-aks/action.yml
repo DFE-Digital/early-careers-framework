@@ -48,7 +48,7 @@ runs:
       shell: bash
       run: |
         make ci ${{ inputs.environment }} terraform-apply
-        cd terraform/aks && echo "url=$(terraform output -raw url)" >> $GITHUB_OUTPUT
+        cd terraform/application && echo "url=$(terraform output -raw url)" >> $GITHUB_OUTPUT
       env:
         TF_VAR_azure_sp_credentials_json: ${{ inputs.azure-credentials }}
         TF_VAR_statuscake_api_token: ${{ inputs.statuscake-api-token }}
