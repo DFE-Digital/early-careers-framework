@@ -19,5 +19,25 @@ namespace :support do
         Support::Participants::Reactivate.new(participant_profile_id:).dry_run
       end
     end
+
+    namespace :mentors do
+      namespace :withdraw do
+        desc "Withdraws a participant from a school"
+        task :run, %i[participant_profile_id school_urn] => :environment do |_task, args|
+          participant_profile_id = args.participant_profile_id
+          school_urn = args.school_urn
+
+          Support::Participants::Mentors::Withdraw.call(participant_profile_id:, school_urn:)
+        end
+
+        desc "DRY RUN (rolls back on completion): Removes a participant from a school"
+        task :dry_run, %i[participant_profile_id school_urn] => :environment do |_task, args|
+          participant_profile_id = args.participant_profile_id
+          school_urn = args.school_urn
+
+          Support::Participants::Mentors::Withdraw.new(participant_profile_id:, school_urn:).dry_run
+        end
+      end
+    end
   end
 end
