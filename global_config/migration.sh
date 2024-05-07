@@ -5,5 +5,4 @@ CONFIG_SHORT=mg
 CONFIG_LONG=migration
 DEPLOY_ENV=${CONFIG}
 ENV_TAG=Production
-PLATFORM=aks
 NAMESPACE=cpd-production

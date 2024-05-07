@@ -5,5 +5,4 @@ CONFIG_SHORT=rv
 CONFIG_LONG=review
 DEPLOY_ENV=${CONFIG}
 ENV_TAG=Test
-PLATFORM=aks
 NAMESPACE=cpd-development

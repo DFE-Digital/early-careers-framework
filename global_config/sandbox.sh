@@ -5,5 +5,4 @@ CONFIG_SHORT=sb
 CONFIG_LONG=sandbox
 DEPLOY_ENV=${CONFIG}
 ENV_TAG=Production
-PLATFORM=aks
 NAMESPACE=cpd-production

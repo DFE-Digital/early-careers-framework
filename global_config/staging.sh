@@ -5,5 +5,4 @@ CONFIG_SHORT=st
 CONFIG_LONG=staging
 DEPLOY_ENV=${CONFIG}
 ENV_TAG=Test
-PLATFORM=aks
 NAMESPACE=cpd-development

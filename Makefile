@@ -2,15 +2,14 @@ ifndef VERBOSE
 .SILENT:
 endif
 
+REGION=UK South
 SERVICE_SHORT=cpdecf
-
-aks:  ## Sets environment variables for aks deployment
-	$(eval PLATFORM=aks)
-	$(eval REGION=UK South)
-	$(eval KEY_VAULT_PURGE_PROTECTION=false)
+KEY_VAULT_PURGE_PROTECTION=false
+ARM_TEMPLATE_TAG=1.1.6
+TERRAFILE_VERSION=0.8
 
 .PHONY: review
-review: aks test-cluster ## Specify review AKS environment
+review: test-cluster ## Specify review environment
 	# PULL_REQUEST_NUMBER is set by the GitHub action
 	$(if $(PULL_REQUEST_NUMBER), , $(error Missing environment variable "PULL_REQUEST_NUMBER"))
 	$(eval include global_config/review.sh)
@@ -19,7 +18,7 @@ review: aks test-cluster ## Specify review AKS environment
 	$(eval export TF_VAR_uploads_storage_account_name=$(AZURE_RESOURCE_PREFIX)$(SERVICE_SHORT)rv$(PULL_REQUEST_NUMBER)sa)
 
 .PHONY: staging
-staging: aks test-cluster
+staging: test-cluster
 	$(eval include global_config/staging.sh)
 
 .PHONY: sandbox
