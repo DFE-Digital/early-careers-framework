@@ -38,6 +38,7 @@ Rails/UnknownEnv:
     - production
     - review
     - sandbox
+    - migration
     - staging
     - test
     - performance
