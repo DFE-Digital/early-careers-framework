@@ -21,8 +21,8 @@ namespace :support do
     end
 
     namespace :mentors do
-      namespace :remove do
-        desc "Removes a participant from a school"
+      namespace :withdraw do
+        desc "Withdraws a participant from a school"
         task :run, %i[participant_profile_id school_urn] => :environment do |_task, args|
           participant_profile_id = args.participant_profile_id
           school_urn = args.school_urn
