@@ -28,8 +28,14 @@ class HealthcheckController < ApplicationController
 
 private
 
+  def database_supports_refreshing?
+    # As we can refresh the migration environment database via a GitHub action
+    # it can be empty and should still be considered healthy.
+    Rails.env.migration?
+  end
+
   def status
-    if database_connected? && database_populated?
+    if database_connected? && (database_supports_refreshing? || database_populated?)
       :ok
     else
       :internal_server_error
@@ -41,16 +47,14 @@ private
   end
 
   def database_connected?
-    ApplicationRecord.connection.select_value("SELECT 1") == 1
+    ApplicationRecord.connection
+    ApplicationRecord.connected?
   rescue StandardError
     false
   end
 
   def database_populated?
-    [
-      ApplicationRecord.connection.select_value("select count(*) from schools"),
-      ApplicationRecord.connection.select_value("select count(*) from schedules"),
-    ].all?(&:positive?)
+    database_connected? && School.any? && Finance::Schedule.any?
   rescue StandardError
     false
   end
