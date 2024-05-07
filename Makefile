@@ -13,26 +13,26 @@ aks:  ## Sets environment variables for aks deployment
 review: aks test-cluster ## Specify review AKS environment
 	# PULL_REQUEST_NUMBER is set by the GitHub action
 	$(if $(PULL_REQUEST_NUMBER), , $(error Missing environment variable "PULL_REQUEST_NUMBER"))
-	$(eval include global_config/review_aks.sh)
+	$(eval include global_config/review.sh)
 	$(eval backend_config=-backend-config="key=terraform-$(PULL_REQUEST_NUMBER).tfstate")
 	$(eval export TF_VAR_app_suffix=-$(PULL_REQUEST_NUMBER))
 	$(eval export TF_VAR_uploads_storage_account_name=$(AZURE_RESOURCE_PREFIX)$(SERVICE_SHORT)rv$(PULL_REQUEST_NUMBER)sa)
 
 .PHONY: staging
 staging: aks test-cluster
-	$(eval include global_config/staging_aks.sh)
+	$(eval include global_config/staging.sh)
 
 .PHONY: sandbox
 sandbox: production-cluster
-	$(eval include global_config/sandbox_aks.sh)
+	$(eval include global_config/sandbox.sh)
 
 .PHONY: migration
 migration: production-cluster
-	$(eval include global_config/migration_aks.sh)
+	$(eval include global_config/migration.sh)
 
 .PHONY: production
 production: production-cluster
-	$(eval include global_config/production_aks.sh)
+	$(eval include global_config/production.sh)
 	$(if $(or ${SKIP_CONFIRM}, ${CONFIRM_PRODUCTION}), , $(error Production can only run with CONFIRM_PRODUCTION))
 
 load-domain-config:

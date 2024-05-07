@@ -10,10 +10,10 @@ on:
       environment:
         description: "Deploy environment"
         required: true
-        default: review_aks
+        default: review
         type: environment
         options:
-          - review_aks
+          - review
   push:
     branches:
       - main

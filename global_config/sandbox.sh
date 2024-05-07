@@ -1,6 +1,6 @@
 AZURE_RESOURCE_PREFIX=s189p01
 AZURE_SUBSCRIPTION=s189-teacher-services-cloud-production
-CONFIG=sandbox_aks
+CONFIG=sandbox
 CONFIG_SHORT=sb
 CONFIG_LONG=sandbox
 DEPLOY_ENV=${CONFIG}
