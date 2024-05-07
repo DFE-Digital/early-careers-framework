@@ -56,11 +56,11 @@ RSpec.describe "Healthcheck" do
         before { allow(Rails).to receive(:env) { "migration".inquiry } }
 
         it { is_expected.to be_successful }
-        it { expect(response_body[:database]).to include({ connected: true, populated: false }) }
+        it { expect(response_body[:database]).to include({ connected: true, populated: true }) }
       end
     end
 
-    context "when notify has an incident" do
+    context "when notify API is down" do
       before { stub_request(:get, HealthcheckController::NOTIFY_STATUS_API).to_return(status: 500) }
       it { is_expected.to be_server_error }
       it { expect(response_body[:notify][:incident_status]).to eq("Status request failed") }
