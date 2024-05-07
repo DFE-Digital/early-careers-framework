@@ -2,14 +2,17 @@
 
 module Support
   class BaseService
+    include ActiveModel::Validations
+
   private
 
     def log_message(message)
       logger.info(message)
     end
 
-    def log_error(message)
+    def log_error(message, raise: false)
       logger.error(message)
+      raise(message.to_s) if raise
     end
 
     def logger
