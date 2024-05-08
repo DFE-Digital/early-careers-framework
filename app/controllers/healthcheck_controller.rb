@@ -35,7 +35,7 @@ private
   end
 
   def status
-    if database_connected? && (database_supports_refreshing? || database_populated?)
+    if database_connected? && database_populated?
       :ok
     else
       :internal_server_error
@@ -54,7 +54,7 @@ private
   end
 
   def database_populated?
-    database_connected? && School.any? && Finance::Schedule.any?
+    database_supports_refreshing? || (database_connected? && School.any? && Finance::Schedule.any?)
   rescue StandardError
     false
   end
