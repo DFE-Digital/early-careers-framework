@@ -39,7 +39,7 @@ runs:
     - name: Backup production DB
       shell: bash
       run: |
-        bin/konduit.sh cpd-ecf-${{ inputs.environment }}-web -- pg_dump -E utf8 --compress=1 --clean --if-exists --no-privileges --no-owner --verbose -f backup-${{ inputs.environment }}.sql.gz
+        bin/konduit.sh cpd-ecf-${{ inputs.environment }}-web -- pg_dump -E utf8 --exclude-table-data api_requests --exclude-table-data versions --compress=1 --clean --if-exists --no-privileges --no-owner --verbose -f backup-${{ inputs.environment }}.sql.gz
 
     - name: Restore to migration DB
       shell: bash
