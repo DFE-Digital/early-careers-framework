@@ -18,7 +18,7 @@ module Api
       # POST /api/v3/npq-applications/:id/accept
       #
       def accept
-        service = ::NPQ::Application::Accept.new({ npq_application: }.merge(accept_npq_application_params["attributes"] || {}))
+        service = ::NPQ::Application::Accept.new(npq_application:, funded_place:, schedule_identifier:)
 
         render_from_service(service, json_serializer_class)
       end
@@ -46,10 +46,14 @@ module Api
         Api::V3::NPQApplicationSerializer
       end
 
-      def accept_npq_application_params
+      def schedule_identifier
+        accept_permitted_params.dig("attributes", "schedule_identifier")
+      end
+
+      def accept_permitted_params
         parameters = params
           .fetch(:data)
-          .permit(:type, attributes: %i[schedule_identifier])
+          .permit(:type, attributes: %i[schedule_identifier funded_place])
 
         return parameters unless parameters["attributes"].empty?
 

@@ -114,7 +114,7 @@ en:
     cannot_change_from_accepted: Once accepted an application cannot change state
     cannot_change_from_rejected: Once rejected an application cannot change state
     not_eligible_for_funded_place: Not eligible for funded place (copy pending)
-    no_funding_cap_available: No funding cap (copy pending)
+    funded_place_required: Funded place is required (copy pending)
   errors:
     email: &email_error_messages
       blank: "Enter an email address"

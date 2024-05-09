@@ -16,7 +16,7 @@ module NPQ
       validate :other_accepted_applications_with_same_course?
       validate :validate_permitted_schedule_for_course
       validate :eligible_for_funded_place
-      validate :funding_cap_available
+      validate :validate_funded_place
 
       def call
         return self unless valid?
@@ -155,23 +155,34 @@ module NPQ
       def eligible_for_funded_place
         return unless FeatureFlag.active?("npq_capping")
         return if errors.any?
-        return if funded_place.nil?
 
-        unless npq_application.eligible_for_funding && funded_place
+        if funded_place && !npq_application.eligible_for_funding
           errors.add(:npq_application, I18n.t("npq_application.not_eligible_for_funded_place"))
         end
       end
 
-      def funding_cap_available
+      def validate_funded_place
         return unless FeatureFlag.active?("npq_capping")
         return if errors.any?
-        return if funded_place.nil?
+        return unless npq_contract.funding_cap.to_i.positive?
 
-        contract = npq_application.current_contract
+        if funded_place.nil?
+          errors.add(:npq_application, I18n.t("npq_application.funded_place_required"))
+        end
+      end
 
-        return if funded_place && contract.funding_cap.present? && contract.funding_cap.positive?
+      def npq_contract
+        @npq_contract ||=
+          NPQContract.where(
+            cohort_id: cohort.id,
+            npq_lead_provider_id: npq_application.npq_lead_provider_id,
+            course_identifier: npq_application.npq_course.identifier,
+            version: statement.contract_version,
+          ).first
+      end
 
-        errors.add(:npq_application, I18n.t("npq_application.no_funding_cap_available"))
+      def statement
+        npq_application.npq_lead_provider.next_output_fee_statement(cohort)
       end
     end
   end

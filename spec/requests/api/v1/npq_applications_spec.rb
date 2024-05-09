@@ -12,10 +12,6 @@ RSpec.describe "NPQ Applications API", type: :request do
   let(:npq_course) { create(:npq_course, identifier: "npq-senior-leadership") }
   let(:another_npq_course) { create(:npq_course, identifier: "npq-leading-teaching") }
 
-  before do
-    default_headers[:CONTENT_TYPE] = "application/json"
-  end
-
   describe "GET /api/v1/npq-applications" do
     let(:other_npq_lead_provider) { create(:npq_lead_provider) }
 
@@ -339,19 +335,41 @@ RSpec.describe "NPQ Applications API", type: :request do
         .to change { default_npq_application.reload.lead_provider_approval_status }.from("pending").to("accepted")
     end
 
+    it "responds with 200 and representation of the resource" do
+      post "/api/v1/npq-applications/#{default_npq_application.id}/accept"
+
+      expect(response).to be_successful
+
+      expect(parsed_response.dig("data", "attributes", "status")).to eql("accepted")
+    end
+
     describe "NPQ capping" do
       let(:params) { { data: { type: "npq-application-accept", attributes: { funded_place: true } } } }
 
       before do
-        default_npq_application.cohort.npq_contracts << create(:npq_contract, npq_course:, version: "1.0", funding_cap: 10)
+        statement = create(
+          :npq_statement,
+          :next_output_fee,
+          cpd_lead_provider:,
+          cohort: default_npq_application.cohort,
+        )
+        create(
+          :npq_contract,
+          npq_lead_provider:,
+          cohort: statement.cohort,
+          course_identifier: npq_course.identifier,
+          version: statement.contract_version,
+          funding_cap: 10,
+        )
+
         default_npq_application.update!(eligible_for_funding: true)
       end
 
       context "when feature flag `npq_capping` is disabled" do
         before { FeatureFlag.deactivate(:npq_capping) }
 
-        it "updates funded place attribute" do
-          post "/api/v1/npq-applications/#{default_npq_application.id}/accept", params: params.to_json
+        it "does not update funded place attribute" do
+          post("/api/v1/npq-applications/#{default_npq_application.id}/accept", params:)
 
           expect(default_npq_application.reload.funded_place).to be_nil
         end
@@ -361,25 +379,17 @@ RSpec.describe "NPQ Applications API", type: :request do
         before { FeatureFlag.activate(:npq_capping) }
 
         it "updates funded place attribute" do
-          post "/api/v1/npq-applications/#{default_npq_application.id}/accept", params: params.to_json
+          post("/api/v1/npq-applications/#{default_npq_application.id}/accept", params:)
 
           expect(default_npq_application.reload.funded_place).to be_truthy
         end
 
         it "returns 200" do
-          post "/api/v1/npq-applications/#{default_npq_application.id}/accept", params: params.to_json
+          post("/api/v1/npq-applications/#{default_npq_application.id}/accept", params:)
 
           expect(response).to be_successful
         end
       end
-    end
-
-    it "responds with 200 and representation of the resource" do
-      post "/api/v1/npq-applications/#{default_npq_application.id}/accept"
-
-      expect(response).to be_successful
-
-      expect(parsed_response.dig("data", "attributes", "status")).to eql("accepted")
     end
 
     context "when participant has applied for multiple NPQs" do

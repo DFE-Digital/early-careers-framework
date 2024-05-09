@@ -445,10 +445,29 @@ RSpec.describe NPQ::Application::Accept do
 
     describe "NPQ capping" do
       context "when feature flag `npq_capping` is enabled" do
+        let(:statement) do
+          create(
+            :npq_statement,
+            :next_output_fee,
+            cpd_lead_provider: npq_lead_provider.cpd_lead_provider,
+            cohort: npq_application.cohort,
+          )
+        end
+        let(:funding_cap) { 10 }
+        let!(:npq_contract) do
+          create(
+            :npq_contract,
+            npq_lead_provider:,
+            cohort: statement.cohort,
+            course_identifier: npq_course.identifier,
+            version: statement.contract_version,
+            funding_cap:,
+          )
+        end
+
         before do
           FeatureFlag.activate(:npq_capping)
           npq_application.update!(eligible_for_funding: true)
-          npq_application.cohort.npq_contracts << create(:npq_contract, npq_course:, version: "1.0", funding_cap: 10)
         end
 
         context "when funded_place is true" do
@@ -466,20 +485,6 @@ RSpec.describe NPQ::Application::Accept do
             service.call
             expect(service.errors.messages_for(:npq_application)).to include("Not eligible for funded place (copy pending)")
           end
-
-          it "does not set the value if the contract funded_cap is 0" do
-            npq_application.current_contract.update!(funding_cap: 0)
-
-            service.call
-            expect(service.errors.messages_for(:npq_application)).to include("No funding cap (copy pending)")
-          end
-
-          it "does not set the value if the contract funded_cap is nil" do
-            npq_application.current_contract.update!(funding_cap: nil)
-
-            service.call
-            expect(service.errors.messages_for(:npq_application)).to include("No funding cap (copy pending)")
-          end
         end
 
         context "when funded_place is false" do
@@ -489,6 +494,37 @@ RSpec.describe NPQ::Application::Accept do
             service.call
 
             expect(npq_application.reload.funded_place).to be_falsey
+          end
+        end
+
+        context "when funded_place is nil" do
+          let(:params) { { npq_application:, funded_place: nil } }
+
+          context "funding_cap is 0" do
+            let(:funding_cap) { 0 }
+
+            it "should not validate funded_place" do
+              service.call
+              expect(service.errors.messages_for(:npq_application)).to be_empty
+            end
+          end
+
+          context "funding_cap is nil" do
+            let(:funding_cap) { nil }
+
+            it "should not validate funded_place" do
+              service.call
+              expect(service.errors.messages_for(:npq_application)).to be_empty
+            end
+          end
+
+          context "funding_cap is 10" do
+            let(:funding_cap) { 10 }
+
+            it "returns funding_place is required error" do
+              service.call
+              expect(service.errors.messages_for(:npq_application)).to include("Funded place is required (copy pending)")
+            end
           end
         end
       end

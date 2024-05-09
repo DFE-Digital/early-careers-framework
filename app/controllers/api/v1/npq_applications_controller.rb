@@ -33,11 +33,7 @@ module Api
       end
 
       def accept
-        service = if FeatureFlag.active?(:npq_capping)
-                    ::NPQ::Application::Accept.new(npq_application:, funded_place:)
-                  else
-                    ::NPQ::Application::Accept.new(npq_application:)
-                  end
+        service = ::NPQ::Application::Accept.new(npq_application:, funded_place:)
 
         render_from_service(service, json_serializer_class)
       end
@@ -74,11 +70,13 @@ module Api
       end
 
       def funded_place
-        permitted_params.dig("attributes", "funded_place")
+        if FeatureFlag.active?(:npq_capping)
+          accept_permitted_params.dig("attributes", "funded_place")
+        end
       end
 
-      def permitted_params
-        params.require(:data).permit(:type, attributes: %i[schedule_identifier funded_place])
+      def accept_permitted_params
+        params.require(:data).permit(:type, attributes: %i[funded_place])
       rescue ActionController::ParameterMissing => e
         if e.param == :data
           raise ActionController::BadRequest, I18n.t(:invalid_data_structure)

@@ -487,28 +487,6 @@ RSpec.describe NPQApplication, type: :model do
     end
   end
 
-  describe "#current_contract" do
-    let(:npq_application) { create(:npq_application) }
-
-    context "when there are multiple contracts" do
-      it "returns the contract with the highest version number" do
-        npq_application.cohort.npq_contracts.first.update!(version: "1.0.1")
-        npq_application.cohort.npq_contracts.second.update!(version: "1.9.1")
-        npq_application.cohort.npq_contracts.third.update!(version: "1.5.1")
-
-        expect(npq_application.current_contract.version).to eq("1.9.1")
-      end
-    end
-
-    context "when there are no contracts" do
-      it "returns nil" do
-        npq_application.cohort.npq_contracts.destroy_all
-
-        expect(npq_application.current_contract).to be_nil
-      end
-    end
-  end
-
   describe "Change logs for NPQ applications" do
     before do
       PaperTrail.config.enabled = true
