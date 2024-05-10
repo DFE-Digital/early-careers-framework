@@ -131,7 +131,7 @@ GEM
       erubi (~> 1.4)
       parser (>= 2.4)
       smart_properties
-    bigdecimal (3.1.7)
+    bigdecimal (3.1.8)
     bindex (0.8.1)
     bootsnap (1.18.3)
       msgpack (~> 1.2)
@@ -281,7 +281,7 @@ GEM
       mutex_m
       nkf
       rack (>= 2.0, < 3.1)
-    i18n (1.14.4)
+    i18n (1.14.5)
       concurrent-ruby (~> 1.0)
     ice_nine (0.11.2)
     inflection (1.0.0)
@@ -401,7 +401,7 @@ GEM
     public_suffix (5.0.5)
     puma (5.6.8)
       nio4r (~> 2.0)
-    pundit (2.3.1)
+    pundit (2.3.2)
       activesupport (>= 3.0.0)
     pundit-matchers (1.9.0)
       rspec-rails (>= 3.0.0)
