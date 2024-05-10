@@ -36,7 +36,7 @@ class AppropriateBodySelectionForm
   def body_appointed_choices
     [
       OpenStruct.new(id: "yes", name: "Yes"),
-      OpenStruct.new(id: "no", name: "No"),
+      OpenStruct.new(id: "no", name: "No, I will appoint an appropriate body later"),
     ]
   end
 
