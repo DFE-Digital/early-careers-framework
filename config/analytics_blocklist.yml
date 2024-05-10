@@ -142,6 +142,14 @@
   - data
   - created_at
   - updated_at
+  :validation_errors:
+  - id
+  - form_object
+  - user_id
+  - request_path
+  - details
+  - created_at
+  - updated_at
   :sync_dqt_induction_start_date_errors:
   - id
   - participant_profile_id
@@ -199,6 +207,20 @@
   - delivery_partner_id
   - cohort_id
   - uploaded_urns
+  :participant_profile_start_date_inconsistencies:
+  - id
+  - participant_profile_id
+  - dqt_value
+  - participant_value
+  - created_at
+  - updated_at
+  :participant_profile_completion_date_inconsistencies:
+  - id
+  - participant_profile_id
+  - dqt_value
+  - participant_value
+  - created_at
+  - updated_at
   :participant_identities:
   - id
   - user_id
@@ -308,6 +330,14 @@
   - data
   - created_at
   - updated_at
+  :email_schedules:
+  - id
+  - mailer_name
+  - scheduled_at
+  - status
+  - created_at
+  - updated_at
+  - emails_sent_count
   :ecf_participant_validation_data:
   - id
   - participant_profile_id
@@ -426,14 +456,6 @@
   - get_an_identity_id
   - archived_email
   - archived_at
-  :email_schedules:
-  - id
-  - mailer_name
-  - scheduled_at
-  - status
-  - emails_sent_count
-  - created_at
-  - updated_at
   :analytics_school_cohorts:
   - id
   - school_cohort_id
@@ -492,11 +514,3 @@
   - participant_type
   - induction_record_created_at
   - partnership_id
-  :validation_errors:
-  - id
-  - form_object
-  - user_id
-  - request_path
-  - details
-  - created_at
-  - updated_at

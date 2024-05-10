@@ -33,13 +33,28 @@ RSpec.describe Participants::CheckAndSetCompletionDate do
       allow(DQT::GetInductionRecord).to receive(:call).with(trn:).and_return(dqt_induction_record)
     end
 
-    it "sets the induction completion date" do
-      service_call
-      expect(participant_profile.induction_completion_date).to eq completion_date
+    context "when the participant already have a completion date" do
+      let(:induction_completion_date) { 2.months.ago.to_date }
+
+      before do
+        participant_profile.update!(induction_completion_date:)
+        service_call
+      end
+
+      it "do not re-complete the participant" do
+        expect(participant_profile.induction_completion_date).to eq induction_completion_date
+      end
     end
 
-    context "when the participant does not have a completion date" do
-      let(:dqt_induction_record) { nil }
+    context "when DQT provides a completion date" do
+      it "complete the participant with the latest induction period" do
+        service_call
+        expect(participant_profile.induction_completion_date).to eq(start_date + 2.weeks)
+      end
+    end
+
+    context "when DQT does not provide a completion date" do
+      let(:completion_date) { nil }
 
       it "does not set a completion date" do
         service_call
@@ -75,6 +90,33 @@ RSpec.describe Participants::CheckAndSetCompletionDate do
             service_call
             service_call
           }.to change { ParticipantProfileStartDateInconsistency.count }.from(0).to(1)
+        end
+      end
+    end
+
+    context "when completion dates are matching" do
+      it "does not record inconsistencies" do
+        expect { service_call }.not_to change { ParticipantProfileCompletionDateInconsistency.count }.from(0)
+      end
+    end
+
+    context "when completion dates are not matching" do
+      let(:induction_completion_date) { 2.months.ago.to_date }
+
+      before do
+        participant_profile.update!(induction_completion_date:)
+      end
+
+      it "records inconsistency" do
+        expect { service_call }.to change { ParticipantProfileCompletionDateInconsistency.count }.from(0).to(1)
+      end
+
+      context "when same inconsistency is processed twice" do
+        it "records only one inconsistency" do
+          expect {
+            service_call
+            service_call
+          }.to change { ParticipantProfileCompletionDateInconsistency.count }.from(0).to(1)
         end
       end
     end
