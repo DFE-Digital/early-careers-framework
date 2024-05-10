@@ -34,6 +34,6 @@ To bring the application back up: `make staging disable-maintenance APP_NAME=ecf
 
 Review apps need their PR number specifying, for PR 3766 see below.
 
-Run the make command: `make review_aks enable-maintenance APP_NAME=ecf-review-pr-3766 PULL_REQUEST_NUMBER=3766`
+Run the make command: `make review enable-maintenance APP_NAME=ecf-review-pr-3766 PULL_REQUEST_NUMBER=3766`
 
-To bring the application back up: `make review_aks disable-maintenance APP_NAME=ecf-review-pr-3766 PULL_REQUEST_NUMBER=3766`
+To bring the application back up: `make review disable-maintenance APP_NAME=ecf-review-pr-3766 PULL_REQUEST_NUMBER=3766`

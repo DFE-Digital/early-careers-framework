@@ -2,37 +2,36 @@ ifndef VERBOSE
 .SILENT:
 endif
 
+REGION=UK South
 SERVICE_SHORT=cpdecf
-
-aks:  ## Sets environment variables for aks deployment
-	$(eval PLATFORM=aks)
-	$(eval REGION=UK South)
-	$(eval KEY_VAULT_PURGE_PROTECTION=false)
+KEY_VAULT_PURGE_PROTECTION=false
+ARM_TEMPLATE_TAG=1.1.6
+TERRAFILE_VERSION=0.8
 
 .PHONY: review
-review: aks test-cluster ## Specify review AKS environment
+review: test-cluster ## Specify review environment
 	# PULL_REQUEST_NUMBER is set by the GitHub action
 	$(if $(PULL_REQUEST_NUMBER), , $(error Missing environment variable "PULL_REQUEST_NUMBER"))
-	$(eval include global_config/review_aks.sh)
+	$(eval include global_config/review.sh)
 	$(eval backend_config=-backend-config="key=terraform-$(PULL_REQUEST_NUMBER).tfstate")
 	$(eval export TF_VAR_app_suffix=-$(PULL_REQUEST_NUMBER))
 	$(eval export TF_VAR_uploads_storage_account_name=$(AZURE_RESOURCE_PREFIX)$(SERVICE_SHORT)rv$(PULL_REQUEST_NUMBER)sa)
 
 .PHONY: staging
-staging: aks test-cluster
-	$(eval include global_config/staging_aks.sh)
+staging: test-cluster
+	$(eval include global_config/staging.sh)
 
 .PHONY: sandbox
 sandbox: production-cluster
-	$(eval include global_config/sandbox_aks.sh)
+	$(eval include global_config/sandbox.sh)
 
 .PHONY: migration
 migration: production-cluster
-	$(eval include global_config/migration_aks.sh)
+	$(eval include global_config/migration.sh)
 
 .PHONY: production
 production: production-cluster
-	$(eval include global_config/production_aks.sh)
+	$(eval include global_config/production.sh)
 	$(if $(or ${SKIP_CONFIRM}, ${CONFIRM_PRODUCTION}), , $(error Production can only run with CONFIRM_PRODUCTION))
 
 load-domain-config:
@@ -115,26 +114,26 @@ terraform-init:
 	$(eval export TF_VAR_azure_resource_prefix=$(AZURE_RESOURCE_PREFIX))
 
 	[[ "${SP_AUTH}" != "true" ]] && az account show && az account set -s $(AZURE_SUBSCRIPTION) || true
-	terraform -chdir=terraform/aks init -backend-config workspace_variables/${CONFIG}_backend.tfvars $(backend_config) -upgrade -reconfigure
+	terraform -chdir=terraform/application init -backend-config workspace_variables/${CONFIG}_backend.tfvars $(backend_config) -upgrade -reconfigure
 
 .PHONY: terraform-apply
 terraform-apply: terraform-init
-	terraform -chdir=terraform/aks apply -var-file workspace_variables/${DEPLOY_ENV}.tfvars.json ${AUTO_APPROVE}
+	terraform -chdir=terraform/application apply -var-file workspace_variables/${DEPLOY_ENV}.tfvars.json ${AUTO_APPROVE}
 
 .PHONY: terraform-plan
 terraform-plan: terraform-init
-	terraform -chdir=terraform/aks plan -var-file workspace_variables/${DEPLOY_ENV}.tfvars.json
+	terraform -chdir=terraform/application plan -var-file workspace_variables/${DEPLOY_ENV}.tfvars.json
 
 .PHONY: terraform-destroy
 terraform-destroy: terraform-init
-	terraform -chdir=terraform/aks destroy -var-file workspace_variables/${DEPLOY_ENV}.tfvars.json ${AUTO_APPROVE}
+	terraform -chdir=terraform/application destroy -var-file workspace_variables/${DEPLOY_ENV}.tfvars.json ${AUTO_APPROVE}
 
 
 ## DOCKER_IMAGE=fake-image make review terraform-unlock PULL_REQUEST_NUMBER=4169 LOCK_ID=123456
 ## DOCKER_IMAGE=fake-image make staging terraform-unlock LOCK_ID=123456
 .PHONY: terraform-unlock
 terraform-unlock: terraform-init
-	terraform -chdir=terraform/aks force-unlock ${LOCK_ID}
+	terraform -chdir=terraform/application force-unlock ${LOCK_ID}
 
 test-cluster:
 	$(eval CLUSTER_RESOURCE_GROUP_NAME=s189t01-tsc-ts-rg)
