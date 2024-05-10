@@ -483,7 +483,7 @@ RSpec.describe NPQ::Application::Accept do
             npq_application.update!(eligible_for_funding: false)
 
             service.call
-            expect(service.errors.messages_for(:npq_application)).to include("Not eligible for funded place (copy pending)")
+            expect(service.errors.messages_for(:npq_application)).to include("The participant is not eligible for funding, so '#/funded_place' cannot be set to true.")
           end
         end
 
@@ -523,7 +523,7 @@ RSpec.describe NPQ::Application::Accept do
 
             it "returns funding_place is required error" do
               service.call
-              expect(service.errors.messages_for(:npq_application)).to include("Funded place is required (copy pending)")
+              expect(service.errors.messages_for(:npq_application)).to include("Set '#/funded_place' to true or false.")
             end
           end
         end
