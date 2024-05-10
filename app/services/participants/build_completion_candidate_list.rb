@@ -27,7 +27,6 @@ module Participants
           JOIN teacher_profiles tp ON tp.id = pp.teacher_profile_id
           WHERE pp.type = 'ParticipantProfile::ECT'
           AND pp.induction_start_date IS NOT NULL
-          AND pp.induction_completion_date IS NULL
           AND tp.trn IS NOT NULL;
         SQL
       )
