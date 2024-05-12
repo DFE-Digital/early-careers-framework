@@ -26,6 +26,7 @@ class ChangeSchedule
   validate :validate_cannot_change_cohort_ecf
   validate :validate_cannot_change_cohort_npq
   validate :validate_school_cohort_exists
+  validate :validate_application_funded_place
 
   def call
     return if invalid?
@@ -174,7 +175,6 @@ private
 
     update_schedule!
     update_npq_application_cohort!
-    update_funded_place!
   end
 
   def relevant_induction_record
@@ -256,6 +256,23 @@ private
     return if school_partnership.present?
 
     errors.add(:cohort, I18n.t(:missing_school_cohort_default_partnership))
+  end
+
+  def validate_application_funded_place
+    return unless FeatureFlag.active?(:npq_capping)
+    return unless npq_contract.cohort != target_npq_contract.cohort
+
+    if npq_contract_funded? && target_npq_contract_not_funded?
+      errors.add(:cohort, I18n.t(:cannot_change_cohort))
+    end
+  end
+
+  def target_npq_contract_not_funded?
+    target_npq_contract.funding_cap.to_i.zero?
+  end
+
+  def npq_contract_funded?
+    npq_contract.funding_cap.to_i.positive?
   end
 
   def school_partnership

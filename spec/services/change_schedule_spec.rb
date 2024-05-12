@@ -587,13 +587,18 @@ RSpec.describe ChangeSchedule do
           context "when changing to another cohort" do
             let(:new_cohort) { Cohort.previous }
 
+            before do
+              create(:npq_statement, :next_output_fee, cpd_lead_provider: npq_lead_provider.cpd_lead_provider, cohort: participant_profile.npq_application.cohort)
+              create(:npq_statement, :next_output_fee, cpd_lead_provider: npq_lead_provider.cpd_lead_provider, cohort: new_cohort)
+            end
+
             describe ".call" do
               it_behaves_like "changing the schedule of a participant"
             end
 
             it "updates the cohort on the npq application" do
               service.call
-              expect(participant_profile.npq_application.cohort).to eq(new_cohort)
+              expect(participant_profile.npq_application.reload.cohort).to eq(new_cohort)
             end
 
             context "when moving from a previous cohort" do
@@ -616,7 +621,7 @@ RSpec.describe ChangeSchedule do
 
               it "updates the cohort on the npq application" do
                 service.call
-                expect(participant_profile.npq_application.cohort).to eq(new_cohort)
+                expect(participant_profile.npq_application.reload.cohort).to eq(new_cohort)
               end
 
               context "when moving from funding cohort to funding cohort" do
@@ -673,6 +678,21 @@ RSpec.describe ChangeSchedule do
 
                     expect(participant_profile.reload.npq_application.reload.funded_place).to be_falsey
                   end
+                end
+              end
+
+              context "when moving from funding cohort to non funding cohort" do
+                before do
+                  FeatureFlag.activate(:npq_capping)
+
+                  npq_contract.update!(funding_cap: 10)
+                  npq_contract_new_cohort.update!(funding_cap: 0)
+                end
+
+                it "does not change the application to the new cohort" do
+                  service.call
+
+                  expect(service.errors.messages_for(:cohort)).to include("The property '#/cohort' cannot be changed")
                 end
               end
             end
