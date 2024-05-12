@@ -32,6 +32,7 @@ module NPQ
       end
 
       def eligible_for_funding
+        return unless funded_place
         return if npq_application.eligible_for_funding?
 
         errors.add(:npq_application, I18n.t("npq_application.cannot_change_funded_status_non_eligible"))
