@@ -13,16 +13,12 @@ module NPQ
       validate :accepted_application
       validate :eligible_for_funding
       validate :eligible_for_removing_funding_place
-      # validate :funding_cap_available
 
       def call
+        return npq_application unless FeatureFlag.active?("npq_capping")
         return self unless valid?
 
-        ApplicationRecord.transaction do
-          if FeatureFlag.active?("npq_capping")
-            npq_application.update!(funded_place:)
-          end
-        end
+        npq_application.update!(funded_place:)
 
         npq_application
       end

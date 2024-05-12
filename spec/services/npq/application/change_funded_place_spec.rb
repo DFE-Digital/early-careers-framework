@@ -72,6 +72,7 @@ RSpec.describe NPQ::Application::ChangeFundedPlace do
     end
 
     describe "validations" do
+      before { FeatureFlag.activate("npq_capping") }
       let(:funded_place) { true }
 
       it "is invalid if the application has not been accepted" do
