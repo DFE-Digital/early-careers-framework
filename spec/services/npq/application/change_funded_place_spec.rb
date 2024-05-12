@@ -7,6 +7,28 @@ RSpec.describe NPQ::Application::ChangeFundedPlace do
 
   describe "#call" do
     let(:npq_application) { create(:npq_application, :accepted, eligible_for_funding: true) }
+    let(:npq_lead_provider) { create(:npq_lead_provider) }
+    let(:npq_course) { create(:npq_leadership_course, identifier: "npq-senior-leadership") }
+    let(:funding_cap) { 10 }
+    let(:statement) do
+      create(
+        :npq_statement,
+        :next_output_fee,
+        cpd_lead_provider: npq_lead_provider.cpd_lead_provider,
+        cohort: npq_application.cohort,
+      )
+    end
+    let!(:npq_contract) do
+      create(
+        :npq_contract,
+        npq_lead_provider:,
+        cohort: statement.cohort,
+        course_identifier: npq_course.identifier,
+        version: statement.contract_version,
+        funding_cap:,
+      )
+    end
+
     let(:params) { { npq_application: } }
 
     context "when feature flag: `npq_capping` is active" do

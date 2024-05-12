@@ -422,6 +422,24 @@ RSpec.describe "NPQ Applications API", type: :request do
   describe "POST /api/v2/npq-applications/:id/change-funded-place" do
     let(:user) { default_npq_application.user }
     let(:accepted_application) { create(:npq_application, :accepted, npq_lead_provider:, npq_course:, eligible_for_funding: true) }
+    let(:statement) do
+      create(
+        :npq_statement,
+        :next_output_fee,
+        cpd_lead_provider: npq_lead_provider.cpd_lead_provider,
+        cohort: accepted_application.cohort,
+      )
+    end
+    let!(:npq_contract) do
+      create(
+        :npq_contract,
+        npq_lead_provider:,
+        cohort: statement.cohort,
+        course_identifier: npq_course.identifier,
+        version: statement.contract_version,
+        funding_cap: 10,
+      )
+    end
     let(:params) { { data: { type: "npq-application-change-funded-status", attributes: { funded_place: true } } } }
 
     before do
