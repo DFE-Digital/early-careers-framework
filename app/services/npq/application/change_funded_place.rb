@@ -38,7 +38,7 @@ module NPQ
       end
 
       def eligible_for_removing_funding_place
-        return if npq_application.funded_place?
+        return if funded_place
 
         declarations_states = npq_application
                                 .profile
