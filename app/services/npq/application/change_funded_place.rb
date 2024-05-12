@@ -40,14 +40,14 @@ module NPQ
       def eligible_for_removing_funding_place
         return if funded_place
 
-        declarations_states = npq_application
-                                .profile
-                                .participant_declarations
-                                .map(&:declaration_states).flatten
+        errors.add(:npq_application, I18n.t("npq_application.cannot_change_funded_place")) if applicable_declarations.any?
+      end
 
-        errors.add(:npq_application, I18n.t("npq_application.cannot_remove_funding_voided_declaration")) if declarations_states.any?(&:voided?)
-        errors.add(:npq_application, I18n.t("npq_application.cannot_remove_funding_awaiting_clawback_declaration")) if declarations_states.any?(&:awaiting_clawback!)
-        errors.add(:npq_application, I18n.t("npq_application.cannot_remove_funding_clawed_back_declaration")) if declarations_states.any?(&:clawed_back!)
+      def applicable_declarations
+        npq_application
+          .profile
+          .participant_declarations
+          .where(state: %w[voided awaiting_clawback clawed_back])
       end
     end
   end

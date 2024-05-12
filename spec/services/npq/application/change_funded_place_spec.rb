@@ -99,26 +99,26 @@ RSpec.describe NPQ::Application::ChangeFundedPlace do
         end
 
         it "is not eligible if the application has voided declaration" do
-          declaration.declaration_states.first.voided!
+          declaration.voided!
           service.call
 
-          expect(service.errors.messages_for(:npq_application)).to include("Cannot remove funding as there is a voided declaration (pending)")
+          expect(service.errors.messages_for(:npq_application)).to include("The property '#/funded_place' cannot be changed")
         end
 
         it "is not eligible if the application has awaiting claweback declaration" do
-          declaration.declaration_states.first.awaiting_clawback!
+          declaration.awaiting_clawback!
 
           service.call
 
-          expect(service.errors.messages_for(:npq_application)).to include("Cannot remove funding as there is an awaiting claw back declaration (pending)")
+          expect(service.errors.messages_for(:npq_application)).to include("The property '#/funded_place' cannot be changed")
         end
 
         it "is not eligible if the application has awaiting clawed back declaration" do
-          declaration.declaration_states.first.clawed_back!
+          declaration.clawed_back!
 
           service.call
 
-          expect(service.errors.messages_for(:npq_application)).to include("Cannot remove funding as there is a clawed back declaration (pending)")
+          expect(service.errors.messages_for(:npq_application)).to include("The property '#/funded_place' cannot be changed")
         end
       end
     end
