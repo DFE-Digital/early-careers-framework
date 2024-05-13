@@ -10,42 +10,36 @@
     <%= form_for @appropriate_body_form, url: { action: :update_appropriate_body }, method: :put do |f| %>
       <%= f.govuk_error_summary %>
 
-      <div class="govuk-form-group">
-        <h1 class="govuk-label-wrapper">
-          <span class="govuk-caption-l">FIX: Cohortless Empty School FIP</span>
-          <label class="govuk-label govuk-label--l" for="whichTSH">
-            Which type of appropriate body have you appointed?
+      <div class="govuk-radios" data-module="govuk-radios">
+
+        <div class="govuk-radios__item">
+          <input class="govuk-radios__input" id="typeOfBody" name="typeOfBody" type="radio" value="Teaching school hub (TSH)" aria-controls="conditional-[tshOrNot]" aria-expanded="true">
+          <label class="govuk-label govuk-radios__label" for="typeOfBody">
+            Teaching school hub
           </label>
-        </h1>
-
-        <div class="govuk-radios" data-module="govuk-radios">
-          <div class="govuk-radios__item">
-            <input class="govuk-radios__input" id="typeOfBody" name="typeOfBody" type="radio" value="Teaching school hub (TSH)" aria-controls="conditional-[tshOrNot]" aria-expanded="true">
-            <label class="govuk-label govuk-radios__label" for="typeOfBody">
-              Teaching school hub
-            </label>
-          </div>
-
-          <div class="govuk-radios__conditional" id="conditional-[tshOrNot]">
-            <div class="govuk-form-group">
-              <%= f.govuk_collection_select(:body_id,
-                                            appropriate_bodies,
-                                            :id,
-                                            :name,
-                                            label: { text: "Which teaching school hub have you appointed?", size: 's' },
-                                            options: { include_blank: true },
-                                            class: "autocomplete") %>
-            </div>
-          </div>
-
-          <div class="govuk-radios__item">
-            <input class="govuk-radios__input" id="typeOfBody-2" name="typeOfBody" type="radio" value="Educational Success Partners (ESP)">
-            <label class="govuk-label govuk-radios__label" for="typeOfBody-2">
-              FIX: Educational Success Partners (ESP)
-            </label>
-          </div>
-
         </div>
+
+        <div class="govuk-radios__conditional" id="conditional-[tshOrNot]">
+          <div class="govuk-form-group">
+            <label class="govuk-label govuk-label--s" for="whichTSH">
+              Which teaching school hub have you appointed?
+            </label>
+            <%= f.govuk_collection_select(:body_id,
+                                          appropriate_bodies,
+                                          :id,
+                                          :name,
+                                          options: { include_blank: true },
+                                          class: "autocomplete") %>
+          </div>
+        </div>
+
+        <div class="govuk-radios__item">
+          <input class="govuk-radios__input" id="typeOfBody-2" name="typeOfBody" type="radio" value="Educational Success Partners (ESP)">
+          <label class="govuk-label govuk-radios__label" for="typeOfBody-2">
+            FIX: Educational Success Partners (ESP)
+          </label>
+        </div>
+
       </div>
 
       <%# if @appropriate_body_form.body_type == "national" %>
