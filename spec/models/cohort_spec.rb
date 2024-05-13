@@ -5,6 +5,15 @@ require "rails_helper"
 RSpec.describe Cohort, type: :model do
   let!(:cohort_2024) { FactoryBot.create :seed_cohort, start_year: 2024 }
 
+  describe "associations" do
+    it { is_expected.to have_many(:call_off_contracts) }
+    it { is_expected.to have_many(:npq_contracts) }
+    it { is_expected.to have_many(:partnerships) }
+    it { is_expected.to have_many(:schedules).class_name("Finance::Schedule") }
+    it { is_expected.to have_many(:statements) }
+    it { is_expected.to have_many(:participant_declarations) }
+  end
+
   describe "scopes" do
     describe ".between_years" do
       it "generates a BETWEEN clause with the given years" do
