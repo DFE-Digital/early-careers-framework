@@ -232,6 +232,7 @@ RSpec.shared_examples "creates a participant declaration" do
     expect(declaration.course_identifier).to eq(course_identifier)
     expect(declaration.evidence_held).to eq("other")
     expect(declaration.cpd_lead_provider).to eq(cpd_lead_provider)
+    expect(declaration.cohort).to eq(schedule.cohort)
   end
 end
 

@@ -130,7 +130,9 @@ private
   end
 
   def participant_declaration
-    @participant_declaration ||= find_participant_declaration.tap { |pd| pd.update!(uplift_flags) }
+    @participant_declaration ||= find_participant_declaration.tap do |pd|
+      pd.update!(uplift_flags.merge(cohort:))
+    end
   end
 
   def find_participant_declaration
