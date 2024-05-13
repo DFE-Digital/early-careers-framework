@@ -9,7 +9,8 @@ class Cohort < ApplicationRecord
   has_many :npq_contracts
   has_many :partnerships
   has_many :schedules, class_name: "Finance::Schedule"
-  has_many :statements
+  has_many :statements, class_name: "Finance::Statement"
+  has_many :participant_declarations
 
   scope :between_years, ->(lower, upper) { where(start_year: lower..upper) }
   scope :between_2021_and, ->(upper) { between_years(2021, upper) }

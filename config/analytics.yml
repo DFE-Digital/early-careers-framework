@@ -91,6 +91,7 @@
   - pupil_premium_uplift
   - delivery_partner_id
   - mentor_user_id
+  - cohort_id
   :npq_applications:
   - id
   - npq_lead_provider_id
