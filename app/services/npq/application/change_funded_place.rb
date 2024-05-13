@@ -48,7 +48,7 @@ module NPQ
         npq_application
           .profile
           .participant_declarations
-          .where(state: %w[voided awaiting_clawback clawed_back])
+          .where(state: %w[submitted eligible payable paid])
       end
     end
   end
