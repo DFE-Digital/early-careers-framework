@@ -1481,15 +1481,18 @@ module ManageTrainingSteps
 
   def valid_dqt_response(participant_data)
     DQTRecordPresenter.new({
-      "name" => participant_data[:full_name],
-                             "trn" => participant_data[:trn],
-                             "state_name" => "Active",
-                             "dob" => participant_data[:date_of_birth],
-                             "qualified_teacher_status" => { "qts_date" => 1.year.ago },
-                             "induction" => {
-                               "periods" => [{ "startDate" => 1.month.ago }],
-                               "status" => "Active",
-                             },
+      "firstName" => participant_data[:full_name].split(" ").first,
+      "lastName" => participant_data[:full_name].split(" ").last,
+      "trn" => participant_data[:trn],
+      "dateOfBirth" => participant_data[:date_of_birth],
+      "qts" => { "awarded" => 1.year.ago },
+      "induction" => {
+        "startDate" => 1.month.ago,
+        "status" => "Active",
+        "periods" => [
+          { "startDate" => 1.month.ago, "endDate" => nil },
+        ],
+      },
     })
   end
 

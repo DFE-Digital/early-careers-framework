@@ -2,6 +2,8 @@
 
 class DQTRecordCheck < ::BaseService
   TITLES = %w[mr mrs miss ms dr prof rev].freeze
+  NUMBER_OF_MATCHES_REQUIRED = 3
+  UNMATCHED_TRN = "0000001"
 
   CheckResult = Struct.new(
     :dqt_record,
@@ -34,45 +36,42 @@ private
     @check_first_name_only = check_first_name_only
   end
 
-  def dqt_record(trn, nino)
-    full_dqt_client.get_record(trn:, birthdate: date_of_birth, nino:)
-  end
-
   def full_dqt_client
-    @full_dqt_client ||= FullDQT::V1::Client.new
+    @full_dqt_client ||= FullDQT::V3::Client.new
   end
 
-  def check_record
+  def fetch_dqt_record(trn:, date_of_birth:, nino: nil)
+    DQT::GetTeacherRecord.call(trn:, date_of_birth:, nino:)
+  end
+
+  def check_record(with_nino: false)
     return check_failure(:trn_and_nino_blank) if trn.blank? && nino.blank?
 
-    @trn = "0000001" if trn.blank?
-
     padded_trn = TeacherReferenceNumber.new(trn).formatted_trn
-    dqt_record = DQTRecordPresenter.new(dqt_record(padded_trn, nino))
+    fetch_args = with_nino ? { trn: UNMATCHED_TRN, date_of_birth:, nino: } : { trn: padded_trn, date_of_birth: }
+    dqt_record = DQTRecordPresenter.new(fetch_dqt_record(**fetch_args))
 
     return check_failure(:no_match_found) if dqt_record.blank?
     return check_failure(:found_but_not_active) unless dqt_record.active?
 
     trn_matches = dqt_record.trn == padded_trn
-    name_matches = name_matches?(dqt_name: dqt_record.name)
+    name_matches = name_matches?(dqt_name: dqt_record.full_name)
     dob_matches = dqt_record.dob == date_of_birth
     nino_matches = nino.present? && nino.downcase == dqt_record.ni_number&.downcase
 
     matches = [trn_matches, name_matches, dob_matches, nino_matches].count(true)
 
-    if matches >= 3
+    if matches >= NUMBER_OF_MATCHES_REQUIRED
       CheckResult.new(dqt_record, trn_matches, name_matches, dob_matches, nino_matches, matches)
-    elsif matches < 3 && (trn_matches && trn != "1")
-      if matches == 2 && !name_matches && check_first_name_only?
+    elsif NUMBER_OF_MATCHES_REQUIRED - matches == 1
+      if !name_matches && check_first_name_only?
         CheckResult.new(dqt_record, trn_matches, name_matches, dob_matches, nino_matches, matches)
+      elsif !with_nino && !trn_matches
+        check_record(with_nino: true)
       else
-        # If a participant mistypes their TRN and enters someone else's, we should search by NINO instead
-        # The API first matches by (mandatory) TRN, then by NINO if it finds no results. This works around that.
-        @trn = "0000001"
-        check_record
+        check_failure(:no_match_found)
       end
     else
-      # we found a record but not enough matched
       check_failure(:no_match_found)
     end
   end
