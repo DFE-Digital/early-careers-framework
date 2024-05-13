@@ -516,9 +516,27 @@ RSpec.describe "NPQ Applications API", type: :request do
     end
   end
 
-  describe "POST /api/v3/npq-applications/:id/change-funded-place" do
+  describe "PUT /api/v3/npq-applications/:id/change-funded-place" do
     let(:user) { default_npq_application.user }
     let(:accepted_application) { create(:npq_application, :accepted, npq_lead_provider:, npq_course:, eligible_for_funding: true) }
+    let(:statement) do
+      create(
+        :npq_statement,
+        :next_output_fee,
+        cpd_lead_provider: npq_lead_provider.cpd_lead_provider,
+        cohort: accepted_application.cohort,
+      )
+    end
+    let!(:npq_contract) do
+      create(
+        :npq_contract,
+        npq_lead_provider:,
+        cohort: statement.cohort,
+        course_identifier: npq_course.identifier,
+        version: statement.contract_version,
+        funding_cap: 10,
+      )
+    end
     let(:params) { { data: { type: "npq-application-change-funded-status", attributes: { funded_place: true } } } }
 
     before do
@@ -530,7 +548,7 @@ RSpec.describe "NPQ Applications API", type: :request do
       before { FeatureFlag.deactivate(:npq_capping) }
 
       it "returns 403" do
-        post "/api/v1/npq-applications/#{accepted_application.id}/change-funded-place", params: params.to_json
+        put "/api/v1/npq-applications/#{accepted_application.id}/change-funded-place", params: params.to_json
 
         expect(response).to have_http_status(:forbidden)
       end
@@ -541,7 +559,7 @@ RSpec.describe "NPQ Applications API", type: :request do
 
       before do
         accepted_application.update!(funded_place: false)
-        post "/api/v1/npq-applications/#{accepted_application.id}/change-funded-place", params: params.to_json
+        put "/api/v1/npq-applications/#{accepted_application.id}/change-funded-place", params: params.to_json
       end
 
       it "returns 200" do
