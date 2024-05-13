@@ -13,16 +13,18 @@ require "net/http"
 #
 module FullDQT
   module V3
-    class Client < V1::Client
-      def get_record(trn:, sections: %w[induction])
-        call_api(uri: endpoint_uri(trn:, sections:))
+    class Client < FullDQT::Client
+      def get_record(trn:, date_of_birth: nil, sections: %w[induction])
+        call_api(uri: endpoint_uri(trn:, date_of_birth:, sections:))
       end
 
     private
 
-      def endpoint_uri(trn:, sections:)
+      def endpoint_uri(trn:, date_of_birth:, sections:)
         path = "/v3/teachers/#{trn}"
-        path += "?include=#{sections.join(',')}" unless sections.empty?
+        params = { date_of_birth: }.compact
+        params["include"] = sections.join(",") unless sections.empty?
+        path += "?#{params.to_query}" unless params.empty?
 
         URI("#{api_url}#{path}")
       end
