@@ -23,11 +23,16 @@ $primaryNavHeight: 2.5rem;
 
       .govuk-link:focus {
         box-shadow: none;
+        color: $govuk-focus-text-colour;
       }
     }
 
     .nav-item__selected {
       border-bottom: solid govuk-colour("white") 4px;
+
+      &:focus-within {
+        border-bottom: solid $govuk-focus-text-colour 4px;
+      }
     }
   }
 }
