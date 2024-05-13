@@ -9,7 +9,6 @@ RSpec.describe DQTRecordPresenter, type: :model do
       "middleName" => "Doe",
       "lastName" => "Smith",
       "trn" => "1234567",
-      "state_name" => "Active",
       "dateOfBirth" => "01/01/2000",
       "nationalInsuranceNumber" => "AB123456C",
       "alerts" => [],
@@ -97,6 +96,66 @@ RSpec.describe DQTRecordPresenter, type: :model do
     it "returns true when the induction status is Exempt" do
       dqt_record["induction"]["status"] = "Exempt"
       expect(presenter.exempt?).to be true
+    end
+  end
+
+  context "with a v1 DQT record" do
+    let(:dqt_record) do
+      {
+        "name" => "John Smith",
+        "trn" => "1234567",
+        "state_name" => "Active",
+        "dob" => "02/02/2002",
+        "ni_number" => "AB123456C",
+        "active_alert" => false,
+        "qualified_teacher_status" => {
+          "qts_date" => "01/01/2020",
+        },
+        "induction" => {
+          "start_date" => "01/01/2018",
+          "completion_date" => "01/01/2019",
+        },
+      }
+    end
+
+    it "returns the full name" do
+      expect(presenter.full_name).to eq "John Smith"
+    end
+
+    it "returns the first name" do
+      expect(presenter.first_name).to eq "John"
+    end
+
+    it "returns the last name" do
+      expect(presenter.last_name).to eq "Smith"
+    end
+
+    it "returns the date of birth" do
+      expect(presenter.dob).to eq "02/02/2002"
+    end
+
+    it "returns the national insurance number" do
+      expect(presenter.ni_number).to eq "AB123456C"
+    end
+
+    it "returns true when the state is Active" do
+      expect(presenter.active?).to be true
+    end
+
+    it "returns false when there are no alerts" do
+      expect(presenter.active_alert?).to be false
+    end
+
+    it "returns the QTS awarded date" do
+      expect(presenter.qts_date).to eq "01/01/2020"
+    end
+
+    it "returns the induction start date" do
+      expect(presenter.induction_start_date).to eq "01/01/2018"
+    end
+
+    it "returns the induction completion date" do
+      expect(presenter.induction_completion_date).to eq "01/01/2019"
     end
   end
 end

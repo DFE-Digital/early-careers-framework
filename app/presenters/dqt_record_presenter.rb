@@ -8,7 +8,7 @@ class DQTRecordPresenter < SimpleDelegator
   end
 
   def first_name
-    dqt_record["firstName"]
+    dqt_record["firstName"] || dqt_record["name"]&.split(" ")&.first
   end
 
   def middle_name
@@ -16,7 +16,7 @@ class DQTRecordPresenter < SimpleDelegator
   end
 
   def last_name
-    dqt_record["lastName"]
+    dqt_record["lastName"] || dqt_record["name"]&.split(" ")&.last
   end
 
   def trn
@@ -24,37 +24,37 @@ class DQTRecordPresenter < SimpleDelegator
   end
 
   def active?
-    dqt_record.present?
+    dqt_record.present? || dqt_record&.fetch("state_name", nil) == "Active"
   end
 
   def dob
-    dqt_record["dateOfBirth"]
+    dqt_record["dateOfBirth"] || dqt_record["dob"]
   end
 
   def ni_number
-    dqt_record["nationalInsuranceNumber"]
+    dqt_record["nationalInsuranceNumber"] || dqt_record["ni_number"]
   end
 
   def active_alert?
-    dqt_record["alerts"]&.any?
+    dqt_record["alerts"]&.any? || dqt_record["active_alert"].present?
   end
 
   def qts_date
-    dqt_record.dig("qts", "awarded")
+    dqt_record.dig("qts", "awarded") || dqt_record.dig("qualified_teacher_status", "qts_date")
   end
 
   def induction_start_date
     induction_periods.to_a
                      .map { |period| period["startDate"] }
                      .compact
-                     .min
+                     .min || dqt_record.dig("induction", "start_date")
   end
 
   def induction_completion_date
     induction_periods.to_a
                      .map { |period| period["endDate"] }
                      .compact
-                     .max
+                     .max || dqt_record.dig("induction", "completion_date")
   end
 
   def exempt?
