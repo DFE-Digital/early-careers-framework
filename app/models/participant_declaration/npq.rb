@@ -11,6 +11,7 @@ class ParticipantDeclaration::NPQ < ParticipantDeclaration
     "npq-executive-leadership" => "NPQEL",
     "npq-early-years-leadership" => "NPQEYL",
     "npq-leading-primary-mathematics" => "NPQLPM",
+    "npq-senco" => "NPQS",
   }.freeze
 
   has_one :npq_application, through: :participant_profile
