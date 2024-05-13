@@ -14,7 +14,16 @@ RSpec.describe DQTRecordPresenter, type: :model do
       "nationalInsuranceNumber" => "AB123456C",
       "alerts" => [],
       "qts" => { "awarded" => "01/01/2000" },
-      "induction" => { "startDate" => "01/01/2000", "endDate" => "01/01/2001", "status" => "InProgress" },
+      "induction" => {
+        "startDate" => "01/01/2000",
+        "endDate" => "01/01/2001",
+        "status" => "InProgress",
+        "periods" => [
+          { "startDate" => "01/01/2003", "endDate" => "10/11/2003" },
+          { "startDate" => "01/01/2000", "endDate" => "01/01/2001" },
+          { "startDate" => nil, "endDate" => nil },
+        ],
+      },
     }
   end
 
@@ -69,14 +78,14 @@ RSpec.describe DQTRecordPresenter, type: :model do
   end
 
   describe "#induction_start_date" do
-    it "returns the induction start date" do
+    it "returns the start date of the earliest induction period" do
       expect(presenter.induction_start_date).to eq "01/01/2000"
     end
   end
 
   describe "#induction_completion_date" do
-    it "returns the induction completion date" do
-      expect(presenter.induction_completion_date).to eq "01/01/2001"
+    it "returns the last end date of the latest induction period" do
+      expect(presenter.induction_completion_date).to eq "10/11/2003"
     end
   end
 
