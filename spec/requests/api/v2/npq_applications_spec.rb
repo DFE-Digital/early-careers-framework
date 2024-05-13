@@ -357,6 +357,13 @@ RSpec.describe "NPQ Applications API", type: :request do
 
           expect(default_npq_application.reload.funded_place).to be_nil
         end
+
+        it "does not raise error if funded_place param is not sent" do
+          post("/api/v2/npq-applications/#{default_npq_application.id}/accept", params: {})
+
+          expect(response).to be_successful
+          expect(parsed_response.dig("data", "attributes", "status")).to eql("accepted")
+        end
       end
 
       context "when feature flag `npq_capping` is enabled" do

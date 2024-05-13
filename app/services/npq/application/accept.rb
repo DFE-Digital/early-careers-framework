@@ -27,9 +27,7 @@ module NPQ
           npq_application.update!(lead_provider_approval_status: "accepted")
           other_applications_in_same_cohort.update(lead_provider_approval_status: "rejected") # rubocop:disable Rails/SaveBang
           deduplicate_by_trn!
-          if FeatureFlag.active?("npq_capping")
-            npq_application.update!(funded_place:)
-          end
+          set_funded_place_on_npq_application
         end
 
         npq_application
@@ -150,6 +148,13 @@ module NPQ
         unless schedule && schedule.class::PERMITTED_COURSE_IDENTIFIERS.include?(npq_application.npq_course.identifier)
           errors.add(:schedule_identifier, I18n.t(:schedule_invalid_for_course))
         end
+      end
+
+      def set_funded_place_on_npq_application
+        return unless FeatureFlag.active?("npq_capping")
+        return unless npq_contract.funding_cap.to_i.positive?
+
+        npq_application.update!(funded_place:)
       end
 
       def eligible_for_funded_place

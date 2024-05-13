@@ -76,13 +76,15 @@ module Api
       end
 
       def accept_permitted_params
-        params.require(:data).permit(:type, attributes: %i[funded_place])
-      rescue ActionController::ParameterMissing => e
-        if e.param == :data
-          raise ActionController::BadRequest, I18n.t(:invalid_data_structure)
-        else
-          raise
-        end
+        parameters = params
+          .fetch(:data)
+          .permit(:type, attributes: %i[funded_place])
+
+        return parameters unless parameters["attributes"].empty?
+
+        raise ActionController::BadRequest, I18n.t(:invalid_data_structure)
+      rescue ActionController::ParameterMissing
+        {}
       end
     end
   end
