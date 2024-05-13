@@ -91,6 +91,7 @@
   - pupil_premium_uplift
   - delivery_partner_id
   - mentor_user_id
+  - cohort_id
   :npq_applications:
   - id
   - npq_lead_provider_id
@@ -472,10 +473,3 @@
   - status
   - delivered_at
   - tags
-  :participant_profile_start_date_inconsistencies:
-  - id
-  - participant_profile_id
-  - dqt_value
-  - participant_value
-  - created_at
-  - updated_at

@@ -11,6 +11,7 @@ RSpec.describe ParticipantDeclaration, type: :model do
     it { is_expected.to belong_to(:participant_profile) }
     it { is_expected.to have_many(:declaration_states) }
     it { is_expected.to belong_to(:mentor_user).class_name("User").optional }
+    it { is_expected.to belong_to(:cohort).optional }
   end
 
   describe "state transitions" do

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_02_102913) do
+ActiveRecord::Schema[7.1].define(version: 2024_05_13_085459) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "fuzzystrmatch"
@@ -829,6 +829,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_02_102913) do
     t.boolean "pupil_premium_uplift"
     t.uuid "delivery_partner_id"
     t.uuid "mentor_user_id"
+    t.uuid "cohort_id"
+    t.index ["cohort_id"], name: "index_participant_declarations_on_cohort_id"
     t.index ["cpd_lead_provider_id", "participant_profile_id", "declaration_type", "course_identifier", "state"], name: "unique_declaration_index", unique: true, where: "((state)::text = ANY (ARRAY[('submitted'::character varying)::text, ('eligible'::character varying)::text, ('payable'::character varying)::text, ('paid'::character varying)::text]))"
     t.index ["cpd_lead_provider_id"], name: "index_participant_declarations_on_cpd_lead_provider_id"
     t.index ["declaration_type"], name: "index_participant_declarations_on_declaration_type"
@@ -887,6 +889,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_02_102913) do
     t.index ["participant_declaration_id"], name: "index_declaration"
     t.index ["sent_to_qualified_teachers_api_at"], name: "index_participant_outcomes_on_sent_to_qualified_teachers_api_at"
     t.index ["state"], name: "index_participant_outcomes_on_state"
+  end
+
+  create_table "participant_profile_completion_date_inconsistencies", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "participant_profile_id", null: false
+    t.date "dqt_value"
+    t.date "participant_value"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["participant_profile_id"], name: "idx_on_participant_profile_id_b55d68e537", unique: true
   end
 
   create_table "participant_profile_schedules", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -1345,6 +1356,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_02_102913) do
   add_foreign_key "participant_identities", "users"
   add_foreign_key "participant_outcome_api_requests", "participant_outcomes"
   add_foreign_key "participant_outcomes", "participant_declarations"
+  add_foreign_key "participant_profile_completion_date_inconsistencies", "participant_profiles"
   add_foreign_key "participant_profile_schedules", "participant_profiles"
   add_foreign_key "participant_profile_schedules", "schedules"
   add_foreign_key "participant_profile_start_date_inconsistencies", "participant_profiles"

@@ -5,8 +5,9 @@ module Participants
     def call
       return unless participant_profile.ect?
 
-      Induction::Complete.call(participant_profile:, completion_date:) if completion_date.present?
-      record_start_date_inconsistency if start_date != participant_start_date
+      Induction::Complete.call(participant_profile:, completion_date:) if complete_induction?
+      record_start_date_inconsistency if start_date_inconsistent?
+      record_completion_date_inconsistency if completion_date_inconsistent?
     end
 
   private
@@ -17,8 +18,19 @@ module Participants
       @participant_profile = participant_profile
     end
 
+    def complete_induction?
+      !participant_completion_date && completion_date
+    end
+
+    # Get the latest induction period endDate if induction endDate comes with a value.
+    # i.e. induction endDate field value presence flags the latest period is actually the last one.
     def completion_date
-      induction&.fetch("endDate", nil)
+      @completion_date ||= induction&.fetch("endDate", nil).presence &&
+        induction_periods.map { |period| period["endDate"] }.compact.max
+    end
+
+    def completion_date_inconsistent?
+      participant_completion_date != completion_date
     end
 
     def induction
@@ -26,11 +38,26 @@ module Participants
     end
 
     def induction_periods
-      Array(induction&.dig("periods"))
+      @induction_periods ||= Array(induction&.dig("periods"))
+    end
+
+    def participant_completion_date
+      participant_profile.induction_completion_date
     end
 
     def participant_start_date
       participant_profile.induction_start_date
+    end
+
+    def record_completion_date_inconsistency
+      ParticipantProfileCompletionDateInconsistency.upsert(
+        {
+          participant_profile_id: participant_profile.id,
+          dqt_value: completion_date,
+          participant_value: participant_completion_date,
+        },
+        unique_by: :participant_profile_id,
+      )
     end
 
     def record_start_date_inconsistency
@@ -47,6 +74,10 @@ module Participants
     # returns the minimum start date of all the induction periods
     def start_date
       @start_date ||= induction_periods.map { |period| period["startDate"] }.compact.min
+    end
+
+    def start_date_inconsistent?
+      start_date != participant_start_date
     end
   end
 end

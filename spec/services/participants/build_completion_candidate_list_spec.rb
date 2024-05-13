@@ -29,14 +29,36 @@ RSpec.describe Participants::BuildCompletionCandidateList do
       end
     end
 
+    context "when an ECT have an induction start date" do
+      before do
+        ect_22.update!(induction_start_date: 1.year.ago)
+      end
+
+      it "add them to the list" do
+        service_call
+        expect(CompletionCandidate.exists?(participant_profile_id: ect_22.id)).to be_truthy
+      end
+    end
+
+    context "when an ECT has not an induction completion date" do
+      before do
+        ect_22.update!(induction_completion_date: nil)
+      end
+
+      it "add them to the list" do
+        service_call
+        expect(CompletionCandidate.exists?(participant_profile_id: ect_22.id)).to be_truthy
+      end
+    end
+
     context "when an ECT has an induction completion date" do
       before do
         ect_22.update!(induction_completion_date: 1.week.ago)
       end
 
-      it "does not add them to the list" do
+      it "add them to the list" do
         service_call
-        expect(CompletionCandidate.exists?(participant_profile_id: ect_22.id)).to be_falsey
+        expect(CompletionCandidate.exists?(participant_profile_id: ect_22.id)).to be_truthy
       end
     end
   end
