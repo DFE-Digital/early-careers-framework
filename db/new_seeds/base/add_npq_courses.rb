@@ -59,7 +59,7 @@
   },
   {
     id: "84b7ffd9-c726-4915-bcac-05901d9629b8",
-    name: "NPQ for Senco (NPQS)",
+    name: "NPQ for Senco (NPQSENCO)",
     identifier: "npq-senco",
   },
 ].each do |hash|
