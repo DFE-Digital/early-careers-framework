@@ -476,22 +476,32 @@ RSpec.describe "NPQ Applications API", type: :request do
     context "when feature flag `npq_capping` is enabled" do
       before { FeatureFlag.activate(:npq_capping) }
 
-      before do
-        accepted_application.update!(funded_place: false)
+      context "with a valid request" do
+        before do
+          accepted_application.update!(funded_place: false)
 
-        put "/api/v1/npq-applications/#{accepted_application.id}/change-funded-place", params: params.to_json
+          put "/api/v1/npq-applications/#{accepted_application.id}/change-funded-place", params: params.to_json
+        end
+
+        it "returns 200" do
+          expect(response).to have_http_status(:ok)
+        end
+
+        it "updates funded place" do
+          expect(accepted_application.reload.funded_place).to be_truthy
+        end
+
+        it "returns jsonapi content type header" do
+          expect(response.headers["Content-Type"]).to eql("application/vnd.api+json")
+        end
       end
 
-      it "returns 200" do
-        expect(response).to have_http_status(:ok)
-      end
+      context "with an invalid request" do
+        it "returns 422 for an invalid request" do
+          put "/api/v1/npq-applications/#{accepted_application.id}/change-funded-place", params: { data: { type: "npq-application-change-funded-status", attributes: { funded_place: nil } } }.to_json
 
-      it "updates funded place" do
-        expect(accepted_application.reload.funded_place).to be_truthy
-      end
-
-      it "returns jsonapi content type header" do
-        expect(response.headers["Content-Type"]).to eql("application/vnd.api+json")
+          expect(response).to have_http_status(:unprocessable_entity)
+        end
       end
     end
   end

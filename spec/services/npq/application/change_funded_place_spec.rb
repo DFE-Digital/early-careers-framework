@@ -6,11 +6,17 @@ RSpec.describe NPQ::Application::ChangeFundedPlace do
   subject(:service) { described_class.new(params) }
 
   describe "#call" do
-    let(:npq_application) { create(:npq_application, :accepted, eligible_for_funding: true) }
+    let(:npq_application) do
+      create(:npq_application,
+             :accepted,
+             eligible_for_funding: true,
+             npq_course:,
+             npq_lead_provider:)
+    end
     let(:npq_lead_provider) { create(:npq_lead_provider) }
     let(:npq_course) { create(:npq_leadership_course, identifier: "npq-senior-leadership") }
     let(:funding_cap) { 10 }
-    let(:statement) do
+    let!(:statement) do
       create(
         :npq_statement,
         :next_output_fee,
@@ -92,6 +98,13 @@ RSpec.describe NPQ::Application::ChangeFundedPlace do
 
           service.call
           expect(service.errors.messages_for(:npq_application)).to include("The application is not eligible for funding (pending)")
+        end
+
+        it "is invalid if the cohort does not accept capping" do
+          npq_contract.update!(funding_cap: nil)
+
+          service.call
+          expect(service.errors.messages_for(:npq_application)).to include("The cohort does not accept funded places (pending)")
         end
 
         describe "eligibility to set funded place to false" do
