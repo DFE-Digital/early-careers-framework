@@ -77,59 +77,73 @@ RSpec.describe NPQ::Application::ChangeFundedPlace do
         params.merge!(funded_place: true)
       end
 
-      it "is invalid if the application has not been accepted" do
-        npq_application.update!(lead_provider_approval_status: "pending")
+      context "when funded_place is present" do
+        before { params.merge!(funded_place: true) }
 
-        service.call
-        expect(service.errors.messages_for(:npq_application)).to include("The application is not accepted (pending)")
+        it "is invalid if the application has not been accepted" do
+          npq_application.update!(lead_provider_approval_status: "pending")
+
+          service.call
+          expect(service.errors.messages_for(:npq_application)).to include("The application is not accepted (pending)")
+        end
+
+        it "is invalid if the application is not eligible for funding" do
+          npq_application.update!(eligible_for_funding: false)
+
+          service.call
+          expect(service.errors.messages_for(:npq_application)).to include("The application is not eligible for funding (pending)")
+        end
+
+        describe "eligibility to set funded place to false" do
+          let(:declaration) { create(:npq_participant_declaration) }
+          let(:npq_application) { declaration.participant_profile.npq_application }
+
+          before do
+            npq_application.update!(eligible_for_funding: true)
+            params.merge!(funded_place: false)
+          end
+
+          it "is not eligible if the application has submitted declaration" do
+            declaration.submitted!
+
+            service.call
+
+            expect(service.errors.messages_for(:npq_application)).to include("The property '#/funded_place' cannot be changed")
+          end
+
+          it "is not eligible if the application has eligible declaration" do
+            declaration.eligible!
+
+            service.call
+
+            expect(service.errors.messages_for(:npq_application)).to include("The property '#/funded_place' cannot be changed")
+          end
+
+          it "is not eligible if the application has payable back declaration" do
+            declaration.payable!
+
+            service.call
+
+            expect(service.errors.messages_for(:npq_application)).to include("The property '#/funded_place' cannot be changed")
+          end
+
+          it "is not eligible if the application has a paid back declaration" do
+            declaration.paid!
+
+            service.call
+
+            expect(service.errors.messages_for(:npq_application)).to include("The property '#/funded_place' cannot be changed")
+          end
+        end
       end
 
-      it "is invalid if the application is not eligible for funding" do
-        npq_application.update!(eligible_for_funding: false)
+      context "when funded_place is not present" do
+        before { params.merge!(funded_place: nil) }
 
-        service.call
-        expect(service.errors.messages_for(:npq_application)).to include("The application is not eligible for funding (pending)")
-      end
-
-      describe "eligibility to set funded place to false" do
-        let(:declaration) { create(:npq_participant_declaration) }
-        let(:npq_application) { declaration.participant_profile.npq_application }
-
-        before do
-          npq_application.update!(eligible_for_funding: true)
-          params.merge!(funded_place: false)
-        end
-
-        it "is not eligible if the application has submitted declaration" do
-          declaration.submitted!
-
+        it "is invalid if funded_place is `nil`" do
           service.call
 
-          expect(service.errors.messages_for(:npq_application)).to include("The property '#/funded_place' cannot be changed")
-        end
-
-        it "is not eligible if the application has eligible declaration" do
-          declaration.eligible!
-
-          service.call
-
-          expect(service.errors.messages_for(:npq_application)).to include("The property '#/funded_place' cannot be changed")
-        end
-
-        it "is not eligible if the application has payable back declaration" do
-          declaration.payable!
-
-          service.call
-
-          expect(service.errors.messages_for(:npq_application)).to include("The property '#/funded_place' cannot be changed")
-        end
-
-        it "is not eligible if the application has a paid back declaration" do
-          declaration.paid!
-
-          service.call
-
-          expect(service.errors.messages_for(:npq_application)).to include("The property '#/funded_place' cannot be changed")
+          expect(service.errors.messages_for(:npq_application)).to include("The entered '#/funded_place' is missing from your request. Check details and try again.")
         end
       end
     end

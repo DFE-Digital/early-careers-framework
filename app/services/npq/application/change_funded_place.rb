@@ -10,6 +10,7 @@ module NPQ
       attribute :funded_place
 
       validates :npq_application, presence: { message: I18n.t("npq_application.missing_npq_application") }
+      validate :funded_place_not_nil
       validate :accepted_application
       validate :eligible_for_funding
       validate :eligible_for_removing_funding_place
@@ -49,6 +50,10 @@ module NPQ
           .profile
           .participant_declarations
           .where(state: %w[submitted eligible payable paid])
+      end
+
+      def funded_place_not_nil
+        errors.add(:npq_application, I18n.t("npq_application.missing_funded_place")) if funded_place.nil?
       end
     end
   end
