@@ -100,7 +100,15 @@ RSpec.describe NPQ::Application::ChangeFundedPlace do
           expect(service.errors.messages_for(:npq_application)).to include("The application is not eligible for funding (pending)")
         end
 
-        it "is invalid if the cohort does not accept capping" do
+        it "is invalid if the cohort does not accept capping and we set a funded place to true" do
+          npq_contract.update!(funding_cap: nil)
+
+          service.call
+          expect(service.errors.messages_for(:npq_application)).to include("The cohort does not accept funded places (pending)")
+        end
+
+        it "is invalid if the cohort does not accept capping and we set a funded place to false" do
+          params.merge!(funded_place: false)
           npq_contract.update!(funding_cap: nil)
 
           service.call

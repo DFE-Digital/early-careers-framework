@@ -59,7 +59,8 @@ module NPQ
       end
 
       def cohort_has_funding_cap
-        return unless funded_place
+        return if errors.any?
+        return if funded_place.nil?
         return if npq_contract.funding_cap.to_i.positive?
 
         errors.add(:npq_application, I18n.t("npq_application.cohort_does_not_accept_capping"))
