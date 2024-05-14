@@ -11,23 +11,17 @@ class AppropriateBodySelectionForm
     OpenStruct.new(id: "teaching_school_hub", name: "Teaching school hub", disable_from_year: nil),
   ].freeze
 
-  attr_accessor :body_appointed, :body_type, :body_id, :cohort_start_year
+  attr_accessor :body_appointed, :body_id, :cohort_start_year
 
   validates :body_appointed,
             inclusion: { in: %w[yes no],
                          message: "Select whether you’ve appointed an appropriate body or not" },
             on: :body_appointed
-  validates :body_type,
-            presence: { message: "Select an appropriate body type" },
-            on: :body_type,
-            inclusion: { in: %w[local_authority national teaching_school_hub unknown],
-                         message: "Select an appropriate body type" }
   validates :body_id, presence: { message: "Select an appropriate body" }, on: :body
 
   def attributes
     {
       body_appointed:,
-      body_type:,
       body_id:,
       cohort_start_year:,
     }
@@ -54,9 +48,9 @@ class AppropriateBodySelectionForm
 
   def body_choices
     if cohort_start_year.present?
-      AppropriateBody.where(body_type:).active_in_year(cohort_start_year)
+      AppropriateBody.where(body_type: "teaching_school_hub").active_in_year(cohort_start_year)
     else
-      AppropriateBody.where(body_type:)
+      AppropriateBody.where(body_type: "teaching_school_hub")
     end
   end
 

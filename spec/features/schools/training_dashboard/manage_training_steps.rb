@@ -864,9 +864,8 @@ module ManageTrainingSteps
   end
 
   def when_i_choose_an_appropriate_body
-    choose "National organisation"
-    click_on "Continue"
-    choose appropriate_body.name
+    choose "Teaching school hub"
+    when_i_fill_in_autocomplete "appropriate-body-selection-form-body-id-field", with: appropriate_body.name
     click_on "Continue"
   end
 
