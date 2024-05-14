@@ -41,6 +41,7 @@ module NPQ
       end
 
       def eligible_for_removing_funding_place
+        return unless npq_application.profile
         return if funded_place
 
         errors.add(:npq_application, I18n.t("npq_application.cannot_change_funded_place")) if applicable_declarations.any?
