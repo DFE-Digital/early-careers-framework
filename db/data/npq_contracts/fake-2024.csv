@@ -7,21 +7,21 @@ Ambition Institute,2024,npq-headship,1004,104,16,FALSE,0.0
 Ambition Institute,2024,npq-executive-leadership,1005,105,17,FALSE,0.0
 Ambition Institute,2024,npq-leading-literacy,1006,106,18,FALSE,0.0
 Ambition Institute,2024,npq-early-years-leadership,1007,107,19,FALSE,0.0
-Ambition Institute,2024,npq-senco,450,902,19,FALSE,0,1
+Ambition Institute,2024,npq-senco,450,902,19,FALSE,0,0.0
 Best Practice Network,2024,npq-leading-teaching,1008,108,20,FALSE,0.0
 Best Practice Network,2024,npq-leading-behaviour-culture,1009,109,21,FALSE,0.0
 Best Practice Network,2024,npq-leading-teaching-development,1010,110,22,FALSE,0.0
 Best Practice Network,2024,npq-senior-leadership,1011,111,23,FALSE,0.0
 Best Practice Network,2024,npq-headship,1012,112,24,FALSE,0.0
 Best Practice Network,2024,npq-executive-leadership,1013,113,25,FALSE,0.0
-Best Practice Network,2024,npq-senco,283,890,19,FALSE,0,1
+Best Practice Network,2024,npq-senco,283,890,19,FALSE,0,0.0
 Church of England,2024,npq-leading-teaching,1014,114,26,FALSE,0.0
 Church of England,2024,npq-leading-behaviour-culture,1015,115,27,FALSE,0.0
 Church of England,2024,npq-leading-teaching-development,1016,116,28,FALSE,0.0
 Church of England,2024,npq-senior-leadership,1017,117,29,FALSE,0.0
 Church of England,2024,npq-headship,1018,118,30,FALSE,0.0
 Church of England,2024,npq-executive-leadership,1019,119,31,FALSE,0.0
-Church of England,2024,npq-senco,200,901,19,FALSE,0,1
+Church of England,2024,npq-senco,200,901,19,FALSE,0,0.0
 Education Development Trust,2024,npq-leading-teaching,1020,120,32,FALSE,0.0
 Education Development Trust,2024,npq-leading-behaviour-culture,1021,121,33,FALSE,0.0
 Education Development Trust,2024,npq-leading-teaching-development,1022,122,34,FALSE,0.0
@@ -54,7 +54,7 @@ Teach First,2024,npq-headship,1048,148,60,FALSE,0.0
 Teach First,2024,npq-executive-leadership,1049,149,61,FALSE,0.0
 Teach First,2024,npq-leading-literacy,1050,150,62,FALSE,0.0
 Teach First,2024,npq-early-years-leadership,1051,151,63,FALSE,0.0
-Teach First,2024,npq-senco,156,895,19,FALSE,0,1
+Teach First,2024,npq-senco,156,895,19,FALSE,0,0.0
 Teacher Development Trust,2024,npq-leading-teaching,1052,152,64,FALSE,0.0
 Teacher Development Trust,2024,npq-leading-behaviour-culture,1053,153,65,FALSE,0.0
 Teacher Development Trust,2024,npq-leading-teaching-development,1054,154,66,FALSE,0.0
@@ -71,7 +71,7 @@ UCL Institute of Education,2024,npq-headship,1064,164,76,FALSE,0.0
 UCL Institute of Education,2024,npq-executive-leadership,1065,165,77,FALSE,0.0
 UCL Institute of Education,2024,npq-leading-literacy,1066,166,78,FALSE,0.0
 UCL Institute of Education,2024,npq-early-years-leadership,1067,167,79,FALSE,0.0
-UCL Institute of Education,2024,npq-senco,125,902,19,FALSE,0,1
+UCL Institute of Education,2024,npq-senco,125,902,19,FALSE,0,0.0
 Ambition Institute,2024,npq-early-headship-coaching-offer,1068,168,0,FALSE,0.0
 Best Practice Network,2024,npq-early-headship-coaching-offer,1069,169,0,FALSE,0.0
 Church of England,2024,npq-early-headship-coaching-offer,1070,170,0,FALSE,0.0
@@ -90,7 +90,7 @@ National Institute of Teaching,2024,npq-executive-leadership,105,805,24,FALSE,0.
 National Institute of Teaching,2024,npq-leading-literacy,106,806,24,FALSE,0.0
 National Institute of Teaching,2024,npq-early-years-leadership,107,807,24,FALSE,0.0
 National Institute of Teaching,2024,npq-early-headship-coaching-offer,1000,800,0,FALSE,0.0
-National Institute of Teaching,2024,npq-senco,150,902,19,FALSE,0,1
+National Institute of Teaching,2024,npq-senco,150,902,19,FALSE,0,0.0
 Ambition Institute,2024,npq-leading-primary-mathematics,1007,107,19,TRUE
 Best Practice Network,2024,npq-leading-primary-mathematics,1013,113,25,TRUE
 Church of England,2024,npq-leading-primary-mathematics,1019,119,31,TRUE
