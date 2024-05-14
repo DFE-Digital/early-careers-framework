@@ -48,11 +48,7 @@
         </div>
       </div>
 
-      <%# if @appropriate_body_form.body_type == "national" %>
-      <%#= render partial: "appropriate_body_selection/radio_button_body_selection", locals: { f:, appropriate_bodies:, title: } %>
-      <%# else %>
-
-      <%# end %>
+      <p class="govuk-body">If any of your ECTs will work with a different appropriate body, you can tell us when you register them later.</p>
 
       <%= f.govuk_submit "Continue" %>
     <% end %>

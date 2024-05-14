@@ -220,7 +220,7 @@ RSpec.describe "Changing participant details from the dashboard", type: :feature
   end
 
   context "When the school cohort has an appropriate body assigned" do
-    let!(:appropriate_body) { create(:appropriate_body_national_organisation) }
+    let!(:appropriate_body) { create(:appropriate_body_teaching_school_hub) }
     before do
       @school_cohort.update!(appropriate_body:)
     end
