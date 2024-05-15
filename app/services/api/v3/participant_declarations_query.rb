@@ -75,25 +75,8 @@ module Api
       end
 
       def declarations_scope
-        scope = ParticipantDeclaration.for_lead_provider(cpd_lead_provider)
-
-        if cohort_years.present?
-          scope = ecf_cohort_for(scope).or(npq_cohort_for(scope))
-        end
-
-        scope
-      end
-
-      def ecf_cohort_for(scope)
-        return ParticipantDeclaration.none if lead_provider.blank?
-
-        with_joins(scope).where(participant_profile: { induction_records: { cohorts: { start_year: cohort_years } } })
-      end
-
-      def npq_cohort_for(scope)
-        return ParticipantDeclaration.none if npq_lead_provider.blank?
-
-        with_joins(scope).where(participant_profile: { type: "ParticipantProfile::NPQ", schedule: { cohorts: { start_year: cohort_years } } })
+        scope = with_joins(ParticipantDeclaration.for_lead_provider(cpd_lead_provider))
+        filter_cohorts(scope)
       end
 
       def ecf_previous_declarations_scope
@@ -102,11 +85,15 @@ module Api
           .where(participant_profile: { induction_records: { induction_status: "active" } }) # only want induction records that are the winning latest ones
           .where(state: %w[submitted eligible payable paid])
 
-        if cohort_years.present? && lead_provider.present?
-          scope = scope.where(participant_profile: { induction_records: { cohorts: { start_year: cohort_years } } })
-        end
+        scope = filter_cohorts(scope) if lead_provider.present?
 
         scope
+      end
+
+      def filter_cohorts(scope)
+        return scope if cohort_years.blank?
+
+        scope.where(cohort: { start_year: cohort_years })
       end
 
       def participant_ids
@@ -119,6 +106,7 @@ module Api
 
       def with_joins(scope)
         scope.left_outer_joins(
+          :cohort,
           participant_profile: [
             [schedule: :cohort],
             { induction_records: [
