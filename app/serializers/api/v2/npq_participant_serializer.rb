@@ -41,7 +41,9 @@ module Api
             training_status: profile.training_status,
             school_urn: profile.school_urn,
             targeted_delivery_funding_eligibility: profile.npq_application.targeted_delivery_funding_eligibility,
-          }
+          }.tap do |hash|
+            hash.merge!(funded_place: profile.npq_application.funded_place) if FeatureFlag.active?("npq_capping")
+          end
         end
       end
     end
