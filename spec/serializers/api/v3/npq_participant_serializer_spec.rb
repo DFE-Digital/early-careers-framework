@@ -43,6 +43,51 @@ module Api
           ])
         end
 
+        describe "funded place attribute" do
+          context "when feature flag `npq_capping` is disabled" do
+            before { FeatureFlag.deactivate(:npq_capping) }
+
+            it "does not include the `funded_place` attribute" do
+              result = subject.serializable_hash
+
+              puts result
+              expect(result[:data][0][:attributes][:npq_enrolments][0].keys).not_to include(:funded_place)
+            end
+          end
+
+          context "when feature flag `npq_capping` is enabled" do
+            let(:npq_course) { create(:npq_leadership_course, identifier: "npq-senior-leadership") }
+            let(:statement) do
+              create(
+                :npq_statement,
+                :next_output_fee,
+                cpd_lead_provider: npq_lead_provider.cpd_lead_provider,
+                cohort: profile.npq_application.cohort,
+              )
+            end
+            let(:funding_cap) { 10 }
+            let!(:npq_contract) do
+              create(
+                :npq_contract,
+                npq_lead_provider:,
+                cohort: statement.cohort,
+                course_identifier: npq_course.identifier,
+                version: statement.contract_version,
+                funding_cap:,
+              )
+            end
+
+            before { FeatureFlag.activate(:npq_capping) }
+
+            it "includes the `funding_cap` attribute" do
+              profile.npq_application.update!(funded_place: true)
+              result = subject.serializable_hash
+
+              expect(result[:data][0][:attributes][:npq_enrolments][0][:funded_place]).to be_truthy
+            end
+          end
+        end
+
         describe "npq_enrolments" do
           context "when there are multiple providers involved" do
             let(:another_cpd_lead_provider) { create(:cpd_lead_provider, :with_npq_lead_provider) }

@@ -75,7 +75,9 @@ module Api
             withdrawal: withdrawal(profile:, cpd_lead_provider: params[:cpd_lead_provider]),
             deferral: deferral(profile:, cpd_lead_provider: params[:cpd_lead_provider]),
             created_at: profile.created_at.rfc3339,
-          }
+          }.tap do |hash|
+            hash.merge!(funded_place: profile.npq_application.funded_place) if FeatureFlag.active?("npq_capping")
+          end
         }.compact
       end
 
