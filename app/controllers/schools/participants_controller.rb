@@ -174,7 +174,7 @@ private
     super action_name: @induction_record.appropriate_body_id.present? ? :change : :add,
           from_path: path_to_participant(@profile, @school),
           submit_action: :save_appropriate_body,
-          school_name: @profile.user.full_name,
+          school: @school,
           ask_appointed: false,
           cohort_start_year: @induction_record.cohort_start_year
   end
