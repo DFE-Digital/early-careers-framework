@@ -87,24 +87,27 @@ module Dashboard
     # the school in the cohorts displayed by the dashboard
     def induction_records
       @induction_records ||= InductionRecordPolicy::Scope
-                               .new(user,
-                                    school
-                                      .induction_records
-                                      .school_dashboard_relevant
-                                      .eager_load(induction_programme: %i[school
-                                                                          core_induction_programme
-                                                                          lead_provider
-                                                                          delivery_partner],
-                                                  participant_profile: %i[user
-                                                                          ecf_participant_eligibility
-                                                                          ecf_participant_validation_data])
-                                      .where(induction_programmes: {
-                                        school_cohort_id: dashboard_school_cohorts.map(&:id),
-                                      }))
-                               .resolve
-                               .order("users.full_name")
-                               .inverse_induction_order
-                               .uniq(&:participant_profile_id)
+                               .new(
+                                 user,
+                                 school
+                                   .induction_records
+                                   .school_dashboard_relevant
+                                   .eager_load(induction_programme: %i[school
+                                                                       core_induction_programme
+                                                                       lead_provider
+                                                                       delivery_partner],
+                                               participant_profile: %i[user
+                                                                       ecf_participant_eligibility
+                                                                       ecf_participant_validation_data])
+                                   .where(
+                                     induction_programmes: {
+                                       school_cohort_id: dashboard_school_cohorts.map(&:id),
+                                     },
+                                   ),
+                               ).resolve
+                                .order("users.full_name")
+                                .inverse_induction_order
+                                .uniq(&:participant_profile_id)
     end
 
     def no_qts?(induction_record)
