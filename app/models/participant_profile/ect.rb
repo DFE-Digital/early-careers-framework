@@ -22,7 +22,7 @@ class ParticipantProfile::ECT < ParticipantProfile::ECF
     "Early career teacher"
   end
 
-  def can_change_cohort_and_continue_training?(cohort_start_year:)
-    super(cohort_start_year:) && induction_completion_date.nil?
+  def self.eligible_to_change_cohort_and_continue_training(in_cohort_start_year:)
+    super(in_cohort_start_year:).where(induction_completion_date: nil)
   end
 end
