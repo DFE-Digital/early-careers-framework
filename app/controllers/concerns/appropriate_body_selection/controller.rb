@@ -62,7 +62,7 @@ module AppropriateBodySelection
     end
 
     # @param [Integer] cohort_start_year When specified the appropriate bodies will be filtered to those that are active [CST-1420]
-    def start_appropriate_body_selection(from_path:, submit_action:, school_name:, ask_appointed: true,
+    def start_appropriate_body_selection(from_path:, submit_action:, school:, ask_appointed: true,
                                          preconfirmation: false, action_name: :add, cohort_start_year: nil)
       session.delete(:appropriate_body_selection_form)
 
@@ -70,7 +70,7 @@ module AppropriateBodySelection
         action_name:,
         from_path:,
         submit_action:,
-        school_name:,
+        school:,
         ask_appointed:,
         preconfirmation:,
         cohort_start_year:,
@@ -131,7 +131,7 @@ module AppropriateBodySelection
     end
 
     def appropriate_body_school_name
-      appropriate_body_session_data[:school_name]
+      appropriate_body_session_data[:school].name
     end
 
     def appropriate_body_delete_session
