@@ -597,19 +597,44 @@ RSpec.describe ChangeSchedule do
             end
 
             context "when moving from a previous cohort" do
-              let(:new_cohort) { Cohort.current }
+              # let(:new_cohort) { Cohort.previous }
               let!(:statement) do
                 create(
                   :npq_statement,
                   :next_output_fee,
                   cpd_lead_provider: npq_lead_provider.cpd_lead_provider,
-                  cohort: participant_profile.npq_application.cohort,
+                )
+              end
+
+              let!(:new_statement) do
+                create(
+                  :npq_statement,
+                  :next_output_fee,
+                  cpd_lead_provider: npq_lead_provider.cpd_lead_provider,
+                  cohort: new_cohort,
                 )
               end
 
               it "updates the cohort on the npq application" do
                 service.call
                 expect(participant_profile.npq_application.cohort).to eq(new_cohort)
+              end
+
+              context "when moving from funding cohort to funding cohort" do
+                before { FeatureFlag.activate(:npq_capping) }
+
+                before do
+                  npq_contract.update!(funding_cap: 10)
+                  npq_contract_new_cohort.update!(funding_cap: 10)
+                end
+
+                it "does not change funding place if original contract has a funded place" do
+                  participant_profile.npq_application.update!(funded_place: false, eligible_for_funding: false)
+
+                  service.call
+
+                  expect(participant_profile.reload.npq_application.reload.funded_place).to be_falsey
+                end
               end
 
               context "when moving from non funding cohort to funding cohort" do
@@ -627,7 +652,9 @@ RSpec.describe ChangeSchedule do
                 end
 
                 context "when feature flag `npq_capping` is enabled" do
-                  before { FeatureFlag.activate(:npq_capping) }
+                  before do
+                    FeatureFlag.activate(:npq_capping)
+                  end
 
                   it "sets funding place to `true` if `eligible_for_funding` is true" do
                     participant_profile.npq_application.update!(eligible_for_funding: true)
