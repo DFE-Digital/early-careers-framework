@@ -3,13 +3,13 @@
 FactoryBot.define do
   factory :participant_declaration do
     declaration_type { "started" }
+    cohort { Cohort.current || create(:cohort, :current) }
 
     declaration_date do
       participant_profile.schedule.milestones.find_by!(declaration_type:).start_date
     end
 
     transient do
-      cohort         { Cohort.current || create(:cohort, :current) }
       profile_traits { [] }
       uplifts        { [] }
       has_passed     { false }
@@ -33,7 +33,6 @@ FactoryBot.define do
       transient do
         npq_course { create(:npq_course) }
         school_urn {}
-        cohort     { Cohort.current || create(:cohort, :current) }
       end
       cpd_lead_provider   { create(:cpd_lead_provider, :with_npq_lead_provider) }
       participant_profile { create(:npq_application, :accepted, *profile_traits, npq_lead_provider: cpd_lead_provider.npq_lead_provider, npq_course:, school_urn:, cohort:).profile }

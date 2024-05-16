@@ -23,8 +23,8 @@ RSpec.describe "Manage currently training participants", js: true do
     given_i_am_taken_to_the_induction_dashboard
 
     when_i_navigate_to_ect_dashboard
-    then_i_see_the_ects_filter_with_counts(currently_training: 2, no_longer_training: 3)
-    when_i_filter_by("No longer training (3)")
+    then_i_see_the_ects_filter_with_counts(currently_training: 2, no_longer_training: 2)
+    when_i_filter_by("No longer training (2)")
     then_i_see_the_participants_filtered_by("No Longer Training")
     and_i_see_ects_not_being_trained
 

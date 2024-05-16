@@ -109,11 +109,11 @@ GEM
     ast (2.4.2)
     auto_strip_attributes (2.6.0)
       activerecord (>= 4.0)
-    axe-core-api (4.9.0)
+    axe-core-api (4.9.1)
       dumb_delegator
       virtus
-    axe-core-rspec (4.9.0)
-      axe-core-api
+    axe-core-rspec (4.9.1)
+      axe-core-api (= 4.9.1)
       dumb_delegator
       virtus
     axiom-types (0.1.1)
@@ -360,14 +360,14 @@ GEM
       net-protocol
     nio4r (2.7.0)
     nkf (0.2.0)
-    nokogiri (1.16.4)
+    nokogiri (1.16.5)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
-    nokogiri (1.16.4-arm64-darwin)
+    nokogiri (1.16.5-arm64-darwin)
       racc (~> 1.4)
-    nokogiri (1.16.4-x86_64-darwin)
+    nokogiri (1.16.5-x86_64-darwin)
       racc (~> 1.4)
-    nokogiri (1.16.4-x86_64-linux)
+    nokogiri (1.16.5-x86_64-linux)
       racc (~> 1.4)
     nori (2.7.0)
       bigdecimal

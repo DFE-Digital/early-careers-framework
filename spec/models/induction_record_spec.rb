@@ -31,6 +31,36 @@ RSpec.describe InductionRecord, type: :model do
   end
 
   describe "scopes" do
+    describe ".school_dashboard_relevant" do
+      let(:expected_included) do
+        [
+          # completed
+          create(:induction_record, induction_status: :completed),
+          # active/current
+          create(:induction_record, induction_status: :active),
+          # transferring out
+          create(:induction_record, induction_status: :leaving, end_date: Time.zone.now + 1.month),
+          # transferring in
+          create(:induction_record, induction_status: :active, start_date: Time.zone.now + 1.month),
+          # active induction record
+          create(:induction_record, :active),
+          # deferred induction record
+          create(:induction_record, training_status: :deferred),
+          # withdrawn induction training status
+          create(:induction_record, training_status: :withdrawn),
+        ]
+      end
+
+      before do
+        # withdrawn induction status
+        create(:induction_record, induction_status: :withdrawn)
+      end
+
+      it "includes completed induction, current, transferring, transferred, training status withdrawn and training status deferred" do
+        expect(described_class.school_dashboard_relevant).to eq(expected_included)
+      end
+    end
+
     describe "end dates" do
       describe ".end_date_null" do
         let!(:ir_with_null_end_date) { create(:induction_record, end_date: nil) }
