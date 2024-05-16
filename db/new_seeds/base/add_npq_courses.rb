@@ -57,6 +57,11 @@
     name: "NPQ Leading Primary Mathematics (NPQLPM)",
     identifier: "npq-leading-primary-mathematics",
   },
+  {
+    id: "84b7ffd9-c726-4915-bcac-05901d9629b8",
+    name: "NPQ for Senco (NPQSENCO)",
+    identifier: "npq-senco",
+  },
 ].each do |hash|
   FactoryBot.create(:seed_npq_course, id: hash[:id], name: hash[:name], identifier: hash[:identifier])
 end
