@@ -160,6 +160,7 @@ module NPQ
       def eligible_for_funded_place
         return unless FeatureFlag.active?("npq_capping")
         return if errors.any?
+        return unless npq_contract.funding_cap.to_i.positive?
 
         if funded_place && !npq_application.eligible_for_funding
           errors.add(:npq_application, I18n.t("npq_application.not_eligible_for_funded_place"))
