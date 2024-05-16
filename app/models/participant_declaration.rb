@@ -55,6 +55,7 @@ class ParticipantDeclaration < ApplicationRecord
   scope :retained, -> { where(declaration_type: %w[retained-1 retained-2 retained-3 retained-4]).order(declaration_date: "desc").unique_id }
   scope :extended, -> { where(declaration_type: %w[extended-1 extended-2 extended-3]).order(declaration_date: "desc").unique_id }
   scope :completed, -> { for_declaration("completed").order(declaration_date: "desc").unique_id }
+  scope :not_completed, -> { where.not(declaration_type: "completed") }
 
   scope :sparsity, -> { where(sparsity_uplift: true) }
   scope :pupil_premium, -> { where(pupil_premium_uplift: true) }

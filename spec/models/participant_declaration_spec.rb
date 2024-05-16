@@ -170,6 +170,14 @@ RSpec.describe ParticipantDeclaration, type: :model do
     end
   end
 
+  describe "scopes" do
+    describe ".not_completed" do
+      subject { described_class.not_completed.to_sql }
+
+      it { is_expected.to include(%(WHERE "participant_declarations"."declaration_type" != 'completed')) }
+    end
+  end
+
   describe "declaration state" do
     let!(:participant_declaration) { create(:ect_participant_declaration) }
 

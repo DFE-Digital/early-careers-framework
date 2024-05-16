@@ -18,6 +18,8 @@ class ParticipantProfile < ApplicationRecord
     other
   ].freeze
 
+  CHANGE_COHORT_CONTINUE_TRAINING_YEARS_DELTA = 3
+
   # This is where the active_record, active_record?, withdrawn_record, withdrawn_record? methods come from.
   # It took me a while to realise that active_record was scope composed from the
   # status and suffix rather than related to ActiveRecord since my IDE definition lookup was pointing me
@@ -72,6 +74,15 @@ class ParticipantProfile < ApplicationRecord
 
   # delivery_partner
   delegate :delivery_partner, to: :latest_induction_record, allow_nil: true
+
+  def can_change_cohort_and_continue_training?(cohort_start_year:)
+    return false unless cohort_start_year - schedule.cohort.start_year == CHANGE_COHORT_CONTINUE_TRAINING_YEARS_DELTA
+
+    no_billable_completed = participant_declarations.billable.completed.none?
+    billable_not_completed = participant_declarations.billable.not_completed.any?
+
+    billable_not_completed && no_billable_completed
+  end
 
   def duplicate?
     ecf_participant_eligibility&.duplicate_profile_reason?

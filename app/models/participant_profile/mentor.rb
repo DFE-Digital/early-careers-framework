@@ -42,4 +42,8 @@ class ParticipantProfile::Mentor < ParticipantProfile::ECF
   def role
     "Mentor"
   end
+
+  def can_change_cohort_and_continue_training?(cohort_start_year:)
+    super(cohort_start_year:) && mentor_completion_date.nil?
+  end
 end
