@@ -67,6 +67,7 @@ end
   { name: "NPQ Early Years Leadership (NPQEYL)", id: "66dff4af-a518-498f-9042-36a41f9e8aa7", identifier: "npq-early-years-leadership" },
   { name: "NPQ Leading Literacy (NPQLL)", id: "829fcd45-e39d-49a9-b309-26d26debfa90", identifier: "npq-leading-literacy" },
   { name: "NPQ for Leading Primary Mathematics (NPQLPM)", id: "7866f853-064f-44b4-9287-20b9993452d6", identifier: "npq-leading-primary-mathematics" },
+  { name: "NPQ for Senco (NPQSENCO)", id: "84b7ffd9-c726-4915-bcac-05901d9629b8", identifier: "npq-senco" },
 ].each do |hash|
   NPQCourse.find_or_create_by!(name: hash[:name], id: hash[:id], identifier: hash[:identifier])
 end

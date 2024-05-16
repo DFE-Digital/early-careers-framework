@@ -13,6 +13,7 @@ class ParticipantProfile::NPQ < ParticipantProfile
     npq-early-headship-coaching-offer
     npq-leading-literacy
     npq-leading-primary-mathematics
+    npq-senco
   ].freeze
 
   VALID_EVIDENCE_HELD = %w[training-event-attended self-study-material-completed other].freeze
