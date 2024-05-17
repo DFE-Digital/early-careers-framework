@@ -187,7 +187,7 @@ RSpec.describe NPQ::Application::ChangeFundedPlace do
 
           service.call
 
-          expect(service.errors.messages_for(:npq_application)).to include("The application is not accepted (pending)")
+          expect(service.errors.messages_for(:npq_application)).to include("You must accept the application before attempting to change the '#/funded_place' setting")
         end
       end
     end
