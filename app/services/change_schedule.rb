@@ -146,17 +146,26 @@ private
 
   def update_funded_place!
     return unless FeatureFlag.active?(:npq_capping)
-    return unless npq_contract.funding_cap&.positive?
+    return if npq_contract.funding_cap&.positive? && target_npq_contract.funding_cap&.positive?
+    return unless target_npq_contract.funding_cap&.positive?
 
     application = participant_profile.npq_application
     application.update!(funded_place: application.eligible_for_funding)
+  end
+
+  def target_npq_contract
+    NPQContract.find_latest_by(
+      npq_lead_provider: participant_profile.npq_application.npq_lead_provider,
+      npq_course: participant_profile.npq_application.npq_course,
+      cohort:,
+    )
   end
 
   def npq_contract
     NPQContract.find_latest_by(
       npq_lead_provider: participant_profile.npq_application.npq_lead_provider,
       npq_course: participant_profile.npq_application.npq_course,
-      cohort:,
+      cohort: participant_profile.npq_application.cohort,
     )
   end
 

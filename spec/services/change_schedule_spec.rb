@@ -632,11 +632,19 @@ RSpec.describe ChangeSchedule do
                 end
 
                 it "does not change funding place if original contract has a funded place" do
-                  participant_profile.npq_application.update!(funded_place: false, eligible_for_funding: false)
+                  participant_profile.npq_application.update!(funded_place: false, eligible_for_funding: true)
 
                   service.call
 
                   expect(participant_profile.reload.npq_application.reload.funded_place).to be_falsey
+                end
+
+                it "does not change funding place if original contract has a funded place" do
+                  participant_profile.npq_application.update!(funded_place: true, eligible_for_funding: false)
+
+                  service.call
+
+                  expect(participant_profile.reload.npq_application.reload.funded_place).to be_truthy
                 end
               end
 
