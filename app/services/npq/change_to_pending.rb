@@ -34,7 +34,7 @@ module NPQ
         end
         npq_application.update!(lead_provider_approval_status: "pending")
         if FeatureFlag.active?(:npq_capping) && !npq_application.funded_place.nil?
-          npq_application.update!(funded_place: false)
+          npq_application.update!(funded_place: nil)
         end
       end
 

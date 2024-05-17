@@ -66,20 +66,20 @@ RSpec.describe NPQ::ChangeToPending do
           FeatureFlag.activate(:npq_capping)
         end
 
-        it "marks the funded place as false if funded place is true" do
+        it "marks the funded place as nil if funded place is true" do
           npq_application.update!(funded_place: true)
 
           subject.call
 
-          expect(npq_application.reload.funded_place).to eq(false)
+          expect(npq_application.reload.funded_place).to eq(nil)
         end
 
-        it "does not change `funded place` if funded place is false" do
+        it "marks the funded place as nil if funded place is false" do
           npq_application.update!(funded_place: false)
 
           subject.call
 
-          expect(npq_application.reload.funded_place).to eq(false)
+          expect(npq_application.reload.funded_place).to eq(nil)
         end
 
         it "does not change `funded place` if funded place is nil" do
@@ -87,7 +87,7 @@ RSpec.describe NPQ::ChangeToPending do
 
           subject.call
 
-          expect(npq_application.reload.funded_place).to eq(nil)
+          expect { subject.call }.not_to change(npq_application, :funded_place)
         end
       end
     end
