@@ -11,7 +11,7 @@ class AppropriateBodySelectionForm
     OpenStruct.new(id: "teaching_school_hub", name: "Teaching school hub", disable_from_year: nil),
   ].freeze
 
-  attr_accessor :body_appointed, :body_id, :cohort_start_year
+  attr_accessor :body_appointed, :body_id, :cohort_start_year, :body_type
 
   validates :body_appointed,
             inclusion: { in: %w[yes no],
