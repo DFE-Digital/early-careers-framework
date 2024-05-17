@@ -131,12 +131,12 @@ private
 
   def participant_declaration
     @participant_declaration ||= find_participant_declaration.tap do |pd|
-      pd.update!(uplift_flags.merge(cohort:))
+      pd.update!(uplift_flags)
     end
   end
 
   def find_participant_declaration
-    participant_profile
+    existing_declaration = participant_profile
       .participant_declarations
       .submitted
       .or(
@@ -144,7 +144,9 @@ private
           .participant_declarations
           .billable,
       )
-      .create_or_find_by!(declaration_parameters)
+      .find_by(declaration_parameters)
+
+    existing_declaration || participant_profile.participant_declarations.create!(declaration_parameters.merge(cohort:))
   end
 
   def uplift_flags
