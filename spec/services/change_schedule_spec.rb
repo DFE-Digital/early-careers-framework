@@ -659,7 +659,7 @@ RSpec.describe ChangeSchedule do
                   end
 
                   it "sets funding place to `true` if `eligible_for_funding` is true" do
-                    participant_profile.npq_application.update!(eligible_for_funding: true)
+                    participant_profile.npq_application.update!(eligible_for_funding: true, funded_place: nil)
 
                     service.call
 
@@ -667,7 +667,7 @@ RSpec.describe ChangeSchedule do
                   end
 
                   it "sets funding place to `false` if `eligible_for_funding` is false" do
-                    participant_profile.npq_application.update!(eligible_for_funding: false)
+                    participant_profile.npq_application.update!(eligible_for_funding: false, funded_place: nil)
 
                     service.call
 
