@@ -31,7 +31,7 @@ module Api
         scope.map { |npq_profile| npq_profile.npq_application.npq_course.identifier }
       end
 
-      attribute :funded_places, if: -> {  FeatureFlag.active?(:npq_capping) } do |object, params|
+      attribute :funded_places, if: -> { FeatureFlag.active?(:npq_capping) } do |object, params|
         scope = object.npq_profiles
         scope = scope.includes(npq_application: [:npq_course])
 
