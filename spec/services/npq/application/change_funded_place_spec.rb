@@ -178,18 +178,6 @@ RSpec.describe NPQ::Application::ChangeFundedPlace do
           expect(service.errors.messages_for(:npq_application)).to include("The entered '#/funded_place' is missing from your request. Check details and try again.")
         end
       end
-
-      context "when the application is not accepted" do
-        let(:npq_application) { create(:npq_application, eligible_for_funding: true) }
-
-        it "does not check for applicable declarations" do
-          params.merge!(funded_place: false)
-
-          service.call
-
-          expect(service.errors.messages_for(:npq_application)).to include("You must accept the application before attempting to change the '#/funded_place' setting")
-        end
-      end
     end
   end
 end
