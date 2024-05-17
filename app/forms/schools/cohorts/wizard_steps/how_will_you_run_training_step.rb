@@ -25,8 +25,7 @@ module Schools
 
         attr_accessor :how_will_you_run_training
 
-        validates :how_will_you_run_training, inclusion: { in: ->(form) { form.choices.map(&:id).map(&:to_s) } }
-
+        validates :how_will_you_run_training, inclusion: { message: "Please select an option", in: ->(form) { form.choices.map(&:id).map(&:to_s) } }
         def self.permitted_params
           %i[how_will_you_run_training]
         end
