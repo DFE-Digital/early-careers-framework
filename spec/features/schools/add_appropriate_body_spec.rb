@@ -14,7 +14,7 @@ RSpec.describe "Add a school cohort appropriate body", type: :feature, js: true,
   end
 
   context "When appropriate body was not appointed during cohort setup" do
-    let!(:appropriate_body) { create(:appropriate_body_national_organisation) }
+    let!(:appropriate_body) { create(:appropriate_body_teaching_school_hub) }
 
     scenario "The appropriate body can be added and set for all ECTs" do
       given_there_is_a_school_and_an_induction_coordinator
@@ -58,18 +58,20 @@ RSpec.describe "Add a school cohort appropriate body", type: :feature, js: true,
 
   context "When an appropriate body is disabled" do
     before do
-      create(:appropriate_body_national_organisation, name: "Disabled AB", disable_from_year: 2023)
-      create(:appropriate_body_national_organisation, name: "Enabled AB")
+      create(:appropriate_body_teaching_school_hub, name: "Disabled AB", disable_from_year: 2023)
+      create(:appropriate_body_teaching_school_hub, name: "Enabled AB")
     end
 
-    scenario "It can't be added" do
+    scenario "It can't be selected" do
       given_there_is_a_school_and_an_induction_coordinator
       and_i_am_signed_in_as_an_induction_coordinator
       then_i_am_on_the_manage_your_training_page
 
       when_i_click_on_add_appropriate_body
-      and_i_choose_national_organisation
+      and_i_choose_teaching_school_hub
+      when_i_fill_in_autocomplete "appropriate-body-selection-form-body-id-field", with: "Enabled AB"
       then_i_see_the_enabled_appropriate_body
+      when_i_fill_in_autocomplete "appropriate-body-selection-form-body-id-field", with: "Enabled AB"
       and_i_dont_see_the_disabled_appropriate_body
     end
   end
@@ -128,9 +130,8 @@ private
 
   def when_i_choose_appropriate_body(appropriate_body)
     when_i_click_on_add_appropriate_body
-    choose "National organisation"
-    click_on "Continue"
-    choose appropriate_body.name
+    choose "Teaching school hub"
+    when_i_fill_in_autocomplete "appropriate-body-selection-form-body-id-field", with: appropriate_body.name
     click_on "Continue"
   end
 
@@ -159,9 +160,8 @@ private
     click_on "Return to manage your training"
   end
 
-  def and_i_choose_national_organisation
-    choose "National organisation"
-    click_on "Continue"
+  def and_i_choose_teaching_school_hub
+    choose "Teaching school hub"
   end
 
   def then_i_see_the_enabled_appropriate_body

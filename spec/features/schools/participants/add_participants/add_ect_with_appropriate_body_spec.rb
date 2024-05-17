@@ -59,7 +59,7 @@ RSpec.describe "Adding ECT with appropriate body", type: :feature, js: true do
 
   scenario "Appropriate body for ECT is not confirmed and a different one is selected" do
     inside_auto_assignment_window(cohort:) do
-      ect_appropriate_body = create(:appropriate_body_national_organisation)
+      ect_appropriate_body = create(:appropriate_body_teaching_school_hub)
 
       sign_in
 
@@ -81,7 +81,7 @@ RSpec.describe "Adding ECT with appropriate body", type: :feature, js: true do
 
   scenario "Appropriate body is confirmed and then changed in the confirm page" do
     inside_auto_assignment_window(cohort:) do
-      ect_appropriate_body = create(:appropriate_body_national_organisation)
+      ect_appropriate_body = create(:appropriate_body_teaching_school_hub)
 
       sign_in
 
@@ -189,22 +189,11 @@ private
 
   def when_i_choose_a_different_appropriate_body(ect_appropriate_body)
     click_on "They have a different appropriate body"
-
-    choose "National organisation"
-    click_on "Continue"
-
-    choose ect_appropriate_body.name
+    choose "Teaching school hub"
+    and_i_fill_in_autocomplete "appropriate-body-selection-form-body-id-field", with: ect_appropriate_body.name
     click_on "Continue"
   end
   alias_method :and_i_choose_a_different_appropriate_body, :when_i_choose_a_different_appropriate_body
-
-  # def and_i_choose_a_different_appropriate_body(ect_appropriate_body)
-  #   choose "National organisation"
-  #   click_on "Continue"
-
-  #   choose ect_appropriate_body.name
-  #   click_on "Continue"
-  # end
 
   def and_i_see_the_appropriate_body(ect_appropriate_body)
     expect(page).to have_summary_row("Appropriate body", ect_appropriate_body.name)
