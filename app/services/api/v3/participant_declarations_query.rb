@@ -75,12 +75,21 @@ module Api
       end
 
       def declarations_scope
-        scope = with_joins(ParticipantDeclaration.for_lead_provider(cpd_lead_provider))
+        scope = ParticipantDeclaration.for_lead_provider(cpd_lead_provider)
+          .left_outer_joins(:cohort)
         filter_cohorts(scope)
       end
 
       def ecf_previous_declarations_scope
-        scope = with_joins(ParticipantDeclaration)
+        scope = ParticipantDeclaration
+          .left_outer_joins(
+            :cohort,
+            participant_profile: [
+              { induction_records: [
+                { induction_programme: :partnership },
+              ] },
+            ],
+          )
           .where(participant_profile: { induction_records: { induction_programme: { partnerships: { lead_provider_id: lead_provider&.id } } } })
           .where(participant_profile: { induction_records: { induction_status: "active" } }) # only want induction records that are the winning latest ones
           .where(state: %w[submitted eligible payable paid])
@@ -102,19 +111,6 @@ module Api
 
       def delivery_partner_ids
         filter[:delivery_partner_id]&.split(",")
-      end
-
-      def with_joins(scope)
-        scope.left_outer_joins(
-          :cohort,
-          participant_profile: [
-            [schedule: :cohort],
-            { induction_records: [
-              :cohort,
-              { induction_programme: :partnership },
-            ] },
-          ],
-        )
       end
     end
   end
