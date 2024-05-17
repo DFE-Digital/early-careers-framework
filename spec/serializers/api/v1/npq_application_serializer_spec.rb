@@ -104,6 +104,46 @@ module Api
           end
         end
       end
+
+      describe "funded_place attribute" do
+        context "when npq_capping feature flag is active" do
+          before { FeatureFlag.activate(:npq_capping) }
+
+          context "when the npq application is funded" do
+            let(:npq_application) { create(:npq_application, :funded_place) }
+
+            it "returns true" do
+              expect(result[:data][:attributes][:funded_place]).to be true
+            end
+          end
+
+          context "when the npq application is not funded" do
+            let(:npq_application) { create(:npq_application, :no_funded_place) }
+
+            it "returns false" do
+              expect(result[:data][:attributes][:funded_place]).to be false
+            end
+          end
+
+          context "when the `funded_place` attribute does not have a value" do
+            let(:npq_application) { create(:npq_application, funded_place: nil) }
+
+            it "returns nil" do
+              expect(result[:data][:attributes][:funded_place]).to be_nil
+            end
+          end
+        end
+
+        context "when npq_capping feature flag is not active" do
+          before { FeatureFlag.deactivate(:npq_capping) }
+
+          let(:npq_application) { create(:npq_application) }
+
+          it "does not include the funded_place attribute" do
+            expect(result[:data][:attributes]).not_to have_key(:funded_place)
+          end
+        end
+      end
     end
   end
 end

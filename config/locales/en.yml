@@ -113,6 +113,8 @@ en:
     has_already_been_rejected: This NPQ application has already been rejected
     cannot_change_from_accepted: Once accepted an application cannot change state
     cannot_change_from_rejected: Once rejected an application cannot change state
+    not_eligible_for_funded_place: "The participant is not eligible for funding, so '#/funded_place' cannot be set to true."
+    funded_place_required: "Set '#/funded_place' to true or false."
   errors:
     email: &email_error_messages
       blank: "Enter an email address"

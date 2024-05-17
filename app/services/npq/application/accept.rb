@@ -8,12 +8,15 @@ module NPQ
 
       attribute :npq_application
       attribute :schedule_identifier
+      attribute :funded_place
 
       validates :npq_application, presence: { message: I18n.t("npq_application.missing_npq_application") }
       validate :not_already_accepted
       validate :cannot_change_from_rejected
       validate :other_accepted_applications_with_same_course?
       validate :validate_permitted_schedule_for_course
+      validate :eligible_for_funded_place
+      validate :validate_funded_place
 
       def call
         return self unless valid?
@@ -24,6 +27,7 @@ module NPQ
           npq_application.update!(lead_provider_approval_status: "accepted")
           other_applications_in_same_cohort.update(lead_provider_approval_status: "rejected") # rubocop:disable Rails/SaveBang
           deduplicate_by_trn!
+          set_funded_place_on_npq_application
         end
 
         npq_application
@@ -144,6 +148,47 @@ module NPQ
         unless schedule && schedule.class::PERMITTED_COURSE_IDENTIFIERS.include?(npq_application.npq_course.identifier)
           errors.add(:schedule_identifier, I18n.t(:schedule_invalid_for_course))
         end
+      end
+
+      def set_funded_place_on_npq_application
+        return unless FeatureFlag.active?("npq_capping")
+        return unless npq_contract.funding_cap.to_i.positive?
+
+        npq_application.update!(funded_place:)
+      end
+
+      def eligible_for_funded_place
+        return unless FeatureFlag.active?("npq_capping")
+        return if errors.any?
+        return unless npq_contract.funding_cap.to_i.positive?
+
+        if funded_place && !npq_application.eligible_for_funding
+          errors.add(:npq_application, I18n.t("npq_application.not_eligible_for_funded_place"))
+        end
+      end
+
+      def validate_funded_place
+        return unless FeatureFlag.active?("npq_capping")
+        return if errors.any?
+        return unless npq_contract.funding_cap.to_i.positive?
+
+        if funded_place.nil?
+          errors.add(:npq_application, I18n.t("npq_application.funded_place_required"))
+        end
+      end
+
+      def npq_contract
+        @npq_contract ||=
+          NPQContract.where(
+            cohort_id: cohort.id,
+            npq_lead_provider_id: npq_application.npq_lead_provider_id,
+            course_identifier: npq_application.npq_course.identifier,
+            version: statement.contract_version,
+          ).first
+      end
+
+      def statement
+        npq_application.npq_lead_provider.next_output_fee_statement(cohort)
       end
     end
   end

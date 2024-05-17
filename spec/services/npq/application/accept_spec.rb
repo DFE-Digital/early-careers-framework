@@ -442,5 +442,105 @@ RSpec.describe NPQ::Application::Accept do
         end
       end
     end
+
+    describe "NPQ capping" do
+      context "when feature flag `npq_capping` is enabled" do
+        let(:statement) do
+          create(
+            :npq_statement,
+            :next_output_fee,
+            cpd_lead_provider: npq_lead_provider.cpd_lead_provider,
+            cohort: npq_application.cohort,
+          )
+        end
+        let(:funding_cap) { 10 }
+        let!(:npq_contract) do
+          create(
+            :npq_contract,
+            npq_lead_provider:,
+            cohort: statement.cohort,
+            course_identifier: npq_course.identifier,
+            version: statement.contract_version,
+            funding_cap:,
+          )
+        end
+
+        before do
+          FeatureFlag.activate(:npq_capping)
+          npq_application.update!(eligible_for_funding: true)
+        end
+
+        context "when funded_place is true" do
+          let(:params) { { npq_application:, funded_place: true } }
+
+          it "sets the funded place to true" do
+            service.call
+
+            expect(npq_application.reload.funded_place).to be_truthy
+          end
+
+          it "does not set the if eligible for funding is false" do
+            npq_application.update!(eligible_for_funding: false)
+
+            service.call
+            expect(service.errors.messages_for(:npq_application)).to include("The participant is not eligible for funding, so '#/funded_place' cannot be set to true.")
+          end
+        end
+
+        context "when funded_place is false" do
+          let(:params) { { npq_application:, funded_place: false } }
+
+          it "sets the funded place to false" do
+            service.call
+
+            expect(npq_application.reload.funded_place).to be_falsey
+          end
+        end
+
+        context "when funded_place is nil" do
+          let(:params) { { npq_application:, funded_place: nil } }
+
+          context "funding_cap is 0" do
+            let(:funding_cap) { 0 }
+
+            it "should not validate funded_place" do
+              service.call
+              expect(service.errors.messages_for(:npq_application)).to be_empty
+            end
+          end
+
+          context "funding_cap is nil" do
+            let(:funding_cap) { nil }
+
+            it "should not validate funded_place" do
+              service.call
+              expect(service.errors.messages_for(:npq_application)).to be_empty
+            end
+          end
+
+          context "funding_cap is 10" do
+            let(:funding_cap) { 10 }
+
+            it "returns funding_place is required error" do
+              service.call
+              expect(service.errors.messages_for(:npq_application)).to include("Set '#/funded_place' to true or false.")
+            end
+          end
+        end
+      end
+
+      context "when feature flag `npq_capping` is disabled" do
+        before { FeatureFlag.deactivate(:npq_capping) }
+
+        let(:params) { { npq_application:, funded_place: true } }
+
+        it "does not set the `funded_place` attribute" do
+          npq_application.update!(funded_place: nil)
+
+          service.call
+          expect(npq_application.reload.funded_place).to be_nil
+        end
+      end
+    end
   end
 end

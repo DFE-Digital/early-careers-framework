@@ -323,7 +323,7 @@ RSpec.describe "NPQ Applications API", type: :request do
   end
 
   describe "POST /api/v1/npq-applications/:id/accept" do
-    let(:default_npq_application) { create(:npq_application, npq_lead_provider:, npq_course:) }
+    let(:default_npq_application) { create(:npq_application, npq_lead_provider:, npq_course:, funded_place: nil) }
     let(:user) { default_npq_application.user }
 
     before do
@@ -341,6 +341,62 @@ RSpec.describe "NPQ Applications API", type: :request do
       expect(response).to be_successful
 
       expect(parsed_response.dig("data", "attributes", "status")).to eql("accepted")
+    end
+
+    describe "NPQ capping" do
+      let(:params) { { data: { type: "npq-application-accept", attributes: { funded_place: true } } } }
+
+      before do
+        statement = create(
+          :npq_statement,
+          :next_output_fee,
+          cpd_lead_provider:,
+          cohort: default_npq_application.cohort,
+        )
+        create(
+          :npq_contract,
+          npq_lead_provider:,
+          cohort: statement.cohort,
+          course_identifier: npq_course.identifier,
+          version: statement.contract_version,
+          funding_cap: 10,
+        )
+
+        default_npq_application.update!(eligible_for_funding: true)
+      end
+
+      context "when feature flag `npq_capping` is disabled" do
+        before { FeatureFlag.deactivate(:npq_capping) }
+
+        it "does not update funded place attribute" do
+          post("/api/v1/npq-applications/#{default_npq_application.id}/accept", params:)
+
+          expect(default_npq_application.reload.funded_place).to be_nil
+        end
+
+        it "does not raise error if funded_place param is not sent" do
+          post("/api/v1/npq-applications/#{default_npq_application.id}/accept", params: {})
+
+          expect(response).to be_successful
+          expect(parsed_response.dig("data", "attributes", "status")).to eql("accepted")
+        end
+      end
+
+      context "when feature flag `npq_capping` is enabled" do
+        before { FeatureFlag.activate(:npq_capping) }
+
+        it "updates funded place attribute" do
+          post("/api/v1/npq-applications/#{default_npq_application.id}/accept", params:)
+
+          expect(default_npq_application.reload.funded_place).to be_truthy
+        end
+
+        it "returns 200" do
+          post("/api/v1/npq-applications/#{default_npq_application.id}/accept", params:)
+
+          expect(response).to be_successful
+        end
+      end
     end
 
     context "when participant has applied for multiple NPQs" do
@@ -383,7 +439,7 @@ end
 def expected_single_json_v1_response(npq_application:)
   {
     "data" =>
-        single_json_v1_application(npq_application:),
+      single_json_v1_application(npq_application:),
   }
 end
 

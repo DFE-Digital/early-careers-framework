@@ -33,7 +33,7 @@ module Api
       end
 
       def accept
-        service = ::NPQ::Application::Accept.new(npq_application:)
+        service = ::NPQ::Application::Accept.new(npq_application:, funded_place:)
 
         render_from_service(service, json_serializer_class)
       end
@@ -67,6 +67,24 @@ module Api
 
       def npq_application
         @npq_application ||= npq_lead_provider.npq_applications.includes(:cohort, :npq_course, participant_identity: [:user]).find(params[:id])
+      end
+
+      def funded_place
+        if FeatureFlag.active?(:npq_capping)
+          accept_permitted_params.dig("attributes", "funded_place")
+        end
+      end
+
+      def accept_permitted_params
+        parameters = params
+          .fetch(:data)
+          .permit(:type, attributes: %i[funded_place])
+
+        return parameters unless parameters["attributes"].empty?
+
+        raise ActionController::BadRequest, I18n.t(:invalid_data_structure)
+      rescue ActionController::ParameterMissing
+        {}
       end
     end
   end
