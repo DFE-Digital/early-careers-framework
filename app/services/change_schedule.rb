@@ -156,7 +156,7 @@ private
     NPQContract.find_latest_by(
       npq_lead_provider: participant_profile.npq_application.npq_lead_provider,
       npq_course: participant_profile.npq_application.npq_course,
-      cohort: cohort,
+      cohort:,
     )
   end
 

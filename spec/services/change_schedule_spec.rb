@@ -623,6 +623,9 @@ RSpec.describe ChangeSchedule do
               context "when moving from funding cohort to funding cohort" do
                 before { FeatureFlag.activate(:npq_capping) }
 
+                let(:participant_profile) { create(:npq_participant_profile, npq_lead_provider:, npq_course:, schedule:, user:, npq_application:) }
+                let(:npq_application) { create(:npq_application, :accepted, npq_lead_provider:, npq_course:, user:, funded_place: false) }
+
                 before do
                   npq_contract.update!(funding_cap: 10)
                   npq_contract_new_cohort.update!(funding_cap: 10)
