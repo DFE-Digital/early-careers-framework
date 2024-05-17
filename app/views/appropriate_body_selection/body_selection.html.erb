@@ -12,21 +12,17 @@
 
       <div class="govuk-form-group">
         <h1 class="govuk-label-wrapper">
-          <span class="govuk-caption-l">FIX: Cohortless Empty School FIP</span>
+          <span class="govuk-caption-l"><%= appropriate_body_school_name %></span>
           <label class="govuk-label govuk-label--l" for="whichTSH">
             Which type of appropriate body have you appointed?
           </label>
         </h1>
 
         <div class="govuk-radios" data-module="govuk-radios">
-          <div class="govuk-radios__item">
-            <input class="govuk-radios__input" id="typeOfBody" name="typeOfBody" type="radio" value="Teaching school hub (TSH)" aria-controls="conditional-[tshOrNot]" aria-expanded="true">
-            <label class="govuk-label govuk-radios__label" for="typeOfBody">
-              Teaching school hub
-            </label>
-          </div>
 
-          <div class="govuk-radios__conditional" id="conditional-[tshOrNot]">
+          <%= f.govuk_radio_button(:body_type, "tsh", label: { text: "Teaching school hub"}, 'aria-controls': "appropriate-body-selection-form-body-id-field") %>
+
+          <div class="govuk-radios__conditional">
             <div class="govuk-form-group">
               <%= f.govuk_collection_select(:body_id,
                                             appropriate_bodies,
@@ -38,12 +34,7 @@
             </div>
           </div>
 
-          <div class="govuk-radios__item">
-            <input class="govuk-radios__input" id="typeOfBody-2" name="typeOfBody" type="radio" value="Educational Success Partners (ESP)">
-            <label class="govuk-label govuk-radios__label" for="typeOfBody-2">
-              FIX: Educational Success Partners (ESP)
-            </label>
-          </div>
+          <%= f.govuk_radio_button(:body_type, "default", label: { text: "FIX: Educational Success Partners (ESP)"}) %>
 
         </div>
       </div>
@@ -51,6 +42,9 @@
       <p class="govuk-body">If any of your ECTs will work with a different appropriate body, you can tell us when you register them later.</p>
 
       <%= f.govuk_submit "Continue" %>
+
     <% end %>
+
+    <p><a href="#">FIX: My appropriate body isn't listed</a></p>
   </div>
 </div>
