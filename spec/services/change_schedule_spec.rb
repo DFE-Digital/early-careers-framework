@@ -597,7 +597,6 @@ RSpec.describe ChangeSchedule do
             end
 
             context "when moving from a previous cohort" do
-              # let(:new_cohort) { Cohort.previous }
               let!(:statement) do
                 create(
                   :npq_statement,
