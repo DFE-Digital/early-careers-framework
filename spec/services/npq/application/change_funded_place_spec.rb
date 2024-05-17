@@ -116,7 +116,7 @@ RSpec.describe NPQ::Application::ChangeFundedPlace do
         end
 
         context "when the application is not accepted" do
-          let(:npq_application) { create(:npq_application,  eligible_for_funding: true)}
+          let(:npq_application) { create(:npq_application, eligible_for_funding: true) }
 
           it "does not check for applicable declarations" do
             params.merge!(funded_place: false)
