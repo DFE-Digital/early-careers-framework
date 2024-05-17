@@ -15,6 +15,7 @@ class NPQContract < ApplicationRecord
 
   def self.find_latest_by(npq_lead_provider:, npq_course:, cohort:)
     statement = npq_lead_provider.next_output_fee_statement(cohort)
+    return unless statement
 
     where(
       cohort_id: cohort.id,

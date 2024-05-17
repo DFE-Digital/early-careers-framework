@@ -35,7 +35,7 @@ RSpec.describe NPQContract do
       )
     end
 
-    before do
+    let!(:npq_contract) do
       create(:npq_contract,
              npq_lead_provider:,
              cohort: statement.cohort,

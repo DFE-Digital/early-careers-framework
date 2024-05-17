@@ -523,7 +523,7 @@ RSpec.describe "NPQ Applications API", type: :request do
       create(
         :npq_statement,
         :next_output_fee,
-        cpd_lead_provider: npq_lead_provider.cpd_lead_provider,
+        cpd_lead_provider:,
         cohort: accepted_application.cohort,
       )
     end
