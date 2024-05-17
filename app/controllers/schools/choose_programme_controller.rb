@@ -65,7 +65,7 @@ private
   def start_appropriate_body_selection
     super from_path: url_for(action: :create),
           submit_action: :save_programme,
-          school: school,
+          school:,
           cohort_start_year: cohort.start_year
   end
 
