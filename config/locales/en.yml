@@ -119,7 +119,7 @@ en:
     funded_place_required: "Set '#/funded_place' to true or false."
     cannot_change_funded_status_from_non_accepted: You must accept the application before attempting to change the '#/funded_place' setting
     cannot_change_funded_status_non_eligible: This participant is not eligible for funding. Contact us if you think this is wrong
-    cannot_change_funded_place: You must void or claw back your declarations for this participant before being able to set funded_place to false
+    cannot_change_funded_place: You must void or claw back your declarations for this participant before being able to set '#/funded_place' to false
   errors:
     email: &email_error_messages
       blank: "Enter an email address"

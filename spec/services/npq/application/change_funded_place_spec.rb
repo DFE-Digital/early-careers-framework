@@ -90,14 +90,14 @@ RSpec.describe NPQ::Application::ChangeFundedPlace do
           npq_application.update!(lead_provider_approval_status: "pending")
 
           service.call
-          expect(service.errors.messages_for(:npq_application)).to include("The application is not accepted (pending)")
+          expect(service.errors.messages_for(:npq_application)).to include("You must accept the application before attempting to change the '#/funded_place' setting")
         end
 
         it "is invalid if the application is not eligible for funding" do
           npq_application.update!(eligible_for_funding: false)
 
           service.call
-          expect(service.errors.messages_for(:npq_application)).to include("The application is not eligible for funding (pending)")
+          expect(service.errors.messages_for(:npq_application)).to include("This participant is not eligible for funding. Contact us if you think this is wrong")
         end
 
         it "is invalid if the cohort does not accept capping and we set a funded place to true" do
@@ -123,7 +123,7 @@ RSpec.describe NPQ::Application::ChangeFundedPlace do
 
             service.call
 
-            expect(service.errors.messages_for(:npq_application)).to include("The application is not accepted (pending)")
+            expect(service.errors.messages_for(:npq_application)).to include("You must accept the application before attempting to change the '#/funded_place' setting")
           end
         end
 
@@ -141,7 +141,7 @@ RSpec.describe NPQ::Application::ChangeFundedPlace do
 
             service.call
 
-            expect(service.errors.messages_for(:npq_application)).to include("The property '#/funded_place' cannot be changed")
+            expect(service.errors.messages_for(:npq_application)).to include("You must void or claw back your declarations for this participant before being able to set '#/funded_place' to false")
           end
 
           it "is not eligible if the application has eligible declaration" do
@@ -149,7 +149,7 @@ RSpec.describe NPQ::Application::ChangeFundedPlace do
 
             service.call
 
-            expect(service.errors.messages_for(:npq_application)).to include("The property '#/funded_place' cannot be changed")
+            expect(service.errors.messages_for(:npq_application)).to include("You must void or claw back your declarations for this participant before being able to set '#/funded_place' to false")
           end
 
           it "is not eligible if the application has payable back declaration" do
@@ -157,7 +157,7 @@ RSpec.describe NPQ::Application::ChangeFundedPlace do
 
             service.call
 
-            expect(service.errors.messages_for(:npq_application)).to include("The property '#/funded_place' cannot be changed")
+            expect(service.errors.messages_for(:npq_application)).to include("You must void or claw back your declarations for this participant before being able to set '#/funded_place' to false")
           end
 
           it "is not eligible if the application has a paid back declaration" do
@@ -165,7 +165,7 @@ RSpec.describe NPQ::Application::ChangeFundedPlace do
 
             service.call
 
-            expect(service.errors.messages_for(:npq_application)).to include("The property '#/funded_place' cannot be changed")
+            expect(service.errors.messages_for(:npq_application)).to include("You must void or claw back your declarations for this participant before being able to set '#/funded_place' to false")
           end
         end
       end
