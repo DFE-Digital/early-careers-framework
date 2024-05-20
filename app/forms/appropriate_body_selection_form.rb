@@ -4,6 +4,7 @@ class AppropriateBodySelectionForm
   include ActiveModel::Model
   include ActiveRecord::AttributeAssignment
   include ActiveModel::Serialization
+  include ActiveRecord::Callbacks
 
   TYPES = [
     OpenStruct.new(id: "local_authority", name: "Local authority", disable_from_year: 2023),
@@ -11,13 +12,16 @@ class AppropriateBodySelectionForm
     OpenStruct.new(id: "teaching_school_hub", name: "Teaching school hub", disable_from_year: nil),
   ].freeze
 
-  attr_accessor :body_appointed, :body_id, :cohort_start_year, :body_type
+  attr_accessor :body_appointed, :body_id, :cohort_start_year, :body_type, :default_appropriate_body
+
+  before_validation :ensure_default_appropriate_body_id
 
   validates :body_appointed,
             inclusion: { in: %w[yes no],
                          message: "Select whether you’ve appointed an appropriate body or not" },
             on: :body_appointed
-  validates :body_id, presence: { message: "Select an appropriate body" }, on: :body
+  validates :body_id, presence: { message: "Select an appropriate body" }, on: :body, if: :body_type_tsh?
+  validates :body_type, presence: { message: "Select an appropriate body" }, inclusion: %w[tsh default], on: :body_type
 
   def attributes
     {
@@ -56,5 +60,15 @@ class AppropriateBodySelectionForm
 
   def body_appointed?
     body_appointed == "yes"
+  end
+
+  def body_type_tsh?
+    body_type == "tsh"
+  end
+
+  def ensure_default_appropriate_body_id
+    if body_type == "default"
+      @body_id = default_appropriate_body.id
+    end
   end
 end

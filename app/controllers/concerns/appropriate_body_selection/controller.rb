@@ -13,7 +13,7 @@ module AppropriateBodySelection
                              update_appropriate_body]
 
       helper_method :appropriate_body_form, :appropriate_body_from_path, :appropriate_body_school_name,
-                    :appropriate_body_action_name, :preconfirm_next_action
+                    :appropriate_body_action_name, :preconfirm_next_action, :appropriate_body_default_selection
     end
 
     def appropriate_body_preconfirm
@@ -86,6 +86,9 @@ module AppropriateBodySelection
     def load_appropriate_body_form
       @appropriate_body_form = AppropriateBodySelectionForm.new(session[:appropriate_body_selection_form])
       @appropriate_body_form.cohort_start_year = appropriate_body_session_data[:cohort_start_year]
+      # TODO: FIX -------------
+      @appropriate_body_form.default_appropriate_body = AppropriateBody.first
+      # -----------------------
       @appropriate_body_form.assign_attributes(appropriate_body_form_params)
       @appropriate_body_form
     end
@@ -99,7 +102,8 @@ module AppropriateBodySelection
 
       params.require(:appropriate_body_selection_form)
             .permit(:body_appointed,
-                    :body_id)
+                    :body_id,
+                    :body_type)
     end
 
     def store_appropriate_body_form
@@ -136,6 +140,10 @@ module AppropriateBodySelection
 
     def appropriate_body_delete_session
       session.delete(:appropriate_body_selection)
+    end
+
+    def appropriate_body_default_selection
+      @appropriate_body_form.default_appropriate_body
     end
 
     def submit_appropriate_body_selection
