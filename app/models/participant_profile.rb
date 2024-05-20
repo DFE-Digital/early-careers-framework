@@ -73,20 +73,6 @@ class ParticipantProfile < ApplicationRecord
   # delivery_partner
   delegate :delivery_partner, to: :latest_induction_record, allow_nil: true
 
-  def self.eligible_to_change_cohort_and_continue_training(in_cohort_start_year:)
-    billable_states = %w[eligible payable paid].freeze
-
-    joins(:participant_declarations, schedule: :cohort)
-      .where(cohorts: { start_year: in_cohort_start_year - Cohort::OPEN_COHORTS_COUNT })
-      .where("participant_declarations.state IN (?) AND declaration_type != ?", billable_states, "completed")
-      .where.not(id: ParticipantDeclaration.billable.for_declaration(:completed).pluck(:participant_profile_id))
-      .distinct
-  end
-
-  def eligible_to_change_cohort_and_continue_training?(in_cohort_start_year:)
-    self.class.eligible_to_change_cohort_and_continue_training(in_cohort_start_year:).include?(self)
-  end
-
   def duplicate?
     ecf_participant_eligibility&.duplicate_profile_reason?
   end

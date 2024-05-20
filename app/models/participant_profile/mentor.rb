@@ -43,7 +43,7 @@ class ParticipantProfile::Mentor < ParticipantProfile::ECF
     "Mentor"
   end
 
-  def self.eligible_to_change_cohort_and_continue_training(in_cohort_start_year:)
-    super(in_cohort_start_year:).where(mentor_completion_date: nil)
+  def self.eligible_to_change_cohort_and_continue_training(in_cohort_start_year:, restrict_to_participant_ids:)
+    super(in_cohort_start_year:, restrict_to_participant_ids:).where(mentor_completion_date: nil)
   end
 end

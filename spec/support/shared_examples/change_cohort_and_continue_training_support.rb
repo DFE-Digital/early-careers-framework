@@ -6,8 +6,10 @@ RSpec.shared_examples "can change cohort and continue training" do |participant_
   describe ".eligible_to_change_cohort_and_continue_training" do
     let(:current_cohort) { eligible_participant.schedule.cohort }
     let(:in_cohort_start_year) { current_cohort.start_year + 3 }
+    let(:restrict_to_participant_ids) { [] }
     let(:cpd_lead_provider) { eligible_participant.lead_provider.cpd_lead_provider }
-    let(:eligible_participant) { create(declaration_type, :payable, declaration_type: :started).participant_profile }
+    let(:eligible_participants) { create_list(declaration_type, 3, :payable, declaration_type: :started).map(&:participant_profile) }
+    let(:eligible_participant) { eligible_participants.first }
 
     before do
       # Extra declaration on the same participant to ensure the results are distinct.
@@ -29,9 +31,15 @@ RSpec.shared_examples "can change cohort and continue training" do |participant_
       end
     end
 
-    subject { described_class.eligible_to_change_cohort_and_continue_training(in_cohort_start_year:) }
+    subject { described_class.eligible_to_change_cohort_and_continue_training(in_cohort_start_year:, restrict_to_participant_ids:) }
 
-    it { is_expected.to contain_exactly(eligible_participant) }
+    it { is_expected.to contain_exactly(*eligible_participants) }
+
+    context "when restricted to a set of participant IDs" do
+      let(:restrict_to_participant_ids) { [eligible_participants.first.id] }
+
+      it { is_expected.to contain_exactly(eligible_participants.first) }
+    end
   end
 
   describe "#eligible_to_change_cohort_and_continue_training?" do
