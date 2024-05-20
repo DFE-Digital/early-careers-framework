@@ -20,9 +20,9 @@
 
         <div class="govuk-radios" data-module="govuk-radios">
 
-          <%= f.govuk_radio_button(:body_type, "tsh", label: { text: "Teaching school hub"}, 'aria-controls': "appropriate-body-selection-form-body-id-field") %>
+          <%= f.govuk_radio_button(:body_type, "tsh", label: { text: "Teaching school hub"}, 'aria-controls': "conditional-tsh") %>
 
-          <div class="govuk-radios__conditional">
+          <div class="govuk-radios__conditional" id="conditional-tsh">
             <div class="govuk-form-group">
               <%= f.govuk_collection_select(:body_id,
                                             appropriate_bodies,
