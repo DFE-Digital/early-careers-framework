@@ -163,15 +163,11 @@ module Induction
       induction_record.schedule == schedule
     end
 
-    def moved_after_payments_frozen_at_cohort
-      source_cohort_start_year if moved_after_payments_frozen && source_cohort&.payments_frozen?
-    end
-
     def participant_declarations
       return false unless participant_profile
       return @participant_declarations if instance_variable_defined?(:@participant_declarations)
 
-      @participant_declarations = if moved_after_payments_frozen_at_cohort
+      @participant_declarations = if payments_frozen?
                                     participant_profile
                                       .participant_declarations
                                       .for_declaration("completed")
@@ -183,6 +179,10 @@ module Induction
                                       .billable_or_changeable
                                       .exists?
                                   end
+    end
+
+    def payments_frozen?
+      reason_for_new_cohort == :payments_frozen_at_previous_cohort && source_cohort&.payments_frozen?
     end
 
     def schedule
@@ -209,7 +209,9 @@ module Induction
 
     # Validations
     def reason_matches_source_cohort_frozen
-      errors.add(:reason_for_new_cohort, :payments_not_frozen_on_current_cohort)
+      if reason_for_new_cohort == :payments_frozen_at_previous_cohort && !source_cohort&.payments_frozen?
+        errors.add(:reason_for_new_cohort, :payments_not_frozen_at_source_cohort)
+      end
     end
 
     def target_cohort_start_year_matches_schedule

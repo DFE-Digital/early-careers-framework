@@ -50,7 +50,7 @@ RSpec.describe Induction::AmendParticipantCohort do
       it "returns false and set errors" do
         expect(form.save).to be_falsey
         expect(form.errors.first.attribute).to eq(:reason_for_new_cohort)
-        expect(form.errors.first.message).to eq("Payments not frozen on current cohort")
+        expect(form.errors.first.message).to eq("Payments not frozen at source cohort")
       end
     end
 
@@ -187,7 +187,7 @@ RSpec.describe Induction::AmendParticipantCohort do
           end
 
           context "when it is cohort-moved due to payments frozen in their current cohort" do
-            let(:moved_after_payments_frozen) { true }
+            let(:reason_for_new_cohort) { :payments_frozen_at_previous_cohort }
 
             before do
               source_cohort.update!(payments_frozen_at: Time.current)
@@ -338,15 +338,20 @@ RSpec.describe Induction::AmendParticipantCohort do
             end
 
             context "when the move is due to payments frozen in the cohort of the participant" do
-              let(:moved_after_payments_frozen) { true }
+              let(:reason_for_new_cohort) { :payments_frozen_at_previous_cohort }
 
               before do
                 source_cohort.update!(payments_frozen_at: Time.current)
               end
 
-              it "flag the participant as moved for that reason and record the original cohort start year" do
+              it "mark the participant as moved for that reason" do
                 expect(form.save).to be_truthy
-                expect(participant_profile.moved_after_payments_frozen_at_cohort).to eq(source_cohort_start_year)
+                expect(participant_profile).to be_reason_for_new_cohort_payments_frozen_at_previous_cohort
+              end
+
+              it "mark the participant as moved from the original cohort" do
+                expect(form.save).to be_truthy
+                expect(participant_profile.previous_cohort).to eq(source_cohort)
               end
             end
           end
