@@ -83,6 +83,10 @@ class Cohort < ApplicationRecord
     start_year.to_s
   end
 
+  def payments_frozen?
+    payments_frozen_at.present?
+  end
+
   def next
     self.class.find_by(start_year: start_year + 1)
   end

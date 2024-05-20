@@ -145,6 +145,10 @@ class ParticipantProfile::ECF < ParticipantProfile
       (ecf_participant_validation_data.present? && ecf_participant_eligibility.nil?)
   end
 
+  def moved_after_payments_frozen?
+    moved_after_payments_frozen_at_cohort.present?
+  end
+
   def policy_class
     ParticipantProfile::ECFPolicy
   end

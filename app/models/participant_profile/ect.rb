@@ -18,6 +18,10 @@ class ParticipantProfile::ECT < ParticipantProfile::ECF
       .where("induction_start_date IS NULL OR induction_start_date < ?", latest_induction_start_date)
   end
 
+  def completed_training?
+    completed_induction?
+  end
+
   def ect?
     true
   end
