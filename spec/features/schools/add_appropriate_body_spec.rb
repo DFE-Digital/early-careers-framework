@@ -87,6 +87,14 @@ private
     create_induction_tutor(@school)
   end
 
+  def given_the_school_is_a_british_school_overseas
+    @school.update(school_type_code: 37)
+  end
+
+  def given_the_school_is_an_independent_school
+    @school.update(school_type_code: [10, 11].sample)
+  end
+
   def create_induction_tutor(*schools)
     user = create(:user, full_name: "Induction Coordinator", email: "ic@example.com")
     @induction_coordinator_profile = create(:induction_coordinator_profile, schools:, user:)
@@ -130,8 +138,9 @@ private
 
   def when_i_choose_appropriate_body(appropriate_body)
     when_i_click_on_add_appropriate_body
-    choose "Teaching school hub"
-    when_i_fill_in_autocomplete "appropriate-body-selection-form-body-id-field", with: appropriate_body.name
+    choose appropriate_body.name
+    # choose "Teaching school hub"
+    # when_i_fill_in_autocomplete "appropriate-body-selection-form-body-id-field", with: appropriate_body.name
     click_on "Continue"
   end
 

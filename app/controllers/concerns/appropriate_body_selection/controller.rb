@@ -86,10 +86,8 @@ module AppropriateBodySelection
     def load_appropriate_body_form
       @appropriate_body_form = AppropriateBodySelectionForm.new(session[:appropriate_body_selection_form])
       @appropriate_body_form.cohort_start_year = appropriate_body_session_data[:cohort_start_year]
-      # TODO: FIX -------------
-      @appropriate_body_form.default_appropriate_body = AppropriateBody.first
-      # -----------------------
       @appropriate_body_form.assign_attributes(appropriate_body_form_params)
+      set_default_appropriate_body
       @appropriate_body_form
     end
 
@@ -134,6 +132,10 @@ module AppropriateBodySelection
       appropriate_body_session_data[:preconfirmation]
     end
 
+    def appropriate_body_school
+      appropriate_body_session_data[:school]
+    end
+
     def appropriate_body_school_name
       appropriate_body_session_data[:school].name
     end
@@ -150,6 +152,17 @@ module AppropriateBodySelection
       store_appropriate_body_form
       method(appropriate_body_submit_action).call
       appropriate_body_delete_session
+    end
+
+    def set_default_appropriate_body
+      # TODO: set default ABs
+      if appropriate_body_school&.school_type_code == 37
+        @appropriate_body_form.default_appropriate_body = AppropriateBody.first
+      elsif appropriate_body_school&.school_type_code == 10 || appropriate_body_school&.school_type_code == 11
+        @appropriate_body_form.default_appropriate_body = AppropriateBody.last
+      else
+        @appropriate_body_form.default_appropriate_body = nil
+      end
     end
   end
 end

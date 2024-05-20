@@ -26,6 +26,72 @@ RSpec.describe NPQ::ChangeToPending do
       end
     end
 
+    describe "remove funded place" do
+      let(:application_status) { :accepted }
+      let(:npq_course) { create(:npq_leadership_course, identifier: "npq-senior-leadership") }
+      let(:npq_lead_provider) { create(:npq_lead_provider) }
+
+      let(:statement) do
+        create(
+          :npq_statement,
+          :next_output_fee,
+          cpd_lead_provider: npq_lead_provider.cpd_lead_provider,
+          cohort: npq_application.cohort,
+        )
+      end
+      let(:funding_cap) { 10 }
+      let!(:npq_contract) do
+        create(
+          :npq_contract,
+          npq_lead_provider:,
+          cohort: statement.cohort,
+          course_identifier: npq_course.identifier,
+          version: statement.contract_version,
+          funding_cap:,
+        )
+      end
+
+      context "when the feature flag is not active" do
+        before { FeatureFlag.deactivate(:npq_capping) }
+
+        it "does not change funded place" do
+          npq_application.update!(funded_place: true)
+
+          expect { subject.call }.not_to change(npq_application, :funded_place)
+        end
+      end
+
+      context "when the feature flag is active" do
+        before do
+          FeatureFlag.activate(:npq_capping)
+        end
+
+        it "marks the funded place as nil if funded place is true" do
+          npq_application.update!(funded_place: true)
+
+          subject.call
+
+          expect(npq_application.reload.funded_place).to eq(nil)
+        end
+
+        it "marks the funded place as nil if funded place is false" do
+          npq_application.update!(funded_place: false)
+
+          subject.call
+
+          expect(npq_application.reload.funded_place).to eq(nil)
+        end
+
+        it "does not change `funded place` if funded place is nil" do
+          npq_application.update!(funded_place: nil)
+
+          subject.call
+
+          expect { subject.call }.not_to change(npq_application, :funded_place)
+        end
+      end
+    end
+
     context "when application has already been rejected" do
       let(:application_status) { :accepted }
 

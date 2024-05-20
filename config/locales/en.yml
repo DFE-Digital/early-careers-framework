@@ -108,6 +108,8 @@ en:
     greater_than_or_equal_to: *default_message
   npq_application:
     missing_npq_application: "The entered '#/npq_application' is missing from your request. Check details and try again."
+    missing_funded_place: "The entered '#/funded_place' is missing from your request. Check details and try again."
+    cohort_does_not_accept_capping: "The cohort does not accept funded places (pending)"
     has_another_accepted_application: The participant has already had an application accepted for this course.
     has_already_been_accepted: This NPQ application has already been accepted
     has_already_been_rejected: This NPQ application has already been rejected
@@ -115,6 +117,9 @@ en:
     cannot_change_from_rejected: Once rejected an application cannot change state
     not_eligible_for_funded_place: "The participant is not eligible for funding, so '#/funded_place' cannot be set to true."
     funded_place_required: "Set '#/funded_place' to true or false."
+    cannot_change_funded_status_from_non_accepted: You must accept the application before attempting to change the '#/funded_place' setting
+    cannot_change_funded_status_non_eligible: This participant is not eligible for funding. Contact us if you think this is wrong
+    cannot_change_funded_place: You must void or claw back your declarations for this participant before being able to set '#/funded_place' to false
   errors:
     email: &email_error_messages
       blank: "Enter an email address"
