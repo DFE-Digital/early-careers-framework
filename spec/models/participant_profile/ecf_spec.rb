@@ -220,24 +220,6 @@ RSpec.describe ParticipantProfile::ECF, type: :model do
     end
   end
 
-  describe "#moved_after_payments_frozen?" do
-    context "when a cohort start year in 'moved_after_payments_frozen_at_cohort' field has been set" do
-      before do
-        subject.moved_after_payments_frozen_at_cohort = 2022
-      end
-
-      it { is_expected.to be_moved_after_payments_frozen }
-    end
-
-    context "when a cohort start year in 'moved_after_payments_frozen_at_cohort' field has not been set" do
-      before do
-        subject.moved_after_payments_frozen_at_cohort = nil
-      end
-
-      it { is_expected.not_to be_moved_after_payments_frozen }
-    end
-  end
-
   describe "#role" do
     context "when participant is Mentor" do
       let(:profile) { create(:mentor_participant_profile) }

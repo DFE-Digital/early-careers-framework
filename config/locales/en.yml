@@ -328,7 +328,7 @@ en:
               blank: "Not registered"
               not_active: "Not active"
             reason_for_new_cohort:
-              payments_not_frozen_on_current_cohort: "Payments not frozen on current cohort"
+              payments_not_frozen_at_source_cohort: "Payments not frozen at source cohort"
             source_cohort_start_year:
               invalid: "Invalid value. Must be an integer between %{start} and %{end}"
             target_cohort_start_year:

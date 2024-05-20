@@ -35,6 +35,7 @@ class ParticipantProfile < ApplicationRecord
     withdrawn: "withdrawn",
   }, _prefix: "training_status"
 
+  attribute :reason_for_new_cohort, :string
   enum reason_for_new_cohort: {
     dqt_mismatch_induction_start_date: "dqt_mismatch_induction_start_date",
     lead_provider_change: "lead_provider_change",
