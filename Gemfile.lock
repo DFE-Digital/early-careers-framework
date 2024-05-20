@@ -259,7 +259,7 @@ GEM
       html-attributes-utils (~> 1.0.0, >= 1.0.0)
       pagy (>= 6, < 8)
       view_component (>= 3.9, < 3.12)
-    govuk_design_system_formbuilder (5.3.3)
+    govuk_design_system_formbuilder (5.4.0)
       actionview (>= 6.1)
       activemodel (>= 6.1)
       activesupport (>= 6.1)
@@ -340,7 +340,7 @@ GEM
     method_source (1.0.0)
     mini_mime (1.1.5)
     mini_portile2 (2.8.6)
-    minitest (5.22.3)
+    minitest (5.23.0)
     msgpack (1.7.2)
     multi_json (1.15.0)
     multi_xml (0.7.1)
@@ -406,7 +406,7 @@ GEM
     pundit-matchers (1.9.0)
       rspec-rails (>= 3.0.0)
     raabro (1.4.0)
-    racc (1.7.3)
+    racc (1.8.0)
     rack (2.2.9)
     rack-attack (6.7.0)
       rack (>= 1.0, < 4)
@@ -729,7 +729,7 @@ DEPENDENCIES
   google-cloud-bigquery
   googleauth
   govuk-components (~> 5.3.2)
-  govuk_design_system_formbuilder (~> 5.3.3)
+  govuk_design_system_formbuilder (~> 5.4.0)
   httpclient (~> 2.8, >= 2.8.3)
   jsbundling-rails
   json-diff (~> 0.4.1)
