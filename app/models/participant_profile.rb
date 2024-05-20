@@ -35,10 +35,20 @@ class ParticipantProfile < ApplicationRecord
     withdrawn: "withdrawn",
   }, _prefix: "training_status"
 
+  enum reason_for_new_cohort: {
+    dqt_mismatch_induction_start_date: "dqt_mismatch_induction_start_date",
+    lead_provider_change: "lead_provider_change",
+    payments_frozen_at_previous_cohort: "payments_frozen_at_previous_cohort",
+    provisional_previous_cohort: "provisional_previous_cohort",
+    registration_mistake: "registration_mistake",
+    unknown: "unknown",
+  }, _prefix: true
+
   # Associations
   belongs_to :participant_identity
   belongs_to :schedule, class_name: "Finance::Schedule"
   belongs_to :teacher_profile, touch: true
+  belongs_to :previous_cohort, class_name: "Cohort", optional: true
 
   has_many :current_induction_records, -> { current }, class_name: "InductionRecord"
   has_many :deleted_duplicates, class_name: "Finance::ECF::DeletedDuplicate", foreign_key: :primary_participant_profile_id

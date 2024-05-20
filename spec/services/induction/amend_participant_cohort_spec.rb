@@ -5,9 +5,13 @@ RSpec.describe Induction::AmendParticipantCohort do
     let(:participant_profile) {}
     let(:source_cohort_start_year) { Cohort.previous.start_year }
     let(:target_cohort_start_year) { Cohort.current.start_year }
+    let(:reason_for_new_cohort) { :registration_mistake }
 
     subject(:form) do
-      described_class.new(participant_profile:, source_cohort_start_year:, target_cohort_start_year:)
+      described_class.new(participant_profile:,
+                          source_cohort_start_year:,
+                          target_cohort_start_year:,
+                          reason_for_new_cohort:)
     end
 
     context "when the source_cohort_start_year is not an integer" do
@@ -37,6 +41,16 @@ RSpec.describe Induction::AmendParticipantCohort do
         expect(form.save).to be_falsey
         expect(form.errors.first.attribute).to eq(:source_cohort_start_year)
         expect(form.errors.first.message).to eq("Invalid value. Must be an integer between 2020 and #{Date.current.year}")
+      end
+    end
+
+    context "when the source cohort is not payments-closed and the reason for new cohort is that" do
+      let(:reason_for_new_cohort) { :payments_frozen_at_previous_cohort }
+
+      it "returns false and set errors" do
+        expect(form.save).to be_falsey
+        expect(form.errors.first.attribute).to eq(:reason_for_new_cohort)
+        expect(form.errors.first.message).to eq("Payments not frozen on current cohort")
       end
     end
 
@@ -91,7 +105,7 @@ RSpec.describe Induction::AmendParticipantCohort do
       let!(:target_cohort) { create(:cohort, start_year: target_cohort_start_year) }
       let!(:target_cohort_schedule) { create(:ecf_schedule, cohort: target_cohort) }
       let!(:participant_profile) do
-        create(:ect_participant_profile, training_status: :active, school_cohort: source_school_cohort)
+        create(:ect_participant_profile, school_cohort: source_school_cohort)
       end
 
       before do
@@ -140,6 +154,18 @@ RSpec.describe Induction::AmendParticipantCohort do
         end
       end
 
+      context "when the participant has completed induction" do
+        before do
+          participant_profile.induction_completion_date = Date.current
+        end
+
+        it "returns false and set errors" do
+          expect(form.save).to be_falsey
+          expect(form.errors.first.attribute).to eq(:participant_profile)
+          expect(form.errors.first.message).to eq("The participant has completed their ECF training")
+        end
+      end
+
       %i[submitted eligible payable paid].each do |declaration_state|
         context "when the participant has #{declaration_state} declarations" do
           before do
@@ -152,10 +178,39 @@ RSpec.describe Induction::AmendParticipantCohort do
                                                                  cohort: participant_profile.schedule.cohort)
           end
 
-          it "returns false and set errors" do
-            expect(form.save).to be_falsey
-            expect(form.errors.first.attribute).to eq(:participant_declarations)
-            expect(form.errors.first.message).to eq("The participant has billable or submitted declarations")
+          context "when it is not cohort-moved due to payments frozen in their current cohort" do
+            it "returns false and set errors" do
+              expect(form.save).to be_falsey
+              expect(form.errors.first.attribute).to eq(:participant_declarations)
+              expect(form.errors.first.message).to eq("The participant has billable or submitted declarations")
+            end
+          end
+
+          context "when it is cohort-moved due to payments frozen in their current cohort" do
+            let(:moved_after_payments_frozen) { true }
+
+            before do
+              source_cohort.update!(payments_frozen_at: Time.current)
+            end
+
+            context "when the declaration is of type 'completed'" do
+              before do
+                participant_profile.participant_declarations.first.update!(declaration_type: "completed")
+              end
+
+              if declaration_state != :submitted
+                it "returns false and set errors" do
+                  expect(form.save).to be_falsey
+                  expect(form.errors.first.attribute).to eq(:participant_declarations)
+                  expect(form.errors.first.message).to eq("The participant has billable or submitted declarations")
+                end
+              end
+            end
+
+            it "do not set errors on declarations" do
+              expect(form.save).to be_falsey
+              expect(form.errors.map(&:attribute)).not_to eq(:participant_declarations)
+            end
           end
         end
       end
@@ -272,9 +327,27 @@ RSpec.describe Induction::AmendParticipantCohort do
                                                                    cohort: participant_profile.schedule.cohort)
             end
 
-            it "executes the transfer, returns true and set no errors" do
+            it "executes the transfer" do
+              expect(form.save).to be_truthy
+              expect(participant_profile.reload.latest_induction_record.cohort_start_year).to eq(target_cohort_start_year)
+            end
+
+            it "returns true and set no errors" do
               expect(form.save).to be_truthy
               expect(form.errors).to be_empty
+            end
+
+            context "when the move is due to payments frozen in the cohort of the participant" do
+              let(:moved_after_payments_frozen) { true }
+
+              before do
+                source_cohort.update!(payments_frozen_at: Time.current)
+              end
+
+              it "flag the participant as moved for that reason and record the original cohort start year" do
+                expect(form.save).to be_truthy
+                expect(participant_profile.moved_after_payments_frozen_at_cohort).to eq(source_cohort_start_year)
+              end
             end
           end
         end
