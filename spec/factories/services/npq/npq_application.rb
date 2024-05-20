@@ -116,7 +116,8 @@ FactoryBot.define do
                declaration_type: "started",
                participant_profile: npq_application.profile,
                course_identifier: npq_application.npq_course.identifier,
-               cpd_lead_provider: npq_application.npq_lead_provider.cpd_lead_provider)
+               cpd_lead_provider: npq_application.npq_lead_provider.cpd_lead_provider,
+               cohort: npq_application.cohort)
       end
     end
   end

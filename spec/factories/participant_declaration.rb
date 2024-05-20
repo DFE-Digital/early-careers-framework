@@ -3,7 +3,7 @@
 FactoryBot.define do
   factory :participant_declaration do
     declaration_type { "started" }
-    cohort { participant_profile.schedule.cohort || Cohort.current || create(:cohort, :current) }
+    cohort { Cohort.current || create(:cohort, :current) }
 
     declaration_date do
       participant_profile.schedule.milestones.find_by!(declaration_type:).start_date
