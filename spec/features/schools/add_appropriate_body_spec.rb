@@ -16,21 +16,79 @@ RSpec.describe "Add a school cohort appropriate body", type: :feature, js: true,
   context "When appropriate body was not appointed during cohort setup" do
     let!(:appropriate_body) { create(:appropriate_body_teaching_school_hub) }
 
-    scenario "The appropriate body can be added and set for all ECTs" do
-      given_there_is_a_school_and_an_induction_coordinator
-      and_i_have_added_an_ect
-      and_i_am_signed_in_as_an_induction_coordinator
-      then_i_am_on_the_manage_your_training_page
+    context "For any GIAS code" do
+      scenario "The appropriate body can be added and set for all ECTs" do
+        given_there_is_a_school_and_an_induction_coordinator
+        and_i_have_added_an_ect
+        and_i_am_signed_in_as_an_induction_coordinator
+        then_i_am_on_the_manage_your_training_page
 
-      # @school.update!(school_type_code: 10)
-      when_i_choose_appropriate_body(appropriate_body)
-      then_i_see_the_confirmation_page
+        when_i_choose_appropriate_body(appropriate_body)
+        then_i_see_the_confirmation_page
 
-      when_i_go_back_to_manage_your_training_page
-      then_i_see_appropriate_body(appropriate_body)
+        when_i_go_back_to_manage_your_training_page
+        then_i_see_appropriate_body(appropriate_body)
 
-      when_i_go_to_the_teacher_profile_page
-      then_i_see_appropriate_body(appropriate_body)
+        when_i_go_to_the_teacher_profile_page
+        then_i_see_appropriate_body(appropriate_body)
+      end
+    end
+
+    context "For british schools overseas (GIAS 37)" do
+      scenario "The appropriate body can be added and set for all ECTs" do
+        given_there_is_a_school_and_an_induction_coordinator
+        and_school_gias_code_is(37)
+        and_i_have_added_an_ect
+        and_i_am_signed_in_as_an_induction_coordinator
+        then_i_am_on_the_manage_your_training_page
+
+        when_i_choose_teaching_school_hub(appropriate_body)
+        then_i_see_the_confirmation_page
+
+        when_i_go_back_to_manage_your_training_page
+        then_i_see_appropriate_body(appropriate_body)
+
+        when_i_go_to_the_teacher_profile_page
+        then_i_see_appropriate_body(appropriate_body)
+      end
+    end
+
+    context "For independent schools (GIAS 10)" do
+      scenario "The appropriate body can be added and set for all ECTs" do
+        given_there_is_a_school_and_an_induction_coordinator
+        and_school_gias_code_is(10)
+        and_i_have_added_an_ect
+        and_i_am_signed_in_as_an_induction_coordinator
+        then_i_am_on_the_manage_your_training_page
+
+        when_i_choose_teaching_school_hub(appropriate_body)
+        then_i_see_the_confirmation_page
+
+        when_i_go_back_to_manage_your_training_page
+        then_i_see_appropriate_body(appropriate_body)
+
+        when_i_go_to_the_teacher_profile_page
+        then_i_see_appropriate_body(appropriate_body)
+      end
+    end
+
+    context "For independent schools (GIAS 11)" do
+      scenario "The appropriate body can be added and set for all ECTs" do
+        given_there_is_a_school_and_an_induction_coordinator
+        and_school_gias_code_is(11)
+        and_i_have_added_an_ect
+        and_i_am_signed_in_as_an_induction_coordinator
+        then_i_am_on_the_manage_your_training_page
+
+        when_i_choose_teaching_school_hub(appropriate_body)
+        then_i_see_the_confirmation_page
+
+        when_i_go_back_to_manage_your_training_page
+        then_i_see_appropriate_body(appropriate_body)
+
+        when_i_go_to_the_teacher_profile_page
+        then_i_see_appropriate_body(appropriate_body)
+      end
     end
   end
 
@@ -43,7 +101,6 @@ RSpec.describe "Add a school cohort appropriate body", type: :feature, js: true,
       and_i_am_signed_in_as_an_induction_coordinator
       then_i_am_on_the_manage_your_training_page
       and_i_can_change_appropriate_body
-      when_i_choose_to_change_appropriate_body_to(appropriate_body)
     end
   end
 
@@ -70,11 +127,7 @@ RSpec.describe "Add a school cohort appropriate body", type: :feature, js: true,
       then_i_am_on_the_manage_your_training_page
 
       when_i_click_on_add_appropriate_body
-      and_i_choose_teaching_school_hub
-      when_i_fill_in_autocomplete "appropriate-body-selection-form-body-id-field", with: "Enabled AB"
-      then_i_see_the_enabled_appropriate_body
-      when_i_fill_in_autocomplete "appropriate-body-selection-form-body-id-field", with: "Enabled AB"
-      and_i_dont_see_the_disabled_appropriate_body
+      then_autocomplete_does_not_allow "appropriate-body-selection-form-body-id-field", value: "Disabled AB"
     end
   end
 
@@ -144,8 +197,13 @@ private
 
   def when_i_choose_appropriate_body(appropriate_body)
     when_i_click_on_add_appropriate_body
-    # choose appropriate_body.name
-    # choose "Teaching school hub"
+    when_i_fill_in_autocomplete "appropriate-body-selection-form-body-id-field", with: appropriate_body.name
+    click_on "Continue"
+  end
+
+  def when_i_choose_teaching_school_hub(appropriate_body)
+    when_i_click_on_add_appropriate_body
+    choose "Teaching school hub"
     when_i_fill_in_autocomplete "appropriate-body-selection-form-body-id-field", with: appropriate_body.name
     click_on "Continue"
   end
@@ -182,6 +240,10 @@ private
 
   def when_i_go_back_to_manage_your_training_page
     click_on "Return to manage your training"
+  end
+
+  def and_school_gias_code_is(code)
+    @school.update!(school_type_code: code)
   end
 
   def and_i_choose_teaching_school_hub
