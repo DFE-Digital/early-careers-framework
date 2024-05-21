@@ -21,4 +21,8 @@ class ParticipantProfile::ECT < ParticipantProfile::ECF
   def role
     "Early career teacher"
   end
+
+  def self.eligible_to_change_cohort_and_continue_training(in_cohort_start_year:, restrict_to_participant_ids:)
+    super(in_cohort_start_year:, restrict_to_participant_ids:).where(induction_completion_date: nil)
+  end
 end

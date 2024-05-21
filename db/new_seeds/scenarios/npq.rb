@@ -105,6 +105,7 @@ module NewSeeds
           participant_profile:,
           course_identifier: npq_course.identifier,
           cpd_lead_provider: npq_lead_provider.cpd_lead_provider,
+          cohort: participant_profile.schedule.cohort,
         )
 
         self

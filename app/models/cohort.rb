@@ -4,6 +4,7 @@ class Cohort < ApplicationRecord
   has_paper_trail
 
   NPQ_PLUS_1_YEAR = 2020
+  OPEN_COHORTS_COUNT = 3
 
   has_many :call_off_contracts
   has_many :npq_contracts
