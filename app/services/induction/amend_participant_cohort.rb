@@ -14,19 +14,17 @@
 #      checking they are sitting currently in 2021/2022
 #       Induction::AmendParticipantCohort.new(participant_profile:,
 #                                             source_cohort_start_year: 2021,
-#                                             target_cohort_start_year: 2022,
-#                                             reason_for_new_cohort: :registration_mistake).save
+#                                             target_cohort_start_year: 2022).save
 #
 #  - This will set induction_programme and schedule for the participant_profile
 #    to the cohort of :schedule checking they sits currently in 2021/2022
 #       Induction::AmendParticipantCohort.new(participant_profile:,
 #                                             source_cohort_start_year: 2021,
-#                                             schedule:,
-#                                             reason_for_new_cohort: :lead_provider_change).save
+#                                             schedule:).save
 #
-#  - For cohort changes on participants whose current cohort has been payments_closed pass
-#    reason_for_new_cohort: :payments_frozen_at_previous_cohort
-#    This will allow the cohort change to complete successfully even if the participant has billable declarations.
+#  - For cohort changes on participants whose current cohort has been payments_closed and are moved to
+#    the current cohort (Cohort.current), it will automatically flag the participant_profile as
+#    cohort_changed_after_payments_frozen: true
 #
 module Induction
   class AmendParticipantCohort
@@ -34,8 +32,7 @@ module Induction
 
     ECF_FIRST_YEAR = 2020
 
-    attr_accessor :participant_profile, :source_cohort_start_year, :target_cohort_start_year,
-                  :reason_for_new_cohort
+    attr_accessor :participant_profile, :source_cohort_start_year, :target_cohort_start_year
     attr_writer :schedule
 
     validates :source_cohort_start_year,
@@ -48,9 +45,6 @@ module Induction
                 end: Date.current.year,
               },
               on: :start
-
-    validate :reason_matches_source_cohort_frozen,
-             on: :start
 
     validates :target_cohort_start_year,
               numericality: {
@@ -68,6 +62,8 @@ module Induction
                 message: ->(form, _) { I18n.t("errors.cohort.blank", year: form.target_cohort_start_year, where: "the service") },
               },
               on: :start
+
+    validate :target_cohort_payments_active
 
     validates :participant_profile,
               presence: true,
@@ -111,20 +107,16 @@ module Induction
     def initialize(*)
       super
       @target_cohort_start_year = (@target_cohort_start_year || @schedule&.cohort_start_year).to_i
-      @reason_for_new_cohort ||= :unknown
     end
 
     def current_induction_record_updated?
       ActiveRecord::Base.transaction do
         Induction::ChangeInductionRecord.call(induction_record:,
                                               changes: { induction_programme:,
-                                                         schedule:,
-                                                         training_status: :active })
+                                                         schedule: })
         participant_profile.update!(school_cohort: target_school_cohort,
                                     schedule:,
-                                    training_status: :active,
-                                    previous_cohort: source_cohort,
-                                    reason_for_new_cohort:)
+                                    cohort_changed_after_payments_frozen:)
       rescue ActiveRecord::RecordInvalid => e
         errors.add(:induction_record, induction_record.errors.full_messages.first) if induction_record.errors.any?
         errors.add(:participant_profile, participant_profile.errors.full_messages.first) if participant_profile.errors.any?
@@ -167,7 +159,7 @@ module Induction
       return false unless participant_profile
       return @participant_declarations if instance_variable_defined?(:@participant_declarations)
 
-      @participant_declarations = if payments_frozen?
+      @participant_declarations = if cohort_changed_after_payments_frozen
                                     participant_profile
                                       .participant_declarations
                                       .for_declaration("completed")
@@ -181,8 +173,8 @@ module Induction
                                   end
     end
 
-    def payments_frozen?
-      reason_for_new_cohort == :payments_frozen_at_previous_cohort && source_cohort&.payments_frozen?
+    def cohort_changed_after_payments_frozen
+      source_cohort&.payments_frozen? && target_cohort == Cohort.current
     end
 
     def schedule
@@ -208,10 +200,8 @@ module Induction
     end
 
     # Validations
-    def reason_matches_source_cohort_frozen
-      if reason_for_new_cohort == :payments_frozen_at_previous_cohort && !source_cohort&.payments_frozen?
-        errors.add(:reason_for_new_cohort, :payments_not_frozen_at_source_cohort)
-      end
+    def target_cohort_payments_active
+      errors.add(:target_cohort_start_year, :payments_frozen) if target_cohort&.payments_frozen?
     end
 
     def target_cohort_start_year_matches_schedule

@@ -272,7 +272,6 @@
   - id
   - created_at
   - updated_at
-  - payments_frozen_at
   - start_year
   - registration_start_date
   - academic_year_start_date
