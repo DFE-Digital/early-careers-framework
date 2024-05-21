@@ -182,6 +182,24 @@ RSpec.describe Cohort, type: :model do
     end
   end
 
+  describe "#payments_frozen?" do
+    context "when a date to frozen payments has been set" do
+      before do
+        subject.payments_frozen_at = Date.current
+      end
+
+      it { is_expected.to be_payments_frozen }
+    end
+
+    context "when a date to frozen payments has not been set" do
+      before do
+        subject.payments_frozen_at = nil
+      end
+
+      it { is_expected.not_to be_payments_frozen }
+    end
+  end
+
   describe "#schedules" do
     subject { described_class.create!(start_year: 3000) }
 
