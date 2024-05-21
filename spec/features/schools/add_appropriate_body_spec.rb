@@ -111,11 +111,11 @@ private
   end
 
   def and_i_can_add_appropriate_body
-    expect(page).to have_summary_row_action("Appropriate body", "Add")
+    expect(page).to have_summary_row_action("Appropriate body", "Add appropriate body")
   end
 
   def and_i_can_change_appropriate_body
-    expect(page).to have_summary_row_action("Appropriate body", "Change")
+    expect(page).to have_summary_row_action("Appropriate body", "Change appropriate body")
   end
 
   def and_appropriate_body_is_appointed(appropriate_body)
@@ -123,7 +123,7 @@ private
   end
 
   def when_i_click_on_add_appropriate_body
-    when_i_click_on_summary_row_action("Appropriate body", "Add")
+    when_i_click_on_summary_row_action("Appropriate body", "Add appropriate body")
   end
 
   def when_i_choose_appropriate_body(appropriate_body)
