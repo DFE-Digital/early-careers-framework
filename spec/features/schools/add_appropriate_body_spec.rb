@@ -22,6 +22,7 @@ RSpec.describe "Add a school cohort appropriate body", type: :feature, js: true,
       and_i_am_signed_in_as_an_induction_coordinator
       then_i_am_on_the_manage_your_training_page
 
+      # @school.update!(school_type_code: 10)
       when_i_choose_appropriate_body(appropriate_body)
       then_i_see_the_confirmation_page
 
@@ -42,6 +43,7 @@ RSpec.describe "Add a school cohort appropriate body", type: :feature, js: true,
       and_i_am_signed_in_as_an_induction_coordinator
       then_i_am_on_the_manage_your_training_page
       and_i_can_change_appropriate_body
+      when_i_choose_to_change_appropriate_body_to(appropriate_body)
     end
   end
 
@@ -136,8 +138,21 @@ private
     when_i_click_on_summary_row_action("Appropriate body", "Add appropriate body")
   end
 
+  def when_i_click_on_change_appropriate_body
+    when_i_click_on_summary_row_action("Appropriate body", "Change")
+  end
+
   def when_i_choose_appropriate_body(appropriate_body)
     when_i_click_on_add_appropriate_body
+    # choose appropriate_body.name
+    # choose "Teaching school hub"
+    when_i_fill_in_autocomplete "appropriate-body-selection-form-body-id-field", with: appropriate_body.name
+    click_on "Continue"
+  end
+
+  def when_i_choose_to_change_appropriate_body_to(appropriate_body)
+    when_i_click_on_change_appropriate_body
+    click_on "Confirm and continue"
     choose appropriate_body.name
     # choose "Teaching school hub"
     # when_i_fill_in_autocomplete "appropriate-body-selection-form-body-id-field", with: appropriate_body.name

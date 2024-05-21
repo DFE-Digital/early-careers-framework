@@ -10,34 +10,59 @@
     <%= form_for @appropriate_body_form, url: { action: :update_appropriate_body }, method: :put do |f| %>
       <%= f.govuk_error_summary %>
 
-      <div class="govuk-form-group">
-        <h1 class="govuk-label-wrapper">
-          <span class="govuk-caption-l"><%= appropriate_body_school_name %></span>
-          <label class="govuk-label govuk-label--l" for="whichTSH">
-            Which type of appropriate body have you appointed?
-          </label>
-        </h1>
+      <% if appropriate_body_default_selection %>
 
-        <div class="govuk-radios" data-module="govuk-radios">
+        <div class="govuk-form-group">
+          <h1 class="govuk-label-wrapper">
+            <span class="govuk-caption-l"><%= appropriate_body_school_name %></span>
+            <label class="govuk-label govuk-label--l" for="whichTSH">
+              Which type of appropriate body have you appointed?
+            </label>
+          </h1>
 
-          <%= f.govuk_radio_button(:body_type, "tsh", label: { text: "Teaching school hub"}, 'aria-controls': "conditional-tsh") %>
+          <div class="govuk-radios" data-module="govuk-radios">
 
-          <div class="govuk-radios__conditional" id="conditional-tsh">
-            <div class="govuk-form-group">
-              <%= f.govuk_collection_select(:body_id,
-                                            appropriate_bodies,
-                                            :id,
-                                            :name,
-                                            label: { text: "Which teaching school hub have you appointed?", size: 's' },
-                                            options: { include_blank: true },
-                                            class: "autocomplete") %>
+            <%= f.govuk_radio_button(:body_type, "tsh", label: { text: "Teaching school hub"}, 'aria-controls': "conditional-tsh") %>
+
+            <div class="govuk-radios__conditional" id="conditional-tsh">
+              <div class="govuk-form-group">
+                <%= f.govuk_collection_select(:body_id,
+                                              appropriate_bodies,
+                                              :id,
+                                              :name,
+                                              label: { text: "Which teaching school hub have you appointed?", size: 's' },
+                                              options: { include_blank: true },
+                                              class: "autocomplete") %>
+              </div>
             </div>
+
+            <%= f.govuk_radio_button(:body_type, "default", label: { text: appropriate_body_default_selection.name }) %>
+
           </div>
-
-          <%= f.govuk_radio_button(:body_type, "default", label: { text: appropriate_body_default_selection.name }) %>
-
         </div>
-      </div>
+
+      <% else %>
+
+        <div class="govuk-form-group">
+          <h1 class="govuk-label-wrapper">
+            <span class="govuk-caption-l"><%= appropriate_body_school_name %></span>
+            <label class="govuk-label govuk-label--l" for="whichTSH">
+              Which teaching school hub have you appointed?
+            </label>
+          </h1>
+
+          <%= f.govuk_collection_select(:body_id,
+                                        appropriate_bodies,
+                                        :id,
+                                        :name,
+                                        label: { text: "Which teaching school hub have you appointed?", size: 's' },
+                                        options: { include_blank: true },
+                                        class: "autocomplete") %>
+
+          <%= f.hidden_field(:body_type, value: "tsh") %>
+        </div>
+
+      <% end %>
 
       <p class="govuk-body">If any of your ECTs will work with a different appropriate body, you can tell us when you register them later.</p>
 
