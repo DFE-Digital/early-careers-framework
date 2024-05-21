@@ -5,13 +5,11 @@ RSpec.describe Induction::AmendParticipantCohort do
     let(:participant_profile) {}
     let(:source_cohort_start_year) { Cohort.previous.start_year }
     let(:target_cohort_start_year) { Cohort.current.start_year }
-    let(:reason_for_new_cohort) { :registration_mistake }
 
     subject(:form) do
       described_class.new(participant_profile:,
                           source_cohort_start_year:,
-                          target_cohort_start_year:,
-                          reason_for_new_cohort:)
+                          target_cohort_start_year:)
     end
 
     context "when the source_cohort_start_year is not an integer" do
@@ -41,16 +39,6 @@ RSpec.describe Induction::AmendParticipantCohort do
         expect(form.save).to be_falsey
         expect(form.errors.first.attribute).to eq(:source_cohort_start_year)
         expect(form.errors.first.message).to eq("Invalid value. Must be an integer between 2020 and #{Date.current.year}")
-      end
-    end
-
-    context "when the source cohort is not payments-closed and the reason for new cohort is that" do
-      let(:reason_for_new_cohort) { :payments_frozen_at_previous_cohort }
-
-      it "returns false and set errors" do
-        expect(form.save).to be_falsey
-        expect(form.errors.first.attribute).to eq(:reason_for_new_cohort)
-        expect(form.errors.first.message).to eq("Payments not frozen at source cohort")
       end
     end
 
@@ -95,6 +83,18 @@ RSpec.describe Induction::AmendParticipantCohort do
         expect(form.errors[:target_cohort]).to_not be_nil
         expect(form.errors.messages[:target_cohort].first)
           .to eq("starting on #{target_cohort_start_year} not setup on the service")
+      end
+    end
+
+    context "when payments in the target cohort has been frozen" do
+      before do
+        Cohort.find_by_start_year(target_cohort_start_year).update!(payments_frozen_at: Date.yesterday)
+      end
+
+      it "returns false and set errors" do
+        expect(form.save).to be_falsey
+        expect(form.errors.messages[:target_cohort_start_year].first)
+          .to eq("Invalid value. The cohort is frozen for payments")
       end
     end
 
@@ -186,9 +186,7 @@ RSpec.describe Induction::AmendParticipantCohort do
             end
           end
 
-          context "when it is cohort-moved due to payments frozen in their current cohort" do
-            let(:reason_for_new_cohort) { :payments_frozen_at_previous_cohort }
-
+          context "when it is cohort-moved to the current cohort due to payments frozen in their current cohort" do
             before do
               source_cohort.update!(payments_frozen_at: Time.current)
             end
@@ -338,20 +336,17 @@ RSpec.describe Induction::AmendParticipantCohort do
             end
 
             context "when the move is due to payments frozen in the cohort of the participant" do
-              let(:reason_for_new_cohort) { :payments_frozen_at_previous_cohort }
-
               before do
                 source_cohort.update!(payments_frozen_at: Time.current)
               end
 
               it "mark the participant as moved for that reason" do
                 expect(form.save).to be_truthy
-                expect(participant_profile).to be_reason_for_new_cohort_payments_frozen_at_previous_cohort
+                expect(participant_profile).to be_cohort_changed_after_payments_frozen
               end
 
               it "mark the participant as moved from the original cohort" do
                 expect(form.save).to be_truthy
-                expect(participant_profile.previous_cohort).to eq(source_cohort)
               end
             end
           end

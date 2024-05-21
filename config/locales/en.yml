@@ -327,14 +327,13 @@ en:
             participant_profile:
               blank: "Not registered"
               not_active: "Not active"
-            reason_for_new_cohort:
-              payments_not_frozen_at_source_cohort: "Payments not frozen at source cohort"
             source_cohort_start_year:
               invalid: "Invalid value. Must be an integer between %{start} and %{end}"
             target_cohort_start_year:
               excluded: "Invalid value. Must be different to %{year}"
               incompatible_with_schedule: "Invalid value. Must match that of the schedule"
               invalid: "Invalid value. Must be an integer between %{start} and %{end}"
+              payments_frozen: "Invalid value. The cohort is frozen for payments"
         edit_induction_tutor_form:
           attributes:
             email:

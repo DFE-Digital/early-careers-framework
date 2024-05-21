@@ -83,12 +83,12 @@ class Cohort < ApplicationRecord
     start_year.to_s
   end
 
-  def payments_frozen?
-    payments_frozen_at.present?
-  end
-
   def next
     self.class.find_by(start_year: start_year + 1)
+  end
+
+  def payments_frozen?
+    payments_frozen_at.present?
   end
 
   def npq_plus_one_or_earlier?
@@ -97,10 +97,6 @@ class Cohort < ApplicationRecord
 
   def previous
     self.class.find_by(start_year: start_year - 1)
-  end
-
-  def payments_frozen?
-    payments_frozen_at.present?
   end
 
   # e.g. "2022"

@@ -182,7 +182,7 @@ RSpec.describe Cohort, type: :model do
     end
   end
 
-  describe "#payments_frozen?" do <<<<<<< HEAD
+  describe "#payments_frozen?" do
     context "when a date to freeze payments has been set" do
       before do
         subject.payments_frozen_at = Date.current
