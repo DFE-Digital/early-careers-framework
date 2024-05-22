@@ -94,7 +94,7 @@ RSpec.describe Induction::AmendParticipantCohort do
       it "returns false and set errors" do
         expect(form.save).to be_falsey
         expect(form.errors.messages[:target_cohort_start_year].first)
-          .to eq("Invalid value. The cohort is frozen for payments")
+          .to eq("Not permitted. The cohort is frozen for payments")
       end
     end
 
@@ -102,7 +102,7 @@ RSpec.describe Induction::AmendParticipantCohort do
       let!(:source_cohort) { create(:cohort, start_year: source_cohort_start_year) }
       let!(:source_school_cohort) { create(:school_cohort, :fip, cohort: source_cohort) }
       let!(:school) { source_school_cohort.school }
-      let!(:target_cohort) { create(:cohort, start_year: target_cohort_start_year) }
+      let!(:target_cohort) { Cohort.find_by_start_year(target_cohort_start_year) }
       let!(:target_cohort_schedule) { create(:ecf_schedule, cohort: target_cohort) }
       let!(:participant_profile) do
         create(:ect_participant_profile, school_cohort: source_school_cohort)
@@ -186,7 +186,9 @@ RSpec.describe Induction::AmendParticipantCohort do
             end
           end
 
-          context "when it is cohort-moved to the current cohort due to payments frozen in their current cohort" do
+          context "when it is cohort-moved to the active registration cohort due to payments frozen in their current cohort" do
+            let(:target_cohort_start_year) { Cohort.active_registration_cohort.start_year }
+
             before do
               source_cohort.update!(payments_frozen_at: Time.current)
             end
@@ -200,14 +202,14 @@ RSpec.describe Induction::AmendParticipantCohort do
                 it "returns false and set errors" do
                   expect(form.save).to be_falsey
                   expect(form.errors.first.attribute).to eq(:participant_declarations)
-                  expect(form.errors.first.message).to eq("The participant has billable or submitted declarations")
+                  expect(form.errors.first.message).to eq("The participant has billable completed declarations")
                 end
               end
             end
 
             it "do not set errors on declarations" do
               expect(form.save).to be_falsey
-              expect(form.errors.map(&:attribute)).not_to eq(:participant_declarations)
+              expect(form.errors.map(&:attribute)).not_to include(:participant_declarations)
             end
           end
         end

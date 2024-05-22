@@ -323,6 +323,7 @@ en:
             participant_declarations:
               exist: "The participant must have no declarations"
               billable_or_submitted: "The participant has billable or submitted declarations"
+              billable_completed: "The participant has billable completed declarations"
               completed: "The participant has not had a 'completed' declaration submitted for them. Therefore you cannot update their outcome."
             participant_profile:
               blank: "Not registered"
@@ -333,7 +334,7 @@ en:
               excluded: "Invalid value. Must be different to %{year}"
               incompatible_with_schedule: "Invalid value. Must match that of the schedule"
               invalid: "Invalid value. Must be an integer between %{start} and %{end}"
-              payments_frozen: "Invalid value. The cohort is frozen for payments"
+              payments_frozen: "Not permitted. The cohort is frozen for payments"
         edit_induction_tutor_form:
           attributes:
             email:

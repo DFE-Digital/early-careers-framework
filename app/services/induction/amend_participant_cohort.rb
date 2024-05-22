@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-# Change the current cohort of an ECF participant.
+# Change the cohort of an ECF participant.
 # In doing so it will add an IR with an induction_programme and schedule on the new cohort.
 # Also, the participant profile will get their cohort and schedule updated.
 #
 # The induction_programme will be the default one for the new cohort in the current school.
-# The schedule will be the provided one or the equivalent to the current but in destination cohort with start year :target_cohort_start_year
+# The schedule will be the provided one or the equivalent to the current one in the cohort with start year :target_cohort_start_year
 #
 # Several validations are run before allowing the change. Specially important are existing declarations.
 #
@@ -22,8 +22,8 @@
 #                                             source_cohort_start_year: 2021,
 #                                             schedule:).save
 #
-#  - For cohort changes on participants whose current cohort has been payments_closed and are moved to
-#    the current cohort (Cohort.current), it will automatically flag the participant_profile as
+#  - For cohort changes on participants whose current cohort has been payments_frozen and are moved to
+#    the active registration cohort, it will automatically flag the participant_profile as
 #    cohort_changed_after_payments_frozen: true
 #
 module Induction
@@ -76,7 +76,12 @@ module Induction
               unfinished_training_participant_profile: true
 
     validates :participant_declarations,
-              absence: { message: :billable_or_submitted }
+              absence: { message: :billable_completed },
+              if: :cohort_changed_after_payments_frozen
+
+    validates :participant_declarations,
+              absence: { message: :billable_or_submitted },
+              unless: :cohort_changed_after_payments_frozen
 
     validates :induction_record,
               presence: {
@@ -94,6 +99,10 @@ module Induction
               }
 
     delegate :school, to: :induction_record, allow_nil: true
+
+    def cohort_changed_after_payments_frozen
+      source_cohort&.payments_frozen? && target_cohort == Cohort.active_registration_cohort
+    end
 
     def save
       return false unless valid?(:start)
@@ -171,10 +180,6 @@ module Induction
                                       .billable_or_changeable
                                       .exists?
                                   end
-    end
-
-    def cohort_changed_after_payments_frozen
-      source_cohort&.payments_frozen? && target_cohort == Cohort.current
     end
 
     def schedule
