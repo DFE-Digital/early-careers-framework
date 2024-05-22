@@ -59,4 +59,6 @@ describe ParticipantProfile::Mentor, type: :model do
       end
     end
   end
+
+  include_context "can change cohort and continue training", :mentor, :ect, :mentor_completion_date
 end
