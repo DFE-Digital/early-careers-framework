@@ -9,6 +9,7 @@ class ChangeSchedule
   attribute :course_identifier
   attribute :schedule_identifier
   attribute :cohort, :integer
+  attribute :attempt_to_change_cohort_leaving_billable_declarations, :boolean, default: false
 
   delegate :participant_profile_state, to: :participant_profile, allow_nil: true
   delegate :lead_provider, to: :cpd_lead_provider, allow_nil: true
@@ -80,6 +81,18 @@ class ChangeSchedule
 
 private
 
+  def can_change_cohort_leaving_billable_declarations?
+    return false unless participant_profile.ecf?
+    return false unless attempt_to_change_cohort_leaving_billable_declarations
+    return true if participant_profile.eligible_to_change_cohort_and_continue_training?(in_cohort_start_year: cohort.start_year)
+
+    participant_profile.eligible_to_change_cohort_back_to_their_payments_frozen_original?(to_cohort_start_year: cohort.start_year)
+  end
+
+  def cohort_start_years_delta
+    cohort.start_year - participant_profile.schedule.cohort.start_year
+  end
+
   def user
     @user ||= participant_identity&.user
   end
@@ -111,6 +124,12 @@ private
   end
 
   def update_school_cohort_and_schedule!
+    changing_cohort = new_schedule.cohort != participant_profile.schedule.cohort
+
+    if changing_cohort && can_change_cohort_leaving_billable_declarations?
+      participant_profile.toggle!(:cohort_changed_after_payments_frozen)
+    end
+
     participant_profile.update!(school_cohort: target_school_cohort, schedule: new_schedule)
   end
 
@@ -165,6 +184,7 @@ private
   def validate_new_schedule_valid_with_existing_declarations
     return if user.blank? || participant_profile.blank?
     return unless new_schedule
+    return if can_change_cohort_leaving_billable_declarations?
 
     applicable_declarations.each do |declaration|
       milestone = new_schedule.milestones.find_by!(declaration_type: declaration.declaration_type)
@@ -194,6 +214,7 @@ private
 
   def validate_cannot_change_cohort_ecf
     return unless participant_profile&.ecf?
+    return if can_change_cohort_leaving_billable_declarations?
 
     if applicable_declarations.any? &&
         relevant_induction_record &&
