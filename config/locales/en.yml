@@ -167,7 +167,7 @@ en:
     local_authority:
       blank: "Enter your school’s local authority"
     programme_choice:
-      blank: "Select how you want to run your induction"
+      blank: "Select how you want to run your training"
     cohorts:
       blank: "Choose at least one"
     lead_providers:

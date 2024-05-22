@@ -24,7 +24,7 @@ RSpec.describe "Admin::Schools::Cohorts::ChangeProgramme", type: :request do
         induction_choice_form: { programme_choice: "" },
       }
       expect(response).to render_template "admin/schools/cohorts/change_programme/show"
-      expect(response.body).to include "Select how you want to run your induction"
+      expect(response.body).to include "Select how you want to run your training"
     end
 
     it "shows a confirmation message" do

@@ -40,7 +40,7 @@ RSpec.describe "Schools::ChooseProgramme", type: :request do
       post "/schools/#{school.slug}/cohorts/#{cohort.start_year}/choose-programme", params: { induction_choice_form: { programme_choice: "" } }
 
       expect(response).to render_template("schools/choose_programme/show")
-      expect(response.body).to include("Select how you want to run your induction")
+      expect(response.body).to include("Select how you want to run your training")
     end
 
     it "should redirect to confirmation page" do
