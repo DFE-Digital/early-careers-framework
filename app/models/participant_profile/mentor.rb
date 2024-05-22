@@ -21,6 +21,12 @@ class ParticipantProfile::Mentor < ParticipantProfile::ECF
     started_not_completed: "started_not_completed",
   }
 
+  def self.archivable(for_cohort_start_year:, restrict_to_participant_ids: [])
+    super(for_cohort_start_year:, restrict_to_participant_ids:)
+      .where(mentor_completion_date: nil)
+      .where.not(id: InductionRecord.where.not(mentor_profile_id: nil).select(:mentor_profile_id).distinct)
+  end
+
   def complete_training!(completion_date:, completion_reason:)
     self.mentor_completion_date = completion_date
     self.mentor_completion_reason = completion_reason

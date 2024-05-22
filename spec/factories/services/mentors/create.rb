@@ -6,10 +6,11 @@ FactoryBot.define do
       lead_provider { create(:cpd_lead_provider, :with_lead_provider).lead_provider }
       uplifts { [] }
       trn { user.teacher_profile&.trn || sprintf("%07i", Random.random_number(9_999_999)) }
+      cohort { Cohort.current || create(:cohort, :current) }
     end
 
     user            { create(:user) }
-    school_cohort   { create(:school_cohort, :fip, :with_induction_programme, *uplifts, lead_provider:) }
+    school_cohort   { create(:school_cohort, :fip, :with_induction_programme, *uplifts, lead_provider:, cohort:) }
     full_name       { user.full_name }
     email           { user.email }
 
