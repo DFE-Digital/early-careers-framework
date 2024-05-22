@@ -184,6 +184,7 @@
   - induction_completion_date
   - mentor_completion_date
   - mentor_completion_reason
+  - cohort_changed_after_payments_frozen
   :cohorts_lead_providers:
   - id
   - lead_provider_id
