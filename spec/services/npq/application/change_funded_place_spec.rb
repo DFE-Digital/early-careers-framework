@@ -104,7 +104,7 @@ RSpec.describe NPQ::Application::ChangeFundedPlace do
           npq_contract.update!(funding_cap: nil)
 
           service.call
-          expect(service.errors.messages_for(:npq_application)).to include("Leave the funded_place field blank. It's only needed for participants starting NPQs from autumn 2024 onwards")
+          expect(service.errors.messages_for(:npq_application)).to include("Leave the '#/funded_place' field blank. It's only needed for participants starting NPQs from autumn 2024 onwards")
         end
 
         it "is invalid if the cohort does not accept capping and we set a funded place to false" do
@@ -112,7 +112,7 @@ RSpec.describe NPQ::Application::ChangeFundedPlace do
           npq_contract.update!(funding_cap: nil)
 
           service.call
-          expect(service.errors.messages_for(:npq_application)).to include("Leave the funded_place field blank. It's only needed for participants starting NPQs from autumn 2024 onwards")
+          expect(service.errors.messages_for(:npq_application)).to include("Leave the '#/funded_place' field blank. It's only needed for participants starting NPQs from autumn 2024 onwards")
         end
 
         context "when the application is not accepted" do
