@@ -33,6 +33,24 @@ RSpec.describe Admin::NPQ::Participants::Details, type: :component do
     end
   end
 
+  describe "#funded_place" do
+    it "returns `empty string` if `nil`" do
+      expect(component.funded_place).to eq("")
+    end
+
+    it "returns `Yes` if `true`" do
+      npq_application.update!(funded_place: true)
+
+      expect(component.funded_place).to eq("Yes")
+    end
+
+    it "returns `No` if `false`" do
+      npq_application.update!(funded_place: false)
+
+      expect(component.funded_place).to eq("No")
+    end
+  end
+
   describe "#last_updated" do
     context "when the profile was updated most recently" do
       let(:profile) { build(:npq_participant_profile, updated_at: 3.days.ago) }
@@ -70,6 +88,65 @@ RSpec.describe Admin::NPQ::Participants::Details, type: :component do
           expect(rendered_content).to include(I18n.t(:npq, scope: "schools.participants.type"))
           expect(rendered_content).to include(npq_application.npq_lead_provider.name)
           expect(rendered_content).to include(npq_application.npq_course.name)
+        end
+      end
+    end
+
+    describe "Funded place" do
+      let!(:profile) { npq_application.profile }
+      let!(:npq_application) do
+        create(:npq_application,
+               :accepted,
+               eligible_for_funding: true,
+               npq_course:,
+               npq_lead_provider:)
+      end
+      let(:npq_lead_provider) { create(:npq_lead_provider) }
+      let(:npq_course) { create(:npq_leadership_course, identifier: "npq-senior-leadership") }
+      let(:funding_cap) { 10 }
+      let!(:statement) do
+        create(
+          :npq_statement,
+          :next_output_fee,
+          cpd_lead_provider: npq_lead_provider.cpd_lead_provider,
+          cohort: npq_application.cohort,
+        )
+      end
+      let!(:npq_contract) do
+        create(
+          :npq_contract,
+          npq_lead_provider:,
+          cohort: statement.cohort,
+          course_identifier: npq_course.identifier,
+          version: statement.contract_version,
+          funding_cap:,
+        )
+      end
+
+      context "when FeatureFlag `npq_capping` is disabled" do
+        subject! { render_inline(component) }
+
+        include_examples "basic NPQ details"
+
+        it "does not render the funded places section" do
+          expect(rendered_content).not_to include("Funded place")
+        end
+      end
+
+      context "when FeatureFlag `npq_capping` is enabled" do
+        before do
+          FeatureFlag.activate(:npq_capping)
+          npq_application.update!(funded_place: true)
+          render_inline(component)
+        end
+
+        context "when the npq_application has a funded place" do
+          include_examples "basic NPQ details"
+
+          it "renders the funded place section" do
+            expect(rendered_content).to include("Funded place")
+            expect(rendered_content).to include("Yes")
+          end
         end
       end
     end
