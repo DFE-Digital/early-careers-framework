@@ -40,6 +40,42 @@ RSpec.describe Mentors::CheckTrainingCompletion do
         expect(mentor_profile.mentor_completion_reason).to be_blank
       end
     end
+
+    context "when the mentor is marked as started_not_completed before the declaration cutoff date", travel_to: Mentors::CheckTrainingCompletion::DECLARATION_WINDOW_CLOSE_DATE - 1.day do
+      before do
+        mentor_profile.complete_training!(completion_date: 1.week.ago,
+                                          completion_reason: :started_not_completed)
+      end
+
+      it "changes the completion date to the declaration date" do
+        service_call
+        expect(mentor_profile.mentor_completion_date.to_date).to eq declaration.declaration_date.to_date
+      end
+
+      it "changes to completion_reason to completed declaration received" do
+        service_call
+        expect(mentor_profile).to be_completed_declaration_received
+      end
+    end
+
+    context "when the mentor is marked as started_not_completed after the declaration cutoff date", travel_to: Mentors::CheckTrainingCompletion::DECLARATION_WINDOW_CLOSE_DATE + 1.day do
+      before do
+        mentor_profile.complete_training!(completion_date: 1.week.ago.to_date,
+                                          completion_reason: :started_not_completed)
+      end
+
+      it "does not change the completion date" do
+        expect {
+          service_call
+        }.not_to change { mentor_profile.mentor_completion_date }
+      end
+
+      it "does not change the completion_reason" do
+        expect {
+          service_call
+        }.not_to change { mentor_profile.mentor_completion_reason }
+      end
+    end
   end
 
   context "when the mentor has not completed training" do
