@@ -109,7 +109,7 @@ en:
   npq_application:
     missing_npq_application: "The entered '#/npq_application' is missing from your request. Check details and try again."
     missing_funded_place: "The entered '#/funded_place' is missing from your request. Check details and try again."
-    cohort_does_not_accept_capping: "The cohort does not accept funded places (pending)"
+    cohort_does_not_accept_capping: "Leave the '#/funded_place' field blank. It's only needed for participants starting NPQs from autumn 2024 onwards"
     has_another_accepted_application: The participant has already had an application accepted for this course.
     has_already_been_accepted: This NPQ application has already been accepted
     has_already_been_rejected: This NPQ application has already been rejected
