@@ -1,0 +1,8 @@
+en:
+  activemodel:
+    errors:
+      models:
+        schools/cohorts/wizard_steps/how_will_you_run_training_step:
+          attributes:
+            how_will_you_run_training:
+              inclusion: "Select how you will run training"

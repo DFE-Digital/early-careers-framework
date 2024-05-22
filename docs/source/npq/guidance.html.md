@@ -375,8 +375,8 @@ For more detailed information see the specifications for this [view multiple NPQ
         ],
         "participant_id_changes": [
           {
-            "from_participant_id": "ac3d1243-7308-4879-942a-c4a70ced400a",
-            "to_participant_id": "23dd8d66-e11f-4139-9001-86b4f9abcb02",
+            "from_participant_id": "23dd8d66-e11f-4139-9001-86b4f9abcb02",
+            "to_participant_id": "ac3d1243-7308-4879-942a-c4a70ced400a",
             "changed_at": "2023-09-23T02:22:32.000Z",
           }
         ]
@@ -433,8 +433,8 @@ For more detailed information see the specifications for this [view a single NPQ
         ],
         "participant_id_changes": [
           {
-            "from_participant_id": "ac3d1243-7308-4879-942a-c4a70ced400a",
-            "to_participant_id": "23dd8d66-e11f-4139-9001-86b4f9abcb02",
+            "from_participant_id": "23dd8d66-e11f-4139-9001-86b4f9abcb02",
+            "to_participant_id": "ac3d1243-7308-4879-942a-c4a70ced400a",
             "changed_at": "2023-09-23T02:22:32.000Z",
           }
         ]

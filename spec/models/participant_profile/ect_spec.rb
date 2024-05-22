@@ -45,4 +45,6 @@ describe ParticipantProfile::ECT, type: :model do
   describe "#role" do
     it { expect(instance.role).to eq("Early career teacher") }
   end
+
+  include_context "can change cohort and continue training", :ect, :mentor, :induction_completion_date
 end

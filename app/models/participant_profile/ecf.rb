@@ -53,7 +53,28 @@ class ParticipantProfile::ECF < ParticipantProfile
     %w[cohort participant_identity school user teacher_profile induction_records]
   end
 
+  def self.eligible_to_change_cohort_and_continue_training(in_cohort_start_year:, restrict_to_participant_ids: [])
+    billable_states = %w[eligible payable paid].freeze
+
+    completed_billable_declarations = ParticipantDeclaration.billable.for_declaration(:completed)
+    completed_billable_declarations = completed_billable_declarations.where(participant_profile_id: restrict_to_participant_ids) if restrict_to_participant_ids.any?
+
+    query = joins(:participant_declarations, schedule: :cohort)
+      .where(cohorts: { start_year: in_cohort_start_year - Cohort::OPEN_COHORTS_COUNT })
+      .where("participant_declarations.state IN (?) AND declaration_type != ?", billable_states, "completed")
+      .where.not(id: completed_billable_declarations.select(:participant_profile_id))
+      .distinct
+
+    query = query.where(id: restrict_to_participant_ids) if restrict_to_participant_ids.any?
+
+    query
+  end
+
   # Instance Methods
+  def eligible_to_change_cohort_and_continue_training?(in_cohort_start_year:)
+    self.class.eligible_to_change_cohort_and_continue_training(in_cohort_start_year:, restrict_to_participant_ids: [id]).exists?
+  end
+
   def completed_induction?
     induction_completion_date.present?
   end

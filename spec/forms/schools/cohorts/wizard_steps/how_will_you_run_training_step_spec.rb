@@ -22,7 +22,7 @@ RSpec.describe Schools::Cohorts::WizardSteps::HowWillYouRunTrainingStep, type: :
         allow(wizard).to receive(:school).and_return(double(cip_only?: true))
       end
 
-      it { is_expected.to validate_inclusion_of(:how_will_you_run_training).in_array(cip_only_valid).with_message("Please select an option") }
+      it { is_expected.to validate_inclusion_of(:how_will_you_run_training).in_array(cip_only_valid).with_message("Select how you will run training") }
     end
 
     context "when the school is not cip-only" do
@@ -30,7 +30,7 @@ RSpec.describe Schools::Cohorts::WizardSteps::HowWillYouRunTrainingStep, type: :
         allow(wizard).to receive(:school).and_return(double(cip_only?: false))
       end
 
-      it { is_expected.to validate_inclusion_of(:how_will_you_run_training).in_array(non_cip_only_valid).with_message("Please select an option") }
+      it { is_expected.to validate_inclusion_of(:how_will_you_run_training).in_array(non_cip_only_valid).with_message("Select how you will run training") }
     end
 
     context "when option not selected" do
@@ -40,7 +40,7 @@ RSpec.describe Schools::Cohorts::WizardSteps::HowWillYouRunTrainingStep, type: :
 
       it "has a descriptive error message" do
         expect(step).to be_invalid
-        expect(step.errors.messages_for(:how_will_you_run_training)).to include("Please select an option")
+        expect(step.errors.messages_for(:how_will_you_run_training)).to include("Select how you will run training")
       end
     end
   end

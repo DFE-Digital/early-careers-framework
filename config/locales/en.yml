@@ -288,8 +288,8 @@ en:
             transfer_choice:
               blank: "Select which programme the participant will join"
             start_date:
-              blank: "Enter a start date"
-              invalid: "Enter a valid start date"
+              blank: "Enter a start date. For example, 14 7 2023"
+              invalid: "Enter a valid start date. For example, 14 7 2023"
               before_start: "Start date cannot be before the current induction record start (%{date})"
             email:
               <<: *email_error_messages

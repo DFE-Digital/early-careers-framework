@@ -245,6 +245,12 @@ RSpec.describe Admin::SchoolTransferForm, type: :model do
         expect(form.valid?(:start_date)).to be false
         expect(form.errors[:latest_induction_record]).to be_present
       end
+
+      it "handles argument errors on start_date" do
+        form.start_date = { 3 => 22, 2 => 111, 1 => 2222 }
+        expect(form.valid?(:start_date)).to be false
+        expect(form.errors.added?(:start_date, :invalid)).to be true
+      end
     end
 
     context "when email step" do

@@ -1,5 +1,6 @@
 <% title = "You’ve submitted your training information" %>
 <% title += " and reported your appropriate body" if @wizard.appropriate_body_appointed? %>
+<% content_for :title, "Training information submitted" %>
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
