@@ -191,7 +191,7 @@ RSpec.describe Cohort, type: :model do
       it { is_expected.to be_payments_frozen }
     end
 
-    context "when a date to frozen payments has not been set" do
+    context "when a date to freeze payments has not been set" do
       before do
         subject.payments_frozen_at = nil
       end
