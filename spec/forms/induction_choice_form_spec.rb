@@ -8,7 +8,7 @@ RSpec.describe InductionChoiceForm, type: :model do
   subject(:form) { described_class.new(school_cohort:) }
 
   describe "validations" do
-    it { is_expected.to validate_presence_of(:programme_choice).with_message("Select how you want to run your induction") }
+    it { is_expected.to validate_presence_of(:programme_choice).with_message("Select how you want to run your training") }
   end
 
   describe "#programme_choices" do
