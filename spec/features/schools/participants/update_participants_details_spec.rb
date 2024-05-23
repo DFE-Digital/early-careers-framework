@@ -232,7 +232,7 @@ RSpec.describe "Changing participant details from the dashboard", type: :feature
       and_i_see_no_appropriate_body_selected
 
       when_i_click_on_summary_row_action("Appropriate body", "Add")
-      then_i_am_taken_to_the_appropriate_body_type_page
+      then_i_am_taken_to_the_appropriate_body_teaching_school_hubs_page
 
       when_i_choose_an_appropriate_body
       click_on "Return to their details"

@@ -49,7 +49,6 @@ RSpec.feature "New schools should be able to choose their programme", type: :fea
       when_i_choose_yes
       and_i_click_on_continue
 
-      when_i_choose_teaching_school_hub
       when_i_fill_appropriate_body_with @appropriate_body.name
       and_i_click_on_continue
 
