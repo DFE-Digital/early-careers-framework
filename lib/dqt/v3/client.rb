@@ -11,7 +11,7 @@ require "net/http"
 # but using the V1 API keeps the id matching logic on the API side whereas
 # using the V3 API we would need to match and validate everything our side)
 #
-module FullDQT
+module DQT
   module V3
     class Client < V1::Client
       def get_record(trn:, sections: %w[induction])

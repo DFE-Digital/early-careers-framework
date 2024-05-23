@@ -4,7 +4,7 @@ require "net/http"
 
 # NOTE: Use this API for validation of participant data
 #
-module FullDQT
+module DQT
   module V1
     class Client
       def get_record(trn:, birthdate:, nino: nil)

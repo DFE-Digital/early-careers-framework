@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe FullDQT::V1::Client do
+RSpec.describe DQT::V1::Client do
   subject { described_class.new }
 
   let(:trn) { "1001000" }
