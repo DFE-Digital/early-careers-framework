@@ -13,7 +13,8 @@ module AppropriateBodySelection
                              update_appropriate_body]
 
       helper_method :appropriate_body_form, :appropriate_body_from_path, :appropriate_body_school_name,
-                    :appropriate_body_action_name, :preconfirm_next_action, :appropriate_body_default_selection
+                    :appropriate_body_action_name, :preconfirm_next_action, :appropriate_body_default_selection,
+                    :appropriate_body_show_different_ab_for_ect_message
     end
 
     def appropriate_body_preconfirm

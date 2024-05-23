@@ -189,7 +189,6 @@ private
 
   def when_i_choose_a_different_appropriate_body(ect_appropriate_body)
     click_on "They have a different appropriate body"
-    choose "Teaching school hub"
     and_i_fill_in_autocomplete "appropriate-body-selection-form-body-id-field", with: ect_appropriate_body.name
     click_on "Continue"
   end
