@@ -17,8 +17,6 @@ class ParticipantProfile::ECT < ParticipantProfile::ECF
   end
 
   alias_method :completed_training?, :completed_induction?
-    completed_induction?
-  end
 
   def ect?
     true
