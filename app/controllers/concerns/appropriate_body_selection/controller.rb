@@ -64,8 +64,7 @@ module AppropriateBodySelection
     # @param [Integer] cohort_start_year When specified the appropriate bodies will be filtered to those that are active [CST-1420]
     def start_appropriate_body_selection(from_path:, submit_action:, school:, show_different_ab_for_ect_message:,
                                          ask_appointed: true, preconfirmation: false, action_name: :add,
-                                         cohort_start_year: nil
-    )
+                                         cohort_start_year: nil)
       session.delete(:appropriate_body_selection_form)
 
       session[:appropriate_body_selection] = {
@@ -163,13 +162,11 @@ module AppropriateBodySelection
 
     def set_default_appropriate_body
       # TODO: set default ABs
-      if appropriate_body_school&.school_type_code == 37
-        @appropriate_body_form.default_appropriate_body = AppropriateBody.first
-      elsif appropriate_body_school&.school_type_code == 10 || appropriate_body_school&.school_type_code == 11
-        @appropriate_body_form.default_appropriate_body = AppropriateBody.last
-      else
-        @appropriate_body_form.default_appropriate_body = nil
-      end
+      @appropriate_body_form.default_appropriate_body = if appropriate_body_school&.school_type_code == 37
+                                                          AppropriateBody.first
+                                                        elsif appropriate_body_school&.school_type_code == 10 || appropriate_body_school&.school_type_code == 11
+                                                          AppropriateBody.last
+                                                        end
     end
   end
 end

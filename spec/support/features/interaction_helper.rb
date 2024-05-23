@@ -66,7 +66,7 @@ module InteractionHelper
     when_i_fill_in_autocomplete(id, with: value)
     raise "Autocomplete field #{id} should not allow the value '#{value}'"
   rescue Capybara::ElementNotFound
-    return true
+    true
   end
 
   def then_autocomplete_does_not_contain(id, value:)
