@@ -21,8 +21,8 @@ class ParticipantProfile::Mentor < ParticipantProfile::ECF
     started_not_completed: "started_not_completed",
   }
 
-  def self.archivable(for_cohort_start_year:, restrict_to_participant_ids: [])
-    super(for_cohort_start_year:, restrict_to_participant_ids:)
+  def self.archivable(restrict_to_participant_ids: [])
+    super(restrict_to_participant_ids:)
       .where(mentor_completion_date: nil)
       .where.not(id: InductionRecord.where.not(mentor_profile_id: nil).select(:mentor_profile_id).distinct)
   end
@@ -49,7 +49,7 @@ class ParticipantProfile::Mentor < ParticipantProfile::ECF
     "Mentor"
   end
 
-  def self.eligible_to_change_cohort_and_continue_training(in_cohort_start_year:, restrict_to_participant_ids:)
-    super(in_cohort_start_year:, restrict_to_participant_ids:).where(mentor_completion_date: nil)
+  def self.eligible_to_change_cohort_and_continue_training(restrict_to_participant_ids: [])
+    super(restrict_to_participant_ids:).where(mentor_completion_date: nil)
   end
 end
