@@ -58,7 +58,6 @@ class SchoolCohort < ApplicationRecord
       .where(school:)
       .merge(Cohort.between_2021_and(latest_year))
       .order(start_year: :desc)
-      .limit(3)
   end
 
   def self.previous
