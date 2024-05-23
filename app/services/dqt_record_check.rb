@@ -35,11 +35,11 @@ private
   end
 
   def dqt_record(trn, nino)
-    full_dqt_client.get_record(trn:, birthdate: date_of_birth, nino:)
+    dqt_client.get_record(trn:, birthdate: date_of_birth, nino:)
   end
 
-  def full_dqt_client
-    @full_dqt_client ||= FullDQT::V1::Client.new
+  def dqt_client
+    @dqt_client ||= DQT::V1::Client.new
   end
 
   def check_record
