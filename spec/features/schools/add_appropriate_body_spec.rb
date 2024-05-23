@@ -93,7 +93,7 @@ RSpec.describe "Add a school cohort appropriate body", type: :feature, js: true,
   end
 
   context "When appropriate body was appointed during cohort setup" do
-    let!(:appropriate_body) { create(:appropriate_body_national_organisation) }
+    let!(:appropriate_body) { create(:appropriate_body_teaching_school_hub) }
 
     scenario "The appropriate body can be changed" do
       given_there_is_a_school_and_an_induction_coordinator
