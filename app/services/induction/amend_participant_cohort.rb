@@ -75,9 +75,7 @@ module Induction
               active_participant_profile: true,
               unfinished_training_participant_profile: true
 
-    validates :participant_declarations,
-              absence: { message: :billable_completed },
-              if: :cohort_changed_after_payments_frozen
+    validate :eligible_to_be_moved_after_payments_frozen, if: :cohort_changed_after_payments_frozen
 
     validates :participant_declarations,
               absence: { message: :billable_or_submitted },
@@ -169,11 +167,7 @@ module Induction
       return @participant_declarations if instance_variable_defined?(:@participant_declarations)
 
       @participant_declarations = if cohort_changed_after_payments_frozen
-                                    participant_profile
-                                      .participant_declarations
-                                      .for_declaration("completed")
-                                      .billable
-                                      .exists?
+
                                   else
                                     participant_profile
                                       .participant_declarations
@@ -205,6 +199,12 @@ module Induction
     end
 
     # Validations
+    def eligible_to_be_moved_after_payments_frozen
+      unless participant_profile.eligible_to_change_cohort_and_continue_training?
+        errors.add(:participant_profile, :participant_not_eligible_to_be_moved)
+      end
+    end
+
     def target_cohort_payments_active
       errors.add(:target_cohort_start_year, :payments_frozen) if target_cohort&.payments_frozen?
     end

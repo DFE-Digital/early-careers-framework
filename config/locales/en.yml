@@ -323,11 +323,11 @@ en:
             participant_declarations:
               exist: "The participant must have no declarations"
               billable_or_submitted: "The participant has billable or submitted declarations"
-              billable_completed: "The participant has billable completed declarations"
               completed: "The participant has not had a 'completed' declaration submitted for them. Therefore you cannot update their outcome."
             participant_profile:
               blank: "Not registered"
               not_active: "Not active"
+              not_eligible_to_be_moved: "Not eligible to be moved from their current cohort"
             source_cohort_start_year:
               invalid: "Invalid value. Must be an integer between %{start} and %{end}"
             target_cohort_start_year:

@@ -166,6 +166,78 @@ RSpec.describe Induction::AmendParticipantCohort do
         end
       end
 
+      context "when it is not transferred due to payments frozen in their current cohort" do
+        %i[submitted eligible payable paid].each do |declaration_state|
+          context "when the participant has #{declaration_state} declarations" do
+            before do
+              participant_profile.participant_declarations.create!(declaration_date: Date.new(2020, 10, 10),
+                                                                   declaration_type: :started,
+                                                                   state: declaration_state,
+                                                                   course_identifier: "ecf-induction",
+                                                                   cpd_lead_provider: create(:cpd_lead_provider),
+                                                                   user: participant_profile.user,
+                                                                   cohort: participant_profile.schedule.cohort)
+            end
+
+            it "returns false and set errors on declarations" do
+              expect(form.save).to be_falsey
+              expect(form.errors.first.attribute).to eq(:participant_declarations)
+              expect(form.errors.first.message).to eq("The participant has billable or submitted declarations")
+            end
+          end
+        end
+
+        %i[voided ineligible awaiting_clawback clawed_back].each do |declaration_state|
+          context "when the participant has #{declaration_state} declarations" do
+            before do
+              participant_profile.participant_declarations.create!(declaration_date: Date.new(2020, 10, 10),
+                                                                   declaration_type: :started,
+                                                                   state: declaration_state,
+                                                                   course_identifier: "ecf-induction",
+                                                                   cpd_lead_provider: create(:cpd_lead_provider),
+                                                                   user: participant_profile.user,
+                                                                   cohort: participant_profile.schedule.cohort)
+            end
+
+            it "do not set errors on declarations" do
+              expect(form.save).to be_falsey
+              expect(form.errors.map(&:attribute)).not_to include(:participant_declarations)
+            end
+          end
+        end
+
+        context "when the participant has no declarations" do
+          it "do not set errors on declarations" do
+            expect(form.save).to be_falsey
+            expect(form.errors.map(&:attribute)).not_to include(:participant_declarations)
+          end
+        end
+      end
+
+      context "when it is transferred due to payments frozen in their current cohort" do
+        context "when the participant is eligible to be moved" do
+          before do
+            allow(:participant_profile).to receive(:eligible_to_change_cohort_and_continue_training?).and_return(true)
+          end
+
+          it "do not set errors" do
+            expect(form.save).to be_falsey
+            expect(form.errors.map(&:attribute)).not_to include(:participant_profile)
+          end
+        end
+
+        context "when the participant is not eligible to be moved" do
+          before do
+            allow(:participant_profile).to receive(:eligible_to_change_cohort_and_continue_training?).and_return(false)
+          end
+
+          it "set errors on participant profile" do
+            expect(form.save).to be_falsey
+            expect(form.errors[:participant_profile]).to include("Not eligible to be moved from their current cohort")
+          end
+        end
+      end
+
       %i[submitted eligible payable paid].each do |declaration_state|
         context "when the participant has #{declaration_state} declarations" do
           before do
@@ -176,14 +248,6 @@ RSpec.describe Induction::AmendParticipantCohort do
                                                                  cpd_lead_provider: create(:cpd_lead_provider),
                                                                  user: participant_profile.user,
                                                                  cohort: participant_profile.schedule.cohort)
-          end
-
-          context "when it is not cohort-moved due to payments frozen in their current cohort" do
-            it "returns false and set errors" do
-              expect(form.save).to be_falsey
-              expect(form.errors.first.attribute).to eq(:participant_declarations)
-              expect(form.errors.first.message).to eq("The participant has billable or submitted declarations")
-            end
           end
 
           context "when it is cohort-moved to the active registration cohort due to payments frozen in their current cohort" do
@@ -201,15 +265,15 @@ RSpec.describe Induction::AmendParticipantCohort do
               if declaration_state != :submitted
                 it "returns false and set errors" do
                   expect(form.save).to be_falsey
-                  expect(form.errors.first.attribute).to eq(:participant_declarations)
-                  expect(form.errors.first.message).to eq("The participant has billable completed declarations")
+                  expect(form.errors.first.attribute).to eq(:participant_profile)
+                  expect(form.errors.first.message).to eq("Not eligible to be moved from their current cohort")
                 end
               end
             end
 
-            it "do not set errors on declarations" do
+            it "do not set errors" do
               expect(form.save).to be_falsey
-              expect(form.errors.map(&:attribute)).not_to include(:participant_declarations)
+              expect(form.errors.map(&:attribute)).not_to include(:participant_profile)
             end
           end
         end
