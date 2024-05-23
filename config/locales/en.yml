@@ -203,7 +203,7 @@ en:
     participant_profile:
       blank: "Not registered"
       not_active: "Not active"
-      not_a_participant_profile: "Not a ParticipantProfile instance"
+      not_a_participant_profile: "Not a participant profile record"
       training_complete: "The participant has completed their ECF training"
     programme:
       blank: "Select a programme type"
