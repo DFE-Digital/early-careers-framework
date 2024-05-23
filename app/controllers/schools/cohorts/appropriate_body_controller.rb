@@ -33,6 +33,7 @@ module Schools
               from_path: schools_dashboard_path,
               submit_action: :save_appropriate_body,
               school: @school,
+              show_different_ab_for_ect_message: true,
               ask_appointed: false,
               preconfirmation:,
               cohort_start_year: @cohort.start_year

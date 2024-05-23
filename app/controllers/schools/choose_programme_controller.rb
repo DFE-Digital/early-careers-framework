@@ -66,6 +66,7 @@ private
     super from_path: url_for(action: :create),
           submit_action: :save_programme,
           school:,
+          show_different_ab_for_ect_message: true,
           cohort_start_year: cohort.start_year
   end
 

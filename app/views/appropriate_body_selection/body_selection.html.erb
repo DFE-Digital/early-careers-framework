@@ -64,12 +64,14 @@
 
       <% end %>
 
-      <p class="govuk-body">If any of your ECTs will work with a different appropriate body, you can tell us when you register them later.</p>
+      <% if appropriate_body_show_different_ab_for_ect_message %>
+        <p class="govuk-body">If any of your ECTs will work with a different appropriate body, you can tell us when you register them later.</p>
+      <% end %>
 
       <%= f.govuk_submit "Continue" %>
 
     <% end %>
 
-    <p><a href="#">FIX: My appropriate body isn't listed</a></p>
+<!--    <p><a href="#">FIX: My appropriate body isn't listed</a></p>-->
   </div>
 </div>
