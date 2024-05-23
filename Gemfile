@@ -76,7 +76,7 @@ gem "json-schema", ">= 2.8.1"
 gem "jsonapi-serializer"
 
 # OpenApi Swagger
-gem "openapi3_parser", "~> 0.9.2"
+gem "openapi3_parser", "~> 0.10.0"
 
 gem "ransack"
 
