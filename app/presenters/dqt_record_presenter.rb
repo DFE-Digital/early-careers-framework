@@ -35,19 +35,19 @@ class DQTRecordPresenter < SimpleDelegator
   # The "induction", "start_date" coming in DQT::V1 is not the more accurate one so,
   # either we get it from the "induction" "periods" coming V1 or V3
   def induction_start_date
-    return @induction_start_date if instance_variable_defined?(:@induction_start_date)
-
-    @induction_start_date = (
-      dqt_record.dig("induction", "periods") ||
-        DQT::V3::Client.new.get_record(trn:)&.dig("induction", "periods")
-    ).to_a
-     .map { |period| period["startDate"] }
-     .compact
-     .min
+    induction_periods
+      .map { |period| period["startDate"] }
+      .compact
+      .min
   end
 
   def induction_completion_date
-    dqt_record.dig("induction", "completion_date")
+    return nil if induction_in_progress?
+
+    induction_periods
+      .map { |period| period["endDate"] }
+      .compact
+      .max
   end
 
   def exempt?
@@ -59,6 +59,13 @@ class DQTRecordPresenter < SimpleDelegator
   end
 
 private
+
+  def induction_periods
+    @induction_periods ||= (
+      dqt_record.dig("induction", "periods") ||
+      DQT::V3::Client.new.get_record(trn:)&.dig("induction", "periods")
+    ).to_a
+  end
 
   def dqt_record
     __getobj__
