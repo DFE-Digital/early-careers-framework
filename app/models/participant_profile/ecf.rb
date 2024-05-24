@@ -3,7 +3,6 @@
 class ParticipantProfile::ECF < ParticipantProfile
   # self.ignored_columns = %i[school_id]
 
-  CHANGE_COHORT_AND_CONTINUE_TRAINING_DELTA = 3
   POST_TRANSITIONAL_INDUCTION_START_DATE_DEADLINE = ActiveSupport::TimeZone["London"].local(2021, 9, 1).freeze
   VALID_EVIDENCE_HELD = %w[training-event-attended self-study-material-completed other].freeze
   COURSE_IDENTIFIERS = %w[ecf-mentor ecf-induction].freeze
@@ -57,12 +56,13 @@ class ParticipantProfile::ECF < ParticipantProfile
   def self.eligible_to_change_cohort_and_continue_training(in_cohort_start_year:, restrict_to_participant_ids: [])
     billable_states = %w[eligible payable paid].freeze
 
+    return none unless Cohort.find_by_start_year(in_cohort_start_year) == Cohort.active_registration_cohort
+
     completed_billable_declarations = ParticipantDeclaration.billable.for_declaration(:completed)
     completed_billable_declarations = completed_billable_declarations.where(participant_profile_id: restrict_to_participant_ids) if restrict_to_participant_ids.any?
 
     query = joins(:participant_declarations, schedule: :cohort)
       .where.not(cohorts: { payments_frozen_at: nil })
-      .where(cohorts: { start_year: in_cohort_start_year - CHANGE_COHORT_AND_CONTINUE_TRAINING_DELTA })
       .where("participant_declarations.state IN (?) AND declaration_type != ?", billable_states, "completed")
       .where.not(id: completed_billable_declarations.select(:participant_profile_id))
       .distinct
@@ -75,12 +75,11 @@ class ParticipantProfile::ECF < ParticipantProfile
   def eligible_to_change_cohort_back_to_their_payments_frozen_original?(to_cohort_start_year:)
     to_cohort = Cohort.find_by_start_year(to_cohort_start_year)
 
-    return false unless schedule.cohort.start_year - to_cohort_start_year == CHANGE_COHORT_AND_CONTINUE_TRAINING_DELTA
     return false unless cohort_changed_after_payments_frozen?
     return false unless to_cohort.payments_frozen?
     return false if participant_declarations.billable_or_changeable.where(cohort: schedule.cohort).exists?
 
-    true
+    participant_declarations.billable.where(cohort: to_cohort).exists?
   end
 
   def self.archivable(restrict_to_participant_ids: [])
