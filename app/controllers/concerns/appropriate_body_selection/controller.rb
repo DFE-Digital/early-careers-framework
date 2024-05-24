@@ -164,10 +164,19 @@ module AppropriateBodySelection
     def set_default_appropriate_body
       # TODO: set default ABs
       @appropriate_body_form.default_appropriate_body = if appropriate_body_school&.school_type_code == 37
-                                                          AppropriateBody.first
+                                                          default_appropriate_body_for_british_schools_overseas
                                                         elsif appropriate_body_school&.school_type_code == 10 || appropriate_body_school&.school_type_code == 11
-                                                          AppropriateBody.last
+                                                          default_appropriate_body_for_independent_schools
                                                         end
+    end
+
+    def default_appropriate_body_for_british_schools_overseas
+      # TODO: ADD AB TO PRODUCTION ONCE CONFIRMED
+      AppropriateBody.find_by(name: "Educational Success Partners (ESP)")
+    end
+
+    def default_appropriate_body_for_independent_schools
+      AppropriateBody.find_by(name: "Independent Schools Teacher Induction Panel (IStip)")
     end
   end
 end

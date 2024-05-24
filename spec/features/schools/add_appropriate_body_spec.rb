@@ -16,6 +16,11 @@ RSpec.describe "Add a school cohort appropriate body", type: :feature, js: true,
   context "When appropriate body was not appointed during cohort setup" do
     let!(:appropriate_body) { create(:appropriate_body_teaching_school_hub) }
 
+    before do
+      create(:appropriate_body_local_authority, name: "Educational Success Partners (ESP)")
+      create(:appropriate_body_national_organisation, name: "Independent Schools Teacher Induction Panel (IStip)")
+    end
+
     context "For any GIAS code" do
       scenario "The appropriate body can be added and set for all ECTs" do
         given_there_is_a_school_and_an_induction_coordinator
