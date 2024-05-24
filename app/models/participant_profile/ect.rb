@@ -10,6 +10,14 @@ class ParticipantProfile::ECT < ParticipantProfile::ECF
     where(induction_start_date: nil).joins(:ecf_participant_eligibility).merge(ECFParticipantEligibility.waiting_for_induction)
   }
 
+  def self.archivable(for_cohort_start_year:, restrict_to_participant_ids: [])
+    latest_induction_start_date = Date.new(for_cohort_start_year, 9, 1)
+
+    super(for_cohort_start_year:, restrict_to_participant_ids:)
+      .where(induction_completion_date: nil)
+      .where("induction_start_date IS NULL OR induction_start_date < ?", latest_induction_start_date)
+  end
+
   def ect?
     true
   end
@@ -20,5 +28,9 @@ class ParticipantProfile::ECT < ParticipantProfile::ECF
 
   def role
     "Early career teacher"
+  end
+
+  def self.eligible_to_change_cohort_and_continue_training(in_cohort_start_year:, restrict_to_participant_ids:)
+    super(in_cohort_start_year:, restrict_to_participant_ids:).where(induction_completion_date: nil)
   end
 end

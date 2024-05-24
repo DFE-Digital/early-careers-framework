@@ -59,4 +59,30 @@ describe ParticipantProfile::Mentor, type: :model do
       end
     end
   end
+
+  include_context "can change cohort and continue training", :mentor, :ect, :mentor_completion_date
+
+  include_context "can archive participant profile", :ect, :mentor_completion_date do
+    def create_declaration(attrs = {})
+      create(:mentor_participant_declaration, attrs)
+    end
+
+    def create_profile(attrs = {})
+      create(:mentor_participant_profile, attrs)
+    end
+
+    describe ".archivable" do
+      subject { described_class.archivable(for_cohort_start_year:) }
+
+      it "does not include participants that have mentees" do
+        build_profile(cohort: eligible_cohort).tap do |mentor_profile|
+          create(:induction_record, :ect, mentor_profile:)
+        end
+
+        eligible_participant = build_profile(cohort: eligible_cohort)
+
+        is_expected.to contain_exactly(eligible_participant)
+      end
+    end
+  end
 end

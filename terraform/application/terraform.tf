@@ -4,6 +4,10 @@ terraform {
   backend "azurerm" {}
 
   required_providers {
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "3.104.2"
+    }
     statuscake = {
       source  = "StatusCakeDev/statuscake"
       version = ">= 2.0.5"

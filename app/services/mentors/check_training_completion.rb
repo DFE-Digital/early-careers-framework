@@ -3,9 +3,13 @@
 module Mentors
   class CheckTrainingCompletion < BaseService
     EARLY_ROLL_OUT_COMPLETION_DATE = Date.new(2021, 4, 19)
+    # hard coded for 2024 as we don't know what is required next year as yet
+    # this is the date when we will no longer accept 2021 declarations
+    DECLARATION_WINDOW_CLOSE_DATE = Date.new(2024, 7, 31)
 
     def call
       return unless mentor_profile.mentor?
+      return if marked_as_started_not_completed_after_declaration_window_closes?
 
       set_completion_values!
     end
@@ -37,6 +41,13 @@ module Mentors
 
     def completed_declaration
       @completed_declaration ||= find_valid_declaration
+    end
+
+    def marked_as_started_not_completed_after_declaration_window_closes?
+      return false if Time.zone.today < DECLARATION_WINDOW_CLOSE_DATE
+
+      # eg. set as complete via csv or manually for the rule 3 category (started but not completed)
+      mentor_profile.mentor_completion_date.present? && mentor_profile.started_not_completed?
     end
 
     def find_valid_declaration
