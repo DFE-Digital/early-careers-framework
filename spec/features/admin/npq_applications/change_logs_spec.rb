@@ -23,6 +23,17 @@ RSpec.feature "Admin NPQ Application change logs", js: true, rutabaga: false do
     then_i_can_see_a_change_log_on_eligible_attribute
   end
 
+  scenario "Show participant details for an NPQ participant (funded place)",
+           with_feature_flags: { npq_capping: "active" } do
+    given_there_is_an_npq_application
+    and_i_am_signed_in_as_an_admin
+
+    when_i_visit the_npq_applications_edge_cases
+    when_i_select_the_first_applicant
+
+    then_i_can_see_the_participant_funded_place_attribute
+  end
+
   scenario "Show a change log for an Applicant (API - first version)" do
     given_there_is_an_npq_application_via_api
     and_i_am_signed_in_as_an_admin
@@ -39,9 +50,9 @@ RSpec.feature "Admin NPQ Application change logs", js: true, rutabaga: false do
 private
 
   def given_there_is_an_npq_application
-    application = create :npq_application, :edge_case
+    @application = create :npq_application, :edge_case, funded_place: false
 
-    allow(User).to receive(:find).and_return(application.user)
+    allow(User).to receive(:find).and_return(@application.user)
   end
 
   def given_there_is_an_npq_application_via_api
@@ -74,5 +85,9 @@ private
 
   def then_i_can_see_a_change_log_on_eligible_attribute
     expect(page).to have_selector("table.govuk-table:first-of-type tbody tr", text: /Eligible.*?No.*?Yes/)
+  end
+
+  def then_i_can_see_the_participant_funded_place_attribute
+    expect(page).to have_selector(".govuk-summary-list__row--no-actions", text: /Funded place.*?No/)
   end
 end
