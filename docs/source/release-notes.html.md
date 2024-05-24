@@ -7,6 +7,22 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
+## 24 May 2024
+
+We’ve added the schedules and contract data for the 2024/25 intake of early career teachers and mentors to the [test (sandbox) environment](https://sb.manage-training-for-early-career-teachers.education.gov.uk/).
+
+Providers can either add participants via the ECF interface or by using the seed data we’ve created. When registering participants in the test environment, providers must use the following date of birth if they want the 2024/25 ECTs to appear as eligible for funding:
+
+- 24/1/1900
+
+For mentors, use the following date of birth:
+
+- 1/1/1900
+
+Providers can also sign in to the [sandbox environment](https://sb.manage-training-for-early-career-teachers.education.gov.uk/users/sign_in) as school induction tutors, where dynamic scenarios such as transfers can be simulated.
+
+As always, we’d welcome feedback on this sandbox update before it goes into production.
+
 ## 8 March 2024
 
 Lead providers can now use the new `mentor_funding_end_date` field in the Live environment’s [ECF participant endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-get). 
