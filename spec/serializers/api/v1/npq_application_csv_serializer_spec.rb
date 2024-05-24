@@ -37,7 +37,28 @@ module Api
           expect(rows[0]["itt_provider"]).to eql(npq_application.itt_provider)
           expect(rows[0]["lead_mentor"]).to eql(npq_application.lead_mentor.to_s)
         end
+
+        describe "funded_place" do
+          context "when Feature Flag `npq_capping` is active" do
+            before { FeatureFlag.activate(:npq_capping) }
+
+            it "returns funded place" do
+              npq_application.update!(funded_place: true)
+
+              expect(rows[0]["funded_place"]).to eql("true")
+            end
+          end
+
+          context "when Feature Flag `npq_capping` is inactive" do
+            before { FeatureFlag.deactivate(:npq_capping) }
+
+            it "does not return funded place attribute" do
+              expect(rows[0]).to_not include("funded_place")
+            end
+          end
+        end
       end
+
 
       describe "#updated_at" do
         let(:npq_application) { create(:npq_application, targeted_delivery_funding_eligibility: true) }
