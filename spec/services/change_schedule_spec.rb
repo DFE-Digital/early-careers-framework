@@ -67,11 +67,12 @@ end
 RSpec.shared_examples "changing cohort and continuing training" do
   %i[eligible payable paid].each do |state|
     context "when there are #{state} declarations" do
-      let(:start_year) { participant_profile.schedule.cohort.start_year + ParticipantProfile::ECF::CHANGE_COHORT_AND_CONTINUE_TRAINING_DELTA }
-      let(:new_cohort) { create(:cohort, start_year:) }
-      let!(:new_schedule) { create(:ecf_schedule, cohort: new_cohort, schedule_identifier:) }
+      let(:cohort) { new_cohort.previous }
+      let(:new_cohort) { Cohort.active_registration_cohort }
 
-      before { create(:participant_declaration, participant_profile:, state:, course_identifier:, cpd_lead_provider:) }
+      before { create(:participant_declaration, participant_profile:, cohort:, state:, course_identifier:, cpd_lead_provider:) }
+
+      it { expect(new_cohort).not_to eq(participant_profile.schedule.cohort) }
 
       context "attempt_to_change_cohort_leaving_billable_declarations is true" do
         let(:attempt_to_change_cohort_leaving_billable_declarations) { true }
@@ -217,11 +218,12 @@ RSpec.describe ChangeSchedule do
 
   context "ECT participant profile" do
     let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
-    let(:participant_profile) { create(:ect, lead_provider: cpd_lead_provider.lead_provider, user:) }
+    let(:cohort) { Cohort.current }
+    let(:participant_profile) { create(:ect, lead_provider: cpd_lead_provider.lead_provider, user:, cohort:) }
     let(:schedule_identifier) { "ecf-standard-september" }
     let(:course_identifier) { "ecf-induction" }
     let(:attempt_to_change_cohort_leaving_billable_declarations) { false }
-    let!(:schedule) { Finance::Schedule::ECF.find_by(schedule_identifier: "ecf-standard-september") }
+    let!(:schedule) { Finance::Schedule::ECF.find_by(schedule_identifier: "ecf-standard-september", cohort:) }
     let(:new_cohort) { Cohort.previous }
     let!(:new_schedule) { create(:ecf_schedule, cohort: new_cohort, schedule_identifier: "ecf-replacement-april") }
 
@@ -262,7 +264,9 @@ RSpec.describe ChangeSchedule do
           end
         end
 
-        it_behaves_like "changing cohort and continuing training"
+        it_behaves_like "changing cohort and continuing training" do
+          let!(:new_schedule) { Finance::Schedule::ECF.find_by(cohort: new_cohort, schedule_identifier:) }
+        end
 
         context "when there are no submitted/eligible/payable/paid declarations" do
           context "when changing to another cohort" do
@@ -473,12 +477,13 @@ RSpec.describe ChangeSchedule do
 
   context "Mentor participant profile" do
     let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
-    let!(:participant_profile) { create(:mentor, lead_provider: cpd_lead_provider.lead_provider, user:) }
+    let(:cohort) { Cohort.current }
+    let!(:participant_profile) { create(:mentor, lead_provider: cpd_lead_provider.lead_provider, user:, cohort:) }
     let(:schedule_identifier) { "ecf-extended-april" }
     let(:course_identifier) { "ecf-mentor" }
     let(:attempt_to_change_cohort_leaving_billable_declarations) { false }
     let(:new_cohort) { Cohort.previous }
-    let!(:schedule) { create(:ecf_mentor_schedule, schedule_identifier: "ecf-extended-april") }
+    let!(:schedule) { create(:ecf_mentor_schedule, cohort:, schedule_identifier: "ecf-extended-april") }
 
     describe "validations" do
       it_behaves_like "validating a participant for a change schedule"
@@ -517,7 +522,9 @@ RSpec.describe ChangeSchedule do
           end
         end
 
-        it_behaves_like "changing cohort and continuing training"
+        it_behaves_like "changing cohort and continuing training" do
+          let!(:new_schedule) { create(:ecf_mentor_schedule, cohort: new_cohort, schedule_identifier:) }
+        end
 
         context "when there are no submitted/eligible/payable/paid declarations" do
           context "when changing to another cohort" do
@@ -637,8 +644,9 @@ RSpec.describe ChangeSchedule do
     let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_npq_lead_provider) }
     let(:npq_lead_provider) { cpd_lead_provider.npq_lead_provider }
     let(:npq_course) { create(:npq_course, identifier: "npq-senior-leadership") }
-    let(:schedule) { Finance::Schedule::NPQ.find_by(cohort: Cohort.current, schedule_identifier: "npq-specialist-spring") }
-    let(:participant_profile) { create(:npq_participant_profile, npq_lead_provider:, npq_course:, schedule:, user:) }
+    let(:schedule) { Finance::Schedule::NPQ.find_by(cohort:, schedule_identifier: "npq-specialist-spring") }
+    let(:cohort) { Cohort.current }
+    let(:participant_profile) { create(:npq_participant_profile, npq_lead_provider:, npq_course:, schedule:, user:, cohort:) }
     let(:course_identifier) { npq_course.identifier }
     let(:schedule_identifier) { new_schedule.schedule_identifier }
     let(:attempt_to_change_cohort_leaving_billable_declarations) { false }
@@ -687,7 +695,7 @@ RSpec.describe ChangeSchedule do
 
         %i[eligible payable paid].each do |state|
           context "when there are #{state} declarations" do
-            let(:new_cohort) { create(:cohort, start_year: participant_profile.schedule.cohort.start_year + ParticipantProfile::ECF::CHANGE_COHORT_AND_CONTINUE_TRAINING_DELTA) }
+            let(:new_cohort) { Cohort.active_registration_cohort }
             let!(:new_schedule) { create(:npq_leadership_schedule, cohort: new_cohort) }
 
             before { create(:participant_declaration, participant_profile:, state:, course_identifier:, cpd_lead_provider:) }
