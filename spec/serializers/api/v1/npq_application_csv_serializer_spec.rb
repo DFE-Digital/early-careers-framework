@@ -59,7 +59,6 @@ module Api
         end
       end
 
-
       describe "#updated_at" do
         let(:npq_application) { create(:npq_application, targeted_delivery_funding_eligibility: true) }
         let(:profile) { npq_application.profile }
