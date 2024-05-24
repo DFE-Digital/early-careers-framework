@@ -22,7 +22,7 @@
 #                                             source_cohort_start_year: 2021,
 #                                             schedule:).save
 #
-#  - For cohort changes on participants whose current cohort has been payments_frozen and are moved to
+#  - For cohort changes on participants whose current cohort has been payments_frozen and are transferred to
 #    the active registration cohort, it will automatically flag the participant_profile as
 #    cohort_changed_after_payments_frozen: true
 #
@@ -63,8 +63,6 @@ module Induction
               },
               on: :start
 
-    validate :target_cohort_payments_active
-
     validates :participant_profile,
               presence: true,
               on: :start
@@ -72,14 +70,15 @@ module Induction
     validate :target_cohort_start_year_matches_schedule
 
     validates :participant_profile,
-              active_participant_profile: true,
-              unfinished_training_participant_profile: true
+              active_participant_profile: true
 
-    validate :eligible_to_be_moved_after_payments_frozen, if: :cohort_changed_after_payments_frozen
+    validate :target_cohort_payments_active, unless: :back_to_payments_frozen_cohort?
+    validate :transfer_from_payments_frozen_cohort, if: :transfer_from_payments_frozen_cohort?
+    validate :transfer_to_payments_frozen_cohort, if: :back_to_payments_frozen_cohort?
 
     validates :participant_declarations,
               absence: { message: :billable_or_submitted },
-              unless: :cohort_changed_after_payments_frozen
+              unless: :payments_frozen_transfer?
 
     validates :induction_record,
               presence: {
@@ -98,10 +97,6 @@ module Induction
 
     delegate :school, to: :induction_record, allow_nil: true
 
-    def cohort_changed_after_payments_frozen
-      source_cohort&.payments_frozen? && target_cohort == Cohort.active_registration_cohort
-    end
-
     def save
       return false unless valid?(:start)
       return true if in_target?(induction_record)
@@ -114,6 +109,14 @@ module Induction
     def initialize(*)
       super
       @target_cohort_start_year = (@target_cohort_start_year || @schedule&.cohort_start_year).to_i
+    end
+
+    def back_to_payments_frozen_cohort?
+      participant_profile&.cohort_changed_after_payments_frozen? && target_cohort&.payments_frozen?
+    end
+
+    def billable_declarations_in_cohort?(cohort)
+      participant_profile.participant_declarations.where(cohort:).billable.exists?
     end
 
     def current_induction_record_updated?
@@ -166,14 +169,10 @@ module Induction
       return false unless participant_profile
       return @participant_declarations if instance_variable_defined?(:@participant_declarations)
 
-      @participant_declarations = if cohort_changed_after_payments_frozen
-
-                                  else
-                                    participant_profile
-                                      .participant_declarations
-                                      .billable_or_changeable
-                                      .exists?
-                                  end
+      @participant_declarations = participant_profile
+                                    .participant_declarations
+                                    .billable_or_changeable
+                                    .exists?
     end
 
     def schedule
@@ -198,15 +197,34 @@ module Induction
       @target_school_cohort ||= SchoolCohort.find_by(school:, cohort: target_cohort)
     end
 
-    # Validations
-    def eligible_to_be_moved_after_payments_frozen
-      unless participant_profile.eligible_to_change_cohort_and_continue_training?
-        errors.add(:participant_profile, :participant_not_eligible_to_be_moved)
-      end
+    def payments_frozen_transfer?
+      transfer_from_payments_frozen_cohort? || back_to_payments_frozen_cohort?
     end
+
+    def transfer_from_payments_frozen_cohort?
+      source_cohort&.payments_frozen? && target_cohort == Cohort.active_registration_cohort
+    end
+
+    alias_method :cohort_changed_after_payments_frozen, :transfer_from_payments_frozen_cohort?
+
+    # Validations
 
     def target_cohort_payments_active
       errors.add(:target_cohort_start_year, :payments_frozen) if target_cohort&.payments_frozen?
+    end
+
+    def transfer_from_payments_frozen_cohort
+      unless participant_profile.eligible_to_change_cohort_and_continue_training?(cohort: target_cohort)
+        errors.add(:participant_profile, :not_eligible_to_be_transferred_from_current_cohort)
+      end
+    end
+
+    def transfer_to_payments_frozen_cohort
+      unless participant_profile.eligible_to_change_cohort_back_to_their_payments_frozen_original?(cohort: target_cohort)
+        errors.add(:participant_profile, :billable_declarations_in_cohort) if billable_declarations_in_cohort?(source_cohort)
+        errors.add(:participant_profile, :no_billable_declarations_in_cohort) unless billable_declarations_in_cohort?(target_cohort)
+        errors.add(:participant_profile, :not_eligible_to_be_transferred_back)
+      end
     end
 
     def target_cohort_start_year_matches_schedule
