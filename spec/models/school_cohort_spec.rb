@@ -86,14 +86,27 @@ RSpec.describe SchoolCohort, type: :model do
 
   describe ".dashboard_for_school" do
     let(:school) { create(:school) }
+    let(:cohort_2020) { Cohort.find_by(start_year: 2020) || create(:cohort, start_year: 2020) }
 
     before do
       FactoryBot.rewind_sequences
       create_list(:school_cohort, 5, :consecutive_cohorts, school:)
+      create(:school_cohort, cohort: cohort_2020, school:)
     end
 
-    it "returns at most 3 cohorts" do
-      expect(described_class.dashboard_for_school(school:, latest_year: 3000).count).to be_between(1, 3)
+    context "when the latest year is 2020" do
+      it "returns zero school cohorts" do
+        expect(described_class.dashboard_for_school(school:, latest_year: 2020).count).to be 0
+      end
+    end
+
+    context "when the latest year is 2021 or later" do
+      it "returns all school cohorts from 2021 to the provided latest year" do
+        cohort_count_since_2021 = Cohort.where.not(start_year: 2020).count
+        expect(described_class.dashboard_for_school(school:, latest_year: 3000).count).to be_between(1, cohort_count_since_2021)
+        expect(described_class.dashboard_for_school(school:, latest_year: 2024).count).to be 4
+        expect(described_class.dashboard_for_school(school:, latest_year: 2022).count).to be 2
+      end
     end
 
     it "returns cohorts from the current year up to 2 years in the past" do
