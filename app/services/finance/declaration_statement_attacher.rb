@@ -23,7 +23,8 @@ module Finance
     attr_accessor :participant_declaration
 
     def cohort
-      participant_declaration.participant_profile.schedule_for(cpd_lead_provider:).cohort
+      participant_declaration.cohort
+      #participant_declaration.participant_profile.schedule_for(cpd_lead_provider:).cohort
     end
 
     def cpd_lead_provider
