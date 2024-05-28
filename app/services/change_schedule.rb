@@ -84,9 +84,9 @@ private
   def can_change_cohort_leaving_billable_declarations?
     return false unless participant_profile.ecf?
     return false unless attempt_to_change_cohort_leaving_billable_declarations
-    return true if participant_profile.eligible_to_change_cohort_and_continue_training?(in_cohort_start_year: cohort.start_year)
+    return true if participant_profile.eligible_to_change_cohort_and_continue_training?(cohort:)
 
-    participant_profile.eligible_to_change_cohort_back_to_their_payments_frozen_original?(to_cohort_start_year: cohort.start_year)
+    participant_profile.eligible_to_change_cohort_back_to_their_payments_frozen_original?(cohort:)
   end
 
   def cohort_start_years_delta

@@ -53,10 +53,10 @@ class ParticipantProfile::ECF < ParticipantProfile
     %w[cohort participant_identity school user teacher_profile induction_records]
   end
 
-  def self.eligible_to_change_cohort_and_continue_training(in_cohort_start_year:, restrict_to_participant_ids: [])
+  def self.eligible_to_change_cohort_and_continue_training(cohort:, restrict_to_participant_ids: [])
     billable_states = %w[eligible payable paid].freeze
 
-    return none unless Cohort.find_by_start_year(in_cohort_start_year) == Cohort.active_registration_cohort
+    return none unless cohort == Cohort.active_registration_cohort
 
     completed_billable_declarations = ParticipantDeclaration.billable.for_declaration(:completed)
     completed_billable_declarations = completed_billable_declarations.where(participant_profile_id: restrict_to_participant_ids) if restrict_to_participant_ids.any?
@@ -72,14 +72,12 @@ class ParticipantProfile::ECF < ParticipantProfile
     query
   end
 
-  def eligible_to_change_cohort_back_to_their_payments_frozen_original?(to_cohort_start_year:)
-    to_cohort = Cohort.find_by_start_year(to_cohort_start_year)
-
+  def eligible_to_change_cohort_back_to_their_payments_frozen_original?(cohort:)
     return false unless cohort_changed_after_payments_frozen?
-    return false unless to_cohort.payments_frozen?
+    return false unless cohort.payments_frozen?
     return false if participant_declarations.billable_or_changeable.where(cohort: schedule.cohort).exists?
 
-    participant_declarations.billable.where(cohort: to_cohort).exists?
+    participant_declarations.billable.where(cohort:).exists?
   end
 
   def self.archivable(restrict_to_participant_ids: [])
@@ -104,8 +102,8 @@ class ParticipantProfile::ECF < ParticipantProfile
   end
 
   # Instance Methods
-  def eligible_to_change_cohort_and_continue_training?(in_cohort_start_year:)
-    self.class.eligible_to_change_cohort_and_continue_training(in_cohort_start_year:, restrict_to_participant_ids: [id]).exists?
+  def eligible_to_change_cohort_and_continue_training?(cohort:)
+    self.class.eligible_to_change_cohort_and_continue_training(cohort:, restrict_to_participant_ids: [id]).exists?
   end
 
   def archivable?
