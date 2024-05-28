@@ -33,9 +33,6 @@ RSpec.describe "Changing participant details from check answers", type: :feature
     and_i_add_date_of_birth_to_the_school_add_participant_wizard @participant_data[:date_of_birth]
     and_i_add_email_address_to_the_school_add_participant_wizard "Sally Teacher", @participant_data[:email]
 
-    # FIXME: only before 2023 cohort?
-    and_i_add_start_term_to_the_school_add_participant_wizard @participant_data[:start_term] if Cohort.within_next_registration_period?
-
     and_i_choose_mentor_later_on_the_school_add_participant_wizard
     then_i_am_taken_to_check_details_page
 
@@ -71,9 +68,6 @@ RSpec.describe "Changing participant details from check answers", type: :feature
     and_i_add_teacher_reference_number_to_the_school_add_participant_wizard @participant_data[:full_name], @participant_data[:trn]
     and_i_add_date_of_birth_to_the_school_add_participant_wizard @participant_data[:date_of_birth]
     and_i_add_email_address_to_the_school_add_participant_wizard "Sally Teacher", @participant_data[:email]
-
-    # FIXME: only before 2023 cohort?
-    and_i_add_start_term_to_the_school_add_participant_wizard @participant_data[:start_term] if Cohort.within_next_registration_period?
 
     then_i_am_taken_to_add_mentor_page
     then_the_page_should_be_accessible
