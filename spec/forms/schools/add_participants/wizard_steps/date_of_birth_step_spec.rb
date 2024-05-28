@@ -45,7 +45,7 @@ RSpec.describe Schools::AddParticipants::WizardSteps::DateOfBirthStep, type: :mo
     let(:found_in_dqt) { false }
     let(:registration_open) { false }
     let(:need_setup) { false }
-    let(:confirm_start_term) { false }
+    let(:automatically_assign_next_cohort) { false }
     let(:participant_withdrawn) { false }
     let(:already_enrolled_at_school_but_leaving) { false }
     let(:already_enrolled_at_school_but_withdrawn) { false }
@@ -67,7 +67,7 @@ RSpec.describe Schools::AddParticipants::WizardSteps::DateOfBirthStep, type: :mo
       allow(wizard).to receive(:found_participant_in_dqt?).and_return(found_in_dqt)
       allow(wizard).to receive(:registration_open_for_participant_cohort?).and_return(registration_open)
       allow(wizard).to receive(:need_training_setup?).and_return(need_setup)
-      allow(wizard).to receive(:needs_to_confirm_start_term?).and_return(confirm_start_term)
+      allow(wizard).to receive(:automatically_assign_next_cohort?).and_return(automatically_assign_next_cohort)
       allow(wizard).to receive(:participant_withdrawn?).and_return(participant_withdrawn)
       allow(wizard).to receive(:set_ect_mentor).and_return(nil)
     end
@@ -80,8 +80,8 @@ RSpec.describe Schools::AddParticipants::WizardSteps::DateOfBirthStep, type: :mo
           expect(step.next_step).to eql :none
         end
 
-        context "when the participant will be asked the start_term question" do
-          let(:confirm_start_term) { true }
+        context "when the participant will be automatically assigned to the next cohort" do
+          let(:automatically_assign_next_cohort) { true }
 
           it "returns :none" do
             expect(step.next_step).to eql :none

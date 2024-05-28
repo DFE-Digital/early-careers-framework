@@ -17,6 +17,7 @@ RSpec.describe Schools::AddParticipants::WizardSteps::EmailStep, type: :model do
   end
 
   describe "#next_step" do
+    let(:automatically_assign_next_cohort) { false }
     let(:email_taken) { false }
     let(:transfer) { false }
     let(:choose_mentor) { false }
@@ -30,12 +31,22 @@ RSpec.describe Schools::AddParticipants::WizardSteps::EmailStep, type: :model do
     let(:choose_partnership) { false }
 
     before do
+      allow(wizard).to receive(:automatically_assign_next_cohort?).and_return(automatically_assign_next_cohort)
       allow(wizard).to receive(:email_in_use?).and_return(email_taken)
       allow(wizard).to receive(:transfer?).and_return(transfer)
       allow(wizard).to receive(:needs_to_choose_a_mentor?).and_return(choose_mentor)
       allow(wizard).to receive(:ect_participant?).and_return(ect_participant)
       allow(wizard).to receive(:sit_adding_themself_as_mentor?).and_return(sit_adding_themself_as_mentor)
       allow(wizard).to receive(:adding_yourself_as_ect?).and_return(adding_yourself_as_ect)
+    end
+
+    context "when registration is not yet open" do
+      let(:automatically_assign_next_cohort) { true }
+      let(:registration_open) { false }
+
+      it "returns :cannot_add_registration_not_yet_open" do
+        expect(step.next_step).to eql :cannot_add_registration_not_yet_open
+      end
     end
 
     context "when the email is already in use" do
@@ -88,7 +99,6 @@ RSpec.describe Schools::AddParticipants::WizardSteps::EmailStep, type: :model do
       let(:ect_participant) { true }
 
       before do
-        allow(wizard).to receive(:needs_to_confirm_start_term?).and_return(confirm_start_term)
         allow(wizard).to receive(:needs_to_confirm_appropriate_body?).and_return(confirm_appropriate_body)
         allow(wizard).to receive(:needs_to_choose_partnership?).and_return(choose_partnership)
       end
