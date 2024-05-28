@@ -31,8 +31,10 @@ module Schools
             end
           elsif wizard.sit_adding_themself_as_mentor?
             :yourself
-          elsif wizard.needs_to_confirm_start_term?
-            :start_term
+          elsif wizard.automatically_assign_next_cohort? && !Cohort.within_next_registration_period?
+            :cannot_add_registration_not_yet_open
+          elsif wizard.automatically_assign_next_cohort? && wizard.need_training_setup?
+            :need_training_setup
           elsif wizard.needs_to_choose_a_mentor?
             :choose_mentor
           elsif wizard.needs_to_confirm_appropriate_body?
