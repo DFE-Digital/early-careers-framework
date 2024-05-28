@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe Cohort, type: :model do
-  let!(:cohort_2024) { FactoryBot.create :seed_cohort, start_year: 2024 }
+  let!(:cohort_2024) { Cohort.find_by_start_year(2024) }
 
   describe "associations" do
     it { is_expected.to have_many(:call_off_contracts) }
