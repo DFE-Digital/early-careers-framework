@@ -18,7 +18,7 @@ module Schools
       delegate :return_point, :changing_answer?, :transfer?, :participant_type, :trn, :confirmed_trn, :date_of_birth,
                :induction_start_date, :nino, :ect_participant?, :mentor_id, :continue_current_programme?, :participant_profile,
                :mentor_participant?, :appropriate_body_confirmed?, :appropriate_body_id, :known_by_another_name?,
-               :was_withdrawn_participant?, :complete?, :start_date, :start_term, :last_visited_step,
+               :was_withdrawn_participant?, :complete?, :start_date, :last_visited_step,
                :ect_mentor?, :join_school_programme, :join_school_programme?, :join_participant_cohort_school_programme?,
                :join_current_cohort_school_programme?, :current_providers?, :previous_providers?, :providers_chosen?,
                :full_name, to: :data_store
@@ -594,7 +594,6 @@ module Schools
           email
           mentor_id
           start_date
-          start_term
           appropriate_body_id
           appropriate_body_confirmed
           continue_current_programme
