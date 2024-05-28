@@ -41,16 +41,6 @@
                  href: form.change_path_for(step: :email)) %>
   <% end %>
 
-  <% if form.show_start_term? %>
-    <% summary_list.with_row do |row| %>
-      <% row.with_key { "Start term" } %>
-      <% row.with_value { form.start_term_description } %>
-      <% row.with_action(text: "Change",
-                    visually_hidden_text: "start term",
-                    href: form.change_path_for(step: :start_term)) %>
-    <% end %>
-  <% end %>
-
   <% if form.ect_participant? %>
     <% summary_list.with_row do |row| %>
       <% row.with_key { "Mentor" } %>

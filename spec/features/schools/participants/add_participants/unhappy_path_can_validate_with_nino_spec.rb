@@ -8,6 +8,7 @@ RSpec.describe "Add participants", js: true, mid_cohort: true do
 
   before do
     given_there_is_a_school_that_has_chosen_fip_and_partnered
+    given_there_is_a_school_that_has_chosen_fip_for_current_and_next_cohorts_and_partnered
     and_i_have_added_an_ect
     and_i_have_added_a_mentor
     and_i_am_signed_in_as_an_induction_coordinator
@@ -59,7 +60,7 @@ RSpec.describe "Add participants", js: true, mid_cohort: true do
   end
 
   scenario "Induction tutor can add new mentor participant when dqt returns a match with nino outside the auto assignment window" do
-    outside_auto_assignment_window do
+    inside_registration_window do
       when_i_navigate_to_mentors_dashboard
       and_i_choose_to_add_a_mentor_on_the_school_mentors_dashboard_page
       and_i_choose_to_add_a_new_mentor_on_the_school_add_participant_wizard
@@ -70,7 +71,6 @@ RSpec.describe "Add participants", js: true, mid_cohort: true do
       and_i_confirm_details_and_continue_on_the_school_add_participant_wizard
       and_i_add_nino_to_the_school_add_participant_wizard @participant_data[:full_name], @participant_data[:nino]
       and_i_add_email_address_to_the_school_add_participant_wizard "Sally Teacher", @participant_data[:email]
-      and_i_choose_summer_term_on_the_school_add_participant_wizard
       and_i_choose_current_providers_on_the_school_add_participant_wizard
       and_i_confirm_and_add_on_the_school_add_participant_wizard
 

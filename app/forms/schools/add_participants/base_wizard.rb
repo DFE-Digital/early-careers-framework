@@ -327,9 +327,7 @@ module Schools
         false
       end
 
-      def needs_to_confirm_start_term?
-        # are we in the next registration period (or pre-registration period) and the participant does not have
-        # an induction start date
+      def automatically_assign_next_cohort?
         (mentor_participant? || induction_start_date.blank?) && !Cohort.within_automatic_assignment_period?
       end
 
@@ -471,17 +469,9 @@ module Schools
             return Cohort.current if cohort.blank? || cohort.npq_plus_one_or_earlier?
           end
         elsif Cohort.within_automatic_assignment_period?
-          # true from 1/9 to end of automatic assignment period
           Cohort.current
-        elsif start_term == "summer"
-          Cohort.current
-        # we're in the registration window prior to 1/9
-        elsif start_term.in? %w[autumn spring]
-          # we're in the registration window prior to 1/9 and chose autumn or spring the following year
-          Cohort.next
         else
-          # default to now - but should ask the start_term question if not already asked
-          Cohort.current
+          Cohort.next
         end
       end
 

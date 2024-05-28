@@ -60,7 +60,7 @@ RSpec.describe "Adding previously withdrawn Mentor", type: :feature, js: true do
     participant_profile = add_and_remove_participant_from_school_cohort(previous_school_cohort)
     the_participant_profile_is_set_up_as_withdrawn_correctly(participant_profile, previous_school_cohort)
 
-    outside_auto_assignment_window do
+    inside_auto_assignment_window do
       expect {
         sign_in
 
@@ -69,9 +69,6 @@ RSpec.describe "Adding previously withdrawn Mentor", type: :feature, js: true do
         and_i_go_through_the_what_we_need_from_you_page
 
         and_i_fill_in_all_info
-        then_i_am_taken_to_mentor_start_training_page
-
-        when_i_choose_summer_term_this_cohort
         when_i_click_on_continue
         then_i_am_taken_to_choose_mentor_partnership_page
 
@@ -97,7 +94,7 @@ RSpec.describe "Adding previously withdrawn Mentor", type: :feature, js: true do
       expected_trn: nil,
     )
 
-    outside_auto_assignment_window do
+    inside_auto_assignment_window do
       expect {
         sign_in
 
@@ -106,9 +103,6 @@ RSpec.describe "Adding previously withdrawn Mentor", type: :feature, js: true do
         and_i_go_through_the_what_we_need_from_you_page
 
         and_i_fill_in_all_info
-        then_i_am_taken_to_mentor_start_training_page
-
-        when_i_choose_summer_term_this_cohort
         when_i_click_on_continue
         then_i_am_taken_to_choose_mentor_partnership_page
 
@@ -129,7 +123,7 @@ RSpec.describe "Adding previously withdrawn Mentor", type: :feature, js: true do
     participant_profile = add_and_remove_participant_from_school_cohort(previous_school_cohort)
     the_participant_profile_is_set_up_as_withdrawn_correctly(participant_profile, previous_school_cohort)
 
-    outside_auto_assignment_window do
+    inside_auto_assignment_window do
       expect {
         new_email = "another_#{ect_email}"
 
@@ -140,9 +134,6 @@ RSpec.describe "Adding previously withdrawn Mentor", type: :feature, js: true do
         and_i_go_through_the_what_we_need_from_you_page
 
         and_i_fill_in_all_info(email: new_email)
-        then_i_am_taken_to_mentor_start_training_page
-
-        when_i_choose_summer_term_this_cohort
         when_i_click_on_continue
         then_i_am_taken_to_choose_mentor_partnership_page
 
@@ -163,7 +154,7 @@ RSpec.describe "Adding previously withdrawn Mentor", type: :feature, js: true do
     participant_profile = add_and_remove_participant_from_school_cohort(previous_school_cohort_different_school)
     the_participant_profile_is_set_up_as_withdrawn_correctly(participant_profile, previous_school_cohort_different_school)
 
-    outside_auto_assignment_window do
+    inside_auto_assignment_window do
       expect {
         sign_in
 
@@ -172,9 +163,6 @@ RSpec.describe "Adding previously withdrawn Mentor", type: :feature, js: true do
         and_i_go_through_the_what_we_need_from_you_page
 
         and_i_fill_in_all_info
-        then_i_am_taken_to_mentor_start_training_page
-
-        when_i_choose_summer_term_this_cohort
         when_i_click_on_continue
         then_i_am_taken_to_choose_mentor_partnership_page
 
