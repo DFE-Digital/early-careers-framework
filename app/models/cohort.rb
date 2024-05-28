@@ -5,6 +5,7 @@ class Cohort < ApplicationRecord
 
   NPQ_PLUS_1_YEAR = 2020
   OPEN_COHORTS_COUNT = 3
+  INITIAL_COHORT_START_DATE = Date.new(2021, 9, 1)
 
   has_many :call_off_contracts
   has_many :npq_contracts
@@ -44,7 +45,7 @@ class Cohort < ApplicationRecord
   #   - The previous date's year cohort if the date is before Jun or
   #   - the cohort starting the date's year otherwise.
   def self.for_induction_start_date(date)
-    return current if date < Date.new(2021, 9, 1)
+    return current if date < INITIAL_COHORT_START_DATE
 
     Cohort.find_by_start_year(date.month < 6 ? date.year - 1 : date.year)
   end
