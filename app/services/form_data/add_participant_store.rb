@@ -41,10 +41,6 @@ module FormData
       get_date :induction_start_date
     end
 
-    def start_term
-      get :start_term
-    end
-
     def start_date
       get_date :start_date
     end

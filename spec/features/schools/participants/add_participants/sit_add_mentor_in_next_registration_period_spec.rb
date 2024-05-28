@@ -75,7 +75,6 @@ RSpec.describe "SIT adding mentor", js: true do
       email: "sally@school.com",
       nino: "AB123456A",
       start_date: nil,
-      start_term: nil,
     }
   end
 end
