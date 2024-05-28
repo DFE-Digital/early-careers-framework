@@ -24,7 +24,6 @@ RSpec.describe Schools::AddParticipants::WizardSteps::EmailStep, type: :model do
     let(:confirm_programme) { false }
     let(:choose_school_programme) { false }
     let(:ect_participant) { false }
-    let(:confirm_start_term) { false }
     let(:confirm_appropriate_body) { false }
     let(:sit_adding_themself_as_mentor) { false }
     let(:adding_yourself_as_ect) { false }
@@ -105,14 +104,6 @@ RSpec.describe Schools::AddParticipants::WizardSteps::EmailStep, type: :model do
 
       it "returns :check_answers" do
         expect(step.next_step).to eql :check_answers
-      end
-
-      context "when the SIT needs to confirm the start term" do
-        let(:confirm_start_term) { true }
-
-        it "returns :start_term" do
-          expect(step.next_step).to eql :start_term
-        end
       end
 
       context "when a mentor can be chosen" do
