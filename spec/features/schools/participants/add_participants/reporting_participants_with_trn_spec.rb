@@ -170,37 +170,6 @@ RSpec.describe "Reporting participants with a known TRN", type: :feature, js: tr
     end
   end
 
-  scenario "Adding a Mentor is accessible outside automatic assignment period" do
-    outside_auto_assignment_window do
-      given_i_sign_in_as_the_user_with_the_full_name "Fip induction tutor"
-      when_i_view_mentor_dashboard_on_the_school_dashboard_page
-
-      when_i_choose_to_add_a_mentor_from_the_school_mentors_dashboard_page
-      and_i_choose_to_add_a_new_mentor_on_the_school_add_participant_wizard
-      then_the_page_is_accessible
-
-      when_i_add_mentor_full_name_to_the_school_add_participant_wizard participant_data[:full_name]
-      when_i_add_teacher_reference_number_to_the_school_add_participant_wizard participant_data[:full_name], participant_data[:trn]
-      when_i_add_date_of_birth_to_the_school_add_participant_wizard participant_data[:date_of_birth]
-
-      when_i_add_email_address_to_the_school_add_participant_wizard "Sally Teacher", participant_data[:email]
-      then_the_page_is_accessible
-
-      when_i_choose_summer_term_on_the_school_add_participant_wizard
-      then_the_page_is_accessible
-
-      when_i_choose_current_providers_on_the_school_add_participant_wizard
-      then_the_page_is_accessible
-
-      when_i_confirm_and_add_on_the_school_add_participant_wizard
-      then_the_page_is_accessible
-
-      then_i_am_on_the_school_add_participant_completed_page
-      and_i_confirm_has_full_name_on_the_school_add_participant_completed_page participant_data[:full_name]
-      and_i_confirm_has_participant_type_on_the_school_add_participant_completed_page "Mentor"
-    end
-  end
-
   def valid_dqt_response(participant_data)
     DQTRecordPresenter.new({
       "name" => participant_data[:full_name],

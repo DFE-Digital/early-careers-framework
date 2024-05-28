@@ -58,9 +58,7 @@ module Schools
         end
 
         def cohort_checks
-          if wizard.needs_to_confirm_start_term?
-            # we're not sure at this point which cohort is needed
-            # so allow to proceed at this point
+          if wizard.automatically_assign_next_cohort?
             :none
           elsif !wizard.registration_open_for_participant_cohort?
             # we know the cohort at this point (only if induction start date set)
