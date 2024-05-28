@@ -94,6 +94,14 @@ module ManageTrainingSteps
     @induction_programme.update!(partnership: @partnership)
   end
 
+  def given_there_is_a_school_that_has_chosen_fip_for_current_and_next_cohorts_and_partnered
+    given_there_is_a_school_that_has_chosen_fip_for_previous_and_current_cohort_and_partnered
+    @cohort_next = Cohort.next || create(:cohort, :next)
+    @school_cohort_next = create(:school_cohort, :fip, school: @school, cohort: @cohort_next)
+    @induction_programme_next = create(:induction_programme, :fip, school_cohort: @school_cohort_next, partnership: @partnership_current)
+    @school_cohort_next.update!(default_induction_programme: @induction_programme_next)
+  end
+
   def given_there_is_a_school_that_has_chosen_fip_for_previous_cohort_and_partnered_but_challenged
     given_there_is_a_school_that_has_chosen_fip_for_previous_cohort
     @lead_provider = create(:lead_provider, name: "Big Provider Ltd")
@@ -696,10 +704,6 @@ module ManageTrainingSteps
 
   def when_i_choose_other_providers
     choose option: "other_providers"
-  end
-
-  def when_i_choose_summer_term_this_cohort
-    choose "Summer term #{Cohort.current.start_year + 1}"
   end
 
   def when_i_choose_yes
@@ -1378,16 +1382,8 @@ module ManageTrainingSteps
     expect(page).to have_selector("h1", text: "When is Sally Teacher moving to your school?")
   end
 
-  def then_i_am_taken_to_mentor_start_training_page
-    expect(page).to have_selector("h1", text: "When will #{@participant_data[:full_name]} start their mentor training?")
-  end
-
   def then_i_am_taken_to_choose_mentor_partnership_page(full_name: @participant_data[:full_name])
     expect(page).to have_selector("h1", text: "Who will #{full_name} do their mentor training with?")
-  end
-
-  def then_i_am_taken_to_sit_mentor_start_training_page
-    expect(page).to have_selector("h1", text: "When will you start mentor training?")
   end
 
   def then_i_am_taken_to_the_cannot_add_page_same_school
@@ -1507,7 +1503,7 @@ module ManageTrainingSteps
                              "dob" => participant_data[:date_of_birth],
                              "qualified_teacher_status" => { "qts_date" => 1.year.ago },
                              "induction" => {
-                               "periods" => [{ "startDate" => 1.month.ago }],
+                               "periods" => [{ "startDate" => @participant_data[:start_date] }],
                                "status" => "Active",
                              },
     })

@@ -15,8 +15,8 @@ module Schools
             else
               :cannot_add_manual_transfer
             end
-          elsif wizard.needs_to_confirm_start_term?
-            :start_term
+          elsif wizard.automatically_assign_next_cohort? && !Cohort.within_next_registration_period?
+            :cannot_add_registration_not_yet_open
           elsif wizard.needs_to_choose_a_mentor?
             :choose_mentor
           elsif wizard.needs_to_confirm_appropriate_body?
