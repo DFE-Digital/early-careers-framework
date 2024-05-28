@@ -53,14 +53,14 @@ class ParticipantProfile::ECF < ParticipantProfile
     %w[cohort participant_identity school user teacher_profile induction_records]
   end
 
-  def self.eligible_to_change_cohort_and_continue_training(in_cohort_start_year:, restrict_to_participant_ids: [])
+  def self.eligible_to_change_cohort_and_continue_training(restrict_to_participant_ids: [])
     billable_states = %w[eligible payable paid].freeze
 
     completed_billable_declarations = ParticipantDeclaration.billable.for_declaration(:completed)
     completed_billable_declarations = completed_billable_declarations.where(participant_profile_id: restrict_to_participant_ids) if restrict_to_participant_ids.any?
 
     query = joins(:participant_declarations, schedule: :cohort)
-      .where(cohorts: { start_year: in_cohort_start_year - Cohort::OPEN_COHORTS_COUNT })
+      .where.not(cohorts: { payments_frozen_at: nil })
       .where("participant_declarations.state IN (?) AND declaration_type != ?", billable_states, "completed")
       .where.not(id: completed_billable_declarations.select(:participant_profile_id))
       .distinct
@@ -70,10 +70,7 @@ class ParticipantProfile::ECF < ParticipantProfile
     query
   end
 
-  def self.archivable(for_cohort_start_year:, restrict_to_participant_ids: [])
-    latest_cohort = Cohort.order(start_year: :desc).first
-    return none unless for_cohort_start_year <= latest_cohort.start_year - Cohort::OPEN_COHORTS_COUNT
-
+  def self.archivable(restrict_to_participant_ids: [])
     unbillable_states = %i[ineligible voided submitted].freeze
 
     # Find all participants that have no FIP induction records (as finding those with only FIP is more complicated).
@@ -83,7 +80,7 @@ class ParticipantProfile::ECF < ParticipantProfile
     query = left_joins(:participant_declarations, schedule: :cohort)
       # Exclude participants that have any induction records that are not FIP.
       .where.not(id: not_fip_induction_records.select(:participant_profile_id))
-      .where(cohorts: { start_year: for_cohort_start_year })
+      .where.not(cohorts: { payments_frozen_at: nil })
       # Exclude participants that have any billable/submitted declarations, but
       # retain participants that have no declarations at all.
       .where.not("participant_declarations.id IS NOT NULL AND participant_declarations.state NOT IN (?)", unbillable_states)
@@ -95,12 +92,12 @@ class ParticipantProfile::ECF < ParticipantProfile
   end
 
   # Instance Methods
-  def eligible_to_change_cohort_and_continue_training?(in_cohort_start_year:)
-    self.class.eligible_to_change_cohort_and_continue_training(in_cohort_start_year:, restrict_to_participant_ids: [id]).exists?
+  def eligible_to_change_cohort_and_continue_training?
+    self.class.eligible_to_change_cohort_and_continue_training(restrict_to_participant_ids: [id]).exists?
   end
 
-  def archivable?(for_cohort_start_year:)
-    self.class.archivable(for_cohort_start_year:, restrict_to_participant_ids: [id]).exists?
+  def archivable?
+    self.class.archivable(restrict_to_participant_ids: [id]).exists?
   end
 
   def completed_induction?
