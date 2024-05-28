@@ -18,6 +18,32 @@ module Api
       attribute(:participant_id, &:id)
 
       attribute(:npq_courses) do |object, params|
+        npq_profiles = npq_profiles(object, params)
+
+        npq_profiles.map { |npq_profile| npq_profile.npq_application.npq_course.identifier }
+      end
+
+      attribute :funded_places, if: -> { FeatureFlag.active?(:npq_capping) } do |object, params|
+        npq_profiles = npq_profiles(object, params)
+
+        npq_profiles.map do |npq_profile|
+          {
+            "npq_course": npq_profile.npq_application.npq_course.identifier,
+            "funded_place:": npq_profile.npq_application.funded_place,
+            "npq_application_id": npq_profile.npq_application.id,
+          }
+        end
+      end
+
+      attribute(:teacher_reference_number) do |object|
+        object.teacher_profile&.trn
+      end
+
+      attribute(:updated_at) do |object|
+        object.updated_at.rfc3339
+      end
+
+      def self.npq_profiles(object, params)
         scope = object.npq_profiles
         scope = scope.includes(npq_application: [:npq_course])
 
@@ -27,16 +53,7 @@ module Api
         else
           scope = ParticipantProfile::NPQ.none
         end
-
-        scope.map { |npq_profile| npq_profile.npq_application.npq_course.identifier }
-      end
-
-      attribute(:teacher_reference_number) do |object|
-        object.teacher_profile&.trn
-      end
-
-      attribute(:updated_at) do |object|
-        object.updated_at.rfc3339
+        scope
       end
     end
   end

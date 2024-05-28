@@ -175,7 +175,6 @@ RSpec.describe NPQ::Application::ChangeFundedPlace do
 
         it "is invalid if funded_place is `nil`" do
           service.call
-
           expect(service.errors.messages_for(:npq_application)).to include("The entered '#/funded_place' is missing from your request. Check details and try again.")
         end
       end

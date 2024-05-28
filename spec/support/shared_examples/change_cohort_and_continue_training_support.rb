@@ -5,13 +5,14 @@ RSpec.shared_examples "can change cohort and continue training" do |participant_
 
   describe ".eligible_to_change_cohort_and_continue_training" do
     let(:current_cohort) { eligible_participant.schedule.cohort }
-    let(:in_cohort_start_year) { current_cohort.start_year + 3 }
     let(:restrict_to_participant_ids) { [] }
     let(:cpd_lead_provider) { eligible_participant.lead_provider.cpd_lead_provider }
     let(:eligible_participants) { create_list(declaration_type, 3, :payable, declaration_type: :started).map(&:participant_profile) }
     let(:eligible_participant) { eligible_participants.first }
 
     before do
+      current_cohort.update!(payments_frozen_at: Time.zone.now)
+
       # Extra declaration on the same participant to ensure the results are distinct.
       create(declaration_type, :payable, declaration_type: :"retained-1", participant_profile: eligible_participant, cpd_lead_provider:)
 
@@ -24,14 +25,14 @@ RSpec.shared_examples "can change cohort and continue training" do |participant_
       # Ineligible due to having the completed_training_at_attribute populated.
       create(declaration_type, :paid, declaration_type: :started).participant_profile.update!("#{completed_training_at_attribute}": 1.month.ago)
 
-      # Ineligible due to not being in the applicable cohort.
+      # Ineligible due to not being in a payments frozen cohort.
       create(declaration_type, :payable, declaration_type: :started).tap do |declaration|
-        schedule = create(:ecf_schedule, cohort: create(:cohort, start_year: in_cohort_start_year - 1))
+        schedule = create(:ecf_schedule, cohort: current_cohort.next)
         declaration.participant_profile.update!(schedule:)
       end
     end
 
-    subject { described_class.eligible_to_change_cohort_and_continue_training(in_cohort_start_year:, restrict_to_participant_ids:) }
+    subject { described_class.eligible_to_change_cohort_and_continue_training(restrict_to_participant_ids:) }
 
     it { is_expected.to contain_exactly(*eligible_participants) }
 
@@ -46,16 +47,17 @@ RSpec.shared_examples "can change cohort and continue training" do |participant_
     let(:declaration) { create(declaration_type, :paid, declaration_type: :started) }
     let(:participant_profile) { declaration.participant_profile }
     let(:current_cohort) { participant_profile.schedule.cohort }
-    let(:in_cohort_start_year) { current_cohort.start_year + 3 }
+
+    before { current_cohort.update!(payments_frozen_at: Time.zone.now) }
 
     subject { participant_profile }
 
-    it { is_expected.to be_eligible_to_change_cohort_and_continue_training(in_cohort_start_year:) }
+    it { is_expected.to be_eligible_to_change_cohort_and_continue_training }
 
-    context "when the cohort is not #{Cohort::OPEN_COHORTS_COUNT} years after the participant's current cohort" do
-      let(:in_cohort_start_year) { current_cohort.start_year + Cohort::OPEN_COHORTS_COUNT + 1 }
+    context "when the participant is not in a payments frozen cohort" do
+      before { current_cohort.update!(payments_frozen_at: nil) }
 
-      it { is_expected.not_to be_eligible_to_change_cohort_and_continue_training(in_cohort_start_year:) }
+      it { is_expected.not_to be_eligible_to_change_cohort_and_continue_training }
     end
 
     %i[paid payable eligible].each do |billable_declaration_type|
@@ -72,20 +74,20 @@ RSpec.shared_examples "can change cohort and continue training" do |participant_
                  cpd_lead_provider: participant_profile.lead_provider.cpd_lead_provider)
         end
 
-        it { is_expected.not_to be_eligible_to_change_cohort_and_continue_training(in_cohort_start_year:) }
+        it { is_expected.not_to be_eligible_to_change_cohort_and_continue_training }
       end
     end
 
     context "when the participant does not have billable, not completed declarations" do
       before { declaration.destroy }
 
-      it { is_expected.not_to be_eligible_to_change_cohort_and_continue_training(in_cohort_start_year:) }
+      it { is_expected.not_to be_eligible_to_change_cohort_and_continue_training }
     end
 
     context "when the participant has a #{completed_training_at_attribute}" do
       before { participant_profile.update!("#{completed_training_at_attribute}": 1.month.ago) }
 
-      it { is_expected.not_to be_eligible_to_change_cohort_and_continue_training(in_cohort_start_year:) }
+      it { is_expected.not_to be_eligible_to_change_cohort_and_continue_training }
     end
   end
 end
