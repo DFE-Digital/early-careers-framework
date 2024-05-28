@@ -25,7 +25,37 @@ module Api
 
           it "does not leak course info when given a provider param" do
             result = NPQParticipantSerializer.new(participant, params: { cpd_lead_provider: provider_one.cpd_lead_provider }).serializable_hash
+
             expect(result[:data][:attributes][:npq_courses]).to eq %w[npq-headship]
+          end
+
+          describe "funded places" do
+            context "when feature flag `npq_capping` is inactive" do
+              before { FeatureFlag.deactivate(:npq_capping) }
+
+              it "does not return the funded places" do
+                result = NPQParticipantSerializer.new(participant, params: { cpd_lead_provider: provider_one.cpd_lead_provider }).serializable_hash
+
+                expect(result[:data][:attributes]).not_to include(:funded_places)
+              end
+            end
+
+            context "when feature flag `npq_capping` is active" do
+              before { FeatureFlag.activate(:npq_capping) }
+
+              it "returns the funded places" do
+                application_one.update!(funded_place: true)
+                result = NPQParticipantSerializer.new(participant, params: { cpd_lead_provider: provider_one.cpd_lead_provider }).serializable_hash
+
+                expect(result[:data][:attributes][:funded_places]).to eq [
+                  {
+                    "npq_course": "npq-headship",
+                    "funded_place:": true,
+                    "npq_application_id": application_one.id,
+                  },
+                ]
+              end
+            end
           end
 
           it "does not leak course info when given no provider param" do
