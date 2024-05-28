@@ -7,7 +7,7 @@ RSpec.describe "SIT adding mentor", js: true do
   include ManageTrainingSteps
 
   before do
-    outside_auto_assignment_window do
+    inside_auto_assignment_window do
       given_there_is_a_school_that_has_chosen_cip
       given_there_is_a_school_that_has_chosen_fip_and_partnered
       set_participant_data
@@ -16,7 +16,7 @@ RSpec.describe "SIT adding mentor", js: true do
   end
 
   scenario "Induction tutor adds themself as mentor using their own email address" do
-    outside_auto_assignment_window do
+    inside_auto_assignment_window do
       when_i_am_signed_in_as_an_induction_coordinator
       and_i_click_on(Cohort.current.description)
       then_i_am_taken_to_fip_induction_dashboard
@@ -49,10 +49,6 @@ RSpec.describe "SIT adding mentor", js: true do
       then_i_am_taken_to_are_you_sure_page
 
       when_i_click_on_confirm
-      then_i_am_taken_to_sit_mentor_start_training_page
-
-      when_i_choose_summer_term_this_cohort
-      and_i_click_on_continue
       then_i_am_taken_to_choose_mentor_partnership_page(full_name: @induction_coordinator_profile.full_name)
 
       when_i_choose_current_providers
@@ -68,7 +64,7 @@ RSpec.describe "SIT adding mentor", js: true do
   end
 
   scenario "Induction tutor adds themself as mentor using their own email address when email and TRN belongs to an existing mentor" do
-    outside_auto_assignment_window do
+    inside_auto_assignment_window do
       given_there_is_a_sit_and_mentor_in_difference_schools
 
       when_i_sign_in_as_sit
@@ -123,7 +119,7 @@ RSpec.describe "SIT adding mentor", js: true do
   end
 
   scenario "Induction tutor adds a new mentor to current providers" do
-    outside_auto_assignment_window do
+    inside_auto_assignment_window do
       given_there_is_a_sit
 
       when_i_sign_in_as_sit
@@ -154,10 +150,6 @@ RSpec.describe "SIT adding mentor", js: true do
       then_i_am_taken_to_add_ect_or_mentor_email_page
 
       when_i_add_ect_or_mentor_email
-      and_i_click_on_continue
-      then_i_am_taken_to_mentor_start_training_page
-
-      when_i_choose_summer_term_this_cohort
       and_i_click_on_continue
       then_i_am_taken_to_choose_mentor_partnership_page
 

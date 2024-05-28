@@ -96,12 +96,6 @@ module Schools
         mentor_participant? && ([lead_provider, delivery_partner].all? || previous_providers_training_on_current_cohort?)
       end
 
-      # only relevant when we are in the registration period before the next cohort starts
-      # and the participant doesn't have an induction start date registered with DQT
-      def show_start_term?
-        (mentor_participant? || induction_start_date.blank?) && start_term.present?
-      end
-
       def start_term_description
         "#{start_term.capitalize} #{start_term == 'spring' ? Time.zone.now.year + 1 : Time.zone.now.year}"
       end
