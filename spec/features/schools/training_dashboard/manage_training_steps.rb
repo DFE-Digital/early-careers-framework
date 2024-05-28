@@ -102,11 +102,6 @@ module ManageTrainingSteps
     @school_cohort_next.update!(default_induction_programme: @induction_programme_next)
   end
 
-  def given_there_is_a_school_that_has_chosen_fip_and_needs_training_setup
-    given_there_is_a_school_that_has_chosen_fip_for_current_and_next_cohorts_and_partnered
-    @school_cohort_next.update!(induction_programme_choice: :design_our_own)
-  end
-
   def given_there_is_a_school_that_has_chosen_fip_for_previous_cohort_and_partnered_but_challenged
     given_there_is_a_school_that_has_chosen_fip_for_previous_cohort
     @lead_provider = create(:lead_provider, name: "Big Provider Ltd")
