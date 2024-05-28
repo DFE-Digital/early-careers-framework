@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.shared_examples "can archive participant profile" do |other_participant_type, completed_training_at_attribute|
-  let(:for_cohort_start_year) { latest_cohort.start_year - Cohort::OPEN_COHORTS_COUNT }
-  let(:eligible_cohort) { create(:cohort, start_year: for_cohort_start_year) }
-  let(:latest_cohort) { create(:cohort, :current) }
+  let(:eligible_cohort) { create(:cohort, :current, payments_frozen_at: Time.zone.now) }
+  let(:ineligible_cohort) { eligible_cohort.next }
 
   def build_profile(attrs = {})
     create_profile(attrs).tap do |participant_profile|
@@ -25,7 +24,7 @@ RSpec.shared_examples "can archive participant profile" do |other_participant_ty
 
     before do
       # Participant not in an eligible cohort.
-      build_profile(cohort: latest_cohort)
+      build_profile(cohort: ineligible_cohort)
 
       # Participant with billable declarations.
       build_declaration(state: :paid, cohort: eligible_cohort)
@@ -42,7 +41,7 @@ RSpec.shared_examples "can archive participant profile" do |other_participant_ty
       end
     end
 
-    subject { described_class.archivable(for_cohort_start_year:, restrict_to_participant_ids:) }
+    subject { described_class.archivable(restrict_to_participant_ids:) }
 
     it { is_expected.to contain_exactly(eligible_no_declarations, eligible_only_unbillable_declarations) }
 
@@ -56,30 +55,30 @@ RSpec.shared_examples "can archive participant profile" do |other_participant_ty
   describe "archivable?" do
     it "returns true if the participant is in an eligible cohort and has no declarations" do
       participant_profile = build_profile(cohort: eligible_cohort)
-      expect(participant_profile).to be_archivable(for_cohort_start_year:)
+      expect(participant_profile).to be_archivable
     end
 
     %i[ineligible voided submitted].each do |unbillable_state|
       it "returns true if the participant is in an eligible cohort and the participant has only #{unbillable_state} declarations" do
         participant_profile = build_declaration(state: unbillable_state, cohort: eligible_cohort).participant_profile
-        expect(participant_profile).to be_archivable(for_cohort_start_year:)
+        expect(participant_profile).to be_archivable
       end
     end
 
     it "returns false if the participant is not in an eligible cohort" do
-      participant_profile = build_profile(cohort: latest_cohort)
-      expect(participant_profile).not_to be_archivable(for_cohort_start_year:)
+      participant_profile = build_profile(cohort: ineligible_cohort)
+      expect(participant_profile).not_to be_archivable
     end
 
     it "returns false if the participant has billable declarations" do
       participant_profile = build_declaration(state: :paid, cohort: eligible_cohort).participant_profile
-      expect(participant_profile).not_to be_archivable(for_cohort_start_year:)
+      expect(participant_profile).not_to be_archivable
     end
 
     it "returns false if the participant has a CIP induction record" do
-      participant_profile = build_profile(cohort: latest_cohort)
+      participant_profile = build_profile(cohort: eligible_cohort)
       create(:induction_record, participant_profile:, induction_programme: create(:induction_programme, :cip))
-      expect(participant_profile).not_to be_archivable(for_cohort_start_year:)
+      expect(participant_profile).not_to be_archivable
     end
   end
 end
