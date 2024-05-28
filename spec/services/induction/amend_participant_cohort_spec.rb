@@ -148,7 +148,8 @@ RSpec.describe Induction::AmendParticipantCohort do
                                                                  state: declaration_state,
                                                                  course_identifier: "ecf-induction",
                                                                  cpd_lead_provider: create(:cpd_lead_provider),
-                                                                 user: participant_profile.user)
+                                                                 user: participant_profile.user,
+                                                                 cohort: participant_profile.schedule.cohort)
           end
 
           it "returns false and set errors" do
@@ -267,7 +268,8 @@ RSpec.describe Induction::AmendParticipantCohort do
                                                                    state: declaration_state,
                                                                    course_identifier: "ecf-induction",
                                                                    cpd_lead_provider: create(:cpd_lead_provider),
-                                                                   user: participant_profile.user)
+                                                                   user: participant_profile.user,
+                                                                   cohort: participant_profile.schedule.cohort)
             end
 
             it "executes the transfer, returns true and set no errors" do

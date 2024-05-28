@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_13_085459) do
+ActiveRecord::Schema[7.1].define(version: 2024_05_22_114103) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "fuzzystrmatch"
@@ -260,6 +260,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_13_085459) do
     t.datetime "academic_year_start_date", precision: nil
     t.datetime "npq_registration_start_date", precision: nil
     t.date "automatic_assignment_period_end_date"
+    t.datetime "payments_frozen_at"
     t.index ["start_year"], name: "index_cohorts_on_start_year", unique: true
   end
 
@@ -829,7 +830,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_13_085459) do
     t.boolean "pupil_premium_uplift"
     t.uuid "delivery_partner_id"
     t.uuid "mentor_user_id"
-    t.uuid "cohort_id"
+    t.uuid "cohort_id", null: false
     t.index ["cohort_id"], name: "index_participant_declarations_on_cohort_id"
     t.index ["cpd_lead_provider_id", "participant_profile_id", "declaration_type", "course_identifier", "state"], name: "unique_declaration_index", unique: true, where: "((state)::text = ANY (ARRAY[('submitted'::character varying)::text, ('eligible'::character varying)::text, ('payable'::character varying)::text, ('paid'::character varying)::text]))"
     t.index ["cpd_lead_provider_id"], name: "index_participant_declarations_on_cpd_lead_provider_id"
@@ -957,6 +958,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_13_085459) do
     t.date "induction_completion_date"
     t.date "mentor_completion_date"
     t.string "mentor_completion_reason"
+    t.boolean "cohort_changed_after_payments_frozen", default: false
     t.index ["cohort_id"], name: "index_participant_profiles_on_cohort_id"
     t.index ["core_induction_programme_id"], name: "index_participant_profiles_on_core_induction_programme_id"
     t.index ["mentor_profile_id"], name: "index_participant_profiles_on_mentor_profile_id"

@@ -45,4 +45,29 @@ describe ParticipantProfile::ECT, type: :model do
   describe "#role" do
     it { expect(instance.role).to eq("Early career teacher") }
   end
+
+  include_context "can change cohort and continue training", :ect, :mentor, :induction_completion_date
+
+  include_context "can archive participant profile", :mentor, :induction_completion_date do
+    def create_declaration(attrs = {})
+      create(:ect_participant_declaration, attrs)
+    end
+
+    def create_profile(attrs = {})
+      create(:ect_participant_profile, attrs)
+    end
+
+    describe ".archivable" do
+      subject { described_class.archivable }
+
+      it "does not include participants where the induction_start_date is 1/9/<cohort_start_year> or later" do
+        build_profile(cohort: eligible_cohort, induction_start_date: Date.new(eligible_cohort.start_year, 9, 1))
+        build_profile(cohort: eligible_cohort, induction_start_date: Date.new(eligible_cohort.start_year + 1, 3, 1))
+
+        eligible_participant = build_profile(cohort: eligible_cohort)
+
+        is_expected.to contain_exactly(eligible_participant)
+      end
+    end
+  end
 end

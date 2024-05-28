@@ -5,7 +5,7 @@ class ParticipantDeclaration < ApplicationRecord
 
   belongs_to :cpd_lead_provider
   belongs_to :user
-  belongs_to :cohort, optional: true
+  belongs_to :cohort
   belongs_to :participant_profile
   belongs_to :superseded_by, class_name: "ParticipantDeclaration", optional: true
   belongs_to :delivery_partner, optional: true
@@ -42,7 +42,7 @@ class ParticipantDeclaration < ApplicationRecord
   alias_attribute :current_state, :state
   delegate :fundable?, to: :participant_profile, allow_nil: true
 
-  validates :course_identifier, :user, :cpd_lead_provider, :declaration_date, :declaration_type, presence: true
+  validates :course_identifier, :user, :cpd_lead_provider, :declaration_date, :declaration_type, :cohort, presence: true
 
   scope :for_lead_provider, ->(cpd_lead_provider) { where(cpd_lead_provider:) }
   scope :for_declaration, ->(declaration_type) { where(declaration_type:) }

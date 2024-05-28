@@ -32,6 +32,7 @@ FactoryBot.define do
 
     declaration_date { Faker::Date.between(from: 2.years.ago, to: 1.day.ago) }
     course_identifier { "ecf-induction" }
+    cohort { Cohort.current || create(:cohort, :current) }
 
     trait(:with_cpd_lead_provider) { association(:cpd_lead_provider, factory: :seed_cpd_lead_provider) }
     trait(:with_user) { association(:user, factory: :seed_user) }

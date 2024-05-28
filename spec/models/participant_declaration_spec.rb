@@ -11,7 +11,16 @@ RSpec.describe ParticipantDeclaration, type: :model do
     it { is_expected.to belong_to(:participant_profile) }
     it { is_expected.to have_many(:declaration_states) }
     it { is_expected.to belong_to(:mentor_user).class_name("User").optional }
-    it { is_expected.to belong_to(:cohort).optional }
+    it { is_expected.to belong_to(:cohort) }
+  end
+
+  describe "validations" do
+    it { is_expected.to validate_presence_of(:course_identifier) }
+    it { is_expected.to validate_presence_of(:user) }
+    it { is_expected.to validate_presence_of(:cpd_lead_provider) }
+    it { is_expected.to validate_presence_of(:declaration_date) }
+    it { is_expected.to validate_presence_of(:declaration_type) }
+    it { is_expected.to validate_presence_of(:cohort) }
   end
 
   describe "state transitions" do
@@ -308,6 +317,7 @@ RSpec.describe ParticipantDeclaration, type: :model do
     let(:participant_profile) { create(:ect) }
     let(:nowish)              { Time.zone.now }
     let(:state)               { "submitted" }
+    let(:cohort)              { Cohort.current || create(:cohort, :current) }
     let(:attributes)          do
       {
         cpd_lead_provider:,
@@ -317,6 +327,7 @@ RSpec.describe ParticipantDeclaration, type: :model do
         declaration_type: "started",
         course_identifier: "ect-induction",
         state:,
+        cohort:,
       }
     end
 

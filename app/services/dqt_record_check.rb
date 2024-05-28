@@ -155,7 +155,7 @@ private
     if with_induction
       record.merge!("induction" => {
         "periods" => [
-          { "start_date" => induction_start_date },
+          { "startDate" => induction_start_date },
         ],
         "status" => "In Progress",
       })

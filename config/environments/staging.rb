@@ -8,6 +8,8 @@ Rails.application.configure do
   # Code is not reloaded between requests.
   config.cache_classes = true
 
+  # Used to handle HTTP_X_WITH_SERVER_DATE header for server side datetime overwrite
+  config.middleware.use TimeTraveler
   config.middleware.use ApiRequestMiddleware
 
   # Eager load code on boot. This eager loads most of Rails and
