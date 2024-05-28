@@ -8,7 +8,6 @@ module Schools
           email
           email_already_taken
           start_date
-          start_term
           cannot_add_registration_not_yet_open
           cannot_add_yourself_as_ect
           cannot_add_mentor_to_providers
@@ -94,10 +93,6 @@ module Schools
 
       def needs_to_choose_partnership?
         mentor_participant? && ([lead_provider, delivery_partner].all? || previous_providers_training_on_current_cohort?)
-      end
-
-      def start_term_description
-        "#{start_term.capitalize} #{start_term == 'spring' ? Time.zone.now.year + 1 : Time.zone.now.year}"
       end
 
       def sit_added_as_mentor?
