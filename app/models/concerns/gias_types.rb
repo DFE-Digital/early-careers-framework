@@ -79,9 +79,6 @@ module GiasTypes
     "Other independent school",
   ).freeze
 
-  # Types that *are* eligible but we would prefer not to send communications to.
-  NO_INVITATIONS_TYPE_CODES = [47, 48].freeze
-
   ALL_STATUS_CODES = {
     "Open" => 1,
     "Closed" => 2,

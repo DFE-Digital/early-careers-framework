@@ -27,7 +27,7 @@ RSpec.describe SchoolDataImporter do
 
       imported_school = School.find_by(urn: 20_001)
       expect(imported_school.name).to eql("The Starship Children's Centre")
-      expect(imported_school.school_type_code).to eql(47)
+      expect(imported_school.school_type_code).to eql(57)
       expect(imported_school.address_line1).to eql("Bar Hill Primary School")
       expect(imported_school.address_line2).to be_nil
       expect(imported_school.address_line3).to eql("Bar Hill")
