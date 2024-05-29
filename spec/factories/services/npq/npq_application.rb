@@ -83,7 +83,7 @@ FactoryBot.define do
 
     trait :accepted do
       after :create do |npq_application|
-        NPQ::Application::Accept.new(npq_application:).call
+        NPQ::Application::Accept.new(npq_application:, funded_place: npq_application.funded_place).call
         npq_application.reload
       end
     end
