@@ -5,7 +5,6 @@ module GiasTypes
 
   # Code 57 is a new addition for "Academy secure 16 to 19" - these are eligible for FIP funding
   ELIGIBLE_TYPE_CODES = [1, 2, 3, 5, 6, 7, 8, 12, 14, 15, 18, 28, 31, 32, 33, 34, 35, 36, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 57].freeze
-  ELIGIBLE_STATUS_CODES = [1, 3].freeze
   CIP_ONLY_TYPE_CODES = [10, 11, 30, 37].freeze
   CIP_ONLY_EXCEPT_WELSH_CODES = [10, 11, 37].freeze
   INDEPENDENT_SCHOOLS_TYPE_CODES = [10, 11].freeze
@@ -13,7 +12,7 @@ module GiasTypes
   # Types that *are* eligible but we would prefer not to send communications to.
   NO_INVITATIONS_TYPE_CODES = [47, 48].freeze
 
-  OPEN_STATUS_CODES = ELIGIBLE_STATUS_CODES
+  OPEN_STATUS_CODES = [1, 3].freeze
   CLOSED_STATUS_CODES = [2, 4].freeze
 
   ALL_TYPE_CODES = (
