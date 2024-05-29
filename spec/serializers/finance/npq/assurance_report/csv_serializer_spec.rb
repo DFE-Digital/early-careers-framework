@@ -72,6 +72,10 @@ RSpec.describe Finance::NPQ::AssuranceReport::CsvSerializer do
 
           expect(header).to eq(expected_header)
         end
+
+        it "includes `funded_place` attribute" do
+          expect(rows.second).to include("funded-true")
+        end
       end
 
       context "when `npq_capping` Feature Flag is not active" do
@@ -80,22 +84,8 @@ RSpec.describe Finance::NPQ::AssuranceReport::CsvSerializer do
         it "does not included Funded place in the header" do
           expect(header).to eq(expected_header)
         end
-      end
-    end
 
-    describe "`funded_place attribute" do
-      context "when `npq_capping` Feature Flag is active" do
-        before { FeatureFlag.activate(:npq_capping) }
-
-        it "includes `funded_place`" do
-          expect(rows.second).to include("funded-true")
-        end
-      end
-
-      context "when `npq_capping` Feature Flag is not active" do
-        before { FeatureFlag.deactivate(:npq_capping) }
-
-        it "does not include Funded place" do
+        it "does not include `funded_place` attribute" do
           expect(rows.second).to_not include("funded-true")
         end
       end
