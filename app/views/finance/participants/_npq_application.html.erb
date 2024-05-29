@@ -49,7 +49,7 @@
     <% row.with_action(text: :none) %>
   <% end %>
 
-  if FeatureFlag.active?(:npq_capping)
+  <% if FeatureFlag.active?(:npq_capping) %>
     <% summary_list.with_row do |row| %>
       <% row.with_key { "Funded place" } %>
       <% row.with_value(text: boolean_to_yes_no_nil(application.funded_place)) %>
