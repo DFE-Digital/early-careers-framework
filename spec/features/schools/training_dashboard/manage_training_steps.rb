@@ -1400,10 +1400,6 @@ module ManageTrainingSteps
     expect(page).to have_selector("h1", text: "You cannot add #{@participant_data[:full_name]} yet")
   end
 
-  def then_i_see_that_training_setup_is_needed
-    expect(page).to have_content("We need some more information")
-  end
-
   def then_i_am_taken_to_choose_mentor_in_transfer_page
     expect(page).to have_selector("h1", text: "Who will #{@participant_data[:full_name]}’s mentor be?")
   end
