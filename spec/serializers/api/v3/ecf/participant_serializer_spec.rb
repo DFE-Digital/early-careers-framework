@@ -14,7 +14,9 @@ module Api
           let(:school_cohort) { create(:school_cohort, :fip, :with_induction_programme, delivery_partner:, school:, cohort:, lead_provider: cpd_lead_provider.lead_provider) }
           let!(:provider_relationship) { create(:provider_relationship, cohort:, delivery_partner:, lead_provider: cpd_lead_provider.lead_provider) }
           let(:participant) { create(:user) }
-          let!(:ect_profile) { create(:ect, :eligible_for_funding, school_cohort:, user: participant, induction_completion_date: Date.parse("2022-01-12")) }
+          let!(:ect_profile) { create(:ect, :eligible_for_funding, school_cohort:, user: participant, induction_completion_date: Date.parse("2022-01-12"), cohort_changed_after_payments_frozen: true) }
+          let(:previous_cohort) { Cohort.previous.tap { |c| c.update!(payments_frozen_at: Time.zone.now) } }
+          let!(:previous_cohort_declaration) { create(:participant_declaration, participant_profile: ect_profile, cohort: previous_cohort, state: :paid, cpd_lead_provider:, course_identifier: "ecf-induction") }
 
           before { freeze_time }
 
@@ -57,6 +59,7 @@ module Api
                       created_at: ect_profile.created_at.rfc3339,
                       induction_end_date: "2022-01-12",
                       mentor_funding_end_date: nil,
+                      previous_payments_frozen_cohort: previous_cohort.start_year,
                     },
                   ],
                 participant_id_changes: [],
@@ -102,6 +105,7 @@ module Api
                   created_at: mentor_profile.created_at.rfc3339,
                   induction_end_date: nil,
                   mentor_funding_end_date: "2021-04-19",
+                  previous_payments_frozen_cohort: nil,
                 })
               end
             end

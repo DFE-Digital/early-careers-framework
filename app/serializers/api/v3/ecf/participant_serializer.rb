@@ -140,6 +140,7 @@ module Api
               created_at: profile.created_at.rfc3339,
               induction_end_date: profile.induction_completion_date&.strftime("%Y-%m-%d"),
               mentor_funding_end_date: profile.mentor_completion_date&.strftime("%Y-%m-%d"),
+              previous_payments_frozen_cohort: profile.previous_payments_frozen_cohort,
             }
           }.compact
         end
