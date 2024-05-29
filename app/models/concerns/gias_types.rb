@@ -3,25 +3,94 @@
 module GiasTypes
   extend ActiveSupport::Concern
 
-  # Code 57 is a new addition for "Academy secure 16 to 19" - these are eligible for FIP funding
-  ELIGIBLE_TYPE_CODES = [1, 2, 3, 5, 6, 7, 8, 12, 14, 15, 18, 28, 31, 32, 33, 34, 35, 36, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 57].freeze
-  CIP_ONLY_TYPE_CODES = [10, 11, 30, 37].freeze
-  CIP_ONLY_EXCEPT_WELSH_CODES = [10, 11, 37].freeze
-  INDEPENDENT_SCHOOLS_TYPE_CODES = [10, 11].freeze
+  ALL_TYPES = {
+    "Community school"                                  => 1,
+    "Voluntary aided school"                            => 2,
+    "Voluntary controlled school"                       => 3,
+    "Foundation school"                                 => 5,
+    "City technology college"                           => 6,
+    "Community special school"                          => 7,
+    "Non-maintained special school"                     => 8,
+    "Other independent special school"                  => 10,
+    "Other independent school"                          => 11,
+    "Foundation special school"                         => 12,
+    "Pupil referral unit"                               => 14,
+    "Local authority nursery school"                    => 15,
+    "Further education"                                 => 18,
+    "Secure units"                                      => 24,
+    "Offshore schools"                                  => 25,
+    "Service children's education"                      => 26,
+    "Miscellaneous"                                     => 27,
+    "Academy sponsor led"                               => 28,
+    "Higher education institutions"                     => 29,
+    "Welsh establishment"                               => 30,
+    "Sixth form centres"                                => 31,
+    "Special post 16 institution"                       => 32,
+    "Academy special sponsor led"                       => 33,
+    "Academy converter"                                 => 34,
+    "Free schools"                                      => 35,
+    "Free schools special"                              => 36,
+    "British schools overseas"                          => 37,
+    "Free schools alternative provision"                => 38,
+    "Free schools 16 to 19"                             => 39,
+    "University technical college"                      => 40,
+    "Studio schools"                                    => 41,
+    "Academy alternative provision converter"           => 42,
+    "Academy alternative provision sponsor led"         => 43,
+    "Academy special converter"                         => 44,
+    "Academy 16-19 converter"                           => 45,
+    "Academy 16 to 19 sponsor led"                      => 46,
+    "Online provider"                                   => 49,
+    "Institution funded by other government department" => 56,
+    "Academy secure 16 to 19"                           => 57,
+  }.freeze
+
+  ALL_TYPE_CODES = ALL_TYPES.values.freeze
+
+  ELIGIBLE_TYPE_CODES = ALL_TYPES.except(
+    "Other independent special school",
+    "Other independent school",
+    "Secure units",
+    "Offshore schools",
+    "Service children's education",
+    "Miscellaneous",
+    "Higher education institutions",
+    "Welsh establishment",
+    "British schools overseas",
+    "Online provider",
+    "Institution funded by other government department",
+  ).values.freeze
+
+  CIP_ONLY_TYPE_CODES = ALL_TYPES.values_at(
+    "Other independent special school",
+    "Other independent school",
+    "Welsh establishment",
+    "British schools overseas",
+  ).freeze
+
+  CIP_ONLY_EXCEPT_WELSH_CODES = ALL_TYPES.values_at(
+    "Other independent special school",
+    "Other independent school",
+    "British schools overseas",
+  ).freeze
+
+  INDEPENDENT_SCHOOLS_TYPE_CODES = ALL_TYPES.values_at(
+    "Other independent special school",
+    "Other independent school",
+  ).freeze
 
   # Types that *are* eligible but we would prefer not to send communications to.
   NO_INVITATIONS_TYPE_CODES = [47, 48].freeze
 
-  OPEN_STATUS_CODES = [1, 3].freeze
-  CLOSED_STATUS_CODES = [2, 4].freeze
+  ALL_STATUS_CODES = {
+    "Open" => 1,
+    "Closed" => 2,
+    "Open, but proposed to close" => 3,
+    "Proposed to open" => 4,
+  }.freeze
 
-  ALL_TYPE_CODES = (
-    ELIGIBLE_TYPE_CODES +
-    CIP_ONLY_TYPE_CODES +
-    CIP_ONLY_EXCEPT_WELSH_CODES +
-    INDEPENDENT_SCHOOLS_TYPE_CODES +
-    NO_INVITATIONS_TYPE_CODES
-  ).uniq.sort.freeze
+  OPEN_STATUS_CODES = ALL_STATUS_CODES.values_at("Open", "Open, but proposed to close").freeze
+  CLOSED_STATUS_CODES = ALL_STATUS_CODES.values_at("Closed", "Proposed to open").freeze
 
   MAJOR_CHANGE_ATTRIBUTES = %w[
     school_status_code
