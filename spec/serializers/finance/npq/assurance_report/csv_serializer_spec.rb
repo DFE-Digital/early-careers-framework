@@ -67,7 +67,7 @@ RSpec.describe Finance::NPQ::AssuranceReport::CsvSerializer do
       context "when `npq_capping` Feature Flag is active" do
         before { FeatureFlag.activate(:npq_capping) }
 
-        it "does not include Funded place" do
+        it "includes Funded place in the header" do
           expected_header.insert(6, "Funded place")
 
           expect(header).to eq(expected_header)
