@@ -7,6 +7,7 @@ module Schools
       include Rails.application.routes.url_helpers
 
       class AlreadyInitialised < StandardError; end
+
       class InvalidStep < StandardError; end
 
       attr_reader :current_step, :submitted_params, :data_store, :current_user, :participant_profile, :school
@@ -288,9 +289,9 @@ module Schools
       def existing_participant_profile
         @existing_participant_profile ||=
           ParticipantProfile::ECF
-          .joins(:teacher_profile)
-          .where(teacher_profile: { trn: formatted_confirmed_trn })
-          .first
+            .joins(:teacher_profile)
+            .where(teacher_profile: { trn: formatted_confirmed_trn })
+            .first
       end
 
       def existing_user
@@ -465,8 +466,9 @@ module Schools
         if transfer?
           existing_participant_cohort || existing_participant_profile&.schedule&.cohort
         elsif ect_participant? && induction_start_date.present?
-          Cohort.containing_date(induction_start_date).tap do |cohort|
+          Cohort.for_induction_start_date(induction_start_date).tap do |cohort|
             return Cohort.current if cohort.blank? || cohort.npq_plus_one_or_earlier?
+            return Cohort.active_registration_cohort if cohort.payments_frozen?
           end
         elsif Cohort.within_automatic_assignment_period?
           Cohort.current
