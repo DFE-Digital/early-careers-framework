@@ -142,25 +142,15 @@ RSpec.describe Induction::AmendParticipantCohort do
         end
       end
 
-      context "when the participant is transferring to a payments-frozen cohort" do
+      context "when they are transferring back to their original cohort" do
         before do
           target_cohort.update!(payments_frozen_at: 1.month.ago)
+          participant_profile.update!(cohort_changed_after_payments_frozen: true)
         end
 
-        context "when they are transferring back to their original cohort" do
-          before do
-            participant_profile.update!(cohort_changed_after_payments_frozen: true)
-          end
-
-          it "do not set errors" do
-            expect(form.save).to be_falsey
-            expect(form.errors.map(&:attribute)).not_to include(:target_cohort_start_year)
-          end
-        end
-
-        it "set errors" do
+        it "do not set errors" do
           expect(form.save).to be_falsey
-          expect(form.errors[:target_cohort_start_year]).to include("Not permitted. The cohort is frozen for payments")
+          expect(form.errors.map(&:attribute)).not_to include(:target_cohort_start_year)
         end
       end
 

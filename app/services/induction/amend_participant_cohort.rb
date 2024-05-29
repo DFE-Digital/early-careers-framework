@@ -72,7 +72,6 @@ module Induction
     validates :participant_profile,
               active_participant_profile: true
 
-    validate :target_cohort_payments_active, unless: :back_to_payments_frozen_cohort?
     validate :transfer_from_payments_frozen_cohort, if: :transfer_from_payments_frozen_cohort?
     validate :transfer_to_payments_frozen_cohort, if: :back_to_payments_frozen_cohort?
 
@@ -209,10 +208,6 @@ module Induction
 
     # Validations
 
-    def target_cohort_payments_active
-      errors.add(:target_cohort_start_year, :payments_frozen) if target_cohort&.payments_frozen?
-    end
-
     def transfer_from_payments_frozen_cohort
       unless participant_profile.eligible_to_change_cohort_and_continue_training?(cohort: target_cohort)
         errors.add(:participant_profile, :not_eligible_to_be_transferred_from_current_cohort)
@@ -220,7 +215,7 @@ module Induction
     end
 
     def transfer_to_payments_frozen_cohort
-      unless participant_profile.eligible_to_change_cohort_back_to_their_payments_frozen_original?(cohort: target_cohort)
+      unless participant_profile.eligible_to_change_cohort_back_to_their_payments_frozen_original?(cohort: target_cohort, current_cohort: source_cohort)
         errors.add(:participant_profile, :billable_declarations_in_cohort) if billable_declarations_in_cohort?(source_cohort)
         errors.add(:participant_profile, :no_billable_declarations_in_cohort) unless billable_declarations_in_cohort?(target_cohort)
         errors.add(:participant_profile, :not_eligible_to_be_transferred_back)
