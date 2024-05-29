@@ -717,7 +717,7 @@ RSpec.describe ChangeSchedule do
 
               it "updates the cohort on the npq application" do
                 service.call
-                expect(participant_profile.npq_application.cohort).to eq(new_cohort)
+                expect(participant_profile.npq_application.reload.cohort).to eq(new_cohort)
               end
 
               context "when moving from funding cohort to funding cohort" do
