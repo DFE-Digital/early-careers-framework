@@ -102,6 +102,11 @@ module ManageTrainingSteps
     @school_cohort_next.update!(default_induction_programme: @induction_programme_next)
   end
 
+  def given_there_is_a_school_that_has_chosen_fip_and_needs_training_setup
+    given_there_is_a_school_that_has_chosen_fip_for_current_and_next_cohorts_and_partnered
+    @school_cohort_next.update!(induction_programme_choice: :design_our_own)
+  end
+
   def given_there_is_a_school_that_has_chosen_fip_for_previous_cohort_and_partnered_but_challenged
     given_there_is_a_school_that_has_chosen_fip_for_previous_cohort
     @lead_provider = create(:lead_provider, name: "Big Provider Ltd")
@@ -1398,6 +1403,10 @@ module ManageTrainingSteps
 
   def then_i_see_i_cannot_add_participant_yet
     expect(page).to have_selector("h1", text: "You cannot add #{@participant_data[:full_name]} yet")
+  end
+
+  def then_i_see_that_training_setup_is_needed
+    expect(page).to have_content("We need some more information")
   end
 
   def then_i_am_taken_to_choose_mentor_in_transfer_page
