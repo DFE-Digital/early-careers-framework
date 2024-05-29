@@ -72,10 +72,10 @@ class ParticipantProfile::ECF < ParticipantProfile
     query
   end
 
-  def eligible_to_change_cohort_back_to_their_payments_frozen_original?(cohort:)
+  def eligible_to_change_cohort_back_to_their_payments_frozen_original?(cohort:, current_cohort:)
     return false unless cohort_changed_after_payments_frozen?
     return false unless cohort.payments_frozen?
-    return false if participant_declarations.billable_or_changeable.where(cohort: schedule.cohort).exists?
+    return false if participant_declarations.billable_or_changeable.where(cohort: current_cohort).exists?
 
     participant_declarations.billable.where(cohort:).exists?
   end

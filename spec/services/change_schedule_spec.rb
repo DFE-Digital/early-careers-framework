@@ -72,7 +72,7 @@ RSpec.shared_examples "changing cohort and continuing training" do
 
       before { create(:participant_declaration, participant_profile:, cohort:, state:, course_identifier:, cpd_lead_provider:) }
 
-      it { expect(new_cohort).not_to eq(participant_profile.schedule.cohort) }
+      it { expect(new_cohort).not_to eq(cohort) }
 
       context "attempt_to_change_cohort_leaving_billable_declarations is true" do
         let(:attempt_to_change_cohort_leaving_billable_declarations) { true }
@@ -82,7 +82,7 @@ RSpec.shared_examples "changing cohort and continuing training" do
         end
 
         context "when the participant is eligible to transfer and continue training" do
-          before { participant_profile.schedule.cohort.update!(payments_frozen_at: Time.zone.now) }
+          before { cohort.update!(payments_frozen_at: Time.zone.now) }
 
           it_behaves_like "changing the schedule of a participant"
           it_behaves_like "reversing a change of schedule/cohort"
@@ -96,7 +96,7 @@ RSpec.shared_examples "changing cohort and continuing training" do
         let(:attempt_to_change_cohort_leaving_billable_declarations) { false }
 
         context "when the participant is eligible to transfer and continue training" do
-          before { participant_profile.schedule.cohort.update!(payments_frozen_at: Time.zone.now) }
+          before { cohort.update!(payments_frozen_at: Time.zone.now) }
 
           it { is_expected.to be_invalid }
         end

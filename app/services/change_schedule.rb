@@ -81,16 +81,12 @@ class ChangeSchedule
 
 private
 
-  def can_change_cohort_leaving_billable_declarations?
+  def changing_cohort_due_to_payments_frozen?
     return false unless participant_profile.ecf?
     return false unless attempt_to_change_cohort_leaving_billable_declarations
     return true if participant_profile.eligible_to_change_cohort_and_continue_training?(cohort:)
 
-    participant_profile.eligible_to_change_cohort_back_to_their_payments_frozen_original?(cohort:)
-  end
-
-  def cohort_start_years_delta
-    cohort.start_year - participant_profile.schedule.cohort.start_year
+    participant_profile.eligible_to_change_cohort_back_to_their_payments_frozen_original?(cohort:, current_cohort:)
   end
 
   def user
@@ -124,13 +120,19 @@ private
   end
 
   def update_school_cohort_and_schedule!
-    changing_cohort = new_schedule.cohort != participant_profile.schedule.cohort
-
-    if changing_cohort && can_change_cohort_leaving_billable_declarations?
-      participant_profile.toggle!(:cohort_changed_after_payments_frozen)
-    end
-
     participant_profile.update!(school_cohort: target_school_cohort, schedule: new_schedule)
+  end
+
+  def update_cohort_changed_after_payments_frozen!
+    changing_cohort = current_cohort.start_year != cohort&.start_year
+
+    if changing_cohort && changing_cohort_due_to_payments_frozen?
+      participant_profile.toggle(:cohort_changed_after_payments_frozen).save!
+    end
+  end
+
+  def current_cohort
+    relevant_induction_record.schedule.cohort
   end
 
   def update_induction_records!
@@ -148,6 +150,7 @@ private
   def update_ecf_records!
     return unless participant_profile&.ecf?
 
+    update_cohort_changed_after_payments_frozen!
     update_school_cohort_and_schedule!
     update_induction_records!
   end
@@ -210,7 +213,7 @@ private
   def validate_new_schedule_valid_with_existing_declarations
     return if user.blank? || participant_profile.blank?
     return unless new_schedule
-    return if can_change_cohort_leaving_billable_declarations?
+    return if changing_cohort_due_to_payments_frozen?
 
     applicable_declarations.each do |declaration|
       milestone = new_schedule.milestones.find_by!(declaration_type: declaration.declaration_type)
@@ -240,11 +243,11 @@ private
 
   def validate_cannot_change_cohort_ecf
     return unless participant_profile&.ecf?
-    return if can_change_cohort_leaving_billable_declarations?
+    return if changing_cohort_due_to_payments_frozen?
 
     if applicable_declarations.any? &&
         relevant_induction_record &&
-        relevant_induction_record.schedule.cohort.start_year != cohort&.start_year
+        current_cohort.start_year != cohort&.start_year
       errors.add(:cohort, I18n.t("cannot_change_cohort"))
     end
   end
