@@ -168,7 +168,7 @@ RSpec.describe ChangeSchedule do
               it "is invalid and returns an error message" do
                 is_expected.to be_invalid
 
-                expect(service.errors.messages_for(:cohort)).to include("The property '#/cohort' cannot be changed")
+                expect(service.errors.messages_for(:cohort)).to include("You cannot change the '#/cohort' property")
               end
             end
           end
@@ -415,7 +415,7 @@ RSpec.describe ChangeSchedule do
               it "is invalid and returns an error message" do
                 is_expected.to be_invalid
 
-                expect(service.errors.messages_for(:cohort)).to include("The property '#/cohort' cannot be changed")
+                expect(service.errors.messages_for(:cohort)).to include("You cannot change the '#/cohort' property")
               end
             end
           end
@@ -577,7 +577,7 @@ RSpec.describe ChangeSchedule do
               it "is invalid and returns an error message" do
                 is_expected.to be_invalid
 
-                expect(service.errors.messages_for(:cohort)).to include("The property '#/cohort' cannot be changed")
+                expect(service.errors.messages_for(:cohort)).to include("You cannot change the '#/cohort' property")
               end
             end
           end
@@ -692,7 +692,7 @@ RSpec.describe ChangeSchedule do
                 it "does not change the application to the new cohort" do
                   service.call
 
-                  expect(service.errors.messages_for(:cohort)).to include("The property '#/cohort' cannot be changed")
+                  expect(service.errors.messages_for(:cohort)).to include("You cannot change the '#/cohort' property")
                 end
               end
             end
