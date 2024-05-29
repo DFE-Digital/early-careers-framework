@@ -15,7 +15,7 @@ RSpec.describe "SIT adding mentor", js: true do
     end
   end
 
-  scenario "Induction tutor adds a new mentor to current providers" do
+  scenario "Induction tutor adds a new mentor to current providers inside registration period" do
     inside_registration_window do
       given_there_is_a_sit
 
