@@ -1396,6 +1396,10 @@ module ManageTrainingSteps
     expect(page).to have_text("Our records show this person is already registered on an ECF-based training programme at a different school")
   end
 
+  def then_i_see_i_cannot_add_participant_yet
+    expect(page).to have_selector("h1", text: "You cannot add #{@participant_data[:full_name]} yet")
+  end
+
   def then_i_am_taken_to_choose_mentor_in_transfer_page
     expect(page).to have_selector("h1", text: "Who will #{@participant_data[:full_name]}’s mentor be?")
   end
