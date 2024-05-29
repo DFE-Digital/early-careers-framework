@@ -24,9 +24,12 @@ module Steps
         page_object = page_object.new
       end
 
-      puts "Called non-existing method #{method_symbol}"
-      puts "Call was re-rerouted to #{page_object_name.camelize}##{method_name} with query_params: #{query_params}, query_values: #{query_values}"
-      puts "Please create your own method, we are planning to delete this helper"
+      RSpec.configuration.methods_missing_reporter&.message([
+        "Missing method: #{method_symbol}",
+        "Generic call: #{page_object_name.camelize}##{method_name}",
+        "Query params: #{query_params}",
+        "Query values: #{query_values}",
+      ].join(", "))
 
       generic_call page_object, method_name, query_params, query_values
     end
