@@ -99,6 +99,10 @@ class Cohort < ApplicationRecord
     self.class.find_by(start_year: start_year - 1)
   end
 
+  def freeze_payments!
+    update!(payments_frozen_at: Time.zone.now)
+  end
+
   # e.g. "2022"
   def to_param
     start_year.to_s

@@ -15,7 +15,7 @@ module Api
           let!(:provider_relationship) { create(:provider_relationship, cohort:, delivery_partner:, lead_provider: cpd_lead_provider.lead_provider) }
           let(:participant) { create(:user) }
           let!(:ect_profile) { create(:ect, :eligible_for_funding, school_cohort:, user: participant, induction_completion_date: Date.parse("2022-01-12"), cohort_changed_after_payments_frozen: true) }
-          let(:previous_cohort) { Cohort.previous.tap { |c| c.update!(payments_frozen_at: Time.zone.now) } }
+          let(:previous_cohort) { Cohort.previous.tap(&:freeze_payments!) }
           let!(:previous_cohort_declaration) { create(:participant_declaration, participant_profile: ect_profile, cohort: previous_cohort, state: :paid, cpd_lead_provider:, course_identifier: "ecf-induction") }
 
           before { freeze_time }

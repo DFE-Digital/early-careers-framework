@@ -270,7 +270,7 @@ RSpec.describe ParticipantProfile::ECF, type: :model do
     it { is_expected.to be_nil }
 
     context "when payments were frozen on a previous cohort" do
-      let(:previous_cohort) { Cohort.previous.tap { |c| c.update!(payments_frozen_at: Time.zone.now) } }
+      let(:previous_cohort) { Cohort.previous.tap(&:freeze_payments!) }
       let(:cpd_lead_provider) { participant_profile.lead_provider.cpd_lead_provider }
       let(:participant_profile) { create(:ect, cohort_changed_after_payments_frozen: true) }
 
