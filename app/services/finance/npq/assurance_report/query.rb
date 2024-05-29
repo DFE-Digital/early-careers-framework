@@ -26,6 +26,7 @@ module Finance
               c.identifier                            AS course_identifier,
               sch.schedule_identifier                 AS schedule,
               a.eligible_for_funding                  AS eligible_for_funding,
+              a.funded_place                          AS funded_place,
               nlp.name                                AS npq_lead_provider_name,
               nlp.id                                  AS npq_lead_provider_id,
               a.school_urn                            AS school_urn,
