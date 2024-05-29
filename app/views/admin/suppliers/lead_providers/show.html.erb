@@ -1,0 +1,53 @@
+<% content_for :title, "Lead Provider: overview" %>
+<% content_for :before_content, govuk_back_link(text: "Back", href: admin_suppliers_path) %>
+
+<h1 class="govuk-heading-l"><%= @lead_provider.name %></h1>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-three-quarters">
+
+    <h2 class="govuk-heading-m">ECF Lead Provider Details</h2>
+<%=
+  govuk_summary_list do |sl|
+    sl.with_row do |row|
+      row.with_key(text: "ID")
+      row.with_value(text: @lead_provider.id)
+    end
+
+    sl.with_row do |row|
+      row.with_key(text: "VAT Chargable")
+      row.with_value(text: @lead_provider.vat_chargeable ? "Yes" : "No")
+    end
+
+    @lead_provider.users.each do |user|
+      sl.with_row do |row|
+        row.with_key(text: "User email")
+        row.with_value(text:  user.email)
+      end
+    end
+  end
+%>
+
+    <h3 class="govuk-heading-m">Delivery partners</h3>
+    <% if @lead_provider.delivery_partners %>
+      <table class="govuk-table">
+        <thead>
+        <tr class="govuk-table__row">
+          <th scope="col" class="govuk-table__header">Supplier</th>
+          <th scope="col" class="govuk-table__header">Supplier type</th>
+        </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+        <% @lead_provider.delivery_partners.each do |supplier| %>
+          <tr class="govuk-table__row">
+            <td class="govuk-table__cell" data-test="supplier-name"><%= supplier_link(supplier) %></td>
+            <td class="govuk-table__cell"><%= supplier.model_name.human %></td>
+          </tr>
+        <% end %>
+        </tbody>
+      </table>
+    <% else %>
+      <p class="govuk-body">No Delivery partners associated with this Lead Provider</p>
+    <% end %>
+  </div>
+</div>
