@@ -74,8 +74,8 @@ RSpec.shared_examples "changing cohort and continuing training" do
 
       it { expect(new_cohort).not_to eq(cohort) }
 
-      context "attempt_to_change_cohort_leaving_billable_declarations is true" do
-        let(:attempt_to_change_cohort_leaving_billable_declarations) { true }
+      context "allow_change_to_from_frozen_cohort is true" do
+        let(:allow_change_to_from_frozen_cohort) { true }
 
         context "when the participant is not eligible to transfer and continue training" do
           it { is_expected.to be_invalid }
@@ -92,8 +92,8 @@ RSpec.shared_examples "changing cohort and continuing training" do
         end
       end
 
-      context "when attempt_to_change_cohort_leaving_billable_declarations is false" do
-        let(:attempt_to_change_cohort_leaving_billable_declarations) { false }
+      context "when allow_change_to_from_frozen_cohort is false" do
+        let(:allow_change_to_from_frozen_cohort) { false }
 
         context "when the participant is eligible to transfer and continue training" do
           before { cohort.update!(payments_frozen_at: Time.zone.now) }
@@ -206,7 +206,7 @@ RSpec.describe ChangeSchedule do
       participant_id:,
       course_identifier:,
       schedule_identifier:,
-      attempt_to_change_cohort_leaving_billable_declarations:,
+      allow_change_to_from_frozen_cohort:,
     }
   end
   let(:participant_identity) { create(:participant_identity) }
@@ -222,7 +222,7 @@ RSpec.describe ChangeSchedule do
     let(:participant_profile) { create(:ect, lead_provider: cpd_lead_provider.lead_provider, user:, cohort:) }
     let(:schedule_identifier) { "ecf-standard-september" }
     let(:course_identifier) { "ecf-induction" }
-    let(:attempt_to_change_cohort_leaving_billable_declarations) { false }
+    let(:allow_change_to_from_frozen_cohort) { false }
     let!(:schedule) { Finance::Schedule::ECF.find_by(schedule_identifier: "ecf-standard-september", cohort:) }
     let(:new_cohort) { Cohort.previous }
     let!(:new_schedule) { create(:ecf_schedule, cohort: new_cohort, schedule_identifier: "ecf-replacement-april") }
@@ -244,7 +244,7 @@ RSpec.describe ChangeSchedule do
             course_identifier:,
             schedule_identifier:,
             cohort: new_cohort.start_year,
-            attempt_to_change_cohort_leaving_billable_declarations:,
+            allow_change_to_from_frozen_cohort:,
           }
         end
 
@@ -392,7 +392,7 @@ RSpec.describe ChangeSchedule do
             participant_id:,
             course_identifier:,
             schedule_identifier:,
-            attempt_to_change_cohort_leaving_billable_declarations:,
+            allow_change_to_from_frozen_cohort:,
             cohort: new_cohort.start_year,
           }
         end
@@ -431,7 +431,7 @@ RSpec.describe ChangeSchedule do
             participant_id:,
             course_identifier:,
             schedule_identifier: new_schedule.schedule_identifier,
-            attempt_to_change_cohort_leaving_billable_declarations:,
+            allow_change_to_from_frozen_cohort:,
             cohort:,
           }
         end
@@ -481,7 +481,7 @@ RSpec.describe ChangeSchedule do
     let!(:participant_profile) { create(:mentor, lead_provider: cpd_lead_provider.lead_provider, user:, cohort:) }
     let(:schedule_identifier) { "ecf-extended-april" }
     let(:course_identifier) { "ecf-mentor" }
-    let(:attempt_to_change_cohort_leaving_billable_declarations) { false }
+    let(:allow_change_to_from_frozen_cohort) { false }
     let(:new_cohort) { Cohort.previous }
     let!(:schedule) { create(:ecf_mentor_schedule, cohort:, schedule_identifier: "ecf-extended-april") }
 
@@ -501,7 +501,7 @@ RSpec.describe ChangeSchedule do
             participant_id:,
             course_identifier:,
             schedule_identifier:,
-            attempt_to_change_cohort_leaving_billable_declarations:,
+            allow_change_to_from_frozen_cohort:,
             cohort: new_cohort.start_year,
           }
         end
@@ -649,7 +649,7 @@ RSpec.describe ChangeSchedule do
     let(:participant_profile) { create(:npq_participant_profile, npq_lead_provider:, npq_course:, schedule:, user:, cohort:) }
     let(:course_identifier) { npq_course.identifier }
     let(:schedule_identifier) { new_schedule.schedule_identifier }
-    let(:attempt_to_change_cohort_leaving_billable_declarations) { false }
+    let(:allow_change_to_from_frozen_cohort) { false }
     let(:new_cohort) { Cohort.previous }
     let(:new_schedule) { Finance::Schedule::NPQ.find_by(cohort: new_cohort, schedule_identifier: "npq-leadership-spring") }
     let!(:npq_contract) { create(:npq_contract, :npq_senior_leadership, npq_lead_provider:, npq_course:) }
@@ -671,7 +671,7 @@ RSpec.describe ChangeSchedule do
             course_identifier:,
             schedule_identifier:,
             cohort: new_cohort.start_year,
-            attempt_to_change_cohort_leaving_billable_declarations:,
+            allow_change_to_from_frozen_cohort:,
           }
         end
 
@@ -700,8 +700,8 @@ RSpec.describe ChangeSchedule do
 
             before { create(:participant_declaration, participant_profile:, state:, course_identifier:, cpd_lead_provider:) }
 
-            context "attempt_to_change_cohort_leaving_billable_declarations is true" do
-              let(:attempt_to_change_cohort_leaving_billable_declarations) { true }
+            context "allow_change_to_from_frozen_cohort is true" do
+              let(:allow_change_to_from_frozen_cohort) { true }
 
               before { participant_profile.schedule.cohort.update!(payments_frozen_at: Time.zone.now) }
 

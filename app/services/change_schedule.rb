@@ -9,7 +9,7 @@ class ChangeSchedule
   attribute :course_identifier
   attribute :schedule_identifier
   attribute :cohort, :integer
-  attribute :attempt_to_change_cohort_leaving_billable_declarations, :boolean, default: false
+  attribute :allow_change_to_from_frozen_cohort, :boolean, default: false
 
   delegate :participant_profile_state, to: :participant_profile, allow_nil: true
   delegate :lead_provider, to: :cpd_lead_provider, allow_nil: true
@@ -83,7 +83,7 @@ private
 
   def changing_cohort_due_to_payments_frozen?
     return false unless participant_profile.ecf?
-    return false unless attempt_to_change_cohort_leaving_billable_declarations
+    return false unless allow_change_to_from_frozen_cohort
     return true if participant_profile.eligible_to_change_cohort_and_continue_training?(cohort:)
 
     participant_profile.eligible_to_change_cohort_back_to_their_payments_frozen_original?(cohort:, current_cohort:)
