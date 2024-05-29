@@ -155,7 +155,7 @@ RSpec.describe(Admin::ParticipantPresenter) do
           end
 
           context "when the previous cohort can be determined" do
-            let(:previous_cohort) { Cohort.previous }
+            let(:previous_cohort) { Cohort.previous.tap { |c| c.update!(payments_frozen_at: Time.zone.now) } }
             let(:cpd_lead_provider) { participant_profile.lead_provider.cpd_lead_provider }
             let(:course_identifier) { "ecf-induction" }
 
