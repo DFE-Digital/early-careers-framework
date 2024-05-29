@@ -55,7 +55,7 @@
       <% row.with_value(text: boolean_to_yes_no_nil(application.funded_place)) %>
       <% row.with_action(text: :none) %>
     <% end %>
-  end
+  <% end %>
 
   <% summary_list.with_row do |row| %>
     <% row.with_key { "Created at" } %>
