@@ -203,6 +203,7 @@ en:
     participant_profile:
       blank: "Not registered"
       not_active: "Not active"
+      not_a_participant_profile: "Not a participant profile record"
     programme:
       blank: "Select a programme type"
     provider:
@@ -319,12 +320,15 @@ en:
               no_default_induction_programme: "No default induction programme set for %{start_academic_year} academic year by school %{school_name}"
               school_cohort_not_setup: "%{start_academic_year} academic year not setup by school %{school_name}"
             participant_declarations:
-              exist: "The participant must have no declarations"
               billable_or_submitted: "The participant has billable or submitted declarations"
               completed: "The participant has not had a 'completed' declaration submitted for them. Therefore you cannot update their outcome."
             participant_profile:
+              billable_declarations_in_cohort: "The participant has billable declarations in their current cohort"
+              no_billable_declarations_in_cohort: "The participant has no billable declarations in destination cohort"
               blank: "Not registered"
               not_active: "Not active"
+              not_eligible_to_be_transferred_back: "Not eligible to be transferred back to their original cohort"
+              not_eligible_to_be_transferred_from_current_cohort: "Not eligible to be transferred from their current cohort"
             source_cohort_start_year:
               invalid: "Invalid value. Must be an integer between %{start} and %{end}"
             target_cohort_start_year:
