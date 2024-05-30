@@ -83,6 +83,33 @@ ActiveRecord::Base.transaction do
 
   next_urn += 1
 
+  # Independent school
+  school = NewSeeds::Scenarios::Schools::School.new(name: "School type 10 #{current_cohort.start_year}-FIP", urn: padded_urn(next_urn))
+                                               .build
+                                               .with_an_induction_tutor(full_name: "SIT School 10", email: "sit.school.10@example.com")
+                                               .chosen_fip_and_partnered_in(cohort: current_cohort)
+  school.school.update!(school_type_code: "10")
+
+  next_urn += 1
+
+  # Independent school
+  school = NewSeeds::Scenarios::Schools::School.new(name: "School type 11 #{current_cohort.start_year}-FIP", urn: padded_urn(next_urn))
+                                               .build
+                                               .with_an_induction_tutor(full_name: "SIT School 11", email: "sit.school.11@example.com")
+                                               .chosen_fip_and_partnered_in(cohort: current_cohort)
+  school.school.update!(school_type_code: "11")
+
+  next_urn += 1
+
+  # School overseas
+  school = NewSeeds::Scenarios::Schools::School.new(name: "School type 37 #{current_cohort.start_year}-FIP", urn: padded_urn(next_urn))
+                                               .build
+                                               .with_an_induction_tutor(full_name: "SIT School 37", email: "sit.school.37@example.com")
+                                               .chosen_fip_and_partnered_in(cohort: current_cohort)
+  school.school.update!(school_type_code: "37")
+
+  next_urn += 1
+
   school = NewSeeds::Scenarios::Schools::School.new(name: "Cohortless School #{current_cohort.start_year}-CIP", urn: padded_urn(next_urn))
     .build
     .with_an_induction_tutor(full_name: "Charlie Cip", email: "charlie.cip@example.com")

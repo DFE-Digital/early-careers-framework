@@ -91,23 +91,6 @@ Random.rand(1..4).times.map do
   )
 end
 
-# Schools with specific school types
-FactoryBot.create(:seed_school,
-                  :with_induction_coordinator,
-                  name: "School with type 10",
-                  school_type_code: 10,
-                  primary_contact_email: "school_type_10@digital.education.gov.uk")
-FactoryBot.create(:seed_school,
-                  :with_induction_coordinator,
-                  name: "School with type 11",
-                  school_type_code: 11,
-                  primary_contact_email: "school_type_11@digital.education.gov.uk")
-FactoryBot.create(:seed_school,
-                  :with_induction_coordinator,
-                  name: "School with type 37",
-                  school_type_code: 37,
-                  primary_contact_email: "school_type_37@digital.education.gov.uk")
-
 # Extra school with participants for UR purposes.
 ur_school = FactoryBot.create(:seed_school,
                               :with_induction_coordinator,
