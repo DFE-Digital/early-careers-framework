@@ -101,12 +101,27 @@ RSpec.describe Participants::SyncDQTInductionStartDate do
       NewSeeds::Scenarios::InductionProgrammes::Fip.new(school_cohort: target_school_cohort).build.induction_programme
     end
 
-    it "changes the participant's induction start date and cohort" do
-      expect { subject }.to change(participant_profile, :induction_start_date)
-                              .to(dqt_induction_start_date)
-                              .and change { participant_profile.induction_records.latest.cohort.start_year }
-                                     .to(Cohort.current.start_year)
-                                     .and not_change(SyncDQTInductionStartDateError, :count)
+    context "when the DQT cohort is not payments-frozen" do
+      it "changes the participant's induction start date and cohort" do
+        expect { subject }.to change(participant_profile, :induction_start_date)
+                                .to(dqt_induction_start_date)
+                                .and change { participant_profile.induction_records.latest.cohort.start_year }
+                                       .to(Cohort.current.start_year)
+                                       .and not_change(SyncDQTInductionStartDateError, :count)
+      end
+    end
+
+    context "when the DQT cohort is payments-frozen" do
+      before do
+        Cohort.current.update!(payments_frozen_at: Date.yesterday)
+      end
+
+      it "changes the participant's induction start date only" do
+        expect { subject }.to change(participant_profile, :induction_start_date)
+                                .to(dqt_induction_start_date)
+                                .and not_change { participant_profile.induction_records.latest.cohort }
+                                       .and not_change(SyncDQTInductionStartDateError, :count)
+      end
     end
   end
 
