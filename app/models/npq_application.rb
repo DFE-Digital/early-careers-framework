@@ -149,6 +149,7 @@ private
       .where.not(id:)
       .where(npq_course: npq_course.rebranded_alternative_courses)
       .where(eligible_for_funding: true)
+      .where(funded_place: [nil, true])
       .accepted
       .exists?
   end
