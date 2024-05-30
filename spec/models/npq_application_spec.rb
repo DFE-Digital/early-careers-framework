@@ -100,19 +100,47 @@ RSpec.describe NPQApplication, type: :model do
       create(:npq_leadership_schedule, :with_npq_milestones)
     end
 
-    context "when first and only application and is eligible" do
-      subject { create(:npq_application, eligible_for_funding: true) }
+    context "when funded place is not set" do
+      context "when first and only application is eligible" do
+        subject { create(:npq_application, eligible_for_funding: true, funded_place: nil) }
 
-      it "returns true" do
-        expect(subject.eligible_for_dfe_funding).to be_truthy
+        it "returns true" do
+          expect(subject.eligible_for_dfe_funding).to be_truthy
+        end
+      end
+
+      context "when first and only application is not eligible" do
+        subject { create(:npq_application, eligible_for_funding: false, funded_place: nil) }
+
+        it "returns false" do
+          expect(subject.eligible_for_dfe_funding).to be_falsey
+        end
       end
     end
 
-    context "when first and only application and is not eligible" do
-      subject { create(:npq_application, eligible_for_funding: false) }
+    context "when funded place is set" do
+      context "when first and only application is not eligible and funded place is false" do
+        subject { create(:npq_application, eligible_for_funding: false, funded_place: false) }
 
-      it "returns false" do
-        expect(subject.eligible_for_dfe_funding).to be_falsey
+        it "returns false" do
+          expect(subject.eligible_for_dfe_funding).to be_falsey
+        end
+      end
+
+      context "when first and only application is eligible and funded place is true" do
+        subject { create(:npq_application, eligible_for_funding: true, funded_place: true) }
+
+        it "returns true" do
+          expect(subject.eligible_for_dfe_funding).to be_truthy
+        end
+      end
+
+      context "when first and only application is eligible and funded place is false" do
+        subject { create(:npq_application, eligible_for_funding: true, funded_place: false) }
+
+        it "returns false" do
+          expect(subject.eligible_for_dfe_funding).to be_falsey
+        end
       end
     end
 

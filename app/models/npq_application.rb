@@ -90,7 +90,7 @@ class NPQApplication < ApplicationRecord
     if previously_funded?
       false
     else
-      eligible_for_funding
+      eligible_for_funding && (funded_place.nil? || funded_place)
     end
   end
 
