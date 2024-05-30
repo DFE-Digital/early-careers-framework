@@ -7,6 +7,21 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
+## 30 May 2024 
+
+We're addressing a potential confusion for providers filtering participant declarations by cohort. 
+ 
+Currently, filtering by a participant's current cohort (for example, 2022) returns all their declarations, even those made when the participant was in an earlier cohort (for example, 2021).  
+ 
+For instance, if a participant is in the 2022 cohort, but has declarations in both 2021 and 2022, all declarations are returned when filtering by 2022, and none when filtering by 2021. 
+ 
+Going forward, we’ll now return only the declarations made during the specified cohort. For example:  
+
+- filtering by 2021 will return only the declarations made while a participant was in the 2021 cohort 
+- filtering by 2022 will return only the declarations made while a participant was in the 2022 cohort 
+
+We’ve released this in the API v3 Live environment.
+
 ## 24 May 2024
 
 We’ve added the schedules and contract data for the 2024/25 intake of early career teachers and mentors to the [test (sandbox) environment](https://sb.manage-training-for-early-career-teachers.education.gov.uk/).
