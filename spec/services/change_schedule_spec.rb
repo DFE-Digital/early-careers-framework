@@ -144,7 +144,7 @@ RSpec.shared_examples "reversing a change of schedule/cohort" do
     end
 
     expect(second_change_of_schedule).not_to be_valid
-    expect(second_change_of_schedule.errors.messages_for(:cohort)).to include("The property '#/cohort' cannot be changed")
+    expect(second_change_of_schedule.errors.messages_for(:cohort)).to include("You cannot change the '#/cohort' field")
   end
 end
 
