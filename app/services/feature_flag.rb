@@ -24,7 +24,6 @@ class FeatureFlag
     prevent_2023_ect_registrations
     school_participant_status_language
     npq_capping
-    cohort_changed_after_payments_frozen
   ].freeze
 
   FEATURES = (PERMANENT_SETTINGS + TEMPORARY_FEATURE_FLAGS).index_with { |name|

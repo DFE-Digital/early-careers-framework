@@ -140,9 +140,8 @@ module Api
               created_at: profile.created_at.rfc3339,
               induction_end_date: profile.induction_completion_date&.strftime("%Y-%m-%d"),
               mentor_funding_end_date: profile.mentor_completion_date&.strftime("%Y-%m-%d"),
-            }.tap do |hash|
-              hash[:cohort_changed_after_payments_frozen] = profile.cohort_changed_after_payments_frozen if FeatureFlag.active?(:cohort_changed_after_payments_frozen)
-            end
+              cohort_changed_after_payments_frozen: profile.cohort_changed_after_payments_frozen,
+            }
           }.compact
         end
 

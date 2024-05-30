@@ -60,35 +60,12 @@ module Api
                       created_at: ect_profile.created_at.rfc3339,
                       induction_end_date: "2022-01-12",
                       mentor_funding_end_date: nil,
+                      cohort_changed_after_payments_frozen: true,
                     },
                   ],
                 participant_id_changes: [],
               },
             ])
-          end
-
-          context "when the cohort_changed_after_payments_frozen feature flag is active" do
-            before { FeatureFlag.activate(:cohort_changed_after_payments_frozen) }
-
-            it "includes the cohort_changed_after_payments_frozen" do
-              expect(ecf_enrolments[0][:cohort_changed_after_payments_frozen]).to be(true)
-            end
-
-            context "when the participant has not changed cohort after payments were frozen" do
-              before { ect_profile.update!(cohort_changed_after_payments_frozen: false) }
-
-              it "does not include the cohort_changed_after_payments_frozen" do
-                expect(ecf_enrolments[0][:cohort_changed_after_payments_frozen]).to be(false)
-              end
-            end
-          end
-
-          context "when the previous_payments_frozen feature flag is not active" do
-            before { FeatureFlag.deactivate(:cohort_changed_after_payments_frozen) }
-
-            it "does not include the cohort_changed_after_payments_frozen" do
-              expect(ecf_enrolments[0]).not_to have_key(:cohort_changed_after_payments_frozen)
-            end
           end
 
           describe "ecf_enrolments" do
@@ -130,6 +107,7 @@ module Api
                   created_at: mentor_profile.created_at.rfc3339,
                   induction_end_date: nil,
                   mentor_funding_end_date: "2021-04-19",
+                  cohort_changed_after_payments_frozen: false,
                 })
               end
             end
