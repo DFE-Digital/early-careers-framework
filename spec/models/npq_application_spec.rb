@@ -374,8 +374,23 @@ RSpec.describe NPQApplication, type: :model do
 
         expect(npq_application.valid?(:admin)).to eq(true)
       end
+
       it "is valid if `eligible_for_funding` is false and `funded_ place` is nil" do
         npq_application.eligible_for_funding = false
+        npq_application.funded_place = nil
+
+        expect(npq_application.valid?(:admin)).to eq(true)
+      end
+
+      it "is valid if `eligible_for_funding` is true and `funded_ place` is true" do
+        npq_application.eligible_for_funding = true
+        npq_application.funded_place = true
+
+        expect(npq_application.valid?(:admin)).to eq(true)
+      end
+
+      it "is valid if `eligible_for_funding` is true and `funded_ place` is nil" do
+        npq_application.eligible_for_funding = true
         npq_application.funded_place = nil
 
         expect(npq_application.valid?(:admin)).to eq(true)
