@@ -204,7 +204,6 @@ en:
       blank: "Not registered"
       not_active: "Not active"
       not_a_participant_profile: "Not a participant profile record"
-      training_complete: "The participant has completed their ECF training"
     programme:
       blank: "Select a programme type"
     provider:
@@ -336,7 +335,6 @@ en:
               excluded: "Invalid value. Must be different to %{year}"
               incompatible_with_schedule: "Invalid value. Must match that of the schedule"
               invalid: "Invalid value. Must be an integer between %{start} and %{end}"
-              payments_frozen: "Not permitted. The cohort is frozen for payments"
         edit_induction_tutor_form:
           attributes:
             email:
