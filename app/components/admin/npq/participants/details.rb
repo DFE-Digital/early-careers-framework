@@ -33,6 +33,12 @@ module Admin
             &.max
             &.to_formatted_s(:govuk)
         end
+
+        def funded_place
+          return "" if npq_application.funded_place.nil?
+
+          npq_application.funded_place ? "Yes" : "No"
+        end
       end
     end
   end

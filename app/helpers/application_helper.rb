@@ -16,6 +16,12 @@ module ApplicationHelper
     @data_layer ||= build_data_layer
   end
 
+  def boolean_to_yes_no_nil(value)
+    return "" if value.nil?
+
+    boolean_to_yes_no(value)
+  end
+
   def boolean_to_yes_no(value)
     value ? "Yes" : "No"
   end

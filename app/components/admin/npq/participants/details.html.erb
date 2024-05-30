@@ -62,6 +62,13 @@
     row.with_value(text: npq_application.npq_course_name)
   end
 
+  if FeatureFlag.active?(:npq_capping)
+    sl.with_row do |row|
+      row.with_key(text: "Funded place")
+      row.with_value(text: funded_place)
+    end
+  end
+
   sl.with_row do |row|
     row.with_key(text: "Last updated")
     row.with_value(text: last_updated)
