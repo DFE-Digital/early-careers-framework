@@ -18,7 +18,8 @@ class Induction::TransferToSchoolsProgramme < BaseService
                                                start_date:,
                                                preferred_email: email,
                                                mentor_profile:,
-                                               school_transfer: true)
+                                               school_transfer: true,
+                                               induction_completed:)
 
       if participant_profile.mentor?
         Mentors::ChangeSchool.call(mentor_profile: participant_profile,
@@ -45,8 +46,12 @@ private
     @mentor_profile = mentor_profile
   end
 
+  def induction_completed
+    participant_profile.with_completion_date_status_or_declaration?
+  end
+
   def latest_induction_record
-    participant_profile.induction_records.latest
+    @latest_induction_record ||= participant_profile.induction_records.latest
   end
 
   def check_different_school!

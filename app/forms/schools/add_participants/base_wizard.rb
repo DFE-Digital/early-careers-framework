@@ -461,12 +461,12 @@ module Schools
         @participant_cohort ||= cohort_to_place_participant
       end
 
-      # NOTE: not preventing registration here just determining where to put the participant
       def cohort_to_place_participant
         return cohort_for_transfer if transfer?
         return cohort_for_ect_with_induction_start_date if ect_participant? && induction_start_date.present?
+        return Cohort.current if Cohort.within_automatic_assignment_period?
 
-        Cohort.within_automatic_assignment_period? ? Cohort.current : Cohort.next
+        Cohort.next
       end
 
       def cohort_for_ect_with_induction_start_date
