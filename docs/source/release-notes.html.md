@@ -7,6 +7,14 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
+## 10 June 2024
+
+We’ve introduced the `cohort_changed_after_payments_frozen` attribute to the participant response in the API v3 [test (sandbox) environment](https://sb.manage-training-for-early-career-teachers.education.gov.uk/).
+
+This feature enables providers to identify participants who’ve migrated to a new cohort to continue their training, as payments for their original cohort were frozen. 
+
+The value will be `true` for these participants.
+
 ## 5 June 2024 
 
 We're addressing a potential confusion for providers filtering participant declarations by cohort. 
