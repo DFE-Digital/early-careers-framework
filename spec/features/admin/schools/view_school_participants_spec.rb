@@ -9,6 +9,9 @@ RSpec.feature "Admin viewing participants", js: true, rutabaga: false do
     when_i_visit the_school_participants_page
     then_i_should_see_all_the_current_and_transferring_participants
     and_the_page_should_be_accessible
+
+    when_i_click_on_the_participants_name "Charlie Current"
+    then_i_am_taken_to_the_admin_participant_details_page
   end
 
 private
@@ -18,7 +21,7 @@ private
     cohort = create(:cohort, start_year: 2021)
     school_cohort = create(:school_cohort, :fip, school:, cohort:)
 
-    charlie = create(:ect_participant_profile, school_cohort:, user: create(:user, full_name: "Charlie Current"))
+    @charlie = create(:ect_participant_profile, school_cohort:, user: create(:user, full_name: "Charlie Current"))
     theresa = create(:ect_participant_profile, user: create(:user, full_name: "Theresa Transfer-In"))
     linda = create(:ect_participant_profile, school_cohort:, user: create(:user, full_name: "Linda Leaving"))
 
@@ -29,7 +32,7 @@ private
     programme2 = create(:induction_programme, :fip, school_cohort: theresa.school_cohort)
     induction_record = Induction::Enrol.call(participant_profile: theresa, induction_programme: programme2, start_date: Date.new(2021, 9, 1))
     induction_record.leaving!(2.months.from_now)
-    Induction::Enrol.call(participant_profile: charlie, induction_programme: programme, start_date: Date.new(2021, 12, 1))
+    Induction::Enrol.call(participant_profile: @charlie, induction_programme: programme, start_date: Date.new(2021, 12, 1))
     Induction::Enrol.call(participant_profile: linda, induction_programme: programme, start_date: Date.new(2021, 9, 1))
     Induction::Enrol.call(participant_profile: theresa, induction_programme: programme, start_date: induction_record.end_date, school_transfer: true)
     linda.current_induction_record.leaving!(1.week.from_now)
@@ -43,5 +46,13 @@ private
     expect(page).to have_content "Charlie Current"
     expect(page).to have_content "Theresa Transfer-In"
     expect(page).to have_content "Linda Leaving"
+  end
+
+  def when_i_click_on_the_participants_name(name)
+    click_on name
+  end
+
+  def then_i_am_taken_to_the_admin_participant_details_page
+    expect(current_path).to eq(admin_participant_details_path(@charlie))
   end
 end

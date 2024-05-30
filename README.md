@@ -109,6 +109,8 @@ The E2E scenarios currently covered are:
 
 Scenarios tests use the `:end_to_end_scenario` tag so that they get excluded from the standard rspec command
 
+For more information on how we now write feature scenarios please our [feature testing documentation](./documentation/feature_testing.md)
+
 ### Setup
 
 ```
@@ -135,35 +137,6 @@ SCENARIOS=2,12,20 bundle exec bin/scenarios_ci
 
 Please note: `--fail-fast` is recommended when running scenarios locally due to the length of time they can all take to run.
 
-## End to end browser testing
-
-We use Cypress for end-to-end tests. This integrates with Axe for automated accessibility tests.
-
-We aim to have an accessibility and snapshot test for every page on the service.
-
-### Setup
-
-```
-RAILS_ENV=test bin/rake db:create db:schema:load
-```
-
-Then in separate windows:
-
-```
-bin/rails server -e test -p 5017
-
-yarn cypress:open
-```
-
-#### Moving to capybara
-
-Features and user journeys are being migrated to Capybara as part of the feature scenarios and these can be run using:
-
-```
-bundle exec bin/features_ci
-```
-
-For more information on how we now write feature scenarios please our [feature testing documentation](./documentation/feature_testing.md)
 
 ## Smoke tests
 

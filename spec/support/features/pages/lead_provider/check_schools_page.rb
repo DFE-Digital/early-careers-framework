@@ -24,5 +24,9 @@ module Pages
     def has_schools_recruited?(num_schools)
       expect(page).to have_content "#{num_schools} Schools recruited"
     end
+
+    def search
+      click_on "Search"
+    end
   end
 end

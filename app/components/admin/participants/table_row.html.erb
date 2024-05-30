@@ -1,31 +1,29 @@
 <tr class="govuk-table__row nhsuk-table__row">
-  <td class="govuk-table__cell nhsuk-table__cell">
+  <td class="govuk-table__cell nhsuk-table__cell" data-test="full-name">
     <span class="nhsuk-table-responsive__heading">Full name</span>
-    <div class="school-name-with-tag">
-      <%= govuk_link_to profile.user.full_name, admin_participant_path(profile) %>
-    </div>
+    <%= govuk_link_to profile.user.full_name, admin_participant_path(profile) %>
   </td>
-  <td class="govuk-table__cell nhsuk-table__cell">
-    <span class="nhsuk-table-responsive__heading">Type</span>
+  <td class="govuk-table__cell nhsuk-table__cell" data-test="role">
+    <span class="nhsuk-table-responsive__heading">Role</span>
     <%= I18n.t(profile.participant_type, scope: "schools.participants.type") %>
   </td>
-  <td class="govuk-table__cell nhsuk-table__cell">
-    <span class="nhsuk-table-responsive__heading">School</span>
+  <td class="govuk-table__cell nhsuk-table__cell" data-test="trn">
+    <span class="nhsuk-table-responsive__heading">TRN</span>
     <%= profile.teacher_profile.trn %>
   </td>
-  <td class="govuk-table__cell nhsuk-table__cell">
-    <span class="nhsuk-table-responsive__heading">School</span>
+  <td class="govuk-table__cell nhsuk-table__cell" data-test="school-name">
+    <span class="nhsuk-table-responsive__heading">School name</span>
     <%= school&.name %>
   </td>
-  <td class="govuk-table__cell nhsuk-table__cell">
+  <td class="govuk-table__cell nhsuk-table__cell" data-test="school-urn">
     <span class="nhsuk-table-responsive__heading">School URN</span>
     <%= school_urn %>
   </td>
-  <td class="govuk-table__cell nhsuk-table__cell">
+  <td class="govuk-table__cell nhsuk-table__cell" data-test="date-added">
     <span class="nhsuk-table-responsive__heading">Date added</span>
     <%= profile.created_at.to_date.to_fs(:govuk_short) %>
   </td>
-  <td class="govuk-table__cell nhsuk-table__cell">
+  <td class="govuk-table__cell nhsuk-table__cell" data-test="training-record-state">
     <span class="nhsuk-table-responsive__heading">Training record state</span>
     <%= render StatusTags::AdminParticipantStatusTag.new(participant_profile: profile,
                                                          induction_record: profile.latest_current_induction_record) %>
