@@ -45,7 +45,7 @@ module Schools
             begin
               @start_date = Date.parse (1..3).map { |n| start_date[n] }.join("/")
 
-              unless start_date.between?(Date.new(2021, 9, 1), Date.current + 1.year)
+              unless start_date.between?(Cohort::INITIAL_COHORT_START_DATE, Date.current + 1.year)
                 errors.add(:start_date, :invalid)
               end
             rescue Date::Error

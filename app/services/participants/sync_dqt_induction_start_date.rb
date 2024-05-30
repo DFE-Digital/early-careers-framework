@@ -2,7 +2,7 @@
 
 module Participants
   class SyncDQTInductionStartDate < BaseService
-    FIRST_2021_ACADEMIC_DATE = Date.new(2021, 9, 1)
+    FIRST_2021_ACADEMIC_DATE = Cohort::INITIAL_COHORT_START_DATE
     FIRST_2023_REGISTRATION_DATE = Cohort.find_by(start_year: 2023)&.registration_start_date || Date.new(2023, 6, 1)
 
     def initialize(dqt_induction_start_date, participant_profile)
