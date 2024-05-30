@@ -463,18 +463,24 @@ module Schools
 
       # NOTE: not preventing registration here just determining where to put the participant
       def cohort_to_place_participant
-        if transfer?
-          existing_participant_cohort || existing_participant_profile&.schedule&.cohort
-        elsif ect_participant? && induction_start_date.present?
-          Cohort.for_induction_start_date(induction_start_date).tap do |cohort|
-            return Cohort.current if cohort.blank? || cohort.npq_plus_one_or_earlier?
-            return Cohort.active_registration_cohort if cohort.payments_frozen?
-          end
-        elsif Cohort.within_automatic_assignment_period?
-          Cohort.current
-        else
-          Cohort.next
+        return cohort_for_transfer if transfer?
+        return cohort_for_ect_with_induction_start_date if ect_participant? && induction_start_date.present?
+
+        Cohort.within_automatic_assignment_period? ? Cohort.current : Cohort.next
+      end
+
+      def cohort_for_ect_with_induction_start_date
+        Cohort.for_induction_start_date(induction_start_date).tap do |cohort|
+          return Cohort.current if cohort.blank? || cohort.npq_plus_one_or_earlier?
+          return Cohort.active_registration_cohort if cohort.payments_frozen?
         end
+      end
+
+      def cohort_for_transfer
+        cohort = Cohort.active_registration_cohort
+        return cohort if existing_participant_profile&.eligible_to_change_cohort_and_continue_training?(cohort:)
+
+        existing_participant_cohort || existing_participant_profile&.schedule&.cohort
       end
 
       def formatted_nino
