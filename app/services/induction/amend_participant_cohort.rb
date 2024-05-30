@@ -153,7 +153,7 @@ module Induction
     end
 
     def in_target?(induction_record)
-      in_target_cohort?(induction_record) && in_target_schedule?(induction_record)
+      induction_record && in_target_cohort?(induction_record) && in_target_schedule?(induction_record)
     end
 
     def in_target_cohort?(induction_record)
