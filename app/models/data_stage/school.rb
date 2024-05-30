@@ -26,7 +26,7 @@ module DataStage
 
     scope :schools_to_open, -> { currently_open.joins(:counterpart).where(counterpart: { school_status_name: :proposed_to_open }) }
 
-    scope :schools_to_close, -> { closed_status.left_joins(:counterpart).where(counterpart: { school_status_code: GiasTypes::ELIGIBLE_STATUS_CODES }) }
+    scope :schools_to_close, -> { closed_status.left_joins(:counterpart).where(counterpart: { school_status_code: GiasTypes::OPEN_STATUS_CODES }) }
 
     scope :schools_with_changes, -> { includes(:school_changes).where(school_changes: { status: :changed, handled: false }) }
 

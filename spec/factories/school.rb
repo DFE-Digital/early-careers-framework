@@ -49,7 +49,7 @@ FactoryBot.define do
     end
 
     trait :eligible do
-      school_status_code { GiasTypes::ELIGIBLE_STATUS_CODES.sample }
+      school_status_code { GiasTypes::OPEN_STATUS_CODES.sample }
       school_type_code   { GiasTypes::ELIGIBLE_TYPE_CODES.sample }
       section_41_approved { true }
       administrative_district_code { "9999" }
