@@ -39,7 +39,7 @@ class DQTRecordPresenter < SimpleDelegator
 
     @induction_start_date = (
       dqt_record.dig("induction", "periods") ||
-        FullDQT::V3::Client.new.get_record(trn:)&.dig("induction", "periods")
+        DQT::V3::Client.new.get_record(trn:)&.dig("induction", "periods")
     ).to_a
      .map { |period| period["startDate"] }
      .compact

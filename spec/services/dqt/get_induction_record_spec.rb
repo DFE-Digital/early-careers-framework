@@ -27,7 +27,7 @@ RSpec.describe DQT::GetInductionRecord do
     subject(:service) { described_class }
 
     it "returns the induction section of the participants DQT record" do
-      expect_any_instance_of(FullDQT::V3::Client).to receive(:get_record).with(trn:).once.and_return(valid_record)
+      expect_any_instance_of(DQT::V3::Client).to receive(:get_record).with(trn:).once.and_return(valid_record)
 
       result = service.call(trn:)
 
@@ -36,7 +36,7 @@ RSpec.describe DQT::GetInductionRecord do
 
     context "when the record is not found" do
       it "returns nil" do
-        expect_any_instance_of(FullDQT::V3::Client).to receive(:get_record).with(trn:).once.and_return(nil)
+        expect_any_instance_of(DQT::V3::Client).to receive(:get_record).with(trn:).once.and_return(nil)
 
         result = service.call(trn:)
 
