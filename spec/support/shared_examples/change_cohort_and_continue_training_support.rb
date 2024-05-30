@@ -79,7 +79,7 @@ RSpec.shared_examples "can change cohort and continue training" do |participant_
           create(declaration_type,
                  billable_declaration_type,
                  declaration_type: :completed,
-                 declaration_date: completed_milestone.start_date + 1.day,
+                 declaration_date: completed_milestone.start_date,
                  participant_profile:,
                  cpd_lead_provider: participant_profile.lead_provider.cpd_lead_provider)
         end
