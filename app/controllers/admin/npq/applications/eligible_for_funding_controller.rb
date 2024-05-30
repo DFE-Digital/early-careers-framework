@@ -30,7 +30,7 @@ module Admin
               content: "#{name} has been marked '#{@npq_application.funding_eligiblity_status_code.to_s.humanize.downcase}'",
             }
           else
-            flash[:alert] = "Failed to save new elgibility"
+            flash[:alert] = "Failed to save new eligibility"
           end
           redirect_to admin_npq_applications_edge_case_path(@npq_application)
         end

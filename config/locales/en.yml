@@ -253,6 +253,7 @@ en:
           attributes:
             base:
               billable_declaration_exists: "Eligibility can not be changed because billable declaration exists"
+              funded_application: "Eligibility can not be changed because the application is funded"
             lead_provider_approval_status:
               has_another_accepted_application: The participant already has an accepted application for this course
               has_already_been_accepted: This NPQ application has already been accepted

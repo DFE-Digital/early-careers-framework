@@ -353,10 +353,36 @@ RSpec.describe NPQApplication, type: :model do
   end
 
   describe "validations" do
-    context "when validating funding eligibility" do
-      let(:participant_declaration) { create(:npq_participant_declaration, state: participant_declaration_state) }
-      let(:npq_application) { participant_declaration.participant_profile.npq_application }
+    let(:participant_declaration) { create(:npq_participant_declaration, state: participant_declaration_state) }
+    let(:npq_application) { participant_declaration.participant_profile.npq_application }
 
+    describe "funding eligibility with funded places" do
+      let(:valid_state) { "submitted" }
+      let(:participant_declaration_state) { valid_state }
+
+      it "is not valid if `eligible_for_funding` is false and `funded_ place` is true" do
+        npq_application.eligible_for_funding = false
+        npq_application.funded_place = true
+
+        expect(npq_application.valid?(:admin)).to eq(false)
+        expect(npq_application.valid?).to eq(true)
+      end
+
+      it "is valid if `eligible_for_funding` is false and `funded_ place` is false" do
+        npq_application.eligible_for_funding = false
+        npq_application.funded_place = false
+
+        expect(npq_application.valid?(:admin)).to eq(true)
+      end
+      it "is valid if `eligible_for_funding` is false and `funded_ place` is nil" do
+        npq_application.eligible_for_funding = false
+        npq_application.funded_place = nil
+
+        expect(npq_application.valid?(:admin)).to eq(true)
+      end
+    end
+
+    context "when validating funding eligibility" do
       before do
         npq_application.update!(eligible_for_funding:)
       end
@@ -414,7 +440,7 @@ RSpec.describe NPQApplication, type: :model do
             let(:participant_declaration_state) { state }
             let(:eligible_for_funding) { false }
 
-            it "is correct" do
+            it "is not correct" do
               npq_application.valid?(:admin)
 
               expect(npq_application.errors.where(:base).first.full_message).to eq("Eligibility can not be changed because billable declaration exists")
