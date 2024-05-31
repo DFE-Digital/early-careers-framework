@@ -100,316 +100,634 @@ RSpec.describe NPQApplication, type: :model do
       create(:npq_leadership_schedule, :with_npq_milestones)
     end
 
-    context "when funded place is not set" do
-      context "when first and only application is eligible" do
-        subject { create(:npq_application, eligible_for_funding: true, funded_place: nil) }
+    context "without funded_place" do
+      context "when funded place is not set" do
+        context "when first and only application is eligible" do
+          subject { create(:npq_application, eligible_for_funding: true, funded_place: nil) }
 
-        it "returns true" do
-          expect(subject.eligible_for_dfe_funding).to be_truthy
+          it "returns true" do
+            expect(subject.eligible_for_dfe_funding).to be_truthy
+          end
+        end
+
+        context "when first and only application is not eligible" do
+          subject { create(:npq_application, eligible_for_funding: false, funded_place: nil) }
+
+          it "returns false" do
+            expect(subject.eligible_for_dfe_funding).to be_falsey
+          end
+        end
+
+        context "when second application is also eligible for funding" do
+          subject do
+            create(
+              :npq_application,
+              eligible_for_funding: true,
+              funded_place: nil,
+              npq_course:,
+            )
+          end
+
+          before do
+            create(
+              :npq_application,
+              :accepted,
+              participant_identity: subject.participant_identity,
+              eligible_for_funding: true,
+              funded_place: nil,
+              npq_course: subject.npq_course,
+              npq_lead_provider: subject.npq_lead_provider,
+            )
+          end
+
+          it "returns false" do
+            expect(subject.eligible_for_dfe_funding).to be_falsey
+          end
+        end
+
+        context "when second application is eligible for funding but first was not" do
+          subject do
+            create(
+              :npq_application,
+              eligible_for_funding: true,
+              funded_place: nil,
+              npq_course:,
+            )
+          end
+
+          before do
+            create(
+              :npq_application,
+              :accepted,
+              participant_identity: subject.participant_identity,
+              eligible_for_funding: false,
+              funded_place: nil,
+              npq_course: subject.npq_course,
+              npq_lead_provider: subject.npq_lead_provider,
+            )
+          end
+
+          it "returns true" do
+            expect(subject.eligible_for_dfe_funding).to be_truthy
+          end
+        end
+
+        context "when second application is for a different course which is eligible for funding" do
+          subject do
+            create(
+              :npq_application,
+              eligible_for_funding: true,
+              funded_place: nil,
+              npq_course:,
+            )
+          end
+
+          before do
+            create(:npq_specialist_schedule, :with_npq_milestones)
+
+            create(
+              :npq_application,
+              :accepted,
+              participant_identity: subject.participant_identity,
+              eligible_for_funding: true,
+              funded_place: nil,
+              npq_course: different_npq_course,
+              npq_lead_provider: subject.npq_lead_provider,
+            )
+          end
+
+          it "returns true" do
+            expect(subject.eligible_for_dfe_funding).to be_truthy
+          end
+        end
+
+        context "when it is the only accepted application" do
+          let(:course) { create(:npq_leadership_course) }
+
+          subject { create(:npq_application, eligible_for_funding: true, funded_place: nil, npq_course: course) }
+
+          before do
+            create(:npq_leadership_schedule)
+
+            NPQ::Application::Accept.new(npq_application: subject).call
+          end
+
+          it "returns eligible for funding" do
+            expect(subject.eligible_for_dfe_funding).to be_truthy
+          end
         end
       end
 
-      context "when first and only application is not eligible" do
-        subject { create(:npq_application, eligible_for_funding: false, funded_place: nil) }
+      context "when funded place is set to true" do
+        context "when first and only application is eligible" do
+          subject { create(:npq_application, eligible_for_funding: true, funded_place: true) }
 
-        it "returns false" do
-          expect(subject.eligible_for_dfe_funding).to be_falsey
+          it "returns true" do
+            expect(subject.eligible_for_dfe_funding).to be_truthy
+          end
+        end
+
+        context "when second application is eligible for funding" do
+          subject do
+            create(
+              :npq_application,
+              eligible_for_funding: true,
+              funded_place: true,
+              npq_course:,
+            )
+          end
+
+          before do
+            create(
+              :npq_application,
+              :accepted,
+              participant_identity: subject.participant_identity,
+              eligible_for_funding: true,
+              funded_place: true,
+              npq_course: subject.npq_course,
+              npq_lead_provider: subject.npq_lead_provider,
+            )
+          end
+
+          it "returns false" do
+            expect(subject.eligible_for_dfe_funding).to be_falsey
+          end
+        end
+
+        context "when second application is eligible for funding but first was not" do
+          subject do
+            create(
+              :npq_application,
+              eligible_for_funding: true,
+              funded_place: true,
+              npq_course:,
+            )
+          end
+
+          before do
+            create(
+              :npq_application,
+              :accepted,
+              participant_identity: subject.participant_identity,
+              eligible_for_funding: false,
+              funded_place: false,
+              npq_course: subject.npq_course,
+              npq_lead_provider: subject.npq_lead_provider,
+            )
+          end
+
+          it "returns true" do
+            expect(subject.eligible_for_dfe_funding).to be_truthy
+          end
+        end
+
+        context "when second application is for a different course which is eligible for funding" do
+          subject do
+            create(
+              :npq_application,
+              eligible_for_funding: true,
+              funded_place: true,
+              npq_course:,
+            )
+          end
+
+          before do
+            create(:npq_specialist_schedule, :with_npq_milestones)
+
+            create(
+              :npq_application,
+              :accepted,
+              participant_identity: subject.participant_identity,
+              eligible_for_funding: true,
+              funded_place: true,
+              npq_course: different_npq_course,
+              npq_lead_provider: subject.npq_lead_provider,
+            )
+          end
+
+          it "returns true" do
+            expect(subject.eligible_for_dfe_funding).to be_truthy
+          end
+        end
+
+        context "when it is the only accepted application" do
+          let(:course) { create(:npq_leadership_course) }
+
+          subject { create(:npq_application, eligible_for_funding: true, funded_place: true, npq_course: course) }
+
+          before do
+            create(:npq_leadership_schedule)
+
+            NPQ::Application::Accept.new(npq_application: subject).call
+          end
+
+          it "returns eligible for funding" do
+            expect(subject.eligible_for_dfe_funding).to be_truthy
+          end
         end
       end
 
-      context "when second application is also eligible for funding" do
-        subject do
-          create(
-            :npq_application,
-            eligible_for_funding: true,
-            funded_place: nil,
-            npq_course:,
-          )
+      context "when funded place is set to false" do
+        context "when first and only application is not eligible and funded place is false" do
+          subject { create(:npq_application, eligible_for_funding: false, funded_place: false) }
+
+          it "returns false" do
+            expect(subject.eligible_for_dfe_funding).to be_falsey
+          end
         end
 
-        before do
-          create(
-            :npq_application,
-            :accepted,
-            participant_identity: subject.participant_identity,
-            eligible_for_funding: true,
-            funded_place: nil,
-            npq_course: subject.npq_course,
-            npq_lead_provider: subject.npq_lead_provider,
-          )
+        context "when first and only application is eligible and funded place is false" do
+          subject { create(:npq_application, eligible_for_funding: true, funded_place: false) }
+
+          it "returns true" do
+            expect(subject.eligible_for_dfe_funding).to be_truthy
+          end
         end
 
-        it "returns false" do
-          expect(subject.eligible_for_dfe_funding).to be_falsey
-        end
-      end
+        context "when second application is not eligible for funding" do
+          subject do
+            create(
+              :npq_application,
+              eligible_for_funding: true,
+              funded_place: true,
+              npq_course:,
+            )
+          end
 
-      context "when second application is eligible for funding but first was not" do
-        subject do
-          create(
-            :npq_application,
-            eligible_for_funding: true,
-            funded_place: nil,
-            npq_course:,
-          )
-        end
+          before do
+            create(
+              :npq_application,
+              :accepted,
+              participant_identity: subject.participant_identity,
+              eligible_for_funding: true,
+              funded_place: false,
+              npq_course: subject.npq_course,
+              npq_lead_provider: subject.npq_lead_provider,
+            )
+          end
 
-        before do
-          create(
-            :npq_application,
-            :accepted,
-            participant_identity: subject.participant_identity,
-            eligible_for_funding: false,
-            funded_place: nil,
-            npq_course: subject.npq_course,
-            npq_lead_provider: subject.npq_lead_provider,
-          )
-        end
-
-        it "returns true" do
-          expect(subject.eligible_for_dfe_funding).to be_truthy
-        end
-      end
-
-      context "when second application is for a different course which is eligible for funding" do
-        subject do
-          create(
-            :npq_application,
-            eligible_for_funding: true,
-            funded_place: nil,
-            npq_course:,
-          )
+          it "returns true" do
+            expect(subject.eligible_for_dfe_funding).to be_truthy
+          end
         end
 
-        before do
-          create(:npq_specialist_schedule, :with_npq_milestones)
+        context "when second application is eligible for funding" do
+          subject do
+            create(
+              :npq_application,
+              eligible_for_funding: true,
+              funded_place: false,
+              npq_course:,
+            )
+          end
 
-          create(
-            :npq_application,
-            :accepted,
-            participant_identity: subject.participant_identity,
-            eligible_for_funding: true,
-            funded_place: nil,
-            npq_course: different_npq_course,
-            npq_lead_provider: subject.npq_lead_provider,
-          )
+          before do
+            create(
+              :npq_application,
+              :accepted,
+              participant_identity: subject.participant_identity,
+              eligible_for_funding: true,
+              funded_place: false,
+              npq_course: subject.npq_course,
+              npq_lead_provider: subject.npq_lead_provider,
+            )
+          end
+
+          it "returns false" do
+            expect(subject.eligible_for_dfe_funding).to be_truthy
+          end
         end
 
-        it "returns true" do
-          expect(subject.eligible_for_dfe_funding).to be_truthy
-        end
-      end
+        context "when it is the only accepted application" do
+          let(:course) { create(:npq_leadership_course) }
 
-      context "when it is the only accepted application" do
-        let(:course) { create(:npq_leadership_course) }
+          subject { create(:npq_application, eligible_for_funding: true, funded_place: false, npq_course: course) }
 
-        subject { create(:npq_application, eligible_for_funding: true, funded_place: nil, npq_course: course) }
+          before do
+            create(:npq_leadership_schedule)
 
-        before do
-          create(:npq_leadership_schedule)
+            NPQ::Application::Accept.new(npq_application: subject).call
+          end
 
-          NPQ::Application::Accept.new(npq_application: subject).call
-        end
-
-        it "returns eligible for funding" do
-          expect(subject.eligible_for_dfe_funding).to be_truthy
+          it "returns true" do
+            expect(subject.eligible_for_dfe_funding).to be_truthy
+          end
         end
       end
     end
 
-    context "when funded place is set to true" do
-      context "when first and only application is eligible" do
-        subject { create(:npq_application, eligible_for_funding: true, funded_place: true) }
+    context "with funded_place" do
+      context "when funded place is not set" do
+        context "when first and only application is eligible" do
+          subject { create(:npq_application, eligible_for_funding: true, funded_place: nil) }
 
-        it "returns true" do
-          expect(subject.eligible_for_dfe_funding).to be_truthy
+          it "returns true" do
+            expect(subject.eligible_for_dfe_funding(with_funded_place: true)).to be_truthy
+          end
+        end
+
+        context "when first and only application is not eligible" do
+          subject { create(:npq_application, eligible_for_funding: false, funded_place: nil) }
+
+          it "returns false" do
+            expect(subject.eligible_for_dfe_funding(with_funded_place: true)).to be_falsey
+          end
+        end
+
+        context "when second application is also eligible for funding" do
+          subject do
+            create(
+              :npq_application,
+              eligible_for_funding: true,
+              funded_place: nil,
+              npq_course:,
+            )
+          end
+
+          before do
+            create(
+              :npq_application,
+              :accepted,
+              participant_identity: subject.participant_identity,
+              eligible_for_funding: true,
+              funded_place: nil,
+              npq_course: subject.npq_course,
+              npq_lead_provider: subject.npq_lead_provider,
+            )
+          end
+
+          it "returns false" do
+            expect(subject.eligible_for_dfe_funding(with_funded_place: true)).to be_falsey
+          end
+        end
+
+        context "when second application is eligible for funding but first was not" do
+          subject do
+            create(
+              :npq_application,
+              eligible_for_funding: true,
+              funded_place: nil,
+              npq_course:,
+            )
+          end
+
+          before do
+            create(
+              :npq_application,
+              :accepted,
+              participant_identity: subject.participant_identity,
+              eligible_for_funding: false,
+              funded_place: nil,
+              npq_course: subject.npq_course,
+              npq_lead_provider: subject.npq_lead_provider,
+            )
+          end
+
+          it "returns true" do
+            expect(subject.eligible_for_dfe_funding(with_funded_place: true)).to be_truthy
+          end
+        end
+
+        context "when second application is for a different course which is eligible for funding" do
+          subject do
+            create(
+              :npq_application,
+              eligible_for_funding: true,
+              funded_place: nil,
+              npq_course:,
+            )
+          end
+
+          before do
+            create(:npq_specialist_schedule, :with_npq_milestones)
+
+            create(
+              :npq_application,
+              :accepted,
+              participant_identity: subject.participant_identity,
+              eligible_for_funding: true,
+              funded_place: nil,
+              npq_course: different_npq_course,
+              npq_lead_provider: subject.npq_lead_provider,
+            )
+          end
+
+          it "returns true" do
+            expect(subject.eligible_for_dfe_funding(with_funded_place: true)).to be_truthy
+          end
+        end
+
+        context "when it is the only accepted application" do
+          let(:course) { create(:npq_leadership_course) }
+
+          subject { create(:npq_application, eligible_for_funding: true, funded_place: nil, npq_course: course) }
+
+          before do
+            create(:npq_leadership_schedule)
+
+            NPQ::Application::Accept.new(npq_application: subject).call
+          end
+
+          it "returns eligible for funding" do
+            expect(subject.eligible_for_dfe_funding(with_funded_place: true)).to be_truthy
+          end
         end
       end
 
-      context "when second application is eligible for funding" do
-        subject do
-          create(
-            :npq_application,
-            eligible_for_funding: true,
-            funded_place: true,
-            npq_course:,
-          )
+      context "when funded place is set to true" do
+        context "when first and only application is eligible" do
+          subject { create(:npq_application, eligible_for_funding: true, funded_place: true) }
+
+          it "returns true" do
+            expect(subject.eligible_for_dfe_funding(with_funded_place: true)).to be_truthy
+          end
         end
 
-        before do
-          create(
-            :npq_application,
-            :accepted,
-            participant_identity: subject.participant_identity,
-            eligible_for_funding: true,
-            funded_place: true,
-            npq_course: subject.npq_course,
-            npq_lead_provider: subject.npq_lead_provider,
-          )
+        context "when second application is eligible for funding" do
+          subject do
+            create(
+              :npq_application,
+              eligible_for_funding: true,
+              funded_place: true,
+              npq_course:,
+            )
+          end
+
+          before do
+            create(
+              :npq_application,
+              :accepted,
+              participant_identity: subject.participant_identity,
+              eligible_for_funding: true,
+              funded_place: true,
+              npq_course: subject.npq_course,
+              npq_lead_provider: subject.npq_lead_provider,
+            )
+          end
+
+          it "returns false" do
+            expect(subject.eligible_for_dfe_funding(with_funded_place: true)).to be_falsey
+          end
         end
 
-        it "returns false" do
-          expect(subject.eligible_for_dfe_funding).to be_falsey
-        end
-      end
+        context "when second application is eligible for funding but first was not" do
+          subject do
+            create(
+              :npq_application,
+              eligible_for_funding: true,
+              funded_place: true,
+              npq_course:,
+            )
+          end
 
-      context "when second application is eligible for funding but first was not" do
-        subject do
-          create(
-            :npq_application,
-            eligible_for_funding: true,
-            funded_place: true,
-            npq_course:,
-          )
-        end
+          before do
+            create(
+              :npq_application,
+              :accepted,
+              participant_identity: subject.participant_identity,
+              eligible_for_funding: false,
+              funded_place: false,
+              npq_course: subject.npq_course,
+              npq_lead_provider: subject.npq_lead_provider,
+            )
+          end
 
-        before do
-          create(
-            :npq_application,
-            :accepted,
-            participant_identity: subject.participant_identity,
-            eligible_for_funding: false,
-            funded_place: false,
-            npq_course: subject.npq_course,
-            npq_lead_provider: subject.npq_lead_provider,
-          )
-        end
-
-        it "returns true" do
-          expect(subject.eligible_for_dfe_funding).to be_truthy
-        end
-      end
-
-      context "when second application is for a different course which is eligible for funding" do
-        subject do
-          create(
-            :npq_application,
-            eligible_for_funding: true,
-            funded_place: true,
-            npq_course:,
-          )
+          it "returns true" do
+            expect(subject.eligible_for_dfe_funding(with_funded_place: true)).to be_truthy
+          end
         end
 
-        before do
-          create(:npq_specialist_schedule, :with_npq_milestones)
+        context "when second application is for a different course which is eligible for funding" do
+          subject do
+            create(
+              :npq_application,
+              eligible_for_funding: true,
+              funded_place: true,
+              npq_course:,
+            )
+          end
 
-          create(
-            :npq_application,
-            :accepted,
-            participant_identity: subject.participant_identity,
-            eligible_for_funding: true,
-            funded_place: true,
-            npq_course: different_npq_course,
-            npq_lead_provider: subject.npq_lead_provider,
-          )
+          before do
+            create(:npq_specialist_schedule, :with_npq_milestones)
+
+            create(
+              :npq_application,
+              :accepted,
+              participant_identity: subject.participant_identity,
+              eligible_for_funding: true,
+              funded_place: true,
+              npq_course: different_npq_course,
+              npq_lead_provider: subject.npq_lead_provider,
+            )
+          end
+
+          it "returns true" do
+            expect(subject.eligible_for_dfe_funding(with_funded_place: true)).to be_truthy
+          end
         end
 
-        it "returns true" do
-          expect(subject.eligible_for_dfe_funding).to be_truthy
-        end
-      end
+        context "when it is the only accepted application" do
+          let(:course) { create(:npq_leadership_course) }
 
-      context "when it is the only accepted application" do
-        let(:course) { create(:npq_leadership_course) }
+          subject { create(:npq_application, eligible_for_funding: true, funded_place: true, npq_course: course) }
 
-        subject { create(:npq_application, eligible_for_funding: true, funded_place: true, npq_course: course) }
+          before do
+            create(:npq_leadership_schedule)
 
-        before do
-          create(:npq_leadership_schedule)
+            NPQ::Application::Accept.new(npq_application: subject).call
+          end
 
-          NPQ::Application::Accept.new(npq_application: subject).call
-        end
-
-        it "returns eligible for funding" do
-          expect(subject.eligible_for_dfe_funding).to be_truthy
-        end
-      end
-    end
-
-    context "when funded place is set to false" do
-      context "when first and only application is not eligible and funded place is false" do
-        subject { create(:npq_application, eligible_for_funding: false, funded_place: false) }
-
-        it "returns false" do
-          expect(subject.eligible_for_dfe_funding).to be_falsey
-        end
-      end
-
-      context "when first and only application is eligible and funded place is false" do
-        subject { create(:npq_application, eligible_for_funding: true, funded_place: false) }
-
-        it "returns false" do
-          expect(subject.eligible_for_dfe_funding).to be_falsey
+          it "returns eligible for funding" do
+            expect(subject.eligible_for_dfe_funding(with_funded_place: true)).to be_truthy
+          end
         end
       end
 
-      context "when second application is not eligible for funding" do
-        subject do
-          create(
-            :npq_application,
-            eligible_for_funding: true,
-            funded_place: true,
-            npq_course:,
-          )
+      context "when funded place is set to false" do
+        context "when first and only application is not eligible and funded place is false" do
+          subject { create(:npq_application, eligible_for_funding: false, funded_place: false) }
+
+          it "returns false" do
+            expect(subject.eligible_for_dfe_funding(with_funded_place: true)).to be_falsey
+          end
         end
 
-        before do
-          create(
-            :npq_application,
-            :accepted,
-            participant_identity: subject.participant_identity,
-            eligible_for_funding: true,
-            funded_place: false,
-            npq_course: subject.npq_course,
-            npq_lead_provider: subject.npq_lead_provider,
-          )
+        context "when first and only application is eligible and funded place is false" do
+          subject { create(:npq_application, eligible_for_funding: true, funded_place: false) }
+
+          it "returns false" do
+            expect(subject.eligible_for_dfe_funding(with_funded_place: true)).to be_falsey
+          end
         end
 
-        it "returns true" do
-          expect(subject.eligible_for_dfe_funding).to be_truthy
-        end
-      end
+        context "when second application is not eligible for funding" do
+          subject do
+            create(
+              :npq_application,
+              eligible_for_funding: true,
+              funded_place: true,
+              npq_course:,
+            )
+          end
 
-      context "when both applications are not eligible for funding" do
-        subject do
-          create(
-            :npq_application,
-            eligible_for_funding: true,
-            funded_place: false,
-            npq_course:,
-          )
-        end
+          before do
+            create(
+              :npq_application,
+              :accepted,
+              participant_identity: subject.participant_identity,
+              eligible_for_funding: true,
+              funded_place: false,
+              npq_course: subject.npq_course,
+              npq_lead_provider: subject.npq_lead_provider,
+            )
+          end
 
-        before do
-          create(
-            :npq_application,
-            :accepted,
-            participant_identity: subject.participant_identity,
-            eligible_for_funding: true,
-            funded_place: false,
-            npq_course: subject.npq_course,
-            npq_lead_provider: subject.npq_lead_provider,
-          )
-        end
-
-        it "returns false" do
-          expect(subject.eligible_for_dfe_funding).to be_falsey
-        end
-      end
-
-      context "when it is the only accepted application" do
-        let(:course) { create(:npq_leadership_course) }
-
-        subject { create(:npq_application, eligible_for_funding: true, funded_place: false, npq_course: course) }
-
-        before do
-          create(:npq_leadership_schedule)
-
-          NPQ::Application::Accept.new(npq_application: subject).call
+          it "returns true" do
+            expect(subject.eligible_for_dfe_funding(with_funded_place: true)).to be_truthy
+          end
         end
 
-        it "returns false" do
-          expect(subject.eligible_for_dfe_funding).to be_falsey
+        context "when both applications are not eligible for funding" do
+          subject do
+            create(
+              :npq_application,
+              eligible_for_funding: true,
+              funded_place: false,
+              npq_course:,
+            )
+          end
+
+          before do
+            create(
+              :npq_application,
+              :accepted,
+              participant_identity: subject.participant_identity,
+              eligible_for_funding: true,
+              funded_place: false,
+              npq_course: subject.npq_course,
+              npq_lead_provider: subject.npq_lead_provider,
+            )
+          end
+
+          it "returns false" do
+            expect(subject.eligible_for_dfe_funding(with_funded_place: true)).to be_falsey
+          end
+        end
+
+        context "when it is the only accepted application" do
+          let(:course) { create(:npq_leadership_course) }
+
+          subject { create(:npq_application, eligible_for_funding: true, funded_place: false, npq_course: course) }
+
+          before do
+            create(:npq_leadership_schedule)
+
+            NPQ::Application::Accept.new(npq_application: subject).call
+          end
+
+          it "returns false" do
+            expect(subject.eligible_for_dfe_funding(with_funded_place: true)).to be_falsey
+          end
         end
       end
     end

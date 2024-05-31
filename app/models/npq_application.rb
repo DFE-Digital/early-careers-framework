@@ -86,11 +86,11 @@ class NPQApplication < ApplicationRecord
   # eligible_for_funding is solely based on what NPQ app knows
   # eg school, course etc
   # here we need to account for previous enrollments too
-  def eligible_for_dfe_funding
+  def eligible_for_dfe_funding(with_funded_place: false)
     if previously_funded?
       false
     else
-      eligible_for_funding && (funded_place.nil? || funded_place)
+      funding_eligibility(with_funded_place:)
     end
   end
 
@@ -152,6 +152,12 @@ private
       .where(funded_place: [nil, true])
       .accepted
       .exists?
+  end
+
+  def funding_eligibility(with_funded_place:)
+    return eligible_for_funding unless with_funded_place
+
+    eligible_for_funding && (funded_place.nil? || funded_place)
   end
 
   def push_enrollment_to_big_query

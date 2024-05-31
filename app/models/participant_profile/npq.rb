@@ -73,7 +73,7 @@ class ParticipantProfile::NPQ < ParticipantProfile
   end
 
   def fundable?
-    npq_application&.eligible_for_dfe_funding
+    npq_application&.eligible_for_dfe_funding(with_funded_place: true)
   end
 
   def schedule_for(*)
