@@ -94,28 +94,24 @@ RSpec.describe SchoolCohort, type: :model do
       create(:school_cohort, cohort: cohort_2020, school:)
     end
 
-    context "when the latest year is 2020" do
-      it "returns zero school cohorts" do
-        expect(described_class.dashboard_for_school(school:, latest_year: 2020).count).to be 0
-      end
+    subject { SchoolCohort.dashboard_for_school(school:) }
+
+    it "returns cohorts for the given school starting from 2021 ordered by the cohort's start year desc" do
+      school_cohort_2021 = school.school_cohorts.for_year(2021).last
+      school_cohort_2022 = school.school_cohorts.for_year(2022).last
+      school_cohort_2023 = school.school_cohorts.for_year(2023).last
+      school_cohort_2024 = school.school_cohorts.for_year(2024).last
+      school_cohort_2025 = school.school_cohorts.for_year(2025).last
+
+      expected_results = [school_cohort_2025, school_cohort_2024, school_cohort_2023, school_cohort_2022, school_cohort_2021]
+
+      expect(subject).to eq expected_results
     end
 
-    context "when the latest year is 2021 or later" do
-      it "returns all school cohorts from 2021 to the provided latest year" do
-        cohort_count_since_2021 = Cohort.where.not(start_year: 2020).count
-        expect(described_class.dashboard_for_school(school:, latest_year: 3000).count).to be_between(1, cohort_count_since_2021)
-        expect(described_class.dashboard_for_school(school:, latest_year: 2024).count).to be 4
-        expect(described_class.dashboard_for_school(school:, latest_year: 2022).count).to be 2
-      end
-    end
+    it "doesn't return the school cohorts for year 2020" do
+      school_cohort_2020 = school.school_cohorts.for_year(2020).last
 
-    it "returns cohorts from the current year up to 2 years in the past" do
-      travel_to Date.new(2024, 5, 15)
-
-      described_class.dashboard_for_school(school:, latest_year: Cohort.active_registration_cohort.start_year)
-                     .each_with_index do |school_cohort, _index|
-        expect(school_cohort.cohort.start_year).to be_between(2021, 2023)
-      end
+      expect(subject).not_to include school_cohort_2020
     end
   end
 
