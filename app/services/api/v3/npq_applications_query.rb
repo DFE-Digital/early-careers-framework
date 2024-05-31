@@ -25,6 +25,7 @@ module Api
               WHERE a.id != npq_applications.id AND
                     a.participant_identity_id = npq_applications.participant_identity_id AND
                     a.eligible_for_funding = true AND
+                    (a.funded_place is null OR a.funded_place = true) AND
                     a.lead_provider_approval_status = 'accepted' AND
                     a.npq_course_id IN (
                       SELECT jsonb_array_elements_text(alt_courses->(npq_applications.npq_course_id::text))::uuid
