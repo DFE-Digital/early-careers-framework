@@ -24,6 +24,76 @@
     }
   ],
   "paths": {
+    "/api/v3/npq-applications/{id}/change-funded-place": {
+      "put": {
+        "summary": "Change funded place",
+        "operationId": "npq_applications_change_funded_place",
+        "tags": [
+          "NPQ applications"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
+            "description": "The ID of the NPQ application to change funded place.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The NPQ application being accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NPQApplicationResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeFundedPlaceRequest"
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/npq-applications": {
       "get": {
         "summary": "Retrieve multiple NPQ applications",
@@ -1681,6 +1751,52 @@
           "bad_request": {
             "description": "An error message for bad request",
             "type": "string"
+          }
+        }
+      },
+      "ChangeFundedPlaceAttributesRequest": {
+        "description": "The NPQ Application acceptance request",
+        "type": "object",
+        "properties": {
+          "funded_place": {
+            "description": "Whether the participant has a funded place",
+            "type": "boolean",
+            "example": true
+          }
+        }
+      },
+      "ChangeFundedPlaceDataRequest": {
+        "description": "The NPQ Application change funded place request attributes",
+        "type": "object",
+        "required": [
+          "type",
+          "data"
+        ],
+        "properties": {
+          "type": {
+            "description": "The data type",
+            "type": "string",
+            "example": "npq-application-change-funded-place"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ChangeFundedPlaceAttributesRequest"
+          }
+        }
+      },
+      "ChangeFundedPlaceRequest": {
+        "description": "The NPQ Application change funded place request",
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/ChangeFundedPlaceDataRequest"
+          }
+        },
+        "example": {
+          "data": {
+            "type": "npq-application-change-funded-place",
+            "attributes": {
+              "funded_place": true
+            }
           }
         }
       },

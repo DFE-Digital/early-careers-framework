@@ -2,7 +2,7 @@
 
 require "swagger_helper"
 
-RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
+RSpec.describe "API", type: :request, swagger_doc: "v1/api_spec.json" do
   let(:npq_lead_provider) { create(:npq_lead_provider) }
   let(:cpd_lead_provider) { npq_lead_provider.cpd_lead_provider }
   let(:npq_course) { create(:npq_leadership_course, identifier: "npq-senior-leadership") }

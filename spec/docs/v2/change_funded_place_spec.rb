@@ -2,7 +2,7 @@
 
 require "swagger_helper"
 
-RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
+RSpec.describe "API", type: :request, swagger_doc: "v2/api_spec.json" do
   let(:npq_lead_provider) { create(:npq_lead_provider) }
   let(:cpd_lead_provider) { npq_lead_provider.cpd_lead_provider }
   let(:npq_course) { create(:npq_leadership_course, identifier: "npq-senior-leadership") }
@@ -35,7 +35,7 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
     FeatureFlag.activate(:npq_capping)
   end
 
-  path "/api/v3/npq-applications/{id}/change-funded-place" do
+  path "/api/v2/npq-applications/{id}/change-funded-place" do
     put "Change funded place" do
       operationId :npq_applications_change_funded_place
       tags "NPQ applications"
