@@ -110,6 +110,12 @@ class ParticipantProfile::ECF < ParticipantProfile
     self.class.archivable(restrict_to_participant_ids: [id]).exists?
   end
 
+  def with_completion_date_status_or_declaration?
+    induction_completion_date.present? ||
+      participant_declarations.billable.for_declaration(:completed).exists? ||
+      latest_induction_record&.completed_induction_status?
+  end
+
   def completed_induction?
     induction_completion_date.present?
   end
