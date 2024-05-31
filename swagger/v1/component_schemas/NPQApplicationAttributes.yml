@@ -138,6 +138,10 @@ properties:
     description: "Indicates whether this NPQ participant would be eligible for funding from the DfE"
     type: boolean
     example: true
+  funded_place:
+    description: "Indicates whether this Application is funded by the DfE"
+    type: boolean
+    example: true
   targeted_delivery_funding_eligibility:
     description: "Whether or not this application is eligible for Targeted Delivery Funding uplift"
     nullable: false
