@@ -24,7 +24,9 @@ module DashboardHelper
     profiles.eligible.any? || profiles.contacted_for_info.any? || profiles.details_being_checked.any? || profiles.no_qts_participants.any?
   end
 
-  def get_three_school_cohorts(school_cohorts)
-    school_cohorts.take(3)
+  def school_academic_years(school_cohorts)
+    school_cohorts
+      .reject { |school_cohort| school_cohort.cohort.payments_frozen? }
+      .take(3)
   end
 end

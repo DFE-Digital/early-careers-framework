@@ -49,7 +49,7 @@
             <%= render partial: "setup_school_cohort" %>
           <% end %>
         <% end %>
-        <% get_three_school_cohorts(@school_cohorts).each do |school_cohort| %>
+        <% school_academic_years(@school_cohorts).each do |school_cohort| %>
           <% component.with_tab(label: TabLabelDecorator.new(school_cohort.description)) do %>
             <% if school_cohort.induction_programme_choice == "no_early_career_teachers" %>
               <%= render partial: "no_ects_cohort_details", locals: { school_cohort: school_cohort } %>
