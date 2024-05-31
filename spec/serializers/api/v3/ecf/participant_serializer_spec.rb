@@ -67,27 +67,27 @@ module Api
             ])
           end
 
-          context "when the previous_payments_frozen_cohort feature flag is active" do
-            before { FeatureFlag.activate(:previous_payments_frozen_cohort) }
+          context "when the cohort_changed_after_payments_frozen feature flag is active" do
+            before { FeatureFlag.activate(:cohort_changed_after_payments_frozen) }
 
-            it "includes the previous_payments_frozen_cohort" do
-              expect(ecf_enrolments[0][:previous_payments_frozen_cohort]).to eql(previous_cohort.start_year)
+            it "includes the cohort_changed_after_payments_frozen" do
+              expect(ecf_enrolments[0][:cohort_changed_after_payments_frozen]).to be(true)
             end
 
             context "when the participant has not changed cohort after payments were frozen" do
               before { ect_profile.update!(cohort_changed_after_payments_frozen: false) }
 
-              it "does not include the previous_payments_frozen_cohort" do
-                expect(ecf_enrolments[0][:previous_payments_frozen_cohort]).to be_nil
+              it "does not include the cohort_changed_after_payments_frozen" do
+                expect(ecf_enrolments[0][:cohort_changed_after_payments_frozen]).to be(false)
               end
             end
           end
 
           context "when the previous_payments_frozen feature flag is not active" do
-            before { FeatureFlag.deactivate(:previous_payments_frozen_cohort) }
+            before { FeatureFlag.deactivate(:cohort_changed_after_payments_frozen) }
 
-            it "does not include the previous_payments_frozen_cohort" do
-              expect(ecf_enrolments[0]).not_to have_key(:previous_payments_frozen_cohort)
+            it "does not include the cohort_changed_after_payments_frozen" do
+              expect(ecf_enrolments[0]).not_to have_key(:cohort_changed_after_payments_frozen)
             end
           end
 

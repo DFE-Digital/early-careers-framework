@@ -141,7 +141,7 @@ module Api
               induction_end_date: profile.induction_completion_date&.strftime("%Y-%m-%d"),
               mentor_funding_end_date: profile.mentor_completion_date&.strftime("%Y-%m-%d"),
             }.tap do |hash|
-              hash[:previous_payments_frozen_cohort] = profile.previous_payments_frozen_cohort if FeatureFlag.active?(:previous_payments_frozen_cohort)
+              hash[:cohort_changed_after_payments_frozen] = profile.cohort_changed_after_payments_frozen if FeatureFlag.active?(:cohort_changed_after_payments_frozen)
             end
           }.compact
         end
