@@ -6,6 +6,13 @@
       row.with_value(text: boolean_red_green_tag(application.eligible_for_funding))
     end
 
+    if FeatureFlag.active?(:npq_capping)
+      sl.with_row do |row|
+        row.with_key(text: 'Funded place')
+        row.with_value(text: boolean_to_yes_no_nil(application.funded_place))
+      end
+    end
+
     sl.with_row do |row|
       row.with_key(text: 'Funding eligibility status code')
       row.with_value(text: application.funding_eligiblity_status_code || "-")

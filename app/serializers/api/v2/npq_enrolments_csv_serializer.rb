@@ -23,7 +23,9 @@ module Api
               object.npq_application.eligible_for_funding,
               object.training_status,
               object.school_urn,
-            ]
+            ].tap do |r|
+              r.insert(6, object.npq_application.funded_place) if FeatureFlag.active?(:npq_capping)
+            end
 
             csv << row
           end
@@ -42,7 +44,9 @@ module Api
           eligible_for_funding
           training_status
           school_urn
-        ]
+        ].tap do |headers|
+          headers.insert(6, "funded_place") if FeatureFlag.active?(:npq_capping)
+        end
       end
     end
   end

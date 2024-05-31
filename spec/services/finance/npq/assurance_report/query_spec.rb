@@ -47,6 +47,22 @@ RSpec.describe Finance::NPQ::AssuranceReport::Query do
         participant_profile.update!(participant_identity: new_participant_identity)
       end
 
+      describe "funded_place attribute" do
+        it "includes the application funded place" do
+          participant_profile.npq_application.update!(funded_place: true)
+
+          participant_declaration = query.participant_declarations.first
+          expect(participant_declaration.funded_place).to be_truthy
+        end
+
+        it "includes the declaration funded place when `nil`" do
+          participant_profile.npq_application.update!(funded_place: nil)
+
+          participant_declaration = query.participant_declarations.first
+          expect(participant_declaration.funded_place).to be_nil
+        end
+      end
+
       it "includes the declaration" do
         expect(query.participant_declarations).to eq([participant_declaration])
       end

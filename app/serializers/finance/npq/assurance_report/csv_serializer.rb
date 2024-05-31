@@ -6,28 +6,6 @@ module Finance
   module NPQ
     module AssuranceReport
       class CsvSerializer
-        CSV_HEADERS = [
-          "Participant ID",
-          "Participant Name",
-          "TRN",
-          "Course Identifier",
-          "Schedule",
-          "Eligible For Funding",
-          "Lead Provider Name",
-          "School Urn",
-          "School Name",
-          "Training Status",
-          "Training Status Reason",
-          "Declaration ID",
-          "Declaration Status",
-          "Declaration Type",
-          "Declaration Date",
-          "Declaration Created At",
-          "Statement Name",
-          "Statement ID",
-          "Targeted Delivery Funding",
-        ].freeze
-
         def initialize(scope, statement)
           self.scope = scope
           self.statement = statement
@@ -39,12 +17,37 @@ module Finance
 
         def call
           CSV.generate do |csv|
-            csv << CSV_HEADERS
+            csv << csv_headers
 
             scope.each do |record|
               csv << to_row(record)
             end
           end
+        end
+
+        def csv_headers
+          [
+            "Participant ID",
+            "Participant Name",
+            "TRN",
+            "Course Identifier",
+            "Schedule",
+            "Eligible For Funding",
+            ("Funded place" if FeatureFlag.active?(:npq_capping)),
+            "Lead Provider Name",
+            "School Urn",
+            "School Name",
+            "Training Status",
+            "Training Status Reason",
+            "Declaration ID",
+            "Declaration Status",
+            "Declaration Type",
+            "Declaration Date",
+            "Declaration Created At",
+            "Statement Name",
+            "Statement ID",
+            "Targeted Delivery Funding",
+          ].compact
         end
 
       private
@@ -72,7 +75,9 @@ module Finance
             record.statement_name,
             record.statement_id,
             record.targeted_delivery_funding,
-          ]
+          ].tap do |row|
+            row.insert(6, record.funded_place) if FeatureFlag.active?(:npq_capping)
+          end
         end
 
         def npq_lead_provider

@@ -21,6 +21,19 @@ class Admin::ParticipantPresenter
     relevant_cohort_location.cohort
   end
 
+  def detailed_cohort_information
+    current_cohort = cohort&.start_year
+
+    return current_cohort unless participant_profile.cohort_changed_after_payments_frozen
+
+    original_cohort = participant_profile.participant_declarations
+      .includes(:cohort)
+      .where.not(cohort: { start_year: current_cohort })
+      .pick("cohort.start_year")
+
+    "#{current_cohort} (migrated after #{original_cohort || 'unknown cohort'} payments were frozen)"
+  end
+
   def declarations
     @declarations ||= @participant_profile
                         .participant_declarations

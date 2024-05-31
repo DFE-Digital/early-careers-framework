@@ -136,6 +136,38 @@ RSpec.describe(Admin::ParticipantPresenter) do
         end
       end
 
+      describe "#detailed_cohort_information" do
+        let(:participant_profile) { create(:ect) }
+        let(:cohort) { participant_profile.schedule.cohort }
+        let(:detailed_cohort_information) { subject.detailed_cohort_information }
+
+        context "when the participant has not had cohort_changed_after_payments_frozen" do
+          before { participant_profile.update!(cohort_changed_after_payments_frozen: false) }
+
+          it { expect(detailed_cohort_information).to eq(cohort.start_year) }
+        end
+
+        context "when the participant has had cohort_changed_after_payments_frozen" do
+          before { participant_profile.update!(cohort_changed_after_payments_frozen: true) }
+
+          context "when the previous cohort cannot be determined" do
+            it { expect(detailed_cohort_information).to eq("#{cohort.start_year} (migrated after unknown cohort payments were frozen)") }
+          end
+
+          context "when the previous cohort can be determined" do
+            let(:previous_cohort) { Cohort.previous }
+            let(:cpd_lead_provider) { participant_profile.lead_provider.cpd_lead_provider }
+            let(:course_identifier) { "ecf-induction" }
+
+            before do
+              create(:participant_declaration, participant_profile:, cohort: previous_cohort, state: :paid, cpd_lead_provider:, course_identifier:)
+            end
+
+            it { expect(detailed_cohort_information).to eq("#{cohort.start_year} (migrated after #{previous_cohort.start_year} payments were frozen)") }
+          end
+        end
+      end
+
       describe "#start_year" do
         it "returns the start_year via induction record, school cohort and cohort" do
           expect(subject.start_year).to eql(subject.relevant_induction_record.school_cohort.cohort.start_year)

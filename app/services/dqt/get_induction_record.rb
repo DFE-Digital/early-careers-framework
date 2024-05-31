@@ -18,6 +18,6 @@ private
   end
 
   def client
-    @client ||= FullDQT::V3::Client.new
+    @client ||= DQT::V3::Client.new
   end
 end

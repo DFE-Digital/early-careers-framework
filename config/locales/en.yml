@@ -41,7 +41,7 @@ en:
   bad_parameter: "Bad parameter"
   invalid_transition: "Invalid action"
   invalid_page_parameters: "The '#/page[page]' and '#/page[per_page]' parameter values must be a valid number (equal and more than 1)"
-  cannot_change_cohort: "The property '#/cohort' cannot be changed"
+  cannot_change_cohort: "You cannot change the '#/cohort' field"
   cannot_create_completed_declaration: "Could not create completed declaration. Contact the DfE for support."
   invalid_participant: "Your update cannot be made as the '#/participant_id' is not recognised. Check participant details and try again."
   invalid_identifier: "The entered '#/course_identifier' is not recognised for the given participant. Check details and try again."
@@ -203,6 +203,7 @@ en:
     participant_profile:
       blank: "Not registered"
       not_active: "Not active"
+      not_a_participant_profile: "Not a participant profile record"
     programme:
       blank: "Select a programme type"
     provider:
@@ -253,6 +254,7 @@ en:
           attributes:
             base:
               billable_declaration_exists: "Eligibility can not be changed because billable declaration exists"
+              funded_application: "Eligibility can not be changed because the application is funded"
             lead_provider_approval_status:
               has_another_accepted_application: The participant already has an accepted application for this course
               has_already_been_accepted: This NPQ application has already been accepted
@@ -319,12 +321,15 @@ en:
               no_default_induction_programme: "No default induction programme set for %{start_academic_year} academic year by school %{school_name}"
               school_cohort_not_setup: "%{start_academic_year} academic year not setup by school %{school_name}"
             participant_declarations:
-              exist: "The participant must have no declarations"
               billable_or_submitted: "The participant has billable or submitted declarations"
               completed: "The participant has not had a 'completed' declaration submitted for them. Therefore you cannot update their outcome."
             participant_profile:
+              billable_declarations_in_cohort: "The participant has billable declarations in their current cohort"
+              no_billable_declarations_in_cohort: "The participant has no billable declarations in destination cohort"
               blank: "Not registered"
               not_active: "Not active"
+              not_eligible_to_be_transferred_back: "Not eligible to be transferred back to their original cohort"
+              not_eligible_to_be_transferred_from_current_cohort: "Not eligible to be transferred from their current cohort"
             source_cohort_start_year:
               invalid: "Invalid value. Must be an integer between %{start} and %{end}"
             target_cohort_start_year:

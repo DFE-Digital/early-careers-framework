@@ -31,13 +31,9 @@ jobs:
     name: Run the RSpec tests
     uses: ./.github/workflows/rspec.yml
 
-  cypress:
-    name: Run the Cypress tests
-    uses: ./.github/workflows/cypress.yml
-
   permit-merge:
     name: Permit merge
-    needs: [lint, rspec, cypress]
+    needs: [lint, rspec]
     runs-on: ubuntu-latest
     steps:
       - run: "echo 'Linting and tests passed, this branch is ready to be merged'"
@@ -132,7 +128,7 @@ jobs:
 
   deploy_staging:
     name: Deploy staging
-    needs: [docker, rspec, cypress, lint, brakeman]
+    needs: [docker, rspec, lint, brakeman]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     environment:

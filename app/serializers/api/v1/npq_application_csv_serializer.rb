@@ -53,7 +53,9 @@ module Api
           teacher_catchment_iso_country_code
           itt_provider
           lead_mentor
-        ]
+        ].tap do |headers|
+          headers.insert(12, "funded_place") if FeatureFlag.active?(:npq_capping)
+        end
       end
 
       def to_row(record)
@@ -86,7 +88,9 @@ module Api
           record.teacher_catchment_iso_country_code,
           record.itt_provider,
           record.lead_mentor,
-        ]
+        ].tap do |row|
+          row.insert(12, record.funded_place.to_s) if FeatureFlag.active?(:npq_capping)
+        end
       end
 
       def teacher_catchment(record)

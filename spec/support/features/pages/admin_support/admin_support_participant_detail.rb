@@ -6,7 +6,7 @@ module Pages
   class AdminSupportParticipantDetail < ::Pages::BasePage
     set_url "/admin/participants/{participant_id}/details"
     # this is a hack as the participants name is the page title
-    set_primary_heading(/^(.*) - Details$/)
+    set_primary_heading(/^(.*)Details$/)
 
     def has_training_record_state?(validation_status)
       # TODO: get language from language files
@@ -53,6 +53,12 @@ module Pages
       click_on "Training"
 
       Pages::AdminSupportParticipantTraining.loaded
+    end
+
+    def edit_identity_confirmation
+      click_on "View identity confirmation"
+
+      Pages::AdminParticipantIdentityValidation.loaded
     end
   end
 end

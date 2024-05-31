@@ -16,7 +16,7 @@ module Pages
     def learn_to_manage_ecf_partnerships
       click_on "How to manage ECF partnerships"
 
-      raise "Not yet implemented"
+      Pages::LeadProviderPartnershipGuidancePage.loaded
     end
   end
 end
