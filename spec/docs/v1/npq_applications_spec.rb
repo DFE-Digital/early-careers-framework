@@ -142,12 +142,12 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json" do
                 }
 
       parameter name: :params,
-        in: :body,
-        style: :deepObject,
-        required: false,
-        schema: {
-          "$ref": "#/components/schemas/NPQApplicationAcceptRequest",
-        }
+                in: :body,
+                style: :deepObject,
+                required: false,
+                schema: {
+                  "$ref": "#/components/schemas/NPQApplicationAcceptRequest",
+                }
 
       response "200", "The NPQ application being accepted" do
         let(:id) { npq_application.id }
