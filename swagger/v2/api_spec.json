@@ -237,6 +237,15 @@
               }
             }
           }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NPQApplicationAcceptRequest"
+              }
+            }
+          }
         }
       }
     },
@@ -3336,6 +3345,75 @@
           }
         }
       },
+      "NPQApplicationAcceptAttributesRequest": {
+        "description": "The NPQ Application acceptance request",
+        "type": "object",
+        "required": [
+          "schedule_identifier"
+        ],
+        "properties": {
+          "schedule_identifier": {
+            "description": "The new schedule of the participant",
+            "type": "string",
+            "enum": [
+              "npq-aso-march",
+              "npq-aso-june",
+              "npq-aso-november",
+              "npq-aso-december",
+              "npq-ehco-march",
+              "npq-ehco-june",
+              "npq-ehco-november",
+              "npq-ehco-december",
+              "npq-leadership-autumn",
+              "npq-leadership-spring",
+              "npq-specialist-autumn",
+              "npq-specialist-spring"
+            ],
+            "example": "npq-leadership-spring"
+          },
+          "funded_place": {
+            "description": "Whether the participant has a funded place",
+            "type": "boolean",
+            "example": true
+          }
+        }
+      },
+      "NPQApplicationAcceptDataRequest": {
+        "description": "The NPQ Application acceptance request attributes",
+        "type": "object",
+        "required": [
+          "type",
+          "data"
+        ],
+        "properties": {
+          "type": {
+            "description": "The data type",
+            "type": "string",
+            "example": "npq-application-accept"
+          },
+          "data": {
+            "$ref": "#/components/schemas/NPQApplicationAcceptAttributesRequest"
+          }
+        }
+      },
+      "NPQApplicationAcceptRequest": {
+        "description": "The NPQ Application acceptance request",
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/NPQApplicationAcceptDataRequest"
+          }
+        },
+        "example": {
+          "data": {
+            "type": "npq-application-accept2",
+            "attributes": {
+              "schedule_identifier": "npq-leadership-spring",
+              "funded_place": true
+            }
+          }
+        }
+      },
       "NPQApplicationAttributes": {
         "description": "The data attributes associated with an NPQ application",
         "type": "object",
@@ -3501,6 +3579,11 @@
           },
           "eligible_for_funding": {
             "description": "Indicates whether this NPQ participant would be eligible for funding from the DfE",
+            "type": "boolean",
+            "example": true
+          },
+          "funded_place": {
+            "description": "Indicates whether this Application is funded by the DfE",
             "type": "boolean",
             "example": true
           },
