@@ -70,6 +70,7 @@ class NPQApplication < ApplicationRecord
 
   validates :eligible_for_funding_before_type_cast, inclusion: { in: [true, false, "true", "false"] }
   validate  :validate_funding_eligiblity_status_code_change, on: :admin
+  validate  :validate_funding_eligiblity_status_with_funded_place, on: :admin
 
   delegate :start_year, to: :cohort, prefix: true, allow_nil: true
 
@@ -161,6 +162,12 @@ private
   def validate_funding_eligiblity_status_code_change
     if declared_as_billable? && eligible_for_funding == false
       errors.add(:base, :billable_declaration_exists)
+    end
+  end
+
+  def validate_funding_eligiblity_status_with_funded_place
+    if !eligible_for_funding && funded_place
+      errors.add(:base, :funded_application)
     end
   end
 end
