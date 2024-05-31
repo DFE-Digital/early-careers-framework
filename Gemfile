@@ -24,6 +24,7 @@ gem "zendesk_api"
 
 gem "secure_headers"
 
+gem "rails_semantic_logger"
 
 # Use postgresql as the database for Active Record
 gem "pg", "~> 1.5"
@@ -141,6 +142,9 @@ group :development, :test do
 
   # Linting
   gem "erb_lint", ">= 0.1.1", require: false
+
+  # Colourizing output
+  gem "amazing_print"
 end
 
 group :development, :test, :staging, :sandbox, :review, :performance, :migration do
