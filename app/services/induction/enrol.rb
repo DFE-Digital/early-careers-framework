@@ -3,7 +3,6 @@
 class Induction::Enrol < BaseService
   def call
     ActiveRecord::Base.transaction do
-
       unless induction_completed
         record_active_profile_participant_state! unless participant_profile_state_already_correct?
         participant_profile.training_status_active!
