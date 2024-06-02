@@ -47,7 +47,7 @@ RSpec.describe "API", type: :request, swagger_doc: "v1/api_spec.json" do
                 in: :path,
                 required: true,
                 example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
-                description: "The ID of the NPQ application to change funded place.",
+                description: "The ID of the NPQ participant to change funded place.",
                 schema: {
                   type: :string,
                   format: :uuid,
