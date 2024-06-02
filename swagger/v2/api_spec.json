@@ -3275,7 +3275,7 @@
             }
           }
         },
-        "example": "id,type,participant_id,full_name,email,email_validated,email_validated,teacher_reference_number,teacher_reference_number_validated,school_urn,headteacher_status,eligible_for_funding,funding_choice,course_identifier,status,created_at,updated_at\ndb3a7848-7308-4879-942a-c4a70ced400a,npq-application,7a8fef46-3c43-42c0-b3d5-1ba5904ba562,Isabelle MacDonald,isabelle.macdonald2@some-school.example.com,true,1234567,true,106286,no,true,trust,npq-leading-teaching,pending,2021-05-31T02:21:32.000Z,2021-05-31T02:22:32.000Z\n"
+        "example": "id,type,participant_id,full_name,email,email_validated,email_validated,teacher_reference_number,teacher_reference_number_validated,school_urn,headteacher_status,eligible_for_funding,funded_place,funding_choice,course_identifier,status,created_at,updated_at\ndb3a7848-7308-4879-942a-c4a70ced400a,npq-application,7a8fef46-3c43-42c0-b3d5-1ba5904ba562,Isabelle MacDonald,isabelle.macdonald2@some-school.example.com,true,1234567,true,106286,no,true,true,trust,npq-leading-teaching,pending,2021-05-31T02:21:32.000Z,2021-05-31T02:22:32.000Z\n"
       },
       "MultipleNPQApplicationsResponse": {
         "description": "A list of NPQ applications",
@@ -3341,7 +3341,7 @@
             }
           }
         },
-        "example": "participant_id,course_identifier,schedule_identifier,cohort,npq_application_id,eligible_for_funding,training_status,school_urn\n9b57c3ad-b911-4427-a4cb-87949741a631,npq-headship,npq-leadership-spring,2021,a7aad9e4-13c6-401c-b4d8-e5ccd231624e,false,active,329229\n"
+        "example": "participant_id,course_identifier,schedule_identifier,cohort,npq_application_id,eligible_for_funding,funded_place,training_status,school_urn\n9b57c3ad-b911-4427-a4cb-87949741a631,npq-headship,npq-leadership-spring,2021,a7aad9e4-13c6-401c-b4d8-e5ccd231624e,false,true,active,329229\n"
       },
       "MultipleNPQParticipantsResponse": {
         "description": "A list of NPQ participants",
@@ -3756,6 +3756,7 @@
           "school_urn",
           "headteacher_status",
           "eligible_for_funding",
+          "funded_place",
           "funding_choice",
           "course_id",
           "course_name",
@@ -3828,6 +3829,11 @@
           },
           "eligible_for_funding": {
             "description": "Indicates whether this NPQ participant would be eligible for funding from the DfE",
+            "type": "boolean",
+            "example": true
+          },
+          "funded_place": {
+            "description": "Indicates whether this NPQ participant is funded by DfE",
             "type": "boolean",
             "example": true
           },
@@ -4009,6 +4015,7 @@
           "cohort",
           "npq_application_id",
           "eligible_for_funding",
+          "funded_place",
           "training_status",
           "school_urn"
         ],
@@ -4070,6 +4077,11 @@
           },
           "eligible_for_funding": {
             "description": "Indicates whether this NPQ participant would be eligible for funding from the DfE",
+            "type": "boolean",
+            "example": true
+          },
+          "funded_place": {
+            "description": "Indicates whether this NPQ participant is funded by DfE",
             "type": "boolean",
             "example": true
           },

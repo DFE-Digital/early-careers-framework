@@ -8,5 +8,5 @@ properties:
     items:
       $ref: "#/components/schemas/NPQEnrolmentCsvRow"
 example: |
-  participant_id,course_identifier,schedule_identifier,cohort,npq_application_id,eligible_for_funding,training_status,school_urn
-  9b57c3ad-b911-4427-a4cb-87949741a631,npq-headship,npq-leadership-spring,2021,a7aad9e4-13c6-401c-b4d8-e5ccd231624e,false,active,329229
+  participant_id,course_identifier,schedule_identifier,cohort,npq_application_id,eligible_for_funding,funded_place,training_status,school_urn
+  9b57c3ad-b911-4427-a4cb-87949741a631,npq-headship,npq-leadership-spring,2021,a7aad9e4-13c6-401c-b4d8-e5ccd231624e,false,true,active,329229
