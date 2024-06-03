@@ -34,6 +34,7 @@ module Admin
         return unless validation_data_permits_validation?
 
         ActiveRecord::Base.transaction do
+          @previously_eligible = @participant_profile.eligible?
           @participant_profile.teacher_profile.update!(trn: nil) unless has_npq_profile?
           @participant_profile.ecf_participant_eligibility&.destroy!
           # this returns either nil, false on failure or an ECFParticipantEligibility record on success
@@ -104,7 +105,11 @@ module Admin
 
       def run_validation
         # this returns either nil, false on failure or an ECFParticipantEligibility record on success
-        @validation_form.call
+        @validation_form.call.tap do
+          unless @previously_eligible
+            Induction::ReviewCohortAfterEligibilityChecks.new(participant_profile: @participant_profile).call
+          end
+        end
       end
     end
   end

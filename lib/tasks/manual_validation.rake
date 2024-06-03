@@ -10,6 +10,7 @@ namespace :manual_validation do
                            .where(ecf_participant_eligibility: { status: "manual_check", reason: "no_qts" })
                            .find_each do |profile|
       Participants::ParticipantValidationForm.call(profile)
+      Induction::ReviewCohortAfterEligibilityChecks.new(participant_profile: profile).call
     end
   end
 
@@ -21,6 +22,7 @@ namespace :manual_validation do
                            .where(ecf_participant_eligibility: { status: "ineligible", reason: "previous_induction" })
                            .find_each do |profile|
       Participants::ParticipantValidationForm.call(profile)
+      Induction::ReviewCohortAfterEligibilityChecks.new(participant_profile:).call
     end
   end
 end

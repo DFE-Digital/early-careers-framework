@@ -7,6 +7,7 @@ class Importers::ECFManualValidation < BaseService
     rows.each do |row|
       participant_profile = get_profile(row["id"]) || next
 
+      previously_eligible = participant_profile.eligible?
       prepare_profile(participant_profile)
 
       Participants::ParticipantValidationForm.call(
@@ -19,7 +20,7 @@ class Importers::ECFManualValidation < BaseService
           full_name: row["name"],
         },
       )
-
+      Induction::ReviewCohortAfterEligibilityChecks.new(participant_profile:).call unless previously_eligible
       if participant_profile.reload.ecf_participant_eligibility.nil?
         logger.warn "No match found #{row['id']}"
       elsif !participant_profile.eligible?
