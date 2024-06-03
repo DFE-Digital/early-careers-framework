@@ -11,6 +11,7 @@ RSpec.describe "SIT adding an ECT", js: true do
       given_there_is_a_school_that_has_chosen_cip
       given_there_is_a_school_that_has_chosen_fip_for_previous_and_current_cohort_and_partnered
       and_i_am_signed_in_as_an_induction_coordinator
+      and_i_have_added_a_mentor
       and_i_click_on(Cohort.current.description)
       then_i_am_taken_to_fip_induction_dashboard
 
@@ -52,9 +53,13 @@ RSpec.describe "SIT adding an ECT", js: true do
       when_i_add_ect_or_mentor_email(email: @participant_data[:email])
       when_i_click_on_continue
 
+      when_i_select_a_mentor
+      when_i_click_on_continue
+
       when_i_click_confirm_and_add
       then_i_see_confirmation_that_the_participant_has_been_added
       and_the_participant_has_been_added_to_the_next_cohort
+      and_the_mentor_has_been_added_to_the_next_cohort
     end
   end
 
@@ -64,5 +69,9 @@ RSpec.describe "SIT adding an ECT", js: true do
 
   def and_the_participant_has_been_added_to_the_next_cohort
     expect(ParticipantProfile::ECT.last.school_cohort.cohort).to eq(Cohort.active_registration_cohort)
+  end
+
+  def and_the_mentor_has_been_added_to_the_next_cohort
+    expect(ParticipantProfile::Mentor.last.school_cohort.cohort).to eq(Cohort.active_registration_cohort)
   end
 end
