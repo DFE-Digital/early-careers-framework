@@ -32,6 +32,7 @@ properties:
           updated_at: "2022-11-24T17:09:37Z"
           cohort: "2022"
           eligible_for_funding: true
+          funded_place: true
           targeted_delivery_funding_eligibility: false
           teacher_catchment: true
           teacher_catchment_iso_country_code: "GBR"
