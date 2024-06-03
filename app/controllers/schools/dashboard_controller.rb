@@ -38,8 +38,7 @@ private
 
   def set_school_cohorts
     @school = active_school
-    @school_cohorts = SchoolCohort.dashboard_for_school(school: @school,
-                                                        latest_year: Cohort.active_registration_cohort.start_year)
+    @school_cohorts = SchoolCohort.dashboard_for_school(school: @school)
   end
 
   def set_up_new_cohort?
