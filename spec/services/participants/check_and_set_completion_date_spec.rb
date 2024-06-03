@@ -72,24 +72,38 @@ RSpec.describe Participants::CheckAndSetCompletionDate do
     end
 
     context "when start dates are matching" do
-      it "does not record inconsistencies" do
-        expect { service_call }.not_to change { ParticipantProfileStartDateInconsistency.count }.from(0)
+      it "does not change the cohort of the participant" do
+        expect { service_call }.not_to change { participant_profile.schedule.cohort }
       end
     end
 
     context "when start dates are not matching" do
-      let(:induction_start_date) { 10.months.ago.to_date }
+      let(:induction_start_date) { 12.months.ago.to_date }
 
-      it "records inconsistency" do
-        expect { service_call }.to change { ParticipantProfileStartDateInconsistency.count }.from(0).to(1)
+      context "when the calculated dqt cohort is payments-frozen" do
+        before do
+          Cohort.for_induction_start_date(induction_start_date).update!(payments_frozen_at: Date.yesterday)
+        end
+
+        it "does not change the cohort of the participant" do
+          expect { service_call }.not_to change { participant_profile.schedule.cohort }
+        end
       end
 
-      context "when same inconsistency is processed twice" do
-        it "records only one inconsistency" do
-          expect {
-            service_call
-            service_call
-          }.to change { ParticipantProfileStartDateInconsistency.count }.from(0).to(1)
+      context "when the calculated dqt cohort is not payments-frozen" do
+        let(:completion_date) {}
+        let!(:source_cohort_start_year) { participant_profile.latest_induction_record.cohort_start_year }
+        let!(:target_cohort_start_year) { Cohort.for_induction_start_date(induction_start_date).start_year }
+
+        before do
+          allow(Induction::AmendParticipantCohort).to receive(:new).and_return(double(save: true))
+          service_call
+        end
+
+        it "try to change the cohort of the participant" do
+          expect(Induction::AmendParticipantCohort).to have_received(:new).with(participant_profile:,
+                                                                                source_cohort_start_year:,
+                                                                                target_cohort_start_year:)
         end
       end
     end
