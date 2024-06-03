@@ -20,7 +20,7 @@ class Importers::ECFManualValidation < BaseService
           full_name: row["name"],
         },
       )
-      Induction::ReviewCohortAfterEligibilityChecks.new(participant_profile:).call unless previously_eligible
+      Induction::AmendCohortAfterEligibilityChecks.new(participant_profile:).call unless previously_eligible
       if participant_profile.reload.ecf_participant_eligibility.nil?
         logger.warn "No match found #{row['id']}"
       elsif !participant_profile.eligible?

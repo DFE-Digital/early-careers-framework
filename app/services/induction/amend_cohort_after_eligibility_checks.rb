@@ -4,7 +4,7 @@
 # If the participant has become eligible and is currently in a payments-frozen cohort,
 # transfer them to the currently active registration cohort.
 module Induction
-  class ReviewCohortAfterEligibilityChecks
+  class AmendCohortAfterEligibilityChecks
     include ActiveModel::Model
 
     attr_accessor :participant_profile
