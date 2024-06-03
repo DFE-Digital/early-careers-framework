@@ -4,6 +4,7 @@ class CheckParticipantsInductionAndQtsJob < ApplicationJob
   def perform
     ects_with_no_induction_previous_induction_or_no_qts.find_each do |participant_profile|
       Participants::ParticipantValidationForm.call(participant_profile)
+      Induction::ReviewCohortAfterEligibilityChecks.new(participant_profile:).call
     end
   end
 
