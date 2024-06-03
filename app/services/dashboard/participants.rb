@@ -42,7 +42,7 @@ module Dashboard
     end
 
     def dashboard_school_cohorts
-      SchoolCohort.dashboard_for_school(school:, latest_year:)
+      SchoolCohort.dashboard_for_school(school:)
     end
 
     def ects

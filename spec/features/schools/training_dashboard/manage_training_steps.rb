@@ -137,6 +137,21 @@ module ManageTrainingSteps
            induction_programme_choice: :design_our_own)
   end
 
+  def given_there_is_a_school_with_participants_in_every_cohort_since_2021
+    @school = create(:school, :cip_only)
+    @sit = create(:induction_coordinator_profile, schools: [@school])
+
+    Cohort.where(start_year: 2021..).find_each do |cohort|
+      school_cohort = create(:school_cohort, :cip, school: @school, cohort:)
+      induction_programme = create(:induction_programme, :cip, school_cohort:)
+
+      user = create(:user)
+      ect = create(:ect_participant_profile, user:, school_cohort:)
+
+      Induction::Enrol.call(participant_profile: ect, induction_programme:)
+    end
+  end
+
   def given_there_are_multiple_schools_and_an_induction_coordinator
     cohort = create :cohort, :current
 
@@ -468,6 +483,11 @@ module ManageTrainingSteps
 
   def then_i_am_taken_to_only_mentor_ects_at_your_school_page
     expect(page).to have_text("Will #{@participant_data[:full_name]} only mentor ECTs at your school?")
+  end
+
+  def then_i_should_see_the_participant_from_the_2021_cohort
+    user_name = @school.school_cohorts.for_year(2021).last.ecf_participant_profiles.last.user.full_name
+    expect(page).to have_text(user_name)
   end
 
   def then_i_am_taken_to_when_is_participant_moving_to_school_page

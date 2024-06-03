@@ -74,7 +74,7 @@ RSpec.shared_examples "can change cohort and continue training" do |participant_
       context "when the participant has a completed, #{billable_declaration_type} declaration" do
         before do
           completed_milestone = participant_profile.schedule.milestones.find_by(declaration_type: :completed)
-          completed_milestone.update!(start_date: 1.month.ago)
+          completed_milestone.update!(start_date: 1.month.ago, milestone_date: 1.day.from_now)
 
           create(declaration_type,
                  billable_declaration_type,
