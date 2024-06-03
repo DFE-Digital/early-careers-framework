@@ -8,7 +8,7 @@ class Induction::ChangeMentor < BaseService
         changes: { mentor_profile: },
       )
       induction_record.participant_profile.update!(mentor_profile:)
-      amend_mentor_cohort if sit_mentor_out_of_frozen_cohort?
+      amend_mentor_cohort if change_mentor_cohort?
       send_training_materials_if_needed
 
       mentor_profile&.user&.touch
@@ -56,7 +56,7 @@ private
      .deliver_later
   end
 
-  def sit_mentor_out_of_frozen_cohort?
+  def change_mentor_cohort?
     return false if ect_in_payments_frozen_cohort?
 
     mentor_profile.eligible_to_change_cohort_and_continue_training?(cohort: Cohort.active_registration_cohort)
