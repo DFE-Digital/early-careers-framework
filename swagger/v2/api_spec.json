@@ -3372,6 +3372,7 @@
                       "cohort": "2021",
                       "npq_application_id": "db3a7848-7308-4879-942a-c4a70ced400a",
                       "eligible_for_funding": true,
+                      "funded_place": true,
                       "training_status": "active"
                     }
                   ]
@@ -3979,6 +3980,11 @@
           },
           "eligible_for_funding": {
             "description": "Indicates whether or not this participant is eligible for DfE funding",
+            "type": "boolean",
+            "example": true
+          },
+          "funded_place": {
+            "description": "Indicates whether or not this participant's training is being funded by DfE",
             "type": "boolean",
             "example": true
           },
