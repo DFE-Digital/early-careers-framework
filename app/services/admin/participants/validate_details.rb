@@ -107,7 +107,7 @@ module Admin
         # this returns either nil, false on failure or an ECFParticipantEligibility record on success
         @validation_form.call.tap do
           unless @previously_eligible
-            Induction::ReviewCohortAfterEligibilityChecks.new(participant_profile: @participant_profile).call
+            Induction::AmendCohortAfterEligibilityChecks.new(participant_profile: @participant_profile).call
           end
         end
       end
