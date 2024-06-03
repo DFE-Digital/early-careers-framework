@@ -38,6 +38,25 @@ Providers will be able to test future declaration submissions in the 2024 cohort
 
 We’d welcome feedback on this sandbox update before it goes into production.
 
+## ?? (pending sandbox release)
+
+We're trialing new functionality in the API test ([sandbox](https://sb.manage-training-for-early-career-teachers.education.gov.uk/)) environment which will enable providers to set whether NPQ applicants are going to have their training funded by DfE.
+
+This is because from the 2024/25 academic year onwards there'll be a set maximum number of places each provider can offer per NPQ that DfE will pay for.
+
+Providers using all versions of the API can set the new funded_place field in the 'Accept an application' request body to true or false. They will also see the funded_place field in the following endpoint response bodies:
+
+'View all applications'
+
+'View a specific application'
+
+'View all participant data'
+
+'View a single participant's data'
+
+Providers who need to update a participant's funding information after an application has been accepted can do so via the 'Change funded place' endpoint.
+
+
 ## 5 June 2024 
 
 We're addressing a potential confusion for providers filtering participant declarations by cohort. 
