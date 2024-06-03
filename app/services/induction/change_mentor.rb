@@ -59,7 +59,7 @@ private
   def change_mentor_cohort?
     return false if ect_in_payments_frozen_cohort?
 
-    mentor_profile.eligible_to_change_cohort_and_continue_training?(cohort: Cohort.active_registration_cohort)
+    mentor_profile&.eligible_to_change_cohort_and_continue_training?(cohort: Cohort.active_registration_cohort)
   end
 
   def sit_name
