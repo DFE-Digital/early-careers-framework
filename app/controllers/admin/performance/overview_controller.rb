@@ -5,17 +5,18 @@ module Admin::Performance
     skip_after_action :verify_authorized, only: :show
     skip_after_action :verify_policy_scoped, only: :show
 
-    # show 2023 pilot stats
+    # show active registration cohort stats
     def show
-      @pilot_stats = get_pilot_stats
+      @pilot_stats = get_registration_stats
     end
 
   private
 
-    def get_pilot_stats
+    def get_registration_stats
       choices = programme_choices
 
       OpenStruct.new({
+        cohort:,
         cip_total: choices.fetch("core_induction_programme", 0),
         diy_total: choices.fetch("design_our_own", 0),
         fip_total: choices.fetch("full_induction_programme", 0),
@@ -56,7 +57,7 @@ module Admin::Performance
     end
 
     def cohort
-      @cohort ||= Cohort.find_by(start_year: 2023)
+      @cohort ||= Cohort.active_registration_cohort
     end
   end
 end
