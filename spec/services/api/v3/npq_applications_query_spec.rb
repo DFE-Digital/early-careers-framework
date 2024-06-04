@@ -99,80 +99,221 @@ RSpec.describe Api::V3::NPQApplicationsQuery do
 
       it { expect(returned_application).not_to be_transient_previously_funded }
 
-      context "when there is a previous, rejected application that was eligible for funding" do
-        before do
-          create(
-            :npq_application,
-            :rejected,
-            npq_lead_provider:,
-            participant_identity: application.participant_identity,
-            eligible_for_funding: true,
-            npq_course: application.npq_course,
-          )
+      context "when funded place is nil" do
+        context "when there is a previous, rejected application that was eligible for funding" do
+          before do
+            create(
+              :npq_application,
+              :rejected,
+              npq_lead_provider:,
+              participant_identity: application.participant_identity,
+              eligible_for_funding: true,
+              funded_place: nil,
+              npq_course: application.npq_course,
+            )
+          end
+
+          it { expect(returned_application).not_to be_transient_previously_funded }
         end
 
-        it { expect(returned_application).not_to be_transient_previously_funded }
+        context "when there is a previous, accepted application that was not eligible for funding" do
+          before do
+            create(
+              :npq_application,
+              :accepted,
+              npq_lead_provider:,
+              participant_identity: application.participant_identity,
+              eligible_for_funding: false,
+              funded_place: nil,
+              npq_course: application.npq_course,
+            )
+          end
+
+          it { expect(returned_application).not_to be_transient_previously_funded }
+        end
+
+        context "when there is a previous, accepted application that was eligible for funding in a different (not rebranded) course" do
+          before do
+            create(
+              :npq_application,
+              :accepted,
+              npq_lead_provider:,
+              participant_identity: application.participant_identity,
+              eligible_for_funding: true,
+              funded_place: nil,
+              npq_course: create(:npq_specialist_course),
+            )
+          end
+
+          it { expect(returned_application).not_to be_transient_previously_funded }
+        end
+
+        context "when there is a previous, accepted application that was eligible for funding" do
+          before do
+            create(
+              :npq_application,
+              :accepted,
+              npq_lead_provider:,
+              participant_identity: application.participant_identity,
+              eligible_for_funding: true,
+              funded_place: nil,
+              npq_course: application.npq_course,
+            )
+          end
+
+          it { expect(returned_application).to be_transient_previously_funded }
+        end
+
+        context "when there is a previous, accepted application that was eligible for funding on a rebranded course" do
+          let(:npq_course) { create(:npq_ehco_course) }
+
+          before do
+            create(
+              :npq_application,
+              :accepted,
+              participant_identity: application.participant_identity,
+              eligible_for_funding: true,
+              funded_place: nil,
+              npq_course: create(:npq_aso_course),
+            )
+          end
+
+          it { expect(returned_application).to be_transient_previously_funded }
+        end
       end
 
-      context "when there is a previous, accepted application that was not eligible for funding" do
-        before do
-          create(
-            :npq_application,
-            :accepted,
-            npq_lead_provider:,
-            participant_identity: application.participant_identity,
-            eligible_for_funding: false,
-            npq_course: application.npq_course,
-          )
+      context "when funded place is true" do
+        context "when there is a previous, rejected application that was eligible for funding" do
+          before do
+            create(
+              :npq_application,
+              :rejected,
+              npq_lead_provider:,
+              participant_identity: application.participant_identity,
+              eligible_for_funding: true,
+              funded_place: true,
+              npq_course: application.npq_course,
+            )
+          end
+
+          it { expect(returned_application).not_to be_transient_previously_funded }
         end
 
-        it { expect(returned_application).not_to be_transient_previously_funded }
+        context "when there is a previous, accepted application that was eligible for funding in a different (not rebranded) course" do
+          before do
+            create(
+              :npq_application,
+              :accepted,
+              npq_lead_provider:,
+              participant_identity: application.participant_identity,
+              eligible_for_funding: true,
+              funded_place: true,
+              npq_course: create(:npq_specialist_course),
+            )
+          end
+
+          it { expect(returned_application).not_to be_transient_previously_funded }
+        end
+
+        context "when there is a previous, accepted application that was eligible for funding" do
+          before do
+            create(
+              :npq_application,
+              :accepted,
+              npq_lead_provider:,
+              participant_identity: application.participant_identity,
+              eligible_for_funding: true,
+              funded_place: true,
+              npq_course: application.npq_course,
+            )
+          end
+
+          it { expect(returned_application).to be_transient_previously_funded }
+        end
+
+        context "when there is a previous, accepted application that was eligible for funding on a rebranded course" do
+          let(:npq_course) { create(:npq_ehco_course) }
+
+          before do
+            create(
+              :npq_application,
+              :accepted,
+              participant_identity: application.participant_identity,
+              eligible_for_funding: true,
+              funded_place: true,
+              npq_course: create(:npq_aso_course),
+            )
+          end
+
+          it { expect(returned_application).to be_transient_previously_funded }
+        end
       end
 
-      context "when there is a previous, accepted application that was eligible for funding in a different (not rebranded) course" do
-        before do
-          create(
-            :npq_application,
-            :accepted,
-            npq_lead_provider:,
-            participant_identity: application.participant_identity,
-            eligible_for_funding: true,
-            npq_course: create(:npq_specialist_course),
-          )
+      context "when funded place is false" do
+        context "when there is a previous, rejected application that was not eligible for funding" do
+          before do
+            create(
+              :npq_application,
+              :rejected,
+              npq_lead_provider:,
+              participant_identity: application.participant_identity,
+              eligible_for_funding: true,
+              funded_place: false,
+              npq_course: application.npq_course,
+            )
+          end
+
+          it { expect(returned_application).not_to be_transient_previously_funded }
         end
 
-        it { expect(returned_application).not_to be_transient_previously_funded }
-      end
+        context "when there is a previous, accepted application that was not eligible for funding" do
+          before do
+            create(
+              :npq_application,
+              :accepted,
+              npq_lead_provider:,
+              participant_identity: application.participant_identity,
+              eligible_for_funding: true,
+              funded_place: false,
+              npq_course: application.npq_course,
+            )
+          end
 
-      context "when there is a previous, accepted application that was eligible for funding" do
-        before do
-          create(
-            :npq_application,
-            :accepted,
-            npq_lead_provider:,
-            participant_identity: application.participant_identity,
-            eligible_for_funding: true,
-            npq_course: application.npq_course,
-          )
+          it { expect(returned_application).not_to be_transient_previously_funded }
         end
 
-        it { expect(returned_application).to be_transient_previously_funded }
-      end
+        context "when there is a previous, accepted application that was not eligible for funding in a different (not rebranded) course" do
+          before do
+            create(
+              :npq_application,
+              :accepted,
+              npq_lead_provider:,
+              participant_identity: application.participant_identity,
+              eligible_for_funding: true,
+              funded_place: false,
+              npq_course: create(:npq_specialist_course),
+            )
+          end
 
-      context "when there is a previous, accepted application that was eligible for funding on a rebranded course" do
-        let(:npq_course) { create(:npq_ehco_course) }
-
-        before do
-          create(
-            :npq_application,
-            :accepted,
-            participant_identity: application.participant_identity,
-            eligible_for_funding: true,
-            npq_course: create(:npq_aso_course),
-          )
+          it { expect(returned_application).not_to be_transient_previously_funded }
         end
 
-        it { expect(returned_application).to be_transient_previously_funded }
+        context "when there is a previous, accepted application that was not eligible for funding on a rebranded course" do
+          let(:npq_course) { create(:npq_ehco_course) }
+
+          before do
+            create(
+              :npq_application,
+              :accepted,
+              participant_identity: application.participant_identity,
+              eligible_for_funding: true,
+              funded_place: false,
+              npq_course: create(:npq_aso_course),
+            )
+          end
+
+          it { expect(returned_application).not_to be_transient_previously_funded }
+        end
       end
     end
   end
