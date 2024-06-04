@@ -7,7 +7,7 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
-## 30 May 2024 
+## 5 June 2024 
 
 We're addressing a potential confusion for providers filtering participant declarations by cohort. 
  
