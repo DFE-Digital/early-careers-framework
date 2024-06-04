@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "rails_helper"
-require_relative "../../training_dashboard/manage_training_steps"
+require_relative "../../../training_dashboard/manage_training_steps"
 
 RSpec.describe "SIT adding an ECT", js: true do
   include ManageTrainingSteps
