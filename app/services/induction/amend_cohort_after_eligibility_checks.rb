@@ -17,7 +17,7 @@ module Induction
 
     def amend_participant_cohort
       Induction::AmendParticipantCohort.new(participant_profile:,
-                                            source_cohort_start_year: participant_profile.schedule&.cohort.start_year,
+                                            source_cohort_start_year: participant_profile.schedule&.cohort&.start_year,
                                             target_cohort_start_year: Cohort.active_registration_cohort.start_year)
                                        .save
     end
