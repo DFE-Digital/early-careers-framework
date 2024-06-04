@@ -98,4 +98,41 @@ RSpec.describe ParticipantProfile::NPQ, type: :model do
       expect(subject.record_to_serialize_for(lead_provider:)).to eq(subject.user)
     end
   end
+
+  describe "#fundable?" do
+    context "when it is eligible_for_funding" do
+      let(:npq_application) { create(:npq_application, eligible_for_funding: true, funded_place: nil) }
+      subject { profile }
+
+      it { is_expected.to be_fundable }
+    end
+
+    context "when it is not eligible_for_funding" do
+      let(:npq_application) { create(:npq_application, eligible_for_funding: false, funded_place: nil) }
+      subject { profile }
+
+      it { is_expected.not_to be_fundable }
+    end
+
+    context "when it is eligible_for_funding but has no funded place" do
+      let(:npq_application) { create(:npq_application, eligible_for_funding: true, funded_place: false) }
+      subject { profile }
+
+      it { is_expected.not_to be_fundable }
+    end
+
+    context "when it is eligible_for_funding but and has a funded place" do
+      let(:npq_application) { create(:npq_application, eligible_for_funding: true, funded_place: true) }
+      subject { profile }
+
+      it { is_expected.to be_fundable }
+    end
+
+    context "when it is not eligible_for_funding but and has a funded place" do
+      let(:npq_application) { create(:npq_application, eligible_for_funding: false, funded_place: false) }
+      subject { profile }
+
+      it { is_expected.not_to be_fundable }
+    end
+  end
 end

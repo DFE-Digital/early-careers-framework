@@ -40,214 +40,600 @@ RSpec.describe NPQ::FundingEligibility do
 
   describe "#call" do
     context "with a trn" do
-      context "when not previously funded" do
-        let(:trn) { application.teacher_reference_number }
-        let(:application) do
-          create(
-            :npq_application,
-            npq_course:,
-            lead_provider_approval_status: "accepted",
-            eligible_for_funding: false,
-          )
-        end
-
-        it "returns falsey for previously_funded" do
-          expect(subject.call[:previously_funded]).to be_falsey
-        end
-
-        it "returns falsey for previously_received_targeted_funding_support" do
-          expect(subject.call[:previously_received_targeted_funding_support]).to be_falsey
-        end
-
-        context "with a get_an_identity_id" do
-          let(:get_an_identity_id) { get_an_identity_id_application.user.get_an_identity_id }
-          let(:get_an_identity_id_application) do
+      context "when funded place is not set" do
+        context "when not previously funded" do
+          let(:trn) { application.teacher_reference_number }
+          let(:application) do
             create(
               :npq_application,
-              lead_provider_approval_status: "accepted",
-              eligible_for_funding: get_an_identity_id_application_funding,
-              teacher_reference_number_verified: true,
-              targeted_delivery_funding_eligibility: true,
               npq_course:,
-              user: create(:user, :with_get_an_identity_id),
+              lead_provider_approval_status: "accepted",
+              eligible_for_funding: false,
+              funded_place: nil,
             )
           end
-          let(:get_an_identity_id_application_funding) { raise NotImplementedError }
 
-          context "that is not previously funded" do
-            let(:get_an_identity_id_application_funding) { false }
-
-            it "returns falsey for previously_funded" do
-              expect(subject.call[:previously_funded]).to be_falsey
-            end
-
-            it "returns falsey for previously_received_targeted_funding_support" do
-              expect(subject.call[:previously_received_targeted_funding_support]).to be_falsey
-            end
+          it "returns falsey for previously_funded" do
+            expect(subject.call[:previously_funded]).to be_falsey
           end
 
-          context "that is previously funded" do
-            let(:get_an_identity_id_application_funding) { true }
+          it "returns falsey for previously_received_targeted_funding_support" do
+            expect(subject.call[:previously_received_targeted_funding_support]).to be_falsey
+          end
 
-            before do
-              NPQ::Application::Accept.new(npq_application: get_an_identity_id_application).call
+          context "with a get_an_identity_id" do
+            let(:get_an_identity_id) { get_an_identity_id_application.user.get_an_identity_id }
+            let(:get_an_identity_id_application) do
+              create(
+                :npq_application,
+                lead_provider_approval_status: "accepted",
+                eligible_for_funding: get_an_identity_id_application_funding,
+                funded_place: nil,
+                teacher_reference_number_verified: true,
+                targeted_delivery_funding_eligibility: true,
+                npq_course:,
+                user: create(:user, :with_get_an_identity_id),
+              )
+            end
+            let(:get_an_identity_id_application_funding) { raise NotImplementedError }
+
+            context "that is not previously funded" do
+              let(:get_an_identity_id_application_funding) { false }
+
+              it "returns falsey for previously_funded" do
+                expect(subject.call[:previously_funded]).to be_falsey
+              end
+
+              it "returns falsey for previously_received_targeted_funding_support" do
+                expect(subject.call[:previously_received_targeted_funding_support]).to be_falsey
+              end
             end
 
-            it "returns truthy for previously_funded" do
-              expect(subject.call[:previously_funded]).to be_truthy
-            end
+            context "that is previously funded" do
+              let(:get_an_identity_id_application_funding) { true }
 
-            it "returns truthy for previously_received_targeted_funding_support" do
-              expect(subject.call[:previously_received_targeted_funding_support]).to be_truthy
+              before do
+                NPQ::Application::Accept.new(npq_application: get_an_identity_id_application).call
+              end
+
+              it "returns truthy for previously_funded" do
+                expect(subject.call[:previously_funded]).to be_truthy
+              end
+
+              it "returns truthy for previously_received_targeted_funding_support" do
+                expect(subject.call[:previously_received_targeted_funding_support]).to be_truthy
+              end
             end
+          end
+        end
+
+        context "when previously funded" do
+          let(:trn) { application.teacher_reference_number }
+          let(:application) do
+            create(
+              :npq_application,
+              npq_course:,
+              eligible_for_funding: true,
+              funded_place: nil,
+              teacher_reference_number_verified: true,
+            )
+          end
+
+          before do
+            NPQ::Application::Accept.new(npq_application: application).call
+          end
+
+          it "returns truthy for previously_funded" do
+            expect(subject.call[:previously_funded]).to be_truthy
+          end
+
+          it "returns falsey for previously_received_targeted_funding_support" do
+            expect(subject.call[:previously_received_targeted_funding_support]).to be_falsey
+          end
+        end
+
+        context "when previously funded for a different course" do
+          let(:trn) { application.teacher_reference_number }
+          let(:application) do
+            create(
+              :npq_application,
+              npq_course:,
+              eligible_for_funding: true,
+              funded_place: nil,
+              teacher_reference_number_verified: true,
+            )
+          end
+          let(:course_for_lookup) { other_npq_course }
+
+          before do
+            NPQ::Application::Accept.new(npq_application: application).call
+          end
+
+          it "returns falsey for previously_funded" do
+            expect(subject.call[:previously_funded]).to be_falsey
+          end
+
+          it "returns falsey for previously_received_targeted_funding_support" do
+            expect(subject.call[:previously_received_targeted_funding_support]).to be_falsey
+          end
+        end
+
+        context "when previously funded with targeted delivery funding" do
+          let(:trn) { application.teacher_reference_number }
+          let(:application) do
+            create(
+              :npq_application,
+              npq_course:,
+              eligible_for_funding: true,
+              funded_place: nil,
+              teacher_reference_number_verified: true,
+              targeted_delivery_funding_eligibility: true,
+            )
+          end
+
+          before do
+            NPQ::Application::Accept.new(npq_application: application).call
+          end
+
+          it "returns truthy for previously_funded" do
+            expect(subject.call[:previously_funded]).to be_truthy
+          end
+
+          it "returns truthy for previously_received_targeted_funding_support" do
+            expect(subject.call[:previously_received_targeted_funding_support]).to be_truthy
+          end
+        end
+
+        context "when previously funded ASO and applying for EHCO" do
+          let(:trn) { application.teacher_reference_number }
+          let(:npq_course) { create(:npq_course, identifier: "npq-additional-support-offer") }
+          let(:application) do
+            create(
+              :npq_application,
+              npq_course:,
+              eligible_for_funding: true,
+              funded_place: nil,
+              teacher_reference_number_verified: true,
+            )
+          end
+
+          let!(:ehco_npq_course) { create(:npq_course, identifier: "npq-early-headship-coaching-offer") }
+
+          before do
+            NPQ::Application::Accept.new(npq_application: application).call
+          end
+
+          it "returns truthy for previously_funded" do
+            expect(subject.call[:previously_funded]).to be_truthy
+          end
+
+          it "returns falsey for previously_received_targeted_funding_support" do
+            expect(subject.call[:previously_received_targeted_funding_support]).to be_falsey
+          end
+        end
+
+        context "when previously funded with multiple teacher profiles" do
+          let(:trn) { application.teacher_reference_number }
+          let(:application) do
+            create(
+              :npq_application,
+              npq_course:,
+              eligible_for_funding: true,
+              funded_place: nil,
+              teacher_reference_number_verified: true,
+            )
+          end
+
+          before do
+            create(:teacher_profile, trn:)
+            NPQ::Application::Accept.new(npq_application: application).call
+          end
+
+          it "returns truthy for previously_funded" do
+            expect(subject.call[:previously_funded]).to be_truthy
+          end
+
+          it "returns falsey for previously_received_targeted_funding_support" do
+            expect(subject.call[:previously_received_targeted_funding_support]).to be_falsey
+          end
+        end
+
+        context "when previously funded with targeted delivery funding but not accepted" do
+          let(:trn) { application.teacher_reference_number }
+          let(:application) do
+            create(
+              :npq_application,
+              npq_course:,
+              eligible_for_funding: true,
+              funded_place: nil,
+              teacher_reference_number_verified: true,
+              targeted_delivery_funding_eligibility: true,
+            )
+          end
+
+          it "returns falsey for previously_funded" do
+            expect(subject.call[:previously_funded]).to be_falsey
+          end
+
+          it "returns falsey for previously_received_targeted_funding_support" do
+            expect(subject.call[:previously_received_targeted_funding_support]).to be_falsey
           end
         end
       end
 
-      context "when previously funded" do
-        let(:trn) { application.teacher_reference_number }
-        let(:application) do
-          create(
-            :npq_application,
-            npq_course:,
-            eligible_for_funding: true,
-            teacher_reference_number_verified: true,
-          )
+      context "when funded place is set to true" do
+        context "when previously funded" do
+          let(:trn) { application.teacher_reference_number }
+          let(:application) do
+            create(
+              :npq_application,
+              npq_course:,
+              eligible_for_funding: true,
+              funded_place: true,
+              teacher_reference_number_verified: true,
+            )
+          end
+
+          before do
+            NPQ::Application::Accept.new(npq_application: application).call
+          end
+
+          it "returns truthy for previously_funded" do
+            expect(subject.call[:previously_funded]).to be_truthy
+          end
+
+          it "returns falsey for previously_received_targeted_funding_support" do
+            expect(subject.call[:previously_received_targeted_funding_support]).to be_falsey
+          end
         end
 
-        before do
-          NPQ::Application::Accept.new(npq_application: application).call
+        context "when previously funded for a different course" do
+          let(:trn) { application.teacher_reference_number }
+          let(:application) do
+            create(
+              :npq_application,
+              npq_course:,
+              eligible_for_funding: true,
+              funded_place: true,
+              teacher_reference_number_verified: true,
+            )
+          end
+          let(:course_for_lookup) { other_npq_course }
+
+          before do
+            NPQ::Application::Accept.new(npq_application: application).call
+          end
+
+          it "returns falsey for previously_funded" do
+            expect(subject.call[:previously_funded]).to be_falsey
+          end
+
+          it "returns falsey for previously_received_targeted_funding_support" do
+            expect(subject.call[:previously_received_targeted_funding_support]).to be_falsey
+          end
         end
 
-        it "returns truthy for previously_funded" do
-          expect(subject.call[:previously_funded]).to be_truthy
+        context "when previously funded with targeted delivery funding" do
+          let(:trn) { application.teacher_reference_number }
+          let(:application) do
+            create(
+              :npq_application,
+              npq_course:,
+              eligible_for_funding: true,
+              funded_place: true,
+              teacher_reference_number_verified: true,
+              targeted_delivery_funding_eligibility: true,
+            )
+          end
+
+          before do
+            NPQ::Application::Accept.new(npq_application: application).call
+          end
+
+          it "returns truthy for previously_funded" do
+            expect(subject.call[:previously_funded]).to be_truthy
+          end
+
+          it "returns truthy for previously_received_targeted_funding_support" do
+            expect(subject.call[:previously_received_targeted_funding_support]).to be_truthy
+          end
         end
 
-        it "returns falsey for previously_received_targeted_funding_support" do
-          expect(subject.call[:previously_received_targeted_funding_support]).to be_falsey
+        context "when previously funded ASO and applying for EHCO" do
+          let(:trn) { application.teacher_reference_number }
+          let(:npq_course) { create(:npq_course, identifier: "npq-additional-support-offer") }
+          let(:application) do
+            create(
+              :npq_application,
+              npq_course:,
+              eligible_for_funding: true,
+              funded_place: true,
+              teacher_reference_number_verified: true,
+            )
+          end
+
+          let!(:ehco_npq_course) { create(:npq_course, identifier: "npq-early-headship-coaching-offer") }
+
+          before do
+            NPQ::Application::Accept.new(npq_application: application).call
+          end
+
+          it "returns truthy for previously_funded" do
+            expect(subject.call[:previously_funded]).to be_truthy
+          end
+
+          it "returns falsey for previously_received_targeted_funding_support" do
+            expect(subject.call[:previously_received_targeted_funding_support]).to be_falsey
+          end
+        end
+
+        context "when previously funded with multiple teacher profiles" do
+          let(:trn) { application.teacher_reference_number }
+          let(:application) do
+            create(
+              :npq_application,
+              npq_course:,
+              eligible_for_funding: true,
+              funded_place: true,
+              teacher_reference_number_verified: true,
+            )
+          end
+
+          before do
+            create(:teacher_profile, trn:)
+            NPQ::Application::Accept.new(npq_application: application).call
+          end
+
+          it "returns truthy for previously_funded" do
+            expect(subject.call[:previously_funded]).to be_truthy
+          end
+
+          it "returns falsey for previously_received_targeted_funding_support" do
+            expect(subject.call[:previously_received_targeted_funding_support]).to be_falsey
+          end
+        end
+
+        context "when previously funded with targeted delivery funding but not accepted" do
+          let(:trn) { application.teacher_reference_number }
+          let(:application) do
+            create(
+              :npq_application,
+              npq_course:,
+              eligible_for_funding: true,
+              funded_place: true,
+              teacher_reference_number_verified: true,
+              targeted_delivery_funding_eligibility: true,
+            )
+          end
+
+          it "returns falsey for previously_funded" do
+            expect(subject.call[:previously_funded]).to be_falsey
+          end
+
+          it "returns falsey for previously_received_targeted_funding_support" do
+            expect(subject.call[:previously_received_targeted_funding_support]).to be_falsey
+          end
         end
       end
 
-      context "when previously funded for a different course" do
-        let(:trn) { application.teacher_reference_number }
-        let(:application) do
-          create(
-            :npq_application,
-            npq_course:,
-            eligible_for_funding: true,
-            teacher_reference_number_verified: true,
-          )
-        end
-        let(:course_for_lookup) { other_npq_course }
+      context "when funded place is set to false" do
+        context "when not previously funded" do
+          let(:trn) { application.teacher_reference_number }
+          let(:application) do
+            create(
+              :npq_application,
+              npq_course:,
+              lead_provider_approval_status: "accepted",
+              eligible_for_funding: false,
+              funded_place: false,
+            )
+          end
 
-        before do
-          NPQ::Application::Accept.new(npq_application: application).call
-        end
+          it "returns falsey for previously_funded" do
+            expect(subject.call[:previously_funded]).to be_falsey
+          end
 
-        it "returns falsey for previously_funded" do
-          expect(subject.call[:previously_funded]).to be_falsey
-        end
+          it "returns falsey for previously_received_targeted_funding_support" do
+            expect(subject.call[:previously_received_targeted_funding_support]).to be_falsey
+          end
 
-        it "returns falsey for previously_received_targeted_funding_support" do
-          expect(subject.call[:previously_received_targeted_funding_support]).to be_falsey
-        end
-      end
+          context "with a get_an_identity_id" do
+            let(:get_an_identity_id) { get_an_identity_id_application.user.get_an_identity_id }
+            let(:get_an_identity_id_application) do
+              create(
+                :npq_application,
+                lead_provider_approval_status: "accepted",
+                eligible_for_funding: get_an_identity_id_application_funding,
+                funded_place: false,
+                teacher_reference_number_verified: true,
+                targeted_delivery_funding_eligibility: true,
+                npq_course:,
+                user: create(:user, :with_get_an_identity_id),
+              )
+            end
+            let(:get_an_identity_id_application_funding) { raise NotImplementedError }
 
-      context "when previously funded with targeted delivery funding" do
-        let(:trn) { application.teacher_reference_number }
-        let(:application) do
-          create(
-            :npq_application,
-            npq_course:,
-            eligible_for_funding: true,
-            teacher_reference_number_verified: true,
-            targeted_delivery_funding_eligibility: true,
-          )
-        end
+            context "that is not previously funded" do
+              let(:get_an_identity_id_application_funding) { false }
 
-        before do
-          NPQ::Application::Accept.new(npq_application: application).call
-        end
+              it "returns falsey for previously_funded" do
+                expect(subject.call[:previously_funded]).to be_falsey
+              end
 
-        it "returns truthy for previously_funded" do
-          expect(subject.call[:previously_funded]).to be_truthy
-        end
+              it "returns falsey for previously_received_targeted_funding_support" do
+                expect(subject.call[:previously_received_targeted_funding_support]).to be_falsey
+              end
+            end
 
-        it "returns truthy for previously_received_targeted_funding_support" do
-          expect(subject.call[:previously_received_targeted_funding_support]).to be_truthy
-        end
-      end
+            context "that is not previously funded but is eligible_for_funding" do
+              let(:get_an_identity_id_application_funding) { true }
 
-      context "when previously funded ASO and applying for EHCO" do
-        let(:trn) { application.teacher_reference_number }
-        let(:npq_course) { create(:npq_course, identifier: "npq-additional-support-offer") }
-        let(:application) do
-          create(
-            :npq_application,
-            npq_course:,
-            eligible_for_funding: true,
-            teacher_reference_number_verified: true,
-          )
-        end
+              before do
+                NPQ::Application::Accept.new(npq_application: get_an_identity_id_application).call
+              end
 
-        let!(:ehco_npq_course) { create(:npq_course, identifier: "npq-early-headship-coaching-offer") }
+              it "returns falsey for previously_funded" do
+                expect(subject.call[:previously_funded]).to be_falsey
+              end
 
-        before do
-          NPQ::Application::Accept.new(npq_application: application).call
-        end
-
-        it "returns truthy for previously_funded" do
-          expect(subject.call[:previously_funded]).to be_truthy
+              it "returns falsey for previously_received_targeted_funding_support" do
+                expect(subject.call[:previously_received_targeted_funding_support]).to be_falsey
+              end
+            end
+          end
         end
 
-        it "returns falsey for previously_received_targeted_funding_support" do
-          expect(subject.call[:previously_received_targeted_funding_support]).to be_falsey
-        end
-      end
+        context "when not previously funded but is eligible_for_funding" do
+          let(:trn) { application.teacher_reference_number }
+          let(:application) do
+            create(
+              :npq_application,
+              npq_course:,
+              eligible_for_funding: true,
+              funded_place: false,
+              teacher_reference_number_verified: true,
+            )
+          end
 
-      context "when previously funded with multiple teacher profiles" do
-        let(:trn) { application.teacher_reference_number }
-        let(:application) do
-          create(
-            :npq_application,
-            npq_course:,
-            eligible_for_funding: true,
-            teacher_reference_number_verified: true,
-          )
-        end
+          before do
+            NPQ::Application::Accept.new(npq_application: application).call
+          end
 
-        before do
-          create(:teacher_profile, trn:)
-          NPQ::Application::Accept.new(npq_application: application).call
-        end
+          it "is not previously funded" do
+            expect(subject.call[:previously_funded]).to be_falsey
+          end
 
-        it "returns truthy for previously_funded" do
-          expect(subject.call[:previously_funded]).to be_truthy
-        end
-
-        it "returns falsey for previously_received_targeted_funding_support" do
-          expect(subject.call[:previously_received_targeted_funding_support]).to be_falsey
-        end
-      end
-
-      context "when previously funded with targeted delivery funding but not accepted" do
-        let(:trn) { application.teacher_reference_number }
-        let(:application) do
-          create(
-            :npq_application,
-            npq_course:,
-            eligible_for_funding: true,
-            teacher_reference_number_verified: true,
-            targeted_delivery_funding_eligibility: true,
-          )
+          it "returns falsey for previously_received_targeted_funding_support" do
+            expect(subject.call[:previously_received_targeted_funding_support]).to be_falsey
+          end
         end
 
-        it "returns falsey for previously_funded" do
-          expect(subject.call[:previously_funded]).to be_falsey
+        context "when not previously funded for a different course" do
+          let(:trn) { application.teacher_reference_number }
+          let(:application) do
+            create(
+              :npq_application,
+              npq_course:,
+              eligible_for_funding: true,
+              funded_place: false,
+              teacher_reference_number_verified: true,
+            )
+          end
+          let(:course_for_lookup) { other_npq_course }
+
+          before do
+            NPQ::Application::Accept.new(npq_application: application).call
+          end
+
+          it "returns falsey for previously_funded" do
+            expect(subject.call[:previously_funded]).to be_falsey
+          end
+
+          it "returns falsey for previously_received_targeted_funding_support" do
+            expect(subject.call[:previously_received_targeted_funding_support]).to be_falsey
+          end
         end
 
-        it "returns falsey for previously_received_targeted_funding_support" do
-          expect(subject.call[:previously_received_targeted_funding_support]).to be_falsey
+        context "when not previously funded with targeted delivery funding" do
+          let(:trn) { application.teacher_reference_number }
+          let(:application) do
+            create(
+              :npq_application,
+              npq_course:,
+              eligible_for_funding: true,
+              funded_place: false,
+              teacher_reference_number_verified: true,
+              targeted_delivery_funding_eligibility: true,
+            )
+          end
+
+          before do
+            NPQ::Application::Accept.new(npq_application: application).call
+          end
+
+          it "returns falsey for previously_funded" do
+            expect(subject.call[:previously_funded]).to be_falsey
+          end
+
+          it "is not previously_received_targeted_funding_support" do
+            expect(subject.call[:previously_received_targeted_funding_support]).to be_falsey
+          end
+        end
+
+        context "when not previously funded ASO and applying for EHCO" do
+          let(:trn) { application.teacher_reference_number }
+          let(:npq_course) { create(:npq_course, identifier: "npq-additional-support-offer") }
+          let(:application) do
+            create(
+              :npq_application,
+              npq_course:,
+              eligible_for_funding: true,
+              funded_place: false,
+              teacher_reference_number_verified: true,
+            )
+          end
+
+          let!(:ehco_npq_course) { create(:npq_course, identifier: "npq-early-headship-coaching-offer") }
+
+          before do
+            NPQ::Application::Accept.new(npq_application: application).call
+          end
+
+          it "returns falsey for previously_funded" do
+            expect(subject.call[:previously_funded]).to be_falsey
+          end
+
+          it "returns falsey for previously_received_targeted_funding_support" do
+            expect(subject.call[:previously_received_targeted_funding_support]).to be_falsey
+          end
+        end
+
+        context "when not previously funded with multiple teacher profiles" do
+          let(:trn) { application.teacher_reference_number }
+          let(:application) do
+            create(
+              :npq_application,
+              npq_course:,
+              eligible_for_funding: true,
+              funded_place: false,
+              teacher_reference_number_verified: true,
+            )
+          end
+
+          before do
+            create(:teacher_profile, trn:)
+            NPQ::Application::Accept.new(npq_application: application).call
+          end
+
+          it "returns falsey for previously_funded" do
+            expect(subject.call[:previously_funded]).to be_falsey
+          end
+
+          it "returns falsey for previously_received_targeted_funding_support" do
+            expect(subject.call[:previously_received_targeted_funding_support]).to be_falsey
+          end
+        end
+
+        context "when not previously funded with targeted delivery funding and not accepted" do
+          let(:trn) { application.teacher_reference_number }
+          let(:application) do
+            create(
+              :npq_application,
+              npq_course:,
+              eligible_for_funding: true,
+              funded_place: false,
+              teacher_reference_number_verified: true,
+              targeted_delivery_funding_eligibility: true,
+            )
+          end
+
+          it "returns falsey for previously_funded" do
+            expect(subject.call[:previously_funded]).to be_falsey
+          end
+
+          it "returns falsey for previously_received_targeted_funding_support" do
+            expect(subject.call[:previously_received_targeted_funding_support]).to be_falsey
+          end
         end
       end
 
@@ -268,145 +654,432 @@ RSpec.describe NPQ::FundingEligibility do
       let(:get_an_identity_id) { SecureRandom.uuid }
       let(:user) { create(:user, get_an_identity_id:) }
 
-      context "when not previously funded" do
-        let(:application) do
-          create(
-            :npq_application,
-            npq_course:,
-            user:,
-            lead_provider_approval_status: "accepted",
-            eligible_for_funding: false,
-          )
+      context "when funded place is not set" do
+        context "when not previously funded" do
+          let(:application) do
+            create(
+              :npq_application,
+              npq_course:,
+              user:,
+              lead_provider_approval_status: "accepted",
+              eligible_for_funding: false,
+              funded_place: nil,
+            )
+          end
+
+          it "returns falsey for previously_funded" do
+            expect(subject.call[:previously_funded]).to be_falsey
+          end
+
+          it "returns falsey for previously_received_targeted_funding_support" do
+            expect(subject.call[:previously_received_targeted_funding_support]).to be_falsey
+          end
         end
 
-        it "returns falsey for previously_funded" do
-          expect(subject.call[:previously_funded]).to be_falsey
+        context "when previously funded" do
+          let(:application) do
+            create(
+              :npq_application,
+              npq_course:,
+              user:,
+              eligible_for_funding: true,
+              funded_place: nil,
+              teacher_reference_number_verified: true,
+            )
+          end
+
+          before do
+            NPQ::Application::Accept.new(npq_application: application).call
+          end
+
+          it "returns truthy for previously_funded" do
+            expect(subject.call[:previously_funded]).to be_truthy
+          end
+
+          it "returns falsey for previously_received_targeted_funding_support" do
+            expect(subject.call[:previously_received_targeted_funding_support]).to be_falsey
+          end
         end
 
-        it "returns falsey for previously_received_targeted_funding_support" do
-          expect(subject.call[:previously_received_targeted_funding_support]).to be_falsey
+        context "when previously funded for a different course" do
+          let(:application) do
+            create(
+              :npq_application,
+              user:,
+              eligible_for_funding: true,
+              funded_place: nil,
+              teacher_reference_number_verified: true,
+              npq_course:,
+            )
+          end
+          let(:course_for_lookup) { other_npq_course }
+
+          before do
+            NPQ::Application::Accept.new(npq_application: application).call
+          end
+
+          it "returns falsey for previously_funded" do
+            expect(subject.call[:previously_funded]).to be_falsey
+          end
+
+          it "returns falsey for previously_received_targeted_funding_support" do
+            expect(subject.call[:previously_received_targeted_funding_support]).to be_falsey
+          end
+        end
+
+        context "when previously funded with targeted delivery funding" do
+          let(:application) do
+            create(
+              :npq_application,
+              npq_course:,
+              user:,
+              eligible_for_funding: true,
+              funded_place: nil,
+              teacher_reference_number_verified: true,
+              targeted_delivery_funding_eligibility: true,
+            )
+          end
+
+          before do
+            NPQ::Application::Accept.new(npq_application: application).call
+          end
+
+          it "returns truthy for previously_funded" do
+            expect(subject.call[:previously_funded]).to be_truthy
+          end
+
+          it "returns truthy for previously_received_targeted_funding_support" do
+            expect(subject.call[:previously_received_targeted_funding_support]).to be_truthy
+          end
+        end
+
+        context "when previously funded ASO and applying for EHCO" do
+          let(:npq_course) { create(:npq_course, identifier: "npq-additional-support-offer") }
+          let(:application) do
+            create(
+              :npq_application,
+              user:,
+              eligible_for_funding: true,
+              funded_place: nil,
+              teacher_reference_number_verified: true,
+              npq_course:,
+            )
+          end
+
+          let!(:ehco_npq_course) { create(:npq_course, identifier: "npq-early-headship-coaching-offer") }
+
+          before do
+            NPQ::Application::Accept.new(npq_application: application).call
+          end
+
+          it "returns truthy for previously_funded" do
+            expect(subject.call[:previously_funded]).to be_truthy
+          end
+
+          it "returns falsey for previously_received_targeted_funding_support" do
+            expect(subject.call[:previously_received_targeted_funding_support]).to be_falsey
+          end
+        end
+
+        context "when previously funded with targeted delivery funding but not accepted" do
+          let(:application) do
+            create(
+              :npq_application,
+              user:,
+              npq_course:,
+              eligible_for_funding: true,
+              funded_place: nil,
+              teacher_reference_number_verified: true,
+              targeted_delivery_funding_eligibility: true,
+            )
+          end
+
+          it "returns falsey for previously_funded" do
+            expect(subject.call[:previously_funded]).to be_falsey
+          end
+
+          it "returns falsey for previously_received_targeted_funding_support" do
+            expect(subject.call[:previously_received_targeted_funding_support]).to be_falsey
+          end
         end
       end
 
-      context "when previously funded" do
-        let(:application) do
-          create(
-            :npq_application,
-            npq_course:,
-            user:,
-            eligible_for_funding: true,
-            teacher_reference_number_verified: true,
-          )
+      context "when funded place is set to true" do
+        context "when previously funded" do
+          let(:application) do
+            create(
+              :npq_application,
+              npq_course:,
+              user:,
+              eligible_for_funding: true,
+              funded_place: true,
+              teacher_reference_number_verified: true,
+            )
+          end
+
+          before do
+            NPQ::Application::Accept.new(npq_application: application).call
+          end
+
+          it "returns truthy for previously_funded" do
+            expect(subject.call[:previously_funded]).to be_truthy
+          end
+
+          it "returns falsey for previously_received_targeted_funding_support" do
+            expect(subject.call[:previously_received_targeted_funding_support]).to be_falsey
+          end
         end
 
-        before do
-          NPQ::Application::Accept.new(npq_application: application).call
+        context "when previously funded for a different course" do
+          let(:application) do
+            create(
+              :npq_application,
+              user:,
+              eligible_for_funding: true,
+              funded_place: true,
+              teacher_reference_number_verified: true,
+              npq_course:,
+            )
+          end
+          let(:course_for_lookup) { other_npq_course }
+
+          before do
+            NPQ::Application::Accept.new(npq_application: application).call
+          end
+
+          it "returns falsey for previously_funded" do
+            expect(subject.call[:previously_funded]).to be_falsey
+          end
+
+          it "returns falsey for previously_received_targeted_funding_support" do
+            expect(subject.call[:previously_received_targeted_funding_support]).to be_falsey
+          end
         end
 
-        it "returns truthy for previously_funded" do
-          expect(subject.call[:previously_funded]).to be_truthy
+        context "when previously funded with targeted delivery funding" do
+          let(:application) do
+            create(
+              :npq_application,
+              npq_course:,
+              user:,
+              eligible_for_funding: true,
+              funded_place: true,
+              teacher_reference_number_verified: true,
+              targeted_delivery_funding_eligibility: true,
+            )
+          end
+
+          before do
+            NPQ::Application::Accept.new(npq_application: application).call
+          end
+
+          it "returns truthy for previously_funded" do
+            expect(subject.call[:previously_funded]).to be_truthy
+          end
+
+          it "returns truthy for previously_received_targeted_funding_support" do
+            expect(subject.call[:previously_received_targeted_funding_support]).to be_truthy
+          end
         end
 
-        it "returns falsey for previously_received_targeted_funding_support" do
-          expect(subject.call[:previously_received_targeted_funding_support]).to be_falsey
+        context "when previously funded ASO and applying for EHCO" do
+          let(:npq_course) { create(:npq_course, identifier: "npq-additional-support-offer") }
+          let(:application) do
+            create(
+              :npq_application,
+              user:,
+              eligible_for_funding: true,
+              funded_place: true,
+              teacher_reference_number_verified: true,
+              npq_course:,
+            )
+          end
+
+          let!(:ehco_npq_course) { create(:npq_course, identifier: "npq-early-headship-coaching-offer") }
+
+          before do
+            NPQ::Application::Accept.new(npq_application: application).call
+          end
+
+          it "returns truthy for previously_funded" do
+            expect(subject.call[:previously_funded]).to be_truthy
+          end
+
+          it "returns falsey for previously_received_targeted_funding_support" do
+            expect(subject.call[:previously_received_targeted_funding_support]).to be_falsey
+          end
+        end
+
+        context "when previously funded with targeted delivery funding but not accepted" do
+          let(:application) do
+            create(
+              :npq_application,
+              user:,
+              npq_course:,
+              eligible_for_funding: true,
+              funded_place: true,
+              teacher_reference_number_verified: true,
+              targeted_delivery_funding_eligibility: true,
+            )
+          end
+
+          it "returns falsey for previously_funded" do
+            expect(subject.call[:previously_funded]).to be_falsey
+          end
+
+          it "returns falsey for previously_received_targeted_funding_support" do
+            expect(subject.call[:previously_received_targeted_funding_support]).to be_falsey
+          end
         end
       end
 
-      context "when previously funded for a different course" do
-        let(:application) do
-          create(
-            :npq_application,
-            user:,
-            eligible_for_funding: true,
-            teacher_reference_number_verified: true,
-            npq_course:,
-          )
-        end
-        let(:course_for_lookup) { other_npq_course }
+      context "when funded place is set to false" do
+        context "when not previously funded" do
+          let(:application) do
+            create(
+              :npq_application,
+              npq_course:,
+              user:,
+              lead_provider_approval_status: "accepted",
+              eligible_for_funding: false,
+              funded_place: false,
+            )
+          end
 
-        before do
-          NPQ::Application::Accept.new(npq_application: application).call
-        end
+          it "returns falsey for previously_funded" do
+            expect(subject.call[:previously_funded]).to be_falsey
+          end
 
-        it "returns falsey for previously_funded" do
-          expect(subject.call[:previously_funded]).to be_falsey
-        end
-
-        it "returns falsey for previously_received_targeted_funding_support" do
-          expect(subject.call[:previously_received_targeted_funding_support]).to be_falsey
-        end
-      end
-
-      context "when previously funded with targeted delivery funding" do
-        let(:application) do
-          create(
-            :npq_application,
-            npq_course:,
-            user:,
-            eligible_for_funding: true,
-            teacher_reference_number_verified: true,
-            targeted_delivery_funding_eligibility: true,
-          )
+          it "returns falsey for previously_received_targeted_funding_support" do
+            expect(subject.call[:previously_received_targeted_funding_support]).to be_falsey
+          end
         end
 
-        before do
-          NPQ::Application::Accept.new(npq_application: application).call
+        context "when not previously funded but is eligible_for_funding" do
+          let(:application) do
+            create(
+              :npq_application,
+              npq_course:,
+              user:,
+              eligible_for_funding: true,
+              funded_place: false,
+              teacher_reference_number_verified: true,
+            )
+          end
+
+          before do
+            NPQ::Application::Accept.new(npq_application: application).call
+          end
+
+          it "returns falsey for previously_funded" do
+            expect(subject.call[:previously_funded]).to be_falsey
+          end
+
+          it "returns falsey for previously_received_targeted_funding_support" do
+            expect(subject.call[:previously_received_targeted_funding_support]).to be_falsey
+          end
         end
 
-        it "returns truthy for previously_funded" do
-          expect(subject.call[:previously_funded]).to be_truthy
+        context "when not previously funded for a different course" do
+          let(:application) do
+            create(
+              :npq_application,
+              user:,
+              eligible_for_funding: true,
+              funded_place: false,
+              teacher_reference_number_verified: true,
+              npq_course:,
+            )
+          end
+          let(:course_for_lookup) { other_npq_course }
+
+          before do
+            NPQ::Application::Accept.new(npq_application: application).call
+          end
+
+          it "returns falsey for previously_funded" do
+            expect(subject.call[:previously_funded]).to be_falsey
+          end
+
+          it "returns falsey for previously_received_targeted_funding_support" do
+            expect(subject.call[:previously_received_targeted_funding_support]).to be_falsey
+          end
         end
 
-        it "returns truthy for previously_received_targeted_funding_support" do
-          expect(subject.call[:previously_received_targeted_funding_support]).to be_truthy
-        end
-      end
+        context "when not previously funded with targeted delivery funding" do
+          let(:application) do
+            create(
+              :npq_application,
+              npq_course:,
+              user:,
+              eligible_for_funding: true,
+              funded_place: false,
+              teacher_reference_number_verified: true,
+              targeted_delivery_funding_eligibility: true,
+            )
+          end
 
-      context "when previously funded ASO and applying for EHCO" do
-        let(:npq_course) { create(:npq_course, identifier: "npq-additional-support-offer") }
-        let(:application) do
-          create(
-            :npq_application,
-            user:,
-            eligible_for_funding: true,
-            teacher_reference_number_verified: true,
-            npq_course:,
-          )
-        end
+          before do
+            NPQ::Application::Accept.new(npq_application: application).call
+          end
 
-        let!(:ehco_npq_course) { create(:npq_course, identifier: "npq-early-headship-coaching-offer") }
+          it "returns falsey for previously_funded" do
+            expect(subject.call[:previously_funded]).to be_falsey
+          end
 
-        before do
-          NPQ::Application::Accept.new(npq_application: application).call
-        end
-
-        it "returns truthy for previously_funded" do
-          expect(subject.call[:previously_funded]).to be_truthy
-        end
-
-        it "returns falsey for previously_received_targeted_funding_support" do
-          expect(subject.call[:previously_received_targeted_funding_support]).to be_falsey
-        end
-      end
-
-      context "when previously funded with targeted delivery funding but not accepted" do
-        let(:application) do
-          create(
-            :npq_application,
-            user:,
-            npq_course:,
-            eligible_for_funding: true,
-            teacher_reference_number_verified: true,
-            targeted_delivery_funding_eligibility: true,
-          )
+          it "is not previously_received_targeted_funding_support" do
+            expect(subject.call[:previously_received_targeted_funding_support]).to be_falsey
+          end
         end
 
-        it "returns falsey for previously_funded" do
-          expect(subject.call[:previously_funded]).to be_falsey
+        context "when not previously funded ASO and applying for EHCO" do
+          let(:npq_course) { create(:npq_course, identifier: "npq-additional-support-offer") }
+          let(:application) do
+            create(
+              :npq_application,
+              user:,
+              eligible_for_funding: true,
+              funded_place: false,
+              teacher_reference_number_verified: true,
+              npq_course:,
+            )
+          end
+
+          let!(:ehco_npq_course) { create(:npq_course, identifier: "npq-early-headship-coaching-offer") }
+
+          before do
+            NPQ::Application::Accept.new(npq_application: application).call
+          end
+
+          it "returns falsey for previously_funded" do
+            expect(subject.call[:previously_funded]).to be_falsey
+          end
+
+          it "returns falsey for previously_received_targeted_funding_support" do
+            expect(subject.call[:previously_received_targeted_funding_support]).to be_falsey
+          end
         end
 
-        it "returns falsey for previously_received_targeted_funding_support" do
-          expect(subject.call[:previously_received_targeted_funding_support]).to be_falsey
+        context "when not previously funded with targeted delivery funding and not accepted" do
+          let(:application) do
+            create(
+              :npq_application,
+              user:,
+              npq_course:,
+              eligible_for_funding: true,
+              funded_place: false,
+              teacher_reference_number_verified: true,
+              targeted_delivery_funding_eligibility: true,
+            )
+          end
+
+          it "returns falsey for previously_funded" do
+            expect(subject.call[:previously_funded]).to be_falsey
+          end
+
+          it "returns falsey for previously_received_targeted_funding_support" do
+            expect(subject.call[:previously_received_targeted_funding_support]).to be_falsey
+          end
         end
       end
 

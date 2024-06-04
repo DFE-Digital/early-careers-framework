@@ -412,6 +412,21 @@ RSpec.describe RecordDeclaration do
     it_behaves_like "creates participant declaration attempt"
     it_behaves_like "checks for mentor completion event"
 
+    context "when declaration is not fundable" do
+      before do
+        participant_profile.npq_application.update(eligible_for_funding: true, funded_place: false)
+      end
+
+      it_behaves_like "creates a participant declaration"
+
+      it "sets the declaration to submitted" do
+        subject.call
+        declaration = ParticipantDeclaration.last
+
+        expect(declaration).to be_submitted
+      end
+    end
+
     context "for next cohort" do
       let!(:schedule) { create(:npq_specialist_schedule, cohort:) }
       let!(:statement) { create(:npq_statement, :output_fee, deadline_date: declaration_date + 6.weeks, cpd_lead_provider:, cohort:) }

@@ -55,6 +55,7 @@ module NPQ
           user.npq_applications
               .where(npq_course: npq_course_and_rebranded_alternatives)
               .where(eligible_for_funding: true)
+              .where(funded_place: [nil, true])
               .accepted
               .pluck(:id)
         end
