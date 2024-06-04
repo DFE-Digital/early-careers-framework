@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe Admin::Participants::ChangeInductionStartDate do
-  let(:participant_profile) { double(ParticipantProfile, update!: true) }
+  let(:participant_profile) { ParticipantProfile.new }
   let(:induction_start_date) { 3.weeks.from_now }
 
   subject { described_class.new(participant_profile, induction_start_date:) }
@@ -19,9 +19,11 @@ RSpec.describe Admin::Participants::ChangeInductionStartDate do
 
   describe "#call" do
     it "updates the participant profile's induction_start_date field with the supplied date when called" do
+      allow(Participants::SyncDQTInductionStartDate).to receive(:call)
+
       subject.call
 
-      expect(participant_profile).to have_received(:update!).with(induction_start_date:)
+      expect(Participants::SyncDQTInductionStartDate).to have_received(:call).with(induction_start_date, participant_profile)
     end
   end
 end
