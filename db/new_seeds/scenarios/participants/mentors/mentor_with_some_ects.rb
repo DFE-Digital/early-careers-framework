@@ -25,6 +25,7 @@ module NewSeeds
             @participant_profile = FactoryBot.create(:seed_mentor_participant_profile,
                                                      participant_identity:,
                                                      teacher_profile:,
+                                                     schedule: Finance::Schedule::ECF.default_for(cohort: school_cohort.cohort),
                                                      school_cohort:,
                                                      **profile_args)
 

@@ -106,8 +106,9 @@ module Admin
       def run_validation
         # this returns either nil, false on failure or an ECFParticipantEligibility record on success
         @validation_form.call.tap do
-          unless @previously_eligible
-            Induction::AmendCohortAfterEligibilityChecks.new(participant_profile: @participant_profile).call
+          if !@previously_eligible &&
+              Induction::AmendCohortAfterEligibilityChecks.new(participant_profile: @participant_profile.reload).call
+            return true
           end
         end
       end
