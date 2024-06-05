@@ -3,7 +3,7 @@
 require "rails_helper"
 require_relative "./nominate_induction_tutor_steps"
 
-RSpec.feature "School contact making cohort choice journey", type: :feature, js: true do
+RSpec.feature "School contact making cohort choice journey", type: :feature, js: true, mid_cohort: true do
   include NominateInductionTutorSteps
 
   shared_context "School choosing how to setup their cohort", shared_context: :metadata do

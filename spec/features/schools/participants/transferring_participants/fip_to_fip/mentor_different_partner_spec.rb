@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "Transferring a mentor with a different provider", type: :feature, js: true do
+RSpec.describe "Transferring a mentor with a different provider", type: :feature, js: true, mid_cohort: true do
   before do
     allow_participant_transfer_mailers
     set_participant_data

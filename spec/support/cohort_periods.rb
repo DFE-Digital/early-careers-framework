@@ -14,3 +14,10 @@ end
 def outside_auto_assignment_window(cohort: Cohort.current, &block)
   travel_to(cohort.automatic_assignment_period_end_date + 1.week, &block)
 end
+
+# time travel to after the current cohort opens
+RSpec.configure do |config|
+  config.before(mid_cohort: true) do
+    travel_to(Cohort.current.academic_year_start_date + 2.days)
+  end
+end

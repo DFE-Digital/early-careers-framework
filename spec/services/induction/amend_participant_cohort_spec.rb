@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Induction::AmendParticipantCohort do
+RSpec.describe Induction::AmendParticipantCohort, mid_cohort: true do
   describe "#save" do
     let(:participant_profile) {}
     let(:source_cohort_start_year) { Cohort.previous.start_year }

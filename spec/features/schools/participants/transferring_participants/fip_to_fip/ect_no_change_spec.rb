@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "ECT has matching lead provider and delivery partner", type: :feature, js: true do
+RSpec.describe "ECT has matching lead provider and delivery partner", type: :feature, js: true, mid_cohort: true do
   before do
     allow_participant_transfer_mailers
     set_participant_data
