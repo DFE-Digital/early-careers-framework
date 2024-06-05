@@ -16,107 +16,111 @@ RSpec.describe "Transferring a mentor with a different provider", type: :feature
   end
 
   scenario "Induction tutor can transfer an Mentor to their schools programme" do
-    when_i_click_to_add_a_new_mentor
-    then_i_should_be_on_the_who_to_add_page
+    inside_auto_assignment_window do
+      when_i_click_to_add_a_new_mentor
+      then_i_should_be_on_the_who_to_add_page
 
-    when_i_select_the_mentor_option
-    click_on "Continue"
-    then_i_should_be_on_what_we_need_page
+      when_i_select_the_mentor_option
+      click_on "Continue"
+      then_i_should_be_on_what_we_need_page
 
-    click_on "Continue"
-    then_i_should_be_on_full_name_page
+      click_on "Continue"
+      then_i_should_be_on_full_name_page
 
-    when_i_update_the_name_with(@participant_data[:full_name])
-    click_on "Continue"
-    then_i_should_be_on_trn_page
+      when_i_update_the_name_with(@participant_data[:full_name])
+      click_on "Continue"
+      then_i_should_be_on_trn_page
 
-    when_i_add_a_valid_trn
-    click_on "Continue"
-    then_i_should_be_on_the_date_of_birth_page
+      when_i_add_a_valid_trn
+      click_on "Continue"
+      then_i_should_be_on_the_date_of_birth_page
 
-    when_i_add_a_valid_date_of_birth
-    click_on "Continue"
+      when_i_add_a_valid_date_of_birth
+      click_on "Continue"
 
-    then_i_should_be_on_the_only_mentor_at_your_school_page
-    then_the_page_should_be_accessible
-    when_i_select "Yes"
-    click_on "Confirm"
+      then_i_should_be_on_the_only_mentor_at_your_school_page
+      then_the_page_should_be_accessible
+      when_i_select "Yes"
+      click_on "Confirm"
 
-    then_i_should_be_on_the_teacher_start_date_page
-    then_the_page_should_be_accessible
+      then_i_should_be_on_the_teacher_start_date_page
+      then_the_page_should_be_accessible
 
-    when_i_add_a_valid_start_date
-    click_on "Continue"
+      when_i_add_a_valid_start_date
+      click_on "Continue"
 
-    then_i_should_be_on_the_add_email_page
+      then_i_should_be_on_the_add_email_page
 
-    when_i_update_the_email_with("sally-mentor@example.com")
-    click_on "Continue"
+      when_i_update_the_email_with("sally-mentor@example.com")
+      click_on "Continue"
 
-    then_i_should_be_taken_to_the_teachers_current_programme_page
-    when_i_select "No"
-    click_on "Continue"
+      then_i_should_be_taken_to_the_teachers_current_programme_page
+      when_i_select "No"
+      click_on "Continue"
 
-    then_i_should_be_taken_to_the_schools_current_programme_page
-    when_i_select @lead_provider.name
-    click_on "Continue"
+      then_i_should_be_taken_to_the_schools_current_programme_page
+      when_i_select @lead_provider.name
+      click_on "Continue"
 
-    then_i_should_be_taken_to_the_check_your_answers_page
+      then_i_should_be_taken_to_the_check_your_answers_page
 
-    click_on "Confirm and add"
-    then_i_should_be_on_the_complete_page
-    and_the_schools_current_provider_is_notified
-    and_the_participants_current_provider_is_notified
+      click_on "Confirm and add"
+      then_i_should_be_on_the_complete_page
+      and_the_schools_current_provider_is_notified
+      and_the_participants_current_provider_is_notified
 
-    click_on "View your mentors"
-    then_i_am_taken_to_manage_mentors_page
+      click_on "View your mentors"
+      then_i_am_taken_to_manage_mentors_page
+    end
   end
 
   scenario "Induction tutor can transfer an Mentor and they can continue their current programme" do
-    when_i_click_to_add_a_new_mentor
-    then_i_should_be_on_the_who_to_add_page
+    inside_auto_assignment_window do
+      when_i_click_to_add_a_new_mentor
+      then_i_should_be_on_the_who_to_add_page
 
-    when_i_select_the_mentor_option
-    click_on "Continue"
-    then_i_should_be_on_what_we_need_page
+      when_i_select_the_mentor_option
+      click_on "Continue"
+      then_i_should_be_on_what_we_need_page
 
-    click_on "Continue"
-    then_i_should_be_on_full_name_page
+      click_on "Continue"
+      then_i_should_be_on_full_name_page
 
-    when_i_update_the_name_with(@participant_data[:full_name])
-    click_on "Continue"
-    then_i_should_be_on_trn_page
+      when_i_update_the_name_with(@participant_data[:full_name])
+      click_on "Continue"
+      then_i_should_be_on_trn_page
 
-    when_i_add_a_valid_trn
-    click_on "Continue"
-    then_i_should_be_on_the_date_of_birth_page
+      when_i_add_a_valid_trn
+      click_on "Continue"
+      then_i_should_be_on_the_date_of_birth_page
 
-    when_i_add_a_valid_date_of_birth
-    click_on "Continue"
-    then_i_should_be_on_the_only_mentor_at_your_school_page
+      when_i_add_a_valid_date_of_birth
+      click_on "Continue"
+      then_i_should_be_on_the_only_mentor_at_your_school_page
 
-    when_i_select "Yes"
-    click_on "Confirm"
-    then_i_should_be_on_the_teacher_start_date_page
+      when_i_select "Yes"
+      click_on "Confirm"
+      then_i_should_be_on_the_teacher_start_date_page
 
-    when_i_add_a_valid_start_date
-    click_on "Continue"
-    then_i_should_be_on_the_add_email_page
+      when_i_add_a_valid_start_date
+      click_on "Continue"
+      then_i_should_be_on_the_add_email_page
 
-    when_i_update_the_email_with("sally-mentor@example.com")
-    click_on "Continue"
+      when_i_update_the_email_with("sally-mentor@example.com")
+      click_on "Continue"
 
-    then_i_should_be_taken_to_the_teachers_current_programme_page
-    when_i_select "Yes"
-    click_on "Continue"
-    then_i_should_be_taken_to_the_check_your_answers_page_for_an_existing_induction
+      then_i_should_be_taken_to_the_teachers_current_programme_page
+      when_i_select "Yes"
+      click_on "Continue"
+      then_i_should_be_taken_to_the_check_your_answers_page_for_an_existing_induction
 
-    click_on "Confirm and add"
-    then_i_should_be_on_the_complete_page_for_an_existing_induction
-    and_the_participants_current_provider_is_notified
+      click_on "Confirm and add"
+      then_i_should_be_on_the_complete_page_for_an_existing_induction
+      and_the_participants_current_provider_is_notified
 
-    click_on "View your mentors"
-    then_i_am_taken_to_manage_mentors_page
+      click_on "View your mentors"
+      then_i_am_taken_to_manage_mentors_page
+    end
   end
 
   # given

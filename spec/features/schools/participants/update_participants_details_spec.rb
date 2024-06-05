@@ -93,7 +93,7 @@ RSpec.describe "Changing participant details from check answers", type: :feature
   end
 end
 
-RSpec.describe "Changing participant details from the dashboard", type: :feature, js: true do
+RSpec.describe "Changing participant details from the dashboard", type: :feature, js: true, mid_cohort: true do
   include ManageTrainingSteps
 
   before do

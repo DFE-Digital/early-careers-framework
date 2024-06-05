@@ -17,22 +17,24 @@ RSpec.describe "Add participants", js: true, mid_cohort: true do
   end
 
   scenario "Induction tutor can add new ECT participant when dqt returns a match with nino" do
-    when_i_navigate_to_ect_dashboard
-    and_i_choose_to_add_an_ect_on_the_school_early_career_teachers_dashboard_page
-    and_i_choose_to_add_a_new_ect_on_the_school_add_participant_wizard
+    inside_auto_assignment_window do
+      when_i_navigate_to_ect_dashboard
+      and_i_choose_to_add_an_ect_on_the_school_early_career_teachers_dashboard_page
+      and_i_choose_to_add_a_new_ect_on_the_school_add_participant_wizard
 
-    when_i_add_full_name_to_the_school_add_participant_wizard @participant_data[:full_name]
-    and_i_add_teacher_reference_number_to_the_school_add_participant_wizard @participant_data[:full_name], @participant_data[:trn]
-    and_i_add_date_of_birth_to_the_school_add_participant_wizard @participant_data[:date_of_birth]
-    and_i_confirm_details_and_continue_on_the_school_add_participant_wizard
-    and_i_add_nino_to_the_school_add_participant_wizard @participant_data[:full_name], @participant_data[:nino]
-    and_i_add_email_address_to_the_school_add_participant_wizard "Sally Teacher", @participant_data[:email]
-    and_i_choose_a_mentor_on_the_school_add_participant_wizard @participant_profile_mentor.full_name
-    and_i_confirm_and_add_on_the_school_add_participant_wizard
+      when_i_add_full_name_to_the_school_add_participant_wizard @participant_data[:full_name]
+      and_i_add_teacher_reference_number_to_the_school_add_participant_wizard @participant_data[:full_name], @participant_data[:trn]
+      and_i_add_date_of_birth_to_the_school_add_participant_wizard @participant_data[:date_of_birth]
+      and_i_confirm_details_and_continue_on_the_school_add_participant_wizard
+      and_i_add_nino_to_the_school_add_participant_wizard @participant_data[:full_name], @participant_data[:nino]
+      and_i_add_email_address_to_the_school_add_participant_wizard "Sally Teacher", @participant_data[:email]
+      and_i_choose_a_mentor_on_the_school_add_participant_wizard @participant_profile_mentor.full_name
+      and_i_confirm_and_add_on_the_school_add_participant_wizard
 
-    then_i_am_on_the_school_add_participant_completed_page
-    and_i_confirm_has_full_name_on_the_school_add_participant_completed_page @participant_data[:full_name]
-    and_i_confirm_has_participant_type_on_the_school_add_participant_completed_page "ECT"
+      then_i_am_on_the_school_add_participant_completed_page
+      and_i_confirm_has_full_name_on_the_school_add_participant_completed_page @participant_data[:full_name]
+      and_i_confirm_has_participant_type_on_the_school_add_participant_completed_page "ECT"
+    end
   end
 
   scenario "Induction tutor can add new mentor participant when dqt returns a match with nino inside the auto assignment window" do
