@@ -109,6 +109,18 @@ module Admin
                                                                  end
         end
 
+        def existing_partnership
+          @existing_partnership = Partnership.find_by(cohort:, school:, lead_provider_id:, delivery_partner_id:)
+        end
+
+        def existing_partnership_challenged_at
+          existing_partnership.challenged_at.to_formatted_s(:govuk)
+        end
+
+        def existing_partnership_challenge_reason
+          existing_partnership.challenge_reason.humanize
+        end
+
         def selected_lead_provider_name
           selected_lead_provider&.name
         end
