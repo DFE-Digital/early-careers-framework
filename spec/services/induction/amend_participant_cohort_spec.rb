@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Induction::AmendParticipantCohort, mid_cohort: true do
+RSpec.describe Induction::AmendParticipantCohort do
   describe "#save" do
     let(:participant_profile) {}
     let(:source_cohort_start_year) { Cohort.previous.start_year }
@@ -380,41 +380,43 @@ RSpec.describe Induction::AmendParticipantCohort, mid_cohort: true do
           end
         end
 
-        %i[voided ineligible awaiting_clawback clawed_back].each do |declaration_state|
-          context "when the participant has #{declaration_state} declarations and no billable or changeable declarations" do
-            before do
-              participant_profile.participant_declarations.create!(declaration_date: Date.new(Cohort.previous.start_year, 10, 10),
-                                                                   declaration_type: :started,
-                                                                   state: declaration_state,
-                                                                   course_identifier: "ecf-induction",
-                                                                   cpd_lead_provider: create(:cpd_lead_provider),
-                                                                   user: participant_profile.user,
-                                                                   cohort: participant_profile.schedule.cohort)
-            end
-
-            it "executes the transfer" do
-              expect(form.save).to be_truthy
-              expect(participant_profile.reload.latest_induction_record.cohort_start_year).to eq(target_cohort_start_year)
-            end
-
-            it "returns true and set no errors" do
-              expect(form.save).to be_truthy
-              expect(form.errors).to be_empty
-            end
-
-            context "when the transfer is due to payments frozen in the cohort of the participant" do
+        describe "declaration states", mid_cohort: true do
+          %i[voided ineligible awaiting_clawback clawed_back].each do |declaration_state|
+            context "when the participant has #{declaration_state} declarations and no billable or changeable declarations" do
               before do
-                source_cohort.update!(payments_frozen_at: Time.current)
-                allow(participant_profile).to receive(:eligible_to_change_cohort_and_continue_training?).and_return(true)
+                participant_profile.participant_declarations.create!(declaration_date: Date.new(Cohort.previous.start_year, 10, 10),
+                                                                     declaration_type: :started,
+                                                                     state: declaration_state,
+                                                                     course_identifier: "ecf-induction",
+                                                                     cpd_lead_provider: create(:cpd_lead_provider),
+                                                                     user: participant_profile.user,
+                                                                     cohort: participant_profile.schedule.cohort)
               end
 
-              it "mark the participant as transferred for that reason" do
+              it "executes the transfer" do
                 expect(form.save).to be_truthy
-                expect(participant_profile).to be_cohort_changed_after_payments_frozen
+                expect(participant_profile.reload.latest_induction_record.cohort_start_year).to eq(target_cohort_start_year)
               end
 
-              it "mark the participant as transferred from the original cohort" do
+              it "returns true and set no errors" do
                 expect(form.save).to be_truthy
+                expect(form.errors).to be_empty
+              end
+
+              context "when the transfer is due to payments frozen in the cohort of the participant" do
+                before do
+                  source_cohort.update!(payments_frozen_at: Time.current)
+                  allow(participant_profile).to receive(:eligible_to_change_cohort_and_continue_training?).and_return(true)
+                end
+
+                it "mark the participant as transferred for that reason" do
+                  expect(form.save).to be_truthy
+                  expect(participant_profile).to be_cohort_changed_after_payments_frozen
+                end
+
+                it "mark the participant as transferred from the original cohort" do
+                  expect(form.save).to be_truthy
+                end
               end
             end
           end
