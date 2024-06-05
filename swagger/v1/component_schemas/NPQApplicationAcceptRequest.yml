@@ -5,7 +5,6 @@ properties:
     $ref: "#/components/schemas/NPQApplicationAcceptDataRequest"
 example:
   data:
-    type: "npq-application-accept2"
+    type: "npq-application-accept"
     attributes:
-      schedule_identifier: "npq-leadership-spring"
       funded_place: true
