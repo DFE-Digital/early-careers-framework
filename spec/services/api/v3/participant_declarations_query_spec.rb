@@ -42,6 +42,7 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery do
           cpd_lead_provider: cpd_lead_provider1,
           participant_profile: participant_profile1,
           delivery_partner: delivery_partner1,
+          cohort: participant_profile1.schedule.cohort,
         )
 
         ParticipantDeclaration.where(id: declaration.id).select(:id, :created_at).first
@@ -56,6 +57,7 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery do
           cpd_lead_provider: cpd_lead_provider1,
           participant_profile: participant_profile2,
           delivery_partner: delivery_partner2,
+          cohort: participant_profile2.schedule.cohort,
         )
 
         ParticipantDeclaration.where(id: declaration.id).select(:id, :created_at).first
@@ -70,6 +72,7 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery do
           cpd_lead_provider: cpd_lead_provider1,
           participant_profile: participant_profile3,
           delivery_partner: delivery_partner2,
+          cohort: participant_profile3.schedule.cohort,
         )
 
         ParticipantDeclaration.where(id: declaration.id).select(:id, :created_at).first
@@ -84,6 +87,7 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery do
           cpd_lead_provider: cpd_lead_provider2,
           participant_profile: participant_profile4,
           delivery_partner: delivery_partner1,
+          cohort: participant_profile4.schedule.cohort,
         )
 
         ParticipantDeclaration.where(id: declaration.id).select(:id, :created_at).first
@@ -110,6 +114,7 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery do
               cpd_lead_provider: cpd_lead_provider2,
               participant_profile: transfer_induction_record.participant_profile,
               delivery_partner: delivery_partner1,
+              cohort: transfer_induction_record.participant_profile.schedule.cohort,
             )
 
             ParticipantDeclaration.where(id: declaration.id).select(:id, :created_at).first
@@ -300,6 +305,7 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery do
           cpd_lead_provider: cpd_lead_provider1,
           participant_profile: participant_profile1,
           delivery_partner: delivery_partner1,
+          cohort: participant_profile1.schedule.cohort,
         )
       end
     end
@@ -312,6 +318,7 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery do
           cpd_lead_provider: cpd_lead_provider1,
           participant_profile: participant_profile2,
           delivery_partner: delivery_partner2,
+          cohort: participant_profile2.schedule.cohort,
         )
       end
     end
@@ -324,6 +331,7 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery do
           cpd_lead_provider: cpd_lead_provider1,
           participant_profile: participant_profile3,
           delivery_partner: delivery_partner2,
+          cohort: participant_profile3.schedule.cohort,
         )
       end
     end
@@ -336,6 +344,7 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery do
           cpd_lead_provider: cpd_lead_provider2,
           participant_profile: participant_profile4,
           delivery_partner: delivery_partner1,
+          cohort: participant_profile4.schedule.cohort,
         )
       end
     end
@@ -373,6 +382,7 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery do
         cpd_lead_provider: cpd_lead_provider1,
         participant_profile: participant_profile1,
         delivery_partner: delivery_partner1,
+        cohort: participant_profile1.schedule.cohort,
       )
     end
 
@@ -402,6 +412,7 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery do
           cpd_lead_provider: cpd_lead_provider2,
           participant_profile: transfer_induction_record.participant_profile,
           delivery_partner: delivery_partner1,
+          cohort: transfer_induction_record.participant_profile.schedule.cohort,
         )
       end
 

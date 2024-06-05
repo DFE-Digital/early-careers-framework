@@ -44,6 +44,7 @@ RSpec.describe "API Participant Declarations", type: :request do
         cpd_lead_provider: cpd_lead_provider1,
         participant_profile: participant_profile1,
         delivery_partner: delivery_partner1,
+        cohort: participant_profile1.cohort,
       )
     end
     let!(:participant_declaration2) do
@@ -57,6 +58,7 @@ RSpec.describe "API Participant Declarations", type: :request do
         cpd_lead_provider: cpd_lead_provider1,
         participant_profile: participant_profile2,
         delivery_partner: delivery_partner2,
+        cohort: participant_profile2.cohort,
       )
     end
     let!(:participant_declaration3) do
@@ -70,6 +72,7 @@ RSpec.describe "API Participant Declarations", type: :request do
         cpd_lead_provider: cpd_lead_provider1,
         participant_profile: participant_profile3,
         delivery_partner: delivery_partner2,
+        cohort: participant_profile3.cohort,
       )
     end
     let!(:participant_declaration4) do
@@ -83,6 +86,7 @@ RSpec.describe "API Participant Declarations", type: :request do
         cpd_lead_provider: cpd_lead_provider2,
         participant_profile: participant_profile4,
         delivery_partner: delivery_partner1,
+        cohort: participant_profile4.cohort,
       )
     end
 
