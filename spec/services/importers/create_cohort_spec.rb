@@ -11,15 +11,15 @@ RSpec.describe Importers::CreateCohort do
   describe "#call" do
     context "with new cohorts" do
       before do
-        csv.write "start-year,registration-start-date,academic-year-start-date,npq-registration-start-date,automatic-assignment-period-end-date"
+        csv.write "start-year,registration-start-date,academic-year-start-date,npq-registration-start-date,automatic-assignment-period-end-date,payments-frozen-at"
         csv.write "\n"
-        csv.write "3030,3030/05/10,3030/09/01,3031/03/31,"
+        csv.write "3030,3030/05/10,3030/09/01,3031/03/31,,"
         csv.write "\n"
-        csv.write "3031,3031/05/10,3031/09/01,3032/03/31,"
+        csv.write "3031,3031/05/10,3031/09/01,3032/03/31,,"
         csv.write "\n"
-        csv.write "3032,3032/05/10,3032/09/01,,"
+        csv.write "3032,3032/05/10,3032/09/01,,,"
         csv.write "\n"
-        csv.write "3033,3033/05/10,3033/09/01,3034/03/31,"
+        csv.write "3033,3033/05/10,3033/09/01,3034/03/31,,"
         csv.write "\n"
         csv.close
       end
@@ -72,9 +72,9 @@ RSpec.describe Importers::CreateCohort do
       end
 
       before do
-        csv.write "start-year,registration-start-date,academic-year-start-date,npq-registration-start-date,automatic-assignment-period-end-date"
+        csv.write "start-year,registration-start-date,academic-year-start-date,npq-registration-start-date,automatic-assignment-period-end-date,payments-frozen-at"
         csv.write "\n"
-        csv.write "4041,4041/05/10,4041/09/01,4041/04/01,4042/03/31"
+        csv.write "4041,4041/05/10,4041/09/01,4041/04/01,4042/03/31,"
         csv.write "\n"
         csv.close
       end
