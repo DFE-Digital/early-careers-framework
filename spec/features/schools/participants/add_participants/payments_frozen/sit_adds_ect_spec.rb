@@ -43,9 +43,6 @@ RSpec.describe "SIT adding an ECT", js: true do
       when_i_add_ect_or_mentor_email(email: @participant_data[:email])
       when_i_click_on_continue
 
-      when_i_select_a_mentor
-      when_i_click_on_continue
-
       when_i_click_confirm_and_add
       then_i_see_confirmation_that_the_participant_has_been_added
       and_the_participant_has_been_added_to_the_active_registration_cohort
