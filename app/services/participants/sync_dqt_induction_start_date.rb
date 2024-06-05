@@ -73,7 +73,7 @@ module Participants
 
     def update_participant
       clear_participant_sync_errors
-      save_errors(*amend_cohort.errors.full_messages) unless amend_cohort.save
+      amend_cohort.save || save_errors(*amend_cohort.errors.full_messages)
     end
   end
 end

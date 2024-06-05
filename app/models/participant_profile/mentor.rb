@@ -49,6 +49,12 @@ class ParticipantProfile::Mentor < ParticipantProfile::ECF
     "Mentor"
   end
 
+  def with_completion_date_status_or_declaration?
+    mentor_completion_date.present? ||
+      participant_declarations.billable.for_declaration(:completed).exists? ||
+      latest_induction_record&.completed_induction_status?
+  end
+
   def self.eligible_to_change_cohort_and_continue_training(cohort:, restrict_to_participant_ids: [])
     super(cohort:, restrict_to_participant_ids:).where(mentor_completion_date: nil)
   end

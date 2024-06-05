@@ -45,10 +45,6 @@ module Participants
       participant_profile.induction_completion_date
     end
 
-    def participant_start_date
-      participant_profile.induction_start_date
-    end
-
     def record_completion_date_inconsistency
       ParticipantProfileCompletionDateInconsistency.upsert(
         {
