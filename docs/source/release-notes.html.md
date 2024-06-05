@@ -44,7 +44,7 @@ We're trialing new functionality in the API test ([sandbox](https://sb.manage-tr
 
 This is because from the 2024/25 academic year onwards there'll be a set maximum number of places each provider can offer per NPQ that DfE will pay for.
 
-Providers using all versions of the API can set the new funded_place field in the 'Accept an application' request body to true or false. They will also see the funded_place field in the following endpoint response bodies:
+Providers using all versions of the API can set the new `funded_place` field in the 'Accept an application' request body to true or false. They will also see the `funded_place` field in the following endpoint response bodies:
 
 'View all applications'
 
