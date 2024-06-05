@@ -262,6 +262,26 @@ RSpec.describe ParticipantProfile::ECF, type: :model do
     end
   end
 
+  describe "#previous_payments_frozen_cohort" do
+    let(:participant_profile) { create(:ect) }
+
+    subject { participant_profile.previous_payments_frozen_cohort }
+
+    it { is_expected.to be_nil }
+
+    context "when payments were frozen on a previous cohort" do
+      let(:previous_cohort) { Cohort.previous.tap(&:freeze_payments!) }
+      let(:cpd_lead_provider) { participant_profile.lead_provider.cpd_lead_provider }
+      let(:participant_profile) { create(:ect, cohort_changed_after_payments_frozen: true) }
+
+      before do
+        create(:participant_declaration, participant_profile:, cohort: previous_cohort, state: :paid, cpd_lead_provider:, course_identifier: "ecf-induction")
+      end
+
+      it { is_expected.to eq(previous_cohort.start_year) }
+    end
+  end
+
   describe "#withdrawn_for" do
     let(:cpd_lead_provider) { subject.induction_records.latest&.cpd_lead_provider }
 

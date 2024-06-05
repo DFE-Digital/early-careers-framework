@@ -14,7 +14,10 @@ module Api
           let(:school_cohort) { create(:school_cohort, :fip, :with_induction_programme, delivery_partner:, school:, cohort:, lead_provider: cpd_lead_provider.lead_provider) }
           let!(:provider_relationship) { create(:provider_relationship, cohort:, delivery_partner:, lead_provider: cpd_lead_provider.lead_provider) }
           let(:participant) { create(:user) }
-          let!(:ect_profile) { create(:ect, :eligible_for_funding, school_cohort:, user: participant, induction_completion_date: Date.parse("2022-01-12")) }
+          let!(:ect_profile) { create(:ect, :eligible_for_funding, school_cohort:, user: participant, induction_completion_date: Date.parse("2022-01-12"), cohort_changed_after_payments_frozen: true) }
+          let(:previous_cohort) { Cohort.previous.tap(&:freeze_payments!) }
+          let!(:previous_cohort_declaration) { create(:participant_declaration, participant_profile: ect_profile, cohort: previous_cohort, state: :paid, cpd_lead_provider:, course_identifier: "ecf-induction") }
+          let(:ecf_enrolments) { result[:data][0][:attributes][:ecf_enrolments] }
 
           before { freeze_time }
 
@@ -64,25 +67,50 @@ module Api
             ])
           end
 
+          context "when the cohort_changed_after_payments_frozen feature flag is active" do
+            before { FeatureFlag.activate(:cohort_changed_after_payments_frozen) }
+
+            it "includes the cohort_changed_after_payments_frozen" do
+              expect(ecf_enrolments[0][:cohort_changed_after_payments_frozen]).to be(true)
+            end
+
+            context "when the participant has not changed cohort after payments were frozen" do
+              before { ect_profile.update!(cohort_changed_after_payments_frozen: false) }
+
+              it "does not include the cohort_changed_after_payments_frozen" do
+                expect(ecf_enrolments[0][:cohort_changed_after_payments_frozen]).to be(false)
+              end
+            end
+          end
+
+          context "when the previous_payments_frozen feature flag is not active" do
+            before { FeatureFlag.deactivate(:cohort_changed_after_payments_frozen) }
+
+            it "does not include the cohort_changed_after_payments_frozen" do
+              expect(ecf_enrolments[0]).not_to have_key(:cohort_changed_after_payments_frozen)
+            end
+          end
+
           describe "ecf_enrolments" do
             context "when there are multiple providers involved" do
               let(:another_school_cohort) { create(:school_cohort, :fip, :with_induction_programme) }
               let!(:mentor_profile) { create(:mentor, school_cohort: another_school_cohort, user: participant) }
 
               it "only includes enrolments from the querying provider" do
-                expect(result[:data][0][:attributes][:ecf_enrolments].size).to be(1)
+                expect(ecf_enrolments.size).to be(1)
               end
             end
 
             context "when there are multiple profiles involved" do
               let!(:mentor_profile) { create(:mentor, school_cohort:, user: participant) }
+              let(:mentor_enrolement) { ecf_enrolments.find { |efce| efce[:participant_type] == :mentor } }
 
               before do
                 mentor_profile.update!(mentor_completion_date: Date.new(2021, 4, 19))
               end
 
               it "includes the second profile data" do
-                expect(result[:data][0][:attributes][:ecf_enrolments].find { |efce| efce[:participant_type] == :mentor }).to eq({
+                expect(mentor_enrolement).to eq({
                   training_record_id: mentor_profile.id,
                   email: participant.email,
                   mentor_id: nil,
@@ -113,8 +141,8 @@ module Api
               end
 
               it "includes a withdrawal object" do
-                expect(result[:data][0][:attributes][:ecf_enrolments][0][:withdrawal][:reason]).to eq("other")
-                expect(result[:data][0][:attributes][:ecf_enrolments][0][:withdrawal][:date]).to eql(ect_profile.participant_profile_state.created_at.rfc3339)
+                expect(ecf_enrolments[0][:withdrawal][:reason]).to eq("other")
+                expect(ecf_enrolments[0][:withdrawal][:date]).to eql(ect_profile.participant_profile_state.created_at.rfc3339)
               end
             end
 
@@ -125,8 +153,8 @@ module Api
               end
 
               it "includes a deferral object" do
-                expect(result[:data][0][:attributes][:ecf_enrolments][0][:deferral][:reason]).to eq("other")
-                expect(result[:data][0][:attributes][:ecf_enrolments][0][:deferral][:date]).to eql(ect_profile.participant_profile_state.created_at.rfc3339)
+                expect(ecf_enrolments[0][:deferral][:reason]).to eq("other")
+                expect(ecf_enrolments[0][:deferral][:date]).to eql(ect_profile.participant_profile_state.created_at.rfc3339)
               end
             end
 
@@ -143,7 +171,7 @@ module Api
               subject { described_class.new([participant_from_query], params: { cpd_lead_provider: }) }
 
               it "selects the latest induction record correctly" do
-                expect(result[:data][0][:attributes][:ecf_enrolments][0][:email]).to eq(latest_induction_record.preferred_identity.email)
+                expect(ecf_enrolments[0][:email]).to eq(latest_induction_record.preferred_identity.email)
               end
             end
           end

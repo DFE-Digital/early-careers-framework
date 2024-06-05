@@ -200,6 +200,16 @@ RSpec.describe Cohort, type: :model do
     end
   end
 
+  describe "#freeze_payments!" do
+    let(:cohort) { Cohort.previous }
+
+    it "sets payments_frozen_at to the current time" do
+      freeze_time do
+        expect { cohort.freeze_payments! }.to change { cohort.payments_frozen_at }.from(nil).to(Time.zone.now)
+      end
+    end
+  end
+
   describe "#schedules" do
     subject { described_class.create!(start_year: 3000) }
 

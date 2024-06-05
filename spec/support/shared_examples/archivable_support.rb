@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.shared_examples "can archive participant profile" do |other_participant_type, completed_training_at_attribute|
-  let(:eligible_cohort) { create(:cohort, :current, payments_frozen_at: Time.zone.now) }
+  let(:eligible_cohort) { create(:cohort, :current, :payments_frozen) }
   let(:ineligible_cohort) { eligible_cohort.next }
 
   def build_profile(attrs = {})
