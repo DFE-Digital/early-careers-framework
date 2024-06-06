@@ -29,7 +29,7 @@ module Api
         npq_profiles.map do |npq_profile|
           {
             "npq_course": npq_profile.npq_application.npq_course.identifier,
-            "funded_place:": npq_profile.npq_application.funded_place,
+            "funded_place": npq_profile.npq_application.funded_place,
             "npq_application_id": npq_profile.npq_application.id,
           }
         end
