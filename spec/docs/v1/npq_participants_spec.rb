@@ -7,7 +7,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json" do
   let(:npq_lead_provider) { create(:npq_lead_provider) }
   let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
   let(:Authorization) { "Bearer #{token}" }
-  let!(:npq_application) { create(:npq_application, :accepted, :with_started_declaration, npq_lead_provider:, npq_course: create(:npq_course, identifier: "npq-senior-leadership")) }
+  let!(:npq_application) { create(:npq_application, :accepted, :with_started_declaration, npq_lead_provider:, funded_place: true, npq_course: create(:npq_course, identifier: "npq-senior-leadership")) }
   let!(:schedule) { create(:npq_leadership_schedule, schedule_identifier: "npq-early-years-leadership", name: "NPQ Early Years") }
 
   before do
