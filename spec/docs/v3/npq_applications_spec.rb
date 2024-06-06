@@ -322,22 +322,22 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
       security [bearerAuth: []]
 
       parameter name: :id,
-        in: :path,
-        required: true,
-        example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
-        description: "The ID of the NPQ participant to change funded place.",
-        schema: {
-          type: :string,
-          format: :uuid,
-        }
+                in: :path,
+                required: true,
+                example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
+                description: "The ID of the NPQ participant to change funded place.",
+                schema: {
+                  type: :string,
+                  format: :uuid,
+                }
 
       parameter name: :params,
-        in: :body,
-        style: :deepObject,
-        required: false,
-        schema: {
-          "$ref": "#/components/schemas/ChangeFundedPlaceRequest",
-        }
+                in: :body,
+                style: :deepObject,
+                required: false,
+                schema: {
+                  "$ref": "#/components/schemas/ChangeFundedPlaceRequest",
+                }
 
       response "200", "The NPQ application being accepted" do
         let(:id) { npq_application.id }
@@ -376,5 +376,4 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
       end
     end
   end
-
 end
