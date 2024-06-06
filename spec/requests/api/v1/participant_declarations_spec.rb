@@ -121,6 +121,19 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
 
           expect(ParticipantDeclaration.order(:created_at).last).to be_eligible
         end
+
+        it "returns 422 when there are no output fee statements available" do
+          Finance::Statement.update!(output_fee: false)
+
+          post "/api/v1/participant-declarations", params: params.to_json
+
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(parsed_response["errors"])
+            .to eq([
+              "title" => "cohort",
+              "detail" => "You cannot submit or void declarations for the #{participant_profile.schedule.cohort.start_year} cohort. The funding contract for this cohort has ended. Get in touch if you need to discuss this with us",
+            ])
+        end
       end
 
       it "does not create duplicate declarations with the same declaration date" do
@@ -913,6 +926,37 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
       it "returns a 200" do
         put "/api/v1/participant-declarations/#{declaration.id}/void"
         expect(response.status).to eql(200)
+      end
+    end
+
+    context "when the declaration is paid" do
+      let(:declaration) { create(:ect_participant_declaration, :paid, cpd_lead_provider:) }
+      let(:cohort) { declaration.participant_profile.schedule.cohort }
+
+      before { create(:ecf_statement, :next_output_fee, cpd_lead_provider:, cohort:) }
+
+      it "can be clawed back" do
+        expect {
+          put "/api/v1/participant-declarations/#{declaration.id}/void"
+        }.to change { declaration.reload.state }.from("paid").to("awaiting_clawback")
+      end
+
+      it "returns a 200" do
+        put "/api/v1/participant-declarations/#{declaration.id}/void"
+        expect(response.status).to eql(200)
+      end
+
+      it "returns 422 when there are no output fee statements available" do
+        Finance::Statement.update!(output_fee: false)
+
+        put "/api/v1/participant-declarations/#{declaration.id}/void"
+
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(parsed_response["errors"])
+          .to eq([
+            "title" => "Invalid action",
+            "detail" => "Participant declaration You cannot submit or void declarations for the #{cohort.start_year} cohort. The funding contract for this cohort has ended. Get in touch if you need to discuss this with us",
+          ])
       end
     end
 

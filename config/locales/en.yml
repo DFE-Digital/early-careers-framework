@@ -40,6 +40,7 @@ en:
   bad_request: "Bad request"
   bad_parameter: "Bad parameter"
   invalid_transition: "Invalid action"
+  no_output_fee_statements_for_cohort: "You cannot submit or void declarations for the %{cohort} cohort. The funding contract for this cohort has ended. Get in touch if you need to discuss this with us"
   invalid_page_parameters: "The '#/page[page]' and '#/page[per_page]' parameter values must be a valid number (equal and more than 1)"
   cannot_change_cohort: "You cannot change the '#/cohort' field"
   cannot_create_completed_declaration: "Could not create completed declaration. Contact the DfE for support."

@@ -8,7 +8,6 @@ RSpec.describe Finance::ClawbackDeclaration do
 
   let!(:participant_declaration) { create(:ect_participant_declaration, :paid, cpd_lead_provider:) }
   let(:participant_profile) { participant_declaration.participant_profile }
-
   let!(:next_statement) { create(:ecf_statement, :next_output_fee, cpd_lead_provider:, deadline_date: 3.months.from_now) }
 
   let(:cohort) { Cohort.current }
@@ -20,7 +19,9 @@ RSpec.describe Finance::ClawbackDeclaration do
   subject { described_class.new(participant_declaration) }
 
   before do
-    Induction::Enrol.call(participant_profile:, induction_programme:)
+    if participant_declaration.ecf?
+      Induction::Enrol.call(participant_profile:, induction_programme:)
+    end
   end
 
   describe "#call" do
@@ -38,6 +39,31 @@ RSpec.describe Finance::ClawbackDeclaration do
       expect {
         subject.call
       }.to change { DeclarationState.where(participant_declaration:, state: "awaiting_clawback").count }.by(1)
+    end
+
+    context "when there are no output fee statements available" do
+      before { next_statement.update!(output_fee: false) }
+
+      it "returns an error" do
+        expect(subject).to be_invalid
+
+        cohort = participant_profile.schedule.cohort.start_year
+        expect(subject.errors.messages_for(:participant_declaration)).to include(/You cannot submit or void declarations for the #{cohort}/)
+      end
+
+      context "when the declaration is an NPQ declaration" do
+        let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_npq_lead_provider) }
+        let(:lead_provider) { cpd_lead_provider.npq_lead_provider }
+        let!(:participant_declaration) { create(:npq_participant_declaration, :paid, cpd_lead_provider:) }
+        let!(:next_statement) { create(:npq_statement, cpd_lead_provider:, deadline_date: 3.months.from_now) }
+
+        it "returns an error" do
+          expect(subject).to be_invalid
+
+          cohort = participant_profile.schedule.cohort.start_year
+          expect(subject.errors.messages_for(:participant_declaration)).to include(/You cannot submit or void declarations for the #{cohort}/)
+        end
+      end
     end
 
     context "when declaration already clawed back" do
