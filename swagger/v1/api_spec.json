@@ -3500,7 +3500,14 @@
                     "npq-leading-teaching"
                   ],
                   "teacher_reference_number": "1234567",
-                  "updated_at": "2021-05-31T02:21:32.000Z"
+                  "updated_at": "2021-05-31T02:21:32.000Z",
+                  "funded_places": [
+                    {
+                      "npq_course": "npq-leading-teaching",
+                      "funded_place": true,
+                      "npq_application_id": "db3a7848-7308-4879-942a-c4a70ced400a"
+                    }
+                  ]
                 }
               }
             ]
@@ -4269,7 +4276,8 @@
           "full_name",
           "email",
           "npq_courses",
-          "updated_at"
+          "updated_at",
+          "funded_places"
         ],
         "properties": {
           "participant_id": {
@@ -4301,6 +4309,21 @@
             "items": {
               "type": "string"
             }
+          },
+          "funded_places": {
+            "description": "The funded place attributes for the Participant",
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/NPQParticipantFundedPlace"
+            },
+            "example": [
+              {
+                "npq_course": "npq-leading-teaching",
+                "funded_place": true,
+                "npq_application_id": "db3a7848-7308-4879-942a-c4a70ced400a"
+              }
+            ]
           },
           "updated_at": {
             "description": "The date the NPQ participant was last updated",
@@ -4686,6 +4709,34 @@
               "reason": "parental-leave",
               "course_identifier": "npq-senior-leadership"
             }
+          }
+        }
+      },
+      "NPQParticipantFundedPlace": {
+        "description": "The funded place attributes for the Participant",
+        "type": "object",
+        "required": [
+          "npq_course",
+          "funded_place",
+          "npq_application_id"
+        ],
+        "properties": {
+          "npq_course": {
+            "description": "The type of course the participant is enrolled in",
+            "type": "String",
+            "example": "npq-leading-teaching"
+          },
+          "funded_place": {
+            "description": "Indicates whether this NPQ participant is funded by DfE",
+            "type": "boolean",
+            "nullable": true,
+            "example": true
+          },
+          "npq_application_id": {
+            "description": "The unique identifier of the NPQ Application",
+            "type": "string",
+            "format": "uuid",
+            "example": "db3a7848-7308-4879-942a-c4a70ced400a"
           }
         }
       },

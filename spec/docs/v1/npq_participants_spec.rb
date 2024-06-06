@@ -10,6 +10,10 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json" do
   let!(:npq_application) { create(:npq_application, :accepted, :with_started_declaration, npq_lead_provider:, npq_course: create(:npq_course, identifier: "npq-senior-leadership")) }
   let!(:schedule) { create(:npq_leadership_schedule, schedule_identifier: "npq-early-years-leadership", name: "NPQ Early Years") }
 
+  before do
+    FeatureFlag.activate(:npq_capping)
+  end
+
   path "/api/v1/participants/npq" do
     get "Retrieve multiple NPQ participants" do
       operationId :npq_participants
