@@ -30,10 +30,6 @@ module Schools
         what_changes == "change_delivery_partner"
       end
 
-      def national_appropriate_body_type?
-        appropriate_body_type == "national"
-      end
-
       def previous_cohort
         @previous_cohort ||= Cohort.active_registration_cohort.previous
       end
@@ -72,6 +68,14 @@ module Schools
 
       def show_path_for(step:)
         schools_cohort_setup_show_path(**path_options(step:))
+      end
+
+      def appropriate_body_default_selection
+        if school.school_type_code == 37
+          AppropriateBody.find_by(name: "Educational Success Partners (ESP)")
+        elsif school.school_type_code == 10 || school.school_type_code == 11
+          AppropriateBody.find_by(name: "Independent Schools Teacher Induction Panel (IStip)")
+        end
       end
     end
   end
