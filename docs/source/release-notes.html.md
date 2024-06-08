@@ -38,7 +38,7 @@ Providers will be able to test future declaration submissions in the 2024 cohort
 
 We’d welcome feedback on this sandbox update before it goes into production.
 
-## ?? (pending sandbox release)
+## 14 June 2024 (pending sandbox release)
 
 We're trialing new functionality in the API test ([sandbox](https://sb.manage-training-for-early-career-teachers.education.gov.uk/)) environment which will enable providers to set whether NPQ applicants are going to have their training funded by DfE.
 
