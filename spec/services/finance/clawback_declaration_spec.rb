@@ -47,7 +47,7 @@ RSpec.describe Finance::ClawbackDeclaration do
       it "returns an error" do
         expect(subject).to be_invalid
 
-        cohort = participant_profile.schedule.cohort.start_year
+        cohort = participant_declaration.cohort.start_year
         expect(subject.errors.messages_for(:participant_declaration)).to include(/You cannot submit or void declarations for the #{cohort}/)
       end
 
@@ -60,7 +60,7 @@ RSpec.describe Finance::ClawbackDeclaration do
         it "returns an error" do
           expect(subject).to be_invalid
 
-          cohort = participant_profile.schedule.cohort.start_year
+          cohort = participant_declaration.cohort.start_year
           expect(subject.errors.messages_for(:participant_declaration)).to include(/You cannot submit or void declarations for the #{cohort}/)
         end
       end
