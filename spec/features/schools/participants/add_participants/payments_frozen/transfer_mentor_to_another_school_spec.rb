@@ -4,50 +4,48 @@ require "rails_helper"
 require_relative "../../../training_dashboard/manage_training_steps"
 require_relative "./common_steps"
 
-RSpec.describe "SIT transfers mentor to another school", js: true do
+RSpec.describe "SIT transfers mentor to another school", js: true, mid_cohort: true do
   include ManageTrainingSteps
 
   scenario "when target cohort payments are frozen" do
-    inside_auto_assignment_window do
-      given_there_is_a_school_that_has_chosen_fip_for_four_cohorts_and_partnered
-      and_there_is_another_school_that_has_chosen_fip_in_the_payments_frozen_cohort_and_partnered
-      and_the_earliest_cohort_has_payments_frozen
-      and_i_am_signed_in_as_an_induction_coordinator_for_the_transfer_school
-      and_i_am_transfering_a_mentor_in_a_cohort_with_payments_frozen_between_schools
-      and_i_click_on(Cohort.current.description)
+    given_there_is_a_school_that_has_chosen_fip_for_four_cohorts_and_partnered
+    and_there_is_another_school_that_has_chosen_fip_in_the_payments_frozen_cohort_and_partnered
+    and_the_earliest_cohort_has_payments_frozen
+    and_i_am_signed_in_as_an_induction_coordinator_for_the_transfer_school
+    and_i_am_transfering_a_mentor_in_a_cohort_with_payments_frozen_between_schools
+    and_i_click_on(Cohort.current.description)
 
-      when_i_navigate_to_ect_dashboard
-      when_i_click_to_add_a_new_ect
-      then_i_should_be_on_the_who_to_add_page
+    when_i_navigate_to_ect_dashboard
+    when_i_click_to_add_a_new_ect
+    then_i_should_be_on_the_who_to_add_page
 
-      when_i_select_to_add_a "Mentor"
-      when_i_click_on_continue
+    when_i_select_to_add_a "Mentor"
+    when_i_click_on_continue
 
-      then_i_am_taken_to_the_what_we_need_from_mentor_page
+    then_i_am_taken_to_the_what_we_need_from_mentor_page
 
-      when_i_click_on_continue
-      then_i_am_taken_to_add_mentor_full_name_page
+    when_i_click_on_continue
+    then_i_am_taken_to_add_mentor_full_name_page
 
-      when_i_add_mentor_name
-      when_i_click_on_continue
-      then_i_am_taken_to_add_teachers_trn_page
+    when_i_add_mentor_name
+    when_i_click_on_continue
+    then_i_am_taken_to_add_teachers_trn_page
 
-      when_i_add_the_trn
-      when_i_click_on_continue
-      then_i_am_taken_to_add_date_of_birth_page
+    when_i_add_the_trn
+    when_i_click_on_continue
+    then_i_am_taken_to_add_date_of_birth_page
 
-      when_i_add_a_date_of_birth
-      when_i_click_on_continue
+    when_i_add_a_date_of_birth
+    when_i_click_on_continue
 
-      when_i_complete_transfer_steps
+    when_i_complete_transfer_steps
 
-      when_i_click_confirm_and_add
+    when_i_click_confirm_and_add
 
-      then_i_am_taken_to_mentor_added_confirmation_page
+    then_i_am_taken_to_mentor_added_confirmation_page
 
-      and_the_mentor_has_been_transfered_to_another_school
-      and_the_mentor_has_been_added_to_the_active_registration_cohort
-    end
+    and_the_mentor_has_been_transfered_to_another_school
+    and_the_mentor_has_been_added_to_the_active_registration_cohort
   end
 
   def and_i_am_transfering_a_mentor_in_a_cohort_with_payments_frozen_between_schools

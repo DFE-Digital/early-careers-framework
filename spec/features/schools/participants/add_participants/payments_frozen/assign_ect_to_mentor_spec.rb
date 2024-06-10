@@ -4,24 +4,22 @@ require "rails_helper"
 require_relative "../../../training_dashboard/manage_training_steps"
 require_relative "./common_steps"
 
-RSpec.describe "SIT assigns a mentor to an ECT", js: true do
+RSpec.describe "SIT assigns a mentor to an ECT", js: true, mid_cohort: true do
   include ManageTrainingSteps
 
   scenario "when payments are frozen for cohort" do
-    inside_auto_assignment_window do
-      given_there_is_a_school_that_has_chosen_fip_for_four_cohorts_and_partnered
-      and_the_earliest_cohort_has_payments_frozen
-      and_there_is_an_ect_in_the_active_registration_cohort
-      and_there_is_a_mentor_in_the_earliest_cohort
-      and_i_am_signed_in_as_an_induction_coordinator
-      and_i_click_on(Cohort.current.description)
+    given_there_is_a_school_that_has_chosen_fip_for_four_cohorts_and_partnered
+    and_the_earliest_cohort_has_payments_frozen
+    and_there_is_an_ect_in_the_active_registration_cohort
+    and_there_is_a_mentor_in_the_earliest_cohort
+    and_i_am_signed_in_as_an_induction_coordinator
+    and_i_click_on(Cohort.current.description)
 
-      when_i_navigate_to_ect_dashboard
-      and_i_assign_the_ect_a_mentor
-      then_i_see_confirmation_that_the_mentor_has_been_assigned
+    when_i_navigate_to_ect_dashboard
+    and_i_assign_the_ect_a_mentor
+    then_i_see_confirmation_that_the_mentor_has_been_assigned
 
-      and_the_mentor_has_been_assigned_to_the_active_registration_cohort
-    end
+    and_the_mentor_has_been_assigned_to_the_active_registration_cohort
   end
 
   def and_there_is_an_ect_in_the_active_registration_cohort
