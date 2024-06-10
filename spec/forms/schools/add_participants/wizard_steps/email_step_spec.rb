@@ -42,6 +42,7 @@ RSpec.describe Schools::AddParticipants::WizardSteps::EmailStep, type: :model do
     context "when registration is not yet open" do
       let(:automatically_assign_next_cohort) { true }
       let(:registration_open) { false }
+      before { allow(Cohort).to receive(:within_next_registration_period?).and_return(registration_open) }
 
       it "returns :cannot_add_registration_not_yet_open" do
         expect(step.next_step).to eql :cannot_add_registration_not_yet_open
