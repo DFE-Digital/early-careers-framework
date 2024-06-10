@@ -44,6 +44,7 @@ RSpec.describe "API Participant Declarations", type: :request do
         cpd_lead_provider: cpd_lead_provider1,
         participant_profile: participant_profile1,
         delivery_partner: delivery_partner1,
+        cohort: participant_profile1.cohort,
       )
     end
     let!(:participant_declaration2) do
@@ -57,6 +58,7 @@ RSpec.describe "API Participant Declarations", type: :request do
         cpd_lead_provider: cpd_lead_provider1,
         participant_profile: participant_profile2,
         delivery_partner: delivery_partner2,
+        cohort: participant_profile2.cohort,
       )
     end
     let!(:participant_declaration3) do
@@ -70,6 +72,7 @@ RSpec.describe "API Participant Declarations", type: :request do
         cpd_lead_provider: cpd_lead_provider1,
         participant_profile: participant_profile3,
         delivery_partner: delivery_partner2,
+        cohort: participant_profile3.cohort,
       )
     end
     let!(:participant_declaration4) do
@@ -83,6 +86,7 @@ RSpec.describe "API Participant Declarations", type: :request do
         cpd_lead_provider: cpd_lead_provider2,
         participant_profile: participant_profile4,
         delivery_partner: delivery_partner1,
+        cohort: participant_profile4.cohort,
       )
     end
 
@@ -507,6 +511,19 @@ RSpec.describe "API Participant Declarations", type: :request do
         expect(response).to have_http_status(:unprocessable_entity)
       end
 
+      it "returns 422 when there are no output fee statements available" do
+        Finance::Statement.update!(output_fee: false)
+
+        post "/api/v3/participant-declarations", params: build_params(valid_params)
+
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(parsed_response["errors"])
+          .to eq([
+            "title" => "cohort",
+            "detail" => "You cannot submit or void declarations for the #{ect_profile.schedule.cohort.start_year} cohort. The funding contract for this cohort has ended. Get in touch if you need to discuss this with us",
+          ])
+      end
+
       it "returns 422 when a required parameter is missing", :aggregation_failures do
         missing_attribute = valid_params.except(:participant_id)
         post "/api/v3/participant-declarations", params: build_params(missing_attribute)
@@ -829,6 +846,37 @@ RSpec.describe "API Participant Declarations", type: :request do
         it "returns a 200" do
           put "/api/v3/participant-declarations/#{participant_declaration.id}/void"
           expect(response.status).to eql(200)
+        end
+      end
+
+      context "when the declaration is paid" do
+        let(:participant_declaration) { create(:ect_participant_declaration, :paid, cpd_lead_provider:) }
+        let(:cohort) { participant_declaration.participant_profile.schedule.cohort }
+
+        before { create(:ecf_statement, :next_output_fee, cpd_lead_provider:, cohort:) }
+
+        it "can be clawed back" do
+          expect {
+            put "/api/v3/participant-declarations/#{participant_declaration.id}/void"
+          }.to change { participant_declaration.reload.state }.from("paid").to("awaiting_clawback")
+        end
+
+        it "returns a 200" do
+          put "/api/v3/participant-declarations/#{participant_declaration.id}/void"
+          expect(response.status).to eql(200)
+        end
+
+        it "returns 422 when there are no output fee statements available" do
+          Finance::Statement.update!(output_fee: false)
+
+          put "/api/v3/participant-declarations/#{participant_declaration.id}/void"
+
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(parsed_response["errors"])
+            .to eq([
+              "title" => "Invalid action",
+              "detail" => "Participant declaration You cannot submit or void declarations for the #{cohort.start_year} cohort. The funding contract for this cohort has ended. Get in touch if you need to discuss this with us",
+            ])
         end
       end
 

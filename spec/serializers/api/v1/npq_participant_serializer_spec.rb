@@ -50,7 +50,7 @@ module Api
                 expect(result[:data][:attributes][:funded_places]).to eq [
                   {
                     "npq_course": "npq-headship",
-                    "funded_place:": true,
+                    "funded_place": true,
                     "npq_application_id": application_one.id,
                   },
                 ]

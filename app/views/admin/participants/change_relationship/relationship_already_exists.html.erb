@@ -17,6 +17,16 @@
         <% row.with_key { "Delivery partner" } %>
         <% row.with_value { @wizard.selected_delivery_partner_name } %>
       <% end %>
+      <% if @wizard.existing_partnership.challenged_at %>
+        <% summary_list.with_row do |row| %>
+          <% row.with_key { "Challenged at" } %>
+          <% row.with_value { @wizard.existing_partnership_challenged_at } %>
+        <% end %>
+        <% summary_list.with_row do |row| %>
+          <% row.with_key { "Challenge reason" } %>
+          <% row.with_value { @wizard.existing_partnership_challenge_reason } %>
+        <% end %>
+      <% end %>
     <% end %>
 
     <%= govuk_link_to "Return to change relationship", @wizard.show_path_for(step: :change_training_programme), no_visited_state: true %>

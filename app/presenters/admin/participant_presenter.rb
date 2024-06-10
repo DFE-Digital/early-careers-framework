@@ -26,10 +26,7 @@ class Admin::ParticipantPresenter
 
     return current_cohort unless participant_profile.cohort_changed_after_payments_frozen
 
-    original_cohort = participant_profile.participant_declarations
-      .includes(:cohort)
-      .where.not(cohort: { start_year: current_cohort })
-      .pick("cohort.start_year")
+    original_cohort = participant_profile.previous_payments_frozen_cohort
 
     "#{current_cohort} (migrated after #{original_cohort || 'unknown cohort'} payments were frozen)"
   end

@@ -26,6 +26,7 @@ class RecordDeclaration
               if: :validate_evidence_held?,
               message: I18n.t(:invalid_evidence_type),
             }
+  validate :output_fee_statement_available
   validate :validate_has_passed_field, if: :validate_has_passed?
   validate :validate_milestone_exists
   validate :validates_billable_slot_available
@@ -95,6 +96,20 @@ private
     nil unless participant_identity
   end
 
+  def output_fee_statement_available
+    return if participant_profile.blank?
+    return if existing_declaration&.submitted?
+    return if existing_declaration.nil? && !participant_profile.fundable?
+
+    next_output_fee_statement = if participant_profile.ecf?
+                                  cpd_lead_provider.lead_provider.next_output_fee_statement(cohort)
+                                else
+                                  cpd_lead_provider.npq_lead_provider.next_output_fee_statement(cohort)
+                                end
+
+    errors.add(:cohort, I18n.t(:no_output_fee_statements_for_cohort, cohort: cohort.start_year)) if next_output_fee_statement.blank?
+  end
+
   def declaration_attempt
     if user && cpd_lead_provider
       @declaration_attempt ||= ParticipantDeclarationAttempt.create!(
@@ -136,7 +151,11 @@ private
   end
 
   def find_participant_declaration
-    existing_declaration = participant_profile
+    existing_declaration || participant_profile.participant_declarations.create!(declaration_parameters.merge(cohort:))
+  end
+
+  def existing_declaration
+    @existing_declaration ||= participant_profile
       .participant_declarations
       .submitted
       .or(
@@ -145,8 +164,6 @@ private
           .billable,
       )
       .find_by(declaration_parameters)
-
-    existing_declaration || participant_profile.participant_declarations.create!(declaration_parameters.merge(cohort:))
   end
 
   def uplift_flags

@@ -110,6 +110,16 @@ class ParticipantProfile::ECF < ParticipantProfile
     self.class.archivable(restrict_to_participant_ids: [id]).exists?
   end
 
+  def previous_payments_frozen_cohort
+    return nil unless cohort_changed_after_payments_frozen?
+
+    participant_declarations
+      .includes(:cohort)
+      .where.not(cohort: { payments_frozen_at: nil })
+      .where.not(cohort: schedule.cohort)
+      .pick("cohort.start_year")
+  end
+
   def completed_induction?
     induction_completion_date.present?
   end

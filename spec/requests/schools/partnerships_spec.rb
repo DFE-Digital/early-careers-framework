@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "Schools::Partnerships", type: :request do
+RSpec.describe "Schools::Partnerships", type: :request, mid_cohort: true do
   let(:user) { create(:user, :induction_coordinator) }
   let!(:school) { user.induction_coordinator_profile.schools.first }
   let(:cohort) { Cohort.current || create(:cohort, :current) }

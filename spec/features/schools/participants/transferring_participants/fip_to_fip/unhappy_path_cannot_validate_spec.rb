@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "transferring participants", type: :feature, js: true do
+RSpec.describe "transferring participants", type: :feature, js: true, mid_cohort: true do
   context "Attempting to transfer an ECT to a school" do
     context "ECT cannot be validated" do
       before do

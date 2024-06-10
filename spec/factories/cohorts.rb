@@ -27,6 +27,10 @@ FactoryBot.define do
       start_year { Date.current.year + (Date.current.month < 9 ? 0 : 1) }
     end
 
+    trait :payments_frozen do
+      payments_frozen_at { Time.zone.now }
+    end
+
     trait :consecutive_years do
       start_year { generate(:base_year) }
     end

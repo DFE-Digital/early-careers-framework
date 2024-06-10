@@ -12,7 +12,7 @@ RSpec.shared_examples "can change cohort and continue training" do |participant_
     let(:cohort) { Cohort.active_registration_cohort }
 
     before do
-      current_cohort.update!(payments_frozen_at: Time.zone.now)
+      current_cohort.freeze_payments!
 
       # Extra declaration on the same participant to ensure the results are distinct.
       create(declaration_type, :payable, declaration_type: :"retained-1", participant_profile: eligible_participant, cpd_lead_provider:)
@@ -51,7 +51,7 @@ RSpec.shared_examples "can change cohort and continue training" do |participant_
     let(:current_cohort) { participant_profile.schedule.cohort }
     let(:cohort) { Cohort.active_registration_cohort }
 
-    before { current_cohort.update!(payments_frozen_at: Time.zone.now) }
+    before { current_cohort.freeze_payments! }
 
     subject { participant_profile }
 
