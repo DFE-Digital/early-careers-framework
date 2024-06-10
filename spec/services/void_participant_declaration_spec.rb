@@ -134,7 +134,8 @@ RSpec.describe VoidParticipantDeclaration do
       end
       let(:participant_declaration) do
         travel_to declaration_date do
-          create(:npq_participant_declaration, participant_profile:, cpd_lead_provider:, declaration_type:, declaration_date:, state: "paid", has_passed: true)
+          cohort = participant_profile.schedule.cohort
+          create(:npq_participant_declaration, participant_profile:, cpd_lead_provider:, declaration_type:, declaration_date:, state: "paid", has_passed: true, cohort:)
         end
       end
 
