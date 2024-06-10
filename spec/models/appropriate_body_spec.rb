@@ -42,4 +42,13 @@ RSpec.describe AppropriateBody, type: :model do
     expect(AppropriateBody.active_in_year(2021).count).to eq(2)
     expect(AppropriateBody.active_in_year(2022).count).to eq(1)
   end
+
+  it "filters ABs removed from selection" do
+    ab1 = create(:appropriate_body_local_authority, name: "Acting")
+    ab2 = create(:appropriate_body_local_authority, name: "No Longer Acting", selectable_by_schools: false)
+    ab3 = create(:appropriate_body_local_authority, name: "from 2021", disable_from_year: 2021)
+    expect(AppropriateBody.all).to match_array [ab1, ab2, ab3]
+    expect(AppropriateBody.selectable_by_schools).to match_array [ab1, ab3]
+    expect(AppropriateBody.selectable_by_schools.active_in_year(2022)).to match_array [ab1]
+  end
 end
