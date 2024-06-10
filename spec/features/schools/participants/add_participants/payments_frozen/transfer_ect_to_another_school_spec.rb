@@ -60,22 +60,15 @@ RSpec.describe "SIT transfers ECT to another school", js: true, mid_cohort: true
     participant_profile = create(:ect_participant_profile, teacher_profile:,
                                  participant_identity:,
                                  schedule:, school_cohort: @school_cohort,
-                                 induction_start_date: Date.new(earliest_cohort.start_year, 9, 1),
-                                 induction_completion_date: Date.new(earliest_cohort.start_year + 1, 9, 1))
+                                 induction_start_date: Date.new(earliest_cohort.start_year, 9, 1))
 
-    # FIXME: This factory fails validation on participant_id, despite this being present on participant identity.
-    # Stubbing the eligibility check to return the participant_profile for now.
-    # create(:ect_participant_declaration, participant_profile:, declaration_type: "completed")
-    allow(ParticipantProfile::ECT).to receive(:eligible_to_change_cohort_and_continue_training)
-      .and_return(ParticipantProfile::ECT.where(id: participant_profile.id))
-
-    induction_programme = InductionProgramme.find_by(school_cohort: @school_cohort)
     create(:ecf_participant_validation_data, participant_profile:,
-           full_name: "Sally Teacher", trn: @participant_data[:trn], date_of_birth: Date.new(1990, 10, 24))
-
-    set_dqt_validation_result
-
+           full_name: "Sally Teacher", trn: @participant_data[:trn], date_of_birth: @participant_data[:date_of_birth])
+    induction_programme = InductionProgramme.find_by(school_cohort: @school_cohort)
     Induction::Enrol.call(participant_profile:, induction_programme:)
+
+    create(:ect_participant_declaration, participant_profile:, cpd_lead_provider:, state: :eligible)
+    set_dqt_validation_result
   end
 
   def then_i_should_be_on_the_confirm_transfer_page
