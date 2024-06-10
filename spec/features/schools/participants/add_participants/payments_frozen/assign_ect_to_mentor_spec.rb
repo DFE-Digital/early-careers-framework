@@ -69,8 +69,7 @@ RSpec.describe "SIT assigns a mentor to an ECT", js: true, mid_cohort: true do
     participant_profile = create(:mentor_participant_profile, teacher_profile:,
                                  participant_identity:,
                                  schedule:, school_cohort: @school_cohort,
-                                 induction_start_date: Date.new(earliest_cohort.start_year, 9, 1),
-                                 induction_completion_date: Date.new(earliest_cohort.start_year + 1, 9, 1))
+                                 induction_start_date: Date.new(earliest_cohort.start_year, 9, 1))
 
     # FIXME: This factory fails validation on participant_id, despite this being present on participant identity.
     # Stubbing the eligibility check to return the participant_profile for now.
