@@ -6,7 +6,7 @@ def given_there_is_a_school_that_has_chosen_fip_for_four_cohorts_and_partnered
     school_cohort = SchoolCohort.create!(cohort:, school:, induction_programme_choice: "full_induction_programme")
     induction_programme = create(:induction_programme, :fip, school_cohort:, partnership: nil)
     school_cohort.update!(default_induction_programme: induction_programme)
-    partnership = create(:partnership, school:, lead_provider:, delivery_partner:, cohort:, challenge_deadline: 2.weeks.ago)
+    partnership = create(:partnership, school:, lead_provider:, delivery_partner:, cohort:)
     induction_programme.update!(partnership:)
 
     # Magic instance vars necessary for subsequent steps (!)
@@ -27,8 +27,12 @@ def target_school
   @target_school ||= FactoryBot.create(:school, name: "Target Fip School")
 end
 
+def cpd_lead_provider
+  @cpd_lead_provider ||= FactoryBot.create(:cpd_lead_provider, :with_lead_provider, name: "CPD Provider Ltd")
+end
+
 def lead_provider
-  @lead_provider ||= FactoryBot.create(:lead_provider, name: "Big Provider Ltd")
+  @lead_provider ||= LeadProvider.find_by(cpd_lead_provider:)
 end
 
 def delivery_partner
@@ -45,7 +49,7 @@ def and_there_is_another_school_that_has_chosen_fip_in_the_payments_frozen_cohor
   induction_programme = create(:induction_programme, :fip, school_cohort: target_school_cohort, partnership: nil)
   target_school_cohort.update!(default_induction_programme: induction_programme)
   partnership = create(:partnership, school: target_school,
-                       lead_provider:, delivery_partner:, cohort: earliest_cohort, challenge_deadline: 2.weeks.ago)
+                       lead_provider:, delivery_partner:, cohort: earliest_cohort)
   induction_programme.update!(partnership:)
 
   current_target_school_cohort = create(:school_cohort, school: target_school,
