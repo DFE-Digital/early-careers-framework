@@ -6,6 +6,7 @@ module Finance
 
     validate :validate_not_already_refunded
     validate :validate_refundable_state
+    validate :output_fee_statement_available
 
     def initialize(participant_declaration)
       self.participant_declaration = participant_declaration
@@ -24,6 +25,19 @@ module Finance
   private
 
     attr_accessor :participant_declaration
+
+    def output_fee_statement_available
+      cpd_lead_provider = participant_declaration.cpd_lead_provider
+      cohort = participant_declaration.participant_profile.schedule_for(cpd_lead_provider:).cohort
+
+      next_output_fee_statement = if participant_declaration.ecf?
+                                    cpd_lead_provider.lead_provider.next_output_fee_statement(cohort)
+                                  else
+                                    cpd_lead_provider.npq_lead_provider.next_output_fee_statement(cohort)
+                                  end
+
+      errors.add(:participant_declaration, I18n.t(:no_output_fee_statements_for_cohort, cohort: cohort.start_year)) if next_output_fee_statement.blank?
+    end
 
     def validate_not_already_refunded
       return unless participant_declaration.statement_line_items.refundable.exists?
