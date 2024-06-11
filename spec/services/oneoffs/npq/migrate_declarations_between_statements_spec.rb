@@ -176,6 +176,58 @@ describe Oneoffs::NPQ::MigrateDeclarationsBetweenStatements do
       end
     end
 
+    context "when migrating to a paid/payable statement" do
+      context "when migrating to a payable statement" do
+        let(:to_statement) { create(:npq_payable_statement, name: "May 2023", cpd_lead_provider:, cohort:) }
+        let(:declaration) { create(:npq_participant_declaration, :eligible, cohort:, cpd_lead_provider:) }
+        let(:from_statement) { declaration.statements.first }
+
+        it "migrates them to the new statement and makes payable" do
+          migrate
+
+          declaration.reload
+
+          expect(declaration.statement_line_items.map(&:statement)).to all(eq(to_statement))
+          expect(declaration).to be_payable
+        end
+
+        it "records information" do
+          migrate
+
+          expect(instance).to have_recorded_info([
+            "Migrating declarations from #{from_statement_name} to #{to_statement_name} for 1 providers",
+            "Migrating 1 declarations for #{npq_lead_provider.name}",
+            "Marking 1 declarations as payable for #{to_statement_name} statement",
+          ])
+        end
+      end
+
+      context "when migrating to a paid statement" do
+        let(:to_statement) { create(:npq_paid_statement, name: "May 2023", cpd_lead_provider:, cohort:) }
+        let(:declaration) { create(:npq_participant_declaration, :payable, cohort:, cpd_lead_provider:) }
+        let(:from_statement) { declaration.statements.first }
+
+        it "migrates them to the new statement and makes paid" do
+          migrate
+
+          declaration.reload
+
+          expect(declaration.statement_line_items.map(&:statement)).to all(eq(to_statement))
+          expect(declaration).to be_paid
+        end
+
+        it "records information" do
+          migrate
+
+          expect(instance).to have_recorded_info([
+            "Migrating declarations from #{from_statement_name} to #{to_statement_name} for 1 providers",
+            "Migrating 1 declarations for #{npq_lead_provider.name}",
+            "Marking 1 declarations as paid for #{to_statement_name} statement",
+          ])
+        end
+      end
+    end
+
     describe "integrity checks" do
       context "when there is a mismatch between the number of statements" do
         let!(:mismatched_statement) { create(:npq_statement, cohort:, name: from_statement.name, output_fee: true) }

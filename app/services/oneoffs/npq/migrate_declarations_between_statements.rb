@@ -65,23 +65,12 @@ module Oneoffs::NPQ
     end
 
     def migrate_line_items!(provider, from_statement, to_statement)
-      statement_line_items = from_statement.statement_line_items
+      statement_line_items = filter_statement_line_items(from_statement.statement_line_items)
 
-      if restrict_to_declaration_types
-        statement_line_items = statement_line_items
-          .includes(:participant_declaration)
-          .where(participant_declaration: { declaration_type: restrict_to_declaration_types })
-      end
-
-      if restrict_to_declaration_states
-        statement_line_items = statement_line_items
-          .includes(:participant_declaration)
-          .where(participant_declaration: { state: restrict_to_declaration_states })
-      end
-
-      record_line_items_info(provider, statement_line_items)
-
+      record_info("Migrating #{statement_line_items.size} declarations for #{provider.name}")
       statement_line_items.update!(statement_id: to_statement.id)
+
+      change_declaration_states_for_to_statement(to_statement, statement_line_items)
     end
 
     def each_statements_by_provider
@@ -91,13 +80,33 @@ module Oneoffs::NPQ
       end
     end
 
+    def change_declaration_states_for_to_statement(to_statement, statement_line_items)
+      declarations = statement_line_items.map(&:participant_declaration).uniq
+
+      service = if to_statement.payable?
+                  ParticipantDeclarations::MarkAsPayable.new(to_statement)
+                elsif to_statement.paid?
+                  ParticipantDeclarations::MarkAsPaid.new(to_statement)
+                end
+
+      return unless service
+
+      action = service.class.to_s.underscore.humanize.split.last
+      record_info("Marking #{declarations.size} declarations as #{action} for #{to_statement.name} statement")
+      declarations.each { |declaration| service.call(declaration) }
+    end
+
+    def filter_statement_line_items(statement_line_items)
+      scope = statement_line_items.includes(:participant_declaration)
+      scope = scope.where(participant_declaration: { declaration_type: restrict_to_declaration_types }) if restrict_to_declaration_types
+      scope = scope.where(participant_declaration: { state: restrict_to_declaration_states }) if restrict_to_declaration_states
+
+      scope
+    end
+
     def record_summary_info(dry_run)
       record_info("~~~ DRY RUN ~~~") if dry_run
       record_info("Migrating declarations from #{from_statement_name} to #{to_statement_name} for #{provider_count} providers")
-    end
-
-    def record_line_items_info(provider, statement_line_items)
-      record_info("Migrating #{statement_line_items.size} declarations for #{provider.name}")
     end
 
     def warn_unless_to_statements_are_future_dated
