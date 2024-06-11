@@ -4,16 +4,19 @@ module Schools
   module Cohorts
     module WizardSteps
       class AppropriateBodyStep < ::WizardStep
-        attr_accessor :appropriate_body_id
+        attr_accessor :appropriate_body_id, :appropriate_body_type
 
-        validates :appropriate_body_id, inclusion: { in: ->(form) { form.choices.map(&:id) } }
+        before_validation :ensure_default_appropriate_body_id
+
+        validates :appropriate_body_id, inclusion: { in: ->(form) { form.choices.map(&:id) } }, if: :body_type_tsh?
+        validates :appropriate_body_type, inclusion: { in: %w[default tsh] }
 
         def self.permitted_params
           %i[appropriate_body_id appropriate_body_type]
         end
 
         def choices
-          @choices ||= AppropriateBody.where(body_type: "teaching_school_hub").active_in_year(wizard.cohort.start_year)
+          @choices ||= AppropriateBody.where(body_type: "teaching_school_hub").selectable_by_schools
         end
 
         def complete?
@@ -26,6 +29,16 @@ module Schools
 
         def next_step
           :complete
+        end
+
+        def body_type_tsh?
+          appropriate_body_type == "tsh"
+        end
+
+        def ensure_default_appropriate_body_id
+          if appropriate_body_type == "default"
+            @appropriate_body_id = wizard.appropriate_body_default_selection.id
+          end
         end
       end
     end
