@@ -9,7 +9,16 @@ module Oneoffs::NPQ
 
     include HasRecordableInformation
 
-    def initialize(cohort:, from_statement_name:, to_statement_name:, from_statement_output_fee: false, to_statement_updates: {}, restrict_to_lead_providers: nil, restrict_to_declaration_types: nil)
+    def initialize(
+      cohort:, 
+      from_statement_name:, 
+      to_statement_name:, 
+      from_statement_output_fee: false, 
+      to_statement_updates: {}, 
+      restrict_to_lead_providers: nil, 
+      restrict_to_declaration_types: nil, 
+      restrict_to_declaration_states: nil
+    )
       @cohort = cohort
       @from_statement_name = from_statement_name
       @to_statement_name = to_statement_name
@@ -17,6 +26,7 @@ module Oneoffs::NPQ
       @to_statement_updates = to_statement_updates
       @restrict_to_lead_providers = restrict_to_lead_providers
       @restrict_to_declaration_types = restrict_to_declaration_types
+      @restrict_to_declaration_states = restrict_to_declaration_states
     end
 
     def migrate(dry_run: true)
@@ -37,7 +47,10 @@ module Oneoffs::NPQ
 
   private
 
-    attr_reader :cohort, :from_statement_name, :to_statement_name, :to_statement_updates, :restrict_to_lead_providers, :restrict_to_declaration_types, :from_statement_output_fee
+    attr_reader :cohort, :from_statement_name, :to_statement_name, 
+      :to_statement_updates, :restrict_to_lead_providers, 
+      :restrict_to_declaration_types, :from_statement_output_fee, 
+      :restrict_to_declaration_states
 
     def update_to_statement_attributes!
       return if to_statement_updates.blank?
@@ -62,6 +75,12 @@ module Oneoffs::NPQ
         statement_line_items = statement_line_items
           .includes(:participant_declaration)
           .where(participant_declaration: { declaration_type: restrict_to_declaration_types })
+      end
+
+      if restrict_to_declaration_states
+        statement_line_items = statement_line_items
+          .includes(:participant_declaration)
+          .where(participant_declaration: { state: restrict_to_declaration_states })
       end
 
       record_line_items_info(provider, statement_line_items)

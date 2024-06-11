@@ -12,8 +12,20 @@ describe Oneoffs::NPQ::MigrateDeclarationsBetweenStatements do
   let(:cohort) { Cohort.current }
   let(:restrict_to_lead_providers) { nil }
   let(:restrict_to_declaration_types) { nil }
+  let(:restrict_to_declaration_states) { nil }
 
-  let(:instance) { described_class.new(cohort:, from_statement_name:, to_statement_name:, from_statement_output_fee:, to_statement_updates:, restrict_to_lead_providers:, restrict_to_declaration_types:) }
+  let(:instance) do 
+    described_class.new(
+      cohort:, 
+      from_statement_name:, 
+      to_statement_name:, 
+      from_statement_output_fee:, 
+      to_statement_updates:, 
+      restrict_to_lead_providers:, 
+      restrict_to_declaration_types:, 
+      restrict_to_declaration_states:
+    )
+  end
 
   before { allow(Rails.logger).to receive(:info) }
 
@@ -33,7 +45,7 @@ describe Oneoffs::NPQ::MigrateDeclarationsBetweenStatements do
     end
 
     context "when there are declarations" do
-      let(:declaration) { create(:npq_participant_declaration, :payable, cohort:, cpd_lead_provider:, declaration_type: :started) }
+      let(:declaration) { create(:npq_participant_declaration, :paid, cohort:, cpd_lead_provider:, declaration_type: :started) }
       let(:from_statement) { declaration.statements.first }
 
       let(:cpd_lead_provider2) { declaration2.cpd_lead_provider }
@@ -118,18 +130,50 @@ describe Oneoffs::NPQ::MigrateDeclarationsBetweenStatements do
           end
         end
       end
-    end
 
-    context "when to_statement_updates are provided" do
-      let(:to_statement_updates) { { deadline_date: 5.days.from_now.to_date, payment_date: 2.days.from_now.to_date } }
+      context "when restrict_to_declaration_states is provided" do
+        let(:restrict_to_declaration_states) { [:paid] }
 
-      it "updates the to statements" do
-        migrate
+        it "migrates only the declarations with the given declaration type" do
+          migrate
+          
+          expect(declaration.statement_line_items.map(&:statement)).to all(eq(to_statement))
+          expect(declaration2.statement_line_items.map(&:statement)).to all(eq(from_statement2))
+        end
 
-        expect(to_statement.reload).to have_attributes(to_statement_updates)
-        expect(instance).to have_recorded_info([
-          "Statement #{to_statement.name} for #{to_statement.npq_lead_provider.name} updated with #{to_statement_updates}",
-        ])
+        it "records information" do
+          migrate
+
+          expect(instance).to have_recorded_info([
+            "Migrating declarations from #{from_statement_name} to #{to_statement_name} for 2 providers",
+            "Migrating 1 declarations for #{npq_lead_provider.name}",
+            "Migrating 0 declarations for #{npq_lead_provider2.name}",
+          ])
+        end
+
+        context "when restrict_to_declaration_types contains a string" do
+          let(:restrict_to_declaration_states) { %w[payable] }
+
+          it "migrates only the declarations with the given declaration type" do
+            migrate
+
+            expect(declaration2.statement_line_items.map(&:statement)).to all(eq(to_statement2))
+            expect(declaration.statement_line_items.map(&:statement)).to all(eq(from_statement))
+          end
+        end
+      end
+
+      context "when to_statement_updates are provided" do
+        let(:to_statement_updates) { { deadline_date: 5.days.from_now.to_date, payment_date: 2.days.from_now.to_date } }
+  
+        it "updates the to statements" do
+          migrate
+  
+          expect(to_statement.reload).to have_attributes(to_statement_updates)
+          expect(instance).to have_recorded_info([
+            "Statement #{to_statement.name} for #{to_statement.npq_lead_provider.name} updated with #{to_statement_updates}",
+          ])
+        end
       end
     end
 
