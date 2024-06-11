@@ -183,15 +183,34 @@ RSpec.describe Cohort, type: :model do
   end
 
   describe "#payments_frozen?" do
-    context "when a date to freeze payments has been set" do
-      before do
-        subject.payments_frozen_at = Date.current
+    context "when the time to freeze payments was set to be in the past" do
+      it do
+        freeze_time do
+          subject.payments_frozen_at = 1.second.ago
+          is_expected.to be_payments_frozen
+        end
       end
-
-      it { is_expected.to be_payments_frozen }
     end
 
-    context "when a date to freeze payments has not been set" do
+    context "when the time to freeze payments is set to be now" do
+      it do
+        freeze_time do
+          subject.payments_frozen_at = Time.current
+          is_expected.to be_payments_frozen
+        end
+      end
+    end
+
+    context "when the time to freeze payments is set to be in the future" do
+      it do
+        freeze_time do
+          subject.payments_frozen_at = 1.second.from_now
+          is_expected.not_to be_payments_frozen
+        end
+      end
+    end
+
+    context "when the datetime to freeze payments has not been set" do
       before do
         subject.payments_frozen_at = nil
       end
