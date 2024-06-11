@@ -46,13 +46,13 @@ This is because from the 2024/25 academic year onwards there'll be a set maximum
 
 Providers using all versions of the API can set the new `funded_place` field in the 'Accept an application' request body to true or false. They will also see the `funded_place` field in the following endpoint response bodies:
 
-'View all applications'
+- 'View all applications'
 
-'View a specific application'
+- 'View a specific application'
 
-'View all participant data'
+- 'View all participant data'
 
-'View a single participant's data'
+- 'View a single participant's data'
 
 Providers who need to update a participant's funding information after an application has been accepted can do so via the 'Change funded place' endpoint.
 
