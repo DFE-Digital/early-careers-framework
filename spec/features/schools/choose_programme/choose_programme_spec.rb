@@ -695,7 +695,7 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
     end
   end
 
-  private
+private
 
   def and_school_type_is(code)
     @school.update!(school_type_code: code)
