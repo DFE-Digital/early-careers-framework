@@ -4313,7 +4313,6 @@
           "funded_places": {
             "description": "The funded place attributes for the Participant",
             "type": "array",
-            "nullable": true,
             "items": {
               "$ref": "#/components/schemas/NPQParticipantFundedPlace"
             },
