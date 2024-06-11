@@ -8,22 +8,20 @@ describe Oneoffs::NPQ::MigrateDeclarationsBetweenStatements do
   let(:to_statement) { create(:npq_statement, :next_output_fee, name: "May 2023", cpd_lead_provider:, cohort:) }
   let(:from_statement_name) { from_statement.name }
   let(:to_statement_name) { to_statement.name }
-  let(:from_statement_output_fee) { false }
   let(:cohort) { Cohort.current }
   let(:restrict_to_lead_providers) { nil }
   let(:restrict_to_declaration_types) { nil }
   let(:restrict_to_declaration_states) { nil }
 
-  let(:instance) do 
+  let(:instance) do
     described_class.new(
-      cohort:, 
-      from_statement_name:, 
-      to_statement_name:, 
-      from_statement_output_fee:, 
-      to_statement_updates:, 
-      restrict_to_lead_providers:, 
-      restrict_to_declaration_types:, 
-      restrict_to_declaration_states:
+      cohort:,
+      from_statement_name:,
+      to_statement_name:,
+      to_statement_updates:,
+      restrict_to_lead_providers:,
+      restrict_to_declaration_types:,
+      restrict_to_declaration_states:,
     )
   end
 
@@ -35,14 +33,6 @@ describe Oneoffs::NPQ::MigrateDeclarationsBetweenStatements do
     subject(:migrate) { instance.migrate(dry_run:) }
 
     it { is_expected.to eq(instance.recorded_info) }
-
-    it "sets output_fee to false on the from statements" do
-      expect { migrate }.to change { from_statement.reload.output_fee }.to(false)
-    end
-
-    it "does not change the to statements" do
-      expect { migrate }.not_to change { to_statement.reload.output_fee }
-    end
 
     context "when there are declarations" do
       let(:declaration) { create(:npq_participant_declaration, :paid, cohort:, cpd_lead_provider:, declaration_type: :started) }
@@ -71,12 +61,6 @@ describe Oneoffs::NPQ::MigrateDeclarationsBetweenStatements do
           "Migrating 1 declarations for #{npq_lead_provider.name}",
           "Migrating 1 declarations for #{npq_lead_provider2.name}",
         ])
-      end
-
-      context "when from_statement_output_fee result in no changes" do
-        let(:from_statement_output_fee) { from_statement.output_fee }
-
-        it { expect { migrate }.not_to change { from_statement.reload.output_fee } }
       end
 
       context "when restrict_to_lead_providers is provided" do
@@ -136,7 +120,7 @@ describe Oneoffs::NPQ::MigrateDeclarationsBetweenStatements do
 
         it "migrates only the declarations with the given declaration type" do
           migrate
-          
+
           expect(declaration.statement_line_items.map(&:statement)).to all(eq(to_statement))
           expect(declaration2.statement_line_items.map(&:statement)).to all(eq(from_statement2))
         end
@@ -165,29 +149,30 @@ describe Oneoffs::NPQ::MigrateDeclarationsBetweenStatements do
 
       context "when to_statement_updates are provided" do
         let(:to_statement_updates) { { deadline_date: 5.days.from_now.to_date, payment_date: 2.days.from_now.to_date } }
-  
+
         it "updates the to statements" do
           migrate
-  
+
           expect(to_statement.reload).to have_attributes(to_statement_updates)
           expect(instance).to have_recorded_info([
             "Statement #{to_statement.name} for #{to_statement.npq_lead_provider.name} updated with #{to_statement_updates}",
           ])
         end
       end
-    end
 
-    context "when dry_run is true" do
-      let(:dry_run) { true }
+      context "when dry_run is true" do
+        let(:dry_run) { true }
 
-      it "does not make any changes, but logs out as if it does" do
-        expect { migrate }.not_to change { from_statement.reload.output_fee }
+        it "does not make any changes, but logs out as if it does" do
+          expect { migrate }.not_to change { declaration.statement_line_items.first.reload.statement }
 
-        expect(instance).to have_recorded_info([
-          "~~~ DRY RUN ~~~",
-          "Migrating declarations from #{from_statement_name} to #{to_statement_name} for 1 providers",
-          "Migrating 0 declarations for #{npq_lead_provider.name}",
-        ])
+          expect(instance).to have_recorded_info([
+            "~~~ DRY RUN ~~~",
+            "Migrating declarations from #{from_statement_name} to #{to_statement_name} for 2 providers",
+            "Migrating 1 declarations for #{npq_lead_provider.name}",
+            "Migrating 1 declarations for #{npq_lead_provider2.name}",
+          ])
+        end
       end
     end
 
@@ -199,21 +184,18 @@ describe Oneoffs::NPQ::MigrateDeclarationsBetweenStatements do
       end
 
       context "when a to statement has a deadline date in the past" do
-        before { to_statement.update!(deadline_date: 1.day.ago) }
+        before do
+          to_statement.update!(deadline_date: 1.day.ago)
+          migrate
+        end
 
-        it { expect { migrate }.to raise_error(described_class::ToStatementDeadlineDateHasPastError, "To statements must be future dated") }
+        it { expect(instance).to have_recorded_info(["Warning: to statements are not future dated"]) }
       end
 
       context "when attempting to migrate between statements on different cohorts" do
         let(:other_cohort) { Cohort.previous }
 
         before { from_statement.update!(cohort: other_cohort) }
-
-        it { expect { migrate }.to raise_error(described_class::StatementMismatchError, "There is a mismatch between to/from statements") }
-      end
-
-      context "when attempting to migrate statements that are output_fee false" do
-        before { from_statement.update!(output_fee: false) }
 
         it { expect { migrate }.to raise_error(described_class::StatementMismatchError, "There is a mismatch between to/from statements") }
       end

@@ -5,24 +5,21 @@ require "has_recordable_information"
 module Oneoffs::NPQ
   class MigrateDeclarationsBetweenStatements
     class StatementMismatchError < RuntimeError; end
-    class ToStatementDeadlineDateHasPastError < RuntimeError; end
 
     include HasRecordableInformation
 
     def initialize(
-      cohort:, 
-      from_statement_name:, 
-      to_statement_name:, 
-      from_statement_output_fee: false, 
-      to_statement_updates: {}, 
-      restrict_to_lead_providers: nil, 
-      restrict_to_declaration_types: nil, 
+      cohort:,
+      from_statement_name:,
+      to_statement_name:,
+      to_statement_updates: {},
+      restrict_to_lead_providers: nil,
+      restrict_to_declaration_types: nil,
       restrict_to_declaration_states: nil
     )
       @cohort = cohort
       @from_statement_name = from_statement_name
       @to_statement_name = to_statement_name
-      @from_statement_output_fee = from_statement_output_fee
       @to_statement_updates = to_statement_updates
       @restrict_to_lead_providers = restrict_to_lead_providers
       @restrict_to_declaration_types = restrict_to_declaration_types
@@ -31,7 +28,7 @@ module Oneoffs::NPQ
 
     def migrate(dry_run: true)
       reset_recorded_info
-      ensure_to_statements_are_future_dated!
+      warn_unless_to_statements_are_future_dated
       ensure_statements_align!
       record_summary_info(dry_run)
 
@@ -47,10 +44,10 @@ module Oneoffs::NPQ
 
   private
 
-    attr_reader :cohort, :from_statement_name, :to_statement_name, 
-      :to_statement_updates, :restrict_to_lead_providers, 
-      :restrict_to_declaration_types, :from_statement_output_fee, 
-      :restrict_to_declaration_states
+    attr_reader :cohort, :from_statement_name, :to_statement_name,
+                :to_statement_updates, :restrict_to_lead_providers,
+                :restrict_to_declaration_types,
+                :restrict_to_declaration_states
 
     def update_to_statement_attributes!
       return if to_statement_updates.blank?
@@ -64,7 +61,6 @@ module Oneoffs::NPQ
     def migrate_declarations_between_statements!
       each_statements_by_provider do |provider, from_statement, to_statement|
         migrate_line_items!(provider, from_statement, to_statement)
-        from_statement.update!(output_fee: from_statement_output_fee) if from_statement.output_fee != from_statement_output_fee
       end
     end
 
@@ -104,8 +100,8 @@ module Oneoffs::NPQ
       record_info("Migrating #{statement_line_items.size} declarations for #{provider.name}")
     end
 
-    def ensure_to_statements_are_future_dated!
-      raise ToStatementDeadlineDateHasPastError, "To statements must be future dated" if to_statements_by_provider.values.any? { |statement| statement.deadline_date.past? }
+    def warn_unless_to_statements_are_future_dated
+      record_info("Warning: to statements are not future dated") if to_statements_by_provider.values.any? { |statement| statement.deadline_date.past? }
     end
 
     def ensure_statements_align!
