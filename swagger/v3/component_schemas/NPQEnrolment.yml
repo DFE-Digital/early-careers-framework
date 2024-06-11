@@ -30,6 +30,7 @@ properties:
       - npq-additional-support-offer
       - npq-early-headship-coaching-offer
       - npq-leading-primary-mathematics
+      - npq-senco
   schedule_identifier:
     description: "The schedule the participant is enrolled in. For the possible values please refer to the <a href=\"/api-reference/npq/schedules-and-milestone-dates.html#schedules-and-milestone-dates\" class=\"govuk-link\">NPQ schedules and milestone dates guidance</a>."
     type: string

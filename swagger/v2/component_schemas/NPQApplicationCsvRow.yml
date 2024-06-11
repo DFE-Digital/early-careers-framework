@@ -98,6 +98,7 @@ properties:
       - npq-additional-support-offer
       - npq-early-headship-coaching-offer
       - npq-leading-primary-mathematics
+      - npq-senco
   status:
     description: "The current state of the NPQ application"
     type: string
