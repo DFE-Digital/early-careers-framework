@@ -10,7 +10,7 @@ module Admin::Participants
     end
 
     def call
-      participant_profile.update!(induction_start_date:)
+      Participants::SyncDQTInductionStartDate.call(induction_start_date, participant_profile)
     end
   end
 end
