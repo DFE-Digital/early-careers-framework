@@ -7,5 +7,4 @@ example:
   data:
     type: "npq-application-accept"
     attributes:
-      schedule_identifier: "npq-leadership-spring"
       funded_place: true
