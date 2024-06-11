@@ -5153,28 +5153,11 @@
       "NPQApplicationAcceptAttributesRequest": {
         "description": "The NPQ Application acceptance request",
         "type": "object",
-        "required": [
-          "schedule_identifier"
-        ],
         "properties": {
-          "schedule_identifier": {
-            "description": "The new schedule of the participant",
-            "type": "string",
-            "enum": [
-              "npq-aso-march",
-              "npq-aso-june",
-              "npq-aso-november",
-              "npq-aso-december",
-              "npq-ehco-march",
-              "npq-ehco-june",
-              "npq-ehco-november",
-              "npq-ehco-december",
-              "npq-leadership-autumn",
-              "npq-leadership-spring",
-              "npq-specialist-autumn",
-              "npq-specialist-spring"
-            ],
-            "example": "npq-leadership-spring"
+          "funded_place": {
+            "description": "Whether the participant has a funded place",
+            "type": "boolean",
+            "example": true
           }
         }
       },
@@ -5208,7 +5191,7 @@
           "data": {
             "type": "npq-application-accept",
             "attributes": {
-              "schedule_identifier": "npq-leadership-spring"
+              "funded_place": "true"
             }
           }
         }
@@ -5308,7 +5291,12 @@
             ]
           },
           "eligible_for_funding": {
-            "description": "Indicates whether this NPQ participant would be eligible for funding from the DfE",
+            "description": "Indicates whether or not this participant is eligible for DfE funding",
+            "type": "boolean",
+            "example": true
+          },
+          "funded_place": {
+            "description": "Indicates whether or not this participant's training is being funded by DfE",
             "type": "boolean",
             "example": true
           },
@@ -5380,16 +5368,6 @@
             "type": "string",
             "nullable": false,
             "example": "2022"
-          },
-          "eligible_for_funding": {
-            "description": "Indicates whether or not this participant is eligible for DfE funding",
-            "type": "boolean",
-            "example": true
-          },
-          "funded_place": {
-            "description": "Indicates whether or not this participant's training is being funded by DfE",
-            "type": "boolean",
-            "example": true
           },
           "targeted_delivery_funding_eligibility": {
             "description": "Whether or not this application is eligible for Targeted Delivery Funding uplift",
