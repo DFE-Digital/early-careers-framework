@@ -7,6 +7,19 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
+## 10 June 2024
+
+On 31 July we’re closing the funding contract for the 2021 cohort.
+
+This means ECTs and mentors with partial declarations currently assigned to the 2021 cohort will be moved to the 2024 cohort.
+
+Providers can now test the functionality for the migration of these ECTs and mentors.
+Participants who’ve moved can be identified by the new `cohort_changed_after_payments_frozen` attribute to the participant response in the [API v3 test (sandbox) environment](https://sb.manage-training-for-early-career-teachers.education.gov.uk/). The value shown for these participants will be `true`.
+
+Providers will be able to test future declaration submissions in the 2024 cohort but can no longer submit or void declarations for 2021 after the contract has closed.
+
+We’d welcome feedback on this sandbox update before it goes into production.
+
 ## 5 June 2024 
 
 We're addressing a potential confusion for providers filtering participant declarations by cohort. 

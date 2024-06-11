@@ -2447,7 +2447,8 @@
                               },
                               "created_at": "2021-05-31T02:22:32.000Z",
                               "induction_end_date": "2022-01-12",
-                              "mentor_funding_end_date": "2021-04-19"
+                              "mentor_funding_end_date": "2021-04-19",
+                              "cohort_changed_after_payments_frozen": true
                             }
                           ],
                           "participant_id_changes": [
@@ -2593,7 +2594,8 @@
                               },
                               "created_at": "2021-05-31T02:22:32.000Z",
                               "induction_end_date": "2022-01-12",
-                              "mentor_funding_end_date": "2021-04-19"
+                              "mentor_funding_end_date": "2021-04-19",
+                              "cohort_changed_after_payments_frozen": false
                             }
                           ],
                           "participant_id_changes": [
@@ -3297,6 +3299,12 @@
             "nullable": true,
             "format": "date",
             "example": "2021-04-19"
+          },
+          "cohort_changed_after_payments_frozen": {
+            "description": "Identify participants that migrated to a new cohort as payments were frozen on their original cohort",
+            "type": "boolean",
+            "nullable": false,
+            "example": true
           }
         }
       },
