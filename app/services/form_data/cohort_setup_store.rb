@@ -54,6 +54,10 @@ module FormData
       get(:appropriate_body_appointed) == "no"
     end
 
+    def appropriate_body_not_listed?
+      get(:appropriate_body_type) == "not_listed"
+    end
+
     def no_expect_any_ects?
       get(:expect_any_ects) == "no"
     end

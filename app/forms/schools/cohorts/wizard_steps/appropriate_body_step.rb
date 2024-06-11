@@ -6,10 +6,10 @@ module Schools
       class AppropriateBodyStep < ::WizardStep
         attr_accessor :appropriate_body_id, :appropriate_body_type
 
-        before_validation :ensure_default_appropriate_body_id
+        before_validation :ensure_appropriate_body_id
 
         validates :appropriate_body_id, inclusion: { in: ->(form) { form.choices.map(&:id) } }, if: :body_type_tsh?
-        validates :appropriate_body_type, inclusion: { in: %w[default tsh] }
+        validates :appropriate_body_type, inclusion: { in: %w[default tsh not_listed] }
 
         def self.permitted_params
           %i[appropriate_body_id appropriate_body_type]
@@ -35,9 +35,12 @@ module Schools
           appropriate_body_type == "tsh"
         end
 
-        def ensure_default_appropriate_body_id
+        def ensure_appropriate_body_id
           if appropriate_body_type == "default"
             @appropriate_body_id = wizard.appropriate_body_default_selection.id
+          elsif appropriate_body_type == "not_listed"
+            wizard.data_store.set(:appropriate_body_appointed, "no")
+            @appropriate_body_id = nil
           end
         end
       end

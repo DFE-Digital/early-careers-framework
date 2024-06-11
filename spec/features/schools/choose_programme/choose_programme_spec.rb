@@ -497,6 +497,42 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
         then_i_am_taken_to_the_manage_your_training_page
         and_i_see_appropriate_body "Educational Success Partners (ESP)"
       end
+
+      scenario "The appropriate body is not listed" do
+        given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
+        and_school_type_is(37)
+        and_cohort_for_next_academic_year_is_created
+        and_a_provider_relationship_exists_for_the_lp_and_dp
+        and_i_am_signed_in_as_an_induction_coordinator
+        then_i_am_taken_to_what_we_need_to_know_to_setup_academic_year
+        and_the_page_should_be_accessible
+
+        when_i_click_continue
+        then_i_am_taken_to_ects_expected_in_next_academic_year_page
+
+        when_i_choose_ects_expected
+        and_i_click_continue
+        then_i_am_taken_to_the_how_will_you_run_training_page
+
+        when_i_choose_deliver_your_own_programme
+        and_i_click_continue
+        then_i_am_taken_to_the_training_confirmation_page
+
+        when_i_click_the_confirm_button
+        then_i_am_taken_to_the_appropriate_body_appointed_page
+
+        when_i_choose_yes
+        and_i_click_continue
+        then_i_am_taken_to_the_appropriate_body_type_page
+
+        when_i_click_on_appropriate_body_not_listed
+        then_i_am_taken_to_the_complete_page
+        and_i_see_the_tell_us_appropriate_body_copy
+
+        when_i_click_on_the_return_to_your_training_link
+        then_i_am_taken_to_the_manage_your_training_page
+        and_i_see_no_appropriate_body
+      end
     end
 
     context "When is an independent school (GIAS 10)" do
@@ -703,5 +739,9 @@ private
 
   def when_i_fill_appropriate_body_with(name)
     when_i_fill_in_autocomplete "schools-cohorts-setup-wizard-appropriate-body-id-field", with: name
+  end
+
+  def when_i_click_on_appropriate_body_not_listed
+    click_on "My appropriate body isn't listed"
   end
 end
