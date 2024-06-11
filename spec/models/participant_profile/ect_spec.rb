@@ -46,6 +46,36 @@ describe ParticipantProfile::ECT, type: :model do
     it { expect(instance.role).to eq("Early career teacher") }
   end
 
+  describe "#with_completion_date_status_or_declaration?" do
+    context "when the induction completion date is present" do
+      before do
+        instance.induction_completion_date = 1.week.ago.to_date
+      end
+
+      it "returns true" do
+        expect(instance).to be_with_completion_date_status_or_declaration
+      end
+    end
+
+    context "when the ect has any billable completed declarations" do
+      let!(:declaration) do
+        create(:ect_participant_declaration, :paid, declaration_type: :completed, cohort: Cohort.previous)
+      end
+
+      it "returns true" do
+        expect(declaration.participant_profile).to be_with_completion_date_status_or_declaration
+      end
+    end
+
+    context "when the ect latest induction record has completed induction status" do
+      let!(:induction_record) { create(:induction_record, :ect, induction_status: :completed) }
+
+      it "returns true" do
+        expect(induction_record.participant_profile).to be_with_completion_date_status_or_declaration
+      end
+    end
+  end
+
   include_context "can change cohort and continue training", :ect, :mentor, :induction_completion_date
 
   include_context "can archive participant profile", :mentor, :induction_completion_date do

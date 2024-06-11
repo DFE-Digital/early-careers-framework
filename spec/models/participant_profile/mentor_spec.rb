@@ -60,6 +60,36 @@ describe ParticipantProfile::Mentor, type: :model do
     end
   end
 
+  describe "#with_completion_date_status_or_declaration?" do
+    context "when a mentor completion date is present" do
+      before do
+        instance.mentor_completion_date = 1.week.ago.to_date
+      end
+
+      it "returns true" do
+        expect(instance).to be_with_completion_date_status_or_declaration
+      end
+    end
+
+    context "when the mentor has any billable completed declarations" do
+      let!(:declaration) do
+        create(:mentor_participant_declaration, :paid, declaration_type: :completed, cohort: Cohort.previous)
+      end
+
+      it "returns true" do
+        expect(declaration.participant_profile).to be_with_completion_date_status_or_declaration
+      end
+    end
+
+    context "when the mentor latest induction record has completed induction status" do
+      let!(:induction_record) { create(:induction_record, :mentor, induction_status: :completed) }
+
+      it "returns true" do
+        expect(induction_record.participant_profile).to be_with_completion_date_status_or_declaration
+      end
+    end
+  end
+
   include_context "can change cohort and continue training", :mentor, :ect, :mentor_completion_date
 
   include_context "can archive participant profile", :ect, :mentor_completion_date do
