@@ -3,7 +3,7 @@
 class Induction::Enrol < BaseService
   def call
     ActiveRecord::Base.transaction do
-      unless induction_completed
+      unless participant_profile.completed_training?
         record_active_profile_participant_state! unless participant_profile_state_already_correct?
         participant_profile.training_status_active!
         participant_profile.update!(status: :active)
@@ -26,7 +26,7 @@ class Induction::Enrol < BaseService
 private
 
   attr_reader :participant_profile, :induction_programme, :start_date, :preferred_email, :mentor_profile,
-              :school_transfer, :appropriate_body_id, :cpd_lead_provider_id, :induction_completed
+              :school_transfer, :appropriate_body_id, :cpd_lead_provider_id
 
   # preferred_email can be supplied if the participant_profile.participant_identity does not have
   # the required email for the induction i.e. a participant transferring schools might have a new email
@@ -37,8 +37,7 @@ private
                  preferred_email: nil,
                  mentor_profile: nil,
                  school_transfer: false,
-                 appropriate_body_id: nil,
-                 induction_completed: false)
+                 appropriate_body_id: nil)
     @participant_profile = participant_profile
     @induction_programme = induction_programme
     @cpd_lead_provider_id = induction_programme&.lead_provider&.cpd_lead_provider_id
@@ -47,11 +46,10 @@ private
     @mentor_profile = mentor_profile
     @school_transfer = school_transfer
     @appropriate_body_id = appropriate_body_id || school_appropriate_body_id
-    @induction_completed = induction_completed
   end
 
   def induction_status
-    induction_completed ? :completed : :active
+    participant_profile.completed_training? ? :completed : :active
   end
 
   def school_appropriate_body_id
