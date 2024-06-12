@@ -27,7 +27,7 @@ RSpec.feature "Request access to the service", type: :feature, js: true, rutabag
 private
 
   def when_i_click_on_request_access_link
-    click_on "request access to the service"
+    click_on "Request access to the service"
   end
 
   def and_i_click_on_continue
