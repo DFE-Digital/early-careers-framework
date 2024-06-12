@@ -120,10 +120,6 @@ class ParticipantProfile::ECF < ParticipantProfile
       .pick("cohort.start_year")
   end
 
-  def completed_induction?
-    induction_completion_date.present?
-  end
-
   def contacted_for_info?
     ecf_participant_validation_data.nil?
   end
@@ -186,7 +182,7 @@ class ParticipantProfile::ECF < ParticipantProfile
   def post_transitional?
     return false unless ect?
     return false unless induction_start_date
-    return false if completed_induction?
+    return false if completed_training?
 
     induction_start_date < POST_TRANSITIONAL_INDUCTION_START_DATE_DEADLINE
   end

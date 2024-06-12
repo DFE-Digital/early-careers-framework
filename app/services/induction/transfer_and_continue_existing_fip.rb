@@ -34,8 +34,7 @@ private
                           start_date:,
                           preferred_email:,
                           mentor_profile:,
-                          school_transfer: true,
-                          induction_completed:)
+                          school_transfer: true)
   end
 
   def update_mentor_pools_and_mentees
@@ -75,10 +74,6 @@ private
 
   def existing_school_partnership
     to_school.active_partnerships.find_by(cohort: school_cohort.cohort, lead_provider:, delivery_partner:)
-  end
-
-  def induction_completed
-    participant_profile.with_completion_date_status_or_declaration?
   end
 
   def induction_programme
