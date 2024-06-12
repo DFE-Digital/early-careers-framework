@@ -83,7 +83,7 @@ ActiveRecord::Base.transaction do
 
   next_urn += 1
 
-  (0..20).each do |num|
+  (0..40).each do |num|
     # Independent school
     school = NewSeeds::Scenarios::Schools::School.new(name: "School #{next_urn} type 10 #{current_cohort.start_year}-FIP", urn: padded_urn(next_urn))
                                                  .build
