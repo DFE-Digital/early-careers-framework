@@ -37,9 +37,9 @@ Providers must confirm to the DfE that they have agreed to enter into new partne
 
 **Providers should note:**
 
-* Once a partnership for a cohort is confirmed, any new participants who are registered for training at that school will be assigned ‘default’ training provision. **For example**, once a provider confirms partnership for the 2022 cohort, any participants who are registered at the school by the induction tutor will default to training with the provider and delivery partner in partnership
-* Not all participants at a given school will be registered to receive training through the (default) partnership. Therefore providers may not receive data for all participants at schools they have partnered with. **For example**, a participant begins training at school 1 which is partnered with provider A and delivery partner B. If the participant transfers to school 2 which is partnered with provider Y and delivery partner Z, the participant can choose to remain with their existing training providers (A and B). In this case, provider Y will not receive data for this participant
-* Providers may receive data for participants at schools which they do not have a partnership with. **For example**, a participant begins training at school 1 which is partnered with provider Y and delivery partner Z. They transfer to school 2 and choose to remain with their existing training providers (Y and Z). Therefore provider Y will continue to receive data for the participant, despite not being partnered with school 2
+* once a partnership for a cohort is confirmed, any new participants who are registered for training at that school will be assigned ‘default’ training provision. For example, once a provider confirms partnership for the 2022 cohort, any participants who are registered at the school by the induction tutor will default to training with the provider and delivery partner in partnership
+* not all participants at a given school will be registered to receive training through the (default) partnership. Therefore providers may not receive data for all participants at schools they have partnered with. For example, a participant begins training at school 1 which is partnered with provider A and delivery partner B. If the participant transfers to school 2 which is partnered with provider Y and delivery partner Z, the participant can choose to remain with their existing training providers (A and B). In this case, provider Y will not receive data for this participant
+* providers may receive data for participants at schools which they do not have a partnership with. For example, a participant begins training at school 1 which is partnered with provider Y and delivery partner Z. They transfer to school 2 and choose to remain with their existing training providers (Y and Z). Therefore provider Y will continue to receive data for the participant, despite not being partnered with school 2
 
 ### Find schools delivering ECF-based training in a given cohort
 
@@ -57,8 +57,9 @@ An example response body is listed below. Successful requests will return a resp
 
 #### Providers should note:
 
-* The API will **only** show schools that are eligible for funded ECF-based training programmes within a given cohort. **For example,** if schools are eligible for funding in the 2021 cohort, they will be visible via the API, and providers can go on to form partnerships with them
-* The API will **not** show schools that are ineligible for funding in a given cohort. If a school’s eligibility changes from one cohort to the next, results will default according to the latest school eligibility. **For example,** if a school was eligible for funding in the 2021 cohort but becomes ineligible for funding in 2022, the API will **not** show the school in the 2022 cohort
+* the API will **only** show schools that are eligible for funded ECF-based training programmes within a given cohort. For example, if schools are eligible for funding in the 2021 cohort, they will be visible via the API, and providers can go on to form partnerships with them
+* the API will **not** show schools that are ineligible for funding in a given cohort. If a school’s eligibility changes from one cohort to the next, results will default according to the latest school eligibility. For example, if a school was eligible for funding in the 2021 cohort but becomes ineligible for funding in 2022, the API will **not** show the school in the 2022 cohort
+* funding for the 2021 cohort ends on 31 July 2024. Schools will migrate any participants from this group who've not completed their training to the 2024 cohort
 
 For more detailed information see the specifications for this [view school details endpoint](/api-reference/reference-v3.html#api-v3-schools-ecf-get).
 
@@ -203,9 +204,9 @@ An example response body is listed below. Successful requests will return a resp
 
 #### Providers should note:
 
-* The API assumes schools intend to work with a given provider for consecutive cohorts. School induction tutors will be prompted to confirm existing partnerships with providers **will continue** into the upcoming cohort. Providers do not need take any action to continue existing partnerships with schools from one cohort to the next
-* In order for new providers to confirm partnerships with schools for an upcoming cohorts, school induction tutors must first notify DfE that their schools **will not continue** their former partnerships with existing providers for the upcoming cohort. Until induction tutors have done this, any new partnerships with new providers will be rejected by the API
-* You can use POST to create a new partnership once one has been rejected
+* the API assumes schools intend to work with a given provider for consecutive cohorts. School induction tutors will be prompted to confirm existing partnerships with providers **will continue** into the upcoming cohort. Providers do not need take any action to continue existing partnerships with schools from one cohort to the next
+* in order for new providers to confirm partnerships with schools for an upcoming cohorts, school induction tutors must first notify DfE that their schools **will not continue** their former partnerships with existing providers for the upcoming cohort. Until induction tutors have done this, any new partnerships with new providers will be rejected by the API
+* you can use POST to create a new partnership once one has been rejected
 
 For more detailed information see the specifications for this [confirm an ECF partnership endpoint.](/api-reference/reference-v3.html#api-v3-partnerships-ecf-post)
 
@@ -371,7 +372,7 @@ Providers can view data to find out whether participants:
 * have (if they're ECTs) been assigned [unfunded mentors](/api-reference/ecf/guidance.html#view-all-unfunded-mentor-details)
 * have (if they're ECTs) completed their induction, according to the Database of Qualified Teachers
 
-Note, while participants can enter different email addresses when registering for each training course they apply for, providers will only see the email address associated with a given course registration. For example, a participant may complete their ECF-based training with one associated email address, then register for an NPQ with a different email address, and go on to be an ECT mentor with a third email address. The DfE will share the relevant email address with the relevant course provider.
+Note, while participants can enter different email addresses when registering for each training course they apply for, providers will only see the email address associated with a given course registration. For example, a participant may complete their ECF-based training with one associated email address, then register for an NPQ with a different email address, and go on to be an ECT mentor with a third email address. DfE will share the relevant email address with the relevant course provider.
 
 Providers can then update data to notify DfE that participants have:
 
@@ -392,8 +393,9 @@ An example response body is listed below.
 
 **Providers should note:**
 
-* The DfE has [previously advised](/api-reference/release-notes.html#15-march-2023) of the possibility that participants may be registered as duplicates with multiple participant_ids. Where the DfE identifies duplicates, it will fix the error by ‘retiring’ one of the participant IDs, then associating all records and data under the remaining ID.
-* Providers can check if an ECF participant’s ID has changed using the `participant_id_changes` nested structure in the [ECFEnrolment](/api-reference/reference-v3.html#schema-ecfenrolment), which contains a `from_participant_id` and a `to_participant_id` string fields, as well a `changed_at` date value
+* DfE has [previously advised](/api-reference/release-notes.html#15-march-2023) of the possibility that participants may be registered as duplicates with multiple participant_ids. Where DfE identifies duplicates, it will fix the error by ‘retiring’ one of the participant IDs, then associating all records and data under the remaining ID
+* providers can check if an ECF participant’s ID has changed using the `participant_id_changes` nested structure in the [ECFEnrolment](/api-reference/reference-v3.html#schema-ecfenrolment), which contains a `from_participant_id` and a `to_participant_id` string fields, as well a `changed_at` date value
+* DfE will close the funding contract for the 2021 cohort on 31 July 2024. Schools will start moving ECTs and mentors with partial declarations originally assigned to the 2021 cohort to the 2024 cohort from mid-June  
 
 For more detailed information see the specifications for this [view multiple ECF participants endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-get).
 
@@ -889,13 +891,15 @@ These declarations will trigger payment from DfE to providers.
 
 When providers submit declarations, API response bodies will include data about which financial statement the given declaration applies to. Providers can then [view financial statement payment dates](/api-reference/ecf/guidance/#view-financial-statement-payment-dates) to check when the invoicing period, and expected payment date, will be for the given declaration.
 
+<div class="govuk-inset-text">DfE will close the funding contract for the 2021 cohort on 31 July 2024. School will start moving ECTs and mentors with partial declarations originally assigned to the 2021 cohort to the 2024 cohort from mid-June. Providers will not be able to submit or void declarations for 2021 after the contract has closed.</div>
+
 ### Test the ability to submit declarations in sandbox ahead of time
 
 `X-With-Server-Date` is a custom JSON header supported in the sandbox environment. It lets providers test their integrations and ensure they are able to submit declarations for future milestone dates.
 
 The `X-With-Server-Date` header lets providers simulate future dates, and therefore allows providers to test declaration submissions for future milestone dates.
 
-<div class="govuk-inset-text">It is only valid in the sandbox environment. Attempts to submit future declarations in the production environment (or without this header in sandbox) will be rejected as part of milestone validation.</div>
+<div class="govuk-inset-text">It's only valid in the sandbox environment. Attempts to submit future declarations in the production environment (or without this header in sandbox) will be rejected as part of milestone validation.</div>
 
 To test declaration submission functionality, include:
 
@@ -967,7 +971,7 @@ For more detailed information see the specifications for this [notify DfE that a
 }
 ```
 
-### Submit a declation to notify DfE a participant has been retained in training
+### Submit a declaration to notify DfE a participant has been retained in training
 
 Notify the DfE that a participant has reached a given retention point in their training by submitting a `retained` declaration in line with [milestone dates](/api-reference/ecf/schedules-and-milestone-dates).
 
