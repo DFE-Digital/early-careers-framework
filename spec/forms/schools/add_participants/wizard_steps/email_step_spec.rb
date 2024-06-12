@@ -24,6 +24,7 @@ RSpec.describe Schools::AddParticipants::WizardSteps::EmailStep, type: :model do
     let(:choose_school_programme) { false }
     let(:ect_participant) { false }
     let(:confirm_start_term) { false }
+    let(:need_training_setup) { false }
     let(:confirm_appropriate_body) { false }
     let(:sit_adding_themself_as_mentor) { false }
     let(:adding_yourself_as_ect) { false }
@@ -32,6 +33,7 @@ RSpec.describe Schools::AddParticipants::WizardSteps::EmailStep, type: :model do
     before do
       allow(wizard).to receive(:email_in_use?).and_return(email_taken)
       allow(wizard).to receive(:transfer?).and_return(transfer)
+      allow(wizard).to receive(:need_training_setup?).and_return(need_training_setup)
       allow(wizard).to receive(:needs_to_choose_a_mentor?).and_return(choose_mentor)
       allow(wizard).to receive(:ect_participant?).and_return(ect_participant)
       allow(wizard).to receive(:sit_adding_themself_as_mentor?).and_return(sit_adding_themself_as_mentor)
@@ -102,6 +104,14 @@ RSpec.describe Schools::AddParticipants::WizardSteps::EmailStep, type: :model do
 
         it "returns :start_term" do
           expect(step.next_step).to eql :start_term
+        end
+      end
+
+      context "when the school needs to setup cohort" do
+        let(:need_training_setup) { true }
+
+        it "returns :need_training_setup" do
+          expect(step.next_step).to eql :need_training_setup
         end
       end
 

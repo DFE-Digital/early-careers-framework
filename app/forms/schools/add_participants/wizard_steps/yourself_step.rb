@@ -17,6 +17,8 @@ module Schools
             end
           elsif wizard.needs_to_confirm_start_term?
             :start_term
+          elsif wizard.need_training_setup?
+            :need_training_setup
           elsif wizard.needs_to_choose_a_mentor?
             :choose_mentor
           elsif wizard.needs_to_confirm_appropriate_body?
