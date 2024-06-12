@@ -59,6 +59,7 @@ ActiveRecord::Base.transaction do
                                                  .build
                                                  .with_an_induction_tutor(full_name: "#{sit_name} Fip", email: "#{sit_name.downcase}.#{next_urn}.fip@example.com")
                                                  .chosen_fip_and_partnered_in(cohort:, with_appropriate_body:)
+    school.update!(school_type_code:)
 
     next_urn += 1
     school_cohort = school.school_cohorts[cohort.start_year]
@@ -80,6 +81,7 @@ ActiveRecord::Base.transaction do
                                                  .build
                                                  .with_an_induction_tutor(full_name: "#{sit_name} Cip", email: "#{sit_name.downcase}.#{next_urn}.cip@example.com")
                                                  .chosen_cip_with_materials_in(cohort:, with_appropriate_body:)
+    school.update!(school_type_code:)
 
     next_urn += 1
     school_cohort = school.school_cohorts[cohort.start_year]
@@ -100,6 +102,7 @@ ActiveRecord::Base.transaction do
                                                  .build
                                                  .with_an_induction_tutor(full_name: "#{sit_name} Diy", email: "#{sit_name.downcase}.#{next_urn}.diy@example.com")
                                                  .chosen_diy_in(cohort:)
+    school.update!(school_type_code:)
 
     next_urn += 1
     FeatureFlag.activate(:registration_pilot_school, for: school.school) if in_pilot
@@ -111,6 +114,7 @@ ActiveRecord::Base.transaction do
                                                  .build
                                                  .with_an_induction_tutor(full_name: "#{sit_name} Noects", email: "#{sit_name.downcase}.#{next_urn}.noects@example.com")
                                                  .chosen_no_ects_in(cohort:)
+    school.update!(school_type_code:)
 
     next_urn += 1
     FeatureFlag.activate(:registration_pilot_school, for: school.school) if in_pilot
@@ -121,6 +125,7 @@ ActiveRecord::Base.transaction do
     school = NewSeeds::Scenarios::Schools::School.new(name: "Reg - Cohortless #{cohort.academic_year} School#{pilot} type #{school_type_code}", urn: padded_urn(next_urn))
                                                  .build
                                                  .with_an_induction_tutor(full_name: "#{sit_name} Cohortless", email: "#{sit_name.downcase}.#{next_urn}.cohortless@example.com")
+    school.update!(school_type_code:)
 
     next_urn += 1
     FeatureFlag.activate(:registration_pilot_school, for: school.school) if in_pilot
