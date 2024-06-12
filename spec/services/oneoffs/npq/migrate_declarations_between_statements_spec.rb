@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 describe Oneoffs::NPQ::MigrateDeclarationsBetweenStatements do
+  let(:from_statement_updates) { {} }
   let(:to_statement_updates) { {} }
   let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_npq_lead_provider) }
   let(:npq_lead_provider) { cpd_lead_provider.npq_lead_provider }
@@ -18,6 +19,7 @@ describe Oneoffs::NPQ::MigrateDeclarationsBetweenStatements do
       cohort:,
       from_statement_name:,
       to_statement_name:,
+      from_statement_updates:,
       to_statement_updates:,
       restrict_to_lead_providers:,
       restrict_to_declaration_types:,
@@ -144,6 +146,19 @@ describe Oneoffs::NPQ::MigrateDeclarationsBetweenStatements do
             expect(declaration2.statement_line_items.map(&:statement)).to all(eq(to_statement2))
             expect(declaration.statement_line_items.map(&:statement)).to all(eq(from_statement))
           end
+        end
+      end
+
+      context "when from_statement_updates are provided" do
+        let(:from_statement_updates) { { output_fee: false } }
+
+        it "updates the to statements" do
+          migrate
+
+          expect(from_statement.reload).to have_attributes(from_statement_updates)
+          expect(instance).to have_recorded_info([
+            "Statement #{from_statement.name} for #{from_statement.npq_lead_provider.name} updated with #{from_statement_updates}",
+          ])
         end
       end
 

@@ -12,6 +12,7 @@ module Oneoffs::NPQ
       cohort:,
       from_statement_name:,
       to_statement_name:,
+      from_statement_updates: {},
       to_statement_updates: {},
       restrict_to_lead_providers: nil,
       restrict_to_declaration_types: nil,
@@ -21,6 +22,7 @@ module Oneoffs::NPQ
       @from_statement_name = from_statement_name
       @to_statement_name = to_statement_name
       @to_statement_updates = to_statement_updates
+      @from_statement_updates = from_statement_updates
       @restrict_to_lead_providers = restrict_to_lead_providers
       @restrict_to_declaration_types = restrict_to_declaration_types
       @restrict_to_declaration_states = restrict_to_declaration_states
@@ -34,6 +36,7 @@ module Oneoffs::NPQ
 
       ActiveRecord::Base.transaction do
         migrate_declarations_between_statements!
+        update_from_statement_attributes!
         update_to_statement_attributes!
 
         raise ActiveRecord::Rollback if dry_run
@@ -45,9 +48,18 @@ module Oneoffs::NPQ
   private
 
     attr_reader :cohort, :from_statement_name, :to_statement_name,
-                :to_statement_updates, :restrict_to_lead_providers,
-                :restrict_to_declaration_types,
+                :to_statement_updates, :from_statement_updates,
+                :restrict_to_lead_providers, :restrict_to_declaration_types,
                 :restrict_to_declaration_states
+
+    def update_from_statement_attributes!
+      return if from_statement_updates.blank?
+
+      from_statements_by_provider.each_value do |statement|
+        statement.update!(from_statement_updates)
+        record_info("Statement #{statement.name} for #{statement.npq_lead_provider.name} updated with #{from_statement_updates}")
+      end
+    end
 
     def update_to_statement_attributes!
       return if to_statement_updates.blank?
