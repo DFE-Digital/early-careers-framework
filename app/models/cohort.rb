@@ -39,14 +39,13 @@ class Cohort < ApplicationRecord
     starting_within(Date.current + 1.day, Date.current + 1.year)
   end
 
-  # Find the cohort an induction start date must be associated to:
-  #   - Cohort.current for dates ealier than Sept 2021 or
-  #   - The previous date's year cohort if the date is before Jun or
-  #   - the cohort starting the date's year otherwise.
-  def self.for_induction_start_date(date)
+  def self.for_date(date)
     return current if date < INITIAL_COHORT_START_DATE
 
-    Cohort.find_by_start_year(date.month < 6 ? date.year - 1 : date.year)
+    cohort = Cohort.find_by_start_year(date.month < 6 ? date.year - 1 : date.year)
+    return current if cohort&.payments_frozen?
+
+    cohort
   end
 
   def self.previous

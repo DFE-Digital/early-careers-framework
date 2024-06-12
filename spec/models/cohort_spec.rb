@@ -55,37 +55,50 @@ RSpec.describe Cohort, type: :model do
     end
   end
 
-  describe ".for_induction_start_date" do
-    subject { Cohort.for_induction_start_date(induction_start_date) }
+  describe ".for_date" do
+    subject { Cohort.for_date(date) }
 
     context "when the provided date is earlier than 2021" do
-      let(:induction_start_date) { Date.new(2020, 5, 1) }
+      let(:date) { Date.new(2020, 5, 1) }
 
       it { is_expected.to eq(Cohort.current) }
     end
 
     context "when the provided date is in 2021 before September" do
-      let(:induction_start_date) { Date.new(2021, 6, 1) }
+      let(:date) { Date.new(2021, 6, 1) }
 
       it { is_expected.to eq(Cohort.current) }
     end
 
     context "when the provided date is in 2021 since September" do
-      let(:induction_start_date) { Date.new(2021, 9, 1) }
+      let(:date) { Date.new(2021, 9, 1) }
 
       it { is_expected.to eq(Cohort.find_by_start_year(2021)) }
     end
 
     context "when the provided date is later than 2021 before June" do
-      let(:induction_start_date) { Date.new(2023, 3, 1) }
+      let(:date) { Date.new(2023, 3, 1) }
 
-      it { is_expected.to eq(Cohort.find_by_start_year(induction_start_date.year - 1)) }
+      it { is_expected.to eq(Cohort.find_by_start_year(date.year - 1)) }
     end
 
     context "when the provided date is later than 2021 since June" do
-      let(:induction_start_date) { Date.new(2022, 7, 1) }
+      let(:date) { Date.new(2022, 7, 1) }
 
-      it { is_expected.to eq(Cohort.find_by_start_year(induction_start_date.year)) }
+      it { is_expected.to eq(Cohort.find_by_start_year(date.year)) }
+    end
+
+    context "when the cohort has payments frozen" do
+      let(:date) { Date.new(2021, 7, 1) }
+      before { Cohort.find_by_start_year(2021).update!(payments_frozen_at: 1.minute.ago) }
+
+      it { is_expected.to eq(Cohort.current) }
+    end
+
+    context "when the cohort can't be found" do
+      let(:date) { 20.years.from_now }
+
+      it { is_expected.to be_nil }
     end
   end
 
