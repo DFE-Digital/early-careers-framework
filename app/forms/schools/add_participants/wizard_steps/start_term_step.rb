@@ -15,7 +15,7 @@ module Schools
         end
 
         def next_step
-          if !start_term_in_registration_scope?
+          if start_term != "summer"
             :cannot_add_registration_not_yet_open
           elsif wizard.need_training_setup?
             :need_training_setup
@@ -44,19 +44,6 @@ module Schools
             OpenStruct.new(id: "autumn", name: "Autumn term #{year}"),
             OpenStruct.new(id: "spring", name: "Spring term #{year + 1}"),
           ]
-        end
-
-      private
-
-        def start_term_in_registration_scope?
-          return true if Cohort.within_next_registration_period?
-          return true if cannot_automatically_determine_cohort? && start_term == "summer"
-
-          false
-        end
-
-        def cannot_automatically_determine_cohort?
-          !Cohort.within_automatic_assignment_period?
         end
       end
     end
