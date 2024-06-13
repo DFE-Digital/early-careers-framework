@@ -16,7 +16,7 @@
           <h1 class="govuk-label-wrapper">
             <span class="govuk-caption-l"><%= appropriate_body_school_name %></span>
             <label class="govuk-label govuk-label--l" for="whichTSH">
-              Which type of appropriate body have you appointed?
+              <%= title %>
             </label>
           </h1>
 
@@ -30,7 +30,7 @@
                                               appropriate_bodies,
                                               :id,
                                               :name,
-                                              label: { text: "Which teaching school hub have you appointed?", size: 's' },
+                                              label: { text: "Which teaching school hub have you appointed?", size: 's', hidden: true },
                                               options: { include_blank: true },
                                               class: "autocomplete") %>
               </div>
@@ -55,7 +55,7 @@
                                         appropriate_bodies,
                                         :id,
                                         :name,
-                                        label: { text: "Which teaching school hub have you appointed?", size: 's' },
+                                        label: { text: "Which teaching school hub have you appointed?", size: 's', hidden: true },
                                         options: { include_blank: true },
                                         class: "autocomplete") %>
 

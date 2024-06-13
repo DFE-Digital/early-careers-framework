@@ -1,4 +1,4 @@
-<% title = t("setup_school_cohort.appropriate_body_type.title.#{@wizard.appropriate_body_type}") %>
+<% title = "Which type of appropriate body have you appointed?" %>
 
 <% content_for :title, title %>
 
@@ -26,7 +26,7 @@
               <h1 class="govuk-label-wrapper">
                 <span class="govuk-caption-l"><%= @wizard.school.name %></span>
                 <label class="govuk-label govuk-label--l" for="whichTSH">
-                  Which type of appropriate body have you appointed?
+                  <%= title %>
                 </label>
               </h1>
 
@@ -40,7 +40,7 @@
                                                   @wizard.form.choices,
                                                   :id,
                                                   :name,
-                                                  label: { text: "Which teaching school hub have you appointed?", size: 's' },
+                                                  label: { text: "Which teaching school hub have you appointed?", size: 's', hidden: true },
                                                   options: { include_blank: true },
                                                   class: "autocomplete") %>
                   </div>
@@ -64,7 +64,7 @@
                                             @wizard.form.choices,
                                             :id,
                                             :name,
-                                            label: { text: "Which teaching school hub have you appointed?", size: 's' },
+                                            label: { text: "Which teaching school hub have you appointed?", size: 's', hidden: true },
                                             options: { include_blank: true },
                                             class: "autocomplete") %>
 
