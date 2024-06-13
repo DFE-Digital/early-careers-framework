@@ -135,7 +135,7 @@ RSpec.describe Participants::SyncDQTInductionStartDate do
                               .and not_change { participant_profile.induction_records.latest.cohort.start_year }
 
       expect(SyncDQTInductionStartDateError.find_by(participant_profile:).message)
-        .to include("Target school cohort starting on #{Cohort.current.start_year} not setup")
+        .to include("Target school cohort Cohort starting on #{Cohort.current.start_year} not setup")
     end
   end
 

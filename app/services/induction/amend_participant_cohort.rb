@@ -58,8 +58,7 @@ module Induction
     validates :target_cohort,
               presence: {
                 message: ->(form, _) { I18n.t("errors.cohort.blank", year: form.target_cohort_start_year, where: "the service") },
-              },
-              on: :start
+              }
 
     validate :non_completion_date
     validate :target_cohort_start_year_matches_schedule
@@ -81,12 +80,12 @@ module Induction
 
     validates :target_school_cohort,
               presence: {
-                message: ->(form, _) { I18n.t("errors.cohort.blank", year: form.target_cohort_start_year, where: form.school&.name) },
+                message: ->(form, _) { I18n.t("errors.cohort.not_setup", year: form.target_cohort_start_year, where: form.school&.name) },
               }
 
     validates :induction_programme,
               presence: {
-                message: ->(form, _) { I18n.t("errors.induction_programme.blank", year: form.target_cohort_start_year, school: form.school&.name) },
+                message: ->(form, _) { I18n.t("errors.induction_programme.not_setup", year: form.target_cohort_start_year, school: form.school&.name) },
               }
 
     delegate :school, to: :induction_record, allow_nil: true
