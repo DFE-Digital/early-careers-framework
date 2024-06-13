@@ -221,6 +221,7 @@ For more detailed information see the specifications for this [accept an NPQ app
       "school_ukprn": "10079319",
       "headteacher_status": "no",
       "eligible_for_funding": true,
+      "funded_place": true,
       "funding_choice": "trust",
       "course_identifier": "npq-leading-teaching",
       "status": "accepted",
@@ -235,7 +236,6 @@ For more detailed information see the specifications for this [accept an NPQ app
       "lead_mentor": true,
       "itt_provider": "University of Southampton",
       "schedule_identifier": "npq-leadership-spring",
-      "funded_place": true
     }
   }
 }
