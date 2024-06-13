@@ -17,6 +17,8 @@ weight: 1
 | `outcome`      | The assessment result a participant achieves a the end of an NPQ course      |
 | `declaration`    | The notification submitted by providers via the API as the sole means for triggering output payments from DfE. Declarations are submitted where there is evidence of a participant’s engagement in training for a given milestone period      |
 | `statement`    | A record of output payments (based on declarations), service fees and any adjustments the DfE may pay lead providers at the end of a contractually agreed payment period. Statements sent to providers by DfE at the end of milestone periods can be used for invoicing purposes     |
+| `funded place`    | The way for DfE and providers to identify participants who are eligible for funding and for whom there is funding available     |
+| `funding cap`    | The maximum number of places each provider can offer per NPQ that DfE will pay for from the 2024/25 academic year onwards     |
 
 ## Data states
 
