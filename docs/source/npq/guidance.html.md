@@ -429,7 +429,7 @@ For more detailed information see the specifications for this [view a single NPQ
             "cohort": "2021",
             "npq_application_id": "db3a7848-7308-4879-942a-c4a70ced400a",
             "eligible_for_funding": true,
-            "funded_place": "true"
+            "funded_place": "true",
             "training_status": "active",
             "school_urn": "123456",
             "targeted_delivery_funding_eligibility": true,
