@@ -58,7 +58,7 @@ RSpec.feature "Nominating tutors", :js do
       expect(page).to have_summary_row("Name", "John Smith")
       expect(page).to have_summary_row("Email", "a-new-john-smith@example.com")
 
-      click_on "Confirm and nominate"
+      click_on "Confirm details"
 
       expect(page).to have_css(".govuk-panel--confirmation", text: "Induction tutor nominated")
 
