@@ -52,9 +52,9 @@ class AppropriateBodySelectionForm
 
   def body_choices
     if cohort_start_year.present?
-      AppropriateBody.where(body_type: "teaching_school_hub").active_in_year(cohort_start_year)
+      AppropriateBody.where(body_type: "teaching_school_hub").active_in_year(cohort_start_year).selectable_by_schools
     else
-      AppropriateBody.where(body_type: "teaching_school_hub")
+      AppropriateBody.where(body_type: "teaching_school_hub").selectable_by_schools
     end
   end
 
