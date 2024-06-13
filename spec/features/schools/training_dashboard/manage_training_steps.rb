@@ -1169,6 +1169,11 @@ module ManageTrainingSteps
 
   def then_i_am_taken_to_ect_confirmation_page
     expect(page).to have_selector("h1", text: "#{@participant_data[:full_name]} has been added as an ECT")
+    expect(page).to have_text("Please check they’re registered with your appropriate body")
+    expect(page).to have_link(
+      "appointed an appropriate body",
+      href: "https://www.gov.uk/government/publications/statutory-teacher-induction-appropriate-bodies/find-an-appropriate-body",
+    )
     expect(page).to have_text("What happens next")
   end
 
