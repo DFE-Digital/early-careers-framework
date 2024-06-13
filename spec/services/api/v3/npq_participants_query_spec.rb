@@ -86,7 +86,7 @@ RSpec.describe Api::V3::NPQParticipantsQuery do
       end
 
       context "when no sort parameter is specified" do
-        it "returns all records ordered by participant profile created_at ascending by default" do
+        it "returns all records ordered by the user created_at ascending by default" do
           expect(participants.map(&:id)).to eq(
             [another_participant_profile, participant_profile].map(&:user_id),
           )
