@@ -6,7 +6,7 @@ module Schools
       class AppropriateBodyAppointedStep < ::WizardStep
         attr_accessor :appropriate_body_appointed
 
-        validates :appropriate_body_appointed, inclusion: { in: %w[yes no] }
+        validates :appropriate_body_appointed, inclusion: { in: %w[yes no], message: 'Specify whether you have appointed an appropriate body' }
 
         def self.permitted_params
           %i[appropriate_body_appointed]
