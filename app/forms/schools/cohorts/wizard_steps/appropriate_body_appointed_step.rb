@@ -6,7 +6,7 @@ module Schools
       class AppropriateBodyAppointedStep < ::WizardStep
         attr_accessor :appropriate_body_appointed
 
-        validates :appropriate_body_appointed, inclusion: { in: %w[yes no], message: 'Specify whether you have appointed an appropriate body' }
+        validates :appropriate_body_appointed, inclusion: { in: %w[yes no], message: "Specify whether you have appointed an appropriate body" }
 
         def self.permitted_params
           %i[appropriate_body_appointed]
@@ -14,6 +14,13 @@ module Schools
 
         def appropriate_body_appointed?
           appropriate_body_appointed == "yes"
+        end
+
+        def body_appointed_choices
+          [
+            OpenStruct.new(id: "yes", name: "Yes"),
+            OpenStruct.new(id: "no", name: "No, I will appoint an appropriate body later"),
+          ]
         end
 
         def complete?

@@ -8,8 +8,8 @@ module Schools
 
         before_validation :ensure_appropriate_body_id
 
-        validates :appropriate_body_id, inclusion: { in: ->(form) { form.choices.map(&:id) }, message: 'Select a teaching school hub' }, if: :body_type_tsh?
-        validates :appropriate_body_type, inclusion: { in: %w[default tsh not_listed], message: 'Specify the type of appropriate body appointed' }
+        validates :appropriate_body_id, inclusion: { in: ->(form) { form.choices.map(&:id) }, message: "Select a teaching school hub" }, if: :body_type_tsh?
+        validates :appropriate_body_type, inclusion: { in: %w[default tsh not_listed], message: "Specify the type of appropriate body appointed" }
 
         def self.permitted_params
           %i[appropriate_body_id appropriate_body_type]
