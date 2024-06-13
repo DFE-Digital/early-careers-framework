@@ -36,6 +36,7 @@ Providers can view application data to find out whether NPQ applicants:
 * have a valid email address
 * have a valid TRN
 * are eligible for funding
+* have a funded place 
 
 Providers can then accept or reject applications to NPQ courses.
 
@@ -98,7 +99,8 @@ For more detailed information see the specifications for this [view multiple NPQ
         "teacher_catchment_country": "United Kingdom of Great Britain and Northern Ireland",
         "itt_provider": null,
         "lead_mentor": false,
-        "schedule_identifier": "npq-leadership-spring"
+        "schedule_identifier": "npq-leadership-spring",
+        “funded_place”: “null”
       }
     }
   ]
@@ -150,7 +152,8 @@ For more detailed information see the specifications for this [view a specific N
       “teacher_catchment_iso_country_code”: “FRA”,
       “lead_mentor”: true,
       “itt_provider”: “University of Southampton”,
-      "schedule_identifier": "npq-leadership-spring"
+      "schedule_identifier": "npq-leadership-spring",
+      “funded_place”: “null”
     }
   }
 }
@@ -183,7 +186,8 @@ An example request body is listed below.
   "data": {
     "type": "npq-application-accept",
     "attributes": {
-      "schedule_identifier": "npq-leadership-spring"
+      "schedule_identifier": "npq-leadership-spring",
+      "funded_place": "true || false"
     }
   }
 }
@@ -230,7 +234,8 @@ For more detailed information see the specifications for this [accept an NPQ app
       "teacher_catchment_iso_country_code": "FRA",
       "lead_mentor": true,
       "itt_provider": "University of Southampton",
-      "schedule_identifier": "npq-leadership-spring"
+      "schedule_identifier": "npq-leadership-spring",
+      "funded_place": "null"
     }
   }
 }
@@ -292,7 +297,8 @@ For more detailed information see the specifications for this [accept an NPQ app
       "teacher_catchment_iso_country_code": "FRA",
       "lead_mentor": true,
       "itt_provider": "University of Southampton",
-      "schedule_identifier": "npq-leadership-spring"
+      "schedule_identifier": "npq-leadership-spring",
+      "funded_place": "null"
     }
   }
 }
@@ -423,6 +429,7 @@ For more detailed information see the specifications for this [view a single NPQ
             "cohort": "2021",
             "npq_application_id": "db3a7848-7308-4879-942a-c4a70ced400a",
             "eligible_for_funding": true,
+            "funded_place": "true"
             "training_status": "active",
             "school_urn": "123456",
             "targeted_delivery_funding_eligibility": true,
