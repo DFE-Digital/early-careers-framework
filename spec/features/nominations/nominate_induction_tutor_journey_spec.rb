@@ -42,7 +42,7 @@ RSpec.feature "ECT nominate SIT journey", type: :feature, js: true, mid_cohort: 
     click_on "Continue"
     then_i_should_be_on_the_check_details_page
 
-    click_on "Confirm and nominate"
+    click_on "Confirm details"
     then_i_should_be_on_the_nominate_sit_success_page
     and_the_page_should_be_accessible
   end
@@ -98,7 +98,7 @@ RSpec.feature "ECT nominate SIT journey", type: :feature, js: true, mid_cohort: 
     then_i_should_be_on_the_check_details_page
     and_the_page_should_be_accessible
 
-    click_on "Confirm and nominate"
+    click_on "Confirm details"
     then_i_should_be_on_the_nominate_sit_success_page
     and_the_page_should_be_accessible
   end
@@ -122,7 +122,7 @@ RSpec.feature "ECT nominate SIT journey", type: :feature, js: true, mid_cohort: 
     click_on "Continue"
     then_i_should_be_on_the_check_details_page
 
-    click_on "Confirm and nominate"
+    click_on "Confirm details"
     then_i_should_be_on_the_nominate_sit_success_page
   end
 end
