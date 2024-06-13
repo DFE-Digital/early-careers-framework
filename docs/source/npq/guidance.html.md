@@ -56,7 +56,7 @@ Note, while participants can enter different email addresses when applying for t
  GET /api/v3/npq-applications
 ```
 
-Note, providers can also filter results to see more specific or up to date data by adding `cohort`, `participant_id` and `updated_since` filters to the parameter. For example: `GET /api/v3/npq-applications?filter[cohort]=2021&filter[participant_id]=7e5bcdbf-c818-4961-8da5-439cab1984e0&filter[updated_since]=2020-11-13T11:21:55Z`
+Note, providers can also filter results to see more specific or up to date data by adding `cohort`, `participant_id` and `updated_since` filters to the parameter. For example: `GET /api/v3/npq-applications?filter[cohort]=2024&filter[participant_id]=7e5bcdbf-c818-4961-8da5-439cab1984e0&filter[updated_since]=2020-11-13T11:21:55Z`
 
 An example response body is listed below.
 
@@ -88,9 +88,9 @@ For more detailed information see the specifications for this [view multiple NPQ
         "school_ukprn": "12345678",
         "status": "pending",
         "works_in_school": true,
-        "created_at": "2022-07-06T10:47:24Z",
-        "updated_at": "2022-11-24T17:09:37Z",
-        "cohort": "2022",
+        "created_at": "2024-07-06T10:47:24Z",
+        "updated_at": "2024-11-24T17:09:37Z",
+        "cohort": "2024",
         "eligible_for_funding": true,
          "targeted_delivery_funding_eligibility": false,
         "teacher_catchment": true,
@@ -140,10 +140,10 @@ For more detailed information see the specifications for this [view a specific N
       “funding_choice”: “trust”,
       “course_identifier”: “npq-leading-teaching”,
       “status”: “pending”,
-      “created_at”: “2021-05-31T02:21:32.000Z”,
-      “updated_at”: “2021-05-31T02:22:32.000Z”,
+      “created_at”: “2024-05-31T02:21:32.000Z”,
+      “updated_at”: “2024-05-31T02:22:32.000Z”,
       “ineligible_for_funding_reason”: “establishment-ineligible”,
-      “cohort”: “2022",
+      “cohort”: “2024",
       “targeted_delivery_funding_eligibility”: true,
       “teacher_catchment”: true,
       “teacher_catchment_country”: “France”,
@@ -220,10 +220,10 @@ For more detailed information see the specifications for this [accept an NPQ app
       "funding_choice": "trust",
       "course_identifier": "npq-leading-teaching",
       "status": "accepted",
-      "created_at": "2021-05-31T02:21:32.000Z",
-      "updated_at": "2021-05-31T02:22:32.000Z",
+      "created_at": "2024-05-31T02:21:32.000Z",
+      "updated_at": "2024-05-31T02:22:32.000Z",
       "ineligible_for_funding_reason": "establishment-ineligible",
-      "cohort": "2022",
+      "cohort": "2024",
       "targeted_delivery_funding_eligibility": true,
       "teacher_catchment": true,
       "teacher_catchment_country": "France",
@@ -282,10 +282,10 @@ For more detailed information see the specifications for this [accept an NPQ app
       "funding_choice": "trust",
       "course_identifier": "npq-leading-teaching",
       "status": "rejected",
-      "created_at": "2021-05-31T02:21:32.000Z",
-      "updated_at": "2021-05-31T02:22:32.000Z",
+      "created_at": "2024-05-31T02:21:32.000Z",
+      "updated_at": "2024-05-31T02:22:32.000Z",
       "ineligible_for_funding_reason": "establishment-ineligible",
-      "cohort": "2022",
+      "cohort": "2024",
       "targeted_delivery_funding_eligibility": true,
       "teacher_catchment": true,
       "teacher_catchment_country": "France",
@@ -356,13 +356,13 @@ For more detailed information see the specifications for this [view multiple NPQ
       "attributes": {
         "full_name": "Isabelle MacDonald",
         "teacher_reference_number": "1234567",
-        "updated_at": "2021-05-31T02:22:32.000Z",
+        "updated_at": "2024-05-31T02:22:32.000Z",
         "npq_enrolments": [
           {
             "email": "isabelle.macdonald2@some-school.example.com",
             "course_identifier": "npq-senior-leadership",
             "schedule_identifier": "npq-leadership-autumn",
-            "cohort": "2021",
+            "cohort": "2024",
             "npq_application_id": "db3a7848-7308-4879-942a-c4a70ced400a",
             "eligible_for_funding": true,
             "training_status": "active",
@@ -370,7 +370,7 @@ For more detailed information see the specifications for this [view multiple NPQ
             "targeted_delivery_funding_eligibility": true,
             "withdrawal": null
             "deferral": null
-            "created_at": "2021-05-31T02:22:32.000Z"
+            "created_at": "2024-05-31T02:22:32.000Z"
           }
         ],
         "participant_id_changes": [
@@ -414,13 +414,13 @@ For more detailed information see the specifications for this [view a single NPQ
       "attributes": {
         "full_name": "Isabelle MacDonald",
         "teacher_reference_number": "1234567",
-        "updated_at": "2021-05-31T02:22:32.000Z",
+        "updated_at": "2024-05-31T02:22:32.000Z",
         "npq_enrolments": [
           {
             "email": "isabelle.macdonald2@some-school.example.com",
             "course_identifier": "npq-senior-leadership",
             "schedule_identifier": "npq-leadership-autumn",
-            "cohort": "2021",
+            "cohort": "2024",
             "npq_application_id": "db3a7848-7308-4879-942a-c4a70ced400a",
             "eligible_for_funding": true,
             "training_status": "active",
@@ -428,7 +428,7 @@ For more detailed information see the specifications for this [view a single NPQ
             "targeted_delivery_funding_eligibility": true,
             "withdrawal": null
             "deferral": null
-            "created_at": "2021-05-31T02:22:32.000Z"
+            "created_at": "2024-05-31T02:22:32.000Z"
           }
         ],
         "participant_id_changes": [
@@ -548,7 +548,7 @@ Successful requests will return a response body including updates to the `schedu
 
 **Note**, the API will reject a schedule change if any `submitted`, `eligible`, `payable` or `paid` declarations have a `declaration_date` which does not align with the new schedule’s milestone dates.
 
-For example, a participant is in the 2022 cohort on an `npq-specialist-autumn` schedule. Their provider has submitted a `started` declaration dated 1 October 2022. The provider tries to change the schedule to `npq-specialist-spring`. The API will reject the change because a spring schedule does not start until January, which is after the declaration date. The API returns an error message with instructions to void existing declarations first.
+For example, a participant is in the 2024 cohort on an `npq-specialist-autumn` schedule. Their provider has submitted a `started` declaration dated 1 October 2024. The provider tries to change the schedule to `npq-specialist-spring`. The API will reject the change because a spring schedule does not start until January, which is after the declaration date. The API returns an error message with instructions to void existing declarations first.
 
 For more detailed information see the specifications for this [notify that an NPQ participant has changed their training schedule endpoint](/api-reference/reference-v3.html#api-v3-participants-npq-id-change-schedule-put).
 
@@ -561,7 +561,7 @@ For more detailed information see the specifications for this [notify that an NP
     "attributes": {
       "schedule_identifier": "npq-leadership-autumn",
       "course_identifier": "npq-leading-teaching",
-      "cohort": "2021"
+      "cohort": "2024"
     }
   }
 }
@@ -596,9 +596,9 @@ For more detailed information see the specifications for this [view NPQ outcomes
         "participant_id": "66218835-9430-4d0c-98ef-7caf0bb4a59b",
         "course_identifier": "npq-leading-teaching",
         "state": "passed",
-        "completion_date": "2021-05-31T00:00:00+00:00",
-        "created_at": "2021-05-31T02:21:32.000Z",
-        "updated_at": "2021-05-31T02:21:32.000Z"
+        "completion_date": "2024-05-31T00:00:00+00:00",
+        "created_at": "2024-05-31T02:21:32.000Z",
+        "updated_at": "2024-05-31T02:21:32.000Z"
       }
     }
   ]
@@ -634,9 +634,9 @@ For more detailed information see the specifications for this [view NPQ outcome 
         "participant_id": "66218835-9430-4d0c-98ef-7caf0bb4a59b",
         "course_identifier": "npq-leading-teaching",
         "state": "passed",
-        "completion_date": "2021-05-31T00:00:00+00:00",
-        "created_at": "2021-05-31T02:21:32.000Z",
-        "updated_at": "2021-05-31T02:21:32.000Z"
+        "completion_date": "2024-05-31T00:00:00+00:00",
+        "created_at": "2024-05-31T02:21:32.000Z",
+        "updated_at": "2024-05-31T02:21:32.000Z"
       }
     }
   ]
@@ -670,7 +670,7 @@ For more detailed information see the specifications for this [update an NPQ out
     "attributes": {
       "course_identifier": "npq-leading-teaching",
       "state": "passed",
-      "completion_date": "2021-05-31"
+      "completion_date": "2024-05-31"
     }
   }
 }
@@ -698,7 +698,7 @@ To test declaration submission functionality, include:
 * the value of your chosen date in ISO8601 Date with time and Timezone (i.e. RFC3339 format). For example:
 
 ```
-X-With-Server-Date: 2022-01-10T10:42:00Z
+X-With-Server-Date: 2025-01-10T10:42:00Z
 ```
 
 ### Notify DfE a participant has started training
@@ -728,7 +728,7 @@ For more detailed information see the specifications for this [notify DfE that a
     "attributes": {
       "participant_id": "db3a7848-7308-4879-942a-c4a70ced400a",
       "declaration_type": "started",
-      "declaration_date": "2021-05-31T02:21:32.000Z",
+      "declaration_date": "2024-05-31T02:21:32.000Z",
       "course_identifier": "npq-leading-teaching"
     }
   }
@@ -790,7 +790,7 @@ For more detailed information see the specifications for this [notify DfE that a
     “attributes”: {
       "participant_id": "db3a7848-7308-4879-942a-c4a70ced400a",
       "declaration_type": "retained-1",
-      "declaration_date": "2021-05-31T02:21:32.000Z",
+      "declaration_date": "2024-05-31T02:21:32.000Z",
       "course_identifier": "npq-headship"
     }
   }
@@ -854,7 +854,7 @@ For more detailed information see the specifications for this [notify DfE that a
     “attributes”: {
       "participant_id": "db3a7848-7308-4879-942a-c4a70ced400a",
       "declaration_type": "completed",
-      "declaration_date": "2021-05-31T02:21:32.000Z",
+      "declaration_date": "2024-05-31T02:21:32.000Z",
       "course_identifier": "npq-leading-teaching",
       "has_passed": true
     }
@@ -872,7 +872,7 @@ For more detailed information see the specifications for this [notify DfE that a
     "attributes": {
       "participant_id": "db3a7848-7308-4879-942a-c4a70ced400a",
       "declaration_type": "completed",
-      "declaration_date": "2021-05-31T02:21:32.000Z",
+      "declaration_date": "2024-05-31T02:21:32.000Z",
       "course_identifier": "npq-leading-teaching",
       "state": "eligible",
       "updated_at": "2020-11-13T11:21:55Z",
@@ -898,7 +898,7 @@ View all declarations which have been submitted to date. Check declaration submi
 GET /api/v3/participant-declarations
 ```
 
-Note, providers can also filter results by adding filters to the parameter. For example: `GET /api/v3/participant-declarations?filter[participant_id]=ab3a7848-1208-7679-942a-b4a70eed400a` or `GET /api/v3/participant-declarations?filter[cohort]=2022&filter[updated_since]=2020-11-13T11:21:55Z`
+Note, providers can also filter results by adding filters to the parameter. For example: `GET /api/v3/participant-declarations?filter[participant_id]=ab3a7848-1208-7679-942a-b4a70eed400a` or `GET /api/v3/participant-declarations?filter[cohort]=2024&filter[updated_since]=2020-11-13T11:21:55Z`
 
 An example response body is listed below.
 
@@ -1045,14 +1045,14 @@ For more detailed information see the specifications for this [view all statemen
       "type": "statement",
       "attributes": {
         "month": "May",
-        "year": "2022",
+        "year": "2024",
         "type": "npq",
-        "cohort": "2021",
-        "cut_off_date": "2022-04-30",
-        "payment_date": "2022-05-25",
+        "cohort": "2024",
+        "cut_off_date": "2024-04-30",
+        "payment_date": "2024-05-25",
         "paid": true,
-        "created_at": "2021-05-31T02:22:32.000Z",
-        "updated_at": "2021-05-31T02:22:32.000Z"
+        "created_at": "2024-05-31T02:22:32.000Z",
+        "updated_at": "2024-05-31T02:22:32.000Z"
       }
     }
   ]
@@ -1080,14 +1080,14 @@ For more detailed information see the specifications for this [view a specific s
     "type": "statement",
     "attributes": {
       "month": "May",
-      "year": "2022",
+      "year": "2024",
       "type": "npq",
-      "cohort": "2021",
-      "cut_off_date": "2022-04-30",
-      "payment_date": "2022-05-25",
+      "cohort": "2024",
+      "cut_off_date": "2024-04-30",
+      "payment_date": "2024-05-25",
       "paid": true,
-      "created_at": "2021-05-31T02:22:32.000Z",
-      "updated_at": "2021-05-31T02:22:32.000Z"
+      "created_at": "2024-05-31T02:22:32.000Z",
+      "updated_at": "2024-05-31T02:22:32.000Z"
     }
   }
 }
