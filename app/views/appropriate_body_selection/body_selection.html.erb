@@ -3,7 +3,7 @@
 <% title = "Which type of appropriate body have you appointed?" %>
 <% content_for :title, title %>
 
-<% content_for :before_content, govuk_back_link(text: "Back", href: url_for(action: :appropriate_body_type)) %>
+<% content_for :before_content, govuk_back_link(text: "Back", href: appropriate_body_from_path) %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">

@@ -6,12 +6,6 @@ class AppropriateBodySelectionForm
   include ActiveModel::Serialization
   include ActiveRecord::Callbacks
 
-  TYPES = [
-    OpenStruct.new(id: "local_authority", name: "Local authority", disable_from_year: 2023),
-    OpenStruct.new(id: "national", name: "National organisation", disable_from_year: nil),
-    OpenStruct.new(id: "teaching_school_hub", name: "Teaching school hub", disable_from_year: nil),
-  ].freeze
-
   attr_accessor :body_appointed, :body_id, :cohort_start_year, :body_type, :default_appropriate_body
 
   before_validation :ensure_default_appropriate_body_id
@@ -36,18 +30,6 @@ class AppropriateBodySelectionForm
       OpenStruct.new(id: "yes", name: "Yes"),
       OpenStruct.new(id: "no", name: "No, I will appoint an appropriate body later"),
     ]
-  end
-
-  def body_type_choices
-    self.class.body_type_choices_for_year(cohort_start_year)
-  end
-
-  def self.body_type_choices_for_year(cohort_start_year)
-    if cohort_start_year.present?
-      TYPES.select { |ab_type| ab_type.disable_from_year.nil? || cohort_start_year < ab_type.disable_from_year }
-    else
-      TYPES
-    end
   end
 
   def body_choices
