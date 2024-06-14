@@ -431,7 +431,8 @@ For more detailed information see the specifications for this [view multiple ECF
             "deferral": null,
             "created_at": "2024-05-31T02:22:32.000Z",
             "induction_end_date": "2025-01-12",
-            "mentor_funding_end_date": "2024-04-19"
+            "mentor_funding_end_date": "2024-04-19",
+            "cohort_changed_after_payments_frozen": false
           }
         ],
         "participant_id_changes": [
@@ -493,7 +494,8 @@ For more detailed information see the specifications for this [view a single ECF
           "deferral": null,
           "created_at": "2024-05-31T02:22:32.000Z",
           "induction_end_date": "2025-01-12",
-          "mentor_funding_end_date": "2024-04-19"
+          "mentor_funding_end_date": "2024-04-19",
+          "cohort_changed_after_payments_frozen": false
         }
       ],
       "participant_id_changes": [
