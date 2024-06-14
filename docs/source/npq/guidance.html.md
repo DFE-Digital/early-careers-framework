@@ -100,7 +100,7 @@ For more detailed information see the specifications for this [view multiple NPQ
         "itt_provider": null,
         "lead_mentor": false,
         "schedule_identifier": "npq-leadership-spring",
-        “funded_place”: “null”
+        “funded_place”: null
       }
     }
   ]
@@ -153,7 +153,7 @@ For more detailed information see the specifications for this [view a specific N
       “lead_mentor”: true,
       “itt_provider”: “University of Southampton”,
       "schedule_identifier": "npq-leadership-spring",
-      “funded_place”: “null”
+      “funded_place”: null
     }
   }
 }
@@ -187,7 +187,7 @@ An example request body is listed below.
     "type": "npq-application-accept",
     "attributes": {
       "schedule_identifier": "npq-leadership-spring",
-      "funded_place": "true || false"
+      "funded_place": true
     }
   }
 }
@@ -235,7 +235,7 @@ For more detailed information see the specifications for this [accept an NPQ app
       "lead_mentor": true,
       "itt_provider": "University of Southampton",
       "schedule_identifier": "npq-leadership-spring",
-      "funded_place": "null"
+      "funded_place": true
     }
   }
 }
@@ -298,7 +298,7 @@ For more detailed information see the specifications for this [accept an NPQ app
       "lead_mentor": true,
       "itt_provider": "University of Southampton",
       "schedule_identifier": "npq-leadership-spring",
-      "funded_place": "null"
+      "funded_place": null
     }
   }
 }
@@ -371,6 +371,7 @@ For more detailed information see the specifications for this [view multiple NPQ
             "cohort": "2021",
             "npq_application_id": "db3a7848-7308-4879-942a-c4a70ced400a",
             "eligible_for_funding": true,
+            "funded_place": true,
             "training_status": "active",
             "school_urn": "123456",
             "targeted_delivery_funding_eligibility": true,
@@ -429,7 +430,7 @@ For more detailed information see the specifications for this [view a single NPQ
             "cohort": "2021",
             "npq_application_id": "db3a7848-7308-4879-942a-c4a70ced400a",
             "eligible_for_funding": true,
-            "funded_place": "true",
+            "funded_place": true,
             "training_status": "active",
             "school_urn": "123456",
             "targeted_delivery_funding_eligibility": true,
