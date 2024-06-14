@@ -13,6 +13,7 @@ class Induction::TransferToSchoolsProgramme < BaseService
       end
       old_school = latest_induction_record.school
 
+      participant_profile.update!(cohort_changed_after_payments_frozen:)
       induction_record = Induction::Enrol.call(participant_profile:,
                                                induction_programme:,
                                                start_date:,
@@ -43,6 +44,12 @@ private
     @start_date = start_date
     @end_date = end_date || start_date
     @mentor_profile = mentor_profile
+  end
+
+  delegate :cohort, to: :induction_programme
+
+  def cohort_changed_after_payments_frozen
+    participant_profile.eligible_to_change_cohort_and_continue_training?(cohort:)
   end
 
   def latest_induction_record

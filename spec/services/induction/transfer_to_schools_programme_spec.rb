@@ -36,6 +36,32 @@ RSpec.describe Induction::TransferToSchoolsProgramme do
       expect { service_call }.to change { induction_programme_2.induction_records.count }.by 1
     end
 
+    context "when the participant is eligible to be moved from a frozen cohort to the target one" do
+      before do
+        allow(participant_profile).to receive(:eligible_to_change_cohort_and_continue_training?)
+                                        .with(cohort: school_cohort_2.cohort)
+                                        .and_return(true)
+        service_call
+      end
+
+      it "flags the participant as changed for that reason" do
+        expect(participant_profile).to be_cohort_changed_after_payments_frozen
+      end
+    end
+
+    context "when the participant is not eligible to be moved from a frozen cohort to the target one" do
+      before do
+        allow(participant_profile).to receive(:eligible_to_change_cohort_and_continue_training?)
+                                        .with(cohort: school_cohort_2.cohort)
+                                        .and_return(false)
+        service_call
+      end
+
+      it "flag the participant as not changed for that reason" do
+        expect(participant_profile).not_to be_cohort_changed_after_payments_frozen
+      end
+    end
+
     context "record details" do
       let(:new_induction_record) { participant_profile.induction_records.latest }
 

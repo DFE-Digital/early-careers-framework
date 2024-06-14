@@ -16,6 +16,8 @@ private
   attr_reader :end_date, :from_school, :mentor_profile, :participant_profile, :preferred_email,
               :school_cohort, :start_date, :to_school
 
+  delegate :cohort, to: :school_cohort
+
   def initialize(school_cohort:, participant_profile:, email: nil, start_date: Time.zone.now, end_date: nil, mentor_profile: nil)
     @school_cohort = school_cohort
     @participant_profile = participant_profile
@@ -29,6 +31,7 @@ private
   end
 
   def enrol_participant_at_new_programme
+    participant_profile.update!(cohort_changed_after_payments_frozen:)
     Induction::Enrol.call(participant_profile:,
                           induction_programme:,
                           start_date:,
@@ -52,6 +55,10 @@ private
     raise ArgumentError, "Participant is already enrolled at this school" if from_school == to_school
   end
 
+  def cohort_changed_after_payments_frozen
+    participant_profile.eligible_to_change_cohort_and_continue_training?(cohort:)
+  end
+
   def create_induction_programme
     InductionProgramme.full_induction_programme.create!(school_cohort:, partnership:)
   end
@@ -73,7 +80,7 @@ private
   end
 
   def existing_school_partnership
-    to_school.active_partnerships.find_by(cohort: school_cohort.cohort, lead_provider:, delivery_partner:)
+    to_school.active_partnerships.find_by(cohort:, lead_provider:, delivery_partner:)
   end
 
   def induction_programme
