@@ -17,6 +17,22 @@ Providers can access this within the sandbox environment for testing. Functional
 
 We’ll notify providers when this new NPQ is available in the production environment.
 
+We're trialing new functionality in the API test ([sandbox](https://sb.manage-training-for-early-career-teachers.education.gov.uk/)) environment which will enable providers to set whether NPQ applicants are going to have their training funded by DfE.
+
+This is because from the 2024/25 academic year onwards there'll be a set maximum number of places each provider can offer per NPQ that DfE will pay for.
+
+Providers using all versions of the API can set the new `funded_place` field in the 'Accept an application' request body to true or false. They will also see the `funded_place` field in the following endpoint response bodies:
+
+- 'View all applications'
+
+- 'View a specific application'
+
+- 'View all participant data'
+
+- 'View a single participant's data'
+
+Providers who need to update a participant's funding information after an application has been accepted can do so via the 'Change funded place' endpoint.
+
 ## 13 June 2024
 
 We’ve fixed an issue with the API v3 NPQ participants endpoint where performing a full sync with pagination resulted in IDs beings omitted. No other endpoint was affected.
@@ -37,25 +53,6 @@ Participants who’ve moved can be identified by the new `cohort_changed_after_p
 Providers will be able to test future declaration submissions in the 2024 cohort but can no longer submit or void declarations for 2021 after the contract has closed.
 
 We’d welcome feedback on this sandbox update before it goes into production.
-
-## 14 June 2024 (pending sandbox release)
-
-We're trialing new functionality in the API test ([sandbox](https://sb.manage-training-for-early-career-teachers.education.gov.uk/)) environment which will enable providers to set whether NPQ applicants are going to have their training funded by DfE.
-
-This is because from the 2024/25 academic year onwards there'll be a set maximum number of places each provider can offer per NPQ that DfE will pay for.
-
-Providers using all versions of the API can set the new `funded_place` field in the 'Accept an application' request body to true or false. They will also see the `funded_place` field in the following endpoint response bodies:
-
-- 'View all applications'
-
-- 'View a specific application'
-
-- 'View all participant data'
-
-- 'View a single participant's data'
-
-Providers who need to update a participant's funding information after an application has been accepted can do so via the 'Change funded place' endpoint.
-
 
 ## 5 June 2024 
 
