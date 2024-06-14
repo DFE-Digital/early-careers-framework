@@ -11,7 +11,7 @@ weight: 1
 | -------- | --------  |
 | `application`    | The application a person makes to be trained on an NPQ course. Applications include funding details       |
 | `participant`    | A person registered for an NPQ course      |
-| `cohort`     | The grouping of participants who begin their course in a given academic year under a given funding contract. For example, a participant starting their training in the academic year 2021-22 will have a cohort of 2021, as funding comes from the 2021-22 call-off contract. In most cases providers cannot change a participant’s cohort once they have begun their training      |
+| `cohort`     | The grouping of participants who begin their course in a given academic year under a given funding contract. For example, a participant starting their training in the academic year 2024/25 will have a cohort of 2024, as funding comes from the 2024/25 call-off contract. In most cases providers cannot change a participant’s cohort once they have begun their training      |
 | `schedule`     | The expected timeframe in which a participant will complete their NPQ course. Schedules include [defined milestone dates](/api-reference/npq/schedules-and-milestone-dates) against which DfE validates the declarations submitted by providers      |
 | `course_identifier`      | The NPQ course a person applies for, and a participant is registered for      |
 | `outcome`      | The assessment result a participant achieves a the end of an NPQ course      |
