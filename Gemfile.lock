@@ -482,7 +482,7 @@ GEM
       nokogiri
     rexml (3.2.8)
       strscan (>= 3.0.9)
-    rouge (4.2.1)
+    rouge (4.3.0)
     rspec-core (3.13.0)
       rspec-support (~> 3.13.0)
     rspec-default_http_header (0.0.6)
