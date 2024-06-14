@@ -36,6 +36,7 @@ Providers can view application data to find out whether NPQ applicants:
 * have a valid email address
 * have a valid TRN
 * are eligible for funding
+* have a funded place 
 
 Providers can then accept or reject applications to NPQ courses.
 
@@ -98,7 +99,8 @@ For more detailed information see the specifications for this [view multiple NPQ
         "teacher_catchment_country": "United Kingdom of Great Britain and Northern Ireland",
         "itt_provider": null,
         "lead_mentor": false,
-        "schedule_identifier": "npq-leadership-spring"
+        "schedule_identifier": "npq-leadership-spring",
+        “funded_place”: null
       }
     }
   ]
@@ -150,7 +152,8 @@ For more detailed information see the specifications for this [view a specific N
       “teacher_catchment_iso_country_code”: “FRA”,
       “lead_mentor”: true,
       “itt_provider”: “University of Southampton”,
-      "schedule_identifier": "npq-leadership-spring"
+      "schedule_identifier": "npq-leadership-spring",
+      “funded_place”: null
     }
   }
 }
@@ -183,7 +186,8 @@ An example request body is listed below.
   "data": {
     "type": "npq-application-accept",
     "attributes": {
-      "schedule_identifier": "npq-leadership-spring"
+      "schedule_identifier": "npq-leadership-spring",
+      "funded_place": true
     }
   }
 }
@@ -217,6 +221,7 @@ For more detailed information see the specifications for this [accept an NPQ app
       "school_ukprn": "10079319",
       "headteacher_status": "no",
       "eligible_for_funding": true,
+      "funded_place": true,
       "funding_choice": "trust",
       "course_identifier": "npq-leading-teaching",
       "status": "accepted",
@@ -230,7 +235,7 @@ For more detailed information see the specifications for this [accept an NPQ app
       "teacher_catchment_iso_country_code": "FRA",
       "lead_mentor": true,
       "itt_provider": "University of Southampton",
-      "schedule_identifier": "npq-leadership-spring"
+      "schedule_identifier": "npq-leadership-spring",
     }
   }
 }
@@ -292,10 +297,80 @@ For more detailed information see the specifications for this [accept an NPQ app
       "teacher_catchment_iso_country_code": "FRA",
       "lead_mentor": true,
       "itt_provider": "University of Southampton",
-      "schedule_identifier": "npq-leadership-spring"
+      "schedule_identifier": "npq-leadership-spring",
+      "funded_place": null
     }
   }
 }
+```
+
+### Change whether or not a participant's training will be funded
+
+Providers can update a participant’s funding information after an application has been accepted. 
+
+It’s not possible to change this information if the application has not been accepted. 
+
+```
+PUT/api/v3/npq-applications/{id}/change-funded-place 
+```
+
+For more detailed information, see the specifications for this [change funded place endpoint](/api-reference/reference-v3.html#api-v3-npq-applications-id-change-funded-place-put).
+
+#### Example request body:
+
+```
+{ 
+  "data": { 
+    "type": "npq-application-change-funded-place", 
+    "attributes": { 
+      "funded_place": true 
+    } 
+  } 
+}
+```
+
+Successful requests will return a response body including updates to the funded_place attribute. 
+
+#### Example response body:
+
+```
+{ 
+  "data": { 
+    "id": "db3a7848-7308-4879-942a-c4a70ced400a", 
+    "type": "npq_application", 
+    "attributes": { 
+      "participant_id": "7a8fef46-3c43-42c0-b3d5-1ba5904ba562", 
+      "full_name": "Isabelle MacDonald", 
+      "email": "isabelle.macdonald2@some-school.example.com", 
+      "email_validated": true, 
+      "teacher_reference_number": "1234567", 
+      "teacher_reference_number_validated": true, 
+      "works_in_school": true, 
+      "employer_name": "Some Company Ltd", 
+      "employment_role": "Director", 
+      "school_urn": "106286", 
+      "private_childcare_provider_urn": "EY944860", 
+      "school_ukprn": "10079319", 
+      "headteacher_status": "no", 
+      "eligible_for_funding": true, 
+      "funded_place": true, 
+      "funding_choice": "trust", 
+      "course_identifier": "npq-leading-teaching", 
+      "status": "pending", 
+      "created_at": "2021-05-31T02:21:32.000Z", 
+      "updated_at": "2021-05-31T02:22:32.000Z", 
+      "ineligible_for_funding_reason": "establishment-ineligible", 
+      "cohort": "2022", 
+      "targeted_delivery_funding_eligibility": true, 
+      "teacher_catchment": true, 
+      "teacher_catchment_country": "France", 
+      "teacher_catchment_iso_country_code": "FRA", 
+      "lead_mentor": true, 
+      "itt_provider": "University of Southampton", 
+      "schedule_identifier": "npq-leadership-spring" 
+    } 
+  } 
+} 
 ```
 
 ### Update an application due to a change in circumstance
@@ -365,6 +440,7 @@ For more detailed information see the specifications for this [view multiple NPQ
             "cohort": "2021",
             "npq_application_id": "db3a7848-7308-4879-942a-c4a70ced400a",
             "eligible_for_funding": true,
+            "funded_place": true,
             "training_status": "active",
             "school_urn": "123456",
             "targeted_delivery_funding_eligibility": true,
@@ -423,6 +499,7 @@ For more detailed information see the specifications for this [view a single NPQ
             "cohort": "2021",
             "npq_application_id": "db3a7848-7308-4879-942a-c4a70ced400a",
             "eligible_for_funding": true,
+            "funded_place": true,
             "training_status": "active",
             "school_urn": "123456",
             "targeted_delivery_funding_eligibility": true,
