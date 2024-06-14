@@ -37,6 +37,7 @@ properties:
       - npq-additional-support-offer
       - npq-early-headship-coaching-offer
       - npq-leading-primary-mathematics
+      - npq-senco
     example: npq-leading-teaching-development
 required:
   - reason

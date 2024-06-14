@@ -33,6 +33,7 @@ properties:
       - npq-additional-support-offer
       - npq-early-headship-coaching-offer
       - npq-leading-primary-mathematics
+      - npq-senco
     example: npq-executive-leadership
   cohort:
     description: "Providers may change an NPQ participant's cohort up until the point of submitting a started declaration. The value indicates which call-off contract funds this participant's training. 2021 indicates a participant that has started, or will start, their training in the 2021/22 academic year."

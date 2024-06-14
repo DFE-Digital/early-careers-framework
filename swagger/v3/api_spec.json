@@ -5216,7 +5216,8 @@
               "npq-early-years-leadership",
               "npq-additional-support-offer",
               "npq-early-headship-coaching-offer",
-              "npq-leading-primary-mathematics"
+              "npq-leading-primary-mathematics",
+              "npq-senco"
             ]
           },
           "status": {
@@ -5455,7 +5456,8 @@
               "npq-early-years-leadership",
               "npq-additional-support-offer",
               "npq-early-headship-coaching-offer",
-              "npq-leading-primary-mathematics"
+              "npq-leading-primary-mathematics",
+              "npq-senco"
             ]
           },
           "schedule_identifier": {
@@ -5622,7 +5624,8 @@
               "npq-headship",
               "npq-executive-leadership",
               "npq-early-years-leadership",
-              "npq-leading-primary-mathematics"
+              "npq-leading-primary-mathematics",
+              "npq-senco"
             ],
             "example": "npq-leading-teaching"
           },
@@ -5674,7 +5677,8 @@
               "npq-headship",
               "npq-executive-leadership",
               "npq-early-years-leadership",
-              "npq-leading-primary-mathematics"
+              "npq-leading-primary-mathematics",
+              "npq-senco"
             ],
             "example": "npq-leading-teaching"
           },
@@ -5898,7 +5902,8 @@
               "npq-early-years-leadership",
               "npq-additional-support-offer",
               "npq-early-headship-coaching-offer",
-              "npq-leading-primary-mathematics"
+              "npq-leading-primary-mathematics",
+              "npq-senco"
             ],
             "example": "npq-executive-leadership"
           },
@@ -5989,7 +5994,8 @@
               "npq-early-years-leadership",
               "npq-additional-support-offer",
               "npq-early-headship-coaching-offer",
-              "npq-leading-primary-mathematics"
+              "npq-leading-primary-mathematics",
+              "npq-senco"
             ],
             "example": "npq-leading-teaching"
           },
@@ -6140,7 +6146,8 @@
               "npq-early-years-leadership",
               "npq-additional-support-offer",
               "npq-early-headship-coaching-offer",
-              "npq-leading-primary-mathematics"
+              "npq-leading-primary-mathematics",
+              "npq-senco"
             ],
             "example": "npq-headship"
           },
@@ -6226,7 +6233,8 @@
               "npq-early-years-leadership",
               "npq-additional-support-offer",
               "npq-early-headship-coaching-offer",
-              "npq-leading-primary-mathematics"
+              "npq-leading-primary-mathematics",
+              "npq-senco"
             ],
             "example": "npq-headship"
           }
@@ -6283,7 +6291,8 @@
               "npq-early-years-leadership",
               "npq-additional-support-offer",
               "npq-early-headship-coaching-offer",
-              "npq-leading-primary-mathematics"
+              "npq-leading-primary-mathematics",
+              "npq-senco"
             ],
             "example": "npq-headship"
           }
@@ -6356,7 +6365,8 @@
               "npq-early-years-leadership",
               "npq-additional-support-offer",
               "npq-early-headship-coaching-offer",
-              "npq-leading-primary-mathematics"
+              "npq-leading-primary-mathematics",
+              "npq-senco"
             ],
             "example": "npq-senior-leadership"
           }
@@ -6438,7 +6448,8 @@
               "npq-early-years-leadership",
               "npq-additional-support-offer",
               "npq-early-headship-coaching-offer",
-              "npq-leading-primary-mathematics"
+              "npq-leading-primary-mathematics",
+              "npq-senco"
             ],
             "example": "npq-senior-leadership"
           }
@@ -6518,7 +6529,8 @@
               "npq-early-years-leadership",
               "npq-additional-support-offer",
               "npq-early-headship-coaching-offer",
-              "npq-leading-primary-mathematics"
+              "npq-leading-primary-mathematics",
+              "npq-senco"
             ],
             "example": "npq-leading-teaching"
           },
@@ -6657,7 +6669,8 @@
               "npq-early-years-leadership",
               "npq-additional-support-offer",
               "npq-early-headship-coaching-offer",
-              "npq-leading-primary-mathematics"
+              "npq-leading-primary-mathematics",
+              "npq-senco"
             ],
             "example": "npq-leading-teaching"
           },
@@ -6823,7 +6836,8 @@
               "npq-early-years-leadership",
               "npq-additional-support-offer",
               "npq-early-headship-coaching-offer",
-              "npq-leading-primary-mathematics"
+              "npq-leading-primary-mathematics",
+              "npq-senco"
             ],
             "example": "npq-leading-teaching-development"
           }
@@ -7111,7 +7125,8 @@
               "npq-early-years-leadership",
               "npq-additional-support-offer",
               "npq-early-headship-coaching-offer",
-              "npq-leading-primary-mathematics"
+              "npq-leading-primary-mathematics",
+              "npq-senco"
             ],
             "example": "ecf-induction"
           },

@@ -7,6 +7,16 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
+## 14 June 2024
+
+We’ve added the new special educational needs coordinator (SENCO) NPQ to the [test (sandbox) environment](https://sb.manage-training-for-early-career-teachers.education.gov.uk/) for the 2024 cohort.
+
+The new course’s identifier is `npq-senco`.
+
+Providers can access this within the sandbox environment for testing. Functionality will be the same as the other existing NPQ courses.
+
+We’ll notify providers when this new NPQ is available in the production environment.
+
 ## 13 June 2024
 
 We’ve fixed an issue with the API v3 NPQ participants endpoint where performing a full sync with pagination resulted in IDs beings omitted. No other endpoint was affected.
