@@ -76,6 +76,10 @@ private
     to_school.active_partnerships.find_by(cohort: school_cohort.cohort, lead_provider:, delivery_partner:)
   end
 
+  def induction_programme
+    @induction_programme ||= existing_school_induction_programme || create_induction_programme
+  end
+
   def latest_induction_record
     @latest_induction_record ||= participant_profile.induction_records.latest
   end
@@ -86,9 +90,5 @@ private
 
   def partnership
     @partnership ||= existing_school_partnership || create_relationship
-  end
-
-  def induction_programme
-    @induction_programme ||= existing_school_induction_programme || create_induction_programme
   end
 end

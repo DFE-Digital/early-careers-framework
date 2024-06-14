@@ -34,6 +34,24 @@ describe ParticipantProfile::ECT, type: :model do
     end
   end
 
+  describe "#completed_training?" do
+    context "when a completion date is present" do
+      before do
+        instance.induction_completion_date = 1.week.ago.to_date
+      end
+
+      it "returns true" do
+        expect(instance).to be_completed_training
+      end
+    end
+
+    context "when a completion date is not present" do
+      it "returns false" do
+        expect(instance).not_to be_completed_training
+      end
+    end
+  end
+
   describe "#ect?" do
     it { expect(instance).to be_ect }
   end

@@ -46,7 +46,7 @@ private
   end
 
   def latest_induction_record
-    participant_profile.induction_records.latest
+    @latest_induction_record ||= participant_profile.induction_records.latest
   end
 
   def check_different_school!

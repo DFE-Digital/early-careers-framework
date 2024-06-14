@@ -22,6 +22,22 @@ RSpec.describe Induction::Enrol do
 
     it_behaves_like "creates a new active participant_profile_state record"
 
+    context "when the participant has completed induction" do
+      subject { described_class.call(participant_profile:, induction_programme:) }
+
+      before do
+        participant_profile.update!(induction_completion_date: 2.days.ago)
+      end
+
+      it "do not create a new participant_profile_state record" do
+        expect { subject }.to not_change(ParticipantProfileState, :count)
+                                .and not_change(participant_profile, :training_status)
+                                       .and not_change(participant_profile, :status)
+      end
+
+      it { is_expected.to be_completed_induction_status }
+    end
+
     context "when a participant_profile_state already exists" do
       let(:cpd_lead_provider_id) { induction_programme.lead_provider&.cpd_lead_provider_id }
       let!(:existing_participant_profile_state) { create(:participant_profile_state, participant_profile:, state: existing_state, cpd_lead_provider_id:) }

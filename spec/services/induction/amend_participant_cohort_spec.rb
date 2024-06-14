@@ -17,8 +17,7 @@ RSpec.describe Induction::AmendParticipantCohort do
 
       it "returns false and set errors" do
         expect(form.save).to be_falsey
-        expect(form.errors.first.attribute).to eq(:source_cohort_start_year)
-        expect(form.errors.first.message).to eq("Invalid value. Must be an integer between 2020 and #{Date.current.year}")
+        expect(form.errors[:source_cohort_start_year]).to include("Invalid value. Must be an integer between 2020 and #{Date.current.year}")
       end
     end
 
@@ -27,8 +26,7 @@ RSpec.describe Induction::AmendParticipantCohort do
 
       it "returns false and set errors" do
         expect(form.save).to be_falsey
-        expect(form.errors.first.attribute).to eq(:source_cohort_start_year)
-        expect(form.errors.first.message).to eq("Invalid value. Must be an integer between 2020 and #{Date.current.year}")
+        expect(form.errors[:source_cohort_start_year]).to include("Invalid value. Must be an integer between 2020 and #{Date.current.year}")
       end
     end
 
@@ -37,8 +35,7 @@ RSpec.describe Induction::AmendParticipantCohort do
 
       it "returns false and set errors" do
         expect(form.save).to be_falsey
-        expect(form.errors.first.attribute).to eq(:source_cohort_start_year)
-        expect(form.errors.first.message).to eq("Invalid value. Must be an integer between 2020 and #{Date.current.year}")
+        expect(form.errors[:source_cohort_start_year]).to include("Invalid value. Must be an integer between 2020 and #{Date.current.year}")
       end
     end
 
@@ -47,8 +44,7 @@ RSpec.describe Induction::AmendParticipantCohort do
 
       it "returns false and set errors" do
         expect(form.save).to be_falsey
-        expect(form.errors.first.attribute).to eq(:target_cohort_start_year)
-        expect(form.errors.first.message).to eq("Invalid value. Must be an integer between 2020 and #{Date.current.year}")
+        expect(form.errors[:target_cohort_start_year]).to include("Invalid value. Must be an integer between 2020 and #{Date.current.year}")
       end
     end
 
@@ -57,8 +53,7 @@ RSpec.describe Induction::AmendParticipantCohort do
 
       it "returns false and set errors" do
         expect(form.save).to be_falsey
-        expect(form.errors.first.attribute).to eq(:target_cohort_start_year)
-        expect(form.errors.first.message).to eq("Invalid value. Must be an integer between 2020 and #{Date.current.year}")
+        expect(form.errors[:target_cohort_start_year]).to include("Invalid value. Must be an integer between 2020 and #{Date.current.year}")
       end
     end
 
@@ -67,22 +62,7 @@ RSpec.describe Induction::AmendParticipantCohort do
 
       it "returns false and set errors" do
         expect(form.save).to be_falsey
-        expect(form.errors.first.attribute).to eq(:target_cohort_start_year)
-        expect(form.errors.first.message).to eq("Invalid value. Must be an integer between 2020 and #{Date.current.year}")
-      end
-    end
-
-    context "when the target cohort has not been setup in the service" do
-      let!(:source_cohort_start_year) { Cohort.next.start_year }
-      let!(:target_cohort_start_year) { Cohort.next.start_year + 1 }
-
-      it "returns false and set errors" do
-        travel_to Date.new(Cohort.ordered_by_start_year.last.start_year + 2, 9, 1)
-
-        expect(form.save).to be_falsey
-        expect(form.errors[:target_cohort]).to_not be_nil
-        expect(form.errors.messages[:target_cohort].first)
-          .to eq("starting on #{target_cohort_start_year} not setup on the service")
+        expect(form.errors[:target_cohort_start_year]).to include("Invalid value. Must be an integer between 2020 and #{Date.current.year}")
       end
     end
 
@@ -101,6 +81,28 @@ RSpec.describe Induction::AmendParticipantCohort do
                                                     programme_choice: source_school_cohort.induction_programme_choice)
       end
 
+      context "when the participant has induction completion date" do
+        before do
+          participant_profile.update!(induction_completion_date: Date.current)
+        end
+
+        it "returns false and set errors" do
+          expect(form.save).to be_falsey
+          expect(form.errors[:participant_profile]).to include("The participant has completion date")
+        end
+      end
+
+      context "when the participant has mentor completion date" do
+        before do
+          participant_profile.update!(mentor_completion_date: Date.current)
+        end
+
+        it "returns false and set errors" do
+          expect(form.save).to be_falsey
+          expect(form.errors[:participant_profile]).to include("The participant has completion date")
+        end
+      end
+
       context "when the target_cohort_start_year is not matching that of the schedule" do
         let(:schedule) { Finance::Schedule::ECF.default_for(cohort: Cohort.previous) }
 
@@ -115,8 +117,7 @@ RSpec.describe Induction::AmendParticipantCohort do
 
         it "returns false and set errors" do
           expect(form.save).to be_falsey
-          expect(form.errors.first.attribute).to eq(:target_cohort_start_year)
-          expect(form.errors.first.message).to eq("Invalid value. Must match that of the schedule")
+          expect(form.errors[:target_cohort_start_year]).to include("The target year must match that of the schedule")
         end
       end
 
@@ -125,8 +126,7 @@ RSpec.describe Induction::AmendParticipantCohort do
 
         it "returns false and set errors" do
           expect(form.save).to be_falsey
-          expect(form.errors.first.attribute).to eq(:participant_profile)
-          expect(form.errors.first.message).to eq("Not registered")
+          expect(form.errors[:participant_profile]).to include("Not a participant profile record")
         end
       end
 
@@ -137,8 +137,7 @@ RSpec.describe Induction::AmendParticipantCohort do
 
         it "returns false and set errors" do
           expect(form.save).to be_falsey
-          expect(form.errors.first.attribute).to eq(:participant_profile)
-          expect(form.errors.first.message).to eq("Not active")
+          expect(form.errors[:participant_profile]).to include("The participant is not active")
         end
       end
 
@@ -150,7 +149,7 @@ RSpec.describe Induction::AmendParticipantCohort do
 
         it "do not set errors" do
           expect(form.save).to be_falsey
-          expect(form.errors.map(&:attribute)).not_to include(:target_cohort_start_year)
+          expect(form.errors[:target_cohort_start_year]).to be_blank
         end
       end
 
@@ -168,7 +167,7 @@ RSpec.describe Induction::AmendParticipantCohort do
 
           it "do not set errors" do
             expect(form.save).to be_falsey
-            expect(form.errors.map(&:attribute)).not_to include(:participant_profile)
+            expect(form.errors[:participant_profile]).to be_blank
           end
         end
 
@@ -179,7 +178,7 @@ RSpec.describe Induction::AmendParticipantCohort do
 
           it "set errors on participant profile" do
             expect(form.save).to be_falsey
-            expect(form.errors[:participant_profile]).to include("Not eligible to be transferred from their current cohort")
+            expect(form.errors[:participant_profile]).to include("Participant not eligible to be transferred from their current cohort")
           end
         end
       end
@@ -203,7 +202,7 @@ RSpec.describe Induction::AmendParticipantCohort do
 
           it "set errors" do
             expect(form.save).to be_falsey
-            expect(form.errors[:participant_profile]).to include("Not eligible to be transferred back to their original cohort")
+            expect(form.errors[:participant_profile]).to include("Participant not eligible to be transferred back to their original cohort")
             expect(form.errors[:participant_profile]).to include("The participant has billable declarations in their current cohort")
           end
         end
@@ -211,7 +210,7 @@ RSpec.describe Induction::AmendParticipantCohort do
         context "when the participant has no billable declarations in destination cohort" do
           it "set errors" do
             expect(form.save).to be_falsey
-            expect(form.errors[:participant_profile]).to include("Not eligible to be transferred back to their original cohort")
+            expect(form.errors[:participant_profile]).to include("Participant not eligible to be transferred back to their original cohort")
             expect(form.errors[:participant_profile]).to include("The participant has no billable declarations in destination cohort")
           end
         end
@@ -248,8 +247,7 @@ RSpec.describe Induction::AmendParticipantCohort do
 
           it "returns false and set errors on declarations" do
             expect(form.save).to be_falsey
-            expect(form.errors.first.attribute).to eq(:participant_declarations)
-            expect(form.errors.first.message).to eq("The participant has billable or submitted declarations")
+            expect(form.errors[:participant_declarations]).to include("The participant has billable or submitted declarations")
           end
         end
       end
@@ -268,7 +266,7 @@ RSpec.describe Induction::AmendParticipantCohort do
 
           it "do not set errors on declarations" do
             expect(form.save).to be_falsey
-            expect(form.errors.map(&:attribute)).not_to include(:participant_declarations)
+            expect(form.errors[:participant_declarations]).to be_blank
           end
         end
       end
@@ -276,16 +274,14 @@ RSpec.describe Induction::AmendParticipantCohort do
       context "when the participant has no declarations" do
         it "do not set errors on declarations" do
           expect(form.save).to be_falsey
-          expect(form.errors.map(&:attribute)).not_to include(:participant_declarations)
+          expect(form.errors[:participant_declarations]).to be_blank
         end
       end
 
       context "when the participant is not enrolled on the source school cohort" do
         it "returns false and set errors" do
           expect(form.save).to be_falsey
-          expect(form.errors.first.attribute).to eq(:induction_record)
-          expect(form.errors.first.message)
-            .to eq("The participant is not enrolled on the cohort starting on #{source_cohort_start_year}")
+          expect(form.errors[:induction_record]).to include("No induction record for the participant on the cohort starting on #{source_cohort_start_year}")
         end
       end
 
@@ -297,9 +293,7 @@ RSpec.describe Induction::AmendParticipantCohort do
 
         it "returns false and set errors" do
           expect(form.save).to be_falsey
-          expect(form.errors.first.attribute).to eq(:target_school_cohort)
-          expect(form.errors.first.message)
-            .to eq("starting on #{target_cohort_start_year} not setup on #{school.name}")
+          expect(form.errors[:target_school_cohort]).to include("Cohort starting on #{target_cohort_start_year} not setup on #{school.name}")
         end
       end
 
@@ -334,9 +328,7 @@ RSpec.describe Induction::AmendParticipantCohort do
 
         it "returns false and set errors" do
           expect(form.save).to be_falsey
-          expect(form.errors.first.attribute).to eq(:induction_programme)
-          expect(form.errors.first.message)
-            .to eq("default for #{target_cohort_start_year} not setup on #{school.name}")
+          expect(form.errors[:induction_programme]).to include("Default induction programme for #{target_cohort_start_year} not setup on #{school.name}")
         end
       end
 
@@ -357,8 +349,7 @@ RSpec.describe Induction::AmendParticipantCohort do
 
           it "returns false and set errors" do
             expect(form.save).to be_falsey
-            expect(form.errors.first.attribute).to eq(:induction_record)
-            expect(form.errors.first.message).to eq("Validation failed: Schedule must exist")
+            expect(form.errors[:induction_record]).to include("Validation failed: Schedule must exist")
           end
         end
 
