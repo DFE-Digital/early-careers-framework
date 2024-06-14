@@ -1,0 +1,12 @@
+description: "The NPQ Application change funded place request attributes"
+type: object
+required:
+  - type
+  - data
+properties:
+  type:
+    description: "The data type"
+    type: string
+    example: "npq-application-change-funded-place"
+  data:
+    $ref: "#/components/schemas/ChangeFundedPlaceAttributesRequest"

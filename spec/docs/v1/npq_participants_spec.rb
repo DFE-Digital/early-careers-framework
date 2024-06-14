@@ -3,12 +3,16 @@
 require "swagger_helper"
 
 describe "API", type: :request, swagger_doc: "v1/api_spec.json" do
-  let(:cpd_lead_provider) { create(:cpd_lead_provider, npq_lead_provider:) }
-  let(:npq_lead_provider) { create(:npq_lead_provider) }
+  let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider) }
+  let(:npq_lead_provider) { cpd_lead_provider.npq_lead_provider }
   let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
   let(:Authorization) { "Bearer #{token}" }
-  let!(:npq_application) { create(:npq_application, :accepted, :with_started_declaration, npq_lead_provider:, npq_course: create(:npq_course, identifier: "npq-senior-leadership")) }
+  let!(:npq_application) { create(:npq_application, :accepted, :with_started_declaration, npq_lead_provider:, funded_place: true, npq_course: create(:npq_course, identifier: "npq-senior-leadership")) }
   let!(:schedule) { create(:npq_leadership_schedule, schedule_identifier: "npq-early-years-leadership", name: "NPQ Early Years") }
+
+  before do
+    FeatureFlag.activate(:npq_capping)
+  end
 
   path "/api/v1/participants/npq" do
     get "Retrieve multiple NPQ participants" do
@@ -99,6 +103,26 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json" do
     let(:profile)     { npq_application.profile }
     let(:schedule)    { create(:npq_leadership_schedule, schedule_identifier: "npq-aso-june", name: "NPQ ASO June", cohort: npq_application.cohort) }
     let!(:contract)   { create(:npq_contract, npq_course: npq_application.npq_course, npq_lead_provider: npq_application.npq_lead_provider, cohort: npq_application.cohort) }
+
+    let(:new_cohort) { Cohort.previous }
+
+    let!(:statement) do
+      create(
+        :npq_statement,
+        :next_output_fee,
+        cpd_lead_provider: npq_lead_provider.cpd_lead_provider,
+        cohort: profile.npq_application.cohort,
+      )
+    end
+
+    let!(:new_statement) do
+      create(
+        :npq_statement,
+        :next_output_fee,
+        cpd_lead_provider: npq_lead_provider.cpd_lead_provider,
+        cohort: new_cohort,
+      )
+    end
 
     let(:attributes) do
       {

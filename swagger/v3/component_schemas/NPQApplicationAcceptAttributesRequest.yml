@@ -20,3 +20,7 @@ properties:
       - npq-specialist-autumn
       - npq-specialist-spring
     example: npq-leadership-spring
+  funded_place:
+    description: "Whether the participant has a funded place"
+    type: boolean
+    example: true

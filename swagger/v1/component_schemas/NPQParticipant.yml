@@ -1,3 +1,4 @@
+
 description: "The details of an NPQ Participant"
 type: object
 required:

@@ -1,0 +1,7 @@
+description: "The NPQ Application acceptance request"
+type: object
+properties:
+  funded_place:
+    description: "Whether the participant has a funded place"
+    type: boolean
+    example: true
