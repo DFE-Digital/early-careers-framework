@@ -102,19 +102,19 @@ namespace :comms do
             .deliver_later
         end
       else
-        # Do not chase the school if the GIAS contact has already nominated a SIT
-        if school.induction_coordinators.any?
-          logger.info "The GIAS contact has already nominated a SIT"
-          next
-        end
-
         if Email.tagged_with(:pilot_chase_gias_contact_to_report_school_training_details).associated_with(school).where.not(status: Email::FAILED_STATUSES).any?
           logger.info "The school's primary GIAS has been already contacted"
           next
         end
 
-        logger.info "Sending chaser to the school's primary GIAS contact"
-        nomination_token = create_nomination_token(school, school.primary_contact_email)
+        gias_contact_email = school.primary_contact_email || school.secondary_contact_email
+        unless gias_contact_email
+          logger.error "No GIAS contacts found for this school"
+          next
+        end
+
+        logger.info "Sending chaser email to the school's GIAS contact"
+        nomination_token = create_nomination_token(school, gias_contact_email)
         SchoolMailer
           .with(
             school:,

@@ -421,7 +421,7 @@ class SchoolMailer < ApplicationMailer
   def pilot_chase_gias_contact_to_report_school_training_details
     school = params[:school]
     gias_contact_email = params[:gias_contact_email]
-    opt_in_out_link = params[:nomination_link]
+    opt_in_out_link = params[:opt_in_out_link]
 
     template_mail(
       PILOT_GIAS_CONTACT_TO_REPORT_SCHOOL_TRAINING_DETAILS_TEMPLATE,
