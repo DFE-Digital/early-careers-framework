@@ -6,6 +6,7 @@ required:
   - email
   - npq_courses
   - updated_at
+  - funded_places
 properties:
   participant_id:
     description: "The unique identifier of this NPQ participant"
@@ -31,6 +32,15 @@ properties:
     type: array
     items:
       type: string
+  funded_places:
+    description: "The funded place attributes for the Participant"
+    type: array
+    items:
+      $ref: "#/components/schemas/NPQParticipantFundedPlace"
+    example:
+      - npq_course: "npq-leading-teaching"
+        funded_place: true
+        npq_application_id: db3a7848-7308-4879-942a-c4a70ced400a
   updated_at:
     description: "The date the NPQ participant was last updated"
     type: string
