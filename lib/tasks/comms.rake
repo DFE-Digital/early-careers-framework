@@ -144,7 +144,7 @@ namespace :comms do
       end
 
       school.induction_coordinators.each do |sit_user|
-        if Email.tagged_with(:launch_ask_sit_to_report_school_training_details).associated_with(sit_user).any?
+        if Email.tagged_with(:launch_ask_sit_to_report_school_training_details).associated_with(sit_user).where.not(status: Email::FAILED_STATUSES).any?
           logger.info "The SIT has been already contacted"
           next
         end
