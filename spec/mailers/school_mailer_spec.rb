@@ -390,7 +390,7 @@ RSpec.describe SchoolMailer, type: :mailer do
     end
 
     it "uses the correct Notify template" do
-      expect(SchoolMailer::PILOT_CHASE_SIT_TO_REPORT_SCHOOL_TRAINING_DETAILS_TEMPLATE).to eq("87d4720b-9e3a-46d9-95de-493295dba1dc")
+      expect(SchoolMailer::PILOT_SIT_TO_REPORT_SCHOOL_TRAINING_DETAILS_TEMPLATE).to eq("87d4720b-9e3a-46d9-95de-493295dba1dc")
     end
   end
 
@@ -413,7 +413,7 @@ RSpec.describe SchoolMailer, type: :mailer do
     end
 
     it "uses the correct Notify template" do
-      expect(SchoolMailer::PILOT_CHASE_GIAS_CONTACT_TO_REPORT_SCHOOL_TRAINING_DETAILS_TEMPLATE).to eq("ae925ff1-edc3-4d5c-a120-baa3a79c73af")
+      expect(SchoolMailer::PILOT_GIAS_CONTACT_TO_REPORT_SCHOOL_TRAINING_DETAILS_TEMPLATE).to eq("ae925ff1-edc3-4d5c-a120-baa3a79c73af")
     end
   end
 

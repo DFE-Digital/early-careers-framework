@@ -11,8 +11,6 @@ class SchoolMailer < ApplicationMailer
   COORDINATOR_PARTNERSHIP_NOTIFICATION_WITH_ACADEMIC_YEAR_EMAIL_TEMPLATE = "123eb3e6-401f-4c1d-b81e-113cb6580fc9"
   PARTICIPANT_WITHDRAWN_BY_PROVIDER = "29f94916-8c3a-4c5a-9e33-bdf3f5d7249a"
   REMIND_GIAS_CONTACT_TO_UPDATE_INDUCTION_TUTOR_DETAILS_TEMPLATE = "88cdad72-386c-40fb-be2e-11d4ae9dcdee"
-  PILOT_CHASE_SIT_TO_REPORT_SCHOOL_TRAINING_DETAILS_TEMPLATE = "87d4720b-9e3a-46d9-95de-493295dba1dc"
-  PILOT_CHASE_GIAS_CONTACT_TO_REPORT_SCHOOL_TRAINING_DETAILS_TEMPLATE = "ae925ff1-edc3-4d5c-a120-baa3a79c73af"
   PILOT_SIT_TO_REPORT_SCHOOL_TRAINING_DETAILS_TEMPLATE = "87d4720b-9e3a-46d9-95de-493295dba1dc"
   PILOT_GIAS_CONTACT_TO_REPORT_SCHOOL_TRAINING_DETAILS_TEMPLATE = "ae925ff1-edc3-4d5c-a120-baa3a79c73af"
   LAUNCH_ASK_SIT_TO_REPORT_SCHOOL_TRAINING_DETAILS_TEMPLATE = "1f796f27-9ba4-4705-a7c9-57462bd1e0b7"
@@ -408,7 +406,7 @@ class SchoolMailer < ApplicationMailer
     nomination_link = params[:nomination_link]
 
     template_mail(
-      PILOT_CHASE_SIT_TO_REPORT_SCHOOL_TRAINING_DETAILS_TEMPLATE,
+      PILOT_SIT_TO_REPORT_SCHOOL_TRAINING_DETAILS_TEMPLATE,
       to: sit_user.email,
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
@@ -426,7 +424,7 @@ class SchoolMailer < ApplicationMailer
     opt_in_out_link = params[:nomination_link]
 
     template_mail(
-      PILOT_CHASE_GIAS_CONTACT_TO_REPORT_SCHOOL_TRAINING_DETAILS_TEMPLATE,
+      PILOT_GIAS_CONTACT_TO_REPORT_SCHOOL_TRAINING_DETAILS_TEMPLATE,
       to: gias_contact_email,
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
