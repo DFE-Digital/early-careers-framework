@@ -92,7 +92,7 @@ class Cohort < ApplicationRecord
   end
 
   def payments_frozen?
-    payments_frozen_at.present?
+    payments_frozen_at.present? && Time.current >= payments_frozen_at
   end
 
   def previous

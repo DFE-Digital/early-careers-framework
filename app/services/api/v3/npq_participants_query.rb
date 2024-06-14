@@ -18,7 +18,7 @@ module Api
         scope = npq_lead_provider
           .npq_participants
           .includes(:teacher_profile, :participant_id_changes, npq_profiles: [:npq_course, :participant_profile_states, :participant_identity, { schedule: [:cohort], npq_application: [npq_lead_provider: :cpd_lead_provider] }])
-          .order(sort_order(default: "npq_profiles.created_at ASC", model: User))
+          .order(sort_order(default: "users.created_at ASC", model: User))
           .distinct
         scope = scope.where("users.updated_at > ?", updated_since) if updated_since_filter.present?
         scope = scope.where(npq_profiles: { training_status: }) if training_status.present?
