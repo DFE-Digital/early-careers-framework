@@ -5,6 +5,7 @@ require "has_recordable_information"
 module Oneoffs::NPQ
   class MigrateDeclarationsBetweenStatements
     class StatementMismatchError < RuntimeError; end
+    class PaidStatementMigrationError < RuntimeError; end
 
     include HasRecordableInformation
 
@@ -30,6 +31,7 @@ module Oneoffs::NPQ
 
     def migrate(dry_run: true)
       reset_recorded_info
+      prevent_migrating_from_paid_statement!
       warn_unless_to_statements_are_future_dated
       ensure_statements_align!
       record_summary_info(dry_run)
@@ -93,18 +95,14 @@ module Oneoffs::NPQ
     end
 
     def change_declaration_states_for_to_statement(to_statement, statement_line_items)
+      return unless to_statement.payable?
+
       declarations = statement_line_items.map(&:participant_declaration).uniq
-
-      service = if to_statement.payable?
-                  ParticipantDeclarations::MarkAsPayable.new(to_statement)
-                elsif to_statement.paid?
-                  ParticipantDeclarations::MarkAsPaid.new(to_statement)
-                end
-
-      return unless service
-
+      service = ParticipantDeclarations::MarkAsPayable.new(to_statement)
       action = service.class.to_s.underscore.humanize.split.last
+
       record_info("Marking #{declarations.size} declarations as #{action} for #{to_statement.name} statement")
+
       declarations.each { |declaration| service.call(declaration) }
     end
 
@@ -131,6 +129,10 @@ module Oneoffs::NPQ
 
       raise StatementMismatchError, "There is a mismatch between to/from statements" if statements_mismatch
       raise StatementMismatchError, "No statements were found" if statements_empty
+    end
+
+    def prevent_migrating_from_paid_statement!
+      raise PaidStatementMigrationError, "Cannot migrate from a paid statement" if from_statements_by_provider.values.any?(&:paid?)
     end
 
     def provider_count

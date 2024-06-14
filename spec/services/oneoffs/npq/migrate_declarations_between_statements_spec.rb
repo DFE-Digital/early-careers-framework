@@ -37,12 +37,12 @@ describe Oneoffs::NPQ::MigrateDeclarationsBetweenStatements do
     it { is_expected.to eq(instance.recorded_info) }
 
     context "when there are declarations" do
-      let(:declaration) { create(:npq_participant_declaration, :paid, cohort:, cpd_lead_provider:, declaration_type: :started) }
+      let(:declaration) { create(:npq_participant_declaration, :payable, cohort:, cpd_lead_provider:, declaration_type: :started) }
       let(:from_statement) { declaration.statements.first }
 
       let(:cpd_lead_provider2) { declaration2.cpd_lead_provider }
       let(:npq_lead_provider2) { cpd_lead_provider2.npq_lead_provider }
-      let(:declaration2) { create(:npq_participant_declaration, :payable, cohort:, declaration_type: :"retained-1") }
+      let(:declaration2) { create(:npq_participant_declaration, :eligible, cohort:, declaration_type: :"retained-1") }
       let!(:from_statement2) { declaration2.statements.first.tap { |s| s.update!(name: from_statement.name) } }
       let!(:to_statement2) { create(:npq_statement, :next_output_fee, name: to_statement.name, cpd_lead_provider: cpd_lead_provider2, cohort:) }
 
@@ -118,13 +118,13 @@ describe Oneoffs::NPQ::MigrateDeclarationsBetweenStatements do
       end
 
       context "when restrict_to_declaration_states is provided" do
-        let(:restrict_to_declaration_states) { [:paid] }
+        let(:restrict_to_declaration_states) { [:eligible] }
 
         it "migrates only the declarations with the given declaration type" do
           migrate
 
-          expect(declaration.statement_line_items.map(&:statement)).to all(eq(to_statement))
-          expect(declaration2.statement_line_items.map(&:statement)).to all(eq(from_statement2))
+          expect(declaration.statement_line_items.map(&:statement)).to all(eq(from_statement))
+          expect(declaration2.statement_line_items.map(&:statement)).to all(eq(to_statement2))
         end
 
         it "records information" do
@@ -132,19 +132,19 @@ describe Oneoffs::NPQ::MigrateDeclarationsBetweenStatements do
 
           expect(instance).to have_recorded_info([
             "Migrating declarations from #{from_statement_name} to #{to_statement_name} for 2 providers",
-            "Migrating 1 declarations for #{npq_lead_provider.name}",
-            "Migrating 0 declarations for #{npq_lead_provider2.name}",
+            "Migrating 0 declarations for #{npq_lead_provider.name}",
+            "Migrating 1 declarations for #{npq_lead_provider2.name}",
           ])
         end
 
         context "when restrict_to_declaration_types contains a string" do
-          let(:restrict_to_declaration_states) { %w[payable] }
+          let(:restrict_to_declaration_states) { %w[eligible] }
 
           it "migrates only the declarations with the given declaration type" do
             migrate
 
-            expect(declaration2.statement_line_items.map(&:statement)).to all(eq(to_statement2))
             expect(declaration.statement_line_items.map(&:statement)).to all(eq(from_statement))
+            expect(declaration2.statement_line_items.map(&:statement)).to all(eq(to_statement2))
           end
         end
       end
@@ -191,56 +191,36 @@ describe Oneoffs::NPQ::MigrateDeclarationsBetweenStatements do
       end
     end
 
-    context "when migrating to a paid/payable statement" do
-      context "when migrating to a payable statement" do
-        let(:to_statement) { create(:npq_payable_statement, name: "May 2023", cpd_lead_provider:, cohort:) }
-        let(:declaration) { create(:npq_participant_declaration, :eligible, cohort:, cpd_lead_provider:) }
-        let(:from_statement) { declaration.statements.first }
+    context "when migrating to a payable statement" do
+      let(:to_statement) { create(:npq_payable_statement, name: "May 2023", cpd_lead_provider:, cohort:) }
+      let(:declaration) { create(:npq_participant_declaration, :eligible, cohort:, cpd_lead_provider:) }
+      let(:from_statement) { declaration.statements.first }
 
-        it "migrates them to the new statement and makes payable" do
-          migrate
+      it "migrates them to the new statement and makes payable" do
+        migrate
 
-          declaration.reload
+        declaration.reload
 
-          expect(declaration.statement_line_items.map(&:statement)).to all(eq(to_statement))
-          expect(declaration).to be_payable
-        end
-
-        it "records information" do
-          migrate
-
-          expect(instance).to have_recorded_info([
-            "Migrating declarations from #{from_statement_name} to #{to_statement_name} for 1 providers",
-            "Migrating 1 declarations for #{npq_lead_provider.name}",
-            "Marking 1 declarations as payable for #{to_statement_name} statement",
-          ])
-        end
+        expect(declaration.statement_line_items.map(&:statement)).to all(eq(to_statement))
+        expect(declaration).to be_payable
       end
 
-      context "when migrating to a paid statement" do
-        let(:to_statement) { create(:npq_paid_statement, name: "May 2023", cpd_lead_provider:, cohort:) }
-        let(:declaration) { create(:npq_participant_declaration, :payable, cohort:, cpd_lead_provider:) }
-        let(:from_statement) { declaration.statements.first }
+      it "records information" do
+        migrate
 
-        it "migrates them to the new statement and makes paid" do
-          migrate
-
-          declaration.reload
-
-          expect(declaration.statement_line_items.map(&:statement)).to all(eq(to_statement))
-          expect(declaration).to be_paid
-        end
-
-        it "records information" do
-          migrate
-
-          expect(instance).to have_recorded_info([
-            "Migrating declarations from #{from_statement_name} to #{to_statement_name} for 1 providers",
-            "Migrating 1 declarations for #{npq_lead_provider.name}",
-            "Marking 1 declarations as paid for #{to_statement_name} statement",
-          ])
-        end
+        expect(instance).to have_recorded_info([
+          "Migrating declarations from #{from_statement_name} to #{to_statement_name} for 1 providers",
+          "Migrating 1 declarations for #{npq_lead_provider.name}",
+          "Marking 1 declarations as payable for #{to_statement_name} statement",
+        ])
       end
+    end
+
+    context "when migrating from a paid statement" do
+      let(:declaration) { create(:npq_participant_declaration, :paid, cohort:, cpd_lead_provider:) }
+      let(:from_statement) { declaration.statements.first }
+
+      it { expect { migrate }.to raise_error(described_class::PaidStatementMigrationError, "Cannot migrate from a paid statement") }
     end
 
     describe "integrity checks" do
