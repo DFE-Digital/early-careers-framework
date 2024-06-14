@@ -6,8 +6,8 @@ module Schools
       include Success
 
       delegate :appropriate_body_id, :appropriate_body_type, :appropriate_body_appointed?,
-               :expect_any_ects?, :how_will_you_run_training, :keep_providers?,
-               :no_appropriate_body_appointed?, :no_expect_any_ects?, :no_keep_providers?,
+               :appropriate_body_not_listed?, :expect_any_ects?, :how_will_you_run_training,
+               :keep_providers?, :no_appropriate_body_appointed?, :no_expect_any_ects?, :no_keep_providers?,
                :what_changes, to: :data_store
 
       def abort_path
@@ -28,10 +28,6 @@ module Schools
 
       def delivery_partner_to_be_confirmed?
         what_changes == "change_delivery_partner"
-      end
-
-      def national_appropriate_body_type?
-        appropriate_body_type == "national"
       end
 
       def previous_cohort
@@ -72,6 +68,14 @@ module Schools
 
       def show_path_for(step:)
         schools_cohort_setup_show_path(**path_options(step:))
+      end
+
+      def appropriate_body_default_selection
+        if school.school_type_code == 37
+          AppropriateBody.find_by(name: "Educational Success Partners (ESP)")
+        elsif school.school_type_code == 10 || school.school_type_code == 11
+          AppropriateBody.find_by(name: "Independent Schools Teacher Induction Panel (IStip)")
+        end
       end
     end
   end

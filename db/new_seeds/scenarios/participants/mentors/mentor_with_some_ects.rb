@@ -16,7 +16,7 @@ module NewSeeds
             @mentees = []
           end
 
-          def build(number_of_mentees: 0, teacher_profile_args: {}, **profile_args)
+          def build(teacher_profile_args: {}, **profile_args)
             school = @school_cohort.school
             @user = @supplied_participant_identity&.user || FactoryBot.create(:seed_user, **new_user_attributes)
             @teacher_profile = @supplied_teacher_profile || FactoryBot.create(:seed_teacher_profile, user:, school:, **teacher_profile_args)
@@ -33,13 +33,19 @@ module NewSeeds
 
             @school_mentors = Array.wrap(FactoryBot.create(:seed_school_mentor, school:, participant_profile:, preferred_identity:))
 
-            add_mentees(number_of_mentees) if number_of_mentees.positive?
-
             self
           end
 
           def with_induction_record(**induction_args)
             add_induction_record(**induction_args)
+            self
+          end
+
+          def with_mentees(number_of_mentees: 1, induction_programme: school_cohort.default_induction_programme)
+            number_of_mentees.times do
+              add_mentee(induction_programme:)
+            end
+
             self
           end
 
@@ -57,6 +63,7 @@ module NewSeeds
               induction_status:,
               training_status:,
               school_transfer:,
+              appropriate_body: school_cohort.appropriate_body,
             )
           end
 
@@ -124,7 +131,9 @@ module NewSeeds
                        .build
                        .with_eligibility
                        .with_validation_data
-                       .with_induction_record(induction_programme:, mentor_profile: @participant_profile)
+                       .with_induction_record(induction_programme:,
+                                              mentor_profile: @participant_profile,
+                                              appropriate_body: school_cohort.appropriate_body)
                        .participant_profile
 
             @mentees.push(mentee)

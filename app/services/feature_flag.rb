@@ -25,6 +25,7 @@ class FeatureFlag
     school_participant_status_language
     npq_capping
     cohort_changed_after_payments_frozen
+    registration_pilot_school
   ].freeze
 
   FEATURES = (PERMANENT_SETTINGS + TEMPORARY_FEATURE_FLAGS).index_with { |name|

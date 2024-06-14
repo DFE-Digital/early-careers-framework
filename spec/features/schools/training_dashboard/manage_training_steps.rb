@@ -901,9 +901,7 @@ module ManageTrainingSteps
   end
 
   def when_i_choose_an_appropriate_body
-    choose "National organisation"
-    click_on "Continue"
-    choose appropriate_body.name
+    when_i_fill_in_autocomplete "appropriate-body-selection-form-body-id-field", with: appropriate_body.name
     click_on "Continue"
   end
 
@@ -1472,6 +1470,10 @@ module ManageTrainingSteps
 
   def then_i_am_taken_to_the_appropriate_body_type_page
     expect(page).to have_content("Which type of appropriate body have you appointed?")
+  end
+
+  def then_i_am_taken_to_the_appropriate_body_teaching_school_hubs_page
+    expect(page).to have_content("Which teaching school hub have you appointed?")
   end
 
   def then_i_see_appropriate_body(appropriate_body)

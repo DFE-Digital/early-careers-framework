@@ -62,6 +62,18 @@ module InteractionHelper
     end
   end
 
+  def then_autocomplete_does_not_allow(id, value:)
+    when_i_fill_in_autocomplete(id, with: value)
+    raise "Autocomplete field #{id} should not allow the value '#{value}'"
+  rescue Capybara::ElementNotFound
+    true
+  end
+
+  def then_autocomplete_does_not_contain(id, value:)
+    page.execute_script("document.getElementById('#{id}').value = '#{value}';")
+    expect(page).to_not have_css("li.autocomplete__option")
+  end
+
   alias_method :and_i_fill_in_autocomplete, :when_i_fill_in_autocomplete
 
   def when_i_click_on_summary_row_action(row_key, selector)
