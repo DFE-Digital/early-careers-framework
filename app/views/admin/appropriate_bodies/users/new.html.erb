@@ -10,7 +10,7 @@
 
     <%= form_with model: @appropriate_bodies_user_form, scope: :appropriate_bodies_user_form, url: admin_appropriate_bodies_users_path do |f| %>
       <%= f.govuk_error_summary %>
-      <%= f.govuk_collection_select(:appropriate_body_id, AppropriateBody.name_order, :id, :name, label: { text: "Appropriate body" }, options: { include_blank: true }, class: ["js-location-select"]) %>
+      <%= f.govuk_collection_select(:appropriate_body_id, AppropriateBody.selectable_by_schools.name_order, :id, :name, label: { text: "Appropriate body" }, options: { include_blank: true }, class: ["js-location-select"]) %>
       <%= f.govuk_text_field(:full_name, label: { text: "Full name" }) %>
       <%= f.govuk_email_field(:email, label: { text: "Email" }) %>
       <%= f.govuk_submit "Add user" %>
