@@ -14,7 +14,7 @@ class Induction::Enrol < BaseService
         start_date:,
         training_status: :active,
         induction_status:,
-        schedule: participant_profile.schedule,
+        schedule:,
         preferred_identity:,
         mentor_profile:,
         school_transfer:,
@@ -26,7 +26,7 @@ class Induction::Enrol < BaseService
 private
 
   attr_reader :participant_profile, :induction_programme, :start_date, :preferred_email, :mentor_profile,
-              :school_transfer, :appropriate_body_id, :cpd_lead_provider_id
+              :school_transfer, :appropriate_body_id, :cpd_lead_provider_id, :schedule
 
   # preferred_email can be supplied if the participant_profile.participant_identity does not have
   # the required email for the induction i.e. a participant transferring schools might have a new email
@@ -37,15 +37,17 @@ private
                  preferred_email: nil,
                  mentor_profile: nil,
                  school_transfer: false,
-                 appropriate_body_id: nil)
+                 appropriate_body_id: nil,
+                 schedule: nil)
     @participant_profile = participant_profile
     @induction_programme = induction_programme
     @cpd_lead_provider_id = induction_programme&.lead_provider&.cpd_lead_provider_id
-    @start_date = start_date || schedule_start_date
     @preferred_email = preferred_email
     @mentor_profile = mentor_profile
     @school_transfer = school_transfer
     @appropriate_body_id = appropriate_body_id || school_appropriate_body_id
+    @schedule = schedule || participant_profile.schedule
+    @start_date = start_date || schedule_start_date
   end
 
   def induction_status
@@ -82,6 +84,6 @@ private
   end
 
   def schedule_start_date
-    participant_profile.schedule.milestones.first.start_date
+    schedule.milestones.first.start_date
   end
 end

@@ -120,6 +120,19 @@ RSpec.describe Induction::Enrol do
       end
     end
 
+    context "when a schedule is provided" do
+      let(:schedule) { Finance::Schedule::ECF.first }
+      let(:induction_record) do
+        service.call(participant_profile:,
+                     induction_programme:,
+                     schedule:)
+      end
+
+      it "sets the schedule" do
+        expect(induction_record.schedule).to eq(schedule)
+      end
+    end
+
     context "when a preferred email is provided" do
       let(:preferred_email) { "newemail@example.com" }
 

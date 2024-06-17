@@ -36,6 +36,13 @@ RSpec.describe Induction::TransferToSchoolsProgramme do
       expect { service_call }.to change { induction_programme_2.induction_records.count }.by 1
     end
 
+    it "updates the school cohort and schedule of the participant" do
+      service_call
+
+      expect(participant_profile.school_cohort).to eq(induction_programme_2.school_cohort)
+      expect(participant_profile.schedule.cohort).to eq(induction_programme_2.cohort)
+    end
+
     context "when the participant is eligible to be moved from a frozen cohort to the target one" do
       before do
         allow(participant_profile).to receive(:eligible_to_change_cohort_and_continue_training?)
@@ -76,6 +83,7 @@ RSpec.describe Induction::TransferToSchoolsProgramme do
         expect(new_induction_record.induction_programme).to eq new_induction_programme
         expect(new_induction_record).to be_active_induction_status
         expect(new_induction_record.start_date).to be_within(1.second).of start_date
+        expect(new_induction_record.schedule.cohort).to eq(new_induction_programme.cohort)
       end
 
       it "assigns the specified mentor to the induction" do

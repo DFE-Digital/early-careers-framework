@@ -43,6 +43,13 @@ RSpec.describe Induction::TransferAndContinueExistingFip do
       expect { service_call }.to change { school_cohort_2.induction_programmes.count }.by 1
     end
 
+    it "updates the school cohort and schedule of the participant" do
+      service_call
+
+      expect(participant_profile.school_cohort).to eq(school_cohort_2)
+      expect(participant_profile.schedule.cohort).to eq(school_cohort_2.cohort)
+    end
+
     it "creates an induction record for the new participant" do
       expect { service_call }.to change { participant_profile.induction_records.count }.by 1
     end
@@ -89,6 +96,7 @@ RSpec.describe Induction::TransferAndContinueExistingFip do
         expect(new_induction_record.induction_programme).to eq new_induction_programme
         expect(new_induction_record).to be_active_induction_status
         expect(new_induction_record.start_date).to be_within(1.second).of start_date
+        expect(new_induction_record.schedule.cohort).to eq(new_induction_programme.cohort)
       end
 
       it "assigns the specified mentor to the induction" do
