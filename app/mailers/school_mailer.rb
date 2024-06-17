@@ -382,7 +382,7 @@ class SchoolMailer < ApplicationMailer
         nomination_link:,
         email_address: sit_user.email,
       },
-    ).tag(:pilot_ask_sit_to_report_school_training_details).associate_with(sit_user)
+    ).tag(:pilot_ask_sit_to_report_school_training_details_for_2024).associate_with(sit_user)
   end
 
   def pilot_ask_gias_contact_to_report_school_training_details
@@ -398,7 +398,7 @@ class SchoolMailer < ApplicationMailer
       personalisation: {
         opt_in_out_link:,
       },
-    ).tag(:pilot_ask_gias_contact_to_report_school_training_details).associate_with(school)
+    ).tag(:pilot_ask_gias_contact_to_report_school_training_details_for_2024).associate_with(school)
   end
 
   def pilot_chase_sit_to_report_school_training_details
@@ -415,7 +415,7 @@ class SchoolMailer < ApplicationMailer
         nomination_link:,
         email_address: sit_user.email,
       },
-    ).tag(:pilot_chase_sit_to_report_school_training_details).associate_with(sit_user)
+    ).tag(:pilot_chase_sit_to_report_school_training_details_for_2024).associate_with(sit_user)
   end
 
   def pilot_chase_gias_contact_to_report_school_training_details
@@ -431,7 +431,7 @@ class SchoolMailer < ApplicationMailer
       personalisation: {
         opt_in_out_link:,
       },
-    ).tag(:pilot_chase_gias_contact_to_report_school_training_details).associate_with(school)
+    ).tag(:pilot_chase_gias_contact_to_report_school_training_details_for_2024).associate_with(school)
   end
 
   def launch_ask_sit_to_report_school_training_details
@@ -447,7 +447,7 @@ class SchoolMailer < ApplicationMailer
         name: sit_user.full_name,
         nomination_link:,
       },
-    ).tag(:launch_ask_sit_to_report_school_training_details).associate_with(sit_user.school, sit_user)
+    ).tag(:launch_ask_sit_to_report_school_training_details_for_2024).associate_with(sit_user.school, sit_user)
   end
 
   def launch_ask_gias_contact_to_report_school_training_details
@@ -463,7 +463,7 @@ class SchoolMailer < ApplicationMailer
       personalisation: {
         opt_in_out_link:,
       },
-    ).tag(:launch_ask_gias_contact_to_report_school_training_details).associate_with(school)
+    ).tag(:launch_ask_gias_contact_to_report_school_training_details_for_2024).associate_with(school)
   end
 
   def sit_needs_to_chase_partnership

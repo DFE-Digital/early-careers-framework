@@ -21,7 +21,7 @@ namespace :comms do
 
       if school.induction_coordinators.any?
         school.induction_coordinators.each do |sit_user|
-          if Email.tagged_with(:pilot_ask_sit_to_report_school_training_details).associated_with(sit_user).where.not(status: Email::FAILED_STATUSES).any?
+          if Email.tagged_with(:pilot_ask_sit_to_report_school_training_details_for_2024).associated_with(sit_user).where.not(status: Email::FAILED_STATUSES).any?
             logger.info "The user with id #{sit_user.id} has been already contacted"
             next
           end
@@ -37,7 +37,7 @@ namespace :comms do
             .deliver_later
         end
       else
-        if Email.tagged_with(:pilot_ask_gias_contact_to_report_school_training_details).associated_with(school).where.not(status: Email::FAILED_STATUSES).any?
+        if Email.tagged_with(:pilot_ask_gias_contact_to_report_school_training_details_for_2024).associated_with(school).where.not(status: Email::FAILED_STATUSES).any?
           logger.info "The school's primary GIAS has been already contacted"
           next
         end
@@ -86,7 +86,7 @@ namespace :comms do
         end
 
         school.induction_coordinators.each do |sit_user|
-          if Email.tagged_with(:pilot_chase_sit_to_report_school_training_details).associated_with(sit_user).where.not(status: Email::FAILED_STATUSES).any?
+          if Email.tagged_with(:pilot_chase_sit_to_report_school_training_details_for_2024).associated_with(sit_user).where.not(status: Email::FAILED_STATUSES).any?
             logger.info "The user has been already contacted"
             next
           end
@@ -102,7 +102,7 @@ namespace :comms do
             .deliver_later
         end
       else
-        if Email.tagged_with(:pilot_chase_gias_contact_to_report_school_training_details).associated_with(school).where.not(status: Email::FAILED_STATUSES).any?
+        if Email.tagged_with(:pilot_chase_gias_contact_to_report_school_training_details_for_2024).associated_with(school).where.not(status: Email::FAILED_STATUSES).any?
           logger.info "The school's primary GIAS has been already contacted"
           next
         end
@@ -144,7 +144,7 @@ namespace :comms do
       end
 
       school.induction_coordinators.each do |sit_user|
-        if Email.tagged_with(:launch_ask_sit_to_report_school_training_details).associated_with(sit_user).where.not(status: Email::FAILED_STATUSES).any?
+        if Email.tagged_with(:launch_ask_sit_to_report_school_training_details_for_2024).associated_with(sit_user).where.not(status: Email::FAILED_STATUSES).any?
           logger.info "The SIT has been already contacted"
           next
         end
@@ -178,7 +178,7 @@ namespace :comms do
         next
       end
 
-      if Email.tagged_with(:launch_ask_gias_contact_to_report_school_training_details).associated_with(school).where.not(status: Email::FAILED_STATUSES).any?
+      if Email.tagged_with(:launch_ask_gias_contact_to_report_school_training_details_for_2024).associated_with(school).where.not(status: Email::FAILED_STATUSES).any?
         logger.info "The school's GIAS contact has been already contacted"
         next
       end
