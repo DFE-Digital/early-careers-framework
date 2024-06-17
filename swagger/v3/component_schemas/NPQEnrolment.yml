@@ -61,10 +61,6 @@ properties:
     description: "Indicates whether or not this participant is eligible for DfE funding"
     type: boolean
     example: true
-  funded_place:
-    description: "Indicates whether or not this participant's training is being funded by DfE"
-    type: boolean
-    example: true
   training_status:
     description: "The training status of the NPQ participant"
     type: string
@@ -96,3 +92,7 @@ properties:
     type: string
     format: date-time
     example: "2021-05-31T02:22:32.000Z"
+  funded_place:
+    description: "Indicates whether or not this participant's training is being funded by DfE"
+    type: boolean
+    example: true
