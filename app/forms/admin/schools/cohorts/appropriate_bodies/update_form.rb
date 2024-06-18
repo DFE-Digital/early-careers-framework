@@ -50,7 +50,7 @@ module Admin
           end
 
           def appropriate_bodies
-            AppropriateBody.active_in_year(cohort_start_year)
+            AppropriateBody.selectable_by_schools.active_in_year(cohort_start_year)
           end
 
           def listed_appropriate_bodies

@@ -7,6 +7,16 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
+## 18 June 2024 
+
+From today, schools have started moving ECTs and mentors with partial declarations currently assigned to the 2021 cohort to the 2024 cohort.  
+
+This is because we’re closing the funding contract for the 2021 cohort at the end of July. 
+
+Providers will be able to identify participants who’ve been moved by the new `cohort_changed_after_payments_frozen` attribute to the [participant response](/api-reference/reference-v3.html?#api-v3-participants-ecf-get-responses-examples) in the API v3 production environment. The value shown for these participants will be `true`. 
+
+Providers will no longer be able to submit or void declarations for the 2021 cohort after the contract closes on 31 July. 
+
 ## 14 June 2024
 
 We’ve added the new special educational needs coordinator (SENCO) NPQ to the [test (sandbox) environment](https://sb.manage-training-for-early-career-teachers.education.gov.uk/) for the 2024 cohort.

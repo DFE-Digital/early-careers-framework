@@ -31,12 +31,15 @@ private
   end
 
   def enrol_participant_at_new_programme
-    participant_profile.update!(cohort_changed_after_payments_frozen:)
+    participant_profile.update!(school_cohort:,
+                                schedule:,
+                                cohort_changed_after_payments_frozen:)
     Induction::Enrol.call(participant_profile:,
                           induction_programme:,
                           start_date:,
                           preferred_email:,
                           mentor_profile:,
+                          schedule:,
                           school_transfer: true)
   end
 
@@ -97,5 +100,9 @@ private
 
   def partnership
     @partnership ||= existing_school_partnership || create_relationship
+  end
+
+  def schedule
+    @schedule ||= Induction::ScheduleForNewCohort.call(cohort:, induction_record: latest_induction_record)
   end
 end
