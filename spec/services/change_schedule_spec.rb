@@ -105,6 +105,50 @@ RSpec.shared_examples "changing cohort and continuing training" do
   end
 end
 
+RSpec.shared_examples "changing schedule after migrating from a payments frozen cohort" do
+  %i[submitted eligible payable paid].each do |state|
+    context "when there are #{state} declarations" do
+      let(:schedule_identifier) { "ecf-extended-schedule" }
+      let!(:new_schedule) { create(:ecf_schedule, cohort: new_cohort, schedule_identifier:) }
+      let(:cohort) { Cohort.current }
+      let(:new_cohort) { cohort }
+
+      let(:params) do
+        {
+          cpd_lead_provider:,
+          participant_id:,
+          course_identifier:,
+          schedule_identifier:,
+          cohort: new_cohort.start_year,
+          allow_change_to_from_frozen_cohort:,
+        }
+      end
+
+      before do
+        previous_cohort = cohort.previous
+        previous_cohort.freeze_payments!
+        participant_profile.update!(cohort_changed_after_payments_frozen: true)
+        create(:participant_declaration, participant_profile:, cohort: previous_cohort, state:, course_identifier:, cpd_lead_provider:)
+      end
+
+      it { is_expected.to be_valid }
+      it { expect { service.call }.to change { participant_profile.reload.schedule_id }.to(new_schedule.id) }
+
+      context "when they have declarations in a non-frozen cohort" do
+        before { create(:participant_declaration, participant_profile:, declaration_type: "retained-1", cohort: new_cohort, state:, course_identifier:, cpd_lead_provider:) }
+
+        it { is_expected.to be_invalid }
+      end
+
+      context "when they are changing cohort as well as schedule" do
+        let(:new_cohort) { cohort.next }
+
+        it { is_expected.to be_invalid }
+      end
+    end
+  end
+end
+
 RSpec.shared_examples "reversing a change of schedule/cohort" do
   it "allows a change of schedule to be reversed" do
     original_cohort = participant_profile.schedule.cohort
@@ -233,6 +277,8 @@ RSpec.describe ChangeSchedule do
       it_behaves_like "validating a participant is not already withdrawn for a change schedule" do
         let(:participant_profile) { create(:ect, :withdrawn, lead_provider: cpd_lead_provider.lead_provider) }
       end
+
+      it_behaves_like "changing schedule after migrating from a payments frozen cohort"
 
       context "when the cohort is changing" do
         let!(:new_schedule) { Finance::Schedule::ECF.find_by(schedule_identifier:, cohort: new_cohort) }
@@ -497,6 +543,8 @@ RSpec.describe ChangeSchedule do
       it_behaves_like "validating a participant is not already withdrawn for a change schedule" do
         let(:participant_profile) { create(:mentor, :withdrawn, lead_provider: cpd_lead_provider.lead_provider) }
       end
+
+      it_behaves_like "changing schedule after migrating from a payments frozen cohort"
 
       context "when the cohort is changing" do
         let!(:new_school_cohort) { create(:school_cohort, :fip, :with_induction_programme, cohort: new_cohort, lead_provider: cpd_lead_provider.lead_provider, school: participant_profile.school) }
