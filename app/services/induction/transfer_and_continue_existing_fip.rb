@@ -16,6 +16,8 @@ private
   attr_reader :end_date, :from_school, :mentor_profile, :participant_profile, :preferred_email,
               :school_cohort, :start_date, :to_school
 
+  delegate :cohort, to: :school_cohort
+
   def initialize(school_cohort:, participant_profile:, email: nil, start_date: Time.zone.now, end_date: nil, mentor_profile: nil)
     @school_cohort = school_cohort
     @participant_profile = participant_profile
@@ -29,11 +31,15 @@ private
   end
 
   def enrol_participant_at_new_programme
+    participant_profile.update!(school_cohort:,
+                                schedule:,
+                                cohort_changed_after_payments_frozen:)
     Induction::Enrol.call(participant_profile:,
                           induction_programme:,
                           start_date:,
                           preferred_email:,
                           mentor_profile:,
+                          schedule:,
                           school_transfer: true)
   end
 
@@ -50,6 +56,10 @@ private
     raise ArgumentError, "Participant has no current lead provider" unless lead_provider
     raise ArgumentError, "Participant has no current delivery partner" unless delivery_partner
     raise ArgumentError, "Participant is already enrolled at this school" if from_school == to_school
+  end
+
+  def cohort_changed_after_payments_frozen
+    participant_profile.eligible_to_change_cohort_and_continue_training?(cohort:)
   end
 
   def create_induction_programme
@@ -73,7 +83,11 @@ private
   end
 
   def existing_school_partnership
-    to_school.active_partnerships.find_by(cohort: school_cohort.cohort, lead_provider:, delivery_partner:)
+    to_school.active_partnerships.find_by(cohort:, lead_provider:, delivery_partner:)
+  end
+
+  def induction_programme
+    @induction_programme ||= existing_school_induction_programme || create_induction_programme
   end
 
   def latest_induction_record
@@ -88,7 +102,7 @@ private
     @partnership ||= existing_school_partnership || create_relationship
   end
 
-  def induction_programme
-    @induction_programme ||= existing_school_induction_programme || create_induction_programme
+  def schedule
+    @schedule ||= Induction::ScheduleForNewCohort.call(cohort:, induction_record: latest_induction_record)
   end
 end

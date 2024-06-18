@@ -24,6 +24,7 @@ class FeatureFlag
     prevent_2023_ect_registrations
     school_participant_status_language
     npq_capping
+    registration_pilot_school
   ].freeze
 
   FEATURES = (PERMANENT_SETTINGS + TEMPORARY_FEATURE_FLAGS).index_with { |name|

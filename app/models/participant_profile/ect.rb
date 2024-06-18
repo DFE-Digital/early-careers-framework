@@ -16,7 +16,9 @@ class ParticipantProfile::ECT < ParticipantProfile::ECF
       .where("induction_start_date IS NULL OR induction_start_date < make_date(cohorts.start_year, 9, 1)")
   end
 
-  alias_method :completed_training?, :completed_induction?
+  def completed_training?
+    induction_completion_date.present?
+  end
 
   def ect?
     true

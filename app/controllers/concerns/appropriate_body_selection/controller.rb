@@ -9,13 +9,12 @@ module AppropriateBodySelection
                     :ensure_appropriate_body_data,
                     only: %i[appropriate_body_appointed
                              update_appropriate_body_appointed
-                             appropriate_body_type
-                             update_appropriate_body_type
                              appropriate_body
                              update_appropriate_body]
 
       helper_method :appropriate_body_form, :appropriate_body_from_path, :appropriate_body_school_name,
-                    :appropriate_body_type_back_link, :appropriate_body_action_name, :preconfirm_next_action
+                    :appropriate_body_action_name, :preconfirm_next_action, :appropriate_body_default_selection,
+                    :appropriate_body_show_different_ab_for_ect_message
     end
 
     def appropriate_body_preconfirm
@@ -30,7 +29,7 @@ module AppropriateBodySelection
       if appropriate_body_form.valid? :body_appointed
         store_appropriate_body_form
         if appropriate_body_form.body_appointed?
-          redirect_to action: :appropriate_body_type
+          redirect_to action: :appropriate_body
         else
           submit_appropriate_body_selection
         end
@@ -40,26 +39,8 @@ module AppropriateBodySelection
       end
     end
 
-    def appropriate_body_type
-      render "/appropriate_body_selection/body_type"
-    end
-
-    def update_appropriate_body_type
-      if appropriate_body_form.valid? :body_type
-        store_appropriate_body_form
-        redirect_to action: :appropriate_body
-      else
-        track_validation_error(appropriate_body_form)
-        render "/appropriate_body_selection/body_type"
-      end
-    end
-
     def appropriate_body
-      if appropriate_body_form.body_type
-        render "/appropriate_body_selection/body_selection"
-      else
-        redirect_to action: :appropriate_body_type
-      end
+      render "/appropriate_body_selection/body_selection"
     end
 
     def update_appropriate_body
@@ -78,19 +59,21 @@ module AppropriateBodySelection
     end
 
     def preconfirm_next_action
-      appropriate_body_ask_appointed ? :appropriate_body_appointed : :appropriate_body_type
+      appropriate_body_ask_appointed ? :appropriate_body_appointed : :appropriate_body
     end
 
     # @param [Integer] cohort_start_year When specified the appropriate bodies will be filtered to those that are active [CST-1420]
-    def start_appropriate_body_selection(from_path:, submit_action:, school_name:, ask_appointed: true,
-                                         preconfirmation: false, action_name: :add, cohort_start_year: nil)
+    def start_appropriate_body_selection(from_path:, submit_action:, school:, show_different_ab_for_ect_message:,
+                                         ask_appointed: true, preconfirmation: false, action_name: :add,
+                                         cohort_start_year: nil)
       session.delete(:appropriate_body_selection_form)
 
       session[:appropriate_body_selection] = {
         action_name:,
         from_path:,
         submit_action:,
-        school_name:,
+        school:,
+        show_different_ab_for_ect_message:,
         ask_appointed:,
         preconfirmation:,
         cohort_start_year:,
@@ -107,6 +90,7 @@ module AppropriateBodySelection
       @appropriate_body_form = AppropriateBodySelectionForm.new(session[:appropriate_body_selection_form])
       @appropriate_body_form.cohort_start_year = appropriate_body_session_data[:cohort_start_year]
       @appropriate_body_form.assign_attributes(appropriate_body_form_params)
+      set_default_appropriate_body
       @appropriate_body_form
     end
 
@@ -119,8 +103,8 @@ module AppropriateBodySelection
 
       params.require(:appropriate_body_selection_form)
             .permit(:body_appointed,
-                    :body_type,
-                    :body_id)
+                    :body_id,
+                    :body_type)
     end
 
     def store_appropriate_body_form
@@ -151,26 +135,48 @@ module AppropriateBodySelection
       appropriate_body_session_data[:preconfirmation]
     end
 
-    def appropriate_body_school_name
-      appropriate_body_session_data[:school_name]
+    def appropriate_body_school
+      appropriate_body_session_data[:school]
     end
 
-    def appropriate_body_type_back_link
-      if appropriate_body_ask_appointed
-        url_for({ action: :appropriate_body_appointed })
-      else
-        appropriate_body_from_path
-      end
+    def appropriate_body_school_name
+      appropriate_body_session_data[:school].name
     end
 
     def appropriate_body_delete_session
       session.delete(:appropriate_body_selection)
     end
 
+    def appropriate_body_default_selection
+      @appropriate_body_form.default_appropriate_body
+    end
+
+    def appropriate_body_show_different_ab_for_ect_message
+      appropriate_body_session_data[:show_different_ab_for_ect_message]
+    end
+
     def submit_appropriate_body_selection
       store_appropriate_body_form
       method(appropriate_body_submit_action).call
       appropriate_body_delete_session
+    end
+
+    def set_default_appropriate_body
+      # TODO: set default ABs
+      @appropriate_body_form.default_appropriate_body = if appropriate_body_school&.school_type_code == 37
+                                                          default_appropriate_body_for_british_schools_overseas
+                                                        elsif appropriate_body_school&.school_type_code == 10 || appropriate_body_school&.school_type_code == 11
+                                                          default_appropriate_body_for_independent_schools
+                                                        end
+    end
+
+    def default_appropriate_body_for_british_schools_overseas
+      # TODO: ADD AB TO PRODUCTION ONCE CONFIRMED
+      AppropriateBody.find_by(name: "Educational Success Partners (ESP)")
+    end
+
+    def default_appropriate_body_for_independent_schools
+      AppropriateBody.find_by(name: "Independent Schools Teacher Induction Panel (IStip)")
     end
   end
 end

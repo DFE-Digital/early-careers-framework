@@ -349,7 +349,7 @@ module ChooseProgrammeSteps
   end
 
   def when_i_fill_appropriate_body_with(value)
-    when_i_fill_in_autocomplete "schools-cohorts-setup-wizard-appropriate-body-id-field", with: value
+    when_i_fill_in_autocomplete "appropriate-body-selection-form-body-id-field", with: value
   end
 
   def when_i_choose_teaching_school_hub

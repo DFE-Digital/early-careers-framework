@@ -13,11 +13,15 @@ class Induction::TransferToSchoolsProgramme < BaseService
       end
       old_school = latest_induction_record.school
 
+      participant_profile.update!(school_cohort:,
+                                  schedule:,
+                                  cohort_changed_after_payments_frozen:)
       induction_record = Induction::Enrol.call(participant_profile:,
                                                induction_programme:,
                                                start_date:,
                                                preferred_email: email,
                                                mentor_profile:,
+                                               schedule:,
                                                school_transfer: true)
 
       if participant_profile.mentor?
@@ -45,11 +49,21 @@ private
     @mentor_profile = mentor_profile
   end
 
-  def latest_induction_record
-    participant_profile.induction_records.latest
-  end
+  delegate :cohort, :school_cohort, to: :induction_programme
 
   def check_different_school!
     raise ArgumentError, "Participant is already enrolled at this school" if latest_induction_record.school == induction_programme.school
+  end
+
+  def cohort_changed_after_payments_frozen
+    participant_profile.eligible_to_change_cohort_and_continue_training?(cohort:)
+  end
+
+  def latest_induction_record
+    @latest_induction_record ||= participant_profile.induction_records.latest
+  end
+
+  def schedule
+    @schedule ||= Induction::ScheduleForNewCohort.call(cohort:, induction_record: latest_induction_record)
   end
 end

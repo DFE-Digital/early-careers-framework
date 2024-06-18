@@ -1,41 +1,89 @@
-<% title = t("setup_school_cohort.appropriate_body_type.title.#{@wizard.appropriate_body_type}") %>
+<% title = "Which type of appropriate body have you appointed?" %>
 
 <% content_for :title, title %>
 
 <% content_for :before_content, govuk_back_link(text: "Back", href: wizard_back_link_path) %>
 
+<script>
+  function ab_not_listed() {
+    var input = document.getElementById('schools-cohorts-setup-wizard-appropriate-body-type-not-listed-field');
+    if (input) {
+      input.checked = true;
+      const form = input.closest('form');
+      form.submit();
+    }
+  }
+</script>
+
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <%= form_with model: @wizard.form, url: url_for(action: :update), scope: @wizard.to_key, method: :put do |f| %>
-            <%= f.govuk_error_summary %>
+          <%= f.govuk_error_summary %>
 
-            <% if @wizard.national_appropriate_body_type? %>
-                <%= f.govuk_collection_radio_buttons(:appropriate_body_id,
-                                                     @wizard.form.choices,
-                                                     :id,
-                                                     :name,
-                                                     legend: { text: title, tag: :h1, size: 'l' },
-                                                     caption: { text: @school.name, size: 'l' }) do %>
-                    <div class="govuk-inset-text">
-                        Remember to contact the appropriate body directly to appoint them for your ECTs, if you have not done so already.
-                    </div>
-                <% end %>
-            <% else %>
-                <%= f.govuk_collection_select(:appropriate_body_id,
-                                              @wizard.form.choices,
-                                              :id,
-                                              :name,
-                                              label: { text: title, tag: :h1, size: 'l' },
-                                              caption: { text: @school.name, size: 'l' },
-                                              options: { include_blank: true },
-                                              class: "autocomplete") do %>
-                    <div class="govuk-inset-text">
-                        Remember to contact the appropriate body directly to appoint them for your ECTs, if you have not done so already.
-                    </div>
-                <% end %>
-            <% end %>
+          <% if @wizard.appropriate_body_default_selection %>
 
-            <%= f.govuk_submit "Continue" %>
+            <div class="govuk-form-group">
+              <h1 class="govuk-label-wrapper">
+                <span class="govuk-caption-l"><%= @wizard.school.name %></span>
+                <label class="govuk-label govuk-label--l" for="whichTSH">
+                  <%= title %>
+                </label>
+              </h1>
+
+              <div class="govuk-radios" data-module="govuk-radios">
+
+                <%= f.govuk_radio_button(:appropriate_body_type, "tsh", label: { text: "Teaching school hub"}, 'aria-controls': "conditional-tsh") %>
+
+                <div class="govuk-radios__conditional" id="conditional-tsh">
+                  <div class="govuk-form-group">
+                    <%= f.govuk_collection_select(:appropriate_body_id,
+                                                  @wizard.form.choices,
+                                                  :id,
+                                                  :name,
+                                                  label: { text: "Which teaching school hub have you appointed?", size: 's', hidden: true },
+                                                  options: { include_blank: true },
+                                                  class: "autocomplete") %>
+                  </div>
+                </div>
+
+                <%= f.govuk_radio_button(:appropriate_body_type, "default", label: { text: @wizard.appropriate_body_default_selection.name }) %>
+              </div>
+            </div>
+
+          <% else %>
+
+            <div class="govuk-form-group">
+              <h1 class="govuk-label-wrapper">
+                <span class="govuk-caption-l"><%= @wizard.school.name %></span>
+                <label class="govuk-label govuk-label--l" for="whichTSH">
+                  Which teaching school hub have you appointed?
+                </label>
+              </h1>
+
+              <%= f.govuk_collection_select(:appropriate_body_id,
+                                            @wizard.form.choices,
+                                            :id,
+                                            :name,
+                                            label: { text: "Which teaching school hub have you appointed?", size: 's', hidden: true },
+                                            options: { include_blank: true },
+                                            class: "autocomplete") %>
+
+              <%= f.hidden_field(:appropriate_body_type, value: "tsh") %>
+            </div>
+
+          <% end %>
+
+          <span class="govuk-visually-hidden">
+            <%= f.govuk_radio_button(:appropriate_body_type, "not_listed", label: { text: "Not listed"}) %>
+          </span>
+
+          <p class="govuk-body">If any of your ECTs will work with a different appropriate body, you can tell us when you register them later.</p>
+
+          <%= f.govuk_submit "Continue" %>
+
+          <p>
+            <%= govuk_link_to "My appropriate body isn't listed", "javascript:ab_not_listed()" %>
+          </p>
         <% end %>
     </div>
 </div>

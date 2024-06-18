@@ -30,7 +30,7 @@ RSpec.describe ActiveParticipantProfileValidator, type: :model do
     end
   end
 
-  context "when the participant has active induction and training statuses" do
+  context "when the participant has active induction status" do
     let(:participant_profile) { ParticipantProfile::Mentor.new(status: :active) }
 
     it "is valid" do

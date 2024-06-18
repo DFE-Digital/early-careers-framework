@@ -31,7 +31,7 @@ RSpec.feature "New schools should be able to choose their programme", type: :fea
 
   context "when appropriate body appointed" do
     before do
-      @appropriate_body = create(:appropriate_body_national_organisation)
+      @appropriate_body = create(:appropriate_body_teaching_school_hub)
     end
 
     scenario "a new school chooses their programme and get confirmarion" do
@@ -49,10 +49,7 @@ RSpec.feature "New schools should be able to choose their programme", type: :fea
       when_i_choose_yes
       and_i_click_on_continue
 
-      when_i_choose_national_organisation
-      and_i_click_on_continue
-
-      when_i_choose_appropriate_body
+      when_i_fill_appropriate_body_with @appropriate_body.name
       and_i_click_on_continue
 
       then_i_see_appropriate_body_reported_confirmation

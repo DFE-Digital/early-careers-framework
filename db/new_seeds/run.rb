@@ -41,7 +41,8 @@ end
   "add_sit_nominations.rb",
   "add_ects_becoming_mentors.rb",
   "add_training_record_state_examples.rb",
-  "add_schools_for_cohortless_testing.rb",
+  "add_schools_for_registration_testing.rb",
+  "add_testing_scenarios_for_closing_2021.rb",
   "add_environment_specific_data.rb",
 ].each do |file|
   Rails.logger.info("seeding #{file}")

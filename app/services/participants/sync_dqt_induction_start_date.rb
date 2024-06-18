@@ -24,8 +24,8 @@ module Participants
 
     attr_reader :dqt_induction_start_date, :participant_profile
 
-    delegate :current_induction_record, :mentor?, to: :participant_profile
-    delegate :cohort, to: :current_induction_record, prefix: :participant
+    delegate :latest_induction_record, :mentor?, to: :participant_profile
+    delegate :cohort, to: :latest_induction_record, prefix: :participant
 
     def amend_cohort
       @amend_cohort ||= Induction::AmendParticipantCohort.new(participant_profile:,
@@ -35,6 +35,14 @@ module Participants
 
     def clear_participant_sync_errors
       SyncDQTInductionStartDateError.where(participant_profile:).destroy_all
+    end
+
+    def cohort_missing
+      save_error("Cohort containing date #{dqt_induction_start_date.to_fs(:govuk)} not setup in the service!")
+    end
+
+    def dqt_target_cohort
+      @dqt_target_cohort ||= Cohort.for_induction_start_date(dqt_induction_start_date)
     end
 
     def pre_2021_dqt_induction_start_date?
@@ -55,11 +63,7 @@ module Participants
     alias_method :save_error, :save_errors
 
     def target_cohort
-      @target_cohort ||= Cohort.for_induction_start_date(dqt_induction_start_date)
-    end
-
-    def cohort_missing
-      save_error("Cohort containing date #{dqt_induction_start_date.to_fs(:govuk)} not setup in the service!")
+      @target_cohort ||= dqt_target_cohort&.payments_frozen? ? participant_cohort : dqt_target_cohort
     end
 
     def update_induction_start_date
@@ -68,7 +72,7 @@ module Participants
 
     def update_participant
       clear_participant_sync_errors
-      save_errors(*amend_cohort.errors.full_messages) unless amend_cohort.save
+      amend_cohort.save || save_errors(*amend_cohort.errors.full_messages)
     end
   end
 end
