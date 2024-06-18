@@ -56,6 +56,16 @@ RSpec.describe ApplicationHelper, type: :helper do
         expect(helper.induction_coordinator_dashboard_path(induction_coordinator)).to eq("/schools")
       end
     end
+
+    context "when the induction coordinator has no schools" do
+      before do
+        induction_coordinator.induction_coordinator_profile.schools = []
+      end
+
+      it "return the schools dashboard path (index)" do
+        expect(helper.induction_coordinator_dashboard_path(induction_coordinator)).to eq("/schools")
+      end
+    end
   end
 
   describe "#participant_start_path" do
