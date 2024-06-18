@@ -152,4 +152,27 @@ RSpec.describe Participants::SyncDQTInductionStartDate do
       end
     end
   end
+
+  context "when the target cohort derived from the induction start date has payments frozen" do
+    let(:dqt_induction_start_date) { Date.new(Cohort.previous.start_year, 10, 2) }
+    let(:participant_cohort_start_year) { Cohort.previous.start_year }
+    let(:target_school_cohort) do
+      create(:seed_school_cohort, :fip, cohort: Cohort.current, school: participant_profile.school)
+    end
+
+    before do
+      Cohort.previous.update!(payments_frozen_at: 1.day.ago)
+      NewSeeds::Scenarios::InductionProgrammes::Fip.new(school_cohort: target_school_cohort).build.induction_programme
+    end
+
+    it "assigns the participant to the current cohort" do
+      expect { subject }.to change(participant_profile, :induction_start_date)
+                              .to(dqt_induction_start_date)
+                              .and change { participant_profile.induction_records.latest.cohort.start_year }
+                                     .to(Cohort.current.start_year)
+                                     .and not_change(SyncDQTInductionStartDateError, :count)
+
+      expect(participant_profile.induction_records.latest.induction_status).to eq("active")
+    end
+  end
 end

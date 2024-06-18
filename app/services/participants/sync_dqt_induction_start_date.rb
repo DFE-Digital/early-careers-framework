@@ -55,7 +55,7 @@ module Participants
     alias_method :save_error, :save_errors
 
     def target_cohort
-      @target_cohort ||= Cohort.for_induction_start_date(dqt_induction_start_date)
+      @target_cohort ||= Cohort.for_date(dqt_induction_start_date)
     end
 
     def cohort_missing
