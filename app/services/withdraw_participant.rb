@@ -35,7 +35,10 @@ class WithdrawParticipant
 
     unless participant_profile.npq?
       induction_coordinator = participant_profile.school.induction_coordinator_profiles.first
-      SchoolMailer.with(withdrawn_participant: participant_profile, induction_coordinator:).fip_provider_has_withdrawn_a_participant.deliver_later
+      if induction_coordinator.present?
+        SchoolMailer.with(withdrawn_participant: participant_profile, induction_coordinator:)
+                    .fip_provider_has_withdrawn_a_participant.deliver_later
+      end
     end
 
     participant_profile.record_to_serialize_for(lead_provider: cpd_lead_provider.lead_provider)
