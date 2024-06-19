@@ -135,3 +135,5 @@ variable "azure_cpu_threshold" {
   type    = number
   default = 60
 }
+
+variable "enable_logit" { default = false }
