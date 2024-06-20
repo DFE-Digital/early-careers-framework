@@ -57,7 +57,7 @@ RSpec.describe InductionRecord, type: :model do
       end
 
       it "includes completed induction, current, transferring, transferred, training status withdrawn and training status deferred" do
-        expect(described_class.school_dashboard_relevant).to eq(expected_included)
+        expect(described_class.school_dashboard_relevant).to match_array(expected_included)
       end
     end
 

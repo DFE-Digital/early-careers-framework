@@ -3361,8 +3361,8 @@
                 "id": "db3a7848-7308-4879-942a-c4a70ced400a",
                 "type": "npq-participant",
                 "attributes": {
-                  "full_name": "Isabelle MacDonald",
                   "email": "isabelle.macdonald2@some-school.example.com",
+                  "full_name": "Isabelle MacDonald",
                   "teacher_reference_number": "1234567",
                   "updated_at": "2021-05-31T02:21:32.000Z",
                   "npq_enrolments": [
@@ -3372,8 +3372,10 @@
                       "cohort": "2021",
                       "npq_application_id": "db3a7848-7308-4879-942a-c4a70ced400a",
                       "eligible_for_funding": true,
-                      "funded_place": true,
-                      "training_status": "active"
+                      "training_status": "active",
+                      "school_urn": "123456",
+                      "targeted_delivery_funding_eligibility": true,
+                      "funded_place": true
                     }
                   ]
                 }
@@ -3960,11 +3962,6 @@
             "type": "boolean",
             "example": true
           },
-          "funded_place": {
-            "description": "Indicates whether or not this participant's training is being funded by DfE",
-            "type": "boolean",
-            "example": true
-          },
           "training_status": {
             "description": "The training status of the NPQ participant",
             "type": "string",
@@ -3984,6 +3981,11 @@
           "targeted_delivery_funding_eligibility": {
             "description": "Whether or not this enrolment is eligible for Targeted Delivery Funding uplift",
             "nullable": false,
+            "type": "boolean",
+            "example": true
+          },
+          "funded_place": {
+            "description": "Indicates whether or not this participant's training is being funded by DfE",
             "type": "boolean",
             "example": true
           }
@@ -4321,22 +4323,22 @@
         "description": "The data attributes associated with an NPQ participants",
         "type": "object",
         "required": [
-          "full_name",
           "email",
+          "full_name",
           "npq_enrolments",
           "updated_at"
         ],
         "properties": {
-          "full_name": {
-            "description": "The full name of this NPQ participant",
-            "type": "string",
-            "example": "Isabelle MacDonald"
-          },
           "email": {
             "description": "The email address registered for this NPQ participant",
             "type": "string",
             "nullable": true,
             "example": "isabelle.macdonald2@some-school.example.com"
+          },
+          "full_name": {
+            "description": "The full name of this NPQ participant",
+            "type": "string",
+            "example": "Isabelle MacDonald"
           },
           "teacher_reference_number": {
             "description": "The Teacher Reference Number (TRN) for this NPQ participant",
@@ -4344,18 +4346,18 @@
             "example": "1234567",
             "nullable": true
           },
+          "updated_at": {
+            "description": "The date the NPQ participant was last updated",
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-05-31T02:22:32.000Z"
+          },
           "npq_enrolments": {
             "description": "Information about the course(s) the participant is enroled in",
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/NPQEnrolment"
             }
-          },
-          "updated_at": {
-            "description": "The date the NPQ participant was last updated",
-            "type": "string",
-            "format": "date-time",
-            "example": "2021-05-31T02:22:32.000Z"
           }
         }
       },

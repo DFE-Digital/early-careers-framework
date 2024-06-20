@@ -3494,20 +3494,20 @@
                 "type": "npq-participant",
                 "attributes": {
                   "participant_id": "7a8fef46-3c43-42c0-b3d5-1ba5904ba562",
-                  "full_name": "Isabelle MacDonald",
                   "email": "isabelle.macdonald2@some-school.example.com",
+                  "full_name": "Isabelle MacDonald",
                   "npq_courses": [
                     "npq-leading-teaching"
                   ],
-                  "teacher_reference_number": "1234567",
-                  "updated_at": "2021-05-31T02:21:32.000Z",
                   "funded_places": [
                     {
                       "npq_course": "npq-leading-teaching",
                       "funded_place": true,
                       "npq_application_id": "db3a7848-7308-4879-942a-c4a70ced400a"
                     }
-                  ]
+                  ],
+                  "teacher_reference_number": "1234567",
+                  "updated_at": "2021-05-31T02:21:32.000Z"
                 }
               }
             ]
@@ -4283,29 +4283,26 @@
             "example": "7a8fef46-3c43-42c0-b3d5-1ba5904ba562",
             "format": "uuid"
           },
-          "full_name": {
-            "description": "The full name of this NPQ participant",
-            "type": "string",
-            "example": "Isabelle MacDonald"
-          },
           "email": {
             "description": "The email address registered for this NPQ participant",
             "type": "string",
             "nullable": true,
             "example": "isabelle.macdonald2@some-school.example.com"
           },
-          "teacher_reference_number": {
-            "description": "The Teacher Reference Number (TRN) for this NPQ participant",
+          "full_name": {
+            "description": "The full name of this NPQ participant",
             "type": "string",
-            "example": "1234567",
-            "nullable": true
+            "example": "Isabelle MacDonald"
           },
           "npq_courses": {
             "description": "The type of course the participant is enrolled in",
             "type": "array",
             "items": {
               "type": "string"
-            }
+            },
+            "example": [
+              "npq-leading-teaching"
+            ]
           },
           "funded_places": {
             "description": "The funded place attributes for the Participant",
@@ -4320,6 +4317,12 @@
                 "npq_application_id": "db3a7848-7308-4879-942a-c4a70ced400a"
               }
             ]
+          },
+          "teacher_reference_number": {
+            "description": "The Teacher Reference Number (TRN) for this NPQ participant",
+            "type": "string",
+            "example": "1234567",
+            "nullable": true
           },
           "updated_at": {
             "description": "The date the NPQ participant was last updated",

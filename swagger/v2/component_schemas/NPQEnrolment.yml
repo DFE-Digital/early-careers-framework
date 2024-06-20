@@ -55,10 +55,6 @@ properties:
     description: "Indicates whether or not this participant is eligible for DfE funding"
     type: boolean
     example: true
-  funded_place:
-    description: "Indicates whether or not this participant's training is being funded by DfE"
-    type: boolean
-    example: true
   training_status:
     description: "The training status of the NPQ participant"
     type: string
@@ -75,5 +71,9 @@ properties:
   targeted_delivery_funding_eligibility:
     description: "Whether or not this enrolment is eligible for Targeted Delivery Funding uplift"
     nullable: false
+    type: boolean
+    example: true
+  funded_place:
+    description: "Indicates whether or not this participant's training is being funded by DfE"
     type: boolean
     example: true
