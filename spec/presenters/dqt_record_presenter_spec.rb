@@ -91,7 +91,7 @@ RSpec.describe DQTRecordPresenter, type: :model do
   describe "#induction_start_date" do
     context "when there are induction periods" do
       before do
-        expect_any_instance_of(FullDQT::V3::Client).to receive(:get_record).with(trn: "1234567").and_return(v3_dqt_record)
+        expect_any_instance_of(DQT::V3::Client).to receive(:get_record).with(trn: "1234567").and_return(v3_dqt_record)
       end
 
       it "returns the start date of the earliest induction period" do
@@ -102,7 +102,7 @@ RSpec.describe DQTRecordPresenter, type: :model do
     context "when there are no induction periods" do
       before do
         v3_dqt_record["induction"]["periods"] = []
-        expect_any_instance_of(FullDQT::V3::Client).to receive(:get_record).with(trn: "1234567").and_return(v3_dqt_record)
+        expect_any_instance_of(DQT::V3::Client).to receive(:get_record).with(trn: "1234567").and_return(v3_dqt_record)
       end
 
       it "returns nil" do
@@ -114,7 +114,7 @@ RSpec.describe DQTRecordPresenter, type: :model do
   describe "#induction_completion_date" do
     context "when induction has been completed" do
       before do
-        expect_any_instance_of(FullDQT::V3::Client).to receive(:get_record).with(trn: "1234567").and_return(v3_dqt_record)
+        expect_any_instance_of(DQT::V3::Client).to receive(:get_record).with(trn: "1234567").and_return(v3_dqt_record)
       end
 
       it "returns the last end date of the latest induction period" do
@@ -132,7 +132,7 @@ RSpec.describe DQTRecordPresenter, type: :model do
     context "when there are no induction periods" do
       before do
         v3_dqt_record["induction"]["periods"] = []
-        expect_any_instance_of(FullDQT::V3::Client).to receive(:get_record).with(trn: "1234567").and_return(v3_dqt_record)
+        expect_any_instance_of(DQT::V3::Client).to receive(:get_record).with(trn: "1234567").and_return(v3_dqt_record)
       end
 
       it "returns nil" do
