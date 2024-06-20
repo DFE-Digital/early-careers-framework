@@ -5153,9 +5153,6 @@
       "NPQApplicationAcceptAttributesRequest": {
         "description": "The NPQ Application acceptance request",
         "type": "object",
-        "required": [
-          "schedule_identifier"
-        ],
         "properties": {
           "funded_place": {
             "description": "Whether the participant has a funded place",

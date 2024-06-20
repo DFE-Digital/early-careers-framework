@@ -1,7 +1,5 @@
 description: "The NPQ Application acceptance request"
 type: object
-required:
-  - schedule_identifier
 properties:
   schedule_identifier:
     description: "The new schedule of the participant"
