@@ -103,7 +103,7 @@ RSpec.shared_examples "withdrawing a participant" do
 end
 
 RSpec.shared_examples "withdrawing an ECF participant" do
-  let(:induction_coordinator) { participant_profile.school.induction_coordinator_profiles.first }
+  let(:induction_coordinator) { create(:induction_coordinator_profile, schools: [participant_profile.school]) }
 
   it_behaves_like "withdrawing a participant"
 
@@ -118,6 +118,16 @@ RSpec.shared_examples "withdrawing an ECF participant" do
         },
         args: [],
       ).once
+  end
+
+  context "when the participant's school has no induction coordinator" do
+    it "does not send an alert email to the provider" do
+      participant_profile.school.induction_coordinator_profiles = []
+
+      expect {
+        service.call
+      }.not_to have_enqueued_mail(SchoolMailer, :fip_provider_has_withdrawn_a_participant)
+    end
   end
 
   it "creates a new withdrawn induction record" do

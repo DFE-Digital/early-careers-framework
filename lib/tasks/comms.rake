@@ -79,8 +79,8 @@ namespace :comms do
       end
 
       if school.induction_coordinators.any?
-        # Do not chase the school if there is a 2023 training programme
-        if school.school_cohorts.for_year(2023).first&.induction_programme_choice
+        # Do not chase the school if there is a 2024 training programme
+        if school.school_cohorts.for_year(2024).first&.induction_programme_choice
           logger.info "School has reported the training programme"
           next
         end
@@ -138,7 +138,7 @@ namespace :comms do
 
       school = School.find_by_urn(school["urn"])
 
-      if school.school_cohorts.for_year(2023).first&.induction_programme_choice
+      if school.school_cohorts.for_year(2024).first&.induction_programme_choice
         logger.info "School has reported the training programme"
         next
       end

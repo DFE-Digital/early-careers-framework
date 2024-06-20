@@ -330,7 +330,7 @@ GEM
       rack (>= 2.1.4.1)
     marcel (1.0.4)
     matrix (0.4.2)
-    memory_profiler (1.0.1)
+    memory_profiler (1.0.2)
     method_source (1.0.0)
     mini_mime (1.1.5)
     mini_portile2 (2.8.7)
@@ -343,7 +343,7 @@ GEM
     mutex_m (0.2.0)
     net-http (0.4.1)
       uri
-    net-imap (0.4.12)
+    net-imap (0.4.13)
       date
       net-protocol
     net-pop (0.1.2)

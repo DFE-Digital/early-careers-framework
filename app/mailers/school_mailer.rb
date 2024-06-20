@@ -445,6 +445,7 @@ class SchoolMailer < ApplicationMailer
       rails_mail_template: action_name,
       personalisation: {
         name: sit_user.full_name,
+        email_address: sit_user.email,
         nomination_link:,
       },
     ).tag(:launch_ask_sit_to_report_school_training_details_for_2024).associate_with(sit_user.school, sit_user)

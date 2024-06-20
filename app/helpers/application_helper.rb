@@ -34,7 +34,7 @@ module ApplicationHelper
   end
 
   def induction_coordinator_dashboard_path(user)
-    return schools_dashboard_index_path if user.schools.count > 1
+    return schools_dashboard_index_path if user.schools.count != 1
 
     school = user.induction_coordinator_profile.schools.first
     return schools_choose_programme_path(school_id: school.slug, cohort_id: Cohort.active_registration_cohort) if school.school_cohorts.empty?
