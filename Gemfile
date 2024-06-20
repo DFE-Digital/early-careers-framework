@@ -90,8 +90,6 @@ gem "activerecord-session_store", "~> 2.1"
 
 gem "active_record_extended"
 
-gem "google-apis-drive_v3"
-gem "googleauth"
 gem "google-cloud-bigquery"
 
 gem "sidekiq"
