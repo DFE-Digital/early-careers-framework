@@ -94,6 +94,19 @@ module ManageTrainingSteps
     @induction_programme.update!(partnership: @partnership)
   end
 
+  def given_there_is_a_school_that_has_chosen_fip_for_current_and_next_cohorts_and_partnered
+    given_there_is_a_school_that_has_chosen_fip_for_previous_and_current_cohort_and_partnered
+    @cohort_next = Cohort.next || create(:cohort, :next)
+    @school_cohort_next = create(:school_cohort, :fip, school: @school, cohort: @cohort_next)
+    @induction_programme_next = create(:induction_programme, :fip, school_cohort: @school_cohort_next, partnership: @partnership_current)
+    @school_cohort_next.update!(default_induction_programme: @induction_programme_next)
+  end
+
+  def given_there_is_a_school_that_has_chosen_fip_and_needs_training_setup
+    given_there_is_a_school_that_has_chosen_fip_for_current_and_next_cohorts_and_partnered
+    @school_cohort_next.update!(induction_programme_choice: :design_our_own)
+  end
+
   def given_there_is_a_school_that_has_chosen_fip_for_previous_cohort_and_partnered_but_challenged
     given_there_is_a_school_that_has_chosen_fip_for_previous_cohort
     @lead_provider = create(:lead_provider, name: "Big Provider Ltd")
@@ -135,6 +148,21 @@ module ManageTrainingSteps
            school: @school_cohort.school,
            cohort: Cohort.previous || create(:cohort, :previous),
            induction_programme_choice: :design_our_own)
+  end
+
+  def given_there_is_a_school_with_participants_in_every_cohort_since_2021
+    @school = create(:school, :cip_only)
+    @sit = create(:induction_coordinator_profile, schools: [@school])
+
+    Cohort.where(start_year: 2021..).find_each do |cohort|
+      school_cohort = create(:school_cohort, :cip, school: @school, cohort:)
+      induction_programme = create(:induction_programme, :cip, school_cohort:)
+
+      user = create(:user)
+      ect = create(:ect_participant_profile, user:, school_cohort:)
+
+      Induction::Enrol.call(participant_profile: ect, induction_programme:)
+    end
   end
 
   def given_there_are_multiple_schools_and_an_induction_coordinator
@@ -470,6 +498,11 @@ module ManageTrainingSteps
     expect(page).to have_text("Will #{@participant_data[:full_name]} only mentor ECTs at your school?")
   end
 
+  def then_i_should_see_the_participant_from_the_2021_cohort
+    user_name = @school.school_cohorts.for_year(2021).last.ecf_participant_profiles.last.user.full_name
+    expect(page).to have_text(user_name)
+  end
+
   def then_i_am_taken_to_when_is_participant_moving_to_school_page
     expect(page).to have_text("When is #{@participant_data[:full_name]} moving to your school?")
   end
@@ -682,6 +715,10 @@ module ManageTrainingSteps
     choose "Summer term #{Cohort.current.start_year + 1}"
   end
 
+  def when_i_choose_autumn_term_this_cohort
+    choose "Autumn term #{Cohort.current.start_year + 1}"
+  end
+
   def when_i_choose_yes
     choose("Yes")
   end
@@ -864,9 +901,7 @@ module ManageTrainingSteps
   end
 
   def when_i_choose_an_appropriate_body
-    choose "National organisation"
-    click_on "Continue"
-    choose appropriate_body.name
+    when_i_fill_in_autocomplete "appropriate-body-selection-form-body-id-field", with: appropriate_body.name
     click_on "Continue"
   end
 
@@ -1149,6 +1184,11 @@ module ManageTrainingSteps
 
   def then_i_am_taken_to_ect_confirmation_page
     expect(page).to have_selector("h1", text: "#{@participant_data[:full_name]} has been added as an ECT")
+    expect(page).to have_text("Please check they’re registered with your appropriate body")
+    expect(page).to have_link(
+      "appointed an appropriate body",
+      href: "https://www.gov.uk/government/publications/statutory-teacher-induction-appropriate-bodies/find-an-appropriate-body",
+    )
     expect(page).to have_text("What happens next")
   end
 
@@ -1380,6 +1420,14 @@ module ManageTrainingSteps
     expect(page).to have_text("Our records show this person is already registered on an ECF-based training programme at a different school")
   end
 
+  def then_i_see_i_cannot_add_participant_yet
+    expect(page).to have_selector("h1", text: "You cannot add #{@participant_data[:full_name]} yet")
+  end
+
+  def then_i_see_that_training_setup_is_needed
+    expect(page).to have_content("We need some more information")
+  end
+
   def then_i_am_taken_to_choose_mentor_in_transfer_page
     expect(page).to have_selector("h1", text: "Who will #{@participant_data[:full_name]}’s mentor be?")
   end
@@ -1422,6 +1470,10 @@ module ManageTrainingSteps
 
   def then_i_am_taken_to_the_appropriate_body_type_page
     expect(page).to have_content("Which type of appropriate body have you appointed?")
+  end
+
+  def then_i_am_taken_to_the_appropriate_body_teaching_school_hubs_page
+    expect(page).to have_content("Which teaching school hub have you appointed?")
   end
 
   def then_i_see_appropriate_body(appropriate_body)
@@ -1482,14 +1534,14 @@ module ManageTrainingSteps
   def valid_dqt_response(participant_data)
     DQTRecordPresenter.new({
       "name" => participant_data[:full_name],
-                             "trn" => participant_data[:trn],
-                             "state_name" => "Active",
-                             "dob" => participant_data[:date_of_birth],
-                             "qualified_teacher_status" => { "qts_date" => 1.year.ago },
-                             "induction" => {
-                               "periods" => [{ "startDate" => 1.month.ago }],
-                               "status" => "Active",
-                             },
+      "trn" => participant_data[:trn],
+      "state_name" => "Active",
+      "dob" => participant_data[:date_of_birth],
+      "qualified_teacher_status" => { "qts_date" => 1.year.ago },
+      "induction" => {
+        "periods" => [{ "startDate" => @participant_data[:start_date] }],
+        "status" => "Active",
+      },
     })
   end
 

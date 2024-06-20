@@ -16,6 +16,10 @@ class AppropriateBody < ApplicationRecord
   default_scope { order(:name) }
 
   scope :name_order, -> { order("UPPER(name)") }
+
+  # provide means to keep AB for history but prevent selection in UI
+  scope :selectable_by_schools, -> { where(selectable_by_schools: true) }
+
   scope :local_authorities, -> { where(body_type: :local_authority) }
   scope :teaching_school_hubs, -> { where(body_type: :teaching_school_hub) }
   scope :nationals, -> { where(body_type: :national) }

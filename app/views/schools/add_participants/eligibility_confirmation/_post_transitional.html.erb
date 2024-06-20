@@ -1,6 +1,9 @@
 <div class="govuk-panel govuk-panel--confirmation govuk-!-margin-bottom-7">
   <h1 class="govuk-panel__title"><%= profile.full_name %> has been added as an ECT</h1>
+  <div class="govuk-panel__body">Please check they’re registered with your appropriate body</div>
 </div>
+
+<%= render 'schools/add_participants/eligibility_confirmation/appropriate_body_guidance' %>
 
 <h2 class="govuk-heading-m">What happens next</h2>
 <p class="govuk-body">We’ll let this person know you’ve registered them for ECF-based training at your school. They do not need to provide us with any further information.</p>

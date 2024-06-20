@@ -7,13 +7,20 @@ module NewSeeds
       class Cip
         attr_reader :school_cohort
 
-        def initialize(cohort:, school: nil)
+        def initialize(cohort:, school: nil, with_appropriate_body: false)
           @cohort = cohort
           @school = school
+          @with_appropriate_body = with_appropriate_body
         end
 
         def build
-          @school_cohort = FactoryBot.create(:seed_school_cohort, :cip, school:, cohort:)
+          traits = [
+            :cip,
+          ]
+
+          traits << :with_appropriate_body if with_appropriate_body
+
+          @school_cohort = FactoryBot.create(:seed_school_cohort, *traits, school:, cohort:)
 
           self
         end
@@ -40,7 +47,7 @@ module NewSeeds
 
       private
 
-        attr_reader :cohort
+        attr_reader :cohort, :with_appropriate_body
 
         def school
           @school ||= FactoryBot.create(:seed_school)

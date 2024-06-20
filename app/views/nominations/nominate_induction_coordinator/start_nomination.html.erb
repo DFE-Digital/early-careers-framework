@@ -9,23 +9,26 @@
         <span class="govuk-caption-l"><%= @nominate_induction_tutor_form.school.name %></span>
         <h1 class="govuk-heading-x">Nominate an induction tutor for your school</h1>
 
-        <p class="govuk-body">Your induction tutor will be our single point of contact for ECF-based training at your school. They’ll use our service to:</p>
+        <p class="govuk-body">Your induction tutor will be our single point of contact for ECF-based training at your school.</p>
+        <p>They’ll use our service to:</p>
         <ul class="govuk-list govuk-list--bullet">
             <li>report how your school will run training for early career teachers (ECTs)</li>
             <li>register ECTs and their mentors</li>
             <li>tell us about any changes your school needs to make</li>
         </ul>
 
+        <%= govuk_button_link_to "Continue", full_name_nominate_induction_coordinator_path %>
+
         <h2 class="govuk-heading-m">Who you can nominate</h2>
 
         <p class="govuk-body">
-            <%= govuk_link_to "Read more about the induction tutor role in our guidance",
+            <%= govuk_link_to "Read more about the induction tutor role in our guidance.",
             page_path(page: 'what-each-person-does'),
             class: "govuk-link govuk-link--no-visited-state" %>.
         </p>
+
         <p class="govuk-body govuk-!-margin-bottom-7">If you’re supported by a MAT (multi-academy trust) or federation, you can choose someone who manages training for a number of schools.</p>
 
-        <%= govuk_button_link_to "Continue", full_name_nominate_induction_coordinator_path %>
 
     </div>
 </div>

@@ -3,7 +3,7 @@
 require "rails_helper"
 require_relative "../training_dashboard/manage_training_steps"
 
-RSpec.describe "Changing participant details from check answers", type: :feature, js: true do
+RSpec.describe "Changing participant details from check answers", type: :feature, js: true, mid_cohort: true do
   include ManageTrainingSteps
 
   before do
@@ -32,9 +32,6 @@ RSpec.describe "Changing participant details from check answers", type: :feature
     and_i_add_teacher_reference_number_to_the_school_add_participant_wizard @participant_data[:full_name], @participant_data[:trn]
     and_i_add_date_of_birth_to_the_school_add_participant_wizard @participant_data[:date_of_birth]
     and_i_add_email_address_to_the_school_add_participant_wizard "Sally Teacher", @participant_data[:email]
-
-    # FIXME: only before 2023 cohort?
-    and_i_add_start_term_to_the_school_add_participant_wizard @participant_data[:start_term] if Cohort.within_next_registration_period?
 
     and_i_choose_mentor_later_on_the_school_add_participant_wizard
     then_i_am_taken_to_check_details_page
@@ -72,9 +69,6 @@ RSpec.describe "Changing participant details from check answers", type: :feature
     and_i_add_date_of_birth_to_the_school_add_participant_wizard @participant_data[:date_of_birth]
     and_i_add_email_address_to_the_school_add_participant_wizard "Sally Teacher", @participant_data[:email]
 
-    # FIXME: only before 2023 cohort?
-    and_i_add_start_term_to_the_school_add_participant_wizard @participant_data[:start_term] if Cohort.within_next_registration_period?
-
     then_i_am_taken_to_add_mentor_page
     then_the_page_should_be_accessible
 
@@ -93,7 +87,7 @@ RSpec.describe "Changing participant details from check answers", type: :feature
   end
 end
 
-RSpec.describe "Changing participant details from the dashboard", type: :feature, js: true do
+RSpec.describe "Changing participant details from the dashboard", type: :feature, js: true, mid_cohort: true do
   include ManageTrainingSteps
 
   before do
@@ -220,7 +214,7 @@ RSpec.describe "Changing participant details from the dashboard", type: :feature
   end
 
   context "When the school cohort has an appropriate body assigned" do
-    let!(:appropriate_body) { create(:appropriate_body_national_organisation) }
+    let!(:appropriate_body) { create(:appropriate_body_teaching_school_hub) }
     before do
       @school_cohort.update!(appropriate_body:)
     end
@@ -232,7 +226,7 @@ RSpec.describe "Changing participant details from the dashboard", type: :feature
       and_i_see_no_appropriate_body_selected
 
       when_i_click_on_summary_row_action("Appropriate body", "Add")
-      then_i_am_taken_to_the_appropriate_body_type_page
+      then_i_am_taken_to_the_appropriate_body_teaching_school_hubs_page
 
       when_i_choose_an_appropriate_body
       click_on "Return to their details"

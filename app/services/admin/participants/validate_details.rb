@@ -34,6 +34,7 @@ module Admin
         return unless validation_data_permits_validation?
 
         ActiveRecord::Base.transaction do
+          @previously_eligible = @participant_profile.eligible?
           @participant_profile.teacher_profile.update!(trn: nil) unless has_npq_profile?
           @participant_profile.ecf_participant_eligibility&.destroy!
           # this returns either nil, false on failure or an ECFParticipantEligibility record on success
@@ -58,7 +59,7 @@ module Admin
           eligibility_data = Admin::ParticipantPresenter.new(preview_profile).eligibility_data.as_json
 
           new_validation_state = DetermineTrainingRecordStateLegacy.call(participant_profile: preview_profile)
-                                                             .validation_state
+                                                                   .validation_state
 
           @preview_response = PreviewStruct.new(
             validation_data: {
@@ -104,7 +105,12 @@ module Admin
 
       def run_validation
         # this returns either nil, false on failure or an ECFParticipantEligibility record on success
-        @validation_form.call
+        @validation_form.call.tap do
+          if !@previously_eligible &&
+              Induction::AmendCohortAfterEligibilityChecks.new(participant_profile: @participant_profile.reload).call
+            return true
+          end
+        end
       end
     end
   end

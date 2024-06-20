@@ -9,8 +9,7 @@ module Dashboard
       @participant_profile_id = induction_record&.participant_profile_id || participant_profile_id
     end
 
-    delegate :completed_induction?,
-             :induction_completion_date,
+    delegate :induction_completion_date,
              :induction_start_date,
              :mentor?,
              :ect?,

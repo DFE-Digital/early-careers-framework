@@ -1,0 +1,22 @@
+description: "The funded place attributes for the Participant"
+type: object
+required:
+  - npq_course
+  - funded_place
+  - npq_application_id
+properties:
+  npq_course:
+    description: "The type of course the participant is enrolled in"
+    type: String
+    example: "npq-leading-teaching"
+  funded_place:
+    description: "Indicates whether this NPQ participant is funded by DfE"
+    type: boolean
+    nullable: true
+    example: true
+  npq_application_id:
+    description: "The unique identifier of the NPQ Application"
+    type: string
+    format: uuid
+    example: db3a7848-7308-4879-942a-c4a70ced400a
+

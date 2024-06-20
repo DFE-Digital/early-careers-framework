@@ -820,6 +820,7 @@
                           "ineligible_for_funding_reason": "establishment-ineligible",
                           "cohort": "2022",
                           "eligible_for_funding": true,
+                          "funded_place": true,
                           "targeted_delivery_funding_eligibility": true,
                           "teacher_catchment": true,
                           "teacher_catchment_iso_country_code": "FRA",
@@ -939,6 +940,7 @@
                           "ineligible_for_funding_reason": "establishment-ineligible",
                           "cohort": "2022",
                           "eligible_for_funding": true,
+                          "funded_place": true,
                           "targeted_delivery_funding_eligibility": true,
                           "teacher_catchment": true,
                           "teacher_catchment_iso_country_code": "FRA",
@@ -981,6 +983,76 @@
                 "schema": {
                   "$ref": "#/components/schemas/NPQApplicationRejectErrorResponse"
                 }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/npq-applications/{id}/change-funded-place": {
+      "put": {
+        "summary": "Change funded place",
+        "operationId": "npq_applications_change_funded_place",
+        "tags": [
+          "NPQ applications"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
+            "description": "The ID of the NPQ application to change funded place.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The NPQ application being accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NPQApplicationResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeFundedPlaceRequest"
               }
             }
           }
@@ -1239,6 +1311,7 @@
                                 "cohort": "2021",
                                 "npq_application_id": "db3a7848-7308-4879-942a-c4a70ced400a",
                                 "eligible_for_funding": true,
+                                "funded_place": true,
                                 "training_status": "active",
                                 "school_urn": "123456",
                                 "targeted_delivery_funding_eligibility": true,
@@ -1328,6 +1401,7 @@
                               "cohort": "2021",
                               "npq_application_id": "db3a7848-7308-4879-942a-c4a70ced400a",
                               "eligible_for_funding": true,
+                              "funded_place": true,
                               "training_status": "deferred",
                               "school_urn": "123456",
                               "targeted_delivery_funding_eligibility": true,
@@ -1484,6 +1558,7 @@
                               "cohort": "2021",
                               "npq_application_id": "db3a7848-7308-4879-942a-c4a70ced400a",
                               "eligible_for_funding": true,
+                              "funded_place": true,
                               "training_status": "deferred",
                               "school_urn": "123456",
                               "targeted_delivery_funding_eligibility": true,
@@ -1623,6 +1698,7 @@
                               "cohort": "2021",
                               "npq_application_id": "db3a7848-7308-4879-942a-c4a70ced400a",
                               "eligible_for_funding": true,
+                              "funded_place": true,
                               "training_status": "withdrawn",
                               "school_urn": "123456",
                               "targeted_delivery_funding_eligibility": true,
@@ -2447,7 +2523,8 @@
                               },
                               "created_at": "2021-05-31T02:22:32.000Z",
                               "induction_end_date": "2022-01-12",
-                              "mentor_funding_end_date": "2021-04-19"
+                              "mentor_funding_end_date": "2021-04-19",
+                              "cohort_changed_after_payments_frozen": true
                             }
                           ],
                           "participant_id_changes": [
@@ -2593,7 +2670,8 @@
                               },
                               "created_at": "2021-05-31T02:22:32.000Z",
                               "induction_end_date": "2022-01-12",
-                              "mentor_funding_end_date": "2021-04-19"
+                              "mentor_funding_end_date": "2021-04-19",
+                              "cohort_changed_after_payments_frozen": false
                             }
                           ],
                           "participant_id_changes": [
@@ -2976,6 +3054,52 @@
           }
         }
       },
+      "ChangeFundedPlaceAttributesRequest": {
+        "description": "The NPQ Application acceptance request",
+        "type": "object",
+        "properties": {
+          "funded_place": {
+            "description": "Whether the participant has a funded place",
+            "type": "boolean",
+            "example": true
+          }
+        }
+      },
+      "ChangeFundedPlaceDataRequest": {
+        "description": "The NPQ Application change funded place request attributes",
+        "type": "object",
+        "required": [
+          "type",
+          "data"
+        ],
+        "properties": {
+          "type": {
+            "description": "The data type",
+            "type": "string",
+            "example": "npq-application-change-funded-place"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ChangeFundedPlaceAttributesRequest"
+          }
+        }
+      },
+      "ChangeFundedPlaceRequest": {
+        "description": "The NPQ Application change funded place request",
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/ChangeFundedPlaceDataRequest"
+          }
+        },
+        "example": {
+          "data": {
+            "type": "npq-application-change-funded-place",
+            "attributes": {
+              "funded_place": true
+            }
+          }
+        }
+      },
       "DeliveryPartner": {
         "description": "A delivery partner",
         "type": "object",
@@ -3297,6 +3421,12 @@
             "nullable": true,
             "format": "date",
             "example": "2021-04-19"
+          },
+          "cohort_changed_after_payments_frozen": {
+            "description": "Identify participants that migrated to a new cohort as payments were frozen on their original cohort",
+            "type": "boolean",
+            "nullable": false,
+            "example": true
           }
         }
       },
@@ -4854,6 +4984,7 @@
                   "updated_at": "2022-11-24T17:09:37Z",
                   "cohort": "2022",
                   "eligible_for_funding": true,
+                  "funded_place": true,
                   "targeted_delivery_funding_eligibility": true,
                   "teacher_catchment": true,
                   "teacher_catchment_iso_country_code": "FRA",
@@ -5026,6 +5157,11 @@
           "schedule_identifier"
         ],
         "properties": {
+          "funded_place": {
+            "description": "Whether the participant has a funded place",
+            "type": "boolean",
+            "example": true
+          },
           "schedule_identifier": {
             "description": "The new schedule of the participant",
             "type": "string",
@@ -5077,7 +5213,8 @@
           "data": {
             "type": "npq-application-accept",
             "attributes": {
-              "schedule_identifier": "npq-leadership-spring"
+              "schedule_identifier": "npq-leadership-spring",
+              "funded_place": "true"
             }
           }
         }
@@ -5177,7 +5314,12 @@
             ]
           },
           "eligible_for_funding": {
-            "description": "Indicates whether this NPQ participant would be eligible for funding from the DfE",
+            "description": "Indicates whether or not this participant is eligible for DfE funding",
+            "type": "boolean",
+            "example": true
+          },
+          "funded_place": {
+            "description": "Indicates whether or not this participant's training is being funded by DfE",
             "type": "boolean",
             "example": true
           },
@@ -5208,7 +5350,8 @@
               "npq-early-years-leadership",
               "npq-additional-support-offer",
               "npq-early-headship-coaching-offer",
-              "npq-leading-primary-mathematics"
+              "npq-leading-primary-mathematics",
+              "npq-senco"
             ]
           },
           "status": {
@@ -5447,7 +5590,8 @@
               "npq-early-years-leadership",
               "npq-additional-support-offer",
               "npq-early-headship-coaching-offer",
-              "npq-leading-primary-mathematics"
+              "npq-leading-primary-mathematics",
+              "npq-senco"
             ]
           },
           "schedule_identifier": {
@@ -5481,7 +5625,12 @@
             "example": "db3a7848-7308-4879-942a-c4a70ced400a"
           },
           "eligible_for_funding": {
-            "description": "Indicates whether this NPQ participant would be eligible for funding from the DfE",
+            "description": "Indicates whether or not this participant is eligible for DfE funding",
+            "type": "boolean",
+            "example": true
+          },
+          "funded_place": {
+            "description": "Indicates whether or not this participant's training is being funded by DfE",
             "type": "boolean",
             "example": true
           },
@@ -5614,7 +5763,8 @@
               "npq-headship",
               "npq-executive-leadership",
               "npq-early-years-leadership",
-              "npq-leading-primary-mathematics"
+              "npq-leading-primary-mathematics",
+              "npq-senco"
             ],
             "example": "npq-leading-teaching"
           },
@@ -5666,7 +5816,8 @@
               "npq-headship",
               "npq-executive-leadership",
               "npq-early-years-leadership",
-              "npq-leading-primary-mathematics"
+              "npq-leading-primary-mathematics",
+              "npq-senco"
             ],
             "example": "npq-leading-teaching"
           },
@@ -5890,7 +6041,8 @@
               "npq-early-years-leadership",
               "npq-additional-support-offer",
               "npq-early-headship-coaching-offer",
-              "npq-leading-primary-mathematics"
+              "npq-leading-primary-mathematics",
+              "npq-senco"
             ],
             "example": "npq-executive-leadership"
           },
@@ -5981,7 +6133,8 @@
               "npq-early-years-leadership",
               "npq-additional-support-offer",
               "npq-early-headship-coaching-offer",
-              "npq-leading-primary-mathematics"
+              "npq-leading-primary-mathematics",
+              "npq-senco"
             ],
             "example": "npq-leading-teaching"
           },
@@ -6132,7 +6285,8 @@
               "npq-early-years-leadership",
               "npq-additional-support-offer",
               "npq-early-headship-coaching-offer",
-              "npq-leading-primary-mathematics"
+              "npq-leading-primary-mathematics",
+              "npq-senco"
             ],
             "example": "npq-headship"
           },
@@ -6218,7 +6372,8 @@
               "npq-early-years-leadership",
               "npq-additional-support-offer",
               "npq-early-headship-coaching-offer",
-              "npq-leading-primary-mathematics"
+              "npq-leading-primary-mathematics",
+              "npq-senco"
             ],
             "example": "npq-headship"
           }
@@ -6275,7 +6430,8 @@
               "npq-early-years-leadership",
               "npq-additional-support-offer",
               "npq-early-headship-coaching-offer",
-              "npq-leading-primary-mathematics"
+              "npq-leading-primary-mathematics",
+              "npq-senco"
             ],
             "example": "npq-headship"
           }
@@ -6348,7 +6504,8 @@
               "npq-early-years-leadership",
               "npq-additional-support-offer",
               "npq-early-headship-coaching-offer",
-              "npq-leading-primary-mathematics"
+              "npq-leading-primary-mathematics",
+              "npq-senco"
             ],
             "example": "npq-senior-leadership"
           }
@@ -6430,7 +6587,8 @@
               "npq-early-years-leadership",
               "npq-additional-support-offer",
               "npq-early-headship-coaching-offer",
-              "npq-leading-primary-mathematics"
+              "npq-leading-primary-mathematics",
+              "npq-senco"
             ],
             "example": "npq-senior-leadership"
           }
@@ -6510,7 +6668,8 @@
               "npq-early-years-leadership",
               "npq-additional-support-offer",
               "npq-early-headship-coaching-offer",
-              "npq-leading-primary-mathematics"
+              "npq-leading-primary-mathematics",
+              "npq-senco"
             ],
             "example": "npq-leading-teaching"
           },
@@ -6649,7 +6808,8 @@
               "npq-early-years-leadership",
               "npq-additional-support-offer",
               "npq-early-headship-coaching-offer",
-              "npq-leading-primary-mathematics"
+              "npq-leading-primary-mathematics",
+              "npq-senco"
             ],
             "example": "npq-leading-teaching"
           },
@@ -6815,7 +6975,8 @@
               "npq-early-years-leadership",
               "npq-additional-support-offer",
               "npq-early-headship-coaching-offer",
-              "npq-leading-primary-mathematics"
+              "npq-leading-primary-mathematics",
+              "npq-senco"
             ],
             "example": "npq-leading-teaching-development"
           }
@@ -7103,7 +7264,8 @@
               "npq-early-years-leadership",
               "npq-additional-support-offer",
               "npq-early-headship-coaching-offer",
-              "npq-leading-primary-mathematics"
+              "npq-leading-primary-mathematics",
+              "npq-senco"
             ],
             "example": "ecf-induction"
           },

@@ -22,6 +22,7 @@ properties:
               cohort: "2021",
               npq_application_id: "db3a7848-7308-4879-942a-c4a70ced400a",
               eligible_for_funding: true,
+              funded_place: true,
               training_status: "active",
             }
           ]

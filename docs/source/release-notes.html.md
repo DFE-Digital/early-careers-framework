@@ -7,6 +7,78 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
+## 18 June 2024 
+
+From today, schools have started moving ECTs and mentors with partial declarations currently assigned to the 2021 cohort to the 2024 cohort.  
+
+This is because we’re closing the funding contract for the 2021 cohort at the end of July. 
+
+Providers will be able to identify participants who’ve been moved by the new `cohort_changed_after_payments_frozen` attribute to the [participant response](/api-reference/reference-v3.html?#api-v3-participants-ecf-get-responses-examples) in the API v3 production environment. The value shown for these participants will be `true`. 
+
+Providers will no longer be able to submit or void declarations for the 2021 cohort after the contract closes on 31 July. 
+
+## 14 June 2024
+
+We’ve added the new special educational needs coordinator (SENCO) NPQ to the [test (sandbox) environment](https://sb.manage-training-for-early-career-teachers.education.gov.uk/) for the 2024 cohort.
+
+The new course’s identifier is `npq-senco`.
+
+Providers can access this within the sandbox environment for testing. Functionality will be the same as the other existing NPQ courses.
+
+We’ll notify providers when this new NPQ is available in the production environment.
+
+We're trialing new functionality in the API test ([sandbox](https://sb.manage-training-for-early-career-teachers.education.gov.uk/)) environment which will enable providers to set whether NPQ applicants are going to have their training funded by DfE.
+
+This is because from the 2024/25 academic year onwards there'll be a set maximum number of places each provider can offer per NPQ that DfE will pay for.
+
+Providers using all versions of the API can set the new `funded_place` field in the 'Accept an application' request body to true or false. They will also see the `funded_place` field in the following endpoint response bodies:
+
+- 'View all applications'
+
+- 'View a specific application'
+
+- 'View all participant data'
+
+- 'View a single participant's data'
+
+Providers who need to update a participant's funding information after an application has been accepted can do so via the 'Change funded place' endpoint.
+
+## 13 June 2024
+
+We’ve fixed an issue with the API v3 NPQ participants endpoint where performing a full sync with pagination resulted in IDs beings omitted. No other endpoint was affected.
+
+The NPQ participants endpoint and the pagination will now return all users in the NPQ GET participants endpoint.
+
+Providers are recommended to perform a full re-sync at the earliest convenience to retrieve all participant records.
+
+## 10 June 2024
+
+On 31 July we’re closing the funding contract for the 2021 cohort.
+
+This means ECTs and mentors with partial declarations currently assigned to the 2021 cohort will be moved to the 2024 cohort.
+
+Providers can now test the functionality for the migration of these ECTs and mentors.
+Participants who’ve moved can be identified by the new `cohort_changed_after_payments_frozen` attribute to the participant response in the [API v3 test (sandbox) environment](https://sb.manage-training-for-early-career-teachers.education.gov.uk/). The value shown for these participants will be `true`.
+
+Providers will be able to test future declaration submissions in the 2024 cohort but can no longer submit or void declarations for 2021 after the contract has closed.
+
+We’d welcome feedback on this sandbox update before it goes into production.
+
+## 5 June 2024 
+
+We're addressing a potential confusion for providers filtering participant declarations by cohort. 
+ 
+Currently, filtering by a participant's current cohort (for example, 2022) returns all their declarations, even those made when the participant was in an earlier cohort (for example, 2021).  
+ 
+For instance, if a participant is in the 2022 cohort, but has declarations in both 2021 and 2022, all declarations are returned when filtering by 2022, and none when filtering by 2021. 
+ 
+Going forward, we’ll now return only the declarations made during the specified cohort. For example:  
+
+- filtering by 2021 will return only the declarations made while a participant was in the 2021 cohort 
+- filtering by 2022 will return only the declarations made while a participant was in the 2022 cohort 
+
+We’ve released this in the API v3 Live environment.
+
 ## 24 May 2024
 
 We’ve added the schedules and contract data for the 2024/25 intake of early career teachers and mentors to the [test (sandbox) environment](https://sb.manage-training-for-early-career-teachers.education.gov.uk/).

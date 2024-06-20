@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "ECT has matching lead provider and delivery partner", type: :feature, js: true do
+RSpec.describe "ECT has matching lead provider and delivery partner", type: :feature, js: true, mid_cohort: true do
   before do
     allow_participant_transfer_mailers
     set_participant_data
@@ -16,108 +16,110 @@ RSpec.describe "ECT has matching lead provider and delivery partner", type: :fea
   end
 
   scenario "Induction tutor can transfer an ECT to their school" do
-    when_i_click_to_add_an_ect
-    then_i_should_be_on_the_who_to_add_page
-    then_the_page_should_be_accessible
+    inside_auto_assignment_window do
+      when_i_click_to_add_an_ect
+      then_i_should_be_on_the_who_to_add_page
+      then_the_page_should_be_accessible
 
-    # when_i_select_transfer_teacher_option
-    when_i_select_the_ect_option
-    click_on "Continue"
-    then_i_should_be_on_what_we_need_page
-    then_the_page_should_be_accessible
+      # when_i_select_transfer_teacher_option
+      when_i_select_the_ect_option
+      click_on "Continue"
+      then_i_should_be_on_what_we_need_page
+      then_the_page_should_be_accessible
 
-    click_on "Continue"
-    then_i_should_be_on_full_name_page
-    then_the_page_should_be_accessible
+      click_on "Continue"
+      then_i_should_be_on_full_name_page
+      then_the_page_should_be_accessible
 
-    click_on "Continue"
-    then_i_receive_a_missing_name_error_message
+      click_on "Continue"
+      then_i_receive_a_missing_name_error_message
 
-    when_i_update_the_name_with(@participant_data[:full_name])
-    click_on "Continue"
-    then_i_should_be_on_trn_page
-    then_the_page_should_be_accessible
+      when_i_update_the_name_with(@participant_data[:full_name])
+      click_on "Continue"
+      then_i_should_be_on_trn_page
+      then_the_page_should_be_accessible
 
-    click_on "Continue"
-    then_i_should_see_a_enter_trn_error_message
+      click_on "Continue"
+      then_i_should_see_a_enter_trn_error_message
 
-    when_i_add_an_invalid_trn
-    click_on "Continue"
-    then_i_should_see_invalid_trn_message
+      when_i_add_an_invalid_trn
+      click_on "Continue"
+      then_i_should_see_invalid_trn_message
 
-    when_i_add_a_valid_trn
-    click_on "Continue"
-    then_i_should_be_on_the_date_of_birth_page
-    then_the_page_should_be_accessible
+      when_i_add_a_valid_trn
+      click_on "Continue"
+      then_i_should_be_on_the_date_of_birth_page
+      then_the_page_should_be_accessible
 
-    click_on "Continue"
-    then_i_should_see_enter_date_of_birth_error_message
+      click_on "Continue"
+      then_i_should_see_enter_date_of_birth_error_message
 
-    when_i_add_an_invalid_date_of_birth
-    click_on "Continue"
-    then_i_should_see_invalid_date_of_birth_error_message
+      when_i_add_an_invalid_date_of_birth
+      click_on "Continue"
+      then_i_should_see_invalid_date_of_birth_error_message
 
-    when_i_add_a_valid_date_of_birth
-    click_on "Continue"
+      when_i_add_a_valid_date_of_birth
+      click_on "Continue"
 
-    then_i_should_be_on_the_confirm_transfer_page
-    then_the_page_should_be_accessible
-    click_on "Confirm"
+      then_i_should_be_on_the_confirm_transfer_page
+      then_the_page_should_be_accessible
+      click_on "Confirm"
 
-    then_i_should_be_on_the_teacher_start_date_page
-    then_the_page_should_be_accessible
+      then_i_should_be_on_the_teacher_start_date_page
+      then_the_page_should_be_accessible
 
-    click_on "Continue"
-    then_i_should_see_enter_start_date_error_message
-    when_i_add_an_invalid_start_date
-    click_on "Continue"
-    then_i_should_see_invalid_start_date_error_message
+      click_on "Continue"
+      then_i_should_see_enter_start_date_error_message
+      when_i_add_an_invalid_start_date
+      click_on "Continue"
+      then_i_should_see_invalid_start_date_error_message
 
-    when_i_add_a_date_prior_to_the_participants_induction_start
-    click_on "Continue"
-    then_i_should_see_start_date_must_be_after_error_message
+      when_i_add_a_date_prior_to_the_participants_induction_start
+      click_on "Continue"
+      then_i_should_see_start_date_must_be_after_error_message
 
-    when_i_add_a_valid_start_date
-    click_on "Continue"
+      when_i_add_a_valid_start_date
+      click_on "Continue"
 
-    then_i_should_be_on_the_add_email_page
-    then_the_page_should_be_accessible
+      then_i_should_be_on_the_add_email_page
+      then_the_page_should_be_accessible
 
-    click_on "Continue"
-    then_i_should_see_blank_email_date_error_message
+      click_on "Continue"
+      then_i_should_see_blank_email_date_error_message
 
-    when_i_update_the_email_with("sally-teacher")
-    click_on "Continue"
-    then_i_should_see_invalid_email_date_error_message
+      when_i_update_the_email_with("sally-teacher")
+      click_on "Continue"
+      then_i_should_see_invalid_email_date_error_message
 
-    when_i_update_the_email_with("sally-teacher@example.com")
-    click_on "Continue"
-    then_i_should_be_on_the_select_mentor_page
-    then_the_page_should_be_accessible
-    and_it_should_list_the_schools_mentors
+      when_i_update_the_email_with("sally-teacher@example.com")
+      click_on "Continue"
+      then_i_should_be_on_the_select_mentor_page
+      then_the_page_should_be_accessible
+      and_it_should_list_the_schools_mentors
 
-    click_on "Continue"
-    then_i_should_see_select_option_error_message
+      click_on "Continue"
+      then_i_should_see_select_option_error_message
 
-    when_i_assign_a_mentor
-    click_on "Continue"
-    then_i_should_be_taken_to_the_teachers_current_programme_page
+      when_i_assign_a_mentor
+      click_on "Continue"
+      then_i_should_be_taken_to_the_teachers_current_programme_page
 
-    when_i_select "Yes"
-    click_on "Continue"
-    then_i_should_be_taken_to_the_check_your_answers_page
-    then_the_page_should_be_accessible
+      when_i_select "Yes"
+      click_on "Continue"
+      then_i_should_be_taken_to_the_check_your_answers_page
+      then_the_page_should_be_accessible
 
-    click_on "Confirm and add"
-    then_i_should_be_on_the_complete_page
-    then_the_page_should_be_accessible
-    and_the_schools_current_provider_is_notified
+      click_on "Confirm and add"
+      then_i_should_be_on_the_complete_page
+      then_the_page_should_be_accessible
+      and_the_schools_current_provider_is_notified
 
-    click_on "View your ECTs"
-    then_i_am_taken_to_manage_ects_page
+      click_on "View your ECTs"
+      then_i_am_taken_to_manage_ects_page
 
-    # click_on "Moving school"
-    # then_i_should_see_the_transferring_participant
+      # click_on "Moving school"
+      # then_i_should_see_the_transferring_participant
+    end
   end
   # given
 

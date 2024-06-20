@@ -40,6 +40,7 @@ module Importers
           academic_year_start_date: safe_parse(row["academic-year-start-date"]),
           npq_registration_start_date: safe_parse(row["npq-registration-start-date"]),
           automatic_assignment_period_end_date: safe_parse(row["automatic-assignment-period-end-date"]) || default_automatic_assignment_period_end_date,
+          payments_frozen_at: safe_parse(row["payments-frozen-at"]).presence,
           created_at: Time.zone.now,
           updated_at: Time.zone.now,
         },
@@ -59,7 +60,7 @@ module Importers
     end
 
     def check_headers!
-      unless %w[start-year registration-start-date academic-year-start-date npq-registration-start-date automatic-assignment-period-end-date].all? { |header| rows.headers.include?(header) }
+      unless %w[start-year registration-start-date academic-year-start-date npq-registration-start-date automatic-assignment-period-end-date payments-frozen-at].all? { |header| rows.headers.include?(header) }
         raise NameError, "Invalid headers"
       end
     end

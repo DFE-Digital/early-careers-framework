@@ -6,13 +6,20 @@
   <div class="govuk-grid-column-two-thirds">
     <%= form_for @appropriate_body_form, url: { action: :update_appropriate_body_appointed }, method: :put do |f| %>
       <%= f.govuk_error_summary %>
+
       <%= f.govuk_collection_radio_buttons(
         :body_appointed,
         @appropriate_body_form.body_appointed_choices,
         :id, :name,
-        inline: true,
         legend: { text: title, tag: :h1, size: 'l' },
         caption: { text: appropriate_body_school_name, size: 'l' }) do %>
+
+        <p class="govuk-body">
+          An ECT cannot start their induction until you’ve appointed an
+          <a class="govuk-link" target="_blank" href="https://www.gov.uk/government/publications/statutory-teacher-induction-appropriate-bodies/find-an-appropriate-body">appropriate
+            body</a>.
+          The appropriate body must first verify their role is suitable for induction.
+        </p>
       <% end %>
 
       <%= f.govuk_submit "Continue" %>

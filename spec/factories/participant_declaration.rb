@@ -63,9 +63,6 @@ FactoryBot.define do
         NPQContract.find_by(opts) || create(:npq_contract, opts)
       end
 
-      service = RecordDeclaration.new(params)
-      raise ArgumentError, service.errors.full_messages unless service.valid?
-
       if participant_profile.is_a?(ParticipantProfile::NPQ) && participant_profile.fundable?
         cohort = participant_profile.npq_application.cohort
         next_output_fee_statement = cpd_lead_provider.npq_lead_provider.next_output_fee_statement(cohort)
@@ -77,6 +74,9 @@ FactoryBot.define do
         next_output_fee_statement = cpd_lead_provider.lead_provider.next_output_fee_statement(cohort)
         create(:ecf_statement, :next_output_fee, cpd_lead_provider:, cohort:) unless next_output_fee_statement
       end
+
+      service = RecordDeclaration.new(params)
+      raise ArgumentError, service.errors.full_messages unless service.valid?
 
       service.call
     end

@@ -11,10 +11,10 @@ RSpec.describe Importers::CreateNewNPQCohort do
 
     let(:cohort_csv) do
       csv = Tempfile.new("cohort_csv_data.csv")
-      csv.write "start-year,registration-start-date,academic-year-start-date,npq-registration-start-date,automatic-assignment-period-end-date"
+      csv.write "start-year,registration-start-date,academic-year-start-date,npq-registration-start-date,automatic-assignment-period-end-date,payments-frozen-at"
       csv.write "\n"
       4.times.each do |n|
-        csv.write "#{start_year + n},#{start_year + n}/05/10,#{start_year}/09/01,#{start_year + 1}/03/31,"
+        csv.write "#{start_year + n},#{start_year + n}/05/10,#{start_year}/09/01,#{start_year + 1}/03/31,,"
         csv.write "\n"
       end
       csv.close

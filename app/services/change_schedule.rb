@@ -283,6 +283,7 @@ private
   end
 
   def validate_application_funded_place
+    return unless participant_profile&.npq?
     return unless FeatureFlag.active?(:npq_capping)
     return unless npq_contract.cohort != target_npq_contract.cohort
 

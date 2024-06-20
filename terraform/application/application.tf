@@ -62,6 +62,8 @@ module "web_application" {
   probe_path = "/check"
   replicas   = var.webapp_replicas
   max_memory = var.webapp_memory_max
+
+  enable_logit = var.enable_logit
 }
 
 module "worker_application" {
@@ -85,4 +87,6 @@ module "worker_application" {
 
   replicas   = var.worker_replicas
   max_memory = var.worker_memory_max
+
+  enable_logit = var.enable_logit
 }

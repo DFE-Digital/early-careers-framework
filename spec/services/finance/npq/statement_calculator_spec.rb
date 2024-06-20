@@ -103,7 +103,8 @@ RSpec.describe Finance::NPQ::StatementCalculator do
     context "when there are clawbacks" do
       let!(:participant_declaration) do
         travel_to milestone.start_date do
-          create(:npq_participant_declaration, :paid, declaration_type:, cpd_lead_provider:, participant_profile:)
+          cohort = participant_profile.schedule.cohort
+          create(:npq_participant_declaration, :paid, declaration_type:, cpd_lead_provider:, participant_profile:, cohort:)
         end
       end
       let!(:previous_statement) { participant_declaration.statement_line_items.first.statement }

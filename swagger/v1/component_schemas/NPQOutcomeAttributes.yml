@@ -27,6 +27,7 @@ properties:
       - npq-executive-leadership
       - npq-early-years-leadership
       - npq-leading-primary-mathematics
+      - npq-senco
     example: npq-leading-teaching
   state:
     description: The state of the outcome (passed, failed or voided)

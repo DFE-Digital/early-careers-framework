@@ -110,8 +110,14 @@ class ParticipantProfile::ECF < ParticipantProfile
     self.class.archivable(restrict_to_participant_ids: [id]).exists?
   end
 
-  def completed_induction?
-    induction_completion_date.present?
+  def previous_payments_frozen_cohort
+    return nil unless cohort_changed_after_payments_frozen?
+
+    participant_declarations
+      .includes(:cohort)
+      .where.not(cohort: { payments_frozen_at: nil })
+      .where.not(cohort: schedule.cohort)
+      .pick("cohort.start_year")
   end
 
   def contacted_for_info?
@@ -176,7 +182,7 @@ class ParticipantProfile::ECF < ParticipantProfile
   def post_transitional?
     return false unless ect?
     return false unless induction_start_date
-    return false if completed_induction?
+    return false if completed_training?
 
     induction_start_date < POST_TRANSITIONAL_INDUCTION_START_DATE_DEADLINE
   end

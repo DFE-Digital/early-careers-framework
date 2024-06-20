@@ -9,6 +9,42 @@ RSpec.shared_examples "checks for mentor completion event" do
   end
 end
 
+RSpec.shared_examples "validates the next output fee statement is available" do
+  context "when there are no available output fee statements" do
+    before { Finance::Statement.update!(output_fee: false) }
+
+    context "when the declarations is submitted" do
+      it { is_expected.to be_valid }
+    end
+
+    context "when the declaration is eligible" do
+      it "returns an error" do
+        create(:ecf_participant_eligibility, :eligible, participant_profile:) if participant_profile.ecf?
+        participant_profile.npq_application.update!(eligible_for_funding: true) if participant_profile.npq?
+
+        expect(service).to be_invalid
+
+        cohort = participant_profile.schedule.cohort.start_year
+        expect(service.errors.messages_for(:cohort)).to include(/You cannot submit or void declarations for the #{cohort}/)
+      end
+    end
+
+    context "when there is an existing billable declaration" do
+      before do
+        existing_declaration = described_class.new(params).call
+        existing_declaration.update!(state: :paid)
+      end
+
+      it "returns an error" do
+        expect(service).to be_invalid
+
+        cohort = participant_profile.schedule.cohort.start_year
+        expect(service.errors.messages_for(:cohort)).to include(/You cannot submit or void declarations for the #{cohort}/)
+      end
+    end
+  end
+end
+
 RSpec.shared_examples "validates the declaration for a withdrawn participant" do
   context "when a participant has been withdrawn" do
     before do
@@ -357,6 +393,7 @@ RSpec.describe RecordDeclaration do
         end
       end
 
+      it_behaves_like "validates the next output fee statement is available"
       it_behaves_like "validates the declaration for a withdrawn participant"
       it_behaves_like "validates the course_identifier, cpd_lead_provider, participant_id"
       it_behaves_like "validates existing declarations"
@@ -370,6 +407,7 @@ RSpec.describe RecordDeclaration do
       let(:participant_type) { :mentor }
       let(:course_identifier) { "ecf-mentor" }
 
+      it_behaves_like "validates the next output fee statement is available"
       it_behaves_like "validates the declaration for a withdrawn participant"
       it_behaves_like "validates the course_identifier, cpd_lead_provider, participant_id"
       it_behaves_like "validates existing declarations"
@@ -404,6 +442,7 @@ RSpec.describe RecordDeclaration do
       end
     end
 
+    it_behaves_like "validates the next output fee statement is available"
     it_behaves_like "validates the declaration for a withdrawn participant"
     it_behaves_like "validates the course_identifier, cpd_lead_provider, participant_id"
     it_behaves_like "validates existing declarations"
@@ -411,6 +450,21 @@ RSpec.describe RecordDeclaration do
     it_behaves_like "creates a participant declaration"
     it_behaves_like "creates participant declaration attempt"
     it_behaves_like "checks for mentor completion event"
+
+    context "when declaration is not fundable" do
+      before do
+        participant_profile.npq_application.update(eligible_for_funding: true, funded_place: false)
+      end
+
+      it_behaves_like "creates a participant declaration"
+
+      it "sets the declaration to submitted" do
+        subject.call
+        declaration = ParticipantDeclaration.last
+
+        expect(declaration).to be_submitted
+      end
+    end
 
     context "for next cohort" do
       let!(:schedule) { create(:npq_specialist_schedule, cohort:) }

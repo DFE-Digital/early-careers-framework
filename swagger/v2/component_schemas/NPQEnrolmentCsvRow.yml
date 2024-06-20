@@ -7,6 +7,7 @@ required:
   - cohort
   - npq_application_id
   - eligible_for_funding
+  - funded_place
   - training_status
   - school_urn
 properties:
@@ -31,6 +32,7 @@ properties:
       - npq-additional-support-offer
       - npq-early-headship-coaching-offer
       - npq-leading-primary-mathematics
+      - npq-senco
   schedule_identifier:
     description: "The schedule currently applied to this enrolment"
     type: string
@@ -58,8 +60,12 @@ properties:
     example: 7a8fef46-3c43-42c0-b3d5-1ba5904ba562
     format: uuid
   eligible_for_funding:
-    description: "Indicates whether this NPQ participant would be eligible for funding from the DfE"
+    description: "Indicates whether or not this participant is eligible for DfE funding"
     type: "boolean"
+    example: true
+  funded_place:
+    description: "Indicates whether this NPQ participant is funded by DfE"
+    type: boolean
     example: true
   training_status:
     description: "The training status of the ECF participant"

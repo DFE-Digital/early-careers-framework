@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "Transferring ECT is with a different lead provider", type: :feature, js: true do
+RSpec.describe "Transferring ECT is with a different lead provider", type: :feature, js: true, mid_cohort: true do
   before do
     allow_participant_transfer_mailers
     set_participant_data
@@ -201,7 +201,7 @@ RSpec.describe "Transferring ECT is with a different lead provider", type: :feat
   def when_i_add_a_valid_start_date
     legend = "When is #{@participant_data[:full_name]} moving to your school?"
 
-    fill_in_date(legend, with: "#{Cohort.next.start_year}-10-24")
+    fill_in_date(legend, with: 1.week.from_now.to_date)
   end
 
   def when_i_assign_a_mentor

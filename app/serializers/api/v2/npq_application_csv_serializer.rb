@@ -50,7 +50,9 @@ module Api
           targeted_delivery_funding_eligibility
           itt_provider
           lead_mentor
-        ]
+        ].tap do |headers|
+          headers.insert(12, "funded_place") if FeatureFlag.active?(:npq_capping)
+        end
       end
 
       def to_row(record)
@@ -80,7 +82,9 @@ module Api
           record.targeted_delivery_funding_eligibility,
           record.itt_provider,
           record.lead_mentor,
-        ]
+        ].tap do |row|
+          row.insert(12, record.funded_place) if FeatureFlag.active?(:npq_capping)
+        end
       end
 
       def updated_at(record)

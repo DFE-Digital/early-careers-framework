@@ -2,29 +2,26 @@
   <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-heading-l">Manage training for early career teachers</h1>
 
-    <p class="govuk-body">Use this service to set up ECF-based training for your early career teachers (ECTs) or tell us about a change at your school.</p>
+    <p class="govuk-body">Set up and manage early career framework (ECF)-based training at your school.</p>
 
-    <h2 class="govuk-heading-m">Set up and manage your training</h2>
-
-    <p class="govuk-body">Tell us:</p>
+    <p class="govuk-body">Use this service to report:</p>
 
     <ul class="govuk-list govuk-list--bullet">
-      <li>how you want to run your training</li>
-      <li>which accredited materials or training provider you’ll use</li>
-      <li>which ECTs and mentors will take part</li>
+      <li>details about your early career teachers (ECTs) and mentors</li>
+      <li>which appropriate body you've appointed</li>
+      <li>who you've nominated as your induction tutor</li>
+      <li>which training option you've chosen</li>
     </ul>
 
     <p class="govuk-body">Your school must complete these steps before your ECTs can start their statutory induction programme.</p>
 
-    <h2 class="govuk-heading-m">Tell us about changes at your school</h2>
+    <p class="govuk-body">You can also use this service to report any changes, for example, nominating a new induction tutor for your school.</p>
 
-    <p class="govuk-body">Tell us about any changes, for example, nominating a new induction tutor.</p>
+    <p class="govuk-body">Sign in if you've been nominated as the induction tutor for your school.</p>
 
-    <div class="govuk-button-group govuk-!-margin-top-7">
-      <%= govuk_button_link_to "Sign in", new_user_session_path %>
-      <span class="govuk-!-margin-right-2">or</span>
-      <%= govuk_link_to "request access to the service", resend_email_request_nomination_invite_path, no_visited_state: true %>
-    </div>
+    <p class="govuk-body"><%= govuk_button_link_to "Sign in", new_user_session_path %></p>
+
+    <p class="govuk-body"><%= govuk_link_to "Request access to the service", resend_email_request_nomination_invite_path, no_visited_state: true %> to set up training at your school for the first time.</p>
   </div>
 
   <div class="govuk-grid-column-one-third">

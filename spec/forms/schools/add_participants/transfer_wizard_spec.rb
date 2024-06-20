@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Schools::AddParticipants::TransferWizard, type: :model do
+RSpec.describe Schools::AddParticipants::TransferWizard, type: :model, mid_cohort: true do
   let(:cohort) { Cohort.previous || create(:cohort, :previous) }
   let(:next_cohort) { Cohort.current || create(:cohort, :current) }
   let(:data_store) do

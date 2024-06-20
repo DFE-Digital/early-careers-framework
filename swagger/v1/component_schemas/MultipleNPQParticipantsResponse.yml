@@ -17,3 +17,7 @@ properties:
           npq_courses: ["npq-leading-teaching"]
           teacher_reference_number: "1234567"
           updated_at: "2021-05-31T02:21:32.000Z"
+          funded_places:
+            - npq_course: "npq-leading-teaching"
+              funded_place: true
+              npq_application_id: db3a7848-7308-4879-942a-c4a70ced400a

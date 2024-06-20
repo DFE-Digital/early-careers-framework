@@ -70,6 +70,7 @@ class NPQApplication < ApplicationRecord
 
   validates :eligible_for_funding_before_type_cast, inclusion: { in: [true, false, "true", "false"] }
   validate  :validate_funding_eligiblity_status_code_change, on: :admin
+  validate  :validate_funding_eligiblity_status_with_funded_place, on: :admin
 
   delegate :start_year, to: :cohort, prefix: true, allow_nil: true
 
@@ -85,11 +86,11 @@ class NPQApplication < ApplicationRecord
   # eligible_for_funding is solely based on what NPQ app knows
   # eg school, course etc
   # here we need to account for previous enrollments too
-  def eligible_for_dfe_funding
+  def eligible_for_dfe_funding(with_funded_place: false)
     if previously_funded?
       false
     else
-      eligible_for_funding
+      funding_eligibility(with_funded_place:)
     end
   end
 
@@ -148,8 +149,15 @@ private
       .where.not(id:)
       .where(npq_course: npq_course.rebranded_alternative_courses)
       .where(eligible_for_funding: true)
+      .where(funded_place: [nil, true])
       .accepted
       .exists?
+  end
+
+  def funding_eligibility(with_funded_place:)
+    return eligible_for_funding unless with_funded_place
+
+    eligible_for_funding && (funded_place.nil? || funded_place)
   end
 
   def push_enrollment_to_big_query
@@ -161,6 +169,12 @@ private
   def validate_funding_eligiblity_status_code_change
     if declared_as_billable? && eligible_for_funding == false
       errors.add(:base, :billable_declaration_exists)
+    end
+  end
+
+  def validate_funding_eligiblity_status_with_funded_place
+    if !eligible_for_funding && funded_place
+      errors.add(:base, :funded_application)
     end
   end
 end

@@ -6,7 +6,7 @@
     <h1 class="govuk-heading-l">Overview</h1>
 
     <table class="govuk-table govuk-!-margin-bottom-9">
-      <caption class="govuk-table__caption govuk-table__caption--m">Schools registered for 2023 to 2024</caption>
+      <caption class="govuk-table__caption govuk-table__caption--m">Schools registered for <%= @pilot_stats.cohort.description %></caption>
       <thead class="govuk-table__head">
         <tr class="govuk-table__row">
           <th scope="col" class="govuk-table__header">Training programme</th>
@@ -51,7 +51,7 @@
 
 
     <table class="govuk-table">
-      <caption class="govuk-table__caption govuk-table__caption--m">Participants registered for 2023 to 2024</caption>
+      <caption class="govuk-table__caption govuk-table__caption--m">Participants registered for <%= @pilot_stats.cohort.description %></caption>
       <thead class="govuk-table__head">
         <tr class="govuk-table__row">
           <th scope="col" class="govuk-table__header">Participant type</th>

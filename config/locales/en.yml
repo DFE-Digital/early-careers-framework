@@ -40,6 +40,7 @@ en:
   bad_request: "Bad request"
   bad_parameter: "Bad parameter"
   invalid_transition: "Invalid action"
+  no_output_fee_statements_for_cohort: "You cannot submit or void declarations for the %{cohort} cohort. The funding contract for this cohort has ended. Get in touch if you need to discuss this with us"
   invalid_page_parameters: "The '#/page[page]' and '#/page[per_page]' parameter values must be a valid number (equal and more than 1)"
   cannot_change_cohort: "You cannot change the '#/cohort' field"
   cannot_create_completed_declaration: "Could not create completed declaration. Contact the DfE for support."
@@ -186,10 +187,12 @@ en:
       blank: "starting on %{year} not setup on %{where}"
       excluded_start_year: "Invalid value. Must be different to %{year}"
       invalid_start_year: "Invalid value. Must be an integer between %{start} and %{end}"
+      not_setup: "Cohort starting on %{year} not setup on %{where}"
     induction_programme:
       blank: "default for %{year} not setup on %{school}"
+      not_setup: "Default induction programme for %{year} not setup on %{school}"
     induction_record:
-      blank: "The participant is not enrolled on the cohort starting on %{year}"
+      blank: "No induction record for the participant on the cohort starting on %{year}"
     participant_declarations:
       exist: "The participant must have no declarations"
       billable_or_submitted: "The participant has billable or submitted declarations in the current cohort"
@@ -202,7 +205,8 @@ en:
       already_unsuccessfully_sent_to_api: "This participant outcome has already been unsuccessfully submitted to Qualified Teachers API (TRA)"
     participant_profile:
       blank: "Not registered"
-      not_active: "Not active"
+      not_active: "The participant is not active"
+      not_a_participant_profile: "Not a participant profile record"
     programme:
       blank: "Select a programme type"
     provider:
@@ -253,6 +257,7 @@ en:
           attributes:
             base:
               billable_declaration_exists: "Eligibility can not be changed because billable declaration exists"
+              funded_application: "Eligibility can not be changed because the application is funded"
             lead_provider_approval_status:
               has_another_accepted_application: The participant already has an accepted application for this course
               has_already_been_accepted: This NPQ application has already been accepted
@@ -319,17 +324,21 @@ en:
               no_default_induction_programme: "No default induction programme set for %{start_academic_year} academic year by school %{school_name}"
               school_cohort_not_setup: "%{start_academic_year} academic year not setup by school %{school_name}"
             participant_declarations:
-              exist: "The participant must have no declarations"
               billable_or_submitted: "The participant has billable or submitted declarations"
               completed: "The participant has not had a 'completed' declaration submitted for them. Therefore you cannot update their outcome."
             participant_profile:
+              billable_declarations_in_cohort: "The participant has billable declarations in their current cohort"
+              completion_date: "The participant has completion date"
+              no_billable_declarations_in_cohort: "The participant has no billable declarations in destination cohort"
               blank: "Not registered"
-              not_active: "Not active"
+              not_active: "The participant is not active"
+              not_eligible_to_be_transferred_back: "Participant not eligible to be transferred back to their original cohort"
+              not_eligible_to_be_transferred_from_current_cohort: "Participant not eligible to be transferred from their current cohort"
             source_cohort_start_year:
               invalid: "Invalid value. Must be an integer between %{start} and %{end}"
             target_cohort_start_year:
               excluded: "Invalid value. Must be different to %{year}"
-              incompatible_with_schedule: "Invalid value. Must match that of the schedule"
+              incompatible_with_schedule: "The target year must match that of the schedule"
               invalid: "Invalid value. Must be an integer between %{start} and %{end}"
         edit_induction_tutor_form:
           attributes:

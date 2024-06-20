@@ -68,6 +68,27 @@ RSpec.describe "NPQ Participants API", type: :request do
           expect(JSON.parse(response.body)["data"].size).to eql(1)
         end
 
+        context "When a user has multiple profiles" do
+          let!(:another_npq_application) { create(:npq_application, :accepted, npq_lead_provider:, user: npq_application.user) }
+          let(:ordered_users) { User.order(:created_at).pluck(:id) }
+
+          before do
+            another_npq_application.profile.update!(created_at: 1.day.ago)
+            another_npq_application.user.update!(created_at: 1.day.ago)
+            npq_application.profile.update!(created_at: 4.days.ago)
+            npq_application.user.update!(created_at: 4.days.ago)
+          end
+          it "can return paginated data" do
+            get "/api/v3/participants/npq", params: { page: { per_page: 2, page: 1 } }
+            expect(parsed_response["data"].size).to eql(2)
+            expect(parsed_response["data"].map { |user| user["id"] }).to eq(ordered_users.first(2))
+
+            get "/api/v3/participants/npq", params: { page: { per_page: 2, page: 2 } }
+            expect(JSON.parse(response.body)["data"].size).to eql(1)
+            expect(JSON.parse(response.body)["data"].map { |user| user["id"] }).to eq([ordered_users.last])
+          end
+        end
+
         context "filtering" do
           before do
             travel_to 10.days.ago do
@@ -176,12 +197,12 @@ RSpec.describe "NPQ Participants API", type: :request do
 
           context "when not including sort in the params" do
             before do
-              another_npq_application.profile.update!(created_at: 10.days.ago)
+              another_npq_application.user.update!(created_at: 10.days.ago)
 
               get "/api/v3/participants/npq", params: { sort: "" }
             end
 
-            it "returns all records ordered by profiles created_at" do
+            it "returns all records ordered by user created_at" do
               expect(parsed_response["data"].size).to eql(4)
               expect(parsed_response.dig("data", 0, "attributes", "full_name")).to eql(another_npq_application.user.full_name)
             end

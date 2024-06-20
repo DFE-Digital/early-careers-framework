@@ -24,9 +24,7 @@ gem "zendesk_api"
 
 gem "secure_headers"
 
-# Cleaner logs, one line per request
-gem "lograge", "~> 0.14.0"
-gem "logstash-event"
+gem "rails_semantic_logger"
 
 # Use postgresql as the database for Active Record
 gem "pg", "~> 1.5"
@@ -115,7 +113,7 @@ gem "rouge"
 
 gem "auto_strip_attributes", "~> 2.6"
 
-gem "dfe-analytics", github: "DFE-Digital/dfe-analytics", tag: "v1.12.6"
+gem "dfe-analytics", github: "DFE-Digital/dfe-analytics", tag: "v1.12.7"
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -144,6 +142,9 @@ group :development, :test do
 
   # Linting
   gem "erb_lint", ">= 0.1.1", require: false
+
+  # Colourizing output
+  gem "amazing_print"
 end
 
 group :development, :test, :staging, :sandbox, :review, :performance, :migration do

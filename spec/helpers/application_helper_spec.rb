@@ -56,6 +56,16 @@ RSpec.describe ApplicationHelper, type: :helper do
         expect(helper.induction_coordinator_dashboard_path(induction_coordinator)).to eq("/schools")
       end
     end
+
+    context "when the induction coordinator has no schools" do
+      before do
+        induction_coordinator.induction_coordinator_profile.schools = []
+      end
+
+      it "return the schools dashboard path (index)" do
+        expect(helper.induction_coordinator_dashboard_path(induction_coordinator)).to eq("/schools")
+      end
+    end
   end
 
   describe "#participant_start_path" do
@@ -119,6 +129,20 @@ RSpec.describe ApplicationHelper, type: :helper do
 
     it 'returns "No" when value is nil' do
       expect(helper.boolean_to_yes_no(nil)).to eq("No")
+    end
+  end
+
+  describe "#boolean_to_yes_no_nil" do
+    it 'returns "Yes" when value is true' do
+      expect(helper.boolean_to_yes_no_nil(true)).to eq("Yes")
+    end
+
+    it 'returns "No" when value is false' do
+      expect(helper.boolean_to_yes_no_nil(false)).to eq("No")
+    end
+
+    it "returns `empty string` when value is nil" do
+      expect(helper.boolean_to_yes_no_nil(nil)).to eq("")
     end
   end
 

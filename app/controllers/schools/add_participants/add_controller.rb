@@ -24,7 +24,8 @@ module Schools
       def start_appropriate_body_selection
         super from_path: url_for(action: :show, step: "confirm-appropriate-body"),
               submit_action: :save_appropriate_body,
-              school_name: @school.name,
+              school: @school,
+              show_different_ab_for_ect_message: false,
               ask_appointed: false
       end
 

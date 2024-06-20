@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "active_support/core_ext/integer/time"
+require Rails.root.join("lib/semantic_logger/formatters/json_with_api_metadata")
 
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
@@ -115,37 +116,19 @@ Rails.application.configure do
   # Tell Active Support which deprecation messages to disallow.
   config.active_support.disallowed_deprecation_warnings = []
 
-  # Use default logging formatter so that PID and timestamp are not suppressed.
-  config.log_formatter = ::Logger::Formatter.new
-
   # Use a different logger for distributed setups.
   # require "syslog/logger"
   # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new "app-name")
 
   # Logging
   config.log_level = :info
-  config.log_tags = [:request_id] # Prepend all log lines with the following tags.
-  logger = ActiveSupport::Logger.new($stdout)
-  logger.formatter = config.log_formatter
-  config.logger = ActiveSupport::TaggedLogging.new(logger)
-  config.active_record.logger = nil # Don't log SQL in production
 
-  # Use Lograge for cleaner logging
-  config.lograge.enabled = true
-  config.lograge.base_controller_class = ["ActionController::API", "ActionController::Base"]
-  config.lograge.formatter = Lograge::Formatters::Logstash.new
-  config.lograge.ignore_actions = ["ApplicationController#check"]
-  config.lograge.logger = ActiveSupport::Logger.new($stdout)
+  if ENV["RAILS_LOG_TO_STDOUT"].present?
+    config.rails_semantic_logger.add_file_appender = false
 
-  # Include params in logs: https://github.com/roidrage/lograge#what-it-doesnt-do
-  config.lograge.custom_options = lambda do |event|
-    exceptions = %w[controller action format id]
-    {
-      params: event.payload[:params].except(*exceptions),
-      exception: event.payload[:exception], # ["ExceptionClass", "the message"]
-      current_user_class: event.payload[:current_user_class],
-      current_user_id: event.payload[:current_user_id],
-    }
+    $stdout.sync = true
+
+    config.semantic_logger.add_appender(io: $stdout, level: Rails.application.config.log_level, formatter: SemanticLogger::Formatters::JsonWithApiMetadata.new)
   end
 
   # Do not dump schema after migrations.

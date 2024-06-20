@@ -8,7 +8,7 @@ RSpec.describe Finance::DeclarationStatementAttacher do
   let(:schedule_current_cohort) { create(:ecf_schedule, cohort: current_cohort) }
   let(:npq_schedule_current_cohort) { create(:npq_leadership_schedule, cohort: current_cohort) }
 
-  let(:declaration) { create(:ect_participant_declaration, cpd_lead_provider:, participant_profile:, state: "eligible") }
+  let(:declaration) { create(:ect_participant_declaration, cpd_lead_provider:, participant_profile:, state: "eligible", cohort:) }
 
   let(:ecf_statement_previous_cohort) { create(:ecf_statement, output_fee: true, cpd_lead_provider:, deadline_date: 2.months.from_now, cohort: previous_cohort) }
   let(:ecf_statement_current_cohort) { create(:ecf_statement, output_fee: true, cpd_lead_provider:, deadline_date: 2.months.from_now, cohort: current_cohort) }
@@ -47,6 +47,16 @@ RSpec.describe Finance::DeclarationStatementAttacher do
 
         line_item = Finance::StatementLineItem.last
         expect(line_item.state).to eql(declaration.state)
+      end
+
+      context "when the participant has since changed to a later cohort" do
+        before { participant_profile.schedule.update!(cohort: current_cohort) }
+
+        it "creates line item against the schedule in the previous cohort" do
+          expect {
+            subject.call
+          }.to change { statement.reload.statement_line_items.count }.by(1)
+        end
       end
     end
 

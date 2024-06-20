@@ -37,9 +37,9 @@ Providers must confirm to the DfE that they have agreed to enter into new partne
 
 **Providers should note:**
 
-* Once a partnership for a cohort is confirmed, any new participants who are registered for training at that school will be assigned ‘default’ training provision. **For example**, once a provider confirms partnership for the 2022 cohort, any participants who are registered at the school by the induction tutor will default to training with the provider and delivery partner in partnership
-* Not all participants at a given school will be registered to receive training through the (default) partnership. Therefore providers may not receive data for all participants at schools they have partnered with. **For example**, a participant begins training at school 1 which is partnered with provider A and delivery partner B. If the participant transfers to school 2 which is partnered with provider Y and delivery partner Z, the participant can choose to remain with their existing training providers (A and B). In this case, provider Y will not receive data for this participant
-* Providers may receive data for participants at schools which they do not have a partnership with. **For example**, a participant begins training at school 1 which is partnered with provider Y and delivery partner Z. They transfer to school 2 and choose to remain with their existing training providers (Y and Z). Therefore provider Y will continue to receive data for the participant, despite not being partnered with school 2
+* once a partnership for a cohort is confirmed, any new participants who are registered for training at that school will be assigned ‘default’ training provision. For example, once a provider confirms partnership for the 2024 cohort, any participants who are registered at the school by the induction tutor will default to training with the provider and delivery partner in partnership
+* not all participants at a given school will be registered to receive training through the (default) partnership. Therefore providers may not receive data for all participants at schools they have partnered with. For example, a participant begins training at school 1 which is partnered with provider A and delivery partner B. If the participant transfers to school 2 which is partnered with provider Y and delivery partner Z, the participant can choose to remain with their existing training providers (A and B). In this case, provider Y will not receive data for this participant
+* providers may receive data for participants at schools which they do not have a partnership with. For example, a participant begins training at school 1 which is partnered with provider Y and delivery partner Z. They transfer to school 2 and choose to remain with their existing training providers (Y and Z). Therefore provider Y will continue to receive data for the participant, despite not being partnered with school 2
 
 ### Find schools delivering ECF-based training in a given cohort
 
@@ -51,14 +51,15 @@ GET /api/v3/schools/ecf?filter[cohort]={year}
 
 <div class="govuk-inset-text"> The `cohort` filter must be included as a parameter. The API will reject requests which do not include the `cohort` filter. </div>
 
-Providers can also filter results by school URN. For example: `GET /api/v3/schools/ecf?filter[cohort]=2021&filter[urn]=123456`
+Providers can also filter results by school URN. For example: `GET /api/v3/schools/ecf?filter[cohort]=2024&filter[urn]=123456`
 
 An example response body is listed below. Successful requests will return a response body with school details.
 
 #### Providers should note:
 
-* The API will **only** show schools that are eligible for funded ECF-based training programmes within a given cohort. **For example,** if schools are eligible for funding in the 2021 cohort, they will be visible via the API, and providers can go on to form partnerships with them
-* The API will **not** show schools that are ineligible for funding in a given cohort. If a school’s eligibility changes from one cohort to the next, results will default according to the latest school eligibility. **For example,** if a school was eligible for funding in the 2021 cohort but becomes ineligible for funding in 2022, the API will **not** show the school in the 2022 cohort
+* the API will **only** show schools that are eligible for funded ECF-based training programmes within a given cohort. For example, if schools are eligible for funding in the 2021 cohort, they will be visible via the API, and providers can go on to form partnerships with them
+* the API will **not** show schools that are ineligible for funding in a given cohort. If a school’s eligibility changes from one cohort to the next, results will default according to the latest school eligibility. For example, if a school was eligible for funding in the 2023 cohort but becomes ineligible for funding in 2024, the API will **not** show the school in the 2024 cohort
+* funding for the 2021 cohort ends on 31 July 2024. Schools will migrate any participants from this group who've not completed their training to the 2024 cohort
 
 For more detailed information see the specifications for this [view school details endpoint](/api-reference/reference-v3.html#api-v3-schools-ecf-get).
 
@@ -73,11 +74,11 @@ For more detailed information see the specifications for this [view school detai
       "attributes": {
         "name": "School Example",
         "urn": "123456",
-        "cohort": 2021,
+        "cohort": 2024,
         "in_partnership": "false",
         "induction_programme_choice": "not_yet_known",
-        "created_at": "2021-05-31T02:22:32.000Z",
-        "updated_at": "2021-05-31T02:22:32.000Z"
+        "created_at": "2024-05-31T02:22:32.000Z",
+        "updated_at": "2024-05-31T02:22:32.000Z"
       }
     }
   ]
@@ -110,11 +111,11 @@ For more detailed information see the specifications for this [view a school’s
       "attributes": {
         "name": "School Example",
         "urn": "123456",
-        "cohort": 2021,
+        "cohort": 2024,
         "in_partnership": "false",
         "induction_programme_choice": "not_yet_known",
-        "created_at": "2021-05-31T02:22:32.000Z",
-        "updated_at": "2021-05-31T02:22:32.000Z"
+        "created_at": "2024-05-31T02:22:32.000Z",
+        "updated_at": "2024-05-31T02:22:32.000Z"
       }
     }
   ]
@@ -129,7 +130,7 @@ Delivery partners are assigned a unique ID by DfE. This `delivery_partner_id` is
 GET /api/v3/delivery-partners
 ```
 
-Note, providers can also filter results by adding a `cohort` filter to the parameter. For example: `GET /api/v3/delivery-partners?filter[cohort]=2022`
+Note, providers can also filter results by adding a `cohort` filter to the parameter. For example: `GET /api/v3/delivery-partners?filter[cohort]=2024`
 
 An example response body is listed below. Successful requests will return a response body including delivery partner details.
 
@@ -146,11 +147,11 @@ For more detailed information see the specifications for this [find delivery par
       "attributes": {
         "name": "Awesome Delivery Partner Ltd",
         "cohort": [
-          "2021",
-          "2022"
+          "2023",
+          "2024"
         ],
-        "created_at": "2021-05-31T02:22:32.000Z",
-        "updated_at": "2021-05-31T02:22:32.000Z"
+        "created_at": "2024-05-31T02:22:32.000Z",
+        "updated_at": "2024-05-31T02:22:32.000Z"
       }
     }
   ]
@@ -180,11 +181,11 @@ For more detailed information see the specifications for this [find a delivery p
       "attributes": {
         "name": "Awesome Delivery Partner Ltd",
         "cohort": [
-          "2021",
-          "2022"
+          "2023",
+          "2024"
         ],
-        "created_at": "2021-05-31T02:22:32.000Z",
-        "updated_at": "2021-05-31T02:22:32.000Z"
+        "created_at": "2024-05-31T02:22:32.000Z",
+        "updated_at": "2024-05-31T02:22:32.000Z"
       }
     }
   ]
@@ -203,9 +204,9 @@ An example response body is listed below. Successful requests will return a resp
 
 #### Providers should note:
 
-* The API assumes schools intend to work with a given provider for consecutive cohorts. School induction tutors will be prompted to confirm existing partnerships with providers **will continue** into the upcoming cohort. Providers do not need take any action to continue existing partnerships with schools from one cohort to the next
-* In order for new providers to confirm partnerships with schools for an upcoming cohorts, school induction tutors must first notify DfE that their schools **will not continue** their former partnerships with existing providers for the upcoming cohort. Until induction tutors have done this, any new partnerships with new providers will be rejected by the API
-* You can use POST to create a new partnership once one has been rejected
+* the API assumes schools intend to work with a given provider for consecutive cohorts. School induction tutors will be prompted to confirm existing partnerships with providers **will continue** into the upcoming cohort. Providers do not need take any action to continue existing partnerships with schools from one cohort to the next
+* in order for new providers to confirm partnerships with schools for an upcoming cohorts, school induction tutors must first notify DfE that their schools **will not continue** their former partnerships with existing providers for the upcoming cohort. Until induction tutors have done this, any new partnerships with new providers will be rejected by the API
+* you can use POST to create a new partnership once one has been rejected
 
 For more detailed information see the specifications for this [confirm an ECF partnership endpoint.](/api-reference/reference-v3.html#api-v3-partnerships-ecf-post)
 
@@ -216,7 +217,7 @@ For more detailed information see the specifications for this [confirm an ECF pa
   "data": {
     "type": "ecf-partnership",
     "attributes": {
-      "cohort": "2021",
+      "cohort": "2024",
       "school_id": "24b61d1c-ad95-4000-aee0-afbdd542294a",
       "delivery_partner_id": "db2fbf67-b7b7-454f-a1b7-0020411e2314"
     }
@@ -231,7 +232,7 @@ For more detailed information see the specifications for this [confirm an ECF pa
     "id": "cd3a12347-7308-4879-942a-c4a70ced400a",
     "type": "partnership",
     "attributes": {
-      "cohort": 2021,
+      "cohort": 2024,
       "urn": "123456",
       "school_id": "24b61d1c-ad95-4000-aee0-afbdd542294a",
       "delivery_partner_id": "db2fbf67-b7b7-454f-a1b7-0020411e2314",
@@ -241,8 +242,8 @@ For more detailed information see the specifications for this [confirm an ECF pa
       "challenged_at": null,
       "induction_tutor_name": "John Doe",
       "induction_tutor_email": "john.doe@example.com",
-      "updated_at": "2021-05-31T02:22:32.000Z",
-      "created_at": "2021-05-31T02:22:32.000Z"
+      "updated_at": "2024-05-31T02:22:32.000Z",
+      "created_at": "2024-05-31T02:22:32.000Z"
     }
   }
 }
@@ -256,7 +257,7 @@ View details for all existing partnerships to check information is correct and w
 GET /api/v3/partnerships/ecf
 ```
 
-Note, providers can also filter results by adding a `cohort` filter to the parameter. For example: `GET /api/v3/partnerships/ecf?filter[cohort]=2022`
+Note, providers can also filter results by adding a `cohort` filter to the parameter. For example: `GET /api/v3/partnerships/ecf?filter[cohort]=2024`
 
 An example response body is listed below.
 
@@ -271,18 +272,18 @@ For more detailed information see the specifications for this [view all ECF part
       "id": "cd3a12347-7308-4879-942a-c4a70ced400a",
       "type": "partnership",
       "attributes": {
-        "cohort": 2021,
+        "cohort": 2024,
         "urn": "123456",
         "school_id": "dd4a11347-7308-4879-942a-c4a70ced400v",
         "delivery_partner_id": "cd3a12347-7308-4879-942a-c4a70ced400a",
         "delivery_partner_name": "Delivery Partner Example",
         "status": "challenged",
         "challenged_reason": "mistake",
-        "challenged_at": "2021-05-31T02:22:32.000Z",
+        "challenged_at": "2024-05-31T02:22:32.000Z",
         "induction_tutor_name": "John Doe",
         "induction_tutor_email": "john.doe@example.com",
-        "updated_at": "2021-05-31T02:22:32.000Z",
-        "created_at": "2021-05-31T02:22:32.000Z"
+        "updated_at": "2024-05-31T02:22:32.000Z",
+        "created_at": "2024-05-31T02:22:32.000Z"
       }
     }
   ]
@@ -310,18 +311,18 @@ For more detailed information see the specifications for this [view a single ECF
       "id": "cd3a12347-7308-4879-942a-c4a70ced400a",
       "type": "partnership",
       "attributes": {
-        "cohort": 2021,
+        "cohort": 2024,
         "urn": "123456",
         "school_id": "dd4a11347-7308-4879-942a-c4a70ced400v",
         "delivery_partner_id": "cd3a12347-7308-4879-942a-c4a70ced400a",
         "delivery_partner_name": "Delivery Partner Example",
         "status": "challenged",
         "challenged_reason": "mistake",
-        "challenged_at": "2021-05-31T02:22:32.000Z",
+        "challenged_at": "2024-05-31T02:22:32.000Z",
         "induction_tutor_name": "John Doe",
         "induction_tutor_email": "john.doe@example.com",
-        "updated_at": "2021-05-31T02:22:32.000Z",
-        "created_at": "2021-05-31T02:22:32.000Z"
+        "updated_at": "2024-05-31T02:22:32.000Z",
+        "created_at": "2024-05-31T02:22:32.000Z"
       }
     }
   ]
@@ -371,7 +372,7 @@ Providers can view data to find out whether participants:
 * have (if they're ECTs) been assigned [unfunded mentors](/api-reference/ecf/guidance.html#view-all-unfunded-mentor-details)
 * have (if they're ECTs) completed their induction, according to the Database of Qualified Teachers
 
-Note, while participants can enter different email addresses when registering for each training course they apply for, providers will only see the email address associated with a given course registration. For example, a participant may complete their ECF-based training with one associated email address, then register for an NPQ with a different email address, and go on to be an ECT mentor with a third email address. The DfE will share the relevant email address with the relevant course provider.
+Note, while participants can enter different email addresses when registering for each training course they apply for, providers will only see the email address associated with a given course registration. For example, a participant may complete their ECF-based training with one associated email address, then register for an NPQ with a different email address, and go on to be an ECT mentor with a third email address. DfE will share the relevant email address with the relevant course provider.
 
 Providers can then update data to notify DfE that participants have:
 
@@ -386,14 +387,15 @@ Providers can then update data to notify DfE that participants have:
  GET /api/v{n}/participants/ecf
 ```
 
-Note, providers can also filter results by adding `cohort` and `updated_since` filters to the parameter. For example: `GET /api/v{n}/participants/ecf?filter[cohort]=2022&filter[updated_since]=2020-11-13T11:21:55Z`
+Note, providers can also filter results by adding `cohort` and `updated_since` filters to the parameter. For example: `GET /api/v{n}/participants/ecf?filter[cohort]=2024&filter[updated_since]=2020-11-13T11:21:55Z`
 
 An example response body is listed below.
 
 **Providers should note:**
 
-* The DfE has [previously advised](/api-reference/release-notes.html#15-march-2023) of the possibility that participants may be registered as duplicates with multiple participant_ids. Where the DfE identifies duplicates, it will fix the error by ‘retiring’ one of the participant IDs, then associating all records and data under the remaining ID.
-* Providers can check if an ECF participant’s ID has changed using the `participant_id_changes` nested structure in the [ECFEnrolment](/api-reference/reference-v3.html#schema-ecfenrolment), which contains a `from_participant_id` and a `to_participant_id` string fields, as well a `changed_at` date value
+* DfE has [previously advised](/api-reference/release-notes.html#15-march-2023) of the possibility that participants may be registered as duplicates with multiple participant_ids. Where DfE identifies duplicates, it will fix the error by ‘retiring’ one of the participant IDs, then associating all records and data under the remaining ID
+* providers can check if an ECF participant’s ID has changed using the `participant_id_changes` nested structure in the [ECFEnrolment](/api-reference/reference-v3.html#schema-ecfenrolment), which contains a `from_participant_id` and a `to_participant_id` string fields, as well a `changed_at` date value
+* DfE will close the funding contract for the 2021 cohort on 31 July 2024. Schools will start moving ECTs and mentors with partial declarations originally assigned to the 2021 cohort to the 2024 cohort from mid-June  
 
 For more detailed information see the specifications for this [view multiple ECF participants endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-get).
 
@@ -408,7 +410,7 @@ For more detailed information see the specifications for this [view multiple ECF
       "attributes": {
         "full_name": "Jane Smith",
         "teacher_reference_number": "1234567",
-        "updated_at": "2021-05-31T02:22:32.000Z",
+        "updated_at": "2024-05-31T02:22:32.000Z",
         "ecf_enrolments": [
           {
             "training_record_id": "000a97ff-d2a9-4779-a397-9bfd9063072e",
@@ -416,7 +418,7 @@ For more detailed information see the specifications for this [view multiple ECF
             "mentor_id": "bb36d74a-68a7-47b6-86b6-1fd0d141c590",
             "school_urn": "106286",
             "participant_type": "ect",
-            "cohort": "2021",
+            "cohort": "2024",
             "training_status": "active",
             "participant_status": "active",
             "teacher_reference_number_validated": true,
@@ -427,9 +429,10 @@ For more detailed information see the specifications for this [view multiple ECF
             "delivery_partner_id": "cd3a12347-7308-4879-942a-c4a70ced400a",
             "withdrawal": null,
             "deferral": null,
-            "created_at": "2021-05-31T02:22:32.000Z",
-            "induction_end_date": "2022-01-12",
-            "mentor_funding_end_date": "2021-04-19"
+            "created_at": "2024-05-31T02:22:32.000Z",
+            "induction_end_date": "2025-01-12",
+            "mentor_funding_end_date": "2024-04-19",
+            "cohort_changed_after_payments_frozen": false
           }
         ],
         "participant_id_changes": [
@@ -470,7 +473,7 @@ For more detailed information see the specifications for this [view a single ECF
     "attributes": {
       "full_name": "Jane Smith",
       "teacher_reference_number": "1234567",
-      "updated_at": "2021-05-31T02:22:32.000Z",
+      "updated_at": "2024-05-31T02:22:32.000Z",
       "ecf_enrolments": [
         {
           "training_record_id": "000a97ff-d2a9-4779-a397-9bfd9063072e",
@@ -478,7 +481,7 @@ For more detailed information see the specifications for this [view a single ECF
           "mentor_id": "bb36d74a-68a7-47b6-86b6-1fd0d141c590",
           "school_urn": "106286",
           "participant_type": "ect",
-          "cohort": "2021",
+          "cohort": "2024",
           "training_status": "active",
           "participant_status": "active",
           "teacher_reference_number_validated": true,
@@ -489,9 +492,10 @@ For more detailed information see the specifications for this [view a single ECF
           "delivery_partner_id": "cd3a12347-7308-4879-942a-c4a70ced400a",
           "withdrawal": null,
           "deferral": null,
-          "created_at": "2021-05-31T02:22:32.000Z",
-          "induction_end_date": "2022-01-12",
-          "mentor_funding_end_date": "2021-04-19"
+          "created_at": "2024-05-31T02:22:32.000Z",
+          "induction_end_date": "2025-01-12",
+          "mentor_funding_end_date": "2024-04-19",
+          "cohort_changed_after_payments_frozen": false
         }
       ],
       "participant_id_changes": [
@@ -540,8 +544,8 @@ For more detailed information see the specifications for this [view all unfunded
         "full_name": "Jane Smith",
         "email": "jane.smith@some-school.example.com",
         "teacher_reference_number": "1234567",
-        "created_at": "2021-05-31T02:22:32.000Z",
-        "updated_at": "2021-05-31T02:22:32.000Z"
+        "created_at": "2024-05-31T02:22:32.000Z",
+        "updated_at": "2024-05-31T02:22:32.000Z"
       }
     }
   ]
@@ -575,8 +579,8 @@ For more detailed information see the specifications for this [view a specific u
       "full_name": "Jane Smith",
       "email": "jane.smith@some-school.example.com",
       "teacher_reference_number": "1234567",
-      "created_at": "2021-05-31T02:22:32.000Z",
-      "updated_at": "2021-05-31T02:22:32.000Z"
+      "created_at": "2024-05-31T02:22:32.000Z",
+      "updated_at": "2024-05-31T02:22:32.000Z"
     }
   }
 }
@@ -709,7 +713,7 @@ For more detailed information see the specifications for this [notify that an EC
     "attributes": {
       "schedule_identifier": "ecf-standard-january",
       "course_identifier": "ecf-mentor",
-      "cohort": "2021"
+      "cohort": "2024"
     }
   }
 }
@@ -776,7 +780,7 @@ For more detailed information see the specifications for this [view participant 
       "id": "db3a7848-7308-4879-942a-c4a70ced400a",
       "type": "participant-transfer",
       "attributes": {
-        "updated_at": "2021-05-31T02:22:32.000Z",
+        "updated_at": "2024-05-31T02:22:32.000Z",
         "transfers": [
           {
             "training_record_id": "000a97ff-d2a9-4779-a397-9bfd9063072e",
@@ -785,14 +789,14 @@ For more detailed information see the specifications for this [view participant 
             "leaving": {
               "school_urn": "123456",
               "provider": "Old Institute",
-              "date": "2021-05-31"
+              "date": "2024-05-31"
             },
             "joining": {
               "school_urn": "654321",
               "provider": "New Institute",
-              "date": "2021-06-01"
+              "date": "2024-06-01"
             },
-            "created_at": "2021-05-31T02:22:32.000Z"
+            "created_at": "2024-05-31T02:22:32.000Z"
           }
         ]
       }
@@ -838,7 +842,7 @@ For more detailed information see the specifications for this [view a participan
       "id": "db3a7848-7308-4879-942a-c4a70ced400a",
       "type": "participant-transfer",
       "attributes": {
-        "updated_at": "2021-05-31T02:22:32.000Z",
+        "updated_at": "2024-05-31T02:22:32.000Z",
         "transfers": [
           {
             "training_record_id": "000a97ff-d2a9-4779-a397-9bfd9063072e",
@@ -847,14 +851,14 @@ For more detailed information see the specifications for this [view a participan
             "leaving": {
               "school_urn": "123456",
               "provider": "Old Institute",
-              "date": "2021-05-31"
+              "date": "2024-05-31"
             },
             "joining": {
               "school_urn": "654321",
               "provider": "New Institute",
-              "date": "2021-06-01"
+              "date": "2024-06-01"
             },
-            "created_at": "2021-05-31T02:22:32.000Z"
+            "created_at": "2024-05-31T02:22:32.000Z"
           }
         ]
       }
@@ -889,13 +893,15 @@ These declarations will trigger payment from DfE to providers.
 
 When providers submit declarations, API response bodies will include data about which financial statement the given declaration applies to. Providers can then [view financial statement payment dates](/api-reference/ecf/guidance/#view-financial-statement-payment-dates) to check when the invoicing period, and expected payment date, will be for the given declaration.
 
+<div class="govuk-inset-text">DfE will close the funding contract for the 2021 cohort on 31 July 2024. School will start moving ECTs and mentors with partial declarations originally assigned to the 2021 cohort to the 2024 cohort from mid-June. Providers will not be able to submit or void declarations for 2021 after the contract has closed.</div>
+
 ### Test the ability to submit declarations in sandbox ahead of time
 
 `X-With-Server-Date` is a custom JSON header supported in the sandbox environment. It lets providers test their integrations and ensure they are able to submit declarations for future milestone dates.
 
 The `X-With-Server-Date` header lets providers simulate future dates, and therefore allows providers to test declaration submissions for future milestone dates.
 
-<div class="govuk-inset-text">It is only valid in the sandbox environment. Attempts to submit future declarations in the production environment (or without this header in sandbox) will be rejected as part of milestone validation.</div>
+<div class="govuk-inset-text">It's only valid in the sandbox environment. Attempts to submit future declarations in the production environment (or without this header in sandbox) will be rejected as part of milestone validation.</div>
 
 To test declaration submission functionality, include:
 
@@ -903,7 +909,7 @@ To test declaration submission functionality, include:
 * the value of your chosen date in ISO8601 Date with time and Timezone (i.e. RFC3339 format). For example:
 
 ```
-X-With-Server-Date: 2022-01-10T10:42:00Z
+X-With-Server-Date: 2025-01-10T10:42:00Z
 ```
 
 ### Submit a declaration to notify DfE a participant has started training
@@ -933,7 +939,7 @@ For more detailed information see the specifications for this [notify DfE that a
     "attributes": {
       "participant_id": "db3a7848-7308-4879-942a-c4a70ced400a",
       "declaration_type": "started",
-      "declaration_date": "2021-05-31T02:21:32.000Z",
+      "declaration_date": "2024-05-31T02:21:32.000Z",
       "course_identifier": "ecf-induction"
     }
   }
@@ -967,7 +973,7 @@ For more detailed information see the specifications for this [notify DfE that a
 }
 ```
 
-### Submit a declation to notify DfE a participant has been retained in training
+### Submit a declaration to notify DfE a participant has been retained in training
 
 Notify the DfE that a participant has reached a given retention point in their training by submitting a `retained` declaration in line with [milestone dates](/api-reference/ecf/schedules-and-milestone-dates).
 
@@ -994,7 +1000,7 @@ For more detailed information see the specifications for this [notify DfE that a
     “attributes”: {
       “participant_id”: “db3a7848-7308-4879-942a-c4a70ced400a”,
       “declaration_type”: “retained-1",
-      “declaration_date”: “2021-05-31T02:21:32.000Z”,
+      “declaration_date”: “2024-05-31T02:21:32.000Z”,
       “course_identifier”: “ecf-induction”
       “evidence_held”: “training-event-attended”
     }
@@ -1012,7 +1018,7 @@ For more detailed information see the specifications for this [notify DfE that a
     “attributes”: {
       “participant_id”: “08d78829-f864-417f-8a30-cb7655714e28",
       “declaration_type”: “retained-1",
-      “declaration_date”: “2021-05-31T02:21:32.000Z”,
+      “declaration_date”: “2024-05-31T02:21:32.000Z”,
       “course_identifier”: “ecf-induction”,
       “state”: “eligible”,
       “updated_at”: “2020-11-13T11:21:55Z”,
@@ -1056,7 +1062,7 @@ For more detailed information see the specifications for this [notify DfE that a
     “attributes”: {
       “participant_id”: “db3a7848-7308-4879-942a-c4a70ced400a”,
       “declaration_type”: “completed”,
-      “declaration_date”: “2021-05-31T02:21:32.000Z”,
+      “declaration_date”: “2024-05-31T02:21:32.000Z”,
       “course_identifier”: “ecf-induction”
       “evidence_held”: “self-study-material-completed”
     }
@@ -1073,7 +1079,7 @@ For more detailed information see the specifications for this [notify DfE that a
     “attributes”: {
       “participant_id”: “08d78829-f864-417f-8a30-cb7655714e28",
       “declaration_type”: “completed",
-      “declaration_date”: “2021-05-31T02:21:32.000Z”,
+      “declaration_date”: “2024-05-31T02:21:32.000Z”,
       “course_identifier”: “ecf-induction”,
       “state”: “eligible”,
       “updated_at”: “2020-11-13T11:21:55Z”,
@@ -1098,7 +1104,7 @@ View all declarations which have been submitted to date. Check submissions, iden
 GET /api/v3/participant-declarations
 ```
 
-Note, providers can also filter results by adding filters to the parameter. For example: `GET /api/v3/participant-declarations?filter[participant_id]=ab3a7848-1208-7679-942a-b4a70eed400a` or `GET /api/v3/participant-declarations?filter[cohort]=2022&filter[updated_since]=2020-11-13T11:21:55Z`
+Note, providers can also filter results by adding filters to the parameter. For example: `GET /api/v3/participant-declarations?filter[participant_id]=ab3a7848-1208-7679-942a-b4a70eed400a` or `GET /api/v3/participant-declarations?filter[cohort]=2024&filter[updated_since]=2020-11-13T11:21:55Z`
 
 An example response body is listed below.
 
@@ -1261,14 +1267,14 @@ For more detailed information see the specifications for this [view all statemen
       "type": "statement",
       "attributes": {
         "month": "May",
-        "year": "2022",
+        "year": "2025",
         "type": "ecf",
-        "cohort": "2021",
-        "cut_off_date": "2022-04-30",
-        "payment_date": "2022-05-25",
+        "cohort": "2024",
+        "cut_off_date": "2025-04-30",
+        "payment_date": "2025-05-25",
         "paid": true
-        "created_at": "2021-05-31T02:22:32.000Z",
-        "updated_at": "2021-05-31T02:22:32.000Z"
+        "created_at": "2024-05-31T02:22:32.000Z",
+        "updated_at": "2024-05-31T02:22:32.000Z"
       }
     }
   ]
@@ -1296,14 +1302,14 @@ For more detailed information see the specifications for this [view a specific s
     "type": "statement",
     "attributes": {
       "month": "May",
-      "year": "2022",
+      "year": "2025",
       "type": "ecf",
-      "cohort": "2021",
-      "cut_off_date": "2022-04-30",
-      "payment_date": "2022-05-25",
+      "cohort": "2024",
+      "cut_off_date": "2025-04-30",
+      "payment_date": "2025-05-25",
       "paid": true,
-      "created_at": "2021-05-31T02:22:32.000Z",
-      "updated_at": "2021-05-31T02:22:32.000Z"
+      "created_at": "2024-05-31T02:22:32.000Z",
+      "updated_at": "2024-05-31T02:22:32.000Z"
     }
   }
 }
