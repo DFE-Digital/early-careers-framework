@@ -508,7 +508,6 @@ Rails.application.routes.draw do
 
         resources :change_name, controller: "applications/change_name", only: %i[edit update]
         resources :change_email, controller: "applications/change_email", only: %i[edit update]
-        resources :exports, only: %i[index new create], controller: "applications/exports"
         resources :eligibility_imports, only: %i[index new create show], controller: "applications/eligibility_imports"
         resources :applications, only: %i[index show] do
           resource :change_logs, only: %i[show], controller: "applications/change_logs"
