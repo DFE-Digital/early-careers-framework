@@ -398,11 +398,19 @@ RSpec.describe Induction::AmendParticipantCohort do
                 before do
                   source_cohort.update!(payments_frozen_at: Time.current)
                   allow(participant_profile).to receive(:eligible_to_change_cohort_and_continue_training?).and_return(true)
+                  create(:ecf_extended_schedule, cohort: target_cohort)
                 end
 
                 it "mark the participant as transferred for that reason" do
                   expect(form.save).to be_truthy
                   expect(participant_profile).to be_cohort_changed_after_payments_frozen
+                end
+
+                it "sets the schedule to ecf-extended-september" do
+                  expect(form.save).to be_truthy
+                  expect(participant_profile.reload.schedule.schedule_identifier).to eq("ecf-extended-september")
+                  expect(participant_profile.schedule.cohort).to eq(target_cohort)
+                  expect(participant_profile.latest_induction_record.schedule).to eq(participant_profile.schedule)
                 end
 
                 it "mark the participant as transferred from the original cohort" do

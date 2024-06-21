@@ -169,13 +169,9 @@ module Induction
     end
 
     def schedule
-      @schedule ||= if induction_record && in_target_cohort?(induction_record)
-                      induction_record.schedule
-                    else
-                      Finance::Schedule::ECF.find_by(cohort: target_cohort,
-                                                     schedule_identifier: induction_record&.schedule_identifier) ||
-                        Finance::Schedule::ECF.default_for(cohort: target_cohort)
-                    end
+      @schedule ||= Induction::ScheduleForNewCohort.call(cohort: target_cohort,
+                                                         induction_record:,
+                                                         cohort_changed_after_payments_frozen:)
     end
 
     def source_cohort
