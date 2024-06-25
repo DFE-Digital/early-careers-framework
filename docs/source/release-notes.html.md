@@ -7,6 +7,10 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
+## 25 June 2024
+
+Registration is now open for the 2024/25 intake of early career teachers and mentors, so we’ve added the schedules and contract data for this academic year to the production environment.
+
 ## 18 June 2024 
 
 From today, schools have started moving ECTs and mentors with partial declarations currently assigned to the 2021 cohort to the 2024 cohort.  
