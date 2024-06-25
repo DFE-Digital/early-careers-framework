@@ -2,9 +2,11 @@
 
 To enable the 2021 cohort to be frozen for payments, participants that had not completed their induction could be moved to the 2024 cohort by following these steps in order:
 
-1. A change happens to the participant such as changing from `withdrawn` to `active` status, transferring to another school or a change of mentor, that indicates they are continuing with their training
+1. A change happens to the participant such as changing from `withdrawn` to `active` status, transferring to another school or a change of mentor or mentee that indicate they are continuing with their training
 2. We verify that the participant is eligible to move
 3. We move the participant
+
+These will happen automatically for school transfers, mentor assignments, re-validations and the move will be performed when possible.
 
 ## How do I determine whether the participant is eligible to move?
 
@@ -22,8 +24,8 @@ Once we are sure that a participant is eligible to be moved from 2021 to 2024 we
 
 ```ruby
 i = Induction::AmendParticipantCohort.new(participant_profile:,
-  																				source_cohort_start_year: 2021,
-  																				target_cohort_start_year: 2024)
+                                          source_cohort_start_year: 2021,
+                                          target_cohort_start_year: 2024)
 i.save
 ```
 
