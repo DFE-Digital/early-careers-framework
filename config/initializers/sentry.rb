@@ -1,5 +1,22 @@
 # frozen_string_literal: true
 
+FILTERABLE_JS_ERRORS = [
+  "Failed to fetch",
+  "NetworkError when attempting to fetch resource.",
+].freeze
+
+def cookie_banner_js_event?(event, hint)
+  hint[:exception].is_a?(Error) &&
+    event.tags["mechanism"] == "onunhandledrejection" &&
+    event.exception.values.any? { |ex| ex.value.include?("[object Response]") }
+end
+
+def filterable_js_event?(event, hint)
+  hint[:exception].is_a?(TypeError) && event.exception.values.any? do |exception|
+    FILTERABLE_JS_ERRORS.include?(exception.value)
+  end
+end
+
 Sentry.init do |config|
   config.enabled_environments = %w[production sandbox staging review]
   config.dsn = config.enabled_environments.include?(Rails.env) ? Rails.application.credentials.SENTRY_DSN : "disabled"
@@ -7,7 +24,9 @@ Sentry.init do |config|
   config.release = "#{ENV['RELEASE_VERSION']}-#{ENV['SHA']}"
 
   filter = ActiveSupport::ParameterFilter.new(Rails.application.config.filter_parameters)
-  config.before_send = lambda do |event, _hint|
+  config.before_send = lambda do |event, hint|
+    return nil if filterable_js_event?(event, hint) || cookie_banner_js_event?(event, hint)
+
     # use Rails' parameter filter to sanitize the event
     filter.filter(event.to_hash)
   end
