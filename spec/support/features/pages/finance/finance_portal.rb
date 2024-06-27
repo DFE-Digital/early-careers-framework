@@ -15,8 +15,6 @@ module Pages
 
     def view_schedules
       click_on "View payment schedules"
-
-      full_stop
     end
 
     def view_participant_drilldown
