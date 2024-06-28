@@ -11,6 +11,11 @@ module NPQ
 
       validates :npq_application, presence: { message: I18n.t("npq_application.missing_npq_application") }
       validate :funded_place_not_nil
+      validates :funded_place,
+                inclusion: {
+                  in: [true, false],
+                  message: I18n.t("npq_application.funded_place_required"),
+                }
       validate :accepted_application
       validate :eligible_for_funding
       validate :eligible_for_removing_funding_place
