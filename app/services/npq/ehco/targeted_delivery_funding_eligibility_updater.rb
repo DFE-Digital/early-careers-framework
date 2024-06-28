@@ -10,7 +10,7 @@ module NPQ
       end
 
       def run
-        logger = Logger.new($stdout)
+        logger = Logger.new(Rails.env.test? ? nil : $stdout)
         logger.info "Updating EHCO NPQ Applications, this may take a couple of minutes..."
 
         ehco_npq_course = NPQCourse.find_by(identifier: "npq-early-headship-coaching-offer")
