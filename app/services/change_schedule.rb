@@ -216,7 +216,7 @@ private
     return unless new_schedule
     return if changing_cohort_due_to_payments_frozen?
 
-    applicable_declarations.each do |declaration|
+    applicable_declarations_excluding_payments_frozen.each do |declaration|
       milestone = new_schedule.milestones.find_by!(declaration_type: declaration.declaration_type)
 
       if declaration.declaration_date <= milestone.start_date.beginning_of_day
@@ -230,8 +230,17 @@ private
   end
 
   def applicable_declarations
-    @applicable_declarations ||= participant_profile.participant_declarations
-      .where(state: %w[submitted eligible payable paid])
+    @applicable_declarations ||= participant_profile
+        .participant_declarations
+        .where(state: %w[submitted eligible payable paid])
+  end
+
+  def applicable_declarations_excluding_payments_frozen
+    return applicable_declarations unless participant_profile.cohort_changed_after_payments_frozen?
+
+    @applicable_declarations_excluding_payments_frozen ||= applicable_declarations
+      .includes(:cohort)
+      .where(cohort: { payments_frozen_at: nil })
   end
 
   def validate_permitted_schedule_for_course
