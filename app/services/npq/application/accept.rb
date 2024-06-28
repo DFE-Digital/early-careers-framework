@@ -10,13 +10,18 @@ module NPQ
       attribute :schedule_identifier
       attribute :funded_place
 
+      validates :funded_place,
+                inclusion: {
+                  in: [true, false],
+                  if: :validate_funded_place?,
+                  message: I18n.t("npq_application.funded_place_required"),
+                }
       validates :npq_application, presence: { message: I18n.t("npq_application.missing_npq_application") }
       validate :not_already_accepted
       validate :cannot_change_from_rejected
       validate :other_accepted_applications_with_same_course?
       validate :validate_permitted_schedule_for_course
       validate :eligible_for_funded_place
-      validate :validate_funded_place
 
       def call
         return self unless valid?
@@ -167,14 +172,10 @@ module NPQ
         end
       end
 
-      def validate_funded_place
-        return unless FeatureFlag.active?("npq_capping")
-        return if errors.any?
-        return unless npq_contract.funding_cap.to_i.positive?
-
-        if funded_place.nil?
-          errors.add(:npq_application, I18n.t("npq_application.funded_place_required"))
-        end
+      def validate_funded_place?
+        FeatureFlag.active?("npq_capping") &&
+          errors.blank? &&
+          npq_contract.funding_cap.to_i.positive?
       end
 
       def npq_contract
