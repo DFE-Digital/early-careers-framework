@@ -1,11 +1,15 @@
 # frozen_string_literal: true
 
-RSpec.describe Archive::UndeclaredUser do
+RSpec.describe Archive::FrozenCohortUser do
   let(:cohort) { Cohort.find_by(start_year: 2021) }
   let(:participant_profile) { create(:ect_participant_profile, cohort:) }
   let!(:user) { participant_profile.user }
 
-  subject(:service_call) { described_class.call(user, cohort_year: cohort.start_year) }
+  subject(:service_call) { described_class.call(user) }
+
+  before do
+    cohort.update!(payments_frozen_at: 1.day.ago)
+  end
 
   it "creates a Relic record" do
     expect { service_call }.to change { Archive::Relic.count }.by(1)
@@ -20,7 +24,7 @@ RSpec.describe Archive::UndeclaredUser do
     let(:relic) { service_call }
 
     it "sets the reason on the Relic" do
-      expect(relic.reason).to eq "undeclared participants in 2021"
+      expect(relic.reason).to eq "undeclared participants in frozen cohort"
     end
 
     it "sets the object_type" do
@@ -86,7 +90,7 @@ RSpec.describe Archive::UndeclaredUser do
         }.to raise_error Archive::ArchiveError
       end
 
-      context "when the declaration is void" do
+      context "when the declaration is non-payable" do
         let(:state) { "voided" }
 
         it "raises an ArchiveError" do
