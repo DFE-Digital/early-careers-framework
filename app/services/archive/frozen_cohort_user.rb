@@ -1,11 +1,33 @@
 # frozen_string_literal: true
 
 module Archive
-  class FrozenCohortUser < UnvalidatedUser
+  class FrozenCohortUser < ::BaseService
+    include Archive::SupportMethods
+
+    def call
+      check_user_can_be_archived!
+
+      data = Archive::UserSerializer.new(user).serializable_hash[:data]
+
+      ActiveRecord::Base.transaction do
+        relic = Archive::Relic.create!(object_type: user.class.name,
+                                       object_id: user.id,
+                                       display_name: user.full_name,
+                                       reason:,
+                                       data:)
+        destroy_user! unless keep_original
+        relic
+      end
+    end
+
   private
 
+    attr_accessor :user, :reason, :keep_original
+
     def initialize(user, reason: "undeclared participants in frozen cohort", keep_original: false)
-      super(user, reason:, keep_original:)
+      @user = user
+      @reason = reason
+      @keep_original = keep_original
     end
 
     def check_user_can_be_archived!

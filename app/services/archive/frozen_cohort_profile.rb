@@ -1,11 +1,34 @@
 # frozen_string_literal: true
 
 module Archive
-  class FrozenCohortProfile < UnvalidatedProfile
+  class FrozenCohortProfile < ::BaseService
+    include Archive::SupportMethods
+
+    def call
+      check_profile_can_be_archived!
+
+      data = Archive::ParticipantProfileSerializer.new(participant_profile).serializable_hash[:data]
+
+      ActiveRecord::Base.transaction do
+        relic = Archive::Relic.create!(object_type: participant_profile.class.name,
+                                       object_id: participant_profile.id,
+                                       display_name: user.full_name,
+                                       reason:,
+                                       data:)
+        destroy_profile!(participant_profile) unless keep_original
+        relic
+      end
+    end
+
   private
 
+    attr_accessor :participant_profile, :user, :reason, :keep_original
+
     def initialize(participant_profile, reason: "undeclared participants in frozen cohort", keep_original: false)
-      super
+      @participant_profile = participant_profile
+      @user = participant_profile.user
+      @reason = reason
+      @keep_original = keep_original
     end
 
     def check_profile_can_be_archived!
