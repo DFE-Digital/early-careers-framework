@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "Adding previously withdrawn ECT", type: :feature, js: true do
+RSpec.describe "Adding previously withdrawn ECT", type: :feature, js: true, mid_cohort: true do
   let(:current_year) { Time.current.year }
   let!(:cohort) { Cohort.current || create(:cohort, start_year: current_year) }
   let(:previous_cohort) { create(:cohort, start_year: cohort.start_year - 1) }
