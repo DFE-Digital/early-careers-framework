@@ -20,7 +20,7 @@ namespace :npq_applications do
     require "csv"
     require "logger"
 
-    logger = Logger.new($stdout)
+    logger = Logger.new(Rails.env.test? ? nil : $stdout)
     file_path = args[:file_path]
 
     unless file_path && File.exist?(file_path)

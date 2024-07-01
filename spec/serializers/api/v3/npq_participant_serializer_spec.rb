@@ -50,7 +50,6 @@ module Api
             it "does not include the `funded_place` attribute" do
               result = subject.serializable_hash
 
-              puts result
               expect(result[:data][0][:attributes][:npq_enrolments][0].keys).not_to include(:funded_place)
             end
           end
