@@ -3,15 +3,16 @@
 require "rails_helper"
 
 RSpec.feature "Appropriate body users participants", type: :feature do
+  let(:cohort) { Cohort.active_registration_cohort }
   let(:appropriate_body_user) { create(:user, :appropriate_body) }
   let(:appropriate_body) { appropriate_body_user.appropriate_bodies.first }
 
-  let(:participant_profile) { create :ect_participant_profile, training_status: "withdrawn" }
-  let(:mentor_profile) { create :mentor_participant_profile, training_status: "withdrawn" }
+  let(:participant_profile) { create :ect_participant_profile, training_status: "withdrawn", cohort: }
+  let(:mentor_profile) { create :mentor_participant_profile, training_status: "withdrawn", cohort: }
   let(:lead_provider) { create(:lead_provider) }
   let(:delivery_partner) { create(:delivery_partner) }
   let(:school) { create(:school) }
-  let(:school_cohort) { create(:school_cohort, school:) }
+  let(:school_cohort) { create(:school_cohort, school:, cohort:) }
   let(:partnership) do
     create(
       :partnership,
@@ -20,6 +21,7 @@ RSpec.feature "Appropriate body users participants", type: :feature do
       challenged_at: nil,
       challenge_reason: nil,
       pending: false,
+      cohort:,
     )
   end
   let(:induction_programme) { create(:induction_programme, :fip, partnership:, school_cohort:) }
