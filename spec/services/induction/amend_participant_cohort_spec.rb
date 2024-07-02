@@ -67,8 +67,9 @@ RSpec.describe Induction::AmendParticipantCohort do
     end
 
     context "enrolling participant" do
+      let(:lead_provider) { nil }
       let!(:source_cohort) { create(:cohort, start_year: source_cohort_start_year) }
-      let!(:source_school_cohort) { create(:school_cohort, :fip, cohort: source_cohort) }
+      let!(:source_school_cohort) { create(:school_cohort, :fip, cohort: source_cohort, lead_provider:) }
       let!(:school) { source_school_cohort.school }
       let!(:target_cohort) { Cohort.find_by_start_year(target_cohort_start_year) }
       let!(:target_cohort_schedule) { create(:ecf_schedule, cohort: target_cohort) }
@@ -79,28 +80,6 @@ RSpec.describe Induction::AmendParticipantCohort do
       before do
         Induction::SetCohortInductionProgramme.call(school_cohort: source_school_cohort,
                                                     programme_choice: source_school_cohort.induction_programme_choice)
-      end
-
-      context "when the participant has induction completion date" do
-        before do
-          participant_profile.update!(induction_completion_date: Date.current)
-        end
-
-        it "returns false and set errors" do
-          expect(form.save).to be_falsey
-          expect(form.errors[:participant_profile]).to include("The participant has completion date")
-        end
-      end
-
-      context "when the participant has mentor completion date" do
-        before do
-          participant_profile.update!(mentor_completion_date: Date.current)
-        end
-
-        it "returns false and set errors" do
-          expect(form.save).to be_falsey
-          expect(form.errors[:participant_profile]).to include("The participant has completion date")
-        end
       end
 
       context "when the target_cohort_start_year is not matching that of the schedule" do
@@ -121,23 +100,14 @@ RSpec.describe Induction::AmendParticipantCohort do
         end
       end
 
-      context "when there is no participant" do
-        let(:participant_profile) {}
-
-        it "returns false and set errors" do
-          expect(form.save).to be_falsey
-          expect(form.errors[:participant_profile]).to include("Not a participant profile record")
-        end
-      end
-
-      context "when the participant is not active" do
+      context "when the participant has notes" do
         before do
-          participant_profile.withdrawn_record!
+          participant_profile.notes = "Some note"
         end
 
         it "returns false and set errors" do
           expect(form.save).to be_falsey
-          expect(form.errors[:participant_profile]).to include("The participant is not active")
+          expect(form.errors[:participant_profile]).to include("The participant has notes that block a cohort change")
         end
       end
 
@@ -282,6 +252,24 @@ RSpec.describe Induction::AmendParticipantCohort do
         it "returns false and set errors" do
           expect(form.save).to be_falsey
           expect(form.errors[:induction_record]).to include("No induction record for the participant on the cohort starting on #{source_cohort_start_year}")
+        end
+      end
+
+      context "when a NIoT-associated participant is to be moved to a cohort earlier than 2023" do
+        let(:lead_provider) { LeadProvider.find_or_create_by!(name: "National Institute of Teaching") }
+        let(:source_cohort_start_year) { 2023 }
+        let(:target_cohort_start_year) { 2022 }
+        let(:cohort_2023) { Cohort.find_by(start_year: 2023) || create(:cohort, start_year: 2023) }
+
+        before do
+          Induction::Enrol.call(participant_profile:,
+                                induction_programme: source_school_cohort.default_induction_programme)
+          lead_provider.provider_relationships.create!(delivery_partner: DeliveryPartner.first, cohort: cohort_2023)
+        end
+
+        it "returns false and set errors" do
+          expect(form.save).to be_falsey
+          expect(form.errors[:induction_record]).to include("A NIoT-associated participant can't be moved to a cohort earlier than 2023")
         end
       end
 
