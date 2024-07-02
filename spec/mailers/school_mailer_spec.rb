@@ -313,11 +313,17 @@ RSpec.describe SchoolMailer, type: :mailer do
     let(:school_cohort) { create(:school_cohort, induction_programme_choice: "full_induction_programme") }
     let(:participant_profile) { create(:ect_participant_profile, training_status: "withdrawn", school_cohort:, user: create(:user, email: "john.clemence@example.com")) }
     let(:sit_profile) { create(:induction_coordinator_profile, schools: [school_cohort.school]) }
+    let(:partnership) { create(:partnership) }
+
+    before do
+      create(:induction_record, participant_profile:, partnership:)
+    end
 
     let(:email) do
       SchoolMailer.with(
         withdrawn_participant: participant_profile,
         induction_coordinator: sit_profile,
+        partnership:,
       ).fip_provider_has_withdrawn_a_participant
     end
 
