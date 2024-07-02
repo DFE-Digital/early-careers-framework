@@ -67,6 +67,8 @@ module Induction
     validates :participant_profile,
               active_participant_profile: true
 
+    validate :participant_with_no_notes
+
     validate :transfer_from_payments_frozen_cohort, if: :transfer_from_payments_frozen_cohort?
     validate :transfer_to_payments_frozen_cohort, if: :back_to_payments_frozen_cohort?
 
@@ -225,6 +227,10 @@ module Induction
       if participant_profile&.induction_completion_date || participant_profile&.mentor_completion_date
         errors.add(:participant_profile, :completion_date)
       end
+    end
+
+    def participant_with_no_notes
+      errors.add(:participant_profile, :with_notes) if participant_profile&.notes.present?
     end
 
     def transfer_from_payments_frozen_cohort

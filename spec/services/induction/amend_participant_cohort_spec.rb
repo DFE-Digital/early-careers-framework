@@ -142,6 +142,17 @@ RSpec.describe Induction::AmendParticipantCohort do
         end
       end
 
+      context "when the participant has notes" do
+        before do
+          participant_profile.notes = "Some note"
+        end
+
+        it "returns false and set errors" do
+          expect(form.save).to be_falsey
+          expect(form.errors[:participant_profile]).to include("The participants has notes that block a cohort change")
+        end
+      end
+
       context "when they are transferring back to their original cohort" do
         before do
           target_cohort.update!(payments_frozen_at: 1.month.ago)
