@@ -311,6 +311,8 @@ en:
             historical_records:
               no_default_induction_programme: "No default induction programme set for %{start_academic_year} academic year by school %{school_name}"
               school_cohort_not_setup: "%{start_academic_year} academic year not setup by school %{school_name}"
+            induction_record:
+              niot_participant: "A NIoT-associated participant can't be moved to a cohort earlier than 2023"
             participant_declarations:
               billable_or_submitted: "The participant has billable or submitted declarations"
               completed: "The participant has not had a 'completed' declaration submitted for them. Therefore you cannot update their outcome."
