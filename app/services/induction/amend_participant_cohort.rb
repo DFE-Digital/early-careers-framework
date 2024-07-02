@@ -31,6 +31,7 @@ module Induction
     include ActiveModel::Model
 
     ECF_FIRST_YEAR = 2020
+    NIOT_NAME = "National Institute of Teaching"
 
     attr_accessor :participant_profile, :source_cohort_start_year, :target_cohort_start_year
     attr_writer :schedule
@@ -77,6 +78,8 @@ module Induction
               presence: {
                 message: ->(form, _) { I18n.t("errors.induction_record.blank", year: form.source_cohort_start_year) },
               }
+
+    validate :niot_exception
 
     validates :target_school_cohort,
               presence: {
@@ -197,6 +200,26 @@ module Induction
     alias_method :cohort_changed_after_payments_frozen, :transfer_from_payments_frozen_cohort?
 
     # Validations
+
+    def niot_exception
+      errors.add(:induction_record, :niot_participant) if niot_forbidden_target_cohort?
+    end
+
+    def niot
+      @niot ||= LeadProvider.find_by_name(NIOT_NAME)
+    end
+
+    def niot_first_year
+      @niot_first_year ||= niot.provider_relationships.includes(:cohort).minimum("cohorts.start_year") if niot
+    end
+
+    def niot_forbidden_target_cohort?
+      niot_participant? && niot_first_year && target_cohort_start_year < niot_first_year
+    end
+
+    def niot_participant?
+      niot && induction_record && induction_record.lead_provider_id == niot.id
+    end
 
     def non_completion_date
       if participant_profile&.induction_completion_date || participant_profile&.mentor_completion_date
