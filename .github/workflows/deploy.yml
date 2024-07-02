@@ -57,7 +57,7 @@ jobs:
     name: Run Brakeman vulnerability scanner
     uses: ./.github/workflows/brakeman.yml
     with:
-      ruby-version: "3.2.2"
+      ruby-version: "3.2.4"
 
   deploy_review:
     name: Deploy review
