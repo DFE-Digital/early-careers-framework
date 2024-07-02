@@ -1,0 +1,44 @@
+<% content_for :title, "Check your answers" %>
+<% content_for(:before_content, govuk_back_link(href: @wizard.previous_step_path)) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= form_with(
+      model: @wizard.current_step,
+      url: @wizard.current_step_path(school_id: @school_id, participant_id: @participant_id, start_year: @start_year),
+    ) do |f| %>
+      <h1>Check your answers before you request the change</h1>
+
+      <h2>Change request details</h2>
+
+      <%= govuk_summary_list do |sl|
+        sl.with_row do |row|
+          row.with_key(text: "Participant name")
+          row.with_value(text: @participant.full_name)
+        end
+        sl.with_row do |row|
+          row.with_key(text: "School")
+          row.with_value(text: @school.name)
+        end
+        sl.with_row do |row|
+          row.with_key(text: "Academic year")
+          row.with_value(text: @start_year)
+        end
+        sl.with_row do |row|
+          row.with_key(text: "Participant email address")
+          row.with_value(text: @participant.user.email)
+        end
+        sl.with_row do |row|
+          row.with_key(text: "Current lead provider")
+          row.with_value(text: lead_provider&.name)
+        end
+        sl.with_row do |row|
+          row.with_key(text: "New lead provider")
+          row.with_value(text: lead_provider&.name)
+        end
+      end %>
+
+      <%= f.govuk_submit "Accept and send request" %>
+    <% end %>
+  </div>
+</div>
