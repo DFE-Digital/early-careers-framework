@@ -75,8 +75,8 @@ describe ParticipantProfile::ECT, type: :model do
       create(:ect_participant_profile, attrs)
     end
 
-    describe ".archivable" do
-      subject { described_class.archivable }
+    describe ".archivable_from_frozen_cohort" do
+      subject { described_class.archivable_from_frozen_cohort }
 
       it "does not include participants where the induction_start_date is 1/9/<cohort_start_year> or later" do
         build_profile(cohort: eligible_cohort, induction_start_date: Date.new(eligible_cohort.start_year, 9, 1))

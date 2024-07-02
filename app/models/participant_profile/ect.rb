@@ -10,7 +10,7 @@ class ParticipantProfile::ECT < ParticipantProfile::ECF
     where(induction_start_date: nil).joins(:ecf_participant_eligibility).merge(ECFParticipantEligibility.waiting_for_induction)
   }
 
-  def self.archivable(restrict_to_participant_ids: [])
+  def self.archivable_from_frozen_cohort(restrict_to_participant_ids: [])
     super(restrict_to_participant_ids:)
       .where(induction_completion_date: nil)
       .where("induction_start_date IS NULL OR induction_start_date < make_date(cohorts.start_year, 9, 1)")

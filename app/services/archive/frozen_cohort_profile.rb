@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Archive
-  class UnvalidatedProfile < ::BaseService
+  class FrozenCohortProfile < ::BaseService
     include Archive::SupportMethods
 
     def call
@@ -24,7 +24,7 @@ module Archive
 
     attr_accessor :participant_profile, :user, :reason, :keep_original
 
-    def initialize(participant_profile, reason: "unvalidated/undeclared ECTs 2021 or 2022", keep_original: false)
+    def initialize(participant_profile, reason: "undeclared participants in frozen cohort", keep_original: false)
       @participant_profile = participant_profile
       @user = participant_profile.user
       @reason = reason
@@ -32,13 +32,17 @@ module Archive
     end
 
     def check_profile_can_be_archived!
-      if profile_has_declarations?
-        raise ArchiveError, "Profile #{participant_profile.id} has non-voided declarations"
-      elsif profile_has_eligibility?
-        raise ArchiveError, "Profile #{participant_profile.id} has an eligibility record"
-      elsif profile_has_mentees?
-        raise ArchiveError, "Profile #{participant_profile.id} has mentees"
+      if profile_not_archivable_from_cohort?
+        raise ArchiveError, "Profile #{participant_profile.id} cannot be archived from the #{cohort.start_year} cohort"
       end
+    end
+
+    def profile_not_archivable_from_cohort?
+      !participant_profile.archivable_from_frozen_cohort?
+    end
+
+    def cohort
+      @cohort ||= participant_profile.schedule.cohort
     end
   end
 end
