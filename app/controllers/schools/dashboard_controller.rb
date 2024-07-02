@@ -6,6 +6,11 @@ class Schools::DashboardController < Schools::BaseController
   skip_after_action :verify_authorized
   skip_after_action :verify_policy_scoped
 
+  include ActionView::Helpers::TagHelper
+  include ActionView::Helpers::UrlHelper
+  include GovukVisuallyHiddenHelper
+  include GovukLinkHelper
+
   def index
     @pagy, @schools = pagy(current_user
                       .induction_coordinator_profile
@@ -13,6 +18,13 @@ class Schools::DashboardController < Schools::BaseController
                       .order(:name),
                            page: params[:page],
                            items: 20)
+
+    if @schools.empty?
+      flash.now[:notice] = {
+        title: "You are not associated with any schools.",
+        content: "You need to contact our support team at #{govuk_mail_to(Rails.configuration.support_email, Rails.configuration.support_email)}".html_safe,
+      }
+    end
   end
 
   def show

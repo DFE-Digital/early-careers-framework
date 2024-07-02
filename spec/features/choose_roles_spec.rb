@@ -32,8 +32,20 @@ RSpec.feature "Choose roles page", type: :feature do
     and_i_see(@user.appropriate_bodies.first.name)
   end
 
+  scenario "Induction coordinator with no schools" do
+    given_an_induction_coordinator_exists
+    and_i_am_logged_in_as_user
+
+    when_i_visit_the_choose_roles_page
+    then_i_see("You are not associated with any schools")
+  end
+
   def given_a_user_exists
     @user = create(:user)
+  end
+
+  def given_an_induction_coordinator_exists(schools: [])
+    @user = create(:user, :induction_coordinator, schools:)
   end
 
   def and_has_delivery_partner_role
