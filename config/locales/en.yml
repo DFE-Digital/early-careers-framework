@@ -324,7 +324,7 @@ en:
               not_active: "The participant is not active"
               not_eligible_to_be_transferred_back: "Participant not eligible to be transferred back to their original cohort"
               not_eligible_to_be_transferred_from_current_cohort: "Participant not eligible to be transferred from their current cohort"
-              with_notes: "The participants has notes that block a cohort change"
+              with_notes: "The participant has notes that block a cohort change"
             source_cohort_start_year:
               invalid: "Invalid value. Must be an integer between %{start} and %{end}"
             target_cohort_start_year:
