@@ -61,14 +61,8 @@ module Induction
                 message: ->(form, _) { I18n.t("errors.cohort.blank", year: form.target_cohort_start_year, where: "the service") },
               }
 
-    validate :non_completion_date
     validate :target_cohort_start_year_matches_schedule
-
-    validates :participant_profile,
-              active_participant_profile: true
-
     validate :participant_with_no_notes
-
     validate :transfer_from_payments_frozen_cohort, if: :transfer_from_payments_frozen_cohort?
     validate :transfer_to_payments_frozen_cohort, if: :back_to_payments_frozen_cohort?
 
@@ -145,7 +139,7 @@ module Induction
       return unless participant_profile
 
       @induction_record ||= participant_profile.induction_records
-                                               .active_induction_status
+                                               .where.not(induction_status: :changed)
                                                .joins(induction_programme: { school_cohort: :cohort })
                                                .where(cohorts: { start_year: source_cohort_start_year })
                                                .latest
@@ -221,12 +215,6 @@ module Induction
 
     def niot_participant?
       niot && induction_record && induction_record.lead_provider_id == niot.id
-    end
-
-    def non_completion_date
-      if participant_profile&.induction_completion_date || participant_profile&.mentor_completion_date
-        errors.add(:participant_profile, :completion_date)
-      end
     end
 
     def participant_with_no_notes

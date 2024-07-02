@@ -82,28 +82,6 @@ RSpec.describe Induction::AmendParticipantCohort do
                                                     programme_choice: source_school_cohort.induction_programme_choice)
       end
 
-      context "when the participant has induction completion date" do
-        before do
-          participant_profile.update!(induction_completion_date: Date.current)
-        end
-
-        it "returns false and set errors" do
-          expect(form.save).to be_falsey
-          expect(form.errors[:participant_profile]).to include("The participant has completion date")
-        end
-      end
-
-      context "when the participant has mentor completion date" do
-        before do
-          participant_profile.update!(mentor_completion_date: Date.current)
-        end
-
-        it "returns false and set errors" do
-          expect(form.save).to be_falsey
-          expect(form.errors[:participant_profile]).to include("The participant has completion date")
-        end
-      end
-
       context "when the target_cohort_start_year is not matching that of the schedule" do
         let(:schedule) { Finance::Schedule::ECF.default_for(cohort: Cohort.previous) }
 
@@ -122,26 +100,6 @@ RSpec.describe Induction::AmendParticipantCohort do
         end
       end
 
-      context "when there is no participant" do
-        let(:participant_profile) {}
-
-        it "returns false and set errors" do
-          expect(form.save).to be_falsey
-          expect(form.errors[:participant_profile]).to include("Not a participant profile record")
-        end
-      end
-
-      context "when the participant is not active" do
-        before do
-          participant_profile.withdrawn_record!
-        end
-
-        it "returns false and set errors" do
-          expect(form.save).to be_falsey
-          expect(form.errors[:participant_profile]).to include("The participant is not active")
-        end
-      end
-
       context "when the participant has notes" do
         before do
           participant_profile.notes = "Some note"
@@ -149,7 +107,7 @@ RSpec.describe Induction::AmendParticipantCohort do
 
         it "returns false and set errors" do
           expect(form.save).to be_falsey
-          expect(form.errors[:participant_profile]).to include("The participants has notes that block a cohort change")
+          expect(form.errors[:participant_profile]).to include("The participant has notes that block a cohort change")
         end
       end
 
