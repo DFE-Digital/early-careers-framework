@@ -112,6 +112,7 @@ gem "rouge"
 gem "auto_strip_attributes", "~> 2.6"
 
 gem "dfe-analytics", github: "DFE-Digital/dfe-analytics", tag: "v1.12.8"
+gem "dfe-wizard", github: "DFE-Digital/dfe-wizard"
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

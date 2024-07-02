@@ -9,6 +9,14 @@ GIT
       multi_xml (~> 0.6.0)
       request_store_rails (~> 2)
 
+GIT
+  remote: https://github.com/DFE-Digital/dfe-wizard.git
+  revision: 66610827125188bc4d28da84fe5539651722bf7d
+  specs:
+    dfe-wizard (0.1.0)
+      activemodel
+      activesupport
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -354,9 +362,6 @@ GEM
       net-protocol
     nio4r (2.7.0)
     nkf (0.2.0)
-    nokogiri (1.16.6)
-      mini_portile2 (~> 2.8.2)
-      racc (~> 1.4)
     nokogiri (1.16.6-arm64-darwin)
       racc (~> 1.4)
     nokogiri (1.16.6-x86_64-darwin)
@@ -700,7 +705,6 @@ PLATFORMS
   arm64-darwin-21
   arm64-darwin-22
   arm64-darwin-23
-  ruby
   x86_64-darwin-22
   x86_64-linux
 
@@ -721,6 +725,7 @@ DEPENDENCIES
   database_cleaner-active_record
   devise (>= 4.8.0)
   dfe-analytics!
+  dfe-wizard!
   discard (~> 1.3)
   dotenv-rails (~> 2.8.1)
   erb_lint (>= 0.1.1)
