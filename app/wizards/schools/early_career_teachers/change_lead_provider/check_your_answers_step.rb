@@ -4,8 +4,10 @@ module Schools
   module EarlyCareerTeachers
     module ChangeLeadProvider
       class CheckYourAnswersStep < DfE::Wizard::Step
+        attr_accessor :complete
+
         def self.permitted_params
-          []
+          [:complete]
         end
 
         def previous_step
