@@ -31,7 +31,6 @@ module Induction
     include ActiveModel::Model
 
     ECF_FIRST_YEAR = 2020
-    NIOT_NAME = "National Institute of Teaching"
 
     attr_accessor :participant_profile, :source_cohort_start_year, :target_cohort_start_year
     attr_writer :schedule
@@ -201,20 +200,27 @@ module Induction
       errors.add(:induction_record, :niot_participant) if niot_forbidden_target_cohort?
     end
 
-    def niot
-      @niot ||= LeadProvider.find_by_name(NIOT_NAME)
-    end
-
     def niot_first_year
-      @niot_first_year ||= niot.provider_relationships.includes(:cohort).minimum("cohorts.start_year") if niot
+      return unless LeadProvider.niot
+
+      @niot_first_year ||= LeadProvider.niot
+                                       .provider_relationships
+                                       .includes(:cohort)
+                                       .minimum("cohorts.start_year")
     end
 
     def niot_forbidden_target_cohort?
-      niot_participant? && niot_first_year && target_cohort_start_year < niot_first_year
+      return false unless niot_participant?
+      return false unless niot_first_year
+
+      target_cohort_start_year < niot_first_year
     end
 
     def niot_participant?
-      niot && induction_record && induction_record.lead_provider_id == niot.id
+      return false unless LeadProvider.niot
+      return false unless induction_record
+
+      induction_record.lead_provider_id == LeadProvider.niot.id
     end
 
     def participant_with_no_notes
