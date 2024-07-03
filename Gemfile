@@ -16,7 +16,7 @@ gem "pundit"
 
 # Error and performance monitoring
 gem "sentry-rails", "~> 5.17"
-gem "sentry-ruby", "~> 5.17"
+gem "sentry-ruby", "~> 5.18"
 gem "sentry-sidekiq"
 
 # Support queries
