@@ -642,24 +642,5 @@ module Steps
 
       lead_provider
     end
-
-    # helper whilst debugging scenarios with --fail-fast
-
-    def full_stop(html: false)
-      links = page.all("main a").map { |link| "  -  #{link.text} href: #{link['href']}" }
-
-      puts "==="
-      puts page.current_url
-      puts "---"
-      if html
-        puts page.html
-      else
-        puts page.find("main").text
-      end
-      puts "---\nLinks:"
-      puts links
-      puts "==="
-      raise
-    end
   end
 end

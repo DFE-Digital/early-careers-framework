@@ -523,8 +523,26 @@ RSpec.describe NPQ::Application::Accept do
 
             it "returns funding_place is required error" do
               service.call
-              expect(service.errors.messages_for(:npq_application)).to include("Set '#/funded_place' to true or false.")
+              expect(service.errors.messages_for(:funded_place)).to include("Set '#/funded_place' to true or false.")
             end
+          end
+        end
+
+        context "when funded_place is a string" do
+          let(:params) { { npq_application:, funded_place: "true" } }
+
+          it "returns funding_place is required error" do
+            service.call
+            expect(service.errors.messages_for(:funded_place)).to include("Set '#/funded_place' to true or false.")
+          end
+        end
+
+        context "when funded_place is an empty string" do
+          let(:params) { { npq_application:, funded_place: "" } }
+
+          it "returns funding_place is required error" do
+            service.call
+            expect(service.errors.messages_for(:funded_place)).to include("Set '#/funded_place' to true or false.")
           end
         end
       end

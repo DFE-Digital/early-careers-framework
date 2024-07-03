@@ -71,8 +71,8 @@ describe ParticipantProfile::Mentor, type: :model do
       create(:mentor_participant_profile, attrs)
     end
 
-    describe ".archivable" do
-      subject { described_class.archivable }
+    describe ".archivable_from_frozen_cohort" do
+      subject { described_class.archivable_from_frozen_cohort }
 
       it "does not include participants that have mentees" do
         build_profile(cohort: eligible_cohort).tap do |mentor_profile|

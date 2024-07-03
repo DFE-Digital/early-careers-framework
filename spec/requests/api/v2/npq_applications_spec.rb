@@ -353,13 +353,13 @@ RSpec.describe "NPQ Applications API", type: :request do
         before { FeatureFlag.deactivate(:npq_capping) }
 
         it "does not update funded place attribute" do
-          post("/api/v2/npq-applications/#{default_npq_application.id}/accept", params:)
+          post("/api/v2/npq-applications/#{default_npq_application.id}/accept", params:, as: :json)
 
           expect(default_npq_application.reload.funded_place).to be_nil
         end
 
         it "does not raise error if funded_place param is not sent" do
-          post("/api/v2/npq-applications/#{default_npq_application.id}/accept", params: {})
+          post("/api/v2/npq-applications/#{default_npq_application.id}/accept", params: {}, as: :json)
 
           expect(response).to be_successful
           expect(parsed_response.dig("data", "attributes", "status")).to eql("accepted")
@@ -370,13 +370,13 @@ RSpec.describe "NPQ Applications API", type: :request do
         before { FeatureFlag.activate(:npq_capping) }
 
         it "updates funded place attribute" do
-          post("/api/v2/npq-applications/#{default_npq_application.id}/accept", params:)
+          post("/api/v2/npq-applications/#{default_npq_application.id}/accept", params:, as: :json)
 
           expect(default_npq_application.reload.funded_place).to be_truthy
         end
 
         it "returns 200" do
-          post("/api/v2/npq-applications/#{default_npq_application.id}/accept", params:)
+          post("/api/v2/npq-applications/#{default_npq_application.id}/accept", params:, as: :json)
 
           expect(response).to be_successful
         end

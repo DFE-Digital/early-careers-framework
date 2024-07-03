@@ -178,6 +178,24 @@ RSpec.describe NPQ::Application::ChangeFundedPlace do
           expect(service.errors.messages_for(:npq_application)).to include("The entered '#/funded_place' is missing from your request. Check details and try again.")
         end
       end
+
+      context "when funded_place is set to a string" do
+        before { params.merge!(funded_place: "false") }
+
+        it "is invalid" do
+          service.call
+          expect(service.errors.messages_for(:funded_place)).to include("Set '#/funded_place' to true or false.")
+        end
+      end
+
+      context "when funded_place is set to an empty string" do
+        before { params.merge!(funded_place: "false") }
+
+        it "is invalid" do
+          service.call
+          expect(service.errors.messages_for(:funded_place)).to include("Set '#/funded_place' to true or false.")
+        end
+      end
     end
   end
 end

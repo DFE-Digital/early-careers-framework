@@ -2,17 +2,17 @@
 
 RSpec.describe Induction::TransferToSchoolsProgramme do
   describe "#call" do
-    let(:lead_provider_1)         { create(:cpd_lead_provider, :with_lead_provider).lead_provider }
-    let(:lead_provider_2)         { create(:cpd_lead_provider, :with_lead_provider).lead_provider }
-    let(:school_cohort_1)         { create(:school_cohort, :fip, :with_induction_programme, lead_provider: lead_provider_1) }
-    let(:school_cohort_2)         { create(:school_cohort, :fip, :with_induction_programme, lead_provider: lead_provider_2) }
-    let!(:induction_programme_2)  { school_cohort_2.induction_programmes.first }
-    let!(:mentor_profile_1)       { create(:mentor, school_cohort: school_cohort_1, lead_provider: lead_provider_1) }
-    let!(:mentor_profile_2)       { create(:mentor, school_cohort: school_cohort_2, lead_provider: lead_provider_2) }
-    let(:participant_profile)     { create(:ect, school_cohort: school_cohort_1, lead_provider: lead_provider_1, mentor_profile_id: mentor_profile_1.id) }
-    let(:start_date)              { 1.week.from_now }
-    let(:end_date)                { 1.week.ago }
-    let(:new_email_address)       { "peter.bonetti@new-school.example.com" }
+    let(:lead_provider_1) { create(:cpd_lead_provider, :with_lead_provider).lead_provider }
+    let(:lead_provider_2) { create(:cpd_lead_provider, :with_lead_provider).lead_provider }
+    let(:school_cohort_1) { create(:school_cohort, :fip, :with_induction_programme, lead_provider: lead_provider_1) }
+    let(:school_cohort_2) { create(:school_cohort, :fip, :with_induction_programme, lead_provider: lead_provider_2) }
+    let!(:induction_programme_2) { school_cohort_2.induction_programmes.first }
+    let!(:mentor_profile_1) { create(:mentor, school_cohort: school_cohort_1, lead_provider: lead_provider_1) }
+    let!(:mentor_profile_2) { create(:mentor, school_cohort: school_cohort_2, lead_provider: lead_provider_2) }
+    let(:participant_profile) { create(:ect, school_cohort: school_cohort_1, lead_provider: lead_provider_1, mentor_profile_id: mentor_profile_1.id) }
+    let(:start_date) { 1.week.from_now }
+    let(:end_date) { 1.week.ago }
+    let(:new_email_address) { "peter.bonetti@new-school.example.com" }
     let(:new_induction_programme) { school_cohort_2.induction_programmes.order(:created_at).last }
 
     subject(:service) { described_class }
@@ -44,15 +44,29 @@ RSpec.describe Induction::TransferToSchoolsProgramme do
     end
 
     context "when the participant is eligible to be moved from a frozen cohort to the target one" do
+      let(:school_cohort_2) do
+        create(:school_cohort,
+               :fip,
+               :with_induction_programme,
+               cohort: Cohort.next,
+               lead_provider: lead_provider_2)
+      end
+
       before do
         allow(participant_profile).to receive(:eligible_to_change_cohort_and_continue_training?)
-                                        .with(cohort: school_cohort_2.cohort)
+                                        .with(cohort: Cohort.next)
                                         .and_return(true)
+        create(:ecf_extended_schedule, cohort: Cohort.next)
         service_call
       end
 
       it "flags the participant as changed for that reason" do
         expect(participant_profile).to be_cohort_changed_after_payments_frozen
+      end
+
+      it "sets 'ecf-extended-september' schedule" do
+        expect(participant_profile.schedule.schedule_identifier).to eq("ecf-extended-september")
+        expect(participant_profile.reload.latest_induction_record.schedule).to eq(participant_profile.schedule)
       end
     end
 

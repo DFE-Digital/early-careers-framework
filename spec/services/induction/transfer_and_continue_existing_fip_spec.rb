@@ -55,15 +55,29 @@ RSpec.describe Induction::TransferAndContinueExistingFip do
     end
 
     context "when the participant is eligible to be moved from a frozen cohort to the target one" do
+      let(:school_cohort_2) do
+        create(:school_cohort,
+               :fip,
+               :with_induction_programme,
+               cohort: Cohort.next,
+               lead_provider:)
+      end
+
       before do
         allow(participant_profile).to receive(:eligible_to_change_cohort_and_continue_training?)
-                                        .with(cohort: school_cohort_2.cohort)
+                                        .with(cohort: Cohort.next)
                                         .and_return(true)
+        create(:ecf_extended_schedule, cohort: Cohort.next)
         service_call
       end
 
       it "flags the participant as changed for that reason" do
         expect(participant_profile).to be_cohort_changed_after_payments_frozen
+      end
+
+      it "sets 'ecf-extended-september' schedule" do
+        expect(participant_profile.schedule.schedule_identifier).to eq("ecf-extended-september")
+        expect(participant_profile.reload.latest_induction_record.schedule).to eq(participant_profile.schedule)
       end
     end
 

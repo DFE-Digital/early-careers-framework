@@ -80,7 +80,7 @@ class ParticipantProfile::ECF < ParticipantProfile
     participant_declarations.billable.where(cohort:).exists?
   end
 
-  def self.archivable(restrict_to_participant_ids: [])
+  def self.archivable_from_frozen_cohort(restrict_to_participant_ids: [])
     unbillable_states = %i[ineligible voided submitted].freeze
 
     # Find all participants that have no FIP induction records (as finding those with only FIP is more complicated).
@@ -106,8 +106,8 @@ class ParticipantProfile::ECF < ParticipantProfile
     self.class.eligible_to_change_cohort_and_continue_training(cohort:, restrict_to_participant_ids: [id]).exists?
   end
 
-  def archivable?
-    self.class.archivable(restrict_to_participant_ids: [id]).exists?
+  def archivable_from_frozen_cohort?
+    self.class.archivable_from_frozen_cohort(restrict_to_participant_ids: [id]).exists?
   end
 
   def previous_payments_frozen_cohort

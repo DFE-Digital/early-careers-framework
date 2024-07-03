@@ -21,7 +21,7 @@ class ParticipantProfile::Mentor < ParticipantProfile::ECF
     started_not_completed: "started_not_completed",
   }
 
-  def self.archivable(restrict_to_participant_ids: [])
+  def self.archivable_from_frozen_cohort(restrict_to_participant_ids: [])
     super(restrict_to_participant_ids:)
       .where(mentor_completion_date: nil)
       .where.not(id: InductionRecord.where.not(mentor_profile_id: nil).select(:mentor_profile_id).distinct)
