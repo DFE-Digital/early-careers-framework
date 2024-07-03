@@ -46,42 +46,19 @@ module Schools
 
           if store.complete?
             create_support_query!
-            store.destroy
+            store.destroy # rubocop:disable Rails/SaveBang
           end
         end
 
         def create_support_query!
-          SupportQuery.create!(
-            message:,
-            user: current_user,
-            subject:,
-            additional_information:,
-          ).tap(&:enqueue_support_query_sync_job)
-        end
-
-        def subject
-          "change-participant-lead-provider"
-        end
-
-        def message
-          I18n.t(
-            "schools.early_career_teachers.change_lead_provider.support_query.message",
-            current_user: current_user.full_name,
-            participant: participant.full_name,
+          CreateChangeLeadProviderSupportQuery.call(
+            current_user:,
+            participant:,
             email:,
-            school: school.name,
-            current_lead_provider: current_lead_provider.name,
-            new_lead_provider: new_lead_provider.name,
-          )
-        end
-
-        def additional_information
-          I18n.t(
-            "schools.early_career_teachers.change_lead_provider.support_query.additional_information",
-            academic_year: start_year,
-            participant_id:,
-            school: school.name,
-            urn: school.urn,
+            school:,
+            start_year:,
+            current_lead_provider:,
+            new_lead_provider:,
           )
         end
 
@@ -94,7 +71,7 @@ module Schools
         end
 
         def school
-          @school ||= School.find_by(id: school_id)
+          @school ||= School.find(school_id)
         end
 
         def participant
