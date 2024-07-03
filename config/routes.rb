@@ -753,6 +753,10 @@ Rails.application.routes.draw do
   post "/schools/:school_id/:start_year/early-career-teachers/:participant_id/change-lead-provider/start",
        to: "schools/early_career_teachers/change_lead_provider/start#create"
 
+  get "/schools/:school_id/:start_year/early-career-teachers/:participant_id/change-lead-provider/contact-providers",
+      to: "schools/early_career_teachers/change_lead_provider/contact_providers#new",
+      as: "schools_early_career_teachers_change_lead_provider_contact_providers"
+
   get "/schools/:school_id/:start_year/early-career-teachers/:participant_id/change-lead-provider/email",
       to: "schools/early_career_teachers/change_lead_provider/email#new",
       as: "schools_early_career_teachers_change_lead_provider_email"
