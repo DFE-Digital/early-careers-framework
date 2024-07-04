@@ -151,9 +151,9 @@ module Schools
 
         if existing_profile
           args = participant_create_args.except(:full_name)
-          EarlyCareerTeachers::Reactivate.call(participant_profile: existing_profile, **args)
+          ::EarlyCareerTeachers::Reactivate.call(participant_profile: existing_profile, **args)
         else
-          EarlyCareerTeachers::Create.call(**participant_create_args)
+          ::EarlyCareerTeachers::Create.call(**participant_create_args)
         end
       end
 
