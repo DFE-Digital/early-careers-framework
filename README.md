@@ -6,7 +6,7 @@
 
 ### Prerequisites
 
-- Ruby 3.2.2
+- Ruby 3.2.4
 - PostgreSQL (we deploy on 11.x)
 - NodeJS 18.18.0
 - Yarn 1.12.x
