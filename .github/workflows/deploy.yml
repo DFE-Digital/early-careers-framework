@@ -53,80 +53,6 @@ jobs:
           docker-repository: ghcr.io/dfe-digital/early-careers-framework
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
-  docker_without_npq_swagger:
-    name: Build and push Docker image (without NPQ swagger docs)
-    runs-on: ubuntu-latest
-    if: github.actor != 'dependabot[bot]' && github.event_name != 'merge_group'
-    outputs:
-      docker-image-without-npq-swagger: ${{ steps.set-image-output.outputs.image }}
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Ensure docker repository is lowercase
-        shell: pwsh
-        run: |
-          $DockerRepository = "ghcr.io/${{ github.repository }}".ToLower()
-          "DOCKER_REPOSITORY=$DockerRepository" | Out-File -FilePath $env:GITHUB_ENV -Append
-
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Set environment variables (push)
-        if: github.event_name == 'push'
-        shell: bash
-        run: |
-          GIT_BRANCH=${GITHUB_REF##*/}
-          echo "BRANCH_TAG=$GIT_BRANCH" >> $GITHUB_ENV # GIT_BRANCH will be main for refs/heads/main
-          echo "IMAGE_TAG=${{ github.sha }}" >> $GITHUB_ENV
-
-      - name: Set environment variables (pull_request)
-        if: github.event_name == 'pull_request'
-        shell: bash
-        run: |
-          GIT_BRANCH=${GITHUB_HEAD_REF##*/}
-          echo "BRANCH_TAG=$GIT_BRANCH" >> $GITHUB_ENV
-          echo "IMAGE_TAG=${{ github.event.pull_request.head.sha }}" >> $GITHUB_ENV
-
-      - name: Set environment variables (default event)
-        if: github.event_name != 'push' && github.event_name != 'pull_request'
-        shell: bash
-        run: |
-          echo "BRANCH_TAG=main" >> $GITHUB_ENV
-          echo "IMAGE_TAG=$(date +%s)" >> $GITHUB_ENV
-
-      - name: Set image output
-        id: set-image-output
-        shell: bash
-        run: |
-          echo "image=${{ env.DOCKER_REPOSITORY }}:${{ env.IMAGE_TAG }}-without-npq-swagger" >> "$GITHUB_OUTPUT"
-
-      - uses: docker/build-push-action@v5
-        id: build-docker-image-without-npq-swagger
-        with:
-          context: .
-          load: true
-          push: false
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          tags: |
-            ${{ env.DOCKER_REPOSITORY }}:${{ env.IMAGE_TAG }}-without-npq-swagger
-            ${{ env.DOCKER_REPOSITORY }}:${{ env.BRANCH_TAG }}-without-npq-swagger
-          cache-to: type=inline
-          cache-from: |
-            type=registry,ref=${{ env.DOCKER_REPOSITORY }}:main
-            type=registry,ref=${{ env.DOCKER_REPOSITORY }}:${{ env.IMAGE_TAG }}-without-npq-swagger
-            type=registry,ref=${{ env.DOCKER_REPOSITORY }}:${{ env.BRANCH_TAG }}-without-npq-swagger
-          build-args: |
-            REMOVE_NPQ_REFERENCES=true
-            COMMIT_SHA=${{ env.IMAGE_TAG }}
-      
-      - name: Push ${{ env.DOCKER_REPOSITORY }}:${{ env.IMAGE_TAG }} image to registry
-        shell: bash
-        run: docker image push --all-tags ${{ env.DOCKER_REPOSITORY }}
-
   brakeman:
     name: Run Brakeman vulnerability scanner
     uses: ./.github/workflows/brakeman.yml
@@ -137,7 +63,7 @@ jobs:
     name: Deploy review
     concurrency: deploy_review_${{ github.event.pull_request.number }}
     if: github.actor != 'dependabot[bot]' && github.event_name == 'pull_request'
-    needs: [docker_without_npq_swagger, brakeman]
+    needs: [docker, brakeman]
     runs-on: ubuntu-latest
     environment:
       name: review
@@ -148,7 +74,7 @@ jobs:
         id: deploy
         with:
           environment: review
-          docker-image: ${{ needs.docker_without_npq_swagger.outputs.docker-image-without-npq-swagger }}
+          docker-image: ${{ needs.docker.outputs.docker-image }}
           azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
           pull-request-number: ${{ github.event.pull_request.number }}
           current-commit-sha: ${{ github.event.pull_request.head.sha }}

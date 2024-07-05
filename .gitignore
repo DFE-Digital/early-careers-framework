@@ -65,6 +65,7 @@ tokens
 /spec/examples.txt
 
 /public/api-reference
+/public/api-reference-without-npq
 
 /app/assets/builds/*
 !/app/assets/builds/.keep
