@@ -127,7 +127,7 @@ Rails.application.configure do
 
     $stdout.sync = true
 
-    config.semantic_logger.add_appender(io: $stdout, level: Rails.application.config.log_level, formatter: SemanticLogger::Formatters::Json.new)
+    config.semantic_logger.add_appender(io: $stdout, level: Rails.application.config.log_level, formatter: :json)
   end
 
   # Do not dump schema after migrations.
