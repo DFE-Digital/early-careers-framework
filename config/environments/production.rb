@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "active_support/core_ext/integer/time"
-require Rails.root.join("lib/semantic_logger/formatters/json_with_api_metadata")
 
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
@@ -128,7 +127,7 @@ Rails.application.configure do
 
     $stdout.sync = true
 
-    config.semantic_logger.add_appender(io: $stdout, level: Rails.application.config.log_level, formatter: SemanticLogger::Formatters::JsonWithApiMetadata.new)
+    config.semantic_logger.add_appender(io: $stdout, level: Rails.application.config.log_level, formatter: SemanticLogger::Formatters::Json.new)
   end
 
   # Do not dump schema after migrations.
