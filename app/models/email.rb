@@ -6,6 +6,8 @@ class Email < ApplicationRecord
     belongs_to :object, polymorphic: true
   end
 
+  self.filter_attributes += %i[to]
+
   has_many :associations, dependent: :destroy
 
   scope :associated_with, ->(object) { where(id: Association.where(object:).select(:email_id)) }
