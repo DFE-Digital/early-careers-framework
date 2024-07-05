@@ -19,4 +19,5 @@ Rails.application.config.filter_parameters += %i[
   date_of_birth
   trn
   teacher_reference_number
+  email
 ]
