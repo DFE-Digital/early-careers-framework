@@ -17,9 +17,11 @@ on:
   push:
     branches:
       - main
+      - 3226-remove-npq-from-swagger-docs 
   pull_request:
     branches:
       - main
+      - 3226-remove-npq-from-swagger-docs 
   merge_group:
 
 jobs:
