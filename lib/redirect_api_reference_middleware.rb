@@ -8,7 +8,7 @@ class RedirectApiReferenceMiddleware
   def call(env)
     request = Rack::Request.new(env)
 
-    if request.path =~ /^\/api-reference(?:\/|$)/ && Rails.env.review?
+    if request.path =~ /^\/api-reference(?:\/|$)/
       new_location = "/api-reference-without-npq#{request.path.sub('/api-reference', '')}"
       return [301, { "Location" => new_location, "Content-Type" => "text/html" }, ["Redirecting..."]]
     end
