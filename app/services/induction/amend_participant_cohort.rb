@@ -60,12 +60,8 @@ module Induction
                 message: ->(form, _) { I18n.t("errors.cohort.blank", year: form.target_cohort_start_year, where: "the service") },
               }
 
-    validate :non_completion_date
     validate :target_cohort_start_year_matches_schedule
-
-    validates :participant_profile,
-              active_participant_profile: true
-
+    validate :participant_with_no_notes
     validate :transfer_from_payments_frozen_cohort, if: :transfer_from_payments_frozen_cohort?
     validate :transfer_to_payments_frozen_cohort, if: :back_to_payments_frozen_cohort?
 
@@ -77,6 +73,8 @@ module Induction
               presence: {
                 message: ->(form, _) { I18n.t("errors.induction_record.blank", year: form.source_cohort_start_year) },
               }
+
+    validate :niot_exception
 
     validates :target_school_cohort,
               presence: {
@@ -140,7 +138,7 @@ module Induction
       return unless participant_profile
 
       @induction_record ||= participant_profile.induction_records
-                                               .active_induction_status
+                                               .where.not(induction_status: :changed)
                                                .joins(induction_programme: { school_cohort: :cohort })
                                                .where(cohorts: { start_year: source_cohort_start_year })
                                                .latest
@@ -198,10 +196,34 @@ module Induction
 
     # Validations
 
-    def non_completion_date
-      if participant_profile&.induction_completion_date || participant_profile&.mentor_completion_date
-        errors.add(:participant_profile, :completion_date)
-      end
+    def niot
+      @niot ||= Niot.lead_provider
+    end
+
+    def niot_exception
+      errors.add(:induction_record, :niot_participant) if niot_forbidden_target_cohort?
+    end
+
+    def niot_first_training_year
+      @niot_first_training_year ||= Niot.first_training_year
+    end
+
+    def niot_forbidden_target_cohort?
+      return false unless niot_participant?
+      return false unless niot_first_training_year
+
+      target_cohort_start_year < niot_first_training_year
+    end
+
+    def niot_participant?
+      return false unless niot
+      return false unless induction_record
+
+      induction_record.lead_provider_id == niot.id
+    end
+
+    def participant_with_no_notes
+      errors.add(:participant_profile, :with_notes) if participant_profile&.notes.present?
     end
 
     def transfer_from_payments_frozen_cohort

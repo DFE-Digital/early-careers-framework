@@ -311,6 +311,8 @@ en:
             historical_records:
               no_default_induction_programme: "No default induction programme set for %{start_academic_year} academic year by school %{school_name}"
               school_cohort_not_setup: "%{start_academic_year} academic year not setup by school %{school_name}"
+            induction_record:
+              niot_participant: "A NIoT-associated participant can't be moved to a cohort earlier than 2023"
             participant_declarations:
               billable_or_submitted: "The participant has billable or submitted declarations"
               completed: "The participant has not had a 'completed' declaration submitted for them. Therefore you cannot update their outcome."
@@ -322,6 +324,7 @@ en:
               not_active: "The participant is not active"
               not_eligible_to_be_transferred_back: "Participant not eligible to be transferred back to their original cohort"
               not_eligible_to_be_transferred_from_current_cohort: "Participant not eligible to be transferred from their current cohort"
+              with_notes: "The participant has notes that block a cohort change"
             source_cohort_start_year:
               invalid: "Invalid value. Must be an integer between %{start} and %{end}"
             target_cohort_start_year:
