@@ -115,6 +115,7 @@ RSpec.shared_examples "withdrawing an ECF participant" do
         params: {
           withdrawn_participant: participant_profile,
           induction_coordinator:,
+          partnership: induction_record.partnership,
         },
         args: [],
       ).once
