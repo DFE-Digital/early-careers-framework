@@ -2,8 +2,6 @@
 
 # This is actually ECFLeadProvider in all but name. See https://github.com/DFE-Digital/early-careers-framework/issues/698
 class LeadProvider < ApplicationRecord
-  NIOT_NAME = "National Institute of Teaching"
-
   belongs_to :cpd_lead_provider, optional: true
 
   has_many :participant_declarations, through: :cpd_lead_provider, class_name: "ParticipantDeclaration::ECF"
@@ -33,12 +31,12 @@ class LeadProvider < ApplicationRecord
 
   scope :name_order, -> { order("UPPER(name)") }
 
-  def self.niot
-    find_by_name(NIOT_NAME)
-  end
-
   def self.ransackable_attributes(_auth_object = nil)
     %w[name]
+  end
+
+  def first_training_year
+    provider_relationships.includes(:cohort).minimum("cohorts.start_year")
   end
 
   def next_output_fee_statement(cohort)

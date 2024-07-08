@@ -89,6 +89,29 @@ RSpec.describe LeadProvider, type: :model do
       end
     end
 
+    describe "#first_training_year" do
+      let(:cohort_1) { Cohort.previous || create(:cohort, :previous) }
+      let(:cohort_2) { Cohort.current || create(:cohort, :current) }
+      let(:lead_provider) { create(:lead_provider) }
+
+      context "when the lead provider has no relationships with any delivery_partner" do
+        it "return nil" do
+          expect(lead_provider.first_training_year).to be_nil
+        end
+      end
+
+      context "when the lead provider has relationships with delivery_partners" do
+        before do
+          create(:provider_relationship, lead_provider:, cohort: cohort_1)
+          create(:provider_relationship, lead_provider:, cohort: cohort_2)
+        end
+
+        it "return the year of the earliest relationship" do
+          expect(lead_provider.first_training_year).to eq(cohort_1.start_year)
+        end
+      end
+    end
+
     describe "#providing_training?" do
       let(:cohort) { Cohort.current || create(:cohort, :current) }
       let(:lead_provider) { create(:lead_provider) }

@@ -196,31 +196,30 @@ module Induction
 
     # Validations
 
+    def niot
+      @niot ||= Niot.lead_provider
+    end
+
     def niot_exception
       errors.add(:induction_record, :niot_participant) if niot_forbidden_target_cohort?
     end
 
-    def niot_first_year
-      return unless LeadProvider.niot
-
-      @niot_first_year ||= LeadProvider.niot
-                                       .provider_relationships
-                                       .includes(:cohort)
-                                       .minimum("cohorts.start_year")
+    def niot_first_training_year
+      @niot_first_training_year ||= Niot.first_training_year
     end
 
     def niot_forbidden_target_cohort?
       return false unless niot_participant?
-      return false unless niot_first_year
+      return false unless niot_first_training_year
 
-      target_cohort_start_year < niot_first_year
+      target_cohort_start_year < niot_first_training_year
     end
 
     def niot_participant?
-      return false unless LeadProvider.niot
+      return false unless niot
       return false unless induction_record
 
-      induction_record.lead_provider_id == LeadProvider.niot.id
+      induction_record.lead_provider_id == niot.id
     end
 
     def participant_with_no_notes
