@@ -49,14 +49,14 @@ RSpec.describe Schools::EarlyCareerTeachers::ChangeLeadProvider::BaseWizard do
     end
 
     before do
-      allow(store).to receive(:complete?).and_return(false)
-      allow(store).to receive(:set)
+      allow(store).to receive(:attrs_for)
+      allow(store).to receive(:store_attrs)
     end
 
     it "saves the step params to the store" do
       subject.save!
 
-      expect(store).to have_received(:set).with("answer", "yes")
+      expect(store).to have_received(:store_attrs).with("start", "answer" => "yes")
     end
 
     context "when the wizard is complete" do
@@ -78,9 +78,6 @@ RSpec.describe Schools::EarlyCareerTeachers::ChangeLeadProvider::BaseWizard do
       let(:current_lead_provider) { instance_double(LeadProvider, name: "Current Lead Provider", id: current_lead_provider_id) }
       let(:new_lead_provider_id) { SecureRandom.uuid }
       let(:new_lead_provider) { instance_double(LeadProvider, name: "New Lead Provider", id: new_lead_provider_id) }
-      let(:step_params) do
-        ActionController::Parameters.new({ check_your_answers: { complete: "true" } })
-      end
 
       subject do
         described_class.new(
@@ -95,10 +92,10 @@ RSpec.describe Schools::EarlyCareerTeachers::ChangeLeadProvider::BaseWizard do
       end
 
       before do
-        allow(store).to receive(:complete?).and_return(true)
-        allow(store).to receive(:lead_provider_id).and_return(new_lead_provider_id)
-        allow(store).to receive(:email).and_return(email)
         allow(store).to receive(:destroy)
+        allow(store).to receive(:attrs_for).with(:email).and_return({ email: })
+        allow(store).to receive(:attrs_for).with(:lead_provider).and_return({ lead_provider_id: new_lead_provider_id })
+        allow(store).to receive(:attrs_for).with(:check_your_answers).and_return({ complete: "true" })
         allow(ParticipantProfile::ECT).to receive(:find).with(participant_id).and_return(participant)
         allow(LeadProvider).to receive(:find).with(current_lead_provider_id).and_return(current_lead_provider)
         allow(LeadProvider).to receive(:find).with(new_lead_provider_id).and_return(new_lead_provider)

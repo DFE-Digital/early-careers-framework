@@ -3,7 +3,7 @@
 module Schools
   module EarlyCareerTeachers
     module ChangeLeadProvider
-      class CheckYourAnswersStep < DfE::Wizard::Step
+      class CheckYourAnswersStep < StoredStep
         attr_accessor :complete
 
         def self.permitted_params

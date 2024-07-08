@@ -3,13 +3,17 @@
 module Schools
   module EarlyCareerTeachers
     module ChangeLeadProvider
-      class StartStep < DfE::Wizard::Step
-        attr_accessor :answer
+      class StartStep < StoredStep
+        attr_writer :answer
 
         validates :answer, presence: true
 
         def self.permitted_params
           [:answer]
+        end
+
+        def answer
+          @answer || stored_attrs[:answer]
         end
 
         def previous_step

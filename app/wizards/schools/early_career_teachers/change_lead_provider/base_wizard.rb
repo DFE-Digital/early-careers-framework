@@ -40,11 +40,9 @@ module Schools
         end
 
         def save!
-          step_params.each do |key, value|
-            store.set(key, value)
-          end
+          current_step.save! if current_step.respond_to?(:save!)
 
-          if store.complete?
+          if complete?
             create_support_query!
             store.destroy # rubocop:disable Rails/SaveBang
           end
@@ -54,7 +52,7 @@ module Schools
           CreateChangeLeadProviderSupportQuery.call(
             current_user:,
             participant:,
-            email:,
+            email: preferred_email,
             school:,
             start_year:,
             current_lead_provider:,
@@ -67,7 +65,7 @@ module Schools
         end
 
         def new_lead_provider
-          @new_lead_provider ||= LeadProvider.find(store.lead_provider_id)
+          @new_lead_provider ||= LeadProvider.find(store.attrs_for(:lead_provider)[:lead_provider_id])
         end
 
         def school
@@ -78,8 +76,12 @@ module Schools
           @participant ||= ParticipantProfile::ECT.find(participant_id)
         end
 
-        def email
-          store.email || participant.user.email
+        def preferred_email
+          store.attrs_for(:email)[:email] || participant.user.email
+        end
+
+        def complete?
+          store.attrs_for(:check_your_answers)&.fetch(:complete, nil) == "true"
         end
       end
     end

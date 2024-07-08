@@ -3,14 +3,22 @@
 module Schools
   module EarlyCareerTeachers
     module ChangeLeadProvider
-      class EmailStep < DfE::Wizard::Step
-        attr_accessor :answer, :email
+      class EmailStep < StoredStep
+        attr_writer :answer, :email
 
         validates :answer, presence: true
         validates :email, presence: true, if: -> { answer == "no" }
 
         def self.permitted_params
           %i[answer email]
+        end
+
+        def answer
+          @answer || stored_attrs[:answer]
+        end
+
+        def email
+          @email || stored_attrs[:email]
         end
 
         def previous_step

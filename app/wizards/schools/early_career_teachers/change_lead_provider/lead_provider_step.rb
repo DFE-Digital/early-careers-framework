@@ -3,13 +3,17 @@
 module Schools
   module EarlyCareerTeachers
     module ChangeLeadProvider
-      class LeadProviderStep < DfE::Wizard::Step
-        attr_accessor :lead_provider_id
+      class LeadProviderStep < StoredStep
+        attr_writer :lead_provider_id
 
         validates :lead_provider_id, presence: true
 
         def self.permitted_params
           [:lead_provider_id]
+        end
+
+        def lead_provider_id
+          @lead_provider_id || stored_attrs[:lead_provider_id]
         end
 
         def previous_step

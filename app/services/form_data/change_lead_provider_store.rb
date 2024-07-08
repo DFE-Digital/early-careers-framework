@@ -10,16 +10,12 @@ module FormData
       get(:participant_id)
     end
 
-    def email
-      get(:email)
+    def store_attrs(step, attrs)
+      set(step, attrs)
     end
 
-    def lead_provider_id
-      get(:lead_provider_id)
-    end
-
-    def complete?
-      get(:complete) == "true"
+    def attrs_for(step)
+      get(step) || {}
     end
   end
 end
