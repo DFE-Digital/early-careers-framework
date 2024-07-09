@@ -124,10 +124,16 @@ Rails.application.configure do
 
   if ENV["RAILS_LOG_TO_STDOUT"].present?
     config.rails_semantic_logger.add_file_appender = false
+    config.rails_semantic_logger.filter = proc { |log| log.name != "DfE::Analytics::SendEvents" }
 
     $stdout.sync = true
 
-    config.semantic_logger.add_appender(io: $stdout, level: Rails.application.config.log_level, formatter: :json)
+    config.semantic_logger.add_appender(
+      io: $stdout,
+      level: Rails.application.config.log_level,
+      formatter: :json,
+      filter: config.rails_semantic_logger.filter,
+    )
   end
 
   # Do not dump schema after migrations.
