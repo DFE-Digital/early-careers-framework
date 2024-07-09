@@ -29,6 +29,13 @@
         sl.with_row do |row|
           row.with_key(text: "Participant email address")
           row.with_value(text: @wizard.preferred_email)
+          row.with_action(
+            text: "Change",
+            visually_hidden_text: "email address",
+            href: schools_early_career_teachers_change_lead_provider_email_path(
+              school_id: @school_id, participant_id: @participant_id, start_year: @start_year
+            )
+          )
         end
         sl.with_row do |row|
           row.with_key(text: "Current lead provider")
@@ -37,6 +44,13 @@
         sl.with_row do |row|
           row.with_key(text: "New lead provider")
           row.with_value(text: @wizard.new_lead_provider.name)
+          row.with_action(
+            text: "Change",
+            visually_hidden_text: "lead provider",
+            href: schools_early_career_teachers_change_lead_provider_lead_provider_path(
+              school_id: @school_id, participant_id: @participant_id, start_year: @start_year
+            )
+          )
         end
       end %>
 

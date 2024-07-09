@@ -21,6 +21,8 @@ RSpec.describe "Induction coordinator requests lead provider change for a partic
     then_i_go_back_to_amend_the_email_address
     then_i_choose_a_new_lead_provider
     then_i_am_asked_to_check_my_answers
+    then_i_change_the_lead_provider
+    then_i_am_asked_to_check_my_changes
     click_on "Accept and send request"
     then_i_see_confirmation_that_the_request_has_been_sent
     and_a_support_query_is_created
@@ -102,6 +104,19 @@ RSpec.describe "Induction coordinator requests lead provider change for a partic
     expect(page).to have_content("Participant email address alternative@example.com")
     expect(page).to have_content("Current lead provider #{@lead_provider.name}")
     expect(page).to have_content("New lead provider Lead Provider 1")
+  end
+
+  def then_i_change_the_lead_provider
+    click_on "Change lead provider"
+    expect(page).to have_content("Who is the new lead provider?")
+    choose "Lead Provider 2"
+    click_on "Continue"
+  end
+
+  def then_i_am_asked_to_check_my_changes
+    expect(page).to have_content("Check your answers before you request the change")
+    expect(page).to have_content("Change request details")
+    expect(page).to have_content("New lead provider Lead Provider 2")
   end
 
   def then_i_see_confirmation_that_the_request_has_been_sent
