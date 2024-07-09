@@ -11,7 +11,7 @@ GIT
 
 GIT
   remote: https://github.com/DFE-Digital/dfe-wizard.git
-  revision: 66610827125188bc4d28da84fe5539651722bf7d
+  revision: da16840e177376d0d5a43440ee3448e812879169
   specs:
     dfe-wizard (0.1.0)
       activemodel
@@ -342,7 +342,6 @@ GEM
     memory_profiler (1.0.2)
     method_source (1.0.0)
     mini_mime (1.1.5)
-    mini_portile2 (2.8.7)
     minitest (5.24.1)
     msgpack (1.7.2)
     multi_json (1.15.0)
