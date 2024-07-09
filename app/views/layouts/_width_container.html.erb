@@ -1,7 +1,8 @@
 <%= render layout: "layouts/application" do %>
   <div class="govuk-width-container">
-    <%= yield(:before_content) %>
-
+    <div role="region" aria-label="Backwards navigation">
+      <%= yield(:before_content) %>
+    </div>
     <main class="govuk-main-wrapper govuk-body" id="main-content" role="main">
       <% flash.each do |type, msg| %>
         <% if type == "alert" %>
