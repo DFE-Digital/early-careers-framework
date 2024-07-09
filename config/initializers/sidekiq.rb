@@ -3,23 +3,13 @@
 require "sidekiq/web"
 require "sidekiq/cron/web"
 
-if ENV.key?("REDIS_URI")
+if (redis_url = ENV["REDIS_URL"] || ENV["REDIS_URI"])
   Sidekiq.configure_server do |config|
-    config.redis = { url: ENV.fetch("REDIS_URI") }
+    config.redis = { url: redis_url }
   end
 
   Sidekiq.configure_client do |config|
-    config.redis = { url: ENV.fetch("REDIS_URI") }
-  end
-end
-
-if ENV.key?("REDIS_URL")
-  Sidekiq.configure_server do |config|
-    config.redis = { url: ENV.fetch("REDIS_URL") }
-  end
-
-  Sidekiq.configure_client do |config|
-    config.redis = { url: ENV.fetch("REDIS_URL") }
+    config.redis = { url: redis_url }
   end
 end
 
