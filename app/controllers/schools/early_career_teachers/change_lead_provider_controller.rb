@@ -79,8 +79,11 @@ module Schools
       end
       helper_method :lead_providers
 
-      # TODO: Check this query is scoped correctly
-      # TODO: Do we need Pundit check here?
+      def default_path_params
+        { school_id:, participant_id:, start_year: }
+      end
+      helper_method :default_path_params
+
       def participant
         @participant ||= ParticipantProfile::ECT.find(params[:participant_id])
       end

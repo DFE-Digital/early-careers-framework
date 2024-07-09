@@ -3,10 +3,7 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <%= form_with(
-      model: @wizard.current_step,
-      url: @wizard.current_step_path(school_id: @school_id, participant_id: @participant_id, start_year: @start_year),
-    ) do |f| %>
+    <%= form_with(model: @wizard.current_step, url: @wizard.current_step_path(default_path_params)) do |f| %>
       <%= f.hidden_field :complete, value: true %>
 
       <h1>Check your answers before you request the change</h1>
@@ -32,9 +29,7 @@
           row.with_action(
             text: "Change",
             visually_hidden_text: "email address",
-            href: schools_early_career_teachers_change_lead_provider_email_path(
-              school_id: @school_id, participant_id: @participant_id, start_year: @start_year
-            )
+            href: schools_early_career_teachers_change_lead_provider_email_path(default_path_params)
           )
         end
         sl.with_row do |row|
@@ -47,9 +42,7 @@
           row.with_action(
             text: "Change",
             visually_hidden_text: "lead provider",
-            href: schools_early_career_teachers_change_lead_provider_lead_provider_path(
-              school_id: @school_id, participant_id: @participant_id, start_year: @start_year
-            )
+            href: schools_early_career_teachers_change_lead_provider_lead_provider_path(default_path_params)
           )
         end
       end %>
