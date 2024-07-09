@@ -14,7 +14,7 @@
         text: "Who is the new lead provider?",
         tag: "h1",
       } do %>
-        <% @lead_providers.each do |lead_provider| %>
+        <% lead_providers.each do |lead_provider| %>
           <%= f.govuk_radio_button :lead_provider_id, lead_provider.id, label: { text: lead_provider.name } %>
         <% end %>
       <% end %>

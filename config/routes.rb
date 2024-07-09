@@ -744,39 +744,39 @@ Rails.application.routes.draw do
   end
 
   get "/schools/:school_id/:start_year/early-career-teachers/:participant_id/change-lead-provider/intro",
-      to: "schools/early_career_teachers/change_lead_provider/intro#new",
+      to: "schools/early_career_teachers/change_lead_provider#new",
       as: "schools_early_career_teachers_change_lead_provider_intro"
 
   get "/schools/:school_id/:start_year/early-career-teachers/:participant_id/change-lead-provider/start",
-      to: "schools/early_career_teachers/change_lead_provider/start#new",
+      to: "schools/early_career_teachers/change_lead_provider#new",
       as: "schools_early_career_teachers_change_lead_provider_start"
   post "/schools/:school_id/:start_year/early-career-teachers/:participant_id/change-lead-provider/start",
-       to: "schools/early_career_teachers/change_lead_provider/start#create"
+       to: "schools/early_career_teachers/change_lead_provider#create"
 
   get "/schools/:school_id/:start_year/early-career-teachers/:participant_id/change-lead-provider/contact-providers",
-      to: "schools/early_career_teachers/change_lead_provider/contact_providers#new",
+      to: "schools/early_career_teachers/change_lead_provider#new",
       as: "schools_early_career_teachers_change_lead_provider_contact_providers"
 
   get "/schools/:school_id/:start_year/early-career-teachers/:participant_id/change-lead-provider/email",
-      to: "schools/early_career_teachers/change_lead_provider/email#new",
+      to: "schools/early_career_teachers/change_lead_provider#new",
       as: "schools_early_career_teachers_change_lead_provider_email"
   post "/schools/:school_id/:start_year/early-career-teachers/:participant_id/change-lead-provider/email",
-       to: "schools/early_career_teachers/change_lead_provider/email#create"
+       to: "schools/early_career_teachers/change_lead_provider#create"
 
   get "/schools/:school_id/:start_year/early-career-teachers/:participant_id/change-lead-provider/lead-provider",
-      to: "schools/early_career_teachers/change_lead_provider/lead_provider#new",
+      to: "schools/early_career_teachers/change_lead_provider#new",
       as: "schools_early_career_teachers_change_lead_provider_lead_provider"
   post "/schools/:school_id/:start_year/early-career-teachers/:participant_id/change-lead-provider/lead-provider",
-       to: "schools/early_career_teachers/change_lead_provider/lead_provider#create"
+       to: "schools/early_career_teachers/change_lead_provider#create"
 
   get "/schools/:school_id/:start_year/early-career-teachers/:participant_id/change-lead-provider/check-your-answers",
-      to: "schools/early_career_teachers/change_lead_provider/check_your_answers#new",
+      to: "schools/early_career_teachers/change_lead_provider#new",
       as: "schools_early_career_teachers_change_lead_provider_check_your_answers"
   post "/schools/:school_id/:start_year/early-career-teachers/:participant_id/change-lead-provider/check-your-answers",
-       to: "schools/early_career_teachers/change_lead_provider/check_your_answers#create"
+       to: "schools/early_career_teachers/change_lead_provider#create"
 
   get "/schools/:school_id/:start_year/early-career-teachers/:participant_id/change-lead-provider/success",
-      to: "schools/early_career_teachers/change_lead_provider/success#new",
+      to: "schools/early_career_teachers/change_lead_provider#new",
       as: "schools_early_career_teachers_change_lead_provider_success"
 
   get "/delivery-partners/start", to: "start#delivery_partners", as: :start_delivery_partners

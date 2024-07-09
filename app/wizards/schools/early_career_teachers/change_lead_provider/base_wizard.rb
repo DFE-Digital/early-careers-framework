@@ -1,20 +1,5 @@
 # frozen_string_literal: true
 
-# Patching until https://github.com/DFE-Digital/dfe-wizard/issues/1 is resolved.
-# The alternative is to pick unique wizard step names.
-module DfE
-  module Wizard
-    class Step
-      def self.model_name
-        activemodel_model_name = super
-        step_model_name = ActiveModel::Name.new(self, nil, formatted_name.demodulize)
-        step_model_name.i18n_key = activemodel_model_name.i18n_key
-        step_model_name
-      end
-    end
-  end
-end
-
 module Schools
   module EarlyCareerTeachers
     module ChangeLeadProvider
