@@ -208,8 +208,9 @@ GEM
       railties (>= 5.0.0)
     faker (2.23.0)
       i18n (>= 1.8.11, < 2)
-    faraday (2.9.2)
+    faraday (2.10.0)
       faraday-net_http (>= 2.0, < 3.2)
+      logger
     faraday-multipart (1.0.4)
       multipart-post (~> 2)
     faraday-net_http (3.1.0)
@@ -275,11 +276,11 @@ GEM
       mini_mime (>= 1.0.0)
       multi_xml (>= 0.5.2)
     httpclient (2.8.3)
-    httpi (4.0.1)
+    httpi (4.0.3)
       base64
       mutex_m
       nkf
-      rack (>= 2.0, < 3.1)
+      rack (>= 2.0, < 4)
     i18n (1.14.5)
       concurrent-ruby (~> 1.0)
     ice_nine (0.11.2)
@@ -550,11 +551,11 @@ GEM
     sass-listen (4.0.0)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
-    savon (2.15.0)
+    savon (2.15.1)
       akami (~> 1.2)
       builder (>= 2.1.2)
       gyoku (~> 1.2)
-      httpi (>= 2.4.5, < 5)
+      httpi (>= 4, < 5)
       mail (~> 2.5)
       nokogiri (>= 1.8.1)
       nori (~> 2.4)
@@ -663,7 +664,7 @@ GEM
       descendants_tracker (~> 0.0, >= 0.0.3)
     warden (1.2.9)
       rack (>= 2.0.9)
-    wasabi (5.0.1)
+    wasabi (5.0.2)
       addressable
       faraday (~> 2.8)
       nokogiri (>= 1.13.9)
