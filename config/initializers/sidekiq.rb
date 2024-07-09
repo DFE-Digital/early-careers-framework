@@ -5,6 +5,7 @@ require "sidekiq/cron/web"
 
 if (redis_url = ENV["REDIS_URL"] || ENV["REDIS_URI"])
   Sidekiq.configure_server do |config|
+    config.logger.level = Logger::WARN
     config.redis = { url: redis_url }
   end
 
