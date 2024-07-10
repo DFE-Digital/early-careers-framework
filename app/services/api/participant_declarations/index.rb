@@ -12,7 +12,7 @@ module Api
       end
 
       def scope
-        scope = ParticipantDeclaration.union(
+        scope = declaration_class.union(
           declarations_scope,
           previous_declarations_scope,
         )
@@ -30,16 +30,24 @@ module Api
       end
 
       def declarations_scope
-        ParticipantDeclaration
+        declaration_class
           .for_lead_provider(cpd_lead_provider)
       end
 
       def previous_declarations_scope
-        ParticipantDeclaration
+        declaration_class
           .joins(participant_profile: { induction_records: { induction_programme: { partnership: [:lead_provider] } } })
           .where(participant_profile: { induction_records: { induction_programme: { partnerships: { lead_provider: } } } })
           .where(participant_profile: { induction_records: { induction_status: "active" } }) # only want induction records that are the winning latest ones
           .where(state: %w[submitted eligible payable paid])
+      end
+
+      def declaration_class
+        if FeatureFlag.active?(:disable_npq_endpoints)
+          ParticipantDeclaration::ECF
+        else
+          ParticipantDeclaration
+        end
       end
     end
   end

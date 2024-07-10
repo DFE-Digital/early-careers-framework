@@ -23,6 +23,8 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
 
     let(:npq_application) { create(:npq_application) }
 
+    it_behaves_like "Feature enabled NPQ API endpoint", "GET", "/api/v1/npq-profiles/1234567"
+
     it "displays the application attributes" do
       get "/api/v1/npq-profiles/#{npq_application.id}"
       expect(response).to be_ok
@@ -44,6 +46,8 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
 
     let(:json) { json_hash.to_json }
     let(:npq_application) { create(:npq_application, eligible_for_funding: false) }
+
+    it_behaves_like "Feature enabled NPQ API endpoint", "PATCH", "/api/v1/npq-profiles/1234567"
 
     context "with valid data" do
       let(:json_hash) do
@@ -196,6 +200,8 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
       end
 
       let(:json) { json_hash.to_json }
+
+      it_behaves_like "Feature enabled NPQ API endpoint", "POST", "/api/v1/npq-profiles/1234567"
 
       it "creates the npq validation data", :aggregate_failures do
         Timecop.freeze(Date.new(2023, 3, 20)) do

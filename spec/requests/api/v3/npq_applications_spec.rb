@@ -31,6 +31,8 @@ RSpec.describe "NPQ Applications API", type: :request do
         default_headers[:Authorization] = bearer_token
       end
 
+      it_behaves_like "Feature enabled NPQ API endpoint", "GET", "/api/v3/npq-applications"
+
       describe "JSON API" do
         it "returns correct jsonapi content type header" do
           get "/api/v3/npq-applications"
@@ -234,6 +236,8 @@ RSpec.describe "NPQ Applications API", type: :request do
     context "when authorized" do
       let(:expected_response) { expected_single_json_v3_response(npq_application:) }
 
+      it_behaves_like "Feature enabled NPQ API endpoint", "GET", "/api/v3/npq-applications/1234567"
+
       it "returns correct jsonapi content type header" do
         expect(response.headers["Content-Type"]).to eql("application/vnd.api+json")
       end
@@ -262,6 +266,8 @@ RSpec.describe "NPQ Applications API", type: :request do
     before do
       default_headers[:Authorization] = bearer_token
     end
+
+    it_behaves_like "Feature enabled NPQ API endpoint", "POST", "/api/v3/npq-applications/1234567/reject"
 
     it "update lead_provider_approval_status to rejected" do
       expect { post "/api/v3/npq-applications/#{npq_profile.id}/reject" }
@@ -302,6 +308,8 @@ RSpec.describe "NPQ Applications API", type: :request do
     before do
       default_headers[:Authorization] = bearer_token
     end
+
+    it_behaves_like "Feature enabled NPQ API endpoint", "POST", "/api/v3/npq-applications/1234567/accept"
 
     it "update status to accepted" do
       expect { post "/api/v3/npq-applications/#{default_npq_application.id}/accept" }
@@ -544,11 +552,13 @@ RSpec.describe "NPQ Applications API", type: :request do
       default_headers[:CONTENT_TYPE] = "application/json"
     end
 
+    it_behaves_like "Feature enabled NPQ API endpoint", "PUT", "/api/v3/npq-applications/1234567/change-funded-place"
+
     context "when feature flag `npq_capping` is disabled" do
       before { FeatureFlag.deactivate(:npq_capping) }
 
       it "returns 403" do
-        put "/api/v1/npq-applications/#{accepted_application.id}/change-funded-place", params: params.to_json
+        put "/api/v3/npq-applications/#{accepted_application.id}/change-funded-place", params: params.to_json
 
         expect(response).to have_http_status(:forbidden)
       end
@@ -561,7 +571,7 @@ RSpec.describe "NPQ Applications API", type: :request do
         before do
           accepted_application.update!(funded_place: false)
 
-          put "/api/v1/npq-applications/#{accepted_application.id}/change-funded-place", params: params.to_json
+          put "/api/v3/npq-applications/#{accepted_application.id}/change-funded-place", params: params.to_json
         end
 
         it "returns 200" do
@@ -579,7 +589,7 @@ RSpec.describe "NPQ Applications API", type: :request do
 
       context "with an invalid request" do
         it "returns 422 for an invalid request" do
-          put "/api/v1/npq-applications/#{accepted_application.id}/change-funded-place", params: { data: { type: "npq-application-change-funded-status", attributes: { funded_place: nil } } }.to_json
+          put "/api/v3/npq-applications/#{accepted_application.id}/change-funded-place", params: { data: { type: "npq-application-change-funded-status", attributes: { funded_place: nil } } }.to_json
 
           expect(response).to have_http_status(:unprocessable_entity)
         end

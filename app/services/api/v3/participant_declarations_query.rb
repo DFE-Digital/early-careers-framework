@@ -15,7 +15,7 @@ module Api
 
       def participant_declarations_for_pagination
         filterable_attributes = %i[id created_at user_id updated_at delivery_partner_id]
-        scope = ParticipantDeclaration.union(
+        scope = declaration_class.union(
           declarations_scope.select(*filterable_attributes),
           ecf_previous_declarations_scope.select(*filterable_attributes),
         )
@@ -38,7 +38,7 @@ module Api
       end
 
       def participant_declarations_from(paginated_join)
-        scope = ParticipantDeclaration
+        scope = declaration_class
             .includes(
               :statement_line_items,
               :declaration_states,
@@ -58,7 +58,7 @@ module Api
       end
 
       def participant_declaration(id)
-        ParticipantDeclaration.union(
+        declaration_class.union(
           declarations_scope,
           ecf_previous_declarations_scope,
         ).find(id)
@@ -75,13 +75,13 @@ module Api
       end
 
       def declarations_scope
-        scope = ParticipantDeclaration.for_lead_provider(cpd_lead_provider)
+        scope = declaration_class.for_lead_provider(cpd_lead_provider)
           .left_outer_joins(:cohort)
         filter_cohorts(scope)
       end
 
       def ecf_previous_declarations_scope
-        scope = ParticipantDeclaration
+        scope = declaration_class
           .left_outer_joins(
             :cohort,
             participant_profile: [
@@ -111,6 +111,14 @@ module Api
 
       def delivery_partner_ids
         filter[:delivery_partner_id]&.split(",")
+      end
+
+      def declaration_class
+        if FeatureFlag.active?(:disable_npq_endpoints)
+          ParticipantDeclaration::ECF
+        else
+          ParticipantDeclaration
+        end
       end
     end
   end

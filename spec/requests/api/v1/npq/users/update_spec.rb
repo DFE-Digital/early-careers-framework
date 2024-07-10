@@ -51,6 +51,8 @@ RSpec.describe "API Users", type: :request do
     context "when authorized" do
       let(:authorization_header) { bearer_token }
 
+      it_behaves_like "Feature enabled NPQ API endpoint", "PATCH", "/api/v1/npq/users/1234567.json"
+
       context "updating the user's email" do
         let(:request_body) do
           {

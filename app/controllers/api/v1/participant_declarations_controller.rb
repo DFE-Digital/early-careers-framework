@@ -11,7 +11,14 @@ module Api
       include ApiFilterValidation
 
       def create
-        service = RecordDeclaration.new({ cpd_lead_provider: }.merge(permitted_params["attributes"] || {}))
+        attributes = permitted_params["attributes"] || {}
+
+        if FeatureFlag.active?(:disable_npq_endpoints) && attributes[:course_identifier].to_s.starts_with?("npq-")
+          render json: { errors: [{ title: "course_identifier", detail: "NPQ Courses are no longer supported" }] }, status: :unprocessable_entity
+          return
+        end
+
+        service = RecordDeclaration.new({ cpd_lead_provider: }.merge(attributes))
 
         log_schema_validation_results
 

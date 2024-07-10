@@ -11,6 +11,8 @@ RSpec.describe "NPQ Enrolments API", type: :request do
 
   before { default_headers[:Authorization] = bearer_token }
 
+  it_behaves_like "Feature enabled NPQ API endpoint", "GET", "/api/v2/npq-enrolments.csv"
+
   let(:expected_headers) do
     %w[
       participant_id

@@ -651,6 +651,38 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
           end
         end
       end
+
+      context "when using 'disable_npq_endpoints' feature" do
+        let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider) }
+        let(:npq_course) { create(:npq_leadership_course) }
+        let(:course_identifier) { npq_course.identifier }
+        let(:participant_profile) do
+          create(:npq_participant_profile, npq_lead_provider: cpd_lead_provider.npq_lead_provider, npq_course:)
+        end
+        let!(:contract) { create(:npq_contract, npq_course:, npq_lead_provider: cpd_lead_provider.npq_lead_provider) }
+
+        context "when disable_npq_endpoints is true" do
+          before { FeatureFlag.activate(:disable_npq_endpoints) }
+
+          it "returns error response" do
+            post "/api/v1/participant-declarations", params: params.to_json
+
+            expect(response).to have_http_status(:unprocessable_entity)
+            expect(parsed_response["errors"]).to eq([
+              "title" => "course_identifier",
+              "detail" => "NPQ Courses are no longer supported",
+            ])
+          end
+        end
+
+        context "when disable_npq_endpoints is false" do
+          it "returns ok response" do
+            post "/api/v1/participant-declarations", params: params.to_json
+
+            expect(response).to have_http_status(:ok)
+          end
+        end
+      end
     end
 
     context "when unauthorized" do
