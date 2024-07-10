@@ -1,8 +1,10 @@
 <%= render layout: "layouts/application" do %>
   <div class="govuk-width-container govuk-width-container__wide">
-    <%= yield(:before_content) %>
+    <div role="region" aria-label="Backwards navigation">
+      <%= yield(:before_content) %>
 
-    <%= govuk_breadcrumbs(breadcrumbs:) if breadcrumbs.present? %>
+      <%= govuk_breadcrumbs(breadcrumbs:) if breadcrumbs.present? %>
+    </div>
 
     <main class="govuk-main-wrapper govuk-body" id="main-content" role="main">
       <% flash.each do |type, msg| %>
