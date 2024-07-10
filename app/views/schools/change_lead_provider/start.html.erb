@@ -1,5 +1,12 @@
 <% content_for :title, "Have you confirmed this change?" %>
-<% content_for(:before_content, govuk_back_link(href: @wizard.previous_step_path)) %>
+<% content_for(
+  :before_content,
+  govuk_back_link(
+  href: @wizard.participant_change_request? ?
+    schools_change_lead_provider_intro_path(default_path_params) :
+    schools_change_lead_provider_year_intro_path(default_path_params)
+  )
+) %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">

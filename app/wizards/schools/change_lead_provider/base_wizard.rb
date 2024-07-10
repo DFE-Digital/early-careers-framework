@@ -57,7 +57,7 @@ module Schools
       def participant
         return unless participant_change_request?
 
-        @participant ||= ParticipantProfile::ECT.find(participant_id)
+        @participant ||= ParticipantProfile.find(participant_id)
       end
 
       def preferred_email

@@ -16,7 +16,7 @@ module Schools
       end
 
       def previous_step
-        :email
+        wizard.participant_change_request? ? :email : :start
       end
 
       def next_step
