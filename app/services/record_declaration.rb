@@ -33,6 +33,7 @@ class RecordDeclaration
   validates :course_identifier, course: true
   validates :cpd_lead_provider, induction_record: true
   validates :cohort, npq_contract_for_cohort_and_course: { message: I18n.t(:missing_npq_contract_for_cohort_and_course_new_declaration) }
+  validate :validate_if_npq_course_supported
 
   attr_reader :raw_declaration_date
 
@@ -284,5 +285,13 @@ private
 
   def check_mentor_completion
     ParticipantDeclarations::HandleMentorCompletion.call(participant_declaration:)
+  end
+
+  def validate_if_npq_course_supported
+    return unless FeatureFlag.active?(:disable_npq_endpoints)
+
+    if course_identifier.to_s.starts_with?("npq-")
+      errors.add(:course_identifier, I18n.t(:npq_course_no_longer_supported))
+    end
   end
 end

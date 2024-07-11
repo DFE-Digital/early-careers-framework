@@ -626,6 +626,23 @@ RSpec.describe RecordDeclaration do
         expect(service.errors.messages_for(:cohort)).to include("You cannot submit a declaration for this participant as you do not have a contract for the cohort and course. Contact the DfE for assistance.")
       end
     end
+
+    context "when using 'disable_npq_endpoints' feature" do
+      context "when disable_npq_endpoints is true" do
+        before { FeatureFlag.activate(:disable_npq_endpoints) }
+
+        it "returns error" do
+          expect(service).to be_invalid
+          expect(service.errors.messages_for(:course_identifier)).to eq(["NPQ Courses are no longer supported"])
+        end
+      end
+
+      context "when disable_npq_endpoints is false" do
+        it "is valid without errors" do
+          expect(service).to be_valid
+        end
+      end
+    end
   end
 
   context "when re-posting after a clawback" do
