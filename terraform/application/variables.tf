@@ -25,6 +25,15 @@ variable "deploy_snapshot_database" {
   default = false
 }
 
+variable "azure_maintenance_window" {
+  type = object({
+    day_of_week  = number
+    start_hour   = number
+    start_minute = number
+  })
+  default = null
+}
+
 variable "azure_sp_credentials_json" {
   type    = string
   default = null

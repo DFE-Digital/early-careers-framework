@@ -59,6 +59,7 @@ module "postgres" {
   use_azure                      = var.deploy_azure_backing_services
   azure_enable_monitoring        = var.enable_monitoring
   azure_extensions               = ["citext", "fuzzystrmatch", "pg_stat_statements", "pgcrypto", "plpgsql", "uuid-ossp"]
+  azure_maintenance_window       = var.azure_maintenance_window
 }
 
 module "postgres-snapshot" {
