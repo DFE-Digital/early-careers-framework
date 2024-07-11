@@ -96,7 +96,7 @@ RSpec.describe Schools::EarlyCareerTeachers::ChangeLeadProvider::BaseWizard do
         allow(store).to receive(:attrs_for).with(:email).and_return({ email: })
         allow(store).to receive(:attrs_for).with(:lead_provider).and_return({ lead_provider_id: new_lead_provider_id })
         allow(store).to receive(:attrs_for).with(:check_your_answers).and_return({ complete: "true" })
-        allow(ParticipantProfile::ECT).to receive(:find).with(participant_id).and_return(participant)
+        allow(ParticipantProfile).to receive(:find).with(participant_id).and_return(participant)
         allow(LeadProvider).to receive(:find).with(current_lead_provider_id).and_return(current_lead_provider)
         allow(LeadProvider).to receive(:find).with(new_lead_provider_id).and_return(new_lead_provider)
         allow(School).to receive(:find).with(school_id).and_return(school)

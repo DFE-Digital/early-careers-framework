@@ -58,7 +58,7 @@ module Schools
         end
 
         def participant
-          @participant ||= ParticipantProfile::ECT.find(participant_id)
+          @participant ||= ParticipantProfile.find(participant_id)
         end
 
         def preferred_email

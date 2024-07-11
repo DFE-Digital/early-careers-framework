@@ -85,7 +85,7 @@ module Schools
       helper_method :default_path_params
 
       def participant
-        @participant ||= ParticipantProfile::ECT.find(params[:participant_id])
+        @participant ||= ParticipantProfile.find(params[:participant_id])
       end
     end
   end
