@@ -154,6 +154,20 @@ RSpec.describe VoidParticipantDeclaration do
         expect(participant_declaration.outcomes.count).to eql(2)
         expect(participant_declaration.outcomes.latest).to be_voided
       end
+
+      context "when using 'disable_npq_endpoints' feature" do
+        context "when disable_npq_endpoints is true" do
+          before do
+            participant_declaration
+
+            FeatureFlag.activate(:disable_npq_endpoints)
+          end
+
+          it "raises error" do
+            expect { subject.call }.to raise_error(Api::Errors::InvalidTransitionError, "NPQ Courses are no longer supported")
+          end
+        end
+      end
     end
   end
 end

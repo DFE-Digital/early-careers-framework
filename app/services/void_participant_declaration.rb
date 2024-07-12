@@ -6,6 +6,8 @@ class VoidParticipantDeclaration
   end
 
   def call
+    check_if_npq_course_supported
+
     if participant_declaration.paid?
       make_awaiting_clawback
     else
@@ -45,5 +47,13 @@ private
 
   def line_item
     participant_declaration.statement_line_items.find_by(state: %w[eligible payable submitted])
+  end
+
+  def check_if_npq_course_supported
+    return unless FeatureFlag.active?(:disable_npq_endpoints)
+
+    if participant_declaration.npq?
+      raise Api::Errors::InvalidTransitionError, I18n.t(:npq_course_no_longer_supported)
+    end
   end
 end
