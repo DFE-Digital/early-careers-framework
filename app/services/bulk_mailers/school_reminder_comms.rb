@@ -21,7 +21,7 @@ module BulkMailers
       email_count = 0
 
       query
-        .includes(:user, :school)
+        .eager_load(:user, :school)
         .find_each do |induction_record|
           ect_name = induction_record.user.full_name
           school = induction_record.school
@@ -50,7 +50,7 @@ module BulkMailers
       email_count = 0
 
       query
-        .includes(:user)
+        .eager_load(:user)
         .find_each do |induction_record|
           ect_name = induction_record.user.full_name
           school = induction_record.school
@@ -80,7 +80,7 @@ module BulkMailers
       email_count = 0
 
       query
-        .includes(:induction_coordinator_profiles)
+        .eager_load(:induction_coordinator_profiles)
         .find_each do |school|
           school.induction_coordinator_profiles.each do |induction_coordinator|
             email_count += 1
@@ -104,7 +104,7 @@ module BulkMailers
       # this could send a lot of email at the cohort start and may break Notify limits
       # numbers should be checked before running this (dry_run = true) and maybe changes made/different approach to batch these
       query
-        .includes(:induction_coordinator_profiles)
+        .eager_load(:induction_coordinator_profiles)
         .find_each do |school|
           school.induction_coordinator_profiles.each do |induction_coordinator|
             email_count += 1
@@ -128,7 +128,7 @@ module BulkMailers
       # this could send a lot of email at the cohort start and may break Notify limits
       # numbers should be checked before running this (dry_run = true) and maybe changes made/different approach to batch these
       query
-        .includes(:induction_coordinator_profiles)
+        .eager_load(:induction_coordinator_profiles)
         .find_each do |school|
           school.induction_coordinator_profiles.each do |induction_coordinator|
             email_count += 1
@@ -224,7 +224,9 @@ module BulkMailers
 
       # this could send a lot of email at the cohort start and may break Notify limits
       # numbers should be checked before running this (dry_run = true) and maybe changes made/different approach to batch these
-      query.find_each do |school|
+      query
+        .eager_load(:induction_coordinator_profiles)
+        .find_each do |school|
         school.induction_coordinator_profiles.each do |induction_coordinator|
           email_count += 1
 
