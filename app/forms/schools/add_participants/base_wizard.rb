@@ -287,11 +287,21 @@ module Schools
       end
 
       def existing_participant_profile
-        @existing_participant_profile ||=
-          ParticipantProfile::ECF
-            .joins(:teacher_profile)
-            .where(teacher_profile: { trn: formatted_confirmed_trn })
-            .first
+        @existing_participant_profile ||= existing_participant_type || existing_ecf_participant
+      end
+
+      def existing_participant_type
+        (ect_participant? ? ParticipantProfile::ECT : ParticipantProfile::Mentor)
+          .joins(:teacher_profile)
+          .where(teacher_profile: { trn: formatted_confirmed_trn })
+          .first
+      end
+
+      def existing_ecf_participant
+        ParticipantProfile::ECF
+          .joins(:teacher_profile)
+          .where(teacher_profile: { trn: formatted_confirmed_trn })
+          .first
       end
 
       def existing_user
