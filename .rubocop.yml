@@ -42,6 +42,7 @@ Rails/UnknownEnv:
     - staging
     - test
     - performance
+    - separation
 
 Naming/VariableNumber:
   EnforcedStyle: snake_case
