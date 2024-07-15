@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "npq_api_endpoint_route"
+require "npq_api_endpoint"
 
 Rails.application.routes.draw do
   mount_sidekiq = -> { mount Sidekiq::Web => "/sidekiq" }
@@ -91,7 +91,7 @@ Rails.application.routes.draw do
     end
 
     namespace :v1 do
-      resources :npq_funding, constraints: NpqApiEndpointRoute, only: [:show], path: "npq-funding", param: :trn
+      resources :npq_funding, constraints: NpqApiEndpoint, only: [:show], path: "npq-funding", param: :trn
 
       resources :ecf_participants, path: "participants/ecf", only: %i[index show] do
         concerns :participant_actions
@@ -104,7 +104,7 @@ Rails.application.routes.draw do
       resources :participant_declarations, only: %i[create index show], path: "participant-declarations" do
         member { put :void }
       end
-      resources :npq_participants, constraints: NpqApiEndpointRoute, only: %i[index show], path: "participants/npq" do
+      resources :npq_participants, constraints: NpqApiEndpoint, only: %i[index show], path: "participants/npq" do
         concerns :participant_actions
         collection do
           resources :outcomes, only: %i[index], controller: "provider_outcomes"
@@ -115,7 +115,7 @@ Rails.application.routes.draw do
       resources :users, only: %i[index create]
       resources :ecf_users, only: %i[index create], path: "ecf-users"
       resources :participant_validation, only: %i[create], path: "participant-validation"
-      resources :npq_applications, constraints: NpqApiEndpointRoute, only: %i[index show], path: "npq-applications" do
+      resources :npq_applications, constraints: NpqApiEndpoint, only: %i[index show], path: "npq-applications" do
         member do
           post :accept
           post :reject
@@ -123,13 +123,13 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :npq_profiles, constraints: NpqApiEndpointRoute, only: %i[show create update], path: "npq-profiles"
+      resources :npq_profiles, constraints: NpqApiEndpoint, only: %i[show create update], path: "npq-profiles"
 
       namespace :data_studio, path: "data-studio" do
         get "/school-rollout", to: "school_rollout#index"
       end
 
-      namespace :npq, constraints: NpqApiEndpointRoute do
+      namespace :npq, constraints: NpqApiEndpoint do
         resources :users, only: %i[show create update]
         resource :previous_funding, only: [:show]
         resources :application_synchronizations, only: [:index]
@@ -148,7 +148,7 @@ Rails.application.routes.draw do
       resources :participant_declarations, only: %i[create index show], path: "participant-declarations" do
         member { put :void }
       end
-      resources :npq_participants, constraints: NpqApiEndpointRoute, only: %i[index show], path: "participants/npq" do
+      resources :npq_participants, constraints: NpqApiEndpoint, only: %i[index show], path: "participants/npq" do
         concerns :participant_actions
         collection do
           resources :outcomes, only: %i[index], controller: "provider_outcomes"
@@ -156,11 +156,11 @@ Rails.application.routes.draw do
           post ":participant_id/outcomes", to: "participant_outcomes#create", as: :create_outcome
         end
       end
-      resources :npq_enrolments, constraints: NpqApiEndpointRoute, only: %i[index], path: "npq-enrolments"
+      resources :npq_enrolments, constraints: NpqApiEndpoint, only: %i[index], path: "npq-enrolments"
       resources :users, only: %i[index create]
       resources :ecf_users, only: %i[index create], path: "ecf-users"
       resources :participant_validation, only: %i[create], path: "participant-validation"
-      resources :npq_applications, constraints: NpqApiEndpointRoute, only: %i[index show], path: "npq-applications" do
+      resources :npq_applications, constraints: NpqApiEndpoint, only: %i[index show], path: "npq-applications" do
         member do
           post :accept
           post :reject
@@ -168,7 +168,7 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :npq_profiles, constraints: NpqApiEndpointRoute, only: %i[show create update], path: "npq-profiles"
+      resources :npq_profiles, constraints: NpqApiEndpoint, only: %i[show create update], path: "npq-profiles"
 
       namespace :data_studio, path: "data-studio" do
         get "/school-rollout", to: "school_rollout#index"
@@ -179,7 +179,7 @@ Rails.application.routes.draw do
       resources :statements, only: %i[index show], controller: "finance/statements"
       resources :delivery_partners, only: %i[index show], path: "delivery-partners"
       resources :partnerships, path: "partnerships/ecf", only: %i[show index create update], controller: "ecf/partnerships"
-      resources :npq_participants, constraints: NpqApiEndpointRoute, only: %i[index show], path: "participants/npq" do
+      resources :npq_participants, constraints: NpqApiEndpoint, only: %i[index show], path: "participants/npq" do
         concerns :participant_actions
         collection do
           resources :outcomes, only: %i[index], controller: "provider_outcomes"
@@ -199,7 +199,7 @@ Rails.application.routes.draw do
         end
       end
       resources :ecf_unfunded_mentors, path: "unfunded-mentors/ecf", only: %i[index show], controller: "ecf/unfunded_mentors"
-      resources :npq_applications, constraints: NpqApiEndpointRoute, only: %i[index show], path: "npq-applications" do
+      resources :npq_applications, constraints: NpqApiEndpoint, only: %i[index show], path: "npq-applications" do
         member do
           post :accept
           post :reject

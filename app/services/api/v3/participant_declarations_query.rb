@@ -114,7 +114,7 @@ module Api
       end
 
       def declaration_class
-        if FeatureFlag.active?(:disable_npq_endpoints)
+        if NpqApiEndpoint.disable_npq_endpoints?
           ParticipantDeclaration::ECF
         else
           ParticipantDeclaration

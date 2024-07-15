@@ -50,7 +50,7 @@ private
   end
 
   def check_if_npq_course_supported
-    return unless FeatureFlag.active?(:disable_npq_endpoints)
+    return unless NpqApiEndpoint.disable_npq_endpoints?
 
     if participant_declaration.npq?
       raise Api::Errors::InvalidTransitionError, I18n.t(:npq_course_no_longer_supported)

@@ -117,7 +117,7 @@ RSpec.describe Api::ParticipantDeclarations::Index do
       subject { described_class.new(cpd_lead_provider:) }
 
       context "when disable_npq_endpoints is true" do
-        before { FeatureFlag.activate(:disable_npq_endpoints) }
+        before { Rails.application.config.separation = { disable_npq_endpoints: true } }
 
         it "returns only ecf declarations" do
           expect(subject.scope.to_a).to eql([ecf_declaration])

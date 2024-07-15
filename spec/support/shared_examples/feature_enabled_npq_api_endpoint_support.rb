@@ -3,7 +3,7 @@
 RSpec.shared_examples "Feature enabled NPQ API endpoint" do |action, url|
   context "when disable_npq_endpoints is true" do
     before do
-      FeatureFlag.activate(:disable_npq_endpoints)
+      before { Rails.application.config.separation = { disable_npq_endpoints: true } }
     end
 
     it "raises routing error" do

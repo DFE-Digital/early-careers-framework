@@ -160,7 +160,7 @@ RSpec.describe VoidParticipantDeclaration do
           before do
             participant_declaration
 
-            FeatureFlag.activate(:disable_npq_endpoints)
+            Rails.application.config.separation = { disable_npq_endpoints: true }
           end
 
           it "raises error" do

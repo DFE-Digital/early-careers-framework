@@ -629,7 +629,7 @@ RSpec.describe RecordDeclaration do
 
     context "when using 'disable_npq_endpoints' feature" do
       context "when disable_npq_endpoints is true" do
-        before { FeatureFlag.activate(:disable_npq_endpoints) }
+        before { Rails.application.config.separation = { disable_npq_endpoints: true } }
 
         it "returns error" do
           expect(service).to be_invalid
