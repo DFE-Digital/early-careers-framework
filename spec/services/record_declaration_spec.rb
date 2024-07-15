@@ -635,6 +635,15 @@ RSpec.describe RecordDeclaration do
           expect(service).to be_invalid
           expect(service.errors.messages_for(:course_identifier)).to eq(["NPQ Courses are no longer supported"])
         end
+
+        context "when there are multiple errors" do
+          let(:params) { { course_identifier: } }
+
+          it "returns only one error" do
+            expect(service).to be_invalid
+            expect(service.errors.full_messages).to eq(["Course identifier NPQ Courses are no longer supported"])
+          end
+        end
       end
 
       context "when disable_npq_endpoints is false" do
