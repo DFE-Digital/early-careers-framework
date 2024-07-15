@@ -297,6 +297,29 @@ RSpec.describe "API Participant Declarations", type: :request do
             expect(parsed_response["data"].size).to eql(0)
           end
         end
+
+        context "when using 'disable_npq_endpoints' feature" do
+          context "when disable_npq_endpoints is true" do
+            before { FeatureFlag.activate(:disable_npq_endpoints) }
+
+            it "returns empty declarations" do
+              get "/api/v3/participant-declarations"
+
+              expect(response.status).to eq(200)
+              expect(parsed_response["data"]).to be_blank
+            end
+          end
+
+          context "when disable_npq_endpoints is false" do
+            it "returns npq declarations" do
+              get "/api/v3/participant-declarations"
+
+              expect(response.status).to eq(200)
+              participant_declaration_ids = npq_participant_declarations.pluck(:id)
+              expect(parsed_response["data"][0]["id"]).to be_in(participant_declaration_ids)
+            end
+          end
+        end
       end
 
       context "with an NPQ and ECF provider" do
@@ -342,6 +365,37 @@ RSpec.describe "API Participant Declarations", type: :request do
             get "/api/v3/participant-declarations", params: { filter: { cohort: "3100" } }
 
             expect(parsed_response["data"].size).to eql(0)
+          end
+        end
+
+        context "when using 'disable_npq_endpoints' feature" do
+          context "when disable_npq_endpoints is true" do
+            before { FeatureFlag.activate(:disable_npq_endpoints) }
+
+            it "returns only ecf declarations" do
+              get "/api/v3/participant-declarations"
+
+              expect(response.status).to eq(200)
+              participant_declaration_ids = [participant_declaration1, participant_declaration2, participant_declaration3].map(&:id)
+              expect(parsed_response["data"].size).to eql(participant_declaration_ids.size)
+              expect(parsed_response["data"][0]["id"]).to be_in(participant_declaration_ids)
+              expect(parsed_response["data"][1]["id"]).to be_in(participant_declaration_ids)
+              expect(parsed_response["data"][2]["id"]).to be_in(participant_declaration_ids)
+            end
+          end
+
+          context "when disable_npq_endpoints is false" do
+            it "returns both ecf and npq declarations" do
+              get "/api/v3/participant-declarations"
+
+              expect(response.status).to eq(200)
+              participant_declaration_ids = npq_participant_declarations.pluck(:id) + [participant_declaration1, participant_declaration2, participant_declaration3].map(&:id)
+              expect(parsed_response["data"].size).to eql(participant_declaration_ids.size)
+              expect(parsed_response["data"][0]["id"]).to be_in(participant_declaration_ids)
+              expect(parsed_response["data"][1]["id"]).to be_in(participant_declaration_ids)
+              expect(parsed_response["data"][2]["id"]).to be_in(participant_declaration_ids)
+              expect(parsed_response["data"][3]["id"]).to be_in(participant_declaration_ids)
+            end
           end
         end
       end
