@@ -514,6 +514,28 @@ RSpec.describe "NPQ Applications API", type: :request do
         end
       end
     end
+
+    context "when there is a dedupe transfer error" do
+      let(:user1) { user }
+      let(:user2) { create(:participant_identity).user }
+
+      let(:get_an_identity_id_1) { SecureRandom.uuid }
+      let(:get_an_identity_id_2) { SecureRandom.uuid }
+
+      before do
+        user1.update!(get_an_identity_id: get_an_identity_id_1)
+        user2.update!(get_an_identity_id: get_an_identity_id_2)
+        allow(Identity::PrimaryUser).to receive(:find_by).and_return(user2)
+      end
+
+      it "returns an error" do
+        post "/api/v3/npq-applications/#{default_npq_application.id}/accept"
+
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(parsed_response.dig("errors", 0, "title")).to eql("Application not accepted")
+        expect(parsed_response.dig("errors", 0, "detail")).to eql("Contact us so we can help you resolve the issue")
+      end
+    end
   end
 
   describe "PUT /api/v3/npq-applications/:id/change-funded-place" do
