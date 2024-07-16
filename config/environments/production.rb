@@ -120,7 +120,7 @@ Rails.application.configure do
   # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new "app-name")
 
   # Logging
-  config.log_level = :info
+  config.log_level = (Sidekiq.server?) ? :warn : :info
 
   if ENV["RAILS_LOG_TO_STDOUT"].present?
     config.rails_semantic_logger.add_file_appender = false
