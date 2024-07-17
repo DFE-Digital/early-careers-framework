@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe EarlyCareerTeachers::Reactivate do
+RSpec.describe ::EarlyCareerTeachers::Reactivate do
   let!(:user) { create :user }
   let(:trn) { user.teacher_profile.trn }
   let!(:school) { create(:school, name: "Fip School") }
@@ -176,7 +176,7 @@ RSpec.describe EarlyCareerTeachers::Reactivate do
   end
 
   def add_participant_to_school(full_name:, email:, appropriate_body:, school_cohort:)
-    EarlyCareerTeachers::Create.call(
+    ::EarlyCareerTeachers::Create.call(
       full_name:,
       email:,
       school_cohort:,

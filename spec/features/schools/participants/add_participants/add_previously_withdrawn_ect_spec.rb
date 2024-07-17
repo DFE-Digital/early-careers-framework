@@ -191,7 +191,7 @@ private
   end
 
   def add_participant_to_school(full_name:, email:, appropriate_body:, school_cohort:)
-    EarlyCareerTeachers::Create.call(
+    ::EarlyCareerTeachers::Create.call(
       full_name:,
       email:,
       school_cohort:,

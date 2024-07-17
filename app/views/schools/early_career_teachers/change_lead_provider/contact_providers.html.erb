@@ -1,0 +1,13 @@
+<% content_for :title, "You need to contact the current and new lead providers" %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-l">You need to contact the current and new lead providers</h1>
+
+    <p class="govuk-body">You need to contact the participant's current and new lead providers to <a href="https://www.gov.uk/guidance/how-to-manage-early-career-teacher-training#change-lead-provider" target="_blank" class="govuk-link govuk-link--no-visited-state">change their lead provider (opens in a new window or tab)</a>.</p>
+
+    <p>The new provider will then report the change to us.</p>
+
+    <p class="govuk-body"><%= govuk_link_to "Return to manage your training", schools_dashboard_path(school_id: @school_id) %></p>
+  </div>
+</div>

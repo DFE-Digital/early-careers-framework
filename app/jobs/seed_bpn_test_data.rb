@@ -43,7 +43,7 @@ class SeedBPNTestData < ApplicationJob
       Rails.logger.info "Generated : #{september_started_mentor_count} Mentor started declaration in #{september_standard_started_milestone.inspect}"
 
       september_ects = FactoryBot.create_list(:user, september_started_ect_count.to_i)
-                         .map { |user| create_participant(EarlyCareerTeachers::Create, user, september_standard_school_cohorts.first) }
+                         .map { |user| create_participant(::EarlyCareerTeachers::Create, user, september_standard_school_cohorts.first) }
                          .map { |participant_profile| record_started_declaration(participant_profile, declaration_start_interval, lead_provider) }
                          .map { |participant_profile| make_declaration_eligible(participant_profile) }
       Rails.logger.info "Generated : #{september_started_ect_count.to_i} ECF started declaration in #{september_standard_started_milestone.inspect}"
@@ -62,7 +62,7 @@ class SeedBPNTestData < ApplicationJob
       Rails.logger.info "Generated : #{september_started_mentor_count} Mentor started declaration in #{september_standard_started_milestone.inspect}"
 
       FactoryBot.create_list(:user, january_started_ect_count.to_i)
-        .map { |user| create_participant(EarlyCareerTeachers::Create, user, january_standard_school_cohorts.first) }
+        .map { |user| create_participant(::EarlyCareerTeachers::Create, user, january_standard_school_cohorts.first) }
         .map { |participant_profile| change_participant_schedule(participant_profile, january_standard_schedule, lead_provider) }
         .map { |participant_profile| record_started_declaration(participant_profile, january_declaration_start_interval, lead_provider) }
         .map { |participant_profile| make_declaration_eligible(participant_profile) }
@@ -83,7 +83,7 @@ class SeedBPNTestData < ApplicationJob
         .map { |participant_profile| make_declaration_eligible(participant_profile) }
 
       FactoryBot.create_list(:user, backdated_declaration_ect)
-        .map { |user| create_participant(EarlyCareerTeachers::Create, user, january_standard_school_cohorts.first) }
+        .map { |user| create_participant(::EarlyCareerTeachers::Create, user, january_standard_school_cohorts.first) }
         .map { |participant_profile| change_participant_schedule(participant_profile, september_standard_schedule, lead_provider) }
         .map { |participant_profile| record_backdated_started_declaration(participant_profile, january_declaration_start_interval, lead_provider, declaration_start_interval) }
         .map { |participant_profile| make_declaration_eligible(participant_profile) }
