@@ -158,6 +158,30 @@ RSpec.describe Api::V3::Finance::StatementsQuery do
           end
         end
       end
+
+      context "when using 'disable_npq_endpoints' feature" do
+        context "when disable_npq_endpoints is true" do
+          before { Rails.application.config.npq_separation = { disable_npq_endpoints: true } }
+
+          it "returns only ECF statements" do
+            expect(subject.statements).to eq([
+              ecf_statement_next_cohort,
+              ecf_statement_current_cohort,
+            ])
+          end
+        end
+
+        context "when disable_npq_endpoints is false" do
+          it "returns all statements" do
+            expect(subject.statements).to eq([
+              ecf_statement_next_cohort,
+              ecf_statement_current_cohort,
+              npq_statement_next_cohort,
+              npq_statement_current_cohort,
+            ])
+          end
+        end
+      end
     end
 
     describe "#statement" do
@@ -190,6 +214,56 @@ RSpec.describe Api::V3::Finance::StatementsQuery do
 
         it "does not return the finance statement" do
           expect { subject.statement }.to raise_error(ActiveRecord::RecordNotFound)
+        end
+      end
+
+      context "when using 'disable_npq_endpoints' feature" do
+        let!(:npq_statement_next_cohort) do
+          create(
+            :npq_statement,
+            :output_fee,
+            cpd_lead_provider:,
+            cohort: next_cohort,
+            payment_date: 2.days.ago,
+          )
+        end
+
+        context "when disable_npq_endpoints is true" do
+          before { Rails.application.config.npq_separation = { disable_npq_endpoints: true } }
+
+          context "when requesting ECF statement" do
+            let(:params) { { id: ecf_statement_next_cohort.id } }
+
+            it "returns the finance statement with the id" do
+              expect(subject.statement).to eq(ecf_statement_next_cohort)
+            end
+          end
+
+          context "when requesting NPQ statement" do
+            let(:params) { { id: npq_statement_next_cohort.id } }
+
+            it "does not return the finance statement" do
+              expect { subject.statement }.to raise_error(ActiveRecord::RecordNotFound)
+            end
+          end
+        end
+
+        context "when disable_npq_endpoints is false" do
+          context "when requesting ECF statement" do
+            let(:params) { { id: ecf_statement_next_cohort.id } }
+
+            it "returns the finance statement with the id" do
+              expect(subject.statement).to eq(ecf_statement_next_cohort)
+            end
+          end
+
+          context "when requesting NPQ statement" do
+            let(:params) { { id: npq_statement_next_cohort.id } }
+
+            it "returns the finance statement with the id" do
+              expect(subject.statement).to eq(npq_statement_next_cohort)
+            end
+          end
         end
       end
     end

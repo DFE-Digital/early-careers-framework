@@ -23,6 +23,10 @@ module Api
               cohort_id: cohorts.map(&:id),
             )
 
+          if NpqApiEndpoint.disable_npq_endpoints?
+            scope = scope.where.not("type ILIKE 'Finance::Statement::NPQ%'")
+          end
+
           if updated_since_filter.present?
             scope = scope.where(updated_at: updated_since..)
           end
@@ -31,7 +35,13 @@ module Api
         end
 
         def statement
-          cpd_lead_provider.statements.find(params[:id])
+          scope = cpd_lead_provider.statements
+
+          if NpqApiEndpoint.disable_npq_endpoints?
+            scope = scope.where.not("type ILIKE 'Finance::Statement::NPQ%'")
+          end
+
+          scope.find(params[:id])
         end
 
       private
