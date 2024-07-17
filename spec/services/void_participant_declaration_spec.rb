@@ -160,7 +160,7 @@ RSpec.describe VoidParticipantDeclaration do
           before do
             participant_declaration
 
-            Rails.application.config.separation = { disable_npq_endpoints: true }
+            Rails.application.config.npq_separation = { disable_npq_endpoints: true }
           end
 
           it "raises error" do

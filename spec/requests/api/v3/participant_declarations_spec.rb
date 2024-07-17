@@ -300,7 +300,7 @@ RSpec.describe "API Participant Declarations", type: :request do
 
         context "when using 'disable_npq_endpoints' feature" do
           context "when disable_npq_endpoints is true" do
-            before { Rails.application.config.separation = { disable_npq_endpoints: true } }
+            before { Rails.application.config.npq_separation = { disable_npq_endpoints: true } }
 
             it "returns empty declarations" do
               get "/api/v3/participant-declarations"
@@ -370,7 +370,7 @@ RSpec.describe "API Participant Declarations", type: :request do
 
         context "when using 'disable_npq_endpoints' feature" do
           context "when disable_npq_endpoints is true" do
-            before { Rails.application.config.separation = { disable_npq_endpoints: true } }
+            before { Rails.application.config.npq_separation = { disable_npq_endpoints: true } }
 
             it "returns only ecf declarations" do
               get "/api/v3/participant-declarations"
@@ -742,7 +742,7 @@ RSpec.describe "API Participant Declarations", type: :request do
         end
 
         context "when disable_npq_endpoints is true" do
-          before { Rails.application.config.separation = { disable_npq_endpoints: true } }
+          before { Rails.application.config.npq_separation = { disable_npq_endpoints: true } }
 
           it "returns error response" do
             post "/api/v3/participant-declarations", params: params.to_json

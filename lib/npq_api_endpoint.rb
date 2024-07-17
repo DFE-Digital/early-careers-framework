@@ -6,8 +6,8 @@ class NpqApiEndpoint
   end
 
   def self.disable_npq_endpoints?
-    return false unless Rails.application.config.respond_to?(:separation)
+    return false unless Rails.application.config.respond_to?(:npq_separation)
 
-    !!(Rails.application.config.separation || {})[:disable_npq_endpoints]
+    !!(Rails.application.config.npq_separation || {})[:disable_npq_endpoints]
   end
 end

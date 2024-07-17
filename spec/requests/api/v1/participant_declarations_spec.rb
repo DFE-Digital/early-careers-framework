@@ -662,7 +662,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         let!(:contract) { create(:npq_contract, npq_course:, npq_lead_provider: cpd_lead_provider.npq_lead_provider) }
 
         context "when disable_npq_endpoints is true" do
-          before { Rails.application.config.separation = { disable_npq_endpoints: true } }
+          before { Rails.application.config.npq_separation = { disable_npq_endpoints: true } }
 
           it "returns error response" do
             post "/api/v1/participant-declarations", params: params.to_json

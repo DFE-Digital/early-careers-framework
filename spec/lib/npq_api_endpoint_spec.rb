@@ -4,7 +4,7 @@ require "rails_helper"
 require "npq_api_endpoint"
 
 RSpec.describe NpqApiEndpoint do
-  before { Rails.application.config.separation = nil }
+  before { Rails.application.config.npq_separation = nil }
 
   describe ".matches?" do
     let(:request) { instance_double(ActionDispatch::Request) }
@@ -14,7 +14,7 @@ RSpec.describe NpqApiEndpoint do
     end
 
     describe "when disable_npq_endpoints is true" do
-      before { Rails.application.config.separation = { disable_npq_endpoints: true } }
+      before { Rails.application.config.npq_separation = { disable_npq_endpoints: true } }
 
       it "returns false" do
         expect(described_class.matches?(request)).to be_falsy
@@ -22,7 +22,7 @@ RSpec.describe NpqApiEndpoint do
     end
 
     describe "when disable_npq_endpoints is false" do
-      before { Rails.application.config.separation = { disable_npq_endpoints: false } }
+      before { Rails.application.config.npq_separation = { disable_npq_endpoints: false } }
 
       it "returns true" do
         expect(described_class.matches?(request)).to be_truthy
@@ -36,7 +36,7 @@ RSpec.describe NpqApiEndpoint do
     end
 
     describe "when disable_npq_endpoints is true" do
-      before { Rails.application.config.separation = { disable_npq_endpoints: true } }
+      before { Rails.application.config.npq_separation = { disable_npq_endpoints: true } }
 
       it "returns true" do
         expect(described_class.disable_npq_endpoints?).to be_truthy
@@ -44,7 +44,7 @@ RSpec.describe NpqApiEndpoint do
     end
 
     describe "when disable_npq_endpoints is false" do
-      before { Rails.application.config.separation = { disable_npq_endpoints: false } }
+      before { Rails.application.config.npq_separation = { disable_npq_endpoints: false } }
 
       it "returns false" do
         expect(described_class.disable_npq_endpoints?).to be_falsy

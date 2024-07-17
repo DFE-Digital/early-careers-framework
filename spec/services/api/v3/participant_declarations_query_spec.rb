@@ -382,7 +382,7 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery do
       let(:paginated_query) { ParticipantDeclaration.where(cpd_lead_provider: cpd_lead_provider1) }
 
       context "when disable_npq_endpoints is true" do
-        before { Rails.application.config.separation = { disable_npq_endpoints: true } }
+        before { Rails.application.config.npq_separation = { disable_npq_endpoints: true } }
 
         it "returns only ecf declarations" do
           expect(subject.participant_declarations_from(paginated_query).to_a).to eq([participant_declaration3, participant_declaration1, participant_declaration2])
@@ -465,7 +465,7 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery do
       end
 
       context "when disable_npq_endpoints is true" do
-        before { Rails.application.config.separation = { disable_npq_endpoints: true } }
+        before { Rails.application.config.npq_separation = { disable_npq_endpoints: true } }
 
         it "returns ecf declaration" do
           expect(subject.participant_declaration(ecf_declaration.id)).to eql(ecf_declaration)
