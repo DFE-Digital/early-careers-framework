@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "csv"
-require "identity/transfer"
 
 module Api
   module V1
@@ -10,8 +9,6 @@ module Api
       include ApiPagination
       include ApiFilter
       include ApiFilterValidation
-
-      rescue_from Identity::TransferError, with: :identity_transfer_error_response
 
       def index
         respond_to do |format|
@@ -98,10 +95,6 @@ module Api
         raise ActionController::BadRequest, I18n.t(:invalid_data_structure)
       rescue ActionController::ParameterMissing
         {}
-      end
-
-      def identity_transfer_error_response(_exception)
-        render json: { errors: Api::ParamErrorFactory.new(error: I18n.t(:application_not_accepted), params: I18n.t(:contact_us_to_resolve_issue)).call }, status: :unprocessable_entity
       end
     end
   end

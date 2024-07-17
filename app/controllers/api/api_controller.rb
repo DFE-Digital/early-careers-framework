@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "identity/transfer"
+
 module Api
   class ApiController < ActionController::API
     include ActionController::MimeResponds
@@ -18,6 +20,7 @@ module Api
     rescue_from Api::Errors::InvalidDatetimeError, with: :invalid_updated_since_response
     rescue_from Api::Errors::InvalidTrainingStatusError, with: :invalid_training_status_response
     rescue_from Pagy::VariableError, with: :invalid_pagination_response
+    rescue_from Identity::TransferError, with: :identity_transfer_error_response
 
     def append_info_to_payload(payload)
       super
@@ -66,6 +69,10 @@ module Api
 
     def invalid_pagination_response(_exception)
       render json: { errors: Api::ParamErrorFactory.new(error: I18n.t(:bad_request), params: I18n.t(:invalid_page_parameters)).call }, status: :bad_request
+    end
+
+    def identity_transfer_error_response(_exception)
+      render json: { errors: Api::ParamErrorFactory.new(error: I18n.t(:bad_request), params: I18n.t(:contact_us_to_resolve_issue)).call }, status: :unprocessable_entity
     end
   end
 end

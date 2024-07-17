@@ -451,7 +451,7 @@ RSpec.describe "NPQ Applications API", type: :request do
         post "/api/v1/npq-applications/#{default_npq_application.id}/accept"
 
         expect(response).to have_http_status(:unprocessable_entity)
-        expect(parsed_response.dig("errors", 0, "title")).to eql("Application not accepted")
+        expect(parsed_response.dig("errors", 0, "title")).to eql("Bad request")
         expect(parsed_response.dig("errors", 0, "detail")).to eql("Contact us so we can help you resolve the issue")
       end
     end
