@@ -122,6 +122,7 @@ Rails.application.configure do
   # Logging
   config.log_level = (Sidekiq.server?) ? :warn : :info
 
+  # RAILS_LOG_TO_STDOUT is set via https://github.com/DFE-Digital/terraform-modules
   if ENV["RAILS_LOG_TO_STDOUT"].present?
     config.rails_semantic_logger.add_file_appender = false
     config.rails_semantic_logger.filter = proc { |log| log.name != "DfE::Analytics::SendEvents" }
