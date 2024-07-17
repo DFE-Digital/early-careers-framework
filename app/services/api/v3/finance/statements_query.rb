@@ -23,10 +23,6 @@ module Api
               cohort_id: cohorts.map(&:id),
             )
 
-          if NpqApiEndpoint.disable_npq_endpoints?
-            scope = scope.where.not("type ILIKE 'Finance::Statement::NPQ%'")
-          end
-
           if updated_since_filter.present?
             scope = scope.where(updated_at: updated_since..)
           end
@@ -35,22 +31,32 @@ module Api
         end
 
         def statement
-          scope = cpd_lead_provider.statements
-
-          if NpqApiEndpoint.disable_npq_endpoints?
-            scope = scope.where.not("type ILIKE 'Finance::Statement::NPQ%'")
-          end
-
-          scope.find(params[:id])
+          statement_class.where(cpd_lead_provider:).find(params[:id])
         end
 
       private
 
         def statement_class
-          return ::Finance::Statement if filter[:type].blank?
-          return ::Finance::Statement.none unless ::Finance::Statement::STATEMENT_TYPES.include?(filter[:type])
+          if filter[:type].blank?
+            if NpqApiEndpoint.disable_npq_endpoints?
+              return ::Finance::Statement::ECF
+            else
+              return ::Finance::Statement
+            end
+          end
 
-          "::Finance::Statement::#{filter[:type].classify}".constantize
+          case filter[:type]
+          when "ecf"
+            ::Finance::Statement::ECF
+          when "npq"
+            if NpqApiEndpoint.disable_npq_endpoints?
+              ::Finance::Statement.none
+            else
+              ::Finance::Statement::NPQ
+            end
+          else
+            ::Finance::Statement.none
+          end
         end
       end
     end
