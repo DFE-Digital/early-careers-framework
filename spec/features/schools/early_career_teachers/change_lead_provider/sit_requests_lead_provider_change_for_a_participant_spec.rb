@@ -17,7 +17,7 @@ RSpec.describe "Induction coordinator requests lead provider change for a partic
     click_on("Change Lead provider", visible: false)
     then_i_see_the_intro_step
     then_i_choose_yes_on_the_start_step
-    then_i_add_a_different_email_for_the_participant
+    then_i_confirm_the_email_for_the_participant
     then_i_go_back_to_amend_the_email_address
     then_i_choose_a_new_lead_provider
     then_i_am_asked_to_check_my_answers
@@ -69,20 +69,20 @@ RSpec.describe "Induction coordinator requests lead provider change for a partic
     click_on "Continue"
   end
 
-  def then_i_add_a_different_email_for_the_participant
+  def then_i_confirm_the_email_for_the_participant
     expect(page).to have_content("Email #{@participant_data[:email]}")
     expect(page).to have_content("Is this the correct email for #{@participant_data[:full_name]}?")
     click_on "Continue"
     expect(page).to have_content("Select yes if this is the correct email address for the participant")
-    choose "No"
-    fill_in "email[email]", with: "different@example.com", visible: false
+    choose "Yes"
     click_on "Continue"
   end
 
   def then_i_go_back_to_amend_the_email_address
     click_on "Back"
-    expect(page).to have_content("Email different@example.com")
-    expect(page).to have_field("email[email]", with: "different@example.com", visible: false)
+    expect(page).to have_content("Is this the correct email for #{@participant_data[:full_name]}?")
+    expect(page).to have_content("Email #{@participant_data[:email]}")
+    choose "No"
     fill_in "email[email]", with: "alternative@example.com", visible: false
     click_on "Continue"
   end

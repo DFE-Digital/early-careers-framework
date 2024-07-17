@@ -62,7 +62,7 @@ module Schools
         end
 
         def preferred_email
-          store.attrs_for(:email)[:email] || participant.user.email
+          store.attrs_for(:email)[:email].presence || participant.user.email
         end
 
         def complete?
