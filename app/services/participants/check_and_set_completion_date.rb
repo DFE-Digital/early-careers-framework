@@ -4,8 +4,8 @@ module Participants
   class CheckAndSetCompletionDate < BaseService
     def call
       return unless participant_profile.ect?
-      return Induction::Complete.call(participant_profile:, completion_date:) if complete_induction?
 
+      Induction::Complete.call(participant_profile:, completion_date:) if complete_induction?
       Participants::SyncDQTInductionStartDate.call(start_date, participant_profile)
       record_completion_date_inconsistency if completion_date_inconsistent?
     end
