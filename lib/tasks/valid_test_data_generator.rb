@@ -324,6 +324,10 @@ module ValidTestDataGenerator
       user = User.create!(full_name: name, email: Faker::Internet.email(name:))
       identity = Identity::Create.call(user:, origin: :npq)
 
+      npq_courses = NPQCourse.all.reject { |c| c.identifier == "npq-early-headship-coaching-offer" }
+      # NPQ-SENCO available only for >= 2024 cohorts
+      npq_course = cohort.start_date >= 2024 ? npq_courses.sample : npq_courses.reject { |c| c.identifier == "npq-senco" }.sample
+
       npq_application = NPQApplication.create!(
         active_alert: "",
         date_of_birth: Date.new(1990, 1, 1),
@@ -334,7 +338,7 @@ module ValidTestDataGenerator
         school_urn: school.urn,
         teacher_reference_number: TRNGenerator.next,
         teacher_reference_number_verified: true,
-        npq_course: NPQCourse.all.reject { |c| c.identifier == "npq-early-headship-coaching-offer" }.sample,
+        npq_course:,
         npq_lead_provider: lead_provider,
         participant_identity: identity,
         cohort:,
