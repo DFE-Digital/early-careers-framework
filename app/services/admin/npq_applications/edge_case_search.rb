@@ -29,6 +29,7 @@ private
         .does_not_work_in_childcare
         .edge_case_statuses
         .where(id: query_string)
+        .or(NPQApplication.referred_by_return_to_teaching_advisor)
         .or(User.full_name_matches(query_string))
         .or(User.email_matches(query_string))
         .or(TeacherProfile.trn_matches(query_string))
@@ -41,6 +42,7 @@ private
         .does_not_work_in_school
         .does_not_work_in_childcare
         .edge_case_statuses
+        .or(NPQApplication.referred_by_return_to_teaching_advisor)
         .all
     end
   end

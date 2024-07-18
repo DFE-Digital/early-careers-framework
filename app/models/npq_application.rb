@@ -67,6 +67,7 @@ class NPQApplication < ApplicationRecord
                                                                         marked_funded_by_policy])
                              }
   scope :created_at_range, ->(start_date, end_date) { where(created_at: start_date..end_date) }
+  scope :referred_by_return_to_teaching_advisor, -> { where(referred_by_return_to_teaching_adviser: "yes") }
 
   validates :eligible_for_funding_before_type_cast, inclusion: { in: [true, false, "true", "false"] }
   validate  :validate_funding_eligiblity_status_code_change, on: :admin

@@ -133,6 +133,7 @@
   - eligible_for_funding_updated_by_id
   - eligible_for_funding_updated_at
   - funded_place
+  - referred_by_return_to_teaching_adviser
   :induction_records:
   - id
   - induction_programme_id
