@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_20_093655) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_17_111257) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "fuzzystrmatch"
@@ -899,15 +899,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_20_093655) do
     t.index ["schedule_id"], name: "index_participant_profile_schedules_on_schedule_id"
   end
 
-  create_table "participant_profile_start_date_inconsistencies", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "participant_profile_id", null: false
-    t.date "dqt_value"
-    t.date "participant_value"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["participant_profile_id"], name: "idx_on_participant_profile_id_77e3f2fe02", unique: true
-  end
-
   create_table "participant_profile_states", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "participant_profile_id", null: false
     t.text "state", default: "active"
@@ -1349,7 +1340,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_20_093655) do
   add_foreign_key "participant_profile_completion_date_inconsistencies", "participant_profiles"
   add_foreign_key "participant_profile_schedules", "participant_profiles"
   add_foreign_key "participant_profile_schedules", "schedules"
-  add_foreign_key "participant_profile_start_date_inconsistencies", "participant_profiles"
   add_foreign_key "participant_profile_states", "participant_profiles"
   add_foreign_key "participant_profiles", "cohorts"
   add_foreign_key "participant_profiles", "core_induction_programmes"
