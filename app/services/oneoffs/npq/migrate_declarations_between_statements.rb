@@ -156,7 +156,6 @@ module Oneoffs::NPQ
       Finance::Statement::NPQ
         .includes(:cohort, :participant_declarations, cpd_lead_provider: :npq_lead_provider)
         .where(cohort:, name: statement_name, cpd_lead_provider: { npq_lead_provider: })
-        .output
         .group_by(&:npq_lead_provider)
         .transform_values(&:first)
     end
