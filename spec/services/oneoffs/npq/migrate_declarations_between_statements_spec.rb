@@ -39,12 +39,14 @@ describe Oneoffs::NPQ::MigrateDeclarationsBetweenStatements do
     it { is_expected.to eq(instance.recorded_info) }
 
     context "when there are declarations" do
-      let(:declaration) { create(:npq_participant_declaration, :payable, cohort:, cpd_lead_provider:, declaration_type: :started) }
+      let(:npq_course) { create(:npq_course, identifier: "npq-senior-leadership") }
+      let(:declaration) { create(:npq_participant_declaration, :payable, cohort:, cpd_lead_provider:, declaration_type: :started, npq_course:) }
       let(:from_statement) { declaration.statements.first }
 
       let(:cpd_lead_provider2) { declaration2.cpd_lead_provider }
       let(:npq_lead_provider2) { cpd_lead_provider2.npq_lead_provider }
-      let(:declaration2) { create(:npq_participant_declaration, :eligible, cohort:, declaration_type: :"retained-1") }
+      let(:npq_course2) { create(:npq_course, identifier: "npq-leading-behaviour-culture") }
+      let(:declaration2) { create(:npq_participant_declaration, :eligible, cohort:, declaration_type: :"retained-1", npq_course: npq_course2) }
       let!(:from_statement2) { declaration2.statements.first.tap { |s| s.update!(name: from_statement.name) } }
       let!(:to_statement2) { create(:npq_statement, :next_output_fee, name: to_statement.name, cpd_lead_provider: cpd_lead_provider2, cohort:) }
 
