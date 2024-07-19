@@ -43,7 +43,8 @@ module Induction
                 message: :invalid,
                 start: ECF_FIRST_YEAR,
                 end: Date.current.year,
-              }
+              },
+              on: :before_in_target_check
 
     validates :target_cohort_start_year,
               numericality: {
@@ -53,44 +54,61 @@ module Induction
                 message: :invalid,
                 start: ECF_FIRST_YEAR,
                 end: Date.current.year,
-              }
+              },
+              on: :before_in_target_check
 
     validates :target_cohort,
               presence: {
                 message: ->(form, _) { I18n.t("errors.cohort.blank", year: form.target_cohort_start_year, where: "the service") },
-              }
+              },
+              on: :before_in_target_check
 
-    validate :target_cohort_start_year_matches_schedule
-    validate :participant_with_no_notes
-    validate :transfer_from_payments_frozen_cohort, if: :transfer_from_payments_frozen_cohort?
-    validate :transfer_to_payments_frozen_cohort, if: :back_to_payments_frozen_cohort?
+    validate :target_cohort_start_year_matches_schedule,
+             on: :before_in_target_check
+
+    validate :participant_with_no_notes,
+             on: :after_in_target_check
+
+    validate :transfer_from_payments_frozen_cohort,
+             if: :transfer_from_payments_frozen_cohort?,
+             on: :after_in_target_check
+
+    validate :transfer_to_payments_frozen_cohort,
+             if: :back_to_payments_frozen_cohort?,
+             on: :after_in_target_check
 
     validates :participant_declarations,
               absence: { message: :billable_or_submitted },
-              unless: :payments_frozen_transfer?
+              unless: :payments_frozen_transfer?,
+              on: :after_in_target_check
 
     validates :induction_record,
               presence: {
                 message: ->(form, _) { I18n.t("errors.induction_record.blank", year: form.source_cohort_start_year) },
-              }
+              },
+              on: :before_in_target_check
 
-    validate :niot_exception
+    validate :niot_exception,
+             on: :after_in_target_check
 
     validates :target_school_cohort,
               presence: {
                 message: ->(form, _) { I18n.t("errors.cohort.not_setup", year: form.target_cohort_start_year, where: form.school&.name) },
-              }
+              },
+              on: :after_in_target_check
 
     validates :induction_programme,
               presence: {
                 message: ->(form, _) { I18n.t("errors.induction_programme.not_setup", year: form.target_cohort_start_year, school: form.school&.name) },
-              }
+              },
+              on: :after_in_target_check
 
     delegate :school, to: :induction_record, allow_nil: true
 
     def save
-      return false unless valid?
+      return false unless valid?(:before_in_target_check)
       return true if in_target?(induction_record)
+      return false unless valid?(:after_in_target_check)
 
       current_induction_record_updated?
     end

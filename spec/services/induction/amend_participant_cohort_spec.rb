@@ -102,6 +102,8 @@ RSpec.describe Induction::AmendParticipantCohort do
 
       context "when the participant has notes" do
         before do
+          Induction::Enrol.call(participant_profile:,
+                                induction_programme: source_school_cohort.default_induction_programme)
           participant_profile.notes = "Some note"
         end
 
@@ -143,6 +145,8 @@ RSpec.describe Induction::AmendParticipantCohort do
 
         context "when the participant is not eligible to be transferred" do
           before do
+            Induction::Enrol.call(participant_profile:,
+                                  induction_programme: source_school_cohort.default_induction_programme)
             allow(participant_profile).to receive(:eligible_to_change_cohort_and_continue_training?).and_return(false)
           end
 
@@ -161,6 +165,8 @@ RSpec.describe Induction::AmendParticipantCohort do
 
         context "when the participant has billable declarations in current cohort" do
           before do
+            Induction::Enrol.call(participant_profile:,
+                                  induction_programme: source_school_cohort.default_induction_programme)
             participant_profile.participant_declarations.create!(declaration_date: Date.new(source_cohort_start_year, 10, 10),
                                                                  declaration_type: :started,
                                                                  state: :eligible,
@@ -178,6 +184,11 @@ RSpec.describe Induction::AmendParticipantCohort do
         end
 
         context "when the participant has no billable declarations in destination cohort" do
+          before do
+            Induction::Enrol.call(participant_profile:,
+                                  induction_programme: source_school_cohort.default_induction_programme)
+          end
+
           it "set errors" do
             expect(form.save).to be_falsey
             expect(form.errors[:participant_profile]).to include("Participant not eligible to be transferred back to their original cohort")
@@ -206,6 +217,8 @@ RSpec.describe Induction::AmendParticipantCohort do
       %i[submitted eligible payable paid].each do |declaration_state|
         context "when the participant has #{declaration_state} declarations" do
           before do
+            Induction::Enrol.call(participant_profile:,
+                                  induction_programme: source_school_cohort.default_induction_programme)
             participant_profile.participant_declarations.create!(declaration_date: Date.new(2020, 10, 10),
                                                                  declaration_type: :started,
                                                                  state: declaration_state,
@@ -282,6 +295,25 @@ RSpec.describe Induction::AmendParticipantCohort do
         it "returns false and set errors" do
           expect(form.save).to be_falsey
           expect(form.errors[:target_school_cohort]).to include("Cohort starting on #{target_cohort_start_year} not setup on #{school.name}")
+        end
+      end
+
+      context "when the participant is in the target cohort and schedule" do
+        let(:target_cohort_start_year) { source_cohort_start_year }
+
+        subject(:form) do
+          described_class.new(participant_profile:, source_cohort_start_year:, target_cohort_start_year:)
+        end
+
+        before do
+          Induction::Enrol.call(participant_profile:,
+                                induction_programme: source_school_cohort.default_induction_programme)
+        end
+
+        it "returns successfully" do
+          expect(form.save).to be_truthy
+          expect(form.errors).to be_empty
+          expect(participant_profile.reload.latest_induction_record.cohort_start_year).to eq(target_cohort_start_year)
         end
       end
 
