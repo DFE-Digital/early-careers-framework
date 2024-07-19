@@ -11,7 +11,7 @@ namespace :lead_providers do
     cohort = Cohort.find_by(start_year: args[:cohort_start_year])
     raise "Cohort not found: #{args[:cohort_start_year]}" if args[:cohort_start_year] && !cohort
 
-    Array.wrap(lead_provider || LeadProvider.all).each do |lp|
+    Array.wrap(lead_provider || LeadProvider.name_order.joins(:cohorts).includes(:cohorts)).each do |lp|
       Array.wrap(cohort || Cohort.between_years((Date.current - 2.years + 1.day).year, (Date.current + 1.year).year)).each do |c|
         ValidTestDataGenerator::LeadProviderPopulater.call(name: lp.name, cohort: c, total_schools:  args[:total_schools]&.to_i || 5, participants_per_school: 50)
       end
