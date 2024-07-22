@@ -146,7 +146,7 @@ group :development, :test do
   gem "amazing_print"
 end
 
-group :development, :test, :staging, :sandbox, :review, :performance, :migration do
+group :development, :test, :staging, :sandbox, :review, :performance, :migration, :separation do
   gem "factory_bot_rails", "~> 6.4.3"
   gem "faker"
   gem "timecop"
