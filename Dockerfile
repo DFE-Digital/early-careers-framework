@@ -17,7 +17,10 @@ COPY public /public
 COPY swagger /swagger
 
 WORKDIR docs
+ENV REMOVE_NPQ_REFERENCES="false"
 RUN bundle exec middleman build --build-dir=../public/api-reference
+ENV REMOVE_NPQ_REFERENCES="true"
+RUN bundle exec middleman build --build-dir=../public/api-reference-without-npq
 
 # Stage 1: Download gems and node modules.
 FROM ${BASE_RUBY_IMAGE} AS builder
