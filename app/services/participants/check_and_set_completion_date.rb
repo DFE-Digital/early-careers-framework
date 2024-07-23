@@ -2,12 +2,14 @@
 
 module Participants
   class CheckAndSetCompletionDate < BaseService
+    IN_PROGRESS_STATUS = "InProgress"
+
     def call
       return unless participant_profile.ect?
 
-      Induction::Complete.call(participant_profile:, completion_date:) if complete_induction?
-      Participants::SyncDQTInductionStartDate.call(start_date, participant_profile)
-      record_completion_date_inconsistency if completion_date_inconsistent?
+      complete_induction if complete_induction?
+      continue_training if sync_with_dqt && unfinished_participant_continue_training?
+      record_completion_date_mismatch if completion_date_mismatch?
     end
 
   private
@@ -16,6 +18,20 @@ module Participants
 
     def initialize(participant_profile:)
       @participant_profile = participant_profile
+    end
+
+    def amend_cohort_to_continue_training
+      @amend_cohort_to_continue_training ||= Induction::AmendParticipantCohort.new(participant_profile:,
+                                                                                   source_cohort_start_year:,
+                                                                                   target_cohort_start_year:)
+    end
+
+    def clear_participant_continue_training_errors
+      ContinueTrainingCohortChangeError.where(participant_profile:).destroy_all
+    end
+
+    def complete_induction
+      Induction::Complete.call(participant_profile:, completion_date:)
     end
 
     def complete_induction?
@@ -29,8 +45,13 @@ module Participants
         induction_periods.map { |period| period["endDate"] }.compact.max
     end
 
-    def completion_date_inconsistent?
+    def completion_date_mismatch?
       participant_completion_date != completion_date
+    end
+
+    def continue_training
+      clear_participant_continue_training_errors
+      amend_cohort_to_continue_training.save || save_error(amend_cohort_to_continue_training.errors.full_messages.first)
     end
 
     def induction
@@ -41,11 +62,19 @@ module Participants
       @induction_periods ||= Array(induction&.dig("periods"))
     end
 
+    def in_progress_induction_status?
+      induction&.dig("status") == IN_PROGRESS_STATUS
+    end
+
+    def participant_cohort
+      (participant_profile.schedule || participant_profile.latest_induction_record)&.cohort
+    end
+
     def participant_completion_date
       participant_profile.induction_completion_date
     end
 
-    def record_completion_date_inconsistency
+    def record_completion_date_mismatch
       ParticipantProfileCompletionDateInconsistency.upsert(
         {
           participant_profile_id: participant_profile.id,
@@ -56,9 +85,37 @@ module Participants
       )
     end
 
+    def save_error(message)
+      ContinueTrainingCohortChangeError.find_or_create_by!(participant_profile:, message:)
+
+      false
+    end
+
+    def source_cohort_start_year
+      participant_cohort&.start_year
+    end
+
     # returns the minimum start date of all the induction periods
     def start_date
       @start_date ||= induction_periods.map { |period| period["startDate"] }.compact.min
+    end
+
+    def sync_with_dqt
+      Participants::SyncDQTInductionStartDate.call(start_date, participant_profile)
+    end
+
+    def target_cohort
+      Cohort.active_registration_cohort
+    end
+
+    def target_cohort_start_year
+      target_cohort.start_year
+    end
+
+    def unfinished_participant_continue_training?
+      in_progress_induction_status? &&
+        participant_cohort&.payments_frozen? &&
+        participant_profile.eligible_to_change_cohort_and_continue_training?(cohort: target_cohort)
     end
   end
 end
