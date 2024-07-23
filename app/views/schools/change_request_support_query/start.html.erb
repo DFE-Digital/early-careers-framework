@@ -1,0 +1,24 @@
+<% content_for :title, I18n.t("schools.change_request_support_query.page_titles.start_step.#{@wizard.change_request_type.underscore}") %>
+<% content_for(
+  :before_content,
+  govuk_back_link(href: schools_change_request_support_query_intro_path(default_path_params))
+) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= form_with(model: @wizard.current_step, url: @wizard.current_step_path(default_path_params)) do |f| %>
+      <%= f.govuk_error_summary %>
+
+      <%= f.govuk_radio_buttons_fieldset :answer, legend: {
+        size: "l",
+        text: I18n.t("schools.change_request_support_query.page_titles.start_step.#{@wizard.change_request_type.underscore}"),
+        tag: "h1",
+      } do %>
+        <%= f.govuk_radio_button :answer, :yes, label: { text: "Yes" }, link_errors: true %>
+        <%= f.govuk_radio_button :answer, :no, label: { text: "No" } %>
+      <% end %>
+
+      <%= f.govuk_submit "Continue" %>
+    <% end %>
+  </div>
+</div>

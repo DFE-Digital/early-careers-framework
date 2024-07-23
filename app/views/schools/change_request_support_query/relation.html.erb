@@ -1,0 +1,22 @@
+<% content_for :title, I18n.t("schools.change_request_support_query.page_titles.relation_step.#{@wizard.change_request_type.underscore}") %>
+<% content_for(:before_content, govuk_back_link(href: @wizard.previous_step_path)) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= form_with(model: @wizard.current_step, url: @wizard.current_step_path(default_path_params)) do |f| %>
+      <%= f.govuk_error_summary %>
+
+      <%= f.govuk_radio_buttons_fieldset :relation_id, legend: {
+        size: "l",
+        text: I18n.t("schools.change_request_support_query.page_titles.relation_step.#{@wizard.change_request_type.underscore}"),
+        tag: "h1",
+      } do %>
+        <% @wizard.relations.each do |relation| %>
+          <%= f.govuk_radio_button :relation_id, relation.id, label: { text: relation.name } %>
+        <% end %>
+      <% end %>
+
+      <%= f.govuk_submit "Continue" %>
+    <% end %>
+  </div>
+</div>

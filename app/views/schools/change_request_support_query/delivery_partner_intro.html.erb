@@ -1,0 +1,16 @@
+<% content_for :title, "How to change your delivery partner for the #{academic_year} academic year" %>
+<% content_for :before_content, govuk_back_link(href: schools_dashboard_path(school_id: @school_id)) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-l">How to change your delivery partner for the <%= academic_year %> academic year</h1>
+
+    <p class="govuk-body">If you want to <a href="https://www.gov.uk/guidance/how-to-manage-early-career-teacher-training#change-delivery-partner" target="_blank" class="govuk-link govuk-link--no-visited-state">change your delivery partner (opens in a new window or tab)</a> you need to confirm the change with your lead provider.</p>
+
+    <p class="govuk-body">Your lead provider will then report the change to us.</p>
+
+    <h2 class="govuk-heading-m">If you've already contacted your provider</h2>
+
+    <p>If you contacted your lead provider more than 2 weeks ago, and the change has still not been made, <%= govuk_link_to "contact us", schools_change_request_support_query_start_path(default_path_params) %>.</p>
+  </div>
+</div>

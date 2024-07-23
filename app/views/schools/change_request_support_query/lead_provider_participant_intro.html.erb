@@ -1,0 +1,16 @@
+<% content_for :title, "How to change the lead provider for #{@participant.full_name}" %>
+<% content_for :before_content, govuk_back_link(href: schools_dashboard_path(school_id: @school_id)) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-l">How to change the lead provider for <%= @participant.full_name %></h1>
+    <p class="govuk-body">
+      You need to contact <%= @participant.full_name %>'s current and new lead providers to <a href="https://www.gov.uk/guidance/how-to-manage-early-career-teacher-training#change-lead-provider" target="_blank" class="govuk-link govuk-link--no-visited-state">change the lead provider (opens in a new window or tab)</a>.
+    </p>
+
+    <p class="govuk-body">The new provider will then report the change to us.</p>
+
+    <h2 class="govuk-heading-m">If you've already contacted the providers</h2>
+    <p>If you contacted the current and new lead provider more than 2 weeks ago, and the change has still not been made, <%= govuk_link_to "contact us", schools_change_request_support_query_start_path(default_path_params) %>.</p>
+  </div>
+</div>

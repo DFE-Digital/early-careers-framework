@@ -14,7 +14,7 @@ en:
         schools/change_lead_provider/start_step:
           attributes:
             answer:
-              blank: "Select yes if you have confirmed this change with the current and new lead providers"
+              blank: "Select yes if you have confirmed this change with the current and new lead provider"
         schools/change_lead_provider/email_step:
           attributes:
             answer:
@@ -32,10 +32,13 @@ en:
       page_titles:
         start_step:
           change_delivery_partner: Have you confirmed this change with your lead provider?
-          change_lead_provider: Have you confirmed this change with the current and new lead providers?
+          change_lead_provider: Have you confirmed this change with the current and new lead provider?
         relation_step:
           change_delivery_partner: Who is the new delivery partner?
           change_lead_provider: Who is the new lead provider?
+        contact_providers_step:
+          change_delivery_partner: You need to contact your lead provider
+          change_lead_provider: You need to contact the current and new lead provider
 
       delivery_partner:
         additional_information: |

@@ -1,0 +1,28 @@
+<% content_for :title, "Is this the correct email?" %>
+<% content_for(:before_content, govuk_back_link(href: @wizard.previous_step_path)) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-l">Is this the correct email for <%= @participant.full_name %>?</h1>
+
+    <%= govuk_summary_list do |sl|
+      sl.with_row do |row|
+        row.with_key(text: "Email")
+        row.with_value(text: @wizard.preferred_email)
+      end
+    end %>
+
+    <%= form_with(model: @wizard.current_step, url: @wizard.current_step_path(default_path_params)) do |f| %>
+      <%= f.govuk_error_summary %>
+
+      <%= f.govuk_radio_buttons_fieldset :answer, legend: { text: nil } do %>
+        <%= f.govuk_radio_button :answer, :yes, label: { text: "Yes" }, link_errors: true %>
+        <%= f.govuk_radio_button :answer, :no, label: { text: "No" } do %>
+          <%= f.govuk_text_field :email, label: { text: "Enter the correct email address" } %>
+        <% end %>
+      <% end %>
+
+      <%= f.govuk_submit "Continue" %>
+    <% end %>
+  </div>
+</div>

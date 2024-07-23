@@ -150,8 +150,14 @@
           </dd>
 
           <dd class="govuk-summary-list__actions">
-            <%= govuk_link_to(schools_change_lead_provider_intro_path(
-              participant_id: profile.id, school_id: school.id, start_year: induction_record.cohort.start_year)) do %>
+            <%= govuk_link_to(
+              schools_change_request_support_query_intro_path(
+                change_request_type: "change-lead-provider",
+                participant_id: profile.id,
+                school_id: school.id,
+                start_year: induction_record.cohort.start_year,
+              )
+            ) do %>
               <%= 'Change' %> <span class="govuk-visually-hidden"> Lead provider</span>
             <% end %>
           </dd>
