@@ -17,3 +17,8 @@ set :js_dir, "api-reference/javascripts"
 set :images_dir, "api-reference/javascripts"
 
 set :relative_links, true
+
+if ENV["REMOVE_NPQ_REFERENCES"].to_s == "true"
+  ignore "/npq.html"
+  ignore "/npq/**.*"
+end
