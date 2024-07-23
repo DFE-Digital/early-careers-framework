@@ -8,9 +8,4 @@ Rails.application.configure do
 
   config.log_level = :warn
   config.ssl_options = { redirect: { exclude: ->(request) { request.path.include?("/check") } } }
-
-  # Enable/disable aspects of the separation environment
-  config.npq_separation = {
-    disable_npq_endpoints: true,
-  }
 end
