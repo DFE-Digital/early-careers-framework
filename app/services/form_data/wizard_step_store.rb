@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module FormData
-  class ChangeLeadProviderStore < DataStore
+  class WizardStepStore < DataStore
     def store_attrs(step, attrs)
       set(step, attrs)
     end
