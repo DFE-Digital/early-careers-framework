@@ -514,3 +514,9 @@
   - participant_type
   - induction_record_created_at
   - partnership_id
+  :continue_training_cohort_change_errors:
+    - id
+    - participant_profile_id
+    - message
+    - created_at
+    - updated_at
