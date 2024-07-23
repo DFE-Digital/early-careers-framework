@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Schools::EarlyCareerTeachers::ChangeLeadProvider::BaseWizard do
+RSpec.describe Schools::ChangeLeadProvider::BaseWizard do
   let(:current_step) { :intro }
   subject { described_class.new(current_step:) }
 
@@ -10,13 +10,12 @@ RSpec.describe Schools::EarlyCareerTeachers::ChangeLeadProvider::BaseWizard do
     it "returns the correct steps" do
       expect(subject.steps).to eq(
         [{
-          intro: Schools::EarlyCareerTeachers::ChangeLeadProvider::IntroStep,
-          start: Schools::EarlyCareerTeachers::ChangeLeadProvider::StartStep,
-          contact_providers: Schools::EarlyCareerTeachers::ChangeLeadProvider::ContactProvidersStep,
-          email: Schools::EarlyCareerTeachers::ChangeLeadProvider::EmailStep,
-          lead_provider: Schools::EarlyCareerTeachers::ChangeLeadProvider::LeadProviderStep,
-          check_your_answers: Schools::EarlyCareerTeachers::ChangeLeadProvider::CheckYourAnswersStep,
-          success: Schools::EarlyCareerTeachers::ChangeLeadProvider::SuccessStep,
+          start: Schools::ChangeLeadProvider::StartStep,
+          contact_providers: Schools::ChangeLeadProvider::ContactProvidersStep,
+          email: Schools::ChangeLeadProvider::EmailStep,
+          lead_provider: Schools::ChangeLeadProvider::LeadProviderStep,
+          check_your_answers: Schools::ChangeLeadProvider::CheckYourAnswersStep,
+          success: Schools::ChangeLeadProvider::SuccessStep,
         }],
       )
     end
@@ -73,6 +72,7 @@ RSpec.describe Schools::EarlyCareerTeachers::ChangeLeadProvider::BaseWizard do
       let(:email) { "different@example.com" }
       let(:school_id) { SecureRandom.uuid }
       let(:school) { instance_double(School, name: "Big School", id: school_id) }
+      let(:academic_year) { "2022 to 2023" }
       let(:start_year) { 2022 }
       let(:current_lead_provider_id) { SecureRandom.uuid }
       let(:current_lead_provider) { instance_double(LeadProvider, name: "Current Lead Provider", id: current_lead_provider_id) }
@@ -110,9 +110,8 @@ RSpec.describe Schools::EarlyCareerTeachers::ChangeLeadProvider::BaseWizard do
         expect(CreateChangeLeadProviderSupportQuery).to have_received(:call).with(
           current_user:,
           participant:,
-          email:,
           school:,
-          start_year:,
+          academic_year:,
           current_lead_provider:,
           new_lead_provider:,
         )

@@ -11,27 +11,41 @@
       <h2>Change request details</h2>
 
       <%= govuk_summary_list do |sl|
-        sl.with_row do |row|
-          row.with_key(text: "Participant name")
-          row.with_value(text: @participant.full_name)
+        if @wizard.participant_change_request?
+          sl.with_row do |row|
+            row.with_key(text: "Participant name")
+            row.with_value(text: @participant.full_name)
+          end
+        else
+          sl.with_row do |row|
+            row.with_key(text: "Induction tutor name")
+            row.with_value(text: @school.induction_coordinators.first.full_name)
+          end
+          sl.with_row do |row|
+            row.with_key(text: "Induction tutor email address")
+            row.with_value(text: @school.induction_coordinators.first.email)
+          end
         end
+
         sl.with_row do |row|
           row.with_key(text: "School")
           row.with_value(text: @school.name)
         end
         sl.with_row do |row|
           row.with_key(text: "Academic year")
-          row.with_value(text: @start_year)
+          row.with_value(text: academic_year)
         end
+
         sl.with_row do |row|
           row.with_key(text: "Participant email address")
           row.with_value(text: @wizard.preferred_email)
           row.with_action(
             text: "Change",
             visually_hidden_text: "email address",
-            href: schools_early_career_teachers_change_lead_provider_email_path(default_path_params)
+            href: schools_change_lead_provider_email_path(default_path_params)
           )
-        end
+        end if @wizard.participant_change_request?
+
         sl.with_row do |row|
           row.with_key(text: "Current lead provider")
           row.with_value(text: @wizard.current_lead_provider.name)
@@ -42,7 +56,7 @@
           row.with_action(
             text: "Change",
             visually_hidden_text: "lead provider",
-            href: schools_early_career_teachers_change_lead_provider_lead_provider_path(default_path_params)
+            href: schools_change_lead_provider_lead_provider_path(default_path_params)
           )
         end
       end %>

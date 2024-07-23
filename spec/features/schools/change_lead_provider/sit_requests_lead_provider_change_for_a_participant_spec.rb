@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "rails_helper"
-require_relative "../../training_dashboard/manage_training_steps"
+require_relative "../training_dashboard/manage_training_steps"
 
 RSpec.describe "Induction coordinator requests lead provider change for a participant", js: true, mid_cohort: true do
   include ManageTrainingSteps
@@ -25,7 +25,7 @@ RSpec.describe "Induction coordinator requests lead provider change for a partic
     then_i_am_asked_to_check_my_changes
     click_on "Accept and send request"
     then_i_see_confirmation_that_the_request_has_been_sent
-    and_a_support_query_is_created
+    and_a_support_query_has_been_created
   end
 
   def and_there_is_an_ect_in_the_active_registration_cohort
@@ -123,8 +123,8 @@ RSpec.describe "Induction coordinator requests lead provider change for a partic
     expect(page).to have_content("Your change request has been submitted")
   end
 
-  def and_a_support_query_is_created
+  def and_a_support_query_has_been_created
     expect(SupportQuery.count).to eq(1)
-    expect(SupportQuery.first.subject).to eq("change-participant-lead-provider")
+    expect(SupportQuery.last.subject).to eq("change-participant-lead-provider")
   end
 end
