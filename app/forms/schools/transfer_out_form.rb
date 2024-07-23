@@ -25,6 +25,8 @@ module Schools
       elsif @end_date.year.digits.length != 4
         errors.add(:end_date, I18n.t("errors.end_date.invalid"))
       end
+    rescue ArgumentError
+      errors.add(:end_date, I18n.t("errors.end_date.invalid"))
     end
   end
 end
