@@ -5,6 +5,11 @@ module Schools
     before_action :set_school
     before_action :initialize_wizard
 
+    attr_reader :wizard
+
+    delegate :academic_year, :default_path_arguments, to: :wizard
+    helper_method :academic_year, :default_path_arguments
+
     def new
       render current_step
     end
@@ -69,11 +74,6 @@ module Schools
       ActionController::Parameters.new({ current_step => params })
     end
 
-    def default_path_params
-      { change_request_type:, participant_id:, school_id:, start_year: }
-    end
-    helper_method :default_path_params
-
     def school_id
       @school_id ||= @school.id
     end
@@ -95,11 +95,6 @@ module Schools
     def participant
       @participant ||= ParticipantProfile.find(params[:participant_id])
     end
-
-    def academic_year
-      @academic_year ||= "#{start_year} to #{start_year.to_i + 1}"
-    end
-    helper_method :academic_year
 
     def participant_change_request?
       params[:participant_id].present?

@@ -12,7 +12,7 @@
       end
     end %>
 
-    <%= form_with(model: @wizard.current_step, url: @wizard.current_step_path(default_path_params)) do |f| %>
+    <%= form_with(model: @wizard.current_step, url: @wizard.current_step_path(default_path_arguments)) do |f| %>
       <%= f.govuk_error_summary %>
 
       <%= f.govuk_radio_buttons_fieldset :answer, legend: { text: nil } do %>
