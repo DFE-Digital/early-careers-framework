@@ -22,6 +22,18 @@ RSpec.describe NPQApplication, type: :model do
     it { expect { save_and_dedupe_participant }.not_to change(ParticipantIdChange, :count) }
     it { is_expected.to eq(true) }
 
+    context "when a rollback occurs in Identity::Transfer" do
+      before do
+        create(:teacher_profile, trn: user.teacher_profile.trn, created_at: 1.day.ago)
+        allow_any_instance_of(User).to receive(:participant_identities).and_raise(ActiveRecord::Rollback)
+      end
+
+      it "raises an error outside of Identity::Transfer and rolls back the outer transaction" do
+        expect { save_and_dedupe_participant }.to raise_error(Identity::TransferError)
+        expect(instance).not_to be_persisted
+      end
+    end
+
     context "when a participant with the same TRN exists" do
       let(:duplicate_trn) { user.teacher_profile.trn }
 
