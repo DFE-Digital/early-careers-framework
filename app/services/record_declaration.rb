@@ -13,6 +13,7 @@ class RecordDeclaration
   attribute :evidence_held
   attribute :has_passed
 
+  before_validation :validate_if_npq_course_supported
   before_validation :declaration_attempt
 
   validates :participant_id, participant_identity_presence: true, participant_not_withdrawn: true
@@ -284,5 +285,14 @@ private
 
   def check_mentor_completion
     ParticipantDeclarations::HandleMentorCompletion.call(participant_declaration:)
+  end
+
+  def validate_if_npq_course_supported
+    return unless NpqApiEndpoint.disable_npq_endpoints?
+
+    if course_identifier.to_s.starts_with?("npq-")
+      errors.add(:course_identifier, I18n.t(:npq_course_no_longer_supported))
+      throw(:abort)
+    end
   end
 end

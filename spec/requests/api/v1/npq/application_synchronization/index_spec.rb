@@ -16,6 +16,9 @@ RSpec.describe "NPQ Application Status API", type: :request do
       participant_declaration_id = NPQApplication.participant_declaration_finder(pick_application.last)&.id
       ParticipantOutcome::NPQ.latest_per_declaration&.find_by_participant_declaration_id(participant_declaration_id)&.state
     end
+
+    it_behaves_like "Feature enabled NPQ API endpoint", "GET", "/api/v1/npq/application_synchronizations"
+
     it "returns correct jsonapi content" do
       @controller = Api::V1::NPQ::ApplicationSynchronizationsController.new
       @controller.params = { "@npq_applications": npq_application }

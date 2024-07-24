@@ -63,6 +63,10 @@ RSpec.configure do |config|
   config.before do
     Faker::Number.unique.clear
     enqueued_jobs.clear
+
+    # Enable/disable aspects of the separation environment
+    # We reset to default before each test
+    Rails.application.config.npq_separation = nil
   end
   config.include Devise::Test::IntegrationHelpers, type: :request
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures

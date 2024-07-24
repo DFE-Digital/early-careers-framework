@@ -37,6 +37,8 @@ RSpec.describe "API Users", type: :request do
     context "when authorized" do
       let(:authorization_header) { bearer_token }
 
+      it_behaves_like "Feature enabled NPQ API endpoint", "GET", "/api/v1/npq/users/1234567.json"
+
       context "when user exists" do
         let(:user_id) { user.id }
 

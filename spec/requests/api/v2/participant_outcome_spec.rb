@@ -16,6 +16,8 @@ RSpec.describe "participant outcomes endpoint spec", type: :request do
         default_headers[:CONTENT_TYPE] = "application/json"
       end
 
+      it_behaves_like "Feature enabled NPQ API endpoint", "GET", "/api/v2/participants/npq/12345678/outcomes"
+
       context "when no outcome exists" do
         it "returns empty array" do
           get "/api/v2/participants/npq/#{npq_application.participant_identity.external_identifier}/outcomes"

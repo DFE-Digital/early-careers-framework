@@ -96,5 +96,39 @@ RSpec.describe Api::ParticipantDeclarations::Index do
         expect(subject.scope).to include(new_provider_ineligible_declaration)
       end
     end
+
+    context "when using 'disable_npq_endpoints' feature" do
+      let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider) }
+      let!(:npq_declaration) do
+        create(
+          :npq_participant_declaration,
+          declaration_type: "started",
+          cpd_lead_provider:,
+        )
+      end
+      let!(:ecf_declaration) do
+        create(
+          :ect_participant_declaration,
+          declaration_type: "started",
+          cpd_lead_provider:,
+        )
+      end
+
+      subject { described_class.new(cpd_lead_provider:) }
+
+      context "when disable_npq_endpoints is true" do
+        before { Rails.application.config.npq_separation = { disable_npq_endpoints: true } }
+
+        it "returns only ecf declarations" do
+          expect(subject.scope.to_a).to eql([ecf_declaration])
+        end
+      end
+
+      context "when disable_npq_endpoints is false" do
+        it "returns both declarations" do
+          expect(subject.scope.to_a).to eql([npq_declaration, ecf_declaration])
+        end
+      end
+    end
   end
 end

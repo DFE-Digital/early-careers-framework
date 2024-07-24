@@ -369,6 +369,32 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery do
         expect(subject.participant_declarations_from(paginated_query).to_a).to eq([participant_declaration1])
       end
     end
+
+    context "when using 'disable_npq_endpoints' feature" do
+      let(:cpd_lead_provider1) { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider) }
+      let!(:npq_declaration) do
+        create(
+          :npq_participant_declaration,
+          declaration_type: "started",
+          cpd_lead_provider: cpd_lead_provider1,
+        )
+      end
+      let(:paginated_query) { ParticipantDeclaration.where(cpd_lead_provider: cpd_lead_provider1) }
+
+      context "when disable_npq_endpoints is true" do
+        before { Rails.application.config.npq_separation = { disable_npq_endpoints: true } }
+
+        it "returns only ecf declarations" do
+          expect(subject.participant_declarations_from(paginated_query).to_a).to eq([participant_declaration3, participant_declaration1, participant_declaration2])
+        end
+      end
+
+      context "when disable_npq_endpoints is false" do
+        it "returns all declarations" do
+          expect(subject.participant_declarations_from(paginated_query).to_a).to eq([participant_declaration3, participant_declaration1, participant_declaration2, npq_declaration])
+        end
+      end
+    end
   end
 
   describe "#participant_declaration" do
@@ -418,6 +444,46 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery do
 
       it "is included in the response" do
         expect(subject.participant_declaration(transferred_declaration.id)).to eql(transferred_declaration)
+      end
+    end
+
+    context "when using 'disable_npq_endpoints' feature" do
+      let(:cpd_lead_provider1) { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider) }
+      let!(:npq_declaration) do
+        create(
+          :npq_participant_declaration,
+          declaration_type: "started",
+          cpd_lead_provider: cpd_lead_provider1,
+        )
+      end
+      let!(:ecf_declaration) do
+        create(
+          :ect_participant_declaration,
+          declaration_type: "started",
+          cpd_lead_provider: cpd_lead_provider1,
+        )
+      end
+
+      context "when disable_npq_endpoints is true" do
+        before { Rails.application.config.npq_separation = { disable_npq_endpoints: true } }
+
+        it "returns ecf declaration" do
+          expect(subject.participant_declaration(ecf_declaration.id)).to eql(ecf_declaration)
+        end
+
+        it "does not return npq declaration" do
+          expect { subject.participant_declaration(npq_declaration.id) }.to raise_error(ActiveRecord::RecordNotFound)
+        end
+      end
+
+      context "when disable_npq_endpoints is false" do
+        it "returns ecf declaration" do
+          expect(subject.participant_declaration(ecf_declaration.id)).to eql(ecf_declaration)
+        end
+
+        it "returns npq declaration" do
+          expect(subject.participant_declaration(npq_declaration.id)).to eql(npq_declaration)
+        end
       end
     end
   end

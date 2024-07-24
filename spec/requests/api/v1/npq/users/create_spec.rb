@@ -58,6 +58,8 @@ RSpec.describe "API Users", type: :request do
     context "when authorized" do
       let(:authorization_header) { bearer_token }
 
+      it_behaves_like "Feature enabled NPQ API endpoint", "POST", "/api/v1/npq/users.json"
+
       context "when the get_an_identity_id is not in use" do
         context "when the email is not in use" do
           include_examples "correct response check" do
