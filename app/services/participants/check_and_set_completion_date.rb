@@ -6,7 +6,7 @@ module Participants
       return unless participant_profile.ect?
 
       Induction::Complete.call(participant_profile:, completion_date:) if complete_induction?
-      record_start_date_inconsistency if start_date_inconsistent?
+      Participants::SyncDQTInductionStartDate.call(start_date, participant_profile)
       record_completion_date_inconsistency if completion_date_inconsistent?
     end
 
@@ -45,10 +45,6 @@ module Participants
       participant_profile.induction_completion_date
     end
 
-    def participant_start_date
-      participant_profile.induction_start_date
-    end
-
     def record_completion_date_inconsistency
       ParticipantProfileCompletionDateInconsistency.upsert(
         {
@@ -60,24 +56,9 @@ module Participants
       )
     end
 
-    def record_start_date_inconsistency
-      ParticipantProfileStartDateInconsistency.upsert(
-        {
-          participant_profile_id: participant_profile.id,
-          dqt_value: start_date,
-          participant_value: participant_start_date,
-        },
-        unique_by: :participant_profile_id,
-      )
-    end
-
     # returns the minimum start date of all the induction periods
     def start_date
       @start_date ||= induction_periods.map { |period| period["startDate"] }.compact.min
-    end
-
-    def start_date_inconsistent?
-      start_date != participant_start_date
     end
   end
 end

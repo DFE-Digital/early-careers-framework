@@ -345,7 +345,7 @@ class SchoolMailer < ApplicationMailer
   def fip_provider_has_withdrawn_a_participant
     withdrawn_participant = params[:withdrawn_participant]
     induction_coordinator = params[:induction_coordinator]
-    partnership = Partnership.find_by(school: withdrawn_participant.school, cohort: withdrawn_participant.cohort)
+    partnership = params[:partnership]
 
     email = template_mail(
       PARTICIPANT_WITHDRAWN_BY_PROVIDER,

@@ -22,12 +22,14 @@ RSpec.describe Schools::AddParticipants::AddWizard, type: :model do
 
   describe "email_in_use?" do
     let(:ect_mentor) { false }
+    let(:ect_participant) { true }
     let(:transfer) { false }
     let(:confirmed_trn) { "0012345" }
     let(:participant_type) { "ect" }
 
     before do
       allow(data_store).to receive(:email).and_return("ray.clemence@example.com")
+      allow(data_store).to receive(:ect_participant?).and_return(ect_participant)
       allow(data_store).to receive(:ect_mentor?).and_return(ect_mentor)
       allow(data_store).to receive(:transfer?).and_return(transfer)
       allow(data_store).to receive(:confirmed_trn).and_return(confirmed_trn)
@@ -51,6 +53,7 @@ RSpec.describe Schools::AddParticipants::AddWizard, type: :model do
 
       context "when adding a mentor profile to an ECT" do
         let(:ect_mentor) { true }
+        let(:ect_participant) { false }
 
         it "returns false" do
           expect(wizard).not_to be_email_in_use

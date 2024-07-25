@@ -14,7 +14,7 @@ module Support
     end
 
     def logger
-      @logger = Logger.new($stdout)
+      @logger = Logger.new(Rails.env.test? ? nil : $stdout)
     end
   end
 end

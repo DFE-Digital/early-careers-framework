@@ -43,7 +43,8 @@ module Induction
                 message: :invalid,
                 start: ECF_FIRST_YEAR,
                 end: Date.current.year,
-              }
+              },
+              on: :before_in_target_check
 
     validates :target_cohort_start_year,
               numericality: {
@@ -53,46 +54,61 @@ module Induction
                 message: :invalid,
                 start: ECF_FIRST_YEAR,
                 end: Date.current.year,
-              }
+              },
+              on: :before_in_target_check
 
     validates :target_cohort,
               presence: {
                 message: ->(form, _) { I18n.t("errors.cohort.blank", year: form.target_cohort_start_year, where: "the service") },
-              }
+              },
+              on: :before_in_target_check
 
-    validate :non_completion_date
-    validate :target_cohort_start_year_matches_schedule
+    validate :target_cohort_start_year_matches_schedule,
+             on: :before_in_target_check
 
-    validates :participant_profile,
-              active_participant_profile: true
+    validate :participant_with_no_notes,
+             on: :after_in_target_check
 
-    validate :transfer_from_payments_frozen_cohort, if: :transfer_from_payments_frozen_cohort?
-    validate :transfer_to_payments_frozen_cohort, if: :back_to_payments_frozen_cohort?
+    validate :transfer_from_payments_frozen_cohort,
+             if: :transfer_from_payments_frozen_cohort?,
+             on: :after_in_target_check
+
+    validate :transfer_to_payments_frozen_cohort,
+             if: :back_to_payments_frozen_cohort?,
+             on: :after_in_target_check
 
     validates :participant_declarations,
               absence: { message: :billable_or_submitted },
-              unless: :payments_frozen_transfer?
+              unless: :payments_frozen_transfer?,
+              on: :after_in_target_check
 
     validates :induction_record,
               presence: {
                 message: ->(form, _) { I18n.t("errors.induction_record.blank", year: form.source_cohort_start_year) },
-              }
+              },
+              on: :before_in_target_check
+
+    validate :niot_exception,
+             on: :after_in_target_check
 
     validates :target_school_cohort,
               presence: {
                 message: ->(form, _) { I18n.t("errors.cohort.not_setup", year: form.target_cohort_start_year, where: form.school&.name) },
-              }
+              },
+              on: :after_in_target_check
 
     validates :induction_programme,
               presence: {
                 message: ->(form, _) { I18n.t("errors.induction_programme.not_setup", year: form.target_cohort_start_year, school: form.school&.name) },
-              }
+              },
+              on: :after_in_target_check
 
     delegate :school, to: :induction_record, allow_nil: true
 
     def save
-      return false unless valid?
+      return false unless valid?(:before_in_target_check)
       return true if in_target?(induction_record)
+      return false unless valid?(:after_in_target_check)
 
       current_induction_record_updated?
     end
@@ -140,7 +156,7 @@ module Induction
       return unless participant_profile
 
       @induction_record ||= participant_profile.induction_records
-                                               .active_induction_status
+                                               .where.not(induction_status: :changed)
                                                .joins(induction_programme: { school_cohort: :cohort })
                                                .where(cohorts: { start_year: source_cohort_start_year })
                                                .latest
@@ -169,13 +185,9 @@ module Induction
     end
 
     def schedule
-      @schedule ||= if induction_record && in_target_cohort?(induction_record)
-                      induction_record.schedule
-                    else
-                      Finance::Schedule::ECF.find_by(cohort: target_cohort,
-                                                     schedule_identifier: induction_record&.schedule_identifier) ||
-                        Finance::Schedule::ECF.default_for(cohort: target_cohort)
-                    end
+      @schedule ||= Induction::ScheduleForNewCohort.call(cohort: target_cohort,
+                                                         induction_record:,
+                                                         cohort_changed_after_payments_frozen:)
     end
 
     def source_cohort
@@ -202,10 +214,34 @@ module Induction
 
     # Validations
 
-    def non_completion_date
-      if participant_profile&.induction_completion_date || participant_profile&.mentor_completion_date
-        errors.add(:participant_profile, :completion_date)
-      end
+    def niot
+      @niot ||= Niot.lead_provider
+    end
+
+    def niot_exception
+      errors.add(:induction_record, :niot_participant) if niot_forbidden_target_cohort?
+    end
+
+    def niot_first_training_year
+      @niot_first_training_year ||= Niot.first_training_year
+    end
+
+    def niot_forbidden_target_cohort?
+      return false unless niot_participant?
+      return false unless niot_first_training_year
+
+      target_cohort_start_year < niot_first_training_year
+    end
+
+    def niot_participant?
+      return false unless niot
+      return false unless induction_record
+
+      induction_record.lead_provider_id == niot.id
+    end
+
+    def participant_with_no_notes
+      errors.add(:participant_profile, :with_notes) if participant_profile&.notes.present?
     end
 
     def transfer_from_payments_frozen_cohort

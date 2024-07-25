@@ -474,7 +474,6 @@ module ManageTrainingSteps
   end
 
   def and_the_participant_is_displayed_mentored_by(name)
-    puts page.html
     expect(page).to have_summary_row("Mentor", name)
   end
 

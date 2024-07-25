@@ -13,7 +13,7 @@ module AppropriateBodies
     def scope
       scoped = collection.includes(
         :cohort,
-      ).where(cohort: { start_year: Cohort.current.start_year })
+      ).where(cohort: { start_year: Cohort.active_registration_cohort.start_year })
 
       if params[:query].present?
         scoped = filter_query(scoped, params[:query])

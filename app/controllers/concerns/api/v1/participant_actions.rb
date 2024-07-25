@@ -22,7 +22,7 @@ module Api
       end
 
       def change_schedule
-        service = ChangeSchedule.new(action_params)
+        service = ChangeSchedule.new(action_params.merge!(allow_change_to_from_frozen_cohort: true))
 
         serialized_response_for(service)
       end

@@ -37,15 +37,11 @@ module Support
           timestamp = participant_profile.schedule.milestones.first.start_date + 10.days
         when :retained_1
           timestamp = participant_profile.schedule.milestones.second.start_date + 10.days
-        else
-          puts "Unexpected declaration type \"#{declaration_type}\""
         end
 
         course_identifier = participant_type == "ECT" ? "ecf-induction" : "ecf-mentor"
 
         travel_to(timestamp) do
-          puts timestamp
-
           declarations_endpoint = APIs::PostParticipantDeclarationsEndpoint.new tokens[lead_provider_name]
           declarations_endpoint.post_training_declaration participant_profile.user.id, course_identifier, declaration_type, timestamp - 8.days
 

@@ -13,6 +13,8 @@ RSpec.describe "NPQ Funding API", type: :request do
         default_headers[:Authorization] = bearer_token
       end
 
+      it_behaves_like "Feature enabled NPQ API endpoint", "GET", "/api/v1/npq-funding/1234567"
+
       it "returns correct response" do
         expect(NPQ::FundingEligibility).to receive(:new)
           .with(trn: "1234567", npq_course_identifier: "npq-leading-literacy")

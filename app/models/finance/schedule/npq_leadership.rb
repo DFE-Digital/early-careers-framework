@@ -6,6 +6,7 @@ class Finance::Schedule::NPQLeadership < Finance::Schedule::NPQ
     npq-headship
     npq-executive-leadership
     npq-early-years-leadership
+    npq-senco
   ].freeze
 
   PERMITTED_COURSE_IDENTIFIERS = IDENTIFIERS

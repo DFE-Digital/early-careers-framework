@@ -15,8 +15,8 @@ gem "pretender", ">= 0.4.0"
 gem "pundit"
 
 # Error and performance monitoring
-gem "sentry-rails", "~> 5.17"
-gem "sentry-ruby", "~> 5.17"
+gem "sentry-rails", "~> 5.18"
+gem "sentry-ruby", "~> 5.18"
 gem "sentry-sidekiq"
 
 # Support queries
@@ -111,7 +111,8 @@ gem "rouge"
 
 gem "auto_strip_attributes", "~> 2.6"
 
-gem "dfe-analytics", github: "DFE-Digital/dfe-analytics", tag: "v1.12.7"
+gem "dfe-analytics", github: "DFE-Digital/dfe-analytics", tag: "v1.13.0"
+gem "dfe-wizard", github: "DFE-Digital/dfe-wizard"
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -145,7 +146,7 @@ group :development, :test do
   gem "amazing_print"
 end
 
-group :development, :test, :staging, :sandbox, :review, :performance, :migration do
+group :development, :test, :staging, :sandbox, :review, :performance, :migration, :separation do
   gem "factory_bot_rails", "~> 6.4.3"
   gem "faker"
   gem "timecop"

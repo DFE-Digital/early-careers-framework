@@ -11,6 +11,13 @@ RSpec.describe "NPQ Participants API", type: :request do
 
   before { default_headers[:Authorization] = bearer_token }
 
+  it_behaves_like "Feature enabled NPQ API endpoint", "GET", "/api/v1/participants/npq"
+  it_behaves_like "Feature enabled NPQ API endpoint", "GET", "/api/v1/participants/npq/1234567"
+  it_behaves_like "Feature enabled NPQ API endpoint", "PUT", "/api/v1/participants/npq/1234567/withdraw"
+  it_behaves_like "Feature enabled NPQ API endpoint", "PUT", "/api/v1/participants/npq/1234567/defer"
+  it_behaves_like "Feature enabled NPQ API endpoint", "PUT", "/api/v1/participants/npq/1234567/resume"
+  it_behaves_like "Feature enabled NPQ API endpoint", "PUT", "/api/v1/participants/npq/1234567/change-schedule"
+
   describe "GET /api/v1/participants/npq" do
     let!(:npq_applications) do
       create_list(:npq_application, 3, :accepted, :with_started_declaration, npq_lead_provider:, school_urn: "123456")

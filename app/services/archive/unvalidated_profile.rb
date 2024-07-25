@@ -2,6 +2,8 @@
 
 module Archive
   class UnvalidatedProfile < ::BaseService
+    include Archive::SupportMethods
+
     def call
       check_profile_can_be_archived!
 
@@ -13,7 +15,7 @@ module Archive
                                        display_name: user.full_name,
                                        reason:,
                                        data:)
-        destroy_profile! unless keep_original
+        destroy_profile!(participant_profile) unless keep_original
         relic
       end
     end
@@ -37,22 +39,6 @@ module Archive
       elsif profile_has_mentees?
         raise ArchiveError, "Profile #{participant_profile.id} has mentees"
       end
-    end
-
-    def profile_has_declarations?
-      participant_profile.participant_declarations.not_voided.any?
-    end
-
-    def profile_has_eligibility?
-      participant_profile.ecf_participant_eligibility.present?
-    end
-
-    def profile_has_mentees?
-      participant_profile.mentor? && InductionRecord.where(mentor_profile: participant_profile).any?
-    end
-
-    def destroy_profile!
-      DestroyECFProfileData.call(participant_profile:)
     end
   end
 end

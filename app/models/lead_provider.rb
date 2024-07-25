@@ -35,6 +35,10 @@ class LeadProvider < ApplicationRecord
     %w[name]
   end
 
+  def first_training_year
+    provider_relationships.includes(:cohort).minimum("cohorts.start_year")
+  end
+
   def next_output_fee_statement(cohort)
     statements.next_output_fee_statements.where(cohort:).first
   end

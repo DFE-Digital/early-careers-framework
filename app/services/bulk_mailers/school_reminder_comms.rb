@@ -21,7 +21,7 @@ module BulkMailers
       email_count = 0
 
       query
-        .includes(:user, :school)
+        .eager_load(:user, :school)
         .find_each do |induction_record|
           ect_name = induction_record.user.full_name
           school = induction_record.school
@@ -50,7 +50,7 @@ module BulkMailers
       email_count = 0
 
       query
-        .includes(:user)
+        .eager_load(:user)
         .find_each do |induction_record|
           ect_name = induction_record.user.full_name
           school = induction_record.school
@@ -73,13 +73,14 @@ module BulkMailers
     def contact_sits_that_need_to_assign_mentors
       query = Schools::WithEctsWithNoMentorQuery.call(cohort:, school_type_codes: SCHOOL_TYPES_TO_INCLUDE)
 
+      query = query.joins(:induction_coordinator_profiles)
+
       return query.count if dry_run
 
       email_count = 0
 
       query
-        .joins(:induction_coordinator_profiles)
-        .includes(:induction_coordinator_profiles)
+        .eager_load(:induction_coordinator_profiles)
         .find_each do |school|
           school.induction_coordinator_profiles.each do |induction_coordinator|
             email_count += 1
@@ -94,6 +95,8 @@ module BulkMailers
     def contact_sits_that_have_not_added_participants
       query = Schools::ThatHaveNotAddedParticipantsQuery.call(cohort:, school_type_codes: SCHOOL_TYPES_TO_INCLUDE)
 
+      query = query.joins(:induction_coordinator_profiles)
+
       return query.count if dry_run
 
       email_count = 0
@@ -101,8 +104,7 @@ module BulkMailers
       # this could send a lot of email at the cohort start and may break Notify limits
       # numbers should be checked before running this (dry_run = true) and maybe changes made/different approach to batch these
       query
-        .joins(:induction_coordinator_profiles)
-        .includes(:induction_coordinator_profiles)
+        .eager_load(:induction_coordinator_profiles)
         .find_each do |school|
           school.induction_coordinator_profiles.each do |induction_coordinator|
             email_count += 1
@@ -117,6 +119,8 @@ module BulkMailers
     def contact_sits_that_have_not_engaged
       query = Schools::ThatRanFipLastYearButHaveNotEngagedQuery.call(cohort:, school_type_codes: SCHOOL_TYPES_TO_INCLUDE)
 
+      query = query.joins(:induction_coordinator_profiles)
+
       return query.count if dry_run
 
       email_count = 0
@@ -124,8 +128,7 @@ module BulkMailers
       # this could send a lot of email at the cohort start and may break Notify limits
       # numbers should be checked before running this (dry_run = true) and maybe changes made/different approach to batch these
       query
-        .joins(:induction_coordinator_profiles)
-        .includes(:induction_coordinator_profiles)
+        .eager_load(:induction_coordinator_profiles)
         .find_each do |school|
           school.induction_coordinator_profiles.each do |induction_coordinator|
             email_count += 1
@@ -143,27 +146,27 @@ module BulkMailers
     def contact_schools_without_a_sit_that_have_not_engaged
       query = Schools::ThatRanFipLastYearButHaveNotEngagedQuery.call(cohort:, school_type_codes: SCHOOL_TYPES_TO_INCLUDE)
 
+      query = query.where.missing(:induction_coordinator_profiles)
+
       return query.count if dry_run
 
       email_count = 0
 
-      query
-        .where.missing(:induction_coordinator_profiles)
-        .find_each do |school|
-          gias_contact_email = school.primary_contact_email || school.secondary_contact_email
+      query.find_each do |school|
+        gias_contact_email = school.primary_contact_email || school.secondary_contact_email
 
-          if gias_contact_email.blank?
-            Rails.logger.info("No GIAS contact for #{school.name_and_urn}")
-            next
-          end
-
-          email_count += 1
-          next if dry_run
-
-          SchoolMailer.with(school:, gias_contact_email:, opt_in_out_link: opt_in_out_url(email: gias_contact_email, school:))
-            .launch_ask_gias_contact_to_report_school_training_details
-            .deliver_later(wait: get_waiting_time(email_count))
+        if gias_contact_email.blank?
+          Rails.logger.info("No GIAS contact for #{school.name_and_urn}")
+          next
         end
+
+        email_count += 1
+        next if dry_run
+
+        SchoolMailer.with(school:, gias_contact_email:, opt_in_out_link: opt_in_out_url(email: gias_contact_email, school:))
+          .launch_ask_gias_contact_to_report_school_training_details
+          .deliver_later(wait: get_waiting_time(email_count))
+      end
 
       email_count
     end
@@ -171,20 +174,20 @@ module BulkMailers
     def contact_sits_that_have_chosen_fip_but_not_partnered_at_year_start
       query = Schools::UnpartneredLastYearAndHaveNotPartneredThisYearQuery.call(cohort:, school_type_codes: SCHOOL_TYPES_TO_INCLUDE)
 
+      query = query.joins(:induction_coordinator_profiles)
+
       return query.count if dry_run
 
       email_count = 0
 
       # we don't email those that partnered last year but havent this year
       # as yet
-      query
-        .joins(:induction_coordinator_profiles)
-        .find_each do |school|
-          email_count += 1
-          next if dry_run
+      query.find_each do |school|
+        email_count += 1
+        next if dry_run
 
-          SchoolMailer.with(school:).sit_needs_to_chase_partnership.deliver_later(wait: get_waiting_time(email_count))
-        end
+        SchoolMailer.with(school:).sit_needs_to_chase_partnership.deliver_later(wait: get_waiting_time(email_count))
+      end
 
       email_count
     end
@@ -192,26 +195,28 @@ module BulkMailers
     def contact_sits_that_have_chosen_fip_but_not_partnered
       query = Schools::UnpartneredQuery.call(cohort:, school_type_codes: SCHOOL_TYPES_TO_INCLUDE)
 
+      query = query.joins(:induction_coordinator_profiles)
+
       return query.count if dry_run
 
       email_count = 0
 
       # in year we want to email if they haven't partnered regardless
       # of whether they partnered last year or not
-      query
-        .joins(:induction_coordinator_profiles)
-        .find_each do |school|
-          email_count += 1
-          next if dry_run
+      query.find_each do |school|
+        email_count += 1
+        next if dry_run
 
-          SchoolMailer.with(school:, email_schedule:).sit_needs_to_chase_partnership.deliver_later(wait: get_waiting_time(email_count))
-        end
+        SchoolMailer.with(school:, email_schedule:).sit_needs_to_chase_partnership.deliver_later(wait: get_waiting_time(email_count))
+      end
 
       email_count
     end
 
     def contact_sits_pre_term_to_report_any_changes
       query = Schools::PreTermReminderToReportAnyChangesQuery.call(cohort:, school_type_codes: SCHOOL_TYPES_TO_INCLUDE)
+
+      query = query.joins(:induction_coordinator_profiles)
 
       return query.count if dry_run
 
@@ -220,14 +225,14 @@ module BulkMailers
       # this could send a lot of email at the cohort start and may break Notify limits
       # numbers should be checked before running this (dry_run = true) and maybe changes made/different approach to batch these
       query
-        .joins(:induction_coordinator_profiles)
+        .eager_load(:induction_coordinator_profiles)
         .find_each do |school|
-          school.induction_coordinator_profiles.each do |induction_coordinator|
-            email_count += 1
+        school.induction_coordinator_profiles.each do |induction_coordinator|
+          email_count += 1
 
-            SchoolMailer.with(induction_coordinator:).sit_pre_term_reminder_to_report_any_changes.deliver_later(wait: get_waiting_time(email_count))
-          end
+          SchoolMailer.with(induction_coordinator:).sit_pre_term_reminder_to_report_any_changes.deliver_later(wait: get_waiting_time(email_count))
         end
+      end
 
       email_count
     end

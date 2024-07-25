@@ -27,7 +27,7 @@ FactoryBot.define do
     end
 
     initialize_with do
-      EarlyCareerTeachers::Create.call(
+      ::EarlyCareerTeachers::Create.call(
         email: user.email,
         full_name: user.full_name,
         mentor_profile_id:,

@@ -297,6 +297,29 @@ RSpec.describe "API Participant Declarations", type: :request do
             expect(parsed_response["data"].size).to eql(0)
           end
         end
+
+        context "when using 'disable_npq_endpoints' feature" do
+          context "when disable_npq_endpoints is true" do
+            before { Rails.application.config.npq_separation = { disable_npq_endpoints: true } }
+
+            it "returns empty declarations" do
+              get "/api/v3/participant-declarations"
+
+              expect(response.status).to eq(200)
+              expect(parsed_response["data"]).to be_blank
+            end
+          end
+
+          context "when disable_npq_endpoints is false" do
+            it "returns npq declarations" do
+              get "/api/v3/participant-declarations"
+
+              expect(response.status).to eq(200)
+              participant_declaration_ids = npq_participant_declarations.pluck(:id)
+              expect(parsed_response["data"][0]["id"]).to be_in(participant_declaration_ids)
+            end
+          end
+        end
       end
 
       context "with an NPQ and ECF provider" do
@@ -342,6 +365,37 @@ RSpec.describe "API Participant Declarations", type: :request do
             get "/api/v3/participant-declarations", params: { filter: { cohort: "3100" } }
 
             expect(parsed_response["data"].size).to eql(0)
+          end
+        end
+
+        context "when using 'disable_npq_endpoints' feature" do
+          context "when disable_npq_endpoints is true" do
+            before { Rails.application.config.npq_separation = { disable_npq_endpoints: true } }
+
+            it "returns only ecf declarations" do
+              get "/api/v3/participant-declarations"
+
+              expect(response.status).to eq(200)
+              participant_declaration_ids = [participant_declaration1, participant_declaration2, participant_declaration3].map(&:id)
+              expect(parsed_response["data"].size).to eql(participant_declaration_ids.size)
+              expect(parsed_response["data"][0]["id"]).to be_in(participant_declaration_ids)
+              expect(parsed_response["data"][1]["id"]).to be_in(participant_declaration_ids)
+              expect(parsed_response["data"][2]["id"]).to be_in(participant_declaration_ids)
+            end
+          end
+
+          context "when disable_npq_endpoints is false" do
+            it "returns both ecf and npq declarations" do
+              get "/api/v3/participant-declarations"
+
+              expect(response.status).to eq(200)
+              participant_declaration_ids = npq_participant_declarations.pluck(:id) + [participant_declaration1, participant_declaration2, participant_declaration3].map(&:id)
+              expect(parsed_response["data"].size).to eql(participant_declaration_ids.size)
+              expect(parsed_response["data"][0]["id"]).to be_in(participant_declaration_ids)
+              expect(parsed_response["data"][1]["id"]).to be_in(participant_declaration_ids)
+              expect(parsed_response["data"][2]["id"]).to be_in(participant_declaration_ids)
+              expect(parsed_response["data"][3]["id"]).to be_in(participant_declaration_ids)
+            end
           end
         end
       end
@@ -660,6 +714,52 @@ RSpec.describe "API Participant Declarations", type: :request do
             post "/api/v3/participant-declarations", params: params.to_json
             expect(response.status).to eq 422
             expect(response.body).to eq({ errors: [{ title: "Invalid action", detail: I18n.t(:cannot_create_completed_declaration) }] }.to_json)
+          end
+        end
+      end
+
+      context "when using 'disable_npq_endpoints' feature" do
+        let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider) }
+        let(:npq_course) { create(:npq_leadership_course) }
+        let(:course_identifier) { npq_course.identifier }
+        let(:participant_profile) do
+          create(:npq_participant_profile, npq_lead_provider: cpd_lead_provider.npq_lead_provider, npq_course:)
+        end
+        let(:participant_id) { participant_profile.user_id }
+        let!(:contract) { create(:npq_contract, npq_course:, npq_lead_provider: cpd_lead_provider.npq_lead_provider) }
+        let(:params) do
+          {
+            data: {
+              type: "participant-declaration",
+              attributes: {
+                participant_id:,
+                declaration_type: "started",
+                declaration_date: declaration_date.rfc3339,
+                course_identifier:,
+              },
+            },
+          }
+        end
+
+        context "when disable_npq_endpoints is true" do
+          before { Rails.application.config.npq_separation = { disable_npq_endpoints: true } }
+
+          it "returns error response" do
+            post "/api/v3/participant-declarations", params: params.to_json
+
+            expect(response).to have_http_status(:unprocessable_entity)
+            expect(parsed_response["errors"]).to eq([
+              "title" => "course_identifier",
+              "detail" => "NPQ Courses are no longer supported",
+            ])
+          end
+        end
+
+        context "when disable_npq_endpoints is false" do
+          it "returns ok response" do
+            post "/api/v3/participant-declarations", params: params.to_json
+
+            expect(response).to have_http_status(:ok)
           end
         end
       end

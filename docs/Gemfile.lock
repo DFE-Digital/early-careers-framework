@@ -167,8 +167,8 @@ GEM
       ffi (~> 1.0)
     redcarpet (3.5.1)
     regexp_parser (2.7.0)
-    rexml (3.2.8)
-      strscan (>= 3.0.9)
+    rexml (3.3.2)
+      strscan
     rouge (3.30.0)
     rspec (3.12.0)
       rspec-core (~> 3.12.0)
@@ -214,7 +214,7 @@ DEPENDENCIES
   rspec
 
 RUBY VERSION
-   ruby 3.2.2p53
+   ruby 3.2.4p170
 
 BUNDLED WITH
    2.4.6

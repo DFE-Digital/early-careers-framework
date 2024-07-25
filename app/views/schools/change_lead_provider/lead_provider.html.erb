@@ -1,0 +1,22 @@
+<% content_for :title, "Who is the new lead provider?" %>
+<% content_for(:before_content, govuk_back_link(href: @wizard.previous_step_path)) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= form_with(model: @wizard.current_step, url: @wizard.current_step_path(default_path_params)) do |f| %>
+      <%= f.govuk_error_summary %>
+
+      <%= f.govuk_radio_buttons_fieldset :lead_provider, legend: {
+        size: "l",
+        text: "Who is the new lead provider?",
+        tag: "h1",
+      } do %>
+        <% lead_providers.each do |lead_provider| %>
+          <%= f.govuk_radio_button :lead_provider_id, lead_provider.id, label: { text: lead_provider.name } %>
+        <% end %>
+      <% end %>
+
+      <%= f.govuk_submit "Continue" %>
+    <% end %>
+  </div>
+</div>

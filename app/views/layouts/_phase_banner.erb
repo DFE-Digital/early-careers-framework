@@ -1,4 +1,4 @@
-<%= tag.div(class: class_names("govuk-width-container", "govuk-width-container__wide" => wide_container_view?)) do %>
+<%= tag.div(class: class_names("govuk-width-container", "govuk-width-container__wide" => wide_container_view?), role: "region", aria: { label: "Service phase banner" }) do %>
   <%= govuk_phase_banner(
     tag: { text: phase_banner_tag_text, colour: phase_banner_tag_colour },
     text: Rails.env) do %>

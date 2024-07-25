@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "active_support/core_ext/integer/time"
-require Rails.root.join("lib/semantic_logger/formatters/json_with_api_metadata")
 
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
@@ -121,14 +120,21 @@ Rails.application.configure do
   # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new "app-name")
 
   # Logging
-  config.log_level = :info
+  config.log_level = (Sidekiq.server?) ? :warn : :info
 
+  # RAILS_LOG_TO_STDOUT is set via https://github.com/DFE-Digital/terraform-modules
   if ENV["RAILS_LOG_TO_STDOUT"].present?
     config.rails_semantic_logger.add_file_appender = false
+    config.rails_semantic_logger.filter = proc { |log| log.name != "DfE::Analytics::SendEvents" }
 
     $stdout.sync = true
 
-    config.semantic_logger.add_appender(io: $stdout, level: Rails.application.config.log_level, formatter: SemanticLogger::Formatters::JsonWithApiMetadata.new)
+    config.semantic_logger.add_appender(
+      io: $stdout,
+      level: Rails.application.config.log_level,
+      formatter: :json,
+      filter: config.rails_semantic_logger.filter,
+    )
   end
 
   # Do not dump schema after migrations.

@@ -13,6 +13,7 @@ describe Oneoffs::NPQ::MigrateDeclarationsBetweenStatements do
   let(:restrict_to_lead_providers) { nil }
   let(:restrict_to_declaration_types) { nil }
   let(:restrict_to_declaration_states) { nil }
+  let(:restrict_to_course_identifiers) { nil }
 
   let(:instance) do
     described_class.new(
@@ -24,6 +25,7 @@ describe Oneoffs::NPQ::MigrateDeclarationsBetweenStatements do
       restrict_to_lead_providers:,
       restrict_to_declaration_types:,
       restrict_to_declaration_states:,
+      restrict_to_course_identifiers:,
     )
   end
 
@@ -37,12 +39,14 @@ describe Oneoffs::NPQ::MigrateDeclarationsBetweenStatements do
     it { is_expected.to eq(instance.recorded_info) }
 
     context "when there are declarations" do
-      let(:declaration) { create(:npq_participant_declaration, :payable, cohort:, cpd_lead_provider:, declaration_type: :started) }
+      let(:npq_course) { create(:npq_course, identifier: "npq-senior-leadership") }
+      let(:declaration) { create(:npq_participant_declaration, :payable, cohort:, cpd_lead_provider:, declaration_type: :started, npq_course:) }
       let(:from_statement) { declaration.statements.first }
 
       let(:cpd_lead_provider2) { declaration2.cpd_lead_provider }
       let(:npq_lead_provider2) { cpd_lead_provider2.npq_lead_provider }
-      let(:declaration2) { create(:npq_participant_declaration, :eligible, cohort:, declaration_type: :"retained-1") }
+      let(:npq_course2) { create(:npq_course, identifier: "npq-leading-behaviour-culture") }
+      let(:declaration2) { create(:npq_participant_declaration, :eligible, cohort:, declaration_type: :"retained-1", npq_course: npq_course2) }
       let!(:from_statement2) { declaration2.statements.first.tap { |s| s.update!(name: from_statement.name) } }
       let!(:to_statement2) { create(:npq_statement, :next_output_fee, name: to_statement.name, cpd_lead_provider: cpd_lead_provider2, cohort:) }
 
@@ -185,6 +189,27 @@ describe Oneoffs::NPQ::MigrateDeclarationsBetweenStatements do
             "~~~ DRY RUN ~~~",
             "Migrating declarations from #{from_statement_name} to #{to_statement_name} for 2 providers",
             "Migrating 1 declarations for #{npq_lead_provider.name}",
+            "Migrating 1 declarations for #{npq_lead_provider2.name}",
+          ])
+        end
+      end
+
+      context "when restrict_to_course_identifiers is provided" do
+        let(:restrict_to_course_identifiers) { [declaration2.course_identifier] }
+
+        it "migrates only the declarations with the given course identifier" do
+          migrate
+
+          expect(declaration.statement_line_items.map(&:statement)).to all(eq(from_statement))
+          expect(declaration2.statement_line_items.map(&:statement)).to all(eq(to_statement2))
+        end
+
+        it "records information" do
+          migrate
+
+          expect(instance).to have_recorded_info([
+            "Migrating declarations from #{from_statement_name} to #{to_statement_name} for 2 providers",
+            "Migrating 0 declarations for #{npq_lead_provider.name}",
             "Migrating 1 declarations for #{npq_lead_provider2.name}",
           ])
         end

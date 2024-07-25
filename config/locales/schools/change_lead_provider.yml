@@ -1,0 +1,44 @@
+en:
+  activemodel:
+    errors:
+      models:
+        schools/change_lead_provider/start_step:
+          attributes:
+            answer:
+              blank: "Select yes if you have confirmed this change with the current and new lead providers"
+        schools/change_lead_provider/email_step:
+          attributes:
+            answer:
+              blank: "Select yes if this is the correct email address for the participant"
+            email:
+              blank: "Enter an email address in the correct format, like name@example.com"
+              invalid: "Enter a valid email address"
+        schools/change_lead_provider/lead_provider_step:
+          attributes:
+            lead_provider_id:
+              blank: "Select who the new lead provider is"
+
+  schools:
+    change_lead_provider:
+      support_query:
+        additional_information: |
+          Academic year: %{academic_year}
+          School name: %{school}
+          School URN: %{urn}
+
+        message:
+          cohort: |
+            %{current_user} has requested to change the lead provider for the academic year %{academic_year}.
+
+            Induction coordinator: %{induction_coordinator}
+            Email: %{email}
+            Current lead provider: %{current_lead_provider}
+            New lead provider: %{new_lead_provider}
+
+          participant: |
+            %{current_user} has requested to change the lead provider for %{participant}.
+
+            Full name: %{participant}
+            Email: %{email}
+            Current lead provider: %{current_lead_provider}
+            New lead provider: %{new_lead_provider}

@@ -19,6 +19,8 @@ RSpec.describe "participant outcomes endpoint spec", type: :request do
         default_headers[:CONTENT_TYPE] = "application/json"
       end
 
+      it_behaves_like "Feature enabled NPQ API endpoint", "GET", "/api/v1/participants/npq/12345678/outcomes"
+
       context "when no outcome exists" do
         it "returns empty array" do
           get "/api/v1/participants/npq/#{npq_application.participant_identity.external_identifier}/outcomes"
@@ -92,6 +94,8 @@ RSpec.describe "participant outcomes endpoint spec", type: :request do
 
         declaration.update!(declaration_type: "completed")
       end
+
+      it_behaves_like "Feature enabled NPQ API endpoint", "POST", "/api/v1/participants/npq/12345678/outcomes"
 
       it "creates a new npq participant outcome record" do
         expect { post "/api/v1/participants/npq/#{participant_id}/outcomes", params: params_json }

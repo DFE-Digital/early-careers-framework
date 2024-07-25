@@ -103,6 +103,8 @@ private
   end
 
   def schedule
-    @schedule ||= Induction::ScheduleForNewCohort.call(cohort:, induction_record: latest_induction_record)
+    @schedule ||= Induction::ScheduleForNewCohort.call(cohort:,
+                                                       induction_record: latest_induction_record,
+                                                       cohort_changed_after_payments_frozen:)
   end
 end

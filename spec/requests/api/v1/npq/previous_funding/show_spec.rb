@@ -34,6 +34,8 @@ RSpec.describe "NPQ Funding API", type: :request do
         default_headers[:Authorization] = bearer_token
       end
 
+      it_behaves_like "Feature enabled NPQ API endpoint", "GET", "/api/v1/npq/previous_funding"
+
       context "with no identifiers" do
         it "returns an error" do
           get "#{base_url}?npq_course_identifier=#{npq_course_identifier}"

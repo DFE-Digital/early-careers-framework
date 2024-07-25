@@ -57,7 +57,7 @@ jobs:
     name: Run Brakeman vulnerability scanner
     uses: ./.github/workflows/brakeman.yml
     with:
-      ruby-version: "3.2.2"
+      ruby-version: "3.2.4"
 
   deploy_review:
     name: Deploy review
@@ -186,6 +186,25 @@ jobs:
   #         azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
   #         current-commit-sha: ${{ github.sha }}
   #         statuscake-api-token: ${{ secrets.STATUSCAKE_API_TOKEN }}
+  
+  deploy_separation:
+    name: Deploy separation
+    needs: [deploy_staging]
+    runs-on: ubuntu-latest
+    environment:
+      name: separation
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: ./.github/actions/deploy-environment-to-aks
+        id: deploy
+        with:
+          environment: separation
+          docker-image: ${{ needs.deploy_staging.outputs.docker-image }}
+          azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
+          current-commit-sha: ${{ github.sha }}
+          statuscake-api-token: ${{ secrets.STATUSCAKE_API_TOKEN }}
 
   deploy_production:
     name: Deploy production

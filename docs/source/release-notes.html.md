@@ -7,6 +7,35 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
+## 1 July 2024
+
+Registration has opened for the 2024/25 intake of NPQ participant applications, so we’ve added the following to the production environment:
+
+- the 2024/25 NPQ data and schedules
+- functionality which enables providers to set whether NPQ applicants are going to have their training funded by DfE
+- the new special education needs coordinator (SENCO) NPQ
+
+See the [14 June release note](/api-reference/release-notes.html#14-june-2024) for more details about the funded training functionality and SENCO NPQ.
+
+## 28 June 2024
+
+We’ve added some new features to help providers ahead of the closure of the funding contract for the 2021 cohort on 31 July.
+
+The main impact will be ECTs and mentors with partial declarations currently assigned to the 2021 cohort being moved to the 2024 cohort.
+
+Because these ECTs and mentors are automatically shifted from a standard to an extended schedule, we’re allowing providers to change their schedules if necessary, using the existing [change-schedule](/api-reference/reference-v3.html#api-v3-participants-ecf-id-change-schedule-put) endpoint.
+
+Providers can also temporarily move participants back to the 2021 cohort if they need to make any final declarations before it closes. They must be returned to the 2024 cohort to start making submissions against that year.
+
+Note that the schedule and cohort cannot be changed when a migrated participant is in the 2024 cohort if there are existing declarations in any of the following states:
+
+- submitted
+- eligible
+- payable
+- paid
+
+However, you can make changes in the 2021 cohort where participants already have declarations in these statuses.
+
 ## 25 June 2024
 
 Registration is now open for the 2024/25 intake of early career teachers and mentors, so we’ve added the schedules and contract data for this academic year to the production environment.

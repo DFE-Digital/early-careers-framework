@@ -67,8 +67,9 @@ RSpec.describe Induction::AmendParticipantCohort do
     end
 
     context "enrolling participant" do
+      let(:lead_provider) { nil }
       let!(:source_cohort) { create(:cohort, start_year: source_cohort_start_year) }
-      let!(:source_school_cohort) { create(:school_cohort, :fip, cohort: source_cohort) }
+      let!(:source_school_cohort) { create(:school_cohort, :fip, cohort: source_cohort, lead_provider:) }
       let!(:school) { source_school_cohort.school }
       let!(:target_cohort) { Cohort.find_by_start_year(target_cohort_start_year) }
       let!(:target_cohort_schedule) { create(:ecf_schedule, cohort: target_cohort) }
@@ -79,28 +80,6 @@ RSpec.describe Induction::AmendParticipantCohort do
       before do
         Induction::SetCohortInductionProgramme.call(school_cohort: source_school_cohort,
                                                     programme_choice: source_school_cohort.induction_programme_choice)
-      end
-
-      context "when the participant has induction completion date" do
-        before do
-          participant_profile.update!(induction_completion_date: Date.current)
-        end
-
-        it "returns false and set errors" do
-          expect(form.save).to be_falsey
-          expect(form.errors[:participant_profile]).to include("The participant has completion date")
-        end
-      end
-
-      context "when the participant has mentor completion date" do
-        before do
-          participant_profile.update!(mentor_completion_date: Date.current)
-        end
-
-        it "returns false and set errors" do
-          expect(form.save).to be_falsey
-          expect(form.errors[:participant_profile]).to include("The participant has completion date")
-        end
       end
 
       context "when the target_cohort_start_year is not matching that of the schedule" do
@@ -121,23 +100,16 @@ RSpec.describe Induction::AmendParticipantCohort do
         end
       end
 
-      context "when there is no participant" do
-        let(:participant_profile) {}
-
-        it "returns false and set errors" do
-          expect(form.save).to be_falsey
-          expect(form.errors[:participant_profile]).to include("Not a participant profile record")
-        end
-      end
-
-      context "when the participant is not active" do
+      context "when the participant has notes" do
         before do
-          participant_profile.withdrawn_record!
+          Induction::Enrol.call(participant_profile:,
+                                induction_programme: source_school_cohort.default_induction_programme)
+          participant_profile.notes = "Some note"
         end
 
         it "returns false and set errors" do
           expect(form.save).to be_falsey
-          expect(form.errors[:participant_profile]).to include("The participant is not active")
+          expect(form.errors[:participant_profile]).to include("The participant has notes that block a cohort change")
         end
       end
 
@@ -173,6 +145,8 @@ RSpec.describe Induction::AmendParticipantCohort do
 
         context "when the participant is not eligible to be transferred" do
           before do
+            Induction::Enrol.call(participant_profile:,
+                                  induction_programme: source_school_cohort.default_induction_programme)
             allow(participant_profile).to receive(:eligible_to_change_cohort_and_continue_training?).and_return(false)
           end
 
@@ -191,6 +165,8 @@ RSpec.describe Induction::AmendParticipantCohort do
 
         context "when the participant has billable declarations in current cohort" do
           before do
+            Induction::Enrol.call(participant_profile:,
+                                  induction_programme: source_school_cohort.default_induction_programme)
             participant_profile.participant_declarations.create!(declaration_date: Date.new(source_cohort_start_year, 10, 10),
                                                                  declaration_type: :started,
                                                                  state: :eligible,
@@ -208,6 +184,11 @@ RSpec.describe Induction::AmendParticipantCohort do
         end
 
         context "when the participant has no billable declarations in destination cohort" do
+          before do
+            Induction::Enrol.call(participant_profile:,
+                                  induction_programme: source_school_cohort.default_induction_programme)
+          end
+
           it "set errors" do
             expect(form.save).to be_falsey
             expect(form.errors[:participant_profile]).to include("Participant not eligible to be transferred back to their original cohort")
@@ -236,6 +217,8 @@ RSpec.describe Induction::AmendParticipantCohort do
       %i[submitted eligible payable paid].each do |declaration_state|
         context "when the participant has #{declaration_state} declarations" do
           before do
+            Induction::Enrol.call(participant_profile:,
+                                  induction_programme: source_school_cohort.default_induction_programme)
             participant_profile.participant_declarations.create!(declaration_date: Date.new(2020, 10, 10),
                                                                  declaration_type: :started,
                                                                  state: declaration_state,
@@ -285,6 +268,24 @@ RSpec.describe Induction::AmendParticipantCohort do
         end
       end
 
+      context "when a NIoT-associated participant is to be moved to a cohort earlier than 2023" do
+        let(:lead_provider) { LeadProvider.find_or_create_by!(name: "National Institute of Teaching") }
+        let(:source_cohort_start_year) { 2023 }
+        let(:target_cohort_start_year) { 2022 }
+        let(:cohort_2023) { Cohort.find_by(start_year: 2023) || create(:cohort, start_year: 2023) }
+
+        before do
+          Induction::Enrol.call(participant_profile:,
+                                induction_programme: source_school_cohort.default_induction_programme)
+          lead_provider.provider_relationships.create!(delivery_partner: DeliveryPartner.first, cohort: cohort_2023)
+        end
+
+        it "returns false and set errors" do
+          expect(form.save).to be_falsey
+          expect(form.errors[:induction_record]).to include("A NIoT-associated participant can't be moved to a cohort earlier than 2023")
+        end
+      end
+
       context "when the school has not setup the target cohort" do
         before do
           Induction::Enrol.call(participant_profile:,
@@ -294,6 +295,25 @@ RSpec.describe Induction::AmendParticipantCohort do
         it "returns false and set errors" do
           expect(form.save).to be_falsey
           expect(form.errors[:target_school_cohort]).to include("Cohort starting on #{target_cohort_start_year} not setup on #{school.name}")
+        end
+      end
+
+      context "when the participant is in the target cohort and schedule" do
+        let(:target_cohort_start_year) { source_cohort_start_year }
+
+        subject(:form) do
+          described_class.new(participant_profile:, source_cohort_start_year:, target_cohort_start_year:)
+        end
+
+        before do
+          Induction::Enrol.call(participant_profile:,
+                                induction_programme: source_school_cohort.default_induction_programme)
+        end
+
+        it "returns successfully" do
+          expect(form.save).to be_truthy
+          expect(form.errors).to be_empty
+          expect(participant_profile.reload.latest_induction_record.cohort_start_year).to eq(target_cohort_start_year)
         end
       end
 
@@ -398,11 +418,19 @@ RSpec.describe Induction::AmendParticipantCohort do
                 before do
                   source_cohort.update!(payments_frozen_at: Time.current)
                   allow(participant_profile).to receive(:eligible_to_change_cohort_and_continue_training?).and_return(true)
+                  create(:ecf_extended_schedule, cohort: target_cohort)
                 end
 
                 it "mark the participant as transferred for that reason" do
                   expect(form.save).to be_truthy
                   expect(participant_profile).to be_cohort_changed_after_payments_frozen
+                end
+
+                it "sets the schedule to ecf-extended-september" do
+                  expect(form.save).to be_truthy
+                  expect(participant_profile.reload.schedule.schedule_identifier).to eq("ecf-extended-september")
+                  expect(participant_profile.schedule.cohort).to eq(target_cohort)
+                  expect(participant_profile.latest_induction_record.schedule).to eq(participant_profile.schedule)
                 end
 
                 it "mark the participant as transferred from the original cohort" do

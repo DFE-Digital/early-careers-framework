@@ -38,10 +38,10 @@ fip_mentor = Mentors::Create.call(full_name: "FIP Mentor 090001",
                                   email: "fipmentor-090001@example.com",
                                   school_cohort: fip_school_cohort)
 
-EarlyCareerTeachers::Create.call(full_name: "FIP ECT 090001",
-                                 email: "fipect-090001@example.com",
-                                 school_cohort: fip_school_cohort,
-                                 mentor_profile_id: fip_mentor.id)
+::EarlyCareerTeachers::Create.call(full_name: "FIP ECT 090001",
+                                   email: "fipect-090001@example.com",
+                                   school_cohort: fip_school_cohort,
+                                   mentor_profile_id: fip_mentor.id)
 
 # ===== FIP school 2 and SIT ==================
 fip2_school = School.find_or_create_by!(urn: "090002") do |school|
@@ -84,10 +84,10 @@ fip2_mentor = Mentors::Create.call(full_name: "FIP Mentor 090002",
                                    email: "fipmentor-090002@example.com",
                                    school_cohort: fip2_school_cohort)
 
-EarlyCareerTeachers::Create.call(full_name: "FIP ECT 090002",
-                                 email: "fipect-090002@example.com",
-                                 school_cohort: fip2_school_cohort,
-                                 mentor_profile_id: fip2_mentor.id)
+::EarlyCareerTeachers::Create.call(full_name: "FIP ECT 090002",
+                                   email: "fipect-090002@example.com",
+                                   school_cohort: fip2_school_cohort,
+                                   mentor_profile_id: fip2_mentor.id)
 
 # ===== FIP school 3 and SIT ==================
 fip3_school = School.find_or_create_by!(urn: "090003") do |school|
@@ -124,10 +124,10 @@ fip3_mentor = Mentors::Create.call(full_name: "FIP Mentor 090003",
                                    email: "fipmentor-090003@example.com",
                                    school_cohort: fip3_school_cohort)
 
-EarlyCareerTeachers::Create.call(full_name: "FIP ECT 090003",
-                                 email: "fipect-090003@example.com",
-                                 school_cohort: fip3_school_cohort,
-                                 mentor_profile_id: fip3_mentor.id)
+::EarlyCareerTeachers::Create.call(full_name: "FIP ECT 090003",
+                                   email: "fipect-090003@example.com",
+                                   school_cohort: fip3_school_cohort,
+                                   mentor_profile_id: fip3_mentor.id)
 
 # ===== CIP school and SIT ==================
 
@@ -160,10 +160,10 @@ cip_mentor = Mentors::Create.call(full_name: "CIP Mentor 090010",
                                   email: "cipmentor-090010@example.com",
                                   school_cohort: cip_school_cohort)
 
-EarlyCareerTeachers::Create.call(full_name: "CIP ECT 090010",
-                                 email: "cipect-090010@example.com",
-                                 school_cohort: cip_school_cohort,
-                                 mentor_profile_id: cip_mentor.id)
+::EarlyCareerTeachers::Create.call(full_name: "CIP ECT 090010",
+                                   email: "cipect-090010@example.com",
+                                   school_cohort: cip_school_cohort,
+                                   mentor_profile_id: cip_mentor.id)
 
 # ===== CIP2 school and SIT ==================
 
@@ -196,10 +196,10 @@ cip2_mentor = Mentors::Create.call(full_name: "CIP Mentor 090011",
                                    email: "cipmentor-090011@example.com",
                                    school_cohort: cip2_school_cohort)
 
-EarlyCareerTeachers::Create.call(full_name: "CIP ECT 090011",
-                                 email: "cipect-090011@example.com",
-                                 school_cohort: cip2_school_cohort,
-                                 mentor_profile_id: cip2_mentor.id)
+::EarlyCareerTeachers::Create.call(full_name: "CIP ECT 090011",
+                                   email: "cipect-090011@example.com",
+                                   school_cohort: cip2_school_cohort,
+                                   mentor_profile_id: cip2_mentor.id)
 
 # ===== CIP3 school and SIT ==================
 
@@ -232,10 +232,10 @@ cip3_mentor = Mentors::Create.call(full_name: "CIP Mentor 090012",
                                    email: "cipmentor-090012@example.com",
                                    school_cohort: cip3_school_cohort)
 
-EarlyCareerTeachers::Create.call(full_name: "CIP ECT 090012",
-                                 email: "cipect-090012@example.com",
-                                 school_cohort: cip3_school_cohort,
-                                 mentor_profile_id: cip3_mentor.id)
+::EarlyCareerTeachers::Create.call(full_name: "CIP ECT 090012",
+                                   email: "cipect-090012@example.com",
+                                   school_cohort: cip3_school_cohort,
+                                   mentor_profile_id: cip3_mentor.id)
 
 # ===== DIY school and SIT ==================
 

@@ -61,7 +61,7 @@
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
 
-    <a href="#main-content" class="govuk-skip-link">Skip to main content</a>
+    <a href="#main-content" class="govuk-skip-link" tabindex="-1">Skip to main content</a>
 
     <% unless cookies[:cookie_consent_1] || current_page?(cookies_path) %>
       <%= render "cookies/banner" %>

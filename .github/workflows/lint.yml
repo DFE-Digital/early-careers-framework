@@ -6,7 +6,7 @@ on:
         description: Ruby version
         type: string
         required: false
-        default: "3.2.2"
+        default: "3.2.4"
       node-version:
         description: Node version
         type: string
@@ -25,7 +25,7 @@ jobs:
         name: Checkout Code
 
       - name: Set up Ruby
-        uses: ruby/setup-ruby@v1.179.0
+        uses: ruby/setup-ruby@v1.188.0
         with:
           ruby-version: ${{ inputs.ruby-version }}
 
@@ -46,7 +46,7 @@ jobs:
         name: Checkout Code
 
       - name: Set up Node
-        uses: actions/setup-node@v4.0.2
+        uses: actions/setup-node@v4.0.3
         with:
           node-version: ${{ inputs.node-version }}
           cache: "yarn"
@@ -69,7 +69,7 @@ jobs:
         name: Checkout Code
 
       - name: Set up Ruby
-        uses: ruby/setup-ruby@v1.179.0
+        uses: ruby/setup-ruby@v1.188.0
         with:
           ruby-version: ${{ inputs.ruby-version }}
 
@@ -91,7 +91,7 @@ jobs:
         name: Checkout Code
 
       - name: Set up Ruby
-        uses: ruby/setup-ruby@v1.179.0
+        uses: ruby/setup-ruby@v1.188.0
         with:
           ruby-version: ${{ inputs.ruby-version }}
 

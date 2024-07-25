@@ -17,7 +17,8 @@ module Oneoffs::NPQ
       to_statement_updates: {},
       restrict_to_lead_providers: nil,
       restrict_to_declaration_types: nil,
-      restrict_to_declaration_states: nil
+      restrict_to_declaration_states: nil,
+      restrict_to_course_identifiers: nil
     )
       @cohort = cohort
       @from_statement_name = from_statement_name
@@ -27,6 +28,7 @@ module Oneoffs::NPQ
       @restrict_to_lead_providers = restrict_to_lead_providers
       @restrict_to_declaration_types = restrict_to_declaration_types
       @restrict_to_declaration_states = restrict_to_declaration_states
+      @restrict_to_course_identifiers = restrict_to_course_identifiers
     end
 
     def migrate(dry_run: true)
@@ -52,7 +54,7 @@ module Oneoffs::NPQ
     attr_reader :cohort, :from_statement_name, :to_statement_name,
                 :to_statement_updates, :from_statement_updates,
                 :restrict_to_lead_providers, :restrict_to_declaration_types,
-                :restrict_to_declaration_states
+                :restrict_to_declaration_states, :restrict_to_course_identifiers
 
     def update_from_statement_attributes!
       return if from_statement_updates.blank?
@@ -110,6 +112,7 @@ module Oneoffs::NPQ
       scope = statement_line_items.includes(:participant_declaration)
       scope = scope.where(participant_declaration: { declaration_type: restrict_to_declaration_types }) if restrict_to_declaration_types
       scope = scope.where(participant_declaration: { state: restrict_to_declaration_states }) if restrict_to_declaration_states
+      scope = scope.where(participant_declaration: { course_identifier: restrict_to_course_identifiers }) if restrict_to_course_identifiers
 
       scope
     end
@@ -153,7 +156,6 @@ module Oneoffs::NPQ
       Finance::Statement::NPQ
         .includes(:cohort, :participant_declarations, cpd_lead_provider: :npq_lead_provider)
         .where(cohort:, name: statement_name, cpd_lead_provider: { npq_lead_provider: })
-        .output
         .group_by(&:npq_lead_provider)
         .transform_values(&:first)
     end

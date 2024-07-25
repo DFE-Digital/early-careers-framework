@@ -42,6 +42,7 @@ Rails/UnknownEnv:
     - staging
     - test
     - performance
+    - separation
 
 Naming/VariableNumber:
   EnforcedStyle: snake_case
@@ -61,3 +62,9 @@ Rails/SaveBang:
 Style/RedundantFetchBlock:
   Exclude:
     - 'app/middlewares/api_request_middleware.rb'
+
+Style/TernaryParentheses:
+  Enabled: false
+
+Style/RedundantParentheses:
+  Enabled: false

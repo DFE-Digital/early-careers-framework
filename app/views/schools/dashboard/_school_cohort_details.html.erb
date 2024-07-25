@@ -48,7 +48,13 @@
       <% else %>
         <% row.with_value(text: school_cohort_lead_provider_name(school_cohort)) %>
       <% end %>
-      <% row.with_action(text: 'Change', visually_hidden_text: "lead provider", href: support_path(cohort_year: school_cohort.start_year, school_id: @school.id, subject: :"change-cohort-lead-provider")) %>
+      <% if school_cohort.start_year != Cohort.active_registration_cohort.start_year %>
+        <% row.with_action(
+          text: 'Change',
+          visually_hidden_text: "lead provider",
+          href: schools_change_lead_provider_year_intro_path(start_year: school_cohort.start_year, school_id: @school.id)
+        ) %>
+      <% end %>
     <% end %>
 
     <% list.with_row do |row| %>
@@ -58,7 +64,9 @@
       <% else %>
         <% row.with_value(text: school_cohort_delivery_partner_name(school_cohort)) %>
       <% end %>
-      <% row.with_action(text: 'Change', visually_hidden_text: "delivery partner", href: support_path(cohort_year: school_cohort.start_year, school_id: @school.id, subject: :"change-cohort-delivery-partner")) %>
+      <% if school_cohort.start_year != Cohort.active_registration_cohort.start_year %>
+        <% row.with_action(text: 'Change', visually_hidden_text: "delivery partner", href: support_path(cohort_year: school_cohort.start_year, school_id: @school.id, subject: :"change-cohort-delivery-partner")) %>
+      <% end %>
     <% end %>
   <% end %>
 <% end %>
