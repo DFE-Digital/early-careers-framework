@@ -186,8 +186,18 @@ module GovukTechDocs
         ENV["REMOVE_NPQ_REFERENCES"].to_s == "true"
       end
 
+      def remove_npq_references_from_text(text)
+        text.gsub(/ecf or npq/i, "ecf") if remove_npq_references?
+      end
+
       def filter_possible_values(enum)
         enum.reject { |v| remove_npq_references? && v.downcase.include?("npq") }
+      end
+
+      def filter_examples(examples)
+        examples&.reject do |_, example|
+          remove_npq_references? && example["value"].to_s.downcase.include?("npq")
+        end
       end
 
       def filter_schemas(schemas)

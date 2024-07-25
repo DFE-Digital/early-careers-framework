@@ -15,7 +15,7 @@
           <td><%= key %></td>
 
           <td>
-            <%= markdown(response.description) %>
+            <%= markdown(remove_npq_references_from_text(response.description)) %>
 
             <% if response.content['application/json'] %>
               <p>
@@ -38,7 +38,7 @@
     <details class="govuk-details" data-module="govuk-details">
       <summary class="govuk-details__summary">
         <span class="govuk-details__summary-text">
-          <%= key %> - <%= response.description %>
+          <%= key %> - <%= remove_npq_references_from_text(response.description) %>
         </span>
       </summary>
 
@@ -64,8 +64,8 @@
         <% example_done = false %>
 
         <% if response.content['application/json'] %>
-          <% if response.content['application/json']["examples"] %>
-            <% response.content['application/json']["examples"].each do |name, hash| %>
+          <% if filter_examples(response.content['application/json']["examples"]) %>
+            <% filter_examples(response.content['application/json']["examples"]).each do |name, hash| %>
               <% body = json_prettyprint(hash["value"]) %>
 
               <%
