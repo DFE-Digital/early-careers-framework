@@ -1,4 +1,4 @@
-<% content_for :title, I18n.t("schools.change_request_support_query.page_titles.start_step.#{@wizard.change_request_type.underscore}") %>
+<% content_for :title, I18n.t("schools.change_request_support_query.start_step.#{@wizard.change_request_type.underscore}.title") %>
 <% content_for(
   :before_content,
   govuk_back_link(href: schools_change_request_support_query_intro_path(default_path_arguments))
@@ -11,7 +11,7 @@
 
       <%= f.govuk_radio_buttons_fieldset :answer, legend: {
         size: "l",
-        text: I18n.t("schools.change_request_support_query.page_titles.start_step.#{@wizard.change_request_type.underscore}"),
+        text: I18n.t("schools.change_request_support_query.start_step.#{@wizard.change_request_type.underscore}.title"),
         tag: "h1",
       } do %>
         <%= f.govuk_radio_button :answer, :yes, label: { text: "Yes" }, link_errors: true %>

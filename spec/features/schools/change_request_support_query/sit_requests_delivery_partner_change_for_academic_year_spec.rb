@@ -25,8 +25,14 @@ RSpec.describe "Induction coordinator requests delivery partner change for acade
   end
 
   def and_there_is_a_choice_of_delivery_partners
-    create(:delivery_partner, name: "Delivery Partner 1")
-    create(:delivery_partner, name: "Delivery Partner 2")
+    create(:provider_relationship,
+           cohort: @school_cohort.cohort,
+           lead_provider: @lead_provider,
+           delivery_partner: create(:delivery_partner, name: "Delivery Partner 1"))
+    create(:provider_relationship,
+           cohort: @school_cohort.cohort,
+           lead_provider: @lead_provider,
+           delivery_partner: create(:delivery_partner, name: "Delivery Partner 2"))
   end
 
   def then_i_see_the_intro_step

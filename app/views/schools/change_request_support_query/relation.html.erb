@@ -1,22 +1,29 @@
-<% content_for :title, I18n.t("schools.change_request_support_query.page_titles.relation_step.#{@wizard.change_request_type.underscore}") %>
+<% content_for :title, I18n.t("schools.change_request_support_query.relation_step.#{@wizard.change_request_type.underscore}.title") %>
 <% content_for(:before_content, govuk_back_link(href: @wizard.previous_step_path)) %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <%= form_with(model: @wizard.current_step, url: @wizard.current_step_path(default_path_arguments)) do |f| %>
-      <%= f.govuk_error_summary %>
+    <% if @wizard.available_relations.empty? %>
+      <h1 class="govuk-heading-l"><%= I18n.t("schools.change_request_support_query.relation_step.#{@wizard.change_request_type.underscore}.no_relations") %></h1>
+      <p class="govuk-body">
+        <%= govuk_link_to "Return to manage your training", schools_dashboard_path(school_id: @school_id) %>
+      </p>
+    <% else %>
+      <%= form_with(model: @wizard.current_step, url: @wizard.current_step_path(default_path_arguments)) do |f| %>
+        <%= f.govuk_error_summary %>
 
-      <%= f.govuk_radio_buttons_fieldset :relation_id, legend: {
-        size: "l",
-        text: I18n.t("schools.change_request_support_query.page_titles.relation_step.#{@wizard.change_request_type.underscore}"),
-        tag: "h1",
-      } do %>
-        <% @wizard.relations.each do |relation| %>
-          <%= f.govuk_radio_button :relation_id, relation.id, label: { text: relation.name } %>
+        <%= f.govuk_radio_buttons_fieldset :relation_id, legend: {
+          size: "l",
+          text: I18n.t("schools.change_request_support_query.relation_step.#{@wizard.change_request_type.underscore}.title"),
+          tag: "h1",
+        } do %>
+          <% @wizard.available_relations.each do |relation| %>
+            <%= f.govuk_radio_button :relation_id, relation.id, label: { text: relation.name } %>
+          <% end %>
         <% end %>
-      <% end %>
 
-      <%= f.govuk_submit "Continue" %>
+        <%= f.govuk_submit "Continue" %>
+      <% end %>
     <% end %>
   </div>
 </div>

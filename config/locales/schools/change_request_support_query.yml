@@ -29,16 +29,23 @@ en:
 
   schools:
     change_request_support_query:
-      page_titles:
-        start_step:
-          change_delivery_partner: Have you confirmed this change with your lead provider?
-          change_lead_provider: Have you confirmed this change with the current and new lead provider?
-        relation_step:
-          change_delivery_partner: Who is the new delivery partner?
-          change_lead_provider: Who is the new lead provider?
-        contact_providers_step:
-          change_delivery_partner: You need to contact your lead provider
-          change_lead_provider: You need to contact the current and new lead provider
+      start_step:
+        change_delivery_partner:
+          title: Have you confirmed this change with your lead provider?
+        change_lead_provider:
+          title: Have you confirmed this change with the current and new lead provider?
+      relation_step:
+        change_delivery_partner:
+          title: Who is the new delivery partner?
+          no_relations: "There are no other delivery partners available for academic year you chose."
+        change_lead_provider:
+          title: Who is the new lead provider?
+          no_relations: "There are no other lead providers available for academic year you chose."
+      contact_providers_step:
+        change_delivery_partner:
+          title: You need to contact your lead provider
+        change_lead_provider:
+          title: You need to contact the current and new lead provider
 
       delivery_partner:
         additional_information: |

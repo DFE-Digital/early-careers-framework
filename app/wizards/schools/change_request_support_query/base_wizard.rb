@@ -54,8 +54,16 @@ module Schools
         @new_relation ||= relation_klass.find(store.attrs_for(:relation)[:relation_id])
       end
 
+      def available_relations
+        relations - [current_relation]
+      end
+
       def relations
-        relation_klass.all.order(:name)
+        if relation_klass == DeliveryPartner
+          school.lead_provider(start_year).delivery_partners.order(:name)
+        else
+          LeadProvider.all.order(:name)
+        end
       end
 
       def school
