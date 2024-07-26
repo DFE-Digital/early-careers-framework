@@ -62,6 +62,7 @@ class NPQApplication < ApplicationRecord
   scope :edge_case_statuses, lambda {
                                where(funding_eligiblity_status_code: %w[re_register
                                                                         no_institution
+                                                                        referred_by_return_to_teaching_adviser
                                                                         awaiting_more_information
                                                                         marked_ineligible_by_policy
                                                                         marked_funded_by_policy])
