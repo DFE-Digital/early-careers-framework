@@ -39,7 +39,7 @@ private
   end
 
   def different_name?
-    user.full_name != full_name
+    user.full_name&.downcase != full_name&.downcase
   end
 
   def ensure_user_persisted

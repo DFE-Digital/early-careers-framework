@@ -23,16 +23,28 @@ RSpec.describe NominateInductionTutorForm, type: :model do
       end
     end
 
-    context "when the name provided doesn't match the intended new SIT's name" do
-      let(:form) { described_class.new(full_name: "Another name", email:, school:) }
+    describe "#name_matches" do
+      let(:form) { described_class.new(full_name: new_full_name, email:, school:) }
 
       before do
         create(:ect, user: create(:user, email:, full_name:))
       end
 
-      it "an error is added" do
-        expect(form.valid?(:email)).to be_falsey
-        expect(form.errors[:full_name].first).to eq("A user with a different name (#{full_name}) has already been registered with this email address. Change the name or email address you entered.")
+      context "when the name provided doesn't match the intended new SIT's name" do
+        let(:new_full_name) { "Another name" }
+
+        it "an error is added" do
+          expect(form.valid?(:email)).to be_falsey
+          expect(form.errors[:full_name].first).to eq("A user with a different name (#{full_name}) has already been registered with this email address. Change the name or email address you entered.")
+        end
+      end
+
+      context "when the name is the same but in different case" do
+        let(:new_full_name) { full_name.upcase }
+
+        it "an error is added" do
+          expect(form.valid?(:email)).to be_truthy
+        end
       end
     end
 
