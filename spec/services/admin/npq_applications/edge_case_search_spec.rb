@@ -5,10 +5,13 @@ require "rails_helper"
 RSpec.describe Admin::NPQApplications::EdgeCaseSearch do
   let(:search) { Admin::NPQApplications::EdgeCaseSearch }
 
-  let!(:application_1) { create(:npq_application, user: user_1) }
-  let!(:application_2) { create(:npq_application, user: user_2) }
-  let!(:application_3) { create(:npq_application, user: user_1, employer_name: "Salford", funding_eligiblity_status_code: "no_institution", employment_type: "hospital_school", works_in_school: false, works_in_childcare: false) }
-  let!(:application_4) { create(:npq_application, user: user_2, employer_name: "Learning", funding_eligiblity_status_code: "previously_funded", employment_type: "other") }
+  let(:referred) { "no" }
+  let!(:application_1) { create(:npq_application, user: user_1, referred_by_return_to_teaching_adviser: referred) }
+  let!(:application_2) { create(:npq_application, user: user_2, referred_by_return_to_teaching_adviser: referred) }
+  let!(:application_3) { create(:npq_application, user: user_1, referred_by_return_to_teaching_adviser: referred, employer_name: "Salford", funding_eligiblity_status_code: "no_institution", employment_type: "hospital_school", works_in_school: false, works_in_childcare: false) }
+  let!(:application_4) { create(:npq_application, user: user_2, referred_by_return_to_teaching_adviser: referred, employer_name: "Learning", funding_eligiblity_status_code: "previously_funded", employment_type: "other") }
+  let!(:application_4) { create(:npq_application, user: user_2, referred_by_return_to_teaching_adviser: referred, employer_name: "Learning", funding_eligiblity_status_code: "previously_funded", employment_type: "school") }
+  let!(:application_5) { create(:npq_application, user: user_2, referred_by_return_to_teaching_adviser: referred, employer_name: "Learning", funding_eligiblity_status_code: "funded", employment_type: "school", works_in_school: true) }
   let!(:participant_identity_1) { create(:participant_identity, email: "aajohn-doe123@example.com") }
   let!(:participant_identity_2) { create(:participant_identity, email: "bbalaric123@example.com") }
   let!(:teacher_profile_1) { create(:teacher_profile, user: user_1) }
@@ -142,6 +145,25 @@ RSpec.describe Admin::NPQApplications::EdgeCaseSearch do
 
       it "does not return the other applications" do
         expect(subject.call).not_to include(application_4)
+      end
+    end
+
+    context "when showing all applications" do
+      subject { described_class.new }
+      context "when referred_by_return_to_teaching_adviser is yes" do
+        let(:referred) { "yes" }
+
+        it "returns correct applications" do
+          expect(subject.call).to include(application_5)
+        end
+      end
+
+      context "when referred_by_return_to_teaching_adviser is no" do
+        let(:referred) { "no" }
+
+        it "returns correct applications" do
+          expect(subject.call).not_to include(application_5)
+        end
       end
     end
   end

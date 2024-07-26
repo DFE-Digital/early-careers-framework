@@ -248,6 +248,7 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
             "tsf_primary_eligibility" => false,
             "tsf_primary_plus_eligibility" => false,
             "private_childcare_provider_urn" => nil,
+            "referred_by_return_to_teaching_adviser" => nil,
             "funding_eligiblity_status_code" => "funded",
             "teacher_catchment" => "other",
             "teacher_catchment_country" => "United Kingdom",

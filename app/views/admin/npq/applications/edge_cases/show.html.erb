@@ -107,18 +107,25 @@
     end
 
     sl.with_row do |row|
-      row.with_key(text: "Employment type")
-      row.with_value(text: @npq_application.employment_type&.humanize || "-")
+      row.with_key(text: "Referred by return to teaching adviser")
+      row.with_value(text: @npq_application.referred_by_return_to_teaching_adviser&.humanize || "-")
     end
 
-    sl.with_row do |row|
-      row.with_key(text: "Employment name")
-      row.with_value(text: @npq_application.employer_name&.humanize || "-")
-    end
+    unless @npq_application.referred_by_return_to_teaching_adviser == "yes"
+      sl.with_row do |row|
+        row.with_key(text: "Employment type")
+        row.with_value(text: @npq_application.employment_type&.humanize || "-")
+      end
 
-    sl.with_row do |row|
-      row.with_key(text: "Employment role")
-      row.with_value(text: @npq_application.employment_role&.humanize || "-")
+      sl.with_row do |row|
+        row.with_key(text: "Employment name")
+        row.with_value(text: @npq_application.employer_name&.humanize || "-")
+      end
+
+      sl.with_row do |row|
+        row.with_key(text: "Employment role")
+        row.with_value(text: @npq_application.employment_role&.humanize || "-")
+      end
     end
 
     sl.with_row do |row|
