@@ -69,7 +69,7 @@ RSpec.describe Oneoffs::NPQ::CreateNewContractAndUpdateExistingStatements do
       csv.close
     end
 
-    it "creates a contracts with correct values" do
+    it "creates contracts with correct values" do
       expect { subject.call }.to change { NPQContract.count }.by(4)
 
       lead_provider_data.each do |lead_provider_name, course_identifier_data|
