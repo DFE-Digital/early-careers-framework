@@ -2,14 +2,14 @@
 
 require "rails_helper"
 
-RSpec.describe CreateChangeLeadProviderSupportQuery do
+RSpec.describe CreateChangeRequestSupportQuery do
   let(:current_user) { build(:user) }
   let(:induction_coordinator_email) { "ian.duck@bigschool.com" }
   let(:induction_coordinator) { build(:user, full_name: "Ian Duck", email: induction_coordinator_email) }
   let(:school) { instance_double(School, name: "Big School", urn: "123456", induction_coordinators: [induction_coordinator]) }
   let(:academic_year) { "2022 to 2023" }
-  let(:current_lead_provider) { instance_double(LeadProvider, name: "Current Lead Provider") }
-  let(:new_lead_provider) { instance_double(LeadProvider, name: "New Lead Provider") }
+  let(:current_relation) { build(:lead_provider, name: "Current Lead Provider") }
+  let(:new_relation) { build(:lead_provider, name: "New Lead Provider") }
   let(:participant) { nil }
 
   subject do
@@ -18,8 +18,8 @@ RSpec.describe CreateChangeLeadProviderSupportQuery do
       participant:,
       school:,
       academic_year:,
-      current_lead_provider:,
-      new_lead_provider:,
+      current_relation:,
+      new_relation:,
     )
   end
 
@@ -43,14 +43,14 @@ RSpec.describe CreateChangeLeadProviderSupportQuery do
 
       expect(SupportQuery.last.message).to eq(
         I18n.t(
-          "schools.change_lead_provider.support_query.message.cohort",
+          "schools.change_request_support_query.lead_provider.message.cohort",
           academic_year:,
           email: induction_coordinator_email,
           induction_coordinator: induction_coordinator.full_name,
           current_user: current_user.full_name,
           school: school.name,
-          current_lead_provider: current_lead_provider.name,
-          new_lead_provider: new_lead_provider.name,
+          current_relation: current_relation.name,
+          new_relation: new_relation.name,
         ),
       )
     end
@@ -59,7 +59,7 @@ RSpec.describe CreateChangeLeadProviderSupportQuery do
       subject
       expect(SupportQuery.last.additional_information).to eq(
         I18n.t(
-          "schools.change_lead_provider.support_query.additional_information",
+          "schools.change_request_support_query.lead_provider.additional_information",
           academic_year:,
           school: school.name,
           urn: school.urn,
@@ -88,14 +88,36 @@ RSpec.describe CreateChangeLeadProviderSupportQuery do
 
         expect(SupportQuery.last.message).to eq(
           I18n.t(
-            "schools.change_lead_provider.support_query.message.participant",
+            "schools.change_request_support_query.lead_provider.message.participant",
             academic_year:,
             email: participant_email,
             current_user: current_user.full_name,
             participant: participant.full_name,
             school: school.name,
-            current_lead_provider: current_lead_provider.name,
-            new_lead_provider: new_lead_provider.name,
+            current_relation: current_relation.name,
+            new_relation: new_relation.name,
+          ),
+        )
+      end
+    end
+
+    context "when the change request is to change delivery partner" do
+      let(:current_relation) { build(:delivery_partner, name: "Current Delivery Partner") }
+      let(:new_relation) { build(:delivery_partner, name: "New Delivery Partner") }
+
+      it "adds the correct message" do
+        subject
+
+        expect(SupportQuery.last.message).to eq(
+          I18n.t(
+            "schools.change_request_support_query.delivery_partner.message.cohort",
+            academic_year:,
+            email: induction_coordinator_email,
+            induction_coordinator: induction_coordinator.full_name,
+            current_user: current_user.full_name,
+            school: school.name,
+            current_relation: current_relation.name,
+            new_relation: new_relation.name,
           ),
         )
       end

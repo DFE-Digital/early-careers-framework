@@ -1,11 +1,14 @@
 # frozen_string_literal: true
 
-require "./app/wizards/schools/change_lead_provider/base_wizard"
-
 module Schools
-  class ChangeLeadProviderController < ::Schools::BaseController
+  class ChangeRequestSupportQueryController < ::Schools::BaseController
     before_action :set_school
     before_action :initialize_wizard
+
+    attr_reader :wizard
+
+    delegate :academic_year, :default_path_arguments, to: :wizard
+    helper_method :academic_year, :default_path_arguments
 
     def new
       render current_step
@@ -22,10 +25,12 @@ module Schools
     end
 
     def intro
-      if params[:participant_id].present?
-        render :participant_intro
+      if participant_change_request?
+        render :lead_provider_participant_intro
+      elsif change_request_type == "change-lead-provider"
+        render :lead_provider_cohort_intro
       else
-        render :academic_year_intro
+        render :delivery_partner_intro
       end
     end
 
@@ -33,6 +38,7 @@ module Schools
 
     def initialize_wizard
       @wizard = wizard_class.new(
+        change_request_type:,
         current_step:,
         step_params:,
         current_user:,
@@ -44,11 +50,11 @@ module Schools
     end
 
     def store
-      @store ||= FormData::ChangeLeadProviderStore.new(session:, form_key:)
+      @store ||= FormData::WizardStepStore.new(session:, form_key:)
     end
 
     def form_key
-      participant_change_request? ? :change_lead_provider_for_participant : :change_lead_provider_for_year
+      participant_change_request? ? :change_lead_provider_for_participant : change_request_type.to_sym
     end
 
     def current_step
@@ -68,16 +74,6 @@ module Schools
       ActionController::Parameters.new({ current_step => params })
     end
 
-    def participant_id
-      return unless participant_change_request?
-
-      @participant_id ||= participant.id
-    end
-
-    def participant
-      @participant ||= ParticipantProfile.find(params[:participant_id])
-    end
-
     def school_id
       @school_id ||= @school.id
     end
@@ -86,28 +82,26 @@ module Schools
       @start_year ||= params[:start_year]
     end
 
-    def lead_providers
-      @lead_providers ||= LeadProvider.all.order(:name)
-    end
-    helper_method :lead_providers
+    def participant_id
+      return unless participant_change_request?
 
-    def default_path_params
-      path_params = { school_id:, start_year: }
-      participant_change_request? ? path_params.merge(participant_id:) : path_params
+      @participant_id ||= participant.id
     end
-    helper_method :default_path_params
 
-    def academic_year
-      @academic_year ||= "#{start_year} to #{start_year.to_i + 1}"
+    def change_request_type
+      @change_request_type ||= params[:change_request_type]
     end
-    helper_method :academic_year
+
+    def participant
+      @participant ||= ParticipantProfile.find(params[:participant_id])
+    end
 
     def participant_change_request?
       params[:participant_id].present?
     end
 
     def wizard_class
-      Schools::ChangeLeadProvider::BaseWizard
+      Schools::ChangeRequestSupportQuery::BaseWizard
     end
   end
 end

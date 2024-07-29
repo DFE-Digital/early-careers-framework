@@ -3,7 +3,7 @@
 require "rails_helper"
 require_relative "../training_dashboard/manage_training_steps"
 
-RSpec.describe "Induction coordinator requests lead provider change for acedemic year", js: true, mid_cohort: true do
+RSpec.describe "Induction coordinator requests lead provider change for academic year", js: true, mid_cohort: true do
   include ManageTrainingSteps
 
   scenario "SIT makes support query to change lead provider" do
@@ -36,9 +36,13 @@ RSpec.describe "Induction coordinator requests lead provider change for acedemic
   end
 
   def then_i_choose_yes_on_the_start_step
-    expect(page).to have_content("Have you confirmed this change with the current and new lead providers?")
+    expect(page).to have_content("Have you confirmed this change with the current and new lead provider?")
     click_on "Continue"
-    expect(page).to have_content("Select yes if you have confirmed this change with the current and new lead providers")
+    expect(page).to have_content("Select yes if you have confirmed this change with the current and new lead provider")
+    choose "No"
+    click_on "Continue"
+    expect(page).to have_content("You need to contact the current and new lead provider")
+    page.go_back
     choose "Yes"
     click_on "Continue"
   end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Schools
-  module ChangeLeadProvider
+  module ChangeRequestSupportQuery
     class StoredStep < DfE::Wizard::Step
       def save!
         store.store_attrs(key, wizard.step_params.to_h)

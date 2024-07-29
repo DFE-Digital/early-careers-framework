@@ -1,0 +1,86 @@
+en:
+  activemodel:
+    errors:
+      models:
+        schools/change_delivery_partner/start_step:
+          attributes:
+            answer:
+              blank: "Select yes if you have confirmed this change with your lead provider"
+        schools/change_delivery_partner/relation_step:
+          attributes:
+            relation_id:
+              blank: "Select who the new delivery partner is"
+
+        schools/change_lead_provider/start_step:
+          attributes:
+            answer:
+              blank: "Select yes if you have confirmed this change with the current and new lead provider"
+        schools/change_lead_provider/email_step:
+          attributes:
+            answer:
+              blank: "Select yes if this is the correct email address for the participant"
+            email:
+              blank: "Enter an email address in the correct format, like name@example.com"
+              invalid: "Enter a valid email address"
+        schools/change_lead_provider/relation_step:
+          attributes:
+            relation_id:
+              blank: "Select who the new lead provider is"
+
+  schools:
+    change_request_support_query:
+      start_step:
+        change_delivery_partner:
+          title: Have you confirmed this change with your lead provider?
+        change_lead_provider:
+          title: Have you confirmed this change with the current and new lead provider?
+      relation_step:
+        change_delivery_partner:
+          title: Who is the new delivery partner?
+          no_relations: "There are no other delivery partners available for academic year you chose."
+        change_lead_provider:
+          title: Who is the new lead provider?
+          no_relations: "There are no other lead providers available for academic year you chose."
+      contact_providers_step:
+        change_delivery_partner:
+          title: You need to contact your lead provider
+        change_lead_provider:
+          title: You need to contact the current and new lead provider
+
+      delivery_partner:
+        additional_information: |
+          Academic year: %{academic_year}
+          School name: %{school}
+          School URN: %{urn}
+
+        message:
+          cohort: |
+            %{current_user} has requested to change the delivery partner for the academic year %{academic_year}.
+
+            Induction coordinator: %{induction_coordinator}
+            Email: %{email}
+            Current delivery partner: %{current_relation}
+            New delivery partner: %{new_relation}
+
+      lead_provider:
+        additional_information: |
+          Academic year: %{academic_year}
+          School name: %{school}
+          School URN: %{urn}
+
+        message:
+          cohort: |
+            %{current_user} has requested to change the lead provider for the academic year %{academic_year}.
+
+            Induction coordinator: %{induction_coordinator}
+            Email: %{email}
+            Current lead provider: %{current_relation}
+            New lead provider: %{new_relation}
+
+          participant: |
+            %{current_user} has requested to change the lead provider for %{participant}.
+
+            Full name: %{participant}
+            Email: %{email}
+            Current lead provider: %{current_relation}
+            New lead provider: %{new_relation}

@@ -1,9 +1,10 @@
 <% content_for :title, "Check your answers" %>
 <% content_for(:before_content, govuk_back_link(href: @wizard.previous_step_path)) %>
+<% relation_type = @wizard.change_request_type == "change-lead-provider" ? "lead provider" : "delivery partner" %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <%= form_with(model: @wizard.current_step, url: @wizard.current_step_path(default_path_params)) do |f| %>
+    <%= form_with(model: @wizard.current_step, url: @wizard.current_step_path(default_path_arguments)) do |f| %>
       <%= f.hidden_field :complete, value: true %>
 
       <h1>Check your answers before you request the change</h1>
@@ -42,21 +43,21 @@
           row.with_action(
             text: "Change",
             visually_hidden_text: "email address",
-            href: schools_change_lead_provider_email_path(default_path_params)
+            href: schools_change_request_support_query_email_path(default_path_arguments)
           )
         end if @wizard.participant_change_request?
 
         sl.with_row do |row|
-          row.with_key(text: "Current lead provider")
-          row.with_value(text: @wizard.current_lead_provider.name)
+          row.with_key(text: "Current #{relation_type}")
+          row.with_value(text: @wizard.current_relation.name)
         end
         sl.with_row do |row|
-          row.with_key(text: "New lead provider")
-          row.with_value(text: @wizard.new_lead_provider.name)
+          row.with_key(text: "New #{relation_type}")
+          row.with_value(text: @wizard.new_relation.name)
           row.with_action(
             text: "Change",
-            visually_hidden_text: "lead provider",
-            href: schools_change_lead_provider_lead_provider_path(default_path_params)
+            visually_hidden_text: relation_type,
+            href: schools_change_request_support_query_relation_path(default_path_arguments)
           )
         end
       end %>

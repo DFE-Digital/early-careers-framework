@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Schools
-  module ChangeLeadProvider
+  module ChangeRequestSupportQuery
     class SuccessStep < DfE::Wizard::Step
       def self.permitted_params
         []

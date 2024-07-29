@@ -1,0 +1,28 @@
+<% content_for :title, I18n.t("schools.change_request_support_query.contact_providers_step.#{@wizard.change_request_type.underscore}.title") %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-l">
+      <%= I18n.t("schools.change_request_support_query.contact_providers_step.#{@wizard.change_request_type.underscore}.title") %>
+    </h1>
+
+    <p class="govuk-body">
+      <% if @wizard.participant_change_request? %>
+        You need to contact the participant's current and new lead providers to <a href="https://www.gov.uk/guidance/how-to-manage-early-career-teacher-training#change-lead-provider" target="_blank" class="govuk-link govuk-link--no-visited-state">change their lead provider (opens in a new window or tab)</a>.
+      <% elsif @wizard.change_request_type == "change-lead-provider" %>
+        If you want to <a href="https://www.gov.uk/guidance/how-to-manage-early-career-teacher-training#change-lead-provider" target="_blank" class="govuk-link govuk-link--no-visited-state">change your lead provider (opens in a new window or tab)</a> you need to:</p>
+
+      <ul class="govuk-list govuk-list--bullet">
+        <li>contact your current provider to let them know you want to end the partnership</li>
+        <li>sign up with your new lead provider</li>
+      </ul>
+      <% else %>
+        If you want to <a href="https://www.gov.uk/guidance/how-to-manage-early-career-teacher-training#change-delivery-partner" target="_blank" class="govuk-link govuk-link--no-visited-state">change your delivery partner (opens in a new window or tab)</a> you need to confirm the change with your lead provider.
+      <% end %>
+    </p>
+
+    <p>The new provider will then report the change to us.</p>
+
+    <p class="govuk-body"><%= govuk_link_to "Return to manage your training", schools_dashboard_path(school_id: @school_id) %></p>
+  </div>
+</div>

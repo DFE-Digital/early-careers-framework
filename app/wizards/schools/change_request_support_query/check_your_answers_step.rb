@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Schools
-  module ChangeLeadProvider
+  module ChangeRequestSupportQuery
     class CheckYourAnswersStep < StoredStep
       attr_accessor :complete
 
@@ -10,7 +10,7 @@ module Schools
       end
 
       def previous_step
-        :lead_provider
+        :relation
       end
 
       def next_step

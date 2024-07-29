@@ -745,45 +745,41 @@ Rails.application.routes.draw do
     end
   end
 
-  get "/schools/:school_id/:start_year/:participant_id/change-lead-provider/introduction",
-      to: "schools/change_lead_provider#intro",
-      as: "schools_change_lead_provider_intro"
+  get "/schools/:school_id/:start_year(/:participant_id)/:change_request_type/introduction",
+      to: "schools/change_request_support_query#intro",
+      as: "schools_change_request_support_query_intro"
 
-  get "/schools/:school_id/:start_year/change-lead-provider/introduction",
-      to: "schools/change_lead_provider#intro",
-      as: "schools_change_lead_provider_year_intro"
+  get "/schools/:school_id/:start_year(/:participant_id)/:change_request_type/start",
+      to: "schools/change_request_support_query#new",
+      as: "schools_change_request_support_query_start"
+  post "/schools/:school_id/:start_year(/:participant_id)/:change_request_type/start",
+       to: "schools/change_request_support_query#create"
 
-  get "/schools/:school_id/:start_year(/:participant_id)/change-lead-provider/start",
-      to: "schools/change_lead_provider#new",
-      as: "schools_change_lead_provider_start"
-  post "/schools/:school_id/:start_year(/:participant_id)/change-lead-provider/start",
-       to: "schools/change_lead_provider#create"
+  get "/schools/:school_id/:start_year(/:participant_id)/:change_request_type/contact-providers",
+      to: "schools/change_request_support_query#new",
+      as: "schools_change_request_support_query_contact_providers"
 
-  get "/schools/:school_id/:start_year(/:participant_id)/change-lead-provider/contact-providers",
-      to: "schools/change_lead_provider#new",
-      as: "schools_change_lead_provider_contact_providers"
+  get "/schools/:school_id/:start_year/:participant_id/:change_request_type/email",
+      to: "schools/change_request_support_query#new",
+      as: "schools_change_request_support_query_email"
+  post "/schools/:school_id/:start_year/:participant_id/:change_request_type/email",
+       to: "schools/change_request_support_query#create"
 
-  get "/schools/:school_id/:start_year(/:participant_id)/change-lead-provider/email",
-      to: "schools/change_lead_provider#new",
-      as: "schools_change_lead_provider_email"
-  post "/schools/:school_id/:start_year(/:participant_id)/change-lead-provider/email",
-       to: "schools/change_lead_provider#create"
+  get "/schools/:school_id/:start_year(/:participant_id)/:change_request_type/relation",
+      to: "schools/change_request_support_query#new",
+      as: "schools_change_request_support_query_relation"
+  post "/schools/:school_id/:start_year(/:participant_id)/:change_request_type/relation",
+       to: "schools/change_request_support_query#create"
 
-  get "/schools/:school_id/:start_year(/:participant_id)/change-lead-provider/lead-provider",
-      to: "schools/change_lead_provider#new",
-      as: "schools_change_lead_provider_lead_provider"
-  post "/schools/:school_id/:start_year(/:participant_id)/change-lead-provider/lead-provider",
-       to: "schools/change_lead_provider#create"
+  get "/schools/:school_id/:start_year(/:participant_id)/:change_request_type/check-your-answers",
+      to: "schools/change_request_support_query#new",
+      as: "schools_change_request_support_query_check_your_answers"
+  post "/schools/:school_id/:start_year(/:participant_id)/:change_request_type/check-your-answers",
+       to: "schools/change_request_support_query#create"
 
-  get "/schools/:school_id/:start_year(/:participant_id)/change-lead-provider/check-your-answers",
-      to: "schools/change_lead_provider#new",
-      as: "schools_change_lead_provider_check_your_answers"
-  post "/schools/:school_id/:start_year(/:participant_id)/change-lead-provider/check-your-answers",
-       to: "schools/change_lead_provider#create"
-
-  get "/schools/:school_id/:start_year(/:participant_id)/change-lead-provider/success",
-      to: "schools/change_lead_provider#new",
-      as: "schools_change_lead_provider_success"
+  get "/schools/:school_id/:start_year(/:participant_id)/:change_request_type/success",
+      to: "schools/change_request_support_query#new",
+      as: "schools_change_request_support_query_success"
 
   get "/delivery-partners/start", to: "start#delivery_partners", as: :start_delivery_partners
   scope module: "delivery_partners" do

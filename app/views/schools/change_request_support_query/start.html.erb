@@ -1,21 +1,17 @@
-<% content_for :title, "Have you confirmed this change?" %>
+<% content_for :title, I18n.t("schools.change_request_support_query.start_step.#{@wizard.change_request_type.underscore}.title") %>
 <% content_for(
   :before_content,
-  govuk_back_link(
-  href: @wizard.participant_change_request? ?
-    schools_change_lead_provider_intro_path(default_path_params) :
-    schools_change_lead_provider_year_intro_path(default_path_params)
-  )
+  govuk_back_link(href: schools_change_request_support_query_intro_path(default_path_arguments))
 ) %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <%= form_with(model: @wizard.current_step, url: @wizard.current_step_path(default_path_params)) do |f| %>
+    <%= form_with(model: @wizard.current_step, url: @wizard.current_step_path(default_path_arguments)) do |f| %>
       <%= f.govuk_error_summary %>
 
       <%= f.govuk_radio_buttons_fieldset :answer, legend: {
         size: "l",
-        text: "Have you confirmed this change with the current and new lead providers?",
+        text: I18n.t("schools.change_request_support_query.start_step.#{@wizard.change_request_type.underscore}.title"),
         tag: "h1",
       } do %>
         <%= f.govuk_radio_button :answer, :yes, label: { text: "Yes" }, link_errors: true %>

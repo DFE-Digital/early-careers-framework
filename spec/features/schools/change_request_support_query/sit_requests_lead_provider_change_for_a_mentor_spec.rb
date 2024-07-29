@@ -3,16 +3,16 @@
 require "rails_helper"
 require_relative "../training_dashboard/manage_training_steps"
 
-RSpec.describe "Induction coordinator requests lead provider change for a participant", js: true, mid_cohort: true do
+RSpec.describe "Induction coordinator requests lead provider change for a mentor", js: true, mid_cohort: true do
   include ManageTrainingSteps
 
   scenario "SIT makes support query to change lead provider" do
     given_there_is_a_school_that_has_chosen_fip_and_partnered
     and_i_am_signed_in_as_an_induction_coordinator
-    and_there_is_an_ect_in_the_active_registration_cohort
+    and_there_is_a_mentor_in_the_active_registration_cohort
     and_there_is_a_choice_of_lead_providers
     when_i_visit_manage_training_dashboard
-    click_on("Early career teachers")
+    click_on("Mentors")
     click_on(@participant_data[:full_name])
     click_on("Change Lead provider", visible: false)
     then_i_see_the_intro_step
@@ -28,13 +28,13 @@ RSpec.describe "Induction coordinator requests lead provider change for a partic
     and_a_support_query_has_been_created
   end
 
-  def and_there_is_an_ect_in_the_active_registration_cohort
+  def and_there_is_a_mentor_in_the_active_registration_cohort
     set_participant_data
     user = create(:user, full_name: @participant_data[:full_name], email: @participant_data[:email])
     teacher_profile = create(:teacher_profile, user:, trn: @participant_data[:trn])
     schedule = create(:ecf_schedule, cohort: @cohort)
     participant_identity = create(:participant_identity, user:)
-    participant_profile = create(:ect_participant_profile, teacher_profile:,
+    participant_profile = create(:mentor_participant_profile, teacher_profile:,
                                  participant_identity:,
                                  schedule:, school_cohort: @school_cohort,
                                  induction_start_date: Date.new(@cohort.start_year, 9, 1))
@@ -45,7 +45,7 @@ RSpec.describe "Induction coordinator requests lead provider change for a partic
     induction_programme = InductionProgramme.find_by(school_cohort: @school_cohort)
     Induction::Enrol.call(participant_profile:, induction_programme:)
 
-    create(:ect_participant_declaration, participant_profile:,
+    create(:mentor_participant_declaration, participant_profile:,
            cpd_lead_provider: @lead_provider.cpd_lead_provider, state: :eligible)
     set_dqt_validation_result
   end
@@ -62,9 +62,9 @@ RSpec.describe "Induction coordinator requests lead provider change for a partic
   end
 
   def then_i_choose_yes_on_the_start_step
-    expect(page).to have_content("Have you confirmed this change with the current and new lead providers?")
+    expect(page).to have_content("Have you confirmed this change with the current and new lead provider?")
     click_on "Continue"
-    expect(page).to have_content("Select yes if you have confirmed this change with the current and new lead providers")
+    expect(page).to have_content("Select yes if you have confirmed this change with the current and new lead provider")
     choose "Yes"
     click_on "Continue"
   end

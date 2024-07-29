@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
-class CreateChangeLeadProviderSupportQuery < BaseService
-  attr_reader :current_user, :participant, :school, :academic_year, :current_lead_provider, :new_lead_provider
+class CreateChangeRequestSupportQuery < BaseService
+  attr_reader :current_user, :participant, :school, :academic_year, :current_relation, :new_relation
 
-  def initialize(current_user:, participant:, school:, academic_year:, current_lead_provider:, new_lead_provider:)
+  def initialize(current_user:, participant:, school:, academic_year:, current_relation:, new_relation:)
     @current_user = current_user
     @participant = participant
     @school = school
     @academic_year = academic_year
-    @current_lead_provider = current_lead_provider
-    @new_lead_provider = new_lead_provider
+    @current_relation = current_relation
+    @new_relation = new_relation
   end
 
   def call
@@ -24,12 +24,16 @@ class CreateChangeLeadProviderSupportQuery < BaseService
 private
 
   def subject
-    participant_change_request? ? "change-participant-lead-provider" : "change-cohort-lead-provider"
+    if lead_provider_change_request?
+      participant_change_request? ? "change-participant-lead-provider" : "change-cohort-lead-provider"
+    else
+      "change-cohort-delivery-partner"
+    end
   end
 
   def additional_information
     I18n.t(
-      "schools.change_lead_provider.support_query.additional_information",
+      "schools.change_request_support_query.#{relation_i18n_key}.additional_information",
       academic_year:,
       school: school.name,
       urn: school.urn,
@@ -38,15 +42,15 @@ private
 
   def message
     i18n_key = participant_change_request? ? "participant" : "cohort"
-    key = "schools.change_lead_provider.support_query.message.#{i18n_key}"
+    key = "schools.change_request_support_query.#{relation_i18n_key}.message.#{i18n_key}"
 
     kwargs = {
       academic_year:,
       current_user: current_user.full_name,
       email:,
       school: school.name,
-      current_lead_provider: current_lead_provider.name,
-      new_lead_provider: new_lead_provider.name,
+      current_relation: current_relation.name,
+      new_relation: new_relation.name,
       induction_coordinator: induction_coordinator.full_name,
     }
 
@@ -65,5 +69,13 @@ private
 
   def participant_change_request?
     participant.present?
+  end
+
+  def lead_provider_change_request?
+    current_relation.is_a?(LeadProvider)
+  end
+
+  def relation_i18n_key
+    current_relation.class.name.underscore
   end
 end
