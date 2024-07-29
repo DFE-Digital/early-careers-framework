@@ -3,7 +3,7 @@
     tag: { text: phase_banner_tag_text, colour: phase_banner_tag_colour },
     text: Rails.env) do %>
       This is a new service – your
-      <%= govuk_link_to "feedback", feedback_form_url, target: "_blank", rel: "noopener noreferrer" %>
+      <%= govuk_link_to "feedback", feedback_form_url, target: "_blank", rel: "noopener noreferrer", tabindex: "-1" %>
       will help us to improve it.
   <% end %>
 <% end %>
