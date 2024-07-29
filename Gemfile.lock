@@ -267,7 +267,7 @@ GEM
       html-attributes-utils (~> 1.0.0, >= 1.0.0)
       pagy (>= 6, < 9)
       view_component (>= 3.9, < 3.13)
-    govuk_design_system_formbuilder (5.4.0)
+    govuk_design_system_formbuilder (5.4.1)
       actionview (>= 6.1)
       activemodel (>= 6.1)
       activesupport (>= 6.1)
@@ -734,7 +734,7 @@ DEPENDENCIES
   friendly_id (~> 5.5)
   google-cloud-bigquery
   govuk-components (~> 5.4.1)
-  govuk_design_system_formbuilder (~> 5.4.0)
+  govuk_design_system_formbuilder (~> 5.4.1)
   httpclient (~> 2.8, >= 2.8.3)
   jsbundling-rails
   json-diff (~> 0.4.1)
