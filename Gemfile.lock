@@ -171,7 +171,7 @@ GEM
       bigdecimal
       rexml
     crass (1.0.6)
-    cssbundling-rails (1.4.0)
+    cssbundling-rails (1.4.1)
       railties (>= 6.0.0)
     csv (3.3.0)
     database_cleaner-active_record (2.2.0)
@@ -404,7 +404,7 @@ GEM
     pundit-matchers (1.9.0)
       rspec-rails (>= 3.0.0)
     raabro (1.4.0)
-    racc (1.8.0)
+    racc (1.8.1)
     rack (2.2.9)
     rack-attack (6.7.0)
       rack (>= 1.0, < 4)
@@ -691,7 +691,7 @@ GEM
     xpath (3.2.0)
       nokogiri (~> 1.8)
     yard (0.9.36)
-    zeitwerk (2.6.16)
+    zeitwerk (2.6.17)
     zendesk_api (3.1.0)
       faraday (> 2.0.0)
       faraday-multipart
