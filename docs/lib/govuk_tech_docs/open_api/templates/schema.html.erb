@@ -29,11 +29,11 @@
             <% if property[1].type == 'array' %>
               <% nested_schema = property[1]['items'] %>
 
-              <% if nested_schema["anyOf"] %>
+              <% if filter_schemas(nested_schema["anyOf"]) %>
                 <p>This conforms to any of the following schemas:</p>
 
                 <ul>
-                  <% nested_schema["anyOf"].each do |node| %>
+                  <% filter_schemas(nested_schema["anyOf"]).each do |node| %>
                     <li><%= get_schema_link node %></li>
                   <% end %>
                 </ul>
@@ -48,11 +48,11 @@
               <%= "It conforms to #{get_schema_link_data(nested_schema)} schema." %>
             <% end %>
 
-            <% if property[1].node_data["anyOf"].node.present? %>
+            <% if filter_schemas(property[1].node_data["anyOf"].node).present? %>
               <p>This conforms to any of the following schemas:</p>
 
               <ul>
-                <% property[1].node_data["anyOf"].node.each do |node| %>
+                <% filter_schemas(property[1].node_data["anyOf"].node).each do |node| %>
                   <li><%= get_schema_link node %></li>
                 <% end %>
               </ul>
@@ -62,7 +62,7 @@
               <p>Possible values:</p>
 
               <ul>
-                <% enum.each do |possible_value| %>
+                <% filter_possible_values(enum).each do |possible_value| %>
                   <li><%= format_possible_value(possible_value) %></li>
                 <% end %>
               </ul>
