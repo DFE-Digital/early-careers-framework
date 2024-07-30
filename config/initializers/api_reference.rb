@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
-# TODO: change to separation before merging!
-return unless Rails.env.review?
+return unless Rails.env.separation?
 
 api_reference_path = Rails.root.join("public/api-reference")
 api_reference_without_npq_path = Rails.root.join("public/api-reference-without-npq")
