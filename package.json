@@ -10,7 +10,7 @@
     "@babel/plugin-proposal-object-rest-spread": "^7.20.7",
     "@babel/plugin-transform-runtime": "^7.24.7",
     "@babel/preset-env": "^7.25.2",
-    "@babel/runtime": "^7.24.8",
+    "@babel/runtime": "^7.25.0",
     "@sentry/browser": "^6.19.7",
     "@sentry/tracing": "^6.19.7",
     "accessible-autocomplete": "^2.0.3",
