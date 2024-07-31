@@ -9,13 +9,13 @@ module ValidTestDataGenerator
     include ActiveSupport::Testing::TimeHelpers
 
     class << self
-      def call(name:, total_schools: 10, participants_per_school: 50)
-        new(name:).call(total_schools:, participants_per_school:)
+      def call(name:, total_schools: 10, participants_per_school: 50, cohort: Cohort.current)
+        new(name:, cohort:).call(total_schools:, participants_per_school:)
       end
     end
 
-    def call(total_schools: 10, participants_per_school: 100)
-      generate_new_schools(count: total_schools - lead_provider.schools.count) if lead_provider.schools.count < total_schools
+    def call(total_schools:, participants_per_school:)
+      generate_new_schools(count: total_schools)
 
       lead_provider.schools.order("created_at desc").limit(total_schools).each do |school|
         sparsity_uplift = weighted_choice(selection: [true, false], odds: [11, 89])
@@ -26,10 +26,11 @@ module ValidTestDataGenerator
 
   private
 
-    attr_reader :lead_provider
+    attr_reader :lead_provider, :cohort
 
-    def initialize(name:)
+    def initialize(name:, cohort:)
       @lead_provider = ::LeadProvider.find_or_create_by!(name:)
+      @cohort = cohort
     end
 
     def generate_new_schools(count:)
@@ -64,22 +65,19 @@ module ValidTestDataGenerator
       schedule = ecf_schedules.sample
       participant_identity = Identity::Create.call(user:, origin: :ecf)
 
-      cpd_lead_provider = school_cohort.lead_provider.cpd_lead_provider
-      lead_provider = cpd_lead_provider.lead_provider
-      november_statement = Finance::Statement::ECF.find_by(
+      lead_provider = school_cohort.lead_provider
+      cpd_lead_provider = lead_provider.cpd_lead_provider
+      statement = Finance::Statement::ECF.where(
         cpd_lead_provider:,
-        name: "November 2021",
-      )
-
+        cohort:,
+      ).order("RANDOM()").first
       delivery_partner = lead_provider.delivery_partners.first
-
       partnership = Partnership.find_or_create_by!(
         cohort: school_cohort.cohort,
         delivery_partner:,
         school: school_cohort.school,
         lead_provider:,
       )
-
       InductionProgramme.find_or_create_by!(
         school_cohort:,
         partnership:,
@@ -121,7 +119,7 @@ module ValidTestDataGenerator
         )
 
         line_item.update!(
-          statement: november_statement,
+          statement:,
           state: started_declaration.state,
         )
 
@@ -170,7 +168,7 @@ module ValidTestDataGenerator
         )
 
         line_item.update!(
-          statement: november_statement,
+          statement:,
           state: started_declaration.state,
         )
 
@@ -192,13 +190,13 @@ module ValidTestDataGenerator
     def ecf_schedules
       @ecf_schedules ||=
         [
-          Finance::Schedule::ECF.find_by(cohort: Cohort.current, schedule_identifier: "ecf-standard-september"),
-          Finance::Schedule::ECF.find_by(cohort: Cohort.current, schedule_identifier: "ecf-standard-january"),
+          Finance::Schedule::ECF.find_by(cohort:, schedule_identifier: "ecf-standard-september"),
+          Finance::Schedule::ECF.find_by(cohort:, schedule_identifier: "ecf-standard-january"),
         ]
     end
 
     def school_cohort(school:)
-      SchoolCohort.find_or_create_by!(school:, cohort: Cohort.current, induction_programme_choice: "full_induction_programme")
+      SchoolCohort.find_or_create_by!(school:, cohort:, induction_programme_choice: "full_induction_programme")
     end
 
     def create_fip_school_with_cohort(urn:)
@@ -220,12 +218,12 @@ module ValidTestDataGenerator
       Partnership.find_or_create_by!(
         school:,
         lead_provider:,
-        cohort: Cohort.current,
+        cohort:,
       ) do |partnership|
         partnership.delivery_partner = DeliveryPartner.create!(name: Faker::Company.name)
         ProviderRelationship.find_or_create_by!(
           lead_provider:,
-          cohort: Cohort.current,
+          cohort:,
           delivery_partner: partnership.delivery_partner,
         )
       end
@@ -244,10 +242,11 @@ module ValidTestDataGenerator
 
   class AmbitionSpecificPopulater < LeadProviderPopulater
     class << self
-      FIRST_AMBITION_SEED_DATA_TIME = ("2021-08-18 13:43".."2021-08-18 13:49")
+      FIRST_AMBITION_SEED_DATA_TIME = ("2022-08-18 13:43".."2022-08-18 13:49")
 
-      def call(name:, total_schools: 3, participants_per_school: 3000)
-        generator = new(name:)
+      def call(name:, total_schools: 3, participants_per_school: 3000, cohort: Cohort.current)
+        generator = new(name:, cohort:)
+
         generator.remove_old_data(created_at: FIRST_AMBITION_SEED_DATA_TIME)
         generator.call(total_schools:, participants_per_school:)
       end
@@ -257,15 +256,15 @@ module ValidTestDataGenerator
       lead_provider.ecf_participants.where(created_at:).find_each(&:destroy)
       schools = lead_provider.schools.where(created_at:)
       schools.each do |school|
-        partnership = Partnership.find_by(lead_provider:, school:, cohort: Cohort.current)
+        partnership = Partnership.find_by(lead_provider:, school:, cohort:)
         delivery_partner = partnership.delivery_partner
         provider_relationship = ProviderRelationship.find_by(lead_provider:,
-                                                             cohort: Cohort.current,
+                                                             cohort:,
                                                              delivery_partner:)
         provider_relationship.destroy!
         partnership.destroy!
         delivery_partner.destroy!
-        school_cohort = SchoolCohort.find_by(school:, cohort: Cohort.current, induction_programme_choice: "full_induction_programme")
+        school_cohort = SchoolCohort.find_by(school:, cohort:, induction_programme_choice: "full_induction_programme")
         school_cohort.ecf_participant_profiles.destroy_all
         school_cohort.destroy!
         school.destroy!
@@ -287,8 +286,8 @@ module ValidTestDataGenerator
 
   class NPQLeadProviderPopulater
     class << self
-      def call(name:, total_schools: 10, participants_per_school: 10)
-        new(name:, participants_per_school:).call(total_schools:)
+      def call(name:, total_schools: 10, participants_per_school: 10, cohort: Cohort.current)
+        new(name:, participants_per_school:, cohort:).call(total_schools:)
       end
     end
 
@@ -298,11 +297,12 @@ module ValidTestDataGenerator
 
   private
 
-    attr_reader :lead_provider, :participants_per_school
+    attr_reader :lead_provider, :participants_per_school, :cohort
 
-    def initialize(name:, participants_per_school:)
+    def initialize(name:, participants_per_school:, cohort:)
       @lead_provider = ::NPQLeadProvider.find_or_create_by!(name:)
       @participants_per_school = participants_per_school
+      @cohort = cohort
     end
 
     def generate_new_schools(count:)
@@ -324,6 +324,10 @@ module ValidTestDataGenerator
       user = User.create!(full_name: name, email: Faker::Internet.email(name:))
       identity = Identity::Create.call(user:, origin: :npq)
 
+      npq_courses = NPQCourse.all.reject { |c| c.identifier == "npq-early-headship-coaching-offer" }
+      # NPQ-SENCO available only for >= 2024 cohorts
+      npq_course = cohort.start_date >= 2024 ? npq_courses.sample : npq_courses.reject { |c| c.identifier == "npq-senco" }.sample
+
       npq_application = NPQApplication.create!(
         active_alert: "",
         date_of_birth: Date.new(1990, 1, 1),
@@ -334,10 +338,10 @@ module ValidTestDataGenerator
         school_urn: school.urn,
         teacher_reference_number: TRNGenerator.next,
         teacher_reference_number_verified: true,
-        npq_course: NPQCourse.all.reject { |c| c.identifier == "npq-early-headship-coaching-offer" }.sample,
+        npq_course:,
         npq_lead_provider: lead_provider,
         participant_identity: identity,
-        cohort: Cohort.find_by!(start_year: 2021),
+        cohort:,
       )
 
       return if [true, false].sample
@@ -365,7 +369,18 @@ module ValidTestDataGenerator
     end
 
     def accept_application(npq_application)
-      NPQ::Application::Accept.new(npq_application:).call
+      npq_contract = NPQContract.where(
+        cohort_id: cohort.id,
+        npq_lead_provider_id: npq_application.npq_lead_provider_id,
+        course_identifier: npq_application.npq_course.identifier,
+      ).first
+      return unless npq_contract
+
+      funded_place = if npq_contract.funding_cap.to_i.positive?
+                       npq_application.eligible_for_funding? ? [true, false].sample : false
+                     end
+
+      NPQ::Application::Accept.new(npq_application:, funded_place:).call
       npq_application.reload
     end
 
