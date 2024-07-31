@@ -48,11 +48,6 @@ en:
           title: You need to contact the current and new lead provider
 
       delivery_partner:
-        additional_information: |
-          Academic year: %{academic_year}
-          School name: %{school}
-          School URN: %{urn}
-
         message:
           cohort: |
             %{current_user} has requested to change the delivery partner for the academic year %{academic_year}.
@@ -63,11 +58,6 @@ en:
             New delivery partner: %{new_relation}
 
       lead_provider:
-        additional_information: |
-          Academic year: %{academic_year}
-          School name: %{school}
-          School URN: %{urn}
-
         message:
           cohort: |
             %{current_user} has requested to change the lead provider for the academic year %{academic_year}.
