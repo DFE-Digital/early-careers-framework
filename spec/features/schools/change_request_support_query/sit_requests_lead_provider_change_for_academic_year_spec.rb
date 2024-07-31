@@ -12,7 +12,7 @@ RSpec.describe "Induction coordinator requests lead provider change for academic
     and_there_is_a_choice_of_lead_providers
     when_i_visit_manage_training_dashboard
     click_on(Cohort.previous.start_year)
-    click_on("Change lead provider", visible: false)
+    and_i_click_change_lead_provider
     then_i_see_the_intro_step
     then_i_choose_yes_on_the_start_step
     then_i_choose_a_new_lead_provider
@@ -27,6 +27,10 @@ RSpec.describe "Induction coordinator requests lead provider change for academic
   def and_there_is_a_choice_of_lead_providers
     create(:lead_provider, name: "Lead Provider 1")
     create(:lead_provider, name: "Lead Provider 2")
+  end
+
+  def and_i_click_change_lead_provider
+    all("a", text: "Change lead provider", visible: false).last.click
   end
 
   def then_i_see_the_intro_step
