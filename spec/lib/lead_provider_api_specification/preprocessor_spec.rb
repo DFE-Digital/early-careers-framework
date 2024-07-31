@@ -1,18 +1,13 @@
 # frozen_string_literal: true
 
-require "govuk_tech_docs/open_api/preprocessor"
-
-RSpec.describe GovukTechDocs::OpenApi::Preprocessor do
-  let(:swagger_path) { "spec/fixtures/api_spec.json" }
+RSpec.describe LeadProviderApiSpecification::Preprocessor do
+  let(:swagger_path) { "spec/fixtures/files/api_reference/api_spec.json" }
   let(:instance) { described_class.new(swagger_path) }
 
   describe "#preprocess!" do
-    let(:remove_npq_references) { true }
+    let(:environment) { "separation" }
 
-    before do
-      allow(ENV).to receive(:[]).and_call_original
-      allow(ENV).to receive(:[]).with("REMOVE_NPQ_REFERENCES").and_return(remove_npq_references)
-    end
+    before { allow(Rails).to receive(:env) { environment.inquiry } }
 
     context "when the swagger doc contains NPQ references" do
       it "removes the NPQ references" do
@@ -23,7 +18,7 @@ RSpec.describe GovukTechDocs::OpenApi::Preprocessor do
         allow(File).to receive(:open).with(swagger_path, "w").and_yield(file_double)
 
         expect(file_double).to receive(:write) do |contents|
-          swagger_without_npq = File.read("spec/fixtures/api_spec_no_npq.json").strip
+          swagger_without_npq = File.read("spec/fixtures/files/api_reference/api_spec_no_npq.json").strip
           expect(contents).to eq(swagger_without_npq)
         end
 
@@ -78,7 +73,7 @@ RSpec.describe GovukTechDocs::OpenApi::Preprocessor do
     end
 
     context "when the swagger doc contains no NPQ references" do
-      let(:swagger_path) { "spec/fixtures/api_spec_no_npq.json" }
+      let(:swagger_path) { "spec/fixtures/files/api_reference/api_spec_no_npq.json" }
 
       it "does not modify the file" do
         expect(File).not_to receive(:write)
@@ -88,7 +83,7 @@ RSpec.describe GovukTechDocs::OpenApi::Preprocessor do
     end
 
     context "when not removing NPQ references" do
-      let(:remove_npq_references) { false }
+      let(:environment) { "production" }
 
       it "does not read or write any files" do
         expect(File).not_to receive(:read)

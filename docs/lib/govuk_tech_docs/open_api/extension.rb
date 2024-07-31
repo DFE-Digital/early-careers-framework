@@ -3,7 +3,6 @@
 require "openapi3_parser"
 require "uri"
 require_relative "renderer"
-require_relative "preprocessor"
 
 module GovukTechDocs
   module OpenApi
@@ -14,7 +13,6 @@ module GovukTechDocs
       end
 
       def renderer
-        Preprocessor.new(path_to_spec).preprocess!
         Renderer.new(app, document)
       end
 
