@@ -187,7 +187,9 @@ module GovukTechDocs
       end
 
       def remove_npq_references_from_text(text)
-        text.gsub(/ecf or npq/i, "ecf") if remove_npq_references?
+        return text unless remove_npq_references?
+
+        text.gsub(/ecf or npq/i, "ecf")
       end
 
       def filter_possible_values(enum)
