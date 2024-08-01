@@ -30,7 +30,9 @@ RSpec.describe Participants::CheckAndSetCompletionDate do
 
   describe "#call" do
     before do
-      allow(DQT::GetInductionRecord).to receive(:call).with(trn:).and_return(dqt_induction_record)
+      inside_registration_window do
+        allow(DQT::GetInductionRecord).to receive(:call).with(trn:).and_return(dqt_induction_record)
+      end
     end
 
     context "when the participant already have a completion date" do
