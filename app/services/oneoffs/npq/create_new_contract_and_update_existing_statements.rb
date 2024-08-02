@@ -13,6 +13,7 @@ module Oneoffs::NPQ
         rows_by_provider.each do |provider_name, rows|
           cpd_lead_provider = CpdLeadProvider.find_by!(name: provider_name)
           npq_lead_provider = cpd_lead_provider.npq_lead_provider
+          new_contracts = []
 
           rows.each.with_index(1) do |row, index|
             cohort = Cohort.find_by!(start_year: row["cohort_year"])
@@ -40,7 +41,17 @@ module Oneoffs::NPQ
               funding_cap: row["funding_cap"],
             )
 
+            new_contracts << new_contract
+
             next unless index == rows.size
+
+            other_lp_contracts = NPQContract.where(cohort:, version: current_version, npq_lead_provider:)
+                                            .where.not(course_identifier: new_contracts.map(&:course_identifier))
+
+            other_lp_contracts.each do |contract|
+              new_contract = contract.dup
+              new_contract.update!(version: new_version)
+            end
 
             statements = Finance::Statement::NPQ.where(cohort:, payment_date: payment_date_range, cpd_lead_provider:)
             statements.find_each do |statement|

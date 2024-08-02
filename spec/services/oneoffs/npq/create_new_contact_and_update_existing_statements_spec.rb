@@ -10,7 +10,7 @@ RSpec.describe Oneoffs::NPQ::CreateNewContractAndUpdateExistingStatements do
       "Ambition Institute" => {
         course_data: {
           "npq-early-headship-coaching-offer" => {
-            contract_version: "0.0.2",
+            contract_version: "0.0.3",
             recruitment_target: 1,
             per_participant: 10,
           },
@@ -25,7 +25,7 @@ RSpec.describe Oneoffs::NPQ::CreateNewContractAndUpdateExistingStatements do
       "Best Practice Network" => {
         course_data: {
           "npq-early-headship-coaching-offer" => {
-            contract_version: "0.0.4",
+            contract_version: "0.0.5",
             recruitment_target: 1,
             per_participant: 10,
           },
@@ -40,8 +40,22 @@ RSpec.describe Oneoffs::NPQ::CreateNewContractAndUpdateExistingStatements do
     }
   end
 
+  let(:other_course_data) do
+    {
+      "Ambition Institute" => {
+        course_data: {
+          "npq-senior-leadership" => {
+            contract_version: "0.0.3",
+            recruitment_target: 1,
+            per_participant: 10,
+          },
+        },
+      },
+    }
+  end
+
   before do
-    lead_provider_data.each do |lead_provider_name, course_identifier_data|
+    lead_provider_data.deep_merge(other_course_data).each do |lead_provider_name, course_identifier_data|
       cpd_lead_provider = create(:cpd_lead_provider, :with_npq_lead_provider, name: lead_provider_name)
 
       course_identifier_data[:course_data].each do |course_identifier, data|
@@ -70,7 +84,7 @@ RSpec.describe Oneoffs::NPQ::CreateNewContractAndUpdateExistingStatements do
     end
 
     it "creates contracts with correct values" do
-      expect { subject.call }.to change { NPQContract.count }.by(4)
+      expect { subject.call }.to change { NPQContract.count }.from(5).to(10)
 
       lead_provider_data.each do |lead_provider_name, course_identifier_data|
         cpd_lead_provider = CpdLeadProvider.find_by(name: lead_provider_name)
@@ -88,6 +102,15 @@ RSpec.describe Oneoffs::NPQ::CreateNewContractAndUpdateExistingStatements do
           expect(contract.cohort).to eql(cohort)
           expect(contract.version).to eql(lead_provider_data[lead_provider_name][:new_contract_version])
         end
+      end
+    end
+
+    context "when there are contracts for the Lead Provider not in the CSV" do
+      it "updates the contract version" do
+        subject.call
+
+        additional_contracts = NPQContract.where(course_identifier: "npq-senior-leadership")
+        expect(additional_contracts.pluck(:version)).to contain_exactly("0.0.3", "0.0.4")
       end
     end
 
