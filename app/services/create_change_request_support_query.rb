@@ -32,12 +32,11 @@ private
   end
 
   def additional_information
-    I18n.t(
-      "schools.change_request_support_query.#{relation_i18n_key}.additional_information",
-      academic_year:,
-      school: school.name,
-      urn: school.urn,
-    )
+    {
+      school_id: school&.id,
+      participant_profile_id: participant&.id,
+      cohort_year: academic_year&.split&.first,
+    }.reject { |_k, v| v.blank? }
   end
 
   def message
@@ -54,7 +53,10 @@ private
       induction_coordinator: induction_coordinator.full_name,
     }
 
-    kwargs[:participant] = participant.full_name if participant_change_request?
+    if participant_change_request?
+      kwargs[:participant] = participant.full_name
+      kwargs[:participant_id] = participant.id
+    end
 
     I18n.t(key, **kwargs)
   end
