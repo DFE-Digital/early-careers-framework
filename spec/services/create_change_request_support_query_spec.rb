@@ -6,7 +6,8 @@ RSpec.describe CreateChangeRequestSupportQuery do
   let(:current_user) { build(:user) }
   let(:induction_coordinator_email) { "ian.duck@bigschool.com" }
   let(:induction_coordinator) { build(:user, full_name: "Ian Duck", email: induction_coordinator_email) }
-  let(:school) { instance_double(School, name: "Big School", urn: "123456", induction_coordinators: [induction_coordinator]) }
+  let(:school_id) { SecureRandom.uuid }
+  let(:school) { instance_double(School, id: school_id, name: "Big School", urn: "123456", induction_coordinators: [induction_coordinator]) }
   let(:academic_year) { "2022 to 2023" }
   let(:current_relation) { build(:lead_provider, name: "Current Lead Provider") }
   let(:new_relation) { build(:lead_provider, name: "New Lead Provider") }
@@ -58,20 +59,20 @@ RSpec.describe CreateChangeRequestSupportQuery do
     it "adds the correct additional information" do
       subject
       expect(SupportQuery.last.additional_information).to eq(
-        I18n.t(
-          "schools.change_request_support_query.lead_provider.additional_information",
-          academic_year:,
-          school: school.name,
-          urn: school.urn,
-        ),
+        {
+          "school_id" => school_id,
+          "cohort_year" => academic_year.split.first,
+        },
       )
     end
 
     context "when the change request is specific to a participant" do
+      let(:participant_id) { SecureRandom.uuid }
       let(:participant_email) { "participant@example.com" }
       let(:participant) do
         instance_double(
           ParticipantProfile::ECT,
+          id: participant_id,
           full_name: "Test User",
           user: create(:user, email: participant_email),
         )
@@ -97,6 +98,17 @@ RSpec.describe CreateChangeRequestSupportQuery do
             current_relation: current_relation.name,
             new_relation: new_relation.name,
           ),
+        )
+      end
+
+      it "adds the correct additional information" do
+        subject
+        expect(SupportQuery.last.additional_information).to eq(
+          {
+            "school_id" => school_id,
+            "participant_profile_id" => participant_id,
+            "cohort_year" => academic_year.split.first,
+          },
         )
       end
     end
