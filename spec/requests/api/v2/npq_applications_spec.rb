@@ -338,14 +338,7 @@ RSpec.describe "NPQ Applications API", type: :request do
 
     describe "NPQ capping" do
       let(:params) { { data: { type: "npq-application-accept", attributes: { funded_place: true } } } }
-
-      before do
-        statement = create(
-          :npq_statement,
-          :next_output_fee,
-          cpd_lead_provider:,
-          cohort: default_npq_application.cohort,
-        )
+      let!(:npq_contract) do
         create(
           :npq_contract,
           npq_lead_provider:,
@@ -354,9 +347,17 @@ RSpec.describe "NPQ Applications API", type: :request do
           version: statement.contract_version,
           funding_cap: 10,
         )
-
-        default_npq_application.update!(eligible_for_funding: true)
       end
+      let(:statement) do
+        create(
+          :npq_statement,
+          :next_output_fee,
+          cpd_lead_provider:,
+          cohort: default_npq_application.cohort,
+        )
+      end
+
+      before { default_npq_application.update!(eligible_for_funding: true) }
 
       context "when feature flag `npq_capping` is disabled" do
         before { FeatureFlag.deactivate(:npq_capping) }
@@ -388,6 +389,17 @@ RSpec.describe "NPQ Applications API", type: :request do
           post("/api/v2/npq-applications/#{default_npq_application.id}/accept", params:, as: :json)
 
           expect(response).to be_successful
+        end
+
+        context "when the NPQContract does not exist" do
+          let(:npq_contract) {}
+
+          it "returns 400" do
+            post("/api/v2/npq-applications/#{default_npq_application.id}/accept", params:, as: :json)
+
+            expect(response).to be_bad_request
+            expect(response.body).to include("There’s an issue with your contract data. Contact us so we can rectify this for you")
+          end
         end
       end
     end
@@ -510,6 +522,15 @@ RSpec.describe "NPQ Applications API", type: :request do
 
         it "returns jsonapi content type header" do
           expect(response.headers["Content-Type"]).to eql("application/vnd.api+json")
+        end
+
+        it "returns 400 when the NPQContract does not exist" do
+          npq_contract.destroy!
+
+          put "/api/v2/npq-applications/#{accepted_application.id}/change-funded-place", params: params.to_json
+
+          expect(response).to be_bad_request
+          expect(response.body).to include("There’s an issue with your contract data. Contact us so we can rectify this for you")
         end
       end
 

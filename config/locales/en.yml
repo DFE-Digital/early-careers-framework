@@ -41,6 +41,7 @@ en:
   bad_parameter: "Bad parameter"
   invalid_transition: "Invalid action"
   contact_us_to_resolve_issue: "Contact us so we can help you resolve the issue"
+  missing_npq_contract_or_statement: "There’s an issue with your contract data. Contact us so we can rectify this for you"
   no_output_fee_statements_for_cohort: "You cannot submit or void declarations for the %{cohort} cohort. The funding contract for this cohort has ended. Get in touch if you need to discuss this with us"
   invalid_page_parameters: "The '#/page[page]' and '#/page[per_page]' parameter values must be a valid number (equal and more than 1)"
   cannot_change_cohort: "You cannot change the '#/cohort' field"
