@@ -42,5 +42,14 @@ RSpec.describe LeadProviderApiSpecification do
         expect(LeadProviderApiSpecification.as_hash("v1")["paths"].keys).to contain_exactly(*paths)
       end
     end
+
+    it "calls the preprocessor" do
+      preprocessor = instance_double(LeadProviderApiSpecification::Preprocessor, preprocess!: nil)
+      expect(LeadProviderApiSpecification::Preprocessor).to receive(:new).with("swagger/v1/api_spec.json").and_return(preprocessor)
+
+      LeadProviderApiSpecification.as_hash("v1")
+
+      expect(preprocessor).to have_received(:preprocess!)
+    end
   end
 end
