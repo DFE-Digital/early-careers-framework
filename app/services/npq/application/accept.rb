@@ -195,7 +195,7 @@ module NPQ
         return unless FeatureFlag.active?("npq_capping")
         return if errors.any?
 
-        raise Api::Errors::MissingNPQContractOrStatementError unless npq_contract && statement
+        raise Api::Errors::MissingNPQContractOrStatementError unless statement && npq_contract
       end
 
       def statement

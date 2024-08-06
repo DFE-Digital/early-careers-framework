@@ -73,11 +73,11 @@ module Api
     end
 
     def identity_transfer_error_response(_exception)
-      render json: { errors: Api::ParamErrorFactory.new(error: I18n.t(:bad_request), params: I18n.t(:contact_us_to_resolve_issue)).call }, status: :unprocessable_entity
+      render json: { errors: Api::ParamErrorFactory.new(error: I18n.t(:unprocessable_request), params: I18n.t(:contact_us_to_resolve_issue)).call }, status: :unprocessable_entity
     end
 
     def missing_npq_contract_or_statement_response(_exception)
-      render json: { errors: Api::ParamErrorFactory.new(error: I18n.t(:bad_request), params: I18n.t(:missing_npq_contract_or_statement)).call }, status: :bad_request
+      render json: { errors: Api::ParamErrorFactory.new(error: I18n.t(:unprocessable_request), params: I18n.t(:missing_npq_contract_or_statement)).call }, status: :unprocessable_entity
     end
   end
 end

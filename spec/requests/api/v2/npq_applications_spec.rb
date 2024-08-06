@@ -394,10 +394,10 @@ RSpec.describe "NPQ Applications API", type: :request do
         context "when the NPQContract does not exist" do
           let(:npq_contract) {}
 
-          it "returns 400" do
+          it "returns 422" do
             post("/api/v2/npq-applications/#{default_npq_application.id}/accept", params:, as: :json)
 
-            expect(response).to be_bad_request
+            expect(response.status).to be(422)
             expect(response.body).to include("There’s an issue with your contract data. Contact us so we can rectify this for you")
           end
         end
@@ -456,7 +456,7 @@ RSpec.describe "NPQ Applications API", type: :request do
         post "/api/v2/npq-applications/#{default_npq_application.id}/accept"
 
         expect(response).to have_http_status(:unprocessable_entity)
-        expect(parsed_response.dig("errors", 0, "title")).to eql("Bad request")
+        expect(parsed_response.dig("errors", 0, "title")).to eql("Unprocessable request")
         expect(parsed_response.dig("errors", 0, "detail")).to eql("Contact us so we can help you resolve the issue")
       end
     end
@@ -524,12 +524,12 @@ RSpec.describe "NPQ Applications API", type: :request do
           expect(response.headers["Content-Type"]).to eql("application/vnd.api+json")
         end
 
-        it "returns 400 when the NPQContract does not exist" do
+        it "returns 422 when the NPQContract does not exist" do
           npq_contract.destroy!
 
           put "/api/v2/npq-applications/#{accepted_application.id}/change-funded-place", params: params.to_json
 
-          expect(response).to be_bad_request
+          expect(response.status).to be(422)
           expect(response.body).to include("There’s an issue with your contract data. Contact us so we can rectify this for you")
         end
       end

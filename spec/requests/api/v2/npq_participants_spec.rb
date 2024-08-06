@@ -282,13 +282,13 @@ RSpec.describe "NPQ Participants API", type: :request do
       expect(npq_application.profile.reload.schedule).to eq(new_schedule)
     end
 
-    it "returns 400 when the npq_capping feature is enabled and the NPQContract does not exist" do
+    it "returns 422 when the npq_capping feature is enabled and the NPQContract does not exist" do
       contract.destroy!
       FeatureFlag.activate(:npq_capping)
 
       put("/api/v2/participants/npq/#{npq_application.profile.user_id}/change-schedule", params:)
 
-      expect(response).to be_bad_request
+      expect(response.status).to be(422)
       expect(response.body).to include("There’s an issue with your contract data. Contact us so we can rectify this for you")
     end
   end
