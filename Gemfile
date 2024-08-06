@@ -57,7 +57,7 @@ gem "mail-notify", "~> 1.2"
 gem "tzinfo-data"
 
 gem "govuk-components", "~> 5.4.1"
-gem "govuk_design_system_formbuilder", "~> 5.4.0"
+gem "govuk_design_system_formbuilder", "~> 5.4.1"
 
 # Fetching from APIs
 gem "httpclient", "~> 2.8", ">= 2.8.3"
@@ -111,7 +111,7 @@ gem "rouge"
 
 gem "auto_strip_attributes", "~> 2.6"
 
-gem "dfe-analytics", github: "DFE-Digital/dfe-analytics", tag: "v1.13.0"
+gem "dfe-analytics", github: "DFE-Digital/dfe-analytics", tag: "v1.14.0"
 gem "dfe-wizard", github: "DFE-Digital/dfe-wizard"
 
 group :development, :test do
