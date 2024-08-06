@@ -12,7 +12,7 @@ RSpec.describe "Induction coordinator requests delivery partner change for acade
     and_there_is_a_choice_of_delivery_partners
     when_i_visit_manage_training_dashboard
     click_on(Cohort.previous.start_year)
-    click_on("Change delivery partner", visible: false)
+    and_i_click_change_delivery_partner
     then_i_see_the_intro_step
     then_i_choose_yes_on_the_start_step
     then_i_choose_a_new_delivery_partner
@@ -33,6 +33,10 @@ RSpec.describe "Induction coordinator requests delivery partner change for acade
            cohort: @school_cohort.cohort,
            lead_provider: @lead_provider,
            delivery_partner: create(:delivery_partner, name: "Delivery Partner 2"))
+  end
+
+  def and_i_click_change_delivery_partner
+    all("a", text: "Change delivery partner", visible: false).last.click
   end
 
   def then_i_see_the_intro_step
