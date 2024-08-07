@@ -35,7 +35,7 @@
         </div>
       <% end %>
 
-      <%= f.govuk_file_field :csv, label: { text: 'CSV file' }, accept: 'text/csv' %>
+      <%= f.govuk_file_field :csv, label: { text: 'CSV file' }, accept: 'text/csv', onchange: "document.querySelector('form button').focus();" %>
       <%= f.govuk_submit "Continue" %>
     <% end %>
   </div>
