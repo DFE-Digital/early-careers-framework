@@ -10,6 +10,10 @@ $govuk-assets-path: "/api-reference/assets/govuk/assets/";
   font-size: 14px;
 }
 
+.technical-documentation table ul li {
+  padding: 3px 0;
+}
+
 @include govuk-media-query(desktop) {
   .flexbox {
     .app-pane__toc {
