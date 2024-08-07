@@ -59,9 +59,9 @@ describe Oneoffs::ECF::ChangeServiceFees do
       perform_change
 
       expect(instance).to have_recorded_info([
-        "Current contract version: 0.0.2, fee: 10.0",
+        "Latest contract version: 0.0.2, fee: 10.0",
         "New contract version: 0.0.3, fee: 20.0",
-        "Updating statement dated: 2023-10-25",
+        "Updating statement (#{ecf_statement.id}) dated: 2023-10-25 (version: 0.0.2, fee: 10.0)",
       ])
     end
 
@@ -124,6 +124,18 @@ describe Oneoffs::ECF::ChangeServiceFees do
       it { expect { perform_change }.to raise_error(described_class::CallOffContractNotFoundError) }
     end
 
+    context "when the service fees are `nil`" do
+      before { call_off_contract.update!(monthly_service_fee: nil) }
+
+      it "logs out the `nil` value explicitly" do
+        perform_change
+
+        expect(instance).to have_recorded_info([
+          "Latest contract version: 0.0.2, fee: nil",
+        ])
+      end
+    end
+
     context "when dry_run is true" do
       let(:dry_run) { true }
 
@@ -132,9 +144,9 @@ describe Oneoffs::ECF::ChangeServiceFees do
 
         expect(instance).to have_recorded_info([
           "~~~ DRY RUN ~~~",
-          "Current contract version: 0.0.2, fee: 10.0",
+          "Latest contract version: 0.0.2, fee: 10.0",
           "New contract version: 0.0.3, fee: 20.0",
-          "Updating statement dated: 2023-10-25",
+          "Updating statement (#{ecf_statement.id}) dated: 2023-10-25 (version: 0.0.2, fee: 10.0)",
         ])
       end
     end
