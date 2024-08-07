@@ -24,6 +24,11 @@ collapsible_nav: true
 # headings.
 max_toc_heading_level: 2
 
+footer_links:
+  Privacy: /privacy-policy
+  Cookies: /cookies
+  Accessibility: /accessibility-statement
+
 # Prevent robots from indexing (e.g. whilst in development)
 prevent_indexing: false
 
