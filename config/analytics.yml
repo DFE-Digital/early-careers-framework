@@ -467,7 +467,6 @@
   :emails:
   - id
   - from
-  - to
   - template_id
   - template_version
   - uri
