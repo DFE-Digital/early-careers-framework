@@ -20,4 +20,5 @@ Rails.application.config.filter_parameters += %i[
   trn
   teacher_reference_number
   email
+  to
 ]
