@@ -57,7 +57,4 @@ DfE::Analytics.configure do |config|
   # users that don't use the id field.
   #
   config.user_identifier = proc { |user| user&.id if user.respond_to?(:id) }
-
-  # FIXME: remove this line once the window has passed
-  config.bigquery_maintenance_window = "07-08-2024 18:00..07-08-2024 18:30"
 end
