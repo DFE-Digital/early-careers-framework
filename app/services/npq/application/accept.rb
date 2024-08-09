@@ -10,6 +10,7 @@ module NPQ
       attribute :schedule_identifier
       attribute :funded_place
 
+      validate :npq_contract_and_statement_exist
       validates :funded_place,
                 inclusion: {
                   in: [true, false],
@@ -179,13 +180,22 @@ module NPQ
       end
 
       def npq_contract
+        return unless statement
+
         @npq_contract ||=
-          NPQContract.where(
+          NPQContract.find_by(
             cohort_id: cohort.id,
             npq_lead_provider_id: npq_application.npq_lead_provider_id,
             course_identifier: npq_application.npq_course.identifier,
             version: statement.contract_version,
-          ).first
+          )
+      end
+
+      def npq_contract_and_statement_exist
+        return unless FeatureFlag.active?("npq_capping")
+        return if errors.any?
+
+        raise Api::Errors::MissingNPQContractOrStatementError unless statement && npq_contract
       end
 
       def statement

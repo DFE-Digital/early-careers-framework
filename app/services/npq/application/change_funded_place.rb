@@ -19,6 +19,7 @@ module NPQ
       validate :accepted_application
       validate :eligible_for_funding
       validate :eligible_for_removing_funding_place
+      validate :npq_contract_exists
       validate :cohort_has_funding_cap
 
       def call
@@ -77,6 +78,13 @@ module NPQ
           npq_course: npq_application.npq_course,
           cohort: npq_application.cohort,
         )
+      end
+
+      def npq_contract_exists
+        return unless FeatureFlag.active?("npq_capping")
+        return if errors.any?
+
+        raise Api::Errors::MissingNPQContractOrStatementError unless npq_contract
       end
     end
   end

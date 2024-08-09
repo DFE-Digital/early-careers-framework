@@ -721,6 +721,16 @@ RSpec.describe ChangeSchedule do
         let(:participant_profile) { create(:npq_participant_profile, :withdrawn, npq_lead_provider:, npq_course:) }
       end
 
+      context "when the NPQContract is missing" do
+        before { FeatureFlag.activate(:npq_capping) }
+
+        let(:npq_contract) {}
+
+        it "raises an error" do
+          expect { service.call }.to raise_error(::Api::Errors::MissingNPQContractOrStatementError)
+        end
+      end
+
       context "when the cohort is changing" do
         let!(:npq_contract_new_cohort) { create(:npq_contract, :npq_senior_leadership, cohort: new_cohort, npq_lead_provider:, npq_course:) }
         let(:new_schedule) { Finance::Schedule::NPQ.find_by(schedule_identifier: "npq-leadership-spring", cohort: new_cohort) }

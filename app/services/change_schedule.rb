@@ -19,6 +19,7 @@ class ChangeSchedule
   validates :course_identifier, course: true, presence: { message: I18n.t(:missing_course_identifier) }
   validates :cpd_lead_provider, induction_record: true
   validates :schedule_identifier, presence: { message: I18n.t(:invalid_schedule) }
+  validate :npq_contract_exists
   validates :cohort, npq_contract_for_cohort_and_course: true
   validate :not_already_withdrawn
   validate :validate_new_schedule_valid_with_existing_declarations
@@ -278,6 +279,14 @@ private
     errors.add(:schedule_identifier, I18n.t(:schedule_already_on_the_profile))
   end
 
+  def npq_contract_exists
+    return unless participant_profile&.npq?
+    return unless FeatureFlag.active?("npq_capping")
+    return if errors.any?
+
+    raise ::Api::Errors::MissingNPQContractOrStatementError unless npq_contract
+  end
+
   def relevant_induction_record_has_different_schedule
     return unless relevant_induction_record
 
@@ -294,7 +303,7 @@ private
   def validate_application_funded_place
     return unless participant_profile&.npq?
     return unless FeatureFlag.active?(:npq_capping)
-    return unless npq_contract.cohort != target_npq_contract.cohort
+    return unless npq_contract && target_npq_contract && npq_contract.cohort != target_npq_contract.cohort
 
     if npq_contract_funded? && target_npq_contract_not_funded?
       errors.add(:cohort, I18n.t(:cannot_change_cohort))
