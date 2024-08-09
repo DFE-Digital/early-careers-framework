@@ -15,12 +15,6 @@ module Pages
       Pages::SignInPage.loaded
     end
 
-    def view_accessibility_statement
-      click_on "Accessibility"
-
-      Pages::AccessibilityStatementPage.loaded
-    end
-
     def view_privacy_policy
       click_on "Privacy"
 
