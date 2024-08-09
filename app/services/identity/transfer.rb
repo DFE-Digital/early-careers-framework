@@ -13,6 +13,8 @@ module Identity
         transfer_induction_coordinator_profile!
         transfer_get_an_identity_id!
         create_participant_id_change!
+      rescue ActiveRecord::Rollback
+        raise TransferError, "Transfer failed"
       end
     end
 
