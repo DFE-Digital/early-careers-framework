@@ -7,6 +7,34 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
+## 13 August 2024 
+
+We’ve launched standalone API test environments so providers can manage ECF and NPQ data separately.  
+
+The merged data model that we’ve been running previously has proven challenging with bugs, unstable ID’s, issues with emails, and participants appearing and disappearing for providers. 
+
+The new approach with standalone APIs will stabilise the services and simplify the domain model. Operationally, providers will benefit from faster resolution times on issues for applicants and faster deployment on requested features and policy changes.  
+
+To help test the NPQ and ECF new world ahead of the full separation later in the autumn, we've launched ‘separation’ test environments with relevant seed data to replace the existing ‘sandboxes’.  
+
+To make requests in the new test environments, providers must use the bearer tokens that we’ve sent them via Galaxkey. The base URLs are: 
+
+- ECF test environment - [https://sp.manage-training-for-early-career-teachers.education.gov.uk](https://sp.manage-training-for-early-career-teachers.education.gov.uk)
+- NPQ test environment - [https://npq-registration-separation-web.teacherservices.cloud](https://npq-registration-separation-web.teacherservices.cloud)
+
+Providers can add the required API version and endpoint depending on what they want to test. For example, they’d add /api/v3/npq-applications to the NPQ test environment URL if they want to retrieve multiple applications. 
+
+We’ve also created documentation for the new separation environment endpoints:
+
+- [ECF API v1 documentation](https://sp.manage-training-for-early-career-teachers.education.gov.uk/api-reference/reference-v1.html)
+- [ECF API v2 documentation](https://sp.manage-training-for-early-career-teachers.education.gov.uk/api-reference/reference-v2.html)
+- [ECF API v3 documentation](https://sp.manage-training-for-early-career-teachers.education.gov.uk/api-reference/reference-v3.html)
+- [NPQ API v1 documentation](https://npq-registration-separation-web.teacherservices.cloud/api/docs/v1)
+- [NPQ API v2 documentation](https://npq-registration-separation-web.teacherservices.cloud/api/docs/v2)
+- [NPQ API v3 documentation](https://npq-registration-separation-web.teacherservices.cloud/api/docs/v3)
+
+The existing sandbox environments will remain accessible and unchanged to allow continued testing on the current API setup. 
+
 ## 1 July 2024
 
 Registration has opened for the 2024/25 intake of NPQ participant applications, so we’ve added the following to the production environment:
