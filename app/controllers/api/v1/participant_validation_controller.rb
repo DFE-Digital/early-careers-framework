@@ -3,7 +3,7 @@
 module Api
   module V1
     class ParticipantValidationController < Api::ApiController
-      # include ApiTokenAuthenticatable
+      include ApiTokenAuthenticatable
 
       def create
         record = ParticipantValidationService.validate(
