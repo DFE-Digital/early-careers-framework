@@ -83,6 +83,14 @@ RSpec.describe NPQ::Application::ChangeFundedPlace do
         params.merge!(funded_place: true)
       end
 
+      context "when the NPQContract is missing" do
+        let(:npq_contract) {}
+
+        it "raises an error" do
+          expect { service.call }.to raise_error(::Api::Errors::MissingNPQContractOrStatementError)
+        end
+      end
+
       context "when funded_place is present" do
         before { params.merge!(funded_place: true) }
 

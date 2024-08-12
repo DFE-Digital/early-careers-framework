@@ -545,6 +545,22 @@ RSpec.describe NPQ::Application::Accept do
             expect(service.errors.messages_for(:funded_place)).to include("Set '#/funded_place' to true or false.")
           end
         end
+
+        context "when the NPQContract is missing" do
+          let(:npq_contract) {}
+
+          it "raises an error" do
+            expect { service.call }.to raise_error(::Api::Errors::MissingNPQContractOrStatementError)
+          end
+        end
+
+        context "when the statement is missing" do
+          before { statement.destroy! }
+
+          it "raises an error" do
+            expect { service.call }.to raise_error(::Api::Errors::MissingNPQContractOrStatementError)
+          end
+        end
       end
 
       context "when feature flag `npq_capping` is disabled" do
