@@ -7,6 +7,7 @@ RSpec.describe Importers::NPQManualValidation do
   let(:npq_application)  { create(:npq_application, :accepted, npq_course:, teacher_reference_number_verified: false) }
   let(:file)             { Tempfile.new("test.csv") }
   let!(:teacher_profile) { npq_application.profile.teacher_profile }
+  let(:teacher_reference_number) { "7654321" }
 
   around do |example|
     original_stdout = $stdout
@@ -28,7 +29,7 @@ RSpec.describe Importers::NPQManualValidation do
         file.write("\n")
         file.write("123,7654321")
         file.write("\n")
-        file.write("#{npq_application.id},7654321")
+        file.write("#{npq_application.id},#{teacher_reference_number}")
         file.rewind
       end
 
@@ -48,6 +49,16 @@ RSpec.describe Importers::NPQManualValidation do
         expect {
           subject.call
         }.to change { npq_application.reload.teacher_reference_number_verified }.to(true)
+      end
+
+      context "when application trn is less than 7 digits" do
+        let(:teacher_reference_number) { "123456" }
+
+        it "adds leading zero" do
+          expect {
+            subject.call
+          }.to change { npq_application.reload.teacher_reference_number }.to("0123456")
+        end
       end
     end
 
