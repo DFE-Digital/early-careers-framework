@@ -198,6 +198,7 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
                             induction_end_date: "2022-01-12",
                             mentor_funding_end_date: "2021-04-19",
                             cohort_changed_after_payments_frozen: true,
+                            mentor_ineligible_for_funding_reason: nil,
                           },
                         ],
                         participant_id_changes: [
@@ -362,6 +363,7 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
                             induction_end_date: "2022-01-12",
                             mentor_funding_end_date: "2021-04-19",
                             cohort_changed_after_payments_frozen: false,
+                            mentor_ineligible_for_funding_reason: nil,
                           },
                         ],
                         participant_id_changes: [

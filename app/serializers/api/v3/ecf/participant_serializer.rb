@@ -141,7 +141,9 @@ module Api
               induction_end_date: profile.induction_completion_date&.strftime("%Y-%m-%d"),
               mentor_funding_end_date: profile.mentor_completion_date&.strftime("%Y-%m-%d"),
               cohort_changed_after_payments_frozen: profile.cohort_changed_after_payments_frozen,
-            }
+            }.tap do |hash|
+              hash.merge!(mentor_ineligible_for_funding_reason: profile.mentor? ? profile.mentor_completion_reason : nil) unless Rails.env.production?
+            end
           }.compact
         end
 

@@ -132,3 +132,12 @@ properties:
     description: Identify participants that migrated to a new cohort as payments were frozen on their original cohort
     type: boolean
     example: true
+  mentor_ineligible_for_funding_reason:
+    description: The reason why funding for a mentor's training has ended
+    type: string
+    nullable: true
+    enum:
+      - completed_declaration_received
+      - completed_during_early_roll_out
+      - started_not_completed
+    example: completed_declaration_received
