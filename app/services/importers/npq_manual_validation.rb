@@ -12,7 +12,7 @@ class Importers::NPQManualValidation
 
     rows.each do |row|
       npq_application_id = row["application_ecf_id"]
-      trn = row["validated_trn"]
+      trn = add_leading_zero(row["validated_trn"])
 
       npq_application = NPQApplication.find_by(id: npq_application_id)
 
@@ -20,7 +20,7 @@ class Importers::NPQManualValidation
       next if npq_application.nil?
 
       puts "Updating TRN for NPQApplication: #{npq_application_id} with TRN: #{trn}"
-      npq_application.update!(teacher_reference_number: row["validated_trn"], teacher_reference_number_verified: true)
+      npq_application.update!(teacher_reference_number: trn, teacher_reference_number_verified: true)
 
       teacher_profile = npq_application.profile.try(:teacher_profile)
       next if teacher_profile.nil?
@@ -31,6 +31,10 @@ class Importers::NPQManualValidation
   end
 
 private
+
+  def add_leading_zero(trn)
+    trn.rjust(7, "0")
+  end
 
   def check_headers
     unless rows.headers == %w[application_ecf_id validated_trn]
