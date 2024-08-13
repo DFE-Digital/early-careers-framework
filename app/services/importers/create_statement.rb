@@ -47,7 +47,7 @@ module Importers
 
           next if statement
 
-          contract_version = Finance::Statement::ECF.order(payment_date: :desc).first&.contract_version
+          contract_version = Finance::Statement::ECF.where(cpd_lead_provider:, cohort: statement_data.cohort).order(payment_date: :desc).first&.contract_version
           contract_version ||= "0.0.1"
 
           Finance::Statement::ECF.create!(
@@ -81,7 +81,7 @@ module Importers
 
           next if statement
 
-          contract_version = Finance::Statement::NPQ.order(payment_date: :desc).first&.contract_version
+          contract_version = Finance::Statement::NPQ.where(cpd_lead_provider:, cohort: statement_data.cohort).order(payment_date: :desc).first&.contract_version
           contract_version ||= "0.0.1"
 
           Finance::Statement::NPQ.create!(
