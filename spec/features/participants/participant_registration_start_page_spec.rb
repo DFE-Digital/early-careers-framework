@@ -17,7 +17,7 @@ RSpec.feature "Participant registration start page",
   scenario "Participant can begin registration" do
     given_i_am_on_the_participant_registration_start_page
 
-    when_i_continue_from_the_participant_registration_start_page
+    and_i_continue
 
     then_i_am_on_the_sign_in_page
   end
@@ -25,25 +25,11 @@ RSpec.feature "Participant registration start page",
   describe "when registration is not currently open" do
     scenario "Participant can cannot use this service yet" do
       given_i_am_on_the_participant_registration_start_page
-      and_i_continue_from_the_participant_registration_start_page
+      and_i_continue
 
-      when_i_add_email_address_to_the_sign_in_page email_address
-      and_i_continue_from_the_sign_in_complete_page
+      when_i_sign_in_as_the_user_with_the_email email_address
 
       then_i_cannot_use_this_service
-    end
-  end
-
-  describe "when registration is currently open" do
-    scenario "Participant can complete registrations",
-             skip: "needs the cohort to have registration date available" do
-      given_i_am_on_the_participant_registration_start_page
-      and_i_continue_from_the_participant_registration_start_page
-
-      when_i_add_email_address_to_the_sign_in_page email_address
-      and_i_continue_from_the_sign_in_complete_page
-
-      then_i_am_on_the_privacy_policy_page
     end
   end
 
@@ -55,5 +41,13 @@ private
 
   def given_i_am_on_the_participant_registration_start_page
     visit "/participants/start-registration"
+  end
+
+  def and_i_continue
+    click_on "Continue"
+  end
+
+  def then_i_am_on_the_sign_in_page
+    expect(page).to have_text "Sign in"
   end
 end
