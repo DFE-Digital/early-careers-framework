@@ -5,14 +5,6 @@ require "tasks/valid_test_data_generator"
 module ValidTestDataGenerator
   class SeparationSharedData < LeadProviderPopulater
     SHARED_USERS = {
-      "Education Development Trust" => [
-        { name: "Miss Candie Lubowitz", email: "lubowitz_candie_miss@schneider.com", trn: "9999000", date_of_birth: "1982-07-29", ecf_id: "74475d64-5faa-469a-8733-0db9e51df7aa" },
-        { name: "Brady Hansen", email: "hansen.brady@kulas.co", trn: "9999001", date_of_birth: "1997-12-24", ecf_id: "bb235533-7877-41b2-9061-d0051480e9e9" },
-        { name: "Pamula Heller", email: "pamula.heller@koss.com", trn: "9999002", date_of_birth: "1972-10-29", ecf_id: "747705e5-d2cb-4026-b038-a92db312cb56" },
-        { name: "Jocelyn Langosh", email: "jocelyn_langosh@pollich.org", trn: "9999003", date_of_birth: "1966-04-14", ecf_id: nil },
-        { name: "Janyce Johnson", email: "janyce_johnson@waters.info", trn: "9999004", date_of_birth: "1969-03-16", ecf_id: nil },
-        { name: "Everette Price", email: "price_everette@altenwerth.io", trn: "9999005", date_of_birth: "1986-11-17", ecf_id: nil },
-      ],
       "LLSE" => [
         { name: "Caleb Abbott MD", email: "caleb_md_abbott@deckow.io", trn: "9999006", date_of_birth: "1971-02-09", ecf_id: "4abe57c4-f2b7-45bb-ab5b-cc78b235ab81" },
         { name: "Dr. Israel Lang", email: "lang_israel_dr@donnelly-erdman.org", trn: "9999007", date_of_birth: "1960-01-05", ecf_id: "1253dec4-e7c8-4795-b1f1-29736cec37af" },
