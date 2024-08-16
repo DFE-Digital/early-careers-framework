@@ -100,24 +100,53 @@ RSpec.describe Importers::CreateStatement do
       let!(:npq_contract) { create(:npq_contract, npq_course:, cohort: cohort_2023, npq_lead_provider:) }
 
       before do
-        Finance::Statement::ECF.create!(
+        statement_attributes = {
           name: "December 2023",
-          cpd_lead_provider:,
-          cohort: cohort_2023,
           deadline_date: "2023-11-30",
           payment_date: "2023-12-25",
           output_fee: false,
-          contract_version: "0.0.5",
+          cpd_lead_provider:,
+          cohort: cohort_2023,
+        }
+
+        [Finance::Statement::ECF, Finance::Statement::NPQ].each do |statement_type|
+          # Later version with different lead provider
+          statement_type.create!(
+            statement_attributes.merge({
+              cpd_lead_provider: create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider),
+              contract_version: "0.0.8",
+            }),
+          )
+
+          # Later version with different cohort
+          statement_type.create!(
+            statement_attributes.merge({
+              cohort: cohort_2023.previous,
+              contract_version: "0.0.8",
+            }),
+          )
+
+          # Later version with earlier payment_date
+          statement_type.create!(
+            statement_attributes.merge({
+              contract_version: "0.0.8",
+              payment_date: "2023-12-24",
+            }),
+          )
+        end
+
+        # Latest, relevant ECF statement
+        Finance::Statement::ECF.create!(
+          statement_attributes.merge({
+            contract_version: "0.0.5",
+          }),
         )
 
+        # Latest, relevant NPQ statement
         Finance::Statement::NPQ.create!(
-          name: "December 2023",
-          cpd_lead_provider:,
-          cohort: cohort_2023,
-          deadline_date: "2023-11-30",
-          payment_date: "2023-12-25",
-          output_fee: false,
-          contract_version: "0.0.9",
+          statement_attributes.merge({
+            contract_version: "0.0.6",
+          }),
         )
       end
 
@@ -144,7 +173,7 @@ RSpec.describe Importers::CreateStatement do
           payment_date: Date.new(2024, 1, 25),
         )
 
-        expect(st.contract_version).to eql("0.0.9")
+        expect(st.contract_version).to eql("0.0.6")
       end
     end
 
