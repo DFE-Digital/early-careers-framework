@@ -7,6 +7,20 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
+## 20 August 2024 
+
+We’ve added a field in the API sandbox environment’s participant response bodies to show why funding for a mentor’s training has ended.  
+
+This follows feedback from providers who want this information for record keeping.  
+
+The new field is called <code>mentor_funding_end_date_reason</code>. It’ll display 3 possible values:  
+
+- <code>completed_declaration_received</code>. Providers will see this if the mentor has completed their mentor training 
+- <code>completed_during-early_roll_out</code>. This means the mentor completed their training during the pilot period of the ECF (Early Career Framework) programme, so is no longer eligible for funding 
+- <code>started_not_completed</code>. We’ll display this if 2 years has elapsed since a full-time mentor started training. After 2 years, they’re no longer eligible 
+
+We’d welcome feedback on this sandbox update before it goes into production. Providers can contact us via the usual Slack channel if they’ve got any suggestions or concerns.
+
 ## 13 August 2024 
 
 We’ve launched standalone API test environments so providers can manage ECF and NPQ data separately.  

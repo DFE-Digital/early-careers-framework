@@ -335,6 +335,7 @@ RSpec.describe "API ECF Participants", type: :request do
                 "induction_end_date": "2022-01-12",
                 "mentor_funding_end_date": nil,
                 "cohort_changed_after_payments_frozen": false,
+                "mentor_ineligible_for_funding_reason": nil,
               }],
               "participant_id_changes": [],
             },

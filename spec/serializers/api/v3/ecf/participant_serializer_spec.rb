@@ -61,11 +61,21 @@ module Api
                       induction_end_date: "2022-01-12",
                       mentor_funding_end_date: nil,
                       cohort_changed_after_payments_frozen: true,
+                      mentor_ineligible_for_funding_reason: nil,
                     },
                   ],
                 participant_id_changes: [],
               },
             ])
+          end
+
+          context "when running in the production environment" do
+            before { allow(Rails).to receive(:env).and_return("production".inquiry) }
+
+            it "does not include the mentor_ineligible_for_funding_reason" do
+              ecf_enrolment_keys = result[:data].map { |d| d[:attributes][:ecf_enrolments].map(&:keys).flatten }.flatten
+              expect(ecf_enrolment_keys).not_to include(:mentor_ineligible_for_funding_reason)
+            end
           end
 
           describe "ecf_enrolments" do
@@ -79,7 +89,7 @@ module Api
             end
 
             context "when there are multiple profiles involved" do
-              let!(:mentor_profile) { create(:mentor, school_cohort:, user: participant) }
+              let!(:mentor_profile) { create(:mentor, school_cohort:, user: participant, mentor_completion_reason: "completed_declaration_received") }
               let(:mentor_enrolement) { ecf_enrolments.find { |efce| efce[:participant_type] == :mentor } }
 
               before do
@@ -108,6 +118,7 @@ module Api
                   induction_end_date: nil,
                   mentor_funding_end_date: "2021-04-19",
                   cohort_changed_after_payments_frozen: false,
+                  mentor_ineligible_for_funding_reason: mentor_profile.mentor_completion_reason,
                 })
               end
             end

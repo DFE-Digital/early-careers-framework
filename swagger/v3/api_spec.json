@@ -2524,7 +2524,8 @@
                               "created_at": "2021-05-31T02:22:32.000Z",
                               "induction_end_date": "2022-01-12",
                               "mentor_funding_end_date": "2021-04-19",
-                              "cohort_changed_after_payments_frozen": true
+                              "cohort_changed_after_payments_frozen": true,
+                              "mentor_ineligible_for_funding_reason": null
                             }
                           ],
                           "participant_id_changes": [
@@ -2671,7 +2672,8 @@
                               "created_at": "2021-05-31T02:22:32.000Z",
                               "induction_end_date": "2022-01-12",
                               "mentor_funding_end_date": "2021-04-19",
-                              "cohort_changed_after_payments_frozen": false
+                              "cohort_changed_after_payments_frozen": false,
+                              "mentor_ineligible_for_funding_reason": null
                             }
                           ],
                           "participant_id_changes": [
@@ -3427,6 +3429,17 @@
             "type": "boolean",
             "nullable": false,
             "example": true
+          },
+          "mentor_ineligible_for_funding_reason": {
+            "description": "The reason why funding for a mentor's training has ended",
+            "type": "string",
+            "enum": [
+              "completed_declaration_received",
+              "completed_during_early_roll_out",
+              "started_not_completed"
+            ],
+            "nullable": true,
+            "example": "completed_declaration_received"
           }
         }
       },
