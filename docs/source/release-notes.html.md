@@ -7,7 +7,7 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
-## 16 August 2024 
+## 20 August 2024 
 
 We’ve added a field in the API sandbox environment’s participant response bodies to show why funding for a mentor’s training has ended.  
 
