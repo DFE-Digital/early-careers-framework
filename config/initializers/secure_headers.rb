@@ -33,7 +33,7 @@ SecureHeaders::Configuration.default do |config|
   config.csp_report_only = {
     default_src: %w['none'] + zendesk,
     base_uri: %w['self'],
-    block_all_mixed_content: true, # see http://www.w3.org/TR/mixed-content/
+    upgrade_insecure_requests: true,
     child_src: %w['self'],
     connect_src: %W['self' *.ingest.sentry.io] + google_analytics + zendesk,
     font_src: %w['self' *.gov.uk fonts.gstatic.com],
