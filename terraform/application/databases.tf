@@ -40,7 +40,7 @@ module "redis" {
 }
 
 module "postgres" {
-  source = "git::https://github.com/DFE-Digital/terraform-modules.git//aks/postgres?ref=testing"
+  source = "git::https://github.com/DFE-Digital/terraform-modules.git//aks/postgres?ref=1839-postgres"
 
   namespace             = var.namespace
   environment           = local.environment
