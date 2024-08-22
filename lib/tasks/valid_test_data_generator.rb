@@ -72,7 +72,6 @@ module ValidTestDataGenerator
       teacher_profile = user.teacher_profile
       schedule = ecf_schedules.sample
 
-      # lead_provider = school_cohort.lead_provider
       cpd_lead_provider = lead_provider.cpd_lead_provider
       statement = Finance::Statement::ECF.where(
         cpd_lead_provider:,
