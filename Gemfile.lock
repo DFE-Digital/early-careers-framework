@@ -119,11 +119,11 @@ GEM
     ast (2.4.2)
     auto_strip_attributes (2.6.0)
       activerecord (>= 4.0)
-    axe-core-api (4.9.1)
+    axe-core-api (4.10.0)
       dumb_delegator
       virtus
-    axe-core-rspec (4.9.1)
-      axe-core-api (= 4.9.1)
+    axe-core-rspec (4.10.0)
+      axe-core-api (= 4.10.0)
       dumb_delegator
       virtus
     axiom-types (0.1.1)
