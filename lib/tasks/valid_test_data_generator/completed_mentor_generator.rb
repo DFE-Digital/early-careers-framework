@@ -15,7 +15,7 @@ module ValidTestDataGenerator
     end
 
     def call(total_completed_mentors:)
-      school = lead_provider.schools.order("RANDOM()").first
+      school = lead_provider.schools.joins(:school_cohorts).where(school_cohorts: { induction_programme_choice: "full_induction_programme" }).order("RANDOM()").first
 
       sparsity_uplift = weighted_choice(selection: [true, false], odds: [11, 89])
       pupil_premium_uplift = weighted_choice(selection: [true, false], odds: [11, 39])
