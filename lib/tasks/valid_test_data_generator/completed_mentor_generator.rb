@@ -15,7 +15,7 @@ module ValidTestDataGenerator
     end
 
     def call(total_completed_mentors:)
-      school = lead_provider.schools.joins(:school_cohorts).where(school_cohorts: { induction_programme_choice: "full_induction_programme" }).order("RANDOM()").first
+      school = create_fip_school_with_cohort(urn: SchoolURNGenerator.next)
 
       sparsity_uplift = weighted_choice(selection: [true, false], odds: [11, 89])
       pupil_premium_uplift = weighted_choice(selection: [true, false], odds: [11, 39])
@@ -76,17 +76,16 @@ module ValidTestDataGenerator
       )
 
       if profile_type == :ect
-        profile = ParticipantProfile::ECT.create!(teacher_profile:, school_cohort:, mentor_profile:, status:, sparsity_uplift:, pupil_premium_uplift:, schedule:, participant_identity:) do |pp|
-          ParticipantProfileState.create!(participant_profile: pp)
-          ECFParticipantEligibility.create!(participant_profile_id: pp.id).eligible_status!
-        end
+        profile = ParticipantProfile::ECT.create!(teacher_profile:, school_cohort:, mentor_profile:, status:, sparsity_uplift:, pupil_premium_uplift:, schedule:, participant_identity:)
+        ParticipantProfileState.create!(participant_profile_id: profile.id)
+        ECFParticipantEligibility.create!(participant_profile_id: profile.id).eligible_status!
 
         induction_programme = profile.school_cohort.induction_programmes.first
         raise unless induction_programme
 
         Induction::Enrol.call(participant_profile: profile, induction_programme:)
 
-        return unless profile.active_record?
+        return profile unless profile.active_record?
 
         started_declaration = travel_to profile.schedule.milestones.first.start_date + 2.days do
           RecordDeclaration.new(
@@ -98,7 +97,7 @@ module ValidTestDataGenerator
           ).call
         end
 
-        return if profile.schedule.milestones.second.start_date > Date.current
+        return profile if profile.schedule.milestones.second.start_date > Date.current
 
         started_declaration.make_payable!
         started_declaration.update!(
@@ -114,7 +113,7 @@ module ValidTestDataGenerator
           state: started_declaration.state,
         )
 
-        return if (profile.schedule.milestones.second.start_date + 1.day) > Time.zone.now
+        return profile if (profile.schedule.milestones.second.start_date + 1.day) > Time.zone.now
 
         RecordDeclaration.new(
           participant_id: user.tap(&:reload).id,
@@ -125,10 +124,9 @@ module ValidTestDataGenerator
           evidence_held: "other",
         ).call
       else
-        profile = ParticipantProfile::Mentor.create!(teacher_profile:, school_cohort:, status:, sparsity_uplift:, pupil_premium_uplift:, schedule:, participant_identity:) do |pp|
-          ParticipantProfileState.create!(participant_profile: pp)
-          ECFParticipantEligibility.create!(participant_profile_id: pp.id).eligible_status!
-        end
+        profile = ParticipantProfile::Mentor.create!(teacher_profile:, school_cohort:, status:, sparsity_uplift:, pupil_premium_uplift:, schedule:, participant_identity:)
+        ParticipantProfileState.create!(participant_profile_id: profile.id)
+        ECFParticipantEligibility.create!(participant_profile_id: profile.id).eligible_status!
 
         induction_programme = profile.school_cohort.induction_programmes.first
         raise unless induction_programme
@@ -147,7 +145,7 @@ module ValidTestDataGenerator
           ).call
         end
 
-        return if profile.schedule.milestones.second.start_date > Date.current
+        return profile if profile.schedule.milestones.second.start_date > Date.current
 
         started_declaration.make_payable!
         started_declaration.update!(
@@ -163,7 +161,7 @@ module ValidTestDataGenerator
           state: started_declaration.state,
         )
 
-        return if (profile.schedule.milestones.second.start_date + 1.day) > Time.zone.now
+        return profile if (profile.schedule.milestones.second.start_date + 1.day) > Time.zone.now
 
         RecordDeclaration.new(
           participant_id: user.tap(&:reload).id,
@@ -187,7 +185,8 @@ module ValidTestDataGenerator
     end
 
     def school_cohort(school:)
-      SchoolCohort.find_or_create_by!(school:, cohort:, induction_programme_choice: "full_induction_programme")
+      SchoolCohort.find_by(school:, cohort:) ||
+        SchoolCohort.create!(school:, cohort:, induction_programme_choice: "full_induction_programme")
     end
 
     def create_fip_school_with_cohort(urn:)
@@ -203,6 +202,7 @@ module ValidTestDataGenerator
         training_programme: "full_induction_programme",
         school_cohort:,
       )
+      school
     end
 
     def attach_partnership_to_school(school:)
