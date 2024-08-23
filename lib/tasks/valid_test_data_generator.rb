@@ -91,10 +91,9 @@ module ValidTestDataGenerator
       )
 
       if profile_type == :ect
-        profile = ParticipantProfile::ECT.create!(teacher_profile:, school_cohort:, mentor_profile:, status:, sparsity_uplift:, pupil_premium_uplift:, schedule:, participant_identity:) do |pp|
-          ParticipantProfileState.create!(participant_profile: pp)
-          ECFParticipantEligibility.create!(participant_profile_id: pp.id).eligible_status!
-        end
+        profile = ParticipantProfile::ECT.create!(teacher_profile:, school_cohort:, mentor_profile:, status:, sparsity_uplift:, pupil_premium_uplift:, schedule:, participant_identity:)
+        ParticipantProfileState.create!(participant_profile_id: profile.id)
+        ECFParticipantEligibility.create!(participant_profile_id: profile.id).eligible_status!
 
         induction_programme = profile.school_cohort.induction_programmes.first
         raise unless induction_programme
@@ -141,10 +140,9 @@ module ValidTestDataGenerator
           evidence_held: "other",
         ).call
       else
-        profile = ParticipantProfile::Mentor.create!(teacher_profile:, school_cohort:, status:, sparsity_uplift:, pupil_premium_uplift:, schedule:, participant_identity:) do |pp|
-          ParticipantProfileState.create!(participant_profile: pp)
-          ECFParticipantEligibility.create!(participant_profile_id: pp.id).eligible_status!
-        end
+        profile = ParticipantProfile::Mentor.create!(teacher_profile:, school_cohort:, status:, sparsity_uplift:, pupil_premium_uplift:, schedule:, participant_identity:)
+        ParticipantProfileState.create!(participant_profile_id: profile.id)
+        ECFParticipantEligibility.create!(participant_profile_id: profile.id).eligible_status!
 
         induction_programme = profile.school_cohort.induction_programmes.first
         raise unless induction_programme

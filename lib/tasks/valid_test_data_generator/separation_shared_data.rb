@@ -19,7 +19,7 @@ module ValidTestDataGenerator
       profile_type = weighted_choice(selection: %i[mentor ect], odds: [9, 1])
       school_cohort = school_cohort(school:)
 
-      shared_users_data[lead_provider.name].each do |user_params|
+      (shared_users_data[lead_provider.name] || []).each do |user_params|
         participant_identity = shared_participant_identity(user_params)
 
         participant = create_participant(
