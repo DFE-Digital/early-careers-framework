@@ -52,6 +52,7 @@ jobs:
         with:
           docker-repository: ghcr.io/dfe-digital/early-careers-framework
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          snyk-token: ${{ secrets.SNYK_TOKEN }}
 
   brakeman:
     name: Run Brakeman vulnerability scanner
@@ -186,7 +187,7 @@ jobs:
   #         azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
   #         current-commit-sha: ${{ github.sha }}
   #         statuscake-api-token: ${{ secrets.STATUSCAKE_API_TOKEN }}
-  
+
   deploy_separation:
     name: Deploy separation
     needs: [deploy_staging]
