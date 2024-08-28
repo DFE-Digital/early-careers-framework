@@ -13,7 +13,7 @@ We’ve added a field in the API sandbox environment’s participant response bo
 
 This follows feedback from providers who want this information for record keeping.  
 
-The new field is called <code>mentor_funding_end_date_reason</code>. It’ll display 3 possible values:  
+The new field is called <code>mentor_ineligible_for_funding_reason</code>. It’ll display 3 possible values:
 
 - <code>completed_declaration_received</code>. Providers will see this if the mentor has completed their mentor training 
 - <code>completed_during-early_roll_out</code>. This means the mentor completed their training during the pilot period of the ECF (Early Career Framework) programme, so is no longer eligible for funding 
