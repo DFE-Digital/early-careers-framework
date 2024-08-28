@@ -10,6 +10,7 @@ describe ChangeMilestoneDate, type: :model do
   let(:milestone) { schedule.milestones.first }
   let(:new_milestone_date) { (milestone.milestone_date || Date.new) - 1.week }
   let(:new_start_date) { (milestone.start_date || Date.new) + 1.week }
+  let(:new_payment_date) { (milestone.payment_date || Date.new) + 1.week }
 
   let(:instance) do
     described_class.new(
@@ -18,6 +19,7 @@ describe ChangeMilestoneDate, type: :model do
       milestone_number:,
       new_milestone_date:,
       new_start_date:,
+      new_payment_date:,
     )
   end
 
@@ -49,7 +51,7 @@ describe ChangeMilestoneDate, type: :model do
       end
     end
 
-    describe "new_start_date and new_milestone_date validation" do
+    describe "new_start_date, new_milestone_date and payment_date validation" do
       let(:participant_profile) { create(:ect, schedule:, lead_provider:) }
       let(:lead_provider) { partnership.lead_provider }
       let(:partnership) { create(:partnership) }
@@ -59,6 +61,7 @@ describe ChangeMilestoneDate, type: :model do
 
       it { is_expected.to validate_presence_of(:new_milestone_date).with_message(/must be specified/) }
       it { is_expected.to validate_presence_of(:new_start_date).with_message(/must be specified/) }
+      it { is_expected.to validate_presence_of(:new_payment_date).with_message(/must be specified/) }
 
       context "when the declarations fall within the new milestone dates" do
         let(:declaration_date) { new_milestone_date - 1.day }
@@ -93,6 +96,7 @@ describe ChangeMilestoneDate, type: :model do
 
     it { expect { change_date }.to change { milestone.reload.start_date }.to(new_start_date) }
     it { expect { change_date }.to change { milestone.reload.milestone_date }.to(new_milestone_date) }
+    it { expect { change_date }.to change { milestone.reload.payment_date }.to(new_payment_date) }
 
     context "when new_start_date is nil" do
       let(:new_start_date) { nil }
@@ -104,6 +108,12 @@ describe ChangeMilestoneDate, type: :model do
       let(:new_milestone_date) { nil }
 
       it { expect { change_date }.not_to change { milestone.reload.milestone_date } }
+    end
+
+    context "when new_payment_date is nil" do
+      let(:new_payment_date) { nil }
+
+      it { expect { change_date }.not_to change { milestone.reload.payment_date } }
     end
 
     context "when the date change is not valid" do

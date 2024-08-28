@@ -14,9 +14,11 @@ class ChangeMilestoneDate
   attribute :milestone_number, :integer
   attribute :new_start_date, :date
   attribute :new_milestone_date, :date
+  attribute :new_payment_date, :date
 
-  validates :new_milestone_date, presence: { message: I18n.t(:milestone_date_required) }, if: -> { new_start_date.blank? }
-  validates :new_start_date, presence: { message: I18n.t(:milestone_date_required) }, if: -> { new_milestone_date.blank? }
+  validates :new_milestone_date, presence: { message: I18n.t(:milestone_date_required) }, if: -> { new_start_date.blank? && new_payment_date.blank? }
+  validates :new_start_date, presence: { message: I18n.t(:milestone_date_required) }, if: -> { new_milestone_date.blank? && new_payment_date.blank? }
+  validates :new_payment_date, presence: { message: I18n.t(:milestone_date_required) }, if: -> { new_start_date.blank? && new_milestone_date.blank? }
   validates :milestone, presence: { message: I18n.t(:milestone_not_matched) }
   validate :validate_milestone_dates_present
   validate :validate_milestone_date_change
@@ -24,7 +26,7 @@ class ChangeMilestoneDate
   def change_date!
     raise DateCannotBeChangedError, errors.map(&:message) if invalid?
 
-    updates = { start_date: new_start_date, milestone_date: new_milestone_date }.compact
+    updates = { start_date: new_start_date, milestone_date: new_milestone_date, payment_date: new_payment_date }.compact
     milestone.update!(updates)
   end
 
@@ -55,6 +57,7 @@ private
       message = I18n.t(:cannot_change_milestone_date, declaration_date:, new_date_range:)
       errors.add(:new_milestone_date, message) if new_milestone_date
       errors.add(:new_start_date, message) if new_start_date
+      errors.add(:new_payment_date, message) if new_payment_date
     end
   end
 
