@@ -87,3 +87,8 @@ end
 }.each do |cpd_lead_provider, id|
   FactoryBot.create(:seed_npq_lead_provider, cpd_lead_provider:, id:, name: cpd_lead_provider.name)
 end
+
+CpdLeadProvider.find_each do |clp|
+  lp = LeadProvider.find_or_create_by!(name: clp.name)
+  lp.update!(cpd_lead_provider: clp)
+end
