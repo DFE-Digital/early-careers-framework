@@ -95,7 +95,7 @@ en:
   schedule_missing: "The participant does not have a schedule"
   declaration_before_milestone_start: "Enter a '#/declaration_date' that's on or after the milestone start."
   declaration_after_milestone_cutoff: "Enter a '#/declaration_date' that's before the milestone end date."
-  milestone_date_required: "The new_start_date or new_milestone_date must be specified"
+  milestone_date_required: "The new_start_date, new_milestone_date or new_payment_date must be specified"
   missing_start_date: "The milestone does not currently have a start_date"
   missing_milestone_date: "The milestone does not currently have a milestone_date"
   milestone_not_matched: "The milestone could not be matched"
