@@ -7,36 +7,42 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
-## 20 August 2024 
+## 2 September 2024
 
-We’ve added a field in the API sandbox environment’s participant response bodies to show why funding for a mentor’s training has ended.  
+Providers can now see the new <code>mentor_ineligible_for_funding_reason</code> field in the API production environment's participant response bodies.
 
-This follows feedback from providers who want this information for record keeping.  
+For full details about the field and the values it can display, read the <a href="/api-reference/release-notes.html#20-august-2024">release note we published</a> when we added this functionality to the test (sandbox) environment.
+
+## 20 August 2024
+
+We’ve added a field in the API sandbox environment’s participant response bodies to show why funding for a mentor’s training has ended.
+
+This follows feedback from providers who want this information for record keeping.
 
 The new field is called <code>mentor_ineligible_for_funding_reason</code>. It’ll display 3 possible values:
 
-- <code>completed_declaration_received</code>. Providers will see this if the mentor has completed their mentor training 
-- <code>completed_during-early_roll_out</code>. This means the mentor completed their training during the pilot period of the ECF (Early Career Framework) programme, so is no longer eligible for funding 
-- <code>started_not_completed</code>. We’ll display this if 2 years has elapsed since a full-time mentor started training. After 2 years, they’re no longer eligible 
+- <code>completed_declaration_received</code>. Providers will see this if the mentor has completed their mentor training
+- <code>completed_during-early_roll_out</code>. This means the mentor completed their training during the pilot period of the ECF (Early Career Framework) programme, so is no longer eligible for funding
+- <code>started_not_completed</code>. We’ll display this if 2 years has elapsed since a full-time mentor started training. After 2 years, they’re no longer eligible
 
 We’d welcome feedback on this sandbox update before it goes into production. Providers can contact us via the usual Slack channel if they’ve got any suggestions or concerns.
 
-## 13 August 2024 
+## 13 August 2024
 
-We’ve launched standalone API test environments so providers can manage ECF and NPQ data separately.  
+We’ve launched standalone API test environments so providers can manage ECF and NPQ data separately.
 
-The merged data model that we’ve been running previously has proven challenging with bugs, unstable ID’s, issues with emails, and participants appearing and disappearing for providers. 
+The merged data model that we’ve been running previously has proven challenging with bugs, unstable ID’s, issues with emails, and participants appearing and disappearing for providers.
 
-The new approach with standalone APIs will stabilise the services and simplify the domain model. Operationally, providers will benefit from faster resolution times on issues for applicants and faster deployment on requested features and policy changes.  
+The new approach with standalone APIs will stabilise the services and simplify the domain model. Operationally, providers will benefit from faster resolution times on issues for applicants and faster deployment on requested features and policy changes.
 
-To help test the NPQ and ECF new world ahead of the full separation later in the autumn, we've launched ‘separation’ test environments with relevant seed data to replace the existing ‘sandboxes’.  
+To help test the NPQ and ECF new world ahead of the full separation later in the autumn, we've launched ‘separation’ test environments with relevant seed data to replace the existing ‘sandboxes’.
 
-To make requests in the new test environments, providers must use the bearer tokens that we’ve sent them via Galaxkey. The base URLs are: 
+To make requests in the new test environments, providers must use the bearer tokens that we’ve sent them via Galaxkey. The base URLs are:
 
 - ECF test environment - [https://sp.manage-training-for-early-career-teachers.education.gov.uk](https://sp.manage-training-for-early-career-teachers.education.gov.uk)
 - NPQ test environment - [https://npq-registration-separation-web.teacherservices.cloud](https://npq-registration-separation-web.teacherservices.cloud)
 
-Providers can add the required API version and endpoint depending on what they want to test. For example, they’d add /api/v3/npq-applications to the NPQ test environment URL if they want to retrieve multiple applications. 
+Providers can add the required API version and endpoint depending on what they want to test. For example, they’d add /api/v3/npq-applications to the NPQ test environment URL if they want to retrieve multiple applications.
 
 We’ve also created documentation for the new separation environment endpoints:
 
@@ -47,7 +53,7 @@ We’ve also created documentation for the new separation environment endpoints:
 - [NPQ API v2 documentation](https://npq-registration-separation-web.teacherservices.cloud/api/docs/v2)
 - [NPQ API v3 documentation](https://npq-registration-separation-web.teacherservices.cloud/api/docs/v3)
 
-The existing sandbox environments will remain accessible and unchanged to allow continued testing on the current API setup. 
+The existing sandbox environments will remain accessible and unchanged to allow continued testing on the current API setup.
 
 ## 1 July 2024
 
@@ -82,15 +88,15 @@ However, you can make changes in the 2021 cohort where participants already have
 
 Registration is now open for the 2024/25 intake of early career teachers and mentors, so we’ve added the schedules and contract data for this academic year to the production environment.
 
-## 18 June 2024 
+## 18 June 2024
 
-From today, schools have started moving ECTs and mentors with partial declarations currently assigned to the 2021 cohort to the 2024 cohort.  
+From today, schools have started moving ECTs and mentors with partial declarations currently assigned to the 2021 cohort to the 2024 cohort.
 
-This is because we’re closing the funding contract for the 2021 cohort at the end of July. 
+This is because we’re closing the funding contract for the 2021 cohort at the end of July.
 
-Providers will be able to identify participants who’ve been moved by the new `cohort_changed_after_payments_frozen` attribute to the [participant response](/api-reference/reference-v3.html?#api-v3-participants-ecf-get-responses-examples) in the API v3 production environment. The value shown for these participants will be `true`. 
+Providers will be able to identify participants who’ve been moved by the new `cohort_changed_after_payments_frozen` attribute to the [participant response](/api-reference/reference-v3.html?#api-v3-participants-ecf-get-responses-examples) in the API v3 production environment. The value shown for these participants will be `true`.
 
-Providers will no longer be able to submit or void declarations for the 2021 cohort after the contract closes on 31 July. 
+Providers will no longer be able to submit or void declarations for the 2021 cohort after the contract closes on 31 July.
 
 ## 14 June 2024
 
@@ -139,18 +145,18 @@ Providers will be able to test future declaration submissions in the 2024 cohort
 
 We’d welcome feedback on this sandbox update before it goes into production.
 
-## 5 June 2024 
+## 5 June 2024
 
-We're addressing a potential confusion for providers filtering participant declarations by cohort. 
- 
-Currently, filtering by a participant's current cohort (for example, 2022) returns all their declarations, even those made when the participant was in an earlier cohort (for example, 2021).  
- 
-For instance, if a participant is in the 2022 cohort, but has declarations in both 2021 and 2022, all declarations are returned when filtering by 2022, and none when filtering by 2021. 
- 
-Going forward, we’ll now return only the declarations made during the specified cohort. For example:  
+We're addressing a potential confusion for providers filtering participant declarations by cohort.
 
-- filtering by 2021 will return only the declarations made while a participant was in the 2021 cohort 
-- filtering by 2022 will return only the declarations made while a participant was in the 2022 cohort 
+Currently, filtering by a participant's current cohort (for example, 2022) returns all their declarations, even those made when the participant was in an earlier cohort (for example, 2021).
+
+For instance, if a participant is in the 2022 cohort, but has declarations in both 2021 and 2022, all declarations are returned when filtering by 2022, and none when filtering by 2021.
+
+Going forward, we’ll now return only the declarations made during the specified cohort. For example:
+
+- filtering by 2021 will return only the declarations made while a participant was in the 2021 cohort
+- filtering by 2022 will return only the declarations made while a participant was in the 2022 cohort
 
 We’ve released this in the API v3 Live environment.
 
@@ -172,7 +178,7 @@ As always, we’d welcome feedback on this sandbox update before it goes into pr
 
 ## 8 March 2024
 
-Lead providers can now use the new `mentor_funding_end_date` field in the Live environment’s [ECF participant endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-get). 
+Lead providers can now use the new `mentor_funding_end_date` field in the Live environment’s [ECF participant endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-get).
 
 Further details are available in the release note of [4 March 2024](/api-reference/release-notes.html#4-march-2024).
 
