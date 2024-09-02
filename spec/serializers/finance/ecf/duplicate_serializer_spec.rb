@@ -43,7 +43,7 @@ RSpec.describe Finance::ECF::DuplicateSerializer do
         cohort: Cohort.current.display_name,
         training_status: "active",
         induction_status: "active",
-        start_date: Cohort.current.academic_year_start_date.rfc3339,
+        start_date: participant_declaration.declaration_date.rfc3339,
         end_date: nil,
         school_transfer: false,
       )
@@ -53,7 +53,7 @@ RSpec.describe Finance::ECF::DuplicateSerializer do
       result = subject.serializable_hash
       expect(result[:data][:attributes][:participant_declarations][0]).to include(
         declaration_type: "started",
-        declaration_date: Cohort.current.academic_year_start_date.rfc3339,
+        declaration_date: participant_declaration.declaration_date.rfc3339,
         course_identifier: "ecf-induction",
       )
     end
