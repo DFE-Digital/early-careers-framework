@@ -45,27 +45,33 @@ module ValidTestDataGenerator
       while count.positive?
         status = weighted_choice(selection: %w[active withdrawn], odds: [6, 1])
         profile_type = weighted_choice(selection: %i[mentor ect], odds: [9, 1])
+        participant_identity = create_random_participant_identity
+
         count -= 1
         if profile_type == :mentor
-          mentor = create_participant(school_cohort: school_cohort(school:), profile_type: :mentor, status:, sparsity_uplift:, pupil_premium_uplift:)
+          mentor = create_participant(participant_identity:, school_cohort: school_cohort(school:), profile_type: :mentor, status:, sparsity_uplift:, pupil_premium_uplift:)
           rand(0..3).times do
-            create_participant(school_cohort: school_cohort(school:), profile_type: :ect, mentor_profile: mentor, status:, sparsity_uplift:, pupil_premium_uplift:)
+            create_participant(participant_identity:, school_cohort: school_cohort(school:), profile_type: :ect, mentor_profile: mentor, status:, sparsity_uplift:, pupil_premium_uplift:)
             count -= 1
           end
         else
-          create_participant(school_cohort: school_cohort(school:), profile_type: :ect, status:, sparsity_uplift:, pupil_premium_uplift:)
+          create_participant(participant_identity:, school_cohort: school_cohort(school:), profile_type: :ect, status:, sparsity_uplift:, pupil_premium_uplift:)
         end
       end
     end
 
-    def create_participant(school_cohort:, profile_type: :ect, mentor_profile: nil, status: "active", sparsity_uplift: false, pupil_premium_uplift: false)
+    def create_random_participant_identity
       name = Faker::Name.name
       user = User.create!(full_name: name, email: Faker::Internet.email(name:))
-      teacher_profile = TeacherProfile.create!(user:, trn: random_or_nil_trn)
-      schedule = ecf_schedules.sample
-      participant_identity = Identity::Create.call(user:, origin: :ecf)
+      TeacherProfile.create!(user:, trn: random_or_nil_trn)
+      Identity::Create.call(user:, origin: :ecf)
+    end
 
-      lead_provider = school_cohort.lead_provider
+    def create_participant(participant_identity:, school_cohort:, profile_type: :ect, mentor_profile: nil, status: "active", sparsity_uplift: false, pupil_premium_uplift: false)
+      user = participant_identity.user
+      teacher_profile = user.teacher_profile
+      schedule = ecf_schedules.sample
+
       cpd_lead_provider = lead_provider.cpd_lead_provider
       statement = Finance::Statement::ECF.where(
         cpd_lead_provider:,
@@ -85,10 +91,9 @@ module ValidTestDataGenerator
       )
 
       if profile_type == :ect
-        profile = ParticipantProfile::ECT.create!(teacher_profile:, school_cohort:, mentor_profile:, status:, sparsity_uplift:, pupil_premium_uplift:, schedule:, participant_identity:) do |pp|
-          ParticipantProfileState.create!(participant_profile: pp)
-          ECFParticipantEligibility.create!(participant_profile_id: pp.id).eligible_status!
-        end
+        profile = ParticipantProfile::ECT.create!(teacher_profile:, school_cohort:, mentor_profile:, status:, sparsity_uplift:, pupil_premium_uplift:, schedule:, participant_identity:)
+        ParticipantProfileState.create!(participant_profile_id: profile.id)
+        ECFParticipantEligibility.create!(participant_profile_id: profile.id).eligible_status!
 
         induction_programme = profile.school_cohort.induction_programmes.first
         raise unless induction_programme
@@ -106,6 +111,7 @@ module ValidTestDataGenerator
             declaration_type: "started",
           ).call
         end
+        return unless started_declaration
 
         return if profile.schedule.milestones.second.start_date > Date.current
 
@@ -134,10 +140,9 @@ module ValidTestDataGenerator
           evidence_held: "other",
         ).call
       else
-        profile = ParticipantProfile::Mentor.create!(teacher_profile:, school_cohort:, status:, sparsity_uplift:, pupil_premium_uplift:, schedule:, participant_identity:) do |pp|
-          ParticipantProfileState.create!(participant_profile: pp)
-          ECFParticipantEligibility.create!(participant_profile_id: pp.id).eligible_status!
-        end
+        profile = ParticipantProfile::Mentor.create!(teacher_profile:, school_cohort:, status:, sparsity_uplift:, pupil_premium_uplift:, schedule:, participant_identity:)
+        ParticipantProfileState.create!(participant_profile_id: profile.id)
+        ECFParticipantEligibility.create!(participant_profile_id: profile.id).eligible_status!
 
         induction_programme = profile.school_cohort.induction_programmes.first
         raise unless induction_programme
@@ -155,6 +160,7 @@ module ValidTestDataGenerator
             declaration_type: "started",
           ).call
         end
+        return unless started_declaration
 
         return if profile.schedule.milestones.second.start_date > Date.current
 
@@ -196,7 +202,8 @@ module ValidTestDataGenerator
     end
 
     def school_cohort(school:)
-      SchoolCohort.find_or_create_by!(school:, cohort:, induction_programme_choice: "full_induction_programme")
+      SchoolCohort.find_by(school:, cohort:) ||
+        SchoolCohort.create!(school:, cohort:, induction_programme_choice: "full_induction_programme")
     end
 
     def create_fip_school_with_cohort(urn:)
@@ -274,8 +281,8 @@ module ValidTestDataGenerator
     def generate_new_participants(school:, count:, sparsity_uplift:, pupil_premium_uplift:)
       (count / 2).times do
         status = "active"
-        mentor = create_participant(school_cohort: school_cohort(school:), profile_type: :mentor, status:, sparsity_uplift:, pupil_premium_uplift:)
-        create_participant(school_cohort: school_cohort(school:), profile_type: :ect, mentor_profile: mentor, status:, sparsity_uplift:, pupil_premium_uplift:)
+        mentor = create_participant(participant_identity: create_random_participant_identity, school_cohort: school_cohort(school:), profile_type: :mentor, status:, sparsity_uplift:, pupil_premium_uplift:)
+        create_participant(participant_identity: create_random_participant_identity, school_cohort: school_cohort(school:), profile_type: :ect, mentor_profile: mentor, status:, sparsity_uplift:, pupil_premium_uplift:)
       end
     end
 
