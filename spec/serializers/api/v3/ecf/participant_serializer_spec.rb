@@ -69,15 +69,6 @@ module Api
             ])
           end
 
-          context "when running in the production environment" do
-            before { allow(Rails).to receive(:env).and_return("production".inquiry) }
-
-            it "does not include the mentor_ineligible_for_funding_reason" do
-              ecf_enrolment_keys = result[:data].map { |d| d[:attributes][:ecf_enrolments].map(&:keys).flatten }.flatten
-              expect(ecf_enrolment_keys).not_to include(:mentor_ineligible_for_funding_reason)
-            end
-          end
-
           describe "ecf_enrolments" do
             context "when there are multiple providers involved" do
               let(:another_school_cohort) { create(:school_cohort, :fip, :with_induction_programme) }
