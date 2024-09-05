@@ -76,7 +76,7 @@ RSpec.shared_examples "validates the declaration for a withdrawn participant" do
     end
 
     context "when the declaration is backdated before the participant has been withdrawn" do
-      let(:withdrawal_time) { declaration_date + 1.second + 1.month } # Temp fix until we revert cohort start date to September
+      let(:withdrawal_time) { declaration_date + 1.second }
 
       it { is_expected.to be_valid }
     end

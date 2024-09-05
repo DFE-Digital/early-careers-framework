@@ -5,7 +5,7 @@ require "tempfile"
 RSpec.describe Importers::CreateNewECFCohort do
   describe "#call" do
     # TODO: hard coding year for now here and in csvs due to flaky tests but those need to be dynamic
-    let(:start_year) { "2026" }
+    let(:start_year) { "2025" }
 
     let(:cohort_csv) { "spec/fixtures/files/importers/cohort_csv_data.csv" }
     let(:cohort_lead_provider_csv) { "spec/fixtures/files/importers/cohort_lead_provider_csv_data.csv" }
