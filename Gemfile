@@ -68,7 +68,7 @@ gem "savon", "~> 2.15"
 gem "strong_migrations", "~> 1.8"
 
 # Pagination
-gem "pagy", "~> 6"
+gem "pagy", "~> 9"
 
 # Json Schema for api validation
 gem "json-schema", ">= 2.8.1"
