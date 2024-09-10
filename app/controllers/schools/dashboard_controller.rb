@@ -17,7 +17,7 @@ class Schools::DashboardController < Schools::BaseController
                       .schools
                       .order(:name),
                            page: params[:page],
-                           items: 20)
+                           limit: 20)
 
     if @schools.empty?
       flash.now[:notice] = {

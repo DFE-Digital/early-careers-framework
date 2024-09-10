@@ -3,7 +3,7 @@
 module Admin::TestData
   class FipSchoolsController < Admin::TestData::BaseController
     def index
-      @pagy, @schools = pagy(find_schools, page: params[:page], items: 10)
+      @pagy, @schools = pagy(find_schools, page: params[:page], limit: 10)
     end
 
   private

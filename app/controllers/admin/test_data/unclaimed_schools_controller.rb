@@ -5,7 +5,7 @@ module Admin::TestData
     before_action :get_school, only: :generate_link
 
     def index
-      @pagy, @schools = pagy(find_schools, page: params[:page], items: 10)
+      @pagy, @schools = pagy(find_schools, page: params[:page], limit: 10)
     end
 
     def generate_link

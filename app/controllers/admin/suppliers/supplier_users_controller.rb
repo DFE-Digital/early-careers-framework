@@ -11,7 +11,7 @@ module Admin
 
       def index
         @query = params[:query]
-        @pagy, @lead_providers = pagy_array(scoped_lead_providers, page: params[:page], items: 20)
+        @pagy, @lead_providers = pagy_array(scoped_lead_providers, page: params[:page], limit: 20)
         @page = @pagy.page
         @total_pages = @pagy.pages
       end

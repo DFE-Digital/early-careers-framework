@@ -7,7 +7,7 @@ module Admin
 
     def index
       @query = params[:query]
-      @pagy, @schools = pagy(schools_search, page: params[:page], items: 10)
+      @pagy, @schools = pagy(schools_search, page: params[:page], limit: 10)
     end
 
     def show

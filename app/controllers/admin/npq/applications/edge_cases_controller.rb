@@ -23,7 +23,7 @@ module Admin
           results = Admin::NPQApplications::EdgeCaseSearch
             .new(policy_scope(NPQApplication), query_string:, funding_eligiblity_status_code:, employment_type:, start_date:, end_date:).call
 
-          @pagy, @npq_applications = pagy(results, page: params[:page], items: 20)
+          @pagy, @npq_applications = pagy(results, page: params[:page], limit: 20)
           @page = @pagy.page
           @total_pages = @pagy.pages
         end
