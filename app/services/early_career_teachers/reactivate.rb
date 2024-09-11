@@ -21,6 +21,7 @@ module EarlyCareerTeachers
                                 start_date:,
                                 appropriate_body_id:,
                                 preferred_email: email)
+          amend_mentor_cohort if change_mentor_cohort?
         end
       end
 
@@ -43,6 +44,20 @@ module EarlyCareerTeachers
       @induction_programme = school_cohort.default_induction_programme
     end
 
+    delegate :cohort, to: :school_cohort
+
+    def amend_mentor_cohort
+      Induction::AmendParticipantCohort.new(participant_profile: mentor_profile,
+                                            source_cohort_start_year: mentor_profile.schedule.cohort.start_year,
+                                            target_cohort_start_year: Cohort.active_registration_cohort.start_year).save
+    end
+
+    def change_mentor_cohort?
+      return false if cohort.payments_frozen?
+
+      mentor_profile&.eligible_to_change_cohort_and_continue_training?(cohort: Cohort.active_registration_cohort)
+    end
+
     def mentor_profile
       ParticipantProfile::Mentor.find(mentor_profile_id) if mentor_profile_id.present?
     end
@@ -62,7 +77,7 @@ module EarlyCareerTeachers
         pupil_premium_uplift: pupil_premium_uplift?(start_year),
         induction_start_date:,
         status: :active,
-        schedule: Finance::Schedule::ECF.default_for(cohort: school_cohort.cohort),
+        schedule: Finance::Schedule::ECF.default_for(cohort:),
       )
     end
 
