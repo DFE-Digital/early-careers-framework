@@ -6,6 +6,7 @@ class Induction::TransferAndContinueExistingFip < BaseService
       latest_induction_record.leaving!(end_date) if latest_induction_record.active_induction_status?
 
       enrol_participant_at_new_programme.tap do
+        amend_mentor_cohort if participant_profile.ect? && change_mentor_cohort?
         update_mentor_pools_and_mentees if participant_profile.mentor?
       end
     end
@@ -28,6 +29,18 @@ private
     @from_school = latest_induction_record.school
     @to_school = school_cohort.school
     checks!
+  end
+
+  def amend_mentor_cohort
+    Induction::AmendParticipantCohort.new(participant_profile: mentor_profile,
+                                          source_cohort_start_year: mentor_profile.schedule.cohort.start_year,
+                                          target_cohort_start_year: Cohort.active_registration_cohort.start_year).save
+  end
+
+  def change_mentor_cohort?
+    return false if cohort.payments_frozen?
+
+    mentor_profile&.eligible_to_change_cohort_and_continue_training?(cohort: Cohort.active_registration_cohort)
   end
 
   def enrol_participant_at_new_programme

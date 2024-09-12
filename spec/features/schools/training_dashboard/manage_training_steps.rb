@@ -278,9 +278,9 @@ module ManageTrainingSteps
     Mentors::AddToSchool.call(mentor_profile: @participant_profile_mentor, school: @school)
   end
 
-  def and_i_have_added_a_mentor_in_cohort(cohort)
-    @mentor_school_cohort = @school.school_cohorts.for_year(cohort.start_year).first ||
-      create(:school_cohort, school: @school, cohort:, induction_programme_choice: "full_induction_programme")
+  def and_i_have_added_a_mentor_in_cohort(cohort, school: @school)
+    @mentor_school_cohort = school.school_cohorts.for_year(cohort.start_year).first ||
+      create(:school_cohort, school:, cohort:, induction_programme_choice: "full_induction_programme")
     @mentor_profile_in_cohort = create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, user: create(:user, full_name: "Cohort Mentor"), school_cohort: @mentor_school_cohort)
     if cohort.payments_frozen?
       @mentor_profile_in_cohort.participant_declarations.create!(declaration_date: Date.new(cohort.start_year, 10, 10),
@@ -292,7 +292,7 @@ module ManageTrainingSteps
                                                                  cohort:)
     end
     Induction::Enrol.call(participant_profile: @mentor_profile_in_cohort, induction_programme: @induction_programme)
-    Mentors::AddToSchool.call(mentor_profile: @mentor_profile_in_cohort, school: @school)
+    Mentors::AddToSchool.call(mentor_profile: @mentor_profile_in_cohort, school:)
   end
 
   def and_i_have_added_a_mentor_who_completed_training
