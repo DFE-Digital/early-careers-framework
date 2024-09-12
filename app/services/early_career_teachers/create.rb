@@ -17,7 +17,7 @@ module EarlyCareerTeachers
 
         profile = ParticipantProfile::ECT.create!(
           teacher_profile:,
-          schedule: Finance::Schedule::ECF.default_for(cohort: school_cohort.cohort),
+          schedule: Finance::Schedule::ECF.default_for(cohort:),
           participant_identity: Identity::Create.call(user:),
           **ect_attributes,
         )
@@ -29,6 +29,7 @@ module EarlyCareerTeachers
                                 mentor_profile:,
                                 start_date:,
                                 appropriate_body_id:)
+          amend_mentor_cohort if change_mentor_cohort?
         end
       end
 
@@ -48,6 +49,20 @@ module EarlyCareerTeachers
       @appropriate_body_id = appropriate_body_id
       @induction_start_date = induction_start_date
       @induction_programme = induction_programme || school_cohort.default_induction_programme
+    end
+
+    delegate :cohort, to: :school_cohort
+
+    def amend_mentor_cohort
+      Induction::AmendParticipantCohort.new(participant_profile: mentor_profile,
+                                            source_cohort_start_year: mentor_profile.schedule.cohort.start_year,
+                                            target_cohort_start_year: Cohort.active_registration_cohort.start_year).save
+    end
+
+    def change_mentor_cohort?
+      return false if cohort.payments_frozen?
+
+      mentor_profile&.eligible_to_change_cohort_and_continue_training?(cohort: Cohort.active_registration_cohort)
     end
 
     def ect_attributes
