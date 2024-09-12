@@ -56,7 +56,7 @@ gem "mail-notify", "~> 1.2"
 # do not rely on host's timezone data, which can be inconsistent
 gem "tzinfo-data"
 
-gem "govuk-components", "~> 5.4.1"
+gem "govuk-components", "~> 5.6.1"
 gem "govuk_design_system_formbuilder", "~> 5.6.0"
 
 # Fetching from APIs
@@ -68,7 +68,7 @@ gem "savon", "~> 2.15"
 gem "strong_migrations", "~> 1.8"
 
 # Pagination
-gem "pagy", "~> 6"
+gem "pagy", "~> 9"
 
 # Json Schema for api validation
 gem "json-schema", ">= 2.8.1"

@@ -8,7 +8,7 @@ module Admin
       def initialize(profiles:, page:)
         @pagy, @profiles = pagy(profiles.includes(:user),
                                 page:,
-                                items: 10)
+                                limit: 10)
       end
 
     private

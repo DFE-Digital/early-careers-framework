@@ -6,7 +6,7 @@ module Admin
       include Pagy::Backend
 
       def initialize(relics:, page:)
-        @pagy, @relics = pagy(relics, page:, items: 10)
+        @pagy, @relics = pagy(relics, page:, limit: 10)
       end
 
     private

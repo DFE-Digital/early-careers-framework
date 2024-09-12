@@ -10,7 +10,7 @@ module Admin
       def index
         @query = params[:query]
         authorize DeliveryPartnerProfile
-        @pagy, @delivery_partner_profiles = pagy(scoped, page: params[:page], items: 20)
+        @pagy, @delivery_partner_profiles = pagy(scoped, page: params[:page], limit: 20)
       end
 
       def new

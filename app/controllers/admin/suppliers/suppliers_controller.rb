@@ -8,7 +8,7 @@ module Admin
       def index
         @query = params[:query]
         @type = params[:type]
-        @pagy, @suppliers = pagy_array(suppliers_search, page: params[:page], items: 20)
+        @pagy, @suppliers = pagy_array(suppliers_search, page: params[:page], limit: 20)
         @page = @pagy.page
         @total_pages = @pagy.pages
       end

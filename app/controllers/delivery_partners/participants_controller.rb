@@ -12,7 +12,7 @@ module DeliveryPartners
           @pagy, @induction_records = pagy(
             @filter.scope.order(updated_at: :desc),
             page: params[:page],
-            items: 50,
+            limit: 50,
           )
         end
 
