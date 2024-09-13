@@ -23,6 +23,7 @@ class Induction::TransferToSchoolsProgramme < BaseService
                                                mentor_profile:,
                                                schedule:,
                                                school_transfer: true)
+      amend_mentor_cohort if participant_profile.ect? && change_mentor_cohort?
 
       if participant_profile.mentor?
         Mentors::ChangeSchool.call(mentor_profile: participant_profile,
@@ -50,6 +51,18 @@ private
   end
 
   delegate :cohort, :school_cohort, to: :induction_programme
+
+  def amend_mentor_cohort
+    Induction::AmendParticipantCohort.new(participant_profile: mentor_profile,
+                                          source_cohort_start_year: mentor_profile.schedule.cohort.start_year,
+                                          target_cohort_start_year: Cohort.active_registration_cohort.start_year).save
+  end
+
+  def change_mentor_cohort?
+    return false if cohort.payments_frozen?
+
+    mentor_profile&.eligible_to_change_cohort_and_continue_training?(cohort: Cohort.active_registration_cohort)
+  end
 
   def check_different_school!
     raise ArgumentError, "Participant is already enrolled at this school" if latest_induction_record.school == induction_programme.school
