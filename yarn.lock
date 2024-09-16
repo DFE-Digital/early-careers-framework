@@ -3043,18 +3043,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"babel-loader@npm:^8.3.0":
-  version: 8.3.0
-  resolution: "babel-loader@npm:8.3.0"
+"babel-loader@npm:^8.4.0":
+  version: 8.4.0
+  resolution: "babel-loader@npm:8.4.0"
   dependencies:
     find-cache-dir: "npm:^3.3.1"
-    loader-utils: "npm:^2.0.0"
+    loader-utils: "npm:^2.0.4"
     make-dir: "npm:^3.1.0"
     schema-utils: "npm:^2.6.5"
   peerDependencies:
     "@babel/core": ^7.0.0
     webpack: ">=2"
-  checksum: 7b83bae35a12fbc5cdf250e2d36a288305fe5b6d20ab044ab7c09bbf456c8895b80af7a4f1e8b64b5c07a4fd48d4b5144dab40b4bc72a4fed532dc000362f38f
+  checksum: 98e113ad01fee1ae0ed5f1715338ce314c6cc30cf5c806db0b8cbe8fecf60752e6ccecf973e965f4ee88a4d10487d6ccb50e9d7a4e426f4d2e6d13ea108b41c4
   languageName: node
   linkType: hard
 
@@ -3874,7 +3874,7 @@ __metadata:
     "@sentry/tracing": "npm:^6.19.7"
     accessible-autocomplete: "npm:^2.0.3"
     axe-core: "npm:^4.10.0"
-    babel-loader: "npm:^8.3.0"
+    babel-loader: "npm:^8.4.0"
     babel-plugin-macros: "npm:^3.1.0"
     compression-webpack-plugin: "npm:^9.2.0"
     es6-promise: "npm:^4.2.8"
@@ -5836,7 +5836,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"loader-utils@npm:^2.0.0":
+"loader-utils@npm:^2.0.0, loader-utils@npm:^2.0.4":
   version: 2.0.4
   resolution: "loader-utils@npm:2.0.4"
   dependencies:
