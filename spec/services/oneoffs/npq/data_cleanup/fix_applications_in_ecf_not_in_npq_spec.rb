@@ -20,13 +20,20 @@ describe Oneoffs::NPQ::DataCleanup::FixApplicationsInECFNotInNPQ do
       end
       let(:npq_application_ids) { [application.id, similar_application.id] }
 
-      it "deletes it" do
+      it "deletes the application which does not exist in NPQ" do
         expect { run }.to change { NPQApplication.count }.by(-1)
+      end
+
+      it "keeps the accepted application" do
+        run
+
+        expect { application.reload }.to raise_error(ActiveRecord::RecordNotFound)
+        expect { similar_application.reload }.not_to raise_error
       end
     end
 
     context "when there is a rejected application" do
-      let!(:application) { create(:npq_application, :rejected) }
+      let!(:application) { create(:npq_application, :accepted) }
       let!(:similar_application) do
         create(:npq_application, :rejected,
                npq_course: application.npq_course,
@@ -36,8 +43,15 @@ describe Oneoffs::NPQ::DataCleanup::FixApplicationsInECFNotInNPQ do
       end
       let(:npq_application_ids) { [application.id, similar_application.id] }
 
-      it "deletes it" do
+      it "deletes all applications which does not exist in NPQ" do
         expect { run }.to change { NPQApplication.count }.by(-1)
+      end
+
+      it "keeps the accepted application" do
+        run
+
+        expect { application.reload }.not_to raise_error
+        expect { similar_application.reload }.to raise_error(ActiveRecord::RecordNotFound)
       end
     end
 
@@ -59,12 +73,20 @@ describe Oneoffs::NPQ::DataCleanup::FixApplicationsInECFNotInNPQ do
       end
       let(:npq_application_ids) { [application.id, similar_application.id, another_similar_application.id] }
 
-      it "deletes it" do
-        expect { run }.to change { NPQApplication.count }.by(-1)
+      it "deletes all applications which does not exist in NPQ" do
+        expect { run }.to change { NPQApplication.count }.by(-2)
+      end
+
+      it "keeps the latest pending application" do
+        run
+
+        expect { application.reload }.to raise_error(ActiveRecord::RecordNotFound)
+        expect { similar_application.reload }.to raise_error(ActiveRecord::RecordNotFound)
+        expect { another_similar_application.reload }.not_to raise_error
       end
     end
 
-    context "when the application is pending" do
+    context "when the application is rejected" do
       let!(:application) { create(:npq_application, :rejected) }
       let!(:similar_application) do
         create(:npq_application, :rejected,
@@ -75,8 +97,15 @@ describe Oneoffs::NPQ::DataCleanup::FixApplicationsInECFNotInNPQ do
       end
       let(:npq_application_ids) { [application.id, similar_application.id] }
 
-      it "deletes it" do
+      it "deletes all applications which does not exist in NPQ" do
         expect { run }.to change { NPQApplication.count }.by(-1)
+      end
+
+      it "keeps the latest rejected application" do
+        run
+
+        expect { application.reload }.to raise_error(ActiveRecord::RecordNotFound)
+        expect { similar_application.reload }.not_to raise_error
       end
     end
 

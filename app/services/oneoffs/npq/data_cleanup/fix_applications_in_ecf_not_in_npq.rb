@@ -46,21 +46,22 @@ module Oneoffs::NPQ::DataCleanup
           # We keep the latest one and update NPQ accordingly.
           # Also delete all the ones which does not exist in NPQ.
           if npq_application.pending? && similar_applications.size.positive? && similar_applications.all?(&:pending?)
-            similar_application_ids = similar_applications.map(&:id)
-            similar_application_ids.delete_at(0) # remove first one
+            similar_application_ids = (similar_applications << npq_application).sort_by(&:created_at).reverse.map(&:id)
+            application_id_to_keep = similar_application_ids.delete_at(0) # remove latest one
             applications_ids_to_be_deleted = npq_application_ids & similar_application_ids
             applications_to_be_deleted = NPQApplication.where(id: applications_ids_to_be_deleted).destroy_all
-            hash[npq_application_id] = "Keep #{similar_applications.first.id}. Sync up in NPQ accordingly. Delete #{applications_to_be_deleted.map { |app| [app.npq_lead_provider.name, app.user_id, app.id] }}"
+            hash[npq_application_id] = "Keep #{application_id_to_keep}. Sync up in NPQ accordingly. Delete #{applications_to_be_deleted.map { |app| [app.npq_lead_provider.name, app.user_id, app.id] }}"
             next
           end
 
           # Application is rejected, and all similar ones are also rejected.
           # We delete all the ones which does not exist in NPQ.
           if npq_application.rejected? && similar_applications.size.positive? && similar_applications.all?(&:rejected?)
-            similar_application_ids = similar_applications.map(&:id)
+            similar_application_ids = (similar_applications << npq_application).sort_by(&:created_at).reverse.map(&:id)
+            application_id_to_keep = similar_application_ids.delete_at(0) # remove latest one
             applications_ids_to_be_deleted = npq_application_ids & similar_application_ids
             applications_to_be_deleted = NPQApplication.where(id: applications_ids_to_be_deleted).destroy_all
-            hash[npq_application_id] = "Delete #{applications_to_be_deleted.map { |app| [app.npq_lead_provider.name, app.user_id, app.id] }}"
+            hash[npq_application_id] = "Keep #{application_id_to_keep}. Sync up in NPQ accordingly. Delete #{applications_to_be_deleted.map { |app| [app.npq_lead_provider.name, app.user_id, app.id] }}"
             next
           end
 
