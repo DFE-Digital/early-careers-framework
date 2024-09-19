@@ -289,7 +289,7 @@ GEM
       mutex_m
       nkf
       rack (>= 2.0, < 4)
-    i18n (1.14.5)
+    i18n (1.14.6)
       concurrent-ruby (~> 1.0)
     ice_nine (0.11.2)
     inflection (1.0.0)
@@ -399,7 +399,7 @@ GEM
     public_suffix (6.0.1)
     puma (5.6.9)
       nio4r (~> 2.0)
-    pundit (2.3.2)
+    pundit (2.4.0)
       activesupport (>= 3.0.0)
     pundit-matchers (1.9.0)
       rspec-rails (>= 3.0.0)
