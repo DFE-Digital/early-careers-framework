@@ -1,10 +1,2 @@
 ---
-:shared:
-  :schools:
-  - secondary_contact_email
-  - primary_contact_email
-  :nomination_emails:
-  - sent_to
-  :emails:
-  - to
-  - personalisation
+:shared: {}
