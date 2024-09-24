@@ -16,7 +16,7 @@ module Api
       private
 
         def get_participant_declaration(participant_identity_id)
-          NPQApplication.participant_declaration_finder(participant_identity_id)
+          NPQApplication.completed_participant_declaration_finder(participant_identity_id)
         end
 
         def get_latest_participant_outcome
