@@ -100,8 +100,8 @@ module Oneoffs::NPQ
       declarations = statement_line_items.map(&:participant_declaration).uniq
       eligible_declarations = declarations.select(&:eligible?)
 
-      return unless eligible_declarations.any?
       return unless to_statement.payable?
+      return unless eligible_declarations.any?
 
       service = ParticipantDeclarations::MarkAsPayable.new(to_statement)
       action = service.class.to_s.underscore.humanize.split.last
