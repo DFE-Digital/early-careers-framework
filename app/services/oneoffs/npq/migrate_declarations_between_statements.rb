@@ -97,15 +97,18 @@ module Oneoffs::NPQ
     end
 
     def change_declaration_states_for_to_statement(to_statement, statement_line_items)
-      return unless to_statement.payable?
-
       declarations = statement_line_items.map(&:participant_declaration).uniq
+      eligible_declarations = declarations.select(&:eligible?)
+
+      return unless to_statement.payable?
+      return unless eligible_declarations.any?
+
       service = ParticipantDeclarations::MarkAsPayable.new(to_statement)
       action = service.class.to_s.underscore.humanize.split.last
 
-      record_info("Marking #{declarations.size} declarations as #{action} for #{to_statement.name} statement")
+      record_info("Marking #{eligible_declarations.size} eligible declarations as #{action} for #{to_statement.name} statement")
 
-      declarations.each { |declaration| service.call(declaration) }
+      eligible_declarations.each { |declaration| service.call(declaration) }
     end
 
     def filter_statement_line_items(statement_line_items)

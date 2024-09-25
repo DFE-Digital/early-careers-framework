@@ -221,7 +221,7 @@ describe Oneoffs::NPQ::MigrateDeclarationsBetweenStatements do
       let(:declaration) { create(:npq_participant_declaration, :eligible, cohort:, cpd_lead_provider:) }
       let(:from_statement) { declaration.statements.first }
 
-      it "migrates them to the new statement and makes payable" do
+      it "migrates eligible declarations to the new statement and makes them payable" do
         migrate
 
         declaration.reload
@@ -236,8 +236,45 @@ describe Oneoffs::NPQ::MigrateDeclarationsBetweenStatements do
         expect(instance).to have_recorded_info([
           "Migrating declarations from #{from_statement_name} to #{to_statement_name} for 1 providers",
           "Migrating 1 declarations for #{npq_lead_provider.name}",
-          "Marking 1 declarations as payable for #{to_statement_name} statement",
+          "Marking 1 eligible declarations as payable for #{to_statement_name} statement",
         ])
+      end
+
+      context "when there are declarations awaiting_clawback" do
+        let(:declaration) { create(:npq_participant_declaration, :awaiting_clawback, cohort:, cpd_lead_provider:) }
+        let(:awaiting_clawback_line_item) { declaration.statement_line_items.find(&:awaiting_clawback?) }
+        let(:from_statement) { awaiting_clawback_line_item.statement }
+
+        # Fixes flakey test where the paid statement and awaiting clawback statement can
+        # end up with the same name, resulting in an exception from the migration operation
+        # as we don't allow migrating from paid statements.
+        before { from_statement.update!(name: "#{from_statement.name} - Clawback") }
+
+        it "migrates them, but does not make them payable" do
+          migrate
+
+          declaration.reload
+
+          migrated_statement_line_item = declaration.statement_line_items.find(&:awaiting_clawback?)
+          expect(migrated_statement_line_item.statement).to eq(to_statement)
+          expect(declaration).to be_awaiting_clawback
+          expect(instance.recorded_info).not_to include(/eligible declarations as payable/)
+        end
+      end
+
+      context "when there are declarations are already payable" do
+        let(:declaration) { create(:npq_participant_declaration, :payable, cohort:, cpd_lead_provider:) }
+        let(:from_statement) { declaration.statement_line_items.first.statement }
+
+        it "migrates them, but does not attempt to make them payable" do
+          migrate
+
+          declaration.reload
+
+          expect(declaration.statement_line_items.map(&:statement)).to all(eq(to_statement))
+          expect(declaration).to be_payable
+          expect(instance.recorded_info).not_to include(/eligible declarations as payable/)
+        end
       end
     end
 
