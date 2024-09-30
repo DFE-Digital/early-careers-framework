@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Finance::Statements::NPQDetailsTable, type: :component do
+RSpec.describe Finance::Statements::NPQDetailsTable, type: :component, mid_cohort: true do
   let(:cohort)              { Cohort.current || create(:cohort, :current) }
   let(:cpd_lead_provider)   { create(:cpd_lead_provider, :with_npq_lead_provider) }
   let(:npq_lead_provider)   { cpd_lead_provider.npq_lead_provider }

@@ -21,3 +21,9 @@ RSpec.configure do |config|
     travel_to(Cohort.current.academic_year_start_date + 2.days)
   end
 end
+
+RSpec.configure do |config|
+  config.before(mid_cohort: true) do
+    travel_to(Cohort.current.academic_year_start_date + 6.months)
+  end
+end
