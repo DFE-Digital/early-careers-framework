@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.feature "ECT doing CIP: no validation", type: :feature, mid_cohort: true do
+RSpec.feature "ECT doing CIP: no validation", type: :feature, early_in_cohort: true do
   let!(:participant_details) do
     NewSeeds::Scenarios::Participants::Ects::EctNoValidation
       .new(school_cohort:, full_name: participant_full_name)

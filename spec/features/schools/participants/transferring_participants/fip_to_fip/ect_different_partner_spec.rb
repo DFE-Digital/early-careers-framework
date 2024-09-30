@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "Transferring ECT is with a different lead provider", type: :feature, js: true, mid_cohort: true do
+RSpec.describe "Transferring ECT is with a different lead provider", type: :feature, js: true, early_in_cohort: true do
   before do
     allow_participant_transfer_mailers
     set_participant_data

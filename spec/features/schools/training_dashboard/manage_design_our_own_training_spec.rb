@@ -3,7 +3,7 @@
 require "rails_helper"
 require_relative "./manage_training_steps"
 
-RSpec.describe "Manage Design Our Own training", js: true, mid_cohort: true do
+RSpec.describe "Manage Design Our Own training", js: true, early_in_cohort: true do
   include ManageTrainingSteps
 
   scenario "Design Our Own Induction Coordinator" do

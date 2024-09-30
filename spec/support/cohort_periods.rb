@@ -17,7 +17,7 @@ end
 
 # time travel to after the current cohort opens
 RSpec.configure do |config|
-  config.before(mid_cohort: true) do
+  config.before(early_in_cohort: true) do
     travel_to(Cohort.current.academic_year_start_date + 2.days)
   end
 end
