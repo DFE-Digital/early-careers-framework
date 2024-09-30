@@ -20,17 +20,18 @@ RSpec.describe Partnerships::Report do
   before { freeze_time }
 
   it "creates a new partnership with expected attributes" do
-    expect { result }.to change(Partnership, :count).by 1
-    expect(result).to be_an_instance_of(Partnership)
-
-    expect(result).to have_attributes(
-      school_id: school.id,
-      cohort_id: cohort.id,
-      lead_provider_id: lead_provider.id,
-      delivery_partner_id: delivery_partner.id,
-      pending: false,
-      challenge_deadline: described_class::DEFAULT_CHALLENGE_WINDOW.from_now,
-    )
+    outside_auto_assignment_window do
+      expect { result }.to change(Partnership, :count).by 1
+      expect(result).to be_an_instance_of(Partnership)
+      expect(result).to have_attributes(
+        school_id: school.id,
+        cohort_id: cohort.id,
+        lead_provider_id: lead_provider.id,
+        delivery_partner_id: delivery_partner.id,
+        pending: false,
+        challenge_deadline: described_class::DEFAULT_CHALLENGE_WINDOW.from_now,
+      )
+    end
   end
 
   it "schedules partnership notifications" do
@@ -118,16 +119,18 @@ RSpec.describe Partnerships::Report do
     end
 
     it "updates the existing partnership" do
-      result
+      outside_auto_assignment_window do
+        result
 
-      expect(partnership.reload).to have_attributes(
-        school_id: school.id,
-        cohort_id: cohort.id,
-        lead_provider_id: lead_provider.id,
-        delivery_partner_id: delivery_partner.id,
-        pending: false,
-        challenge_deadline: described_class::DEFAULT_CHALLENGE_WINDOW.from_now,
-      )
+        expect(partnership.reload).to have_attributes(
+          school_id: school.id,
+          cohort_id: cohort.id,
+          lead_provider_id: lead_provider.id,
+          delivery_partner_id: delivery_partner.id,
+          pending: false,
+          challenge_deadline: described_class::DEFAULT_CHALLENGE_WINDOW.from_now,
+        )
+      end
     end
 
     it "updates partnership's report_id" do

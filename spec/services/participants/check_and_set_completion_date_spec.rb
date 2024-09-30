@@ -30,7 +30,7 @@ RSpec.describe Participants::CheckAndSetCompletionDate do
 
   describe "#call" do
     before do
-      inside_registration_window do
+      inside_registration_window(cohort: Cohort.current) do
         allow(DQT::GetInductionRecord).to receive(:call).with(trn:).and_return(dqt_induction_record)
       end
     end
@@ -103,9 +103,13 @@ RSpec.describe Participants::CheckAndSetCompletionDate do
         end
 
         it "try to change the cohort of the participant" do
-          expect(Induction::AmendParticipantCohort).to have_received(:new).with(participant_profile:,
-                                                                                source_cohort_start_year:,
-                                                                                target_cohort_start_year:)
+          expect(Induction::AmendParticipantCohort)
+            .to have_received(:new)
+            .with(
+              participant_profile:,
+              source_cohort_start_year:,
+              target_cohort_start_year:,
+            )
         end
       end
     end
