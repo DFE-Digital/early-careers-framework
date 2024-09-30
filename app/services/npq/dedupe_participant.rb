@@ -15,13 +15,28 @@ module NPQ
     def call
       return if invalid?
 
-      Identity::Transfer.call(from_user: npq_application.user, to_user: primary_user_for_trn)
+      if get_an_identity_id_clash?
+        # If both users have a get_an_identity_id, we transfer to the most recent
+        from_user, to_user = users.sort_by(&:updated_at)
+      else
+        from_user, to_user = users
+      end
+
+      Identity::Transfer.call(from_user:, to_user:)
     end
 
   private
 
+    def users
+      [npq_application.user, primary_user_for_trn]
+    end
+
     def primary_user_for_trn
       Identity::PrimaryUser.find_by(trn:)
+    end
+
+    def get_an_identity_id_clash?
+      users.all? { |user| user.get_an_identity_id.present? }
     end
 
     def trn_validated

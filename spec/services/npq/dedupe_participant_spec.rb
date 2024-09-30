@@ -31,5 +31,24 @@ RSpec.describe NPQ::DedupeParticipant, type: :model do
 
       call
     end
+
+    context "when both users have a get_an_identity_id" do
+      let(:npq_application) { create(:npq_application, user: npq_application_user) }
+      let(:npq_application_user) { create(:user, get_an_identity_id: SecureRandom.uuid) }
+
+      let(:primary_user_for_trn) { create(:teacher_profile, trn: npq_application.teacher_reference_number, user: teacher_profile_user).user }
+      let(:teacher_profile_user) { create(:user, get_an_identity_id: SecureRandom.uuid) }
+
+      before do
+        travel_to(1.week.ago) { npq_application }
+        travel_to(1.month.ago) { primary_user_for_trn }
+      end
+
+      it "transfers to the to_user" do
+        expect(Identity::Transfer).to receive(:call).with(from_user: primary_user_for_trn, to_user: npq_application.user)
+
+        call
+      end
+    end
   end
 end
