@@ -111,7 +111,7 @@ class NPQApplication < ApplicationRecord
   end
 
   def self.completed_participant_declaration_finder(participant_identity_id)
-    ParticipantDeclaration::NPQ.find_by(declaration_type: "completed", participant_profile_id: ParticipantProfile.find_by_participant_identity_id(participant_identity_id)&.id)
+    ParticipantDeclaration::NPQ.billable_or_changeable.for_declaration("completed").find_by(participant_profile_id: ParticipantProfile.find_by_participant_identity_id(participant_identity_id)&.id)
   end
 
   def declared_as_billable?
