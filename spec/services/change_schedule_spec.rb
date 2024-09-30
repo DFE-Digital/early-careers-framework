@@ -135,7 +135,11 @@ RSpec.shared_examples "changing schedule after migrating from a payments frozen 
       it { expect { service.call }.to change { participant_profile.reload.schedule_id }.to(new_schedule.id) }
 
       context "when they have declarations in a non-frozen cohort" do
-        before { create(:participant_declaration, participant_profile:, declaration_type: "retained-1", cohort: new_cohort, state:, course_identifier:, cpd_lead_provider:) }
+        before do
+          travel_to(participant_profile.schedule.milestones.find_by(declaration_type: "retained-1").start_date) do
+            create(:participant_declaration, participant_profile:, declaration_type: "retained-1", cohort: new_cohort, state:, course_identifier:, cpd_lead_provider:)
+          end
+        end
 
         it { is_expected.to be_invalid }
       end

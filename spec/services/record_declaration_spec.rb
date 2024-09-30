@@ -438,7 +438,9 @@ RSpec.describe RecordDeclaration do
       let(:declaration_type) { "retained-1" }
 
       it "creates a declaration, no need to pass evidence_held" do
-        expect(service).to be_valid
+        travel_to(declaration_date) do
+          expect(service).to be_valid
+        end
       end
     end
 
