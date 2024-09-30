@@ -202,7 +202,7 @@ RSpec.describe "ECT has matching lead provider and delivery partner", type: :fea
   def when_i_add_an_invalid_start_date
     legend = "When is #{@participant_data[:full_name]} moving to your school?"
 
-    fill_in_date(legend, with: "25-10-25")
+    fill_in_date(legend, with: "25-10-32")
   end
 
   def when_i_add_a_valid_start_date

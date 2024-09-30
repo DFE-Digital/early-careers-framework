@@ -148,7 +148,7 @@ RSpec.feature "Lead Provider Dashboard", type: :feature, js: true, rutabaga: fal
     when_i_visit_the_schools_page
     and_i_click_on "Big School"
     then_i_should_see "Big School"
-    and_i_should_see "2023 participants"
+    and_i_should_see "#{Cohort.current.start_year} participants"
     and_i_should_see "700001"
     and_i_should_see "Ace Delivery Partner"
     and_i_should_see "Pupil premium above 40%"
@@ -158,7 +158,7 @@ RSpec.feature "Lead Provider Dashboard", type: :feature, js: true, rutabaga: fal
     when_i_visit_the_schools_page
     and_i_click_on "Middle School"
     then_i_should_see "Middle School"
-    and_i_should_see "2023 participants"
+    and_i_should_see "#{Cohort.current.start_year} participants"
     and_i_should_see "700002"
     and_i_should_see "Ace Delivery Partner"
     and_i_should_see "Remote school"
@@ -167,7 +167,7 @@ RSpec.feature "Lead Provider Dashboard", type: :feature, js: true, rutabaga: fal
     when_i_visit_the_schools_page
     and_i_click_on "Small School"
     then_i_should_see "Small School"
-    and_i_should_see "2023 participants"
+    and_i_should_see "#{Cohort.current.start_year} participants"
     and_i_should_see "700003"
     and_i_should_see "Ace Delivery Partner"
     and_i_should_see "Pupil premium above 40% and Remote school"
