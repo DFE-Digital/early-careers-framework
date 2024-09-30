@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 module Identity
-  class TransferError < StandardError; end
-
   class Transfer < BaseService
     def call
       return if to_user == from_user

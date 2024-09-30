@@ -21,7 +21,6 @@ module Api
     rescue_from Api::Errors::InvalidTrainingStatusError, with: :invalid_training_status_response
     rescue_from Api::Errors::MissingNPQContractOrStatementError, with: :missing_npq_contract_or_statement_response
     rescue_from Pagy::VariableError, with: :invalid_pagination_response
-    rescue_from Identity::TransferError, with: :identity_transfer_error_response
 
     def append_info_to_payload(payload)
       super
