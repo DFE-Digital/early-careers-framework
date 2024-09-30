@@ -1,6 +1,11 @@
 name: Refresh migration DB
 description: Backup production DB and restore to migration DB
 
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * *" # Run at midnight.
+
 inputs:
   environment:
     description: The name of the environment
