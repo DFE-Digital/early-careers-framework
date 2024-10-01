@@ -391,7 +391,7 @@ RSpec.describe Induction::AmendParticipantCohort do
           end
         end
 
-        describe "declaration states", mid_cohort: true do
+        describe "declaration states", early_in_cohort: true do
           %i[voided ineligible awaiting_clawback clawed_back].each do |declaration_state|
             context "when the participant has #{declaration_state} declarations and no billable or changeable declarations" do
               before do

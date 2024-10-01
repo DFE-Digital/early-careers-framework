@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "participant-declarations endpoint spec", type: :request do
+RSpec.describe "participant-declarations endpoint spec", type: :request, mid_cohort: true do
   let(:cpd_lead_provider)    { create(:cpd_lead_provider, :with_lead_provider) }
   let(:token)                { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
   let(:bearer_token)         { "Bearer #{token}" }

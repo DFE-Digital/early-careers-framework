@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Finance::ECF::AssuranceReportsController do
+RSpec.describe Finance::ECF::AssuranceReportsController, mid_cohort: true do
   let(:user)                    { create(:user, :finance) }
   let(:cpd_lead_provider)       { create(:cpd_lead_provider, :with_lead_provider) }
   let(:lead_provider)           { cpd_lead_provider.lead_provider }

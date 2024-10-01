@@ -12,7 +12,7 @@ end
 
 require "rails_helper"
 
-RSpec.describe "Reporting participants with a known TRN", type: :feature, js: true, mid_cohort: true do
+RSpec.describe "Reporting participants with a known TRN", type: :feature, js: true, early_in_cohort: true do
   let!(:cohort) { Cohort.previous || create(:cohort, :previous) }
   let!(:next_cohort) { Cohort.current || create(:cohort, :current) }
   let!(:current_cohort) { Cohort.current || create(:cohort, :current) }

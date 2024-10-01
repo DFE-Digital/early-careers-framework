@@ -20,17 +20,18 @@ RSpec.describe Partnerships::Report do
   before { freeze_time }
 
   it "creates a new partnership with expected attributes" do
-    expect { result }.to change(Partnership, :count).by 1
-    expect(result).to be_an_instance_of(Partnership)
-
-    expect(result).to have_attributes(
-      school_id: school.id,
-      cohort_id: cohort.id,
-      lead_provider_id: lead_provider.id,
-      delivery_partner_id: delivery_partner.id,
-      pending: false,
-      challenge_deadline: described_class::DEFAULT_CHALLENGE_WINDOW.from_now,
-    )
+    outside_auto_assignment_window do
+      expect { result }.to change(Partnership, :count).by 1
+      expect(result).to be_an_instance_of(Partnership)
+      expect(result).to have_attributes(
+        school_id: school.id,
+        cohort_id: cohort.id,
+        lead_provider_id: lead_provider.id,
+        delivery_partner_id: delivery_partner.id,
+        pending: false,
+        challenge_deadline: described_class::DEFAULT_CHALLENGE_WINDOW.from_now,
+      )
+    end
   end
 
   it "schedules partnership notifications" do
@@ -118,16 +119,18 @@ RSpec.describe Partnerships::Report do
     end
 
     it "updates the existing partnership" do
-      result
+      outside_auto_assignment_window do
+        result
 
-      expect(partnership.reload).to have_attributes(
-        school_id: school.id,
-        cohort_id: cohort.id,
-        lead_provider_id: lead_provider.id,
-        delivery_partner_id: delivery_partner.id,
-        pending: false,
-        challenge_deadline: described_class::DEFAULT_CHALLENGE_WINDOW.from_now,
-      )
+        expect(partnership.reload).to have_attributes(
+          school_id: school.id,
+          cohort_id: cohort.id,
+          lead_provider_id: lead_provider.id,
+          delivery_partner_id: delivery_partner.id,
+          pending: false,
+          challenge_deadline: described_class::DEFAULT_CHALLENGE_WINDOW.from_now,
+        )
+      end
     end
 
     it "updates partnership's report_id" do
@@ -152,7 +155,7 @@ RSpec.describe Partnerships::Report do
   end
 
   context "challenge deadline to 31st October from 2023" do
-    let(:cohort) { create(:cohort, start_year: 2023, academic_year_start_date: Date.new(2023, 9, 1)) }
+    let(:cohort) { create(:cohort, start_year: 2023) }
 
     it "sets the challenge deadline to 31st October when the partnership is created before the 17th October", travel_to: Date.new(2023, 5, 1) do
       expect(result.challenge_deadline).to eq(Date.new(2023, 10, 31))

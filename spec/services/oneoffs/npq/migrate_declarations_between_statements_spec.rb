@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Oneoffs::NPQ::MigrateDeclarationsBetweenStatements do
+describe Oneoffs::NPQ::MigrateDeclarationsBetweenStatements, mid_cohort: true do
   let(:from_statement_updates) { {} }
   let(:to_statement_updates) { {} }
   let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_npq_lead_provider) }

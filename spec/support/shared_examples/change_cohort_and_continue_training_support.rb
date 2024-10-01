@@ -139,7 +139,12 @@ RSpec.shared_examples "can change cohort and continue training" do |participant_
 
     %i[paid payable eligible submitted].each do |billable_or_changeable_declaration_type|
       context "when the participant has a #{billable_or_changeable_declaration_type} declaration for the current cohort" do
-        before { create(declaration_type, :payable, declaration_type: "retained-1", participant_profile:, cpd_lead_provider: participant_profile.lead_provider.cpd_lead_provider) }
+        before do
+          milestone_date = participant_profile.schedule.milestones.find_by(declaration_type: "retained-1").start_date
+          travel_to(milestone_date) do
+            create(declaration_type, :payable, declaration_type: "retained-1", participant_profile:, cpd_lead_provider: participant_profile.lead_provider.cpd_lead_provider)
+          end
+        end
 
         it { is_expected.not_to be_eligible_to_change_cohort_back_to_their_payments_frozen_original(cohort:, current_cohort:) }
       end

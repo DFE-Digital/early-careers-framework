@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Finance::ECF::OutputCalculator do
+RSpec.describe Finance::ECF::OutputCalculator, mid_cohort: true do
   let(:first_statement) { create(:ecf_statement, cpd_lead_provider:, payment_date: 6.months.ago) }
   let(:second_statement) { create(:ecf_statement, cpd_lead_provider:, payment_date: 4.months.ago) }
   let(:third_statement) { create(:ecf_statement, cpd_lead_provider:, payment_date: 2.months.ago) }

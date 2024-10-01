@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.feature "ECT doing CIP: no validation", type: :feature, mid_cohort: true do
+RSpec.feature "ECT doing CIP: no validation", type: :feature, early_in_cohort: true do
   let!(:participant_details) do
     NewSeeds::Scenarios::Participants::Ects::EctNoValidation
       .new(school_cohort:, full_name: participant_full_name)
@@ -27,7 +27,7 @@ RSpec.feature "ECT doing CIP: no validation", type: :feature, mid_cohort: true d
   let(:schedule_identifier) { "ecf-standard-september" }
   let(:cip_material_provider) { "Education Development Trust" }
   let(:cip_materials) { "edt" }
-  let(:start_year) { 2023 }
+  let(:start_year) { Cohort.current.start_year }
   let(:registration_completed) { false }
   let(:participant_status) { "active" }
   let(:training_status) { "active" }

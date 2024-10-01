@@ -3,7 +3,7 @@
 require "rails_helper"
 require_relative "./nominate_induction_tutor_steps"
 
-RSpec.feature "ECT nominate SIT journey", type: :feature, js: true, mid_cohort: true do
+RSpec.feature "ECT nominate SIT journey", type: :feature, js: true, early_in_cohort: true do
   include NominateInductionTutorSteps
 
   let(:academic_year_text) { Cohort.current.description }
