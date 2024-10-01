@@ -35,7 +35,7 @@ RSpec.describe Api::V1::NPQ::ApplicationStatusQuery do
     end
 
     context "when no participant declaration exists" do
-      before { npq_application.destroy }
+      before { participant_declaration.update!(participant_profile: create(:npq_participant_profile)) }
 
       it "returns nil" do
         expect(service.call).to be_nil

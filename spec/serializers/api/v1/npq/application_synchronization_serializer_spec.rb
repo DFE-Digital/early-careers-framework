@@ -5,10 +5,13 @@ require "rails_helper"
 RSpec.describe Api::V1::NPQ::ApplicationSynchronizationSerializer do
   let(:npq_application) { create(:npq_application, :accepted) }
   let(:pick_application) { NPQApplication.where(id: npq_application.id).pick(:lead_provider_approval_status, :id, :participant_identity_id) }
-  let(:participant_declaration) { create(:npq_participant_declaration, cpd_lead_provider: npq_application.npq_lead_provider.cpd_lead_provider, participant_profile: npq_application.profile) }
-  let!(:participant_outcome) { create(:participant_outcome, participant_declaration:) }
-
-  before { participant_declaration.update!(declaration_type: "completed") }
+  let(:declaration_date) { npq_application.profile.schedule.milestones.find_by(declaration_type: "completed").start_date }
+  let!(:participant_declaration) do
+    travel_to declaration_date + 2.days do
+      create(:npq_participant_declaration, declaration_type: "completed", cpd_lead_provider: npq_application.npq_lead_provider.cpd_lead_provider, participant_profile: npq_application.profile, declaration_date:)
+    end
+  end
+  let!(:participant_outcome) { create(:participant_outcome, :failed, participant_declaration:) }
 
   describe "#serializable_hash" do
     it "serialises to the correct structure" do
@@ -21,7 +24,7 @@ RSpec.describe Api::V1::NPQ::ApplicationSynchronizationSerializer do
           attributes: {
             id: npq_application.id,
             lead_provider_approval_status: "accepted",
-            participant_outcome_state: "passed",
+            participant_outcome_state: "failed",
           },
         },
       }

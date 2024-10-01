@@ -12,10 +12,13 @@ RSpec.describe "NPQ Application Status API", type: :request do
   describe "GET /api/v1/npq/application_synchronizations" do
     let(:npq_application) { create(:npq_application, :accepted) }
     let(:pick_application) { NPQApplication.where(id: npq_application.id).pick(:lead_provider_approval_status, :id, :participant_identity_id) }
-    let(:participant_declaration) { create(:npq_participant_declaration, cpd_lead_provider: npq_application.npq_lead_provider.cpd_lead_provider, participant_profile: npq_application.profile) }
-    let!(:participant_outcome) { create(:participant_outcome, participant_declaration:) }
-
-    before { participant_declaration.update!(declaration_type: "completed") }
+    let(:declaration_date) { npq_application.profile.schedule.milestones.find_by(declaration_type: "completed").start_date }
+    let!(:participant_declaration) do
+      travel_to declaration_date + 2.days do
+        create(:npq_participant_declaration, declaration_type: "completed", cpd_lead_provider: npq_application.npq_lead_provider.cpd_lead_provider, participant_profile: npq_application.profile, declaration_date:)
+      end
+    end
+    let!(:participant_outcome) { create(:participant_outcome, :failed, participant_declaration:) }
 
     it_behaves_like "Feature enabled NPQ API endpoint", "GET", "/api/v1/npq/application_synchronizations"
 
@@ -28,7 +31,7 @@ RSpec.describe "NPQ Application Status API", type: :request do
       expect(parsed_response).to be_a(Hash)
       expect(parsed_response["attributes"]["id"]).to eq(npq_application.id.to_s)
       expect(parsed_response["attributes"]["lead_provider_approval_status"]).to eq("accepted")
-      expect(parsed_response["attributes"]["participant_outcome_state"]).to eq("passed")
+      expect(parsed_response["attributes"]["participant_outcome_state"]).to eq("failed")
     end
   end
 end
