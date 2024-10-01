@@ -275,7 +275,7 @@ GEM
     gyoku (1.4.0)
       builder (>= 2.1.2)
       rexml (~> 3.0)
-    hashdiff (1.1.0)
+    hashdiff (1.1.1)
     hashie (5.0.0)
     html-attributes-utils (1.0.2)
       activesupport (>= 6.1.4.4)
@@ -484,7 +484,7 @@ GEM
     retriable (3.1.2)
     reverse_markdown (2.1.1)
       nokogiri
-    rexml (3.3.7)
+    rexml (3.3.8)
     rouge (4.4.0)
     rspec-core (3.13.1)
       rspec-support (~> 3.13.0)
@@ -675,7 +675,7 @@ GEM
       activemodel (>= 6.0.0)
       bindex (>= 0.4.0)
       railties (>= 6.0.0)
-    webmock (3.23.1)
+    webmock (3.24.0)
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
@@ -793,7 +793,7 @@ DEPENDENCIES
   tzinfo-data
   wdm (~> 0.1)
   web-console (~> 4.2.1)
-  webmock (~> 3.23)
+  webmock (~> 3.24)
   with_model
   zendesk_api
 
