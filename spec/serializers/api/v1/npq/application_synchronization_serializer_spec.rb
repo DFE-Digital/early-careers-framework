@@ -7,10 +7,6 @@ RSpec.describe Api::V1::NPQ::ApplicationSynchronizationSerializer do
   let(:pick_application) { NPQApplication.where(id: npq_application.id).pick(:lead_provider_approval_status, :id, :participant_identity_id) }
   let(:participant_declaration) { create(:npq_participant_declaration, cpd_lead_provider: npq_application.npq_lead_provider.cpd_lead_provider, participant_profile: npq_application.profile) }
   let!(:participant_outcome) { create(:participant_outcome, participant_declaration:) }
-  let(:state) do
-    participant_declaration_id = NPQApplication.completed_participant_declaration_finder(pick_application.last).id
-    ParticipantOutcome::NPQ.latest_per_declaration.find_by_participant_declaration_id(participant_declaration_id).state
-  end
 
   before { participant_declaration.update!(declaration_type: "completed") }
 

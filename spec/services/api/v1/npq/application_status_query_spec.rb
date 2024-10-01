@@ -3,9 +3,9 @@
 require "rails_helper"
 
 RSpec.describe Api::V1::NPQ::ApplicationStatusQuery do
-  let(:participant_declaration) { create(:npq_participant_declaration) }
-  let(:participant_profile) { participant_declaration.participant_profile }
-  let(:npq_application) { create(:npq_application, :accepted, npq_course: participant_profile.npq_course, npq_lead_provider: participant_declaration.cpd_lead_provider.npq_lead_provider, participant_identity_id: participant_profile.participant_identity_id) }
+  let(:npq_application) { create(:npq_application, :accepted) }
+  let(:participant_profile) { npq_application.profile }
+  let(:participant_declaration) { create(:npq_participant_declaration, cpd_lead_provider: npq_application.npq_lead_provider.cpd_lead_provider, participant_profile:) }
   let!(:participant_outcome) { create(:participant_outcome, participant_declaration:) }
   let(:service) { described_class.new(npq_application) }
 
