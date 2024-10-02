@@ -181,7 +181,7 @@ group :test do
   gem "shoulda-matchers", "~> 5.3"
   gem "simplecov"
   gem "site_prism", "~> 3.7"
-  gem "webmock", "~> 3.23"
+  gem "webmock", "~> 3.24"
   gem "with_model"
 end
 
