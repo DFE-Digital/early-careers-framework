@@ -144,6 +144,42 @@ module Induction
       end
     end
 
+    # Returns the school cohort for the target_cohort
+    # If this is a cohort change of a participant in a cohort with payments frozen and eligible to be moved to the current
+    # registration cohort, it will create/update the school cohort to FIP if there is no default induction programme and will
+    # set a default induction programme from the previous school cohort default providers or no partnership if they are not
+    # providing training this year.
+    def find_or_create_target_school_cohort
+      school_cohort = SchoolCohort.find_by(school:, cohort: target_cohort)
+
+      if transfer_from_payments_frozen_cohort? &&
+          participant_profile.eligible_to_change_cohort_and_continue_training?(cohort: target_cohort)
+        school_cohort ||= SchoolCohort.full_induction_programme.new(cohort: target_cohort, school:)
+        unless school_cohort.default_induction_programme
+          default_induction_programme = fip_induction_programme_for(school_cohort)
+          school_cohort.update!(induction_programme_choice: :full_induction_programme, default_induction_programme:)
+        end
+      end
+
+      school_cohort
+    end
+
+    def fip_induction_programme_for(school_cohort)
+      previous_school_cohort = school_cohort.previous
+      lead_provider_id = previous_school_cohort&.default_lead_provider_id
+      delivery_partner_id = previous_school_cohort&.default_delivery_partner_id
+
+      if ProviderRelationship.exists?(lead_provider_id:, delivery_partner_id:, cohort_id: target_cohort.id)
+        partnership = Partnership.find_or_create_by!(school_id: school_cohort.school_id,
+                                                     cohort_id: school_cohort.cohort_id,
+                                                     lead_provider_id:,
+                                                     delivery_partner_id:,
+                                                     relationship: false)
+      end
+
+      InductionProgramme.full_induction_programme.create!(school_cohort:, partnership:)
+    end
+
     def induction_programme
       @induction_programme ||= if induction_record && in_target_cohort?(induction_record)
                                  induction_record.induction_programme
@@ -199,7 +235,7 @@ module Induction
     end
 
     def target_school_cohort
-      @target_school_cohort ||= SchoolCohort.find_by(school:, cohort: target_cohort)
+      @target_school_cohort ||= find_or_create_target_school_cohort
     end
 
     def payments_frozen_transfer?

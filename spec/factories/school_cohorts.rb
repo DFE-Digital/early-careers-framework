@@ -61,6 +61,10 @@ FactoryBot.define do
       induction_programme_choice { "core_induction_programme" }
     end
 
+    trait :no_early_career_teachers do
+      induction_programme_choice { "no_early_career_teachers" }
+    end
+
     trait :school_funded_fip do
       induction_programme_choice { "school_funded_fip" }
     end
