@@ -553,6 +553,7 @@ class SchoolMailer < ApplicationMailer
 
   def sit_pre_term_reminder_to_report_any_changes
     induction_coordinator = params[:induction_coordinator]
+    nomination_url = params[:nomination_url]
     sit_name = induction_coordinator.user.full_name
     email_address = induction_coordinator.user.email
 
@@ -564,6 +565,7 @@ class SchoolMailer < ApplicationMailer
       personalisation: {
         name: sit_name,
         email_address:,
+        nomination_link: nomination_url,
       },
     ).tag(:sit_pre_term_reminder_to_report_any_changes).associate_with(induction_coordinator, as: :induction_coordinator_profile)
   end
