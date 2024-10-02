@@ -551,10 +551,12 @@ RSpec.describe SchoolMailer, type: :mailer do
   describe "#sit_pre_term_reminder_to_report_any_changes" do
     let(:induction_coordinator) { create(:seed_induction_coordinator_profile, :with_user) }
     let(:email_address) { induction_coordinator.user.email }
+    let(:nomination_link) { "https://ecf-dev.london.cloudapps/nominations/start?token=123" }
 
     let(:sit_pre_term_reminder_to_report_any_changes) do
       SchoolMailer.with(
         induction_coordinator:,
+        nomination_link:,
       ).sit_pre_term_reminder_to_report_any_changes.deliver_now
     end
 
