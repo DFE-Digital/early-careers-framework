@@ -275,7 +275,7 @@ GEM
     gyoku (1.4.0)
       builder (>= 2.1.2)
       rexml (~> 3.0)
-    hashdiff (1.1.0)
+    hashdiff (1.1.1)
     hashie (5.0.0)
     html-attributes-utils (1.0.2)
       activesupport (>= 6.1.4.4)
@@ -484,8 +484,7 @@ GEM
     retriable (3.1.2)
     reverse_markdown (2.1.1)
       nokogiri
-    rexml (3.3.6)
-      strscan
+    rexml (3.3.8)
     rouge (4.4.0)
     rspec-core (3.13.1)
       rspec-support (~> 3.13.0)
@@ -572,7 +571,7 @@ GEM
     scss_lint-govuk (0.2.0)
       scss_lint
     secure_headers (6.7.0)
-    selenium-webdriver (4.24.0)
+    selenium-webdriver (4.25.0)
       base64 (~> 0.2)
       logger (~> 1.4)
       rexml (~> 3.2, >= 3.2.5)
@@ -580,14 +579,14 @@ GEM
       websocket (~> 1.0)
     semantic_logger (4.16.0)
       concurrent-ruby (~> 1.0)
-    sentry-rails (5.19.0)
+    sentry-rails (5.20.1)
       railties (>= 5.0)
-      sentry-ruby (~> 5.19.0)
-    sentry-ruby (5.19.0)
+      sentry-ruby (~> 5.20.1)
+    sentry-ruby (5.20.1)
       bigdecimal
       concurrent-ruby (~> 1.0, >= 1.0.2)
-    sentry-sidekiq (5.19.0)
-      sentry-ruby (~> 5.19.0)
+    sentry-sidekiq (5.20.1)
+      sentry-ruby (~> 5.20.1)
       sidekiq (>= 3.0)
     shoulda-matchers (5.3.0)
       activesupport (>= 5.2.0)
@@ -643,7 +642,6 @@ GEM
     stringio (3.1.1)
     strong_migrations (1.8.0)
       activerecord (>= 5.2)
-    strscan (3.1.0)
     thor (1.3.2)
     thread_safe (0.3.6)
     tilt (2.3.0)
@@ -677,11 +675,11 @@ GEM
       activemodel (>= 6.0.0)
       bindex (>= 0.4.0)
       railties (>= 6.0.0)
-    webmock (3.23.1)
+    webmock (3.24.0)
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
-    webrick (1.8.1)
+    webrick (1.8.2)
     websocket (1.2.11)
     websocket-driver (0.7.6)
       websocket-extensions (>= 0.1.0)
@@ -795,7 +793,7 @@ DEPENDENCIES
   tzinfo-data
   wdm (~> 0.1)
   web-console (~> 4.2.1)
-  webmock (~> 3.23)
+  webmock (~> 3.24)
   with_model
   zendesk_api
 

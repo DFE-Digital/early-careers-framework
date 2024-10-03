@@ -24,7 +24,7 @@ RSpec.shared_examples "redirects to start nomination" do |how_to_continue|
   end
 end
 
-RSpec.describe "Choosing how to continue with nominations", type: :request, mid_cohort: true do
+RSpec.describe "Choosing how to continue with nominations", type: :request, early_in_cohort: true do
   let!(:cohort) { create(:cohort, :current) }
 
   describe "GET /nominations/start" do

@@ -229,8 +229,9 @@ module BulkMailers
         .find_each do |school|
         school.induction_coordinator_profiles.each do |induction_coordinator|
           email_count += 1
+          nomination_url = nomination_url(email: induction_coordinator.user.email, school:)
 
-          SchoolMailer.with(induction_coordinator:).sit_pre_term_reminder_to_report_any_changes.deliver_later(wait: get_waiting_time(email_count))
+          SchoolMailer.with(induction_coordinator:, nomination_url:).sit_pre_term_reminder_to_report_any_changes.deliver_later(wait: get_waiting_time(email_count))
         end
       end
 

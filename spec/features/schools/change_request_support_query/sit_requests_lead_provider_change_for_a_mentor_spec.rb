@@ -3,7 +3,7 @@
 require "rails_helper"
 require_relative "../training_dashboard/manage_training_steps"
 
-RSpec.describe "Induction coordinator requests lead provider change for a mentor", js: true, mid_cohort: true do
+RSpec.describe "Induction coordinator requests lead provider change for a mentor", js: true, early_in_cohort: true do
   include ManageTrainingSteps
 
   scenario "SIT makes support query to change lead provider" do

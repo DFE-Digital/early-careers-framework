@@ -381,11 +381,17 @@ RSpec.describe BulkMailers::SchoolReminderComms, type: :mailer do
 
   describe "#contact_sits_pre_term_to_report_any_changes" do
     context "when a school rans FIP or CIP and has not opted out of updates" do
+      let(:nomination_url) { "http://nomination.example.com" }
+
+      before do
+        allow(service).to receive(:nomination_url).with(email: sit_profile.user.email, school:).and_return(nomination_url)
+      end
+
       it "mails the induction coordinator" do
         expect {
           service.contact_sits_pre_term_to_report_any_changes
         }.to have_enqueued_mail(SchoolMailer, :sit_pre_term_reminder_to_report_any_changes)
-          .with(params: { induction_coordinator: sit_profile }, args: [])
+          .with(params: { induction_coordinator: sit_profile, nomination_url: }, args: [])
       end
     end
 

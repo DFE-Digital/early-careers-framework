@@ -26,7 +26,7 @@ runs:
         azure-credentials: ${{ inputs.azure-credentials }}
 
     - name: Install kubectl
-      uses: azure/setup-kubectl@v3
+      uses: DFE-Digital/github-actions/set-kubectl@master
 
     - name: Install konduit
       shell: bash

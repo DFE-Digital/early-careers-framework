@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "Transferring a mentor weith matching lead provider and delivery partner", type: :feature, js: true, mid_cohort: true do
+RSpec.describe "Transferring a mentor weith matching lead provider and delivery partner", type: :feature, js: true, early_in_cohort: true do
   before do
     allow_participant_transfer_mailers
     set_participant_data
@@ -129,7 +129,7 @@ RSpec.describe "Transferring a mentor weith matching lead provider and delivery 
   def when_i_add_a_valid_start_date
     legend = "When is #{@participant_data[:full_name]} moving to your school?"
 
-    fill_in_date(legend, with: "2023-10-24")
+    fill_in_date(legend, with: "#{Cohort.current.start_year}-10-24")
   end
 
   def when_i_select(option)

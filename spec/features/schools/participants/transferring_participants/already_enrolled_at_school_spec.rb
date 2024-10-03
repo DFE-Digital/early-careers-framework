@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "Transferring participants", type: :feature, js: true, rutabaga: false, mid_cohort: true do
+RSpec.describe "Transferring participants", type: :feature, js: true, rutabaga: false, early_in_cohort: true do
   context "Participant is already enrolled at the school" do
     before do
       set_participant_data

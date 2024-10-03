@@ -60,6 +60,7 @@ module "postgres" {
   azure_enable_monitoring        = var.enable_monitoring
   azure_extensions               = ["citext", "fuzzystrmatch", "pg_stat_statements", "pgcrypto", "plpgsql", "uuid-ossp"]
   azure_maintenance_window       = var.azure_maintenance_window
+  server_version                 = "14"
 }
 
 module "postgres-snapshot" {
@@ -82,6 +83,7 @@ module "postgres-snapshot" {
   azure_enable_backup_storage    = false
   azure_enable_monitoring        = false
   azure_extensions               = ["citext", "fuzzystrmatch", "pg_stat_statements", "pgcrypto", "plpgsql", "uuid-ossp"]
+  server_version                 = "14"
 }
 
 resource "azurerm_postgresql_flexible_server_database" "analytics" {

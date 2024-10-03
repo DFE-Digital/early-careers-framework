@@ -4,7 +4,7 @@ require "rails_helper"
 require_relative "../../../training_dashboard/manage_training_steps"
 require_relative "./common_steps"
 
-RSpec.describe "SIT adding mentor", js: true, mid_cohort: true do
+RSpec.describe "SIT adding mentor", js: true, early_in_cohort: true do
   include ManageTrainingSteps
 
   scenario "Induction tutor adds a new mentor when cohort is frozen" do

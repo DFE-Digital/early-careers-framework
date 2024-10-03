@@ -4,7 +4,7 @@ require "rails_helper"
 require_relative "../../../training_dashboard/manage_training_steps"
 require_relative "./common_steps"
 
-RSpec.describe "SIT adding an ECT", js: true, mid_cohort: true do
+RSpec.describe "SIT adding an ECT", js: true, early_in_cohort: true do
   include ManageTrainingSteps
 
   scenario "when target cohort payments are frozen" do
