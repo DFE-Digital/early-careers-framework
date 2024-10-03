@@ -55,7 +55,7 @@ module Identity
       if from_id.present?
         # validations prevent changes to this value under normal circumstances
         from_user.update_attribute(:get_an_identity_id, nil) # rubocop:disable Rails/SkipsModelValidations
-        to_user.update!(get_an_identity_id: from_id) if to_id.blank?
+        to_user.update_attribute(:get_an_identity_id, from_id) if to_id.blank? || from_user.created_at > to_user.created_at
       end
     end
 
