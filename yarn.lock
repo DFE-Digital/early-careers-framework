@@ -1767,12 +1767,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.25.6":
-  version: 7.25.6
-  resolution: "@babel/runtime@npm:7.25.6"
+"@babel/runtime@npm:^7.25.7":
+  version: 7.25.7
+  resolution: "@babel/runtime@npm:7.25.7"
   dependencies:
     regenerator-runtime: "npm:^0.14.0"
-  checksum: d6143adf5aa1ce79ed374e33fdfd74fa975055a80bc6e479672ab1eadc4e4bfd7484444e17dd063a1d180e051f3ec62b357c7a2b817e7657687b47313158c3d2
+  checksum: 86b7829d2fc9343714a9afe92757cf96c4dc799006ca61d73cda62f4b9e29bfa1ce36794955bc6cb4c188f5b10db832c949339895e1bbe81a69022d9d578ce29
   languageName: node
   linkType: hard
 
@@ -3878,7 +3878,7 @@ __metadata:
     "@babel/plugin-proposal-object-rest-spread": "npm:^7.20.7"
     "@babel/plugin-transform-runtime": "npm:^7.25.4"
     "@babel/preset-env": "npm:^7.25.4"
-    "@babel/runtime": "npm:^7.25.6"
+    "@babel/runtime": "npm:^7.25.7"
     "@sentry/browser": "npm:^6.19.7"
     "@sentry/tracing": "npm:^6.19.7"
     accessible-autocomplete: "npm:^2.0.3"
