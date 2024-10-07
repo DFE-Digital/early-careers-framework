@@ -110,8 +110,10 @@ class NPQApplication < ApplicationRecord
     UK_CATCHMENT_AREA.include?(teacher_catchment)
   end
 
-  def self.participant_declaration_finder(participant_identity_id)
-    ParticipantDeclaration::NPQ.find_by_participant_profile_id(ParticipantProfile.find_by_participant_identity_id(participant_identity_id)&.id)
+  def latest_completed_participant_declaration
+    return unless profile
+
+    profile.participant_declarations.npq.for_declaration("completed").billable_or_changeable.order(created_at: :desc).first
   end
 
   def declared_as_billable?

@@ -731,22 +731,35 @@ RSpec.describe NPQApplication, type: :model do
     end
   end
 
-  describe "#self.participant_declaration_finder" do
+  describe "#latest_completed_participant_declaration" do
     context "when participant_declaration not exist" do
       let(:npq_application) { create(:npq_application) }
 
       it "returns nil" do
-        result = described_class.participant_declaration_finder(npq_application.participant_identity_id)
+        result = npq_application.latest_completed_participant_declaration
         expect(result).to eq(nil)
       end
     end
 
     context "when participant_declaration exist" do
-      let(:participant_declaration) { create(:npq_participant_declaration) }
-      let(:npq_application) { create(:npq_application, participant_identity_id: participant_declaration.participant_profile.participant_identity.id) }
-      it "returns participant_declaration" do
-        result = described_class.participant_declaration_finder(npq_application.participant_identity_id)
-        expect(result).to eq(participant_declaration)
+      let(:npq_application) { create(:npq_application, :accepted) }
+      let(:participant_profile) { npq_application.profile }
+      let!(:participant_declaration) { create(:npq_participant_declaration, cpd_lead_provider: npq_application.npq_lead_provider.cpd_lead_provider, participant_profile:) }
+
+      context "when declaration is not completed" do
+        it "returns nil" do
+          result = npq_application.latest_completed_participant_declaration
+          expect(result).to eq(nil)
+        end
+      end
+
+      context "when declaration is completed" do
+        before { participant_declaration.update!(declaration_type: "completed") }
+
+        it "returns participant_declaration" do
+          result = npq_application.latest_completed_participant_declaration
+          expect(result).to eq(participant_declaration)
+        end
       end
     end
   end
