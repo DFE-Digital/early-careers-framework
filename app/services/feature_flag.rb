@@ -25,6 +25,7 @@ class FeatureFlag
     school_participant_status_language
     npq_capping
     registration_pilot_school
+    ecf_jobs_disabled
   ].freeze
 
   FEATURES = (PERMANENT_SETTINGS + TEMPORARY_FEATURE_FLAGS).index_with { |name|

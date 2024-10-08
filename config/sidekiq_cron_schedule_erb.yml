@@ -1,59 +1,75 @@
+---
 session_trim:
   cron: "0 1 * * *"
   class: "SessionTrimJob"
   queue: default
+  status: <%= FeatureFlag.active?(:ecf_jobs_disabled) ? "disabled" : "enabled" %>
 stream_big_query_participant_declarations:
   cron: "0 * * * *"
   class: "StreamBigQueryParticipantDeclarationsJob"
   queue: default
+  status: "enabled"
 import_gias_data:
   cron: "0 6 * * *"
   class: "ImportGiasDataJob"
   queue: default
+  status: <%= FeatureFlag.active?(:ecf_jobs_disabled) ? "disabled" : "enabled" %>
 school_analytics:
   cron: "10 * * * *"
   class: "SchoolAnalyticsJob"
   queue: default
+  status: <%= FeatureFlag.active?(:ecf_jobs_disabled) ? "disabled" : "enabled" %>
 check_no_induction_or_no_qts_participants:
   cron: "0 7 * * 1"
   class: "CheckParticipantsInductionAndQtsJob"
   queue: default
+  status: <%= FeatureFlag.active?(:ecf_jobs_disabled) ? "disabled" : "enabled" %>
 check_eligible_ects_that_failed_permanent_cohort_setup:
   cron: "0 11 * * 1"
   class: "CheckEligibleEctsThatFailedPermanentCohortSetupJob"
   queue: default
+  status: <%= FeatureFlag.active?(:ecf_jobs_disabled) ? "disabled" : "enabled" %>
 enrol_school_cohorts:
   cron: "0 3 * * *"
   class: "EnrolSchoolCohortsJob"
+  status: <%= FeatureFlag.active?(:ecf_jobs_disabled) ? "disabled" : "enabled" %>
 transition_statements_to_payable:
   cron: "@daily"
   class: "Finance::Statements::MarkAsPayable"
   queue: default
+  status: <%= FeatureFlag.active?(:ecf_jobs_disabled) ? "disabled" : "enabled" %>
 remove_school_mentor_job:
   cron: "45 4 * * *"
   class: "RemoveSchoolMentorJob"
   queue: default
+  status: <%= FeatureFlag.active?(:ecf_jobs_disabled) ? "disabled" : "enabled" %>
 send_outcomes_to_qualified_teachers_api:
   cron: "*/10 * * * *"
   class: "ParticipantOutcomes::BatchSendLatestOutcomesJob"
   queue: participant_outcomes
+  status: <%= FeatureFlag.active?(:ecf_jobs_disabled) ? "disabled" : "enabled" %>
 build_completion_candidates_list_job:
   cron: "15 23 * * 1,4"
   class: "BuildCompletionCandidatesListJob"
   queue: default
+  status: <%= FeatureFlag.active?(:ecf_jobs_disabled) ? "disabled" : "enabled" %>
 set_participant_completion_date_job:
   cron: "*/2 0-8 * * *"
   class: "SetParticipantCompletionDateJob"
   queue: default
+  status: <%= FeatureFlag.active?(:ecf_jobs_disabled) ? "disabled" : "enabled" %>
 detect_sidekiq_metrics_issues_job:
   cron: "0 * * * *"
   class: "DetectSidekiqMetricsIssuesJob"
   queue: slack_alerts
+  status: "enabled"
 send_entity_table_checks_to_bigquery:
   cron: "30 0 * * *"
   class: "DfE::Analytics::EntityTableCheckJob"
   queue: dfe_analytics
+  status: "enabled"
 send_email_schedules:
   cron: "0 12 * * *"
   class: "Admin::EmailSchedulesJob"
   queue: default
+  status: <%= FeatureFlag.active?(:ecf_jobs_disabled) ? "disabled" : "enabled" %>
