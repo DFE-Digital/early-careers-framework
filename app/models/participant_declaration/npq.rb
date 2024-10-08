@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ParticipantDeclaration::NPQ < ParticipantDeclaration
+  include ReadOnlyModel
+
   QUALIFICATION_TYPES = {
     "npq-leading-teaching" => "NPQLT",
     "npq-leading-behaviour-culture" => "NPQLBC",

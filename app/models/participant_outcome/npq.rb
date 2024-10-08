@@ -3,6 +3,8 @@
 class ParticipantOutcome::NPQ < ApplicationRecord
   has_paper_trail
 
+  include ReadOnlyModel
+
   self.table_name = "participant_outcomes"
 
   VALID_STATES = %i[passed failed voided].freeze
