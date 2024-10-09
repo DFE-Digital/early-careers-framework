@@ -125,7 +125,7 @@ RSpec.describe Induction::AmendParticipantCohort do
         end
       end
 
-      context "when the participant is transferred from their their payments-frozen cohort to the currently one open for registration" do
+      context "when the participant is transferred from their payments-frozen cohort to the currently one open for registration" do
         let(:target_cohort_start_year) { Cohort.active_registration_cohort.start_year }
 
         before do
@@ -134,12 +134,49 @@ RSpec.describe Induction::AmendParticipantCohort do
 
         context "when the participant is eligible to be transferred" do
           before do
+            Induction::Enrol.call(participant_profile:,
+                                  induction_programme: source_school_cohort.default_induction_programme)
             allow(participant_profile).to receive(:eligible_to_change_cohort_and_continue_training?).and_return(true)
           end
 
-          it "do not set errors" do
-            expect(form.save).to be_falsey
-            expect(form.errors[:participant_profile]).to be_blank
+          context "when the target_school_cohort has not been set yet" do
+            it "creates it and move the participant there" do
+              expect(form.save).to be_truthy
+              expect(form.participant_profile.latest_induction_record.cohort_start_year).to eq(target_cohort_start_year)
+            end
+          end
+
+          context "when the target_school_cohort has no default_induction_programme" do
+            let(:lead_provider) { LeadProvider.find_or_create_by!(name: "Ambition Institute") }
+            let(:delivery_partner) { source_school_cohort.default_delivery_partner }
+
+            before do
+              create(:school_cohort, :no_early_career_teachers, school:, cohort: target_cohort, default_induction_programme: nil)
+              create(:provider_relationship, lead_provider:, delivery_partner:, cohort: target_cohort)
+            end
+
+            it "creates a FIP copying previous providers and move the participant there" do
+              expect(form.save).to be_truthy
+              expect(form.participant_profile.latest_induction_record.cohort_start_year).to eq(target_cohort_start_year)
+              expect(form.participant_profile.latest_induction_record.lead_provider).to eq(lead_provider)
+              expect(form.participant_profile.latest_induction_record.delivery_partner).to eq(delivery_partner)
+            end
+          end
+
+          context "when the target_school_cohort has no default_induction_programme and previous providers are not training this year" do
+            let(:lead_provider) { LeadProvider.find_or_create_by!(name: "Ambition Institute") }
+            let(:delivery_partner) { source_school_cohort.default_delivery_partner }
+
+            before do
+              create(:school_cohort, :no_early_career_teachers, school:, cohort: target_cohort, default_induction_programme: nil)
+            end
+
+            it "creates a FIP with no partnership and move the participant there" do
+              expect(form.save).to be_truthy
+              expect(form.participant_profile.latest_induction_record.cohort_start_year).to eq(target_cohort_start_year)
+              expect(form.participant_profile.latest_induction_record.lead_provider).to be_nil
+              expect(form.participant_profile.latest_induction_record.delivery_partner).to be_nil
+            end
           end
         end
 

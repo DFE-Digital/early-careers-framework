@@ -102,6 +102,20 @@ class SchoolCohort < ApplicationRecord
     induction_programme_choice.in? %w[design_our_own no_early_career_teachers school_funded_fip]
   end
 
+  def previous
+    school.school_cohorts.for_year(start_year - 1).first
+  end
+
+  def default_partnership
+    partnership = default_induction_programme&.partnership
+    partnership unless partnership&.challenged?
+  end
+
+  delegate :lead_provider, to: :default_partnership, allow_nil: true, prefix: :default
+  delegate :delivery_partner, to: :default_partnership, allow_nil: true, prefix: :default
+  delegate :lead_provider_id, to: :default_partnership, allow_nil: true, prefix: :default
+  delegate :delivery_partner_id, to: :default_partnership, allow_nil: true, prefix: :default
+
 private
 
   def update_analytics
