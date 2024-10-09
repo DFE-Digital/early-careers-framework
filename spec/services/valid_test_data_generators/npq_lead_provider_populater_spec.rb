@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
 require "rails_helper"
-require "tasks/valid_test_data_generator/npq_lead_provider_populater"
 
-RSpec.describe ValidTestDataGenerator::NPQLeadProviderPopulater do
+RSpec.describe ValidTestDataGenerators::NPQLeadProviderPopulater do
   let(:npq_lead_provider) { create(:npq_lead_provider) }
   let(:cohort) { create(:cohort, :current) }
   let!(:school) { create(:school) }

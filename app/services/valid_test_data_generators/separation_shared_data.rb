@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
-require "tasks/valid_test_data_generator"
-
-module ValidTestDataGenerator
-  class SeparationSharedData < LeadProviderPopulater
+module ValidTestDataGenerators
+  class SeparationSharedData < ECFLeadProviderPopulater
     class << self
       def call(name:, cohort:)
         new(name:, cohort:)

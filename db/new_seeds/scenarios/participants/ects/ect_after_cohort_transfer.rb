@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "active_support/testing/time_helpers"
+
 module NewSeeds
   module Scenarios
     module Participants

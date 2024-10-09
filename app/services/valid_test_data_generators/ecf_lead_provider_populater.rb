@@ -1,31 +1,24 @@
 # frozen_string_literal: true
 
-require "tasks/school_urn_generator"
-require "tasks/trn_generator"
 require "active_support/testing/time_helpers"
 
-module ValidTestDataGenerator
-  class CompletedMentorGenerator
+module ValidTestDataGenerators
+  class ECFLeadProviderPopulater
     include ActiveSupport::Testing::TimeHelpers
 
     class << self
-      def call(name:, cohort: Cohort.current, total_completed_mentors: 30)
-        new(name:, cohort:).call(total_completed_mentors:)
+      def call(name:, total_schools: 10, participants_per_school: 50, cohort: Cohort.current)
+        new(name:, cohort:).call(total_schools:, participants_per_school:)
       end
     end
 
-    def call(total_completed_mentors:)
-      school = create_fip_school_with_cohort(urn: SchoolURNGenerator.next)
+    def call(total_schools:, participants_per_school:)
+      generate_new_schools(count: total_schools)
 
-      sparsity_uplift = weighted_choice(selection: [true, false], odds: [11, 89])
-      pupil_premium_uplift = weighted_choice(selection: [true, false], odds: [11, 39])
-
-      total_completed_mentors.times do
-        mentor = create_mentor(school:, sparsity_uplift:, pupil_premium_uplift:)
-
-        completion_date = rand(10..100).days.from_now.to_date
-        completion_reason = ParticipantProfile::Mentor.mentor_completion_reasons.values.sample
-        mentor.complete_training!(completion_date:, completion_reason:)
+      lead_provider.schools.order("created_at desc").limit(total_schools).each do |school|
+        sparsity_uplift = weighted_choice(selection: [true, false], odds: [11, 89])
+        pupil_premium_uplift = weighted_choice(selection: [true, false], odds: [11, 39])
+        find_or_create_participants(school:, number_of_participants: participants_per_school, sparsity_uplift:, pupil_premium_uplift:)
       end
     end
 
@@ -34,29 +27,49 @@ module ValidTestDataGenerator
     attr_reader :lead_provider, :cohort
 
     def initialize(name:, cohort:)
-      @lead_provider = ::LeadProvider.find_by!(name:)
+      @lead_provider = ::LeadProvider.find_or_create_by!(name:)
       @cohort = cohort
     end
 
-    def create_mentor(school:, sparsity_uplift:, pupil_premium_uplift:)
-      status = weighted_choice(selection: %w[active withdrawn], odds: [6, 1])
-
-      mentor = create_participant(school_cohort: school_cohort(school:), profile_type: :mentor, status:, sparsity_uplift:, pupil_premium_uplift:)
-      rand(0..3).times do
-        create_participant(school_cohort: school_cohort(school:), profile_type: :ect, mentor_profile: mentor, status:, sparsity_uplift:, pupil_premium_uplift:)
-      end
-
-      mentor
+    def generate_new_schools(count:)
+      count.times { create_fip_school_with_cohort(urn: Helpers::SchoolUrnGenerator.next) }
     end
 
-    def create_participant(school_cohort:, profile_type: :ect, mentor_profile: nil, status: "active", sparsity_uplift: false, pupil_premium_uplift: false)
+    def find_or_create_participants(school:, number_of_participants:, sparsity_uplift:, pupil_premium_uplift:)
+      generate_new_participants(school:, count: number_of_participants - school.ecf_participants.count, sparsity_uplift:, pupil_premium_uplift:) if school.ecf_participants.count < number_of_participants
+    end
+
+    def generate_new_participants(school:, count:, sparsity_uplift:, pupil_premium_uplift:)
+      while count.positive?
+        status = weighted_choice(selection: %w[active withdrawn], odds: [6, 1])
+        profile_type = weighted_choice(selection: %i[mentor ect], odds: [9, 1])
+        participant_identity = create_random_participant_identity
+
+        count -= 1
+        if profile_type == :mentor
+          mentor = create_participant(participant_identity:, school_cohort: school_cohort(school:), profile_type: :mentor, status:, sparsity_uplift:, pupil_premium_uplift:)
+          rand(0..3).times do
+            create_participant(participant_identity:, school_cohort: school_cohort(school:), profile_type: :ect, mentor_profile: mentor, status:, sparsity_uplift:, pupil_premium_uplift:)
+            count -= 1
+          end
+        else
+          create_participant(participant_identity:, school_cohort: school_cohort(school:), profile_type: :ect, status:, sparsity_uplift:, pupil_premium_uplift:)
+        end
+      end
+    end
+
+    def create_random_participant_identity
       name = Faker::Name.name
       user = User.create!(full_name: name, email: Faker::Internet.email(name:))
-      teacher_profile = TeacherProfile.create!(user:, trn: random_or_nil_trn)
-      schedule = ecf_schedules.sample
-      participant_identity = Identity::Create.call(user:, origin: :ecf)
+      TeacherProfile.create!(user:, trn: random_or_nil_trn)
+      Identity::Create.call(user:, origin: :ecf)
+    end
 
-      lead_provider = school_cohort.lead_provider
+    def create_participant(participant_identity:, school_cohort:, profile_type: :ect, mentor_profile: nil, status: "active", sparsity_uplift: false, pupil_premium_uplift: false)
+      user = participant_identity.user
+      teacher_profile = user.teacher_profile
+      schedule = ecf_schedules.sample
+
       cpd_lead_provider = lead_provider.cpd_lead_provider
       statement = Finance::Statement::ECF.where(
         cpd_lead_provider:,
@@ -85,7 +98,7 @@ module ValidTestDataGenerator
 
         Induction::Enrol.call(participant_profile: profile, induction_programme:)
 
-        return profile unless profile.active_record?
+        return unless profile.active_record?
 
         started_declaration = travel_to profile.schedule.milestones.first.start_date + rand(5.days).seconds do
           RecordDeclaration.new(
@@ -96,8 +109,9 @@ module ValidTestDataGenerator
             declaration_type: "started",
           ).call
         end
+        return profile unless started_declaration
 
-        return profile if profile.schedule.milestones.second.start_date > Date.current
+        return if profile.schedule.milestones.second.start_date > Date.current
 
         started_declaration.make_payable!
         started_declaration.update!(
@@ -113,7 +127,7 @@ module ValidTestDataGenerator
           state: started_declaration.state,
         )
 
-        return profile if (profile.schedule.milestones.second.start_date + 1.day) > Time.zone.now
+        return if (profile.schedule.milestones.second.start_date + 1.day) > Time.zone.now
 
         RecordDeclaration.new(
           participant_id: user.tap(&:reload).id,
@@ -144,8 +158,9 @@ module ValidTestDataGenerator
             declaration_type: "started",
           ).call
         end
+        return profile unless started_declaration
 
-        return profile if profile.schedule.milestones.second.start_date > Date.current
+        return if profile.schedule.milestones.second.start_date > Date.current
 
         started_declaration.make_payable!
         started_declaration.update!(
@@ -161,7 +176,7 @@ module ValidTestDataGenerator
           state: started_declaration.state,
         )
 
-        return profile if (profile.schedule.milestones.second.start_date + 1.day) > Time.zone.now
+        return if (profile.schedule.milestones.second.start_date + 1.day) > Time.zone.now
 
         RecordDeclaration.new(
           participant_id: user.tap(&:reload).id,
@@ -202,7 +217,6 @@ module ValidTestDataGenerator
         training_programme: "full_induction_programme",
         school_cohort:,
       )
-      school
     end
 
     def attach_partnership_to_school(school:)
@@ -221,13 +235,57 @@ module ValidTestDataGenerator
     end
 
     def random_or_nil_trn
-      [true, false].sample ? nil : TRNGenerator.next
+      [true, false].sample ? nil : Helpers::TrnGenerator.next
     end
 
     def weighted_choice(selection:, odds:)
       selection.each_with_index.map { |item, index|
         [item] * odds[index]
       }.flatten.sample
+    end
+  end
+
+  class AmbitionSpecificPopulater < ECFLeadProviderPopulater
+    class << self
+      FIRST_AMBITION_SEED_DATA_TIME = ("2022-08-18 13:43".."2022-08-18 13:49")
+
+      def call(name:, total_schools: 3, participants_per_school: 3000, cohort: Cohort.current)
+        generator = new(name:, cohort:)
+
+        generator.remove_old_data(created_at: FIRST_AMBITION_SEED_DATA_TIME)
+        generator.call(total_schools:, participants_per_school:)
+      end
+    end
+
+    def remove_old_data(created_at:)
+      lead_provider.ecf_participants.where(created_at:).find_each(&:destroy)
+      schools = lead_provider.schools.where(created_at:)
+      schools.each do |school|
+        partnership = Partnership.find_by(lead_provider:, school:, cohort:)
+        delivery_partner = partnership.delivery_partner
+        provider_relationship = ProviderRelationship.find_by(lead_provider:,
+                                                             cohort:,
+                                                             delivery_partner:)
+        provider_relationship.destroy!
+        partnership.destroy!
+        delivery_partner.destroy!
+        school_cohort = SchoolCohort.find_by(school:, cohort:, induction_programme_choice: "full_induction_programme")
+        school_cohort.ecf_participant_profiles.destroy_all
+        school_cohort.destroy!
+        school.destroy!
+      end
+    end
+
+    def generate_new_participants(school:, count:, sparsity_uplift:, pupil_premium_uplift:)
+      (count / 2).times do
+        status = "active"
+        mentor = create_participant(participant_identity: create_random_participant_identity, school_cohort: school_cohort(school:), profile_type: :mentor, status:, sparsity_uplift:, pupil_premium_uplift:)
+        create_participant(participant_identity: create_random_participant_identity, school_cohort: school_cohort(school:), profile_type: :ect, mentor_profile: mentor, status:, sparsity_uplift:, pupil_premium_uplift:)
+      end
+    end
+
+    def random_or_nil_trn
+      Helpers::TrnGenerator.next
     end
   end
 end
