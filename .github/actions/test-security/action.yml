@@ -1,0 +1,52 @@
+name: Test security
+description: Run full ZapScan security tests
+
+inputs:
+  url:
+    description: The URL of the deployed environment.
+    required: true
+
+  notify-slack-users:
+    default: "False"
+    description: Whether to notify developers via slack channel
+
+runs:
+  using: composite
+
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Notify Slack of Start
+      if: inputs.notify-slack-users == 'True'
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_USERNAME: Zap2Docker
+        SLACK_TITLE: OWASP full scan starting!
+        SLACK_MESSAGE: Beginning OWasp full scan against ${{ inputs.url }}
+        SLACK_ICON: https://avatars.githubusercontent.com/u/6716868?s=100&v=4
+        MSG_MINIMAL: true
+        SLACK_COLOR: ${{ job.status }}
+        SLACK_WEBHOOK: ${{ steps.key-vault-secrets.outputs.SLACK-WEBHOOK }}
+
+    - name: ZAP FULL Scan
+      uses: zaproxy/action-full-scan@v0.9.0
+      with:
+        target: ${{ inputs.url }}/sandbox
+        rules_file_name: .zap/rules.tsv
+        cmd_options: -m 1 -adIjs
+        allow_issue_writing: true
+        issue_title: ZapScan full Scan report
+        artifact_name: zapscan_report
+
+    - name: Notify Slack of Completion
+      if: inputs.notify-slack-users == 'True'
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_USERNAME: Zap2Docker
+        SLACK_TITLE: OWASP full scan completed!
+        SLACK_MESSAGE: OWasp full scan completed against ${{ inputs.url }}
+        SLACK_ICON: https://avatars.githubusercontent.com/u/6716868?s=100&v=4
+        MSG_MINIMAL: actions url
+        SLACK_COLOR: ${{ job.status }}
+        SLACK_WEBHOOK: ${{ steps.key-vault-secrets.outputs.SLACK-WEBHOOK }}
