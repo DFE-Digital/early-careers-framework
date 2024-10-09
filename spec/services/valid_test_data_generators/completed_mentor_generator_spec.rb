@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
 require "rails_helper"
-require "tasks/valid_test_data_generator/completed_mentor_generator"
 
-RSpec.describe ValidTestDataGenerator::CompletedMentorGenerator do
+RSpec.describe ValidTestDataGenerators::CompletedMentorGenerator do
   let(:cohort) { create(:cohort, :current) }
   let(:lead_provider) { create(:lead_provider, :with_delivery_partner) }
   let(:school) { create(:school) }

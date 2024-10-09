@@ -2,7 +2,7 @@
 
 require "active_support/testing/time_helpers"
 
-module ValidTestDataGenerator
+module ValidTestDataGenerators
   class BasePopulater
     include ActiveSupport::Testing::TimeHelpers
 
@@ -40,7 +40,7 @@ module ValidTestDataGenerator
         headteacher_status: "",
         nino: "",
         school_urn: school.urn,
-        teacher_reference_number: TRNGenerator.next,
+        teacher_reference_number: Helpers::TrnGenerator.next,
         teacher_reference_number_verified: true,
         npq_course:,
         npq_lead_provider: lead_provider,
@@ -53,7 +53,7 @@ module ValidTestDataGenerator
       number_of_participants.times do
         user = create_user!
         participant_identity = Identity::Create.call(user:, origin: :npq)
-        create_application!(lead_provider:, school: School.order("RANDOM()").first, npq_course:, cohort:, participant_identity:)
+        create_application!(lead_provider:, school: School.eligible.order("RANDOM()").first, npq_course:, cohort:, participant_identity:)
       end
     end
 

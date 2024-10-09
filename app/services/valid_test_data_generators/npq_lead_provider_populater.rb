@@ -1,11 +1,6 @@
 # frozen_string_literal: true
 
-require "tasks/school_urn_generator"
-require "tasks/trn_generator"
-require "active_support/testing/time_helpers"
-require "tasks/valid_test_data_generator/base_populater"
-
-module ValidTestDataGenerator
+module ValidTestDataGenerators
   class NPQLeadProviderPopulater < BasePopulater
     def populate
       return unless Rails.env.in?(%w[development review sandbox])
@@ -13,7 +8,7 @@ module ValidTestDataGenerator
       logger.info "NPQLeadProviderPopulater: Started!"
 
       ActiveRecord::Base.transaction do
-        generate_new_schools!
+        generate_new_schools_and_participants!
       end
 
       logger.info "NPQLeadProviderPopulater: Finished!"
@@ -21,12 +16,12 @@ module ValidTestDataGenerator
 
   private
 
-    def generate_new_schools!
-      total_schools.times { create_fip_school_with_cohort!(urn: SchoolURNGenerator.next) }
+    def generate_new_schools_and_participants!
+      total_schools.times { find_or_create_participants! }
     end
 
-    def find_or_create_participants!(school:)
-      generate_new_participants!(school:)
+    def find_or_create_participants!
+      generate_new_participants!(school: School.eligible.order("RANDOM()").first)
     end
 
     def generate_new_participants!(school:)
@@ -56,6 +51,7 @@ module ValidTestDataGenerator
       return if npq_application.profile.blank?
 
       started_declaration = create_started_declarations(npq_application)
+      return npq_application.profile unless started_declaration
 
       return if Faker::Boolean.boolean(true_ratio: 0.3)
 
@@ -90,15 +86,6 @@ module ValidTestDataGenerator
         cpd_lead_provider: npq_application.npq_lead_provider.cpd_lead_provider,
         declaration_type: "started",
       ).call
-    end
-
-    def create_fip_school_with_cohort!(urn:)
-      school = School.find_or_create_by!(urn:) do |s|
-        s.name = Faker::Company.name
-        s.address_line1 = Faker::Address.street_address
-        s.postcode = Faker::Address.postcode
-      end
-      find_or_create_participants!(school:)
     end
   end
 end
