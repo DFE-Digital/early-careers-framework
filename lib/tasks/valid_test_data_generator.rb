@@ -102,7 +102,7 @@ module ValidTestDataGenerator
 
         return unless profile.active_record?
 
-        started_declaration = travel_to profile.schedule.milestones.first.start_date + 2.days do
+        started_declaration = travel_to profile.schedule.milestones.first.start_date + rand(5.days).seconds do
           RecordDeclaration.new(
             participant_id: user.tap(&:reload).id,
             course_identifier: "ecf-induction",
@@ -151,7 +151,7 @@ module ValidTestDataGenerator
 
         return profile unless profile.active_record?
 
-        started_declaration = travel_to profile.schedule.milestones.first.start_date + 2.days do
+        started_declaration = travel_to profile.schedule.milestones.first.start_date + rand(5.days).seconds do
           RecordDeclaration.new(
             participant_id: profile.user.tap(&:reload).id,
             course_identifier: "ecf-mentor",
