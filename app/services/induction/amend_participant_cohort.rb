@@ -173,8 +173,7 @@ module Induction
         partnership = Partnership.find_or_create_by!(school_id: school_cohort.school_id,
                                                      cohort_id: school_cohort.cohort_id,
                                                      lead_provider_id:,
-                                                     delivery_partner_id:,
-                                                     relationship: false)
+                                                     delivery_partner_id:)
       end
 
       InductionProgramme.full_induction_programme.create!(school_cohort:, partnership:)
