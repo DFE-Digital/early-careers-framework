@@ -32,19 +32,6 @@ RSpec.describe NPQApplication, type: :model do
       it { expect { save_and_dedupe_participant }.to change(NPQApplication, :count).by(1) }
       it { expect { save_and_dedupe_participant }.to change(ParticipantIdChange, :count).by(1) }
       it { is_expected.to eq(true) }
-
-      context "when an error is raised during deduping" do
-        before do
-          dedupe_double = instance_double(NPQ::DedupeParticipant)
-          allow(dedupe_double).to receive(:call).and_raise(Identity::TransferError)
-          allow(NPQ::DedupeParticipant).to receive(:new) { dedupe_double }
-        end
-
-        it "does not create a new NPQApplication" do
-          expect { save_and_dedupe_participant }.to raise_error(Identity::TransferError)
-          expect(instance).not_to be_persisted
-        end
-      end
     end
   end
 

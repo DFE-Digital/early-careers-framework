@@ -118,10 +118,30 @@ RSpec.describe Identity::Transfer do
           user2.update!(get_an_identity_id: get_an_identity_id_2)
         end
 
-        it "raises an error" do
-          expect {
-            service.call(from_user: user1, to_user: user2)
-          }.to raise_error(Identity::TransferError, "Identity ids present on both User records: #{user1.id} -> #{user2.id}")
+        it "sets the from user get_an_identity_id to nil" do
+          service.call(from_user: user1, to_user: user2)
+          expect(user1.get_an_identity_id).to be_nil
+        end
+
+        context "when the destination user has a get_an_identity_id" do
+          context "when the from user is more recent" do
+            it "sets the to user get_an_identity_id to the from users" do
+              user2.update_column(:created_at, 1.month.ago)
+              service.call(from_user: user1, to_user: user2)
+
+              expect(user2.get_an_identity_id).to eq get_an_identity_id
+            end
+          end
+
+          context "when the to user is more recent" do
+            it "does not change the to user get_an_identity_id" do
+              user1.update_column(:created_at, 1.month.ago)
+
+              service.call(from_user: user1, to_user: user2)
+
+              expect(user2.get_an_identity_id).to eq get_an_identity_id_2
+            end
+          end
         end
       end
     end
