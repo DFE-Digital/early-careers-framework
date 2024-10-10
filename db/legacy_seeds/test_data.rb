@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "tasks/valid_test_data_generator"
 require "active_support/testing/time_helpers"
 
 include ActiveSupport::Testing::TimeHelpers
@@ -696,11 +695,11 @@ create_cip_mentor_with_eligibility("Different TRN", { different_trn: true })
 create_cip_mentor_with_eligibility("Active Flags", { active_flags: true })
 
 LeadProvider.all.map(&:name).each do |provider|
-  ValidTestDataGenerator::LeadProviderPopulater.call(name: provider, total_schools: 1, participants_per_school: 3)
+  ValidTestDataGenerators::ECFLeadProviderPopulater.call(name: provider, total_schools: 1, participants_per_school: 3)
 end
 
 NPQLeadProvider.all.map(&:name).each do |provider|
-  ValidTestDataGenerator::NPQLeadProviderPopulater.call(name: provider, total_schools: 1, participants_per_school: 3)
+  ValidTestDataGenerators::NPQLeadProviderPopulater.call(name: provider, total_schools: 1, participants_per_school: 3)
 end
 
 # NPQ declarations
