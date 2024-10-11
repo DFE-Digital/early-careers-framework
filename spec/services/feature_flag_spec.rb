@@ -128,8 +128,8 @@ RSpec.describe FeatureFlag do
     end
   end
 
-  describe "Feature :disable_npq_endpoints" do
-    let(:feature_name) { :disable_npq_endpoints }
+  describe "Feature :disable_npq" do
+    let(:feature_name) { :disable_npq }
 
     it "returns true when activated" do
       FeatureFlag.activate(feature_name)
