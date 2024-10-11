@@ -128,6 +128,20 @@ RSpec.describe FeatureFlag do
     end
   end
 
+  describe "Feature :disable_npq" do
+    let(:feature_name) { :disable_npq }
+
+    it "returns true when activated" do
+      FeatureFlag.activate(feature_name)
+      expect(FeatureFlag.active?(feature_name)).to be(true)
+    end
+
+    it "returns false when deactivated" do
+      FeatureFlag.deactivate(feature_name)
+      expect(FeatureFlag.active?(feature_name)).to be(false)
+    end
+  end
+
   def random_record
     create %i[user school].sample
   end
