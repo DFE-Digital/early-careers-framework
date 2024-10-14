@@ -348,7 +348,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request, mid_coh
         end
       end
 
-      context "when using 'disable_npq_endpoints' feature" do
+      context "when using 'disable_npq' feature" do
         let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider) }
         let(:npq_course) { create(:npq_leadership_course) }
         let(:course_identifier) { npq_course.identifier }
@@ -371,8 +371,8 @@ RSpec.describe "participant-declarations endpoint spec", type: :request, mid_coh
           }
         end
 
-        context "when disable_npq_endpoints is true" do
-          before { Rails.application.config.npq_separation = { disable_npq_endpoints: true } }
+        context "when 'disable_npq' feature is active" do
+          before { FeatureFlag.activate(:disable_npq) }
 
           it "returns error response" do
             post "/api/v2/participant-declarations", params: params.to_json
@@ -385,7 +385,9 @@ RSpec.describe "participant-declarations endpoint spec", type: :request, mid_coh
           end
         end
 
-        context "when disable_npq_endpoints is false" do
+        context "when 'disable_npq' feature is not active" do
+          before { FeatureFlag.deactivate(:disable_npq) }
+
           it "returns ok response" do
             post "/api/v2/participant-declarations", params: params.to_json
 

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.shared_examples "Feature enabled NPQ API endpoint" do |action, url|
-  context "when disable_npq_endpoints is true" do
-    before { Rails.application.config.npq_separation = { disable_npq_endpoints: true } }
+  context "when 'disable_npq' feature is active" do
+    before { FeatureFlag.activate(:disable_npq) }
 
     it "raises routing error" do
       expect {

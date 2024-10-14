@@ -97,7 +97,7 @@ RSpec.describe Api::ParticipantDeclarations::Index do
       end
     end
 
-    context "when using 'disable_npq_endpoints' feature" do
+    context "when using 'disable_npq' feature" do
       let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider) }
       let!(:npq_declaration) do
         create(
@@ -116,15 +116,17 @@ RSpec.describe Api::ParticipantDeclarations::Index do
 
       subject { described_class.new(cpd_lead_provider:) }
 
-      context "when disable_npq_endpoints is true" do
-        before { Rails.application.config.npq_separation = { disable_npq_endpoints: true } }
+      context "when 'disable_npq' feature is active" do
+        before { FeatureFlag.activate(:disable_npq) }
 
         it "returns only ecf declarations" do
           expect(subject.scope.to_a).to eql([ecf_declaration])
         end
       end
 
-      context "when disable_npq_endpoints is false" do
+      context "when 'disable_npq' feature is not active" do
+        before { FeatureFlag.deactivate(:disable_npq) }
+
         it "returns both declarations" do
           expect(subject.scope.to_a).to eql([npq_declaration, ecf_declaration])
         end

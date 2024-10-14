@@ -288,7 +288,7 @@ private
   end
 
   def validate_if_npq_course_supported
-    return unless NpqApiEndpoint.disable_npq_endpoints?
+    return unless NpqApiEndpoint.disabled?
 
     if course_identifier.to_s.starts_with?("npq-")
       errors.add(:course_identifier, I18n.t(:npq_course_no_longer_supported))

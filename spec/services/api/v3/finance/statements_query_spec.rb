@@ -159,9 +159,9 @@ RSpec.describe Api::V3::Finance::StatementsQuery do
         end
       end
 
-      context "when using 'disable_npq_endpoints' feature" do
-        context "when disable_npq_endpoints is true" do
-          before { Rails.application.config.npq_separation = { disable_npq_endpoints: true } }
+      context "when using 'disable_npq' feature" do
+        context "when 'disable_npq' feature is active" do
+          before { FeatureFlag.activate(:disable_npq) }
 
           it "returns only ECF statements" do
             expect(subject.statements).to eq([
@@ -171,7 +171,9 @@ RSpec.describe Api::V3::Finance::StatementsQuery do
           end
         end
 
-        context "when disable_npq_endpoints is false" do
+        context "when 'disable_npq' feature is not active" do
+          before { FeatureFlag.deactivate(:disable_npq) }
+
           it "returns all statements" do
             expect(subject.statements).to eq([
               ecf_statement_next_cohort,
@@ -217,7 +219,7 @@ RSpec.describe Api::V3::Finance::StatementsQuery do
         end
       end
 
-      context "when using 'disable_npq_endpoints' feature" do
+      context "when using 'disable_npq' feature" do
         let!(:npq_statement_next_cohort) do
           create(
             :npq_statement,
@@ -228,8 +230,8 @@ RSpec.describe Api::V3::Finance::StatementsQuery do
           )
         end
 
-        context "when disable_npq_endpoints is true" do
-          before { Rails.application.config.npq_separation = { disable_npq_endpoints: true } }
+        context "when 'disable_npq' feature is active" do
+          before { FeatureFlag.activate(:disable_npq) }
 
           context "when requesting ECF statement" do
             let(:params) { { id: ecf_statement_next_cohort.id } }
@@ -248,7 +250,9 @@ RSpec.describe Api::V3::Finance::StatementsQuery do
           end
         end
 
-        context "when disable_npq_endpoints is false" do
+        context "when 'disable_npq' feature is not active" do
+          before { FeatureFlag.deactivate(:disable_npq) }
+
           context "when requesting ECF statement" do
             let(:params) { { id: ecf_statement_next_cohort.id } }
 

@@ -2,12 +2,10 @@
 
 class NpqApiEndpoint
   def self.matches?(_request)
-    !disable_npq_endpoints?
+    !disabled?
   end
 
-  def self.disable_npq_endpoints?
-    return false unless Rails.application.config.respond_to?(:npq_separation)
-
-    !!(Rails.application.config.npq_separation || {})[:disable_npq_endpoints]
+  def self.disabled?
+    FeatureFlag.active?(:disable_npq)
   end
 end
