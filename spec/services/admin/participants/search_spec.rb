@@ -64,6 +64,14 @@ RSpec.describe Admin::Participants::Search do
         end
       end
 
+      describe "partly matching by participant identity email (case insensitively)" do
+        let(:results) { search.call(ParticipantProfile, search_term: "@Example.com") }
+
+        it "returns matching participants" do
+          expect(results).to include(pp_1, pp_2, pp_3)
+        end
+      end
+
       describe "matching by TRN" do
         before { pp_3.teacher_profile.update(trn: "123456") }
 
@@ -145,6 +153,17 @@ RSpec.describe Admin::Participants::Search do
 
         it "doesn't return non-matching participants" do
           expect(results).not_to include(pp_2, pp_3)
+        end
+      end
+
+      context "when 'disable_npq' feature is active" do
+        let(:results) { search.call(ParticipantProfile, search_term: "example.com") }
+
+        before { FeatureFlag.activate(:disable_npq) }
+
+        it "does not return NPQ participants" do
+          expect(results).to include(pp_1, pp_2)
+          expect(results).not_to include(pp_3)
         end
       end
     end
