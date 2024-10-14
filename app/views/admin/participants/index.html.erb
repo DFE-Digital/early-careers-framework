@@ -12,8 +12,9 @@
         OpenStruct.new(id: "", name: ""),
         OpenStruct.new(id: "ParticipantProfile::ECT", name: "ECT"),
         OpenStruct.new(id: "ParticipantProfile::Mentor", name: "Mentor"),
-        OpenStruct.new(id: "ParticipantProfile::NPQ", name: "NPQ"),
-      ],
+      ].tap do |options|
+        options << OpenStruct.new(id: "ParticipantProfile::NPQ", name: "NPQ") unless NpqApiEndpoint.disabled?
+      end
     },
   ],
 ) %>
