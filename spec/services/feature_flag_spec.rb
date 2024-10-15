@@ -52,6 +52,14 @@ RSpec.describe FeatureFlag do
         expect(described_class.active?(feature_name)).to be false
       end
     end
+
+    context "with unknown feature" do
+      it "raises error" do
+        expect {
+          FeatureFlag.activate(:made_up)
+        }.to raise_error(RuntimeError, "Unknown feature: made_up")
+      end
+    end
   end
 
   describe ".deactivate" do
@@ -124,6 +132,40 @@ RSpec.describe FeatureFlag do
       it "does not deactivate the feature for other objects" do
         expect { described_class.deactivate(feature_name, for: object) }
           .not_to change { described_class.active?(feature_name, for: other_object) }
+      end
+    end
+
+    context "with unknown feature" do
+      it "raises error" do
+        expect {
+          FeatureFlag.deactivate(:made_up)
+        }.to raise_error(RuntimeError, "Unknown feature: made_up")
+      end
+    end
+  end
+
+  describe ".active?" do
+    context "when feature is active" do
+      before { FeatureFlag.activate(feature_name) }
+
+      it "returns true" do
+        expect(FeatureFlag.active?(feature_name)).to be(true)
+      end
+    end
+
+    context "when feature is not active" do
+      before { FeatureFlag.deactivate(feature_name) }
+
+      it "returns false" do
+        expect(FeatureFlag.active?(feature_name)).to be(false)
+      end
+    end
+
+    context "with unknown feature" do
+      it "raises error" do
+        expect {
+          FeatureFlag.active?(:made_up)
+        }.to raise_error(RuntimeError, "Unknown feature: made_up")
       end
     end
   end
