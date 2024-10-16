@@ -35,6 +35,12 @@ class FeatureFlag
   def self.activate(feature_name, **opts)
     raise "Unknown feature: #{feature_name}" unless feature_name.in?(FEATURES)
 
+    # FIXME: remove after merging: https://github.com/DFE-Digital/early-careers-framework/pull/5233
+    if feature_name == :disable_npq
+      Rails.application.config.npq_separation = {} unless Rails.application.config.respond_to?(:npq_separation)
+      Rails.application.config.npq_separation = (Rails.application.config.npq_separation || {}).merge({ disable_npq_endpoints: true })
+    end
+
     if opts.key?(:for).present?
       sync_with_database_with_object(feature_name, opts[:for], true)
     else
@@ -45,6 +51,12 @@ class FeatureFlag
   def self.deactivate(feature_name, **opts)
     raise "Unknown feature: #{feature_name}" unless feature_name.in?(FEATURES)
 
+    # FIXME: remove after merging: https://github.com/DFE-Digital/early-careers-framework/pull/5233
+    if feature_name == :disable_npq
+      Rails.application.config.npq_separation = {} unless Rails.application.config.respond_to?(:npq_separation)
+      Rails.application.config.npq_separation = (Rails.application.config.npq_separation || {}).merge({ disable_npq_endpoints: false })
+    end
+
     if opts.key?(:for).present?
       sync_with_database_with_object(feature_name, opts[:for], false)
     else
@@ -54,6 +66,12 @@ class FeatureFlag
 
   def self.active?(feature_name, **opts)
     raise "Unknown feature: #{feature_name}" unless feature_name.in?(FEATURES)
+
+    # FIXME: remove after merging: https://github.com/DFE-Digital/early-careers-framework/pull/5233
+    if feature_name == :disable_npq
+      Rails.application.config.npq_separation = {} unless Rails.application.config.respond_to?(:npq_separation)
+      return !!(Rails.application.config.npq_separation || {})[:disable_npq_endpoints]
+    end
 
     feature = FEATURES[feature_name].feature
     feature.active? || (opts.key?(:for) && feature.selected_objects.exists?(object: opts[:for]))

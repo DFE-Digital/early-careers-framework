@@ -115,4 +115,10 @@ RSpec.describe Finance::Schedule::NPQSpecialist, type: :model do
       end
     end
   end
+
+  describe ".npq?" do
+    it "should return true" do
+      expect(described_class.new.npq?).to be(true)
+    end
+  end
 end
