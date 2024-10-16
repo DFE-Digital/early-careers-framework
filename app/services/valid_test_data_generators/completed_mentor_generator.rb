@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
-require "tasks/school_urn_generator"
-require "tasks/trn_generator"
 require "active_support/testing/time_helpers"
 
-module ValidTestDataGenerator
+module ValidTestDataGenerators
   class CompletedMentorGenerator
     include ActiveSupport::Testing::TimeHelpers
 
@@ -15,7 +13,7 @@ module ValidTestDataGenerator
     end
 
     def call(total_completed_mentors:)
-      school = create_fip_school_with_cohort(urn: SchoolURNGenerator.next)
+      school = create_fip_school_with_cohort(urn: Helpers::SchoolUrnGenerator.next)
 
       sparsity_uplift = weighted_choice(selection: [true, false], odds: [11, 89])
       pupil_premium_uplift = weighted_choice(selection: [true, false], odds: [11, 39])
@@ -96,6 +94,7 @@ module ValidTestDataGenerator
             declaration_type: "started",
           ).call
         end
+        return profile unless started_declaration
 
         return profile if profile.schedule.milestones.second.start_date > Date.current
 
@@ -144,6 +143,7 @@ module ValidTestDataGenerator
             declaration_type: "started",
           ).call
         end
+        return profile unless started_declaration
 
         return profile if profile.schedule.milestones.second.start_date > Date.current
 
@@ -221,7 +221,7 @@ module ValidTestDataGenerator
     end
 
     def random_or_nil_trn
-      [true, false].sample ? nil : TRNGenerator.next
+      [true, false].sample ? nil : Helpers::TrnGenerator.next
     end
 
     def weighted_choice(selection:, odds:)

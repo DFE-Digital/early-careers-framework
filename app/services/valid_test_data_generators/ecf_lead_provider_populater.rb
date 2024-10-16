@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 
-require "tasks/school_urn_generator"
-require "tasks/trn_generator"
 require "active_support/testing/time_helpers"
 
-module ValidTestDataGenerator
-  class LeadProviderPopulater
+module ValidTestDataGenerators
+  class ECFLeadProviderPopulater
     include ActiveSupport::Testing::TimeHelpers
 
     class << self
@@ -34,7 +32,7 @@ module ValidTestDataGenerator
     end
 
     def generate_new_schools(count:)
-      count.times { create_fip_school_with_cohort(urn: SchoolURNGenerator.next) }
+      count.times { create_fip_school_with_cohort(urn: Helpers::SchoolUrnGenerator.next) }
     end
 
     def find_or_create_participants(school:, number_of_participants:, sparsity_uplift:, pupil_premium_uplift:)
@@ -111,7 +109,7 @@ module ValidTestDataGenerator
             declaration_type: "started",
           ).call
         end
-        return unless started_declaration
+        return profile unless started_declaration
 
         return if profile.schedule.milestones.second.start_date > Date.current
 
@@ -160,7 +158,7 @@ module ValidTestDataGenerator
             declaration_type: "started",
           ).call
         end
-        return unless started_declaration
+        return profile unless started_declaration
 
         return if profile.schedule.milestones.second.start_date > Date.current
 
@@ -237,7 +235,7 @@ module ValidTestDataGenerator
     end
 
     def random_or_nil_trn
-      [true, false].sample ? nil : TRNGenerator.next
+      [true, false].sample ? nil : Helpers::TrnGenerator.next
     end
 
     def weighted_choice(selection:, odds:)
@@ -247,7 +245,7 @@ module ValidTestDataGenerator
     end
   end
 
-  class AmbitionSpecificPopulater < LeadProviderPopulater
+  class AmbitionSpecificPopulater < ECFLeadProviderPopulater
     class << self
       FIRST_AMBITION_SEED_DATA_TIME = ("2022-08-18 13:43".."2022-08-18 13:49")
 
@@ -287,127 +285,7 @@ module ValidTestDataGenerator
     end
 
     def random_or_nil_trn
-      TRNGenerator.next
-    end
-  end
-
-  class NPQLeadProviderPopulater
-    class << self
-      def call(name:, total_schools: 10, participants_per_school: 10, cohort: Cohort.current)
-        new(name:, participants_per_school:, cohort:).call(total_schools:)
-      end
-    end
-
-    def call(total_schools: 10)
-      generate_new_schools(count: total_schools)
-    end
-
-  private
-
-    attr_reader :lead_provider, :participants_per_school, :cohort
-
-    def initialize(name:, participants_per_school:, cohort:)
-      @lead_provider = ::NPQLeadProvider.find_or_create_by!(name:)
-      @participants_per_school = participants_per_school
-      @cohort = cohort
-    end
-
-    def generate_new_schools(count:)
-      count.times { create_fip_school_with_cohort(urn: SchoolURNGenerator.next) }
-    end
-
-    def find_or_create_participants(school:, number_of_participants:)
-      generate_new_participants(school:, count: number_of_participants)
-    end
-
-    def generate_new_participants(school:, count:)
-      count.times do
-        create_participant(school:)
-      end
-    end
-
-    def create_participant(school:)
-      name = Faker::Name.name
-      user = User.create!(full_name: name, email: Faker::Internet.email(name:))
-      identity = Identity::Create.call(user:, origin: :npq)
-
-      npq_courses = NPQCourse.all.reject { |c| c.identifier == "npq-early-headship-coaching-offer" }
-      # NPQ-SENCO available only for >= 2024 cohorts
-      npq_course = cohort.start_date >= 2024 ? npq_courses.sample : npq_courses.reject { |c| c.identifier == "npq-senco" }.sample
-
-      npq_application = NPQApplication.create!(
-        active_alert: "",
-        date_of_birth: Date.new(1990, 1, 1),
-        eligible_for_funding: true,
-        funding_choice: "",
-        headteacher_status: "",
-        nino: "",
-        school_urn: school.urn,
-        teacher_reference_number: TRNGenerator.next,
-        teacher_reference_number_verified: true,
-        npq_course:,
-        npq_lead_provider: lead_provider,
-        participant_identity: identity,
-        cohort:,
-      )
-
-      return if [true, false].sample
-
-      accept_application(npq_application)
-
-      return if [true, false].sample
-
-      # skip declarations for future courses
-      return if %w[
-        npq-early-headship-coaching-offer
-        npq-early-years-leadership
-        npq-leading-literacy
-      ].include?(npq_application.npq_course.identifier)
-
-      started_declaration = create_started_declarations(npq_application)
-
-      return if [true, false].sample
-
-      started_declaration.make_eligible!
-
-      return if [true, false].sample
-
-      started_declaration.make_payable!
-    end
-
-    def accept_application(npq_application)
-      npq_contract = NPQContract.where(
-        cohort_id: cohort.id,
-        npq_lead_provider_id: npq_application.npq_lead_provider_id,
-        course_identifier: npq_application.npq_course.identifier,
-      ).first
-      return unless npq_contract
-
-      funded_place = if npq_contract.funding_cap.to_i.positive?
-                       npq_application.eligible_for_funding? ? [true, false].sample : false
-                     end
-
-      NPQ::Application::Accept.new(npq_application:, funded_place:).call
-      npq_application.reload
-    end
-
-    def create_started_declarations(npq_application)
-      RecordDeclaration.new(
-        participant_id: npq_application.user.id,
-        course_identifier: npq_application.npq_course.identifier,
-        declaration_date: (npq_application.profile.schedule.milestones.first.start_date + 1.day).rfc3339,
-        cpd_lead_provider: npq_application.npq_lead_provider.cpd_lead_provider,
-        declaration_type: "started",
-      ).call
-    end
-
-    def create_fip_school_with_cohort(urn:)
-      school = School.find_or_create_by!(urn:) do |s|
-        s.name = Faker::Company.name
-        s.address_line1 = Faker::Address.street_address
-        s.postcode = Faker::Address.postcode
-      end
-      find_or_create_participants(school:, number_of_participants: participants_per_school)
+      Helpers::TrnGenerator.next
     end
   end
 end

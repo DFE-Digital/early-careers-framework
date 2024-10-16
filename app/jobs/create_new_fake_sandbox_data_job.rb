@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "tasks/trn_generator"
-
 class CreateNewFakeSandboxDataJob < ApplicationJob
   EDT_NAME = "Education Development Trust"
 
@@ -35,7 +33,7 @@ class CreateNewFakeSandboxDataJob < ApplicationJob
           headteacher_status: "",
           nino: "",
           school_urn: random_school.urn,
-          teacher_reference_number: TRNGenerator.next,
+          teacher_reference_number: ValidTestDataGenerators::Helpers::TrnGenerator.next,
           teacher_reference_number_verified: true,
           npq_course: NPQCourse.all.sample,
           npq_lead_provider:,

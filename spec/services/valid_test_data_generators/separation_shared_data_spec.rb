@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
 require "rails_helper"
-require "tasks/valid_test_data_generator/separation_shared_data"
 
-RSpec.describe ValidTestDataGenerator::SeparationSharedData do
+RSpec.describe ValidTestDataGenerators::SeparationSharedData do
   let(:cohort) { create(:cohort, :current) }
   let(:lead_provider) { create(:lead_provider, :with_delivery_partner, name: shared_users_data.keys.sample) }
   let(:school) { create(:school) }
