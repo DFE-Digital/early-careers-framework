@@ -44,10 +44,11 @@ class ParticipantProfile::Mentor < ParticipantProfile::ECF
     with_unarchivable_declaration_ids = with_unarchivable_declaration.pluck(:id)
 
     # Mentors ever assigned an ECT
-    with_mentee = InductionRecord.joins(:induction_programme, :participant_profile)
-                                 .where(participant_profiles: { type: "ParticipantProfile::ECT" })
+    with_mentee = InductionRecord.joins(:induction_programme, mentor_profile: { schedule: :cohort })
                                  .where.not(mentor_profile_id: nil)
                                  .where.not(mentor_profile_id: not_fip_ids + with_unarchivable_declaration_ids)
+                                 .where.not(cohorts: { payments_frozen_at: nil })
+                                 .where(participant_profiles: { mentor_completion_date: nil })
     with_mentee = with_mentee.where(mentor_profile_id: restrict_to_participant_ids) if restrict_to_participant_ids.any?
     with_mentee_ids = with_mentee.pluck(:mentor_profile_id).uniq
 
