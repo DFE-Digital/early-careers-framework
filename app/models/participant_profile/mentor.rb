@@ -51,7 +51,7 @@ class ParticipantProfile::Mentor < ParticipantProfile::ECF
     with_mentee = with_mentee.where(mentor_profile_id: restrict_to_participant_ids) if restrict_to_participant_ids.any?
     with_mentee_ids = with_mentee.pluck(:mentor_profile_id).uniq
 
-    # Mentors in a payments frozen cohort with no completion date
+    # Mentors in a payments frozen cohort with no completion date excluding the ones above
     query = joins(schedule: :cohort)
               .where.not(cohorts: { payments_frozen_at: nil })
               .where(mentor_completion_date: nil)
