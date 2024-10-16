@@ -34,6 +34,7 @@ class ParticipantProfile::ECT < ParticipantProfile::ECF
     with_unarchivable_declaration = with_unarchivable_declaration.where(id: restrict_to_participant_ids) if restrict_to_participant_ids.any?
     with_unarchivable_declaration_ids = with_unarchivable_declaration.pluck(:id)
 
+    # ECTs in a payments-frozen cohort with no induction start date or prior to Sept 2021 excluding the ones above
     query = joins(schedule: :cohort)
               .where.not(cohorts: { payments_frozen_at: nil })
               .where(induction_completion_date: nil)
