@@ -24,7 +24,7 @@ class ParticipantProfile::Mentor < ParticipantProfile::ECF
   def self.archivable_from_frozen_cohort(restrict_to_participant_ids: [])
     archivable_states = %i[ineligible voided submitted].freeze
 
-    # ECTs that have no FIP induction records
+    # Mentors that have no FIP induction records
     not_fip = InductionRecord.joins(:induction_programme, participant_profile: { schedule: :cohort })
                              .where.not(cohorts: { payments_frozen_at: nil })
                              .where(participant_profiles: { mentor_completion_date: nil })
