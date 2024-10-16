@@ -6,7 +6,7 @@ RSpec.describe ValidTestDataGenerators::NPQLeadProviderPopulater do
   let(:npq_lead_provider) { create(:npq_lead_provider) }
   let(:cohort) { create(:cohort, :current) }
   let!(:school) { create(:school) }
-  let!(:npq_course) { create(:npq_specialist_course) }
+  let!(:npq_course) { create(:npq_course, identifier: "npq-headship") }
 
   before do
     allow(Rails).to receive(:env) { environment.inquiry }
