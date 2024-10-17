@@ -70,18 +70,20 @@ RSpec.shared_examples "can archive participant profile" do |other_participant_ty
       expect(participant_profile).not_to be_archivable_from_frozen_cohort
     end
 
-    it "returns false if the participant has not archivable declarations" do
-      paid_declaration = build_declaration(state: :paid, cohort: eligible_cohort)
-      participant_profile = paid_declaration.participant_profile
-      declaration_date = participant_profile.schedule.milestones.find_by(declaration_type: "retained-2").milestone_date - 1.day
-      travel_to declaration_date do
-        build_declaration(state: :voided,
-                          cohort: eligible_cohort,
-                          participant_profile:,
-                          cpd_lead_provider: paid_declaration.cpd_lead_provider,
-                          declaration_date:,
-                          declaration_type: "retained-2")
-        expect(participant_profile).not_to be_archivable_from_frozen_cohort
+    ParticipantDeclaration.non_archivable_states.each do |declaration_state|
+      it "returns false if the participant has #{declaration_state} declarations" do
+        paid_declaration = build_declaration(state: declaration_state, cohort: eligible_cohort)
+        participant_profile = paid_declaration.participant_profile
+        declaration_date = participant_profile.schedule.milestones.find_by(declaration_type: "retained-2").milestone_date - 1.day
+        travel_to declaration_date do
+          build_declaration(state: :voided,
+                            cohort: eligible_cohort,
+                            participant_profile:,
+                            cpd_lead_provider: paid_declaration.cpd_lead_provider,
+                            declaration_date:,
+                            declaration_type: "retained-2")
+          expect(participant_profile).not_to be_archivable_from_frozen_cohort
+        end
       end
     end
 

@@ -11,8 +11,6 @@ class ParticipantProfile::ECT < ParticipantProfile::ECF
   }
 
   def self.archivable_from_frozen_cohort(restrict_to_participant_ids: [])
-    archivable_states = %i[ineligible voided submitted].freeze
-
     # ECTs that have no FIP induction records
     not_fip = InductionRecord.joins(:induction_programme, participant_profile: { schedule: :cohort })
                              .where.not(cohorts: { payments_frozen_at: nil })
@@ -29,7 +27,7 @@ class ParticipantProfile::ECT < ParticipantProfile::ECF
                                       .where(induction_completion_date: nil)
                                       .where("induction_start_date IS NULL OR induction_start_date < make_date(cohorts.start_year, 9, 1)")
                                       .where.not(id: not_fip_ids)
-                                      .where.not(participant_declarations: { state: archivable_states })
+                                      .where(participant_declarations: { state: ParticipantDeclaration.non_archivable_states })
                                       .distinct
     with_unarchivable_declaration = with_unarchivable_declaration.where(id: restrict_to_participant_ids) if restrict_to_participant_ids.any?
     with_unarchivable_declaration_ids = with_unarchivable_declaration.pluck(:id)
