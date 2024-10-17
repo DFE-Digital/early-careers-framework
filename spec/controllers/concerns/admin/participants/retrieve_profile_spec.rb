@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-class TestsController < Admin::BaseController
+class RetrieveProfileTestsController < Admin::BaseController
   include Admin::Participants::RetrieveProfile
 end
 
@@ -12,7 +12,7 @@ describe Admin::Participants::RetrieveProfile, type: :controller do
   let!(:mentor_participant_profile) { create(:mentor_participant_profile) }
   let!(:npq_participant_profile) { create(:npq_participant_profile) }
 
-  controller TestsController do
+  controller RetrieveProfileTestsController do
     def index
       render body: @participant_profile.id
     end
@@ -22,7 +22,7 @@ describe Admin::Participants::RetrieveProfile, type: :controller do
     sign_in user
 
     routes.append do
-      get "index" => "tests#index"
+      get "index" => "retrieve_profile_tests#index"
     end
   end
 
