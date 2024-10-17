@@ -4,8 +4,6 @@ require "rails_helper"
 require "npq_api_endpoint"
 
 RSpec.describe NpqApiEndpoint do
-  before { Rails.application.config.npq_separation = nil }
-
   describe ".matches?" do
     let(:request) { instance_double(ActionDispatch::Request) }
 
@@ -13,16 +11,16 @@ RSpec.describe NpqApiEndpoint do
       expect(described_class.matches?(request)).to be_truthy
     end
 
-    describe "when disable_npq_endpoints is true" do
-      before { Rails.application.config.npq_separation = { disable_npq_endpoints: true } }
+    context "when 'disable_npq' feature is active" do
+      before { FeatureFlag.activate(:disable_npq) }
 
       it "returns false" do
         expect(described_class.matches?(request)).to be_falsy
       end
     end
 
-    describe "when disable_npq_endpoints is false" do
-      before { Rails.application.config.npq_separation = { disable_npq_endpoints: false } }
+    context "when 'disable_npq' feature is not active" do
+      before { FeatureFlag.deactivate(:disable_npq) }
 
       it "returns true" do
         expect(described_class.matches?(request)).to be_truthy
@@ -30,24 +28,24 @@ RSpec.describe NpqApiEndpoint do
     end
   end
 
-  describe ".disable_npq_endpoints?" do
+  describe ".disabled?" do
     it "returns false by default" do
-      expect(described_class.disable_npq_endpoints?).to be_falsy
+      expect(described_class.disabled?).to be_falsy
     end
 
-    describe "when disable_npq_endpoints is true" do
-      before { Rails.application.config.npq_separation = { disable_npq_endpoints: true } }
+    context "when 'disable_npq' feature is active" do
+      before { FeatureFlag.activate(:disable_npq) }
 
       it "returns true" do
-        expect(described_class.disable_npq_endpoints?).to be_truthy
+        expect(described_class.disabled?).to be_truthy
       end
     end
 
-    describe "when disable_npq_endpoints is false" do
-      before { Rails.application.config.npq_separation = { disable_npq_endpoints: false } }
+    context "when 'disable_npq' feature is not active" do
+      before { FeatureFlag.deactivate(:disable_npq) }
 
       it "returns false" do
-        expect(described_class.disable_npq_endpoints?).to be_falsy
+        expect(described_class.disabled?).to be_falsy
       end
     end
   end

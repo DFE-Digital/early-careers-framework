@@ -38,7 +38,7 @@ module Api
 
         def statement_class
           if filter[:type].blank?
-            if NpqApiEndpoint.disable_npq_endpoints?
+            if NpqApiEndpoint.disabled?
               return ::Finance::Statement::ECF
             else
               return ::Finance::Statement
@@ -49,7 +49,7 @@ module Api
           when "ecf"
             ::Finance::Statement::ECF
           when "npq"
-            if NpqApiEndpoint.disable_npq_endpoints?
+            if NpqApiEndpoint.disabled?
               ::Finance::Statement.none
             else
               ::Finance::Statement::NPQ

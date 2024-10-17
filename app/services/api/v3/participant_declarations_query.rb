@@ -114,7 +114,7 @@ module Api
       end
 
       def declaration_class
-        if NpqApiEndpoint.disable_npq_endpoints?
+        if NpqApiEndpoint.disabled?
           ParticipantDeclaration::ECF
         else
           ParticipantDeclaration

@@ -155,12 +155,12 @@ RSpec.describe VoidParticipantDeclaration do
         expect(participant_declaration.outcomes.latest).to be_voided
       end
 
-      context "when using 'disable_npq_endpoints' feature" do
-        context "when disable_npq_endpoints is true" do
+      context "when using 'disable_npq' feature" do
+        context "when 'disable_npq' feature is active" do
           before do
             participant_declaration
 
-            Rails.application.config.npq_separation = { disable_npq_endpoints: true }
+            FeatureFlag.activate(:disable_npq)
           end
 
           it "raises error" do

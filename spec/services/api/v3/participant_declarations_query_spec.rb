@@ -370,7 +370,7 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery do
       end
     end
 
-    context "when using 'disable_npq_endpoints' feature" do
+    context "when using 'disable_npq' feature" do
       let(:cpd_lead_provider1) { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider) }
       let!(:npq_declaration) do
         create(
@@ -381,15 +381,17 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery do
       end
       let(:paginated_query) { ParticipantDeclaration.where(cpd_lead_provider: cpd_lead_provider1) }
 
-      context "when disable_npq_endpoints is true" do
-        before { Rails.application.config.npq_separation = { disable_npq_endpoints: true } }
+      context "when 'disable_npq' feature is active" do
+        before { FeatureFlag.activate(:disable_npq) }
 
         it "returns only ecf declarations" do
           expect(subject.participant_declarations_from(paginated_query).to_a).to eq([participant_declaration3, participant_declaration1, participant_declaration2])
         end
       end
 
-      context "when disable_npq_endpoints is false" do
+      context "when 'disable_npq' feature is not active" do
+        before { FeatureFlag.deactivate(:disable_npq) }
+
         it "returns all declarations" do
           expect(subject.participant_declarations_from(paginated_query).to_a).to eq([participant_declaration3, participant_declaration1, participant_declaration2, npq_declaration])
         end
@@ -447,7 +449,7 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery do
       end
     end
 
-    context "when using 'disable_npq_endpoints' feature" do
+    context "when using 'disable_npq' feature" do
       let(:cpd_lead_provider1) { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider) }
       let!(:npq_declaration) do
         create(
@@ -464,8 +466,8 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery do
         )
       end
 
-      context "when disable_npq_endpoints is true" do
-        before { Rails.application.config.npq_separation = { disable_npq_endpoints: true } }
+      context "when 'disable_npq' feature is active" do
+        before { FeatureFlag.activate(:disable_npq) }
 
         it "returns ecf declaration" do
           expect(subject.participant_declaration(ecf_declaration.id)).to eql(ecf_declaration)
@@ -476,7 +478,9 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery do
         end
       end
 
-      context "when disable_npq_endpoints is false" do
+      context "when 'disable_npq' feature is not active" do
+        before { FeatureFlag.deactivate(:disable_npq) }
+
         it "returns ecf declaration" do
           expect(subject.participant_declaration(ecf_declaration.id)).to eql(ecf_declaration)
         end
