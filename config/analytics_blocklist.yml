@@ -520,3 +520,10 @@
     - message
     - created_at
     - updated_at
+  :analytics_appropriate_bodies:
+  - id
+  - appropriate_body_id
+  - name
+  - body_type
+  - created_at
+  - updated_at
