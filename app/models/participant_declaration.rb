@@ -3,6 +3,8 @@
 class ParticipantDeclaration < ApplicationRecord
   self.ignored_columns = %w[statement_type statement_id voided_at]
 
+  ARCHIVABLE_STATES = %w[ineligible voided submitted].freeze
+
   belongs_to :cpd_lead_provider
   belongs_to :user
   belongs_to :cohort
@@ -111,6 +113,10 @@ class ParticipantDeclaration < ApplicationRecord
   scope :billable_or_changeable, -> { billable.or(changeable) }
 
   before_create :build_initial_declaration_state
+
+  def self.non_archivable_states
+    states.keys.excluding(ARCHIVABLE_STATES)
+  end
 
   def voidable?
     %w[submitted eligible payable ineligible].include?(state)
