@@ -404,13 +404,6 @@
   - pupil_premium
   - schedule_identifier
   - external_id
-  :analytics_appropriate_bodies:
-  - id
-  - appropriate_body_id
-  - name
-  - body_type
-  - created_at
-  - updated_at
   :analytics_schools:
   - id
   - name
