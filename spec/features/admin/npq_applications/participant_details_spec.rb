@@ -26,6 +26,12 @@ RSpec.feature "Admin NPQ participant details", js: true, rutabaga: false do
     then_i_can_see_the_participant_funded_place_attribute
   end
 
+  scenario "Hide NPQ option when :disable_npq feature is active" do
+    and_disable_npq_feature_is_active
+    and_i_am_signed_in_as_an_admin
+    then_i_should_not_see_npq_as_an_option
+  end
+
 private
 
   def when_i_visit_the_npq_applications_participants
@@ -48,5 +54,16 @@ private
 
   def then_i_can_see_the_participant_funded_place_attribute
     expect(page).to have_selector(".govuk-summary-list__row--no-actions", text: /Funded place.*?No/)
+  end
+
+  def and_disable_npq_feature_is_active
+    FeatureFlag.activate(:disable_npq)
+  end
+
+  def then_i_should_not_see_npq_as_an_option
+    click_on "Participants"
+    within(:xpath, "//select[@id = 'type-field']") do
+      expect(page).to have_no_content("NPQ")
+    end
   end
 end
