@@ -25,7 +25,7 @@ jobs:
         with:
           environment: production
           azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
-          
+
       - name: Login
         uses: azure/login@v2
         with:
@@ -45,5 +45,5 @@ jobs:
       - name: Generate known keys
         shell: bash
         run: |
-          kubectl -n cpd-production exec -ti --tty deployment/npq-registration-migration-web -- /bin/sh -c "cd /app && bundle exec rails runner \"Migration::ParityCheck::TokenProvider.new.generate!\""
+          kubectl -n cpd-production exec -ti --tty deployment/npq-registration-migration-web -- /bin/sh -c "cd /app && bundle exec rails runner \"PaperTrail.request.whodunnit = %{CI}; Migration::ParityCheck::TokenProvider.new.generate!\""
           
