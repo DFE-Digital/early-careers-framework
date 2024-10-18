@@ -22,4 +22,10 @@ RSpec.describe Finance::Schedule::NPQSupport, type: :model do
       expect(described_class.default).to eql(expected_schedule)
     end
   end
+
+  describe ".npq?" do
+    it "should return true" do
+      expect(described_class.new.npq?).to be(true)
+    end
+  end
 end

@@ -15,6 +15,7 @@
 
     <tbody class="govuk-table__body">
       <% cohort.schedules.each do |schedule| %>
+        <% next if schedule.npq? && FeatureFlag.active?(:disable_npq) %>
         <tr class="govuk-table__row">
           <th scope="row" class="govuk-table__header">
             <%= govuk_link_to schedule.schedule_identifier, finance_schedule_path(schedule) %>
