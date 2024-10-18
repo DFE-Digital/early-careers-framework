@@ -80,7 +80,7 @@ RSpec.describe "Admin::Schools::Cohorts::ChangeProgramme", type: :request do
     describe "GET /admin/schools/:school_slug/cohorts/:id/challenge-partnership/new" do
       it "triggers a policy error" do
         path = "/admin/schools/#{school.slug}/partnerships/#{partnership.id}/challenge-partnership/new"
-        expect { get(path) }.to raise_error(Pundit::NotAuthorizedError, "not allowed to challenge? this Partnership")
+        expect { get(path) }.to raise_error(Pundit::NotAuthorizedError, "not allowed to PartnershipPolicy#challenge? this Partnership")
       end
     end
   end
