@@ -25,3 +25,25 @@ jobs:
         with:
           environment: production
           azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
+          
+      - name: Login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - uses: DFE-Digital/github-actions/set-kubelogin-environment@master
+        with:
+          azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Install kubectl
+        uses: DFE-Digital/github-actions/set-kubectl@master
+
+      - name: Set AKS credentials (migration)
+        shell: bash
+        run: make ci migration get-cluster-credentials
+
+      - name: Generate known keys
+        shell: bash
+        run: |
+          kubectl -n cpd-production exec -ti --tty deployment/npq-registration-migration-web -- /bin/sh -c "cd /app && bundle exec rails runner \"Migration::ParityCheck::TokenProvider.new.generate!\""
+          
