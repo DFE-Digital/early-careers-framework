@@ -9,7 +9,7 @@ RSpec.describe Migration::ParityCheck::TokenProvider do
     allow(Rails).to receive(:env) { environment.inquiry }
 
     allow(ENV).to receive(:[]).and_call_original
-    allow(ENV).to receive(:[]).with("PARITY-CHECK-KEYS").and_return(keys.to_json) if keys
+    allow(ENV).to receive(:[]).with("PARITY_CHECK_KEYS").and_return(keys.to_json) if keys
   end
 
   let(:instance) { described_class.new }

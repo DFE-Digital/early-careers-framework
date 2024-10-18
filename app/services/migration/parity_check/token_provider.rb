@@ -16,7 +16,7 @@ module Migration
   private
 
     def known_tokens_by_lead_provider_ecf_id
-      JSON.parse(ENV["PARITY-CHECK-KEYS"].to_s)
+      JSON.parse(ENV["PARITY_CHECK_KEYS"].to_s)
     rescue JSON::ParserError
       {}
     end
