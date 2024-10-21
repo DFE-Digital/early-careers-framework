@@ -61,6 +61,8 @@ RSpec.feature "Finance users participant drilldown", type: :feature do
       then_i_see("Identity 1")
       and_i_see("ParticipantProfile::NPQ")
       and_i_see("Declaration type#{npq_declaration.declaration_type}")
+      and_i_see("NPQ applications")
+      and_i_see(npq_application.id)
     end
 
     scenario "search by application ID" do
@@ -78,6 +80,21 @@ RSpec.feature "Finance users participant drilldown", type: :feature do
       then_i_see(npq_user.id)
       then_i_see(npq_declaration.id)
     end
+
+    scenario "when :disable_npq feature is active" do
+      given_disable_npq_feature_is_active
+      when_i_fill_in("query", with: npq_user.id)
+      and_i_click_on("Search")
+
+      then_i_see("Identity 1")
+      and_i_do_not_see("ParticipantProfile::NPQ")
+      and_i_do_not_see("NPQ applications")
+      and_i_do_not_see(npq_application.id)
+    end
+  end
+
+  def given_disable_npq_feature_is_active
+    FeatureFlag.activate(:disable_npq)
   end
 
   def when_i_visit_the_finance_homepage
@@ -94,6 +111,10 @@ RSpec.feature "Finance users participant drilldown", type: :feature do
 
   def and_i_see(string)
     then_i_see(string)
+  end
+
+  def and_i_do_not_see(string)
+    expect(page).to_not have_content(string)
   end
 
   def when_i_fill_in(selector, with:)
