@@ -33,6 +33,7 @@ class ApiRequestJob
 
     event = DfE::Analytics::Event.new
                                  .with_type(:persist_api_request)
+                                 .with_request_uuid(uuid)
                                  .with_entity_table_name(:api_requests)
                                  .with_data(data)
 
