@@ -11,7 +11,7 @@ RSpec.feature "Admin finding participants", js: true, rutabaga: false do
     and_i_am_signed_in_as_an_admin
     and_i_have_added_an_ect
     and_i_have_added_a_mentor
-    and_i_have_added_a_npq
+    and_i_have_added_an_npq_profile
     when_i_visit_admin_participants_dashboard
   end
 
