@@ -259,7 +259,7 @@ Rails.application.routes.draw do
     # Keeping the urls to old guidance urls, but they need to lead to new api-reference ones
     get "/guidance/home", to: redirect("/api-reference")
     get "/guidance/ecf-usage", to: redirect("/api-reference/ecf-usage")
-    get "/guidance/npq-usage", to: redirect("/api-reference/npq-usage")
+    get "/guidance/npq-usage", to: redirect("/api-reference/npq-usage"), constraints: NpqApiEndpoint
     get "/guidance/reference", to: redirect("/api-reference/reference")
     get "/guidance/release-notes", to: redirect("/api-reference/release-notes")
     get "/guidance/help", to: redirect("/api-reference/help")
@@ -374,8 +374,8 @@ Rails.application.routes.draw do
 
       resource :add_to_school_mentor_pool, only: %i[new create], controller: "participants/add_to_school_mentor_pool"
 
-      resource :npq_change_full_name, only: %i[edit update], controller: "participants/npq/change_full_name"
-      resource :npq_change_email, only: %i[edit update], controller: "participants/npq/change_email"
+      resource :npq_change_full_name, only: %i[edit update], controller: "participants/npq/change_full_name", constraints: NpqApiEndpoint
+      resource :npq_change_email, only: %i[edit update], controller: "participants/npq/change_email", constraints: NpqApiEndpoint
 
       resource :change_induction_start_date, only: %i[edit update], controller: "participants/change_induction_start_date"
       resource :change_induction_status, only: %i[edit], controller: "participants/change_induction_status" do
@@ -503,7 +503,7 @@ Rails.application.routes.draw do
 
     resources :induction_coordinators, only: %i[index edit update], path: "induction-coordinators"
 
-    namespace :npq do
+    namespace :npq, constraints: NpqApiEndpoint do
       resource :applications, only: [] do
         get "/eligibility_imports/example", to: "applications/eligibility_imports#example", as: :example_csv_file
         get "/analysis", to: "applications/analysis#invalid_payments_analysis", as: :analysis

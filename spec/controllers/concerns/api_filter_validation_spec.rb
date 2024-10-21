@@ -2,12 +2,12 @@
 
 require "rails_helper"
 
-class TestsController < Api::ApiController
+class ApiFilterValidationTestsController < Api::ApiController
   include ApiFilterValidation
 end
 
 describe ApiFilterValidation, type: :controller do
-  controller TestsController do
+  controller ApiFilterValidationTestsController do
     filter_validation required_filters: %i[cohort]
 
     def index
@@ -17,7 +17,7 @@ describe ApiFilterValidation, type: :controller do
 
   before do
     routes.append do
-      get "index" => "tests#index"
+      get "index" => "api_filter_validation_tests#index"
     end
   end
 

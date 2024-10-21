@@ -40,11 +40,8 @@ private
   end
 
   def type_conditions
-    if type.present?
-      ParticipantProfile.where(type:)
-    else
-      ParticipantProfile.all
-    end
+    scope = NpqApiEndpoint.disabled? ? ParticipantProfile.ecf : ParticipantProfile.all
+    type.present? ? scope.where(type:) : scope
   end
 
   def left_outer_joins

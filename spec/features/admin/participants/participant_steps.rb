@@ -29,7 +29,7 @@ module ParticipantSteps
     and_i_am_signed_in_as_an_admin
     and_i_have_added_an_ect
     and_i_have_added_a_mentor
-
+    and_i_have_added_an_npq_profile
     when_i_visit_admin_participants_dashboard
     then_i_should_see_a_list_of_participants
   end
@@ -114,8 +114,20 @@ module ParticipantSteps
     expect(page).to have_text("Fip School")
     expect(page).to have_text("Sally Teacher")
     expect(page).to have_text("Billy Mentor")
+    expect(page).to have_text("Bart NPQ")
     expect(page).to have_text("Early career teacher")
     expect(page).to have_text("Mentor")
+    expect(page).to have_text("NPQ")
+  end
+
+  def then_i_should_see_a_list_of_participants_without_npq
+    expect(page).to have_text("Fip School")
+    expect(page).to have_text("Sally Teacher")
+    expect(page).to have_text("Billy Mentor")
+    expect(page).not_to have_text("Bart NPQ")
+    expect(page).to have_text("Early career teacher")
+    expect(page).to have_text("Mentor")
+    expect(page).not_to have_text("NPQ")
   end
 
   def then_i_should_be_in_the_admin_participants_dashboard
@@ -189,6 +201,10 @@ module ParticipantSteps
     @participant_profile_mentor = create(:mentor_participant_profile, user: create(:user, full_name: "Billy Mentor", email: "billy-mentor@example.com"), school_cohort: @school_cohort)
     Induction::Enrol.call(participant_profile: @participant_profile_mentor, induction_programme: @induction_programme)
     Mentors::AddToSchool.call(school: @school, mentor_profile: @participant_profile_mentor)
+  end
+
+  def and_i_have_added_an_npq_profile
+    @participant_profile_npq = create(:npq_participant_profile, user: create(:user, full_name: "Bart NPQ", email: "bart-npq@example.com"))
   end
 
   def and_the_mentor_is_mentoring_the_ect

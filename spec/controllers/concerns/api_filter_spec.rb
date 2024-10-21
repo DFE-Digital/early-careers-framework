@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-class TestsController < Api::ApiController
+class ApiFilterTestsController < Api::ApiController
   include ApiFilter
 end
 
@@ -11,14 +11,14 @@ class Test < ApplicationRecord; end
 describe "ApiFilter", type: :controller do
   before do
     routes.append do
-      get "index" => "tests#index"
+      get "index" => "api_filter_tests#index"
     end
   end
 
   describe "updated_since" do
     let(:now) { Time.zone.local(2023, 3, 29, 10, 10, 0) }
 
-    controller TestsController do
+    controller ApiFilterTestsController do
       def index
         render json: { updated_since_param: updated_since }
       end
