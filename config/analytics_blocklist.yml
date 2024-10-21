@@ -527,3 +527,10 @@
   - body_type
   - created_at
   - updated_at
+  :participant_appropriate_body_dqt_checks:
+  - id
+  - participant_profile_id
+  - appropriate_body_name
+  - dqt_appropriate_body_name
+  - created_at
+  - updated_at
