@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_18_153716) do
+ActiveRecord::Schema[7.1].define(version: 2024_10_21_071942) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "fuzzystrmatch"
@@ -784,6 +784,14 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_18_153716) do
     t.uuid "cpd_lead_provider_id"
     t.boolean "vat_chargeable", default: true
     t.index ["cpd_lead_provider_id"], name: "index_npq_lead_providers_on_cpd_lead_provider_id"
+  end
+
+  create_table "participant_appropriate_body_dqt_checks", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "participant_profile_id", null: false
+    t.string "appropriate_body_name"
+    t.string "dqt_appropriate_body_name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "participant_bands", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
