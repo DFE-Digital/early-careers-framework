@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-class TestsController < Api::ApiController
+class ApiPaginationTestsController < Api::ApiController
   include ApiPagination
 end
 
@@ -11,14 +11,14 @@ class Test < ApplicationRecord; end
 describe "ApiPagination", type: :controller do
   before do
     routes.append do
-      get "index" => "tests#index"
+      get "index" => "api_pagination_tests#index"
     end
   end
 
   describe "pagination" do
     let!(:first_school)  { create(:school) }
     let!(:second_school) { create(:school) }
-    controller TestsController do
+    controller ApiPaginationTestsController do
       def index
         render json: { data: paginate(School.order(created_at: :asc)) }
       end
