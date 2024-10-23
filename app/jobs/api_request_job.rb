@@ -5,8 +5,6 @@ class ApiRequestJob
   include ActionController::HttpAuthentication::Token
 
   def perform(request_data, response_data, status_code, created_at, uuid)
-    RequestLocals.store[:dfe_analytics_request_id] = uuid
-
     request_data = request_data.with_indifferent_access
     response_data = response_data.with_indifferent_access
     request_headers = request_data.fetch(:headers, {})
