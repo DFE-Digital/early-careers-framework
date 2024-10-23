@@ -119,12 +119,14 @@ GEM
     ast (2.4.2)
     auto_strip_attributes (2.6.0)
       activerecord (>= 4.0)
-    axe-core-api (4.10.0)
+    axe-core-api (4.10.1)
       dumb_delegator
+      ostruct
       virtus
-    axe-core-rspec (4.10.0)
-      axe-core-api (= 4.10.0)
+    axe-core-rspec (4.10.1)
+      axe-core-api (= 4.10.1)
       dumb_delegator
+      ostruct
       virtus
     axiom-types (0.1.1)
       descendants_tracker (~> 0.0.4)
@@ -375,6 +377,7 @@ GEM
       commonmarker (~> 0.17)
     orm_adapter (0.5.0)
     os (1.1.4)
+    ostruct (0.6.0)
     pagy (9.1.0)
     paper_trail (15.2.0)
       activerecord (>= 6.1)
