@@ -7,6 +7,31 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
+## 27 November 2024
+
+We've launched a separate API for NPQs following a 3-month test phase. All NPQ data has been successfully migrated to the new environment, which means providers can no longer make NPQ-related calls from this API.
+
+The base URL for this API continues to be:
+
+- [https://manage-training-for-early-career-teachers.education.gov.uk/](https://manage-training-for-early-career-teachers.education.gov.uk/)
+
+Providers can add the required API version and endpoint depending on what they want to do. For example, they’d add `/api/v3/participants/ecf` to the base URL if they wanted to retrieve data for multiple participants.
+
+The endpoints documentation for each version of the API is also unchanged:
+
+- [ECF API v1 documentation](https://manage-training-for-early-career-teachers.education.gov.uk/api-reference/reference-v1.html)
+- [ECF API v2 documentation](https://manage-training-for-early-career-teachers.education.gov.uk/api-reference/reference-v2.html)
+- [ECF API v3 documentation](https://manage-training-for-early-career-teachers.education.gov.uk/api-reference/reference-v3.html)
+
+To ensure everything runs smoothly on the ECF side of things, we recommend providers take the following post-separation actions:
+
+- check their integration supports ECF calls independently
+- make sure all data flows and integrations continue to work as expected
+- test internal processes to verify that data from the ECF environment is being handled appropriately
+- conduct full data syncs within their allocated window so that data is up to date and accurate
+
+Providers can contact us via their dedicated DfE Slack channel if they’ve got any suggestions or concerns.
+
 ## 2 September 2024
 
 Providers can now see the new <code>mentor_ineligible_for_funding_reason</code> field in the API production environment's participant response bodies.
