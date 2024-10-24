@@ -20,7 +20,7 @@ class CreateNewFakeSandboxDataJob < ApplicationJob
       end
     end
 
-    if npq_lead_provider.present? && random_school.present?
+    if !NpqApiEndpoint.disabled? && npq_lead_provider.present? && random_school.present?
       10.times do
         name = Faker::Name.name
         user = User.create!(full_name: name, email: Faker::Internet.email(name:))

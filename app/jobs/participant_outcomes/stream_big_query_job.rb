@@ -5,6 +5,8 @@ module ParticipantOutcomes
     queue_as :big_query
 
     def perform(participant_outcome_id:)
+      return if NpqApiEndpoint.disabled?
+
       bigquery = Google::Cloud::Bigquery.new
       dataset = bigquery.dataset "npq_participant_outcomes", skip_lookup: true
       table = dataset.table "npq_participant_outcomes_#{Rails.env.downcase}"

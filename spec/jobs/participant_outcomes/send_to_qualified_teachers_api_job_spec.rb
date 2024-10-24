@@ -23,5 +23,19 @@ RSpec.describe ParticipantOutcomes::SendToQualifiedTeachersApiJob do
 
       job
     end
+
+    context "when `disable_npq` feature flag is active" do
+      before { FeatureFlag.activate(:disable_npq) }
+
+      it "returns nil" do
+        expect(job).to be_nil
+      end
+
+      it "does not call the service" do
+        job
+
+        expect(api_sender).not_to have_received(:call)
+      end
+    end
   end
 end

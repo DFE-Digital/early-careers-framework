@@ -4,7 +4,7 @@ require "rails_helper"
 
 RSpec.describe Statements::MarkAsPayable do
   let(:cpd_lead_provider)              { create(:cpd_lead_provider, :with_npq_lead_provider) }
-  let!(:statement)                     { create :npq_statement, :next_output_fee, cpd_lead_provider: }
+  let!(:statement)                     { create(:npq_statement, :next_output_fee, cpd_lead_provider:) }
   let!(:submitted_declaration)         { create(:npq_participant_declaration, :submitted,  cpd_lead_provider:) }
   let!(:eligible_declaration)          { create(:npq_participant_declaration, :submitted,  cpd_lead_provider:) }
   let!(:awaiting_clawback_declaration) { create(:npq_participant_declaration, :submitted,  cpd_lead_provider:) }
@@ -52,6 +52,19 @@ RSpec.describe Statements::MarkAsPayable do
        .and not_change(statement.statement_line_items.awaiting_clawback, :count)
        .and not_change(statement.statement_line_items.ineligible, :count)
        .and not_change(statement.statement_line_items.voided, :count)
+    end
+
+    context "when `disable_npq` feature flag is active" do
+      before { FeatureFlag.activate(:disable_npq) }
+
+      it "does not transition the statement, declarations and line items" do
+        expect {
+          subject.call
+          statement.reload
+        }.to not_change { statement.type }
+        .and(not_change { statement.participant_declarations.payable.count })
+        .and(not_change { statement.statement_line_items.payable.count })
+      end
     end
   end
 end

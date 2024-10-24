@@ -5,6 +5,8 @@ module NPQ
     queue_as :big_query
 
     def perform(profile_id:)
+      return if NpqApiEndpoint.disabled?
+
       bigquery = Google::Cloud::Bigquery.new
       dataset = bigquery.dataset "npq_registration", skip_lookup: true
       table = dataset.table "profiles_#{Rails.env.downcase}"
