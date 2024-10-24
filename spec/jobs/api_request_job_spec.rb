@@ -114,6 +114,13 @@ RSpec.describe ApiRequestJob do
 
     context "when the dfe_analytics feature is enabled" do
       before { FeatureFlag.activate(:dfe_analytics) }
+      let(:expected_job_data) do
+        {
+          "event_type" => "persist_api_request",
+          "request_uuid" => request_uuid,
+          "entity_table_name" => "api_requests",
+        }
+      end
 
       it "saves the request_uuid on the big query event" do
         expect {
@@ -123,7 +130,7 @@ RSpec.describe ApiRequestJob do
             path: "/api/v1/bar",
             method: "POST",
           }, {}, 500, Time.zone.now, request_uuid)
-        }.to have_enqueued_job(DfE::Analytics::SendEvents).with(array_including(hash_including("request_uuid" => request_uuid))).on_queue("dfe_analytics")
+        }.to have_enqueued_job(DfE::Analytics::SendEvents).with(array_including(hash_including(**expected_job_data))).on_queue("dfe_analytics")
       end
     end
 

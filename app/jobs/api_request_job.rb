@@ -5,8 +5,6 @@ class ApiRequestJob
   include ActionController::HttpAuthentication::Token
 
   def perform(request_data, response_data, status_code, created_at, uuid)
-    RequestLocals.store[:dfe_analytics_request_id] = uuid
-
     request_data = request_data.with_indifferent_access
     response_data = response_data.with_indifferent_access
     request_headers = request_data.fetch(:headers, {})
@@ -16,7 +14,7 @@ class ApiRequestJob
     response_headers = response_data[:headers]
     response_body = response_data[:body]
 
-    ApiRequest.create!(
+    data = {
       request_path: request_data[:path],
       request_headers:,
       request_body: request_body(request_data),
@@ -27,7 +25,17 @@ class ApiRequestJob
       user_description: token&.owner_description,
       cpd_lead_provider:,
       created_at:,
-    )
+    }
+
+    ApiRequest.create!(data)
+
+    event = DfE::Analytics::Event.new
+                                 .with_type(:persist_api_request)
+                                 .with_request_uuid(uuid)
+                                 .with_entity_table_name(:api_requests)
+                                 .with_data(data)
+
+    DfE::Analytics::SendEvents.do(Array.wrap(event.as_json))
   end
 
 private
