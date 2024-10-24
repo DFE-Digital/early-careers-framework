@@ -8,6 +8,8 @@ module ParticipantOutcomes
     DEFAULT_BATCH_SIZE = 200
 
     def perform(batch_size = DEFAULT_BATCH_SIZE)
+      return if NpqApiEndpoint.disabled?
+
       outcomes.first(batch_size).each { |outcome| SendToQualifiedTeachersApiJob.perform_later(participant_outcome_id: outcome.id) }
     end
 

@@ -35,6 +35,20 @@ RSpec.describe ParticipantOutcomes::BatchSendLatestOutcomesJob do
         expect(ParticipantOutcomes::SendToQualifiedTeachersApiJob).not_to have_been_enqueued.with(participant_outcome_id: 2)
       end
     end
+
+    context "when `disable_npq` feature flag is active" do
+      before { FeatureFlag.activate(:disable_npq) }
+
+      it "returns nil" do
+        expect(described_class.perform_now).to be_nil
+      end
+
+      it "does not enqueue the job" do
+        described_class.perform_now
+
+        expect(ParticipantOutcomes::SendToQualifiedTeachersApiJob).not_to have_been_enqueued
+      end
+    end
   end
 
   describe "#perform_later" do
