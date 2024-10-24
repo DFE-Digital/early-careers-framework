@@ -3,12 +3,13 @@
 module Api
   module ParticipantDeclarations
     class Index
-      attr_reader :cpd_lead_provider, :updated_since, :participant_id
+      attr_reader :cpd_lead_provider, :updated_since, :participant_id, :type
 
-      def initialize(cpd_lead_provider:, updated_since: nil, participant_id: nil)
+      def initialize(cpd_lead_provider:, updated_since: nil, participant_id: nil, type: nil)
         @cpd_lead_provider = cpd_lead_provider
         @updated_since = updated_since
         @participant_id = participant_id
+        @type = format_type(type)
       end
 
       def scope
@@ -19,11 +20,23 @@ module Api
 
         scope = scope.where("user_id = ?", participant_id) if participant_id.present?
         scope = scope.where("updated_at > ?", updated_since) if updated_since.present?
+        scope = scope.where(type:) if type.present?
 
         scope.order(:created_at)
       end
 
     private
+
+      def format_type(type)
+        return nil unless Rails.env.migration?
+
+        case type&.downcase&.to_sym
+        when :npq
+          "ParticipantDeclaration::NPQ"
+        when :ecf
+          "ParticipantDeclaration::ECF"
+        end
+      end
 
       def lead_provider
         cpd_lead_provider.lead_provider

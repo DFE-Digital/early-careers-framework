@@ -97,6 +97,51 @@ RSpec.describe Api::ParticipantDeclarations::Index do
       end
     end
 
+    context "when filtering by type" do
+      let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider) }
+      let!(:npq_declaration) do
+        create(
+          :npq_participant_declaration,
+          declaration_type: "started",
+          cpd_lead_provider:,
+        )
+      end
+      let!(:ecf_declaration) do
+        create(
+          :ect_participant_declaration,
+          declaration_type: "started",
+          cpd_lead_provider:,
+        )
+      end
+      let(:environment) { "migration" }
+
+      before { allow(Rails).to receive(:env) { environment.inquiry } }
+
+      subject { described_class.new(cpd_lead_provider:, type:) }
+
+      context "when filtering by NPQ declarations" do
+        let(:type) { "npq" }
+
+        it { expect(subject.scope.to_a).to contain_exactly(npq_declaration) }
+      end
+
+      context "when filtering by ECF declarations" do
+        let(:type) { "ECF" }
+
+        it { expect(subject.scope.to_a).to contain_exactly(ecf_declaration) }
+      end
+
+      context "when environment is not migration" do
+        let(:environment) { "production" }
+
+        context "when filtering by type" do
+          let(:type) { "npq" }
+
+          it { expect(subject.scope.to_a).to contain_exactly(ecf_declaration, npq_declaration) }
+        end
+      end
+    end
+
     context "when using 'disable_npq' feature" do
       let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider) }
       let!(:npq_declaration) do

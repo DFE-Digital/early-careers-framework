@@ -220,6 +220,33 @@ RSpec.describe "API Participant Declarations", type: :request, mid_cohort: true 
         end
       end
 
+      context "when a type filter used" do
+        let(:environment) { "migration" }
+        before { allow(Rails).to receive(:env).and_return(environment.inquiry) }
+
+        it "returns NPQ declarations when filtering by NPQ" do
+          get "/api/v3/participant-declarations", params: { filter: { type: :npq } }
+          expect(response.status).to eq 200
+          expect(parsed_response["data"].size).to eq 0
+        end
+
+        it "returns ECF declarations when filtering by ECF" do
+          get "/api/v3/participant-declarations", params: { filter: { type: :ecf } }
+          expect(response.status).to eq 200
+          expect(parsed_response["data"].size).to eq 3
+        end
+
+        context "when the environment is not migration" do
+          let(:environment) { "production" }
+
+          it "ignores the type filter" do
+            get "/api/v3/participant-declarations", params: { filter: { type: :npq } }
+            expect(response.status).to eq 200
+            expect(parsed_response["data"].size).to eq 3
+          end
+        end
+      end
+
       context "when filtering by updated_since" do
         before do
           participant_declaration1.update!(updated_at: 3.days.ago)
