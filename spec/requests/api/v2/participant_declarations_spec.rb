@@ -506,6 +506,37 @@ RSpec.describe "participant-declarations endpoint spec", type: :request, mid_coh
         end
       end
 
+      context "when a type filter used" do
+        let(:environment) { "migration" }
+
+        before do
+          create(:ect_participant_declaration, cpd_lead_provider:, participant_profile: ect_profile)
+          allow(Rails).to receive(:env).and_return(environment.inquiry)
+        end
+
+        it "returns NPQ declarations when filtering by NPQ" do
+          get "/api/v2/participant-declarations", params: { filter: { type: :npq } }
+          expect(response.status).to eq 200
+          expect(parsed_response["data"].size).to eq 0
+        end
+
+        it "returns ECF declarations when filtering by ECF" do
+          get "/api/v2/participant-declarations", params: { filter: { type: :ecf } }
+          expect(response.status).to eq 200
+          expect(parsed_response["data"].size).to eq 1
+        end
+
+        context "when the environment is not migration" do
+          let(:environment) { "production" }
+
+          it "ignores the type filter" do
+            get "/api/v2/participant-declarations", params: { filter: { type: :npq } }
+            expect(response.status).to eq 200
+            expect(parsed_response["data"].size).to eq 1
+          end
+        end
+      end
+
       context "when a participant id filter used" do
         let!(:second_ect_profile) { create(:ect, lead_provider: cpd_lead_provider.lead_provider) }
         let!(:second_participant_declaration) do

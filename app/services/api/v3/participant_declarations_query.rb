@@ -113,7 +113,20 @@ module Api
         filter[:delivery_partner_id]&.split(",")
       end
 
+      def type
+        return nil unless Rails.env.migration?
+
+        case filter[:type]&.downcase&.to_sym
+        when :npq
+          ParticipantDeclaration::NPQ
+        when :ecf
+          ParticipantDeclaration::ECF
+        end
+      end
+
       def declaration_class
+        return type if type.present?
+
         if NpqApiEndpoint.disabled?
           ParticipantDeclaration::ECF
         else

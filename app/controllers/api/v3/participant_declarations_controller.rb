@@ -66,7 +66,7 @@ module Api
       end
 
       def query_params
-        params.permit(:id, filter: %i[cohort participant_id updated_since delivery_partner_id])
+        params.permit(:id, filter: %i[cohort participant_id updated_since delivery_partner_id type])
       end
 
       def permitted_params

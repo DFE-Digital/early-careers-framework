@@ -127,6 +127,40 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery do
       end
     end
 
+    context "with type filter" do
+      let(:environment) { "migration" }
+      let(:params) { { filter: { type: } } }
+      let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider) }
+      let!(:npq_participant_declaration_id) { create(:npq_participant_declaration, cpd_lead_provider:).id }
+      let!(:ecf_participant_declaration_id) { create(:ect_participant_declaration, cpd_lead_provider:).id }
+
+      before { allow(Rails).to receive(:env) { environment.inquiry } }
+
+      subject { described_class.new(cpd_lead_provider:, params:) }
+
+      context "when filtering by NPQ declarations" do
+        let(:type) { "npq" }
+
+        it { expect(subject.participant_declarations_for_pagination.pluck(:id)).to contain_exactly(npq_participant_declaration_id) }
+      end
+
+      context "when filtering by ECF declarations" do
+        let(:type) { "ECF" }
+
+        it { expect(subject.participant_declarations_for_pagination.pluck(:id)).to contain_exactly(ecf_participant_declaration_id) }
+      end
+
+      context "when not in migration environment" do
+        let(:environment) { "production" }
+
+        context "when filtering by type" do
+          let(:type) { "npq" }
+
+          it { expect(subject.participant_declarations_for_pagination.pluck(:id)).to contain_exactly(ecf_participant_declaration_id, npq_participant_declaration_id) }
+        end
+      end
+    end
+
     context "with cohort filter" do
       let(:params) { { filter: { cohort: cohort2.start_year.to_s } } }
 
