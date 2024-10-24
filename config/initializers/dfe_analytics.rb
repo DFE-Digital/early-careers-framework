@@ -45,7 +45,7 @@ DfE::Analytics.configure do |config|
   # enable analytics. You might want to hook this up to a feature flag or
   # environment variable.
 
-  config.enable_analytics = proc { !Rails.env.review? && FeatureFlag.active?(:dfe_analytics) }
+  config.enable_analytics = proc { FeatureFlag.active?(:dfe_analytics) }
 
   # The environment we’re running in. This value will be attached
   # to all events we send to BigQuery.
