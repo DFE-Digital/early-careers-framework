@@ -409,4 +409,43 @@ RSpec.describe BulkMailers::SchoolReminderComms, type: :mailer do
       end
     end
   end
+
+  describe "#remind_sits_to_report_school_training_details" do
+    context "when the school has not made a programme choice" do
+      context "and ran FIP last year" do
+        let!(:query_cohort) { create(:seed_cohort, start_year: cohort.start_year + 1) }
+
+        it "mails the induction coordinator" do
+          expect {
+            service.remind_sits_to_report_school_training_details
+          }.to have_enqueued_mail(SchoolMailer, :remind_sit_to_report_school_training_details)
+            .with(params: { induction_coordinator: sit_profile }, args: [])
+        end
+
+        context "when the dry_run flag is set" do
+          let(:dry_run) { true }
+
+          it "does not mail the induction coordinator" do
+            expect {
+              service.remind_sits_to_report_school_training_details
+            }.not_to have_enqueued_mail
+          end
+
+          it "returns the count of emails that would be sent" do
+            expect(service.remind_sits_to_report_school_training_details).to eq 1
+          end
+        end
+      end
+
+      context "and did not run FIP last year" do
+        let!(:school) { create(:seed_school, :valid) }
+
+        it "does not mail the induction coordinator" do
+          expect {
+            service.remind_sits_to_report_school_training_details
+          }.not_to have_enqueued_mail
+        end
+      end
+    end
+  end
 end

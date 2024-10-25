@@ -238,6 +238,30 @@ module BulkMailers
       email_count
     end
 
+    def remind_sits_to_report_school_training_details
+      query = Schools::ThatRanFipLastYearButHaveNotEngagedQuery.call(cohort:, school_type_codes: SCHOOL_TYPES_TO_INCLUDE)
+
+      query = query.joins(:induction_coordinator_profiles)
+
+      return query.count if dry_run
+
+      email_count = 0
+
+      query
+        .eager_load(:induction_coordinator_profiles)
+        .find_each do |school|
+          school.induction_coordinator_profiles.each do |induction_coordinator|
+            email_count += 1
+
+            SchoolMailer.with(induction_coordinator:)
+              .remind_sit_to_report_school_training_details
+              .deliver_later(wait: get_waiting_time(email_count))
+          end
+        end
+
+      email_count
+    end
+
   private
 
     def nomination_token(email:, school:)

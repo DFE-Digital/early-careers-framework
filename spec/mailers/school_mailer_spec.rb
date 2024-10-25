@@ -569,4 +569,28 @@ RSpec.describe SchoolMailer, type: :mailer do
       expect(SchoolMailer::SIT_PRE_TERM_REMINDER_TO_REPORT_ANY_CHANGES).to eq("59983db6-678f-4a7d-9a3b-80bed4f6ef17")
     end
   end
+
+  describe "#remind_sit_to_report_school_training_details" do
+    let(:induction_coordinator) { create(:seed_induction_coordinator_profile, :with_user) }
+    let(:email_address) { induction_coordinator.user.email }
+
+    let(:mailer) do
+      SchoolMailer.with(induction_coordinator:).remind_sit_to_report_school_training_details.deliver_now
+    end
+
+    it "renders the right headers" do
+      expect(mailer.to).to eq([email_address])
+      expect(mailer.from).to eq(["mail@example.com"])
+    end
+
+    it "calls template_mail with the correct template and placeholders" do
+      expect_any_instance_of(SchoolMailer).to receive(:template_mail).with(
+        "38e2e143-2b11-4acf-b305-26185f28d58c",
+        hash_including(to: email_address, personalisation: { name: induction_coordinator.user.full_name, email_address: }),
+      ).and_call_original
+
+      # Trigger the method
+      mailer
+    end
+  end
 end
