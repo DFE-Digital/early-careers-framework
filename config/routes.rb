@@ -545,12 +545,12 @@ Rails.application.routes.draw do
         end
       end
       namespace :npq do
-        resource :change_training_status, only: %i[new create]
-        resource :change_lead_provider, only: %i[new create update]
+        resource :change_training_status, only: %i[new create], constraints: NpqApiEndpoint
+        resource :change_lead_provider, only: %i[new create update], constraints: NpqApiEndpoint
       end
     end
     resources :npq_applications, only: [] do
-      resource :change_lead_provider_approval_status, only: %i[new create]
+      resource :change_lead_provider_approval_status, only: %i[new create], constraints: NpqApiEndpoint
     end
 
     namespace :banding_tracker, path: "banding-tracker" do
@@ -563,11 +563,11 @@ Rails.application.routes.draw do
       post "/choose-programme", to: "payment_breakdowns#choose_programme", as: :choose_programme
       get "/choose-provider-ecf", to: "payment_breakdowns#select_provider_ecf", as: :select_provider_ecf
       post "/choose-provider-ecf", to: "payment_breakdowns#choose_provider_ecf", as: :choose_provider_ecf
-      get "/choose-provider-npq", to: "payment_breakdowns#select_provider_npq", as: :select_provider_npq
-      post "/choose-provider-npq", to: "payment_breakdowns#choose_provider_npq", as: :choose_provider_npq
+      get "/choose-provider-npq", to: "payment_breakdowns#select_provider_npq", as: :select_provider_npq, constraints: NpqApiEndpoint
+      post "/choose-provider-npq", to: "payment_breakdowns#choose_provider_npq", as: :choose_provider_npq, constraints: NpqApiEndpoint
 
       collection do
-        post :choose_npq_statement, path: "choose-npq-statement"
+        post :choose_npq_statement, path: "choose-npq-statement", constraints: NpqApiEndpoint
         post :choose_ecf_statement, path: "choose-ecf-statement"
       end
     end
@@ -586,7 +586,7 @@ Rails.application.routes.draw do
       end
     end
 
-    namespace :npq do
+    namespace :npq, constraints: NpqApiEndpoint do
       resources :statements, only: [] do
         resource :assurance_report, path: "assurance-report", only: :show, format: :csv
       end

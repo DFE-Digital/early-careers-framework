@@ -28,15 +28,16 @@
 <h2>Profiles</h2>
 
 <% @user.participant_profiles.each do |pp| %>
-  <h3><%= pp.type %></h3>
   <% if pp.ecf? %>
+    <h3><%= pp.type %></h3>
     <%= render partial: "finance/participants/ecf_profile", locals: { pp: pp } %>
-  <% else %>
+  <% elsif !FeatureFlag.active?(:disable_npq) %>
+    <h3><%= pp.type %></h3>
     <%= render partial: "finance/participants/npq_profile", locals: { pp: pp } %>
   <% end %>
 <% end %>
 
-<% if @user.npq_applications.exists? %>
+<% if !FeatureFlag.active?(:disable_npq) && @user.npq_applications.exists? %>
   <h2>NPQ applications</h2>
 
   <% @user.npq_applications.each_with_index do |application, i| %>

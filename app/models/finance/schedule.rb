@@ -11,6 +11,10 @@ module Finance
 
     # cohort_start_year
     delegate :start_year, to: :cohort, prefix: true
+
+    def npq?
+      false
+    end
   end
 end
 

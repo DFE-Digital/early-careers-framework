@@ -54,6 +54,19 @@ RSpec.feature "Finance users payment breakdowns", type: :feature, js: true do
     and_the_page_should_be_accessible
   end
 
+  scenario "Show NPQ when :disable_npq feature is inactive" do
+    given_i_am_logged_in_as_a_finance_user
+    when_i_click_on_payment_breakdown_header
+    then_i_should_see_npq_payments
+  end
+
+  scenario "Hide NPQ when :disable_npq feature is active" do
+    given_i_am_logged_in_as_a_finance_user
+    and_disable_npq_feature_is_active
+    when_i_click_on_payment_breakdown_header
+    then_i_should_not_see_npq_payments
+  end
+
 private
 
   def then_i_should_see_the_total_voided
@@ -64,6 +77,24 @@ private
     extended_declarations = ParticipantDeclaration.extended
     expect(page.find("strong", text: "Total extended")).to have_sibling("div", text: extended_declarations.count)
     expect(page).to have_content("Extended")
+  end
+
+  def and_disable_npq_feature_is_active
+    FeatureFlag.activate(:disable_npq)
+  end
+
+  def then_i_should_see_npq_payments
+    within first("#main-content form") do
+      expect(page).to have_content("ECF payments")
+      expect(page).to have_content("NPQ payments")
+    end
+  end
+
+  def then_i_should_not_see_npq_payments
+    within first("#main-content form") do
+      expect(page).to have_content("ECF payments")
+      expect(page).to_not have_content("NPQ payments")
+    end
   end
 
   def then_i_see_voided_declarations
