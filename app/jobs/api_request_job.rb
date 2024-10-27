@@ -28,14 +28,7 @@ class ApiRequestJob
     }
 
     ApiRequest.create!(data)
-
-    event = DfE::Analytics::Event.new
-                                 .with_type(:persist_api_request)
-                                 .with_request_uuid(uuid)
-                                 .with_entity_table_name(:api_requests)
-                                 .with_data(data)
-
-    DfE::Analytics::SendEvents.do(Array.wrap(event.as_json))
+    send_analytics_event(cpd_lead_provider:, data:, uuid:)
   end
 
 private
@@ -66,5 +59,17 @@ private
     end
   rescue JSON::ParserError
     { error: "request data did not contain valid JSON" }
+  end
+
+  def send_analytics_event(cpd_lead_provider:, data:, uuid:)
+    return if cpd_lead_provider.blank?
+
+    event = DfE::Analytics::Event.new
+                                 .with_type(:persist_api_request)
+                                 .with_request_uuid(uuid)
+                                 .with_entity_table_name(:api_requests)
+                                 .with_data(data:)
+
+    DfE::Analytics::SendEvents.do(Array.wrap(event.as_json))
   end
 end

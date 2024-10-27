@@ -37,32 +37,4 @@ RSpec.describe ApiRequest, type: :model do
       end
     end
   end
-
-  describe "#send_event" do
-    before do
-      FeatureFlag.activate(:dfe_analytics)
-      allow(DfE::Analytics::SendEvents).to receive(:perform_later)
-    end
-
-    it "sends analytics events with the request uuid" do
-      RequestLocals.store[:dfe_analytics_request_id] = "example-request-id"
-
-      subject.send_event("create_entity", {})
-
-      expect(DfE::Analytics::SendEvents).to have_received(:perform_later)
-        .with([a_hash_including({
-          "request_uuid" => "example-request-id",
-        })])
-    end
-
-    context "when api request is not from a lead provider" do
-      subject { create(:api_request, cpd_lead_provider: nil) }
-
-      it "does not send analytics events" do
-        subject.send_event("create_entity", {})
-
-        expect(DfE::Analytics::SendEvents).not_to have_received(:perform_later)
-      end
-    end
-  end
 end

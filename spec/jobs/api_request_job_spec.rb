@@ -114,15 +114,19 @@ RSpec.describe ApiRequestJob do
 
     context "when the dfe_analytics feature is enabled" do
       before { FeatureFlag.activate(:dfe_analytics) }
+
       let(:expected_job_data) do
-        {
-          "event_type" => "persist_api_request",
-          "request_uuid" => request_uuid,
-          "entity_table_name" => "api_requests",
-        }
+        array_including(
+          hash_including(
+            "event_type" => "persist_api_request",
+            "request_uuid" => request_uuid,
+            "entity_table_name" => "api_requests",
+            "data" => array_including({ "key" => "request_path", "value" => ["/api/v1/bar"] }),
+          ),
+        )
       end
 
-      it "saves the request_uuid on the big query event" do
+      it "sends event to analytics with API request data and uuid" do
         expect {
           described_class.new.perform({
             headers:,
@@ -130,7 +134,7 @@ RSpec.describe ApiRequestJob do
             path: "/api/v1/bar",
             method: "POST",
           }, {}, 500, Time.zone.now, request_uuid)
-        }.to have_enqueued_job(DfE::Analytics::SendEvents).with(array_including(hash_including(**expected_job_data))).on_queue("dfe_analytics")
+        }.to have_enqueued_job(DfE::Analytics::SendEvents).with(expected_job_data).on_queue("dfe_analytics")
       end
     end
 
@@ -151,6 +155,8 @@ RSpec.describe ApiRequestJob do
   end
 
   context "when the api request is not made by a lead provider" do
+    before { FeatureFlag.activate(:dfe_analytics) }
+
     it "does not send events to analytics" do
       expect {
         described_class.new.perform({
