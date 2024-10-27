@@ -45,7 +45,7 @@ gem "bootsnap", "~> 1.18", require: false
 gem "foreman"
 
 # Canonical meta tag
-gem "canonical-rails", "~> 0.2.15"
+gem "canonical-rails", "~> 0.2.16"
 
 gem "listen", "~> 3.9"
 gem "rack-attack", "~> 6.7"
