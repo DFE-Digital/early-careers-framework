@@ -68,5 +68,18 @@ RSpec.describe Statements::MarkAsPaid do
         }.to change(statement.reload.statement_line_items.clawed_back, :count).from(0).to(1)
       end
     end
+
+    context "when `disable_npq` feature flag is active" do
+      before { FeatureFlag.activate(:disable_npq) }
+
+      it "does not transition the statement, declarations and line items" do
+        expect {
+          subject.call
+          statement.reload
+        }.to not_change { statement.type }
+        .and(not_change { statement.participant_declarations.paid.count })
+        .and(not_change { statement.statement_line_items.paid.count })
+      end
+    end
   end
 end

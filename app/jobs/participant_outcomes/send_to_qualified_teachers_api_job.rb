@@ -6,6 +6,8 @@ module ParticipantOutcomes
     retry_on TooManyRequests, attempts: 3
 
     def perform(participant_outcome_id:)
+      return if NpqApiEndpoint.disabled?
+
       QualifiedTeachersApiSender.new(participant_outcome_id:).call
     end
   end

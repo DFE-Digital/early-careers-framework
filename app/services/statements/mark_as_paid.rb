@@ -7,6 +7,8 @@ module Statements
     end
 
     def call
+      return if NpqApiEndpoint.disabled? && statement.npq?
+
       Finance::Statement.transaction do
         participant_declarations.find_each do |participant_declaration|
           declaration_mark_as_paid_service.call(participant_declaration)

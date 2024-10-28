@@ -50,5 +50,21 @@ RSpec.describe ParticipantOutcomes::StreamBigQueryJob do
         expect(table).not_to have_received(:insert)
       end
     end
+
+    context "when `disable_npq` feature flag is active" do
+      let(:participant_outcome_id) { SecureRandom.uuid }
+
+      before { FeatureFlag.activate(:disable_npq) }
+
+      it "returns nil" do
+        expect(described_class.perform_now(participant_outcome_id:)).to be_nil
+      end
+
+      it "doesn't attempt to stream" do
+        described_class.perform_now(participant_outcome_id:)
+
+        expect(table).not_to have_received(:insert)
+      end
+    end
   end
 end

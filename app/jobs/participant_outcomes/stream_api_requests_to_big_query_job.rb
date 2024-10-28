@@ -5,7 +5,7 @@ module ParticipantOutcomes
     queue_as :big_query
 
     def perform(participant_outcome_api_request_id:)
-      return if table.nil?
+      return if NpqApiEndpoint.disabled? || table.nil?
 
       api_request = ParticipantOutcomeApiRequest.find(participant_outcome_api_request_id)
 
