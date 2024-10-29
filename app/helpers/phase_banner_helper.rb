@@ -17,13 +17,12 @@ module PhaseBannerHelper
   end
 
   def maintenance_banner_dismissed?
-    dismissed_until = cookies[:dismiss_maintenance_banner_until]
-    return if dismissed_until.blank?
+    cookie_value = cookies[:dismiss_maintenance_banner_until]
+    return unless cookie_value
 
-    Time.zone.parse(dismissed_until) <= 1.week.from_now
-  rescue StandardError => e
-    Rails.logger.error "Error parsing maintenance banner dismissal cookie: #{e.message}"
-    Sentry.capture_exception(e)
-    false
+    dismissed_until = Time.zone.parse(cookie_value)
+    return unless dismissed_until
+
+    dismissed_until > Time.zone.now
   end
 end
