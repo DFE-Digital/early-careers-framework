@@ -571,8 +571,11 @@ RSpec.describe SchoolMailer, type: :mailer do
   end
 
   describe "#remind_sit_to_report_school_training_details" do
-    let(:induction_coordinator) { create(:seed_induction_coordinator_profile, :with_user) }
+    let(:school) { create(:seed_school, :valid) }
+    let(:induction_coordinator) { create(:seed_induction_coordinator_profiles_school, :valid, school:).induction_coordinator_profile }
     let(:email_address) { induction_coordinator.user.email }
+    let(:school_name) { induction_coordinator.user.school.name }
+    let(:sit_name) { induction_coordinator.user.full_name }
 
     let(:mailer) do
       SchoolMailer.with(induction_coordinator:).remind_sit_to_report_school_training_details.deliver_now
@@ -586,10 +589,9 @@ RSpec.describe SchoolMailer, type: :mailer do
     it "calls template_mail with the correct template and placeholders" do
       expect_any_instance_of(SchoolMailer).to receive(:template_mail).with(
         "38e2e143-2b11-4acf-b305-26185f28d58c",
-        hash_including(to: email_address, personalisation: { name: induction_coordinator.user.full_name, email_address: }),
+        hash_including(to: email_address, personalisation: { sit_name:, email_address:, school_name: }),
       ).and_call_original
 
-      # Trigger the method
       mailer
     end
   end

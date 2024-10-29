@@ -575,6 +575,7 @@ class SchoolMailer < ApplicationMailer
     induction_coordinator = params[:induction_coordinator]
     sit_name = induction_coordinator.user.full_name
     email_address = induction_coordinator.user.email
+    school_name = induction_coordinator.user.school.name
 
     template_mail(
       REMIND_SIT_TO_REPORT_SCHOOL_TRAINING_DETAILS,
@@ -582,8 +583,9 @@ class SchoolMailer < ApplicationMailer
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
-        name: sit_name,
+        sit_name:,
         email_address:,
+        school_name:,
       },
     ).tag(:remind_sit_to_report_school_training_details).associate_with(induction_coordinator, as: :induction_coordinator_profile)
   end
