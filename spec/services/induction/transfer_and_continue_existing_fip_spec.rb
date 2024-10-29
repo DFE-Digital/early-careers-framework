@@ -122,6 +122,32 @@ RSpec.describe Induction::TransferAndContinueExistingFip do
       end
     end
 
+    context "when an ECT in a non-frozen cohort is transferred and mentor is in a frozen one" do
+      let(:frozen_cohort) { Cohort.find_by_start_year(2021) || create(:cohort, start_year: 2021) }
+      let(:mentor_school_cohort) do
+        NewSeeds::Scenarios::SchoolCohorts::Fip.new(cohort: frozen_cohort).build.with_programme.school_cohort
+      end
+
+      let!(:mentor_profile_2) do
+        NewSeeds::Scenarios::Participants::Mentors::MentorWithNoEcts
+          .new(school_cohort: mentor_school_cohort)
+          .build
+          .with_induction_record(induction_programme: mentor_school_cohort.default_induction_programme)
+          .participant_profile
+      end
+
+      before do
+        frozen_cohort.update!(payments_frozen_at: 1.month.ago)
+      end
+
+      it "moves the mentor to the currently active registration cohort" do
+        expect { service_call }
+          .to change { mentor_profile_2.reload.schedule.cohort.start_year }
+                .from(2021)
+                .to(Cohort.active_registration_cohort.start_year)
+      end
+    end
+
     context "without optional params" do
       let(:service_call) { service.call(school_cohort: school_cohort_2, participant_profile:) }
 

@@ -20,7 +20,9 @@ module Admin::Participants
       @latest_induction_record = @participant_profile.latest_induction_record
 
       @amend_participant_cohort = Induction::AmendParticipantCohort.new(
-        { **default_amend_participant_cohort_attributes, **amend_participant_cohort_params }.symbolize_keys,
+        { **default_amend_participant_cohort_attributes,
+          **amend_participant_cohort_params,
+          force_from_frozen_cohort: true }.symbolize_keys,
       )
 
       if @amend_participant_cohort.save

@@ -99,14 +99,6 @@ RSpec.describe Participants::CheckAndSetCompletionDate do
             .with_programme
         end
 
-        context "when the ect is not eligible to continue training" do
-          let(:induction_status) { "InProgress" }
-
-          it "leave the participant in the synced cohort" do
-            expect { service_call }.not_to change { participant_profile.schedule.cohort }
-          end
-        end
-
         context "when the ect induction is not in progress" do
           before do
             allow(participant_profile).to receive(:eligible_to_change_cohort_and_continue_training?).and_return(true)
@@ -117,12 +109,8 @@ RSpec.describe Participants::CheckAndSetCompletionDate do
           end
         end
 
-        context "when the ect is eligible to continue training" do
+        context "when the ect induction is in progress" do
           let(:induction_status) { "InProgress" }
-
-          before do
-            allow(participant_profile).to receive(:eligible_to_change_cohort_and_continue_training?).and_return(true)
-          end
 
           it "sit the participant in the active registration cohort" do
             expect { service_call }.to change { participant_profile.schedule.cohort }

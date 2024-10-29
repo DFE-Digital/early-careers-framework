@@ -12,15 +12,15 @@ class Induction::ScheduleForNewCohort < BaseService
 
 private
 
-  attr_reader :cohort, :induction_record, :cohort_changed_after_payments_frozen
+  attr_reader :cohort, :induction_record, :extended_schedule
 
-  def initialize(cohort:, induction_record:, cohort_changed_after_payments_frozen: false)
+  def initialize(cohort:, induction_record:, extended_schedule: false)
     @cohort = cohort
     @induction_record = induction_record
-    @cohort_changed_after_payments_frozen = cohort_changed_after_payments_frozen
+    @extended_schedule = extended_schedule
   end
 
   def schedule_identifier
-    cohort_changed_after_payments_frozen ? EXTENDED_SCHEDULE_IDENTIFIER : induction_record&.schedule_identifier
+    extended_schedule ? EXTENDED_SCHEDULE_IDENTIFIER : induction_record&.schedule_identifier
   end
 end

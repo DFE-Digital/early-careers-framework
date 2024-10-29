@@ -49,13 +49,12 @@ module EarlyCareerTeachers
     def amend_mentor_cohort
       Induction::AmendParticipantCohort.new(participant_profile: mentor_profile,
                                             source_cohort_start_year: mentor_profile.schedule.cohort.start_year,
-                                            target_cohort_start_year: Cohort.active_registration_cohort.start_year).save
+                                            target_cohort_start_year: Cohort.active_registration_cohort.start_year,
+                                            force_from_frozen_cohort: true).save
     end
 
     def change_mentor_cohort?
-      return false if cohort.payments_frozen?
-
-      mentor_profile&.eligible_to_change_cohort_and_continue_training?(cohort: Cohort.active_registration_cohort)
+      !cohort.payments_frozen? && mentor_profile&.schedule&.cohort&.payments_frozen?
     end
 
     def mentor_profile

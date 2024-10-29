@@ -32,7 +32,7 @@ module Induction
 
     ECF_FIRST_YEAR = 2020
 
-    attr_accessor :participant_profile, :source_cohort_start_year, :target_cohort_start_year
+    attr_accessor :participant_profile, :source_cohort_start_year, :target_cohort_start_year, :force_from_frozen_cohort
     attr_writer :schedule
 
     validates :source_cohort_start_year,
@@ -115,6 +115,8 @@ module Induction
 
   private
 
+    alias_method :force_from_frozen_cohort?, :force_from_frozen_cohort
+
     def initialize(*)
       super
       @target_cohort_start_year = (@target_cohort_start_year || @schedule&.cohort_start_year).to_i
@@ -122,6 +124,10 @@ module Induction
 
     def back_to_payments_frozen_cohort?
       participant_profile&.cohort_changed_after_payments_frozen? && target_cohort&.payments_frozen?
+    end
+
+    def because_payments_frozen?
+      transfer_from_payments_frozen_cohort? && (unfinished? || force_from_frozen_cohort?)
     end
 
     def billable_declarations_in_cohort?(cohort)
@@ -152,8 +158,7 @@ module Induction
     def find_or_create_target_school_cohort
       school_cohort = SchoolCohort.find_by(school:, cohort: target_cohort)
 
-      if transfer_from_payments_frozen_cohort? &&
-          participant_profile.eligible_to_change_cohort_and_continue_training?(cohort: target_cohort)
+      if because_payments_frozen?
         school_cohort ||= SchoolCohort.full_induction_programme.new(cohort: target_cohort, school:)
         unless school_cohort.default_induction_programme
           default_induction_programme = fip_induction_programme_for(school_cohort)
@@ -219,10 +224,14 @@ module Induction
                                     .exists?
     end
 
+    def payments_frozen_transfer?
+      transfer_from_payments_frozen_cohort? || back_to_payments_frozen_cohort?
+    end
+
     def schedule
       @schedule ||= Induction::ScheduleForNewCohort.call(cohort: target_cohort,
                                                          induction_record:,
-                                                         cohort_changed_after_payments_frozen:)
+                                                         extended_schedule: because_payments_frozen?)
     end
 
     def source_cohort
@@ -237,15 +246,13 @@ module Induction
       @target_school_cohort ||= find_or_create_target_school_cohort
     end
 
-    def payments_frozen_transfer?
-      transfer_from_payments_frozen_cohort? || back_to_payments_frozen_cohort?
-    end
-
     def transfer_from_payments_frozen_cohort?
       source_cohort&.payments_frozen? && target_cohort == Cohort.active_registration_cohort
     end
 
-    alias_method :cohort_changed_after_payments_frozen, :transfer_from_payments_frozen_cohort?
+    def cohort_changed_after_payments_frozen
+      transfer_from_payments_frozen_cohort? && unfinished?
+    end
 
     # Validations
 
@@ -280,7 +287,7 @@ module Induction
     end
 
     def transfer_from_payments_frozen_cohort
-      unless participant_profile.eligible_to_change_cohort_and_continue_training?(cohort: target_cohort)
+      unless unfinished? || force_from_frozen_cohort?
         errors.add(:participant_profile, :not_eligible_to_be_transferred_from_current_cohort)
       end
     end
@@ -297,6 +304,12 @@ module Induction
       if schedule && target_cohort_start_year != schedule.cohort_start_year
         errors.add(:target_cohort_start_year, :incompatible_with_schedule)
       end
+    end
+
+    def unfinished?
+      return @unfinished if instance_variable_defined?(:@unfinished)
+
+      @unfinished ||= participant_profile.eligible_to_change_cohort_and_continue_training?(cohort: target_cohort)
     end
   end
 end

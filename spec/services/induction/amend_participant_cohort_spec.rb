@@ -5,11 +5,13 @@ RSpec.describe Induction::AmendParticipantCohort do
     let(:participant_profile) {}
     let(:source_cohort_start_year) { Cohort.previous.start_year }
     let(:target_cohort_start_year) { Cohort.current.start_year }
+    let(:force_from_frozen_cohort) { false }
 
     subject(:form) do
       described_class.new(participant_profile:,
                           source_cohort_start_year:,
-                          target_cohort_start_year:)
+                          target_cohort_start_year:,
+                          force_from_frozen_cohort:)
     end
 
     context "when the source_cohort_start_year is not an integer" do
@@ -187,9 +189,22 @@ RSpec.describe Induction::AmendParticipantCohort do
             allow(participant_profile).to receive(:eligible_to_change_cohort_and_continue_training?).and_return(false)
           end
 
-          it "set errors on participant profile" do
-            expect(form.save).to be_falsey
-            expect(form.errors[:participant_profile]).to include("Participant not eligible to be transferred from their current cohort")
+          context "when the force flag is not true" do
+            let(:force_from_frozen_cohort) { false }
+
+            it "set errors on participant profile" do
+              expect(form.save).to be_falsey
+              expect(form.errors[:participant_profile]).to include("Participant not eligible to be transferred from their current cohort")
+            end
+          end
+
+          context "when the force flag is true" do
+            let(:force_from_frozen_cohort) { true }
+
+            it "set no errors on participant profile" do
+              expect(form.save).to be_truthy
+              expect(form.errors[:participant_profile]).to be_blank
+            end
           end
         end
       end
@@ -458,9 +473,24 @@ RSpec.describe Induction::AmendParticipantCohort do
                   create(:ecf_extended_schedule, cohort: target_cohort)
                 end
 
-                it "mark the participant as transferred for that reason" do
-                  expect(form.save).to be_truthy
-                  expect(participant_profile).to be_cohort_changed_after_payments_frozen
+                context "when the participant is unfinished" do
+                  it "mark the participant as transferred for that reason" do
+                    expect(form.save).to be_truthy
+                    expect(participant_profile).to be_cohort_changed_after_payments_frozen
+                  end
+                end
+
+                context "when the participant is not unfinished but the force flag is set" do
+                  let(:force_from_frozen_cohort) { true }
+
+                  before do
+                    allow(participant_profile).to receive(:eligible_to_change_cohort_and_continue_training?).and_return(false)
+                  end
+
+                  it "don't mark the participant as transferred for that reason" do
+                    expect(form.save).to be_truthy
+                    expect(participant_profile).not_to be_cohort_changed_after_payments_frozen
+                  end
                 end
 
                 it "sets the schedule to ecf-extended-september" do
