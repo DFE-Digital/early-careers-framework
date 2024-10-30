@@ -121,6 +121,7 @@ RSpec.describe ApiRequestJob do
             "event_type" => "persist_api_request",
             "request_uuid" => request_uuid,
             "entity_table_name" => "api_requests",
+            "user_id" => cpd_lead_provider.id,
             "data" => array_including({ "key" => "request_path", "value" => ["/api/v1/bar"] }),
           ),
         )

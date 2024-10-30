@@ -69,6 +69,7 @@ private
                                  .with_request_uuid(uuid)
                                  .with_entity_table_name(:api_requests)
                                  .with_data(data:)
+                                 .with_user(cpd_lead_provider)
 
     DfE::Analytics::SendEvents.do(Array.wrap(event.as_json))
   end
