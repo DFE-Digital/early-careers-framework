@@ -1,21 +1,3 @@
-<%= tag.div(class: class_names("govuk-width-container", "govuk-width-container__wide" => wide_container_view)) do %>
-  <div class="govuk-notification-banner"
-       role="region"
-       aria-labelledby="govuk-notification-banner-title"
-       data-module="govuk-notification-banner">
-    <div class="govuk-notification-banner__header">
-      <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
-        Important
-      </h2>
-    </div>
-    <div class="govuk-notification-banner__content govuk-notification-banner__content--full-width">
-      <p class="govuk-notification-banner__heading">
-        This service will be unavailable <%= unavailable_timeframe_string %>.
-      </p>
-
-      <%= form_with url: maintenance_banner_dismissal_path, method: :patch do |f| %>
-        <%= f.govuk_submit("Dismiss", secondary: true, class: "govuk-!-margin-0") %>
-      <% end %>
-    </div>
-  </div>
-<% end %>
+<div class="govuk-width-container govuk-!-margin-top-4">
+  <%= govuk_notification_banner(title_text:) { |banner| banner.with_heading(text:, link_text:, link_href:) } %>
+</div>

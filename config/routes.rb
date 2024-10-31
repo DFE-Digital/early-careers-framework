@@ -78,7 +78,8 @@ Rails.application.routes.draw do
       get "success", action: :success
     end
   end
-  resource :maintenance_banner_dismissal, only: :update
+
+  get "maintenance_banners/dismiss", to: "maintenance_banners#dismiss", as: :maintenance_banner_dismiss
 
   namespace :api, defaults: { format: "json" } do
     resource :notify_callback, only: :create, path: "notify-callback"

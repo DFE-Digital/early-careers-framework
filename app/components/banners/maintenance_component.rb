@@ -2,73 +2,67 @@
 
 module Banners
   class MaintenanceComponent < ViewComponent::Base
-    attr_reader :wide_container_view
-
-    # Set the following constants to the appropriate dates and times to enable the upcoming maintenance warning.
-    #
-    # date - required (for rendering)
-    # start_time - optional
-    # end_time - optional
-    DATE       = nil # Date.new(2023, 9, 14)
-    START_TIME = nil # Time.zone.local(2023, 9, 14, 18, 0, 0)
-    END_TIME   = nil # Time.zone.local(2023, 9, 14, 21, 0, 0)
-
-    def initialize(wide_container_view: false)
-      @wide_container_view = wide_container_view
-    end
+    HOUR_FORMAT = "%-l%P"
+    DAY_FORMAT = "%-d %B"
+    MAINTENANCE_WINDOW = Time.zone.local(2024, 11, 27, 19)..Time.zone.local(2024, 11, 27, 22)
 
     def render?
-      date.present? && date_is_in_future? && FeatureFlag.active?(:maintenance_banner)
-    end
-
-    def unavailable_timeframe_string
-      if start_time.present?
-        return "from #{formatted_start_time} to #{formatted_end_time} on #{formatted_date}" if end_time.present?
-
-        "from #{formatted_start_time} on #{formatted_date}"
-      elsif end_time.present?
-        "until #{formatted_end_time} on #{formatted_date}"
-      else
-        "on #{formatted_date}"
-      end
+      FeatureFlag.active?(:maintenance_banner) && maintenance_window_ends_in_future?
     end
 
   private
 
-    def start_time
-      START_TIME
+    def title_text
+      "Important"
     end
 
-    def end_time
-      END_TIME
+    def text
+      maintenance_window_spans_days = maintenance_window_start_at.to_date != maintenance_window_end_at.to_date
+      maintenance_window_spans_days ? multi_day_window_text : single_day_window_text
     end
 
-    def date
-      DATE
+    def single_day_window_text
+      "This service will be unavailable from #{from_hour} to #{to_hour} on #{from_day}."
     end
 
-    def date_is_in_future?
-      date.to_time.beginning_of_day > Time.current.end_of_day
+    def multi_day_window_text
+      "This service will be unavailable from #{from_hour} on #{from_day} to #{to_hour} on #{to_day}."
     end
 
-    def formatted_date
-      date.strftime("%-e %B %Y")
+    def link_text
+      "Dismiss"
     end
 
-    def formatted_start_time
-      formatted_time(start_time)
+    def from_hour
+      maintenance_window_start_at.strftime(HOUR_FORMAT)
     end
 
-    def formatted_end_time
-      formatted_time(end_time)
+    def to_hour
+      maintenance_window_end_at.strftime(HOUR_FORMAT)
     end
 
-    def formatted_time(time)
-      return "midnight" if time.strftime("%H:%M") == "00:00"
-      return "midday" if time.strftime("%H:%M") == "12:00"
-      return time.strftime("%-l%P") if time.strftime("%M") == "00"
+    def from_day
+      maintenance_window_start_at.strftime(DAY_FORMAT)
+    end
 
-      time.strftime("%-l:%M%P")
+    def to_day
+      maintenance_window_end_at.strftime(DAY_FORMAT)
+    end
+
+    def link_href
+      maintenance_banner_dismiss_path
+    end
+
+    def maintenance_window_ends_in_future?
+      maintenance_window_end_at >= Time.zone.now
+    end
+
+    def maintenance_window_start_at
+      MAINTENANCE_WINDOW.first
+    end
+
+    def maintenance_window_end_at
+      MAINTENANCE_WINDOW.last
     end
   end
 end
