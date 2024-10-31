@@ -448,4 +448,58 @@ RSpec.describe BulkMailers::SchoolReminderComms, type: :mailer do
       end
     end
   end
+
+  describe "#chase_schools_with_sits_that_have_not_engaged" do
+    context "when the school has not made a programme choice" do
+      let!(:query_cohort) { create(:seed_cohort, start_year: cohort.start_year + 1) }
+
+      context "when the school has SITs" do
+        let(:start_page_url) { "https://ecf-dev.london.cloudapps" }
+        let(:nomination_link) { "https://ecf-dev.london.cloudapps/nominations?token=abc123" }
+
+        before do
+          allow(service).to receive(:nomination_url).with(email: sit_profile.user.email, school:).and_return(nomination_link)
+          allow(service).to receive(:start_page_url).and_return(start_page_url)
+        end
+
+        it "mails the school" do
+          expect {
+            service.chase_schools_with_sits_that_have_not_engaged
+          }.to have_enqueued_mail(SchoolMailer, :ask_gias_contact_to_validate_sit_details)
+            .with(params: {
+              induction_coordinator: sit_profile,
+              school:,
+              primary_contact_email: school.primary_contact_email,
+              secondary_contact_email: school.secondary_contact_email,
+              start_page_url:,
+              nomination_link:,
+            }, args: [])
+        end
+      end
+
+      context "when the school has no SITs" do
+        let!(:sit_profile) { nil }
+
+        it "does not mail the school" do
+          expect {
+            service.chase_schools_with_sits_that_have_not_engaged
+          }.not_to have_enqueued_mail
+        end
+      end
+
+      context "when the dry_run flag is set" do
+        let(:dry_run) { true }
+
+        it "does not mail the school" do
+          expect {
+            service.chase_schools_with_sits_that_have_not_engaged
+          }.not_to have_enqueued_mail
+        end
+
+        it "returns the count of emails that would be sent" do
+          expect(service.chase_schools_with_sits_that_have_not_engaged).to eq 1
+        end
+      end
+    end
+  end
 end
