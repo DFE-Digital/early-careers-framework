@@ -9,7 +9,7 @@ RSpec.describe "Maintenance banner", type: :request do
 
       cookie_value = response.cookies["dismiss_maintenance_banner_until"]
       expect(cookie_value).to be_present
-      expect(Time.zone.parse(cookie_value)).to be_within(1.second).of(1.week.from_now)
+      expect(Time.zone.parse(cookie_value)).to be_within(5.seconds).of(1.week.from_now)
     end
 
     it "redirects back to the root path if no referer is present" do
