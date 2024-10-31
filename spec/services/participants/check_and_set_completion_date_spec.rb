@@ -161,7 +161,7 @@ RSpec.describe Participants::CheckAndSetCompletionDate do
     end
 
     context "when completion dates are not matching" do
-      let(:induction_completion_date) { 2.months.ago.to_date }
+      let(:induction_completion_date) { 2.months.from_now.to_date }
 
       before do
         participant_profile.update!(induction_completion_date:)
