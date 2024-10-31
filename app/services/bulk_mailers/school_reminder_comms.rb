@@ -262,6 +262,38 @@ module BulkMailers
       email_count
     end
 
+    def chase_schools_with_sits_that_have_not_engaged
+      query = Schools::ThatHaveNotEngagedQuery.call(cohort:, school_type_codes: SCHOOL_TYPES_TO_INCLUDE)
+
+      query = query.where.associated(:induction_coordinator_profiles)
+
+      return query.count if dry_run
+
+      email_count = 0
+
+      query.find_each do |school|
+        gias_contact_email = school.primary_contact_email || school.secondary_contact_email
+
+        if gias_contact_email.blank?
+          Rails.logger.info("No GIAS contact for #{school.name_and_urn}")
+          next
+        end
+
+        email_count += 1
+
+        induction_coordinator = school.induction_coordinator_profiles.first
+        nomination_link = nomination_url(email: induction_coordinator.user.email, school:)
+        primary_contact_email = school.primary_contact_email
+        secondary_contact_email = school.secondary_contact_email
+
+        SchoolMailer.with(school:, primary_contact_email:, secondary_contact_email:, induction_coordinator:, start_page_url:, nomination_link:)
+          .ask_gias_contact_to_validate_sit_details
+          .deliver_later(wait: get_waiting_time(email_count))
+      end
+
+      email_count
+    end
+
   private
 
     def nomination_token(email:, school:)
@@ -276,6 +308,10 @@ module BulkMailers
     def opt_in_out_url(email:, school:)
       Rails.application.routes.url_helpers.choose_how_to_continue_url(token: nomination_token(email:, school:),
                                                                       host: Rails.application.config.domain)
+    end
+
+    def start_page_url
+      Rails.application.routes.url_helpers.root_url(host: Rails.application.config.domain)
     end
 
     def appropriate_body_name(induction_record)
