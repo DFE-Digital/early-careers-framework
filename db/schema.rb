@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_10_21_071942) do
+ActiveRecord::Schema[7.1].define(version: 2024_11_01_133851) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "fuzzystrmatch"
@@ -792,6 +792,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_21_071942) do
     t.string "dqt_appropriate_body_name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "dqt_induction_status"
   end
 
   create_table "participant_bands", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
