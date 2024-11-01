@@ -64,7 +64,7 @@ RSpec.describe Induction::TransferAndContinueExistingFip do
       end
 
       before do
-        allow(participant_profile).to receive(:eligible_to_change_cohort_and_continue_training?)
+        allow(participant_profile).to receive(:unfinished_with_billable_declaration?)
                                         .with(cohort: Cohort.next)
                                         .and_return(true)
         create(:ecf_extended_schedule, cohort: Cohort.next)
@@ -83,7 +83,7 @@ RSpec.describe Induction::TransferAndContinueExistingFip do
 
     context "when the participant is not eligible to be moved from a frozen cohort to the target one" do
       before do
-        allow(participant_profile).to receive(:eligible_to_change_cohort_and_continue_training?)
+        allow(participant_profile).to receive(:unfinished_with_billable_declaration?)
                                         .with(cohort: school_cohort_2.cohort)
                                         .and_return(false)
         service_call

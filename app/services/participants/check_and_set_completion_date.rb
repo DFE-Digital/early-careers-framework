@@ -56,7 +56,7 @@ module Participants
     end
 
     def continue_training?
-      in_progress_induction_status? && participant_cohort&.payments_frozen?
+      in_progress_induction_status? && participant_profile.unfinished?
     end
 
     def induction

@@ -61,7 +61,7 @@ module EarlyCareerTeachers
     end
 
     def change_mentor_cohort?
-      !cohort.payments_frozen? && mentor_profile&.schedule&.cohort&.payments_frozen?
+      !cohort.payments_frozen? && mentor_profile&.unfinished?
     end
 
     def ect_attributes

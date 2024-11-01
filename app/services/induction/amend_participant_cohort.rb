@@ -127,7 +127,11 @@ module Induction
     end
 
     def because_payments_frozen?
-      transfer_from_payments_frozen_cohort? && (unfinished? || force_from_frozen_cohort?)
+      return false unless transfer_from_payments_frozen_cohort?
+      return true if unfinished_with_billable_declaration?
+      return false unless unfinished_with_no_billable_declaration?
+
+      force_from_frozen_cohort?
     end
 
     def billable_declarations_in_cohort?(cohort)
@@ -251,7 +255,7 @@ module Induction
     end
 
     def cohort_changed_after_payments_frozen
-      transfer_from_payments_frozen_cohort? && unfinished?
+      transfer_from_payments_frozen_cohort? && unfinished_with_billable_declaration?
     end
 
     # Validations
@@ -287,9 +291,10 @@ module Induction
     end
 
     def transfer_from_payments_frozen_cohort
-      unless unfinished? || force_from_frozen_cohort?
-        errors.add(:participant_profile, :not_eligible_to_be_transferred_from_current_cohort)
-      end
+      return if unfinished_with_billable_declaration?
+      return if unfinished_with_no_billable_declaration? && force_from_frozen_cohort?
+
+      errors.add(:participant_profile, :not_eligible_to_be_transferred_from_current_cohort)
     end
 
     def transfer_to_payments_frozen_cohort
@@ -306,10 +311,16 @@ module Induction
       end
     end
 
-    def unfinished?
-      return @unfinished if instance_variable_defined?(:@unfinished)
+    def unfinished_with_billable_declaration?
+      return @unfinished_with_billable_declaration if instance_variable_defined?(:@unfinished_with_billable_declaration)
 
-      @unfinished ||= participant_profile.eligible_to_change_cohort_and_continue_training?(cohort: target_cohort)
+      @unfinished_with_billable_declaration ||= participant_profile.unfinished_with_billable_declaration?(cohort: target_cohort)
+    end
+
+    def unfinished_with_no_billable_declaration?
+      return @unfinished_with_no_billable_declaration if instance_variable_defined?(:@unfinished_with_no_billable_declaration)
+
+      @unfinished_with_no_billable_declaration ||= participant_profile.unfinished_with_no_billable_declaration?(cohort: target_cohort)
     end
   end
 end

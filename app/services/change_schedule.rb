@@ -86,7 +86,7 @@ private
   def changing_cohort_due_to_payments_frozen?
     return false unless participant_profile.ecf?
     return false unless allow_change_to_from_frozen_cohort
-    return true if participant_profile.eligible_to_change_cohort_and_continue_training?(cohort:)
+    return true if participant_profile.unfinished_with_billable_declaration?(cohort:)
 
     participant_profile.eligible_to_change_cohort_back_to_their_payments_frozen_original?(cohort:, current_cohort:)
   end

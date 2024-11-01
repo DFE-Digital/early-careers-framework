@@ -32,7 +32,7 @@ private
   end
 
   def change_mentor_cohort?
-    !ect_in_payments_frozen_cohort? && mentor_profile&.schedule&.cohort&.payments_frozen?
+    !ect_in_payments_frozen_cohort? && mentor_profile&.unfinished?
   end
 
   def cip_materials

@@ -118,6 +118,14 @@ class ParticipantDeclaration < ApplicationRecord
     states.keys.excluding(ARCHIVABLE_STATES)
   end
 
+  def billable?
+    %w[eligible payable paid].include?(current_state)
+  end
+
+  def completed?
+    declaration_type == "completed"
+  end
+
   def voidable?
     %w[submitted eligible payable ineligible].include?(state)
   end

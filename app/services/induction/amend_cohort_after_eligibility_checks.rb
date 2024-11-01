@@ -10,7 +10,7 @@ module Induction
     attr_accessor :participant_profile
 
     def call
-      amend_participant_cohort if eligible_participant_in_frozen_cohort?
+      amend_participant_cohort if unfinished_eligible_participant?
     end
 
   private
@@ -18,15 +18,16 @@ module Induction
     def amend_participant_cohort
       Induction::AmendParticipantCohort.new(participant_profile:,
                                             source_cohort_start_year: participant_profile.schedule&.cohort&.start_year,
-                                            target_cohort_start_year: Cohort.active_registration_cohort.start_year)
+                                            target_cohort_start_year: Cohort.active_registration_cohort.start_year,
+                                            force_from_frozen_cohort: true)
                                        .save
     end
 
-    def eligible_participant_in_frozen_cohort?
+    def unfinished_eligible_participant?
       return false unless participant_profile.eligible?
       return false if participant_profile.ecf_participant_eligibility&.reason != "none"
 
-      participant_profile.schedule&.cohort&.payments_frozen?
+      participant_profile.unfinished?
     end
   end
 end

@@ -36,7 +36,7 @@ RSpec.describe "SIT assigns a mentor to an ECT", js: true, early_in_cohort: true
     # FIXME: This factory fails validation on participant_id, despite this being present on participant identity.
     # Stubbing the eligibility check to return the participant_profile for now.
     # create(:ect_participant_declaration, participant_profile:, declaration_type: "completed")
-    allow(ParticipantProfile::ECT).to receive(:eligible_to_change_cohort_and_continue_training)
+    allow(ParticipantProfile::ECT).to receive(:unfinished_with_billable_declaration)
                                         .and_return(ParticipantProfile::ECT.where(id: participant_profile.id))
 
     induction_programme = InductionProgramme.find_by(school_cohort: active_registration_school_cohort)
@@ -73,7 +73,7 @@ RSpec.describe "SIT assigns a mentor to an ECT", js: true, early_in_cohort: true
     # FIXME: This factory fails validation on participant_id, despite this being present on participant identity.
     # Stubbing the eligibility check to return the participant_profile for now.
     # create(:ect_participant_declaration, participant_profile:, declaration_type: "completed")
-    allow(ParticipantProfile::Mentor).to receive(:eligible_to_change_cohort_and_continue_training)
+    allow(ParticipantProfile::Mentor).to receive(:unfinished_with_billable_declaration)
                                            .and_return(ParticipantProfile::Mentor.where(id: participant_profile.id))
 
     induction_programme = InductionProgramme.find_by(school_cohort: @school_cohort)

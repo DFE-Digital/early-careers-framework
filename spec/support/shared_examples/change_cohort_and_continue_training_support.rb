@@ -3,7 +3,7 @@
 RSpec.shared_examples "can change cohort and continue training" do |participant_type, other_participant_type, completed_training_at_attribute|
   let(:declaration_type) { "#{participant_type}_participant_declaration" }
 
-  describe ".eligible_to_change_cohort_and_continue_training" do
+  describe ".unfinished_with_billable_declaration" do
     let(:current_cohort) { eligible_participant.schedule.cohort }
     let(:restrict_to_participant_ids) { [] }
     let(:cpd_lead_provider) { eligible_participant.lead_provider.cpd_lead_provider }
@@ -33,7 +33,7 @@ RSpec.shared_examples "can change cohort and continue training" do |participant_
       end
     end
 
-    subject { described_class.eligible_to_change_cohort_and_continue_training(cohort:, restrict_to_participant_ids:) }
+    subject { described_class.unfinished_with_billable_declaration(cohort:, restrict_to_participant_ids:) }
 
     it { expect(current_cohort).not_to eq(cohort) }
     it { is_expected.to contain_exactly(*eligible_participants) }
@@ -45,7 +45,7 @@ RSpec.shared_examples "can change cohort and continue training" do |participant_
     end
   end
 
-  describe "#eligible_to_change_cohort_and_continue_training?" do
+  describe "#unfinished_with_billable_declaration?" do
     let(:declaration) { create(declaration_type, :paid, declaration_type: :started, cohort: Cohort.previous) }
     let(:participant_profile) { declaration.participant_profile }
     let(:current_cohort) { participant_profile.schedule.cohort }
@@ -56,18 +56,18 @@ RSpec.shared_examples "can change cohort and continue training" do |participant_
     subject { participant_profile }
 
     it { expect(current_cohort).not_to eq(cohort) }
-    it { is_expected.to be_eligible_to_change_cohort_and_continue_training(cohort:) }
+    it { is_expected.to be_unfinished_with_billable_declaration(cohort:) }
 
     context "when the participant is not in a payments frozen cohort" do
       before { current_cohort.update!(payments_frozen_at: nil) }
 
-      it { is_expected.not_to be_eligible_to_change_cohort_and_continue_training(cohort:) }
+      it { is_expected.not_to be_unfinished_with_billable_declaration(cohort:) }
     end
 
     context "when the cohort they intend to continue training in is not the active registration cohort" do
       let(:cohort) { Cohort.active_registration_cohort.previous }
 
-      it { is_expected.not_to be_eligible_to_change_cohort_and_continue_training(cohort:) }
+      it { is_expected.not_to be_unfinished_with_billable_declaration(cohort:) }
     end
 
     %i[paid payable eligible].each do |billable_declaration_type|
@@ -84,20 +84,20 @@ RSpec.shared_examples "can change cohort and continue training" do |participant_
                  cpd_lead_provider: participant_profile.lead_provider.cpd_lead_provider)
         end
 
-        it { is_expected.not_to be_eligible_to_change_cohort_and_continue_training(cohort:) }
+        it { is_expected.not_to be_unfinished_with_billable_declaration(cohort:) }
       end
     end
 
     context "when the participant does not have billable, not completed declarations" do
       before { declaration.destroy }
 
-      it { is_expected.not_to be_eligible_to_change_cohort_and_continue_training(cohort:) }
+      it { is_expected.not_to be_unfinished_with_billable_declaration(cohort:) }
     end
 
     context "when the participant has a #{completed_training_at_attribute}" do
       before { participant_profile.update!("#{completed_training_at_attribute}": 1.month.ago) }
 
-      it { is_expected.not_to be_eligible_to_change_cohort_and_continue_training(cohort:) }
+      it { is_expected.not_to be_unfinished_with_billable_declaration(cohort:) }
     end
   end
 

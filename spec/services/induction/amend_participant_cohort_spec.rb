@@ -134,11 +134,11 @@ RSpec.describe Induction::AmendParticipantCohort do
           source_cohort.update!(payments_frozen_at: Time.current)
         end
 
-        context "when the participant is eligible to be transferred" do
+        context "when the participant is unfinished with billable declarations" do
           before do
             Induction::Enrol.call(participant_profile:,
                                   induction_programme: source_school_cohort.default_induction_programme)
-            allow(participant_profile).to receive(:eligible_to_change_cohort_and_continue_training?).and_return(true)
+            allow(participant_profile).to receive(:unfinished_with_billable_declaration?).and_return(true)
           end
 
           context "when the target_school_cohort has not been set yet" do
@@ -182,11 +182,11 @@ RSpec.describe Induction::AmendParticipantCohort do
           end
         end
 
-        context "when the participant is not eligible to be transferred" do
+        context "when the participant is not unfinished with billable declarations" do
           before do
             Induction::Enrol.call(participant_profile:,
                                   induction_programme: source_school_cohort.default_induction_programme)
-            allow(participant_profile).to receive(:eligible_to_change_cohort_and_continue_training?).and_return(false)
+            allow(participant_profile).to receive(:unfinished_with_billable_declaration?).and_return(false)
           end
 
           context "when the force flag is not true" do
@@ -198,7 +198,20 @@ RSpec.describe Induction::AmendParticipantCohort do
             end
           end
 
-          context "when the force flag is true" do
+          context "when the force flag is true but the participant is not unfinished with no billable declarations" do
+            let(:force_from_frozen_cohort) { true }
+
+            before do
+              participant_profile.update!(induction_completion_date: Date.yesterday)
+            end
+
+            it "set errors on participant profile" do
+              expect(form.save).to be_falsey
+              expect(form.errors[:participant_profile]).to include("Participant not eligible to be transferred from their current cohort")
+            end
+          end
+
+          context "when the force flag is true and the participant is unfinished with no billable declarations" do
             let(:force_from_frozen_cohort) { true }
 
             it "set no errors on participant profile" do
@@ -469,25 +482,39 @@ RSpec.describe Induction::AmendParticipantCohort do
               context "when the transfer is due to payments frozen in the cohort of the participant" do
                 before do
                   source_cohort.update!(payments_frozen_at: Time.current)
-                  allow(participant_profile).to receive(:eligible_to_change_cohort_and_continue_training?).and_return(true)
+                  allow(participant_profile).to receive(:unfinished_with_billable_declaration?).and_return(true)
                   create(:ecf_extended_schedule, cohort: target_cohort)
                 end
 
-                context "when the participant is unfinished" do
+                context "when the participant is unfinished with billable declaration" do
                   it "mark the participant as transferred for that reason" do
                     expect(form.save).to be_truthy
                     expect(participant_profile).to be_cohort_changed_after_payments_frozen
                   end
                 end
 
-                context "when the participant is not unfinished but the force flag is set" do
+                context "when the participant is complete, unfinished and the force flag is set" do
                   let(:force_from_frozen_cohort) { true }
 
                   before do
-                    allow(participant_profile).to receive(:eligible_to_change_cohort_and_continue_training?).and_return(false)
+                    participant_profile.update!(induction_completion_date: Date.yesterday)
+                    allow(participant_profile).to receive(:unfinished_with_billable_declaration?).and_return(false)
                   end
 
-                  it "don't mark the participant as transferred for that reason" do
+                  it "don't execute the transfer" do
+                    expect(form.save).to be_falsey
+                  end
+                end
+
+                context "when the participant is unfinished with no billable declaration and the force flag is set" do
+                  let(:force_from_frozen_cohort) { true }
+
+                  before do
+                    allow(participant_profile).to receive(:unfinished_with_billable_declaration?).and_return(false)
+                    allow(participant_profile).to receive(:unfinished_with_no_billable_declaration?).and_return(true)
+                  end
+
+                  it "don't mark the participant as transferred from the original cohort" do
                     expect(form.save).to be_truthy
                     expect(participant_profile).not_to be_cohort_changed_after_payments_frozen
                   end

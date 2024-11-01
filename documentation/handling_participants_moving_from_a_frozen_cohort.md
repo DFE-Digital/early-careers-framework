@@ -13,7 +13,7 @@ These will happen automatically for school transfers, mentor assignments, re-val
 In addition to seeing that they are continuing with training, we need to check the participant's induction status and declarations to determine whether they are eligible to move from 2021 to 2024:
 
 ```ruby
-participant_profile.eligible_to_change_cohort_and_continue_training?(cohort:)
+participant_profile.unfinished_with_billable_declaration?(cohort:)
 ```
 
 Where `cohort` is `Cohort.active_registration_cohort`

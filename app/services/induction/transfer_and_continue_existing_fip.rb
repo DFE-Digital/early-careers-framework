@@ -39,7 +39,7 @@ private
   end
 
   def change_mentor_cohort?
-    !cohort.payments_frozen? && mentor_profile&.schedule&.cohort&.payments_frozen?
+    !cohort.payments_frozen? && mentor_profile&.unfinished?
   end
 
   def enrol_participant_at_new_programme
@@ -71,7 +71,7 @@ private
   end
 
   def cohort_changed_after_payments_frozen
-    participant_profile.eligible_to_change_cohort_and_continue_training?(cohort:)
+    participant_profile.unfinished_with_billable_declaration?(cohort:)
   end
 
   def create_induction_programme

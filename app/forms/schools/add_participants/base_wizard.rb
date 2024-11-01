@@ -494,7 +494,7 @@ module Schools
 
       def cohort_for_transfer
         cohort = Cohort.active_registration_cohort
-        return cohort if existing_participant_profile&.eligible_to_change_cohort_and_continue_training?(cohort:)
+        return cohort if existing_participant_profile&.unfinished?(cohort:)
 
         existing_participant_cohort || existing_participant_profile&.schedule&.cohort
       end

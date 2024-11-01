@@ -55,7 +55,8 @@ RSpec.describe Induction::AmendCohortAfterEligibilityChecks do
       it "try and place them in the currently active registration cohort" do
         expect(Induction::AmendParticipantCohort).to have_received(:new).with(participant_profile:,
                                                                               source_cohort_start_year:,
-                                                                              target_cohort_start_year:)
+                                                                              target_cohort_start_year:,
+                                                                              force_from_frozen_cohort: true)
       end
     end
   end
