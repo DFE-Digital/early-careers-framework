@@ -532,6 +532,7 @@
   - participant_profile_id
   - appropriate_body_name
   - dqt_appropriate_body_name
+  - dqt_induction_status
   - created_at
   - updated_at
   :api_requests:

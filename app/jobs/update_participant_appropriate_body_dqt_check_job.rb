@@ -4,19 +4,33 @@ class UpdateParticipantAppropriateBodyDQTCheckJob < ApplicationJob
   queue_as :default
 
   def perform(participant_profile_id)
-    # Participant profiles sometimes are getting deleted (when dedupped for example).
-    # Ensure they exist before updating the DQT AB check record.
-    if ParticipantAppropriateBodyDQTCheck.exists?(participant_profile_id:)
-      check_record = ParticipantAppropriateBodyDQTCheck.find_by(participant_profile_id:)
+    # Ensure the record exists before updating
+    crosscheck_record = find_crosscheck_record(participant_profile_id)
+    return if crosscheck_record.nil?
 
-      # Get the appropriate body name from DQT's latest period
-      dqt_response = DQT::V3::Client.new.get_record(trn: check_record.participant_profile.trn)
-      dqt_latest_period = dqt_response["induction"]["periods"].max_by { |period| period["startDate"] }
-      dqt_ab_name = dqt_latest_period["appropriateBody"]["name"]
+    dqt_response = fetch_dqt_response(crosscheck_record&.participant_profile&.trn)
+    attributes_to_update = extract_dqt_attributes(dqt_response)
 
-      check_record.update!(dqt_appropriate_body_name: dqt_ab_name)
-    else
-      Rails.logger.info "Couldn't find the participant profile with id #{participant_profile_id}"
-    end
+    crosscheck_record.update!(attributes_to_update) if attributes_to_update.present?
+  end
+
+private
+
+  def find_crosscheck_record(participant_profile_id)
+    ParticipantAppropriateBodyDQTCheck.includes(:participant_profile).find_by(participant_profile_id:)
+  end
+
+  def fetch_dqt_response(trn)
+    DQT::V3::Client.new.get_record(trn:)
+  end
+
+  def extract_dqt_attributes(dqt_response)
+    dqt_induction_status = dqt_response.dig("induction", "status")
+
+    # We need to get the appropriate body name from the latest period
+    dqt_latest_period = dqt_response.dig("induction", "periods")&.max_by { |period| period["startDate"] }
+    dqt_appropriate_body_name = dqt_latest_period&.dig("appropriateBody", "name")
+
+    { dqt_appropriate_body_name:, dqt_induction_status: }.compact
   end
 end
