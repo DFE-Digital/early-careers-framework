@@ -1,0 +1,12 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: early-careers-framework-maintenance
+spec:
+  selector:
+    app: early-careers-framework-maintenance
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080

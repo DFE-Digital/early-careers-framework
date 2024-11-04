@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: early-careers-framework-maintenance
+  labels:
+    app: early-careers-framework-maintenance
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: early-careers-framework-maintenance
+  template:
+    metadata:
+      labels:
+        app: early-careers-framework-maintenance
+    spec:
+      nodeSelector:
+        teacherservices.cloud/node_pool: applications
+        kubernetes.io/os: linux
+      containers:
+      - name: early-careers-framework-maintenance
+        image: ghcr.io/dfe-digital/early-careers-framework-maintenance:#MAINTENANCE_IMAGE_TAG#
+        ports:
+        - containerPort: 8080
+        resources:
+          requests:
+            memory: 64M
+            cpu: 0.1
+          limits:
+            memory: 64M
+            cpu: 1
