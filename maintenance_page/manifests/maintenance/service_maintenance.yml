@@ -2,10 +2,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: early-careers-framework-maintenance
+  name: cpd-ecf-maintenance
 spec:
   selector:
-    app: early-careers-framework-maintenance
+    app: cpd-ecf-maintenance
   ports:
     - protocol: TCP
       port: 80
