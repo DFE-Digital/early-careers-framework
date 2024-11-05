@@ -146,3 +146,8 @@ variable "azure_cpu_threshold" {
 }
 
 variable "enable_logit" { default = false }
+
+variable "send_traffic_to_maintenance_page" {
+  default     = false
+  description = "During a maintenance operation, keep sending traffic to the maintenance page instead of resetting the ingress"
+}
