@@ -123,7 +123,7 @@ runs:
         node ./performance/dfe-k6-reporter.js ./reports/${{ inputs.scenario }}-report.json ./reports/${{ inputs.scenario }}-report.html ./reports/${{ inputs.scenario }}-summary.md
 
     - name: Upload the reports
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: ${{ inputs.scenario }}-report
         path: |
