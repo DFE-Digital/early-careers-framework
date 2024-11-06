@@ -53,7 +53,7 @@ class ParticipantProfile::ECF < ParticipantProfile
     %w[cohort participant_identity school user teacher_profile induction_records]
   end
 
-  def self.eligible_to_change_cohort_and_continue_training(cohort:, restrict_to_participant_ids: [])
+  def self.unfinished_with_billable_declaration(cohort:, restrict_to_participant_ids: [])
     billable_states = %w[eligible payable paid].freeze
 
     return none unless cohort == Cohort.active_registration_cohort
@@ -81,10 +81,6 @@ class ParticipantProfile::ECF < ParticipantProfile
   end
 
   # Instance Methods
-  def eligible_to_change_cohort_and_continue_training?(cohort:)
-    self.class.eligible_to_change_cohort_and_continue_training(cohort:, restrict_to_participant_ids: [id]).exists?
-  end
-
   def archivable_from_frozen_cohort?
     self.class.archivable_from_frozen_cohort(restrict_to_participant_ids: [id]).exists?
   end
@@ -176,6 +172,22 @@ class ParticipantProfile::ECF < ParticipantProfile
 
   def withdrawn_for?(cpd_lead_provider:)
     !!relevant_induction_record(lead_provider: cpd_lead_provider&.lead_provider)&.training_status_withdrawn?
+  end
+
+  def unfinished_with_billable_declaration?(cohort:)
+    self.class.unfinished_with_billable_declaration(cohort:, restrict_to_participant_ids: [id]).exists?
+  end
+
+  def unfinished_with_no_billable_declaration?(cohort:)
+    return false if completed_training?
+    return false unless cohort == Cohort.active_registration_cohort
+    return false unless schedule&.cohort&.payments_frozen?
+
+    participant_declarations.none? { |declaration| declaration.billable? && declaration.completed? }
+  end
+
+  def unfinished?(cohort: Cohort.active_registration_cohort)
+    unfinished_with_billable_declaration?(cohort:) || unfinished_with_no_billable_declaration?(cohort:)
   end
 
 private

@@ -18,9 +18,10 @@ RSpec.describe ::EarlyCareerTeachers::Create do
         school_cohort:,
         mentor_profile_id: mentor_profile.id,
       )
-    }.to change { ParticipantProfile::ECT.count }.by(1)
-     .and not_change { User.count }
-     .and change { TeacherProfile.count }.by(1)
+    }.to change { ParticipantProfile::ECT.count }
+           .by(1)
+           .and not_change { User.count }
+                  .and change { TeacherProfile.count }.by(1)
   end
 
   it "uses the existing teacher profile record" do
@@ -30,9 +31,10 @@ RSpec.describe ::EarlyCareerTeachers::Create do
         full_name: npq_participant.full_name,
         school_cohort:,
       )
-    }.to change { ParticipantProfile::ECT.count }.by(1)
-     .and not_change { User.count }
-     .and not_change { TeacherProfile.count }
+    }.to change { ParticipantProfile::ECT.count }
+           .by(1)
+           .and not_change { User.count }
+                  .and not_change { TeacherProfile.count }
   end
 
   it "creates a new user and teacher profile" do
@@ -42,9 +44,10 @@ RSpec.describe ::EarlyCareerTeachers::Create do
         full_name: Faker::Name.name,
         school_cohort:,
       )
-    }.to change { ParticipantProfile::ECT.count }.by(1)
-     .and change { User.count }.by(1)
-     .and change { TeacherProfile.count }.by(1)
+    }.to change { ParticipantProfile::ECT.count }
+           .by(1)
+           .and change { User.count }.by(1)
+                                     .and change { TeacherProfile.count }.by(1)
   end
 
   it "updates the users name" do
@@ -120,6 +123,33 @@ RSpec.describe ::EarlyCareerTeachers::Create do
     end
   end
 
+  context "when the mentor is in a frozen cohort and the ECT is not" do
+    let(:frozen_cohort) { Cohort.find_by_start_year(2021) || create(:cohort, start_year: 2021) }
+    let(:ect_school_cohort) do
+      NewSeeds::Scenarios::SchoolCohorts::Fip.new(cohort: Cohort.current).build.with_programme.school_cohort
+    end
+    let(:mentor_school_cohort) do
+      NewSeeds::Scenarios::SchoolCohorts::Fip.new(cohort: frozen_cohort).build.with_programme.school_cohort
+    end
+
+    let!(:mentor_profile) do
+      NewSeeds::Scenarios::Participants::Mentors::MentorWithNoEcts
+        .new(school_cohort: mentor_school_cohort)
+        .build
+        .with_induction_record(induction_programme: mentor_school_cohort.default_induction_programme)
+        .participant_profile
+    end
+
+    before do
+      frozen_cohort.update!(payments_frozen_at: 1.month.ago)
+    end
+
+    it "moves the mentor to the currently active registration cohort" do
+      expect { described_class.call(email: user.email, full_name: user.full_name, school_cohort: ect_school_cohort, mentor_profile_id: mentor_profile.id) }
+        .to change { mentor_profile.reload.schedule.cohort.start_year }.from(2021).to(Cohort.active_registration_cohort.start_year)
+    end
+  end
+
   it "sets the correct mentor profile" do
     participant_profile = described_class.call(email: user.email, full_name: user.full_name, school_cohort:, mentor_profile_id: mentor_profile.id)
     expect(participant_profile.mentor_profile).to eq(mentor_profile)
@@ -161,6 +191,6 @@ RSpec.describe ::EarlyCareerTeachers::Create do
         mentor_profile_id: mentor_profile.id,
       )
     }.to have_enqueued_job(Analytics::UpsertECFParticipantProfileJob)
-     .with(participant_profile: instance_of(ParticipantProfile::ECT))
+           .with(participant_profile: instance_of(ParticipantProfile::ECT))
   end
 end

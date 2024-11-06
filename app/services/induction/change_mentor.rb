@@ -27,7 +27,12 @@ private
   def amend_mentor_cohort
     Induction::AmendParticipantCohort.new(participant_profile: mentor_profile,
                                           source_cohort_start_year: mentor_profile.schedule.cohort.start_year,
-                                          target_cohort_start_year: Cohort.active_registration_cohort.start_year).save
+                                          target_cohort_start_year: Cohort.active_registration_cohort.start_year,
+                                          force_from_frozen_cohort: true).save
+  end
+
+  def change_mentor_cohort?
+    !ect_in_payments_frozen_cohort? && mentor_profile&.unfinished?
   end
 
   def cip_materials
@@ -54,12 +59,6 @@ private
       sit_name:,
     ).training_materials
                 .deliver_later
-  end
-
-  def change_mentor_cohort?
-    return false if ect_in_payments_frozen_cohort?
-
-    mentor_profile&.eligible_to_change_cohort_and_continue_training?(cohort: Cohort.active_registration_cohort)
   end
 
   def sit_name

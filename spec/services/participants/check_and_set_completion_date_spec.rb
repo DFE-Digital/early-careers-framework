@@ -64,7 +64,7 @@ RSpec.describe Participants::CheckAndSetCompletionDate do
     end
 
     context "when DQT does not provide a completion date" do
-      let(:completion_date) { nil }
+      let(:completion_date) {}
 
       it "does not set a completion date" do
         service_call
@@ -99,17 +99,9 @@ RSpec.describe Participants::CheckAndSetCompletionDate do
             .with_programme
         end
 
-        context "when the ect is not eligible to continue training" do
-          let(:induction_status) { "InProgress" }
-
-          it "leave the participant in the synced cohort" do
-            expect { service_call }.not_to change { participant_profile.schedule.cohort }
-          end
-        end
-
         context "when the ect induction is not in progress" do
           before do
-            allow(participant_profile).to receive(:eligible_to_change_cohort_and_continue_training?).and_return(true)
+            allow(participant_profile).to receive(:unfinished_with_billable_declaration?).and_return(true)
           end
 
           it "leave the participant in the synced cohort" do
@@ -117,12 +109,9 @@ RSpec.describe Participants::CheckAndSetCompletionDate do
           end
         end
 
-        context "when the ect is eligible to continue training" do
+        context "when the ect induction is in progress" do
           let(:induction_status) { "InProgress" }
-
-          before do
-            allow(participant_profile).to receive(:eligible_to_change_cohort_and_continue_training?).and_return(true)
-          end
+          let(:completion_date) {}
 
           it "sit the participant in the active registration cohort" do
             expect { service_call }.to change { participant_profile.schedule.cohort }

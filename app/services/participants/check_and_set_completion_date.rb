@@ -8,7 +8,7 @@ module Participants
       return unless participant_profile.ect?
 
       complete_induction if complete_induction?
-      continue_training if sync_with_dqt && unfinished_participant_continue_training?
+      continue_training if sync_with_dqt && continue_training?
       record_completion_date_mismatch if completion_date_mismatch?
     end
 
@@ -23,7 +23,8 @@ module Participants
     def amend_cohort_to_continue_training
       @amend_cohort_to_continue_training ||= Induction::AmendParticipantCohort.new(participant_profile:,
                                                                                    source_cohort_start_year:,
-                                                                                   target_cohort_start_year:)
+                                                                                   target_cohort_start_year:,
+                                                                                   force_from_frozen_cohort: true)
     end
 
     def clear_participant_continue_training_errors
@@ -52,6 +53,10 @@ module Participants
     def continue_training
       clear_participant_continue_training_errors
       amend_cohort_to_continue_training.save || save_error(amend_cohort_to_continue_training.errors.full_messages.first)
+    end
+
+    def continue_training?
+      in_progress_induction_status? && participant_profile.unfinished?
     end
 
     def induction
@@ -108,14 +113,7 @@ module Participants
       Cohort.active_registration_cohort
     end
 
-    def target_cohort_start_year
-      target_cohort.start_year
-    end
-
-    def unfinished_participant_continue_training?
-      in_progress_induction_status? &&
-        participant_cohort&.payments_frozen? &&
-        participant_profile.eligible_to_change_cohort_and_continue_training?(cohort: target_cohort)
-    end
+    # target_cohort_start_year
+    delegate :start_year, to: :target_cohort, prefix: true
   end
 end

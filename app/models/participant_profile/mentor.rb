@@ -82,7 +82,7 @@ class ParticipantProfile::Mentor < ParticipantProfile::ECF
     "Mentor"
   end
 
-  def self.eligible_to_change_cohort_and_continue_training(cohort:, restrict_to_participant_ids: [])
+  def self.unfinished_with_billable_declaration(cohort:, restrict_to_participant_ids: [])
     super(cohort:, restrict_to_participant_ids:).where(mentor_completion_date: nil)
   end
 end

@@ -55,6 +55,7 @@ RSpec.describe "Admin::Participants", type: :request do
           source_cohort_start_year: Cohort.current.start_year,
           target_cohort_start_year: next_cohort.display_name, # string because this one is passed in from the form
           participant_profile: mentor_profile,
+          force_from_frozen_cohort: true,
         )
 
         expect(response).to redirect_to(admin_participant_path(mentor_profile))

@@ -5,8 +5,8 @@ RSpec.describe Induction::ScheduleForNewCohort do
     let(:cohort) { Cohort.current }
     let(:schedule_identifier) { "ecf-standard-september" }
     let(:schedule) { double(Finance::Schedule::ECF, schedule_identifier:) }
-    let(:cohort_changed_after_payments_frozen) { false }
-    let(:service) { described_class.call(cohort:, induction_record:, cohort_changed_after_payments_frozen:) }
+    let(:extended_schedule) { false }
+    let(:service) { described_class.call(cohort:, induction_record:, extended_schedule:) }
 
     context "when induction record is nil" do
       let(:default_schedule) { double(Finance::Schedule::ECF) }
@@ -34,8 +34,8 @@ RSpec.describe Induction::ScheduleForNewCohort do
       let(:induction_record) { double(InductionRecord, cohort: Cohort.previous, schedule_identifier:) }
       let(:new_schedule) { double(Finance::Schedule::ECF, schedule_identifier:, cohort:) }
 
-      context "when cohort_changed_after_payments_frozen is true" do
-        let(:cohort_changed_after_payments_frozen) { true }
+      context "when extended_schedule is true" do
+        let(:extended_schedule) { true }
 
         context "when the ecf-extended-september schedule in the cohort exists" do
           let(:default_schedule) { double(Finance::Schedule::ECF, cohort:, schedule_identifier: "ecf-extended-september") }
@@ -68,8 +68,8 @@ RSpec.describe Induction::ScheduleForNewCohort do
         end
       end
 
-      context "when cohort_changed_after_payments_frozen is false" do
-        let(:cohort_changed_after_payments_frozen) { false }
+      context "when extended_schedule is false" do
+        let(:extended_schedule) { false }
 
         context "when a schedule in the cohort exists with the same schedule-identifier as the induction record's schedule" do
           let(:default_schedule) { double(Finance::Schedule::ECF, cohort:, schedule_identifier:) }
