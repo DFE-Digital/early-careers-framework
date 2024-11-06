@@ -1,25 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: early-careers-framework-maintenance
+  name: cpd-ecf-maintenance
   labels:
-    app: early-careers-framework-maintenance
+    app: cpd-ecf-maintenance
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: early-careers-framework-maintenance
+      app: cpd-ecf-maintenance
   template:
     metadata:
       labels:
-        app: early-careers-framework-maintenance
+        app: cpd-ecf-maintenance
     spec:
       nodeSelector:
         teacherservices.cloud/node_pool: applications
         kubernetes.io/os: linux
       containers:
-      - name: early-careers-framework-maintenance
-        image: ghcr.io/dfe-digital/early-careers-framework-maintenance:#MAINTENANCE_IMAGE_TAG#
+      - name: cpd-ecf-maintenance
+        image: ghcr.io/dfe-digital/cpd-ecf-maintenance:#MAINTENANCE_IMAGE_TAG#
         ports:
         - containerPort: 8080
         resources:

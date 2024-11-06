@@ -232,9 +232,9 @@ konduit-snapshot: get-cluster-credentials
 maintenance-image-push: ## Build and push maintenance page image: make production maintenance-image-push GITHUB_TOKEN=x [MAINTENANCE_IMAGE_TAG=y]
 	$(if ${GITHUB_TOKEN},, $(error Provide a valid Github token with write:packages permissions as GITHUB_TOKEN variable))
 	$(if ${MAINTENANCE_IMAGE_TAG},, $(eval export MAINTENANCE_IMAGE_TAG=$(shell date +%s)))
-	docker build -t ghcr.io/dfe-digital/early-careers-framework-maintenance:${MAINTENANCE_IMAGE_TAG} maintenance_page
+	docker build -t ghcr.io/dfe-digital/cpd-ecf-maintenance:${MAINTENANCE_IMAGE_TAG} maintenance_page
 	echo ${GITHUB_TOKEN} | docker login ghcr.io -u USERNAME --password-stdin
-	docker push ghcr.io/dfe-digital/early-careers-framework-maintenance:${MAINTENANCE_IMAGE_TAG}
+	docker push ghcr.io/dfe-digital/cpd-ecf-maintenance:${MAINTENANCE_IMAGE_TAG}
 
 maintenance-fail-over: get-cluster-credentials ## Fail main app over to the maintenance page. Requires an existing maintenance docker image: make production maintenance-fail-over MAINTENANCE_IMAGE_TAG=y. See https://github.com/DFE-Digital/teacher-services-cloud/blob/main/documentation/maintenance-page.md#github-token
 	$(eval export CONFIG)

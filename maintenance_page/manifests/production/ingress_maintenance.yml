@@ -11,6 +11,6 @@ spec:
       - pathType: ImplementationSpecific
         backend:
           service:
-            name: early-careers-framework-maintenance
+            name: cpd-ecf-maintenance
             port:
               number: 80
