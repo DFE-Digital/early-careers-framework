@@ -113,10 +113,35 @@ RSpec.describe Participants::CheckAndSetCompletionDate do
           let(:induction_status) { "InProgress" }
           let(:completion_date) {}
 
-          it "sit the participant in the active registration cohort" do
-            expect { service_call }.to change { participant_profile.schedule.cohort }
-                                         .from(cohort)
-                                         .to(Cohort.active_registration_cohort)
+          let!(:esp) { create(:appropriate_body, :esp) }
+          let!(:istip) { create(:appropriate_body, :istip) }
+
+          context "when the participant is has not ESP or ISTIP appropriate body" do
+            it "sit the participant in the active registration cohort" do
+              expect { service_call }.to change { participant_profile.schedule.cohort }
+                                           .from(cohort)
+                                           .to(Cohort.active_registration_cohort)
+            end
+          end
+
+          context "when the participant has ESP as appropriate body" do
+            before do
+              participant_profile.latest_induction_record.update!(appropriate_body: esp)
+            end
+
+            it "do not sit the participant in the active registration cohort" do
+              expect { service_call }.not_to change { participant_profile.schedule.cohort }
+            end
+          end
+
+          context "when the participant has ISTIP as appropriate body" do
+            before do
+              participant_profile.latest_induction_record.update!(appropriate_body: istip)
+            end
+
+            it "do not sit the participant in the active registration cohort" do
+              expect { service_call }.not_to change { participant_profile.schedule.cohort }
+            end
           end
         end
       end

@@ -56,7 +56,11 @@ module Participants
     end
 
     def continue_training?
-      in_progress_induction_status? && participant_profile.unfinished?
+      in_progress_induction_status? && participant_profile.unfinished? && !esp_or_istip?
+    end
+
+    def esp_or_istip?
+      [AppropriateBody.esp, AppropriateBody.istip].compact.include?(participant_profile.latest_induction_record.appropriate_body)
     end
 
     def induction

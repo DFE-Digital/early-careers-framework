@@ -3,6 +3,9 @@
 class AppropriateBody < ApplicationRecord
   has_paper_trail
 
+  ESP = "Educational Success Partners (ESP)"
+  ISTIP = "Independent Schools Teacher Induction Panel (IStip)"
+
   enum body_type: {
     local_authority: "local_authority",
     teaching_school_hub: "teaching_school_hub",
@@ -29,6 +32,14 @@ class AppropriateBody < ApplicationRecord
 
   def self.ransackable_attributes(_auth_object = nil)
     %w[name]
+  end
+
+  def self.esp
+    find_by_name(ESP)
+  end
+
+  def self.istip
+    find_by_name(ISTIP)
   end
 
 private
