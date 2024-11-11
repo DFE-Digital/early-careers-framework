@@ -25,8 +25,8 @@ on:
     - cron: "0 4 * * *" # 04:00 UTC
 
 env:
-  SERVICE_NAME: early-careers-framework
-  SERVICE_SHORT: ecf
+  SERVICE_NAME: cpd-ecf
+  SERVICE_SHORT: cpdecf
   TF_VARS_PATH: terraform/application/workspace_variables
 
 jobs:
