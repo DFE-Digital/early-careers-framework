@@ -23,6 +23,16 @@ FactoryBot.define do
       body_type { "national" }
     end
 
+    trait :esp do
+      name { AppropriateBody::ESP }
+      body_type { "national" }
+    end
+
+    trait :istip do
+      name { AppropriateBody::ISTIP }
+      body_type { "national" }
+    end
+
     trait :supports_independent_schools_only do
       listed_for_school_type_codes { GiasTypes::INDEPENDENT_SCHOOLS_TYPE_CODES }
     end
