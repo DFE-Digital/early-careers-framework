@@ -46,4 +46,8 @@ jobs:
         shell: bash
         run: |
           kubectl -n cpd-production exec -ti --tty deployment/cpd-ecf-migration-web -- /bin/sh -c "cd /app && bundle exec rails runner \"PaperTrail.request.whodunnit = %{CI}; Migration::ParityCheck::TokenProvider.new.generate!\""
-          
+
+      - name: Turn off DfE analytics feature flag
+        shell: bash
+        run: |
+          kubectl -n cpd-production exec -ti --tty deployment/cpd-ecf-migration-web -- /bin/sh -c "cd /app && bundle exec rails runner \"FeatureFlag.deactivate(:dfe_analytics)\""
