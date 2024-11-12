@@ -93,13 +93,12 @@ API v3:
 https://sb.manage-training-for-early-career-teachers.education.gov.uk/api/v3
 ```
 
-<div class="govuk-inset-text"> Note, there are some custom API headers that can only be used in sandbox. </div>
+<div class="govuk-inset-text"> Note, there are some custom API headers that can only be used in the sandbox. </div>
 
-* [Test the ability to submit ECF declarations in sandbox ahead of time](/api-reference/ecf/guidance/#test-the-ability-to-submit-declarations-in-sandbox-ahead-of-time)
-* [Test the ability to submit NPQ declarations in sandbox ahead of time](/api-reference/npq/guidance/#test-the-ability-to-submit-declarations-in-sandbox-ahead-of-time)
+[Test the ability to submit ECF declarations in the sandbox ahead of time](/api-reference/ecf/guidance/#test-the-ability-to-submit-declarations-in-sandbox-ahead-of-time)
 
 ## Rate limits
 
-Providers are limited to 1000 requests per 5 minutes when using the API in the production environment. If the limit is exceeded, providers will see `429` HTTP status codes.
+Providers are limited to 1,000 requests per 5 minutes when using the API in the production environment. If the limit is exceeded, providers will see `429` HTTP status codes.
 
 This limit on requests for each authentication key is calculated on a rolling basis. 
