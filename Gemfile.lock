@@ -488,7 +488,7 @@ GEM
     reverse_markdown (2.1.1)
       nokogiri
     rexml (3.3.9)
-    rouge (4.4.0)
+    rouge (4.5.1)
     rspec-core (3.13.1)
       rspec-support (~> 3.13.0)
     rspec-default_http_header (0.0.6)
