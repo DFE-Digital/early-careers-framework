@@ -5,9 +5,7 @@ RSpec.describe LeadProviderApiSpecification::Preprocessor do
   let(:instance) { described_class.new(swagger_path) }
 
   describe "#preprocess!" do
-    let(:environment) { "separation" }
-
-    before { allow(Rails).to receive(:env) { environment.inquiry } }
+    before { FeatureFlag.activate(:disable_npq) }
 
     context "when the swagger doc contains NPQ references" do
       it "removes the NPQ references" do
@@ -83,7 +81,7 @@ RSpec.describe LeadProviderApiSpecification::Preprocessor do
     end
 
     context "when not removing NPQ references" do
-      let(:environment) { "production" }
+      before { FeatureFlag.deactivate(:disable_npq) }
 
       it "does not read or write any files" do
         expect(File).not_to receive(:read)
