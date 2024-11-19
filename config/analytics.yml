@@ -263,13 +263,6 @@
   - created_at
   - updated_at
   - delivery_partner_to_be_confirmed
-  :declaration_states:
-  - id
-  - participant_declaration_id
-  - state
-  - created_at
-  - updated_at
-  - state_reason
   :cohorts:
   - id
   - created_at

@@ -548,3 +548,10 @@
   - user_description
   - created_at
   - updated_at
+  :declaration_states:
+  - id
+  - participant_declaration_id
+  - state
+  - created_at
+  - updated_at
+  - state_reason
