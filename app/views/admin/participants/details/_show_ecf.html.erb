@@ -73,14 +73,20 @@
     end
   end
 
-  sl.with_row do |row|
-    row.with_key(text: "Induction start date")
-    row.with_value(text: @participant_presenter.induction_start_date)
-  end
-
-  sl.with_row do |row|
-    row.with_key(text: "Induction completion date")
-    row.with_value(text: @participant_presenter.induction_completion_date)
+  if @participant_profile.mentor?
+    sl.with_row do |row|
+      row.with_key(text: "Mentor completion date")
+      row.with_value(text: @participant_presenter.mentor_completion_date)
+    end
+  else
+    sl.with_row do |row|
+      row.with_key(text: "Induction start date")
+      row.with_value(text: @participant_presenter.induction_start_date)
+    end
+    sl.with_row do |row|
+      row.with_key(text: "Induction completion date")
+      row.with_value(text: @participant_presenter.induction_completion_date)
+    end
   end
 
   sl.with_row do |row|

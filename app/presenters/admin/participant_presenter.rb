@@ -65,6 +65,12 @@ class Admin::ParticipantPresenter
 
   delegate :id, to: :participant_profile
 
+  def mentor_completion_date
+    return "Not yet recorded" unless participant_profile.mentor_completion_date
+
+    participant_profile.mentor_completion_date.to_formatted_s(:govuk)
+  end
+
   def induction_completion_date
     if participant_profile.induction_completion_date
       participant_profile.induction_completion_date.to_formatted_s(:govuk)
