@@ -49,7 +49,7 @@ class LeadProviderApiSpecification::Preprocessor
 private
 
   def remove_npq_references?
-    Rails.env.separation?
+    FeatureFlag.active?(:disable_npq)
   end
 
   def swagger_string
