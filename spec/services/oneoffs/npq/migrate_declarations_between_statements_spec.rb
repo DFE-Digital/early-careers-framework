@@ -278,6 +278,31 @@ describe Oneoffs::NPQ::MigrateDeclarationsBetweenStatements, mid_cohort: true do
       end
     end
 
+    context "when migrating to an eligible statement" do
+      let(:to_statement) { create(:npq_statement, name: "May 2023", cpd_lead_provider:, cohort:) }
+      let(:declaration) { create(:npq_participant_declaration, :payable, cohort:, cpd_lead_provider:) }
+      let(:from_statement) { declaration.statements.first }
+
+      it "migrates payable declarations to the new statement and makes them eligible" do
+        migrate
+
+        declaration.reload
+
+        expect(declaration.statement_line_items.map(&:statement)).to all(eq(to_statement))
+        expect(declaration).to be_eligible
+      end
+
+      it "records information" do
+        migrate
+
+        expect(instance).to have_recorded_info([
+          "Migrating declarations from #{from_statement_name} to #{to_statement_name} for 1 providers",
+          "Migrating 1 declarations for #{npq_lead_provider.name}",
+          "Marking 1 payable declarations back as eligible for #{to_statement_name} statement",
+        ])
+      end
+    end
+
     context "when migrating from a paid statement" do
       let(:declaration) { create(:npq_participant_declaration, :paid, cohort:, cpd_lead_provider:) }
       let(:from_statement) { declaration.statements.first }

@@ -86,7 +86,8 @@ module Oneoffs::NPQ
       record_info("Migrating #{statement_line_items.size} declarations for #{provider.name}")
       statement_line_items.update!(statement_id: to_statement.id)
 
-      change_declaration_states_for_to_statement(to_statement, statement_line_items)
+      make_eligible_declaration_payable_for_to_statement(to_statement, statement_line_items)
+      make_payable_declaration_eligible_for_to_statement(to_statement, statement_line_items)
     end
 
     def each_statements_by_provider
@@ -96,7 +97,7 @@ module Oneoffs::NPQ
       end
     end
 
-    def change_declaration_states_for_to_statement(to_statement, statement_line_items)
+    def make_eligible_declaration_payable_for_to_statement(to_statement, statement_line_items)
       declarations = statement_line_items.map(&:participant_declaration).uniq
       eligible_declarations = declarations.select(&:eligible?)
 
@@ -109,6 +110,19 @@ module Oneoffs::NPQ
       record_info("Marking #{eligible_declarations.size} eligible declarations as #{action} for #{to_statement.name} statement")
 
       eligible_declarations.each { |declaration| service.call(declaration) }
+    end
+
+    def make_payable_declaration_eligible_for_to_statement(to_statement, statement_line_items)
+      declarations = statement_line_items.map(&:participant_declaration).uniq
+      payable_declarations = declarations.select(&:payable?)
+
+      return if to_statement.payable? || to_statement.paid?
+      return unless payable_declarations.any?
+
+      record_info("Marking #{payable_declarations.size} payable declarations back as eligible for #{to_statement.name} statement")
+
+      payable_declarations.each { |declaration| DeclarationState.eligible!(declaration) }
+      statement_line_items.map(&:eligible!)
     end
 
     def filter_statement_line_items(statement_line_items)
