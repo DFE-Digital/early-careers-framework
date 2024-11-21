@@ -290,6 +290,7 @@ describe Oneoffs::NPQ::MigrateDeclarationsBetweenStatements, mid_cohort: true do
 
         expect(declaration.statement_line_items.map(&:statement)).to all(eq(to_statement))
         expect(declaration).to be_eligible
+        expect(to_statement.statement_line_items.map(&:state)).to eq(%w[eligible])
       end
 
       it "records information" do

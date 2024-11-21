@@ -122,7 +122,7 @@ module Oneoffs::NPQ
       record_info("Marking #{payable_declarations.size} payable declarations back as eligible for #{to_statement.name} statement")
 
       payable_declarations.each { |declaration| DeclarationState.eligible!(declaration) }
-      statement_line_items.map(&:eligible!)
+      statement_line_items.select(&:payable?).map(&:eligible!)
     end
 
     def filter_statement_line_items(statement_line_items)
