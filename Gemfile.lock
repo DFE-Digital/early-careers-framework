@@ -755,6 +755,7 @@ DEPENDENCIES
   net-smtp
   nokogiri
   openapi3_parser (~> 0.9.2)
+  ostruct
   pagy (~> 9)
   paper_trail
   parallel_tests

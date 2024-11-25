@@ -100,6 +100,7 @@ gem "net-pop", require: false
 gem "net-smtp", require: false
 
 gem "json-diff", "~> 0.4.1", require: false
+gem "ostruct"
 
 gem "cssbundling-rails", "~> 1.4"
 gem "jsbundling-rails"

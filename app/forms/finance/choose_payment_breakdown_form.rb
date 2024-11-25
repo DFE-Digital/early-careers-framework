@@ -10,10 +10,10 @@ module Finance
     validates :provider, presence: { message: I18n.t("errors.provider.blank") }, on: :choose_provider
 
     def programme_choices
-      choices = [::OpenStruct.new(id: "ecf", name: "ECF payments")]
+      choices = [OpenStruct.new(id: "ecf", name: "ECF payments")]
 
       unless FeatureFlag.active?(:disable_npq)
-        choices << ::OpenStruct.new(id: "npq", name: "NPQ payments")
+        choices << OpenStruct.new(id: "npq", name: "NPQ payments")
       end
 
       choices
