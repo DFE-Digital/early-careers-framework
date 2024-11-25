@@ -7,7 +7,7 @@ Sentry.init do |config|
   config.release = "#{ENV['RELEASE_VERSION']}-#{ENV['SHA']}"
 
   filter = ActiveSupport::ParameterFilter.new(Rails.application.config.filter_parameters)
-  config.before_send = lambda do |event|
+  config.before_send = lambda do |event, _hint|
     # use Rails' parameter filter to sanitize the event
     filter.filter(event.to_hash)
   end
