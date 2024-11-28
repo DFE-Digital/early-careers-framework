@@ -107,26 +107,6 @@ jobs:
           docker-image: ${{ needs.docker.outputs.docker-image }}
           azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
 
-  run_api_performance_tests:
-    name: Run API performance tests
-    needs: [docker]
-    runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'test-performance')
-    concurrency: run_api_performance_tests_${{ github.event.pull_request.number }}
-    environment:
-      name: production
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - uses: ./.github/actions/test-performance
-        id: api-load-test
-        with:
-          scenario: api-load-test
-          docker-image: ${{ needs.docker.outputs.docker-image }}
-          azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
-
   deploy_staging:
     name: Deploy staging
     needs: [docker, rspec, lint, brakeman]
