@@ -21,8 +21,6 @@ if ENV["LEGACY_SEEDS"] == "true"
       FeatureFlag.activate(feature)
     end
   end
-elsif Rails.env.performance?
-  load(Rails.root.join(*%w[db new_seeds performance.rb]).to_s)
 elsif Rails.env.test?
   Rails.logger.warn("skipping seeding the test database")
 else

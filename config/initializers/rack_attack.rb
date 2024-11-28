@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-# Turn off completely in performance environment so we can test the applications limits
-Rack::Attack.enabled = !Rails.env.performance?
-
 # Throttle general requests by IP
 class Rack::Attack
   class Request < ::Rack::Request

@@ -28,10 +28,6 @@ review:
   <<: *default
   sslmode: <%= ENV.fetch("DB_SSLMODE") { "require" } %>
 
-performance:
-  <<: *default
-  database: 'early_careers_framework_performance'
-
 staging:
   <<: *default
   url: <%= ENV["DATABASE_URL"] %>
