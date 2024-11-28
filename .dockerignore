@@ -10,5 +10,3 @@
 /coverage/*
 
 /reports
-/performance/reports
-/performance/db/*.gz
