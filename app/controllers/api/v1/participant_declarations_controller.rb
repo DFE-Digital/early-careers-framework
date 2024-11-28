@@ -51,7 +51,6 @@ module Api
           cpd_lead_provider:,
           updated_since:,
           participant_id: participant_id_filter,
-          type: type_filter,
         ).scope
       end
 
@@ -61,10 +60,6 @@ module Api
 
       def participant_id_filter
         filter[:participant_id]
-      end
-
-      def type_filter
-        filter[:type]
       end
 
       def cpd_lead_provider
