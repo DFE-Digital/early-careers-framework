@@ -342,7 +342,7 @@ GEM
       rack (>= 2.1.4.1)
     marcel (1.0.4)
     matrix (0.4.2)
-    memory_profiler (1.0.2)
+    memory_profiler (1.1.0)
     method_source (1.1.0)
     mini_mime (1.1.5)
     minitest (5.25.1)
