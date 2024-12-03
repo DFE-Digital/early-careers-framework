@@ -14,16 +14,20 @@ module Api
         end
 
         def unfunded_mentors
+          ActiveRecord::Base.connection.execute("set statement_timeout to 0")
+
           scope = InductionRecord.distinct
                    .select(*necessary_fields)
                    .joins("JOIN participant_profiles ON participant_profiles.id = induction_records.mentor_profile_id")
                    .joins("JOIN (#{latest_induction_records_join.to_sql}) AS latest_induction_records ON latest_induction_records.latest_id = induction_records.id")
+                   .joins("JOIN (#{latest_induction_records_for_mentor_join.to_sql}) AS latest_mentor_induction_records ON latest_mentor_induction_records.participant_profile_id = participant_profiles.id AND row_number = 1")
                    .joins("JOIN induction_programmes on induction_programmes.id = induction_records.induction_programme_id")
                    .joins("JOIN partnerships on partnerships.id = induction_programmes.partnership_id")
-                   .joins("JOIN participant_identities ON participant_identities.id = participant_profiles.participant_identity_id")
+                   .joins("JOIN participant_identities ON participant_identities.id = latest_mentor_induction_records.preferred_identity_id")
                    .joins("JOIN users on users.id = participant_identities.user_id")
                    .joins("JOIN teacher_profiles ON teacher_profiles.user_id = users.id")
                    .joins("LEFT OUTER JOIN ecf_participant_validation_data on ecf_participant_validation_data.participant_profile_id = induction_records.mentor_profile_id")
+                   .where(participant_profiles: { type: "ParticipantProfile::Mentor" })
                    .where("induction_records.mentor_profile_id not in (select distinct participant_profile_id from (#{latest_induction_records_join.to_sql}) AS latest_induction_records)")
                    .order(sort_order(default: "users.created_at ASC", model: User))
 
@@ -33,8 +37,7 @@ module Api
 
         def unfunded_mentor
           scope = unfunded_mentors
-            .where(participant_profile: { participant_identities: { user_id: params[:id] } })
-          scope = scope.where(participant_profile: { type: "ParticipantProfile::Mentor" }) if scope.size > 1
+            .where(participant_identities: { user_id: params[:id] })
 
           scope.first.presence || raise(ActiveRecord::RecordNotFound)
         end
@@ -42,6 +45,21 @@ module Api
       private
 
         attr_accessor :lead_provider, :params
+
+        def latest_induction_records_for_mentor_join
+          InductionRecord
+          .select(Arel.sql("ROW_NUMBER() OVER (#{latest_induction_record_order}) AS row_number, induction_records.participant_profile_id, induction_records.preferred_identity_id"))
+          .joins(:participant_profile, { induction_programme: :partnership })
+          .where.not(induction_programme: { partnerships: { lead_provider: nil } })
+          .where(
+            induction_programme: {
+              partnerships: {
+                challenged_at: nil,
+                challenge_reason: nil,
+              },
+            },
+          )
+        end
 
         def latest_induction_records_join
           super
