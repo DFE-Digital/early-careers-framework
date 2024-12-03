@@ -49,7 +49,7 @@ properties:
       - active
       - withdrawn
   teacher_reference_number:
-    description: "The Teacher Reference Number (TRN) for this NPQ participant"
+    description: "The Teacher Reference Number (TRN) for this ECF participant"
     type: string
     example: "1234567"
   teacher_reference_number_validated:

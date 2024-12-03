@@ -24,15 +24,8 @@ components:
       scheme: bearer
   schemas:
     ParticipantDeclarationResponse:
-      anyOf:
-        - $ref: "#/components/schemas/ECFParticipantDeclarationResponse"
-        - $ref: "#/components/schemas/NPQParticipantDeclarationResponse"
+      $ref: "#/components/schemas/ECFParticipantDeclarationResponse"
       discriminator:
         propertyName: type
-    NPQParticipantDeclarationAttributes:
-      anyOf:
-        - $ref: "#/components/schemas/NPQParticipantStartedDeclarationAttributes"
-        - $ref: "#/components/schemas/NPQParticipantRetainedDeclarationAttributes"
-        - $ref: "#/components/schemas/NPQParticipantCompletedDeclarationAttributes"
 security:
   - "bearerAuth": []
