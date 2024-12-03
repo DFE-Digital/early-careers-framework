@@ -41,7 +41,6 @@ Rails/UnknownEnv:
     - migration
     - staging
     - test
-    - performance
     - separation
 
 Naming/VariableNumber:
