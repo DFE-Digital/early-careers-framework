@@ -1,9 +1,9 @@
 ---
-title: TESTING 
+title: 2025 contract guidance
 weight: 3
 ---
 
-# ECF-based training management
+# 2025 contract guidance 
 
 ## Contents
 
