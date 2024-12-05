@@ -143,7 +143,7 @@ RSpec.describe NPQ::ChangeToPending do
     end
 
     # Should fail
-    %w[eligible payable paid awaiting_clawback].each do |dec_state|
+    %w[eligible payable paid].each do |dec_state|
       context "accepted application with #{dec_state} declaration" do
         let(:application_status) { :accepted }
         let!(:participant_declaration) { create(:npq_participant_declaration, dec_state, participant_profile:, cpd_lead_provider:) }

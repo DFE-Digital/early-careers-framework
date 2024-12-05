@@ -240,28 +240,6 @@ describe Oneoffs::NPQ::MigrateDeclarationsBetweenStatements, mid_cohort: true do
         ])
       end
 
-      context "when there are declarations awaiting_clawback" do
-        let(:declaration) { create(:npq_participant_declaration, :awaiting_clawback, cohort:, cpd_lead_provider:) }
-        let(:awaiting_clawback_line_item) { declaration.statement_line_items.find(&:awaiting_clawback?) }
-        let(:from_statement) { awaiting_clawback_line_item.statement }
-
-        # Fixes flakey test where the paid statement and awaiting clawback statement can
-        # end up with the same name, resulting in an exception from the migration operation
-        # as we don't allow migrating from paid statements.
-        before { from_statement.update!(name: "#{from_statement.name} - Clawback") }
-
-        it "migrates them, but does not make them payable" do
-          migrate
-
-          declaration.reload
-
-          migrated_statement_line_item = declaration.statement_line_items.find(&:awaiting_clawback?)
-          expect(migrated_statement_line_item.statement).to eq(to_statement)
-          expect(declaration).to be_awaiting_clawback
-          expect(instance.recorded_info).not_to include(/eligible declarations as payable/)
-        end
-      end
-
       context "when there are declarations are already payable" do
         let(:declaration) { create(:npq_participant_declaration, :payable, cohort:, cpd_lead_provider:) }
         let(:from_statement) { declaration.statement_line_items.first.statement }

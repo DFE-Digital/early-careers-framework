@@ -29,12 +29,7 @@ module Finance
     def output_fee_statement_available
       cohort = participant_declaration.cohort
       cpd_lead_provider = participant_declaration.cpd_lead_provider
-
-      next_output_fee_statement = if participant_declaration.ecf?
-                                    cpd_lead_provider.lead_provider.next_output_fee_statement(cohort)
-                                  else
-                                    cpd_lead_provider.npq_lead_provider.next_output_fee_statement(cohort)
-                                  end
+      next_output_fee_statement = cpd_lead_provider.lead_provider.next_output_fee_statement(cohort)
 
       errors.add(:participant_declaration, I18n.t(:no_output_fee_statements_for_cohort, cohort: cohort.start_year)) if next_output_fee_statement.blank?
     end

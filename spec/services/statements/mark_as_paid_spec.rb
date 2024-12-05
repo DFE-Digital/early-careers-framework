@@ -7,21 +7,16 @@ RSpec.describe Statements::MarkAsPaid do
   let(:cohort)                        { Cohort.current }
   let(:eligible_statement)            { create(:npq_statement, cpd_lead_provider:, cohort:, deadline_date: Cohort.next.registration_start_date - 3.months) }
   let(:statement)                     { create(:npq_statement, cpd_lead_provider:, cohort:, deadline_date: Cohort.next.registration_start_date - 2.months) }
-  let(:awaiting_clawback_declaration) { create(:npq_participant_declaration, :eligible, cpd_lead_provider:) }
 
   subject { described_class.new(statement) }
 
   before do
-    travel_to eligible_statement.deadline_date - 1.day do
-      awaiting_clawback_declaration
-    end
     Statements::MarkAsPayable.new(eligible_statement).call
     Statements::MarkAsPaid.new(eligible_statement).call
 
     travel_to statement.deadline_date - 1.day do
       create(:npq_participant_declaration, :eligible, cpd_lead_provider:)
       VoidParticipantDeclaration.new(create(:npq_participant_declaration, :eligible, cpd_lead_provider:)).call
-      Finance::ClawbackDeclaration.new(awaiting_clawback_declaration.reload).call
     end
     Statements::MarkAsPayable.new(statement).call
     Finance::Statement::NPQ::Payable.find(statement.id)
@@ -41,14 +36,6 @@ RSpec.describe Statements::MarkAsPaid do
           subject.call
         }.to change(statement.reload.participant_declarations.paid, :count).from(0).to(1)
       end
-
-      it "transitions the awaiting_clawback to clawed_back" do
-        expect(statement.participant_declarations.awaiting_clawback.count).to eq(1)
-
-        expect {
-          subject.call
-        }.to change(statement.reload.participant_declarations.clawed_back, :count).from(0).to(1)
-      end
     end
 
     describe "line items" do
@@ -58,14 +45,6 @@ RSpec.describe Statements::MarkAsPaid do
         expect {
           subject.call
         }.to change(statement.reload.statement_line_items.paid, :count).from(0).to(1)
-      end
-
-      it "transitions the awaiting_clawback to clawed_back" do
-        expect(statement.statement_line_items.awaiting_clawback.count).to eql(1)
-
-        expect {
-          subject.call
-        }.to change(statement.reload.statement_line_items.clawed_back, :count).from(0).to(1)
       end
     end
 
