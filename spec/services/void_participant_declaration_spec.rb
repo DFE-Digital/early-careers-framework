@@ -124,50 +124,5 @@ RSpec.describe VoidParticipantDeclaration do
         expect(line_item.reload).to be_voided
       end
     end
-
-    context "when NPQ completed declaration thats paid" do
-      let(:declaration_date) { participant_profile.schedule.milestones.find_by(declaration_type:).start_date }
-      let(:npq_course) { create(:npq_leadership_course) }
-      let(:declaration_type) { "completed" }
-      let(:participant_profile) do
-        create(:npq_participant_profile, npq_lead_provider: cpd_lead_provider.npq_lead_provider, npq_course:)
-      end
-      let(:participant_declaration) do
-        travel_to declaration_date do
-          cohort = participant_profile.schedule.cohort
-          create(:npq_participant_declaration, participant_profile:, cpd_lead_provider:, declaration_type:, declaration_date:, state: "paid", has_passed: true, cohort:)
-        end
-      end
-
-      before do
-        create(:npq_statement, :output_fee, deadline_date: declaration_date + 1.month, cpd_lead_provider:)
-      end
-
-      it "can be voided" do
-        expect(participant_declaration.reload).to be_paid
-        expect(participant_declaration.outcomes.count).to eql(1)
-
-        travel_to declaration_date + 1.day do
-          subject.call
-        end
-        expect(participant_declaration.reload).to be_awaiting_clawback
-        expect(participant_declaration.outcomes.count).to eql(2)
-        expect(participant_declaration.outcomes.latest).to be_voided
-      end
-
-      context "when using 'disable_npq' feature" do
-        context "when 'disable_npq' feature is active" do
-          before do
-            participant_declaration
-
-            FeatureFlag.activate(:disable_npq)
-          end
-
-          it "raises error" do
-            expect { subject.call }.to raise_error(Api::Errors::InvalidTransitionError, "NPQ Courses are no longer supported")
-          end
-        end
-      end
-    end
   end
 end
