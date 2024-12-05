@@ -19,16 +19,12 @@ class ChangeSchedule
   validates :course_identifier, course: true, presence: { message: I18n.t(:missing_course_identifier) }
   validates :cpd_lead_provider, induction_record: true
   validates :schedule_identifier, presence: { message: I18n.t(:invalid_schedule) }
-  validate :npq_contract_exists
-  validates :cohort, npq_contract_for_cohort_and_course: true
   validate :not_already_withdrawn
   validate :validate_new_schedule_valid_with_existing_declarations
   validate :change_with_a_different_schedule
   validate :validate_permitted_schedule_for_course
-  validate :validate_cannot_change_cohort_ecf
-  validate :validate_cannot_change_cohort_npq
+  validate :validate_cannot_change_cohort
   validate :validate_school_cohort_exists
-  validate :validate_application_funded_place
 
   def call
     return if invalid?
@@ -84,7 +80,7 @@ class ChangeSchedule
 private
 
   def changing_cohort_due_to_payments_frozen?
-    return false unless participant_profile.ecf?
+    return false unless participant_profile
     return false unless allow_change_to_from_frozen_cohort
     return true if participant_profile.unfinished_with_billable_declaration?(cohort:)
 
@@ -115,8 +111,7 @@ private
   end
 
   def update_participant_profile_schedule_references!
-    update_ecf_records!
-    update_npq_records!
+    update_records!
 
     true
   end
@@ -149,55 +144,12 @@ private
     )
   end
 
-  def update_ecf_records!
-    return unless participant_profile&.ecf?
+  def update_records!
+    return unless participant_profile
 
     update_cohort_changed_after_payments_frozen!
     update_school_cohort_and_schedule!
     update_induction_records!
-  end
-
-  def update_schedule!
-    participant_profile.update!(schedule: new_schedule)
-  end
-
-  def update_npq_application_cohort!
-    return unless participant_profile.npq_application.cohort != new_schedule.cohort
-
-    update_funded_place!
-    participant_profile.npq_application.update!(cohort: new_schedule.cohort)
-  end
-
-  def update_funded_place!
-    return unless FeatureFlag.active?(:npq_capping)
-    return if npq_contract.funding_cap&.positive? && target_npq_contract.funding_cap&.positive?
-    return unless target_npq_contract.funding_cap&.positive?
-
-    application = participant_profile.npq_application
-    application.update!(funded_place: application.eligible_for_funding)
-  end
-
-  def target_npq_contract
-    NPQContract.find_latest_by(
-      npq_lead_provider: participant_profile.npq_application.npq_lead_provider,
-      npq_course: participant_profile.npq_application.npq_course,
-      cohort:,
-    )
-  end
-
-  def npq_contract
-    NPQContract.find_latest_by(
-      npq_lead_provider: participant_profile.npq_application.npq_lead_provider,
-      npq_course: participant_profile.npq_application.npq_course,
-      cohort: participant_profile.npq_application.cohort,
-    )
-  end
-
-  def update_npq_records!
-    return unless participant_profile&.npq?
-
-    update_schedule!
-    update_npq_application_cohort!
   end
 
   def relevant_induction_record
@@ -252,21 +204,13 @@ private
     end
   end
 
-  def validate_cannot_change_cohort_ecf
-    return unless participant_profile&.ecf?
+  def validate_cannot_change_cohort
+    return unless participant_profile
     return if changing_cohort_due_to_payments_frozen?
 
     if applicable_declarations.any? &&
         relevant_induction_record &&
         current_cohort.start_year != cohort&.start_year
-      errors.add(:cohort, I18n.t("cannot_change_cohort"))
-    end
-  end
-
-  def validate_cannot_change_cohort_npq
-    return unless participant_profile&.npq? && new_schedule
-
-    if applicable_declarations.any? && new_schedule.cohort.start_year != schedule.cohort.start_year
       errors.add(:cohort, I18n.t("cannot_change_cohort"))
     end
   end
@@ -279,14 +223,6 @@ private
     errors.add(:schedule_identifier, I18n.t(:schedule_already_on_the_profile))
   end
 
-  def npq_contract_exists
-    return unless participant_profile&.npq?
-    return unless FeatureFlag.active?("npq_capping")
-    return if errors.any?
-
-    raise ::Api::Errors::MissingNPQContractOrStatementError unless npq_contract
-  end
-
   def relevant_induction_record_has_different_schedule
     return unless relevant_induction_record
 
@@ -294,28 +230,10 @@ private
   end
 
   def validate_school_cohort_exists
-    return unless participant_profile&.ecf?
+    return unless participant_profile
     return if school_partnership.present?
 
     errors.add(:cohort, I18n.t(:missing_school_cohort_default_partnership))
-  end
-
-  def validate_application_funded_place
-    return unless participant_profile&.npq?
-    return unless FeatureFlag.active?(:npq_capping)
-    return unless npq_contract && target_npq_contract && npq_contract.cohort != target_npq_contract.cohort
-
-    if npq_contract_funded? && target_npq_contract_not_funded?
-      errors.add(:cohort, I18n.t(:cannot_change_cohort))
-    end
-  end
-
-  def target_npq_contract_not_funded?
-    target_npq_contract.funding_cap.to_i.zero?
-  end
-
-  def npq_contract_funded?
-    npq_contract.funding_cap.to_i.positive?
   end
 
   def school_partnership
