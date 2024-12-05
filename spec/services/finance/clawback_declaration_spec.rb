@@ -50,20 +50,6 @@ RSpec.describe Finance::ClawbackDeclaration do
         cohort = participant_declaration.cohort.start_year
         expect(subject.errors.messages_for(:participant_declaration)).to include(/You cannot submit or void declarations for the #{cohort}/)
       end
-
-      context "when the declaration is an NPQ declaration" do
-        let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_npq_lead_provider) }
-        let(:lead_provider) { cpd_lead_provider.npq_lead_provider }
-        let!(:participant_declaration) { create(:npq_participant_declaration, :paid, cpd_lead_provider:) }
-        let!(:next_statement) { create(:npq_statement, cpd_lead_provider:, deadline_date: 3.months.from_now) }
-
-        it "returns an error" do
-          expect(subject).to be_invalid
-
-          cohort = participant_declaration.cohort.start_year
-          expect(subject.errors.messages_for(:participant_declaration)).to include(/You cannot submit or void declarations for the #{cohort}/)
-        end
-      end
     end
 
     context "when declaration already clawed back" do

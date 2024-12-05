@@ -7,7 +7,6 @@ RSpec.describe Statements::MarkAsPayable do
   let!(:statement)                     { create(:npq_statement, :next_output_fee, cpd_lead_provider:) }
   let!(:submitted_declaration)         { create(:npq_participant_declaration, :submitted,  cpd_lead_provider:) }
   let!(:eligible_declaration)          { create(:npq_participant_declaration, :submitted,  cpd_lead_provider:) }
-  let!(:awaiting_clawback_declaration) { create(:npq_participant_declaration, :submitted,  cpd_lead_provider:) }
   let!(:ineligible_declaration)        { create(:npq_participant_declaration, :ineligible, cpd_lead_provider:) }
   let!(:voided_declaration)            { create(:npq_participant_declaration, :voided,     cpd_lead_provider:) }
 
@@ -17,7 +16,6 @@ RSpec.describe Statements::MarkAsPayable do
     travel_to statement.deadline_date do
       RecordDeclarations::Actions::MakeDeclarationsEligibleForParticipantProfile
         .call(participant_profile: eligible_declaration.participant_profile)
-      Finance::ClawbackDeclaration.new(awaiting_clawback_declaration).call
     end
   end
 
