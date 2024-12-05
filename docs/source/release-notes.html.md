@@ -7,7 +7,7 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
-## 4 December 2024
+## 11 December 2024
 
 We’ve fixed a bug that caused the GET unfunded-mentors endpoint query to return incorrect or no longer valid email addresses in a small number of cases.
 

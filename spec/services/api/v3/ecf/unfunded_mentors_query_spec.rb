@@ -32,7 +32,7 @@ RSpec.describe Api::V3::ECF::UnfundedMentorsQuery do
       let!(:latest_induction_record) { create(:induction_record, :future_start_date, induction_programme: other_induction_programme, participant_profile: unfunded_mentor_participant_profile, preferred_identity: latest_preferred_identity) }
 
       it "returns the preferred email from the latest induction record" do
-        expect(unfunded_mentor_participant_profile.induction_records.pluck(&:participant_email).uniq.count).to be > 1
+        expect(unfunded_mentor_participant_profile.induction_records.pluck(&:participant_email).uniq.count).to eq(2)
         expect(subject.unfunded_mentors.first.preferred_identity_email).to eq(latest_preferred_identity.email)
       end
     end
