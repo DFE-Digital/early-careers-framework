@@ -81,7 +81,6 @@ en:
   invalid_reason: "The property '#/reason' must be a valid reason"
   invalid_state: "The attribute '#/state' can only include 'passed' or 'failed' values. If you need to void an outcome, you will need to void the associated 'completed' declaration."
   invalid_has_passed: "Enter 'true' or 'false' in the '#/has_passed' field to indicate whether this participant has passed or failed their course."
-  no_started_declaration_found: An NPQ participant who has not got a started declaration cannot be withdrawn. Please contact support for assistance
   schedule_already_on_the_profile: Selected schedule is already on the profile
   schedule_invalidates_declaration: Changing schedule would invalidate existing declarations. Please void them first.
   schedule_invalid_for_course: Selected schedule is not valid for the course

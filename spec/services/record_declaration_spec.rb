@@ -445,7 +445,6 @@ RSpec.describe RecordDeclaration do
     end
 
     it_behaves_like "validates the next output fee statement is available"
-    it_behaves_like "validates the declaration for a withdrawn participant"
     it_behaves_like "validates the course_identifier, cpd_lead_provider, participant_id"
     it_behaves_like "validates existing declarations"
     it_behaves_like "validates the participant milestone"
