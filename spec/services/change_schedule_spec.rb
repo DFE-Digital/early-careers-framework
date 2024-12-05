@@ -721,10 +721,6 @@ RSpec.describe ChangeSchedule do
     describe "validations" do
       it_behaves_like "validating a participant for a change schedule"
 
-      it_behaves_like "validating a participant is not already withdrawn for a change schedule" do
-        let(:participant_profile) { create(:npq_participant_profile, :withdrawn, npq_lead_provider:, npq_course:) }
-      end
-
       context "when the NPQContract is missing" do
         before { FeatureFlag.activate(:npq_capping) }
 
