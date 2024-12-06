@@ -8,8 +8,10 @@ RSpec.describe SupplierHelper, type: :helper do
 
   describe "#supplier_link" do
     context "when the supplier is a lead provider" do
-      it "returns nil" do
-        expect(helper.supplier_link(lead_provider)).to eq(CGI.escapeHTML(lead_provider.name))
+      let(:result) { "/admin/suppliers/lead-providers/#{lead_provider.id}" }
+
+      it "returns the admin show url for the lead provider" do
+        expect(helper.supplier_link(lead_provider)).to include(result, CGI.escapeHTML(lead_provider.name))
       end
     end
 
