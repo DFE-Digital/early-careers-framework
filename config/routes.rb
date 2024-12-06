@@ -484,7 +484,6 @@ Rails.application.routes.draw do
         end
       end
       namespace :npq do
-        resource :change_training_status, only: %i[new create], constraints: NpqApiEndpoint
         resource :change_lead_provider, only: %i[new create update], constraints: NpqApiEndpoint
       end
     end
