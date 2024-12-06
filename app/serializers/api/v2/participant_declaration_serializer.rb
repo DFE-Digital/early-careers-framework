@@ -26,10 +26,8 @@ module Api
         declaration.current_state.dasherize
       end
 
-      attribute :has_passed do |declaration|
-        if declaration.npq?
-          declaration.outcomes.latest&.has_passed?
-        end
+      attribute :has_passed do |_declaration|
+        nil
       end
     end
   end

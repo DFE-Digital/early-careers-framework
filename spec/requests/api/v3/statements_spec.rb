@@ -9,6 +9,13 @@ RSpec.describe "statements endpoint spec", type: :request do
 
   let(:current_cohort) { Cohort.current || create(:cohort, :current) }
   let(:next_cohort) { Cohort.next || create(:cohort, :next) }
+  let!(:ecf_statement_current_cohort) do
+    create(
+      :ecf_statement,
+      cpd_lead_provider:,
+      cohort: current_cohort,
+    )
+  end
   let!(:ecf_statement_next_cohort) do
     create(
       :ecf_statement,
@@ -21,28 +28,6 @@ RSpec.describe "statements endpoint spec", type: :request do
   let(:params) { {} }
 
   describe "GET /statements" do
-    let!(:ecf_statement_current_cohort) do
-      create(
-        :ecf_statement,
-        cpd_lead_provider:,
-        cohort: current_cohort,
-      )
-    end
-    let!(:npq_statement_next_cohort) do
-      create(
-        :npq_statement,
-        cpd_lead_provider:,
-        cohort: next_cohort,
-      )
-    end
-    let!(:npq_statement_current_cohort) do
-      create(
-        :npq_statement,
-        cpd_lead_provider:,
-        cohort: current_cohort,
-      )
-    end
-
     before do
       default_headers[:Authorization] = bearer_token
       default_headers[:CONTENT_TYPE] = "application/json"
@@ -56,7 +41,7 @@ RSpec.describe "statements endpoint spec", type: :request do
 
     it "returns a list of all statements" do
       get("/api/v3/statements", params:)
-      expect(parsed_response["data"].count).to eq(4)
+      expect(parsed_response["data"].count).to eq(2)
     end
 
     it "returns correct type" do
@@ -88,13 +73,13 @@ RSpec.describe "statements endpoint spec", type: :request do
     end
 
     it "returns the right number of statements per page" do
-      get "/api/v3/statements", params: { page: { per_page: 3, page: 1 } }
+      get "/api/v3/statements", params: { page: { per_page: 2, page: 1 } }
 
-      expect(parsed_response["data"].size).to eql(3)
+      expect(parsed_response["data"].size).to eql(2)
     end
 
     it "returns different statements for second page" do
-      get "/api/v3/statements", params: { page: { per_page: 3, page: 2 } }
+      get "/api/v3/statements", params: { page: { per_page: 1, page: 2 } }
 
       expect(parsed_response["data"].size).to eql(1)
     end
@@ -104,7 +89,7 @@ RSpec.describe "statements endpoint spec", type: :request do
       it "returns statements within filter cohort" do
         get("/api/v3/statements", params:)
 
-        expect(parsed_response["data"].size).to eql(2)
+        expect(parsed_response["data"].size).to eql(1)
       end
     end
 
@@ -121,15 +106,13 @@ RSpec.describe "statements endpoint spec", type: :request do
       before do
         ecf_statement_next_cohort.update!(updated_at: 3.days.ago)
         ecf_statement_current_cohort.update!(updated_at: 1.day.ago)
-        npq_statement_next_cohort.update!(updated_at: 1.day.ago)
-        npq_statement_current_cohort.update!(updated_at: 6.days.ago)
       end
 
       it "returns statements updated after updated_since" do
         get "/api/v3/statements", params: { filter: { updated_since: 2.days.ago.iso8601 } }
 
-        expected_ids = [ecf_statement_current_cohort.id, npq_statement_next_cohort.id]
-        expect(parsed_response["data"].size).to eql(2)
+        expected_ids = [ecf_statement_current_cohort.id]
+        expect(parsed_response["data"].size).to eql(1)
         expect(parsed_response["data"].map { |statement| statement["id"] }).to match_array expected_ids
       end
     end

@@ -43,31 +43,11 @@ RSpec.describe Api::V3::Finance::StatementsQuery do
           payment_date: 3.days.ago,
         )
       end
-      let!(:npq_statement_next_cohort) do
-        create(
-          :npq_statement,
-          :output_fee,
-          cpd_lead_provider:,
-          cohort: next_cohort,
-          payment_date: 2.days.ago,
-        )
-      end
-      let!(:npq_statement_current_cohort) do
-        create(
-          :npq_statement,
-          :output_fee,
-          cpd_lead_provider:,
-          cohort: current_cohort,
-          payment_date: 1.day.ago,
-        )
-      end
 
       it "returns all output statements for the cpd provider ordered by payment_date" do
         expect(subject.statements).to eq([
           ecf_statement_next_cohort,
           ecf_statement_current_cohort,
-          npq_statement_next_cohort,
-          npq_statement_current_cohort,
         ])
       end
 
@@ -77,7 +57,6 @@ RSpec.describe Api::V3::Finance::StatementsQuery do
         it "returns all output statements for the specific cohort" do
           expect(subject.statements).to eq([
             ecf_statement_current_cohort,
-            npq_statement_current_cohort,
           ])
         end
       end
@@ -89,8 +68,6 @@ RSpec.describe Api::V3::Finance::StatementsQuery do
           expect(subject.statements).to eq([
             ecf_statement_next_cohort,
             ecf_statement_current_cohort,
-            npq_statement_next_cohort,
-            npq_statement_current_cohort,
           ])
         end
       end
@@ -109,14 +86,11 @@ RSpec.describe Api::V3::Finance::StatementsQuery do
         before do
           ecf_statement_next_cohort.update!(updated_at: 3.days.ago)
           ecf_statement_current_cohort.update!(updated_at: 1.day.ago)
-          npq_statement_next_cohort.update!(updated_at: 1.day.ago)
-          npq_statement_current_cohort.update!(updated_at: 6.days.ago)
         end
 
         it "returns statements for the specific updated time" do
           expect(subject.statements).to match_array([
             ecf_statement_current_cohort,
-            npq_statement_next_cohort,
           ])
         end
       end
@@ -135,53 +109,35 @@ RSpec.describe Api::V3::Finance::StatementsQuery do
       context "with npq type filter" do
         let(:params) { { filter: { type: "npq" } } }
 
-        it "returns all npq statements" do
-          expect(subject.statements).to eq([
-            npq_statement_next_cohort,
-            npq_statement_current_cohort,
-          ])
-        end
-
-        context "with incorrect type filter" do
-          let(:params) { { filter: { type: "does-not-exist" } } }
-
-          it "returns no statements" do
-            expect(subject.statements).to be_empty
-          end
-        end
-
-        context "with an ecf and cohort filter" do
-          let(:params) { { filter: { type: "ecf", cohort: current_cohort.display_name } } }
-
-          it "returns ecf statement that belongs to the cohort" do
-            expect(subject.statements).to contain_exactly(ecf_statement_current_cohort)
-          end
+        it "returns no statements" do
+          expect(subject.statements).to be_empty
         end
       end
 
-      context "when using 'disable_npq' feature" do
-        context "when 'disable_npq' feature is active" do
-          before { FeatureFlag.activate(:disable_npq) }
+      context "with incorrect type filter" do
+        let(:params) { { filter: { type: "does-not-exist" } } }
 
-          it "returns only ECF statements" do
-            expect(subject.statements).to eq([
-              ecf_statement_next_cohort,
-              ecf_statement_current_cohort,
-            ])
-          end
+        it "returns no statements" do
+          expect(subject.statements).to be_empty
         end
+      end
 
-        context "when 'disable_npq' feature is not active" do
-          before { FeatureFlag.deactivate(:disable_npq) }
+      context "with an ecf and cohort filter" do
+        let(:params) { { filter: { type: "ecf", cohort: current_cohort.display_name } } }
 
-          it "returns all statements" do
-            expect(subject.statements).to eq([
-              ecf_statement_next_cohort,
-              ecf_statement_current_cohort,
-              npq_statement_next_cohort,
-              npq_statement_current_cohort,
-            ])
-          end
+        it "returns ecf statement that belongs to the cohort" do
+          expect(subject.statements).to contain_exactly(ecf_statement_current_cohort)
+        end
+      end
+
+      context "with blank type filter" do
+        let(:params) { { filter: { type: "" } } }
+
+        it "returns no statements" do
+          expect(subject.statements).to eq([
+            ecf_statement_next_cohort,
+            ecf_statement_current_cohort,
+          ])
         end
       end
     end
@@ -216,58 +172,6 @@ RSpec.describe Api::V3::Finance::StatementsQuery do
 
         it "does not return the finance statement" do
           expect { subject.statement }.to raise_error(ActiveRecord::RecordNotFound)
-        end
-      end
-
-      context "when using 'disable_npq' feature" do
-        let!(:npq_statement_next_cohort) do
-          create(
-            :npq_statement,
-            :output_fee,
-            cpd_lead_provider:,
-            cohort: next_cohort,
-            payment_date: 2.days.ago,
-          )
-        end
-
-        context "when 'disable_npq' feature is active" do
-          before { FeatureFlag.activate(:disable_npq) }
-
-          context "when requesting ECF statement" do
-            let(:params) { { id: ecf_statement_next_cohort.id } }
-
-            it "returns the finance statement with the id" do
-              expect(subject.statement).to eq(ecf_statement_next_cohort)
-            end
-          end
-
-          context "when requesting NPQ statement" do
-            let(:params) { { id: npq_statement_next_cohort.id } }
-
-            it "does not return the finance statement" do
-              expect { subject.statement }.to raise_error(ActiveRecord::RecordNotFound)
-            end
-          end
-        end
-
-        context "when 'disable_npq' feature is not active" do
-          before { FeatureFlag.deactivate(:disable_npq) }
-
-          context "when requesting ECF statement" do
-            let(:params) { { id: ecf_statement_next_cohort.id } }
-
-            it "returns the finance statement with the id" do
-              expect(subject.statement).to eq(ecf_statement_next_cohort)
-            end
-          end
-
-          context "when requesting NPQ statement" do
-            let(:params) { { id: npq_statement_next_cohort.id } }
-
-            it "returns the finance statement with the id" do
-              expect(subject.statement).to eq(npq_statement_next_cohort)
-            end
-          end
         end
       end
     end

@@ -15,7 +15,7 @@ module Api
 
       def participant_declarations_for_pagination
         filterable_attributes = %i[id created_at user_id updated_at delivery_partner_id type]
-        scope = declaration_class.union(
+        scope = ParticipantDeclaration::ECF.union(
           declarations_scope.select(*filterable_attributes),
           ecf_previous_declarations_scope.select(*filterable_attributes),
         )
@@ -38,27 +38,20 @@ module Api
       end
 
       def participant_declarations_from(paginated_join)
-        scope = declaration_class
-            .includes(
-              :statement_line_items,
-              :declaration_states,
-              :participant_profile,
-              :cpd_lead_provider,
-            )
-            .joins("INNER JOIN (#{paginated_join.to_sql}) as tmp on tmp.id = participant_declarations.id")
-            .order(:created_at)
-            .distinct
-
-        ActiveRecord::Associations::Preloader.new(
-          records: scope.select { |p| p.type == "ParticipantDeclaration::NPQ" },
-          associations: [:outcomes, { participant_profile: :npq_application }],
-        ).call
-
-        scope
+        ParticipantDeclaration::ECF
+          .includes(
+            :statement_line_items,
+            :declaration_states,
+            :participant_profile,
+            :cpd_lead_provider,
+          )
+          .joins("INNER JOIN (#{paginated_join.to_sql}) as tmp on tmp.id = participant_declarations.id")
+          .order(:created_at)
+          .distinct
       end
 
       def participant_declaration(id)
-        declaration_class.union(
+        ParticipantDeclaration::ECF.union(
           declarations_scope,
           ecf_previous_declarations_scope,
         ).find(id)
@@ -70,18 +63,14 @@ module Api
         cpd_lead_provider.lead_provider if cpd_lead_provider.respond_to?(:lead_provider)
       end
 
-      def npq_lead_provider
-        cpd_lead_provider.npq_lead_provider if cpd_lead_provider.respond_to?(:npq_lead_provider)
-      end
-
       def declarations_scope
-        scope = declaration_class.for_lead_provider(cpd_lead_provider)
+        scope = ParticipantDeclaration::ECF.for_lead_provider(cpd_lead_provider)
           .left_outer_joins(:cohort)
         filter_cohorts(scope)
       end
 
       def ecf_previous_declarations_scope
-        scope = declaration_class
+        scope = ParticipantDeclaration::ECF
           .left_outer_joins(
             :cohort,
             participant_profile: [
@@ -111,14 +100,6 @@ module Api
 
       def delivery_partner_ids
         filter[:delivery_partner_id]&.split(",")
-      end
-
-      def declaration_class
-        if NpqApiEndpoint.disabled?
-          ParticipantDeclaration::ECF
-        else
-          ParticipantDeclaration
-        end
       end
     end
   end

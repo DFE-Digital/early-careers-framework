@@ -19,14 +19,13 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery do
   let(:school_cohort3) { create(:school_cohort, :fip, :with_induction_programme, lead_provider: lead_provider2, cohort: cohort2) }
   let(:participant_profile4) { create(:ect, :eligible_for_funding, school_cohort: school_cohort3, lead_provider: lead_provider1) }
 
+  let(:npq_only_lead_provider) { create(:cpd_lead_provider, :with_npq_lead_provider) }
+  let(:npq_lead_provider) { npq_only_lead_provider.npq_lead_provider }
+  let!(:npq_application) { create(:npq_application, :accepted, :with_started_declaration, npq_lead_provider:, cohort: cohort1) }
+
   let(:delivery_partner1) { create(:delivery_partner) }
   let(:delivery_partner2) { create(:delivery_partner) }
   let(:params) { {} }
-
-  let(:npq_only_lead_provider) { create(:cpd_lead_provider, :with_npq_lead_provider) }
-  let(:npq_lead_provider) { npq_only_lead_provider.npq_lead_provider }
-  let(:npq_application) { create(:npq_application, :accepted, :with_started_declaration, npq_lead_provider:, cohort: cohort1) }
-  let!(:npq_participant_declarations) { npq_application.profile.participant_declarations }
 
   subject { described_class.new(cpd_lead_provider: cpd_lead_provider1, params:) }
 
@@ -45,7 +44,7 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery do
           cohort: participant_profile1.schedule.cohort,
         )
 
-        ParticipantDeclaration.where(id: declaration.id).select(:id, :created_at).first
+        ParticipantDeclaration::ECF.where(id: declaration.id).select(:id, :created_at).first
       end
     end
     let!(:participant_declaration2) do
@@ -60,7 +59,7 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery do
           cohort: participant_profile2.schedule.cohort,
         )
 
-        ParticipantDeclaration.where(id: declaration.id).select(:id, :created_at).first
+        ParticipantDeclaration::ECF.where(id: declaration.id).select(:id, :created_at).first
       end
     end
     let!(:participant_declaration3) do
@@ -75,7 +74,7 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery do
           cohort: participant_profile3.schedule.cohort,
         )
 
-        ParticipantDeclaration.where(id: declaration.id).select(:id, :created_at).first
+        ParticipantDeclaration::ECF.where(id: declaration.id).select(:id, :created_at).first
       end
     end
     let!(:participant_declaration4) do
@@ -90,7 +89,7 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery do
           cohort: participant_profile4.schedule.cohort,
         )
 
-        ParticipantDeclaration.where(id: declaration.id).select(:id, :created_at).first
+        ParticipantDeclaration::ECF.where(id: declaration.id).select(:id, :created_at).first
       end
     end
 
@@ -117,7 +116,7 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery do
               cohort: transfer_induction_record.participant_profile.schedule.cohort,
             )
 
-            ParticipantDeclaration.where(id: declaration.id).select(:id, :created_at).first
+            ParticipantDeclaration::ECF.where(id: declaration.id).select(:id, :created_at).first
           end
         end
 
@@ -217,38 +216,8 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery do
     context "with NPQ only lead provider" do
       subject { described_class.new(cpd_lead_provider: npq_only_lead_provider, params:) }
 
-      it "returns all participant declarations for that provider" do
-        expect(subject.participant_declarations_for_pagination.pluck(:id)).to eq(npq_participant_declarations.pluck(:id))
-      end
-
-      context "with cohort filter" do
-        let(:another_npq_application) { create(:npq_application, :accepted, :with_started_declaration, npq_lead_provider:, cohort: cohort2) }
-        let!(:npq_participant_declarations) { another_npq_application.profile.participant_declarations }
-
-        let(:cohort) { cohort2.start_year.to_s }
-        let(:params) { { filter: { cohort: } } }
-
-        it "returns all participant declarations for the specific cohort" do
-          expect(subject.participant_declarations_for_pagination.pluck(:id)).to eq(npq_participant_declarations.pluck(:id))
-        end
-      end
-
-      context "with multiple cohort filter" do
-        let(:another_npq_application) { create(:npq_application, :accepted, :with_started_declaration, npq_lead_provider:, cohort: cohort2) }
-        let!(:npq_participant_declarations) { another_npq_application.profile.participant_declarations + npq_application.profile.participant_declarations }
-        let(:params) { { filter: { cohort: [cohort1.start_year, cohort2.start_year].join(",") } } }
-
-        it "returns all participant declarations for the specific cohort" do
-          expect(subject.participant_declarations_for_pagination.pluck(:id)).to eq(npq_participant_declarations.pluck(:id))
-        end
-      end
-
-      context "with incorrect cohort filter" do
-        let(:params) { { filter: { cohort: "2017" } } }
-
-        it "returns no participant declarations" do
-          expect(subject.participant_declarations_for_pagination.to_a).to be_empty
-        end
+      it "returns no participant declarations" do
+        expect(subject.participant_declarations_for_pagination.to_a).to be_empty
       end
     end
 
@@ -256,30 +225,26 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery do
       let(:cpd_lead_provider1) { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider) }
       let(:npq_lead_provider) { cpd_lead_provider1.npq_lead_provider }
       let(:ecf_declarations) { [participant_declaration3, participant_declaration1, participant_declaration2] }
+      let!(:npq_application) { create(:npq_application, :accepted, :with_started_declaration, npq_lead_provider: cpd_lead_provider1.npq_lead_provider, cohort: cohort2) }
 
       it "returns all participant declarations for that provider" do
-        expect(subject.participant_declarations_for_pagination.pluck(:id)).to match_array(npq_participant_declarations.pluck(:id) + ecf_declarations.map(&:id))
+        expect(subject.participant_declarations_for_pagination.pluck(:id)).to match_array(ecf_declarations.map(&:id))
       end
 
       context "with cohort filter" do
-        let(:another_npq_application) { create(:npq_application, :accepted, :with_started_declaration, npq_lead_provider:, cohort: cohort2) }
-        let!(:npq_participant_declarations) { another_npq_application.profile.participant_declarations }
-
         let(:cohort) { cohort2.start_year.to_s }
         let(:params) { { filter: { cohort: } } }
 
         it "returns all participant declarations for the specific cohort" do
-          expect(subject.participant_declarations_for_pagination.pluck(:id)).to match_array(npq_participant_declarations.pluck(:id) + [participant_declaration3.id])
+          expect(subject.participant_declarations_for_pagination.pluck(:id)).to match_array([participant_declaration3.id])
         end
       end
 
       context "with multiple cohort filter" do
-        let(:another_npq_application) { create(:npq_application, :accepted, :with_started_declaration, npq_lead_provider:, cohort: cohort2) }
-        let!(:npq_participant_declarations) { another_npq_application.profile.participant_declarations + npq_application.profile.participant_declarations }
         let(:params) { { filter: { cohort: [cohort1.start_year, cohort2.start_year].join(",") } } }
 
         it "returns all participant declarations for the specific cohort" do
-          expect(subject.participant_declarations_for_pagination.pluck(:id)).to match_array(npq_participant_declarations.pluck(:id) + ecf_declarations.map(&:id))
+          expect(subject.participant_declarations_for_pagination.pluck(:id)).to match_array(ecf_declarations.map(&:id))
         end
       end
 
@@ -354,15 +319,6 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery do
       expect(subject.participant_declarations_from(paginated_query).to_a).to eq([participant_declaration3, participant_declaration1, participant_declaration2])
     end
 
-    it "preloads expected NPQ associations" do
-      paginated_query = npq_participant_declarations
-      npq_declarations = subject.participant_declarations_from(paginated_query)
-
-      expect(npq_declarations.map { |d| d.association(:outcomes) }).to all(be_loaded)
-      expect(npq_declarations.map { |d| d.association(:participant_profile) }).to all(be_loaded)
-      expect(npq_declarations.map { |d| d.participant_profile.association(:npq_application) }).to all(be_loaded)
-    end
-
     context "with a subset of declarations" do
       it "returns only the declarations that have been paginated" do
         paginated_query = ParticipantDeclaration.where(id: participant_declaration1.id)
@@ -370,7 +326,7 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery do
       end
     end
 
-    context "when using 'disable_npq' feature" do
+    context "when NPQ application exists for same lead provider" do
       let(:cpd_lead_provider1) { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider) }
       let!(:npq_declaration) do
         create(
@@ -381,25 +337,21 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery do
       end
       let(:paginated_query) { ParticipantDeclaration.where(cpd_lead_provider: cpd_lead_provider1) }
 
-      context "when 'disable_npq' feature is active" do
-        before { FeatureFlag.activate(:disable_npq) }
-
-        it "returns only ecf declarations" do
-          expect(subject.participant_declarations_from(paginated_query).to_a).to eq([participant_declaration3, participant_declaration1, participant_declaration2])
-        end
-      end
-
-      context "when 'disable_npq' feature is not active" do
-        before { FeatureFlag.deactivate(:disable_npq) }
-
-        it "returns all declarations" do
-          expect(subject.participant_declarations_from(paginated_query).to_a).to eq([participant_declaration3, participant_declaration1, participant_declaration2, npq_declaration])
-        end
+      it "returns only ecf declarations" do
+        expect(subject.participant_declarations_from(paginated_query).to_a).to eq([participant_declaration3, participant_declaration1, participant_declaration2])
       end
     end
   end
 
   describe "#participant_declaration" do
+    let(:cpd_lead_provider1) { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider) }
+    let!(:npq_participant_declaration) do
+      create(
+        :npq_participant_declaration,
+        declaration_type: "started",
+        cpd_lead_provider: cpd_lead_provider1,
+      )
+    end
     let!(:participant_declaration) do
       create(
         :ect_participant_declaration,
@@ -418,6 +370,10 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery do
       it "return one participant declarationsfor" do
         expect(subject.participant_declaration(participant_declaration.id)).to eql(participant_declaration)
       end
+    end
+
+    it "does not return npq declaration" do
+      expect { subject.participant_declaration(npq_participant_declaration.id) }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
     context "declaration does not exist" do
@@ -446,48 +402,6 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery do
 
       it "is included in the response" do
         expect(subject.participant_declaration(transferred_declaration.id)).to eql(transferred_declaration)
-      end
-    end
-
-    context "when using 'disable_npq' feature" do
-      let(:cpd_lead_provider1) { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider) }
-      let!(:npq_declaration) do
-        create(
-          :npq_participant_declaration,
-          declaration_type: "started",
-          cpd_lead_provider: cpd_lead_provider1,
-        )
-      end
-      let!(:ecf_declaration) do
-        create(
-          :ect_participant_declaration,
-          declaration_type: "started",
-          cpd_lead_provider: cpd_lead_provider1,
-        )
-      end
-
-      context "when 'disable_npq' feature is active" do
-        before { FeatureFlag.activate(:disable_npq) }
-
-        it "returns ecf declaration" do
-          expect(subject.participant_declaration(ecf_declaration.id)).to eql(ecf_declaration)
-        end
-
-        it "does not return npq declaration" do
-          expect { subject.participant_declaration(npq_declaration.id) }.to raise_error(ActiveRecord::RecordNotFound)
-        end
-      end
-
-      context "when 'disable_npq' feature is not active" do
-        before { FeatureFlag.deactivate(:disable_npq) }
-
-        it "returns ecf declaration" do
-          expect(subject.participant_declaration(ecf_declaration.id)).to eql(ecf_declaration)
-        end
-
-        it "returns npq declaration" do
-          expect(subject.participant_declaration(npq_declaration.id)).to eql(npq_declaration)
-        end
       end
     end
   end
