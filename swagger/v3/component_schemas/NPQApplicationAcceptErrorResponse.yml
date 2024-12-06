@@ -1,9 +1,0 @@
-description: "A list of errors"
-type: object
-properties:
-  error:
-    type: array
-    items:
-      anyOf:
-        - $ref: "#/components/schemas/NPQApplicationAlreadyAccepted"
-        - $ref: "#/components/schemas/NPQApplicationChangedFromRejected"
