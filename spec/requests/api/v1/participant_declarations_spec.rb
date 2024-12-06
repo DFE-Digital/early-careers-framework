@@ -14,6 +14,8 @@ RSpec.describe "participant-declarations endpoint spec", type: :request, mid_coh
   let(:participant_type)     { :ect }
   let(:milestone_start_date) { schedule.milestones.find_by(declaration_type: "started").start_date }
 
+  before { FeatureFlag.activate(:disable_npq) }
+
   describe "POST /api/v1/participant-declarations" do
     let(:declaration_date)  { milestone_start_date }
     let(:declaration_type)  { "started" }
@@ -585,16 +587,14 @@ RSpec.describe "participant-declarations endpoint spec", type: :request, mid_coh
         end
       end
 
-      context "when NPQ participant has completed declaration" do
-        let(:cpd_lead_provider)     { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider) }
-        let(:declaration_date)      { participant_profile.schedule.milestones.find_by(declaration_type:).start_date + 1.day }
+      context "when posting an NPQ declaration" do
+        let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider) }
         let(:npq_course) { create(:npq_leadership_course) }
+        let(:course_identifier) { npq_course.identifier }
         let(:participant_profile) do
           create(:npq_participant_profile, npq_lead_provider: cpd_lead_provider.npq_lead_provider, npq_course:)
         end
-        let(:course_identifier) { npq_course.identifier }
-        let(:declaration_type)  { "completed" }
-        let(:has_passed) { nil }
+        let(:participant_id) { participant_profile.user_id }
         let!(:contract) { create(:npq_contract, npq_course:, npq_lead_provider: cpd_lead_provider.npq_lead_provider) }
         let(:params) do
           {
@@ -602,87 +602,22 @@ RSpec.describe "participant-declarations endpoint spec", type: :request, mid_coh
               type: "participant-declaration",
               attributes: {
                 participant_id:,
-                declaration_type:,
+                declaration_type: "started",
                 declaration_date: declaration_date.rfc3339,
                 course_identifier:,
-                has_passed:,
               },
             },
           }
         end
 
-        before do
-          travel_to declaration_date
-        end
+        it "returns error response" do
+          post "/api/v1/participant-declarations", params: params.to_json
 
-        context "has_passed is true" do
-          let(:has_passed)  { true }
-
-          it "creates passed participant outcome" do
-            expect(ParticipantOutcome::NPQ.count).to eql(0)
-            post "/api/v1/participant-declarations", params: params.to_json
-            expect(parsed_response["data"]["attributes"]["has_passed"]).to eq(true)
-            expect(ParticipantOutcome::NPQ.count).to eql(1)
-          end
-        end
-
-        context "has_passed is false" do
-          let(:has_passed)  { false }
-
-          it "creates failed participant outcome" do
-            expect(ParticipantOutcome::NPQ.count).to eql(0)
-            post "/api/v1/participant-declarations", params: params.to_json
-            expect(parsed_response["data"]["attributes"]["has_passed"]).to eq(false)
-            expect(ParticipantOutcome::NPQ.count).to eql(1)
-          end
-        end
-
-        context "when CreateParticipantOutcome service class is invalid" do
-          let(:has_passed) { true }
-
-          before do
-            allow_any_instance_of(NPQ::CreateParticipantOutcome).to receive(:valid?).and_return(false)
-          end
-
-          it "returns 422" do
-            post "/api/v1/participant-declarations", params: params.to_json
-            expect(response.status).to eq 422
-            expect(response.body).to eq({ errors: [{ title: "Invalid action", detail: I18n.t(:cannot_create_completed_declaration) }] }.to_json)
-          end
-        end
-      end
-
-      context "when using 'disable_npq' feature" do
-        let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider) }
-        let(:npq_course) { create(:npq_leadership_course) }
-        let(:course_identifier) { npq_course.identifier }
-        let(:participant_profile) do
-          create(:npq_participant_profile, npq_lead_provider: cpd_lead_provider.npq_lead_provider, npq_course:)
-        end
-        let!(:contract) { create(:npq_contract, npq_course:, npq_lead_provider: cpd_lead_provider.npq_lead_provider) }
-
-        context "when 'disable_npq' feature is active" do
-          before { FeatureFlag.activate(:disable_npq) }
-
-          it "returns error response" do
-            post "/api/v1/participant-declarations", params: params.to_json
-
-            expect(response).to have_http_status(:unprocessable_entity)
-            expect(parsed_response["errors"]).to eq([
-              "title" => "course_identifier",
-              "detail" => "NPQ Courses are no longer supported",
-            ])
-          end
-        end
-
-        context "when 'disable_npq' feature is not active" do
-          before { FeatureFlag.deactivate(:disable_npq) }
-
-          it "returns ok response" do
-            post "/api/v1/participant-declarations", params: params.to_json
-
-            expect(response).to have_http_status(:ok)
-          end
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(parsed_response["errors"]).to eq([
+            "title" => "course_identifier",
+            "detail" => "NPQ Courses are no longer supported",
+          ])
         end
       end
     end
