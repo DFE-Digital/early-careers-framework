@@ -7,6 +7,12 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
+## 4 December 2024
+
+We’ve fixed a bug that caused the GET unfunded-mentors endpoint query to return incorrect or no longer valid email addresses in a small number of cases.
+
+The fix we’ve made ensures the endpoint is now surfacing the most up-to-date email in the GET request’s response.
+
 ## 27 November 2024
 
 We've launched a separate API for NPQs following a 3-month test phase. All NPQ data has been successfully migrated to the new environment, which means providers can no longer make NPQ-related calls from this API.
