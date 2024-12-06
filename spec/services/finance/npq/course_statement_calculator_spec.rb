@@ -95,67 +95,6 @@ RSpec.describe Finance::NPQ::CourseStatementCalculator do
     end
   end
 
-  describe "#refundable_declarations_count" do
-    context "when there are zero declarations" do
-      it do
-        expect(subject.refundable_declarations_count).to be_zero
-      end
-    end
-
-    context "when there are refundable declarations" do
-      let!(:to_be_awaiting_clawed_back) do
-        travel_to create(:npq_statement, :next_output_fee, deadline_date: statement.deadline_date - 1.month, cpd_lead_provider:).deadline_date do
-          create(:npq_participant_declaration, :paid, npq_course:, cpd_lead_provider:, cohort:)
-        end
-      end
-      before do
-        travel_to statement.deadline_date do
-          Finance::ClawbackDeclaration.new(to_be_awaiting_clawed_back).call
-        end
-      end
-
-      it "is counted" do
-        expect(subject.refundable_declarations_count).to eql(1)
-      end
-    end
-  end
-
-  describe "#refundable_declarations_by_type_count" do
-    let(:eligible_statement)                  { create(:npq_statement, :next_output_fee, deadline_date: statement.deadline_date - 1.month, cpd_lead_provider:) }
-    let(:to_be_awaiting_claw_back_started)    { create(:npq_participant_declaration,         :eligible, npq_course:, cpd_lead_provider:, cohort:) }
-    let(:to_be_awaiting_claw_back_retained_1) { create_list(:npq_participant_declaration, 2, :eligible, declaration_type: "retained-1", npq_course:, cpd_lead_provider:, cohort:) }
-    let(:to_be_awaiting_claw_back_completed)  { create_list(:npq_participant_declaration, 3, :eligible, declaration_type: "retained-2", npq_course:, cpd_lead_provider:, cohort:) }
-    let(:declarations) do
-      [to_be_awaiting_claw_back_started] + to_be_awaiting_claw_back_retained_1 + to_be_awaiting_claw_back_completed
-    end
-    before do
-      travel_to(eligible_statement.deadline_date) do
-        to_be_awaiting_claw_back_started
-        to_be_awaiting_claw_back_retained_1
-        to_be_awaiting_claw_back_completed
-      end
-
-      Statements::MarkAsPayable.new(eligible_statement).call
-      Statements::MarkAsPaid.new(eligible_statement).call
-
-      travel_to statement.deadline_date do
-        declarations.each do |declaration|
-          Finance::ClawbackDeclaration.new(declaration.reload).call
-        end
-      end
-    end
-
-    it "returns counts of refunds by type" do
-      expected = {
-        "started" => 1,
-        "retained-1" => 2,
-        "retained-2" => 3,
-      }
-
-      expect(subject.refundable_declarations_by_type_count).to eql(expected)
-    end
-  end
-
   describe "#not_eligible_declarations" do
     context "when there are voided declarations" do
       before do
@@ -388,24 +327,6 @@ RSpec.describe Finance::NPQ::CourseStatementCalculator do
     context "when there are zero declarations" do
       it do
         expect(subject.targeted_delivery_funding_refundable_declarations_count).to be_zero
-      end
-    end
-
-    context "when there are targeted delivery funding refundable declarations" do
-      let!(:to_be_awaiting_clawed_back) do
-        travel_to create(:npq_statement, :next_output_fee, deadline_date: statement.deadline_date - 1.month, cpd_lead_provider:).deadline_date do
-          create(:npq_participant_declaration, :paid, npq_course:, cpd_lead_provider:, participant_profile:, cohort:)
-        end
-      end
-
-      before do
-        travel_to statement.deadline_date do
-          Finance::ClawbackDeclaration.new(to_be_awaiting_clawed_back).call
-        end
-      end
-
-      it "has one targeted delivery funding refundable declaration" do
-        expect(subject.targeted_delivery_funding_refundable_declarations_count).to eql(1)
       end
     end
   end

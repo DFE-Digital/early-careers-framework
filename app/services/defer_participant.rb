@@ -25,7 +25,6 @@ class DeferParticipant
             }
   validate :not_already_deferred
   validate :not_already_withdrawn
-  validate :do_not_defer_if_without_declarations
 
   def call
     ActiveRecord::Base.transaction do
@@ -60,15 +59,6 @@ class DeferParticipant
   end
 
 private
-
-  def do_not_defer_if_without_declarations
-    return unless participant_profile&.npq?
-    return unless participant_profile.npq_application.accepted?
-
-    if participant_profile.participant_declarations.empty?
-      errors.add(:participant_profile, I18n.t(:invalid_deferral_no_declarations))
-    end
-  end
 
   def not_already_deferred
     return unless participant_profile

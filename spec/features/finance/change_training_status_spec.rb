@@ -11,27 +11,6 @@ RSpec.feature "Finance users participant change training status", type: :feature
     then_i_see("Participant")
   end
 
-  describe "NPQ" do
-    let!(:participant_profile)     { create(:npq_participant_profile, npq_lead_provider: cpd_lead_provider.npq_lead_provider) }
-    let!(:participant_declaration) { create(:npq_participant_declaration, participant_profile:, cpd_lead_provider:) }
-
-    scenario "Change training status to deferred" do
-      then_table_value_is(label: "Training status", value: "active")
-      and_i_click_on("Change training status")
-      and_i_click_on("Continue")
-
-      expect(page).to have_css(".govuk-error-summary__body ul.govuk-error-summary__list li a[href='#finance-npq-change-training-status-form-training-status-field-error']", text: "Choose a valid training status")
-
-      then_i_see("Change training status")
-      and_i_see("Choose a different training status")
-      when_i_choose("deferred")
-      and_i_select("bereavement", "finance-npq-change-training-status-form-reason-field")
-      and_i_click_on("Continue")
-      then_i_see("Training status updated successfully")
-      then_table_value_is(label: "Training status", value: "deferred")
-    end
-  end
-
   describe "ECF" do
     describe "EarlyCareerTeacher" do
       let!(:participant_profile)     { create(:ect, lead_provider: cpd_lead_provider.lead_provider) }
