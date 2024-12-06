@@ -37,23 +37,8 @@ module Api
       private
 
         def statement_class
-          if filter[:type].blank?
-            if NpqApiEndpoint.disabled?
-              return ::Finance::Statement::ECF
-            else
-              return ::Finance::Statement
-            end
-          end
-
-          case filter[:type]
-          when "ecf"
+          if filter[:type].blank? || filter[:type] == "ecf"
             ::Finance::Statement::ECF
-          when "npq"
-            if NpqApiEndpoint.disabled?
-              ::Finance::Statement.none
-            else
-              ::Finance::Statement::NPQ
-            end
           else
             ::Finance::Statement.none
           end

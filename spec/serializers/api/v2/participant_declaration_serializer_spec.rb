@@ -3,45 +3,24 @@
 require "rails_helper"
 
 RSpec.describe Api::V2::ParticipantDeclarationSerializer do
-  describe "#has_passed" do
-    let(:declaration_type) { "completed" }
-    let(:npq_course) { create(:npq_leadership_course) }
-    let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_npq_lead_provider) }
-    let(:npq_application) { create(:npq_application, :accepted, npq_course:, npq_lead_provider: cpd_lead_provider.npq_lead_provider) }
-    let(:declaration_date) { npq_application.profile.schedule.milestones.find_by(declaration_type:).start_date + 1.day }
-    let(:participant_declaration) do
-      travel_to declaration_date do
-        create(:npq_participant_declaration, :eligible, declaration_type:, declaration_date:, has_passed:, participant_profile: npq_application.profile, cpd_lead_provider:)
-      end
-    end
+  subject { described_class.new(participant_declaration) }
 
-    describe "when participant declaration does not have outcome" do
-      let(:participant_declaration) do
-        create(:npq_participant_declaration, :eligible, declaration_type: "started")
-      end
+  describe "#serializable_hash" do
+    let(:participant_declaration) { create(:ect_participant_declaration, :paid, uplifts: [:sparsity_uplift], declaration_type: "started", evidence_held: "training-event-attended") }
 
-      it "returns nil" do
-        result = described_class.new(participant_declaration).serializable_hash
-        expect(result[:data][:attributes][:has_passed]).to eql(nil)
-      end
-    end
+    it "returns correct hash" do
+      data = subject.serializable_hash[:data]
+      expect(data[:id]).to eq(participant_declaration.id)
+      expect(data[:type]).to eq(:"participant-declaration")
 
-    describe "when participant outcome is true" do
-      let(:has_passed) { true }
-
-      it "returns true" do
-        result = described_class.new(participant_declaration).serializable_hash
-        expect(result[:data][:attributes][:has_passed]).to eql(true)
-      end
-    end
-
-    describe "when participant outcome is false" do
-      let(:has_passed) { false }
-
-      it "returns false" do
-        result = described_class.new(participant_declaration).serializable_hash
-        expect(result[:data][:attributes][:has_passed]).to eql(false)
-      end
+      attrs = data[:attributes]
+      expect(attrs[:participant_id]).to eq(participant_declaration.user.id)
+      expect(attrs[:declaration_type]).to eq("started")
+      expect(attrs[:declaration_date]).to eq(participant_declaration.declaration_date.rfc3339)
+      expect(attrs[:course_identifier]).to eq("ecf-induction")
+      expect(attrs[:state]).to eq("paid")
+      expect(attrs[:updated_at]).to eq(participant_declaration.updated_at.rfc3339)
+      expect(attrs[:has_passed]).to eq(nil)
     end
   end
 end
