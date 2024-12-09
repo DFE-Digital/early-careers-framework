@@ -9,6 +9,8 @@ properties:
   type:
     description: Return statements of a given type
     type: string
+    enum:
+      - ecf
     example: ecf
   updated_since:
     description: "Return only records that have been updated since this date and time (ISO 8601 date format)"
