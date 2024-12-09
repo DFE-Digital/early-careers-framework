@@ -26,20 +26,9 @@ module FinanceHelper
     end
   end
 
-  def npq_participant_api_response(participant_profile)
-    cpd_lead_provider = participant_profile.npq_application&.npq_lead_provider&.cpd_lead_provider
-    serializer_output = Api::V3::NPQParticipantSerializer.new(participant_profile.user, params: { cpd_lead_provider: }).serializable_hash
-    highlight_as_json(serializer_output)
-  end
-
   def induction_record_participant_api_response(induction_record, participant_profile)
     cpd_lead_provider = induction_record.induction_programme.partnership&.lead_provider&.cpd_lead_provider
     serializer_output = Api::V3::ECF::ParticipantSerializer.new(participant_profile.user, params: { cpd_lead_provider: }).serializable_hash
-    highlight_as_json(serializer_output)
-  end
-
-  def npq_application_api_response(npq_application)
-    serializer_output = Api::V3::NPQApplicationSerializer.new(npq_application).serializable_hash
     highlight_as_json(serializer_output)
   end
 

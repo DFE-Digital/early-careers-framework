@@ -59,7 +59,7 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
                 example: CGI.unescape({ page: { page: 1, per_page: 5 } }.to_param),
                 description: "Pagination options to navigate through the list of statements."
 
-      response "200", "A list of statements as part of which the DfE will make output payments for ecf or npq participants" do
+      response "200", "A list of statements as part of which the DfE will make output payments for ecf participants" do
         schema({ "$ref": "#/components/schemas/StatementsResponse" })
 
         run_test!
