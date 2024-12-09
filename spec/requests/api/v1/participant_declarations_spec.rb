@@ -14,8 +14,6 @@ RSpec.describe "participant-declarations endpoint spec", type: :request, mid_coh
   let(:participant_type)     { :ect }
   let(:milestone_start_date) { schedule.milestones.find_by(declaration_type: "started").start_date }
 
-  before { FeatureFlag.activate(:disable_npq) }
-
   describe "POST /api/v1/participant-declarations" do
     let(:declaration_date)  { milestone_start_date }
     let(:declaration_type)  { "started" }
@@ -609,6 +607,8 @@ RSpec.describe "participant-declarations endpoint spec", type: :request, mid_coh
             },
           }
         end
+
+        before { FeatureFlag.activate(:disable_npq) }
 
         it "returns error response" do
           post "/api/v1/participant-declarations", params: params.to_json

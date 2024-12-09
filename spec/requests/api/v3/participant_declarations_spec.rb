@@ -531,6 +531,8 @@ RSpec.describe "API Participant Declarations", type: :request, mid_cohort: true 
           }
         end
 
+        before { FeatureFlag.activate(:disable_npq) }
+
         it "returns error response" do
           post "/api/v3/participant-declarations", params: params.to_json
 
