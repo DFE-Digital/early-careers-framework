@@ -67,10 +67,8 @@ module Api
         end
       end
 
-      attribute :has_passed do |declaration|
-        if declaration.npq?
-          declaration.outcomes.sort_by(&:created_at).reverse!&.first&.has_passed?
-        end
+      attribute :has_passed do |_declaration|
+        nil
       end
 
       attribute :lead_provider_name do |declaration|
