@@ -10,7 +10,6 @@ RSpec.describe "participant-declarations endpoint spec", type: :request, mid_coh
   let(:bearer_token)      { "Bearer #{token}" }
 
   before do
-    FeatureFlag.activate(:disable_npq)
     create(:ecf_statement, :output_fee, deadline_date: 2.weeks.from_now, cpd_lead_provider:)
   end
 
@@ -303,6 +302,8 @@ RSpec.describe "participant-declarations endpoint spec", type: :request, mid_coh
             },
           }
         end
+
+        before { FeatureFlag.activate(:disable_npq) }
 
         it "returns error response" do
           post "/api/v2/participant-declarations", params: params.to_json
