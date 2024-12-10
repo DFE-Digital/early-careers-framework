@@ -3,22 +3,11 @@
 RSpec.describe Finance::ChoosePaymentBreakdownForm, type: :model do
   let(:form) { described_class.new({}) }
 
-  describe "programme_choices" do
-    it "returns the programme choices for NPQ and ECF" do
-      expect(form.programme_choices).to match_array([
-        OpenStruct.new(id: "ecf", name: "ECF payments"),
-        OpenStruct.new(id: "npq", name: "NPQ payments"),
-      ])
-    end
+  describe "#ecf_providers" do
+    subject { form.ecf_providers }
 
-    context "when disable_npq feature is on" do
-      it "returns the programme choices for ECF only" do
-        FeatureFlag.activate(:disable_npq)
+    before { create_list(:lead_provider, 3) }
 
-        expect(form.programme_choices).to match_array([
-          OpenStruct.new(id: "ecf", name: "ECF payments"),
-        ])
-      end
-    end
+    it { is_expected.to eq(LeadProvider.name_order) }
   end
 end
