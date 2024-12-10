@@ -9,7 +9,7 @@ RSpec.describe Cohort, type: :model do
     it { is_expected.to have_many(:call_off_contracts) }
     it { is_expected.to have_many(:npq_contracts) }
     it { is_expected.to have_many(:partnerships) }
-    it { is_expected.to have_many(:schedules).class_name("Finance::Schedule") }
+    it { is_expected.to have_many(:schedules).class_name("Finance::Schedule::ECF") }
     it { is_expected.to have_many(:statements).class_name("Finance::Statement") }
     it { is_expected.to have_many(:participant_declarations) }
   end
@@ -230,13 +230,14 @@ RSpec.describe Cohort, type: :model do
   end
 
   describe "#schedules" do
-    subject { described_class.create!(start_year: 3000) }
+    subject { cohort.schedules }
 
-    let!(:schedule) { create(:ecf_schedule, cohort: subject) }
+    let!(:ecf_schedule) { create(:ecf_schedule, cohort:) }
+    let(:cohort) { described_class.create!(start_year: 3000) }
 
-    it "returns associated schedules" do
-      expect(subject.schedules).to include(schedule)
-    end
+    before { create(:npq_leadership_schedule, cohort:) }
+
+    it { is_expected.to contain_exactly(ecf_schedule) }
   end
 
   describe ".active_registration_cohort" do
