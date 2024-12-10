@@ -7,7 +7,7 @@ module Finance
     end
 
     def show
-      @schedule = Finance::Schedule.includes(:cohort, :milestones).find(params[:id])
+      @schedule = Finance::Schedule::ECF.includes(:cohort, :milestones).find(params[:id])
     end
   end
 end
