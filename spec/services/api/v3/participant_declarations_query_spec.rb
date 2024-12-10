@@ -250,6 +250,33 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery do
           expect(subject.participant_declarations_for_pagination.to_a).to be_empty
         end
       end
+
+      context "when ECF declarations with nil partnership exist that do not belong to the NPQ only lead provider" do
+        let(:cpd_lead_provider3) { create(:cpd_lead_provider, :with_lead_provider) }
+        let(:lead_provider3) { cpd_lead_provider3.lead_provider }
+        let(:school_cohort4) { create(:school_cohort, :fip, :with_induction_programme, lead_provider: lead_provider3, cohort: cohort2) }
+        let(:participant_profile5) { create(:ect, :eligible_for_funding, school_cohort: school_cohort4, lead_provider: lead_provider3) }
+        let!(:participant_declaration5) do
+          travel_to(5.days.ago) do
+            declaration = create(
+              :ect_participant_declaration,
+              :eligible,
+              declaration_type: "started",
+              cpd_lead_provider: cpd_lead_provider3,
+              participant_profile: participant_profile5,
+              cohort: participant_profile5.schedule.cohort,
+            )
+
+            ParticipantDeclaration.where(id: declaration.id).select(:id, :created_at).first
+          end
+        end
+        let(:induction_programme_cip) { create(:induction_programme, :cip) }
+        let!(:induction_record) { create(:induction_record, participant_profile: participant_profile5, induction_programme: induction_programme_cip) }
+
+        it "returns only NPQ declarations for the provider" do
+          expect(subject.participant_declarations_for_pagination.pluck(:id)).to eq(npq_participant_declarations.pluck(:id))
+        end
+      end
     end
 
     context "with an NPQ and ECF lead provider" do
