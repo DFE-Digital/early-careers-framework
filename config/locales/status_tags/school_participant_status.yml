@@ -73,7 +73,7 @@ en:
 
       no_induction_start:
         label: "Waiting for induction to be recorded"
-        description: "We’re waiting for the school’s appropriate body to record the participant’s induction. Contact your appropriate body and remind them to register the ECT’s induction with the Teaching Regulation Agency (TRA)."
+        description: "No induction has been recorded in Teaching Regulation Agency (TRA) records for this ECT by an appropriate body. Please check you already have an agreement in place with an appropriate body to act for this ECT."
         colour: "blue"
 
       # FIP ECTs
