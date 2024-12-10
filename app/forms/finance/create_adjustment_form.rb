@@ -50,11 +50,7 @@ module Finance
     def back_link
       case form_step
       when "step1"
-        if statement.ecf?
-          finance_ecf_payment_breakdown_statement_path(statement.lead_provider, statement)
-        elsif statement.npq?
-          finance_npq_lead_provider_statement_path(statement.npq_lead_provider, statement)
-        end
+        finance_ecf_payment_breakdown_statement_path(statement.lead_provider, statement)
       when "step2"
         new_finance_statement_adjustment_path(statement, form_step: "step1")
       when "confirm"

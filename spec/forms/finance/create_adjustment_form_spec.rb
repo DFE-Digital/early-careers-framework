@@ -127,14 +127,6 @@ RSpec.describe Finance::CreateAdjustmentForm, type: :model do
           expect(form.back_link).to eql(finance_ecf_payment_breakdown_statement_path(statement.lead_provider, statement))
         end
       end
-
-      context "NPQ statement" do
-        let(:statement) { create :npq_statement }
-
-        it "redirects to NPQ statement page" do
-          expect(form.back_link).to eql(finance_npq_lead_provider_statement_path(statement.npq_lead_provider, statement))
-        end
-      end
     end
 
     context "step: step2" do

@@ -30,19 +30,6 @@ RSpec.describe Finance::AddAnotherAdjustmentForm, type: :model do
       end
     end
 
-    context "NPQ: select no" do
-      let(:statement) { create :npq_statement }
-      let(:params) { { statement:, add_another: "no" } }
-
-      it "is valid" do
-        expect(form.valid?).to eql(true)
-      end
-
-      it "redirects to NPQ statement page" do
-        expect(form.redirect_to).to eql(finance_npq_lead_provider_statement_path(statement.npq_lead_provider, statement))
-      end
-    end
-
     context "no choice" do
       let(:params) { { statement:, add_another: "" } }
 
