@@ -15,11 +15,6 @@
     <%= component.with_nav_item(path: "/admin/administrators") do %>
       Admin users
     <% end %>
-    <% unless NpqApiEndpoint.disabled? %>
-      <%= component.with_nav_item(path: admin_npq_applications_applications_path, selected: on_admin_npq_application_page?) do %>
-        NPQ
-      <% end %>
-    <% end %>
     <%= component.with_nav_item(path: admin_delivery_partners_users_path) do %>
       Delivery partners
     <% end %>
