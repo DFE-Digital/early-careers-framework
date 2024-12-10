@@ -21,7 +21,6 @@ module Finance
     def find_user_by_query
       query = params[:query] || params[:id]
       @user = Identity.find_user_by(id: query) ||
-        NPQApplication.find_by(id: query)&.user ||
         ParticipantDeclaration.find_by(id: query)&.user
     end
   end
