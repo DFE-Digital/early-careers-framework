@@ -3,7 +3,7 @@
 module Schools
   module ChangeRequestSupportQuery
     class BaseWizard < DfE::Wizard::Base
-      EXCLUDED_LEAD_PROVIDERS = ["Capita"].freeze
+      EXCLUDED_LEAD_PROVIDERS = %w[Capita].freeze
 
       attr_accessor :change_request_type, :current_user, :school_id, :start_year, :participant_id, :store
 
