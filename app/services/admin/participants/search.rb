@@ -40,7 +40,7 @@ private
   end
 
   def type_conditions
-    scope = NpqApiEndpoint.disabled? ? ParticipantProfile.ecf : ParticipantProfile.all
+    scope = ParticipantProfile.ecf
     type.present? ? scope.where(type:) : scope
   end
 

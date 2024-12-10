@@ -310,12 +310,7 @@ Rails.application.routes.draw do
       resource :change_cohort, only: %i[edit update], controller: "participants/change_cohort"
       resource :change_name, only: %i[edit update], controller: "participants/change_name", path: "name"
       resource :change_email, only: %i[edit update], controller: "participants/change_email", path: "email"
-
       resource :add_to_school_mentor_pool, only: %i[new create], controller: "participants/add_to_school_mentor_pool"
-
-      resource :npq_change_full_name, only: %i[edit update], controller: "participants/npq/change_full_name", constraints: NpqApiEndpoint
-      resource :npq_change_email, only: %i[edit update], controller: "participants/npq/change_email", constraints: NpqApiEndpoint
-
       resource :change_induction_start_date, only: %i[edit update], controller: "participants/change_induction_start_date"
       resource :change_induction_status, only: %i[edit], controller: "participants/change_induction_status" do
         get :confirm_induction_status
@@ -441,25 +436,6 @@ Rails.application.routes.draw do
     end
 
     resources :induction_coordinators, only: %i[index edit update], path: "induction-coordinators"
-
-    namespace :npq, constraints: NpqApiEndpoint do
-      resource :applications, only: [] do
-        get "/eligibility_imports/example", to: "applications/eligibility_imports#example", as: :example_csv_file
-        get "/analysis", to: "applications/analysis#invalid_payments_analysis", as: :analysis
-
-        resources :change_name, controller: "applications/change_name", only: %i[edit update]
-        resources :change_email, controller: "applications/change_email", only: %i[edit update]
-        resources :eligibility_imports, only: %i[index new create show], controller: "applications/eligibility_imports"
-        resources :applications, only: %i[index show] do
-          resource :change_logs, only: %i[show], controller: "applications/change_logs"
-        end
-        resources :edge_cases, controller: "applications/edge_cases", only: %i[index show]
-        resources :eligible_for_funding, controller: "applications/eligible_for_funding", only: %i[edit update]
-        resources :eligibility_status, controller: "applications/eligibility_status", only: %i[edit update]
-        resources :notes, controller: "applications/notes", only: %i[edit update]
-      end
-    end
-
     resource :super_user, only: %i[show], path: "super-user"
   end
 
