@@ -26,3 +26,10 @@ Note, there will be an exception to this rule for API `v3`. DfE will support `v1
 When non-breaking updates (sometimes referred to as backwards compatible updates) are made, the API will not be re-versioned. An example of a non-breaking change would be the introduction of a new attribute without removing an existing attribute. 
 
 Summaries of all API updates can be found in the [API release notes](/api-reference/release-notes).
+
+## Changes for the 2025/26 academic year
+
+This is where we could add some content alerting users to the fact that changes are coming in the autumn of 2025. We'd also add a link to a new a section of the API guidance dedicated to informing providers about the upcoming changes.
+
+Alternatively, we could consider adding a notification banner at the top of this page about upcoming changes with a link to more details.
+
