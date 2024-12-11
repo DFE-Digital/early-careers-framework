@@ -3,6 +3,8 @@
 module Schools
   module ChangeRequestSupportQuery
     class BaseWizard < DfE::Wizard::Base
+      EXCLUDED_LEAD_PROVIDERS = %w[Capita].freeze
+
       attr_accessor :change_request_type, :current_user, :school_id, :start_year, :participant_id, :store
 
       steps do
@@ -62,7 +64,7 @@ module Schools
         if relation_klass == DeliveryPartner
           school.lead_provider(start_year).delivery_partners.order(:name)
         else
-          LeadProvider.all.order(:name)
+          LeadProvider.where.not(name: EXCLUDED_LEAD_PROVIDERS).order(:name)
         end
       end
 
