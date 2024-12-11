@@ -9,6 +9,12 @@ If you have any questions or comments about these notes, please contact DfE via 
 
 ## 11 December 2024
 
+We’ve fixed a bug that meant providers could see declarations from participants that were not relevant to them.  They would not have been able to identify the participants with this information.
+
+Following the bug fix, providers can now only see relevant declarations.
+
+## 11 December 2024
+
 We’ve fixed a bug that caused the GET unfunded-mentors endpoint query to return incorrect or no longer valid email addresses in a small number of cases.
 
 The fix we’ve made ensures the endpoint is now surfacing the most up-to-date email in the GET request’s response.
