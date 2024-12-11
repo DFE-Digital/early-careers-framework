@@ -4,20 +4,11 @@ require_relative "../base_page"
 
 module Pages
   class FinancePaymentBreakdownReportWizard < ::Pages::BasePage
-    set_url "/finance/payment-breakdowns/choose-programme"
-    set_primary_heading "Choose trainee payments scheme"
+    set_url "/finance/payment-breakdowns/choose-provider-ecf"
+    set_primary_heading "Choose provider"
 
     def complete(lead_provider_name)
-      view_ecf_payments
       select_lead_provider lead_provider_name
-    end
-
-    def view_ecf_payments
-      choose "ECF payments"
-      click_on "Continue"
-
-      # FinancePaymentBreakdownsChooseEcfProviderWizard
-      # /finance/payment-breakdowns/choose-provider-ecf
     end
 
     def select_lead_provider(lead_provider_name)

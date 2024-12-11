@@ -9,7 +9,7 @@ class Cohort < ApplicationRecord
   has_many :call_off_contracts
   has_many :npq_contracts
   has_many :partnerships
-  has_many :schedules, class_name: "Finance::Schedule"
+  has_many :schedules, class_name: "Finance::Schedule::ECF"
   has_many :statements, class_name: "Finance::Statement"
   has_many :participant_declarations
 

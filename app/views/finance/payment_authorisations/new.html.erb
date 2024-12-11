@@ -7,11 +7,7 @@
     <%= form_for @payment_authorisation_form, url: finance_statement_payment_authorisations_path(@statement), as: :finance_payment_authorisation do |f| %>
       <%= f.govuk_error_summary %>
 
-      <% if @statement.ecf? %>
-        <%= render Finance::Statements::ECFDetailsTable.new(statement: @statement) %>
-      <% elsif @statement.npq? %>
-        <%= render Finance::Statements::NPQDetailsTable.new(statement: @statement) %>
-      <% end %>
+      <%= render Finance::Statements::ECFDetailsTable.new(statement: @statement) %>
 
       <p class="govuk-body">
         <%= f.govuk_check_boxes_fieldset :checks_done, multiple: false, legend: { text: govuk_warning_text(text: I18n.t("finance.statements.payment_authorisations.checks_done.legend")) } do %>
