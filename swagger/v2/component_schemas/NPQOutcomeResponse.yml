@@ -1,7 +1,0 @@
-description: "The details of an NPQ Outcome"
-type: object
-required:
-  - data
-properties:
-  data:
-    $ref: "#/components/schemas/NPQOutcome"

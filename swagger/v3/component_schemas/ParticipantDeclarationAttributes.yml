@@ -7,6 +7,7 @@ required:
   - course_identifier
   - state
   - updated_at
+  - lead_provider_name
 properties:
   participant_id:
     description: "The unique id of the participant"
@@ -38,18 +39,6 @@ properties:
     enum:
       - ecf-induction
       - ecf-mentor
-      - npq-leading-teaching
-      - npq-leading-behaviour-culture
-      - npq-leading-teaching-development
-      - npq-leading-literacy
-      - npq-senior-leadership
-      - npq-headship
-      - npq-executive-leadership
-      - npq-early-years-leadership
-      - npq-additional-support-offer
-      - npq-early-headship-coaching-offer
-      - npq-leading-primary-mathematics
-      - npq-senco
     example: ecf-induction
   state:
     description: "Indicates the state of this payment declaration"
@@ -122,3 +111,7 @@ properties:
     type: boolean
     example: nil
     nullable: true
+  lead_provider_name:
+    description: "The name of the provider that submitted the declaration"
+    type: string
+    example: "Example Institute"

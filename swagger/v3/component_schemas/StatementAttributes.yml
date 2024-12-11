@@ -17,7 +17,6 @@ properties:
     nullable: false
     enum:
       - ecf
-      - npq
     example: "ecf"
   cohort:
     description: "The cohort - 2021 or 2022 - which the statement funds"

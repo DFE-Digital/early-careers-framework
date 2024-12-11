@@ -15,10 +15,6 @@ class LeadProviderApiSpecification
   end
 
   def self.spec(version = CURRENT_VERSION)
-    swagger_file = "swagger/#{version}/api_spec.json"
-
-    Preprocessor.new(swagger_file).preprocess!
-
-    YAML.load_file(swagger_file)
+    YAML.load_file("swagger/#{version}/api_spec.json")
   end
 end
