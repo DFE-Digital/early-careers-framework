@@ -39,41 +39,19 @@ module Api
             expect(serialiser.serializable_hash[:data][:attributes][:updated_at]).to eq(statement.updated_at.rfc3339)
           end
 
-          context "with an ECF statement" do
-            it "returns the type" do
-              expect(serialiser.serializable_hash[:data][:attributes][:type]).to eq("ecf")
-            end
-
-            it "returns the paid status of the statement" do
-              expect(serialiser.serializable_hash[:data][:attributes][:paid]).to be(false)
-            end
-
-            context "when paid" do
-              let(:statement) { create(:ecf_paid_statement) }
-
-              it "returns the paid status of the statement" do
-                expect(serialiser.serializable_hash[:data][:attributes][:paid]).to be(true)
-              end
-            end
+          it "returns the type" do
+            expect(serialiser.serializable_hash[:data][:attributes][:type]).to eq("ecf")
           end
 
-          context "with an NPQ statement" do
-            let(:statement) { create(:npq_statement) }
+          it "returns the paid status of the statement" do
+            expect(serialiser.serializable_hash[:data][:attributes][:paid]).to be(false)
+          end
 
-            it "returns the type" do
-              expect(serialiser.serializable_hash[:data][:attributes][:type]).to eq("npq")
-            end
+          context "when paid" do
+            let(:statement) { create(:ecf_paid_statement) }
 
             it "returns the paid status of the statement" do
-              expect(serialiser.serializable_hash[:data][:attributes][:paid]).to be(false)
-            end
-
-            context "when paid" do
-              let(:statement) { create(:npq_paid_statement) }
-
-              it "returns the paid status of the statement" do
-                expect(serialiser.serializable_hash[:data][:attributes][:paid]).to be(true)
-              end
+              expect(serialiser.serializable_hash[:data][:attributes][:paid]).to be(true)
             end
           end
         end
