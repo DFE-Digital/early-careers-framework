@@ -74,11 +74,11 @@ For more detailed information see the specifications for this [view school detai
       "attributes": {
         "name": "School Example",
         "urn": "123456",
-        "cohort": 2024,
+        "cohort": 2025,
         "in_partnership": "false",
-        "induction_programme_choice": "not_yet_known",
-        "created_at": "2024-05-31T02:22:32.000Z",
-        "updated_at": "2024-05-31T02:22:32.000Z"
+        "induction_programme_choice": "provider-led",
+        "created_at": "2025-05-31T02:22:32.000Z",
+        "updated_at": "2025-05-31T02:22:32.000Z"
       }
     }
   ]
@@ -111,11 +111,11 @@ For more detailed information see the specifications for this [view a school’s
       "attributes": {
         "name": "School Example",
         "urn": "123456",
-        "cohort": 2024,
+        "cohort": 2025,
         "in_partnership": "false",
-        "induction_programme_choice": "not_yet_known",
-        "created_at": "2024-05-31T02:22:32.000Z",
-        "updated_at": "2024-05-31T02:22:32.000Z"
+        "induction_programme_choice": "provider-led",
+        "created_at": "2025-05-31T02:22:32.000Z",
+        "updated_at": "2025-05-31T02:22:32.000Z"
       }
     }
   ]

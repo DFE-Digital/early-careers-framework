@@ -40,8 +40,44 @@ Declarations submitted for participants in standard schedules will be validated 
 
 Providers must [notify DfE if the participant is following any other standard or non-standard training schedule](/api-reference/ecf/guidance.html#notify-dfe-of-a-participant-39-s-training-schedule). Contact ECF contract managers via email for additional support or information. 
 
+### New for autumn 2025
+
+Add information here detailing:
+
+* the reduction from 6 milestones to 2 for mentors from the start of the 2025/26 academic year
+* what this means for providers from a practical perspective
+
 
 ### Dates for standard schedule starting in September
+
+#### 2025/26 academic year: early career teacher schedule
+
+Early career teachers starting their ECF-based training on or before 31 December 2025, and who are expected to complete their training over 2 academic years, should remain on the default schedule:
+
+```
+ "schedule_identifier": "ecf-standard-september"
+```
+
+| Milestone      | Start date     | Milestone date      | Declaration type    | Payment date      |
+| -------- | --------  | -------- | --------  | -------- |
+| Participant Start      | 1 Jun 2025     | 31 Dec 2025     | `started`    | 30 Nov 2025      |
+| Retention Point 1      | 1 Jan 2026     | 31 Mar 2026      | `retained-1`    | 30 Apr 2026     |
+| Retention Point 2      | 1 Apr 2026     | 31 Jul 2026      | `retained-2`    | 31 Aug 2026     |
+| Retention Point 3      | 1 Aug 2026     | 31 Dec 2026      | `retained-3`    | 31 Jan 2027      |
+| Retention Point 4      | 1 Jan 2027     | 31 Mar 2027      | `retained-4`    | 30 Apr 2027     |
+| Participant Completion      | 1 Apr 2027     | 31 Jul 2027      | `completed`    | 31 Aug 2027      |
+
+
+#### 2025/26 academic year: mentor schedule
+
+From autumn 2025 onwards mentors will have 2 rather than 6 milestones. Declarations only need to recorded when they start their training and when they've completed it.
+
+| Milestone      | Start date     | Milestone date      | Declaration type    | Payment date      |
+| -------- | --------  | -------- | --------  | -------- |
+| Participant Start      | 1 Jun 2025     | 31 Dec 2025     | `started`    | 30 Nov 2025      |
+| Participant Completion      | 1 Apr 2027     | 31 Jul 2027      | `completed`    | 31 Aug 2027      |
+
+
 
 #### 2024 cohort
 
@@ -51,14 +87,14 @@ Participants starting their ECF-based training on or before 31 December 2024, an
  "schedule_identifier": "ecf-standard-september"
 ```
 
-| Milestone      | Start date     | Milestone date      | Declaration type    | Payment date      | 
-| -------- | --------  | -------- | --------  | -------- | 
-| Participant Start      | 1 Jun 2024     | 31 Dec 2024     | `started`    | 30 Nov 2024      | 
-| Retention Point 1      | 1 Jan 2025     | 31 Mar 2025      | `retained-1`    | 30 Apr 2025     | 
-| Retention Point 2      | 1 Apr 2025     | 31 Jul 2025      | `retained-2`    | 31 Aug 2025     | 
-| Retention Point 3      | 1 Aug 2025     | 31 Dec 2025      | `retained-3`    | 31 Jan 2026      | 
-| Retention Point 4      | 1 Jan 2026     | 31 Mar 2026      | `retained-4`    | 30 Apr 2026     | 
-| Participant Completion      | 1 Apr 2026     | 31 Jul 2026      | `completed`    | 31 Aug 2026      | 
+| Milestone      | Start date     | Milestone date      | Declaration type    | Payment date      |
+| -------- | --------  | -------- | --------  | -------- |
+| Participant Start      | 1 Jun 2024     | 31 Dec 2024     | `started`    | 30 Nov 2024      |
+| Retention Point 1      | 1 Jan 2025     | 31 Mar 2025      | `retained-1`    | 30 Apr 2025     |
+| Retention Point 2      | 1 Apr 2025     | 31 Jul 2025      | `retained-2`    | 31 Aug 2025     |
+| Retention Point 3      | 1 Aug 2025     | 31 Dec 2025      | `retained-3`    | 31 Jan 2026      |
+| Retention Point 4      | 1 Jan 2026     | 31 Mar 2026      | `retained-4`    | 30 Apr 2026     |
+| Participant Completion      | 1 Apr 2026     | 31 Jul 2026      | `completed`    | 31 Aug 2026      |
 
 
 #### 2023 cohort
@@ -118,20 +154,20 @@ Participants starting their ECF-based training on or before 30 November 2021, an
 
 #### 2024 cohort
 
-Participants starting their ECF-based training between 1 January and 31 March 2025, and who are expected to complete their training over 2 academic years, [should have their schedule updated](/api-reference/ecf/guidance.html#notify-dfe-of-a-participant-39-s-training-schedule) by providers to: 
+Participants starting their ECF-based training between 1 January and 31 March 2025, and who are expected to complete their training over 2 academic years, [should have their schedule updated](/api-reference/ecf/guidance.html#notify-dfe-of-a-participant-39-s-training-schedule) by providers to:
 
 ```
  "schedule_identifier": "ecf-standard-january"
 ```
 
-| Milestone      | Start date     | Milestone date      | Declaration type    | Payment date      | 
-| -------- | --------  | -------- | --------  | -------- | 
-| Participant Start      | 1 Jan 2025     | 31 Mar 2025      | `started`    | 30 Apr 2025      | 
-| Retention Point 1      | 1 Apr 2025    | 31 Jul 2025      | `retained-1`    | 31 Aug 2025      | 
-| Retention Point 2      | 1 Aug 2025     | 31 Dec 2025      | `retained-2`    | 31 Jan 2026      | 
-| Retention Point 3      | 1 Jan 2026     | 31 Mar 2026      | `retained-3`    | 30 Apr 2026      | 
-| Retention Point 4      | 1 Apr 2026     | 31 Jul 2026      | `retained-4`    | 31 Aug 2026      | 
-| Participant Completion      | 1 Aug 2026     | 31 Dec 2026      | `completed`    | 31 Jan 2027      | 
+| Milestone      | Start date     | Milestone date      | Declaration type    | Payment date      |
+| -------- | --------  | -------- | --------  | -------- |
+| Participant Start      | 1 Jan 2025     | 31 Mar 2025      | `started`    | 30 Apr 2025      |
+| Retention Point 1      | 1 Apr 2025    | 31 Jul 2025      | `retained-1`    | 31 Aug 2025      |
+| Retention Point 2      | 1 Aug 2025     | 31 Dec 2025      | `retained-2`    | 31 Jan 2026      |
+| Retention Point 3      | 1 Jan 2026     | 31 Mar 2026      | `retained-3`    | 30 Apr 2026      |
+| Retention Point 4      | 1 Apr 2026     | 31 Jul 2026      | `retained-4`    | 31 Aug 2026      |
+| Participant Completion      | 1 Aug 2026     | 31 Dec 2026      | `completed`    | 31 Jan 2027      |
 
 #### 2023 cohort
 
@@ -189,20 +225,20 @@ For participants starting their course on or before 1 December 2021, and who are
 
 #### 2024 cohort
 
-Participants starting their ECF-based training between 1 April and 31 July 2025, and who are expected to complete their training over 2 academic years, [should have their schedule updated](/api-reference/ecf/guidance.html#notify-dfe-of-a-participant-39-s-training-schedule) by providers to: 
+Participants starting their ECF-based training between 1 April and 31 July 2025, and who are expected to complete their training over 2 academic years, [should have their schedule updated](/api-reference/ecf/guidance.html#notify-dfe-of-a-participant-39-s-training-schedule) by providers to:
 
 ```
  "schedule_identifier": "ecf-standard-april"
 ```
 
-| Milestone      | Start date     | Milestone date      | Declaration type    | Payment date      | 
-| -------- | --------  | -------- | --------  | -------- | 
-| Participant Start      | 1 Apr 2025     | 31 Jul 2025      | `started`    | 31 Aug 2025      | 
-| Retention Point 1      | 1 Aug 2025     | 31 Dec 2025     | `retained-1`    | 31 Jan 2026      | 
-| Retention Point 2      | 1 Jan 2026     | 31 Mar 2026      | `retained-2`    | 30 Apr 2026     | 
-| Retention Point 3      | 1 Apr 2026    | 31 Jul 2026      | `retained-3`    | 31 Aug 2026      | 
-| Retention Point 4      | 1 Aug 2026     | 31 Dec 2026      | `retained-4`    | 31 Jan 2027      | 
-| Participant Completion      | 1 Jan 2027     | 31 Mar 2027      | `completed`    | 30 Apr 2027      | 
+| Milestone      | Start date     | Milestone date      | Declaration type    | Payment date      |
+| -------- | --------  | -------- | --------  | -------- |
+| Participant Start      | 1 Apr 2025     | 31 Jul 2025      | `started`    | 31 Aug 2025      |
+| Retention Point 1      | 1 Aug 2025     | 31 Dec 2025     | `retained-1`    | 31 Jan 2026      |
+| Retention Point 2      | 1 Jan 2026     | 31 Mar 2026      | `retained-2`    | 30 Apr 2026     |
+| Retention Point 3      | 1 Apr 2026    | 31 Jul 2026      | `retained-3`    | 31 Aug 2026      |
+| Retention Point 4      | 1 Aug 2026     | 31 Dec 2026      | `retained-4`    | 31 Jan 2027      |
+| Participant Completion      | 1 Jan 2027     | 31 Mar 2027      | `completed`    | 30 Apr 2027      |
 
 
 #### 2023 cohort
