@@ -27,4 +27,8 @@ private
   def ensure_admin
     raise Pundit::NotAuthorizedError, "Forbidden" unless true_user.admin?
   end
+
+  def school
+    @school ||= @participant_profile.latest_induction_record&.school || @participant_profile.school
+  end
 end
