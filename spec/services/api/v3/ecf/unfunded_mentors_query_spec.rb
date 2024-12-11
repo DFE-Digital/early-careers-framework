@@ -24,16 +24,16 @@ RSpec.describe Api::V3::ECF::UnfundedMentorsQuery do
       expect(subject.unfunded_mentors.first.user_id).to eq(unfunded_mentor_participant_profile.user_id)
     end
 
-    context "with preferred identity" do
-      let(:preferred_email) { Faker::Internet.email }
-      let!(:preferred_identity) { create(:participant_identity, :secondary, user: unfunded_mentor_participant_profile.user, email: preferred_email) }
+    context "when the mentor has multiple induction records with different preferred_identity associations" do
+      let(:latest_preferred_identity) { create(:participant_identity, :secondary, user: unfunded_mentor_participant_profile.user) }
+      let(:other_induction_programme) { create(:induction_programme, :fip, partnership: other_partnership) }
+      let(:other_partnership) { create(:partnership, lead_provider: other_lead_provider, cohort:) }
+      let(:other_lead_provider) { create(:lead_provider) }
+      let!(:latest_induction_record) { create(:induction_record, :future_start_date, induction_programme: other_induction_programme, participant_profile: unfunded_mentor_participant_profile, preferred_identity: latest_preferred_identity) }
 
-      it "returns the user id of the participant identity" do
-        expect(subject.unfunded_mentors.first.user_id).to eq(unfunded_mentor_profile_user_id)
-      end
-
-      it "returns the preferred email" do
-        expect(subject.unfunded_mentors.first.preferred_identity_email).to eq(unfunded_mentor_participant_profile.participant_identity.email)
+      it "returns the preferred email from the latest induction record" do
+        expect(unfunded_mentor_participant_profile.induction_records.pluck(&:participant_email).uniq.count).to eq(2)
+        expect(subject.unfunded_mentors.first.preferred_identity_email).to eq(latest_preferred_identity.email)
       end
     end
 
