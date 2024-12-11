@@ -79,6 +79,7 @@ module Api
               ] },
             ],
           )
+          .where.not(participant_profile: { induction_records: { induction_programmes: { partnership_id: nil } } }) # Exclude any nil partnerships (eg: cip)
           .where(participant_profile: { induction_records: { induction_programme: { partnerships: { lead_provider_id: lead_provider&.id } } } })
           .where(participant_profile: { induction_records: { induction_status: "active" } }) # only want induction records that are the winning latest ones
           .where(state: %w[submitted eligible payable paid])
