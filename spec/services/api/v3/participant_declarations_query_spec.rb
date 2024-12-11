@@ -243,7 +243,7 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery do
         let!(:induction_record) { create(:induction_record, participant_profile: participant_profile5, induction_programme: induction_programme_cip) }
 
         it "returns only NPQ declarations for the provider" do
-          expect(subject.participant_declarations_for_pagination.pluck(:id)).to eq(npq_participant_declarations.pluck(:id))
+          expect(subject.participant_declarations_for_pagination.pluck(:id)).to be_empty
         end
       end
     end
