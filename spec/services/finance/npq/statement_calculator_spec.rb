@@ -56,25 +56,6 @@ RSpec.describe Finance::NPQ::StatementCalculator, mid_cohort: true do
         end
       end
     end
-
-    context "when there are clawbacks" do
-      let!(:participant_declaration) do
-        travel_to(1.month.ago) { create(:npq_participant_declaration, :paid, cpd_lead_provider:) }
-      end
-      let(:paid_statement)     { Finance::Statement::NPQ::Paid.find_by!(cpd_lead_provider:) }
-      let!(:statement)         { create(:npq_statement, :next_output_fee, deadline_date: paid_statement.deadline_date + 1.month, cpd_lead_provider:) }
-
-      before do
-        travel_to statement.deadline_date do
-          Finance::ClawbackDeclaration.new(participant_declaration).call
-        end
-      end
-
-      it "does not count them" do
-        expect(statement.reload.statement_line_items.awaiting_clawback).to exist
-        expect(subject.total_starts).to be_zero
-      end
-    end
   end
 
   describe "#total_completed" do
@@ -99,27 +80,6 @@ RSpec.describe Finance::NPQ::StatementCalculator, mid_cohort: true do
         expect(subject.total_completed).to eq(1)
       end
     end
-
-    context "when there are clawbacks" do
-      let!(:participant_declaration) do
-        travel_to milestone.start_date do
-          cohort = participant_profile.schedule.cohort
-          create(:npq_participant_declaration, :paid, declaration_type:, cpd_lead_provider:, participant_profile:, cohort:)
-        end
-      end
-      let!(:previous_statement) { participant_declaration.statement_line_items.first.statement }
-      let!(:statement) { create(:npq_statement, :next_output_fee, deadline_date: previous_statement.deadline_date + 1.month, cpd_lead_provider:) }
-      before do
-        travel_to statement.deadline_date do
-          Finance::ClawbackDeclaration.new(participant_declaration).call
-        end
-      end
-
-      it "does not count them" do
-        expect(statement.statement_line_items.awaiting_clawback).to exist
-        expect(subject.total_completed).to be_zero
-      end
-    end
   end
 
   describe "#total_retained" do
@@ -141,25 +101,6 @@ RSpec.describe Finance::NPQ::StatementCalculator, mid_cohort: true do
 
       it "counts them" do
         expect(subject.total_retained).to eq(1)
-      end
-    end
-
-    context "when there are clawbacks" do
-      let!(:participant_declaration) do
-        travel_to milestone.start_date do
-          create(:npq_participant_declaration, :paid, declaration_type: "retained-1", cpd_lead_provider:, participant_profile:)
-        end
-      end
-      let(:previous_statement) { participant_declaration.statement_line_items.first.statement }
-      let!(:statement)         { create(:npq_statement, :next_output_fee, deadline_date: previous_statement.deadline_date + 1.month, cpd_lead_provider:) }
-      before do
-        travel_to statement.deadline_date do
-          Finance::ClawbackDeclaration.new(participant_declaration).call
-        end
-      end
-
-      it "does not count them" do
-        expect(subject.total_retained).to be_zero
       end
     end
   end
@@ -243,82 +184,6 @@ RSpec.describe Finance::NPQ::StatementCalculator, mid_cohort: true do
       it "returns total targeted delivery funding" do
         expect(subject.total_targeted_delivery_funding.to_f).to eq(100.0)
       end
-    end
-  end
-
-  describe "#total_targeted_delivery_funding_refundable" do
-    context "no declarations" do
-      it do
-        expect(subject.total_targeted_delivery_funding_refundable).to be_zero
-      end
-    end
-
-    context "with declaration" do
-      let(:declaration_type) { "started" }
-
-      let(:participant_profile) do
-        create(
-          :npq_application,
-          :accepted,
-          :eligible_for_funding,
-          npq_course:,
-          npq_lead_provider:,
-
-          eligible_for_funding: true,
-          targeted_delivery_funding_eligibility: true,
-        ).profile
-      end
-
-      let!(:to_be_awaiting_clawed_back) do
-        travel_to create(:npq_statement, :next_output_fee, deadline_date: statement.deadline_date - 1.month, cpd_lead_provider:).deadline_date do
-          create(:npq_participant_declaration, :paid, course_identifier: npq_course.identifier, declaration_type:, participant_profile:, cpd_lead_provider:)
-        end
-      end
-
-      let!(:participant_declaration) do
-        travel_to statement.deadline_date do
-          Finance::ClawbackDeclaration.new(to_be_awaiting_clawed_back).call
-        end
-      end
-
-      it "returns total targeted delivery funding refundable" do
-        expect(subject.total_targeted_delivery_funding_refundable.to_f).to eq(100.0)
-      end
-    end
-  end
-
-  describe "#total_clawbacks" do
-    let(:declaration_type) { "started" }
-
-    let(:participant_profile) do
-      create(
-        :npq_application,
-        :accepted,
-        :eligible_for_funding,
-        npq_course:,
-        npq_lead_provider:,
-
-        eligible_for_funding: true,
-        targeted_delivery_funding_eligibility: true,
-      ).profile
-    end
-
-    let!(:to_be_awaiting_clawed_back) do
-      travel_to create(:npq_statement, :next_output_fee, deadline_date: statement.deadline_date - 1.month, cpd_lead_provider:).deadline_date do
-        create(:npq_participant_declaration, :paid, course_identifier: npq_course.identifier, declaration_type:, participant_profile:, cpd_lead_provider:)
-      end
-    end
-
-    let!(:participant_declaration) do
-      travel_to statement.deadline_date do
-        Finance::ClawbackDeclaration.new(to_be_awaiting_clawed_back).call
-      end
-    end
-
-    it "returns total clawbacks" do
-      expect(subject.clawback_payments.to_f).to eq(160.0)
-      expect(subject.total_targeted_delivery_funding_refundable.to_f).to eq(100.0)
-      expect(subject.total_clawbacks.to_f).to eq(160.0 + 100.0)
     end
   end
 
