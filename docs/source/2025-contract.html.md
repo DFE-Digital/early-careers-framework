@@ -1,27 +1,30 @@
 ---
-title: 2025 contract guidance
+title: Changes for the 2025/26 academic year
 weight: 3
 ---
 
 # 2025 contract guidance 
 
-## Contents
+High level summary of the changes providers can expect from autumn 2025 onwards. 
 
-* [Data definitions and states](/api-reference/ecf/definitions-and-states)
-* [Confirm, view and update partnerships](/api-reference/ecf/guidance/#confirm-view-and-update-partnerships)
-* [View and update participant data](/api-reference/ecf/guidance/#view-and-update-participant-data)
-* [Submit, view and void declarations](/api-reference/ecf/guidance/#submit-view-and-void-declarations)
-* [View financial statement payment dates](/api-reference/ecf/guidance/#view-financial-statement-payment-dates)
-* [Schedules and milestone dates ](/api-reference/ecf/schedules-and-milestone-dates)
+## What's going to change
 
-## Overview 
+This section would go into more detail about the changes. 
 
-Once integrated with the API, providers can view, submit and update data. The data enables providers to manage and deliver ECF-based training, and receive appropriate payment from DfE.
+## How these changes will impact providers
 
-<div class="govuk-inset-text">The following guidance has been written for ECF providers who have integrated systems with API version 3.0.0. onwards. </div>
+Information about:
 
-While this guidance focuses on `v3` endpoints, providers can view specifications for the API version their systems are integrated with:
+* how providers will be impacted
+* updates to API endpoints
+* any actions they'll need to take
 
-* [Lead provider API - 1.0.0](/api-reference/reference-v1)
-* [Lead provider API - 2.0.0](/api-reference/reference-v2)
-* [Lead provider API - 3.0.0](/api-reference/reference-v3)
+## When the changes will be introduced
+
+List any important dates that providers need to know about so that they can prepare well in advance. 
+
+## Why we're making these changes 
+
+This is where we can showcase that we're making improvements based on feedback and research. 
+
+Perhaps also use this section to inform providers about future plans (ECF 2.0). 
