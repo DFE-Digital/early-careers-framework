@@ -29,6 +29,10 @@ sandbox: production-cluster
 migration: production-cluster
 	$(eval include global_config/migration.sh)
 
+.PHONY: separation
+separation: production-cluster
+	$(eval include global_config/separation.sh)
+
 .PHONY: production
 production: production-cluster
 	$(eval include global_config/production.sh)
@@ -123,6 +127,9 @@ terraform-apply: terraform-init
 .PHONY: terraform-plan
 terraform-plan: terraform-init
 	terraform -chdir=terraform/application plan -var-file workspace_variables/${DEPLOY_ENV}.tfvars.json
+
+terraform-plan-destroy: terraform-init
+	terraform -chdir=terraform/application plan -destroy -var-file "workspace_variables/${DEPLOY_ENV}.tfvars.json"
 
 .PHONY: terraform-destroy
 terraform-destroy: terraform-init
