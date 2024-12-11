@@ -3,7 +3,7 @@
 module AdminHelper
   def admin_edit_user_path(user)
     if user.lead_provider?
-      edit_admin_lead_provider_user_path(user)
+      edit_admin_lead_provider_lead_provider_user_path(user.lead_provider, user)
     elsif user.induction_coordinator?
       edit_admin_induction_coordinator_path(user)
     end
