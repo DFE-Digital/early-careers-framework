@@ -22,6 +22,10 @@ check_eligible_ects_that_failed_permanent_cohort_setup:
   cron: "0 11 * * 1"
   class: "CheckEligibleEctsThatFailedPermanentCohortSetupJob"
   queue: default
+retry_continue_training_participants_that_failed_cohort_change:
+  cron: "0 13 * * 1"
+  class: "RetryContinueTrainingParticipantsThatFailedCohortChangeJob"
+  queue: default
 enrol_school_cohorts:
   cron: "0 3 * * *"
   class: "EnrolSchoolCohortsJob"
