@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe ValidTestDataGenerators::SeparationSharedData do
+RSpec.describe ValidTestDataGenerators::SandboxSharedData do
   let(:cohort) { create(:cohort, :current) }
   let(:lead_provider) { create(:lead_provider, :with_delivery_partner, name: shared_users_data.keys.sample) }
   let(:school) { create(:school) }
@@ -11,7 +11,7 @@ RSpec.describe ValidTestDataGenerators::SeparationSharedData do
   let!(:schedule_sep) { create(:ecf_schedule, schedule_identifier: "ecf-standard-september") }
   let!(:schedule_jan) { create(:ecf_schedule, schedule_identifier: "ecf-standard-january") }
 
-  let(:shared_users_data) { YAML.load_file(Rails.root.join("db/data/separation_shared_data.yml")) }
+  let(:shared_users_data) { YAML.load_file(Rails.root.join("db/data/sandbox_shared_data.yml")) }
   let(:user_params) { shared_users_data[lead_provider.name] }
 
   subject { described_class.new(name: lead_provider.name, cohort:) }

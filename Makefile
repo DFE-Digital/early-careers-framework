@@ -128,6 +128,9 @@ terraform-apply: terraform-init
 terraform-plan: terraform-init
 	terraform -chdir=terraform/application plan -var-file workspace_variables/${DEPLOY_ENV}.tfvars.json
 
+terraform-plan-destroy: terraform-init
+	terraform -chdir=terraform/application plan -destroy -var-file "workspace_variables/${DEPLOY_ENV}.tfvars.json"
+
 .PHONY: terraform-destroy
 terraform-destroy: terraform-init
 	terraform -chdir=terraform/application destroy -var-file workspace_variables/${DEPLOY_ENV}.tfvars.json ${AUTO_APPROVE}
