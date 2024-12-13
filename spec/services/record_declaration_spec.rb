@@ -450,16 +450,4 @@ RSpec.describe RecordDeclaration do
       expect { subject.call }.to change(ParticipantDeclaration, :count).by(1)
     end
   end
-
-  context "when user is for 2020 cohort" do
-    let!(:school_cohort_2020) { create(:school_cohort, cohort: cohort_2020, school: participant_profile.school) }
-
-    before do
-      induction_programme.update!(school_cohort: school_cohort_2020)
-    end
-
-    xit "raises a ParameterMissing error" do
-      expect { described_class.new(params).call }.to raise_error(ActionController::ParameterMissing)
-    end
-  end
 end
