@@ -1294,8 +1294,8 @@ module ManageTrainingSteps
   end
 
   def then_i_am_taken_to_the_cannot_find_their_details
-    expect(page).to have_selector("h1", text: "We cannot find #{@participant_data[:full_name]}’s record")
-    expect(page).to have_text("Check the information you entered is correct.")
+    expect(page).to have_selector("h1", text: "No results found for #{@participant_data[:full_name]}")
+    expect(page).to have_text("Check that you have")
   end
 
   def then_i_can_view_the_design_our_own_induction_dashboard

@@ -41,7 +41,7 @@ RSpec.describe "transferring participants", type: :feature, js: true, early_in_c
 
         then_i_should_be_taken_to_the_cannot_find_their_details
         then_the_page_should_be_accessible
-        click_on "Continue"
+        click_on "find their record using their National Insurance number"
 
         then_i_should_be_on_the_nino_page
         then_the_page_should_be_accessible
@@ -155,8 +155,8 @@ RSpec.describe "transferring participants", type: :feature, js: true, early_in_c
       end
 
       def then_i_should_be_taken_to_the_cannot_find_their_details
-        expect(page).to have_selector("h1", text: "We cannot find #{@participant_data[:full_name]}’s record")
-        expect(page).to have_text("Check the information you entered is correct.")
+        expect(page).to have_selector("h1", text: "No results found for #{@participant_data[:full_name]}")
+        expect(page).to have_text("Check that you have")
       end
 
       def then_i_should_be_on_the_nino_page

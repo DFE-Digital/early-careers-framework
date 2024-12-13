@@ -263,8 +263,8 @@ module Pages
       Pages::SchoolTransferParticipantCompletedPage.loaded
     end
 
-    def confirm_details_and_continue
-      click_on "Continue"
+    def click_the_link_to_lookup_the_record_with_nino
+      click_on "find their record using their National Insurance number"
 
       self
     end
