@@ -13,7 +13,7 @@ class RecordDeclaration
   attribute :evidence_held
   attribute :has_passed
 
-  before_validation :validate_if_npq_course_supported
+  before_validation :ensure_npq_course_no_longer_supported
   before_validation :declaration_attempt
 
   validates :participant_id, participant_identity_presence: true, participant_not_withdrawn: true
@@ -28,12 +28,10 @@ class RecordDeclaration
               message: I18n.t(:invalid_evidence_type),
             }
   validate :output_fee_statement_available
-  validate :validate_has_passed_field, if: :validate_has_passed?
   validate :validate_milestone_exists
   validate :validates_billable_slot_available
   validates :course_identifier, course: true
   validates :cpd_lead_provider, induction_record: true
-  validates :cohort, npq_contract_for_cohort_and_course: { message: I18n.t(:missing_npq_contract_for_cohort_and_course_new_declaration) }
 
   attr_reader :raw_declaration_date
 
@@ -48,8 +46,6 @@ class RecordDeclaration
       end
 
       declaration_attempt.update!(participant_declaration:)
-
-      create_participant_outcome!
 
       check_mentor_completion
     end
@@ -102,11 +98,7 @@ private
     return if existing_declaration&.submitted?
     return if existing_declaration.nil? && !participant_profile.fundable?
 
-    next_output_fee_statement = if participant_profile.ecf?
-                                  cpd_lead_provider.lead_provider.next_output_fee_statement(cohort)
-                                else
-                                  cpd_lead_provider.npq_lead_provider.next_output_fee_statement(cohort)
-                                end
+    next_output_fee_statement = cpd_lead_provider.lead_provider.next_output_fee_statement(cohort)
 
     errors.add(:cohort, I18n.t(:no_output_fee_statements_for_cohort, cohort: cohort.start_year)) if next_output_fee_statement.blank?
   end
@@ -218,7 +210,7 @@ private
   def validates_billable_slot_available
     return unless participant_profile
 
-    return unless participant_declaration_class
+    return unless ParticipantDeclaration::ECF
                     .where(state: %w[submitted eligible payable paid])
                     .where(
                       user: participant_identity.user,
@@ -229,72 +221,14 @@ private
     errors.add(:base, I18n.t(:declaration_already_exists))
   end
 
-  def participant_declaration_class
-    if participant_profile.npq?
-      ParticipantDeclaration::NPQ
-    else
-      ParticipantDeclaration::ECF
-    end
-  end
-
-  def validate_has_passed_field
-    self.has_passed = has_passed.to_s
-
-    if has_passed.blank?
-      errors.add(:has_passed, I18n.t(:missing_has_passed))
-    elsif !%w[true false].include?(has_passed)
-      errors.add(:has_passed, I18n.t(:invalid_has_passed))
-    end
-  end
-
-  def validate_has_passed?
-    return false unless valid_course_identifier_for_participant_outcome?
-
-    participant_profile&.npq? &&
-      declaration_type == "completed"
-  end
-
-  def valid_course_identifier_for_participant_outcome?
-    !(
-      ::Finance::Schedule::NPQEhco::IDENTIFIERS +
-      ::Finance::Schedule::NPQSupport::IDENTIFIERS
-    ).compact.include?(course_identifier)
-  end
-
-  def participant_outcome_state
-    has_passed.to_s == "true" ? "passed" : "failed"
-  end
-
-  def create_participant_outcome!
-    return unless validate_has_passed?
-
-    service = NPQ::CreateParticipantOutcome.new(
-      cpd_lead_provider:,
-      course_identifier:,
-      participant_external_id: participant_identity.user_id,
-      completion_date: declaration_date,
-      state: participant_outcome_state,
-    )
-
-    if service.valid?
-      service.call
-    else
-      raise Api::Errors::InvalidParticipantOutcomeError, I18n.t(:cannot_create_completed_declaration)
-    end
-  end
-
   def check_mentor_completion
     ParticipantDeclarations::HandleMentorCompletion.call(participant_declaration:)
   end
 
-  def validate_if_npq_course_supported
-    return # TODO: should be fixed in https://github.com/DFE-Digital/early-careers-framework/pull/5371
-
-    # rubocop:disable Lint/UnreachableCode
+  def ensure_npq_course_no_longer_supported
     if course_identifier.to_s.starts_with?("npq-")
       errors.add(:course_identifier, I18n.t(:npq_course_no_longer_supported))
       throw(:abort)
     end
-    # rubocop:enable Lint/UnreachableCode
   end
 end
