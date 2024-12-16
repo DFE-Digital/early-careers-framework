@@ -66,7 +66,7 @@ describe Oneoffs::NPQ::BulkChangeApplicationsToPending do
       it { expect(run[application_id]).to eq("Not found") }
     end
 
-    ParticipantDeclaration.states.keys.excluding("submitted", "voided", "ineligible").each do |state|
+    ParticipantDeclaration.states.keys.excluding("submitted", "voided", "ineligible", "awaiting_clawback", "clawed_back").each do |state|
       context "when the application has #{state} declarations" do
         let(:participant_declaration) { create(:npq_participant_declaration, state) }
         let(:application) { participant_declaration.participant_profile.npq_application }

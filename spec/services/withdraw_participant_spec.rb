@@ -142,16 +142,6 @@ RSpec.shared_examples "withdrawing an ECF participant" do
   end
 end
 
-RSpec.shared_examples "withdrawing a NPQ participant" do
-  it_behaves_like "withdrawing a participant"
-
-  it "does not send an alert email to the provider" do
-    expect {
-      service.call
-    }.not_to have_enqueued_mail(SchoolMailer, :fip_provider_has_withdrawn_a_participant)
-  end
-end
-
 RSpec.describe WithdrawParticipant do
   let(:participant_id) { participant_profile.participant_identity.external_identifier }
   let(:induction_record) { participant_profile.induction_records.first }
@@ -229,51 +219,6 @@ RSpec.describe WithdrawParticipant do
 
     describe ".call" do
       it_behaves_like "withdrawing an ECF participant"
-    end
-  end
-
-  context "NPQ participant profile" do
-    let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_npq_lead_provider) }
-    let(:npq_lead_provider) { cpd_lead_provider.npq_lead_provider }
-    let(:npq_course) { create(:npq_course, identifier: "npq-senior-leadership") }
-    let(:schedule) { create(:npq_specialist_schedule) }
-    let(:participant_profile) { create(:npq_participant_profile, npq_lead_provider:, npq_course:, schedule:, user:) }
-    let(:course_identifier) { npq_course.identifier }
-    let(:school) { create(:school) }
-    let!(:induction_coordinator_profile) { create(:induction_coordinator_profile, schools: [school]) }
-
-    describe "validations" do
-      it_behaves_like "validating a participant to be withdrawn"
-
-      it_behaves_like "validating a participant is not already withdrawn for a withdraw" do
-        let(:participant_profile) { create(:npq_participant_profile, :withdrawn, npq_lead_provider:, npq_course:) }
-      end
-
-      context "when a participant has no started declarations" do
-        let(:npq_application) { create(:npq_application, :accepted, npq_course: create(:npq_course, identifier: "npq-senior-leadership")) }
-
-        it "is invalid and returns an error message" do
-          is_expected.to be_invalid
-
-          expect(service.errors.messages_for(:participant_profile)).to include("An NPQ participant who has not got a started declaration cannot be withdrawn. Please contact support for assistance")
-        end
-      end
-
-      context "when the participant does not belong to the CPD lead provider" do
-        let(:another_cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider) }
-        let(:another_npq_lead_provider) { another_cpd_lead_provider.npq_lead_provider }
-        let(:participant_profile) { create(:npq_participant_profile, npq_lead_provider: another_npq_lead_provider) }
-
-        it "is invalid and returns an error message" do
-          is_expected.to be_invalid
-
-          expect(service.errors.messages_for(:participant_id)).to include("Your update cannot be made as the '#/participant_id' is not recognised. Check participant details and try again.")
-        end
-      end
-    end
-
-    describe ".call" do
-      it_behaves_like "withdrawing a NPQ participant"
     end
   end
 end

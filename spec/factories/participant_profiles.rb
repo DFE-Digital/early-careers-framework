@@ -42,32 +42,6 @@ FactoryBot.define do
         profile_traits { [:eligible_for_funding] }
       end
 
-      trait :withdrawn do
-        transient do
-          reason { "other" }
-        end
-
-        after(:create) do |participant_profile, evaluator|
-          WithdrawParticipant.new(
-            participant_id: participant_profile.teacher_profile.user_id,
-            cpd_lead_provider: participant_profile.npq_application.npq_lead_provider.cpd_lead_provider,
-            reason: evaluator.reason,
-            course_identifier: participant_profile.npq_application.npq_course.identifier,
-          ).call
-        end
-      end
-
-      trait :deferred do
-        after(:create) do |participant_profile|
-          DeferParticipant.new(
-            participant_id: participant_profile.teacher_profile.user_id,
-            course_identifier: participant_profile.npq_application.npq_course.identifier,
-            cpd_lead_provider: participant_profile.npq_application.npq_lead_provider.cpd_lead_provider,
-            reason: "bereavement",
-          ).call
-        end
-      end
-
       initialize_with do
         npq_application.profile
       end

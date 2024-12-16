@@ -16,27 +16,6 @@ RSpec.describe "NPQ finance dashboard routes" do
     sign_in user
   end
 
-  describe "GET /finance/participant_profiles/:id/npq/change_training_status/new" do
-    context "when :disable_npq feature is active" do
-      before { FeatureFlag.activate(:disable_npq) }
-
-      it "route should not exist" do
-        expect {
-          get("/finance/participant_profiles/#{participant_profile.id}/npq/change_training_status/new")
-        }.to raise_error(ActionController::RoutingError, /No route matches/)
-      end
-    end
-
-    context "when :disable_npq feature is not active" do
-      before { FeatureFlag.deactivate(:disable_npq) }
-
-      it "route should exist" do
-        get("/finance/participant_profiles/#{participant_profile.id}/npq/change_training_status/new")
-        expect(response).to have_http_status(:success)
-      end
-    end
-  end
-
   describe "GET /finance/participant_profiles/:id/npq/change_lead_provider/new" do
     context "when :disable_npq feature is active" do
       before { FeatureFlag.activate(:disable_npq) }

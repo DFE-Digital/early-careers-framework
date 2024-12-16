@@ -119,9 +119,9 @@ FactoryBot.define do
       paid
       after(:create) do |participant_declaration|
         previous_statement = participant_declaration.statement_line_items.paid.first.statement
-        factory = previous_statement.is_a?(Finance::Statement::ECF) ? :ecf_statement : :npq_statement
+
         create(
-          factory, :next_output_fee,
+          :ecf_statement, :next_output_fee,
           deadline_date: previous_statement.deadline_date + 1.month,
           payment_date: previous_statement.payment_date,
           cpd_lead_provider: previous_statement.cpd_lead_provider

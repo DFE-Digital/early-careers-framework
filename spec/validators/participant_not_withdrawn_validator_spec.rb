@@ -37,12 +37,6 @@ RSpec.describe ParticipantNotWithdrawnValidator do
         it { is_expected.to be_valid }
       end
 
-      context "participant profile withdrawn before declaration_date" do
-        let(:participant_profile) { create(:npq_participant_profile, :withdrawn) }
-
-        it { is_expected.to be_invalid }
-      end
-
       context "participant profile withdrawn after declaration_date" do
         let(:declaration_date) { Time.zone.now - 1.day }
         let(:participant_profile) { create(:npq_participant_profile, :withdrawn) }

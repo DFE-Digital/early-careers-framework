@@ -23,7 +23,6 @@ class WithdrawParticipant
               message: I18n.t(:invalid_reason),
             }, if: ->(klass) { klass.participant_profile.present? }
   validate :not_already_withdrawn
-  validate :with_started_participant_declarations
 
   def call
     ActiveRecord::Base.transaction do
@@ -33,15 +32,13 @@ class WithdrawParticipant
       participant_profile.training_status_withdrawn!
     end
 
-    unless participant_profile.npq?
-      induction_coordinator = participant_profile.school.induction_coordinator_profiles.first
-      if induction_coordinator.present?
-        SchoolMailer.with(
-          withdrawn_participant: participant_profile,
-          induction_coordinator:,
-          partnership: relevant_induction_record.partnership,
-        ).fip_provider_has_withdrawn_a_participant.deliver_later
-      end
+    induction_coordinator = participant_profile.school.induction_coordinator_profiles.first
+    if induction_coordinator.present?
+      SchoolMailer.with(
+        withdrawn_participant: participant_profile,
+        induction_coordinator:,
+        partnership: relevant_induction_record.partnership,
+      ).fip_provider_has_withdrawn_a_participant.deliver_later
     end
 
     participant_profile.record_to_serialize_for(lead_provider: cpd_lead_provider.lead_provider)
@@ -75,12 +72,6 @@ private
     return unless participant_profile
 
     errors.add(:participant_profile, I18n.t(:invalid_withdrawal)) if participant_profile.withdrawn_for?(cpd_lead_provider:)
-  end
-
-  def with_started_participant_declarations
-    return unless participant_profile && participant_profile.npq?
-
-    errors.add(:participant_profile, I18n.t(:no_started_declaration_found)) unless any_participant_declarations_started?
   end
 
   def any_participant_declarations_started?
