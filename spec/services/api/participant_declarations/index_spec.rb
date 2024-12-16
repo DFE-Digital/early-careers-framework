@@ -96,30 +96,5 @@ RSpec.describe Api::ParticipantDeclarations::Index do
         expect(subject.scope).to include(new_provider_ineligible_declaration)
       end
     end
-
-    context "when NPQ application exists for same lead provider" do
-      let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider) }
-      let!(:ecf_declaration) do
-        create(
-          :ect_participant_declaration,
-          declaration_type: "started",
-          cpd_lead_provider:,
-        )
-      end
-
-      before do
-        create(
-          :npq_participant_declaration,
-          declaration_type: "started",
-          cpd_lead_provider:,
-        )
-      end
-
-      subject { described_class.new(cpd_lead_provider:) }
-
-      it "returns only ecf declarations" do
-        expect(subject.scope.to_a).to eql([ecf_declaration])
-      end
-    end
   end
 end

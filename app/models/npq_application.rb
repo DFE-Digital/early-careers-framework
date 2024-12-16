@@ -71,8 +71,6 @@ class NPQApplication < ApplicationRecord
   scope :referred_by_return_to_teaching_advisor, -> { where(referred_by_return_to_teaching_adviser: "yes") }
 
   validates :eligible_for_funding_before_type_cast, inclusion: { in: [true, false, "true", "false"] }
-  validate  :validate_funding_eligiblity_status_code_change, on: :admin
-  validate  :validate_funding_eligiblity_status_with_funded_place, on: :admin
 
   delegate :start_year, to: :cohort, prefix: true, allow_nil: true
 
@@ -120,10 +118,6 @@ class NPQApplication < ApplicationRecord
     profile.present? && profile.participant_declarations.billable.count.positive?
   end
 
-  def has_submitted_declaration?
-    profile.present? && profile.participant_declarations.where(state: "submitted").present?
-  end
-
   def change_logs
     v1 = versions.where_attribute_changes("eligible_for_funding")
     v2 = versions.where_attribute_changes("funding_eligiblity_status_code")
@@ -167,18 +161,6 @@ private
   def push_enrollment_to_big_query
     if (saved_changes.keys & %w[cohort_id id lead_provider_approval_status]).present?
       NPQ::StreamBigQueryEnrollmentJob.perform_later(npq_application_id: id)
-    end
-  end
-
-  def validate_funding_eligiblity_status_code_change
-    if declared_as_billable? && eligible_for_funding == false
-      errors.add(:base, :billable_declaration_exists)
-    end
-  end
-
-  def validate_funding_eligiblity_status_with_funded_place
-    if !eligible_for_funding && funded_place
-      errors.add(:base, :funded_application)
     end
   end
 end
