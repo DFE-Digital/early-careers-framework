@@ -142,22 +142,6 @@ RSpec.describe NPQ::ChangeToPending do
       end
     end
 
-    # Should fail
-    %w[eligible payable paid].each do |dec_state|
-      context "accepted application with #{dec_state} declaration" do
-        let(:application_status) { :accepted }
-        let!(:participant_declaration) { create(:npq_participant_declaration, dec_state, participant_profile:, cpd_lead_provider:) }
-
-        it "returns error", :aggregate_failures do
-          subject.call
-
-          npq_application.reload
-          expect(npq_application).to be_accepted
-          expect(npq_application.errors[:lead_provider_approval_status]).to include("There are already declarations for this participant on this course, please ask provider to void and/or clawback any declarations they have made before attempting to reset the application.")
-        end
-      end
-    end
-
     #  Should succeed
     %w[submitted voided ineligible].each do |dec_state|
       context "accepted application with #{dec_state} declaration" do

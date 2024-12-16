@@ -17,8 +17,6 @@ class ParticipantOutcome::NPQ < ApplicationRecord
   validates :state, presence: true
   validates :completion_date, presence: true, future_date: true
 
-  after_commit :push_outcome_to_big_query
-
   class << self
     def latest
       order(created_at: :desc).first
@@ -107,11 +105,5 @@ class ParticipantOutcome::NPQ < ApplicationRecord
 
   def resend!
     NPQ::ResendParticipantOutcome.new(participant_outcome_id: id).call
-  end
-
-private
-
-  def push_outcome_to_big_query
-    ParticipantOutcomes::StreamBigQueryJob.perform_later(participant_outcome_id: id)
   end
 end

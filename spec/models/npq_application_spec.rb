@@ -35,50 +35,6 @@ RSpec.describe NPQApplication, type: :model do
     end
   end
 
-  describe "callbacks" do
-    subject { create(:npq_application) }
-
-    context "on creation" do
-      it "fires NPQ::StreamBigQueryEnrollmentJob" do
-        expect {
-          subject
-        }.to have_enqueued_job(NPQ::StreamBigQueryEnrollmentJob).once
-      end
-    end
-
-    context "when lead_provider_approval_status is modified" do
-      it "fires NPQ::StreamBigQueryEnrollmentJob" do
-        subject
-
-        expect {
-          subject.update(lead_provider_approval_status: "accepted")
-        }.to have_enqueued_job(NPQ::StreamBigQueryEnrollmentJob).once
-      end
-    end
-
-    context "when cohort_id is modified" do
-      let(:cohort) { create(:cohort, start_year: 2020) }
-
-      it "fires NPQ::StreamBigQueryEnrollmentJob" do
-        subject
-
-        expect {
-          subject.update(cohort:)
-        }.to have_enqueued_job(NPQ::StreamBigQueryEnrollmentJob).once
-      end
-    end
-
-    context "when record is touched" do
-      it "does not fire NPQ::StreamBigQueryEnrollmentJob" do
-        subject
-
-        expect {
-          subject.touch
-        }.not_to have_enqueued_job(NPQ::StreamBigQueryEnrollmentJob)
-      end
-    end
-  end
-
   describe "#eligible_for_dfe_funding" do
     let(:npq_course) { create(:npq_leadership_course) }
     let(:different_npq_course) { create(:npq_specialist_course) }

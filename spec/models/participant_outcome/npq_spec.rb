@@ -241,25 +241,6 @@ RSpec.describe ParticipantOutcome::NPQ, type: :model do
     end
   end
 
-  describe "#push_outcome_to_big_query" do
-    context "on create" do
-      it "pushes outcome to BigQuery" do
-        allow(ParticipantOutcomes::StreamBigQueryJob).to receive(:perform_later).and_call_original
-        outcome
-        expect(ParticipantOutcomes::StreamBigQueryJob).to have_received(:perform_later).with(participant_outcome_id: outcome.id)
-      end
-    end
-
-    context "on update" do
-      it "pushes outcome to BigQuery" do
-        allow(ParticipantOutcomes::StreamBigQueryJob).to receive(:perform_later).and_call_original
-        outcome
-        outcome.update!(state: "voided")
-        expect(ParticipantOutcomes::StreamBigQueryJob).to have_received(:perform_later).with(participant_outcome_id: outcome.id).twice
-      end
-    end
-  end
-
   describe "#has_failed?" do
     it "returns true if failed" do
       outcome = described_class.new(state: "failed")
