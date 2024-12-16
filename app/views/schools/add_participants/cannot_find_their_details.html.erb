@@ -8,19 +8,40 @@
   <div class="govuk-grid-column-two-thirds">
 
     <span class="govuk-caption-l"><%= @school.name %></span>
-    <h1 class="govuk-heading-l">We cannot find <%= @wizard.possessive_name %> record</h1>
+    <h1 class="govuk-heading-l">No results found for <%= @wizard.full_name %></h1>
 
-    <p class="govuk-body">Check the information you entered is correct.</p>
+    <p class="govuk-body">Check that you have:</p>
     <p class="govuk-body">
-      We need to find <%= @wizard.full_name %> in the Teaching Regulation Agency records to make sure
-      they’re eligible for this funded programme.
-      When participants move school, we need to find their record so it can be transferred to your school.
+      <ul class="govuk-list govuk-list--bullet">
+        <li>entered their details correctly</li>
+        <li>not included a title, like Mr, Mrs or Dr</li>
+        <li>used their full name as it appears in their teaching record (shortened names might not match)</li>
+      </ul>
     </p>
+
+    <p class="govuk-body">
+      You could ask <%= @wizard.full_name %> to
+          <%= govuk_link_to "check their teaching record (opens in new tab)",
+                            "https://find-a-lost-trn.education.gov.uk/start",
+                            target: :_blank,
+                            no_visited_state: true %>
+        to make sure their details match.
+    </p>
+
 
     <%= govuk_summary_list do |summary_list| %>
       <% summary_list.with_row do |row| %>
+        <% row.with_key { "Name" } %>
+        <% row.with_value { @wizard.full_name } %>
+        <% row.with_action(text: "Change",
+                      visually_hidden_text: "name",
+                      href: @wizard.change_path_for(step: :name)) %>
+      <% end %>
+
+      <% summary_list.with_row do |row| %>
         <% row.with_key { "TRN" } %>
         <% row.with_value { @wizard.trn } %>
+
         <% row.with_action(text: "Change",
                       visually_hidden_text: "TRN",
                       href: @wizard.change_path_for(step: :trn)) %>
@@ -36,7 +57,10 @@
     <% end %>
 
     <h3 class="govuk-heading-m">If this information is correct</h3>
-    <p class="govuk-body">We may be able to find their record using their National Insurance number.</p>
-    <%= govuk_button_link_to "Continue", url_for(step: :nino) %>
+    <p class="govuk-body">We may be able to
+      <%= govuk_link_to "find their record using their National Insurance number",
+                        url_for(step: :nino),
+                        no_visited_state: true %>.
+    </p>
   </div>
 </div>

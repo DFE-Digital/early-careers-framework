@@ -25,7 +25,7 @@ RSpec.describe "Add participants", js: true, early_in_cohort: true do
       when_i_add_full_name_to_the_school_add_participant_wizard @participant_data[:full_name]
       and_i_add_teacher_reference_number_to_the_school_add_participant_wizard @participant_data[:full_name], @participant_data[:trn]
       and_i_add_date_of_birth_to_the_school_add_participant_wizard @participant_data[:date_of_birth]
-      and_i_confirm_details_and_continue_on_the_school_add_participant_wizard
+      and_i_click_the_link_to_lookup_the_record_with_nino_on_the_school_add_participant_wizard
       and_i_add_nino_to_the_school_add_participant_wizard @participant_data[:full_name], @participant_data[:nino]
       and_i_add_email_address_to_the_school_add_participant_wizard "Sally Teacher", @participant_data[:email]
       and_i_choose_a_mentor_on_the_school_add_participant_wizard @participant_profile_mentor.full_name
@@ -46,7 +46,7 @@ RSpec.describe "Add participants", js: true, early_in_cohort: true do
       when_i_add_mentor_full_name_to_the_school_add_participant_wizard @participant_data[:full_name]
       and_i_add_teacher_reference_number_to_the_school_add_participant_wizard @participant_data[:full_name], @participant_data[:trn]
       and_i_add_date_of_birth_to_the_school_add_participant_wizard @participant_data[:date_of_birth]
-      and_i_confirm_details_and_continue_on_the_school_add_participant_wizard
+      and_i_click_the_link_to_lookup_the_record_with_nino_on_the_school_add_participant_wizard
       and_i_add_nino_to_the_school_add_participant_wizard @participant_data[:full_name], @participant_data[:nino]
       and_i_add_email_address_to_the_school_add_participant_wizard "Sally Teacher", @participant_data[:email]
       and_i_choose_current_providers_on_the_school_add_participant_wizard
@@ -67,7 +67,7 @@ RSpec.describe "Add participants", js: true, early_in_cohort: true do
       when_i_add_mentor_full_name_to_the_school_add_participant_wizard @participant_data[:full_name]
       and_i_add_teacher_reference_number_to_the_school_add_participant_wizard @participant_data[:full_name], @participant_data[:trn]
       and_i_add_date_of_birth_to_the_school_add_participant_wizard @participant_data[:date_of_birth]
-      and_i_confirm_details_and_continue_on_the_school_add_participant_wizard
+      and_i_click_the_link_to_lookup_the_record_with_nino_on_the_school_add_participant_wizard
       and_i_add_nino_to_the_school_add_participant_wizard @participant_data[:full_name], @participant_data[:nino]
       and_i_add_email_address_to_the_school_add_participant_wizard "Sally Teacher", @participant_data[:email]
       and_i_choose_summer_term_on_the_school_add_participant_wizard
