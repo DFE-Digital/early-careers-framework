@@ -29,18 +29,8 @@ FactoryBot.define do
       end
     end
 
-    factory :npq_participant_declaration, class: "ParticipantDeclaration::NPQ" do
-      transient do
-        npq_course { create(:npq_course) }
-        school_urn {}
-      end
-      cpd_lead_provider   { create(:cpd_lead_provider, :with_npq_lead_provider) }
-      participant_profile { create(:npq_application, :accepted, *profile_traits, npq_lead_provider: cpd_lead_provider.npq_lead_provider, npq_course:, school_urn:, cohort:).profile }
-      course_identifier   { participant_profile.npq_course.identifier }
-    end
-
     initialize_with do
-      participant_id = participant_profile.ecf? ? participant_profile.participant_identity.user_id : participant_profile.npq_application.participant_identity.user_id
+      participant_id = participant_profile.participant_identity.user_id
 
       params = {
         participant_id:,
@@ -52,22 +42,6 @@ FactoryBot.define do
       }
 
       params[:evidence_held] = "other" if declaration_type != "started"
-
-      if participant_profile.is_a?(ParticipantProfile::NPQ)
-        opts = {
-          npq_lead_provider: cpd_lead_provider.npq_lead_provider,
-          cohort: participant_profile.npq_application.cohort,
-          npq_course: participant_profile.npq_application.npq_course,
-          version: "1.0",
-        }
-        NPQContract.find_by(opts) || create(:npq_contract, opts)
-      end
-
-      if participant_profile.is_a?(ParticipantProfile::NPQ) && participant_profile.fundable?
-        cohort = participant_profile.npq_application.cohort
-        next_output_fee_statement = cpd_lead_provider.npq_lead_provider.next_output_fee_statement(cohort)
-        create(:npq_statement, :next_output_fee, cpd_lead_provider:, cohort:) unless next_output_fee_statement
-      end
 
       if participant_profile.is_a?(ParticipantProfile::ECF) && participant_profile.fundable?
         cohort = participant_profile.current_induction_record.schedule.cohort

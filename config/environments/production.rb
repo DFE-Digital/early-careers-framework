@@ -86,9 +86,6 @@ Rails.application.configure do
   config.dqt_api_url = Rails.application.credentials.DQT_API_URL
   config.dqt_api_key = Rails.application.credentials.DQT_API_KEY
 
-  config.qualified_teachers_api_url = Rails.application.credentials.QUALIFIED_TEACHERS_API_URL
-  config.qualified_teachers_api_key = Rails.application.credentials.QUALIFIED_TEACHERS_API_KEY
-
   config.slack_alerts_webhook_urls = Rails.application.credentials.SLACK_ALERTS_WEBHOOK_URLS
 
   config.action_mailer.perform_caching = false
