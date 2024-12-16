@@ -47,8 +47,6 @@ class ParticipantProfile::NPQ < ParticipantProfile
 
   has_many :participant_declarations, class_name: "ParticipantDeclaration::NPQ", foreign_key: :participant_profile_id
 
-  after_commit :push_profile_to_big_query
-
   self.validation_steps = %i[identity decision].freeze
 
   def npq?
@@ -107,11 +105,5 @@ class ParticipantProfile::NPQ < ParticipantProfile
   def role
     # not sure what this should be but incase it's needed in the dashboard it won't break
     "NPQ"
-  end
-
-private
-
-  def push_profile_to_big_query
-    ::NPQ::StreamBigQueryProfileJob.perform_later(profile_id: id)
   end
 end
