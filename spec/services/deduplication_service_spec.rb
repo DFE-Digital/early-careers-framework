@@ -12,7 +12,7 @@ RSpec.describe DeduplicationService do
   let(:finance_user) { create(:user, :finance) }
   let(:induction_coordinator_user) { create(:user, :induction_coordinator) }
   let(:lead_provider_user) { create(:user, :lead_provider) }
-  let(:participant_declaration) { create(:npq_participant_declaration, state: "voided") }
+  let(:participant_declaration) { create(:ect_participant_declaration, state: "voided") }
   let(:participant_declaration_user) { participant_declaration.user }
 
   before do
@@ -64,6 +64,7 @@ RSpec.describe DeduplicationService do
         identities = participant_declaration_user.participant_identities
         identities.each do |identity|
           identity.participant_profiles.each do |pp|
+            pp.induction_records.each(&:destroy!)
             pp.participant_profile_states.each(&:destroy!)
             pp.participant_declarations.each do |pd|
               pd.participant_profile_id = nil
@@ -71,7 +72,6 @@ RSpec.describe DeduplicationService do
             end
             pp.destroy!
           end
-          identity.npq_applications.each(&:destroy!)
           identity.destroy!
         end
       end

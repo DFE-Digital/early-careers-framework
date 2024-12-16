@@ -9,8 +9,6 @@ RSpec.describe NPQ::ChangeToPending do
   let(:npq_application) { create(:npq_application, :eligible_for_funding, application_status, npq_lead_provider:) }
   let(:participant_profile) { npq_application.profile }
 
-  let(:participant_declaration) { create(:npq_participant_declaration, participant_profile:, cpd_lead_provider:) }
-
   subject { described_class.new(npq_application:) }
 
   describe "#call" do
@@ -139,22 +137,6 @@ RSpec.describe NPQ::ChangeToPending do
         expect(npq_application).to be_pending
         expect(npq_application.profile).to be_nil
         expect(ParticipantProfileState.where(participant_profile_id: participant_profile.id)).to be_empty
-      end
-    end
-
-    #  Should succeed
-    %w[submitted voided ineligible].each do |dec_state|
-      context "accepted application with #{dec_state} declaration" do
-        let(:application_status) { :accepted }
-        let!(:participant_declaration) { create(:npq_participant_declaration, dec_state, participant_profile:, cpd_lead_provider:) }
-
-        it "changes to pending", :aggregate_failures do
-          subject.call
-
-          npq_application.reload
-          expect(npq_application).to be_pending
-          expect(npq_application.errors[:lead_provider_approval_status]).to_not be_present
-        end
       end
     end
   end

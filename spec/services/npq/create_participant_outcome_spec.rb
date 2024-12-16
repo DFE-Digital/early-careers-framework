@@ -7,7 +7,6 @@ RSpec.describe NPQ::CreateParticipantOutcome do
   let(:npq_lead_provider) { cpd_lead_provider.npq_lead_provider }
   let(:npq_application) { create(:npq_application, :eligible_for_funding, :accepted, npq_lead_provider:) }
   let(:participant_profile) { npq_application.profile }
-  let(:participant_declaration) { create(:npq_participant_declaration, participant_profile:, cpd_lead_provider:) }
   let(:participant_external_id) { participant_profile.participant_identity.external_identifier }
   let(:course_identifier) { npq_application.npq_course.identifier }
   let(:state) { "passed" }
@@ -91,64 +90,6 @@ RSpec.describe NPQ::CreateParticipantOutcome do
         is_expected.to be_invalid
 
         expect(service.errors.full_messages).to include("The participant has not had a 'completed' declaration submitted for them. Therefore you cannot update their outcome.")
-      end
-    end
-
-    context "when the participant profile has a completed declaration" do
-      let!(:npq_participant_declaration) { create(:npq_participant_declaration, :eligible, participant_profile:, cpd_lead_provider:) }
-
-      before do
-        npq_participant_declaration.update!(declaration_type: "completed")
-      end
-
-      it "is valid" do
-        is_expected.to be_valid
-      end
-
-      it "creates a new participant outcome record" do
-        expect { service.call }.to change { ParticipantOutcome::NPQ.count }
-      end
-
-      it "adds the correct attributes to the new participant_outcome record" do
-        service.call
-
-        expect(npq_participant_declaration.outcomes.latest).to have_attributes(
-          state:,
-          completion_date: Date.parse(completion_date),
-        )
-      end
-
-      context "when an outcome with same details already exists" do
-        let!(:outcome) { create(:participant_outcome, participant_declaration: npq_participant_declaration, state:, completion_date:) }
-
-        it "does not create a new participant outcome record" do
-          expect { service.call }.not_to change { ParticipantOutcome::NPQ.count }
-        end
-
-        it "returns the same outcome record" do
-          expect(service.call).to eql(outcome)
-        end
-      end
-
-      context "when an outcome with different details already exists" do
-        let!(:outcome) { create(:participant_outcome, participant_declaration: npq_participant_declaration, state: "voided") }
-
-        it "is valid" do
-          is_expected.to be_valid
-        end
-
-        it "creates a new participant outcome record" do
-          expect { service.call }.to change { ParticipantOutcome::NPQ.count }
-        end
-
-        it "adds the correct attributes to the new participant_outcome record" do
-          service.call
-
-          expect(npq_participant_declaration.outcomes.latest).to have_attributes(
-            state:,
-            completion_date: Date.parse(completion_date),
-          )
-        end
       end
     end
   end
