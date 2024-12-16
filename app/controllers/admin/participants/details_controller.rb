@@ -9,12 +9,5 @@ module Admin::Participants
 
       add_breadcrumb(school.name, admin_school_participants_path(school)) if school.present?
     end
-
-  private
-
-    # Get the school from the induction record for ECTs and from the participant profile for NPQs
-    def school
-      @school ||= @participant_profile.latest_induction_record&.school || @participant_profile.school
-    end
   end
 end

@@ -55,11 +55,6 @@ module Admin::Participants
       @induction_record = @participant_profile.induction_records.find(params[:induction_record_id])
     end
 
-    # Get the school from the induction record for ECTs and from the participant profile for NPQs
-    def school
-      @school ||= @participant_profile.latest_induction_record&.school || @participant_profile.school
-    end
-
     def induction_params
       params.require(:induction_record).permit(:preferred_identity_id)
     end
