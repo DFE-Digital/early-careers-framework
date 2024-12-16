@@ -59,25 +59,4 @@ RSpec.describe "finance/participants/show.html.erb" do
       end
     end
   end
-
-  context "with NPQ profile" do
-    let(:profile) { create(:npq_participant_profile) }
-    let(:user)    { profile.user }
-
-    it "renders needed information" do
-      assign :user, user
-
-      render
-
-      expect(rendered).to have_content("Schedule identifier#{profile.schedule.schedule_identifier}")
-      expect(rendered).to have_content("Schedule cohort#{profile.schedule.cohort.start_year}")
-
-      expect(rendered).to have_content("Lead provider#{profile.npq_application.npq_lead_provider.name}")
-      expect(rendered).to have_content("School URN#{profile.npq_application.school_urn}")
-
-      expect(rendered).to have_content("Eligible for funding#{profile.fundable?.to_s.upcase}")
-
-      expect(rendered).to have_content("Targeted support funding eligibility#{profile.npq_application.targeted_delivery_funding_eligibility ? 'YES' : 'NO'}")
-    end
-  end
 end

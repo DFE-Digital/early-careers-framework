@@ -483,12 +483,6 @@ Rails.application.routes.draw do
           end
         end
       end
-      namespace :npq do
-        resource :change_lead_provider, only: %i[new create update], constraints: NpqApiEndpoint
-      end
-    end
-    resources :npq_applications, only: [] do
-      resource :change_lead_provider_approval_status, only: %i[new create], constraints: NpqApiEndpoint
     end
 
     namespace :banding_tracker, path: "banding-tracker" do
@@ -497,15 +491,10 @@ Rails.application.routes.draw do
     end
 
     resource :payment_breakdowns, only: :show, path: "payment-breakdowns", controller: "payment_breakdowns" do
-      get "/choose-programme", to: "payment_breakdowns#select_programme", as: :select_programme
-      post "/choose-programme", to: "payment_breakdowns#choose_programme", as: :choose_programme
       get "/choose-provider-ecf", to: "payment_breakdowns#select_provider_ecf", as: :select_provider_ecf
       post "/choose-provider-ecf", to: "payment_breakdowns#choose_provider_ecf", as: :choose_provider_ecf
-      get "/choose-provider-npq", to: "payment_breakdowns#select_provider_npq", as: :select_provider_npq, constraints: NpqApiEndpoint
-      post "/choose-provider-npq", to: "payment_breakdowns#choose_provider_npq", as: :choose_provider_npq, constraints: NpqApiEndpoint
 
       collection do
-        post :choose_npq_statement, path: "choose-npq-statement", constraints: NpqApiEndpoint
         post :choose_ecf_statement, path: "choose-ecf-statement"
       end
     end
@@ -521,25 +510,6 @@ Rails.application.routes.draw do
         resources :statements, only: %i[show] do
           resource :voided, controller: "participant_declarations/voided", path: "voided", only: %i[show]
         end
-      end
-    end
-
-    namespace :npq, constraints: NpqApiEndpoint do
-      resources :statements, only: [] do
-        resource :assurance_report, path: "assurance-report", only: :show, format: :csv
-      end
-
-      resources :lead_providers, path: "payment-overviews", controller: "payment_overviews", only: %i[show] do
-        resources :statements, only: %i[show] do
-          resources :courses, only: %i[show], controller: "course_payment_breakdowns"
-          resource :voided, controller: "participant_declarations/voided", path: "voided", only: %i[show]
-        end
-      end
-
-      resources :contracts, only: %i[show]
-
-      resources :participant_outcomes, only: %i[], param: :participant_outcome_id do
-        get :resend, on: :member
       end
     end
 
