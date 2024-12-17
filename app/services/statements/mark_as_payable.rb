@@ -7,6 +7,8 @@ module Statements
     end
 
     def call
+      return unless statement&.ecf?
+
       Finance::Statement.transaction do
         participant_declarations.find_each do |declaration|
           declaration_mark_as_payable_service.call(declaration)
