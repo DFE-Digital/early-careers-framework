@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe ParticipantProfileState, type: :model do
-  let(:participant_profile) { create(:npq_participant_profile) }
+  let(:participant_profile) { create(:ect_participant_profile) }
 
   subject(:participant_profile_state) { create(:participant_profile_state, participant_profile:) }
 

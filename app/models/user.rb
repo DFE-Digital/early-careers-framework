@@ -21,7 +21,6 @@ class User < ApplicationRecord
 
   has_many :delivery_partner_profiles, dependent: :destroy
   has_many :delivery_partners, through: :delivery_partner_profiles
-  has_many :updated_applications, class_name: "NPQApplication", foreign_key: "eligible_for_funding_updated_by_id", dependent: :nullify
 
   has_many :appropriate_body_profiles, dependent: :destroy
   has_many :appropriate_bodies, through: :appropriate_body_profiles
@@ -35,8 +34,6 @@ class User < ApplicationRecord
 
   has_many :npq_profiles, through: :teacher_profile
   # end: TODO
-
-  has_many :npq_application_eligibility_imports, class_name: "NPQApplications::EligibilityImport"
 
   has_many :participant_id_changes, -> { order(created_at: :desc) }
 
@@ -64,13 +61,6 @@ class User < ApplicationRecord
 
   def self.ransackable_associations(_auth_object = nil)
     %w[participant_identities participant_profiles schools lead_provider delivery_partner teacher_profile]
-  end
-
-  # changed from has_many :npq_applications as these now live on participant_identities
-  # and it is possible that there are applications on one or more of the user's
-  # participant_identity records
-  def npq_applications
-    NPQApplication.joins(:participant_identity).where(participant_identity: { user_id: id })
   end
 
   def admin?
@@ -122,7 +112,7 @@ class User < ApplicationRecord
   end
 
   def npq_registered?
-    npq? || npq_applications.any?
+    npq?
   end
 
   def participant?
@@ -172,7 +162,6 @@ class User < ApplicationRecord
       ("mentor" if mentor?),
       ("early_career_teacher" if early_career_teacher?),
       ("npq_participant" if npq?),
-      ("npq_applicant" if npq_applications.any? && !npq?),
       ("teacher" if teacher?), # presence of teacher profile, could include orphaned de-duped users
     ].compact
   end

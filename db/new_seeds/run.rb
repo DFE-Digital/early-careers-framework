@@ -33,7 +33,6 @@ end
   "add_appropriate_bodies.rb",
   "add_schools_and_local_authorities.rb",
   "add_users.rb",
-  "add_npq_registrations.rb",
   "add_transfer_scenarios.rb",
   "add_mentor_scenarios.rb",
   "add_api_tokens.rb",
