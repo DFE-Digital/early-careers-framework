@@ -29,10 +29,6 @@ sandbox: production-cluster
 migration: production-cluster
 	$(eval include global_config/migration.sh)
 
-.PHONY: separation
-separation: production-cluster
-	$(eval include global_config/separation.sh)
-
 .PHONY: production
 production: production-cluster
 	$(eval include global_config/production.sh)

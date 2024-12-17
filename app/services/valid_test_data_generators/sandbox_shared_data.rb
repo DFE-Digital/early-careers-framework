@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module ValidTestDataGenerators
-  class SeparationSharedData < ECFLeadProviderPopulater
+  class SandboxSharedData < ECFLeadProviderPopulater
     class << self
       def call(name:, cohort:)
         new(name:, cohort:)
@@ -60,7 +60,7 @@ module ValidTestDataGenerators
     end
 
     def shared_users_data
-      @shared_users_data ||= YAML.load_file(Rails.root.join("db/data/separation_shared_data.yml"))
+      @shared_users_data ||= YAML.load_file(Rails.root.join("db/data/sandbox_shared_data.yml"))
     end
   end
 end
