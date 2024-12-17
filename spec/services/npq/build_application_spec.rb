@@ -5,7 +5,6 @@ require "rails_helper"
 RSpec.describe NPQ::BuildApplication do
   let!(:user)                      { create(:user) }
   let(:npq_lead_provider)          { create(:npq_lead_provider) }
-  let(:npq_contract)               { create(:npq_contract, npq_lead_provider:, npq_course:) }
   let(:npq_course)                 { create(:npq_course) }
   let(:date_of_birth)              { Date.new(1980, 1, 1) }
   let(:npq_application_attributes) { attributes_for(:npq_application, npq_course:, npq_lead_provider:, date_of_birth:) }
