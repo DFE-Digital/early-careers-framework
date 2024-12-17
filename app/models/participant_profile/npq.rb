@@ -68,6 +68,10 @@ class ParticipantProfile::NPQ < ParticipantProfile
     :npq
   end
 
+  def fundable?
+    nil
+  end
+
   def schedule_for(*)
     schedule
   end
