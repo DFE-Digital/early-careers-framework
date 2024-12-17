@@ -23,34 +23,5 @@ RSpec.describe CreateNewFakeSandboxDataJob, type: :job do
 
       expect(ecf_lead_provider.reload.ecf_participants.count).to eq(10)
     end
-
-    it "should create 10 new NPQ applications" do
-      subject.perform
-
-      expect(npq_lead_provider.reload.npq_applications.count).to eq(10)
-      expect(npq_lead_provider.reload.npq_participants.count).to eq(0)
-    end
-
-    it "should associate the NPQ applications to the active registration cohort" do
-      subject.perform
-
-      expect(npq_lead_provider.reload.npq_applications.last.cohort.start_year).to eq(Cohort.active_registration_cohort.start_year)
-    end
-
-    context "when `disable_npq` feature flag is active" do
-      before { FeatureFlag.activate(:disable_npq) }
-
-      it "creates new ECTs" do
-        subject.perform
-
-        expect(ecf_lead_provider.reload.ecf_participants.count).to eq(10)
-      end
-
-      it "does not create NPQ applications" do
-        subject.perform
-
-        expect(npq_lead_provider.reload.npq_applications.count).to be_zero
-      end
-    end
   end
 end

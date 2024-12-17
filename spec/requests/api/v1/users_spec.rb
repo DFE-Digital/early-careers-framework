@@ -11,8 +11,7 @@ RSpec.describe "API Users", type: :request do
 
   describe "#index" do
     before :each do
-      create(:npq_participant_profile)
-      create(:npq_participant_profile, user: mentor.user)
+      create(:ect_participant_profile)
       create_list(:ect, 2, core_induction_programme: cip, mentor_profile_id: mentor.id)
     end
 

@@ -272,40 +272,6 @@ RSpec.describe ChooseRoleForm, type: :model do
     end
   end
 
-  describe "NPQ roles" do
-    describe "NPQ applicant" do
-      let(:user) { create(:seed_npq_application, :valid).user }
-
-      it "has no role" do
-        expect(form.has_no_role).to be true
-      end
-
-      it "only_one_role should be false" do
-        expect(form.only_one_role).to be false
-      end
-
-      it "has correct role_options" do
-        expect(form.role_options).to be_empty
-      end
-    end
-
-    describe "NPQ participant" do
-      let(:user) { create(:user, :npq) }
-
-      it "has a role" do
-        expect(form.has_no_role).to be false
-      end
-
-      it "only_one_role should be true" do
-        expect(form.only_one_role).to be true
-      end
-
-      it "has correct role_options" do
-        expect(form.role_options).to have_key("teacher")
-      end
-    end
-  end
-
   describe "Multiple roles" do
     describe "induction_coordinator and mentor roles" do
       let(:user) { create(:user, :induction_coordinator, :mentor) }

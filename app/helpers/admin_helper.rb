@@ -13,10 +13,6 @@ module AdminHelper
     ParticipantIdentity.where(user:).pluck(:email)
   end
 
-  def on_admin_npq_application_page?
-    request.path.starts_with?("/admin/npq/applications")
-  end
-
   def html_list(values, bullets: false)
     return nil if values.empty?
 
