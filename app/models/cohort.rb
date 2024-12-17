@@ -7,7 +7,6 @@ class Cohort < ApplicationRecord
   INITIAL_COHORT_START_DATE = Date.new(2021, 9, 1)
 
   has_many :call_off_contracts
-  has_many :npq_contracts
   has_many :partnerships
   has_many :schedules, class_name: "Finance::Schedule::ECF"
   has_many :statements, class_name: "Finance::Statement"
