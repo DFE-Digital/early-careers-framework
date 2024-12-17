@@ -1,19 +1,27 @@
 #!/bin/bash
 
-echo "Setting SSH password for vscode user..."
-sudo usermod --password $(echo vscode | openssl passwd -1 -stdin) vscode
-
 echo "Updating RubyGems..."
-gem update --system
+gem update --system -N
 
 echo "Installing dependencies..."
+gem install bundler -v 2.4.14 # Must be explicitly specified or we get an error on the subsequent bundle install.
 bundle install
 yarn install
+yarn build
+yarn build:css
 
 echo "Creating database..."
-bin/rails db:create db:schema:load db:migrate db:seed
+bin/rails db:create db:schema:load 
 
-echo "Installing documentation dependencies"
-cd docs && bundle
+echo "Seeding database..."
+bin/rails db:seed 
+
+echo "Installing documentation dependencies..."
+cd docs
+gem install bundler -v 2.4.6 # Must be explicitly specified or we get an error on the subsequent bundle install.
+bundle install
+
+echo "Building documentation..."
+bundle exec middleman build --build-dir=../public/api-reference
 
 echo "Done!"
