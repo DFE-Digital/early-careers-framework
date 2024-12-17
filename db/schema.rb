@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_11_01_133851) do
+ActiveRecord::Schema[7.1].define(version: 2024_12_17_132754) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "fuzzystrmatch"
@@ -746,28 +746,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_01_133851) do
     t.index ["npq_course_id"], name: "index_npq_applications_on_npq_course_id"
     t.index ["npq_lead_provider_id"], name: "index_npq_applications_on_npq_lead_provider_id"
     t.index ["participant_identity_id"], name: "index_npq_applications_on_participant_identity_id"
-  end
-
-  create_table "npq_contracts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.jsonb "raw"
-    t.string "version", default: "0.0.1"
-    t.uuid "npq_lead_provider_id", null: false
-    t.integer "recruitment_target"
-    t.string "course_identifier"
-    t.integer "service_fee_installments"
-    t.integer "service_fee_percentage", default: 40
-    t.decimal "per_participant"
-    t.integer "number_of_payment_periods"
-    t.integer "output_payment_percentage", default: 60
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.uuid "cohort_id", null: false
-    t.decimal "monthly_service_fee", default: "0.0"
-    t.decimal "targeted_delivery_funding_per_participant", default: "100.0"
-    t.boolean "special_course", default: false, null: false
-    t.integer "funding_cap"
-    t.index ["cohort_id"], name: "index_npq_contracts_on_cohort_id"
-    t.index ["npq_lead_provider_id"], name: "index_npq_contracts_on_npq_lead_provider_id"
   end
 
   create_table "npq_courses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

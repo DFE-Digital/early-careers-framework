@@ -17,7 +17,6 @@ module Importers
 
       ActiveRecord::Base.transaction do
         create_ecf_statements!
-        create_npq_statements!
       end
 
       logger.info "CreateStatement: Finished!"
@@ -66,40 +65,6 @@ module Importers
       end
     end
 
-    def create_npq_statements!
-      npq_statements.each do |statement_data|
-        npq_lead_providers_with_contracts_for(cohort: statement_data.cohort).each do |npq_lead_provider|
-          cpd_lead_provider = npq_lead_provider.cpd_lead_provider
-
-          logger.info "CreateStatement: Creating #{statement_data.cohort.start_year} cohort NPQ statements for #{cpd_lead_provider.name}"
-
-          statement = Finance::Statement::NPQ.find_by(
-            name: statement_data.name,
-            cpd_lead_provider:,
-            cohort: statement_data.cohort,
-          )
-
-          next if statement
-
-          contract_version = Finance::Statement::NPQ.where(cpd_lead_provider:, cohort: statement_data.cohort).order(payment_date: :desc).first&.contract_version
-          contract_version ||= "0.0.1"
-
-          Finance::Statement::NPQ.create!(
-            name: statement_data.name,
-            cpd_lead_provider:,
-            deadline_date: statement_data.deadline_date,
-            payment_date: statement_data.payment_date,
-            cohort: statement_data.cohort,
-            output_fee: statement_data.output_fee,
-            type: class_for(statement_data, namespace: statement_data.type),
-            contract_version:,
-          )
-
-          logger.info "CreateStatement: #{statement_data.cohort.start_year} cohort NPQ statements for #{cpd_lead_provider.name} successfully created!"
-        end
-      end
-    end
-
     def class_for(statment_data, namespace:)
       return namespace::Paid    if statment_data[:payment_date] < Date.current
       return namespace::Payable if Date.current.between?(statment_data[:deadline_date], statment_data[:payment_date])
@@ -111,9 +76,7 @@ module Importers
       lambda do |value, field_info|
         case field_info.header
         when "type"
-          return Finance::Statement::ECF if value.downcase == "ecf"
-
-          Finance::Statement::NPQ if value.downcase == "npq"
+          Finance::Statement::ECF if value.downcase == "ecf"
         when "deadline_date", "payment_date"
           Date.parse(value)
         when "output_fee"
@@ -145,18 +108,9 @@ module Importers
       @ecf_statements ||= rows.map { |hash| OpenStruct.new(hash) }.select { |row| row.type == Finance::Statement::ECF }
     end
 
-    def npq_statements
-      @npq_statements ||= rows.map { |hash| OpenStruct.new(hash) }.select { |row| row.type == Finance::Statement::NPQ }
-    end
-
     def lead_providers_with_ecf_contracts_for(cohort:)
       @ecf_contracts ||= {}
       @ecf_contracts[cohort.id] ||= CallOffContract.includes(lead_provider: :cpd_lead_provider).where(cohort:).map(&:lead_provider)
-    end
-
-    def npq_lead_providers_with_contracts_for(cohort:)
-      @npq_contracts ||= {}
-      @npq_contracts[cohort.id] ||= NPQContract.includes(npq_lead_provider: :cpd_lead_provider).where(cohort:).map(&:npq_lead_provider)
     end
   end
 end
