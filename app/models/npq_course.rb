@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class NPQCourse < ApplicationRecord
-  has_many :npq_applications
-
   def self.identifiers
     pluck(:identifier)
   end

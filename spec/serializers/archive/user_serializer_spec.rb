@@ -32,7 +32,6 @@ RSpec.describe Archive::UserSerializer do
       expect(attrs[:teacher_profile]).to eq Archive::TeacherProfileSerializer.new(user.teacher_profile).serializable_hash[:data]
       expect(attrs[:participant_identities]).to match_array Archive::ParticipantIdentitySerializer.new(user.participant_identities).serializable_hash[:data]
       expect(attrs[:participant_profiles]).to match_array Archive::ParticipantProfileSerializer.new(user.participant_profiles).serializable_hash[:data]
-      expect(attrs[:npq_applications]).to match_array Archive::NPQApplicationSerializer.new(user.npq_applications).serializable_hash[:data]
     end
   end
 end

@@ -119,8 +119,6 @@ RSpec.describe Archive::Search do
       end
 
       describe "matching by teacher reference number" do
-        let(:search_term) { user_1.npq_applications.first.teacher_reference_number }
-
         let(:results) { search.call(search_term: "9876543") }
 
         it "returns matching participants" do

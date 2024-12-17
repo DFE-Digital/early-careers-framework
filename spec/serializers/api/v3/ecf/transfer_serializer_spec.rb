@@ -230,15 +230,6 @@ module Api
             end
           end
 
-          context "with ECT and NPQ profiles" do
-            let(:npq_lead_provider) { create(:npq_lead_provider, cpd_lead_provider:) }
-            let!(:npq_application) { create(:npq_application, :accepted, :eligible_for_funding, npq_lead_provider:, user:) }
-
-            it "only surfaces a single transfer" do
-              expect(subject.serializable_hash[:data][:attributes][:transfers].size).to eq(1)
-            end
-          end
-
           context "with multiple transfers" do
             let!(:leaving_induction_record) do
               create(:induction_record, :leaving, :preferred_identity, induction_programme: leaving_induction_programme, start_date: leaving_start_date, end_date: leaving_end_date)
