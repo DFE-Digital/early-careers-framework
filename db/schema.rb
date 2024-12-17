@@ -691,15 +691,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_06_145039) do
     t.index ["token"], name: "index_nomination_emails_on_token", unique: true
   end
 
-  create_table "npq_application_exports", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.date "start_date", null: false
-    t.date "end_date", null: false
-    t.uuid "user_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_npq_application_exports_on_user_id"
-  end
-
   create_table "npq_applications", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "npq_lead_provider_id", null: false
     t.uuid "npq_course_id", null: false
@@ -1319,7 +1310,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_06_145039) do
   add_foreign_key "milestones", "schedules"
   add_foreign_key "nomination_emails", "partnership_notification_emails"
   add_foreign_key "nomination_emails", "schools"
-  add_foreign_key "npq_application_exports", "users"
   add_foreign_key "npq_applications", "npq_courses"
   add_foreign_key "npq_applications", "npq_lead_providers"
   add_foreign_key "npq_applications", "participant_identities"
