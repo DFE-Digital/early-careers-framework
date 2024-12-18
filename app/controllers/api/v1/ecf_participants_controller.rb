@@ -56,11 +56,6 @@ module Api
         params.permit(:id, filter: %i[cohort updated_since])
       end
 
-      def access_scope
-        LeadProviderApiToken
-          .joins(cpd_lead_provider: [:lead_provider])
-      end
-
       def lead_provider
         current_user.lead_provider
       end
