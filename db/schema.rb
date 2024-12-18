@@ -691,13 +691,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_06_145039) do
     t.index ["token"], name: "index_nomination_emails_on_token", unique: true
   end
 
-  create_table "npq_courses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.text "name", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.text "identifier"
-  end
-
   create_table "npq_lead_providers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.text "name", null: false
     t.datetime "created_at", null: false
@@ -1278,7 +1271,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_06_145039) do
   add_foreign_key "participant_profile_states", "participant_profiles"
   add_foreign_key "participant_profiles", "cohorts"
   add_foreign_key "participant_profiles", "core_induction_programmes"
-  add_foreign_key "participant_profiles", "npq_courses"
   add_foreign_key "participant_profiles", "participant_identities"
   add_foreign_key "participant_profiles", "participant_profiles", column: "mentor_profile_id"
   add_foreign_key "participant_profiles", "schedules"
