@@ -55,23 +55,6 @@ PrivacyPolicy.find_or_initialize_by(major_version: 1, minor_version: 0)
   NPQLeadProvider.find_or_create_by!(name: hash[:name], id: hash[:id])
 end
 
-[
-  { name: "NPQ Leading Teaching (NPQLT)", id: "15c52ed8-06b5-426e-81a2-c2664978a0dc", identifier: "npq-leading-teaching" },
-  { name: "NPQ Leading Behaviour and Culture (NPQLBC)", id: "7d47a0a6-fa74-4587-92cc-cd1e4548a2e5", identifier: "npq-leading-behaviour-culture" },
-  { name: "NPQ Leading Teacher Development (NPQLTD)", id: "29fee78b-30ce-4b93-ba21-80be2fde286f", identifier: "npq-leading-teaching-development" },
-  { name: "NPQ for Senior Leadership (NPQSL)", id: "a42736ad-3d0b-401d-aebe-354ef4c193ec", identifier: "npq-senior-leadership" },
-  { name: "NPQ for Headship (NPQH)", id: "0f7d6578-a12c-4498-92a0-2ee0f18e0768", identifier: "npq-headship" },
-  { name: "NPQ for Executive Leadership (NPQEL)", id: "aef853f2-9b48-4b6a-9d2a-91b295f5ca9a", identifier: "npq-executive-leadership" },
-  { name: "Additional Support Offer for new headteachers", id: "7fbefdd4-dd2d-4a4f-8995-d59e525124b7", identifier: "npq-additional-support-offer" },
-  { name: "The Early Headship Coaching Offer", id: "0222d1a8-a8e1-42e3-a040-2c585f6c194a", identifier: "npq-early-headship-coaching-offer" },
-  { name: "NPQ Early Years Leadership (NPQEYL)", id: "66dff4af-a518-498f-9042-36a41f9e8aa7", identifier: "npq-early-years-leadership" },
-  { name: "NPQ Leading Literacy (NPQLL)", id: "829fcd45-e39d-49a9-b309-26d26debfa90", identifier: "npq-leading-literacy" },
-  { name: "NPQ for Leading Primary Mathematics (NPQLPM)", id: "7866f853-064f-44b4-9287-20b9993452d6", identifier: "npq-leading-primary-mathematics" },
-  { name: "NPQ for Senco (NPQSENCO)", id: "84b7ffd9-c726-4915-bcac-05901d9629b8", identifier: "npq-senco" },
-].each do |hash|
-  NPQCourse.find_or_create_by!(name: hash[:name], id: hash[:id], identifier: hash[:identifier])
-end
-
 all_provider_names = (LeadProvider.pluck(:name) + NPQLeadProvider.pluck(:name)).uniq
 
 all_provider_names.each do |name|
