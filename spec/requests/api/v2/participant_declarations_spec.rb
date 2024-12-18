@@ -281,26 +281,28 @@ RSpec.describe "participant-declarations endpoint spec", type: :request, mid_coh
       end
 
       context "when posting an NPQ declaration" do
-        let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider) }
-        let(:npq_course) { create(:npq_leadership_course) }
-        let(:course_identifier) { npq_course.identifier }
-        let(:participant_profile) do
-          create(:npq_participant_profile, npq_lead_provider: cpd_lead_provider.npq_lead_provider, npq_course:)
-        end
-        let(:participant_id) { participant_profile.user_id }
-        let!(:contract) { create(:npq_contract, npq_course:, npq_lead_provider: cpd_lead_provider.npq_lead_provider) }
         let(:params) do
           {
             data: {
               type: "participant-declaration",
               attributes: {
-                participant_id:,
+                participant_id: SecureRandom.uuid,
                 declaration_type: "started",
-                declaration_date: declaration_date.rfc3339,
-                course_identifier:,
+                declaration_date: Time.zone.now.rfc3339,
+                course_identifier: "npq-leading-teaching",
               },
             },
           }
+        end
+
+        it "returns error response" do
+          post "/api/v2/participant-declarations", params: params.to_json
+
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(parsed_response["errors"]).to eq([
+            "title" => "course_identifier",
+            "detail" => "NPQ Courses are no longer supported",
+          ])
         end
       end
     end

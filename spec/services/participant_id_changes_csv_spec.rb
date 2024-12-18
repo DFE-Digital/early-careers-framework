@@ -4,10 +4,8 @@ require "rails_helper"
 
 RSpec.describe ParticipantIdChangesCsv do
   let(:cohort) { Cohort.current || create(:cohort, :current) }
-  let(:npq_course) { create(:npq_course, identifier: "npq-senior-leadership") }
-
-  let(:cpd_lead_provider1) { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider) }
-  let(:cpd_lead_provider2) { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider) }
+  let(:cpd_lead_provider1) { create(:cpd_lead_provider, :with_lead_provider) }
+  let(:cpd_lead_provider2) { create(:cpd_lead_provider, :with_lead_provider) }
 
   # Create User1
   let(:lead_provider1) { cpd_lead_provider1.lead_provider }
@@ -32,16 +30,16 @@ RSpec.describe ParticipantIdChangesCsv do
   let!(:participant_id_change2) { create(:participant_id_change, to_participant: user2, user: user2, created_at: 2.months.ago) }
 
   # Create User3
-  let(:npq_lead_provider1) { cpd_lead_provider1.npq_lead_provider }
-  let(:participant_profile3) { create(:npq_participant_profile, npq_lead_provider: npq_lead_provider1, npq_course:) }
-  let(:user3) { participant_profile3.user }
+  let(:participant_profile3) { create(:mentor_participant_profile) }
+  let(:induction_record3) { create(:induction_record, induction_programme:, participant_profile: participant_profile3) }
+  let(:user3) { induction_record3.user }
 
   let!(:participant_id_change3) { create(:participant_id_change, to_participant: user3, user: user3, created_at: 5.days.ago) }
 
   # Create User4
-  let(:npq_lead_provider2) { cpd_lead_provider2.npq_lead_provider }
-  let(:participant_profile4) { create(:npq_participant_profile, npq_lead_provider: npq_lead_provider2, npq_course:) }
-  let(:user4) { participant_profile4.user }
+  let(:participant_profile4) { create(:mentor_participant_profile) }
+  let(:induction_record4) { create(:induction_record, induction_programme: induction_programme2, participant_profile: participant_profile4) }
+  let(:user4) { induction_record4.user }
 
   let!(:participant_id_change4) { create(:participant_id_change, to_participant: user4, user: user4, created_at: 2.months.ago) }
 
