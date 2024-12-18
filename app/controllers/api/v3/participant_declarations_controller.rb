@@ -102,10 +102,6 @@ module Api
         @participant_declaration_for_lead_provider ||= ParticipantDeclaration.for_lead_provider(cpd_lead_provider).find(params[:id])
       end
 
-      def access_scope
-        LeadProviderApiToken.joins(cpd_lead_provider: [:lead_provider]) + LeadProviderApiToken.joins(cpd_lead_provider: [:npq_lead_provider])
-      end
-
       def serializer_class
         ParticipantDeclarationSerializer
       end

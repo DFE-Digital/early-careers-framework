@@ -50,6 +50,6 @@ private
   end
 
   def access_scope
-    ApiToken.all
+    LeadProviderApiToken.joins(cpd_lead_provider: [:lead_provider])
   end
 end

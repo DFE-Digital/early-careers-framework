@@ -7,12 +7,6 @@ module Api
     class ParticipantsController < Api::ApiController
       include ApiTokenAuthenticatable
       include ParticipantActions
-
-    private
-
-      def access_scope
-        LeadProviderApiToken.joins(cpd_lead_provider: [:lead_provider])
-      end
     end
   end
 end
