@@ -40,31 +40,12 @@ PrivacyPolicy.find_or_initialize_by(major_version: 1, minor_version: 0)
   .tap { |pp| pp.html = Rails.root.join("data/privacy_policy.html").read }
   .save!
 
-[
-  { name: "Ambition Institute", id: "9e35e998-c63b-4136-89c4-e9e18ddde0ea" },
-  { name: "Best Practice Network", id: "57ba9e86-559f-4ff4-a6d2-4610c7259b67" },
-  { name: "Church of England", id: "79cb41ca-cb6d-405c-b52c-b6f7c752388d" },
-  { name: "Education Development Trust", id: "21e61f53-9b34-4384-a8f5-d8224dbf946d" },
-  { name: "School-Led Network", id: "bc5e4e37-1d64-4149-a06b-ad10d3c55fd0" },
-  { name: "LLSE", id: "230e67c0-071a-4a48-9673-9d043d456281" },
-  { name: "Teacher Development Trust", id: "30fd937e-b93c-4f81-8fff-3c27544193f1" },
-  { name: "Teach First", id: "a02ae582-f939-462f-90bc-cebf20fa8473" },
-  { name: "UCL Institute of Education", id: "ef687b3d-c1c0-4566-a295-16d6fa5d0fa7" },
-  { name: "National Institute of Teaching", id: "3ec607f2-7a3a-421f-9f1a-9aca8a634aeb" },
-].each do |hash|
-  NPQLeadProvider.find_or_create_by!(name: hash[:name], id: hash[:id])
-end
-
-all_provider_names = (LeadProvider.pluck(:name) + NPQLeadProvider.pluck(:name)).uniq
+all_provider_names = LeadProvider.pluck(:name).uniq
 
 all_provider_names.each do |name|
   CpdLeadProvider.find_or_create_by!(name:)
 end
 
 LeadProvider.find_each do |lp|
-  lp.update!(cpd_lead_provider: CpdLeadProvider.find_by(name: lp.name))
-end
-
-NPQLeadProvider.find_each do |lp|
   lp.update!(cpd_lead_provider: CpdLeadProvider.find_by(name: lp.name))
 end
