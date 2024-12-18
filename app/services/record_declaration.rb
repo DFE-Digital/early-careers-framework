@@ -288,11 +288,13 @@ private
   end
 
   def validate_if_npq_course_supported
-    return unless NpqApiEndpoint.disabled?
+    return # TODO: should be fixed in https://github.com/DFE-Digital/early-careers-framework/pull/5371
 
+    # rubocop:disable Lint/UnreachableCode
     if course_identifier.to_s.starts_with?("npq-")
       errors.add(:course_identifier, I18n.t(:npq_course_no_longer_supported))
       throw(:abort)
     end
+    # rubocop:enable Lint/UnreachableCode
   end
 end

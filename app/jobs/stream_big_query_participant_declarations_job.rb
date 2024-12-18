@@ -12,8 +12,7 @@ class StreamBigQueryParticipantDeclarationsJob < ApplicationJob
 
     return if table.nil?
 
-    scope = NpqApiEndpoint.disabled? ? ParticipantDeclaration::ECF : ParticipantDeclaration
-    scope
+    ParticipantDeclaration::ECF
       .where(updated_at: 1.hour.ago.beginning_of_hour..1.hour.ago.end_of_hour)
       .find_in_batches do |declarations|
         rows = declarations.map do |participant_declaration|

@@ -19,39 +19,12 @@ class CreateNewFakeSandboxDataJob < ApplicationJob
         )
       end
     end
-
-    if !NpqApiEndpoint.disabled? && npq_lead_provider.present? && random_school.present?
-      10.times do
-        name = Faker::Name.name
-        user = User.create!(full_name: name, email: Faker::Internet.email(name:))
-        identity = Identity::Create.call(user:, origin: :npq)
-        NPQApplication.create!(
-          active_alert: "",
-          date_of_birth: Date.new(1990, 1, 1),
-          eligible_for_funding: true,
-          funding_choice: "",
-          headteacher_status: "",
-          nino: "",
-          school_urn: random_school.urn,
-          teacher_reference_number: ValidTestDataGenerators::Helpers::TrnGenerator.next,
-          teacher_reference_number_verified: true,
-          npq_course: NPQCourse.all.sample,
-          npq_lead_provider:,
-          participant_identity: identity,
-          cohort: Cohort.active_registration_cohort,
-        )
-      end
-    end
   end
 
 private
 
   def ecf_lead_provider
     @ecf_lead_provider ||= LeadProvider.find_by(name: @provider_name)
-  end
-
-  def npq_lead_provider
-    @npq_lead_provider ||= NPQLeadProvider.find_by(name: @provider_name)
   end
 
   def random_school

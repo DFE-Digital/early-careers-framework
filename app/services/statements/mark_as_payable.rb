@@ -7,7 +7,7 @@ module Statements
     end
 
     def call
-      return if NpqApiEndpoint.disabled? && statement.npq?
+      return if statement.npq?
 
       Finance::Statement.transaction do
         participant_declarations.find_each do |declaration|

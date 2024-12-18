@@ -28,8 +28,6 @@ class NPQApplication < ApplicationRecord
   belongs_to :cohort, optional: true
   belongs_to :eligible_for_funding_updated_by, class_name: "User", optional: true
 
-  after_commit :push_enrollment_to_big_query
-
   UK_CATCHMENT_AREA = %w[jersey_guernsey_isle_of_man england northern_ireland scotland wales].freeze
 
   enum headteacher_status: {
@@ -162,12 +160,6 @@ private
     return eligible_for_funding unless with_funded_place
 
     eligible_for_funding && (funded_place.nil? || funded_place)
-  end
-
-  def push_enrollment_to_big_query
-    if (saved_changes.keys & %w[cohort_id id lead_provider_approval_status]).present?
-      NPQ::StreamBigQueryEnrollmentJob.perform_later(npq_application_id: id)
-    end
   end
 
   def validate_funding_eligiblity_status_code_change
