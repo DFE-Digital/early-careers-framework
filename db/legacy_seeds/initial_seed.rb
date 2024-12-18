@@ -40,7 +40,7 @@ PrivacyPolicy.find_or_initialize_by(major_version: 1, minor_version: 0)
   .tap { |pp| pp.html = Rails.root.join("data/privacy_policy.html").read }
   .save!
 
-all_provider_names = LeadProvider.pluck(:name).uniq
+all_provider_names = LeadProvider.distinct.pluck(:name)
 
 all_provider_names.each do |name|
   CpdLeadProvider.find_or_create_by!(name:)
