@@ -32,6 +32,7 @@ RSpec.describe Finance::Schedule::ECF, type: :model do
     end
   end
 
+  # 'db/data/schedules/schedules.csv' has data for 2021 to 2024
   Cohort.where(start_year: 2021..2024).find_each do |cohort|
     context "for #{cohort.start_year} cohort" do
       let(:cohort) { Cohort.find_by(start_year: cohort.start_year) }
