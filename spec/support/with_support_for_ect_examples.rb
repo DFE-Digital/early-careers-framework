@@ -105,8 +105,6 @@ RSpec.shared_context "with Support for ECTs example profiles", shared_context: :
     participant_profile
   end
 
-  let(:npq_only) { create(:npq_participant_profile) }
-
   # real cases found in production
 
   let(:fip_ect_then_mentor) do
@@ -126,14 +124,6 @@ RSpec.shared_context "with Support for ECTs example profiles", shared_context: :
   end
 
   # real cases found in seed data
-
-  let(:npq_with_induction_record) do
-    user = create(:user, full_name: "NPQ with induction record")
-    participant_profile = create(:ect_participant_profile, user:, school_cohort: cip_school_cohort)
-    Induction::Enrol.call(participant_profile:, induction_programme: cip_induction_programme)
-    participant_profile.update! type: "ParticipantProfile::NPQ"
-    participant_profile
-  end
 
   let(:ect_with_no_induction_record) do
     user = create(:user, full_name: "ECT with no induction record")

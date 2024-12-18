@@ -27,31 +27,8 @@ FactoryBot.define do
 
     association :cohort, factory: %i[cohort current]
 
-    initialize_with do
-      NPQ::BuildApplication.call(
-        npq_application_params: {
-          active_alert:,
-          date_of_birth:,
-          eligible_for_funding:,
-          funding_choice:,
-          headteacher_status:,
-          nino:,
-          works_in_school:,
-          school_urn:,
-          school_ukprn:,
-          teacher_reference_number:,
-          teacher_reference_number_verified:,
-          teacher_catchment:,
-          teacher_catchment_country:,
-          funding_eligiblity_status_code:,
-          itt_provider:,
-          lead_mentor:,
-          cohort: cohort&.start_year,
-        },
-        npq_course_id: npq_course.id,
-        npq_lead_provider_id: npq_lead_provider.id,
-        user_id: user.id,
-      )
+    before(:create) do |npq_application, evaluator|
+      npq_application.participant_identity = Identity::Create.call(user: evaluator.user, origin: :npq)
     end
 
     trait :funded do
@@ -82,8 +59,22 @@ FactoryBot.define do
     end
 
     trait :accepted do
-      after :create do |npq_application|
-        NPQ::Application::Accept.new(npq_application:, funded_place: npq_application.funded_place).call
+      after(:create) do |npq_application, evaluator|
+        npq_application.update!(lead_provider_approval_status: "accepted")
+        user = evaluator.user
+        teacher_profile = user.teacher_profile || user.build_teacher_profile
+        teacher_profile.update!(trn: npq_application.teacher_reference_number)
+        ParticipantProfile::NPQ.create!(
+          id: npq_application.id,
+          schedule: NPQCourse.schedule_for(npq_course: npq_application.npq_course, cohort: npq_application.cohort),
+          npq_course: npq_application.npq_course,
+          teacher_profile:,
+          school_urn: npq_application.school_urn,
+          school_ukprn: npq_application.school_ukprn,
+          participant_identity: npq_application.participant_identity,
+        ).tap do |pp|
+          ParticipantProfileState.find_or_create_by(participant_profile: pp)
+        end
         npq_application.reload
       end
     end

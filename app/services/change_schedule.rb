@@ -43,7 +43,6 @@ class ChangeSchedule
                                 .call(
                                   participant_id:,
                                   course_identifier:,
-                                  cpd_lead_provider:,
                                 )
   end
 
@@ -52,7 +51,6 @@ class ChangeSchedule
                                .call(
                                  participant_identity:,
                                  course_identifier:,
-                                 cpd_lead_provider:,
                                )
   end
 

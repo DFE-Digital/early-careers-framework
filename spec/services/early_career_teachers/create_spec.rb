@@ -8,7 +8,6 @@ RSpec.describe ::EarlyCareerTeachers::Create do
   let(:sparsity_school) { create :seed_school, :with_sparsity_uplift, start_year: }
   let(:uplift_school) { create :seed_school, :with_uplifts, start_year: }
   let!(:mentor_profile) { create :mentor_participant_profile }
-  let!(:npq_participant) { create(:npq_participant_profile).teacher_profile.user }
 
   it "creates an Early Career Teacher Profile record" do
     expect {
@@ -22,19 +21,6 @@ RSpec.describe ::EarlyCareerTeachers::Create do
            .by(1)
            .and not_change { User.count }
                   .and change { TeacherProfile.count }.by(1)
-  end
-
-  it "uses the existing teacher profile record" do
-    expect {
-      described_class.call(
-        email: npq_participant.email,
-        full_name: npq_participant.full_name,
-        school_cohort:,
-      )
-    }.to change { ParticipantProfile::ECT.count }
-           .by(1)
-           .and not_change { User.count }
-                  .and not_change { TeacherProfile.count }
   end
 
   it "creates a new user and teacher profile" do

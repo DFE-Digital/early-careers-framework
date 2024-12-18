@@ -4,8 +4,8 @@ require "tempfile"
 
 RSpec.describe Importers::ReconcilationDataImporter do
   describe "#call" do
-    let(:profile1) { FactoryBot.create(:npq_participant_profile) }
-    let(:profile2) { FactoryBot.create(:npq_participant_profile) }
+    let(:profile1) { FactoryBot.create(:ect_participant_profile) }
+    let(:profile2) { FactoryBot.create(:ect_participant_profile) }
     let(:user1)    { profile1.user }
     let(:user2)    { profile2.user }
 
@@ -27,10 +27,10 @@ RSpec.describe Importers::ReconcilationDataImporter do
       it "transfers data between users" do
         expect { subject.call }.to change {
                                      [
-                                       user1.reload.npq_applications.count,
+                                       user1.reload.participant_id_changes.count,
                                        user1.reload.participant_identities.count,
                                        user1.reload.participant_profiles.count,
-                                       user2.reload.npq_applications.count,
+                                       user2.reload.participant_id_changes.count,
                                        user2.reload.participant_identities.count,
                                        user2.reload.participant_profiles.count,
                                      ]

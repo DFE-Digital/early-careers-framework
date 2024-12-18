@@ -27,39 +27,6 @@ RSpec.describe ParticipantNotWithdrawnValidator do
   describe "#validate" do
     subject { klass.new(participant_profile:, cpd_lead_provider:, declaration_date:) }
 
-    context "NPQ participant" do
-      let(:participant_profile) { create(:npq_participant_profile) }
-      let(:npq_application) { participant_profile.npq_application }
-      let(:cpd_lead_provider) { npq_application.npq_lead_provider.cpd_lead_provider }
-      let(:declaration_date) { Time.zone.now + 1.day }
-
-      context "participant profile active" do
-        it { is_expected.to be_valid }
-      end
-
-      context "participant profile withdrawn after declaration_date" do
-        let(:declaration_date) { Time.zone.now - 1.day }
-        let(:participant_profile) { create(:npq_participant_profile, :withdrawn) }
-
-        it { is_expected.to be_valid }
-      end
-
-      context "participant profile reinstated after being withdrawn" do
-        let(:participant_profile) { create(:npq_participant_profile, :withdrawn) }
-        let(:course_identifier) { participant_profile.npq_application.npq_course.identifier }
-
-        before do
-          ResumeParticipant.new(
-            cpd_lead_provider:,
-            participant_id: participant_profile.participant_identity.external_identifier,
-            course_identifier:,
-          ).call
-        end
-
-        it { is_expected.to be_valid }
-      end
-    end
-
     context "ECF participant" do
       let(:participant_profile) { create :mentor }
       let(:cpd_lead_provider) { participant_profile.lead_provider.cpd_lead_provider }

@@ -25,7 +25,7 @@ RSpec.describe ParticipantIdentityPresenceValidator do
   describe "#validate" do
     subject { klass.new(participant_identity:) }
 
-    let(:profile) { create(:npq_participant_profile) }
+    let(:profile) { create(:ect_participant_profile) }
     let(:user) { profile.user }
     let(:participant_identity) { profile.participant_identity }
 
