@@ -13,7 +13,7 @@ class RecordDeclaration
   attribute :evidence_held
   attribute :has_passed
 
-  before_validation :ensure_npq_course_no_longer_supported
+  before_validation :validate_if_npq_course_supported
   before_validation :declaration_attempt
 
   validates :participant_id, participant_identity_presence: true, participant_not_withdrawn: true
@@ -287,10 +287,14 @@ private
     ParticipantDeclarations::HandleMentorCompletion.call(participant_declaration:)
   end
 
-  def ensure_npq_course_no_longer_supported
+  def validate_if_npq_course_supported
+    return # TODO: should be fixed in https://github.com/DFE-Digital/early-careers-framework/pull/5371
+
+    # rubocop:disable Lint/UnreachableCode
     if course_identifier.to_s.starts_with?("npq-")
       errors.add(:course_identifier, I18n.t(:npq_course_no_longer_supported))
       throw(:abort)
     end
+    # rubocop:enable Lint/UnreachableCode
   end
 end
