@@ -8,9 +8,8 @@ RSpec.describe Finance::PaymentBreakdownsController do
   let(:cohort_2021) { Cohort.current || create(:cohort, :current) }
   let(:cohort_2022) { Cohort.next || create(:cohort, :next) }
 
-  let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider) }
+  let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
   let(:lead_provider) { cpd_lead_provider.lead_provider }
-  let(:npq_lead_provider) { cpd_lead_provider.npq_lead_provider }
 
   before do
     sign_in user

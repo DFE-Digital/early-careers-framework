@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_12_18_162526) do
+ActiveRecord::Schema[7.1].define(version: 2024_12_18_170200) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "fuzzystrmatch"
@@ -690,15 +690,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_18_162526) do
     t.index ["token"], name: "index_nomination_emails_on_token", unique: true
   end
 
-  create_table "npq_lead_providers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.text "name", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.uuid "cpd_lead_provider_id"
-    t.boolean "vat_chargeable", default: true
-    t.index ["cpd_lead_provider_id"], name: "index_npq_lead_providers_on_cpd_lead_provider_id"
-  end
-
   create_table "participant_appropriate_body_dqt_checks", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "participant_profile_id", null: false
     t.string "appropriate_body_name"
@@ -1253,7 +1244,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_18_162526) do
   add_foreign_key "milestones", "schedules"
   add_foreign_key "nomination_emails", "partnership_notification_emails"
   add_foreign_key "nomination_emails", "schools"
-  add_foreign_key "npq_lead_providers", "cpd_lead_providers"
   add_foreign_key "participant_bands", "call_off_contracts"
   add_foreign_key "participant_declaration_attempts", "participant_declarations"
   add_foreign_key "participant_declarations", "participant_declarations", column: "superseded_by_id"
