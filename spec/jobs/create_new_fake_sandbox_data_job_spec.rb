@@ -6,10 +6,8 @@ RSpec.describe CreateNewFakeSandboxDataJob, type: :job do
   describe "#perform" do
     subject { described_class.new }
 
-    let!(:npq_course) { create(:npq_course, identifier: "npq-senior-leadership") }
     let!(:cpd_lead_provider) { create(:cpd_lead_provider, name: "Education Development Trust") }
     let!(:ecf_lead_provider) { create(:lead_provider, cpd_lead_provider:, name: "Education Development Trust") }
-    let!(:npq_lead_provider) { create(:npq_lead_provider, cpd_lead_provider:, name: "Education Development Trust") }
     let!(:cohort) { Cohort.current }
     let!(:school) { create(:school) }
     let!(:school_cohort) { create(:school_cohort, school:, cohort:) }

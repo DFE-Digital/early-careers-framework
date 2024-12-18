@@ -18,16 +18,11 @@ module ValidTestDataGenerators
 
   private
 
-    attr_reader :lead_provider, :total_schools, :participants_per_school, :cohort, :number_of_participants, :npq_courses, :logger
+    attr_reader :lead_provider, :total_schools, :participants_per_school, :cohort, :number_of_participants, :logger
 
     def create_user!
       name = Faker::Name.name
       User.create!(full_name: name, email: Faker::Internet.email(name:))
-    end
-
-    def npq_course
-      # NPQ-SENCO available only for >= 2024 cohorts
-      cohort.start_year >= 2024 ? npq_courses.sample : npq_courses.reject { |c| c.identifier == "npq-senco" }.sample
     end
   end
 end

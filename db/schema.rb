@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_12_17_150952) do
+ActiveRecord::Schema[7.1].define(version: 2024_12_18_162526) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "fuzzystrmatch"
@@ -690,13 +690,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_17_150952) do
     t.index ["token"], name: "index_nomination_emails_on_token", unique: true
   end
 
-  create_table "npq_courses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.text "name", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.text "identifier"
-  end
-
   create_table "npq_lead_providers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.text "name", null: false
     t.datetime "created_at", null: false
@@ -1277,7 +1270,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_17_150952) do
   add_foreign_key "participant_profile_states", "participant_profiles"
   add_foreign_key "participant_profiles", "cohorts"
   add_foreign_key "participant_profiles", "core_induction_programmes"
-  add_foreign_key "participant_profiles", "npq_courses"
   add_foreign_key "participant_profiles", "participant_identities"
   add_foreign_key "participant_profiles", "participant_profiles", column: "mentor_profile_id"
   add_foreign_key "participant_profiles", "schedules"
