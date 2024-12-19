@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_11_01_133851) do
+ActiveRecord::Schema[7.1].define(version: 2024_12_19_141155) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "fuzzystrmatch"
@@ -838,6 +838,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_01_133851) do
     t.uuid "delivery_partner_id"
     t.uuid "mentor_user_id"
     t.uuid "cohort_id", null: false
+    t.boolean "mentor", default: false, null: false
     t.index ["cohort_id"], name: "index_participant_declarations_on_cohort_id"
     t.index ["cpd_lead_provider_id", "participant_profile_id", "declaration_type", "course_identifier", "state"], name: "unique_declaration_index", unique: true, where: "((state)::text = ANY (ARRAY[('submitted'::character varying)::text, ('eligible'::character varying)::text, ('payable'::character varying)::text, ('paid'::character varying)::text]))"
     t.index ["cpd_lead_provider_id"], name: "index_participant_declarations_on_cpd_lead_provider_id"
@@ -1203,6 +1204,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_01_133851) do
     t.text "state", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "mentor", default: false, null: false
     t.index ["participant_declaration_id", "statement_id", "state"], name: "unique_declaration_statement_state", unique: true
     t.index ["statement_id", "participant_declaration_id", "state"], name: "unique_statement_declaration_state", unique: true
   end
