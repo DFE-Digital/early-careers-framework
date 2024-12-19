@@ -78,10 +78,6 @@ module Api
             .permit(:id, :sort, filter: %i[cohort updated_since delivery_partner_id])
         end
 
-        def access_scope
-          LeadProviderApiToken.joins(cpd_lead_provider: [:lead_provider])
-        end
-
         def serializer_class
           Api::V3::ECF::PartnershipSerializer
         end

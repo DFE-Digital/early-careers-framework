@@ -53,10 +53,6 @@ module Api
             .permit(:participant_id, filter: %i[updated_since])
         end
 
-        def access_scope
-          LeadProviderApiToken.joins(cpd_lead_provider: [:lead_provider])
-        end
-
         def serializer_class
           TransferSerializer
         end

@@ -24,8 +24,8 @@ describe Api::ApiController, type: :controller do
     end
 
     context "when authorization header is provided" do
-      let(:lead_provider) { create(:lead_provider) }
-      let(:token) { LeadProviderApiToken.create_with_random_token!(lead_provider:) }
+      let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
+      let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
       let(:bearer_token) { "Bearer #{token}" }
 
       it "requests authentication via the http header" do
