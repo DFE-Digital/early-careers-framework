@@ -5,6 +5,8 @@ module Finance
     class OutputCalculator
       attr_reader :statement
 
+      DECLARATION_TYPE = "ParticipantDeclaration::ECT"
+
       def initialize(statement:)
         @statement = statement
       end
@@ -181,7 +183,7 @@ module Finance
           .where(statement: statement.previous_statements)
           .billable
           .joins(:participant_declaration)
-          .where(participant_declarations: { declaration_type: })
+          .where(participant_declarations: { declaration_type:, type: DECLARATION_TYPE })
           .count
 
         refundable = Finance::StatementLineItem
@@ -199,7 +201,7 @@ module Finance
           .where(statement: statement.previous_statements)
           .billable
           .joins(:participant_declaration)
-          .where(participant_declarations: { declaration_type: "started" })
+          .where(participant_declarations: { declaration_type: "started", type: DECLARATION_TYPE })
           .where("participant_declarations.sparsity_uplift = true OR participant_declarations.pupil_premium_uplift = true")
           .count
 
@@ -207,7 +209,7 @@ module Finance
           .where(statement: statement.previous_statements)
           .refundable
           .joins(:participant_declaration)
-          .where(participant_declarations: { declaration_type: "started" })
+          .where(participant_declarations: { declaration_type: "started", type: DECLARATION_TYPE })
           .where("participant_declarations.sparsity_uplift = true OR participant_declarations.pupil_premium_uplift = true")
           .count
 
@@ -218,7 +220,7 @@ module Finance
         statement
           .billable_statement_line_items
           .joins(:participant_declaration)
-          .where(participant_declarations: { declaration_type: })
+          .where(participant_declarations: { declaration_type:, type: DECLARATION_TYPE })
           .count
       end
 
@@ -226,7 +228,7 @@ module Finance
         statement
           .refundable_statement_line_items
           .joins(:participant_declaration)
-          .where(participant_declarations: { declaration_type: })
+          .where(participant_declarations: { declaration_type:, type: DECLARATION_TYPE })
           .count
       end
 
@@ -234,7 +236,7 @@ module Finance
         statement
           .billable_statement_line_items
           .joins(:participant_declaration)
-          .where(participant_declarations: { declaration_type: "started" })
+          .where(participant_declarations: { declaration_type: "started", type: DECLARATION_TYPE })
           .where("participant_declarations.sparsity_uplift = true OR participant_declarations.pupil_premium_uplift = true")
           .count
       end
@@ -243,7 +245,7 @@ module Finance
         statement
           .refundable_statement_line_items
           .joins(:participant_declaration)
-          .where(participant_declarations: { declaration_type: "started" })
+          .where(participant_declarations: { declaration_type: "started", type: DECLARATION_TYPE })
           .where("participant_declarations.sparsity_uplift = true OR participant_declarations.pupil_premium_uplift = true")
           .count
       end
