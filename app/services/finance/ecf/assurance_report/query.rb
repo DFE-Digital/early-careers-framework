@@ -9,7 +9,7 @@ module Finance
         end
 
         def participant_declarations
-          ParticipantDeclaration::ECF.find_by_sql(sql)
+          ParticipantDeclaration::ECT.find_by_sql(sql)
         end
 
       private
@@ -80,13 +80,13 @@ module Finance
             JOIN schools sc ON sc.id = latest_induction_record.school_id
             LEFT OUTER JOIN ecf_participant_eligibilities epe ON epe.participant_profile_id = pp.id
             JOIN delivery_partners dp ON dp.id = COALESCE(pd.delivery_partner_id, latest_induction_record.delivery_partner_id)
-            WHERE pd.type = 'ParticipantDeclaration::ECF' AND #{where_values}
+            WHERE pd.type = 'ParticipantDeclaration::ECT' AND #{where_values}
             ORDER BY u.full_name ASC
           EOSQL
         end
 
         def where_values
-          ParticipantDeclaration::ECF.sanitize_sql_for_conditions(["clp.id = ? AND s.id = ?", statement.cpd_lead_provider_id, statement.id])
+          ParticipantDeclaration::ECT.sanitize_sql_for_conditions(["clp.id = ? AND s.id = ?", statement.cpd_lead_provider_id, statement.id])
         end
       end
     end
