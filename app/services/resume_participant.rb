@@ -33,7 +33,6 @@ class ResumeParticipant
                                 .call(
                                   participant_id:,
                                   course_identifier:,
-                                  cpd_lead_provider:,
                                 )
   end
 
@@ -42,7 +41,6 @@ class ResumeParticipant
       ParticipantProfileResolver.call(
         participant_identity:,
         course_identifier:,
-        cpd_lead_provider:,
       )
   end
 

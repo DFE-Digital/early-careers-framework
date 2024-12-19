@@ -7,7 +7,6 @@ RSpec.describe "Admin::Participants::Statuses", type: :request do
 
   let!(:mentor_profile)               { create(:mentor) }
   let!(:ect_profile)                  { create(:ect, mentor_profile_id: mentor_profile.id) }
-  let!(:npq_profile)                  { create(:npq_participant_profile) }
   let!(:withdrawn_ect_profile_record) { create(:ect, :withdrawn_record) }
   let!(:induction_programme)          { create(:induction_programme, :fip) }
 

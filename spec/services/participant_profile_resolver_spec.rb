@@ -4,24 +4,35 @@ require "rails_helper"
 
 RSpec.describe ParticipantProfileResolver do
   describe "#call" do
-    context "when participant has both ECT and NPQ profiles" do
-      let!(:ect_profile) { create(:ect) }
-      let!(:npq_application) { create(:npq_application, :accepted, user:) }
+    let!(:ect_profile) { create(:ect) }
+    let(:user) { ect_profile.user }
+    let!(:mentor_profile) { create(:mentor, user:) }
+    let(:participant_identity) { user.participant_identities.first }
 
-      let(:npq_profile) { npq_application.profile }
-      let(:user) { ect_profile.user }
-      let(:participant_identity) { user.participant_identities.first }
-      let(:course_identifier) { npq_application.npq_course.identifier }
-      let(:cpd_lead_provider) { npq_application.npq_lead_provider.cpd_lead_provider }
+    subject { described_class.call(participant_identity:, course_identifier:) }
 
-      it "correctly selects NPQ profile" do
-        result = described_class.call(
-          participant_identity:,
-          course_identifier:,
-          cpd_lead_provider:,
-        )
+    context "when course identifier is mentor" do
+      let(:course_identifier) { "ecf-mentor" }
 
-        expect(result).to eql(npq_profile)
+      it "correctly selects Mentor profile" do
+        expect(subject).to eql(mentor_profile)
+      end
+    end
+
+    context "when course identifier is induction" do
+      let(:course_identifier) { "ecf-induction" }
+
+      it "correctly selects ECT profile" do
+        expect(subject).to eql(ect_profile)
+      end
+    end
+
+    context "when participant identity is nil" do
+      let(:participant_identity) { nil }
+      let(:course_identifier) { "ecf-induction" }
+
+      it "returns nil" do
+        expect(subject).to be_nil
       end
     end
   end
