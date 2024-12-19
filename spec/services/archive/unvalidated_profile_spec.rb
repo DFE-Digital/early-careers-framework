@@ -59,7 +59,7 @@ RSpec.describe Archive::UnvalidatedProfile do
 
   context "when the profile has a declaration" do
     let(:state) { "submitted" }
-    let!(:declaration) { create(:seed_ecf_participant_declaration, :with_cpd_lead_provider, state:, user:, participant_profile:) }
+    let!(:declaration) { create(:seed_ect_participant_declaration, :with_cpd_lead_provider, state:, user:, participant_profile:) }
 
     it "raises an ArchiveError" do
       expect {
