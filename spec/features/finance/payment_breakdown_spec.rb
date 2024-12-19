@@ -97,15 +97,13 @@ private
 
   def multiple_retained_declarations_are_submitted_jan_statement
     travel_to january_statement.deadline_date do
-      create_list(:mentor_participant_declaration, 5, :eligible, uplifts: [:sparsity_uplift], declaration_type: "retained-1", cpd_lead_provider:)
-      create_list(:ect_participant_declaration,    6, :eligible, uplifts: [:sparsity_uplift], declaration_type: "retained-1", cpd_lead_provider:)
+      create_list(:ect_participant_declaration, 11, :eligible, uplifts: [:sparsity_uplift], declaration_type: "retained-1", cpd_lead_provider:)
     end
   end
 
   def multiple_extended_declarations_are_submitted_nov_statement
     travel_to(november_statement.deadline_date) do
-      create_list(:mentor_participant_declaration, 3, :extended, cpd_lead_provider:)
-      create_list(:ect_participant_declaration, 4, :extended, cpd_lead_provider:)
+      create_list(:ect_participant_declaration, 7, :extended, cpd_lead_provider:)
     end
   end
 

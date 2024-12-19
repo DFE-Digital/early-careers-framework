@@ -232,8 +232,10 @@ private
   def participant_declaration_class
     if participant_profile.npq?
       ParticipantDeclaration::NPQ
+    elsif participant_profile.mentor?
+      ParticipantDeclaration::Mentor
     else
-      ParticipantDeclaration::ECF
+      ParticipantDeclaration::ECT
     end
   end
 

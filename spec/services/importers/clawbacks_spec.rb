@@ -5,7 +5,7 @@ require "rails_helper"
 RSpec.describe Importers::Clawbacks do
   let(:csv) { Tempfile.new("data.csv") }
   let(:path_to_csv) { csv.path }
-  let(:participant_declaration) { create(:ect_participant_declaration) }
+  let(:participant_declaration) { create(:ect_participant_declaration).reload }
 
   subject { described_class.new(path_to_csv:) }
 
