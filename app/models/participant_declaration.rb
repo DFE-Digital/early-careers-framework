@@ -112,7 +112,7 @@ class ParticipantDeclaration < ApplicationRecord
   scope :paid_payable_or_eligible, -> { billable }
   scope :billable_or_changeable, -> { billable.or(changeable) }
 
-  before_create :build_initial_declaration_state
+  before_create :build_initial_declaration_state, :set_mentor
 
   def self.non_archivable_states
     states.keys.excluding(ARCHIVABLE_STATES)
@@ -193,6 +193,10 @@ private
 
   def build_initial_declaration_state
     declaration_states.build(state:)
+  end
+
+  def set_mentor
+    self.mentor = participant_profile.mentor?
   end
 end
 
