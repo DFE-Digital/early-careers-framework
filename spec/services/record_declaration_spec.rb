@@ -415,6 +415,29 @@ RSpec.describe RecordDeclaration do
       it_behaves_like "creates a participant declaration"
       it_behaves_like "creates participant declaration attempt"
       it_behaves_like "checks for mentor completion event"
+
+      context "when cohort has mentor_funding enabled" do
+        let(:participant_type) { :mentor }
+        let(:course_identifier) { "ecf-mentor" }
+        let(:declaration_date) { schedule.milestones.find_by(declaration_type:).start_date }
+
+        before { current_cohort.update!(mentor_funding: true) }
+
+        context "when declaration_type is started" do
+          let(:declaration_type) { "started" }
+
+          it_behaves_like "creates a participant declaration"
+        end
+
+        context "when declaration_type is retained-1" do
+          let(:declaration_type) { "retained-1" }
+
+          it "returns validation error", :aggregate_failures do
+            expect(service).to be_invalid
+            expect(service.errors.messages_for(:declaration_type)).to eql(["Can only declare 'started' and 'completed' for mentors"])
+          end
+        end
+      end
     end
   end
 

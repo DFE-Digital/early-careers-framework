@@ -34,6 +34,7 @@ class RecordDeclaration
   validates :course_identifier, course: true
   validates :cpd_lead_provider, induction_record: true
   validates :cohort, npq_contract_for_cohort_and_course: { message: I18n.t(:missing_npq_contract_for_cohort_and_course_new_declaration) }
+  validate :validate_mentor_funding
 
   attr_reader :raw_declaration_date
 
@@ -285,6 +286,16 @@ private
 
   def check_mentor_completion
     ParticipantDeclarations::HandleMentorCompletion.call(participant_declaration:)
+  end
+
+  def validate_mentor_funding
+    return if errors.any?
+    return unless cohort.mentor_funding
+    return unless participant_declaration.participant_profile.mentor?
+
+    unless %w[started completed].include?(declaration_type)
+      errors.add(:declaration_type, "Can only declare 'started' and 'completed' for mentors")
+    end
   end
 
   def validate_if_npq_course_supported
