@@ -125,4 +125,10 @@ Rails.application.configure do
 
   # Raise error when a before_action's only/except options reference missing actions
   config.action_controller.raise_on_missing_callback_actions = true
+
+  # Disable origin check for Cross-Site Request Forgery (CSRF) protection for Codespaces.
+  # I'm not sure why it doesn't work, but it doesn't.
+  if ENV["CODESPACES"].present?
+    config.action_controller.forgery_protection_origin_check = false
+  end
 end
