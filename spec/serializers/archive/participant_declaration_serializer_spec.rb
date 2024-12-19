@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe Archive::ParticipantDeclarationSerializer do
-  let(:declaration) { create(:seed_ecf_participant_declaration, :valid) }
+  let(:declaration) { create(:seed_ect_participant_declaration, :valid) }
 
   subject { described_class.new(declaration) }
 
