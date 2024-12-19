@@ -11,6 +11,10 @@ class Finance::StatementLineItem < ApplicationRecord
 
   scope :billable, -> { eligible.or(payable).or(paid) }
   scope :refundable, -> { awaiting_clawback.or(clawed_back) }
+  scope :ect, -> { where(mentor: false) }
+  scope :mentor, -> { where(mentor: true) }
+
+  before_create :set_mentor
 
   enum state: {
     eligible: "eligible",
@@ -51,5 +55,9 @@ private
       .exists?
       errors.add(:participant_declaration, "is already asscociated to another statement as a refundable")
     end
+  end
+
+  def set_mentor
+    self.mentor = participant_declaration.mentor
   end
 end
