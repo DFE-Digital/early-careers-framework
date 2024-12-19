@@ -10,10 +10,6 @@ RSpec.describe "Support ECTs Users API", :with_support_for_ect_examples, type: :
   describe "#index" do
     let!(:users) do
       cip_mentor_only
-
-      npq_only
-      npq_with_induction_record
-
       cip_ect_only
       cip_ect_updated_a_year_ago
     end

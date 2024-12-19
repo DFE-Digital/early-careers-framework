@@ -19,8 +19,7 @@ RSpec.shared_examples "validates the next output fee statement is available" do
 
     context "when the declaration is eligible" do
       it "returns an error" do
-        create(:ecf_participant_eligibility, :eligible, participant_profile:) if participant_profile.ecf?
-        participant_profile.npq_application.update!(eligible_for_funding: true) if participant_profile.npq?
+        create(:ecf_participant_eligibility, :eligible, participant_profile:)
 
         expect(service).to be_invalid
 
@@ -49,9 +48,6 @@ RSpec.shared_examples "validates the declaration for a withdrawn participant" do
   context "when a participant has been withdrawn" do
     before do
       travel_to(withdrawal_time - 1.second) do
-        %w[npq-leadership-spring npq-leadership-autumn].each do |schedule_identifier|
-          create(:npq_leadership_schedule, schedule_identifier:, cohort: Cohort.current)
-        end
         participant_profile
       end
 
@@ -118,6 +114,15 @@ RSpec.shared_examples "validates the course_identifier, cpd_lead_provider, parti
     it "has a meaningful error", :aggregate_failures do
       expect(service).to be_invalid
       expect(service.errors.messages_for(:course_identifier)).to eq(["The entered '#/course_identifier' is not recognised for the given participant. Check details and try again."])
+    end
+  end
+
+  context "when the course identifier is NPQ" do
+    let(:course_identifier) { "npq-headship" }
+
+    it "has a meaningful error", :aggregate_failures do
+      expect(service).to be_invalid
+      expect(service.errors.messages_for(:course_identifier)).to eq(["NPQ Courses are no longer supported"])
     end
   end
 
@@ -310,11 +315,10 @@ RSpec.shared_examples "creates participant declaration attempt" do
 end
 
 RSpec.describe RecordDeclaration do
-  let(:cpd_lead_provider)     { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider) }
-  let(:another_lead_provider) { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider, name: "Unknown") }
+  let(:cpd_lead_provider)     { create(:cpd_lead_provider, :with_lead_provider) }
+  let(:another_lead_provider) { create(:cpd_lead_provider, :with_lead_provider, name: "Unknown") }
   let(:declaration_type)      { "started" }
   let(:participant_id) { participant_profile.participant_identity.external_identifier }
-  let(:has_passed) { false }
   let(:evidence_held) { "other" }
   let(:params) do
     {
@@ -323,7 +327,6 @@ RSpec.describe RecordDeclaration do
       declaration_type:,
       course_identifier:,
       cpd_lead_provider:,
-      has_passed:,
       evidence_held:,
     }
   end
@@ -415,217 +418,6 @@ RSpec.describe RecordDeclaration do
       it_behaves_like "creates a participant declaration"
       it_behaves_like "creates participant declaration attempt"
       it_behaves_like "checks for mentor completion event"
-    end
-  end
-
-  context "when the participant is an NPQ" do
-    let(:schedule) { NPQCourse.schedule_for(npq_course:, cohort: current_cohort) }
-    let(:declaration_date) { participant_profile.schedule.milestones.find_by(declaration_type:).start_date }
-    let(:npq_course) { create(:npq_leadership_course) }
-    let(:traits) { [] }
-    let(:participant_profile) do
-      create(:npq_participant_profile, *traits, npq_lead_provider: cpd_lead_provider.npq_lead_provider, npq_course:)
-    end
-    let(:course_identifier) { npq_course.identifier }
-    let!(:npq_contract) { create(:npq_contract, cohort: schedule.cohort, npq_course:, npq_lead_provider: cpd_lead_provider.npq_lead_provider) }
-    let!(:another_npq_cohort_contract) { create(:npq_contract, cohort: cohort_2020, npq_course:, npq_lead_provider: cpd_lead_provider.npq_lead_provider) }
-
-    before do
-      create(:npq_statement, :output_fee, deadline_date: 6.weeks.from_now, cpd_lead_provider:)
-    end
-
-    context "when submitting a retained-1" do
-      let(:declaration_type) { "retained-1" }
-
-      it "creates a declaration, no need to pass evidence_held" do
-        travel_to(declaration_date) do
-          expect(service).to be_valid
-        end
-      end
-    end
-
-    it_behaves_like "validates the next output fee statement is available"
-    it_behaves_like "validates the course_identifier, cpd_lead_provider, participant_id"
-    it_behaves_like "validates existing declarations"
-    it_behaves_like "validates the participant milestone"
-    it_behaves_like "creates a participant declaration"
-    it_behaves_like "creates participant declaration attempt"
-    it_behaves_like "checks for mentor completion event"
-
-    context "when declaration is not fundable" do
-      before do
-        participant_profile.npq_application.update(eligible_for_funding: true, funded_place: false)
-      end
-
-      it_behaves_like "creates a participant declaration"
-
-      it "sets the declaration to submitted" do
-        subject.call
-        declaration = ParticipantDeclaration.last
-
-        expect(declaration).to be_submitted
-      end
-    end
-
-    context "for next cohort" do
-      let!(:schedule) { create(:npq_specialist_schedule, cohort:) }
-      let!(:statement) { create(:npq_statement, :output_fee, deadline_date: declaration_date + 6.weeks, cpd_lead_provider:, cohort:) }
-      let(:cohort) { Cohort.next || create(:cohort, :next) }
-      let(:npq_lead_provider) { cpd_lead_provider.npq_lead_provider }
-      let(:participant_profile) { create(:npq_participant_profile, :eligible_for_funding, npq_lead_provider:, npq_course:, schedule:) }
-      let(:declaration_date) { participant_profile.schedule.milestones.find_by(declaration_type: "started").start_date }
-
-      it "creates declaration to next cohort statement" do
-        travel_to declaration_date + 1.day do
-          expect { service.call }.to change { ParticipantDeclaration.count }.by(1)
-
-          declaration = ParticipantDeclaration.last
-
-          expect(declaration).to be_eligible
-          expect(declaration.statements).to include(statement)
-        end
-      end
-    end
-
-    context "when submitting completed" do
-      let(:declaration_type) { "completed" }
-      let(:declaration_date) { participant_profile.schedule.milestones.find_by(declaration_type:).start_date + 1.day }
-
-      context "has_passed is nil" do
-        let(:has_passed) { nil }
-
-        it "returns error" do
-          expect(service).to be_invalid
-          expect(service.errors.messages_for(:has_passed)).to eq(["Enter 'true' or 'false' in the '#/has_passed' field to indicate whether this participant has passed or failed their course."])
-        end
-      end
-
-      context "has_passed is invalid text" do
-        let(:has_passed) { "no_supported" }
-
-        it "returns error" do
-          expect(service).to be_invalid
-          expect(service.errors.messages_for(:has_passed)).to eq(["Enter 'true' or 'false' in the '#/has_passed' field to indicate whether this participant has passed or failed their course."])
-        end
-      end
-
-      context "has_passed is true" do
-        let(:has_passed) { true }
-
-        it "creates participant outcome" do
-          travel_to declaration_date do
-            expect(service).to be_valid
-            participant_declaration = service.call
-            expect(participant_declaration.outcomes.count).to be(1)
-
-            outcome = participant_declaration.outcomes.first
-            expect(outcome.completion_date).to eql(participant_declaration.declaration_date.to_date)
-            expect(outcome).to be_passed
-          end
-        end
-      end
-
-      context "has_passed is 'true'" do
-        let(:has_passed) { "true" }
-
-        it "creates participant outcome" do
-          travel_to declaration_date do
-            expect(service).to be_valid
-            participant_declaration = service.call
-            expect(participant_declaration.outcomes.count).to be(1)
-
-            outcome = participant_declaration.outcomes.first
-            expect(outcome.completion_date).to eql(participant_declaration.declaration_date.to_date)
-            expect(outcome).to be_passed
-          end
-        end
-      end
-
-      context "has_passed is false" do
-        let(:has_passed) { false }
-
-        it "does not create participant outcome" do
-          travel_to declaration_date do
-            expect(service).to be_valid
-            participant_declaration = service.call
-            expect(participant_declaration.outcomes.count).to be(1)
-
-            outcome = participant_declaration.outcomes.first
-            expect(outcome.completion_date).to eql(participant_declaration.declaration_date.to_date)
-            expect(outcome).to be_failed
-          end
-        end
-      end
-
-      context "has_passed is 'false'" do
-        let(:has_passed) { "false" }
-
-        it "does not create participant outcome" do
-          travel_to declaration_date do
-            expect(service).to be_valid
-            participant_declaration = service.call
-            expect(participant_declaration.outcomes.count).to be(1)
-
-            outcome = participant_declaration.outcomes.first
-            expect(outcome.completion_date).to eql(participant_declaration.declaration_date.to_date)
-            expect(outcome).to be_failed
-          end
-        end
-      end
-
-      context "ehco course identifier" do
-        let!(:npq_ehco_schedule) { create(:npq_ehco_schedule) }
-        let(:npq_course) { create(:npq_ehco_course) }
-        let(:has_passed) { nil }
-
-        it "does not create participant outcome" do
-          travel_to declaration_date do
-            expect(ParticipantOutcome::NPQ.count).to be(0)
-            expect(service).to be_valid
-            service.call
-            expect(ParticipantOutcome::NPQ.count).to be(0)
-          end
-        end
-      end
-
-      context "aso course identifier" do
-        let!(:npq_aso_schedule) { create(:npq_aso_schedule) }
-        let(:npq_course) { create(:npq_aso_course) }
-        let(:has_passed) { nil }
-
-        it "does not create participant outcome" do
-          travel_to declaration_date do
-            expect(ParticipantOutcome::NPQ.count).to be(0)
-            expect(service).to be_valid
-            service.call
-            expect(ParticipantOutcome::NPQ.count).to be(0)
-          end
-        end
-      end
-
-      context "when CreateParticipantOutcome service class is invalid" do
-        before do
-          allow_any_instance_of(NPQ::CreateParticipantOutcome).to receive(:valid?).and_return(false)
-        end
-
-        it "raises an InvalidParticipantOutcomeError" do
-          travel_to declaration_date do
-            expect(ParticipantDeclaration::NPQ.completed.count).to be(0)
-            expect { service.call }.to raise_error(Api::Errors::InvalidParticipantOutcomeError)
-            expect(ParticipantDeclaration::NPQ.completed.count).to be(0)
-          end
-        end
-      end
-    end
-
-    context "when lead provider has no contract for the cohort and course" do
-      before { npq_contract.update!(npq_course: create(:npq_specialist_course)) }
-
-      it "has a meaningful error" do
-        is_expected.to be_invalid
-
-        expect(service.errors.messages_for(:cohort)).to include("You cannot submit a declaration for this participant as you do not have a contract for the cohort and course. Contact the DfE for assistance.")
-      end
     end
   end
 

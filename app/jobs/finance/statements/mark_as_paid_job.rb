@@ -8,7 +8,7 @@ module Finance
       def perform(statement_id:)
         return unless statement_id
 
-        statement = Finance::Statement.find_by(id: statement_id)
+        statement = Finance::Statement::ECF.find_by(id: statement_id)
 
         if statement.present? && statement.payable?
           ::Statements::MarkAsPaid.new(statement).call

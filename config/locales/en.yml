@@ -85,8 +85,6 @@ en:
   schedule_invalidates_declaration: Changing schedule would invalidate existing declarations. Please void them first.
   schedule_invalid_for_course: Selected schedule is not valid for the course
   missing_school_cohort_default_partnership: You cannot change a participant to this cohort as you do not have a partnership with the school for the cohort. Contact the DfE for assistance.
-  missing_npq_contract_for_cohort_and_course: You cannot change a participant to this cohort as you do not have a contract for the cohort and course. Contact the DfE for assistance.
-  missing_npq_contract_for_cohort_and_course_new_declaration: You cannot submit a declaration for this participant as you do not have a contract for the cohort and course. Contact the DfE for assistance.
   withdrawn_participant: Cannot perform actions on a withdrawn participant
   declaration_already_voided: "This declaration has already been voided."
   declaration_not_voidable: "This declaration cannot be voided. Contact the DfE if you have any questions about why you cannot void it."
@@ -109,20 +107,6 @@ en:
     not_a_number: *default_message
     less_than: *default_message
     greater_than_or_equal_to: *default_message
-  npq_application:
-    missing_npq_application: "The entered '#/npq_application' is missing from your request. Check details and try again."
-    missing_funded_place: "The entered '#/funded_place' is missing from your request. Check details and try again."
-    cohort_does_not_accept_capping: "Leave the '#/funded_place' field blank. It's only needed for participants starting NPQs from autumn 2024 onwards"
-    has_another_accepted_application: The participant has already had an application accepted for this course.
-    has_already_been_accepted: This NPQ application has already been accepted
-    has_already_been_rejected: This NPQ application has already been rejected
-    cannot_change_from_accepted: Once accepted an application cannot change state
-    cannot_change_from_rejected: Once rejected an application cannot change state
-    not_eligible_for_funded_place: "The participant is not eligible for funding, so '#/funded_place' cannot be set to true."
-    funded_place_required: "Set '#/funded_place' to true or false."
-    cannot_change_funded_status_from_non_accepted: You must accept the application before attempting to change the '#/funded_place' setting
-    cannot_change_funded_status_non_eligible: This participant is not eligible for funding. Contact us if you think this is wrong
-    cannot_change_funded_place: You must void or claw back your declarations for this participant before being able to set '#/funded_place' to false
   errors:
     email: &email_error_messages
       blank: "Enter an email address"
@@ -255,18 +239,6 @@ en:
             estimated_teacher_count:
               <<: *defaults
               blank: "enter your expected number of teachers"
-        npq_application:
-          attributes:
-            base:
-              billable_declaration_exists: "Eligibility can not be changed because billable declaration exists"
-              funded_application: "Eligibility can not be changed because the application is funded"
-            lead_provider_approval_status:
-              has_another_accepted_application: The participant already has an accepted application for this course
-              has_already_been_accepted: This NPQ application has already been accepted
-              has_already_been_rejected: This NPQ application has already been rejected
-              cannot_change_from_accepted: Once accepted an application cannot change state
-              cannot_change_from_rejected: Once rejected an application cannot change state
-              declarations_exist: There are already declarations for this participant on this course, please ask provider to void and/or clawback any declarations they have made before attempting to reset the application.
         school_cohort:
           attributes:
             school_id:

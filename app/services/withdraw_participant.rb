@@ -49,7 +49,6 @@ class WithdrawParticipant
                                 .call(
                                   participant_id:,
                                   course_identifier:,
-                                  cpd_lead_provider:,
                                 )
   end
 
@@ -58,7 +57,6 @@ class WithdrawParticipant
       ParticipantProfileResolver.call(
         participant_identity:,
         course_identifier:,
-        cpd_lead_provider:,
       )
   end
 

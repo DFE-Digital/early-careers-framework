@@ -31,12 +31,7 @@ module Finance
     end
 
     def statement
-      case participant_declaration
-      when ParticipantDeclaration::ECF
-        participant_declaration.cpd_lead_provider.lead_provider.next_output_fee_statement(cohort)
-      when ParticipantDeclaration::NPQ
-        participant_declaration.cpd_lead_provider.npq_lead_provider.next_output_fee_statement(cohort)
-      end
+      participant_declaration.cpd_lead_provider.lead_provider.next_output_fee_statement(cohort)
     end
   end
 end

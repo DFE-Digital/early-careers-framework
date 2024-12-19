@@ -35,25 +35,12 @@ RSpec.describe Identity::Create do
 
     context "when the user has existing participant_profiles" do
       context "when no existing identity already exists" do
+        let!(:ect_profile) { create(:ect, :eligible_for_funding, user:) }
         let!(:mentor_profile) { create(:mentor, :eligible_for_funding, user:) }
-        let!(:npq_profile)    { create(:npq_participant_profile, user:) }
 
         it "adds the profiles to the new identity" do
           identity = service.call(user:)
-          expect(identity.participant_profiles).to match_array [mentor_profile, npq_profile]
-        end
-      end
-
-      context "when the existing profiles belong to another identity" do
-        let(:ect)                { create(:mentor, :eligible_for_funding, user:) }
-        let(:exisiting_identity) { ect.participant_identities.first }
-        let!(:mentor_profile)    { create(:mentor, :eligible_for_funding, trn: ect.teacher_profile.trn).tap { |pp| pp.update!(teacher_profile: ect.teacher_profile) } }
-        let(:npq_profile)        { create(:npq_participant_profile,       trn: ect.teacher_profile.trn, user:) }
-
-        it "does not add the profiles to the new identity" do
-          pending "this may not happen"
-          expect(mentor_profile.participant_identity.participant_profiles).to be_empty
-          # expect(exisiting_identity.participant_profiles).to match_array [mentor_profile, npq_profile]
+          expect(identity.participant_profiles).to match_array [ect_profile, mentor_profile]
         end
       end
     end
@@ -90,7 +77,7 @@ RSpec.describe Identity::Create do
       context "when the user has existing profiles" do
         let(:teacher_profile) { create(:teacher_profile, user:) }
         let!(:mentor_profile) { create(:mentor, user: teacher_profile.user, participant_identity: identity) }
-        let!(:npq_profile) { create(:npq_participant_profile, teacher_profile:, participant_identity: identity) }
+        let!(:ect_profile) { create(:ect, user: teacher_profile.user, participant_identity: identity) }
 
         it "does not update any of the users participant_profiles" do
           new_identity = service.call(user:, email: "login2@example.com")
