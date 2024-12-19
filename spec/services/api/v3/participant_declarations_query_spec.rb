@@ -25,6 +25,45 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery do
 
   subject { described_class.new(cpd_lead_provider: cpd_lead_provider1, params:) }
 
+  shared_context "declarations transferred to the provider" do
+    context "when declarations have been transferred to the provider" do
+      let(:transfer_induction_record) do
+        NewSeeds::Scenarios::Participants::Transfers::FipToFipChangingTrainingProvider
+          .new(lead_provider_from: lead_provider2, lead_provider_to: lead_provider1)
+          .build
+      end
+      let!(:transferred_declaration) do
+        travel_to(5.days.ago) do
+          declaration = create(
+            :ect_participant_declaration,
+            :eligible,
+            declaration_type: "started",
+            cpd_lead_provider: cpd_lead_provider2,
+            participant_profile: transfer_induction_record.participant_profile,
+            delivery_partner: delivery_partner1,
+            cohort: transfer_induction_record.participant_profile.schedule.cohort,
+          )
+
+          ParticipantDeclaration::ECF.where(id: declaration.id).select(:id, :created_at).first
+        end
+      end
+
+      described_class::RELEVANT_INDUCTION_STATUS.each do |induction_status|
+        it "is included in the response when the participant was #{induction_status} for the previous provider" do
+          transfer_induction_record.update!(induction_status:)
+          expect(subject.participant_declarations_for_pagination.to_a).to include(transferred_declaration)
+        end
+      end
+
+      (InductionRecord.induction_statuses.keys - described_class::RELEVANT_INDUCTION_STATUS).each do |induction_status|
+        it "is not included in the response when the participant was #{induction_status} for the previous provider" do
+          transfer_induction_record.update!(induction_status:)
+          expect(subject.participant_declarations_for_pagination.to_a).not_to include(transferred_declaration)
+        end
+      end
+    end
+  end
+
   describe "#participant_declarations_for_pagination" do
     let!(:participant_declaration1) do
       travel_to(3.days.ago) do
@@ -94,32 +133,7 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery do
         expect(subject.participant_declarations_for_pagination.to_a).to eq([participant_declaration3, participant_declaration1, participant_declaration2])
       end
 
-      context "when declarations have been transferred to to the provider" do
-        let(:transfer_induction_record) do
-          NewSeeds::Scenarios::Participants::Transfers::FipToFipChangingTrainingProvider
-            .new(lead_provider_from: lead_provider2, lead_provider_to: lead_provider1)
-            .build
-        end
-        let!(:transferred_declaration) do
-          travel_to(5.days.ago) do
-            declaration = create(
-              :ect_participant_declaration,
-              :eligible,
-              declaration_type: "started",
-              cpd_lead_provider: cpd_lead_provider2,
-              participant_profile: transfer_induction_record.participant_profile,
-              delivery_partner: delivery_partner1,
-              cohort: transfer_induction_record.participant_profile.schedule.cohort,
-            )
-
-            ParticipantDeclaration::ECF.where(id: declaration.id).select(:id, :created_at).first
-          end
-        end
-
-        it "is included in the response" do
-          expect(subject.participant_declarations_for_pagination.to_a).to include(transferred_declaration)
-        end
-      end
+      include_context "declarations transferred to the provider"
     end
 
     context "with cohort filter" do
@@ -314,27 +328,6 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery do
       end
     end
 
-    context "when declaration have been transferred to new provider" do
-      let(:transfer_induction_record) do
-        NewSeeds::Scenarios::Participants::Transfers::FipToFipChangingTrainingProvider
-          .new(lead_provider_from: lead_provider2, lead_provider_to: lead_provider1)
-          .build
-      end
-      let!(:transferred_declaration) do
-        create(
-          :ect_participant_declaration,
-          :eligible,
-          declaration_type: "started",
-          cpd_lead_provider: cpd_lead_provider2,
-          participant_profile: transfer_induction_record.participant_profile,
-          delivery_partner: delivery_partner1,
-          cohort: transfer_induction_record.participant_profile.schedule.cohort,
-        )
-      end
-
-      it "is included in the response" do
-        expect(subject.participant_declaration(transferred_declaration.id)).to eql(transferred_declaration)
-      end
-    end
+    include_context "declarations transferred to the provider"
   end
 end
