@@ -178,6 +178,7 @@ module Finance
 
       def previous_fill_level_for_declaration_type(declaration_type)
         billable = Finance::StatementLineItem
+          .ect
           .where(statement: statement.previous_statements)
           .billable
           .joins(:participant_declaration)
@@ -185,6 +186,7 @@ module Finance
           .count
 
         refundable = Finance::StatementLineItem
+          .ect
           .where(statement: statement.previous_statements)
           .refundable
           .joins(:participant_declaration)
@@ -196,6 +198,7 @@ module Finance
 
       def previous_fill_level_for_uplift
         billable = Finance::StatementLineItem
+          .ect
           .where(statement: statement.previous_statements)
           .billable
           .joins(:participant_declaration)
@@ -204,6 +207,7 @@ module Finance
           .count
 
         refundable = Finance::StatementLineItem
+          .ect
           .where(statement: statement.previous_statements)
           .refundable
           .joins(:participant_declaration)
@@ -217,6 +221,7 @@ module Finance
       def current_billable_count_for_declaration_type(declaration_type)
         statement
           .billable_statement_line_items
+          .ect
           .joins(:participant_declaration)
           .where(participant_declarations: { declaration_type: })
           .count
@@ -225,6 +230,7 @@ module Finance
       def current_refundable_count_declaration_type(declaration_type)
         statement
           .refundable_statement_line_items
+          .ect
           .joins(:participant_declaration)
           .where(participant_declarations: { declaration_type: })
           .count
@@ -233,6 +239,7 @@ module Finance
       def current_billable_count_for_uplift
         statement
           .billable_statement_line_items
+          .ect
           .joins(:participant_declaration)
           .where(participant_declarations: { declaration_type: "started" })
           .where("participant_declarations.sparsity_uplift = true OR participant_declarations.pupil_premium_uplift = true")
@@ -242,6 +249,7 @@ module Finance
       def current_refundable_count_for_uplift
         statement
           .refundable_statement_line_items
+          .ect
           .joins(:participant_declaration)
           .where(participant_declarations: { declaration_type: "started" })
           .where("participant_declarations.sparsity_uplift = true OR participant_declarations.pupil_premium_uplift = true")
