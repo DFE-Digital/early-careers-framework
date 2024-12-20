@@ -41,7 +41,6 @@ class DeferParticipant
                                 .call(
                                   participant_id:,
                                   course_identifier:,
-                                  cpd_lead_provider:,
                                 )
   end
 
@@ -50,7 +49,6 @@ class DeferParticipant
       ParticipantProfileResolver.call(
         participant_identity:,
         course_identifier:,
-        cpd_lead_provider:,
       )
   end
 
