@@ -5,7 +5,7 @@ require "csv"
 module Api
   module V1
     class ECFParticipantsController < Api::ApiController
-      include ApiTokenAuthenticatable
+      include LeadProviderApiTokenAuthenticatable
       include ApiPagination
       include ApiCsv
       include ApiFilter
@@ -54,11 +54,6 @@ module Api
 
       def ecf_participant_params
         params.permit(:id, filter: %i[cohort updated_since])
-      end
-
-      def access_scope
-        LeadProviderApiToken
-          .joins(cpd_lead_provider: [:lead_provider])
       end
 
       def lead_provider

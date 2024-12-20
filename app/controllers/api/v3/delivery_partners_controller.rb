@@ -3,7 +3,7 @@
 module Api
   module V3
     class DeliveryPartnersController < Api::ApiController
-      include ApiTokenAuthenticatable
+      include LeadProviderApiTokenAuthenticatable
       include ApiPagination
       include ApiFilterValidation
 
@@ -50,10 +50,6 @@ module Api
         params
           .with_defaults(sort: "", filter: { cohort: "" })
           .permit(:id, :sort, filter: %i[cohort])
-      end
-
-      def access_scope
-        LeadProviderApiToken.joins(cpd_lead_provider: [:lead_provider])
       end
 
       def serializer_class

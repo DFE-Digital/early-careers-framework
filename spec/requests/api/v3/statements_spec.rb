@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe "statements endpoint spec", type: :request do
-  let(:cpd_lead_provider) { create(:cpd_lead_provider) }
+  let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
   let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
   let(:bearer_token) { "Bearer #{token}" }
 

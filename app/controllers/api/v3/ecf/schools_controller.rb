@@ -4,7 +4,7 @@ module Api
   module V3
     module ECF
       class SchoolsController < Api::ApiController
-        include ApiTokenAuthenticatable
+        include LeadProviderApiTokenAuthenticatable
         include ApiPagination
         include ApiFilterValidation
 
@@ -40,10 +40,6 @@ module Api
           Api::V3::ECF::SchoolsQuery.new(
             params: school_params,
           )
-        end
-
-        def access_scope
-          LeadProviderApiToken.joins(cpd_lead_provider: [:lead_provider])
         end
 
         def serializer_class
