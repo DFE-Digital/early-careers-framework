@@ -4,7 +4,7 @@ module Api
   module V3
     module ECF
       class TransfersController < Api::ApiController
-        include ApiTokenAuthenticatable
+        include LeadProviderApiTokenAuthenticatable
         include ApiPagination
         include ApiFilterValidation
 

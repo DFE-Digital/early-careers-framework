@@ -5,7 +5,7 @@ require "csv"
 module Api
   module V1
     class ECFParticipantsController < Api::ApiController
-      include ApiTokenAuthenticatable
+      include LeadProviderApiTokenAuthenticatable
       include ApiPagination
       include ApiCsv
       include ApiFilter

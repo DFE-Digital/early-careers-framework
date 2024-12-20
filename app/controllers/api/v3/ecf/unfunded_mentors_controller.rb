@@ -4,7 +4,7 @@ module Api
   module V3
     module ECF
       class UnfundedMentorsController < Api::ApiController
-        include ApiTokenAuthenticatable
+        include LeadProviderApiTokenAuthenticatable
         include ApiPagination
         include ApiFilterValidation
 
