@@ -13,7 +13,7 @@ private
   def has_profile_for_course_given_course_identifier?(record)
     return unless record.participant_identity&.user
 
-    record.participant_identity.user.participant_profiles.active_record.any? do |participant_profile|
+    record.participant_identity.user.participant_profiles.any? do |participant_profile|
       participant_profile.class::COURSE_IDENTIFIERS.include?(record.course_identifier)
     end
   end
