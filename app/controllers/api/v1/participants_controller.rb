@@ -5,7 +5,7 @@ require "csv"
 module Api
   module V1
     class ParticipantsController < Api::ApiController
-      include ApiTokenAuthenticatable
+      include LeadProviderApiTokenAuthenticatable
       include ParticipantActions
     end
   end

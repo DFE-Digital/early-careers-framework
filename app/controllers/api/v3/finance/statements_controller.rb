@@ -3,7 +3,7 @@
 module Api
   module V3
     class Finance::StatementsController < Api::ApiController
-      include ApiTokenAuthenticatable
+      include LeadProviderApiTokenAuthenticatable
       include ApiPagination
       include ApiFilterValidation
 

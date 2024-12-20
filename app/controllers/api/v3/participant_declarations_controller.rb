@@ -4,7 +4,7 @@ module Api
   module V3
     class ParticipantDeclarationsController < Api::ApiController
       include ApiAuditable
-      include ApiTokenAuthenticatable
+      include LeadProviderApiTokenAuthenticatable
       include ApiPagination
       include ApiFilterValidation
 
