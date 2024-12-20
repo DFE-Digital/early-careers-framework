@@ -65,6 +65,8 @@ Declaration states are defined by the `state` attribute.
 
 Providers must [submit declarations](/api-reference/ecf/guidance/#submit-view-and-void-declarations) to confirm a participant has engaged in training within a given milestone period. A declaration’s `state` value will reflect if and when the DfE will pay providers for the training delivered.
 
+Add a paragraph here informing providers to ignore retained declarations for mentors from autumn 2025 onwards. 
+
 | state | Definition | Action |
 | -------- | -------- | -------- |
 | `submitted`     | A declaration associated with to a participant who has not yet been confirmed to be eligible for funding    | Providers can view and void `submitted` declarations    |
