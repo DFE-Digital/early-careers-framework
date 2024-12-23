@@ -2,7 +2,9 @@
 
 class DropTableNPQCourses < ActiveRecord::Migration[7.1]
   def up
-    remove_foreign_key :participant_profiles, :npq_courses
+    if foreign_key_exists?(:participant_profiles, :npq_courses)
+      remove_foreign_key :participant_profiles, :npq_courses
+    end
 
     drop_table :npq_courses
   end
