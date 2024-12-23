@@ -2,7 +2,10 @@
 
 class DropTableNPQLeadProviders < ActiveRecord::Migration[7.1]
   def up
-    remove_foreign_key :npq_lead_providers, :cpd_lead_providers
+    if foreign_key_exists?(:npq_lead_providers, :cpd_lead_providers)
+      remove_foreign_key :npq_lead_providers, :cpd_lead_providers
+    end
+
     drop_table :npq_lead_providers
   end
 
