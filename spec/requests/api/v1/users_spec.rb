@@ -11,9 +11,7 @@ RSpec.describe "API Users", type: :request do
 
   describe "#index" do
     before :each do
-      create(:npq_participant_profile)
-      create(:npq_participant_profile, user: mentor.user)
-      create_list(:ect, 2, core_induction_programme: cip, mentor_profile_id: mentor.id)
+      create_list(:ect, 4, core_induction_programme: cip, mentor_profile_id: mentor.id)
     end
 
     context "when authorized" do
@@ -58,13 +56,13 @@ RSpec.describe "API Users", type: :request do
 
       it "returns different users for second page" do
         get "/api/v1/users", params: { page: { per_page: 3, page: 2 } }
-        expect(parsed_response["data"].size).to eql(1)
+        expect(parsed_response["data"].size).to eql(2)
       end
 
       it "returns users changed since a particular time, if given a changed_since parameter" do
         User.order(:created_at).first.update!(updated_at: 2.days.ago)
         get "/api/v1/users", params: { filter: { updated_since: 1.day.ago.iso8601 } }
-        expect(parsed_response["data"].size).to eql(3)
+        expect(parsed_response["data"].size).to eql(4)
       end
 
       context "when filtering by email" do

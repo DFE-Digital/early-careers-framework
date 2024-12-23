@@ -121,15 +121,5 @@ RSpec.describe "Admin::Participants::ValidateDetailsController", type: :request 
     it "clears the TRN prior to validation" do
       expect(ect_profile.reload.teacher_profile.reload.trn).to be_nil
     end
-
-    context "when an NPQ profile is present" do
-      before do
-        create(:npq_participant_profile, trn: "1234567", user:)
-      end
-
-      it "does not remove the TRN prior to validation" do
-        expect(ect_profile.teacher_profile.trn).to eq "1234567"
-      end
-    end
   end
 end

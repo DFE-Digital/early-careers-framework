@@ -18,8 +18,8 @@ RSpec.describe Statements::MarkAsPaid do
       create(:ect_participant_declaration, :eligible, cpd_lead_provider:)
       VoidParticipantDeclaration.new(create(:ect_participant_declaration, :eligible, cpd_lead_provider:)).call
     end
+
     Statements::MarkAsPayable.new(statement).call
-    Finance::Statement::ECF::Payable.find(statement.id)
   end
 
   describe "#call" do

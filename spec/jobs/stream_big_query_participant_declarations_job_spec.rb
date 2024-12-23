@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe StreamBigQueryParticipantDeclarationsJob do
-  let(:cpd_lead_provider) { create(:cpd_lead_provider) }
+  let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
   let!(:streamable_declaration) { travel_to(1.hour.ago) { create(:ect_participant_declaration, cpd_lead_provider:) } }
 
   before do

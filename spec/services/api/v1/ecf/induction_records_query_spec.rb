@@ -106,15 +106,6 @@ RSpec.describe Api::V1::ECF::InductionRecordsQuery, :with_support_for_ect_exampl
     expect(subject).not_to include(*excluded_records)
   end
 
-  it "does not include Non-ECF participants" do
-    excluded_records = records_for(
-      npq_only,
-      npq_with_induction_record,
-    )
-
-    expect(subject).not_to include(*excluded_records)
-  end
-
   it "does not include Non-participant users" do
     excluded_records = records_for(
       sit_only,

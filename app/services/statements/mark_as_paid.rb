@@ -7,7 +7,7 @@ module Statements
     end
 
     def call
-      return if statement.npq?
+      return unless statement&.ecf?
 
       Finance::Statement.transaction do
         participant_declarations.find_each do |participant_declaration|

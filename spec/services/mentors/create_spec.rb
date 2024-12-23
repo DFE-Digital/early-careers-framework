@@ -7,7 +7,7 @@ RSpec.describe Mentors::Create do
   let(:pupil_premium_school) { create :school, :pupil_premium_uplift }
   let(:sparsity_school) { create :school, :sparsity_uplift }
   let(:uplift_school) { create :school, :pupil_premium_and_sparsity_uplift }
-  let!(:npq_participant) { create(:npq_participant_profile).teacher_profile.user }
+  let!(:ect_participant) { create(:ect_participant_profile).teacher_profile.user }
 
   it "creates a Mentor record" do
     expect {
@@ -33,8 +33,8 @@ RSpec.describe Mentors::Create do
   it "uses the existing teacher profile record" do
     expect {
       described_class.call(
-        email: npq_participant.email,
-        full_name: npq_participant.full_name,
+        email: ect_participant.email,
+        full_name: ect_participant.full_name,
         school_cohort:,
         mentor_id: "random discardable",
       )

@@ -14,7 +14,6 @@ RSpec.describe "Admin::Schools::Participants", type: :request do
   let!(:ect_profile) { create :ect, school_cohort: }
   let!(:ect_profile_next_cohort) { create :ect, school_cohort: school_next_cohort }
   let!(:mentor_profile) { create :mentor, school_cohort: }
-  let!(:npq_profile) { create(:npq_participant_profile, school:) }
   let!(:unrelated_profile) { create :ect }
   let!(:withdrawn_profile_record) { create :mentor, :withdrawn_record, school_cohort: }
 
@@ -54,7 +53,6 @@ RSpec.describe "Admin::Schools::Participants", type: :request do
       expect(assigns(:participant_profiles)).to include ect_profile
       expect(assigns(:participant_profiles)).to include ect_profile_next_cohort
       expect(assigns(:participant_profiles)).to include withdrawn_profile_record
-      expect(assigns(:participant_profiles)).not_to include npq_profile
       expect(assigns(:participant_profiles)).not_to include unrelated_profile
     end
   end

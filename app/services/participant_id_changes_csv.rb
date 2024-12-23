@@ -36,14 +36,11 @@ private
 
   attr_reader :cpd_lead_provider, :from_date
 
-  delegate :lead_provider, :npq_lead_provider,
-           to: :cpd_lead_provider
+  delegate :lead_provider, to: :cpd_lead_provider
 
   def cpd_lead_provider?(user)
     user.participant_profiles.each do |pp|
-      if pp.npq? && pp.npq_application.npq_lead_provider == npq_lead_provider
-        return true
-      elsif pp.ecf? && pp.latest_induction_record_for(cpd_lead_provider:)
+      if pp.ecf? && pp.latest_induction_record_for(cpd_lead_provider:)
         return true
       end
     end
