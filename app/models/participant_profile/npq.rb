@@ -41,9 +41,6 @@ class ParticipantProfile::NPQ < ParticipantProfile
   # self.ignored_columns = %i[mentor_profile_id school_cohort_id]
   belongs_to :cohort, optional: true
   belongs_to :school, optional: true
-  belongs_to :npq_course, optional: true
-
-  has_one :npq_application, foreign_key: :id
 
   has_many :participant_declarations, class_name: "ParticipantDeclaration::NPQ", foreign_key: :participant_profile_id
 
@@ -71,7 +68,7 @@ class ParticipantProfile::NPQ < ParticipantProfile
   end
 
   def fundable?
-    npq_application&.eligible_for_dfe_funding(with_funded_place: true)
+    nil
   end
 
   def schedule_for(*)

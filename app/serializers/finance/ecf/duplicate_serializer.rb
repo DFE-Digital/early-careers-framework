@@ -19,7 +19,6 @@ module Finance
       attribute :profile_duplicity, &:profile_duplicity
       attribute :notes, &:notes
 
-      attribute :npq_course_id, &:npq_course_id
       attribute :schedule_id, &:schedule_id
       attribute :school_id, &:school_id
       attribute :core_induction_programme_id, &:core_induction_programme_id

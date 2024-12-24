@@ -27,9 +27,5 @@ module Archive
     attribute :participant_profiles do |user|
       ParticipantProfileSerializer.new(user.participant_profiles).serializable_hash[:data]
     end
-
-    attribute :npq_applications do |user|
-      NPQApplicationSerializer.new(user.npq_applications).serializable_hash[:data]
-    end
   end
 end

@@ -14,7 +14,6 @@ class ParticipantDeclaration::NPQ < ParticipantDeclaration
     "npq-senco" => "NPQSENCO",
   }.freeze
 
-  has_one :npq_application, through: :participant_profile
   has_many :statements, class_name: "Finance::Statement::NPQ", through: :statement_line_items
   has_many :outcomes, class_name: "ParticipantOutcome::NPQ", foreign_key: "participant_declaration_id"
 
@@ -58,10 +57,7 @@ class ParticipantDeclaration::NPQ < ParticipantDeclaration
   end
 
   def uplift_paid?
-    !%w[npq-additional-support-offer npq-early-headship-coaching-offer].include?(course_identifier) &&
-      declaration_type == "started" &&
-      %w[paid awaiting_clawback clawed_back].include?(state) &&
-      participant_profile.npq_application.targeted_delivery_funding_eligibility
+    nil
   end
 
   def qualification_type

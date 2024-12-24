@@ -7,7 +7,6 @@ RSpec.describe Cohort, type: :model do
 
   describe "associations" do
     it { is_expected.to have_many(:call_off_contracts) }
-    it { is_expected.to have_many(:npq_contracts) }
     it { is_expected.to have_many(:partnerships) }
     it { is_expected.to have_many(:schedules).class_name("Finance::Schedule::ECF") }
     it { is_expected.to have_many(:statements).class_name("Finance::Statement") }
