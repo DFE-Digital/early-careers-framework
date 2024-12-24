@@ -6,6 +6,8 @@ module Api
       include Api::Concerns::FilterCohorts
       include Api::Concerns::FilterUpdatedSince
 
+      RELEVANT_INDUCTION_STATUS = %w[active completed].freeze
+
       attr_reader :cpd_lead_provider, :params
 
       def initialize(cpd_lead_provider:, params:)
@@ -81,7 +83,7 @@ module Api
           )
           .where.not(participant_profile: { induction_records: { induction_programmes: { partnership_id: nil } } }) # Exclude any nil partnerships (eg: cip)
           .where(participant_profile: { induction_records: { induction_programme: { partnerships: { lead_provider_id: lead_provider&.id } } } })
-          .where(participant_profile: { induction_records: { induction_status: "active" } }) # only want induction records that are the winning latest ones
+          .where(participant_profile: { induction_records: { induction_status: RELEVANT_INDUCTION_STATUS } }) # only want induction records that are the winning latest ones
           .where(state: %w[submitted eligible payable paid])
 
         scope = filter_cohorts(scope) if lead_provider.present?
