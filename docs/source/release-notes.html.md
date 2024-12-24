@@ -7,6 +7,12 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
+## 24 December 2024
+
+Lead providers getting participant declarations via the API endpoints will now see previous declarations attached to completed participants rather than just active participants.
+
+Before this update they could only view previous declarations of participants who had an active <code>induction_status</code> and had not completed.
+
 ## 11 December 2024
 
 We’ve fixed a bug that meant providers could see declarations from participants that were not relevant to them.  They would not have been able to identify the participants with this information.
