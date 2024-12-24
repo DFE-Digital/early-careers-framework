@@ -4,7 +4,7 @@ module Api
   module V3
     module ECF
       class PartnershipsController < Api::ApiController
-        include ApiTokenAuthenticatable
+        include LeadProviderApiTokenAuthenticatable
         include ApiPagination
         include ApiFilterValidation
 
@@ -76,10 +76,6 @@ module Api
           params
             .with_defaults(sort: "", filter: { delivery_partner_id: "", updated_since: "", cohort: "" })
             .permit(:id, :sort, filter: %i[cohort updated_since delivery_partner_id])
-        end
-
-        def access_scope
-          LeadProviderApiToken.joins(cpd_lead_provider: [:lead_provider])
         end
 
         def serializer_class

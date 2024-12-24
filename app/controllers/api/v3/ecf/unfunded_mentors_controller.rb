@@ -4,7 +4,7 @@ module Api
   module V3
     module ECF
       class UnfundedMentorsController < Api::ApiController
-        include ApiTokenAuthenticatable
+        include LeadProviderApiTokenAuthenticatable
         include ApiPagination
         include ApiFilterValidation
 
@@ -44,10 +44,6 @@ module Api
             lead_provider:,
             params: unfunded_mentor_params,
           )
-        end
-
-        def access_scope
-          LeadProviderApiToken.joins(cpd_lead_provider: [:lead_provider])
         end
 
         def serializer_class

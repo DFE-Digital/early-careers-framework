@@ -4,7 +4,7 @@ module Api
   module V3
     module ECF
       class TransfersController < Api::ApiController
-        include ApiTokenAuthenticatable
+        include LeadProviderApiTokenAuthenticatable
         include ApiPagination
         include ApiFilterValidation
 
@@ -51,10 +51,6 @@ module Api
           params
             .with_defaults({ filter: { updated_since: "" } })
             .permit(:participant_id, filter: %i[updated_since])
-        end
-
-        def access_scope
-          LeadProviderApiToken.joins(cpd_lead_provider: [:lead_provider])
         end
 
         def serializer_class
