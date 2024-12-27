@@ -279,6 +279,32 @@ RSpec.describe "participant-declarations endpoint spec", type: :request, mid_coh
           expect(fake_logger).to have_received(:info).with(instance_of(Array)).ordered
         end
       end
+
+      context "when posting an NPQ declaration" do
+        let(:params) do
+          {
+            data: {
+              type: "participant-declaration",
+              attributes: {
+                participant_id: SecureRandom.uuid,
+                declaration_type: "started",
+                declaration_date: Time.zone.now.rfc3339,
+                course_identifier: "npq-leading-teaching",
+              },
+            },
+          }
+        end
+
+        it "returns error response" do
+          post "/api/v2/participant-declarations", params: params.to_json
+
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(parsed_response["errors"]).to eq([
+            "title" => "course_identifier",
+            "detail" => "NPQ Courses are no longer supported",
+          ])
+        end
+      end
     end
 
     context "when unauthorized" do
