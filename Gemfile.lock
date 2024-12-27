@@ -712,7 +712,7 @@ PLATFORMS
   arm64-darwin-24
   x86_64-darwin-22
   x86_64-darwin-23
-  x86_64-linux
+  x86_64-linux-gnu
 
 DEPENDENCIES
   active_record_extended
@@ -810,4 +810,4 @@ RUBY VERSION
    ruby 3.2.4p170
 
 BUNDLED WITH
-   2.4.14
+   2.6.2

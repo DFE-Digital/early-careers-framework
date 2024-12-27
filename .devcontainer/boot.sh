@@ -18,7 +18,7 @@ bin/rails db:seed
 
 echo "Installing documentation dependencies..."
 cd docs
-gem install bundler -v 2.4.6 # Must be explicitly specified or we get an error on the subsequent bundle install.
+gem install bundler -v 2.6.2 # Must be explicitly specified or we get an error on the subsequent bundle install.
 bundle install
 
 echo "Building documentation..."
