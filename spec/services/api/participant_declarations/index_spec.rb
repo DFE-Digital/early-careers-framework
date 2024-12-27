@@ -95,6 +95,38 @@ RSpec.describe Api::ParticipantDeclarations::Index do
         expect(subject.scope).not_to include(old_provider_ineligible_declaration)
         expect(subject.scope).to include(new_provider_ineligible_declaration)
       end
+
+      context "when declarations have been transferred to the provider" do
+        let(:transfer_induction_record) do
+          NewSeeds::Scenarios::Participants::Transfers::FipToFipChangingTrainingProvider
+            .new(lead_provider_from: old_cpd_lead_provider.lead_provider, lead_provider_to: new_cpd_lead_provider.lead_provider)
+            .build
+        end
+        let!(:transferred_declaration) do
+          create(
+            :ect_participant_declaration,
+            :eligible,
+            declaration_type: "started",
+            cpd_lead_provider: old_cpd_lead_provider,
+            participant_profile: transfer_induction_record.participant_profile,
+            cohort: transfer_induction_record.participant_profile.schedule.cohort,
+          )
+        end
+
+        described_class::RELEVANT_INDUCTION_STATUS.each do |induction_status|
+          it "is included in the response when the participant was #{induction_status} for the previous provider" do
+            transfer_induction_record.update!(induction_status:)
+            expect(subject.scope).to include(transferred_declaration)
+          end
+        end
+
+        (InductionRecord.induction_statuses.keys - described_class::RELEVANT_INDUCTION_STATUS).each do |induction_status|
+          it "is not included in the response when the participant was #{induction_status} for the previous provider" do
+            transfer_induction_record.update!(induction_status:)
+            expect(subject.scope).not_to include(transferred_declaration)
+          end
+        end
+      end
     end
   end
 end
