@@ -3,6 +3,8 @@
 module Api
   module ParticipantDeclarations
     class Index
+      RELEVANT_INDUCTION_STATUS = %w[active completed].freeze
+
       attr_reader :cpd_lead_provider, :updated_since, :participant_id
 
       def initialize(cpd_lead_provider:, updated_since: nil, participant_id: nil)
@@ -38,7 +40,7 @@ module Api
         ParticipantDeclaration::ECF
           .joins(participant_profile: { induction_records: { induction_programme: { partnership: [:lead_provider] } } })
           .where(participant_profile: { induction_records: { induction_programme: { partnerships: { lead_provider: } } } })
-          .where(participant_profile: { induction_records: { induction_status: "active" } }) # only want induction records that are the winning latest ones
+          .where(participant_profile: { induction_records: { induction_status: RELEVANT_INDUCTION_STATUS } }) # only want induction records that are the winning latest ones
           .where(state: %w[submitted eligible payable paid])
       end
     end
