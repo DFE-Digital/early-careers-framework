@@ -72,6 +72,18 @@ RSpec.describe NominateInductionTutorForm, type: :model do
       end
     end
 
+    context "when the email provided is in use by a NPQ registrant" do
+      let(:form) { described_class.new(full_name:, email:, school:) }
+
+      before do
+        create(:npq_participant_profile, user: create(:user, full_name:, email:))
+      end
+
+      it "is valid" do
+        expect(form).to be_valid(:email)
+      end
+    end
+
     context "when the email provided is in use by a non-registered person" do
       let(:form) { described_class.new(full_name:, email:, school:) }
 

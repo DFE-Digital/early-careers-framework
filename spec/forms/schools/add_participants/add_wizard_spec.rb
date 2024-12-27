@@ -79,5 +79,15 @@ RSpec.describe Schools::AddParticipants::AddWizard, type: :model do
         end
       end
     end
+
+    context "when the email is in use by a NPQ registrant" do
+      let(:user) { create(:user, email: "ray.clemence@example.com") }
+      let(:teacher_profile) { create(:teacher_profile, user:) }
+      let!(:npq_profile) { create(:npq_participant_profile, teacher_profile:) }
+
+      it "returns false" do
+        expect(wizard).not_to be_email_in_use
+      end
+    end
   end
 end

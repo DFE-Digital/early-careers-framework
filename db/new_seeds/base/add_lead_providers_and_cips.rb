@@ -38,6 +38,7 @@ ambition                       = FactoryBot.create(:seed_cpd_lead_provider, name
 best_practice_network          = FactoryBot.create(:seed_cpd_lead_provider, name: "Best Practice Network")
 capita                         = FactoryBot.create(:seed_cpd_lead_provider, name: "Capita")
 education_development_trust    = FactoryBot.create(:seed_cpd_lead_provider, name: "Education Development Trust")
+FactoryBot.create(:seed_cpd_lead_provider, name: "National Institute of Teaching")
 teach_first                    = FactoryBot.create(:seed_cpd_lead_provider, name: "Teach First")
 ucl_institute_of_education     = FactoryBot.create(:seed_cpd_lead_provider, name: "UCL Institute of Education")
 
