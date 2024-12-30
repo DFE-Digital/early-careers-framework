@@ -47,23 +47,6 @@
   - primary_participant_profile_id
   - created_at
   - updated_at
-  :npq_application_exports:
-  - id
-  - start_date
-  - end_date
-  - user_id
-  - created_at
-  - updated_at
-  :npq_application_eligibility_imports:
-  - id
-  - user_id
-  - filename
-  - status
-  - updated_records
-  - import_errors
-  - processed_at
-  - created_at
-  - updated_at
   :statements:
   - original_value
   - contract_version
@@ -250,9 +233,6 @@
   - updated_at
   - output_payment_percentage
   - service_fee_percentage
-  :npq_applications:
-  - date_of_birth
-  - nino
   :nomination_emails:
   - token
   :networks:
