@@ -366,11 +366,11 @@ GEM
       net-protocol
     nio4r (2.7.3)
     nkf (0.2.0)
-    nokogiri (1.17.2-arm64-darwin)
+    nokogiri (1.18.0-arm64-darwin)
       racc (~> 1.4)
-    nokogiri (1.17.2-x86_64-darwin)
+    nokogiri (1.18.0-x86_64-darwin)
       racc (~> 1.4)
-    nokogiri (1.17.2-x86_64-linux)
+    nokogiri (1.18.0-x86_64-linux-gnu)
       racc (~> 1.4)
     nori (2.7.0)
       bigdecimal
@@ -712,7 +712,7 @@ PLATFORMS
   arm64-darwin-24
   x86_64-darwin-22
   x86_64-darwin-23
-  x86_64-linux
+  x86_64-linux-gnu
 
 DEPENDENCIES
   active_record_extended
@@ -810,4 +810,4 @@ RUBY VERSION
    ruby 3.2.4p170
 
 BUNDLED WITH
-   2.4.14
+   2.6.2
