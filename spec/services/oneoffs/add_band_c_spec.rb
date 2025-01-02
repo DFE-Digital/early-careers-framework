@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Oneoffs::ECF::AddBandC do
+RSpec.describe Oneoffs::AddBandC do
   let(:cohort) { create(:cohort, start_year: 2021) }
   let(:payment_date_range) { Date.new(2023, 10, 1)..Date.new(2023, 11, 30) }
   let(:band_c_params) do

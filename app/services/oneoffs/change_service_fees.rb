@@ -2,7 +2,7 @@
 
 require "has_recordable_information"
 
-module Oneoffs::ECF
+module Oneoffs
   class ChangeServiceFees
     class CallOffContractNotFoundError < StandardError; end
 

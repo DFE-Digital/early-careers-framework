@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Oneoffs::ECF
+module Oneoffs
   class RemoveFeesFromContracts
     attr_reader :cohort_year, :from_date
 
