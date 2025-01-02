@@ -143,7 +143,7 @@ RSpec.describe User, type: :model do
         end
 
         context "when there are transferred identity records" do
-          let(:identity2) { create(:participant_identity, :npq, email: "mary.e.jones@example.com") }
+          let(:identity2) { create(:participant_identity, email: "mary.e.jones@example.com") }
 
           before do
             identity2.update!(user:)
@@ -441,14 +441,6 @@ RSpec.describe User, type: :model do
 
     it "returns mentor role" do
       expect(create(:user, :mentor).user_roles).to eq(%w[mentor teacher])
-    end
-
-    it "returns npq_participant role" do
-      expect(create(:user, :npq).user_roles).to eq(%w[npq_participant teacher])
-    end
-
-    it "returns npq_applicant role" do
-      expect(create(:seed_npq_application, :valid).user.user_roles).to eq(%w[npq_applicant])
     end
 
     it "returns induction_coordinator and mentor roles" do

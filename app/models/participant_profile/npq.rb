@@ -43,8 +43,6 @@ class ParticipantProfile::NPQ < ParticipantProfile
   belongs_to :school, optional: true
   belongs_to :npq_course, optional: true
 
-  has_one :npq_application, foreign_key: :id
-
   has_many :participant_declarations, class_name: "ParticipantDeclaration::NPQ", foreign_key: :participant_profile_id
 
   self.validation_steps = %i[identity decision].freeze
@@ -68,10 +66,6 @@ class ParticipantProfile::NPQ < ParticipantProfile
 
   def participant_type
     :npq
-  end
-
-  def fundable?
-    npq_application&.eligible_for_dfe_funding(with_funded_place: true)
   end
 
   def schedule_for(*)

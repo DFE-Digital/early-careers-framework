@@ -10,7 +10,7 @@ module Pages
 
     def has_training_record_state?(validation_status)
       # TODO: get language from language files
-      element_has_content? self, "Training record state #{validation_status}"
+      element_has_content? self, "Training record state#{validation_status}"
     end
 
     def has_full_name?(full_name)

@@ -49,7 +49,7 @@ RSpec.describe DeliveryPartner, type: :model do
 
   describe "participant_profiles" do
     let(:delivery_partner) { create(:delivery_partner) }
-    let(:lead_provider)    { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider).lead_provider }
+    let(:lead_provider)    { create(:cpd_lead_provider, :with_lead_provider).lead_provider }
     let(:school_cohort)    { create(:school_cohort, :with_induction_programme, delivery_partner:, lead_provider:) }
 
     it "should include active participants" do
@@ -66,16 +66,11 @@ RSpec.describe DeliveryPartner, type: :model do
       participant_profile = create(:mentor, school_cohort:, lead_provider:)
       expect(delivery_partner.ecf_participant_profiles).to include participant_profile
     end
-
-    it "should not include NPQ participants" do
-      participant_profile = create(:npq_participant_profile, npq_lead_provider: lead_provider.cpd_lead_provider.npq_lead_provider)
-      expect(delivery_partner.ecf_participant_profiles).not_to include participant_profile
-    end
   end
 
   describe "active_ecf_participant_profiles" do
     let(:delivery_partner) { create(:delivery_partner) }
-    let(:lead_provider)    { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider).lead_provider }
+    let(:lead_provider)    { create(:cpd_lead_provider, :with_lead_provider).lead_provider }
     let(:school_cohort)    { create(:school_cohort, :with_induction_programme, delivery_partner:, lead_provider:) }
 
     it "should include active participants" do
@@ -85,11 +80,6 @@ RSpec.describe DeliveryPartner, type: :model do
 
     it "should not include participants whose records have been withdrawn" do
       participant_profile = create(:ect, :withdrawn_record, school_cohort:, lead_provider:)
-      expect(delivery_partner.active_ecf_participant_profiles).not_to include participant_profile
-    end
-
-    it "should not include NPQ participants" do
-      participant_profile = create(:npq_participant_profile, npq_lead_provider: lead_provider.cpd_lead_provider.npq_lead_provider)
       expect(delivery_partner.active_ecf_participant_profiles).not_to include participant_profile
     end
   end
