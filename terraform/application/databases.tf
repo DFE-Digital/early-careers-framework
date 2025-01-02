@@ -82,6 +82,7 @@ module "postgres-snapshot" {
   azure_enable_high_availability = false
   azure_enable_backup_storage    = false
   azure_enable_monitoring        = false
+  azure_storage_mb               = "65536"
   azure_extensions               = ["citext", "fuzzystrmatch", "pg_stat_statements", "pgcrypto", "plpgsql", "uuid-ossp"]
   server_version                 = "14"
 }
