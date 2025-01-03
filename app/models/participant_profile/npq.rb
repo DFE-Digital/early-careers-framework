@@ -42,8 +42,6 @@ class ParticipantProfile::NPQ < ParticipantProfile
   belongs_to :cohort, optional: true
   belongs_to :school, optional: true
 
-  has_many :participant_declarations, class_name: "ParticipantDeclaration::NPQ", foreign_key: :participant_profile_id
-
   self.validation_steps = %i[identity decision].freeze
 
   def npq?
