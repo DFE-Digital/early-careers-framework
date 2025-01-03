@@ -9,6 +9,12 @@ on:
         options:
           - production
         required: true
+      exclude-versions:
+        description: Exclude 'versions' table
+        type: boolean
+      exclude-api-requests:
+        description: Exclude 'api_requests' table
+        type: boolean
 
 jobs:
   backup-and-restore-production:
@@ -23,3 +29,5 @@ jobs:
         with:
           environment: production
           azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
+          exclude-versions: ${{ inputs.exclude-versions }}
+          exclude-api-requests: ${{ inputs.exclude-api-requests }}
