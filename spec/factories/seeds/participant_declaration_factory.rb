@@ -6,18 +6,6 @@ FactoryBot.define do
   # being able to infer a user via the participant profile. If possible hard
   # code these values when calling this factory
   factory(:seed_abstract_participant_declaration, class: "ParticipantDeclaration") do
-    factory(:seed_npq_participant_declaration, class: "ParticipantDeclaration::NPQ") do
-      trait(:with_npq_participant_profile) do
-        association(:participant_profile, factory: %i[seed_npq_participant_profile valid])
-      end
-
-      trait(:valid) do
-        with_user
-        with_cpd_lead_provider
-        with_npq_participant_profile
-      end
-    end
-
     factory(:seed_ecf_participant_declaration, class: "ParticipantDeclaration::ECF") do
       trait(:with_ecf_participant_profile) do
         association(:participant_profile, factory: %i[seed_ect_participant_profile valid])

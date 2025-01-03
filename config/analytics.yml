@@ -1,14 +1,5 @@
 ---
 :shared:
-  :participant_outcomes:
-  - id
-  - state
-  - completion_date
-  - participant_declaration_id
-  - created_at
-  - updated_at
-  - qualified_teachers_api_request_successful
-  - sent_to_qualified_teachers_api_at
   :school_cohorts:
   - id
   - induction_programme_choice
@@ -62,17 +53,6 @@
   - pending
   - report_id
   - relationship
-  :participant_outcome_api_requests:
-  - id
-  - request_path
-  - status_code
-  - request_headers
-  - request_body
-  - response_body
-  - response_headers
-  - participant_outcome_id
-  - created_at
-  - updated_at
   :participant_declarations:
   - id
   - declaration_type
