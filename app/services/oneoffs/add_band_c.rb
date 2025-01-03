@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Oneoffs::ECF
+module Oneoffs
   class AddBandC
     def initialize(cohort_year:, cpd_lead_provider:, payment_date_range:, band_c_params:)
       @cohort_year = cohort_year

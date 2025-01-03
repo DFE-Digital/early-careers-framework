@@ -2,7 +2,7 @@
 
 require "tempfile"
 
-RSpec.describe Oneoffs::ECF::UpdateContracts do
+RSpec.describe Oneoffs::UpdateContracts do
   let(:cohort) { create(:cohort, start_year: 2024) }
   let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider, name: "Great Provider") }
   let(:lead_provider) { cpd_lead_provider.lead_provider }
