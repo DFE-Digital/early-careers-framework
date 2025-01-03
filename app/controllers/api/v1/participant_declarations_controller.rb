@@ -71,7 +71,7 @@ module Api
       end
 
       def participant_declaration_for_lead_provider
-        @participant_declaration_for_lead_provider ||= ParticipantDeclaration.for_lead_provider(cpd_lead_provider).find(params[:id])
+        @participant_declaration_for_lead_provider ||= ParticipantDeclaration::ECF.for_lead_provider(cpd_lead_provider).find(params[:id])
       end
 
       def permitted_params
