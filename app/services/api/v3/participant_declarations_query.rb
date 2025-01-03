@@ -6,7 +6,7 @@ module Api
       include Api::Concerns::FilterCohorts
       include Api::Concerns::FilterUpdatedSince
 
-      RELEVANT_INDUCTION_STATUS = %w[active completed].freeze
+      RELEVANT_INDUCTION_STATUS = Api::ParticipantDeclarations::Index::RELEVANT_INDUCTION_STATUS
 
       attr_reader :cpd_lead_provider, :params
 
