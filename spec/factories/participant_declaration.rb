@@ -15,18 +15,18 @@ FactoryBot.define do
       has_passed     { false }
     end
 
-    factory :ecf_participant_declaration, class: "ParticipantDeclaration::ECF" do
+    factory :ect_participant_declaration, class: ParticipantDeclaration::ECT do
+      type { "ParticipantDeclaration::ECT" }
       cpd_lead_provider { create(:cpd_lead_provider, :with_lead_provider) }
+      course_identifier { "ecf-induction" }
+      participant_profile { create(:ect, *uplifts, *profile_traits, lead_provider: cpd_lead_provider.lead_provider, cohort:) }
+    end
 
-      factory :ect_participant_declaration, class: "ParticipantDeclaration::ECF" do
-        course_identifier { "ecf-induction" }
-        participant_profile { create(:ect, *uplifts, *profile_traits, lead_provider: cpd_lead_provider.lead_provider, cohort:) }
-      end
-
-      factory :mentor_participant_declaration, class: "ParticipantDeclaration::ECF" do
-        course_identifier { "ecf-mentor" }
-        participant_profile { create(:mentor, *uplifts, *profile_traits, lead_provider: cpd_lead_provider.lead_provider, cohort:) }
-      end
+    factory :mentor_participant_declaration, class: ParticipantDeclaration::Mentor do
+      type { "ParticipantDeclaration::Mentor" }
+      cpd_lead_provider { create(:cpd_lead_provider, :with_lead_provider) }
+      course_identifier { "ecf-mentor" }
+      participant_profile { create(:mentor, *uplifts, *profile_traits, lead_provider: cpd_lead_provider.lead_provider, cohort:) }
     end
 
     initialize_with do

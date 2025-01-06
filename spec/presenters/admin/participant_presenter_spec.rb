@@ -312,7 +312,7 @@ RSpec.describe(Admin::ParticipantPresenter) do
     end
 
     describe "#declarations" do
-      let!(:declarations) { FactoryBot.create_list(:seed_ecf_participant_declaration, 2, :valid, participant_profile:) }
+      let!(:declarations) { FactoryBot.create_list(:seed_ect_participant_declaration, 2, :valid, participant_profile:) }
 
       it "returns the declarations belonging to the participant" do
         expect(subject.declarations).to match_array(declarations)

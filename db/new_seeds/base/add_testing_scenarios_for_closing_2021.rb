@@ -24,12 +24,14 @@ ActiveRecord::Base.transaction do
       { "Mentor" => NewSeeds::Scenarios::Participants::Mentors::MentorWithNoEcts,
         "Ect" => NewSeeds::Scenarios::Participants::Ects::Ect }.each do |participant_type, scenario_klass|
         # #{participant_type} with only completed billable declaration
+        declaration_factory_type = participant_type == "Mentor" ? :seed_mentor_participant_declaration : :seed_ect_participant_declaration
+
         scenario_klass.new(school_cohort:, full_name: "#{participant_type} #{start_year} School #{school_number} with completed billable declaration")
         .build
         .with_induction_record(induction_programme: school_cohort.default_induction_programme)
         .with_validation_data
         .with_eligibility.tap do |scenario|
-          FactoryBot.create(:seed_ecf_participant_declaration,
+          FactoryBot.create(declaration_factory_type,
                             participant_profile: scenario.participant_profile,
                             cohort: school_cohort.cohort,
                             user: scenario.user,
@@ -44,7 +46,7 @@ ActiveRecord::Base.transaction do
         .with_induction_record(induction_programme: school_cohort.default_induction_programme)
         .with_validation_data
         .with_eligibility.tap do |scenario|
-          FactoryBot.create(:seed_ecf_participant_declaration,
+          FactoryBot.create(declaration_factory_type,
                             participant_profile: scenario.participant_profile,
                             cohort: school_cohort.cohort,
                             user: scenario.user,
@@ -59,7 +61,7 @@ ActiveRecord::Base.transaction do
         .with_induction_record(induction_programme: school_cohort.default_induction_programme)
         .with_validation_data
         .with_eligibility.tap do |scenario|
-          FactoryBot.create(:seed_ecf_participant_declaration,
+          FactoryBot.create(declaration_factory_type,
                             participant_profile: scenario.participant_profile,
                             cohort: school_cohort.cohort,
                             user: scenario.user,
@@ -81,7 +83,7 @@ ActiveRecord::Base.transaction do
         .with_induction_record(induction_programme: school_cohort.default_induction_programme)
         .with_validation_data
         .with_eligibility.tap do |scenario|
-          FactoryBot.create(:seed_ecf_participant_declaration,
+          FactoryBot.create(declaration_factory_type,
                             participant_profile: scenario.participant_profile,
                             cohort: school_cohort.cohort,
                             user: scenario.user,
@@ -96,7 +98,7 @@ ActiveRecord::Base.transaction do
         .with_induction_record(induction_programme: school_cohort.default_induction_programme)
         .with_validation_data
         .with_eligibility.tap do |scenario|
-          FactoryBot.create(:seed_ecf_participant_declaration,
+          FactoryBot.create(declaration_factory_type,
                             participant_profile: scenario.participant_profile,
                             cohort: school_cohort.cohort,
                             user: scenario.user,
@@ -111,7 +113,7 @@ ActiveRecord::Base.transaction do
         .with_induction_record(induction_programme: school_cohort.default_induction_programme)
         .with_validation_data
         .with_eligibility.tap do |scenario|
-          FactoryBot.create(:seed_ecf_participant_declaration,
+          FactoryBot.create(declaration_factory_type,
                             participant_profile: scenario.participant_profile,
                             cohort: school_cohort.cohort,
                             user: scenario.user,
@@ -159,7 +161,7 @@ ActiveRecord::Base.transaction do
         .with_induction_record(induction_programme: school_cohort.default_induction_programme)
         .with_validation_data
         .with_eligibility(status: "ineligible", reason: "no_induction").tap do |scenario|
-          FactoryBot.create(:seed_ecf_participant_declaration,
+          FactoryBot.create(declaration_factory_type,
                             participant_profile: scenario.participant_profile,
                             cohort: school_cohort.cohort,
                             user: scenario.user,
@@ -174,7 +176,7 @@ ActiveRecord::Base.transaction do
         .with_induction_record(induction_programme: school_cohort.default_induction_programme)
         .with_validation_data
         .with_eligibility(status: "ineligible", reason: "no_induction").tap do |scenario|
-          FactoryBot.create(:seed_ecf_participant_declaration,
+          FactoryBot.create(declaration_factory_type,
                             participant_profile: scenario.participant_profile,
                             cohort: school_cohort.cohort,
                             user: scenario.user,
@@ -189,7 +191,7 @@ ActiveRecord::Base.transaction do
         .with_induction_record(induction_programme: school_cohort.default_induction_programme)
         .with_validation_data
         .with_eligibility(status: "ineligible", reason: "no_induction").tap do |scenario|
-          FactoryBot.create(:seed_ecf_participant_declaration,
+          FactoryBot.create(declaration_factory_type,
                             participant_profile: scenario.participant_profile,
                             cohort: school_cohort.cohort,
                             user: scenario.user,
@@ -204,7 +206,7 @@ ActiveRecord::Base.transaction do
         .with_induction_record(induction_programme: school_cohort.default_induction_programme)
         .with_validation_data
         .with_eligibility(status: "ineligible", reason: "no_induction").tap do |scenario|
-          FactoryBot.create(:seed_ecf_participant_declaration,
+          FactoryBot.create(declaration_factory_type,
                             participant_profile: scenario.participant_profile,
                             cohort: school_cohort.cohort,
                             user: scenario.user,
@@ -219,7 +221,7 @@ ActiveRecord::Base.transaction do
         .with_induction_record(induction_programme: school_cohort.default_induction_programme)
         .with_validation_data
         .with_eligibility(status: "ineligible", reason: "no_induction").tap do |scenario|
-          FactoryBot.create(:seed_ecf_participant_declaration,
+          FactoryBot.create(declaration_factory_type,
                             participant_profile: scenario.participant_profile,
                             cohort: school_cohort.cohort,
                             user: scenario.user,
@@ -234,7 +236,7 @@ ActiveRecord::Base.transaction do
         .with_induction_record(induction_programme: school_cohort.default_induction_programme)
         .with_validation_data
         .with_eligibility(status: "ineligible", reason: "no_induction").tap do |scenario|
-          FactoryBot.create(:seed_ecf_participant_declaration,
+          FactoryBot.create(declaration_factory_type,
                             participant_profile: scenario.participant_profile,
                             cohort: school_cohort.cohort,
                             user: scenario.user,
@@ -249,7 +251,7 @@ ActiveRecord::Base.transaction do
         .with_induction_record(induction_programme: school_cohort.default_induction_programme)
         .with_validation_data
         .with_eligibility(status: "ineligible", reason: "no_induction").tap do |scenario|
-          FactoryBot.create(:seed_ecf_participant_declaration,
+          FactoryBot.create(declaration_factory_type,
                             participant_profile: scenario.participant_profile,
                             cohort: school_cohort.cohort,
                             user: scenario.user,
@@ -264,7 +266,7 @@ ActiveRecord::Base.transaction do
         .with_induction_record(induction_programme: school_cohort.default_induction_programme)
         .with_validation_data
         .with_eligibility(status: "ineligible", reason: "no_induction").tap do |scenario|
-          FactoryBot.create(:seed_ecf_participant_declaration,
+          FactoryBot.create(declaration_factory_type,
                             participant_profile: scenario.participant_profile,
                             cohort: school_cohort.cohort,
                             user: scenario.user,
@@ -279,7 +281,7 @@ ActiveRecord::Base.transaction do
         .with_induction_record(induction_programme: school_cohort.default_induction_programme)
         .with_validation_data
         .with_eligibility(status: "ineligible", reason: "no_induction").tap do |scenario|
-          FactoryBot.create(:seed_ecf_participant_declaration,
+          FactoryBot.create(declaration_factory_type,
                             participant_profile: scenario.participant_profile,
                             cohort: school_cohort.cohort,
                             user: scenario.user,
@@ -294,7 +296,7 @@ ActiveRecord::Base.transaction do
         .with_induction_record(induction_programme: school_cohort.default_induction_programme)
         .with_validation_data
         .with_eligibility(status: "ineligible", reason: "no_induction").tap do |scenario|
-          FactoryBot.create(:seed_ecf_participant_declaration,
+          FactoryBot.create(declaration_factory_type,
                             participant_profile: scenario.participant_profile,
                             cohort: school_cohort.cohort,
                             user: scenario.user,
@@ -309,7 +311,7 @@ ActiveRecord::Base.transaction do
         .with_induction_record(induction_programme: school_cohort.default_induction_programme)
         .with_validation_data
         .with_eligibility(status: "ineligible", reason: "no_induction").tap do |scenario|
-          FactoryBot.create(:seed_ecf_participant_declaration,
+          FactoryBot.create(declaration_factory_type,
                             participant_profile: scenario.participant_profile,
                             cohort: school_cohort.cohort,
                             user: scenario.user,
@@ -324,7 +326,7 @@ ActiveRecord::Base.transaction do
         .with_induction_record(induction_programme: school_cohort.default_induction_programme)
         .with_validation_data
         .with_eligibility(status: "ineligible", reason: "no_induction").tap do |scenario|
-          FactoryBot.create(:seed_ecf_participant_declaration,
+          FactoryBot.create(declaration_factory_type,
                             participant_profile: scenario.participant_profile,
                             cohort: school_cohort.cohort,
                             user: scenario.user,

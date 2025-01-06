@@ -84,7 +84,7 @@ RSpec.describe Participants::ChangeRelationship do
       context "when the participant has declarations from the current provider" do
         let(:user) { participant_profile.user }
         let(:cpd_lead_provider) { current_induction_record.lead_provider.cpd_lead_provider }
-        let!(:declaration) { create(:seed_ecf_participant_declaration, participant_profile:, user:, cpd_lead_provider:) }
+        let!(:declaration) { create(:seed_ect_participant_declaration, participant_profile:, user:, cpd_lead_provider:) }
 
         it "raises an error" do
           expect {
