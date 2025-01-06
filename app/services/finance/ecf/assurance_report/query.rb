@@ -47,7 +47,8 @@ module Finance
               pd.declaration_date                                              AS declaration_date,
               pd.created_at                                                    AS declaration_created_at,
               s.name                                                           AS statement_name,
-              s.id                                                             AS statement_id
+              s.id                                                             AS statement_id,
+              pd.type                                                          AS type
             FROM participant_declarations pd
             JOIN statement_line_items sli  ON sli.participant_declaration_id = pd.id
             JOIN statements s              ON s.id = sli.statement_id
@@ -80,7 +81,7 @@ module Finance
             JOIN schools sc ON sc.id = latest_induction_record.school_id
             LEFT OUTER JOIN ecf_participant_eligibilities epe ON epe.participant_profile_id = pp.id
             JOIN delivery_partners dp ON dp.id = COALESCE(pd.delivery_partner_id, latest_induction_record.delivery_partner_id)
-            WHERE pd.type = 'ParticipantDeclaration::ECF' AND #{where_values}
+            WHERE pd.type IN ('ParticipantDeclaration::ECT', 'ParticipantDeclaration::Mentor') AND #{where_values}
             ORDER BY u.full_name ASC
           EOSQL
         end

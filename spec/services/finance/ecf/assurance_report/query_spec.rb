@@ -41,6 +41,14 @@ RSpec.describe Finance::ECF::AssuranceReport::Query, mid_cohort: true do
       it { is_expected.to contain_exactly(participant_declaration) }
       it { expect(assurance_report.participant_id).to eq(participant_identity.user_id) }
     end
+
+    context "when there are ECT and Mentor declarations in the results" do
+      let(:mentor_participant_profile) { create(:mentor, :eligible_for_funding, uplifts:, lead_provider: cpd_lead_provider.lead_provider) }
+      let!(:mentor_declaration) { travel_to(statement.deadline_date) { create(:mentor_participant_declaration, participant_profile: mentor_participant_profile, cpd_lead_provider:, delivery_partner:) } }
+
+      it { is_expected.to contain_exactly(participant_declaration, mentor_declaration) }
+      it { expect(subject.map(&:type)).to contain_exactly(/ECT/, /Mentor/) }
+    end
   end
 
   describe "#delivery_partner_name" do
