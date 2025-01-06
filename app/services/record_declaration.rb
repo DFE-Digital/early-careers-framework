@@ -208,7 +208,7 @@ private
   def validates_billable_slot_available
     return unless participant_profile
 
-    return unless ParticipantDeclaration::ECF
+    return unless participant_declaration_class
                     .where(state: %w[submitted eligible payable paid])
                     .where(
                       user: participant_identity.user,
@@ -217,6 +217,14 @@ private
                     ).exists?
 
     errors.add(:base, I18n.t(:declaration_already_exists))
+  end
+
+  def participant_declaration_class
+    if participant_profile.mentor?
+      ParticipantDeclaration::Mentor
+    else
+      ParticipantDeclaration::ECT
+    end
   end
 
   def check_mentor_completion
