@@ -61,7 +61,7 @@ gem "govuk_design_system_formbuilder", "~> 5.7.1"
 
 # Fetching from APIs
 gem "httpclient", "~> 2.8", ">= 2.8.3"
-gem "rubyzip", "~> 2.3", ">= 2.3.0"
+gem "rubyzip", "~> 2.4"
 gem "savon", "~> 2.15"
 
 # Strong migration checker for database migrations
