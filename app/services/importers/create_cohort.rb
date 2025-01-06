@@ -41,6 +41,7 @@ module Importers
           npq_registration_start_date: safe_parse(row["npq-registration-start-date"]),
           automatic_assignment_period_end_date: safe_parse(row["automatic-assignment-period-end-date"]) || default_automatic_assignment_period_end_date,
           payments_frozen_at: safe_parse(row["payments-frozen-at"]).presence,
+          mentor_funding: (row["mentor-funding"] == "true"),
           created_at: Time.zone.now,
           updated_at: Time.zone.now,
         },
