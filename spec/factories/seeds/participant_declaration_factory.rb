@@ -18,9 +18,21 @@ FactoryBot.define do
       end
     end
 
-    factory(:seed_ecf_participant_declaration, class: "ParticipantDeclaration::ECF") do
+    factory(:seed_ect_participant_declaration, class: "ParticipantDeclaration::ECT") do
       trait(:with_ecf_participant_profile) do
         association(:participant_profile, factory: %i[seed_ect_participant_profile valid])
+      end
+
+      trait(:valid) do
+        with_user
+        with_cpd_lead_provider
+        with_ecf_participant_profile
+      end
+    end
+
+    factory(:seed_mentor_participant_declaration, class: "ParticipantDeclaration::Mentor") do
+      trait(:with_ecf_participant_profile) do
+        association(:participant_profile, factory: %i[seed_mentor_participant_profile valid])
       end
 
       trait(:valid) do

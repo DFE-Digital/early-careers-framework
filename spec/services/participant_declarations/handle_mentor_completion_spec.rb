@@ -10,7 +10,7 @@ RSpec.describe ParticipantDeclarations::HandleMentorCompletion do
   let(:participant_profile) { create(:seed_mentor_participant_profile, :valid) }
 
   let(:participant_declaration) do
-    create(:seed_ecf_participant_declaration, user: participant_profile.user, participant_profile:, cpd_lead_provider:, course_identifier:, declaration_type:)
+    create(:seed_mentor_participant_declaration, user: participant_profile.user, participant_profile:, cpd_lead_provider:, course_identifier:, declaration_type:)
   end
 
   subject(:service) { described_class.new(participant_declaration:) }
@@ -27,6 +27,9 @@ RSpec.describe ParticipantDeclarations::HandleMentorCompletion do
       context "when the participant profile is not a mentor" do
         let(:course_identifier) { "ecf-induction" }
         let(:participant_profile) { create(:seed_ect_participant_profile, :valid) }
+        let(:participant_declaration) do
+          create(:seed_ect_participant_declaration, user: participant_profile.user, participant_profile:, cpd_lead_provider:, course_identifier:, declaration_type:)
+        end
 
         it "does not call the Mentors::CheckTrainingCompletion service" do
           expect_any_instance_of(Mentors::CheckTrainingCompletion).not_to receive(:call)
@@ -48,6 +51,9 @@ RSpec.describe ParticipantDeclarations::HandleMentorCompletion do
       context "when the participant profile is not a mentor" do
         let(:course_identifier) { "ecf-induction" }
         let(:participant_profile) { create(:seed_ect_participant_profile, :valid) }
+        let(:participant_declaration) do
+          create(:seed_ect_participant_declaration, user: participant_profile.user, participant_profile:, cpd_lead_provider:, course_identifier:, declaration_type:)
+        end
 
         it "does not call the Mentors::CheckTrainingCompletion service" do
           expect_any_instance_of(Mentors::CheckTrainingCompletion).not_to receive(:call)

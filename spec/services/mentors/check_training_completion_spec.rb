@@ -17,7 +17,7 @@ RSpec.describe Mentors::CheckTrainingCompletion do
   end
 
   context "when the mentor has a completed declaration" do
-    let!(:declaration) { create(:seed_ecf_participant_declaration, :with_cpd_lead_provider, :completed, user: mentor_profile.user, participant_profile: mentor_profile) }
+    let!(:declaration) { create(:seed_mentor_participant_declaration, :with_cpd_lead_provider, :completed, user: mentor_profile.user, participant_profile: mentor_profile) }
 
     it "sets the mentor_completion_date to the declaration date" do
       service_call

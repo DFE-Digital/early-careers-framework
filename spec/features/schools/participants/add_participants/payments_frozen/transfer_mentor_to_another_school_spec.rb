@@ -67,7 +67,7 @@ RSpec.describe "SIT transfers mentor to another school", js: true, early_in_coho
            full_name: "Sally Teacher", trn: @participant_data[:trn], date_of_birth: Date.new(1990, 10, 24))
     Induction::Enrol.call(participant_profile:, induction_programme:)
 
-    create(:ect_participant_declaration, participant_profile:, cpd_lead_provider:, state: :eligible, course_identifier: "ecf-mentor")
+    create(:mentor_participant_declaration, participant_profile:, cpd_lead_provider:, state: :eligible, course_identifier: "ecf-mentor")
     set_dqt_validation_result
   end
 
