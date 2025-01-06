@@ -13,6 +13,7 @@ class ParticipantProfile::Mentor < ParticipantProfile::ECF
 
   has_many :school_mentors, dependent: :destroy, foreign_key: :participant_profile_id
   has_many :schools, through: :school_mentors
+  has_many :participant_declarations, class_name: "ParticipantDeclaration::Mentor", foreign_key: :participant_profile_id
 
   attribute :mentor_completion_reason, :string
   enum mentor_completion_reason: {
