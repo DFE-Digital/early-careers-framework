@@ -10,6 +10,7 @@ describe ParticipantProfile::Mentor, type: :model do
     it { is_expected.to have_many(:mentees).through(:mentee_profiles).source(:user) }
     it { is_expected.to have_many(:school_mentors).dependent(:destroy).with_foreign_key(:participant_profile_id) }
     it { is_expected.to have_many(:schools).through(:school_mentors) }
+    it { is_expected.to have_many(:participant_declarations).class_name("ParticipantDeclaration::Mentor").with_foreign_key(:participant_profile_id) }
   end
 
   describe "#mentor" do

@@ -5,6 +5,7 @@ class ParticipantProfile::ECT < ParticipantProfile::ECF
 
   belongs_to :mentor_profile, class_name: "Mentor", optional: true
   has_one :mentor, through: :mentor_profile, source: :user
+  has_many :participant_declarations, class_name: "ParticipantDeclaration::ECT", foreign_key: :participant_profile_id
 
   scope :awaiting_induction_registration, lambda {
     where(induction_start_date: nil).joins(:ecf_participant_eligibility).merge(ECFParticipantEligibility.waiting_for_induction)
