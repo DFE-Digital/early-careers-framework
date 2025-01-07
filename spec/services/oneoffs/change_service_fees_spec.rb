@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Oneoffs::ECF::ChangeServiceFees do
+describe Oneoffs::ChangeServiceFees do
   let(:cpd_lead_provider) { ecf_statement.cpd_lead_provider }
   let(:cohort) { create(:cohort, start_year: 2021) }
 

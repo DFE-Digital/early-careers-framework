@@ -2,7 +2,7 @@
 
 require "csv"
 
-module Oneoffs::ECF
+module Oneoffs
   class UpdateContracts
     include HasRecordableInformation
 
