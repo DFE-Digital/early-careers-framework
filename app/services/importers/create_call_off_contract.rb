@@ -31,6 +31,7 @@ module Importers
       LeadProvider.find_each do |lead_provider|
         [cohort_current, cohort_previous, cohort_next].each do |cohort|
           create_call_off_contract_and_bands(lead_provider:, cohort:, contract_data: example_contract_data)
+          create_mentors_call_off_contracts(lead_provider:, cohort:, contract_data: example_mentors_contract_data)
         end
       end
     end
@@ -68,6 +69,12 @@ module Importers
       logger.info "CreateCallOffContract: Added Call off Contract and bands for Lead Provider: #{lead_provider.name} in cohort: #{cohort.start_year} successfully!"
     end
 
+    def create_mentors_call_off_contracts(lead_provider:, cohort:, contract_data:)
+      logger.info "CreateMentorsCallOffContract: Adding Mentors Call off Contract for Lead Provider: #{lead_provider.name} in cohort: #{cohort.start_year}"
+      create_mentors_call_off_contract!(lead_provider:, contract_data:, cohort:)
+      logger.info "CreateMentorsCallOffContract: Added Mentors Call off Contract for Lead Provider: #{lead_provider.name} in cohort: #{cohort.start_year} successfully!"
+    end
+
     def check_headers!
       unless %w[lead-provider-name cohort-start-year uplift-target uplift-amount recruitment-target revised-target set-up-fee monthly-service-fee band-a-min band-a-max band-a-per-participant band-b-min band-b-max band-b-per-participant band-c-min band-c-max band-c-per-participant band-d-min band-d-max band-d-per-participant].all? { |header| rows.headers.include?(header) }
         raise NameError, "Invalid headers"
@@ -89,6 +96,15 @@ module Importers
         set_up_fee: contract_data[:set_up_fee],
         monthly_service_fee: contract_data[:monthly_service_fee],
         raw: contract_data.to_json,
+      )
+    end
+
+    def create_mentors_call_off_contract!(lead_provider:, contract_data:, cohort:)
+      MentorsCallOffContract.create!(
+        lead_provider:,
+        cohort:,
+        recruitment_target: contract_data[:recruitment_target],
+        payment_per_participant: contract_data[:payment_per_participant],
       )
     end
 
@@ -144,6 +160,13 @@ module Importers
           max: 40,
           per_participant: 966,
         },
+      }
+    end
+
+    def example_mentors_contract_data
+      @example_mentors_contract_data ||= {
+        recruitment_target: 2500,
+        payment_per_participant: 1000.00,
       }
     end
 

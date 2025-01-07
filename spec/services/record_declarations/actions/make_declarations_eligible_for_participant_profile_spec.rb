@@ -7,10 +7,10 @@ RSpec.describe RecordDeclarations::Actions::MakeDeclarationsEligibleForParticipa
   let!(:participant_profile) { declaration.participant_profile }
 
   context "::call" do
-    let(:mock_attacher) { instance_double(Finance::DeclarationStatementAttacher, call: nil) }
+    let(:mock_attacher) { instance_double(Finance::, call: nil) }
 
     before do
-      allow(Finance::DeclarationStatementAttacher).to receive(:new).with(declaration).and_return(mock_attacher)
+      allow(Finance::).to receive(:new).with(declaration).and_return(mock_attacher)
     end
 
     it "marks any submitted declarations for the participant as eligible" do
