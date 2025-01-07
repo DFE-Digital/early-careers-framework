@@ -11,15 +11,15 @@ RSpec.describe Importers::CreateCohort do
   describe "#call" do
     context "with new cohorts" do
       before do
-        csv.write "start-year,registration-start-date,academic-year-start-date,npq-registration-start-date,automatic-assignment-period-end-date,payments-frozen-at"
+        csv.write "start-year,registration-start-date,academic-year-start-date,npq-registration-start-date,automatic-assignment-period-end-date,payments-frozen-at,mentor-funding"
         csv.write "\n"
-        csv.write "3030,3030/05/10,3030/09/01,3031/03/31,,"
+        csv.write "3030,3030/05/10,3030/09/01,3031/03/31,,,true"
         csv.write "\n"
-        csv.write "3031,3031/05/10,3031/09/01,3032/03/31,,"
+        csv.write "3031,3031/05/10,3031/09/01,3032/03/31,,,false"
         csv.write "\n"
-        csv.write "3032,3032/05/10,3032/09/01,,,"
+        csv.write "3032,3032/05/10,3032/09/01,,,,true"
         csv.write "\n"
-        csv.write "3033,3033/05/10,3033/09/01,3034/03/31,,"
+        csv.write "3033,3033/05/10,3033/09/01,3034/03/31,,,false"
         csv.write "\n"
         csv.close
       end
@@ -61,6 +61,18 @@ RSpec.describe Importers::CreateCohort do
 
         expect(Cohort.select("start_year").group("start_year").pluck(:start_year).size).to be original_cohort_count + 4
       end
+
+      it "sets correctly mentor_funding field" do
+        importer.call
+
+        Cohort.where(start_year: [3030, 3032]).find_each do |cohort|
+          expect(cohort.mentor_funding).to be(true)
+        end
+
+        Cohort.where(start_year: [3031, 3033]).find_each do |cohort|
+          expect(cohort.mentor_funding).to be(false)
+        end
+      end
     end
 
     context "with existing cohorts" do
@@ -68,13 +80,14 @@ RSpec.describe Importers::CreateCohort do
         FactoryBot.create :seed_cohort,
                           start_year: 4041,
                           registration_start_date: Date.new(4041, 5, 1),
-                          academic_year_start_date: Date.new(4041, 8, 31)
+                          academic_year_start_date: Date.new(4041, 8, 31),
+                          mentor_funding: true
       end
 
       before do
-        csv.write "start-year,registration-start-date,academic-year-start-date,npq-registration-start-date,automatic-assignment-period-end-date,payments-frozen-at"
+        csv.write "start-year,registration-start-date,academic-year-start-date,npq-registration-start-date,automatic-assignment-period-end-date,payments-frozen-at,mentor-funding"
         csv.write "\n"
-        csv.write "4041,4041/05/10,4041/09/01,4041/04/01,4042/03/31,"
+        csv.write "4041,4041/05/10,4041/09/01,4041/04/01,4042/03/31,,false"
         csv.write "\n"
         csv.close
       end
@@ -88,6 +101,7 @@ RSpec.describe Importers::CreateCohort do
           registration_start_date: Date.new(4041, 5, 10),
           academic_year_start_date: Date.new(4041, 9, 1),
           npq_registration_start_date: Date.new(4041, 4, 1),
+          mentor_funding: false,
         )
       end
     end

@@ -10,6 +10,7 @@ FactoryBot.define do
     registration_start_date { Date.new(start_year.to_i, 6, 5) }
     academic_year_start_date { Date.new(start_year.to_i, 9, 1) }
     automatic_assignment_period_end_date { Date.new(start_year.to_i + 1, 3, 31) }
+    mentor_funding { false }
 
     initialize_with do
       Cohort.find_by(start_year:) || new(**attributes)
