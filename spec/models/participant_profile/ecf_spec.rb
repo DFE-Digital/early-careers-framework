@@ -406,4 +406,28 @@ RSpec.describe ParticipantProfile::ECF, type: :model do
       expect(profile.relevant_induction_record_for(delivery_partner: another_partnership.delivery_partner)).to eq(induction_record_latest_second_delivery_partner)
     end
   end
+
+  describe "changing the profile type" do
+    it "updates the declarations to the correct type when changing from ECT to mentor" do
+      declaration = travel_to(1.day.ago) { create(:ect_participant_declaration) }
+      profile = declaration.participant_profile
+
+      profile.update!(type: "ParticipantProfile::Mentor")
+
+      expect(ParticipantProfile.find(profile.id)).to be_an_instance_of(ParticipantProfile::Mentor)
+      expect(ParticipantDeclaration.find(declaration.id)).to be_an_instance_of(ParticipantDeclaration::Mentor)
+      expect(ParticipantDeclaration.find(declaration.id).updated_at).to be_within(1.minute).of(1.day.ago)
+    end
+
+    it "updates the declarations to the correct type when changing from mentor to ECT" do
+      declaration = travel_to(1.day.ago) { create(:mentor_participant_declaration) }
+      profile = declaration.participant_profile
+
+      profile.update!(type: "ParticipantProfile::ECT")
+
+      expect(ParticipantProfile.find(profile.id)).to be_an_instance_of(ParticipantProfile::ECT)
+      expect(ParticipantDeclaration.find(declaration.id)).to be_an_instance_of(ParticipantDeclaration::ECT)
+      expect(ParticipantDeclaration.find(declaration.id).updated_at).to be_within(1.minute).of(1.day.ago)
+    end
+  end
 end
