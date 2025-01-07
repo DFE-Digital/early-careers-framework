@@ -25,6 +25,10 @@ module Finance
           }
         end
       end
+
+      def include_uplift_fees?
+        !contract.uplift_amount.nil?
+      end
     end
   end
 end

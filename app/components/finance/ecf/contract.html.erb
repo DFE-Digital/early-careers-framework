@@ -33,22 +33,24 @@
           </dd>
         </div>
       <% end %>
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-          <%=t("finance.contract.uplift_target") %>
-        </dt>
-        <dd class="govuk-summary-list__value">
-          <%= float_to_percentage uplift_target %>
-        </dd>
-      </div>
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-          <%=t("finance.contract.uplift_amount") %>
-        </dt>
-        <dd class="govuk-summary-list__value">
-          <%= number_to_pounds uplift_amount %>
-        </dd>
-      </div>
+      <% if include_uplift_fees? %>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            <%=t("finance.contract.uplift_target") %>
+          </dt>
+          <dd class="govuk-summary-list__value">
+            <%= float_to_percentage uplift_target %>
+          </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            <%=t("finance.contract.uplift_amount") %>
+          </dt>
+          <dd class="govuk-summary-list__value">
+            <%= number_to_pounds uplift_amount %>
+          </dd>
+        </div>
+      <% end %>
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">
           <%=t("finance.contract.set_up_fee") %>
