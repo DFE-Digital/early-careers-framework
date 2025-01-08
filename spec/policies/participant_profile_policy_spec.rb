@@ -11,11 +11,7 @@ RSpec.describe ParticipantProfilePolicy, type: :policy do
     let(:user) { create(:user, :admin) }
     it { is_expected.to permit_action(:show) }
     it { is_expected.to forbid_actions(%i[edit_cohort update_cohort]) }
-
-    context "NPQ" do
-      let(:participant_profile) { create(:npq_participant_profile) }
-      it { is_expected.to forbid_action(:destroy) }
-    end
+    it { is_expected.to forbid_action(:destroy) }
   end
 
   context "not an admin" do

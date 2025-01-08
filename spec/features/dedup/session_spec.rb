@@ -4,7 +4,7 @@ require "rails_helper"
 
 RSpec.feature "Dedup: maintaining session after identity transfer", :js do
   let(:original_user) { create(:ect).user }
-  let(:target_user)   { create(:npq_participant_profile).user }
+  let(:target_user)   { create(:ect_participant_profile).user }
 
   before do
     Identity::Transfer.call(from_user: original_user, to_user: target_user)

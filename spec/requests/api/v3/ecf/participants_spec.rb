@@ -280,18 +280,6 @@ RSpec.describe "API ECF Participants", type: :request do
         expect(response.status).to eq 403
       end
     end
-
-    context "when using LeadProviderApiToken with only NPQ access" do
-      let(:cpd_lead_provider) { create(:cpd_lead_provider, npq_lead_provider:, lead_provider: nil) }
-      let(:npq_lead_provider) { create(:npq_lead_provider) }
-      let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
-
-      it "returns 403" do
-        default_headers[:Authorization] = bearer_token
-        get "/api/v3/participants/ecf"
-        expect(response.status).to eq 403
-      end
-    end
   end
 
   describe "GET /api/v3/participants/ecf/:id" do

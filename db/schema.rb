@@ -691,102 +691,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_06_145039) do
     t.index ["token"], name: "index_nomination_emails_on_token", unique: true
   end
 
-  create_table "npq_application_exports", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.date "start_date", null: false
-    t.date "end_date", null: false
-    t.uuid "user_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_npq_application_exports_on_user_id"
-  end
-
-  create_table "npq_applications", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "npq_lead_provider_id", null: false
-    t.uuid "npq_course_id", null: false
-    t.date "date_of_birth"
-    t.text "teacher_reference_number"
-    t.boolean "teacher_reference_number_verified", default: false
-    t.text "school_urn"
-    t.text "headteacher_status"
-    t.boolean "active_alert", default: false
-    t.boolean "eligible_for_funding", default: false, null: false
-    t.text "funding_choice"
-    t.text "nino"
-    t.text "lead_provider_approval_status", default: "pending", null: false
-    t.text "school_ukprn"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.uuid "participant_identity_id"
-    t.boolean "works_in_school"
-    t.string "employer_name"
-    t.string "employment_role"
-    t.boolean "targeted_support_funding_eligibility", default: false
-    t.uuid "cohort_id"
-    t.boolean "targeted_delivery_funding_eligibility", default: false
-    t.boolean "works_in_nursery"
-    t.boolean "works_in_childcare"
-    t.string "kind_of_nursery"
-    t.string "private_childcare_provider_urn"
-    t.string "funding_eligiblity_status_code"
-    t.text "teacher_catchment"
-    t.text "teacher_catchment_country"
-    t.string "employment_type"
-    t.string "teacher_catchment_iso_country_code", limit: 3
-    t.string "itt_provider"
-    t.boolean "lead_mentor", default: false
-    t.string "notes"
-    t.boolean "primary_establishment", default: false
-    t.integer "number_of_pupils", default: 0
-    t.boolean "tsf_primary_eligibility", default: false
-    t.boolean "tsf_primary_plus_eligibility", default: false
-    t.uuid "eligible_for_funding_updated_by_id"
-    t.datetime "eligible_for_funding_updated_at"
-    t.boolean "funded_place"
-    t.string "referred_by_return_to_teaching_adviser"
-    t.index ["cohort_id"], name: "index_npq_applications_on_cohort_id"
-    t.index ["npq_course_id"], name: "index_npq_applications_on_npq_course_id"
-    t.index ["npq_lead_provider_id"], name: "index_npq_applications_on_npq_lead_provider_id"
-    t.index ["participant_identity_id"], name: "index_npq_applications_on_participant_identity_id"
-  end
-
-  create_table "npq_contracts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.jsonb "raw"
-    t.string "version", default: "0.0.1"
-    t.uuid "npq_lead_provider_id", null: false
-    t.integer "recruitment_target"
-    t.string "course_identifier"
-    t.integer "service_fee_installments"
-    t.integer "service_fee_percentage", default: 40
-    t.decimal "per_participant"
-    t.integer "number_of_payment_periods"
-    t.integer "output_payment_percentage", default: 60
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.uuid "cohort_id", null: false
-    t.decimal "monthly_service_fee", default: "0.0"
-    t.decimal "targeted_delivery_funding_per_participant", default: "100.0"
-    t.boolean "special_course", default: false, null: false
-    t.integer "funding_cap"
-    t.index ["cohort_id"], name: "index_npq_contracts_on_cohort_id"
-    t.index ["npq_lead_provider_id"], name: "index_npq_contracts_on_npq_lead_provider_id"
-  end
-
-  create_table "npq_courses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.text "name", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.text "identifier"
-  end
-
-  create_table "npq_lead_providers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.text "name", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.uuid "cpd_lead_provider_id"
-    t.boolean "vat_chargeable", default: true
-    t.index ["cpd_lead_provider_id"], name: "index_npq_lead_providers_on_cpd_lead_provider_id"
-  end
-
   create_table "participant_appropriate_body_dqt_checks", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "participant_profile_id", null: false
     t.string "appropriate_body_name"
@@ -1341,12 +1245,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_06_145039) do
   add_foreign_key "milestones", "schedules"
   add_foreign_key "nomination_emails", "partnership_notification_emails"
   add_foreign_key "nomination_emails", "schools"
-  add_foreign_key "npq_application_exports", "users"
-  add_foreign_key "npq_applications", "npq_courses"
-  add_foreign_key "npq_applications", "npq_lead_providers"
-  add_foreign_key "npq_applications", "participant_identities"
-  add_foreign_key "npq_applications", "users", column: "eligible_for_funding_updated_by_id"
-  add_foreign_key "npq_lead_providers", "cpd_lead_providers"
   add_foreign_key "participant_bands", "call_off_contracts"
   add_foreign_key "participant_declaration_attempts", "participant_declarations"
   add_foreign_key "participant_declarations", "participant_declarations", column: "superseded_by_id"
@@ -1363,7 +1261,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_06_145039) do
   add_foreign_key "participant_profile_states", "participant_profiles"
   add_foreign_key "participant_profiles", "cohorts"
   add_foreign_key "participant_profiles", "core_induction_programmes"
-  add_foreign_key "participant_profiles", "npq_courses"
   add_foreign_key "participant_profiles", "participant_identities"
   add_foreign_key "participant_profiles", "participant_profiles", column: "mentor_profile_id"
   add_foreign_key "participant_profiles", "schedules"

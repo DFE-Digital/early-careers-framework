@@ -5,11 +5,9 @@ require "tempfile"
 RSpec.describe Importers::CreateStatement do
   let(:csv) { Tempfile.new("data.csv") }
   let(:path_to_csv) { csv.path }
-  let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider) }
+  let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
   let(:lead_provider) { cpd_lead_provider.lead_provider }
-  let(:npq_lead_provider) { cpd_lead_provider.npq_lead_provider }
   let!(:cohort_2023) { create(:cohort, start_year: 2023) }
-  let(:npq_course) { create(:npq_course, identifier: "npq-leading-behaviour-culture") }
 
   subject(:importer) { described_class.new(path_to_csv:) }
 
@@ -21,29 +19,17 @@ RSpec.describe Importers::CreateStatement do
       csv.write "\n"
       csv.write "ecf,February 2024,2023,2024-1-31,2024-2-25,false"
       csv.write "\n"
-      csv.write "npq,January 2024,2023,2023-12-25,2024-1-25,false"
-      csv.write "\n"
-      csv.write "npq,February 2024,2023,2024-1-25,2024-2-25,true"
-      csv.write "\n"
       csv.close
     end
 
     context "when contracts for the cohort exists" do
       let!(:ecf_contract) { create(:call_off_contract, lead_provider:, version: "0.0.1", cohort: cohort_2023) }
-      let!(:npq_contract) { create(:npq_contract, npq_course:, cohort: cohort_2023, npq_lead_provider:) }
 
       it "creates ECF statements idempotently" do
         expect {
           importer.call
           importer.call
         }.to change(Finance::Statement::ECF, :count).by(2)
-      end
-
-      it "creates NPQ statements idempotently" do
-        expect {
-          importer.call
-          importer.call
-        }.to change(Finance::Statement::NPQ, :count).by(2)
       end
 
       it "populates statements correctly" do
@@ -70,34 +56,11 @@ RSpec.describe Importers::CreateStatement do
             output_fee: false,
           ),
         ).to be_present
-
-        expect(
-          Finance::Statement::NPQ.find_by(
-            name: "January 2024",
-            cohort: cohort_2023,
-            deadline_date: Date.new(2023, 12, 25),
-            payment_date: Date.new(2024, 1, 25),
-            contract_version: "0.0.1",
-            output_fee: false,
-          ),
-        ).to be_present
-
-        expect(
-          Finance::Statement::NPQ.find_by(
-            name: "February 2024",
-            cohort: cohort_2023,
-            deadline_date: Date.new(2024, 1, 25),
-            payment_date: Date.new(2024, 2, 25),
-            contract_version: "0.0.1",
-            output_fee: true,
-          ),
-        ).to be_present
       end
     end
 
     context "when existing statements have newer version" do
       let!(:ecf_contract) { create(:call_off_contract, lead_provider:, version: "0.0.1", cohort: cohort_2023) }
-      let!(:npq_contract) { create(:npq_contract, npq_course:, cohort: cohort_2023, npq_lead_provider:) }
 
       before do
         statement_attributes = {
@@ -109,11 +72,11 @@ RSpec.describe Importers::CreateStatement do
           cohort: cohort_2023,
         }
 
-        [Finance::Statement::ECF, Finance::Statement::NPQ].each do |statement_type|
+        [Finance::Statement::ECF].each do |statement_type|
           # Later version with different lead provider
           statement_type.create!(
             statement_attributes.merge({
-              cpd_lead_provider: create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider),
+              cpd_lead_provider: create(:cpd_lead_provider, :with_lead_provider),
               contract_version: "0.0.8",
             }),
           )
@@ -141,13 +104,6 @@ RSpec.describe Importers::CreateStatement do
             contract_version: "0.0.5",
           }),
         )
-
-        # Latest, relevant NPQ statement
-        Finance::Statement::NPQ.create!(
-          statement_attributes.merge({
-            contract_version: "0.0.6",
-          }),
-        )
       end
 
       it "creates ECF statement with latest version" do
@@ -162,19 +118,6 @@ RSpec.describe Importers::CreateStatement do
 
         expect(st.contract_version).to eql("0.0.5")
       end
-
-      it "creates NPQ statement with latest version" do
-        importer.call
-
-        st = Finance::Statement::NPQ.find_by(
-          name: "January 2024",
-          cohort: cohort_2023,
-          deadline_date: Date.new(2023, 12, 25),
-          payment_date: Date.new(2024, 1, 25),
-        )
-
-        expect(st.contract_version).to eql("0.0.6")
-      end
     end
 
     context "when contracts for the cohort does not exist" do
@@ -182,12 +125,6 @@ RSpec.describe Importers::CreateStatement do
         expect {
           importer.call
         }.not_to change(Finance::Statement::ECF, :count)
-      end
-
-      it "does not create any NPQ statement" do
-        expect {
-          importer.call
-        }.not_to change(Finance::Statement::NPQ, :count)
       end
     end
   end

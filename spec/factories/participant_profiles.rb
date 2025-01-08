@@ -30,20 +30,26 @@ FactoryBot.define do
     end
 
     factory :npq_participant_profile, class: "ParticipantProfile::NPQ" do
-      transient do
-        npq_course        { create(:npq_course) }
-        user              { create(:user) }
-        npq_lead_provider { create(:cpd_lead_provider, :with_npq_lead_provider).npq_lead_provider }
-        trn               { user.teacher_profile&.trn || sprintf("%07i", Random.random_number(9_999_999)) }
-      end
-      npq_application { create(:npq_application, *profile_traits, :accepted, user:, npq_lead_provider:, npq_course:, cohort:) }
+      user { create(:user) }
+      schedule { Finance::Schedule::NPQLeadership.default_for(cohort:) || create(:npq_schedule, cohort:) }
+      participant_identity { Identity::Create.call(user:, origin: :npq) }
 
       trait :eligible_for_funding do
         profile_traits { [:eligible_for_funding] }
       end
 
       initialize_with do
-        npq_application.profile
+        teacher_profile = user.teacher_profile || user.build_teacher_profile
+
+        profile = ParticipantProfile::NPQ.create!(
+          schedule:,
+          teacher_profile:,
+          participant_identity:,
+        ).tap do |pp|
+          ParticipantProfileState.find_or_create_by(participant_profile: pp)
+        end
+
+        profile
       end
     end
 

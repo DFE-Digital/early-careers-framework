@@ -119,23 +119,6 @@ RSpec.describe ParticipantProfile::ECFPolicy, type: :policy do
         it { is_expected.to permit_action(:update_email) }
       end
     end
-
-    context "with an NPQ application" do
-      before do
-        create(:npq_application, participant_identity: participant_profile.participant_identity)
-      end
-
-      it { is_expected.to permit_action(:show) }
-      it { is_expected.to permit_action(:edit_mentor) }
-      it { is_expected.to permit_action(:update_mentor) }
-      it { is_expected.to forbid_action(:new_ect) }
-      it { is_expected.to forbid_action(:add_ect) }
-      it { is_expected.to permit_action(:withdraw_record) }
-      it { is_expected.to permit_action(:edit_name) }
-      it { is_expected.to permit_action(:update_name) }
-      it { is_expected.to permit_action(:edit_email) }
-      it { is_expected.to permit_action(:update_email) }
-    end
   end
 
   context "induction tutor at the correct school" do
@@ -204,23 +187,6 @@ RSpec.describe ParticipantProfile::ECFPolicy, type: :policy do
     context "with only voided declarations" do
       before do
         create(:ect_participant_declaration, :voided, participant_profile:, cpd_lead_provider:)
-      end
-
-      it { is_expected.to permit_action(:show) }
-      it { is_expected.to permit_action(:edit_mentor) }
-      it { is_expected.to permit_action(:update_mentor) }
-      it { is_expected.to forbid_action(:new_ect) }
-      it { is_expected.to forbid_action(:add_ect) }
-      it { is_expected.to permit_action(:withdraw_record) }
-      it { is_expected.to forbid_action(:edit_name) }
-      it { is_expected.to forbid_action(:update_name) }
-      it { is_expected.to forbid_action(:edit_email) }
-      it { is_expected.to forbid_action(:update_email) }
-    end
-
-    context "with an NPQ application" do
-      before do
-        create(:npq_application, participant_identity: participant_profile.participant_identity)
       end
 
       it { is_expected.to permit_action(:show) }

@@ -9,7 +9,7 @@ FactoryBot.define do
     contract_version { "1.0" }
 
     factory :npq_statement, class: "Finance::Statement::NPQ" do
-      cpd_lead_provider { association :cpd_lead_provider, :with_npq_lead_provider }
+      cpd_lead_provider { association :cpd_lead_provider }
       factory :npq_payable_statement, class: "Finance::Statement::NPQ::Payable" do
         payable
       end

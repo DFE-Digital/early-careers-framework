@@ -37,13 +37,9 @@ cohort_2024 = Cohort.find_by(start_year: 2024)
 ambition                       = FactoryBot.create(:seed_cpd_lead_provider, name: "Ambition Institute")
 best_practice_network          = FactoryBot.create(:seed_cpd_lead_provider, name: "Best Practice Network")
 capita                         = FactoryBot.create(:seed_cpd_lead_provider, name: "Capita")
-church_of_england              = FactoryBot.create(:seed_cpd_lead_provider, name: "Church of England")
 education_development_trust    = FactoryBot.create(:seed_cpd_lead_provider, name: "Education Development Trust")
-llse                           = FactoryBot.create(:seed_cpd_lead_provider, name: "LLSE")
-national_institute_of_teaching = FactoryBot.create(:seed_cpd_lead_provider, name: "National Institute of Teaching")
-school_led_network             = FactoryBot.create(:seed_cpd_lead_provider, name: "School-Led Network")
+FactoryBot.create(:seed_cpd_lead_provider, name: "National Institute of Teaching")
 teach_first                    = FactoryBot.create(:seed_cpd_lead_provider, name: "Teach First")
-teacher_development_trust      = FactoryBot.create(:seed_cpd_lead_provider, name: "Teacher Development Trust")
 ucl_institute_of_education     = FactoryBot.create(:seed_cpd_lead_provider, name: "UCL Institute of Education")
 
 # now create the relevant core_induction_programmes, lead providers and set up the relationships
@@ -67,23 +63,4 @@ ucl_cip = FactoryBot.create(:seed_core_induction_programme, name: ucl_institute_
       FactoryBot.create(:seed_lead_provider_cip, lead_provider:, cohort: cohort_2021, core_induction_programme: cip)
     end
   end
-end
-
-# now for the NPQ lead providers, we're using some hardcoded ids here so (i assume)
-# there's consistency for people testing various versions of the app across staging
-# and review app environments; these uuids match prod
-
-{
-  ambition                       => "9e35e998-c63b-4136-89c4-e9e18ddde0ea",
-  best_practice_network          => "57ba9e86-559f-4ff4-a6d2-4610c7259b67",
-  church_of_england              => "79cb41ca-cb6d-405c-b52c-b6f7c752388d",
-  education_development_trust    => "21e61f53-9b34-4384-a8f5-d8224dbf946d",
-  llse                           => "230e67c0-071a-4a48-9673-9d043d456281",
-  national_institute_of_teaching => "3ec607f2-7a3a-421f-9f1a-9aca8a634aeb",
-  school_led_network             => "bc5e4e37-1d64-4149-a06b-ad10d3c55fd0",
-  teach_first                    => "a02ae582-f939-462f-90bc-cebf20fa8473",
-  teacher_development_trust      => "30fd937e-b93c-4f81-8fff-3c27544193f1",
-  ucl_institute_of_education     => "ef687b3d-c1c0-4566-a295-16d6fa5d0fa7",
-}.each do |cpd_lead_provider, id|
-  FactoryBot.create(:seed_npq_lead_provider, cpd_lead_provider:, id:, name: cpd_lead_provider.name)
 end

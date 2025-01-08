@@ -36,7 +36,6 @@ module ArchiveHelper
                                    "school_id" => "153ad0f7-cc8d-4b68-942f-f21a021ad0bf",
                                  },
                                },
-                               "npq_applications" => [],
                                "induction_records" => [
                                  {
                                    "id" => SecureRandom.uuid,
