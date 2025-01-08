@@ -20,9 +20,9 @@ module "application_configuration" {
     RAILS_ENV           = var.app_environment
     DB_SSLMODE          = var.db_sslmode
 
-    BIGQUERY_PROJECT_ID = "ecf-bq",
-    BIGQUERY_DATASET    = "events_${var.app_environment}", # TODO: work this out
-    BIGQUERY_TABLE_NAME = "events",                        # TODO: work this out
+    BIGQUERY_PROJECT_ID = "ecf-bq"
+    BIGQUERY_DATASET    = var.dataset_name
+    BIGQUERY_TABLE_NAME = "events"
     GIAS_API_SCHEMA     = "https://ea-edubase-api-prod.azurewebsites.net/edubase/schema/service.wsdl"
     GIAS_EXTRACT_ID     = 13904
     GIAS_API_USER       = "ecftech"
@@ -40,6 +40,7 @@ module "application_configuration" {
     ANALYTICS_DATABASE_URL = <<URL
       postgres://${urlencode(module.postgres.username)}:${urlencode(module.postgres.password)}@${module.postgres.host}:${module.postgres.port}/${try(azurerm_postgresql_flexible_server_database.analytics[0].name, "analytics")}
     URL
+    GOOGLE_CLOUD_CREDENTIALS = var.enable_dfe_analytics_federated_auth ? module.dfe_analytics[0].google_cloud_credentials : null
   }
 }
 
@@ -90,4 +91,5 @@ module "worker_application" {
   max_memory = var.worker_memory_max
 
   enable_logit = var.enable_logit
+  enable_gcp_wif = true
 }
