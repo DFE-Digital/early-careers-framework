@@ -44,6 +44,8 @@ gem "bootsnap", "~> 1.18", require: false
 # Manage multiple processes i.e. web server and webpack
 gem "foreman"
 
+gem "knapsack"
+
 # Canonical meta tag
 gem "canonical-rails", "~> 0.2.16"
 

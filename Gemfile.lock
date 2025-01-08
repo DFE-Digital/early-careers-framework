@@ -316,6 +316,8 @@ GEM
       activesupport (>= 4.2)
     jwt (2.9.3)
       base64
+    knapsack (4.0.0)
+      rake
     kramdown (2.4.0)
       rexml
     kramdown-parser-gfm (1.1.0)
@@ -748,6 +750,7 @@ DEPENDENCIES
   json-schema (>= 2.8.1)
   jsonapi-rspec
   jsonapi-serializer
+  knapsack
   launchy
   listen (~> 3.9)
   mail-notify (~> 1.2)
