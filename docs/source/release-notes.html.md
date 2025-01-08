@@ -7,7 +7,7 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
-## 24 December 2024
+## 8 January 2025
 
 Lead providers getting participant declarations via the API endpoints will now see previous declarations attached to completed participants rather than just active participants.
 
