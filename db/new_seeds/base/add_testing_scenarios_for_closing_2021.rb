@@ -4,6 +4,7 @@ cohort_2021 = Cohort.find_by_start_year(2021)
 cohort_2022 = Cohort.find_by_start_year(2022)
 cohort_2023 = Cohort.find_by_start_year(2023)
 cohort_2024 = Cohort.find_by_start_year(2024)
+cohort_2025 = Cohort.find_by_start_year(2025)
 
 ActiveRecord::Base.transaction do
   (1..4).each do |school_number|
@@ -14,7 +15,8 @@ ActiveRecord::Base.transaction do
                                                  .chosen_fip_and_partnered_in(cohort: cohort_2022)
                                                  .chosen_fip_and_partnered_in(cohort: cohort_2023)
                                                  .chosen_fip_and_partnered_in(cohort: cohort_2024)
-    (2021..2023).each do |start_year|
+                                                 .chosen_fip_and_partnered_in(cohort: cohort_2025)
+    (2021..2025).each do |start_year|
       school_cohort = school.school_cohorts[start_year]
       cpd_lead_provider = FactoryBot.create(:seed_cpd_lead_provider,
                                             name: school_cohort.default_induction_programme.partnership.lead_provider.name)

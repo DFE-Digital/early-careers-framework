@@ -22,7 +22,7 @@ if Rails.env.in?(%w[development staging review])
     [Cohort.previous, Cohort.current, Cohort.next].each do |cohort|
       [1, 2].each do |i|
         NewSeeds::Scenarios::Schools::School
-          .new(name: "#{name} Test School #{i} #{cohort.start_year}", urn: rand(100_000..999_999).to_s)
+          .new(name: "#{name} Test School #{i} #{cohort.start_year}")
           .build
           .with_partnership_in(cohort:, delivery_partner:)
           .with_an_induction_tutor(full_name: "#{name} Test SIT #{i} #{cohort.start_year}", email: email % [Array.wrap(i), cohort.start_year, 0].flatten)
@@ -30,7 +30,7 @@ if Rails.env.in?(%w[development staging review])
 
         # Independent school GIAS 10
         school = NewSeeds::Scenarios::Schools::School
-          .new(name: "#{name} Test School #{i} #{cohort.start_year} independent gias type 10", urn: rand(100_000..999_999).to_s)
+          .new(name: "#{name} Test School #{i} #{cohort.start_year} independent gias type 10")
           .build
           .with_partnership_in(cohort:, delivery_partner:)
           .with_an_induction_tutor(full_name: "#{name} Test SIT #{i} #{cohort.start_year} school type 10", email: email % [Array.wrap(i), cohort.start_year, 10].flatten)
@@ -39,7 +39,7 @@ if Rails.env.in?(%w[development staging review])
 
         # Independent school GIAS 11
         school = NewSeeds::Scenarios::Schools::School
-                   .new(name: "#{name} Test School #{i} #{cohort.start_year} independent gias type 11", urn: rand(100_000..999_999).to_s)
+                   .new(name: "#{name} Test School #{i} #{cohort.start_year} independent gias type 11")
                    .build
                    .with_partnership_in(cohort:, delivery_partner:)
                    .with_an_induction_tutor(full_name: "#{name} Test SIT #{i} #{cohort.start_year} 11", email: email % [Array.wrap(i), cohort.start_year, 11].flatten)
@@ -48,7 +48,7 @@ if Rails.env.in?(%w[development staging review])
 
         # British school overseas GIAS 37
         school = NewSeeds::Scenarios::Schools::School
-                   .new(name: "#{name} Test School #{i} #{cohort.start_year} independent gias type 37", urn: rand(100_000..999_999).to_s)
+                   .new(name: "#{name} Test School #{i} #{cohort.start_year} independent gias type 37")
                    .build
                    .with_partnership_in(cohort:, delivery_partner:)
                    .with_an_induction_tutor(full_name: "#{name} Test SIT #{i} #{cohort.start_year} 37", email: email % [Array.wrap(i), cohort.start_year, 37].flatten)

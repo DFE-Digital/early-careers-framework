@@ -6,7 +6,7 @@ module NewSeeds
       class School
         attr_reader :name, :urn, :school, :induction_tutor, :school_cohorts, :partnerships
 
-        def initialize(name: nil, urn: nil)
+        def initialize(name: nil, urn: ValidTestDataGenerators::Helpers::SchoolUrnGenerator.next)
           @name = name
           @urn = urn
           @school_cohorts = {}
