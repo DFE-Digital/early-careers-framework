@@ -20,6 +20,11 @@ on:
   pull_request:
   merge_group:
 
+permissions:
+  id-token: write
+  pull-requests: write
+  packages: write
+
 jobs:
   lint:
     name: Lint

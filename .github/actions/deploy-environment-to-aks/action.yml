@@ -43,6 +43,11 @@ runs:
       with:
         azure-credentials: ${{ inputs.azure-credentials }}
 
+    - uses: google-github-actions/auth@v2
+      with:
+        project_id: ecf-bq
+        workload_identity_provider: projects/808138694727/locations/global/workloadIdentityPools/early-careers-framework/providers/early-careers-framework
+
     - name: Apply Terraform
       id: apply-terraform
       shell: bash
@@ -58,6 +63,11 @@ runs:
     - uses: Azure/login@v1
       with:
         creds: ${{ inputs.azure-credentials }}
+
+    - uses: google-github-actions/auth@v2
+      with:
+        project_id: ecf-bq
+        workload_identity_provider: projects/808138694727/locations/global/workloadIdentityPools/early-careers-framework/providers/early-careers-framework
 
     - name: Seed database
       if: ${{ inputs.pull-request-number != '' }}

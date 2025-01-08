@@ -57,4 +57,6 @@ DfE::Analytics.configure do |config|
   # users that don't use the id field.
   #
   config.user_identifier = proc { |user| user&.id if user.respond_to?(:id) }
+
+  config.azure_federated_auth = ENV.include? "GOOGLE_CLOUD_CREDENTIALS"
 end
