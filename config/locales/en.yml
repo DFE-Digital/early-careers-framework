@@ -58,6 +58,7 @@ en:
   future_date: "The '#/%{attribute}' value cannot be a future date. Check the date and try again."
   future_date_outcomes: "The attribute '#/%{attribute}' cannot contain a future date. Resubmit the outcome update with a valid date."
   mismatch_declaration_type_for_schedule: "The property '#/declaration_type' does not exist for this schedule."
+  retained_declaration_not_allowed_for_mentor: "You cannot send retained or extended declarations for participants who began their mentor training after June 2025. Resubmit this declaration with either a started or completed declaration."
   missing_declaration_type: "Enter a '#/declaration_type'."
   missing_evidence_held: "Enter a '#/evidence_held' value for this participant."
   missing_has_passed: "Enter 'true' or 'false' in the '#/has_passed' field to indicate whether this participant has passed or failed their course."
