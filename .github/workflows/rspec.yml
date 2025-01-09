@@ -107,5 +107,4 @@ jobs:
         env:
           CI_NODE_TOTAL: ${{ matrix.ci_node_total }}
           CI_NODE_INDEX: ${{ matrix.ci_node_index }}
-        run: |-
-          KNAPSACK_REPORT_PATH=knapsack_end_to_end_scenarios_rspec_report.json bundle exec rake knapsack:rspec SPEC_OPTS="--tag end_to_end_scenario"
+        run: bundle exec bin/scenarios_ci
