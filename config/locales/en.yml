@@ -45,6 +45,7 @@ en:
   missing_npq_contract_or_statement: "There’s an issue with your contract data. Contact us so we can rectify this for you"
   no_output_fee_statements_for_cohort: "You cannot submit or void declarations for the %{cohort} cohort. The funding contract for this cohort has ended. Get in touch if you need to discuss this with us"
   invalid_page_parameters: "The '#/page[page]' and '#/page[per_page]' parameter values must be a valid number (equal and more than 1)"
+  declaration_type_must_match_profile_type: "The declaration type must match the participant profile type."
   cannot_change_cohort: "You cannot change the '#/cohort' field"
   cannot_create_completed_declaration: "Could not create completed declaration. Contact the DfE for support."
   invalid_participant: "Your update cannot be made as the '#/participant_id' is not recognised. Check participant details and try again."

@@ -3,6 +3,26 @@
 require "rails_helper"
 
 RSpec.describe ParticipantDeclaration::ECF, mid_cohort: true do
+  describe "type validation against participant_profile" do
+    it "raises an error when the declaration type is ECT and the profile type is Mentor" do
+      declaration = create(:mentor_participant_declaration)
+
+      declaration.type = "ParticipantDeclaration::ECT"
+
+      expect(declaration).to be_invalid
+      expect(declaration.errors[:type]).to include(I18n.t(:declaration_type_must_match_profile_type))
+    end
+
+    it "raises an error when the declaration type is Mentor and the profile type is ECT" do
+      declaration = create(:ect_participant_declaration)
+
+      declaration.type = "ParticipantDeclaration::Mentor"
+
+      expect(declaration).to be_invalid
+      expect(declaration.errors[:type]).to include(I18n.t(:declaration_type_must_match_profile_type))
+    end
+  end
+
   describe "#uplift_paid?" do
     %i[paid awaiting_clawback clawed_back].each do |declaration_state|
       context "started - ecf-induction - #{declaration_state} - sparsity_uplift" do
