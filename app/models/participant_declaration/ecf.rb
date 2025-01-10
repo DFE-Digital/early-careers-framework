@@ -3,7 +3,7 @@
 class ParticipantDeclaration::ECF < ParticipantDeclaration
   has_many :statements, class_name: "Finance::Statement::ECF", through: :statement_line_items
 
-  before_save :set_temp_type
+  validate :validate_against_profile_type
 
   def ecf?
     true
@@ -16,10 +16,10 @@ class ParticipantDeclaration::ECF < ParticipantDeclaration
       (sparsity_uplift || pupil_premium_uplift)
   end
 
-  def set_temp_type
+  def validate_against_profile_type
     return unless participant_profile
-    return unless temp_type.nil?
+    return if participant_profile.type.demodulize == type.demodulize
 
-    self.temp_type = participant_profile.type.sub("ParticipantProfile", "ParticipantDeclaration")
+    errors.add(:type, I18n.t(:declaration_type_must_match_profile_type))
   end
 end
