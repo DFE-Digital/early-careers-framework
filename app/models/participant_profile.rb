@@ -60,7 +60,6 @@ class ParticipantProfile < ApplicationRecord
   scope :ecf, -> { where(type: [ECT.name, Mentor.name]) }
   scope :ects, -> { where(type: ECT.name) }
   scope :mentors, -> { where(type: Mentor.name) }
-  scope :npqs, -> { where(type: NPQ.name) }
 
   # Instance Methods
   def approved?
@@ -115,10 +114,6 @@ class ParticipantProfile < ApplicationRecord
     ecf_participant_eligibility&.no_qts_reason?
   end
 
-  def npq?
-    false
-  end
-
   def pending?
     !approved? && !rejected?
   end
@@ -165,5 +160,4 @@ class ParticipantProfile < ApplicationRecord
   end
 end
 
-require "participant_profile/npq"
 require "participant_profile/ecf"

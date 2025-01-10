@@ -3,7 +3,7 @@
 module Archive
   module SupportMethods
     EXCLUDED_ROLES = %w[
-      appropriate_body lead_provider delivery_partner admin finance induction_coordinator npq_participant npq_applicant
+      appropriate_body lead_provider delivery_partner admin finance induction_coordinator
     ].freeze
 
     def profile_has_declarations?

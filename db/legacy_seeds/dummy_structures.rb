@@ -97,19 +97,6 @@ ActiveRecord::Base.transaction do
     end
   end
 
-  user = User.find_or_create_by!(email: "npq-registrant@example.com") do |npq_user|
-    npq_user.full_name = "NPQ registrant"
-  end
-
-  teacher_profile = user.teacher_profile || user.create_teacher_profile
-
-  profile = ParticipantProfile::NPQ.find_or_create_by!(teacher_profile:) do |npq_profile|
-    npq_profile.schedule = Finance::Schedule::NPQSpecialist.default
-    npq_profile.participant_identity = Identity::Create.call(user:, origin: :npq)
-  end
-
-  ParticipantProfileState.find_or_create_by!(participant_profile: profile)
-
   user = User.find_or_create_by!(email: "rp-mentor-ambition@example.com") do |mentor_user|
     mentor_user.full_name = "Sally Mentor"
   end

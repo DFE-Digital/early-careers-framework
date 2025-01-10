@@ -64,7 +64,6 @@ class ParticipantDeclaration < ApplicationRecord
 
   scope :ect, -> { where(participant_profile_id: ParticipantProfile::ECT.select(:id)) }
   scope :mentor, -> { where(participant_profile_id: ParticipantProfile::Mentor.select(:id)) }
-  scope :npq, -> { where(participant_profile_id: ParticipantProfile::NPQ.select(:id)) }
 
   scope :changeable, -> { where(state: %w[eligible submitted]) }
   scope :unique_id, -> { select(:user_id).distinct }
@@ -83,13 +82,11 @@ class ParticipantDeclaration < ApplicationRecord
   scope :eligible_for_lead_provider, ->(lead_provider) { for_lead_provider(lead_provider).unique_id.eligible }
   scope :eligible_ects_for_lead_provider, ->(lead_provider) { eligible_for_lead_provider(lead_provider).ect }
   scope :eligible_mentors_for_lead_provider, ->(lead_provider) { eligible_for_lead_provider(lead_provider).mentor }
-  scope :eligible_npqs_for_lead_provider, ->(lead_provider) { eligible_for_lead_provider(lead_provider).npq }
   scope :eligible_uplift_for_lead_provider, ->(lead_provider) { eligible_for_lead_provider(lead_provider).uplift }
 
   scope :unique_ects,    -> { unique_id.ect }
   scope :unique_mentors, -> { unique_id.mentor }
   scope :unique_uplift,  -> { unique_id.uplift }
-  scope :unique_npqs_for_lead_provider, ->(lead_provider) { unique_for_lead_provider(lead_provider).npq }
 
   scope :for_course_identifier, ->(course_identifier) { where(course_identifier:) }
   scope :unique_for_lead_provider_and_course_identifier, ->(lead_provider, course_identifier) { for_lead_provider(lead_provider).for_course_identifier(course_identifier).unique_id }
@@ -98,14 +95,12 @@ class ParticipantDeclaration < ApplicationRecord
   scope :payable_for_lead_provider, ->(lead_provider) { for_lead_provider(lead_provider).unique_id.payable }
   scope :payable_ects_for_lead_provider, ->(lead_provider) { payable_for_lead_provider(lead_provider).ect }
   scope :payable_mentors_for_lead_provider, ->(lead_provider) { payable_for_lead_provider(lead_provider).mentor }
-  scope :payable_npqs_for_lead_provider, ->(lead_provider) { payable_for_lead_provider(lead_provider).npq }
   scope :payable_uplift_for_lead_provider, ->(lead_provider) { payable_for_lead_provider(lead_provider).uplift }
 
   scope :not_paid_for_lead_provider, ->(lead_provider) { submitted_for_lead_provider(lead_provider).or(eligible_for_lead_provider(lead_provider)) }
   scope :paid_for_lead_provider, ->(lead_provider) { for_lead_provider(lead_provider).unique_id.paid }
   scope :paid_ects_for_lead_provider, ->(lead_provider) { paid_for_lead_provider(lead_provider).ect }
   scope :paid_mentors_for_lead_provider, ->(lead_provider) { paid_for_lead_provider(lead_provider).mentor }
-  scope :paid_npqs_for_lead_provider, ->(lead_provider) { paid_for_lead_provider(lead_provider).npq }
   scope :paid_uplift_for_lead_provider, ->(lead_provider) { paid_for_lead_provider(lead_provider).uplift }
 
   scope :billable, -> { where(state: %w[eligible payable paid]) }
@@ -175,10 +170,6 @@ class ParticipantDeclaration < ApplicationRecord
         course_identifier:,
         superseded_by_id: nil,
       )
-  end
-
-  def npq?
-    false
   end
 
   def ecf?

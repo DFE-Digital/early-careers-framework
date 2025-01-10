@@ -31,8 +31,6 @@ class User < ApplicationRecord
   has_many :participant_profiles, through: :teacher_profile
   has_one :early_career_teacher_profile, through: :teacher_profile
   has_one :mentor_profile, through: :teacher_profile
-
-  has_many :npq_profiles, through: :teacher_profile
   # end: TODO
 
   has_many :participant_id_changes, -> { order(created_at: :desc) }
@@ -107,14 +105,6 @@ class User < ApplicationRecord
     mentor_profile.present?
   end
 
-  def npq?
-    npq_profiles.any?(&:active_record?)
-  end
-
-  def npq_registered?
-    npq?
-  end
-
   def participant?
     early_career_teacher? || mentor?
   end
@@ -161,7 +151,6 @@ class User < ApplicationRecord
       ("induction_coordinator" if induction_coordinator?),
       ("mentor" if mentor?),
       ("early_career_teacher" if early_career_teacher?),
-      ("npq_participant" if npq?),
       ("teacher" if teacher?), # presence of teacher profile, could include orphaned de-duped users
     ].compact
   end

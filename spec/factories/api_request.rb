@@ -4,7 +4,7 @@ FactoryBot.define do
   factory :api_request do
     association :cpd_lead_provider
 
-    request_path { "/api/v3/npq-applications" }
+    request_path { "/api/v3/statements" }
     request_headers do
       {
         "host"=>"example.com",

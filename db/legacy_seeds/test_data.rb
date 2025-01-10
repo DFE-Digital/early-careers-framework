@@ -272,65 +272,9 @@ raise unless induction_programme
 
 Induction::Enrol.call(participant_profile:, induction_programme:)
 
-# FIP mentor already doing an NPQ with the same email
-user = User.find_or_create_by!(email: "fip-mentor-npq@example.com") do |u|
-  u.full_name = "FIP Mentor NPQ"
-end
-teacher_profile = TeacherProfile.find_or_create_by!(user:) do |profile|
-  profile.trn = "1958553"
-end
-participant_profile = ParticipantProfile::Mentor.find_or_create_by!(teacher_profile:) do |mentor_profile|
-  mentor_profile.school_cohort = School.find_by(urn: "000105").school_cohorts.find_by(cohort: Cohort.current)
-  mentor_profile.schedule = Finance::Schedule::ECF.default
-  mentor_profile.participant_identity = Identity::Create.call(user:, origin: :ecf)
-  ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
-end
-
-induction_programme = participant_profile.school_cohort.induction_programmes.first
-raise unless induction_programme
-
-Induction::Enrol.call(participant_profile:, induction_programme:)
-
-npq_profile = ParticipantProfile::NPQ.find_or_create_by!(teacher_profile:) do |profile|
-  profile.schedule = Finance::Schedule::NPQSpecialist.default
-  profile.participant_identity = Identity::Create.call(user:, origin: :npq)
-end
-ParticipantProfileState.find_or_create_by!({ participant_profile: npq_profile })
-
-# FIP mentor already doing an NPQ with a different email
-user = User.find_or_create_by!(email: "fip-mentor-npq-other-email@example.com") do |u|
-  u.full_name = "FIP Mentor NPQ"
-end
-
-teacher_profile = TeacherProfile.find_or_create_by!(user:) do |profile|
-  profile.trn = "2369848"
-end
-
-npq_profile = ParticipantProfile::NPQ.find_or_create_by!(teacher_profile:) do |profile|
-  profile.schedule = Finance::Schedule::NPQSpecialist.default
-  profile.participant_identity = Identity::Create.call(user:, origin: :npq)
-end
-ParticipantProfileState.find_or_create_by!({ participant_profile: npq_profile })
-
-user = User.find_or_create_by!(email: "fip-mentor2@example.com") do |u|
-  u.full_name = "FIP Mentor"
-end
-teacher_profile = TeacherProfile.find_or_create_by!(user:)
-participant_profile = ParticipantProfile::Mentor.find_or_create_by!(teacher_profile:) do |mentor_profile|
-  mentor_profile.school_cohort = School.find_by(urn: "000105").school_cohorts.find_by(cohort: Cohort.current)
-  mentor_profile.schedule = Finance::Schedule::ECF.default
-  mentor_profile.participant_identity = Identity::Create.call(user:, origin: :ecf)
-  ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
-end
-
-induction_programme = participant_profile.school_cohort.induction_programmes.first
-raise unless induction_programme
-
-Induction::Enrol.call(participant_profile:, induction_programme:)
-
 # FIP mentor already mentoring at another school with another email
 user = User.find_or_create_by!(email: "fip-mentor-another-school@example.com") do |u|
-  u.full_name = "FIP Mentor NPQ"
+  u.full_name = "FIP Mentor"
 end
 teacher_profile = TeacherProfile.find_or_create_by!(user:) do |profile|
   profile.trn = "1357010"
@@ -494,54 +438,9 @@ profile = ParticipantProfile::Mentor.find_or_create_by!(teacher_profile:) do |me
 end
 Induction::Enrol.call(participant_profile: profile, induction_programme: profile.school_cohort.induction_programmes.first)
 
-# CIP mentor already doing an NPQ with the same email
-user = User.find_or_create_by!(email: "cip-mentor-npq@example.com") do |u|
-  u.full_name = "CIP Mentor NPQ"
-end
-teacher_profile = TeacherProfile.find_or_create_by!(user:) do |p|
-  p.trn = "1162128"
-end
-ParticipantProfile::Mentor.find_or_create_by!(teacher_profile:) do |mentor_profile|
-  mentor_profile.school_cohort = School.find_by(urn: "000202").school_cohorts.find_by(cohort: Cohort.current)
-  mentor_profile.schedule = Finance::Schedule::ECF.default
-  mentor_profile.participant_identity = Identity::Create.call(user:, origin: :ecf)
-  ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
-  Induction::Enrol.call(participant_profile: mentor_profile, induction_programme: mentor_profile.school_cohort.induction_programmes.first)
-end
-npq_profile = ParticipantProfile::NPQ.find_or_create_by!(teacher_profile:) do |p|
-  p.schedule = Finance::Schedule::NPQSpecialist.default
-  p.participant_identity = Identity::Create.call(user:, origin: :npq)
-end
-ParticipantProfileState.find_or_create_by!({ participant_profile: npq_profile })
-
-# CIP mentor already doing an NPQ with a different email
-user = User.find_or_create_by!(email: "cip-mentor-npq-other-email@example.com") do |u|
-  u.full_name = "CIP Mentor NPQ"
-end
-teacher_profile = TeacherProfile.find_or_create_by!(user:) do |p|
-  p.trn = "2631405"
-end
-npq_profile = ParticipantProfile::NPQ.find_or_create_by!(teacher_profile:) do |p|
-  p.schedule = Finance::Schedule::NPQSpecialist.default
-  p.participant_identity = Identity::Create.call(user:, origin: :npq)
-end
-ParticipantProfileState.find_or_create_by!({ participant_profile: npq_profile })
-
-user = User.find_or_create_by!(email: "cip-mentor2@example.com") do |u|
-  u.full_name = "CIP Mentor"
-end
-teacher_profile = TeacherProfile.find_or_create_by!(user:)
-ParticipantProfile::Mentor.find_or_create_by!(teacher_profile:) do |mentor_profile|
-  mentor_profile.school_cohort = School.find_by(urn: "000203").school_cohorts.find_by(cohort: Cohort.current)
-  mentor_profile.schedule = Finance::Schedule::ECF.default
-  mentor_profile.participant_identity = Identity::Create.call(user:, origin: :ecf)
-  ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
-  Induction::Enrol.call(participant_profile: mentor_profile, induction_programme: mentor_profile.school_cohort.induction_programmes.first)
-end
-
 # FIP mentor already mentoring at another school with another email
 user = User.find_or_create_by!(email: "cip-mentor-another-school@example.com") do |u|
-  u.full_name = "CIP Mentor NPQ"
+  u.full_name = "CIP Mentor"
 end
 teacher_profile = TeacherProfile.find_or_create_by!(user:) do |p|
   p.trn = "1835206"

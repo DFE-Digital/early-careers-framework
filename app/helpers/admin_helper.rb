@@ -93,7 +93,6 @@ module AdminHelper
     case class_name
     when "ParticipantProfile::Mentor" then "Mentor"
     when "ParticipantProfile::ECT" then "ECT"
-    when "ParticipantProfile::NPQ" then "NPQ"
     else
       "unknown"
     end

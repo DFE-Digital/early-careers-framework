@@ -9,7 +9,7 @@ module EarlyCareerTeachers
       profile = nil
       ActiveRecord::Base.transaction do
         # Retain the original name if the user already exists
-        user.update!(full_name:) unless user.participant_profiles&.active_record&.any? || user.npq_registered?
+        user.update!(full_name:) unless user.participant_profiles&.active_record&.any?
 
         create_teacher_profile
 

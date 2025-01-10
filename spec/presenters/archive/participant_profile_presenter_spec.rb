@@ -14,13 +14,6 @@ RSpec.describe Archive::ParticipantProfilePresenter do
     it "returns true when the profile is ECF" do
       expect(presenter).to be_ecf
     end
-
-    context "when the profile is NPQ" do
-      let(:profile) { create(:seed_npq_participant_profile, :valid) }
-      it "returns false" do
-        expect(presenter).not_to be_ecf
-      end
-    end
   end
 
   describe "#sparsity_uplift?" do
