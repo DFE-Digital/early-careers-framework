@@ -197,4 +197,3 @@ private
 end
 
 require "participant_declaration/ecf"
-require "participant_declaration/npq"

@@ -777,33 +777,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_06_145039) do
     t.index ["user_id"], name: "index_participant_identities_on_user_id"
   end
 
-  create_table "participant_outcome_api_requests", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "request_path"
-    t.integer "status_code"
-    t.jsonb "request_headers"
-    t.jsonb "request_body"
-    t.jsonb "response_body"
-    t.jsonb "response_headers"
-    t.uuid "participant_outcome_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["participant_outcome_id"], name: "index_participant_outcome_api_requests_on_participant_outcome"
-  end
-
-  create_table "participant_outcomes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "state", null: false
-    t.date "completion_date", null: false
-    t.uuid "participant_declaration_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.boolean "qualified_teachers_api_request_successful"
-    t.datetime "sent_to_qualified_teachers_api_at", precision: nil
-    t.index ["created_at"], name: "index_participant_outcomes_on_created_at"
-    t.index ["participant_declaration_id"], name: "index_declaration"
-    t.index ["sent_to_qualified_teachers_api_at"], name: "index_participant_outcomes_on_sent_to_qualified_teachers_api_at"
-    t.index ["state"], name: "index_participant_outcomes_on_state"
-  end
-
   create_table "participant_profile_completion_date_inconsistencies", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "participant_profile_id", null: false
     t.date "dqt_value"
@@ -1253,8 +1226,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_06_145039) do
   add_foreign_key "participant_declarations", "users", column: "mentor_user_id"
   add_foreign_key "participant_id_changes", "users"
   add_foreign_key "participant_identities", "users"
-  add_foreign_key "participant_outcome_api_requests", "participant_outcomes"
-  add_foreign_key "participant_outcomes", "participant_declarations"
   add_foreign_key "participant_profile_completion_date_inconsistencies", "participant_profiles"
   add_foreign_key "participant_profile_schedules", "participant_profiles"
   add_foreign_key "participant_profile_schedules", "schedules"
