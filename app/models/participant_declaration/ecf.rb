@@ -24,4 +24,9 @@ class ParticipantDeclaration::ECF < ParticipantDeclaration
 
     errors.add(:type, I18n.t(:declaration_type_must_match_profile_type))
   end
+
+  def temp_type=(value)
+    super
+    self.type = value
+  end
 end
