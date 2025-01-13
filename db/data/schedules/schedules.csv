@@ -446,3 +446,84 @@ ecf_standard,ecf-standard-april,ECF Standard April,2024,Output 3 - Retention Poi
 ecf_standard,ecf-standard-april,ECF Standard April,2024,Output 4 - Retention Point 3,retained-3,2026-04-01,2026-07-31,2026-08-31
 ecf_standard,ecf-standard-april,ECF Standard April,2024,Output 5 - Retention Point 4,retained-4,2026-08-01,2026-12-31,2027-01-31
 ecf_standard,ecf-standard-april,ECF Standard April,2024,Output 6 - Participant Completion,completed,2027-01-01,2027-03-31,2027-04-30
+ecf_extended,ecf-extended-september,ECF Extended September,2025,Output 1 - Participant Start,started,2025-09-01,,2025-09-01
+ecf_extended,ecf-extended-september,ECF Extended September,2025,Output 2 - Retention Point 1,retained-1,2025-09-01,,2025-09-01
+ecf_extended,ecf-extended-september,ECF Extended September,2025,Output 3 - Retention Point 2,retained-2,2025-09-01,,2025-09-01
+ecf_extended,ecf-extended-september,ECF Extended September,2025,Output 4 - Retention Point 3,retained-3,2025-09-01,,2025-09-01
+ecf_extended,ecf-extended-september,ECF Extended September,2025,Output 5 - Retention Point 4,retained-4,2025-09-01,,2025-09-01
+ecf_extended,ecf-extended-september,ECF Extended September,2025,Output 6 - Participant Completion,completed,2025-09-01,,2025-09-01
+ecf_extended,ecf-extended-september,ECF Extended September,2025,Output 7 - Extended Point 1,extended-1,2025-09-01,,2025-09-01
+ecf_extended,ecf-extended-september,ECF Extended September,2025,Output 8 - Extended Point 2,extended-2,2025-09-01,,2025-09-01
+ecf_extended,ecf-extended-september,ECF Extended September,2025,Output 9 - Extended Point 3,extended-3,2025-09-01,,2025-09-01
+ecf_extended,ecf-extended-january,ECF Extended January,2025,Output 1 - Participant Start,started,2026-01-01,,2026-01-01
+ecf_extended,ecf-extended-january,ECF Extended January,2025,Output 2 - Retention Point 1,retained-1,2026-01-01,,2026-01-01
+ecf_extended,ecf-extended-january,ECF Extended January,2025,Output 3 - Retention Point 2,retained-2,2026-01-01,,2026-01-01
+ecf_extended,ecf-extended-january,ECF Extended January,2025,Output 4 - Retention Point 3,retained-3,2026-01-01,,2026-01-01
+ecf_extended,ecf-extended-january,ECF Extended January,2025,Output 5 - Retention Point 4,retained-4,2026-01-01,,2026-01-01
+ecf_extended,ecf-extended-january,ECF Extended January,2025,Output 6 - Participant Completion,completed,2026-01-01,,2026-01-01
+ecf_extended,ecf-extended-january,ECF Extended January,2025,Output 7 - Extended Point 1,extended-1,2026-01-01,,2026-01-01
+ecf_extended,ecf-extended-january,ECF Extended January,2025,Output 8 - Extended Point 2,extended-2,2026-01-01,,2026-01-01
+ecf_extended,ecf-extended-january,ECF Extended January,2025,Output 9 - Extended Point 3,extended-3,2026-01-01,,2026-01-01
+ecf_extended,ecf-extended-april,ECF Extended April,2025,Output 1 - Participant Start,started,2026-04-01,,2026-04-01
+ecf_extended,ecf-extended-april,ECF Extended April,2025,Output 2 - Retention Point 1,retained-1,2026-04-01,,2026-04-01
+ecf_extended,ecf-extended-april,ECF Extended April,2025,Output 3 - Retention Point 2,retained-2,2026-04-01,,2026-04-01
+ecf_extended,ecf-extended-april,ECF Extended April,2025,Output 4 - Retention Point 3,retained-3,2026-04-01,,2026-04-01
+ecf_extended,ecf-extended-april,ECF Extended April,2025,Output 5 - Retention Point 4,retained-4,2026-04-01,,2026-04-01
+ecf_extended,ecf-extended-april,ECF Extended April,2025,Output 6 - Participant Completion,completed,2026-04-01,,2026-04-01
+ecf_extended,ecf-extended-april,ECF Extended April,2025,Output 7 - Extended Point 1,extended-1,2026-04-01,,2026-04-01
+ecf_extended,ecf-extended-april,ECF Extended April,2025,Output 8 - Extended Point 2,extended-2,2026-04-01,,2026-04-01
+ecf_extended,ecf-extended-april,ECF Extended April,2025,Output 9 - Extended Point 3,extended-3,2026-04-01,,2026-04-01
+ecf_reduced,ecf-reduced-september,ECF Reduced September,2025,Output 1 - Participant Start,started,2025-09-01,,2025-09-01
+ecf_reduced,ecf-reduced-september,ECF Reduced September,2025,Output 2 - Retention Point 1,retained-1,2025-09-01,,2025-09-01
+ecf_reduced,ecf-reduced-september,ECF Reduced September,2025,Output 3 - Retention Point 2,retained-2,2025-09-01,,2025-09-01
+ecf_reduced,ecf-reduced-september,ECF Reduced September,2025,Output 4 - Retention Point 3,retained-3,2025-09-01,,2025-09-01
+ecf_reduced,ecf-reduced-september,ECF Reduced September,2025,Output 5 - Retention Point 4,retained-4,2025-09-01,,2025-09-01
+ecf_reduced,ecf-reduced-september,ECF Reduced September,2025,Output 6 - Participant Completion,completed,2025-09-01,,2025-09-01
+ecf_reduced,ecf-reduced-january,ECF Reduced January,2025,Output 1 - Participant Start,started,2026-01-01,,2026-01-01
+ecf_reduced,ecf-reduced-january,ECF Reduced January,2025,Output 2 - Retention Point 1,retained-1,2026-01-01,,2026-01-01
+ecf_reduced,ecf-reduced-january,ECF Reduced January,2025,Output 3 - Retention Point 2,retained-2,2026-01-01,,2026-01-01
+ecf_reduced,ecf-reduced-january,ECF Reduced January,2025,Output 4 - Retention Point 3,retained-3,2026-01-01,,2026-01-01
+ecf_reduced,ecf-reduced-january,ECF Reduced January,2025,Output 5 - Retention Point 4,retained-4,2026-01-01,,2026-01-01
+ecf_reduced,ecf-reduced-january,ECF Reduced January,2025,Output 6 - Participant Completion,completed,2026-01-01,,2026-01-01
+ecf_reduced,ecf-reduced-april,ECF Reduced April,2025,Output 1 - Participant Start,started,2026-04-01,,2026-04-01
+ecf_reduced,ecf-reduced-april,ECF Reduced April,2025,Output 2 - Retention Point 1,retained-1,2026-04-01,,2026-04-01
+ecf_reduced,ecf-reduced-april,ECF Reduced April,2025,Output 3 - Retention Point 2,retained-2,2026-04-01,,2026-04-01
+ecf_reduced,ecf-reduced-april,ECF Reduced April,2025,Output 4 - Retention Point 3,retained-3,2026-04-01,,2026-04-01
+ecf_reduced,ecf-reduced-april,ECF Reduced April,2025,Output 5 - Retention Point 4,retained-4,2026-04-01,,2026-04-01
+ecf_reduced,ecf-reduced-april,ECF Reduced April,2025,Output 6 - Participant Completion,completed,2026-04-01,,2026-04-01
+ecf_replacement,ecf-replacement-september,ECF Replacement September,2025,Output 1 - Participant Start,started,2025-09-01,,2025-09-01
+ecf_replacement,ecf-replacement-september,ECF Replacement September,2025,Output 2 - Retention Point 1,retained-1,2025-09-01,,2025-09-01
+ecf_replacement,ecf-replacement-september,ECF Replacement September,2025,Output 3 - Retention Point 2,retained-2,2025-09-01,,2025-09-01
+ecf_replacement,ecf-replacement-september,ECF Replacement September,2025,Output 4 - Retention Point 3,retained-3,2025-09-01,,2025-09-01
+ecf_replacement,ecf-replacement-september,ECF Replacement September,2025,Output 5 - Retention Point 4,retained-4,2025-09-01,,2025-09-01
+ecf_replacement,ecf-replacement-september,ECF Replacement September,2025,Output 6 - Participant Completion,completed,2025-09-01,,2025-09-01
+ecf_replacement,ecf-replacement-january,ECF Replacement January,2025,Output 1 - Participant Start,started,2026-01-01,,2026-01-01
+ecf_replacement,ecf-replacement-january,ECF Replacement January,2025,Output 2 - Retention Point 1,retained-1,2026-01-01,,2026-01-01
+ecf_replacement,ecf-replacement-january,ECF Replacement January,2025,Output 3 - Retention Point 2,retained-2,2026-01-01,,2026-01-01
+ecf_replacement,ecf-replacement-january,ECF Replacement January,2025,Output 4 - Retention Point 3,retained-3,2026-01-01,,2026-01-01
+ecf_replacement,ecf-replacement-january,ECF Replacement January,2025,Output 5 - Retention Point 4,retained-4,2026-01-01,,2026-01-01
+ecf_replacement,ecf-replacement-january,ECF Replacement January,2025,Output 6 - Participant Completion,completed,2026-01-01,,2026-01-01
+ecf_replacement,ecf-replacement-april,ECF Replacement April,2025,Output 1 - Participant Start,started,2026-04-01,,2026-04-01
+ecf_replacement,ecf-replacement-april,ECF Replacement April,2025,Output 2 - Retention Point 1,retained-1,2026-04-01,,2026-04-01
+ecf_replacement,ecf-replacement-april,ECF Replacement April,2025,Output 3 - Retention Point 2,retained-2,2026-04-01,,2026-04-01
+ecf_replacement,ecf-replacement-april,ECF Replacement April,2025,Output 4 - Retention Point 3,retained-3,2026-04-01,,2026-04-01
+ecf_replacement,ecf-replacement-april,ECF Replacement April,2025,Output 5 - Retention Point 4,retained-4,2026-04-01,,2026-04-01
+ecf_replacement,ecf-replacement-april,ECF Replacement April,2025,Output 6 - Participant Completion,completed,2026-04-01,,2026-04-01
+ecf_standard,ecf-standard-september,ECF Standard September,2025,Output 1 - Participant Start,started,2025-06-01,2025-12-31,2025-11-30
+ecf_standard,ecf-standard-september,ECF Standard September,2025,Output 2 - Retention Point 1,retained-1,2026-01-01,2026-03-31,2026-04-30
+ecf_standard,ecf-standard-september,ECF Standard September,2025,Output 3 - Retention Point 2,retained-2,2026-04-01,2026-07-31,2026-08-31
+ecf_standard,ecf-standard-september,ECF Standard September,2025,Output 4 - Retention Point 3,retained-3,2026-08-01,2026-12-31,2027-01-31
+ecf_standard,ecf-standard-september,ECF Standard September,2025,Output 5 - Retention Point 4,retained-4,2027-01-01,2027-03-31,2027-04-30
+ecf_standard,ecf-standard-september,ECF Standard September,2025,Output 6 - Participant Completion,completed,2027-04-01,2027-07-31,2027-08-31
+ecf_standard,ecf-standard-january,ECF Standard January,2025,Output 1 - Participant Start,started,2026-01-01,2026-03-31,2026-04-30
+ecf_standard,ecf-standard-january,ECF Standard January,2025,Output 2 - Retention Point 1,retained-1,2026-04-01,2026-07-31,2026-08-31
+ecf_standard,ecf-standard-january,ECF Standard January,2025,Output 3 - Retention Point 2,retained-2,2026-08-01,2026-12-31,2027-01-31
+ecf_standard,ecf-standard-january,ECF Standard January,2025,Output 4 - Retention Point 3,retained-3,2027-01-01,2027-03-31,2027-04-30
+ecf_standard,ecf-standard-january,ECF Standard January,2025,Output 5 - Retention Point 4,retained-4,2027-04-01,2027-07-31,2027-08-31
+ecf_standard,ecf-standard-january,ECF Standard January,2025,Output 6 - Participant Completion,completed,2027-08-01,2027-12-31,2028-01-31
+ecf_standard,ecf-standard-april,ECF Standard April,2025,Output 1 - Participant Start,started,2026-04-01,2026-07-31,2026-08-31
+ecf_standard,ecf-standard-april,ECF Standard April,2025,Output 2 - Retention Point 1,retained-1,2026-08-01,2026-12-31,2027-01-31
+ecf_standard,ecf-standard-april,ECF Standard April,2025,Output 3 - Retention Point 2,retained-2,2027-01-01,2027-03-31,2027-04-30
+ecf_standard,ecf-standard-april,ECF Standard April,2025,Output 4 - Retention Point 3,retained-3,2027-04-01,2027-07-31,2027-08-31
+ecf_standard,ecf-standard-april,ECF Standard April,2025,Output 5 - Retention Point 4,retained-4,2027-08-01,2027-12-31,2028-01-31
+ecf_standard,ecf-standard-april,ECF Standard April,2025,Output 6 - Participant Completion,completed,2028-01-01,2028-03-31,2028-04-30

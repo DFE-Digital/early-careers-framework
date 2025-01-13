@@ -10,7 +10,7 @@ def add_school_to_local_authority(school:, local_authority:, nomination_email: f
   FactoryBot.create(:seed_induction_coordinator_profile, :with_user).tap do |induction_coordinator_profile|
     FactoryBot.create(:seed_induction_coordinator_profiles_school, induction_coordinator_profile:, school:)
 
-    @cohorts.sample(@cohorts.length).each do |cohort|
+    @cohorts.each do |cohort|
       school_cohort = FactoryBot.create(:seed_school_cohort, school:, cohort:)
       if school_cohort.fip?
         induction_programme = NewSeeds::Scenarios::InductionProgrammes::Fip.new(school_cohort:)
