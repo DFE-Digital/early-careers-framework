@@ -16,6 +16,9 @@
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 #
+require "knapsack"
+Knapsack::Adapters::RSpecAdapter.bind
+
 require "with_model"
 require "csv"
 
