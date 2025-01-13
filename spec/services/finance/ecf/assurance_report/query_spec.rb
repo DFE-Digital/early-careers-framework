@@ -47,7 +47,7 @@ RSpec.describe Finance::ECF::AssuranceReport::Query, mid_cohort: true do
       let!(:mentor_declaration) { travel_to(statement.deadline_date) { create(:mentor_participant_declaration, participant_profile: mentor_participant_profile, cpd_lead_provider:, delivery_partner:) } }
 
       it { is_expected.to contain_exactly(participant_declaration, mentor_declaration) }
-      it { expect(subject.map(&:type)).to contain_exactly(/ECT/, /Mentor/) }
+      it { expect(subject.map(&:temp_type)).to contain_exactly(/ECT/, /Mentor/) }
     end
   end
 

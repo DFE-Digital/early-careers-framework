@@ -14,7 +14,7 @@ RSpec.describe Archive::ParticipantDeclarationSerializer do
       expect(data[:type]).to eq :participant_declaration
 
       attrs = data[:attributes]
-      expect(attrs[:type]).to eq declaration.type
+      expect(attrs[:type]).to eq declaration.temp_type
       expect(attrs[:participant_profile_id]).to eq declaration.participant_profile_id
       expect(attrs[:cpd_lead_provider_id]).to eq declaration.cpd_lead_provider_id
       expect(attrs[:declaration_type]).to eq declaration.declaration_type
