@@ -598,4 +598,5 @@ LeadProvider.all.map(&:name).each do |provider|
 end
 
 Importers::CreateCallOffContract.new.call
+Importers::CreateMentorCallOffContract.new.call
 Importers::CreateStatement.new(path_to_csv: Rails.root.join("db/data/statements/statements.csv")).call

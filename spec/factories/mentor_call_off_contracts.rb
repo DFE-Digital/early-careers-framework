@@ -7,6 +7,6 @@ FactoryBot.define do
 
     recruitment_target { 6000 }
     payment_per_participant { 1000.0 }
-    version { "0.0.1" }
+    version { "1.0" }
   end
 end
