@@ -30,4 +30,20 @@ RSpec.describe ParticipantDeclaration::ECF, mid_cohort: true do
       end
     end
   end
+
+  describe "before_save set_temp_type" do
+    subject { declaration.temp_type }
+
+    context "when an ECT declaration" do
+      let(:declaration) { create(:ect_participant_declaration) }
+
+      it { is_expected.to eq("ParticipantDeclaration::ECT") }
+    end
+
+    context "when a Mentor declaration" do
+      let(:declaration) { create(:mentor_participant_declaration) }
+
+      it { is_expected.to eq("ParticipantDeclaration::Mentor") }
+    end
+  end
 end

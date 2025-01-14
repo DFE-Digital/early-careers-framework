@@ -223,6 +223,8 @@
   - participant_declaration_id
   - created_at
   - updated_at
+  :participant_declarations:
+  - temp_type
   :participant_bands:
   - id
   - call_off_contract_id

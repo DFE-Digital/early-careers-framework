@@ -43,6 +43,7 @@ class ParticipantProfile::ECF < ParticipantProfile
   # Callbacks
   after_save :update_analytics
   after_update :sync_status_with_induction_record
+  after_update :update_declaration_temp_types!, if: :saved_change_to_type?
 
   # Class methods
   def self.ransackable_attributes(_auth_object = nil)
@@ -200,6 +201,10 @@ private
     induction_record = induction_records.latest
     induction_record&.update!(induction_status: status) if saved_change_to_status?
     induction_record&.update!(mentor_profile:) if saved_change_to_mentor_profile_id?
+  end
+
+  def update_declaration_temp_types!
+    participant_declarations.update_all(temp_type: type.sub("ParticipantProfile", "ParticipantDeclaration"))
   end
 end
 
