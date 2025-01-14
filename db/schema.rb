@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_01_10_125608) do
+ActiveRecord::Schema[7.1].define(version: 2025_01_14_144917) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "fuzzystrmatch"
@@ -650,6 +650,18 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_10_125608) do
     t.index ["code"], name: "index_local_authority_districts_on_code", unique: true
   end
 
+  create_table "mentor_call_off_contracts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "lead_provider_id", null: false
+    t.uuid "cohort_id", null: false
+    t.string "version", default: "0.0.1", null: false
+    t.integer "recruitment_target"
+    t.decimal "payment_per_participant", default: "1000.0", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cohort_id"], name: "index_mentor_call_off_contracts_on_cohort_id"
+    t.index ["lead_provider_id"], name: "index_mentor_call_off_contracts_on_lead_provider_id"
+  end
+
   create_table "milestones", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.text "name", null: false
     t.date "milestone_date"
@@ -1216,6 +1228,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_10_125608) do
   add_foreign_key "lead_provider_profiles", "lead_providers"
   add_foreign_key "lead_provider_profiles", "users"
   add_foreign_key "lead_providers", "cpd_lead_providers"
+  add_foreign_key "mentor_call_off_contracts", "cohorts"
+  add_foreign_key "mentor_call_off_contracts", "lead_providers"
   add_foreign_key "milestones", "schedules"
   add_foreign_key "nomination_emails", "partnership_notification_emails"
   add_foreign_key "nomination_emails", "schools"
