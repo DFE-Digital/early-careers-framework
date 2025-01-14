@@ -366,6 +366,15 @@
   - revised_target
   - cohort_id
   - monthly_service_fee
+  :mentor_call_off_contracts:
+  - id
+  - lead_provider_id
+  - cohort_id
+  - version
+  - recruitment_target
+  - payment_per_participant
+  - created_at
+  - updated_at
   :appropriate_body_profiles:
   - id
   - user_id

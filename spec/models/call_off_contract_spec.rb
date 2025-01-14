@@ -7,6 +7,7 @@ RSpec.describe CallOffContract, type: :model do
 
   describe "associations" do
     it { is_expected.to belong_to(:cohort) }
+    it { is_expected.to belong_to(:lead_provider) }
     it { is_expected.to have_many(:participant_bands) }
 
     it "is expected to have band_a with the lowest minimum value" do
