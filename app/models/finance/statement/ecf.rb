@@ -13,6 +13,14 @@ class Finance::Statement::ECF < Finance::Statement
     )
   end
 
+  def mentor_contract
+    MentorCallOffContract.find_by!(
+      version: contract_version,
+      cohort:,
+      lead_provider:,
+    )
+  end
+
   def payable!
     update!(type: "Finance::Statement::ECF::Payable")
   end
