@@ -1,0 +1,23 @@
+name: Publish to rubygems
+
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+    - name: Setup Rubygems
+      env:
+        RUBYGEMS_API_KEY: ${{ secrets.RUBYGEMS_API_KEY }}
+      run: |
+        bash .github/setup-rubygems.sh
+    - name: Publish to Rubygems
+      run: |
+        gem build mail-notify.gemspec
+        gem push "mail-notify-$(git describe --tags).gem"

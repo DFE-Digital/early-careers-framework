@@ -1,0 +1,27 @@
+name: Build
+
+on: [push, pull_request]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+    - name: Set up cache
+      uses: actions/cache@preview
+      with:
+        path: vendor/bundle
+        key: ${{ runner.os }}-gem-${{ hashFiles('**/mail-notify.gemspec') }}
+        restore-keys: |
+          ${{ runner.os }}-gem-
+    - name: Build and test with Rake
+      run: |
+        sudo apt-get update
+        sudo apt-get install sqlite3 libsqlite3-dev
+        gem install bundler
+        bundle install --jobs 4 --retry 3 --path ./vendor/bundle
+        bundle exec rake

@@ -1,0 +1,7 @@
+require "rails/engine"
+require "view_component"
+require "govuk/components/helpers/css_utilities"
+require "govuk/components/engine"
+require "html_attributes_utils"
+require "pagy"
+require "pagy/extras/size"

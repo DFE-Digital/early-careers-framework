@@ -1,0 +1,27 @@
+AllCops:
+  NewCops: disable
+  SuggestExtensions: false
+  Exclude:
+    - 'bin/**'
+    - 'config.ru'
+    - 'tmp/**/*'
+    - 'db/schema.rb'
+    - 'db/migrate/201*'
+    - 'vendor/**/*'
+    - 'node_modules/**/*'
+
+  DisplayCopNames:
+    Enabled: true
+
+  ExtraDetails:
+    Enabled: true
+
+  DisplayStyleGuide:
+    Enabled: true
+
+inherit_from:
+  - layout.yml
+  - metrics.yml
+  - naming.yml
+  - style.yml
+  - rake.yml

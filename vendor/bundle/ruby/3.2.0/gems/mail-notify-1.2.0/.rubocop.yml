@@ -1,0 +1,14 @@
+Metrics/LineLength:
+  Max: 91
+  Exclude:
+    - 'spec/dummy/**/*'
+
+Style/Documentation:
+  Exclude:
+    - 'spec/**/*'
+    - 'test/**/*'
+    - 'lib/**/*'
+
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*'

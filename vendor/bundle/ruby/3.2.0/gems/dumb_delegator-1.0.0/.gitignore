@@ -1,0 +1,23 @@
+# Ignore all logfiles and tempfiles
+/tmp/
+/tags
+
+# Environment normalisation
+/.env
+/.rspec-local
+/.yardoc
+/lib/bundler/man/
+
+# Gem packaging stuff
+/*.gem
+/pkg/
+
+# Dependencies and such
+/.bundle
+/.ruby-version
+/Gemfile.lock
+
+# Spec and coverage housekeeping
+/coverage/
+/spec/rspec-status.txt
+/spec/reports
