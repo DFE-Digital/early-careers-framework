@@ -63,7 +63,7 @@ class ChooseRoleForm
 private
 
   def rejected_roles
-    %w[induction_coordinator early_career_teacher mentor npq_applicant npq_participant teacher].freeze
+    %w[induction_coordinator early_career_teacher mentor teacher].freeze
   end
 
   def sanitized_user_roles

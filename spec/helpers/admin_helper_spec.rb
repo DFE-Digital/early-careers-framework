@@ -134,7 +134,6 @@ RSpec.describe AdminHelper, type: :helper do
     {
       "ParticipantProfile::Mentor" => "Mentor",
       "ParticipantProfile::ECT" => "ECT",
-      "ParticipantProfile::NPQ" => "NPQ",
     }.each do |input, expected_output|
       it "returns #{expected_output} when passed #{input}" do
         expect(admin_participant_role_name(input)).to eql(expected_output)

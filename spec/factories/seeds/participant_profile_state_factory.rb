@@ -2,12 +2,6 @@
 
 FactoryBot.define do
   factory(:seed_abstract_participant_profile_state, class: "ParticipantProfileState") do
-    factory(:seed_npq_participant_profile_state) do
-      trait(:with_participant_profile) do
-        association(:participant_profile, factory: %i[seed_npq_participant_profile valid])
-      end
-    end
-
     factory(:seed_ect_participant_profile_state) do
       trait(:with_participant_profile) do
         association(:participant_profile, factory: %i[seed_ect_participant_profile valid])

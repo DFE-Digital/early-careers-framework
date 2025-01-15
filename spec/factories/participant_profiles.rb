@@ -29,30 +29,6 @@ FactoryBot.define do
       ecf_participant_eligibility { association :ecf_participant_eligibility }
     end
 
-    factory :npq_participant_profile, class: "ParticipantProfile::NPQ" do
-      user { create(:user) }
-      schedule { Finance::Schedule::NPQLeadership.default_for(cohort:) || create(:npq_schedule, cohort:) }
-      participant_identity { Identity::Create.call(user:, origin: :npq) }
-
-      trait :eligible_for_funding do
-        profile_traits { [:eligible_for_funding] }
-      end
-
-      initialize_with do
-        teacher_profile = user.teacher_profile || user.build_teacher_profile
-
-        profile = ParticipantProfile::NPQ.create!(
-          schedule:,
-          teacher_profile:,
-          participant_identity:,
-        ).tap do |pp|
-          ParticipantProfileState.find_or_create_by(participant_profile: pp)
-        end
-
-        profile
-      end
-    end
-
     trait :sparsity_uplift do
       sparsity_uplift { true }
     end

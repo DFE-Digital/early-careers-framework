@@ -34,17 +34,5 @@ RSpec.describe ECFParticipantValidationData, type: :model do
         expect(subject).to be_valid
       end
     end
-
-    context "when linked to a non-ECF participant profile" do
-      let(:participant_profile) { FactoryBot.create(:seed_npq_participant_profile, :valid) }
-
-      it "fails validation" do
-        expect(subject).not_to be_valid
-      end
-
-      it "has an informative error message" do
-        expect(subject.errors.messages[:participant_profile_id]).to include(/not an ECT or Mentor/)
-      end
-    end
   end
 end

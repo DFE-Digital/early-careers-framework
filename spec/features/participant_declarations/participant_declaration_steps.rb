@@ -43,14 +43,6 @@ module ParticipantDeclarationSteps
     expect(@participant_id).to eq([@ect_id, @mentor_id].compact.first)
   end
 
-  def when_the_npq_participant_details_are_passed_to_the_lead_provider
-    @session.get("/api/v1/npq-applications",
-                 headers: { "Authorization": "Bearer #{@token}" })
-
-    participant = JSON.parse(@session.response.body).dig("data", 0, "attributes", "participant_id")
-    expect(participant).to eq(@npq_id)
-  end
-
   def and_the_lead_provider_submits_a_declaration_for_the_ect_using_their_id
     params = common_params(participant_id: @ect_id, course_identifier: "ecf-induction", declaration_date: @declaration_date)
     travel_to @submission_date do
@@ -62,13 +54,6 @@ module ParticipantDeclarationSteps
     params = common_params(participant_id: @mentor_id, course_identifier: "ecf-mentor", declaration_date: @declaration_date)
     travel_to @submission_date do
       @declaratioh_id = submit_request(params).dig("data", "id")
-    end
-  end
-
-  def and_the_lead_provider_submits_a_declaration_for_the_npq_using_their_id
-    params = common_params(participant_id: @npq_id, course_identifier: "npq-senior-leadership", declaration_date: @declaration_date)
-    travel_to @submission_date do
-      submit_request(params)
     end
   end
 

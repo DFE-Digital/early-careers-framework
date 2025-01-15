@@ -10,12 +10,11 @@ RSpec.describe SearchBox, type: :component do
         filters: [
           {
             field: :type,
-            value: "ParticipantProfile::NPQ",
+            value: "ParticipantProfile::ECT",
             options: [
               OpenStruct.new(id: "", name: ""),
               OpenStruct.new(id: "ParticipantProfile::ECT", name: "ECT"),
               OpenStruct.new(id: "ParticipantProfile::Mentor", name: "Mentor"),
-              OpenStruct.new(id: "ParticipantProfile::NPQ", name: "NPQ"),
             ],
           },
         ],
@@ -27,7 +26,7 @@ RSpec.describe SearchBox, type: :component do
         dom = render_inline(subject)
 
         expect(dom).to have_css("select[name=type]")
-        expect(dom.css("select option").count).to eql(4)
+        expect(dom.css("select option").count).to eql(3)
       end
     end
 
@@ -35,7 +34,7 @@ RSpec.describe SearchBox, type: :component do
       with_request_url "/admin/participants" do
         dom = render_inline(subject)
 
-        expect(dom.css("select option[selected]").text).to eql("NPQ")
+        expect(dom.css("select option[selected]").text).to eql("ECT")
       end
     end
   end

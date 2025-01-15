@@ -7,7 +7,6 @@ class ParticipantIdentity < ApplicationRecord
 
   belongs_to :user, touch: true
   has_many :participant_profiles
-  has_many :npq_participant_profiles, class_name: "ParticipantProfile::NPQ"
   has_many :induction_records, through: :participant_profiles
 
   validates :email, presence: true, uniqueness: true, notify_email: true
