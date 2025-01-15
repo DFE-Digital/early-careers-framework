@@ -93,25 +93,6 @@ FactoryBot.define do
       end
     end
 
-    trait(:with_npq_milestones) do
-      after(:create) do |schedule|
-        start_year = schedule.cohort.start_year
-        [
-          { name: "Output 1 - Participant Start", start_date: Date.new(start_year, 9, 1), payment_date: Date.new(start_year, 11, 30), declaration_type: "started" },
-          { name: "Output 2 - Retention Point 1", start_date: Date.new(start_year, 11, 1), payment_date: Date.new(start_year + 1, 2, 28), declaration_type: "retained-1" },
-          { name: "Output 3 - Retention Point 2", start_date: Date.new(start_year + 1, 2, 1), payment_date: Date.new(start_year + 1, 5, 31), declaration_type: "retained-2" },
-          { name: "Output 4 - Participant Completion", start_date: Date.new(start_year + 2, 2, 1), payment_date: Date.new(start_year + 2, 5, 31), declaration_type: "completed" },
-        ].each do |hash|
-          Finance::Milestone.find_or_create_by!(
-            schedule:,
-            name: hash[:name],
-            start_date: hash[:start_date],
-            payment_date: hash[:payment_date],
-          ).update!(declaration_type: hash[:declaration_type])
-        end
-      end
-    end
-
     cohort { Cohort.current || create(:cohort, :current) }
     sequence(:schedule_identifier) { |n| "schedule-identifier-#{n}" }
 
@@ -149,34 +130,6 @@ FactoryBot.define do
       schedule_identifier { "ecf-replacement-april" }
 
       with_ecf_milestones
-    end
-
-    factory :npq_specialist_schedule, class: "Finance::Schedule::NPQSpecialist", parent: :schedule do
-      name { "NPQ Specialist Spring" }
-      schedule_identifier { "npq-specialist-spring" }
-
-      with_npq_milestones
-    end
-
-    factory :npq_leadership_schedule, class: "Finance::Schedule::NPQLeadership", parent: :schedule do
-      name { "NPQ Leadership Spring" }
-      schedule_identifier { "npq-leadership-spring" }
-
-      with_npq_milestones
-    end
-
-    factory :npq_aso_schedule, class: "Finance::Schedule::NPQSupport", parent: :schedule do
-      name { "NPQ Additional Support Offer December" }
-      schedule_identifier { "npq-aso-december" }
-
-      with_npq_milestones
-    end
-
-    factory :npq_ehco_schedule, class: "Finance::Schedule::NPQEhco", parent: :schedule do
-      name { "NPQ EHCO December" }
-      schedule_identifier { "npq-ehco-december" }
-
-      with_npq_milestones
     end
   end
 end

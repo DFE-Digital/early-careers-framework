@@ -8,18 +8,6 @@ FactoryBot.define do
     cohort        { Cohort.current || create(:cohort, :current) }
     contract_version { "1.0" }
 
-    factory :npq_statement, class: "Finance::Statement::NPQ" do
-      cpd_lead_provider { association :cpd_lead_provider }
-      factory :npq_payable_statement, class: "Finance::Statement::NPQ::Payable" do
-        payable
-      end
-
-      factory :npq_paid_statement, class: "Finance::Statement::NPQ::Paid" do
-        paid
-        marked_as_paid_at { Time.zone.now }
-      end
-    end
-
     factory :ecf_statement, class: "Finance::Statement::ECF" do
       cpd_lead_provider { association :cpd_lead_provider, :with_lead_provider }
 
