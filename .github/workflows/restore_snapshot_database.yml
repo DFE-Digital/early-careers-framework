@@ -1,33 +1,44 @@
-name: Restore Snapshot DB from production DB
+name: "Refresh Knapsack manifest"
+
 on:
-  workflow_dispatch:
-    inputs:
-      environment:
-        description: GitHub environment to backup and restore
-        type: choice
-        default: production
-        options:
-          - production
-        required: true
-      exclude-versions:
-        description: Exclude 'versions' table
-        type: boolean
-      exclude-api-requests:
-        description: Exclude 'api_requests' table
-        type: boolean
+  schedule:
+    - cron: '0 8 * * *'
+  workflow_dispatch: 
 
 jobs:
-  backup-and-restore-production:
+  refresh_manifest:
+    name: Refresh Knapsack manifest
     runs-on: ubuntu-20.04
-    environment: production
+
+    env:
+      RAILS_ENV: test
+      DB_USERNAME: postgres
+      DB_PASSWORD: ""
+      DB_HOSTNAME: 127.0.0.1
+      DB_PORT: 5432
+
+    services:
+      postgres:
+        image: postgres:11.6-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: ""
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Backup and restore snapshot
-        uses: ./.github/actions/backup-and-restore-snapshot-database
+      - uses: ./.github/actions/prepare-app-env
+        id: test
         with:
-          environment: production
-          azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
-          exclude-versions: ${{ inputs.exclude-versions }}
-          exclude-api-requests: ${{ inputs.exclude-api-requests }}
+          prepare-test-database: "true"
+          prepare-assets: "true"
+
+      - name: Run tests
+        run: KNAPSACK_GENERATE_REPORT=true bundle exec rake knapsack:rspec
+
+      - name: Create pull request 
+        uses: peter-evans/create-pull-request@v7
