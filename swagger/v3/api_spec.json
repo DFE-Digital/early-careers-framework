@@ -33,9 +33,7 @@
         ],
         "security": [
           {
-            "bearerAuth": [
-
-            ]
+            "bearerAuth": []
           }
         ],
         "parameters": [
@@ -109,9 +107,7 @@
         ],
         "security": [
           {
-            "bearerAuth": [
-
-            ]
+            "bearerAuth": []
           }
         ],
         "parameters": [
@@ -170,9 +166,7 @@
         ],
         "security": [
           {
-            "bearerAuth": [
-
-            ]
+            "bearerAuth": []
           }
         ],
         "parameters": [
@@ -244,14 +238,10 @@
         ],
         "security": [
           {
-            "bearerAuth": [
-
-            ]
+            "bearerAuth": []
           }
         ],
-        "parameters": [
-
-        ],
+        "parameters": [],
         "responses": {
           "200": {
             "description": "Create an ECF partnership",
@@ -329,9 +319,7 @@
         ],
         "security": [
           {
-            "bearerAuth": [
-
-            ]
+            "bearerAuth": []
           }
         ],
         "parameters": [
@@ -388,9 +376,7 @@
         ],
         "security": [
           {
-            "bearerAuth": [
-
-            ]
+            "bearerAuth": []
           }
         ],
         "parameters": [
@@ -493,9 +479,7 @@
         ],
         "security": [
           {
-            "bearerAuth": [
-
-            ]
+            "bearerAuth": []
           }
         ],
         "parameters": [
@@ -593,9 +577,7 @@
         ],
         "security": [
           {
-            "bearerAuth": [
-
-            ]
+            "bearerAuth": []
           }
         ],
         "parameters": [
@@ -666,9 +648,7 @@
         ],
         "security": [
           {
-            "bearerAuth": [
-
-            ]
+            "bearerAuth": []
           }
         ],
         "parameters": [
@@ -758,14 +738,10 @@
         ],
         "security": [
           {
-            "bearerAuth": [
-
-            ]
+            "bearerAuth": []
           }
         ],
-        "parameters": [
-
-        ],
+        "parameters": [],
         "responses": {
           "200": {
             "description": "Successful",
@@ -857,9 +833,7 @@
         ],
         "security": [
           {
-            "bearerAuth": [
-
-            ]
+            "bearerAuth": []
           }
         ],
         "parameters": [
@@ -946,9 +920,7 @@
         ],
         "security": [
           {
-            "bearerAuth": [
-
-            ]
+            "bearerAuth": []
           }
         ],
         "parameters": [
@@ -1015,9 +987,7 @@
         ],
         "security": [
           {
-            "bearerAuth": [
-
-            ]
+            "bearerAuth": []
           }
         ],
         "parameters": [
@@ -1091,9 +1061,7 @@
         ],
         "security": [
           {
-            "bearerAuth": [
-
-            ]
+            "bearerAuth": []
           }
         ],
         "parameters": [
@@ -1143,162 +1111,6 @@
         }
       }
     },
-    "/api/v3/participants/ecf/transfers": {
-      "get": {
-        "summary": "<b>Note, this endpoint is new.</b><br/>Retrieve multiple ECF participant transfers",
-        "operationId": "participants",
-        "tags": [
-          "participant transfers"
-        ],
-        "security": [
-          {
-            "bearerAuth": [
-
-            ]
-          }
-        ],
-        "parameters": [
-          {
-            "name": "filter",
-            "in": "query",
-            "schema": {
-              "$ref": "#/components/schemas/ListFilter"
-            },
-            "style": "deepObject",
-            "explode": true,
-            "required": false,
-            "description": "Refine participant transfers to return.",
-            "example": "filter[updated_since]=2020-11-13T11:21:55Z"
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "schema": {
-              "$ref": "#/components/schemas/Pagination"
-            },
-            "style": "deepObject",
-            "explode": true,
-            "required": false,
-            "example": "page[page]=1&page[per_page]=5",
-            "description": "Pagination options to navigate through the list of participant transfers."
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "A list of ECF participant transfers",
-            "content": {
-              "application/json": {
-                "examples": {
-                  "success": {
-                    "value": {
-                      "data": [
-                        {
-                          "id": "db3a7848-7308-4879-942a-c4a70ced400a",
-                          "type": "participant-transfer",
-                          "attributes": {
-                            "updated_at": "2021-05-31T02:22:32.000Z",
-                            "transfers": {
-                              "training_record_id": "000a97ff-d2a9-4779-a397-9bfd9063072e",
-                              "transfer_type": "new_provider",
-                              "status": "complete",
-                              "leaving": {
-                                "school_urn": "123456",
-                                "provider": "Old Institute",
-                                "date": "2021-05-31"
-                              },
-                              "joining": {
-                                "school_urn": "654321",
-                                "provider": "New Institute",
-                                "date": "2021-06-01"
-                              },
-                              "created_at": "2021-05-31T02:22:32.000Z"
-                            }
-                          }
-                        }
-                      ]
-                    }
-                  }
-                },
-                "schema": {
-                  "$ref": "#/components/schemas/MultipleECFParticipantTransferResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorisedResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v3/participants/ecf/{id}/transfers": {
-      "get": {
-        "summary": "<b>Note, this endpoint is new.</b><br/>Get a single participant's transfers",
-        "operationId": "participant_transfers",
-        "tags": [
-          "participant transfers"
-        ],
-        "security": [
-          {
-            "bearerAuth": [
-
-            ]
-          }
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
-            "description": "The ID of the ECF participant.",
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "A single participant's transfers",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ECFParticipantTransferResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorisedResponse"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotFoundResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/v3/participants/ecf/{id}/defer": {
       "put": {
         "summary": "<b>Note, this endpoint includes updated specifications.</b><br/>Notify that an ECF participant is taking a break from their course",
@@ -1308,9 +1120,7 @@
         ],
         "security": [
           {
-            "bearerAuth": [
-
-            ]
+            "bearerAuth": []
           }
         ],
         "parameters": [
@@ -1409,9 +1219,7 @@
         ],
         "security": [
           {
-            "bearerAuth": [
-
-            ]
+            "bearerAuth": []
           }
         ],
         "parameters": [
@@ -1460,9 +1268,7 @@
         ],
         "security": [
           {
-            "bearerAuth": [
-
-            ]
+            "bearerAuth": []
           }
         ],
         "parameters": [
@@ -1561,9 +1367,7 @@
         ],
         "security": [
           {
-            "bearerAuth": [
-
-            ]
+            "bearerAuth": []
           }
         ],
         "parameters": [
@@ -1603,6 +1407,158 @@
         }
       }
     },
+    "/api/v3/participants/ecf/transfers": {
+      "get": {
+        "summary": "<b>Note, this endpoint is new.</b><br/>Retrieve multiple ECF participant transfers",
+        "operationId": "participants",
+        "tags": [
+          "participant transfers"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "filter",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/ListFilter"
+            },
+            "style": "deepObject",
+            "explode": true,
+            "required": false,
+            "description": "Refine participant transfers to return.",
+            "example": "filter[updated_since]=2020-11-13T11:21:55Z"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Pagination"
+            },
+            "style": "deepObject",
+            "explode": true,
+            "required": false,
+            "example": "page[page]=1&page[per_page]=5",
+            "description": "Pagination options to navigate through the list of participant transfers."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of ECF participant transfers",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "success": {
+                    "value": {
+                      "data": [
+                        {
+                          "id": "db3a7848-7308-4879-942a-c4a70ced400a",
+                          "type": "participant-transfer",
+                          "attributes": {
+                            "updated_at": "2021-05-31T02:22:32.000Z",
+                            "transfers": {
+                              "training_record_id": "000a97ff-d2a9-4779-a397-9bfd9063072e",
+                              "transfer_type": "new_provider",
+                              "status": "complete",
+                              "leaving": {
+                                "school_urn": "123456",
+                                "provider": "Old Institute",
+                                "date": "2021-05-31"
+                              },
+                              "joining": {
+                                "school_urn": "654321",
+                                "provider": "New Institute",
+                                "date": "2021-06-01"
+                              },
+                              "created_at": "2021-05-31T02:22:32.000Z"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/MultipleECFParticipantTransferResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/participants/ecf/{id}/transfers": {
+      "get": {
+        "summary": "<b>Note, this endpoint is new.</b><br/>Get a single participant's transfers",
+        "operationId": "participant_transfers",
+        "tags": [
+          "participant transfers"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
+            "description": "The ID of the ECF participant.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A single participant's transfers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ECFParticipantTransferResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v3/unfunded-mentors/ecf": {
       "get": {
         "summary": "<b>Note, this endpoint is new.</b><br/>Retrieve multiple unfunded mentors",
@@ -1612,9 +1568,7 @@
         ],
         "security": [
           {
-            "bearerAuth": [
-
-            ]
+            "bearerAuth": []
           }
         ],
         "parameters": [
@@ -1688,9 +1642,7 @@
         ],
         "security": [
           {
-            "bearerAuth": [
-
-            ]
+            "bearerAuth": []
           }
         ],
         "parameters": [
@@ -1749,9 +1701,7 @@
         ],
         "security": [
           {
-            "bearerAuth": [
-
-            ]
+            "bearerAuth": []
           }
         ],
         "parameters": [
@@ -1813,9 +1763,7 @@
         ],
         "security": [
           {
-            "bearerAuth": [
-
-            ]
+            "bearerAuth": []
           }
         ],
         "parameters": [
@@ -4389,9 +4337,7 @@
   },
   "security": [
     {
-      "bearerAuth": [
-
-      ]
+      "bearerAuth": []
     }
   ]
 }
