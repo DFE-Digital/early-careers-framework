@@ -79,14 +79,6 @@ RSpec.describe Finance::Statement do
     subject { build :ecf_statement }
 
     it { is_expected.to be_ecf }
-    it { is_expected.to_not be_npq }
-  end
-
-  context ".npq?" do
-    subject { build :npq_statement }
-
-    it { is_expected.to_not be_ecf }
-    it { is_expected.to be_npq }
   end
 
   context ".payable?" do
