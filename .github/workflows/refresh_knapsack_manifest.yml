@@ -1,0 +1,57 @@
+name: "Refresh Knapsack manifest"
+
+on:
+  schedule:
+    - cron: '0 8 * * 1' # Monday at 8am
+  workflow_dispatch: 
+
+jobs:
+  refresh_manifest:
+    name: Refresh Knapsack manifest
+    runs-on: ubuntu-20.04
+
+    env:
+      RAILS_ENV: test
+      DB_USERNAME: postgres
+      DB_PASSWORD: ""
+      DB_HOSTNAME: 127.0.0.1
+      DB_PORT: 5432
+
+    services:
+      postgres:
+        image: postgres:11.6-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: ""
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - uses: ./.github/actions/prepare-app-env
+        id: test
+        with:
+          prepare-test-database: "true"
+          prepare-assets: "true"
+
+      - name: Run tests
+        run: KNAPSACK_GENERATE_REPORT=true bundle exec rake knapsack:rspec
+
+      - name: Create pull request 
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: refresh-knapsack-manifest
+          delete-branch: true
+          add-paths: knapsack_rspec_report.json
+          base: main
+          commit-message: |
+            Refresh Knapsack manifest
+
+            We run the Knapsack manifest generation in CI on a schedule; once complete
+            it raises this commit in a PR so that we can keep our test suite optimal.
+          title: Refresh Knapsack manifest
+          body: |
+            We run the Knapsack manifest generation in CI on a schedule; once complete it raises this commit in a PR so that we can keep our test suite optimal.
