@@ -12,12 +12,13 @@ module Importers
 
   private
 
-    attr_reader :cohort_csv, :cohort_lead_provider_csv, :contract_csv, :schedule_csv, :statement_csv, :logger
+    attr_reader :cohort_csv, :cohort_lead_provider_csv, :contract_csv, :mentor_contract_csv, :schedule_csv, :statement_csv, :logger
 
-    def initialize(cohort_csv:, cohort_lead_provider_csv:, contract_csv:, schedule_csv:, statement_csv:, logger: Rails.logger)
+    def initialize(cohort_csv:, cohort_lead_provider_csv:, contract_csv:, mentor_contract_csv:, schedule_csv:, statement_csv:, logger: Rails.logger)
       @cohort_csv = cohort_csv
       @cohort_lead_provider_csv = cohort_lead_provider_csv
       @contract_csv = contract_csv
+      @mentor_contract_csv = mentor_contract_csv
       @schedule_csv = schedule_csv
       @statement_csv = statement_csv
       @logger = logger
@@ -38,6 +39,9 @@ module Importers
 
       logger.info "CreateNewECFCohort: Running CreateCallOffContract with: '#{contract_csv}'"
       CreateCallOffContract.new(path_to_csv: contract_csv).call
+
+      logger.info "CreateNewECFCohort: Running CreateMentorCallOffContract with: '#{mentor_contract_csv}'"
+      CreateMentorCallOffContract.new(path_to_csv: mentor_contract_csv).call
 
       logger.info "CreateNewECFCohort: Running CreateSchedule with: '#{schedule_csv}'"
       CreateSchedule.new(path_to_csv: schedule_csv).call
