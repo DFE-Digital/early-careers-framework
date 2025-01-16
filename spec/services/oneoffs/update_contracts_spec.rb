@@ -36,7 +36,7 @@ RSpec.describe Oneoffs::UpdateContracts do
   let(:csv_content) do
     <<~CSV
       lead-provider-name,cohort-start-year,uplift-target,uplift-amount,recruitment-target,revised-target,set-up-fee,monthly-service-fee,band-a-min,band-a-max,band-a-per-participant,band-b-min,band-b-max,band-b-per-participant,band-c-min,band-c-max,band-c-per-participant,band-d-min,band-d-max,band-d-per-participant
-      Great Provider,2024,0.4,100,11500,11500,0,224464,0,2000,1355,2001,4000,1380,4001,11500,1355,,,
+      Great Provider,"#{cohort.start_year}",0.4,100,11500,11500,0,224464,0,2000,1355,2001,4000,1380,4001,11500,1355,,,
     CSV
   end
 
@@ -105,7 +105,7 @@ RSpec.describe Oneoffs::UpdateContracts do
         let(:csv_content) do
           <<~CSV
             lead-provider-name,cohort-start-year,uplift-target,uplift-amount,recruitment-target,revised-target,set-up-fee,monthly-service-fee,band-a-min,band-a-max,band-a-per-participant,band-b-min,band-b-max,band-b-per-participant,band-c-min,band-c-max,band-c-per-participant,band-d-min,band-d-max,band-d-per-participant
-            Great Provider,2024,0.5,200,11500,11500,0,224464,0,2000,1355,2001,4000,1380,4001,11500,1355,,,
+            Great Provider,"#{cohort.start_year}",0.5,200,11500,11500,0,224464,0,2000,1355,2001,4000,1380,4001,11500,1355,,,
           CSV
         end
         let(:new_contract) { CallOffContract.where.not(id: existing_contract).first }
@@ -147,6 +147,17 @@ RSpec.describe Oneoffs::UpdateContracts do
           expect(statement.contract_version).to eq("0.0.7")
           subject
           expect(statement.reload.contract_version).to eq("0.0.8")
+        end
+      end
+
+      context "when cohort does not include uplift fees" do
+        let(:cohort) { create(:cohort, start_year: CallOffContract::COHORTS_WITH_NO_UPLIFT.sample) }
+        let(:new_contract) { CallOffContract.where.not(id: existing_contract).first }
+
+        it "sets nil to the new contract `uplift_amount`" do
+          subject
+
+          expect(new_contract.uplift_amount).to be_nil
         end
       end
     end

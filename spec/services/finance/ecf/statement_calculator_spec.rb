@@ -191,6 +191,14 @@ RSpec.describe Finance::ECF::StatementCalculator, mid_cohort: true do
       it "includes uplift adjustments" do
         expect(subject.adjustments_total).to eql(-200)
       end
+
+      context "when contract does not include uplift fees" do
+        let!(:contract) { create(:call_off_contract, lead_provider: cpd_lead_provider.lead_provider, uplift_amount: nil) }
+
+        it "returns zero" do
+          expect(subject.adjustments_total).to be_zero
+        end
+      end
     end
 
     context "when there are clawbacks" do
@@ -447,6 +455,14 @@ RSpec.describe Finance::ECF::StatementCalculator, mid_cohort: true do
       it "includes clawback and uplift adjustments" do
         expect(subject.adjustments_total).to eql(-488)
       end
+
+      context "when contract does not include uplift fees" do
+        let!(:contract) { create(:call_off_contract, lead_provider: cpd_lead_provider.lead_provider, uplift_amount: nil) }
+
+        it "includes clawback adjustments only" do
+          expect(subject.adjustments_total).to eq(-288)
+        end
+      end
     end
   end
 
@@ -631,11 +647,42 @@ RSpec.describe Finance::ECF::StatementCalculator, mid_cohort: true do
         expect(subject.total_for_uplift).to eql(statement.contract.uplift_cap)
       end
     end
+
+    context "when contract does not include uplift fees" do
+      let!(:contract) { create(:call_off_contract, lead_provider: cpd_lead_provider.lead_provider, uplift_amount: nil) }
+
+      let(:uplift_breakdown) do
+        {
+          previous_count: 5,
+          count: 2,
+          additions: 4,
+          subtractions: 2,
+        }
+      end
+
+      let(:output_calculator) { instance_double("Finance::ECF::OutputCalculator", uplift_breakdown:) }
+
+      before do
+        allow(Finance::ECF::OutputCalculator).to receive(:new).and_return(output_calculator)
+      end
+
+      it "returns zero" do
+        expect(subject.total_for_uplift).to be_zero
+      end
+    end
   end
 
   describe "#uplift_fee_per_declaration" do
     it do
       expect(subject.uplift_fee_per_declaration).to eql(100)
+    end
+
+    context "when contract does not include uplift fees" do
+      let!(:contract) { create(:call_off_contract, lead_provider: cpd_lead_provider.lead_provider, uplift_amount: nil) }
+
+      it "returns zero" do
+        expect(subject.uplift_fee_per_declaration).to be_zero
+      end
     end
   end
 

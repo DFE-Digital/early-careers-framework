@@ -148,14 +148,20 @@ module Finance
       end
 
       def uplift_deductions_count
+        return 0 unless statement.contract.include_uplift_fees?
+
         output_calculator.uplift_breakdown[:subtractions]
       end
 
       def uplift_fee_per_declaration
+        return 0.0 unless statement.contract.include_uplift_fees?
+
         statement.contract.uplift_amount
       end
 
       def total_for_uplift
+        return 0.0 unless statement.contract.include_uplift_fees?
+
         previous_uplift_count = output_calculator.uplift_breakdown[:previous_count]
         previous_uplift_amount = previous_uplift_count * uplift_fee_per_declaration
 

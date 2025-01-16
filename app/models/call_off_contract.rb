@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class CallOffContract < ApplicationRecord
+  COHORTS_WITH_NO_UPLIFT = [2025].freeze
+
   belongs_to :lead_provider
   belongs_to :cohort
 
@@ -20,6 +22,10 @@ class CallOffContract < ApplicationRecord
 
   def bands
     participant_bands.min_nulls_first
+  end
+
+  def include_uplift_fees?
+    !uplift_amount.nil?
   end
 
   delegate :set_up_recruitment_basis, to: :band_a

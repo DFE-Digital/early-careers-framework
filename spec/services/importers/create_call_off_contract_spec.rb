@@ -33,6 +33,16 @@ RSpec.describe Importers::CreateCallOffContract do
           expect(ParticipantBand.count).to be_zero
         end
       end
+
+      context "when cohort does not include uplift fees" do
+        let(:cohort) { create(:cohort, start_year: CallOffContract::COHORTS_WITH_NO_UPLIFT.sample) }
+
+        it "sets nil to `uplift_amount`" do
+          importer.call
+
+          expect(CallOffContract.where(cohort:).pluck(:uplift_amount)).to match_array([nil, nil])
+        end
+      end
     end
 
     context "when csv given" do
@@ -197,6 +207,16 @@ RSpec.describe Importers::CreateCallOffContract do
             output_payment_percentage: 100,
             service_fee_percentage: 0,
           )
+        end
+
+        context "when cohort does not include uplift fees" do
+          let(:cohort) { create(:cohort, start_year: CallOffContract::COHORTS_WITH_NO_UPLIFT.sample) }
+
+          it "sets nil to `uplift_amount`" do
+            importer.call
+
+            expect(CallOffContract.where(cohort:).pluck(:uplift_amount)).to match_array([nil])
+          end
         end
       end
     end

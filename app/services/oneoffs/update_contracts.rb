@@ -60,18 +60,21 @@ module Oneoffs
 
       version = Finance::ECF::ContractVersion.new(existing_contract&.version || "0.0.0").increment!
       record_info "Creating new contract with version '#{version}'"
-      call_off_contract = CallOffContract.create!(
+
+      attributes = {
         lead_provider:,
         cohort:,
         version:,
         uplift_target: contract_data[:uplift_target],
-        uplift_amount: contract_data[:uplift_amount],
         recruitment_target: contract_data[:recruitment_target],
         revised_target: contract_data[:revised_target],
         set_up_fee: contract_data[:set_up_fee],
         monthly_service_fee: contract_data[:monthly_service_fee],
         raw: contract_data.to_json,
-      )
+      }
+
+      attributes.merge!(uplift_amount: contract_data[:uplift_amount]) unless CallOffContract::COHORTS_WITH_NO_UPLIFT.include?(cohort.start_year)
+      call_off_contract = CallOffContract.create!(**attributes)
 
       %i[band_a band_b band_c band_d].each do |band|
         record_info "Creating new band: #{band}"

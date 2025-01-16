@@ -29,4 +29,20 @@ RSpec.describe CallOffContract, type: :model do
       expect(call_off_contract.uplift_cap).to eq(200)
     end
   end
+
+  describe "#include_uplift_fees?" do
+    context "when `uplift_amount` is present" do
+      it "returns true" do
+        expect(call_off_contract.include_uplift_fees?).to be_truthy
+      end
+    end
+
+    context "when `uplift_amount` is not present" do
+      before { call_off_contract.uplift_amount = nil }
+
+      it "returns false" do
+        expect(call_off_contract.include_uplift_fees?).to be_falsey
+      end
+    end
+  end
 end
