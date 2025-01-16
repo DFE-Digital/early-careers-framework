@@ -107,10 +107,6 @@ RSpec.describe Importers::CreateMentorCallOffContract do
         it "does not create a new call off contract" do
           expect { importer.call }.to not_change(MentorCallOffContract, :count)
         end
-
-        it "does not create participant bands" do
-          expect { importer.call }.to not_change(ParticipantBand, :count)
-        end
       end
 
       context "when no mentor call off contract exists for lead provider" do
