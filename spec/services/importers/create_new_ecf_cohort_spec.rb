@@ -10,13 +10,14 @@ RSpec.describe Importers::CreateNewECFCohort do
     let(:cohort_csv) { "spec/fixtures/files/importers/cohort_csv_data.csv" }
     let(:cohort_lead_provider_csv) { "spec/fixtures/files/importers/cohort_lead_provider_csv_data.csv" }
     let(:contract_csv) { "spec/fixtures/files/importers/contract_csv_data.csv" }
+    let(:mentor_contract_csv) { "spec/fixtures/files/importers/mentor_contract_csv_data.csv" }
     let(:schedule_csv) { "spec/fixtures/files/importers/schedule_csv_data.csv" }
     let(:statement_csv) { "spec/fixtures/files/importers/statement_csv_data.csv" }
     let(:lead_provider) { create(:lead_provider, name: "Ambition Institute", cohorts: []) }
     let!(:cpd_lead_provider) { create(:cpd_lead_provider, name: "Ambition Institute", lead_provider:) }
 
     subject do
-      described_class.new(cohort_csv:, cohort_lead_provider_csv:, contract_csv:, schedule_csv:, statement_csv:)
+      described_class.new(cohort_csv:, cohort_lead_provider_csv:, contract_csv:, mentor_contract_csv:, schedule_csv:, statement_csv:)
     end
 
     context "with missing csvs" do
@@ -40,9 +41,11 @@ RSpec.describe Importers::CreateNewECFCohort do
 
       it "creates Call off Contract and bands" do
         expect(CallOffContract.count).to eql(0)
+        expect(MentorCallOffContract.count).to eql(0)
         expect(ParticipantBand.count).to eql(0)
         subject.call
         expect(CallOffContract.count).to eql(1)
+        expect(MentorCallOffContract.count).to eql(1)
         expect(ParticipantBand.count).to eql(4)
       end
 
