@@ -166,7 +166,7 @@ group :development do
 
   # Profiling
   gem "memory_profiler"
-  gem "rack-mini-profiler"
+  gem "rack-mini-profiler", require: false
   gem "stackprof"
 
   gem "nokogiri"

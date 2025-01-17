@@ -8,6 +8,8 @@ Rails.application.routes.draw do
     sessions: "users/sessions",
   }
 
+  get "/performance_tests", to: "performance_tests#index"
+
   devise_scope :user do
     get "/users/confirm_sign_in", to: "users/sessions#redirect_from_magic_link"
     post "/users/sign_in_with_token", to: "users/sessions#sign_in_with_token"
