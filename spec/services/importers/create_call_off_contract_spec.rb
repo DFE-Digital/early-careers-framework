@@ -35,7 +35,7 @@ RSpec.describe Importers::CreateCallOffContract do
       end
 
       context "when cohort does not include uplift fees" do
-        let(:cohort) { create(:cohort, start_year: CallOffContract::COHORTS_WITH_NO_UPLIFT.sample) }
+        let(:cohort) { create(:cohort, start_year: described_class::COHORTS_WITH_NO_UPLIFT.sample) }
 
         it "sets nil to `uplift_amount`" do
           importer.call
@@ -210,7 +210,7 @@ RSpec.describe Importers::CreateCallOffContract do
         end
 
         context "when cohort does not include uplift fees" do
-          let(:cohort) { create(:cohort, start_year: CallOffContract::COHORTS_WITH_NO_UPLIFT.sample) }
+          let(:cohort) { create(:cohort, start_year: described_class::COHORTS_WITH_NO_UPLIFT.sample) }
 
           it "sets nil to `uplift_amount`" do
             importer.call

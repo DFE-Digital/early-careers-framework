@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class CallOffContract < ApplicationRecord
-  COHORTS_WITH_NO_UPLIFT = [2025].freeze
-
   belongs_to :lead_provider
   belongs_to :cohort
 
