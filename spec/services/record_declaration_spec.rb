@@ -263,6 +263,15 @@ RSpec.shared_examples "creates a participant declaration" do
     expect { service.call }.to change { ParticipantDeclaration.count }.by(1)
   end
 
+  it "creates the correct type of declaration" do
+    service.call
+
+    expected_type = participant_profile.mentor? ? "ParticipantDeclaration::Mentor" : "ParticipantDeclaration::ECT"
+
+    declaration = ParticipantDeclaration.last
+    expect(declaration.temp_type).to eq(expected_type)
+  end
+
   it "stores the correct data" do
     subject.call
 

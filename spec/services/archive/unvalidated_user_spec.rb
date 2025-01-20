@@ -49,7 +49,7 @@ RSpec.describe Archive::UnvalidatedUser do
 
   context "when the user has a declaration" do
     let(:state) { "submitted" }
-    let!(:declaration) { create(:seed_ecf_participant_declaration, :with_cpd_lead_provider, state:, user:, participant_profile:) }
+    let!(:declaration) { create(:seed_ect_participant_declaration, :with_cpd_lead_provider, state:, user:, participant_profile:) }
 
     it "raises an ArchiveError" do
       expect {
@@ -75,7 +75,7 @@ RSpec.describe Archive::UnvalidatedUser do
 
     context "when the declaration has a different profile but same user (bad data)" do
       let(:profile2) { create(:ect_participant_profile) }
-      let!(:declaration) { create(:seed_ecf_participant_declaration, :with_cpd_lead_provider, participant_profile: profile2, state:, user:) }
+      let!(:declaration) { create(:seed_ect_participant_declaration, :with_cpd_lead_provider, participant_profile: profile2, state:, user:) }
 
       it "raises an ArchiveError" do
         expect {
@@ -219,7 +219,7 @@ RSpec.describe Archive::UnvalidatedUser do
 
   context "when the user is a mentor user on a participants declaration" do
     let(:participant_profile) { create(:mentor_participant_profile) }
-    let!(:declaration) { create(:seed_ecf_participant_declaration, :valid, mentor_user_id: user.id) }
+    let!(:declaration) { create(:seed_mentor_participant_declaration, :valid, mentor_user_id: user.id) }
 
     it "raises an ArchiveError" do
       expect {

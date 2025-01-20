@@ -4,7 +4,8 @@ require "rails_helper"
 
 RSpec.describe ParticipantDeclaration, type: :model do
   let(:user) { create(:user) }
-  subject { described_class.new(user:) }
+  let(:declaration_class) { ParticipantDeclaration::ECT }
+  subject { declaration_class.new(user:) }
 
   describe "associations" do
     it { is_expected.to belong_to(:cpd_lead_provider) }
@@ -303,7 +304,7 @@ RSpec.describe ParticipantDeclaration, type: :model do
       { state: "clawed_back", voidable: false },
     ].each do |hash|
       context "when declaration is #{hash[:state]}" do
-        subject { described_class.new(state: hash[:state]) }
+        subject { declaration_class.new(state: hash[:state]) }
 
         it "#{hash[:voidable] ? 'can' : 'cannot'} be voided" do
           expect(subject.voidable?).to eql(hash[:voidable])
@@ -331,17 +332,17 @@ RSpec.describe ParticipantDeclaration, type: :model do
       }
     end
 
-    before { described_class.create!(attributes) }
+    before { declaration_class.create!(attributes) }
 
     it "raises an not unique error" do
-      expect { described_class.create!(attributes) }.to raise_error ActiveRecord::RecordNotUnique
+      expect { declaration_class.create!(attributes) }.to raise_error ActiveRecord::RecordNotUnique
     end
 
     context "when the declaration state id voided" do
       let(:state) { :voided }
 
       it "raises an not unique error" do
-        expect { described_class.create!(attributes) }.not_to raise_error
+        expect { declaration_class.create!(attributes) }.not_to raise_error
       end
     end
 
@@ -349,7 +350,7 @@ RSpec.describe ParticipantDeclaration, type: :model do
       let(:state) { :ineligible }
 
       it "raises an not unique error" do
-        expect { described_class.create!(attributes) }.not_to raise_error
+        expect { declaration_class.create!(attributes) }.not_to raise_error
       end
     end
 
@@ -357,7 +358,7 @@ RSpec.describe ParticipantDeclaration, type: :model do
       let(:state) { :awaiting_clawback }
 
       it "raises an not unique error" do
-        expect { described_class.create!(attributes) }.not_to raise_error
+        expect { declaration_class.create!(attributes) }.not_to raise_error
       end
     end
   end

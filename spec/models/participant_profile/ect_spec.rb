@@ -8,6 +8,7 @@ describe ParticipantProfile::ECT, type: :model do
   describe "associations" do
     it { is_expected.to belong_to(:mentor_profile).class_name("ParticipantProfile::Mentor").optional }
     it { is_expected.to have_one(:mentor).through(:mentor_profile).source(:user) }
+    it { is_expected.to have_many(:participant_declarations).class_name("ParticipantDeclaration::ECT").with_foreign_key(:participant_profile_id) }
   end
 
   describe "callbacks" do

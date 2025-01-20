@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe Archive::ParticipantDeclarationSerializer do
-  let(:declaration) { create(:seed_ecf_participant_declaration, :valid) }
+  let(:declaration) { create(:seed_ect_participant_declaration, :valid) }
 
   subject { described_class.new(declaration) }
 
@@ -14,7 +14,7 @@ RSpec.describe Archive::ParticipantDeclarationSerializer do
       expect(data[:type]).to eq :participant_declaration
 
       attrs = data[:attributes]
-      expect(attrs[:type]).to eq declaration.type
+      expect(attrs[:type]).to eq declaration.temp_type
       expect(attrs[:participant_profile_id]).to eq declaration.participant_profile_id
       expect(attrs[:cpd_lead_provider_id]).to eq declaration.cpd_lead_provider_id
       expect(attrs[:declaration_type]).to eq declaration.declaration_type
