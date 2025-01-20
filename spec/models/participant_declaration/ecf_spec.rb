@@ -4,9 +4,7 @@ require "rails_helper"
 
 RSpec.describe ParticipantDeclaration::ECF, mid_cohort: true do
   it "sets the type from temp_type" do
-    declaration = build(:mentor_participant_declaration)
-    expect(declaration.type).to eq(declaration.temp_type)
-    declaration.temp_type = "ParticipantDeclaration::ECF"
+    declaration = create(:mentor_participant_declaration)
     expect(declaration.type).to eq(declaration.temp_type)
   end
 

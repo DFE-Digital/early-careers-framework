@@ -204,7 +204,8 @@ private
   end
 
   def update_declaration_types!
-    participant_declarations.update_all(temp_type: type.sub("ParticipantProfile", "ParticipantDeclaration"))
+    declaration_type = type.sub("ParticipantProfile", "ParticipantDeclaration")
+    participant_declarations.update_all(type: declaration_type, temp_type: declaration_type)
   end
 end
 
