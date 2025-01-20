@@ -2,6 +2,7 @@
 
 previous_cohort = Cohort.within_next_registration_period? ? Cohort.current : Cohort.previous
 current_cohort = Cohort.active_registration_cohort
+lead_providers = LeadProvider.where(name: ["Ambition Institute", "Best Practice Network", "Capita", "Education Development Trust"])
 
 school_data = [
   #   cohort, name, with AB?, in pilot?, school_type_code
@@ -65,6 +66,14 @@ ActiveRecord::Base.transaction do
                                                                   .with_mentees
 
     FeatureFlag.activate(:registration_pilot_school, for: school.school) if in_pilot
+
+    lead_providers.each do |lead_provider|
+      school = NewSeeds::Scenarios::Schools::School
+        .new
+        .build
+        .with_partnership_in(cohort:, lead_provider:)
+        .chosen_fip_and_partnered_in(cohort:)
+    end
 
     # CIP School
     cohort, sit_name, with_appropriate_body, in_pilot, school_type_code = row[1]
