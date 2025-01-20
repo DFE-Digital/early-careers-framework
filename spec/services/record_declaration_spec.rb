@@ -270,6 +270,7 @@ RSpec.shared_examples "creates a participant declaration" do
 
     declaration = ParticipantDeclaration.last
     expect(declaration.temp_type).to eq(expected_type)
+    expect(declaration.type).to eq(expected_type)
   end
 
   it "stores the correct data" do
