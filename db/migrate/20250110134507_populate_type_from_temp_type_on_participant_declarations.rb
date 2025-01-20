@@ -10,6 +10,6 @@ class PopulateTypeFromTempTypeOnParticipantDeclarations < ActiveRecord::Migratio
   end
 
   def down
-    ParticipantDeclaration::ECF.in_batches(of: 1_000) { |batch| batch.update_all(temp_type: "ParticipantDeclaration::ECF") }
+    ParticipantDeclaration::ECF.in_batches(of: 1_000) { |batch| batch.update_all(type: "ParticipantDeclaration::ECF") }
   end
 end
