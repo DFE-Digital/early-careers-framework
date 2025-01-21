@@ -70,10 +70,4 @@ RSpec.describe Finance::Schedule::ECF, type: :model do
       end
     end
   end
-
-  describe ".npq?" do
-    it "should return false" do
-      expect(described_class.new.npq?).to be(false)
-    end
-  end
 end

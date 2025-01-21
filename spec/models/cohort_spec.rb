@@ -234,8 +234,6 @@ RSpec.describe Cohort, type: :model do
     let!(:ecf_schedule) { create(:ecf_schedule, cohort:) }
     let(:cohort) { described_class.create!(start_year: 3000) }
 
-    before { create(:npq_leadership_schedule, cohort:) }
-
     it { is_expected.to contain_exactly(ecf_schedule) }
   end
 

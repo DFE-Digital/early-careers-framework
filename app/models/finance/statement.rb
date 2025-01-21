@@ -45,8 +45,6 @@ class Finance::Statement < ApplicationRecord
       .where("deadline_date >= ?", Date.current)
   }
 
-  STATEMENT_TYPES = %w[ecf npq].freeze
-
   class << self
     def current
       with_future_deadline_date.order(deadline_date: :asc).first
@@ -84,10 +82,6 @@ class Finance::Statement < ApplicationRecord
     false
   end
 
-  def npq?
-    false
-  end
-
   def payable?
     false
   end
@@ -102,4 +96,3 @@ class Finance::Statement < ApplicationRecord
 end
 
 require "finance/statement/ecf"
-require "finance/statement/npq"

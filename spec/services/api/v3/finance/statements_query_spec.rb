@@ -43,24 +43,6 @@ RSpec.describe Api::V3::Finance::StatementsQuery do
           payment_date: 3.days.ago,
         )
       end
-      let!(:npq_statement_next_cohort) do
-        create(
-          :npq_statement,
-          :output_fee,
-          cpd_lead_provider:,
-          cohort: next_cohort,
-          payment_date: 2.days.ago,
-        )
-      end
-      let!(:npq_statement_current_cohort) do
-        create(
-          :npq_statement,
-          :output_fee,
-          cpd_lead_provider:,
-          cohort: current_cohort,
-          payment_date: 1.day.ago,
-        )
-      end
 
       it "returns all output ecf statements for the cpd provider ordered by payment_date" do
         expect(subject.statements).to eq([
@@ -104,8 +86,6 @@ RSpec.describe Api::V3::Finance::StatementsQuery do
         before do
           ecf_statement_next_cohort.update!(updated_at: 3.days.ago)
           ecf_statement_current_cohort.update!(updated_at: 1.day.ago)
-          npq_statement_next_cohort.update!(updated_at: 1.day.ago)
-          npq_statement_current_cohort.update!(updated_at: 6.days.ago)
         end
 
         it "returns ecf statements for the specific updated time" do
@@ -126,27 +106,19 @@ RSpec.describe Api::V3::Finance::StatementsQuery do
         end
       end
 
-      context "with npq type filter" do
-        let(:params) { { filter: { type: "npq" } } }
+      context "with incorrect type filter" do
+        let(:params) { { filter: { type: "does-not-exist" } } }
 
         it "returns no statements" do
           expect(subject.statements).to be_empty
         end
+      end
 
-        context "with incorrect type filter" do
-          let(:params) { { filter: { type: "does-not-exist" } } }
+      context "with an ecf and cohort filter" do
+        let(:params) { { filter: { type: "ecf", cohort: current_cohort.display_name } } }
 
-          it "returns no statements" do
-            expect(subject.statements).to be_empty
-          end
-        end
-
-        context "with an ecf and cohort filter" do
-          let(:params) { { filter: { type: "ecf", cohort: current_cohort.display_name } } }
-
-          it "returns ecf statement that belongs to the cohort" do
-            expect(subject.statements).to contain_exactly(ecf_statement_current_cohort)
-          end
+        it "returns ecf statement that belongs to the cohort" do
+          expect(subject.statements).to contain_exactly(ecf_statement_current_cohort)
         end
       end
     end
@@ -178,24 +150,6 @@ RSpec.describe Api::V3::Finance::StatementsQuery do
 
       context "with no params id" do
         let(:params) { {} }
-
-        it "does not return the finance statement" do
-          expect { subject.statement }.to raise_error(ActiveRecord::RecordNotFound)
-        end
-      end
-
-      context "when requesting NPQ statement" do
-        let!(:npq_statement_next_cohort) do
-          create(
-            :npq_statement,
-            :output_fee,
-            cpd_lead_provider:,
-            cohort: next_cohort,
-            payment_date: 2.days.ago,
-          )
-        end
-
-        let(:params) { { id: npq_statement_next_cohort.id } }
 
         it "does not return the finance statement" do
           expect { subject.statement }.to raise_error(ActiveRecord::RecordNotFound)

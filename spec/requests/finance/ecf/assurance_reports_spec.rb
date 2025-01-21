@@ -8,7 +8,7 @@ RSpec.describe Finance::ECF::AssuranceReportsController, mid_cohort: true do
   let(:lead_provider)           { cpd_lead_provider.lead_provider }
   let(:statement)               { create(:ecf_statement, cpd_lead_provider:) }
   let(:other_cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
-  let(:other_statement)         { create(:npq_statement, cpd_lead_provider: other_cpd_lead_provider) }
+  let(:other_statement)         { create(:ecf_statement, cpd_lead_provider: other_cpd_lead_provider) }
 
   let(:parsed_response) { CSV.parse(response.body.force_encoding("utf-8"), headers: true, encoding: "utf-8", col_sep: ",") }
 
