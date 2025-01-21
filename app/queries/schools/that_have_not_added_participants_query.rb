@@ -29,7 +29,11 @@ module Schools
       SchoolCohort
         .where(cohort:)
         .where(induction_programme_choice: %w[full_induction_programme core_induction_programme])
-        .where.not(id: InductionProgramme.joins(:induction_records, :school_cohort).where(school_cohort: { cohort: }).select(:school_cohort_id))
+        .where.not(id: InductionProgramme
+                         .joins(:induction_records, :school_cohort)
+                         .where(school_cohort: { cohort: })
+                         .select(:school_cohort_id)
+                         .distinct)
     end
   end
 end
