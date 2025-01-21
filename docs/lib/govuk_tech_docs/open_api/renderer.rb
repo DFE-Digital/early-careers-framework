@@ -178,7 +178,7 @@ module GovukTechDocs
 
       def document_paths
         sorted_paths(@document.paths.to_h).reject do |path, _|
-          remove_npq_references? && path.downcase.include?("npq")
+          path.downcase.include?("npq")
         end
       end
 
@@ -202,23 +202,17 @@ module GovukTechDocs
         }.to_h
       end
 
-      def remove_npq_references?
-        ENV["REMOVE_NPQ_REFERENCES"].to_s == "true"
-      end
-
       def remove_npq_references_from_text(text)
-        return text unless remove_npq_references?
-
         text.gsub(/ecf or npq/i, "ecf")
       end
 
       def filter_possible_values(enum)
-        enum.reject { |v| remove_npq_references? && v.downcase.include?("npq") }
+        enum.reject { |v| v.downcase.include?("npq") }
       end
 
       def filter_examples(examples)
         examples&.reject do |_, example|
-          remove_npq_references? && example["value"].to_s.downcase.include?("npq")
+          example["value"].to_s.downcase.include?("npq")
         end
       end
 
@@ -227,7 +221,7 @@ module GovukTechDocs
 
         schemas.reject do |schema|
           values = [schema.name, schema.description]
-          remove_npq_references? && values.any? { |v| v.to_s.downcase.include?("npq") }
+          values.any? { |v| v.to_s.downcase.include?("npq") }
         end
       end
 
@@ -289,7 +283,7 @@ module GovukTechDocs
       def schemas_data
         @schemas_data ||= @document.components.schemas.to_h.reject do |schema_name, schema|
           values = [schema_name, schema.description]
-          remove_npq_references? && values.any? { |v| v.to_s.downcase.include?("npq") }
+          values.any? { |v| v.to_s.downcase.include?("npq") }
         end
       end
 

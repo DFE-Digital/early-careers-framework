@@ -133,13 +133,6 @@ RSpec.describe GovukTechDocs::OpenApi::Renderer do
   end
 
   describe "#api_full" do
-    let(:remove_npq_references) { false }
-
-    before do
-      allow(ENV).to receive(:[]).and_call_original
-      allow(ENV).to receive(:[]).with("REMOVE_NPQ_REFERENCES").and_return(remove_npq_references)
-    end
-
     it "renders a server with no description" do
       spec["servers"] = [
         { url: "https://example.com" },
@@ -182,62 +175,31 @@ RSpec.describe GovukTechDocs::OpenApi::Renderer do
         Capybara::Node::Simple.new(render.api_full)
       end
 
-      it "renders a list of paths" do
+      it "renders a list of paths, excluding any that contain 'npq'" do
         expect(rendered).to have_css(".govuk-heading-l", text: "/widgets")
         expect(rendered).to have_css("#widgets-get-responses")
         expect(rendered).to have_css("#widgets-get-responses-examples")
         expect(rendered).to have_css("span.govuk-details__summary-text", text: "200 - widgets description goes here")
 
-        expect(rendered).to have_css(".govuk-heading-l", text: "/npq-widgets")
-        expect(rendered).to have_css("#npq-widgets-get-responses")
-        expect(rendered).to have_css("#npq-widgets-get-responses-examples")
-        expect(rendered).to have_css("span.govuk-details__summary-text", text: "200 - npq widgets description goes here")
+        expect(rendered).not_to have_css(".govuk-heading-l", text: "/npq-widgets")
+        expect(rendered).not_to have_css("#npq-widgets-get-responses")
+        expect(rendered).not_to have_css("#npq-widgets-get-responses-examples")
+        expect(rendered).not_to have_css("span.govuk-details__summary-text", text: "200 - npq widgets description goes here")
       end
 
-      it "renders schemas" do
+      it "renders schemas, excluding any that contain 'npq'" do
         expect(rendered).to have_css("#schema-widget", text: "widget")
         expect(rendered).to have_link("widgetInteger", href: "#schema-widgetinteger")
         expect(rendered).to have_link("widgetString", href: "#schema-widgetstring")
 
-        expect(rendered).to have_css("#schema-npqwidget", text: "npqWidget")
-        expect(rendered).to have_link("npqWidgetInteger", href: "#schema-npqwidgetinteger")
-        expect(rendered).to have_link("npqWidgetString", href: "#schema-npqwidgetstring")
+        expect(rendered).not_to have_css("#schema-npqwidget", text: "npqWidget")
+        expect(rendered).not_to have_link("npqWidgetInteger", href: "#schema-npqwidgetinteger")
+        expect(rendered).not_to have_link("npqWidgetString", href: "#schema-npqwidgetstring")
 
-        expect(rendered).to have_css("#schema-otherwidget", text: "otherWidget")
-        expect(rendered).to have_link("npqWidget", href: "#schema-npqwidget")
+        expect(rendered).not_to have_css("#schema-otherwidget", text: "otherWidget")
+        expect(rendered).not_to have_link("npqWidget", href: "#schema-npqwidget")
 
-        expect(rendered).to have_css("li", text: "NPQ-value")
-      end
-
-      context "whem removing NPQ references" do
-        let(:remove_npq_references) { true }
-
-        it "renders a list of paths, excluding any that contain 'npq'" do
-          expect(rendered).to have_css(".govuk-heading-l", text: "/widgets")
-          expect(rendered).to have_css("#widgets-get-responses")
-          expect(rendered).to have_css("#widgets-get-responses-examples")
-          expect(rendered).to have_css("span.govuk-details__summary-text", text: "200 - widgets description goes here")
-
-          expect(rendered).not_to have_css(".govuk-heading-l", text: "/npq-widgets")
-          expect(rendered).not_to have_css("#npq-widgets-get-responses")
-          expect(rendered).not_to have_css("#npq-widgets-get-responses-examples")
-          expect(rendered).not_to have_css("span.govuk-details__summary-text", text: "200 - npq widgets description goes here")
-        end
-
-        it "renders schemas, excluding any that contain 'npq'" do
-          expect(rendered).to have_css("#schema-widget", text: "widget")
-          expect(rendered).to have_link("widgetInteger", href: "#schema-widgetinteger")
-          expect(rendered).to have_link("widgetString", href: "#schema-widgetstring")
-
-          expect(rendered).not_to have_css("#schema-npqwidget", text: "npqWidget")
-          expect(rendered).not_to have_link("npqWidgetInteger", href: "#schema-npqwidgetinteger")
-          expect(rendered).not_to have_link("npqWidgetString", href: "#schema-npqwidgetstring")
-
-          expect(rendered).not_to have_css("#schema-otherwidget", text: "otherWidget")
-          expect(rendered).not_to have_link("npqWidget", href: "#schema-npqwidget")
-
-          expect(rendered).not_to have_css("li", text: "NPQ-value")
-        end
+        expect(rendered).not_to have_css("li", text: "NPQ-value")
       end
     end
 

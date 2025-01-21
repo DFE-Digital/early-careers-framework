@@ -20,7 +20,5 @@ set :relative_links, true
 
 set :layout, :custom
 
-if ENV["REMOVE_NPQ_REFERENCES"].to_s == "true"
-  ignore "/npq.html"
-  ignore "/npq/**.*"
-end
+ignore "/npq.html"
+ignore "/npq/**.*"
