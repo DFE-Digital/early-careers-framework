@@ -408,7 +408,7 @@ RSpec.describe ParticipantProfile::ECF, type: :model do
   end
 
   describe "changing the profile type" do
-    it "updates the declarations to the correct type/temp_type when changing from ECT to mentor" do
+    it "updates the declarations to the correct type when changing from ECT to mentor" do
       declaration = travel_to(1.day.ago) { create(:ect_participant_declaration) }
       profile = declaration.participant_profile
 
@@ -417,13 +417,12 @@ RSpec.describe ParticipantProfile::ECF, type: :model do
       expect(ParticipantProfile.find(profile.id)).to be_an_instance_of(ParticipantProfile::Mentor)
 
       updated_declaration = ParticipantDeclaration::ECF.find(declaration.id)
-      expect(updated_declaration.temp_type).to eq("ParticipantDeclaration::Mentor")
       expect(updated_declaration.type).to eq("ParticipantDeclaration::Mentor")
       expect(updated_declaration).to be_an_instance_of(ParticipantDeclaration::Mentor)
       expect(updated_declaration.updated_at).to be_within(1.minute).of(1.day.ago)
     end
 
-    it "updates the declarations to the correct type/temp_type when changing from mentor to ECT" do
+    it "updates the declarations to the correct type when changing from mentor to ECT" do
       declaration = travel_to(1.day.ago) { create(:mentor_participant_declaration) }
       profile = declaration.participant_profile
 
@@ -432,7 +431,6 @@ RSpec.describe ParticipantProfile::ECF, type: :model do
       expect(ParticipantProfile.find(profile.id)).to be_an_instance_of(ParticipantProfile::ECT)
 
       updated_declaration = ParticipantDeclaration::ECF.find(declaration.id)
-      expect(updated_declaration.temp_type).to eq("ParticipantDeclaration::ECT")
       expect(updated_declaration.type).to eq("ParticipantDeclaration::ECT")
       expect(updated_declaration).to be_an_instance_of(ParticipantDeclaration::ECT)
       expect(updated_declaration.updated_at).to be_within(1.minute).of(1.day.ago)

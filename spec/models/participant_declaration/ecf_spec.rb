@@ -3,11 +3,6 @@
 require "rails_helper"
 
 RSpec.describe ParticipantDeclaration::ECF, mid_cohort: true do
-  it "sets the temp_type from type" do
-    declaration = create(:mentor_participant_declaration)
-    expect(declaration.temp_type).to eq(declaration.type)
-  end
-
   describe "type validation against participant_profile" do
     it "raises an error when the declaration type is ECT and the profile type is Mentor" do
       declaration = create(:mentor_participant_declaration)
