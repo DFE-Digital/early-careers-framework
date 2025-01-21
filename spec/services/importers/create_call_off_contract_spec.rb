@@ -208,16 +208,6 @@ RSpec.describe Importers::CreateCallOffContract do
             service_fee_percentage: 0,
           )
         end
-
-        context "when cohort does not include uplift fees" do
-          let(:cohort) { create(:cohort, start_year: 2025) }
-
-          it "sets nil to `uplift_amount`" do
-            importer.call
-
-            expect(CallOffContract.where(cohort:).pluck(:uplift_amount)).to match_array([nil])
-          end
-        end
       end
     end
   end

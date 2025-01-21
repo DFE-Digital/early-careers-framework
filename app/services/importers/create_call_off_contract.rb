@@ -30,7 +30,7 @@ module Importers
 
       LeadProvider.find_each do |lead_provider|
         [cohort_current, cohort_previous, cohort_next].each do |cohort|
-          create_call_off_contract_and_bands(lead_provider:, cohort:, contract_data: example_contract_data)
+          create_call_off_contract_and_bands(lead_provider:, cohort:, contract_data: example_contract_data(cohort))
         end
       end
     end
@@ -83,7 +83,7 @@ module Importers
         lead_provider:,
         cohort:,
         uplift_target: contract_data[:uplift_target],
-        uplift_amount: cohort.start_year >= 2025 ? nil : contract_data[:uplift_amount],
+        uplift_amount: contract_data[:uplift_amount],
         recruitment_target: contract_data[:recruitment_target],
         revised_target: contract_data[:revised_target],
         set_up_fee: contract_data[:set_up_fee],
@@ -116,10 +116,11 @@ module Importers
       @cohort_next ||= Cohort.next || FactoryBot.create(:cohort, :next)
     end
 
-    def example_contract_data
-      @example_contract_data ||= {
+    def example_contract_data(cohort)
+      @example_contract_data ||= {}
+      @example_contract_data[cohort.start_year] ||= {
         uplift_target: 0.33,
-        uplift_amount: 100,
+        uplift_amount: cohort.start_year >= 2025 ? nil : 100,
         recruitment_target: 4500,
         revised_target: (4500 * 1.02).to_i,
         set_up_fee: 0,
