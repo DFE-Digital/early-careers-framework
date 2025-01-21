@@ -27,11 +27,11 @@ module GovukTechDocs
       end
 
       def api_full
-        paths = document_paths.keys.inject("") do |memo, text|
+        paths = @document.paths.keys.inject("") do |memo, text|
           memo + path(text)
         end
 
-        schema_names = schemas_data.keys
+        schema_names = @document.components.schemas.keys
         schemas = schema_names.inject("") do |memo, schema_name|
           memo + schema(schema_name)
         end
@@ -40,7 +40,7 @@ module GovukTechDocs
       end
 
       def path(text)
-        path = document_paths[text]
+        path = @document.paths[text]
         id = text.parameterize
         operations = operations(text:, path:, path_id: id)
         @template_path.result(binding)
@@ -62,7 +62,7 @@ module GovukTechDocs
       end
 
       def schemas_from_path(text)
-        operations = get_operations(document_paths[text])
+        operations = get_operations(@document.paths[text])
         schemas = operations.flat_map do |_, operation|
           operation.responses.inject([]) do |memo, (_, response)|
             next memo unless response.content["application/json"]
@@ -176,35 +176,6 @@ module GovukTechDocs
 
     private
 
-      def document_paths
-        @document.paths.to_h.reject do |path, _|
-          path.downcase.include?("npq")
-        end
-      end
-
-      def remove_npq_references_from_text(text)
-        text.gsub(/ecf or npq/i, "ecf")
-      end
-
-      def filter_possible_values(enum)
-        enum.reject { |v| v.downcase.include?("npq") }
-      end
-
-      def filter_examples(examples)
-        examples&.reject do |_, example|
-          example["value"].to_s.downcase.include?("npq")
-        end
-      end
-
-      def filter_schemas(schemas)
-        return unless schemas
-
-        schemas.reject do |schema|
-          values = [schema.name, schema.description]
-          values.any? { |v| v.to_s.downcase.include?("npq") }
-        end
-      end
-
       def info
         document.info
       end
@@ -261,10 +232,7 @@ module GovukTechDocs
       end
 
       def schemas_data
-        @schemas_data ||= @document.components.schemas.to_h.reject do |schema_name, schema|
-          values = [schema_name, schema.description]
-          values.any? { |v| v.to_s.downcase.include?("npq") }
-        end
+        @schemas_data ||= @document.components.schemas
       end
 
       def format_possible_value(possible_value)
