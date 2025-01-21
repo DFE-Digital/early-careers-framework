@@ -269,7 +269,6 @@ RSpec.shared_examples "creates a participant declaration" do
     expected_type = participant_profile.mentor? ? "ParticipantDeclaration::Mentor" : "ParticipantDeclaration::ECT"
 
     declaration = ParticipantDeclaration.last
-    expect(declaration.temp_type).to eq(expected_type)
     expect(declaration.type).to eq(expected_type)
   end
 
