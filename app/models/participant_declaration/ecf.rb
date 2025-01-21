@@ -5,7 +5,7 @@ class ParticipantDeclaration::ECF < ParticipantDeclaration
 
   validate :validate_against_profile_type
 
-  before_save :populate_type
+  before_save :populate_temp_type
 
   def ecf?
     true
@@ -25,7 +25,7 @@ class ParticipantDeclaration::ECF < ParticipantDeclaration
     errors.add(:type, I18n.t(:declaration_type_must_match_profile_type))
   end
 
-  def populate_type
-    self.type = temp_type
+  def populate_temp_type
+    self.temp_type = type
   end
 end
