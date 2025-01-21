@@ -35,7 +35,7 @@ RSpec.describe Importers::CreateCallOffContract do
       end
 
       context "when cohort does not include uplift fees" do
-        let(:cohort) { create(:cohort, start_year: described_class::COHORTS_WITH_NO_UPLIFT.sample) }
+        let(:cohort) { create(:cohort, start_year: 2025) }
 
         it "sets nil to `uplift_amount`" do
           importer.call
@@ -93,7 +93,7 @@ RSpec.describe Importers::CreateCallOffContract do
 
       context "when lead provider does not belong in supplied cohort" do
         let!(:lead_provider) { create(:lead_provider, name: "Kangaroo Institute", cohorts: []) }
-        let!(:cohort) { FactoryBot.create :cohort }
+        let!(:cohort) { create(:cohort) }
         before do
           csv.write "lead-provider-name,cohort-start-year,uplift-target,uplift-amount,recruitment-target,revised-target,set-up-fee,monthly-service-fee,band-a-min,band-a-max,band-a-per-participant,band-b-min,band-b-max,band-b-per-participant,band-c-min,band-c-max,band-c-per-participant,band-d-min,band-d-max,band-d-per-participant"
           csv.write "\n"
@@ -108,7 +108,7 @@ RSpec.describe Importers::CreateCallOffContract do
       end
 
       context "when the lead provider has an existing call off contract in the cohort" do
-        let!(:cohort) { FactoryBot.create :seed_cohort }
+        let!(:cohort) { create(:seed_cohort) }
         let!(:lead_provider) { create(:lead_provider, name: "Whale Institute", cohorts: [cohort]) }
         let!(:call_off_contract) { create(:call_off_contract, cohort:, lead_provider:) }
         before do
@@ -129,7 +129,7 @@ RSpec.describe Importers::CreateCallOffContract do
       end
 
       context "when no call off contract exists for lead provider" do
-        let!(:cohort) { FactoryBot.create :cohort }
+        let!(:cohort) { create(:cohort, start_year: 2024) }
         let!(:lead_provider) { create(:lead_provider, name: "Butterfly Institute", cohorts: [cohort]) }
         before do
           csv.write "lead-provider-name,cohort-start-year,uplift-target,uplift-amount,recruitment-target,revised-target,set-up-fee,monthly-service-fee,band-a-min,band-a-max,band-a-per-participant,band-b-min,band-b-max,band-b-per-participant,band-c-min,band-c-max,band-c-per-participant,band-d-min,band-d-max,band-d-per-participant"
@@ -210,7 +210,7 @@ RSpec.describe Importers::CreateCallOffContract do
         end
 
         context "when cohort does not include uplift fees" do
-          let(:cohort) { create(:cohort, start_year: described_class::COHORTS_WITH_NO_UPLIFT.sample) }
+          let(:cohort) { create(:cohort, start_year: 2025) }
 
           it "sets nil to `uplift_amount`" do
             importer.call

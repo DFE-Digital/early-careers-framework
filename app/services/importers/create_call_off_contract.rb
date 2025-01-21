@@ -4,8 +4,6 @@ require "csv"
 
 module Importers
   class CreateCallOffContract
-    COHORTS_WITH_NO_UPLIFT = [2025].freeze
-
     def call
       logger.info "CreateCallOffContract: Started!"
 
@@ -81,19 +79,17 @@ module Importers
     end
 
     def create_call_off_contract!(lead_provider:, contract_data:, cohort:)
-      attributes = {
+      CallOffContract.create!(
         lead_provider:,
         cohort:,
         uplift_target: contract_data[:uplift_target],
+        uplift_amount: cohort.start_year >= 2025 ? nil : contract_data[:uplift_amount],
         recruitment_target: contract_data[:recruitment_target],
         revised_target: contract_data[:revised_target],
         set_up_fee: contract_data[:set_up_fee],
         monthly_service_fee: contract_data[:monthly_service_fee],
         raw: contract_data.to_json,
-      }
-
-      attributes.merge!(uplift_amount: contract_data[:uplift_amount]) unless COHORTS_WITH_NO_UPLIFT.include?(cohort.start_year)
-      CallOffContract.create!(**attributes)
+      )
     end
 
     def create_participant_band!(call_off_contract:, band_data:, band_d: false)
