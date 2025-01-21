@@ -12,6 +12,7 @@ RSpec.describe Finance::Statements::ECFDetailsTable, type: :component do
       :ect_participant_declaration,
       :eligible,
       cpd_lead_provider:,
+      uplifts: [:sparsity_uplift],
     )
   end
 
@@ -23,6 +24,17 @@ RSpec.describe Finance::Statements::ECFDetailsTable, type: :component do
     expect(rendered).to have_text("Total starts")
     expect(rendered).to have_text(1)
     expect(rendered).to have_text("Total")
-    expect(rendered).to have_text("£6,101.75")
+    expect(rendered).to have_text("£5,981.75")
+  end
+
+  context "when contract does not include uplift fees" do
+    before { allow_any_instance_of(CallOffContract).to receive(:include_uplift_fees?).and_return(false) }
+
+    it "has the correct text" do
+      expect(rendered).to have_text("Total starts")
+      expect(rendered).to have_text(1)
+      expect(rendered).to have_text("Total")
+      expect(rendered).to have_text("£6,101.75")
+    end
   end
 end

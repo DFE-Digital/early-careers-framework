@@ -144,6 +144,8 @@ module Finance
       end
 
       def uplift_additions_count
+        return 0.0 unless statement.contract.include_uplift_fees?
+
         output_calculator.uplift_breakdown[:additions]
       end
 
@@ -165,11 +167,9 @@ module Finance
         previous_uplift_count = output_calculator.uplift_breakdown[:previous_count]
         previous_uplift_amount = previous_uplift_count * uplift_fee_per_declaration
 
-        delta_uplift_count = output_calculator.uplift_breakdown[:count]
-
         # uplift_clawback_deductions is a negative number so doing a double negative --
         # we're adding it back as we had subtracted from adjustments_total
-        delta_uplift_amount = delta_uplift_count * uplift_fee_per_declaration - uplift_clawback_deductions
+        delta_uplift_amount = uplift_count * uplift_fee_per_declaration - uplift_clawback_deductions
 
         available = [(statement.contract.uplift_cap - previous_uplift_amount), 0].max
 
