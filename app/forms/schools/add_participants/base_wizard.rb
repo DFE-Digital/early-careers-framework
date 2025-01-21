@@ -487,7 +487,7 @@ module Schools
 
       def cohort_for_ect_with_induction_start_date
         Cohort.for_induction_start_date(induction_start_date).tap do |cohort|
-          return Cohort.current if cohort.blank? || cohort.npq_plus_one_or_earlier?
+          return Cohort.current if cohort.blank?
           return Cohort.active_registration_cohort if cohort.payments_frozen?
         end
       end
