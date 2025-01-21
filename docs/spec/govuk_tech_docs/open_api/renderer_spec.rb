@@ -29,22 +29,6 @@ RSpec.describe GovukTechDocs::OpenApi::Renderer do
             },
           },
         },
-        "/npq-widgets": {
-          get: {
-            responses: {
-              "200": {
-                description: "npq widgets description goes here",
-                content: {
-                  "application/json": {
-                    schema: {
-                      "$ref": "#/components/schemas/npqWidgets",
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
       },
       components: {
         schemas: {
@@ -58,26 +42,10 @@ RSpec.describe GovukTechDocs::OpenApi::Renderer do
               },
             },
           },
-          npqWidgets: {
-            properties: {
-              data: {
-                type: "array",
-                items: {
-                  "$ref": "#/components/schemas/npqWidget",
-                },
-              },
-            },
-          },
           widget: {
             anyOf: [
               { "$ref": "#/components/schemas/widgetInteger" },
               { "$ref": "#/components/schemas/widgetString" },
-            ],
-          },
-          npqWidget: {
-            anyOf: [
-              { "$ref": "#/components/schemas/npqWidgetInteger" },
-              { "$ref": "#/components/schemas/npqWidgetString" },
             ],
           },
           widgetInteger: {
@@ -90,41 +58,6 @@ RSpec.describe GovukTechDocs::OpenApi::Renderer do
             type: "object",
             properties: {
               id: { type: "string", example: "abcde" },
-            },
-          },
-          npqWidgetInteger: {
-            type: "object",
-            properties: {
-              id: { type: "integer", example: 12_345 },
-            },
-          },
-          npqWidgetString: {
-            type: "object",
-            properties: {
-              id: { type: "string", example: "abcde" },
-            },
-          },
-          otherWidget: {
-            type: "object",
-            description: "an NPQ widget without npq in the schema name",
-          },
-          enumWidget: {
-            type: "object",
-            properties: {
-              enum_attr: {
-                type: "string",
-                enum: %w[
-                  value
-                  NPQ-value
-                ],
-              },
-              various: {
-                anyOf: [
-                  {
-                    "$ref": "#/components/schemas/npqWidget",
-                  },
-                ],
-              },
             },
           },
         },
@@ -175,31 +108,17 @@ RSpec.describe GovukTechDocs::OpenApi::Renderer do
         Capybara::Node::Simple.new(render.api_full)
       end
 
-      it "renders a list of paths, excluding any that contain 'npq'" do
+      it "renders a list of paths" do
         expect(rendered).to have_css(".govuk-heading-l", text: "/widgets")
         expect(rendered).to have_css("#widgets-get-responses")
         expect(rendered).to have_css("#widgets-get-responses-examples")
         expect(rendered).to have_css("span.govuk-details__summary-text", text: "200 - widgets description goes here")
-
-        expect(rendered).not_to have_css(".govuk-heading-l", text: "/npq-widgets")
-        expect(rendered).not_to have_css("#npq-widgets-get-responses")
-        expect(rendered).not_to have_css("#npq-widgets-get-responses-examples")
-        expect(rendered).not_to have_css("span.govuk-details__summary-text", text: "200 - npq widgets description goes here")
       end
 
-      it "renders schemas, excluding any that contain 'npq'" do
+      it "renders schemas" do
         expect(rendered).to have_css("#schema-widget", text: "widget")
         expect(rendered).to have_link("widgetInteger", href: "#schema-widgetinteger")
         expect(rendered).to have_link("widgetString", href: "#schema-widgetstring")
-
-        expect(rendered).not_to have_css("#schema-npqwidget", text: "npqWidget")
-        expect(rendered).not_to have_link("npqWidgetInteger", href: "#schema-npqwidgetinteger")
-        expect(rendered).not_to have_link("npqWidgetString", href: "#schema-npqwidgetstring")
-
-        expect(rendered).not_to have_css("#schema-otherwidget", text: "otherWidget")
-        expect(rendered).not_to have_link("npqWidget", href: "#schema-npqwidget")
-
-        expect(rendered).not_to have_css("li", text: "NPQ-value")
       end
     end
 

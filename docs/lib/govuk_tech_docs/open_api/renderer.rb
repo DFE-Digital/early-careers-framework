@@ -31,7 +31,7 @@ module GovukTechDocs
           memo + path(text)
         end
 
-        schema_names = schemas_data.keys
+        schema_names = @document.components.schemas.keys
         schemas = schema_names.inject("") do |memo, schema_name|
           memo + schema(schema_name)
         end
@@ -177,9 +177,7 @@ module GovukTechDocs
     private
 
       def document_paths
-        sorted_paths(@document.paths.to_h).reject do |path, _|
-          path.downcase.include?("npq")
-        end
+        sorted_paths(@document.paths.to_h)
       end
 
       def sorted_paths(paths)
@@ -200,29 +198,6 @@ module GovukTechDocs
 
           [sort_order.index(path_group), path.length]
         }.to_h
-      end
-
-      def remove_npq_references_from_text(text)
-        text.gsub(/ecf or npq/i, "ecf")
-      end
-
-      def filter_possible_values(enum)
-        enum.reject { |v| v.downcase.include?("npq") }
-      end
-
-      def filter_examples(examples)
-        examples&.reject do |_, example|
-          example["value"].to_s.downcase.include?("npq")
-        end
-      end
-
-      def filter_schemas(schemas)
-        return unless schemas
-
-        schemas.reject do |schema|
-          values = [schema.name, schema.description]
-          values.any? { |v| v.to_s.downcase.include?("npq") }
-        end
       end
 
       def info
@@ -281,10 +256,7 @@ module GovukTechDocs
       end
 
       def schemas_data
-        @schemas_data ||= @document.components.schemas.to_h.reject do |schema_name, schema|
-          values = [schema_name, schema.description]
-          values.any? { |v| v.to_s.downcase.include?("npq") }
-        end
+        @schemas_data ||= @document.components.schemas
       end
 
       def format_possible_value(possible_value)
