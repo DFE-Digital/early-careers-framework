@@ -3,7 +3,6 @@
 class Cohort < ApplicationRecord
   has_paper_trail
 
-  NPQ_PLUS_1_YEAR = 2020
   INITIAL_COHORT_START_DATE = Date.new(2021, 9, 1)
 
   has_many :call_off_contracts
@@ -20,10 +19,6 @@ class Cohort < ApplicationRecord
 
   def self.active_registration_cohort
     where(registration_start_date: ..Date.current).order(start_year: :desc).first
-  end
-
-  def self.active_npq_registration_cohort
-    where(npq_registration_start_date: ..Date.current).order(start_year: :desc).first.presence || current
   end
 
   def self.containing_date(date)
@@ -84,10 +79,6 @@ class Cohort < ApplicationRecord
 
   def next
     self.class.find_by(start_year: start_year + 1)
-  end
-
-  def npq_plus_one_or_earlier?
-    start_year <= NPQ_PLUS_1_YEAR
   end
 
   def payments_frozen?
