@@ -30,6 +30,7 @@ class RecordDeclaration
   validate :output_fee_statement_available
   validate :validate_milestone_exists
   validate :validates_billable_slot_available
+  validate :validate_only_started_or_completed_if_mentor
   validates :course_identifier, course: true
   validates :cpd_lead_provider, induction_record: true
 
@@ -203,6 +204,14 @@ private
 
   def original_participant_declaration
     @original_participant_declaration ||= participant_declaration.duplicate_declarations.order(created_at: :asc).first
+  end
+
+  def validate_only_started_or_completed_if_mentor
+    return if declaration_type&.in?(%w[started completed])
+    return unless participant_profile && participant_profile.mentor?
+    return unless cohort && cohort.mentor_funding?
+
+    errors.add(:declaration_type, I18n.t(:retained_declaration_not_allowed_for_mentor))
   end
 
   def validates_billable_slot_available

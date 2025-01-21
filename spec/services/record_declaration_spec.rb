@@ -341,9 +341,8 @@ RSpec.describe RecordDeclaration do
     }
   end
 
-  let(:cutoff_start_datetime) { participant_profile.schedule.milestones.find_by(declaration_type: "started").start_date.beginning_of_day }
-  let(:cutoff_end_datetime)   { participant_profile.schedule.milestones.find_by(declaration_type: "started").milestone_date.end_of_day }
-
+  let(:cutoff_start_datetime) { participant_profile.schedule.milestones.find_by(declaration_type:).start_date.beginning_of_day }
+  let(:cutoff_end_datetime)   { participant_profile.schedule.milestones.find_by(declaration_type:).milestone_date.end_of_day }
   subject(:service) do
     described_class.new(params)
   end
@@ -354,7 +353,7 @@ RSpec.describe RecordDeclaration do
 
   context "when the participant is an ECF" do
     let(:schedule)              { Finance::Schedule::ECF.find_by(schedule_identifier: "ecf-standard-september", cohort: current_cohort) }
-    let(:declaration_date)      { schedule.milestones.find_by(declaration_type: "started").start_date }
+    let(:declaration_date)      { schedule.milestones.find_by(declaration_type:).start_date }
     let(:traits)                { [] }
     let(:opts)                  { {} }
     let(:participant_profile) do
@@ -414,6 +413,23 @@ RSpec.describe RecordDeclaration do
       it_behaves_like "creates a participant declaration"
       it_behaves_like "creates participant declaration attempt"
       it_behaves_like "checks for mentor completion event"
+
+      %w[retained-1 retained-2 retained-3 retained-4 extended-1 extended-2 extended-3].each do |disallowed_for_mentor_funding_type|
+        context "when the declaration_type is #{disallowed_for_mentor_funding_type}" do
+          let(:declaration_type) { disallowed_for_mentor_funding_type }
+
+          before { create(:milestone, schedule:, declaration_type:, start_date: 1.day.ago) }
+
+          it "allows #{disallowed_for_mentor_funding_type} declarations when in a mentor_funding cohort" do
+            schedule.cohort.update!(mentor_funding: true)
+
+            expect { service.call }.to change { ParticipantDeclaration.count }.by(1)
+
+            created_declaration = ParticipantDeclaration.last
+            expect(created_declaration.declaration_type).to eq(disallowed_for_mentor_funding_type)
+          end
+        end
+      end
     end
 
     context "when the participant is a Mentor" do
@@ -428,6 +444,51 @@ RSpec.describe RecordDeclaration do
       it_behaves_like "creates a participant declaration"
       it_behaves_like "creates participant declaration attempt"
       it_behaves_like "checks for mentor completion event"
+
+      %w[started completed].each do |allowed_for_mentor_funding_type|
+        context "when the declaration_type is #{allowed_for_mentor_funding_type}" do
+          let(:declaration_type) { allowed_for_mentor_funding_type }
+
+          before { create(:milestone, schedule:, declaration_type:, start_date: 1.day.ago) }
+
+          it "allows started declarations when in a mentor_funding cohort" do
+            schedule.cohort.update!(mentor_funding: true)
+
+            travel_to(declaration_date + 1.day) do
+              expect { service.call }.to change { ParticipantDeclaration.count }.by(1)
+            end
+
+            created_declaration = ParticipantDeclaration.last
+            expect(created_declaration.declaration_type).to eq(allowed_for_mentor_funding_type)
+          end
+        end
+      end
+
+      %w[retained-1 retained-2 retained-3 retained-4 extended-1 extended-2 extended-3].each do |disallowed_for_mentor_funding_type|
+        context "when the declaration_type is #{disallowed_for_mentor_funding_type}" do
+          let(:declaration_type) { disallowed_for_mentor_funding_type }
+
+          before { create(:milestone, schedule:, declaration_type:, start_date: 1.day.ago) }
+
+          it "does not allow #{disallowed_for_mentor_funding_type} declarations when in a mentor_funding cohort" do
+            schedule.cohort.update!(mentor_funding: true)
+
+            expect(service).to be_invalid
+            expect(service.errors.messages_for(:declaration_type)).to include("You cannot send retained or extended declarations for participants who began their mentor training after June 2025. Resubmit this declaration with either a started or completed declaration.")
+          end
+
+          it "allows #{disallowed_for_mentor_funding_type} declarations when not in a mentor_funding cohort" do
+            schedule.cohort.update!(mentor_funding: false)
+
+            travel_to(declaration_date + 1.day) do
+              expect { service.call }.to change { ParticipantDeclaration.count }.by(1)
+            end
+
+            created_declaration = ParticipantDeclaration.last
+            expect(created_declaration.declaration_type).to eq(disallowed_for_mentor_funding_type)
+          end
+        end
+      end
     end
   end
 
