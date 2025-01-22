@@ -19,6 +19,3 @@ set :images_dir, "api-reference/javascripts"
 set :relative_links, true
 
 set :layout, :custom
-
-ignore "/npq.html"
-ignore "/npq/**.*"
