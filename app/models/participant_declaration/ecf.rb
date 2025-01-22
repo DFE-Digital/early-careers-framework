@@ -1,13 +1,11 @@
 # frozen_string_literal: true
 
 class ParticipantDeclaration::ECF < ParticipantDeclaration
-  self.inheritance_column = :temp_type
-
   has_many :statements, class_name: "Finance::Statement::ECF", through: :statement_line_items
 
   validate :validate_against_profile_type
 
-  before_save :populate_type
+  before_save :populate_temp_type
 
   def ecf?
     true
@@ -22,12 +20,12 @@ class ParticipantDeclaration::ECF < ParticipantDeclaration
 
   def validate_against_profile_type
     return unless participant_profile
-    return if participant_profile.type.demodulize == temp_type.demodulize
+    return if participant_profile.type.demodulize == type.demodulize
 
     errors.add(:type, I18n.t(:declaration_type_must_match_profile_type))
   end
 
-  def populate_type
-    self.type = temp_type
+  def populate_temp_type
+    self.temp_type = type
   end
 end

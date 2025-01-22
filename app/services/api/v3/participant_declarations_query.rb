@@ -16,7 +16,7 @@ module Api
       end
 
       def participant_declarations_for_pagination
-        filterable_attributes = %i[id created_at user_id updated_at delivery_partner_id temp_type]
+        filterable_attributes = %i[id created_at user_id updated_at delivery_partner_id type]
         scope = ParticipantDeclaration::ECF.union(
           declarations_scope.select(*filterable_attributes),
           ecf_previous_declarations_scope.select(*filterable_attributes),

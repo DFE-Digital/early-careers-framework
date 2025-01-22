@@ -85,7 +85,7 @@ module Finance
             declaration_date: participant_declaration.declaration_date&.rfc3339,
             course_identifier: participant_declaration.course_identifier,
             evidence_held: participant_declaration.evidence_held,
-            type: participant_declaration.temp_type,
+            type: participant_declaration.type,
             cpd_lead_provider: participant_declaration.cpd_lead_provider&.name,
             state: participant_declaration.state,
             superseded_by_id: participant_declaration.superseded_by_id,

@@ -5,7 +5,8 @@ module Archive
     include JSONAPI::Serializer
 
     set_id :id
-    attribute :type, &:temp_type
+
+    attribute :type
     attribute :participant_profile_id
     attribute :cpd_lead_provider_id
     attribute :declaration_type
