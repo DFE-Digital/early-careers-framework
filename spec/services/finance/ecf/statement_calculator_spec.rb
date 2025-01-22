@@ -10,7 +10,21 @@ RSpec.describe Finance::ECF::StatementCalculator, mid_cohort: true do
   subject { described_class.new(statement:) }
 
   describe "#total" do
-    let(:default_total) { BigDecimal("-0.5132793103448275862068965517241379310345e4") }
+    let(:default_total) { BigDecimal("-0.5232793103448275862068965517241379310345e4") }
+
+    let(:uplift_breakdown) do
+      {
+        previous_count: 0,
+        count: 2,
+        additions: 4,
+        subtractions: 2,
+      }
+    end
+    let(:output_calculator) { instance_double("Finance::ECF::OutputCalculator", uplift_breakdown:, banding_breakdown: []) }
+
+    before do
+      allow(Finance::ECF::OutputCalculator).to receive(:new).and_return(output_calculator)
+    end
 
     context "when there is a positive reconcile_amount" do
       before do
@@ -51,6 +65,14 @@ RSpec.describe Finance::ECF::StatementCalculator, mid_cohort: true do
         expect(subject.statement.adjustments.count).to eql(3)
         expect(subject.additional_adjustments_total).to eql(799.99)
         expect(subject.total(with_vat: true)).to eql((default_total + 799.99) * 1.2)
+      end
+    end
+
+    context "when contract does not include uplift fees" do
+      before { allow_any_instance_of(CallOffContract).to receive(:include_uplift_fees?).and_return(false) }
+
+      it "returns default total with no uplifts" do
+        expect(subject.total).to eql(default_total - -100)
       end
     end
   end
@@ -190,6 +212,14 @@ RSpec.describe Finance::ECF::StatementCalculator, mid_cohort: true do
 
       it "includes uplift adjustments" do
         expect(subject.adjustments_total).to eql(-200)
+      end
+
+      context "when contract does not include uplift fees" do
+        before { allow_any_instance_of(CallOffContract).to receive(:include_uplift_fees?).and_return(false) }
+
+        it "returns zero" do
+          expect(subject.adjustments_total).to be_zero
+        end
       end
     end
 
@@ -447,6 +477,14 @@ RSpec.describe Finance::ECF::StatementCalculator, mid_cohort: true do
       it "includes clawback and uplift adjustments" do
         expect(subject.adjustments_total).to eql(-488)
       end
+
+      context "when contract does not include uplift fees" do
+        before { allow_any_instance_of(CallOffContract).to receive(:include_uplift_fees?).and_return(false) }
+
+        it "includes clawback adjustments only" do
+          expect(subject.adjustments_total).to eq(-288)
+        end
+      end
     end
   end
 
@@ -631,11 +669,41 @@ RSpec.describe Finance::ECF::StatementCalculator, mid_cohort: true do
         expect(subject.total_for_uplift).to eql(statement.contract.uplift_cap)
       end
     end
+
+    context "when contract does not include uplift fees" do
+      let(:uplift_breakdown) do
+        {
+          previous_count: 5,
+          count: 2,
+          additions: 4,
+          subtractions: 2,
+        }
+      end
+
+      let(:output_calculator) { instance_double("Finance::ECF::OutputCalculator", uplift_breakdown:) }
+
+      before do
+        allow_any_instance_of(CallOffContract).to receive(:include_uplift_fees?).and_return(false)
+        allow(Finance::ECF::OutputCalculator).to receive(:new).and_return(output_calculator)
+      end
+
+      it "returns zero" do
+        expect(subject.total_for_uplift).to be_zero
+      end
+    end
   end
 
   describe "#uplift_fee_per_declaration" do
     it do
       expect(subject.uplift_fee_per_declaration).to eql(100)
+    end
+
+    context "when contract does not include uplift fees" do
+      before { allow_any_instance_of(CallOffContract).to receive(:include_uplift_fees?).and_return(false) }
+
+      it "returns zero" do
+        expect(subject.uplift_fee_per_declaration).to be_zero
+      end
     end
   end
 

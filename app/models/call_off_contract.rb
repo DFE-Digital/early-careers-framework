@@ -22,5 +22,9 @@ class CallOffContract < ApplicationRecord
     participant_bands.min_nulls_first
   end
 
+  def include_uplift_fees?
+    !uplift_amount.nil?
+  end
+
   delegate :set_up_recruitment_basis, to: :band_a
 end
