@@ -46,14 +46,6 @@ module Importers
 
     def type_to_klass(type)
       case type
-      when "npq_specialist"
-        Finance::Schedule::NPQSpecialist
-      when "npq_leadership"
-        Finance::Schedule::NPQLeadership
-      when "npq_aso"
-        Finance::Schedule::NPQSupport
-      when "npq_ehco"
-        Finance::Schedule::NPQEhco
       when "ecf_standard", "ecf_reduced", "ecf_extended"
         Finance::Schedule::ECF
       when "ecf_replacement"
