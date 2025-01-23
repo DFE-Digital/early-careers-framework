@@ -1,0 +1,51 @@
+<div class="finance-panel finance-panel__adjustments govuk-!-margin-top-5 govuk-!-margin-bottom-5 print-page-break">
+  <%= govuk_table do |table| %>
+    <% table.with_caption(size: "m", text: "Additional adjustments") %>
+
+    <% table.with_head do |head| %>
+      <% head.with_row do |row| %>
+        <% row.with_cell(header: true, text: "Payment type") %>
+        <% row.with_cell(header: true, text: "Payments", numeric: true) %>
+      <% end %>
+    <% end %>
+
+    <% table.with_body do |body| %>
+      <% adjustments.each do |adjustment| %>
+        <% body.with_row do |row| %>
+          <% row.with_cell(text: adjustment.payment_type) %>
+          <% row.with_cell(text: number_to_pounds(adjustment.amount), numeric: true) %>
+        <% end %>
+      <% end %>
+
+      <% if adjustments.empty? %>
+        <% body.with_row do |row| %>
+          <% row.with_cell(text: "") %>
+          <% row.with_cell(text: number_to_pounds(0), numeric: true) %>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+      <% if adjustment_editable? %>
+        <%= govuk_link_to new_finance_statement_adjustment_path(statement) do %>
+          Add <span class="govuk-visually-hidden"> adjustment</span>
+        <% end %>
+
+        <% if adjustments.any? %>
+          <%= govuk_link_to finance_statement_adjustments_path(statement), class: "govuk-!-margin-left-4" do %>
+            Change or remove <span class="govuk-visually-hidden"> adjustment</span>
+          <% end %>
+        <% end %>
+      <% end %>
+      &nbsp;
+    </div>
+
+    <div class="govuk-grid-column-one-half govuk-!-text-align-right govuk-heading-s">
+      Total
+      <br />
+      <%= number_to_pounds(total_amount) %>
+    </div>
+  </div>
+</div>

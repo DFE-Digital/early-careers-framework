@@ -643,6 +643,9 @@ en:
     calculation_rounding_message:
       title: Calculation rounding errors
       content: Due to the way payments per participant are made, there may be rounding errors in some of the individual sub-calculations. The total output fees displayed are correct. Contact your contract manager if you have any queries.
+    updated_designs_message:
+      title: Updated financial statement design
+      content: We've updated the financial statements from June 2025 onwards to reflect changes to the funding model. We've split out ECT and mentor output payments, removed uplift fees, and deleted Band D from the ECT payment bands.
     spring: Spring 2022
     recruitment_target_total: Recruitment target total
     total_completed: Total completed
@@ -686,6 +689,28 @@ en:
         max: Max
         floor: 0
         ceiling: Unlimited
+    provider_targets:
+      title: Provider targets (per academic year)
+      version: Contract reference
+      per_participant: Per participant
+      service_fee_installments: Service fee installments
+      uplift_target: Uplift target
+      uplift_amount: Uplift amount
+      recruitment_target: Recruitment target
+      revised_target: Revised ECTs recruitment target (+2%)
+      set_up_fee: Set-up Fee
+      course_identifier: Course Identifier
+      band: ECTs payment bands
+      bands:
+        min: Min
+        max: Max
+        floor: 0
+        ceiling: Unlimited
+      ects:
+        bands:
+          "0": Band A ECTs
+          "1": Band B ECTs
+          "2": Band C ECTs
     ecf:
       bands:
         "0": Band A
@@ -696,6 +721,15 @@ en:
       statements:
         show:
           title: Early career framework (ECF)
+          started: Starts
+          retained_1: Retained 1
+          retained_2: Retained 2
+          retained_3: Retained 3
+          retained_4: Retained 4
+          completed: Completed
+          extended: Extended
+        show_new:
+          new_title: "Early career teacher programme: financial statements"
           started: Starts
           retained_1: Retained 1
           retained_2: Retained 2
