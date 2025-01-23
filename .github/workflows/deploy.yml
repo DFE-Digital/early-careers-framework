@@ -31,6 +31,10 @@ jobs:
     name: Lint
     uses: ./.github/workflows/lint.yml
 
+  openapi:
+    name: Lead Provider OpenAPI Check
+    uses: ./.github/workflows/lead_provider_openapi_check.yml
+
   rspec:
     name: Run the RSpec tests
     uses: ./.github/workflows/rspec.yml
