@@ -755,6 +755,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_15_143446) do
     t.uuid "delivery_partner_id"
     t.uuid "mentor_user_id"
     t.uuid "cohort_id", null: false
+    t.string "temp_type"
     t.index ["cohort_id"], name: "index_participant_declarations_on_cohort_id"
     t.index ["cpd_lead_provider_id", "participant_profile_id", "declaration_type", "course_identifier", "state"], name: "unique_declaration_index", unique: true, where: "((state)::text = ANY (ARRAY[('submitted'::character varying)::text, ('eligible'::character varying)::text, ('payable'::character varying)::text, ('paid'::character varying)::text]))"
     t.index ["cpd_lead_provider_id"], name: "index_participant_declarations_on_cpd_lead_provider_id"
