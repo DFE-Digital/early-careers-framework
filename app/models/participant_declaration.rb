@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ParticipantDeclaration < ApplicationRecord
-  self.ignored_columns = %w[statement_type statement_id voided_at]
+  self.ignored_columns = %w[statement_type statement_id voided_at temp_type]
 
   ARCHIVABLE_STATES = %w[ineligible voided submitted].freeze
 
