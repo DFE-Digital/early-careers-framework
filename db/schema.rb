@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_01_15_143446) do
+ActiveRecord::Schema[7.1].define(version: 2025_01_23_112657) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "fuzzystrmatch"
@@ -745,7 +745,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_15_143446) do
     t.uuid "user_id", null: false
     t.string "course_identifier"
     t.string "evidence_held"
-    t.string "type", default: "ParticipantDeclaration::ECF"
     t.uuid "cpd_lead_provider_id"
     t.string "state", default: "submitted", null: false
     t.uuid "participant_profile_id"
