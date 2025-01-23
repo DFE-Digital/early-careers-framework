@@ -8,6 +8,13 @@ module Finance
         @statement = @ecf_lead_provider.statements.find(params[:id])
         @calculator = StatementCalculator.new(statement: @statement)
         set_important_message(title: t("finance.statements.payment_authorisations.banner.title"), content: t("finance.statements.payment_authorisations.banner.content", statement_marked_as_paid_at: @statement.marked_as_paid_at.strftime("%-I:%M%P on %-e %b %Y"))) if authorising_for_payment_banner_visible?(@statement)
+
+        if @calculator.contract.include_uplift_fees?
+          render :show
+        else
+          @mentor_calculator = Mentors::StatementCalculator.new(statement: @statement)
+          render :show_new
+        end
       end
 
     private

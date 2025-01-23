@@ -482,6 +482,8 @@ Rails.application.routes.draw do
       resources :payment_breakdowns, only: [] do
         resources :statements, only: %i[show] do
           resource :voided, controller: "participant_declarations/voided", path: "voided", only: %i[show]
+          resource :voided, controller: "participant_declarations/ect/voided", path: "ect/voided", only: %i[show], as: :ect_voided
+          resource :voided, controller: "participant_declarations/mentor/voided", path: "mentor/voided", only: %i[show], as: :mentor_voided
         end
       end
     end

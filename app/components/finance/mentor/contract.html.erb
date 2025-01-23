@@ -1,0 +1,28 @@
+<div class="govuk-details__text">
+  <dl class="govuk-summary-list govuk-summary-list--no-border">
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">
+        Mentors
+      </dt>
+    </div>
+  </dl>
+  <dl class="govuk-summary-list">
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">
+        Mentors recruitment target
+      </dt>
+      <dd class="govuk-summary-list__value">
+        <%=recruitment_target %>
+      </dd>
+    </div>
+
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">
+        Payment per participant
+      </dt>
+      <dd class="govuk-summary-list__value">
+        <%=number_to_pounds(payment_per_participant) %>
+      </dd>
+    </div>
+  </dl>
+</div>
