@@ -47,31 +47,13 @@ module Finance
 
         def current_output_for_declaration_type(declaration_type)
           current_output_count = current_billable_count_for_declaration_type(declaration_type)
-          previous_output_count = current_refundable_count_declaration_type(declaration_type)
+          refundable_output_count = current_refundable_count_declaration_type(declaration_type)
 
           hash = {}
           hash[:"#{declaration_type.underscore}_count"] = current_output_count
-          hash[:"#{declaration_type.underscore}_additions"] = current_output_count - previous_output_count
-          hash[:"#{declaration_type.underscore}_subtractions"] = previous_output_count
+          hash[:"#{declaration_type.underscore}_additions"] = current_output_count - refundable_output_count
+          hash[:"#{declaration_type.underscore}_subtractions"] = refundable_output_count
           hash
-        end
-
-        def previous_fill_level_for_declaration_type(declaration_type)
-          billable = Finance::StatementLineItem
-            .where(statement: statement.previous_statements)
-            .billable
-            .joins(:participant_declaration)
-            .where(participant_declarations: { declaration_type:, type: "ParticipantDeclaration::Mentor" })
-            .count
-
-          refundable = Finance::StatementLineItem
-            .where(statement: statement.previous_statements)
-            .refundable
-            .joins(:participant_declaration)
-            .where(participant_declarations: { declaration_type:, type: "ParticipantDeclaration::Mentor" })
-            .count
-
-          billable - refundable
         end
 
         def current_billable_count_for_declaration_type(declaration_type)
