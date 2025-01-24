@@ -9,7 +9,7 @@ lead_providers = LeadProvider.where(name: ["Ambition Institute", "Best Practice 
 
 FactoryBot.create(:seed_school_local_authority, school:, local_authority:)
 
-Cohort.where(start_year: 2023..).find_each do |cohort|
+Cohort.where(start_year: 2.years.ago.year..).find_each do |cohort|
   school_cohort = FactoryBot.create(:seed_school_cohort, :fip, school:, cohort:, appropriate_body:)
 
   lead_providers.each do |lead_provider|
