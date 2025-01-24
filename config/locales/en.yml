@@ -42,7 +42,6 @@ en:
   invalid_transition: "Invalid action"
   unprocessable_request: "Unprocessable request"
   contact_us_to_resolve_issue: "Contact us so we can help you resolve the issue"
-  missing_npq_contract_or_statement: "There’s an issue with your contract data. Contact us so we can rectify this for you"
   no_output_fee_statements_for_cohort: "You cannot submit or void declarations for the %{cohort} cohort. The funding contract for this cohort has ended. Get in touch if you need to discuss this with us"
   invalid_page_parameters: "The '#/page[page]' and '#/page[per_page]' parameter values must be a valid number (equal and more than 1)"
   declaration_type_must_match_profile_type: "The declaration type must match the participant profile type."
@@ -210,13 +209,8 @@ en:
     teacher_reference_number_personalised:
       <<: *trn_error_messages
       blank: Enter your teacher reference number (TRN)
-    npq_application:
-      blank: Enter a valid NPQ application ID
 
   activerecord:
-    attributes:
-      npq_application:
-        lead_provider_approval_status: Status
     errors:
       models:
         participant_identity:
@@ -486,17 +480,6 @@ en:
               inclusion: Choose a valid training status
             reason:
               inclusion: Choose a valid reason for training status
-        finance/npq/change_training_status_form:
-          attributes:
-            training_status:
-              inclusion: Choose a valid training status
-              invalid_deferral_no_declarations: You cannot defer an NPQ participant that has no declarations
-            reason:
-              inclusion: Choose a valid reason for training status
-        finance/npq/change_lead_provider_form:
-          attributes:
-            lead_provider_id:
-              inclusion: Select a valid lead provider
         finance/change_lead_provider_approval_status_form:
           attributes:
             confirmation:
@@ -571,7 +554,6 @@ en:
       guidance:
         index: "Manage teacher continuing professional development"
         ecf_usage: "Usage scenarios for ECF Lead Providers"
-        npq_usage: "Usage scenarios for NPQ Lead Providers"
         reference: "API reference"
         release_notes: "Release notes"
         help: "Get help"
@@ -613,28 +595,6 @@ en:
       no_early_career_teachers: "No early career teachers for this cohort"
       not_yet_known: "Not yet decided"
 
-  npq_courses:
-    npq-leading-teaching: Leading Teaching course breakdown
-    npq-leading-behaviour-culture: Leading Behaviour and Culture course breakdown
-    npq-leading-teaching-development: Leading Teacher Development course breakdown
-    npq-senior-leadership: Senior Leadership course breakdown
-    npq-headship: Headship course breakdown
-    npq-executive-leadership: Executive Leadership course breakdown
-    npq-additional-support-offer: Additional Support Offer course breakdown
-    npq-early-headship-coaching-offer: Early Headship Coaching Offer
-    npq-early-years-leadership: Early Years Leadership
-    npq-leading-literacy: Leading Literacy
-    npq-leading-primary-mathematics: Leading Primary Mathematics
-    npq-senco: Senco
-  courses:
-    npq:
-      npq-leading-teaching: Leading Teaching
-      npq-leading-behaviour-culture: Leading Behaviour and Culture
-      npq-leading-teaching-development: Leading Teacher Development
-      npq-senior-leadership: Senior Leadership
-      npq-headship: Headship
-      npq-executive-leadership: Executive Leadership
-      npq-additional-support-offer: Additional Support Offer
   finance:
     choose_programme: Choose programme scheme
     cohort: Cohort
@@ -703,25 +663,6 @@ en:
           retained_4: Retained 4
           completed: Completed
           extended: Extended
-    npq:
-      payment_breakdown: NPQ Payment Breakdown
-      participant_outcomes:
-        outcome: "Outcome"
-        completion_date: "Completion date"
-        submitted: "Submitted by provider"
-        attempted: "Attempted to send to TRA API"
-        recorded: "Recorded by TRA API"
-        "yes": "YES"
-        "no": "NO. CONTACT THE DIGITAL SERVICE TEAM"
-        na: "N/A"
-        declaration_outcomes: "Declaration Outcomes"
-        passed: "Passed"
-        failed: "Failed"
-        passed_and_recorded: "Passed and recorded"
-        failed_and_recorded: "Failed and recorded"
-        passed_but_not_recorded: "Passed but not recorded"
-        failed_but_not_recorded: "Failed but not recorded"
-        pending: "Pending"
     service_fee:
       caption: Service fee
     output_payment:
@@ -752,29 +693,6 @@ en:
           label: "Yes, I'm ready to authorise this for payment"
           legend: "Have all necessary assurance checks been done?"
           error_message: "Confirm all necessary assurance checks have been done before authorising this statement for payment"
-
-  admin:
-    npq:
-      applications:
-        index:
-          title: NPQ Applications
-        show:
-          title: NPQ Application
-          details: Details
-          tabs: Tabs
-        eligible_for_funding:
-          edit:
-            true: "Yes"
-            false: "No"
-        eligibility_status:
-          edit:
-            marked_ineligible_by_policy: "Not eligible for funding"
-            awaiting_more_information: "Awaiting more information"
-            re_register: "Needs to re-register"
-        layout:
-          applications: Applications
-          title: NPQ Applications
-          edge_cases: Edge Cases
 
   components:
     finance:

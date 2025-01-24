@@ -249,43 +249,22 @@ RSpec.describe Cohort, type: :model do
     describe "when the current date is before the registration start date of the next cohort" do
       it "returns the cohort with start_year the previous year" do
         Timecop.freeze(Date.new(2022, 5, 9)) do
-          expect(Cohort.active_npq_registration_cohort.start_year).to eq 2021
+          expect(Cohort.active_registration_cohort.start_year).to eq 2021
         end
       end
     end
   end
 
-  describe ".active_npq_registration_cohort" do
-    context "when npq_registration_start_date is nil" do
-      it "returns Cohort.current" do
-        Timecop.freeze(Date.new(2023, 3, 14)) do
-          expect(Cohort.active_npq_registration_cohort.start_year).to eq 2022
-        end
+  describe ".start_year_2020_or_earlier?" do
+    it "should return true if start year 2020 and earlier" do
+      (2019..2020).each do |year|
+        expect(Cohort.new(start_year: year).start_year_2020_or_earlier?).to eq(true)
       end
     end
 
-    context "when npq_registration_start_date is not nil" do
-      before do
-        Cohort.find_by(start_year: 2021).update!(npq_registration_start_date: Date.new(2021, 3, 14))
-        Cohort.find_by(start_year: 2022).update!(npq_registration_start_date: Date.new(2022, 3, 14))
-        Cohort.find_by(start_year: 2023).update!(npq_registration_start_date: Date.new(2023, 3, 14))
-        Cohort.find_by(start_year: 2024).update!(npq_registration_start_date: Date.new(2024, 3, 14))
-      end
-
-      describe "when the current date matches the npq registration start date" do
-        it "returns the cohort with start_year the current year" do
-          Timecop.freeze(Date.new(2023, 3, 14)) do
-            expect(Cohort.active_npq_registration_cohort.start_year).to eq 2023
-          end
-        end
-      end
-
-      describe "when the current date is before the npq registration start date of the next cohort" do
-        it "returns the cohort with start_year the previous year" do
-          Timecop.freeze(Date.new(2023, 3, 13)) do
-            expect(Cohort.active_npq_registration_cohort.start_year).to eq 2022
-          end
-        end
+    it "should return false if start year after 2020" do
+      (2021..2024).each do |year|
+        expect(Cohort.new(start_year: year).start_year_2020_or_earlier?).to eq(false)
       end
     end
   end

@@ -114,7 +114,7 @@ RSpec.describe "API Delivery Partners", type: :request do
           get "/api/v3/delivery-partners", params: { sort: "" }
         end
 
-        it "returns all records ordered by npq applications created_at" do
+        it "returns all records ordered by delivery_partners.created_at" do
           expect(parsed_response["data"].size).to eql(2)
           expect(parsed_response.dig("data", 0, "attributes", "name")).to eql("Second Delivery Partner")
           expect(parsed_response.dig("data", 1, "attributes", "name")).to eql("First Delivery Partner")
