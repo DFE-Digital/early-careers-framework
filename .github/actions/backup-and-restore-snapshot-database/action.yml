@@ -62,4 +62,4 @@ runs:
 
     - name: Restore snapshot database
       shell: bash
-      run: bin/konduit.sh -d s189p01-cpdecf-pd-pg-snapshot -k s189p01-cpdecf-pd-app-kv -i backup-${{ inputs.environment }}.sql.gz -c -t 7200 cpd-ecf-${{ inputs.environment }}-web -- psql
+      run: bin/konduit.sh -d s189p01-cpdecf-pd-pg-snapshot -k s189p01-cpdecf-pd-app-kv -i backup-${{ inputs.environment }}.sql.gz -c -t 7200 cpd-ecf-${{ inputs.environment }}-web -- psql -v ON_ERROR_STOP=1
