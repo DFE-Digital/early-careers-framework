@@ -31,7 +31,7 @@ module GovukTechDocs
           memo + path(text)
         end
 
-        schema_names = @document.components.schemas.keys
+        schema_names = schemas_data.keys
         schemas = schema_names.inject("") do |memo, schema_name|
           memo + schema(schema_name)
         end
