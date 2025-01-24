@@ -120,6 +120,10 @@ module Finance
           end
         end
 
+        def voided_declarations
+          statement.participant_declarations.voided.where(type: "ParticipantDeclaration::ECT")
+        end
+
         def uplift_count
           output_calculator.uplift_breakdown[:count]
         end
