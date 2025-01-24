@@ -1,0 +1,33 @@
+<div class="finance-panel__summary__total-payment-breakdown">
+  <h4 class="govuk-heading-l govuk-!-margin-bottom-2">Total <%= total_amount %></h4>
+
+  <div>
+    <p class="govuk-body-s govuk-!-margin-bottom-2">
+      ECTs output payment <span><%= number_to_pounds(@calculator.output_fee) %></span>
+    </p>
+
+    <p class="govuk-body-s govuk-!-margin-bottom-2">
+      Mentors output payment <span><%= number_to_pounds(@mentor_calculator.output_fee) %></span>
+    </p>
+
+    <p class="govuk-body-s govuk-!-margin-bottom-2">
+      Service fee <span><%= number_to_pounds(@calculator.service_fee) %></span>
+    </p>
+
+    <p class="govuk-body-s govuk-!-margin-bottom-2">
+      ECT clawbacks <span><%= number_to_pounds(@calculator.adjustments_total) %></span>
+    </p>
+
+    <p class="govuk-body-s govuk-!-margin-bottom-2">
+      Mentors clawbacks <span><%= number_to_pounds(@mentor_calculator.adjustments_total) %></span>
+    </p>
+
+    <p class="govuk-body-s govuk-!-margin-bottom-2">
+      Additional adjustments <span><%= number_to_pounds(@calculator.additional_adjustments_total) %></span>
+    </p>
+
+    <p class="govuk-body-s govuk-!-margin-bottom-2">
+      VAT <span><%= total_vat %></span>
+    </p>
+  </div>
+</div>
