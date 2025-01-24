@@ -3,6 +3,8 @@
 class Cohort < ApplicationRecord
   has_paper_trail
 
+  START_YEAR_2020 = 2020
+
   INITIAL_COHORT_START_DATE = Date.new(2021, 9, 1)
 
   has_many :call_off_contracts
@@ -87,6 +89,10 @@ class Cohort < ApplicationRecord
 
   def previous
     self.class.find_by(start_year: start_year - 1)
+  end
+
+  def start_year_2020_or_earlier?
+    start_year <= START_YEAR_2020
   end
 
   def freeze_payments!

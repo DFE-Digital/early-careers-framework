@@ -254,4 +254,18 @@ RSpec.describe Cohort, type: :model do
       end
     end
   end
+
+  describe ".start_year_2020_or_earlier?" do
+    it "should return true if start year 2020 and earlier" do
+      (2019..2020).each do |year|
+        expect(Cohort.new(start_year: year).start_year_2020_or_earlier?).to eq(true)
+      end
+    end
+
+    it "should return false if start year after 2020" do
+      (2021..2024).each do |year|
+        expect(Cohort.new(start_year: year).start_year_2020_or_earlier?).to eq(false)
+      end
+    end
+  end
 end
