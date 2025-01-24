@@ -23,7 +23,6 @@ class FeatureFlag
     eligibility_notifications
     prevent_2023_ect_registrations
     school_participant_status_language
-    npq_capping
     registration_pilot_school
   ].freeze
 

@@ -398,12 +398,6 @@ RSpec.describe ChangeSchedule do
 
       it_behaves_like "changing the schedule of a participant"
 
-      context "when the npq_capping feature is enabled" do
-        before { FeatureFlag.activate(:npq_capping) }
-
-        it_behaves_like "changing the schedule of a participant"
-      end
-
       it "updates the schedule on the relevant induction record" do
         service.call
         relevant_induction_record = participant_profile.current_induction_record
@@ -663,12 +657,6 @@ RSpec.describe ChangeSchedule do
       let!(:new_schedule) { create(:ecf_mentor_schedule, schedule_identifier: "ecf-replacement-april", name: "Mentor Standard") }
 
       it_behaves_like "changing the schedule of a participant"
-
-      context "when the npq_capping feature is enabled" do
-        before { FeatureFlag.activate(:npq_capping) }
-
-        it_behaves_like "changing the schedule of a participant"
-      end
 
       it "updates the schedule on the relevant induction record" do
         service.call
