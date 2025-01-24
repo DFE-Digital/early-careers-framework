@@ -247,7 +247,7 @@
               <% row.with_cell(text: "Mentors", header: true) %>
               <% row.with_cell(text: @mentor_calculator.started_count, numeric: true) %>
               <% row.with_cell(text: "-", numeric: true) %>
-              <% row.with_cell(text: @calculator.completed_count, numeric: true) %>
+              <% row.with_cell(text: @mentor_calculator.completed_count, numeric: true) %>
               <% row.with_cell(text: "-", numeric: true) %>
               <% row.with_cell(text: govuk_link_to(@mentor_calculator.voided_count, finance_ecf_payment_breakdown_statement_mentor_voided_path(@ecf_lead_provider.id, @statement)), numeric: true) %>
               <% row.with_cell(text: "") %>
