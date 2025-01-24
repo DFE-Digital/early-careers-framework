@@ -2,7 +2,7 @@
 
 module Finance
   module ECF
-    module Mentors
+    module Mentor
       class OutputCalculator
         attr_reader :statement, :contract
 
@@ -47,7 +47,7 @@ module Finance
 
         def current_output_for_declaration_type(declaration_type)
           current_output_count = current_billable_count_for_declaration_type(declaration_type)
-          previous_output_count = previous_fill_level_for_declaration_type(declaration_type)
+          previous_output_count = current_refundable_count_declaration_type(declaration_type)
 
           hash = {}
           hash[:"#{declaration_type.underscore}_count"] = current_output_count

@@ -39,39 +39,7 @@
           </div>
         </div>
 
-        <div class="finance-panel__summary__total-payment-breakdown">
-          <h4 class="govuk-heading-l govuk-!-margin-bottom-2">Total <%= number_to_pounds(@calculator.total(with_vat: true) + @mentor_calculator.total(with_vat: true)) %></h4>
-
-          <div>
-            <p class="govuk-body-s govuk-!-margin-bottom-2">
-              ECTs output payment <span><%= number_to_pounds(@calculator.output_fee) %></span>
-            </p>
-
-            <p class="govuk-body-s govuk-!-margin-bottom-2">
-              Mentors output payment <span><%= number_to_pounds(@mentor_calculator.output_fee) %></span>
-            </p>
-
-            <p class="govuk-body-s govuk-!-margin-bottom-2">
-              Service fee <span><%= number_to_pounds(@calculator.service_fee) %></span>
-            </p>
-
-            <p class="govuk-body-s govuk-!-margin-bottom-2">
-              ECT clawbacks <span><%= number_to_pounds(@calculator.adjustments_total) %></span>
-            </p>
-
-            <p class="govuk-body-s govuk-!-margin-bottom-2">
-              Mentors clawbacks <span><%= number_to_pounds(@mentor_calculator.adjustments_total) %></span>
-            </p>
-
-            <p class="govuk-body-s govuk-!-margin-bottom-2">
-              Additional adjustments <span><%= number_to_pounds(@calculator.additional_adjustments_total) %></span>
-            </p>
-
-            <p class="govuk-body-s govuk-!-margin-bottom-2">
-              VAT <span><%= number_to_pounds(@calculator.vat) %></span>
-            </p>
-          </div>
-        </div>
+        <%= render Finance::Statements::PaymentBreakdown::Totals.new(calculator: @calculator, mentor_calculator: @mentor_calculator) %>
       </div>
 
       <div class="finance-panel__summary__meta">
@@ -236,7 +204,7 @@
             </p>
 
             <p class="govuk-body-s govuk-!-margin-bottom-2">
-              VAT <span><%= number_to_pounds(@calculator.vat) %></span>
+              VAT <span><%= number_to_pounds(@calculator.vat + @mentor_calculator.vat) %></span>
             </p>
           </div>
         </div>
@@ -281,7 +249,7 @@
               <% row.with_cell(text: "-", numeric: true) %>
               <% row.with_cell(text: @calculator.completed_count, numeric: true) %>
               <% row.with_cell(text: "-", numeric: true) %>
-              <% row.with_cell(text: govuk_link_to(@calculator.voided_count, finance_ecf_payment_breakdown_statement_mentor_voided_path(@ecf_lead_provider.id, @statement)), numeric: true) %>
+              <% row.with_cell(text: govuk_link_to(@mentor_calculator.voided_count, finance_ecf_payment_breakdown_statement_mentor_voided_path(@ecf_lead_provider.id, @statement)), numeric: true) %>
               <% row.with_cell(text: "") %>
             <% end %>
           <% end %>
@@ -321,6 +289,7 @@
 
 <div class="govuk-grid-row govuk-!-margin-top-5 print-page-break">
   <div class="govuk-grid-column-full">
+    <!-- TODO: have a think about having a partial for this and passing a variable to it to drive the new translations -->
     <div class="finance-panel finance-panel__output-payments">
       <%= govuk_table classes: ["output-payments"] do |table| %>
         <% table.with_caption(size: 'm', text: "Early career teacher (ECT) output payments") %>
@@ -476,9 +445,9 @@
               <% next if count.zero? %>
 
               <% body.with_row do |row| %>
-                <% fee = @mentor_calculator.fee_for_declaration(band_letter: hash[:band], type: name) %>
+                <% fee = @mentor_calculator.fee_for_declaration(type: name) %>
 
-                <% row.with_cell(text: "Clawback for #{name.to_s.humanize} (Band: #{hash[:band].to_s.upcase})") %>
+                <% row.with_cell(text: "Clawback for #{name.to_s.humanize}") %>
                 <% row.with_cell(text: count) %>
                 <% row.with_cell(text: number_to_pounds(-fee)) %>
                 <% row.with_cell(text: number_to_pounds(-count * fee), numeric: true) %>

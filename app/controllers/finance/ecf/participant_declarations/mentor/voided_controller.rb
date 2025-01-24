@@ -9,6 +9,8 @@ module Finance
             @ecf_lead_provider = LeadProvider.find(params[:payment_breakdown_id])
             @cpd_lead_provider = @ecf_lead_provider.cpd_lead_provider
             @statement = @ecf_lead_provider.statements.find(params[:statement_id])
+
+            # go for a new param in the original controller instead
             @voided_declarations = @statement.participant_declarations.where(type: "ParticipantDeclaration::Mentor").voided
           end
         end
