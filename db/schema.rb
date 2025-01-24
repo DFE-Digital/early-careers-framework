@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_01_24_134039) do
+ActiveRecord::Schema[7.1].define(version: 2025_01_24_165233) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "fuzzystrmatch"
@@ -259,7 +259,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_24_134039) do
     t.integer "start_year", limit: 2, null: false
     t.datetime "registration_start_date", precision: nil
     t.datetime "academic_year_start_date", precision: nil
-    t.datetime "npq_registration_start_date", precision: nil
     t.date "automatic_assignment_period_end_date"
     t.datetime "payments_frozen_at"
     t.boolean "mentor_funding", default: false, null: false
