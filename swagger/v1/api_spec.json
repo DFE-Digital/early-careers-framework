@@ -33,14 +33,10 @@
         ],
         "security": [
           {
-            "bearerAuth": [
-
-            ]
+            "bearerAuth": []
           }
         ],
-        "parameters": [
-
-        ],
+        "parameters": [],
         "responses": {
           "200": {
             "description": "Successful",
@@ -101,9 +97,7 @@
         ],
         "security": [
           {
-            "bearerAuth": [
-
-            ]
+            "bearerAuth": []
           }
         ],
         "parameters": [
@@ -165,9 +159,7 @@
         ],
         "security": [
           {
-            "bearerAuth": [
-
-            ]
+            "bearerAuth": []
           }
         ],
         "responses": {
@@ -203,9 +195,7 @@
         ],
         "security": [
           {
-            "bearerAuth": [
-
-            ]
+            "bearerAuth": []
           }
         ],
         "parameters": [
@@ -263,9 +253,7 @@
         ],
         "security": [
           {
-            "bearerAuth": [
-
-            ]
+            "bearerAuth": []
           }
         ],
         "parameters": [
@@ -303,9 +291,7 @@
         ],
         "security": [
           {
-            "bearerAuth": [
-
-            ]
+            "bearerAuth": []
           }
         ],
         "parameters": [
@@ -367,9 +353,7 @@
         ],
         "security": [
           {
-            "bearerAuth": [
-
-            ]
+            "bearerAuth": []
           }
         ],
         "parameters": [
@@ -419,9 +403,7 @@
         ],
         "security": [
           {
-            "bearerAuth": [
-
-            ]
+            "bearerAuth": []
           }
         ],
         "parameters": [
@@ -469,9 +451,7 @@
         ],
         "security": [
           {
-            "bearerAuth": [
-
-            ]
+            "bearerAuth": []
           }
         ],
         "parameters": [
@@ -519,9 +499,7 @@
         ],
         "security": [
           {
-            "bearerAuth": [
-
-            ]
+            "bearerAuth": []
           }
         ],
         "parameters": [
@@ -569,9 +547,7 @@
         ],
         "security": [
           {
-            "bearerAuth": [
-
-            ]
+            "bearerAuth": []
           }
         ],
         "parameters": [
@@ -619,9 +595,7 @@
         ],
         "security": [
           {
-            "bearerAuth": [
-
-            ]
+            "bearerAuth": []
           }
         ],
         "parameters": [
@@ -669,9 +643,7 @@
         ],
         "security": [
           {
-            "bearerAuth": [
-
-            ]
+            "bearerAuth": []
           }
         ],
         "parameters": [
@@ -719,9 +691,7 @@
         ],
         "security": [
           {
-            "bearerAuth": [
-
-            ]
+            "bearerAuth": []
           }
         ],
         "parameters": [
@@ -769,9 +739,7 @@
         ],
         "security": [
           {
-            "bearerAuth": [
-
-            ]
+            "bearerAuth": []
           }
         ],
         "parameters": [
@@ -819,9 +787,7 @@
         ],
         "security": [
           {
-            "bearerAuth": [
-
-            ]
+            "bearerAuth": []
           }
         ],
         "parameters": [
@@ -2925,9 +2891,7 @@
   },
   "security": [
     {
-      "bearerAuth": [
-
-      ]
+      "bearerAuth": []
     }
   ]
 }

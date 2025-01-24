@@ -177,9 +177,29 @@ module GovukTechDocs
     private
 
       def document_paths
-        @document.paths.to_h.reject do |path, _|
+        sorted_paths(@document.paths.to_h).reject do |path, _|
           remove_npq_references? && path.downcase.include?("npq")
         end
+      end
+
+      def sorted_paths(paths)
+        sort_order = %w[
+          delivery-partners
+          partnerships
+          schools
+          participant-declarations
+          participants
+          unfunded-mentors
+          statements
+        ].freeze
+
+        paths.sort_by { |path, _|
+          path_group = path.split("/")[3]&.chomp(".csv")
+
+          raise "Unknown path group: #{path_group}" unless path_group.in?(sort_order)
+
+          [sort_order.index(path_group), path.length]
+        }.to_h
       end
 
       def remove_npq_references?

@@ -1,0 +1,65 @@
+name: "Lead Provider OpenAPI Check"
+
+on:
+  workflow_call:
+
+jobs:
+  api_schema_check:
+    name: Check OpenAPI schema
+
+    runs-on: ubuntu-latest
+
+    env:
+      RAILS_ENV: test
+      DB_USERNAME: postgres
+      DB_PASSWORD: ""
+      DB_HOSTNAME: 127.0.0.1
+      DB_PORT: 5432
+      ANALYTICS_DB_USERNAME: postgres
+      ANALYTICS_DB_PASSWORD: ""
+      ANALYTICS_DB_HOSTNAME: 127.0.0.1
+      ANALYTICS_DB_PORT: 5432
+
+    services:
+      postgres:
+        image: postgres:11.6-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: ""
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - uses: ./.github/actions/prepare-app-env
+        id: test
+        with:
+          prepare-test-database: "true"
+          prepare-assets: "true"
+
+      - name: Generate API doc checksums (original)
+        run: |
+          find swagger/**/api_spec.json -type f -exec sed -i 's/[[:space:]]\+$//' {} \;
+          find swagger/**/api_spec.json -type f | sort | xargs shasum -a 256 > api-doc-checksums-original.txt
+          cat api-doc-checksums-original.txt
+
+      - name: Run swaggerize
+        run: bundle exec rake rswag:specs:swaggerize
+
+      - name: Generate API doc checksums (after swaggerize)
+        run: |
+          find swagger/**/api_spec.json -type f -exec sed -i 's/[[:space:]]\+$//' {} \;
+          find swagger/**/api_spec.json -type f | sort | xargs shasum -a 256 > api-doc-checksums-after-swaggerize.txt
+          cat api-doc-checksums-after-swaggerize.txt
+
+      - name: Compare Checksums
+        run: |
+          if ! diff -q api-doc-checksums-original.txt api-doc-checksums-after-swaggerize.txt; then
+            echo "OpenAPI schema has changed! run rake rswag:specs:swaggerize"
+            exit 1
+          else
+            echo "OpenAPI schema has not changed"
+          fi
