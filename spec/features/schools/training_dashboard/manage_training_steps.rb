@@ -1065,19 +1065,21 @@ module ManageTrainingSteps
   alias_method :and_i_see_the_participants_filtered_by, :then_i_see_the_participants_filtered_by
 
   def and_i_see_ects_not_being_trained
-    expect(page).to have_content("Not mentoring or being mentored\nDeferred participant Training deferred")
+    expect(page).to have_content("Not mentoring or being mentored\nDeferred participant\tTraining deferred")
   end
 
   def and_i_see_ects_with_induction_completed_sorted_by_decreasing_completion_date
-    expect(page).to have_content("Teachers who have completed their induction\nEligible Without-mentor\nCompleted #{2.days.ago.to_date.to_fs(:govuk)}\nCFI Without-mentor\nCompleted #{1.week.ago.to_date.to_fs(:govuk)}")
+    expect(page).to have_content("Teachers who have completed their induction")
+    expect(page).to have_content("Eligible Without-mentor\nCompleted\t#{2.days.ago.to_date.to_fs(:govuk)}")
+    expect(page).to have_text("CFI Without-mentor\nCompleted\t#{1.week.ago.to_date.to_fs(:govuk)}")
   end
 
   def and_i_see_mentors_not_mentoring
-    expect(page).to have_content("CFI Mentor\nMentoring Not currently mentoring")
+    expect(page).to have_content("CFI Mentor\nMentoring\tNot currently mentoring")
   end
 
   def and_i_see_mentors_currently_mentoring
-    expect(page).to have_content("Billy Mentor\nMentoring\nTraining ECT With-mentor\nInduction started #{2.years.ago.to_date.to_fs(:govuk)}")
+    expect(page).to have_content("Billy Mentor\nMentoring\t\nTraining ECT With-mentor\nInduction started #{2.years.ago.to_date.to_fs(:govuk)}")
   end
 
   def then_i_see_the_participant_name(full_name: @participant_data[:full_name])

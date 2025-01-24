@@ -122,14 +122,15 @@ GEM
     ast (2.4.2)
     auto_strip_attributes (2.6.0)
       activerecord (>= 4.0)
-    axe-core-api (4.10.2)
+    axe-core-api (4.2.0)
+      capybara
       dumb_delegator
-      ostruct
+      selenium-webdriver
       virtus
-    axe-core-rspec (4.10.2)
-      axe-core-api (= 4.10.2)
+      watir
+    axe-core-rspec (4.4.2)
+      axe-core-api
       dumb_delegator
-      ostruct
       virtus
     axiom-types (0.1.1)
       descendants_tracker (~> 0.0.4)
@@ -179,6 +180,9 @@ GEM
     cssbundling-rails (1.4.1)
       railties (>= 6.0.0)
     csv (3.3.0)
+    cuprite (0.15.1)
+      capybara (~> 3.0)
+      ferrum (~> 0.15.0)
     database_cleaner-active_record (2.2.0)
       activerecord (>= 5.a)
       database_cleaner-core (~> 2.0.0)
@@ -228,6 +232,11 @@ GEM
       multipart-post (~> 2)
     faraday-net_http (3.4.0)
       net-http (>= 0.5.0)
+    ferrum (0.15)
+      addressable (~> 2.5)
+      concurrent-ruby (~> 1.1)
+      webrick (~> 1.7)
+      websocket-driver (~> 0.7)
     ffi (1.16.3)
     foreman (0.88.1)
     friendly_id (5.5.1)
@@ -686,6 +695,9 @@ GEM
       addressable
       faraday (~> 2.8)
       nokogiri (>= 1.13.9)
+    watir (7.3.0)
+      regexp_parser (>= 1.2, < 3)
+      selenium-webdriver (~> 4.2)
     web-console (4.2.1)
       actionview (>= 6.0.0)
       activemodel (>= 6.0.0)
@@ -730,6 +742,7 @@ DEPENDENCIES
   amazing_print
   ar-uuid (~> 0.2.3)
   auto_strip_attributes (~> 2.6)
+  axe-core-api (= 4.2)
   axe-core-rspec
   bootsnap (~> 1.18)
   byebug
@@ -737,6 +750,7 @@ DEPENDENCIES
   capybara (~> 3.40)
   countries (~> 5.7)
   cssbundling-rails (~> 1.4)
+  cuprite
   database_cleaner-active_record
   devise (>= 4.8.0)
   dfe-analytics!
@@ -794,7 +808,6 @@ DEPENDENCIES
   scenic (~> 1.8)
   scss_lint-govuk
   secure_headers
-  selenium-webdriver
   sentry-rails (~> 5.22)
   sentry-ruby (~> 5.22)
   sentry-sidekiq

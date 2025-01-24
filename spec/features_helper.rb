@@ -2,24 +2,22 @@
 
 require "capybara"
 require "capybara/rspec"
+require "capybara/cuprite"
 require "axe-rspec"
-require "selenium-webdriver"
 require "site_prism"
 require "site_prism/all_there" # Optional but needed to perform more complex matching
 
-Capybara.register_driver :chrome_headless do |app|
-  args = %w[disable-build-check disable-dev-shm-usage no-sandbox window-size=1400,1400]
-  args << "headless" unless ENV["NOT_HEADLESS"]
+Capybara.javascript_driver = :cuprite
+Capybara.register_driver(:cuprite) do |app|
+  options = {
+    window_size: [1400, 1400],
+    timeout: 20,
+  }
 
-  Capybara::Selenium::Driver.new(
-    app,
-    browser: :chrome,
-    options: Selenium::WebDriver::Options.chrome(args:),
-  )
+  Capybara::Cuprite::Driver.new(app, options)
 end
 
 Capybara.server_port = 9887 + ENV["TEST_ENV_NUMBER"].to_i
-Capybara.javascript_driver = :chrome_headless
 Capybara.automatic_label_click = true
 
 RSpec.configure do |config|
@@ -33,7 +31,6 @@ RSpec.configure do |config|
 
   # need this for axe
   config.before(:each, type: :feature) do
-    WebMock.disable_net_connect!(allow_localhost: true,
-                                 allow: "chromedriver.storage.googleapis.com")
+    WebMock.disable_net_connect!(allow_localhost: true)
   end
 end
