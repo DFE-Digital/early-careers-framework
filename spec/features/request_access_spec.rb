@@ -7,6 +7,7 @@ RSpec.feature "Request access to the service", type: :feature, js: true, rutabag
 
   scenario "Request access to the service" do
     given_i_am_on_the_start_page
+    when_i_accept_cookies_on_the_start_page
     when_i_click_on_request_access_link
     then_i_am_on_the_send_link_page
 

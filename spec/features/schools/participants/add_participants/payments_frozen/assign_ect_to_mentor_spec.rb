@@ -94,7 +94,7 @@ RSpec.describe "SIT assigns a mentor to an ECT", js: true, early_in_cohort: true
   end
 
   def then_i_see_confirmation_that_the_mentor_has_been_assigned
-    expect(page).to have_content("Currently mentoring\n#{@participant_data[:full_name]}")
+    expect(page).to have_content("Currently mentoring\t\n#{@participant_data[:full_name]}")
   end
 
   def and_the_mentor_has_been_assigned_to_the_active_registration_cohort

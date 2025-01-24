@@ -70,7 +70,7 @@ RSpec.describe "Induction coordinator requests lead provider change for a partic
   end
 
   def then_i_confirm_the_email_for_the_participant
-    expect(page).to have_content("Email #{@participant_data[:email]}")
+    expect(page).to have_content("Email\t#{@participant_data[:email]}")
     expect(page).to have_content("Is this the correct email for #{@participant_data[:full_name]}?")
     click_on "Continue"
     expect(page).to have_content("Select yes if this is the correct email address for the participant")
@@ -81,7 +81,7 @@ RSpec.describe "Induction coordinator requests lead provider change for a partic
   def then_i_go_back_to_amend_the_email_address
     click_on "Back"
     expect(page).to have_content("Is this the correct email for #{@participant_data[:full_name]}?")
-    expect(page).to have_content("Email #{@participant_data[:email]}")
+    expect(page).to have_content("Email\t#{@participant_data[:email]}")
     choose "No"
     fill_in "email[email]", with: "alternative@example.com", visible: false
     click_on "Continue"
@@ -98,12 +98,12 @@ RSpec.describe "Induction coordinator requests lead provider change for a partic
   def then_i_am_asked_to_check_my_answers
     expect(page).to have_content("Check your answers before you request the change")
     expect(page).to have_content("Change request details")
-    expect(page).to have_content("Participant name #{@participant_data[:full_name]}")
+    expect(page).to have_content("Participant name\t#{@participant_data[:full_name]}")
     expect(page).to have_content(@school.name)
-    expect(page).to have_content("Academic year #{@cohort.start_year}")
-    expect(page).to have_content("Participant email address alternative@example.com")
-    expect(page).to have_content("Current lead provider #{@lead_provider.name}")
-    expect(page).to have_content("New lead provider Lead Provider 1")
+    expect(page).to have_content("Academic year\t#{@cohort.start_year}")
+    expect(page).to have_content("Participant email address\talternative@example.com")
+    expect(page).to have_content("Current lead provider\t#{@lead_provider.name}")
+    expect(page).to have_content("New lead provider\tLead Provider 1")
   end
 
   def then_i_change_the_lead_provider
@@ -116,7 +116,7 @@ RSpec.describe "Induction coordinator requests lead provider change for a partic
   def then_i_am_asked_to_check_my_changes
     expect(page).to have_content("Check your answers before you request the change")
     expect(page).to have_content("Change request details")
-    expect(page).to have_content("New lead provider Lead Provider 2")
+    expect(page).to have_content("New lead provider\tLead Provider 2")
   end
 
   def then_i_see_confirmation_that_the_request_has_been_sent

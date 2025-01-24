@@ -173,14 +173,15 @@ group :development do
 end
 
 group :test do
+  gem "axe-core-api", "4.2"
   gem "axe-core-rspec"
   gem "capybara", "~> 3.40"
+  gem "cuprite"
   gem "jsonapi-rspec"
   gem "launchy"
   gem "pundit-matchers", "~> 1.9.0"
   gem "rails-controller-testing", "~> 1.0.5"
   gem "rspec-default_http_header", "~> 0.0.6"
-  gem "selenium-webdriver"
   gem "shoulda-matchers", "~> 5.3"
   gem "simplecov"
   gem "site_prism", "~> 3.7"

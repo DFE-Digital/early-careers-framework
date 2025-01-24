@@ -57,13 +57,14 @@ module InteractionHelper
   def when_i_fill_in_autocomplete(id, with:)
     page.execute_script("document.getElementById('#{id}').value = '#{with}';")
 
-    within("ul##{id}__listbox") do
-      find("li.autocomplete__option", match: :first).select_option
-    end
+    # The first element in the select is a placeholder, so we need to select the second element
+    # as the 'first'.
+    find("##{id}-select", visible: false).find("option:nth-of-type(2)", visible: false).select_option
   end
 
   def then_autocomplete_does_not_allow(id, value:)
-    when_i_fill_in_autocomplete(id, with: value)
+    find("ul##{id}__listbox li.autocomplete__option", match: :first)
+
     raise "Autocomplete field #{id} should not allow the value '#{value}'"
   rescue Capybara::ElementNotFound
     true

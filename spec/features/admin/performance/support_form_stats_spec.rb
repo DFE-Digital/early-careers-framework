@@ -22,13 +22,13 @@ private
       expect(page).to have_content(I18n.t("support_query.stats.#{subject}"))
     end
 
-    expect(page).to have_content("User visited support form directly 2 1")
-    expect(page).to have_content("Change lead provider for a participant 2 2")
-    expect(page).to have_content("Change date of birth for a participant 0 0")
-    expect(page).to have_content("Change TRN for a participant 0 0")
-    expect(page).to have_content("Change lead provider for an academic year 0 0")
-    expect(page).to have_content("Change delivery partner for an academic year 0 0")
-    expect(page).to have_content("Change training programme choice for an academic year 0 0")
+    expect(page).to have_content("User visited support form directly\t2\t1")
+    expect(page).to have_content("Change lead provider for a participant\t2\t2")
+    expect(page).to have_content("Change date of birth for a participant\t0\t0")
+    expect(page).to have_content("Change TRN for a participant\t0\t0")
+    expect(page).to have_content("Change lead provider for an academic year\t0\t0")
+    expect(page).to have_content("Change delivery partner for an academic year\t0\t0")
+    expect(page).to have_content("Change training programme choice for an academic year\t0\t0")
   end
 
   def setup_support_queries
