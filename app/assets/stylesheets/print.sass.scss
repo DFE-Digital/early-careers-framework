@@ -37,16 +37,6 @@
     display: none;
   }
 
-  .npq-contract-summary {
-    &:nth-child(odd) {
-      page-break-before: always;
-    }
-
-    header {
-      gap: 30px;
-    }
-  }
-
   .app-application__panel__summary,
   .finance-panel {
     padding: 0;
