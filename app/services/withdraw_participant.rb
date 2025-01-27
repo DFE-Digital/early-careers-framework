@@ -32,10 +32,10 @@ class WithdrawParticipant
       participant_profile.training_status_withdrawn!
     end
 
-    induction_coordinator = participant_profile.school.induction_coordinator_profiles.first
+    induction_coordinator = relevant_induction_record.school.induction_coordinator_profiles.first
     if induction_coordinator.present?
       SchoolMailer.with(
-        withdrawn_participant: participant_profile,
+        induction_record: relevant_induction_record,
         induction_coordinator:,
         partnership: relevant_induction_record.partnership,
       ).fip_provider_has_withdrawn_a_participant.deliver_later

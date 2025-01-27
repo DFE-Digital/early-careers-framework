@@ -344,7 +344,7 @@ class SchoolMailer < ApplicationMailer
   end
 
   def fip_provider_has_withdrawn_a_participant
-    withdrawn_participant = params[:withdrawn_participant]
+    induction_record = params[:induction_record]
     induction_coordinator = params[:induction_coordinator]
     partnership = params[:partnership]
 
@@ -355,8 +355,8 @@ class SchoolMailer < ApplicationMailer
       rails_mail_template: action_name,
       personalisation: {
         name: induction_coordinator.user.full_name,
-        withdrawn_participant_name: withdrawn_participant.user.full_name,
-        school: withdrawn_participant.school.name,
+        withdrawn_participant_name: induction_record.user.full_name,
+        school: induction_record.school.name,
         delivery_partner: partnership&.delivery_partner_name || "No delivery partner",
         lead_provider: partnership&.lead_provider_name || "No lead provider",
       },
@@ -364,7 +364,8 @@ class SchoolMailer < ApplicationMailer
     email
       .tag(:sit_fip_provider_has_withdrawn_a_participant)
       .associate_with(induction_coordinator, as: :induction_coordinator)
-      .associate_with(withdrawn_participant, as: :participant_profile)
+      .associate_with(induction_record.participant_profile, as: :participant_profile)
+      .associate_with(induction_record, as: :induction_record)
   end
 
   # Pilot one-off mailers
