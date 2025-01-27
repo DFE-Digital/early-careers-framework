@@ -13,15 +13,15 @@ RSpec.describe GovukTechDocs::OpenApi::Renderer do
         version: "0.0.1",
       },
       paths: {
-        "/widgets": {
+        "/api/v3/statements": {
           get: {
             responses: {
               "200": {
-                description: "widgets description goes here",
+                description: "statements description goes here",
                 content: {
                   "application/json": {
                     schema: {
-                      "$ref": "#/components/schemas/widgets",
+                      "$ref": "#/components/schemas/statements",
                     },
                   },
                 },
@@ -32,7 +32,7 @@ RSpec.describe GovukTechDocs::OpenApi::Renderer do
       },
       components: {
         schemas: {
-          widgets: {
+          statements: {
             properties: {
               data: {
                 type: "array",
@@ -45,7 +45,7 @@ RSpec.describe GovukTechDocs::OpenApi::Renderer do
           widget: {
             anyOf: [
               { "$ref": "#/components/schemas/widgetInteger" },
-              { "$ref": "#/components/schemas/widgetString" },
+              { "$ref": "#/components/schemas/statementString" },
             ],
           },
           widgetInteger: {
@@ -54,7 +54,7 @@ RSpec.describe GovukTechDocs::OpenApi::Renderer do
               id: { type: "integer", example: 12_345 },
             },
           },
-          widgetString: {
+          statementString: {
             type: "object",
             properties: {
               id: { type: "string", example: "abcde" },
@@ -109,16 +109,16 @@ RSpec.describe GovukTechDocs::OpenApi::Renderer do
       end
 
       it "renders a list of paths" do
-        expect(rendered).to have_css(".govuk-heading-l", text: "/widgets")
-        expect(rendered).to have_css("#widgets-get-responses")
-        expect(rendered).to have_css("#widgets-get-responses-examples")
-        expect(rendered).to have_css("span.govuk-details__summary-text", text: "200 - widgets description goes here")
+        expect(rendered).to have_css(".govuk-heading-l", text: "/api/v3/statements")
+        expect(rendered).to have_css("#api-v3-statements-get-responses")
+        expect(rendered).to have_css("#api-v3-statements-get-responses-examples")
+        expect(rendered).to have_css("span.govuk-details__summary-text", text: "200 - statements description goes here")
       end
 
       it "renders schemas" do
         expect(rendered).to have_css("#schema-widget", text: "widget")
         expect(rendered).to have_link("widgetInteger", href: "#schema-widgetinteger")
-        expect(rendered).to have_link("widgetString", href: "#schema-widgetstring")
+        expect(rendered).to have_link("statementString", href: "#schema-statementstring")
       end
     end
 
@@ -139,6 +139,7 @@ RSpec.describe GovukTechDocs::OpenApi::Renderer do
             "/api/v3/delivery-partners": { get: { responses: {} } },
             "/api/v3/participant-declarations/{id}": { get: { responses: {} } },
             "/api/v3/participant-declarations": { get: { responses: {} } },
+            "/api/v3/participant-declarations.csv": { get: { responses: {} } },
           },
         }
       end
@@ -159,6 +160,7 @@ RSpec.describe GovukTechDocs::OpenApi::Renderer do
           "/api/v3/partnerships",
           "/api/v3/schools",
           "/api/v3/participant-declarations",
+          "/api/v3/participant-declarations.csv",
           "/api/v3/participant-declarations/{id}",
           "/api/v3/participants",
           "/api/v3/unfunded-mentors",
