@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Cohort < ApplicationRecord
+  self.ignored_columns = %w[npq_registration_start_date]
+
   has_paper_trail
 
   NPQ_PLUS_1_YEAR = 2020

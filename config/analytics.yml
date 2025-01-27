@@ -195,7 +195,6 @@
   - start_year
   - registration_start_date
   - academic_year_start_date
-  - npq_registration_start_date
   - automatic_assignment_period_end_date
   - payments_frozen_at
   - mentor_funding
