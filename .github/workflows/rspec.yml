@@ -7,16 +7,16 @@ on:
         type: boolean
         required: false
         default: true
-
+        
 jobs:
-  backend-tests:
+  tests:
     name: Run rspec
     runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
       matrix:
-        ci_node_total: [8]
-        ci_node_index: [0, 1, 2, 3, 4, 5, 6, 7]
+        ci_node_total: [6]
+        ci_node_index: [0, 1, 2, 3, 4, 5]
 
     env:
       RAILS_ENV: test
@@ -28,9 +28,9 @@ jobs:
       ANALYTICS_DB_PASSWORD: ""
       ANALYTICS_DB_HOSTNAME: 127.0.0.1
       ANALYTICS_DB_PORT: 5432
+      CI: true
       CI_NODE_TOTAL: ${{ matrix.ci_node_total }}
       CI_NODE_INDEX: ${{ matrix.ci_node_index }}
-      CI: true
 
     services:
       postgres:
@@ -57,7 +57,57 @@ jobs:
           CI_NODE_TOTAL: ${{ matrix.ci_node_total }}
           CI_NODE_INDEX: ${{ matrix.ci_node_index }}
         run: |-
-          bundle exec rake knapsack:rspec
+          bundle exec rake "knapsack:rspec[--tag ~type:feature]"
+
+  feature-tests:
+    name: Run rspec (features)
+    runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: false
+      matrix:
+        ci_node_total: [4]
+        ci_node_index: [0, 1, 2, 3]
+
+    env:
+      RAILS_ENV: test
+      DB_USERNAME: postgres
+      DB_PASSWORD: ""
+      DB_HOSTNAME: 127.0.0.1
+      DB_PORT: 5432
+      ANALYTICS_DB_USERNAME: postgres
+      ANALYTICS_DB_PASSWORD: ""
+      ANALYTICS_DB_HOSTNAME: 127.0.0.1
+      ANALYTICS_DB_PORT: 5432
+      CI: true
+      CI_NODE_TOTAL: ${{ matrix.ci_node_total }}
+      CI_NODE_INDEX: ${{ matrix.ci_node_index }}
+
+    services:
+      postgres:
+        image: postgres:11.6-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: ""
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - uses: ./.github/actions/prepare-app-env
+        id: test
+        with:
+          prepare-test-database: "true"
+          prepare-assets: "true"
+
+      - name: Run tests
+        env:
+          CI_NODE_TOTAL: ${{ matrix.ci_node_total }}
+          CI_NODE_INDEX: ${{ matrix.ci_node_index }}
+        run: |-
+          bundle exec rake "knapsack:rspec[--tag type:feature --fail-fast]"
 
   e2e-scenarios:
     if: ${{ inputs.run-end-to-end-tests }}
@@ -79,9 +129,9 @@ jobs:
       ANALYTICS_DB_PASSWORD: ""
       ANALYTICS_DB_HOSTNAME: 127.0.0.1
       ANALYTICS_DB_PORT: 5432
+      CI: true
       CI_NODE_TOTAL: ${{ matrix.ci_node_total }}
       CI_NODE_INDEX: ${{ matrix.ci_node_index }}
-      CI: true
 
     services:
       postgres:
