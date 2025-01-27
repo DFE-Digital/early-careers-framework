@@ -68,12 +68,12 @@ RSpec.describe "Induction coordinator requests delivery partner change for acade
   def then_i_am_asked_to_check_my_answers
     expect(page).to have_content("Check your answers before you request the change")
     expect(page).to have_content("Change request details")
-    expect(page).to have_content("Induction tutor name\t#{@school.induction_coordinators.first.full_name}")
-    expect(page).to have_content("Induction tutor email address\t#{@school.induction_coordinators.first.email}")
+    expect(page).to have_content("Induction tutor name #{@school.induction_coordinators.first.full_name}")
+    expect(page).to have_content("Induction tutor email address #{@school.induction_coordinators.first.email}")
     expect(page).to have_content(@school.name)
-    expect(page).to have_content("Academic year\t#{academic_year}")
-    expect(page).to have_content("Current delivery partner\t#{@delivery_partner.name}")
-    expect(page).to have_content("New delivery partner\tDelivery Partner 1")
+    expect(page).to have_content("Academic year #{academic_year}")
+    expect(page).to have_content("Current delivery partner #{@delivery_partner.name}")
+    expect(page).to have_content("New delivery partner Delivery Partner 1")
   end
 
   def then_i_change_the_delivery_partner
@@ -86,7 +86,7 @@ RSpec.describe "Induction coordinator requests delivery partner change for acade
   def then_i_am_asked_to_check_my_changes
     expect(page).to have_content("Check your answers before you request the change")
     expect(page).to have_content("Change request details")
-    expect(page).to have_content("New delivery partner\tDelivery Partner 2")
+    expect(page).to have_content("New delivery partner Delivery Partner 2")
   end
 
   def then_i_see_confirmation_that_the_request_has_been_sent

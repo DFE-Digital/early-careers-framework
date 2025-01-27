@@ -235,6 +235,6 @@ private
   end
 
   def then_i_see_contract_information
-    expect(page).to have_content("Recruitment target\t#{contract.recruitment_target}")
+    expect(page).to have_content("Recruitment target #{contract.recruitment_target}")
   end
 end

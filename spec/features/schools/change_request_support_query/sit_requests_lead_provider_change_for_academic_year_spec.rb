@@ -62,12 +62,12 @@ RSpec.describe "Induction coordinator requests lead provider change for academic
   def then_i_am_asked_to_check_my_answers
     expect(page).to have_content("Check your answers before you request the change")
     expect(page).to have_content("Change request details")
-    expect(page).to have_content("Induction tutor name\t#{@school.induction_coordinators.first.full_name}")
-    expect(page).to have_content("Induction tutor email address\t#{@school.induction_coordinators.first.email}")
+    expect(page).to have_content("Induction tutor name #{@school.induction_coordinators.first.full_name}")
+    expect(page).to have_content("Induction tutor email address #{@school.induction_coordinators.first.email}")
     expect(page).to have_content(@school.name)
-    expect(page).to have_content("Academic year\t#{academic_year}")
-    expect(page).to have_content("Current lead provider\t#{@lead_provider.name}")
-    expect(page).to have_content("New lead provider\tLead Provider 1")
+    expect(page).to have_content("Academic year #{academic_year}")
+    expect(page).to have_content("Current lead provider #{@lead_provider.name}")
+    expect(page).to have_content("New lead provider Lead Provider 1")
   end
 
   def then_i_change_the_lead_provider
@@ -80,7 +80,7 @@ RSpec.describe "Induction coordinator requests lead provider change for academic
   def then_i_am_asked_to_check_my_changes
     expect(page).to have_content("Check your answers before you request the change")
     expect(page).to have_content("Change request details")
-    expect(page).to have_content("New lead provider\tLead Provider 2")
+    expect(page).to have_content("New lead provider Lead Provider 2")
   end
 
   def then_i_see_confirmation_that_the_request_has_been_sent

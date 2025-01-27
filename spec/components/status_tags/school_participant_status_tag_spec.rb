@@ -24,7 +24,7 @@ RSpec.describe StatusTags::SchoolParticipantStatusTag, type: :component do
       end
 
       it { is_expected.to have_text value[:label] }
-      it { is_expected.to have_text tag_description }
+      it { is_expected.to have_text tag_description.strip }
     end
 
     it "includes :#{key} as a recognised record_state" do

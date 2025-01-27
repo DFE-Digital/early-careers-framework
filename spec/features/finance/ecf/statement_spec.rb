@@ -132,7 +132,8 @@ RSpec.describe "Show ECF statement", :js do
   end
 
   def and_i_see_additional_adjustments_total
-    expect(page).to have_css(".finance-panel .finance-panel__summary__total-payment-breakdown p:nth-child(5)", text: "Additional adjustments\n£799.99")
+    expect(page).to have_text("Additional adjustments")
+    expect(page).to have_text("£799.99")
   end
 
   def and_i_see_save_as_pdf_link

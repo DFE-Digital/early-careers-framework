@@ -19,6 +19,7 @@ end
 
 Capybara.server_port = 9887 + ENV["TEST_ENV_NUMBER"].to_i
 Capybara.automatic_label_click = true
+Capybara.default_normalize_ws = true
 
 RSpec.configure do |config|
   config.include AxeHelper, type: :feature

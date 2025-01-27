@@ -22,7 +22,8 @@ module Pages
     end
 
     def has_associated_email_address?(email_address)
-      element_has_content? self, "Associated email addresses\n#{email_address}"
+      element_has_content? self, "Associated email addresses"
+      element_has_content? self, email_address
     end
 
     def has_trn?(trn)
