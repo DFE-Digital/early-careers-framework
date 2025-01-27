@@ -5,7 +5,15 @@ local_authority = LocalAuthority.order("RANDOM()").first
 appropriate_body = AppropriateBody.order("RANDOM()").first
 delivery_partner = DeliveryPartner.order("RANDOM()").first
 
-lead_providers = LeadProvider.where(name: ["Ambition Institute", "Best Practice Network", "Capita", "Education Development Trust"])
+lead_providers = LeadProvider.where(name: [
+  "Ambition Institute",
+  "Best Practice Network",
+  "Capita",
+  "Education Development Trust",
+  "National Institute of Teaching",
+  "Teach First",
+  "UCL Institute of Education",
+])
 
 FactoryBot.create(:seed_school_local_authority, school:, local_authority:)
 
