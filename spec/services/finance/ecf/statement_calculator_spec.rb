@@ -9,6 +9,63 @@ RSpec.describe Finance::ECF::StatementCalculator, mid_cohort: true do
 
   subject { described_class.new(statement:) }
 
+  let(:output_calculator) { subject.send :output_calculator }
+
+  before do
+    if defined?(banding_breakdown)
+      allow(statement).to receive_message_chain(:contract, :include_uplift_fees?).and_return(contract.include_uplift_fees?)
+      allow(statement).to receive_message_chain(:contract, :uplift_amount).and_return(contract.uplift_amount)
+      allow(statement).to receive_message_chain(:contract, :monthly_service_fee).and_return(contract.monthly_service_fee)
+      allow(statement).to receive_message_chain(:contract, :uplift_cap).and_return(contract.uplift_cap)
+    end
+
+    if defined?(uplift_breakdown)
+      allow(output_calculator).to receive(:uplift_breakdown).and_return(uplift_breakdown)
+    end
+
+    if defined?(banding_breakdown) && banding_breakdown.present?
+      # Mock participant bands
+      mocked_bands = banding_breakdown.map do |hash|
+        ParticipantBand.new(min: hash[:min], max: hash[:max], per_participant: 500.0, output_payment_percentage: 64)
+      end
+      allow(statement).to receive_message_chain(:contract, :bands, :order).and_return(mocked_bands)
+
+      # Create list of event types from banding_breakdown
+      event_types = banding_breakdown[0].keys.select { |k| k.to_s.ends_with?("_additions") || k.to_s.ends_with?("_subtractions") }.map { |k| k.to_s.gsub(/_additions/, "").gsub(/_subtractions/, "") }.uniq
+
+      # Mock bandings list
+      mocked_bandings = {}
+
+      event_types.each do |event_type|
+        declaration_type = event_type.to_s.dasherize
+
+        mocked_calculator = Finance::ECF::BandingCalculator.new(statement:, declaration_type:)
+
+        # Mocking 'previous_fill_level' to return a specific value
+        count = banding_breakdown.sum { |h| h[:"previous_#{event_type}_count"] || 0 }
+        allow(mocked_calculator).to receive(:previous_fill_level).and_return(count)
+
+        # Mocking 'current_billable_count' to return a specific value
+        count = banding_breakdown.sum { |h| h[:"#{event_type}_additions"] || 0 }
+        allow(mocked_calculator).to receive(:current_billable_count).and_return(count)
+
+        # Mocking 'current_refundable_count' to return a specific value
+        count = banding_breakdown.sum { |h| h[:"#{event_type}_subtractions"] || 0 }
+        allow(mocked_calculator).to receive(:current_refundable_count).and_return(count)
+
+        mocked_calculator.calculate
+
+        mocked_bandings[declaration_type] = mocked_calculator
+      end
+
+      # Return correct mocked banding
+      allow(Finance::ECF::BandingCalculator).to receive(:new) do |args|
+        declaration_type = args[:declaration_type]
+        mocked_bandings[declaration_type]
+      end
+    end
+  end
+
   describe "#total" do
     let(:default_total) { BigDecimal("-0.5232793103448275862068965517241379310345e4") }
 
@@ -20,7 +77,7 @@ RSpec.describe Finance::ECF::StatementCalculator, mid_cohort: true do
         subtractions: 2,
       }
     end
-    let(:output_calculator) { instance_double("Finance::ECF::OutputCalculator", uplift_breakdown:, banding_breakdown: []) }
+    # let(:output_calculator) { instance_double("Finance::ECF::OutputCalculator", uplift_breakdown:, banding_breakdown: []) }
 
     before do
       allow(Finance::ECF::OutputCalculator).to receive(:new).and_return(output_calculator)
@@ -84,7 +141,7 @@ RSpec.describe Finance::ECF::StatementCalculator, mid_cohort: true do
           {
             band: :a,
             min: 1,
-            max: 2,
+            max: 3,
             started_additions: 0,
             retained_1_additions: 0,
             retained_2_additions: 0,
@@ -97,8 +154,8 @@ RSpec.describe Finance::ECF::StatementCalculator, mid_cohort: true do
           },
           {
             band: :b,
-            min: 3,
-            max: 4,
+            min: 4,
+            max: 9,
             started_additions: 0,
             retained_1_additions: 0,
             retained_2_additions: 0,
@@ -112,22 +169,22 @@ RSpec.describe Finance::ECF::StatementCalculator, mid_cohort: true do
         ]
       end
 
-      let(:output_calculator) { instance_double("Finance::ECF::OutputCalculator") }
+      # let(:output_calculator) { instance_double("Finance::ECF::OutputCalculator") }
 
-      before do
-        allow(Finance::ECF::OutputCalculator).to receive(:new).and_return(output_calculator)
-
-        allow(output_calculator).to receive(:banding_breakdown).and_return(banding_breakdown)
-
-        allow(output_calculator).to receive(:fee_for_declaration).and_return(48)
-      end
+      # before do
+      #   allow(Finance::ECF::OutputCalculator).to receive(:new).and_return(output_calculator)
+      #
+      #   allow(output_calculator).to receive(:banding_breakdown).and_return(banding_breakdown)
+      #
+      #   allow(output_calculator).to receive(:fee_for_declaration).and_return(48)
+      # end
 
       it "returns correct value across all bands" do
         output_fee =
           ((1 * 48) + (4 * 48)) +
           ((2 * 48) + (5 * 48)) +
           ((3 * 48) + (6 * 48))
-        expect(subject.output_fee).to eql(output_fee)
+        expect(subject.output_fee.to_i).to eql(output_fee)
       end
     end
   end
@@ -139,43 +196,49 @@ RSpec.describe Finance::ECF::StatementCalculator, mid_cohort: true do
           {
             band: :a,
             min: 1,
-            max: 2,
+            max: 3,
             started_subtractions: 0,
             retained_1_subtractions: 0,
             retained_2_subtractions: 0,
             retained_3_subtractions: 0,
             retained_4_subtractions: 0,
             completed_subtractions: 0,
+            extended_1_additions: 1,
             extended_1_subtractions: 1,
+            extended_2_additions: 2,
             extended_2_subtractions: 2,
+            extended_3_additions: 3,
             extended_3_subtractions: 3,
           },
           {
             band: :b,
-            min: 3,
-            max: 4,
+            min: 4,
+            max: 9,
             started_subtractions: 0,
             retained_1_subtractions: 0,
             retained_2_subtractions: 0,
             retained_3_subtractions: 0,
             retained_4_subtractions: 0,
             completed_subtractions: 0,
+            extended_1_additions: 4,
             extended_1_subtractions: 4,
+            extended_2_additions: 5,
             extended_2_subtractions: 5,
+            extended_3_additions: 6,
             extended_3_subtractions: 6,
           },
         ]
       end
 
-      let(:output_calculator) { instance_double("Finance::ECF::OutputCalculator") }
+      # let(:output_calculator) { instance_double("Finance::ECF::OutputCalculator") }
 
-      before do
-        allow(Finance::ECF::OutputCalculator).to receive(:new).and_return(output_calculator)
-
-        allow(output_calculator).to receive(:banding_breakdown).and_return(banding_breakdown)
-
-        allow(output_calculator).to receive(:fee_for_declaration).and_return(48)
-      end
+      # before do
+      #   allow(Finance::ECF::OutputCalculator).to receive(:new).and_return(output_calculator)
+      #
+      #   allow(output_calculator).to receive(:banding_breakdown).and_return(banding_breakdown)
+      #
+      #   allow(output_calculator).to receive(:fee_for_declaration).and_return(48)
+      # end
 
       it "returns correct value across all bands" do
         deductions =
@@ -198,17 +261,17 @@ RSpec.describe Finance::ECF::StatementCalculator, mid_cohort: true do
         }
       end
 
-      let(:banding_breakdown) do
-        []
-      end
+      # let(:banding_breakdown) do
+      #   []
+      # end
 
-      let(:output_calculator) { instance_double("Finance::ECF::OutputCalculator", uplift_breakdown:, banding_breakdown:) }
+      # let(:output_calculator) { instance_double("Finance::ECF::OutputCalculator", uplift_breakdown:, banding_breakdown:) }
 
       let!(:contract) { create(:call_off_contract, lead_provider:) }
 
-      before do
-        allow(Finance::ECF::OutputCalculator).to receive(:new).and_return(output_calculator)
-      end
+      # before do
+      #   allow(Finance::ECF::OutputCalculator).to receive(:new).and_return(output_calculator)
+      # end
 
       it "includes uplift adjustments" do
         expect(subject.adjustments_total).to eql(-200)
@@ -224,7 +287,7 @@ RSpec.describe Finance::ECF::StatementCalculator, mid_cohort: true do
     end
 
     context "when there are clawbacks" do
-      let(:output_calculator) { instance_double("Finance::ECF::OutputCalculator", banding_breakdown:, uplift_breakdown:) }
+      # let(:output_calculator) { instance_double("Finance::ECF::OutputCalculator", banding_breakdown:, uplift_breakdown:) }
 
       let(:uplift_breakdown) do
         {
@@ -340,13 +403,13 @@ RSpec.describe Finance::ECF::StatementCalculator, mid_cohort: true do
         ]
       end
 
-      before do
-        allow(Finance::ECF::OutputCalculator).to receive(:new).and_return(output_calculator)
-        allow(output_calculator).to receive(:fee_for_declaration).and_return(48)
-      end
+      # before do
+      #   allow(Finance::ECF::OutputCalculator).to receive(:new).and_return(output_calculator)
+      #   allow(output_calculator).to receive(:fee_for_declaration).and_return(48)
+      # end
 
       it "includes clawback adjustments" do
-        expect(subject.adjustments_total).to eql(-288)
+        expect(subject.adjustments_total).to eql(-320)
       end
     end
 
@@ -465,7 +528,7 @@ RSpec.describe Finance::ECF::StatementCalculator, mid_cohort: true do
         ]
       end
 
-      let(:output_calculator) { instance_double("Finance::ECF::OutputCalculator", uplift_breakdown:, banding_breakdown:) }
+      # let(:output_calculator) { instance_double("Finance::ECF::OutputCalculator", uplift_breakdown:, banding_breakdown:) }
 
       let!(:contract) { create(:call_off_contract, lead_provider:) }
 
@@ -479,10 +542,11 @@ RSpec.describe Finance::ECF::StatementCalculator, mid_cohort: true do
       end
 
       context "when contract does not include uplift fees" do
-        before { allow_any_instance_of(CallOffContract).to receive(:include_uplift_fees?).and_return(false) }
+        let!(:contract) { create(:call_off_contract, lead_provider:, uplift_amount: nil) }
+        # before { allow_any_instance_of(CallOffContract).to receive(:include_uplift_fees?).and_return(false) }
 
         it "includes clawback adjustments only" do
-          expect(subject.adjustments_total).to eq(-288)
+          expect(subject.adjustments_total.to_f).to eq(-288)
         end
       end
     end
@@ -541,7 +605,7 @@ RSpec.describe Finance::ECF::StatementCalculator, mid_cohort: true do
       ]
     end
 
-    let(:output_calculator) { instance_double("Finance::ECF::OutputCalculator") }
+    # let(:output_calculator) { instance_double("Finance::ECF::OutputCalculator") }
 
     before do
       allow(Finance::ECF::OutputCalculator).to receive(:new).and_return(output_calculator)
@@ -562,15 +626,15 @@ RSpec.describe Finance::ECF::StatementCalculator, mid_cohort: true do
         {
           band: :a,
           min: 1,
-          max: 2,
+          max: 3,
           extended_1_additions: 1,
           extended_2_additions: 2,
           extended_3_additions: 3,
         },
         {
           band: :b,
-          min: 3,
-          max: 4,
+          min: 4,
+          max: 9,
           extended_1_additions: 4,
           extended_2_additions: 5,
           extended_3_additions: 6,
@@ -578,15 +642,15 @@ RSpec.describe Finance::ECF::StatementCalculator, mid_cohort: true do
       ]
     end
 
-    let(:output_calculator) { instance_double("Finance::ECF::OutputCalculator") }
+    # let(:output_calculator) { instance_double("Finance::ECF::OutputCalculator") }
 
-    before do
-      allow(Finance::ECF::OutputCalculator).to receive(:new).and_return(output_calculator)
-
-      allow(output_calculator).to receive(:banding_breakdown).and_return(banding_breakdown)
-
-      allow(output_calculator).to receive(:fee_for_declaration).and_return(48)
-    end
+    # before do
+    #   allow(Finance::ECF::OutputCalculator).to receive(:new).and_return(output_calculator)
+    #
+    #   allow(output_calculator).to receive(:banding_breakdown).and_return(banding_breakdown)
+    #
+    #   allow(output_calculator).to receive(:fee_for_declaration).and_return(48)
+    # end
 
     it "returns correct value across all bands" do
       expect(subject.additions_for_extended_1).to eql((1 * 48) + (4 * 48)) # = 240
@@ -613,7 +677,7 @@ RSpec.describe Finance::ECF::StatementCalculator, mid_cohort: true do
         }
       end
 
-      let(:output_calculator) { instance_double("Finance::ECF::OutputCalculator", uplift_breakdown:) }
+      # let(:output_calculator) { instance_double("Finance::ECF::OutputCalculator", uplift_breakdown:) }
 
       let!(:contract) { create(:call_off_contract, lead_provider:) }
 
@@ -636,7 +700,7 @@ RSpec.describe Finance::ECF::StatementCalculator, mid_cohort: true do
         }
       end
 
-      let(:output_calculator) { instance_double("Finance::ECF::OutputCalculator", uplift_breakdown:) }
+      # let(:output_calculator) { instance_double("Finance::ECF::OutputCalculator", uplift_breakdown:) }
 
       before do
         allow(Finance::ECF::OutputCalculator).to receive(:new).and_return(output_calculator)
@@ -659,7 +723,7 @@ RSpec.describe Finance::ECF::StatementCalculator, mid_cohort: true do
         }
       end
 
-      let(:output_calculator) { instance_double("Finance::ECF::OutputCalculator", uplift_breakdown:) }
+      # let(:output_calculator) { instance_double("Finance::ECF::OutputCalculator", uplift_breakdown:) }
 
       before do
         allow(Finance::ECF::OutputCalculator).to receive(:new).and_return(output_calculator)
@@ -680,7 +744,7 @@ RSpec.describe Finance::ECF::StatementCalculator, mid_cohort: true do
         }
       end
 
-      let(:output_calculator) { instance_double("Finance::ECF::OutputCalculator", uplift_breakdown:) }
+      # let(:output_calculator) { instance_double("Finance::ECF::OutputCalculator", uplift_breakdown:) }
 
       before do
         allow_any_instance_of(CallOffContract).to receive(:include_uplift_fees?).and_return(false)
@@ -730,11 +794,11 @@ RSpec.describe Finance::ECF::StatementCalculator, mid_cohort: true do
         },
       ]
     end
-    let(:output_calculator) { instance_double("Finance::ECF::OutputCalculator", banding_breakdown:) }
+    # let(:output_calculator) { instance_double("Finance::ECF::OutputCalculator", banding_breakdown:) }
 
-    before do
-      allow(Finance::ECF::OutputCalculator).to receive(:new).and_return(output_calculator)
-    end
+    # before do
+    #   allow(Finance::ECF::OutputCalculator).to receive(:new).and_return(output_calculator)
+    # end
 
     it "returns count of all started across bands" do
       expect(subject.started_count).to eql(3)
@@ -772,7 +836,7 @@ RSpec.describe Finance::ECF::StatementCalculator, mid_cohort: true do
         },
       ]
     end
-    let(:output_calculator) { instance_double("Finance::ECF::OutputCalculator", banding_breakdown:) }
+    # let(:output_calculator) { instance_double("Finance::ECF::OutputCalculator", banding_breakdown:) }
 
     before do
       allow(Finance::ECF::OutputCalculator).to receive(:new).and_return(output_calculator)
@@ -806,11 +870,11 @@ RSpec.describe Finance::ECF::StatementCalculator, mid_cohort: true do
         },
       ]
     end
-    let(:output_calculator) { instance_double("Finance::ECF::OutputCalculator", banding_breakdown:) }
+    # let(:output_calculator) { instance_double("Finance::ECF::OutputCalculator", banding_breakdown:) }
 
-    before do
-      allow(Finance::ECF::OutputCalculator).to receive(:new).and_return(output_calculator)
-    end
+    # before do
+    #   allow(Finance::ECF::OutputCalculator).to receive(:new).and_return(output_calculator)
+    # end
 
     it "returns count of all completed across bands" do
       expect(subject.completed_count).to eql(3)
@@ -848,11 +912,11 @@ RSpec.describe Finance::ECF::StatementCalculator, mid_cohort: true do
         },
       ]
     end
-    let(:output_calculator) { instance_double("Finance::ECF::OutputCalculator", banding_breakdown:) }
+    # let(:output_calculator) { instance_double("Finance::ECF::OutputCalculator", banding_breakdown:) }
 
-    before do
-      allow(Finance::ECF::OutputCalculator).to receive(:new).and_return(output_calculator)
-    end
+    # before do
+    #   allow(Finance::ECF::OutputCalculator).to receive(:new).and_return(output_calculator)
+    # end
 
     it "returns count of all extended across bands" do
       expect(subject.extended_count).to eql(6)

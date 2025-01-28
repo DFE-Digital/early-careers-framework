@@ -9,6 +9,18 @@ module Finance
         @statement = statement
       end
 
+      def bandings
+        @bandings ||= declaration_types.index_with do |declaration_type|
+          BandingCalculator.new(statement:, declaration_type:)
+        end
+      end
+
+      def banding_for(declaration_type)
+        bandings[declaration_type]
+      end
+
+      ###
+
       def banding_breakdown
         @banding_breakdown ||= begin
           bandings = declaration_types.map do |declaration_type|
@@ -49,7 +61,12 @@ module Finance
                        extended_event_percentage
                      end
 
+        # puts ">>>>>>>>>> fee_for_declaration: #{percentage * band_for_letter(band_letter).output_payment_per_participant}"
         percentage * band_for_letter(band_letter).output_payment_per_participant
+      end
+
+      def band_letters
+        bands.zip(:a..:z).map { |e| e[1] }
       end
 
     private
@@ -170,10 +187,6 @@ module Finance
 
       def bands
         statement.contract.bands.order(max: :asc)
-      end
-
-      def band_letters
-        bands.zip(:a..:z).map { |e| e[1] }
       end
 
       def previous_fill_level_for_declaration_type(declaration_type)
