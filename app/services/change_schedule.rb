@@ -127,7 +127,7 @@ private
   end
 
   def current_cohort
-    relevant_induction_record.schedule.cohort
+    relevant_induction_record&.schedule&.cohort
   end
 
   def update_induction_records!

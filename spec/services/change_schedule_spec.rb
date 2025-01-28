@@ -65,14 +65,41 @@ RSpec.shared_examples "validating a participant for a change schedule" do
 end
 
 RSpec.shared_examples "changing cohort and continuing training" do
+  let(:cohort) { new_cohort.previous }
+  let(:new_cohort) { Cohort.active_registration_cohort }
+
+  it { expect(new_cohort).not_to eq(cohort) }
+
+  context "when there are no billable declarations and allow_change_to_from_frozen_cohort is true" do
+    let(:allow_change_to_from_frozen_cohort) { true }
+
+    context "when the participant is not associated with the lead provider" do
+      let!(:new_school_cohort) { create(:school_cohort, :cip, :with_induction_programme, cohort: new_cohort, lead_provider: other_cpd_lead_provider.lead_provider, school: participant_profile.school) }
+      let(:other_cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
+
+      let(:params) do
+        {
+          cpd_lead_provider: other_cpd_lead_provider,
+          participant_id:,
+          course_identifier:,
+          schedule_identifier:,
+          allow_change_to_from_frozen_cohort:,
+          cohort: new_cohort.start_year,
+        }
+      end
+
+      it "is invalid and returns an error" do
+        is_expected.to be_invalid
+
+        expect(service.errors.messages_for(:participant_id)).to include("Your update cannot be made as the '#/participant_id' is not recognised. Check participant details and try again.")
+        expect(service.errors.messages_for(:cohort)).to include("You cannot change a participant to this cohort as you do not have a partnership with the school for the cohort. Contact the DfE for assistance.")
+      end
+    end
+  end
+
   %i[eligible payable paid].each do |state|
     context "when there are #{state} declarations" do
-      let(:cohort) { new_cohort.previous }
-      let(:new_cohort) { Cohort.active_registration_cohort }
-
       before { create(:participant_declaration, participant_profile:, cohort:, state:, course_identifier:, cpd_lead_provider:) }
-
-      it { expect(new_cohort).not_to eq(cohort) }
 
       context "allow_change_to_from_frozen_cohort is true" do
         let(:allow_change_to_from_frozen_cohort) { true }
