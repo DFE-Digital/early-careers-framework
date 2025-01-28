@@ -84,7 +84,6 @@ module Finance
           output_calculator.band_letters.sum do |letter|
             additions = output_calculator.banding_for(declaration_type).additions(letter)
             fee = output_calculator.fee_for_declaration(band_letter: letter, type: event_type)
-            # puts ">>>>>>> additions_for_#{event_type}: #{additions}, #{fee}"
             additions * fee
           end
         end
@@ -225,7 +224,6 @@ module Finance
 
       def output_fee
         event_types.sum do |event_type|
-          # puts ">>>>> #{event_type}: #{public_send(:"additions_for_#{event_type}")}"
           public_send(:"additions_for_#{event_type}")
         end
       end

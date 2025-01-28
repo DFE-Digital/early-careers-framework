@@ -51,7 +51,7 @@ module Finance
       end
 
       def banding
-        @banding ||= # [{:band=>:a, :min=>1, :max=>2000}, {:band=>:b, :min=>2001, :max=>4000}, {:band=>:c, :min=>4001, :max=>13800}, {:band=>:d, :min=>13801, :max=>18000}]
+        @banding ||=
           bands.zip(:a..:z).map do |band, letter|
             # minimum band should always be 1 or more, otherwise band a will go over its max limit
             band_min = band.min.to_i.zero? ? 1 : band.min
@@ -143,8 +143,6 @@ module Finance
           .count
 
         billable - refundable
-
-        # 10_748 # TODO: remove me
       end
 
       def current_billable_count
@@ -153,8 +151,6 @@ module Finance
           .joins(:participant_declaration)
           .where(participant_declarations: { declaration_type: })
           .count
-
-        # 613 # TODO: remove me
       end
 
       def current_refundable_count
@@ -163,8 +159,6 @@ module Finance
           .joins(:participant_declaration)
           .where(participant_declarations: { declaration_type: })
           .count
-
-        # 19 # TODO: remove me
       end
     end
   end

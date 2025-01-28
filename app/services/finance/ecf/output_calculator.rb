@@ -61,7 +61,6 @@ module Finance
                        extended_event_percentage
                      end
 
-        # puts ">>>>>>>>>> fee_for_declaration: #{percentage * band_for_letter(band_letter).output_payment_per_participant}"
         percentage * band_for_letter(band_letter).output_payment_per_participant
       end
 
