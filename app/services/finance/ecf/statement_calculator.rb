@@ -90,9 +90,9 @@ module Finance
 
         define_method "deductions_for_#{event_type}" do
           output_calculator.band_letters.sum do |letter|
-            additions = output_calculator.banding_for(declaration_type).subtractions(letter)
+            subtractions = output_calculator.banding_for(declaration_type).subtractions(letter)
             fee = output_calculator.fee_for_declaration(band_letter: letter, type: event_type)
-            additions * fee
+            subtractions * fee
           end
         end
       end
