@@ -1,0 +1,64 @@
+name: "Manually deploy to an environment"
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch-name:
+        description: Set branch name
+        required: true
+        type: string
+      environment:
+        description: "Deploy environment"
+        required: true
+        default: migration
+        type: choice
+        options:
+          - staging
+          - migration
+          - sandbox
+          - production
+
+permissions:
+  id-token: write
+  pull-requests: write
+  packages: write
+  security-events: write
+
+jobs:
+  docker:
+    name: Build and push Docker image
+    runs-on: ubuntu-latest
+    outputs:
+      docker-image: ${{ steps.build-docker-image.outputs.image }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.branch-name }}
+
+      - uses: DFE-Digital/github-actions/build-docker-image@master
+        id: build-docker-image
+        with:
+          docker-repository: ghcr.io/dfe-digital/early-careers-framework
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          snyk-token: ${{ secrets.SNYK_TOKEN }}
+
+  deploy:
+    name: Deploy to environment
+    needs: [docker]
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    outputs:
+      docker-image: ${{ needs.docker.outputs.docker-image }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.branch-name }}
+
+      - uses: ./.github/actions/deploy-environment-to-aks
+        id: deploy
+        with:
+          environment: ${{ inputs.environment }}
+          docker-image: ${{ needs.docker.outputs.docker-image }}
+          azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
+          current-commit-sha: ${{ github.sha }}
+          statuscake-api-token: ${{ secrets.STATUSCAKE_API_TOKEN }}
