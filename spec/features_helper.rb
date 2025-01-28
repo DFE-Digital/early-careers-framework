@@ -8,19 +8,25 @@ require "site_prism"
 require "site_prism/all_there" # Optional but needed to perform more complex matching
 
 Capybara.register_driver :chrome_headless do |app|
-  args = %w[disable-build-check disable-dev-shm-usage no-sandbox window-size=1400,1400]
+  args = %w[disable-build-check disable-dev-shm-usage disable-gpu no-sandbox window-size=1400,1400 enable-features=NetworkService,NetworkServiceInProcess disable-features=VizDisplayCompositor]
   args << "headless" unless ENV["NOT_HEADLESS"]
+
+  http_client = Selenium::WebDriver::Remote::Http::Default.new
+  http_client.read_timeout = 120
+  http_client.open_timeout = 120
 
   Capybara::Selenium::Driver.new(
     app,
     browser: :chrome,
     options: Selenium::WebDriver::Options.chrome(args:),
+    http_client:,
   )
 end
 
 Capybara.server_port = 9887 + ENV["TEST_ENV_NUMBER"].to_i
 Capybara.javascript_driver = :chrome_headless
 Capybara.automatic_label_click = true
+Capybara.default_max_wait_time = 10
 
 RSpec.configure do |config|
   config.include AxeHelper, type: :feature
@@ -31,9 +37,7 @@ RSpec.configure do |config|
 
   config.include Steps::GenericPageObjectSteps, type: :feature
 
-  # need this for axe
   config.before(:each, type: :feature) do
-    WebMock.disable_net_connect!(allow_localhost: true,
-                                 allow: "chromedriver.storage.googleapis.com")
+    WebMock.disable_net_connect!(allow_localhost: true)
   end
 end
