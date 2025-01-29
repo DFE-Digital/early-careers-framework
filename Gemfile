@@ -47,7 +47,7 @@ gem "foreman"
 gem "knapsack"
 
 # Canonical meta tag
-gem "canonical-rails", "~> 0.2.16"
+gem "canonical-rails", "~> 0.2.17"
 
 gem "listen", "~> 3.9"
 gem "rack-attack", "~> 6.7"
