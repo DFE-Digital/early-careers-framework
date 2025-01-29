@@ -752,7 +752,6 @@ DEPENDENCIES
   faker
   foreman
   friendly_id (~> 5.5)
-  google-cloud-bigquery
   govuk-components (~> 5.8.0)
   govuk_design_system_formbuilder (~> 5.8.0)
   httpclient (~> 2.8, >= 2.8.3)
