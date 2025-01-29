@@ -234,6 +234,12 @@ RSpec.describe InductionRecord, type: :model do
       let(:tina_transferred_ir) { Induction::Enrol.call(participant_profile: create(:ect_participant_profile), induction_programme:, start_date: 2.months.ago) }
       let(:wendy_withdrawn_ir) { Induction::Enrol.call(participant_profile: create(:ect_participant_profile), induction_programme:, start_date: 2.months.ago) }
       let(:terry_transferring_out_ir) { Induction::Enrol.call(participant_profile: create(:ect_participant_profile), induction_programme:, start_date: 2.months.ago) }
+      let(:carol_active_ir) { Induction::Enrol.call(participant_profile: create(:ect_participant_profile), induction_programme:, start_date: 2.months.ago) }
+      let!(:carol_completed_ir) do
+        carol_profile = carol_active_ir.participant_profile
+        Induction::Complete.call(participant_profile: carol_profile, completion_date: 1.day.ago)
+        carol_profile.induction_records.latest
+      end
 
       before do
         linda_leaving_ir.leaving!(1.month.from_now)
@@ -244,27 +250,31 @@ RSpec.describe InductionRecord, type: :model do
 
       context "when .current" do
         it "includes current users" do
-          expect(induction_programme.induction_records.current_or_transferring_in).to include charlie_current_ir
+          expect(induction_programme.induction_records.current).to include charlie_current_ir
         end
 
         it "includes transferring out users" do
-          expect(induction_programme.induction_records.current_or_transferring_in).to include terry_transferring_out_ir
+          expect(induction_programme.induction_records.current).to include terry_transferring_out_ir
         end
 
         it "includes users leaving for another school" do
-          expect(induction_programme.induction_records.current_or_transferring_in).to include linda_leaving_ir
+          expect(induction_programme.induction_records.current).to include linda_leaving_ir
         end
 
         it "does not include transferring in users" do
-          expect(induction_programme.induction_records.current_or_transferring_in).to include theresa_transfer_in_ir
+          expect(induction_programme.induction_records.current).not_to include theresa_transfer_in_ir
         end
 
         it "does not include transferred users" do
-          expect(induction_programme.induction_records.current_or_transferring_in).not_to include tina_transferred_ir
+          expect(induction_programme.induction_records.current).not_to include tina_transferred_ir
         end
 
         it "does not include withdrawn users" do
-          expect(induction_programme.induction_records.current_or_transferring_in).not_to include wendy_withdrawn_ir
+          expect(induction_programme.induction_records.current).not_to include wendy_withdrawn_ir
+        end
+
+        it "does not include completed users" do
+          expect(induction_programme.induction_records.current).not_to include carol_completed_ir
         end
       end
 
@@ -291,6 +301,40 @@ RSpec.describe InductionRecord, type: :model do
 
         it "does not include withdrawn users" do
           expect(induction_programme.induction_records.current_or_transferring_in).not_to include wendy_withdrawn_ir
+        end
+
+        it "does not include completed users" do
+          expect(induction_programme.induction_records.current_or_transferring_in).not_to include carol_completed_ir
+        end
+      end
+
+      context "when .current_completed_or_transferring_in" do
+        it "includes current users" do
+          expect(induction_programme.induction_records.current_completed_or_transferring_in).to include charlie_current_ir
+        end
+
+        it "includes transferring in users" do
+          expect(induction_programme.induction_records.current_completed_or_transferring_in).to include theresa_transfer_in_ir
+        end
+
+        it "includes transferring out users" do
+          expect(induction_programme.induction_records.current_completed_or_transferring_in).to include terry_transferring_out_ir
+        end
+
+        it "includes users leaving for another school" do
+          expect(induction_programme.induction_records.current_completed_or_transferring_in).to include linda_leaving_ir
+        end
+
+        it "does not include transferred users" do
+          expect(induction_programme.induction_records.current_completed_or_transferring_in).not_to include tina_transferred_ir
+        end
+
+        it "does not include withdrawn users" do
+          expect(induction_programme.induction_records.current_completed_or_transferring_in).not_to include wendy_withdrawn_ir
+        end
+
+        it "includes completed users" do
+          expect(induction_programme.induction_records.current_completed_or_transferring_in).to include carol_completed_ir
         end
       end
     end
