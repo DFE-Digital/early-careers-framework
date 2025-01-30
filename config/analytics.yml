@@ -112,7 +112,6 @@
   - school_cohort_id
   - teacher_profile_id
   - schedule_id
-  - npq_course_id
   - school_urn
   - school_ukprn
   - request_for_details_sent_at
