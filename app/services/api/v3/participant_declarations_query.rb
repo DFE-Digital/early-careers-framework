@@ -47,7 +47,7 @@ module Api
             :participant_profile,
             :cpd_lead_provider,
           )
-          .joins("INNER JOIN (#{paginated_join.to_sql}) as tmp on tmp.id = participant_declarations.id")
+          .where(participant_declarations: { id: paginated_join.map(&:id) })
           .order(:created_at)
           .distinct
       end
