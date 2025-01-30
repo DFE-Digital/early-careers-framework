@@ -4,6 +4,5 @@
   - priority_mailers
   - mailers
   - default
-  - big_query
   - dfe_analytics
   - slack_alerts

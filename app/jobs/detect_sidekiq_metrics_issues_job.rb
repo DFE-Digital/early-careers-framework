@@ -3,7 +3,7 @@
 class DetectSidekiqMetricsIssuesJob
   include Sidekiq::Worker
 
-  SIDEKIQ_QUEUE_NAMES = %w[priority_mailers mailers default big_query].freeze
+  SIDEKIQ_QUEUE_NAMES = %w[priority_mailers mailers default].freeze
   SIDEKIQ_RETRIES_THRESHOLD = 200
   SIDEKIQ_LATENCY_THRESHOLD = 120
 

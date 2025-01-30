@@ -92,8 +92,6 @@ gem "activerecord-session_store", "~> 2.1"
 
 gem "active_record_extended"
 
-gem "google-cloud-bigquery"
-
 gem "sidekiq"
 gem "sidekiq-cron"
 

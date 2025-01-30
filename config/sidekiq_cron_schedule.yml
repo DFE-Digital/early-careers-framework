@@ -2,10 +2,6 @@ session_trim:
   cron: "0 1 * * *"
   class: "SessionTrimJob"
   queue: default
-stream_big_query_participant_declarations:
-  cron: "0 * * * *"
-  class: "StreamBigQueryParticipantDeclarationsJob"
-  queue: default
 import_gias_data:
   cron: "0 6 * * *"
   class: "ImportGiasDataJob"

@@ -218,7 +218,6 @@
   "spec/forms/participant_mentor_form_spec.rb": 0.6744434350000574,
   "spec/validators/future_date_validator_spec.rb": 0.06653438700004699,
   "spec/features/schools/participants/add_participants/payments_frozen/sit_reregisters_ect_as_mentor_spec.rb": 9.361463574000027,
-  "spec/jobs/stream_big_query_participant_declarations_job_spec.rb": 2.012568452000096,
   "spec/forms/schools/add_participants/wizard_steps/cannot_add_already_enrolled_at_school_step_spec.rb": 0.003331628999831082,
   "spec/services/appropriate_bodies/induction_records_query_spec.rb": 2.5461568369998986,
   "spec/requests/api/v1/ecf_users_spec.rb": 9.253355356999919,
