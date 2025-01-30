@@ -102,3 +102,24 @@ https://sb.manage-training-for-early-career-teachers.education.gov.uk/api/v3
 Providers are limited to 1,000 requests per 5 minutes when using the API in the production environment. If the limit is exceeded, providers will see `429` HTTP status codes.
 
 This limit on requests for each authentication key is calculated on a rolling basis. 
+
+## Syncing data best practice
+
+### Performing a full sync once a week
+
+We recommend you sync all records in the API twice a week without using the `updated_since` filters. DfE can coordinate ‘windows’ for providers to do this when the service has a low background load. Contact us if you need further details.
+
+### Regular polling
+
+To ensure you never miss any declarations, participants, transfers or unfunded mentors, we recommend making regular poll requests to the relevant `GET endpoints` several times daily. Use the `updated_since` filter and the default pagination of [100] records per page.
+
+Continue this until the API response is empty.
+
+### Polling windows
+
+Always poll 2 windows back from your last successful update request. This guarantees that all participant data is captured. For example:
+
+* at 3:15pm enter the following request - `/api/v3/participants/ecf?filter[updated_since]=2025-01-28T13:15:00Z`
+* at 4:15pm enter the following request - `/api/v3/participants/ecf?filter[updated_since]=2025-01-28T14:15:00Z`
+
+Try polling randomly rather than on the hour to prevent system overload.
