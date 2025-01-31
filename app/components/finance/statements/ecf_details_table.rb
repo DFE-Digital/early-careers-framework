@@ -9,7 +9,7 @@ module Finance
 
       def initialize(statement:)
         @statement = statement
-        @calculator = Finance::ECF::StatementCalculator.new(statement: @statement)
+        @calculator = Finance::ECF::ECT::StatementCalculator.new(statement: @statement)
       end
     end
   end
