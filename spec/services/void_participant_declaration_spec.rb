@@ -52,22 +52,6 @@ RSpec.describe VoidParticipantDeclaration do
       end
     end
 
-    context "when declaration is payable" do
-      let(:participant_declaration) do
-        create(
-          :ect_participant_declaration,
-          :payable,
-          cpd_lead_provider:,
-          participant_profile:,
-        )
-      end
-
-      it "can be voided" do
-        subject.call
-        expect(participant_declaration.reload).to be_voided
-      end
-    end
-
     context "when declaration is paid" do
       let(:participant_declaration) do
         create(
@@ -107,21 +91,59 @@ RSpec.describe VoidParticipantDeclaration do
     end
 
     context "when declaration is attached to a statement" do
-      let(:participant_declaration) do
-        create(
-          :ect_participant_declaration,
-          :payable,
-          cpd_lead_provider:,
-          participant_profile:,
-        )
-      end
-
       let(:line_item) { participant_declaration.statement_line_items.first }
 
-      it "updates declaration and line item state to voided" do
-        subject.call
-        expect(participant_declaration.reload).to be_voided
-        expect(line_item.reload).to be_voided
+      context "when declaration is eligible" do
+        let(:participant_declaration) do
+          create(
+            :ect_participant_declaration,
+            :eligible,
+            cpd_lead_provider:,
+            participant_profile:,
+          )
+        end
+
+        it "updates declaration and line item state to voided" do
+          subject.call
+          expect(participant_declaration.reload).to be_voided
+          expect(line_item.reload).to be_voided
+        end
+      end
+
+      context "when declaration is payable" do
+        let(:participant_declaration) do
+          create(
+            :ect_participant_declaration,
+            :payable,
+            cpd_lead_provider:,
+            participant_profile:,
+          )
+        end
+
+        it "updates declaration and line item state to voided" do
+          subject.call
+          expect(participant_declaration.reload).to be_voided
+          expect(line_item.reload).to be_voided
+        end
+      end
+
+      context "when declaration is ineligible" do
+        let(:participant_declaration) do
+          create(
+            :ect_participant_declaration,
+            :ineligible,
+            cpd_lead_provider:,
+            participant_profile:,
+          )
+        end
+
+        before { line_item.ineligible! }
+
+        it "updates declaration and line item state to voided" do
+          subject.call
+          expect(participant_declaration.reload).to be_voided
+          expect(line_item.reload).to be_voided
+        end
       end
     end
   end

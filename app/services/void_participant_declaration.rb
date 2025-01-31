@@ -42,6 +42,6 @@ private
   attr_accessor :participant_declaration
 
   def line_item
-    participant_declaration.statement_line_items.find_by(state: %w[eligible payable submitted])
+    participant_declaration.statement_line_items.find_by(state: %w[eligible payable ineligible])
   end
 end
