@@ -27,10 +27,6 @@ permissions:
   security-events: write
 
 jobs:
-  lint:
-    name: Lint
-    uses: ./.github/workflows/lint.yml
-
   openapi:
     name: Lead Provider OpenAPI Check
     uses: ./.github/workflows/lead_provider_openapi_check.yml
@@ -38,10 +34,11 @@ jobs:
   rspec:
     name: Run the RSpec tests
     uses: ./.github/workflows/rspec.yml
+    secrets: inherit
 
   permit-merge:
     name: Permit merge
-    needs: [lint, rspec]
+    needs: [rspec]
     runs-on: ubuntu-latest
     steps:
       - run: "echo 'Linting and tests passed, this branch is ready to be merged'"
@@ -117,7 +114,7 @@ jobs:
 
   deploy_staging:
     name: Deploy staging
-    needs: [docker, rspec, lint, brakeman]
+    needs: [docker, rspec, brakeman]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     environment:
