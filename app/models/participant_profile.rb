@@ -3,8 +3,6 @@
 class ParticipantProfile < ApplicationRecord
   has_paper_trail
 
-  self.ignored_columns = %w[npq_course_id]
-
   attr_reader :participant_type
 
   class_attribute :validation_steps
