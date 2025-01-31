@@ -7,8 +7,110 @@ on:
         type: boolean
         required: false
         default: true
-        
+
+env:
+  code-coverage-artifact-name: code_coverage_${{github.run_number}}
+  unit-tests-artifact-name: unit_tests_${{github.run_number}}
+  rubocop-artifact-name: rubocop_results_${{github.run_number}}
+
 jobs:
+  ruby-linting:
+    name: "Lint ruby"
+    env:
+      GOVUK_NOTIFY_API_KEY: Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        name: Checkout Code
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1.215.0
+        with:
+          ruby-version: ${{ inputs.ruby-version }}
+
+      - name: Install dependencies
+        run: bundle install
+
+      - name: Lint Ruby
+        run: bundle exec rubocop --format json --out=out/rubocop-result.json
+
+      - name: Keep Rubocop output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.rubocop-artifact-name }}
+          path: ${{ github.workspace }}/out/rubocop-result.json
+          include-hidden-files: true
+
+  js-linting:
+    name: "Lint JS"
+    env:
+      GOVUK_NOTIFY_API_KEY: Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        name: Checkout Code
+
+      - name: Set up Node
+        uses: actions/setup-node@v4.2.0
+        with:
+          node-version: ${{ inputs.node-version }}
+          cache: "yarn"
+
+      - name: Yarn install
+        run: npm i -g yarn && yarn
+
+      - name: Lint JS
+        run: |-
+          yarn lint
+
+  scss-linting:
+    name: "Lint SCSS"
+    env:
+      GOVUK_NOTIFY_API_KEY: Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        name: Checkout Code
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1.215.0
+        with:
+          ruby-version: ${{ inputs.ruby-version }}
+
+      - name: Install dependencies
+        run: bundle install
+
+      - name: Lint SCSS
+        run: |-
+          bundle exec rake lint:scss
+
+  erb_linting:
+    name: "Lint ERB"
+    env:
+      GOVUK_NOTIFY_API_KEY: Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        name: Checkout Code
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1.215.0
+        with:
+          ruby-version: ${{ inputs.ruby-version }}
+
+      - name: Install dependencies
+        run: bundle install
+
+      - name: Lint ERB Templates
+        if: false
+        run: |-
+          bundle exec erblint --lint-all
+
   tests:
     name: Run rspec
     runs-on: ubuntu-20.04
@@ -58,6 +160,22 @@ jobs:
           CI_NODE_INDEX: ${{ matrix.ci_node_index }}
         run: |-
           bundle exec rake "knapsack:rspec[--tag ~type:feature]"
+
+      - name:  Keep Code Coverage Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.code-coverage-artifact-name }}_${{ matrix.ci_node_index }}_tests
+          path: ./coverage
+          include-hidden-files: true
+
+      - name:  Keep Unit Tests Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.unit-tests-artifact-name }}_${{ matrix.ci_node_index }}_tests
+          path: ./test-report/*
+          include-hidden-files: true
 
   feature-tests:
     name: Run rspec (features)
@@ -109,6 +227,22 @@ jobs:
         run: |-
           bundle exec rake "knapsack:rspec[--tag type:feature --fail-fast]"
 
+      - name:  Keep Code Coverage Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.code-coverage-artifact-name }}_${{ matrix.ci_node_index }}_feature_tests
+          path: ./coverage
+          include-hidden-files: true
+
+      - name:  Keep Unit Tests Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.unit-tests-artifact-name }}_${{ matrix.ci_node_index }}_feature_tests
+          path: ./test-report/*
+          include-hidden-files: true
+
   e2e-scenarios:
     if: ${{ inputs.run-end-to-end-tests }}
     name: Run end to end scenarios
@@ -158,3 +292,76 @@ jobs:
           CI_NODE_TOTAL: ${{ matrix.ci_node_total }}
           CI_NODE_INDEX: ${{ matrix.ci_node_index }}
         run: bundle exec bin/scenarios_ci
+
+  sonar-scanner:
+    name: Sonar Scanner
+    runs-on: ubuntu-24.04
+    needs: [ tests, feature-tests, ruby-linting ]
+    if: github.ref != 'refs/heads/main' && github.actor != 'dependabot[bot]'
+    environment:
+      name: staging
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ inputs.ruby-version }}
+
+      - name: Install gems
+        run: |
+          bundle config path vendor/bundle
+          bundle install --jobs 4 --retry 3
+
+      - name: Setup sonarqube
+        uses: warchant/setup-sonar-scanner@v8
+
+      - name: Download Artifacts
+        uses: actions/download-artifact@v4
+
+      - name: Combine Coverage Reports
+        run: |-
+          # Copy files from separate artifacts into one directory
+          mkdir ${{github.workspace}}/code_coverage
+          cp -r ${{github.workspace}}/${{ env.code-coverage-artifact-name }}_*/ ${{github.workspace}}/code_coverage
+          bundle exec rake coverage:collate
+        env:
+          GOVUK_NOTIFY_API_KEY: Test
+          COVERAGE_DIR: ${{github.workspace}}/code_coverage
+
+      - name: Login Azure
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Fetch secrets from key vault
+        uses: azure/CLI@v2
+        id: keyvault-yaml-secret
+        with:
+          inlineScript: |
+            SONAR_TOKEN=$(az keyvault secret show --name "SONAR-TOKEN" --vault-name "s189t01-cpdecf-rv-kv" --query "value" -o tsv)
+            echo "::add-mask::$SONAR_TOKEN"
+            echo "SONAR_TOKEN=$SONAR_TOKEN" >> $GITHUB_OUTPUT
+
+      - name: Run sonarqube
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: sonar-scanner
+           -Dsonar.token=${{ steps.keyvault-yaml-secret.outputs.SONAR_TOKEN }}
+           -Dsonar.organization=dfe-digital
+           -Dsonar.host.url=https://sonarcloud.io/
+           -Dsonar.projectKey=DFE-Digital_early-careers-framework
+           -Dsonar.testExecutionReportPaths=${{github.workspace}}/${{env.unit-tests-artifact-name}}_0_tests/test-report-0.xml,\
+            ${{github.workspace}}/${{env.unit-tests-artifact-name}}_1_tests/test-report-1.xml,\
+            ${{github.workspace}}/${{env.unit-tests-artifact-name}}_2_tests/test-report-2.xml,\
+            ${{github.workspace}}/${{env.unit-tests-artifact-name}}_3_tests/test-report-3.xml,\
+            ${{github.workspace}}/${{env.unit-tests-artifact-name}}_4_tests/test-report-4.xml,\
+            ${{github.workspace}}/${{env.unit-tests-artifact-name}}_5_tests/test-report-5.xml,\
+            ${{github.workspace}}/${{env.unit-tests-artifact-name}}_6_tests/test-report-5.xml,\
+            ${{github.workspace}}/${{env.unit-tests-artifact-name}}_0_feature_tests/test-report-1.xml,\
+            ${{github.workspace}}/${{env.unit-tests-artifact-name}}_1_feature_tests/test-report-2.xml,\
+            ${{github.workspace}}/${{env.unit-tests-artifact-name}}_2_feature_tests/test-report-3.xml,\
+            ${{github.workspace}}/${{env.unit-tests-artifact-name}}_3_feature_tests/test-report-4.xml
+           -Dsonar.ruby.coverage.reportPaths=${{github.workspace}}/coverage/coverage.json
+           -Dsonar.ruby.rubocop.reportPaths=${{github.workspace}}/${{env.rubocop-artifact-name}}/rubocop-result.json
