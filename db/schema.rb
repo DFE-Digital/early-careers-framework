@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_01_27_140541) do
+ActiveRecord::Schema[7.1].define(version: 2025_01_30_101804) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "fuzzystrmatch"
@@ -834,7 +834,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_27_140541) do
     t.uuid "school_cohort_id"
     t.uuid "teacher_profile_id"
     t.uuid "schedule_id", null: false
-    t.uuid "npq_course_id"
     t.text "school_urn"
     t.text "school_ukprn"
     t.datetime "request_for_details_sent_at", precision: nil
@@ -850,7 +849,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_27_140541) do
     t.index ["cohort_id"], name: "index_participant_profiles_on_cohort_id"
     t.index ["core_induction_programme_id"], name: "index_participant_profiles_on_core_induction_programme_id"
     t.index ["mentor_profile_id"], name: "index_participant_profiles_on_mentor_profile_id"
-    t.index ["npq_course_id"], name: "index_participant_profiles_on_npq_course_id"
     t.index ["participant_identity_id"], name: "index_participant_profiles_on_participant_identity_id"
     t.index ["schedule_id"], name: "index_participant_profiles_on_schedule_id"
     t.index ["school_cohort_id"], name: "index_participant_profiles_on_school_cohort_id"
