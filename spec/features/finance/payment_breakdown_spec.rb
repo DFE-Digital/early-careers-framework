@@ -16,7 +16,7 @@ RSpec.feature "Finance users payment breakdowns", type: :feature, js: true do
   let!(:january_statement)  { create(:ecf_statement, name: "January #{next_start_year}", deadline_date: Date.new(next_start_year, 1, 31), cpd_lead_provider:, contract_version: contract.version) }
   let!(:november_statement) { create(:ecf_statement, name: "November #{current_start_year}", deadline_date: Date.new(current_start_year, 11, 30), cpd_lead_provider:, contract_version: contract.version) }
 
-  let(:jan_statement_calculator) { Finance::ECF::StatementCalculator.new(statement: january_statement) }
+  let(:jan_statement_calculator) { Finance::ECF::ECT::StatementCalculator.new(statement: january_statement) }
 
   scenario "Can get to ECF payment breakdown page for a provider" do
     given_i_am_logged_in_as_a_finance_user
