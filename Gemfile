@@ -178,6 +178,7 @@ group :test do
   gem "pundit-matchers", "~> 1.9.0"
   gem "rails-controller-testing", "~> 1.0.5"
   gem "rspec-default_http_header", "~> 0.0.6"
+  gem "rspec-sonarqube-formatter", require: false
   gem "selenium-webdriver"
   gem "shoulda-matchers", "~> 5.3"
   gem "simplecov"

@@ -286,6 +286,7 @@ GEM
     hashie (5.0.0)
     html-attributes-utils (1.0.2)
       activesupport (>= 6.1.4.4)
+    htmlentities (4.3.4)
     httparty (0.22.0)
       csv
       mini_mime (>= 1.0.0)
@@ -503,6 +504,10 @@ GEM
       nokogiri
     rexml (3.4.0)
     rouge (4.5.1)
+    rspec (3.13.0)
+      rspec-core (~> 3.13.0)
+      rspec-expectations (~> 3.13.0)
+      rspec-mocks (~> 3.13.0)
     rspec-core (3.13.2)
       rspec-support (~> 3.13.0)
     rspec-default_http_header (0.0.6)
@@ -521,6 +526,9 @@ GEM
       rspec-expectations (~> 3.13)
       rspec-mocks (~> 3.13)
       rspec-support (~> 3.13)
+    rspec-sonarqube-formatter (1.6.3)
+      htmlentities (~> 4.3)
+      rspec (~> 3.0)
     rspec-support (3.13.1)
     rswag-specs (2.16.0)
       activesupport (>= 5.2, < 8.1)
@@ -790,6 +798,7 @@ DEPENDENCIES
   rouge
   rspec-default_http_header (~> 0.0.6)
   rspec-rails (~> 6.1.5)
+  rspec-sonarqube-formatter
   rswag-specs (~> 2.16)
   rubocop-govuk (>= 4.8)
   rubyzip (~> 2.4)
