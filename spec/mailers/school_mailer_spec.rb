@@ -314,23 +314,34 @@ RSpec.describe SchoolMailer, type: :mailer do
     let(:participant_profile) { create(:ect_participant_profile, training_status: "withdrawn", school_cohort:, user: create(:user, email: "john.clemence@example.com")) }
     let(:sit_profile) { create(:induction_coordinator_profile, schools: [school_cohort.school]) }
     let(:partnership) { create(:partnership) }
-
-    before do
-      create(:induction_record, participant_profile:, partnership:)
-    end
+    let!(:induction_record) { create(:induction_record, participant_profile:, partnership:) }
 
     let(:email) do
       SchoolMailer.with(
-        withdrawn_participant: participant_profile,
+        induction_record:,
         induction_coordinator: sit_profile,
         partnership:,
       ).fip_provider_has_withdrawn_a_participant
     end
 
+    before { expect(induction_record.school).not_to eq(participant_profile.school) }
+
     it "sets the right sender and recipient addresses" do
       aggregate_failures do
         expect(email.from).to eq(["mail@example.com"])
         expect(email.to).to eq([sit_profile.user.email])
+      end
+    end
+
+    it "populates the personalisation correctly" do
+      aggregate_failures do
+        expect(email.header[:personalisation].unparsed_value).to include({
+          name: sit_profile.user.full_name,
+          withdrawn_participant_name: induction_record.user.full_name,
+          school: induction_record.school.name,
+          delivery_partner: partnership.delivery_partner.name,
+          lead_provider: partnership.lead_provider.name,
+        })
       end
     end
   end
