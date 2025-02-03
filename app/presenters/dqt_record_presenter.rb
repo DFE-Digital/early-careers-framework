@@ -32,7 +32,7 @@ class DQTRecordPresenter < SimpleDelegator
   end
 
   # The issues with the induction start date accuracy have been fixed in the API
-  # and in addition the induction period data is being removed so we revert to 
+  # and in addition the induction period data is being removed so we revert to
   # the original start_date
   def induction_start_date
     @induction_start_date ||= dqt_record.dig("induction", "start_date")
