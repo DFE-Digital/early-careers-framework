@@ -172,7 +172,7 @@ RSpec.describe ParticipantValidationService do
                            dob: Date.new(1990, 2, 1),
                            alert: false,
                            qts: nil,
-                           induction: { "start_date" => nil })
+                           induction:)
         end
         let(:dqt_records) { [record_for_other_trn, dqt_record] }
 
@@ -236,12 +236,6 @@ RSpec.describe ParticipantValidationService do
       end
 
       context "when the participant has an induction with nil start_date" do
-        let(:induction) do
-          {
-            "start_date" => nil,
-          }
-        end
-
         it "does not raise an error" do
           expect { validation_result }.not_to raise_error
         end

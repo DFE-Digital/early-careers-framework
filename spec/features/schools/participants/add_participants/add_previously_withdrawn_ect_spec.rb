@@ -3,6 +3,8 @@
 require "rails_helper"
 
 RSpec.describe "Adding previously withdrawn ECT", type: :feature, js: true, early_in_cohort: true do
+  include DQTHelper
+
   let(:current_year) { Time.current.year }
   let!(:cohort) { Cohort.current || create(:cohort, start_year: current_year) }
   let(:previous_cohort) { create(:cohort, start_year: cohort.start_year - 1) }
@@ -50,6 +52,7 @@ RSpec.describe "Adding previously withdrawn ECT", type: :feature, js: true, earl
   let(:ect_full_name) { "George ECT" }
   let(:ect_trn) { "1234456" }
   let(:ect_dob) { "1998-11-22" }
+
   let(:ect_email) { "ect@email.gov.uk" }
 
   before do
@@ -231,7 +234,7 @@ private
   def and_i_fill_in_all_info(email: ect_email)
     allow(DQTRecordCheck).to receive(:call).and_return(
       DQTRecordCheck::CheckResult.new(
-        valid_dqt_response,
+        valid_dqt_response(participant_data),
         true,
         true,
         true,
@@ -250,18 +253,13 @@ private
     click_on "Continue"
   end
 
-  def valid_dqt_response
-    DQTRecordPresenter.new(
-      "name" => "George ECT",
-      "trn" => ect_trn,
-      "state_name" => "Active",
-      "dob" => Date.new(1998, 11, 22),
-      "qualified_teacher_status" => { "qts_date" => 1.year.ago },
-      "induction" => {
-        "start_date" => induction_start_date,
-        "status" => "Active",
-      },
-    )
+  def participant_data
+    {
+      full_name: ect_full_name,
+      trn: ect_trn,
+      date_of_birth: Date.parse(ect_dob),
+      start_date: induction_start_date,
+    }
   end
 
   def then_i_am_taken_to_the_confirm_appropriate_body_page
