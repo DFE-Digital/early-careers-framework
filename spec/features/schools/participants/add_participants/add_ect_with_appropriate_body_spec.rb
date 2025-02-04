@@ -158,9 +158,8 @@ private
       "state_name" => "Active",
       "dob" => Date.new(1998, 11, 22),
       "qualified_teacher_status" => { "qts_date" => 1.year.ago },
-      "induction_start_date" => Date.new(2022, 9, 1),
       "induction" => {
-        "periods" => [{ "startDate" => 1.month.ago }],
+        "start_date" => 1.month.ago,
         "status" => "Active",
       },
     })

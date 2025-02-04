@@ -24,14 +24,11 @@ RSpec.describe Participants::CheckAndSetCompletionDate do
   let(:dqt_start_date) { cohort.academic_year_start_date.to_date }
   let(:induction_status) { "active" }
   let(:dqt_induction_record) do
-    { "endDate" => completion_date,
-      "periods" => [
-        { "startDate" => dqt_start_date,
-          "endDate" => dqt_start_date + 2.years - 3.months },
-        { "startDate" => dqt_start_date + 2.years - 3.months,
-          "endDate" => dqt_start_date + 2.years - 1.day },
-      ],
-      "status" => induction_status }
+    {
+      "startDate" => dqt_start_date,
+      "endDate" => completion_date,
+      "status" => induction_status,
+    }
   end
 
   subject(:service_call) { described_class.call(participant_profile:) }
@@ -57,9 +54,9 @@ RSpec.describe Participants::CheckAndSetCompletionDate do
     end
 
     context "when DQT provides a completion date" do
-      it "complete the participant with the latest induction period" do
+      it "complete the participant with the induction endDate" do
         service_call
-        expect(participant_profile.induction_completion_date).to eq(dqt_start_date + 2.years - 1.day)
+        expect(participant_profile.induction_completion_date).to eq(completion_date)
       end
     end
 

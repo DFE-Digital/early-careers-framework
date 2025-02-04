@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# NOTE: this will no longer work once the DQT induction data is removed from the
+# API response.  This is not a scheduled job so FYI
+#
 class UpdateParticipantAppropriateBodyDQTCheckJob < ApplicationJob
   queue_as :default
 

@@ -1555,7 +1555,7 @@ module ManageTrainingSteps
       "dob" => participant_data[:date_of_birth],
       "qualified_teacher_status" => { "qts_date" => 1.year.ago },
       "induction" => {
-        "periods" => [{ "startDate" => @participant_data[:start_date] }],
+        "start_date" => @participant_data[:start_date],
         "status" => "Active",
       },
     })

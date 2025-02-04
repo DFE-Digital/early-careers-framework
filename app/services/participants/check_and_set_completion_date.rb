@@ -39,11 +39,8 @@ module Participants
       !participant_completion_date && completion_date
     end
 
-    # Get the latest induction period endDate if induction endDate comes with a value.
-    # i.e. induction endDate field value presence flags the latest period is actually the last one.
     def completion_date
-      @completion_date ||= induction&.fetch("endDate", nil).presence &&
-        induction_periods.map { |period| period["endDate"] }.compact.max
+      @completion_date ||= induction&.fetch("endDate", nil)
     end
 
     def completion_date_mismatch?
@@ -65,10 +62,6 @@ module Participants
 
     def induction
       @induction ||= DQT::GetInductionRecord.call(trn: participant_profile.teacher_profile.trn)
-    end
-
-    def induction_periods
-      @induction_periods ||= Array(induction&.dig("periods"))
     end
 
     def in_progress_induction_status?
@@ -104,9 +97,8 @@ module Participants
       participant_cohort&.start_year
     end
 
-    # returns the minimum start date of all the induction periods
     def start_date
-      @start_date ||= induction_periods.map { |period| period["startDate"] }.compact.min
+      @start_date ||= induction&.fetch("startDate", nil)
     end
 
     def sync_with_dqt
