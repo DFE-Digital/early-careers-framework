@@ -24,7 +24,43 @@ RSpec.describe ParticipantValidationService do
     let(:alert) { false }
     let(:induction_start_date) { Date.parse("2021-07-01T00:00:00Z") }
     let(:induction_completion_date) { Date.parse("2021-07-05T00:00:00Z") }
+
     let(:induction) { { "start_date" => nil } }
+
+    let(:in_progress_induction) do
+      {
+        "start_date" => induction_start_date,
+        "status" => "InProgress",
+      }
+    end
+
+    let(:not_yet_completed_induction) do
+      {
+        "start_date" => induction_start_date,
+        "status" => "Not Yet Completed",
+      }
+    end
+
+    let(:completed_induction) do
+      {
+        "start_date" => induction_start_date,
+        "completion_date" => induction_completion_date,
+        "status" => "Pass",
+        "state" => 0,
+        "state_name" => "Active",
+      }
+    end
+
+    let(:exempt_induction) do
+      {
+        "start_date" => nil,
+        "completion_date" => nil,
+        "status" => "Exempt",
+        "state" => 0,
+        "state_name" => "Exempt",
+      }
+    end
+
     let(:inactive_record) { false }
     let(:dqt_record) { build_dqt_record(trn:, nino:, full_name:, dob:, alert:, qts:, induction:, inactive: inactive_record) }
     let(:dqt_records) { [dqt_record] }
@@ -220,15 +256,7 @@ RSpec.describe ParticipantValidationService do
       end
 
       context "when the participant has previously had an induction" do
-        let(:induction) do
-          {
-            "start_date" => induction_start_date,
-            "completion_date" => induction_completion_date,
-            "status" => "Pass",
-            "state" => 0,
-            "state_name" => "Active",
-          }
-        end
+        let(:induction) { completed_induction }
 
         it "returns returns the correct previous_participation flags" do
           expect(validation_result).to eql(build_validation_result(trn:, options: { previous_induction: true, no_induction: false, induction_start_date: }))
@@ -254,12 +282,7 @@ RSpec.describe ParticipantValidationService do
       end
 
       context "when the participant's induction status is InProgress" do
-        let(:induction) do
-          {
-            "start_date" => induction_start_date,
-            "status" => "InProgress",
-          }
-        end
+        let(:induction) { in_progress_induction }
 
         it "does not raise an error" do
           expect { validation_result }.not_to raise_error
@@ -279,12 +302,7 @@ RSpec.describe ParticipantValidationService do
       end
 
       context "when the participant's induction status is Not Yet Completed" do
-        let(:induction) do
-          {
-            "start_date" => induction_start_date,
-            "status" => "Not Yet Completed",
-          }
-        end
+        let(:induction) { not_yet_completed_induction }
 
         it "does not raise an error" do
           expect { validation_result }.not_to raise_error
@@ -305,15 +323,7 @@ RSpec.describe ParticipantValidationService do
 
       context "when the participant has previously had an induction and participation" do
         let!(:eligibility) { create(:ineligible_participant, trn:, reason: :previous_participation) }
-        let(:induction) do
-          {
-            "start_date" => induction_start_date,
-            "completion_date" => induction_completion_date,
-            "status" => "Pass",
-            "state" => 0,
-            "state_name" => "Active",
-          }
-        end
+        let(:induction) { completed_induction }
 
         it "returns returns both flags" do
           expect(validation_result).to eql(build_validation_result(trn:, options: { previous_induction: true, previous_participation: true, no_induction: false, induction_start_date: }))
@@ -323,15 +333,7 @@ RSpec.describe ParticipantValidationService do
       context "when the participant has an induction start date in or after September this year" do
         let(:induction_start_date) { Time.zone.parse("2021-09-01T00:00:00Z") }
         let(:induction_completion_date) { nil }
-        let(:induction) do
-          {
-            "start_date" => induction_start_date,
-            "completion_date" => induction_completion_date,
-            "status" => "Pass",
-            "state" => 0,
-            "state_name" => "Active",
-          }
-        end
+        let(:induction) { completed_induction }
 
         it "returns false for previous induction" do
           expect(validation_result).to eql(build_validation_result(trn:, options: { previous_induction: false, no_induction: false, induction_start_date: }))
@@ -341,15 +343,7 @@ RSpec.describe ParticipantValidationService do
       context "when the participant has an induction start date is exactly on the threshold" do
         let(:induction_start_date) { Time.zone.parse("2021-08-31T23:00:00Z") }
         let(:induction_completion_date) { nil }
-        let(:induction) do
-          {
-            "start_date" => induction_start_date,
-            "completion_date" => induction_completion_date,
-            "status" => "Pass",
-            "state" => 0,
-            "state_name" => "Active",
-          }
-        end
+        let(:induction) { completed_induction }
 
         it "returns false for previous induction and parses timezones correctly" do
           expect(validation_result).to eql(build_validation_result(trn:, options: { previous_induction: false, no_induction: false, induction_start_date: }))
@@ -359,15 +353,7 @@ RSpec.describe ParticipantValidationService do
       context "when the participant has an induction start date before September 2021" do
         let(:induction_start_date) { Time.zone.parse("2021-08-31T22:59:59Z") }
         let(:induction_completion_date) { nil }
-        let(:induction) do
-          {
-            "start_date" => induction_start_date,
-            "completion_date" => induction_completion_date,
-            "status" => "Pass",
-            "state" => 0,
-            "state_name" => "Active",
-          }
-        end
+        let(:induction) { completed_induction }
 
         it "returns true for previous induction" do
           expect(validation_result).to eql(build_validation_result(trn:, options: { previous_induction: true, no_induction: false, induction_start_date: }))
@@ -375,15 +361,7 @@ RSpec.describe ParticipantValidationService do
       end
 
       context "when the participant has an induction with the status of 'Exempt'" do
-        let(:induction) do
-          {
-            "start_date" => nil,
-            "completion_date" => nil,
-            "status" => "Exempt",
-            "state" => 0,
-            "state_name" => "Exempt",
-          }
-        end
+        let(:induction) { exempt_induction }
 
         it "sets exempt_from_induction to true" do
           expect(validation_result).to eql(build_validation_result(trn:, options: { exempt_from_induction: true, no_induction: true }))
