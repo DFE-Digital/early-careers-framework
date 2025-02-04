@@ -3,6 +3,8 @@
 require "rails_helper"
 
 RSpec.describe "ECT has matching lead provider and delivery partner", type: :feature, js: true, early_in_cohort: true do
+  include DQTHelper
+
   before do
     allow_participant_transfer_mailers
     set_participant_data
@@ -390,20 +392,6 @@ RSpec.describe "ECT has matching lead provider and delivery partner", type: :fea
         3,
       ),
     )
-  end
-
-  def valid_dqt_response(participant_data)
-    DQTRecordPresenter.new({
-      "name" => participant_data[:full_name],
-      "trn" => participant_data[:trn],
-      "state_name" => "Active",
-      "dob" => participant_data[:date_of_birth],
-      "qualified_teacher_status" => { "qts_date" => 1.year.ago },
-      "induction" => {
-        "start_date" => 1.month.ago,
-        "status" => "Active",
-      },
-    })
   end
 
   def set_participant_data

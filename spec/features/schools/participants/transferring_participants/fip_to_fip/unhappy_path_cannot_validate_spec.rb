@@ -3,6 +3,8 @@
 require "rails_helper"
 
 RSpec.describe "transferring participants", type: :feature, js: true, early_in_cohort: true do
+  include DQTHelper
+
   context "Attempting to transfer an ECT to a school" do
     context "ECT cannot be validated" do
       before do
@@ -213,20 +215,6 @@ RSpec.describe "transferring participants", type: :feature, js: true, early_in_c
 
       def set_nino_validation_result
         allow_any_instance_of(NationalInsuranceNumber).to receive(:valid?).and_return(true)
-      end
-
-      def valid_dqt_response(participant_data)
-        DQTRecordPresenter.new({
-          "name" => participant_data[:full_name],
-          "trn" => participant_data[:trn],
-          "state_name" => "Active",
-          "dob" => participant_data[:date_of_birth],
-          "qualified_teacher_status" => { "qts_date" => 1.year.ago },
-          "induction" => {
-            "start_date" => 1.month.ago,
-            "status" => "Active",
-          },
-        })
       end
 
       def set_participant_data
