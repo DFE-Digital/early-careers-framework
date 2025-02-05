@@ -3,19 +3,31 @@
 module Finance
   module ECF
     module Mentor
-      class StatementCalculator < Finance::ECF::StatementCalculator
-        def self.event_types
-          %i[
-            started
-            completed
-          ]
+      class StatementCalculator
+        class << self
+          def event_types
+            %i[
+              started
+              completed
+            ]
+          end
+
+          def event_types_for_display
+            %i[
+              started
+              completed
+            ]
+          end
         end
 
-        def self.event_types_for_display
-          %i[
-            started
-            completed
-          ]
+        attr_reader :statement
+
+        def initialize(statement:)
+          @statement = statement
+        end
+
+        def vat
+          total * vat_rate
         end
 
         def voided_declarations
@@ -52,6 +64,10 @@ module Finance
           hash[:completed_additions]
         end
 
+        def voided_count
+          voided_declarations.count
+        end
+
         def adjustments_total
           -clawback_deductions
         end
@@ -68,6 +84,12 @@ module Finance
           sum
         end
 
+        def output_fee
+          event_types.sum do |event_type|
+            public_send(:"additions_for_#{event_type}")
+          end
+        end
+
         def event_types_for_display
           self.class.event_types_for_display
         end
@@ -76,6 +98,14 @@ module Finance
 
         def output_calculator
           @output_calculator ||= OutputCalculator.new(statement:)
+        end
+
+        def event_types
+          self.class.event_types
+        end
+
+        def vat_rate
+          statement.cpd_lead_provider.lead_provider.vat_chargeable? ? 0.2 : 0
         end
       end
     end

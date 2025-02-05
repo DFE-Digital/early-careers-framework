@@ -3,8 +3,12 @@
 module Finance
   module ECF
     module Mentor
-      class OutputCalculator < Finance::ECF::OutputCalculator
-        COHORT_WITH_MENTOR_FUNDING_DECLARATION_CLASS_TYPES = ["ParticipantDeclaration::Mentor"].freeze
+      class OutputCalculator
+        attr_reader :statement
+
+        def initialize(statement:)
+          @statement = statement
+        end
 
         def output_breakdown
           @output_breakdown ||= declaration_types.map do |declaration_type|

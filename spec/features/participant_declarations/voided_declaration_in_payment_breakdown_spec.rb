@@ -26,7 +26,7 @@ private
   end
 
   def and_statement_calculation_was_run
-    @statement_calculator = Finance::ECF::ECT::StatementCalculator.new(statement: @statement)
+    @statement_calculator = Finance::ECF::StatementCalculator.new(statement: @statement)
   end
 
   def and_participant_declaration_made_eligible_for_payment
