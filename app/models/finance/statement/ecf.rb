@@ -30,7 +30,7 @@ class Finance::Statement::ECF < Finance::Statement
   end
 
   def calculator
-    @calculator ||= Finance::ECF::ECT::StatementCalculator.new(statement: self)
+    @calculator ||= Finance::ECF::StatementCalculator.new(statement: self)
   end
 
   def previous_statements
