@@ -147,7 +147,7 @@ variable "azure_cpu_threshold" {
 
 variable "azure_storage_tier" {
   type    = string
-  default = "P6"
+  default = "P4"
 }
 
 variable "enable_logit" { default = false }
