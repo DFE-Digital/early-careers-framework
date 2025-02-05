@@ -14,13 +14,9 @@ RSpec.describe DQT::GetInductionRecord do
         "email" => nil,
         "qts" => { "awarded" => 2.years.ago.to_date },
         "eyts" => nil,
-        "induction" => { "startDate" => 18.months.ago.to_date,
-                         "endDate" => nil,
-                         "status" => "InProgress",
-                         "periods"=>[{ "startDate" => 18.months.ago.to_date,
-                                      "endDate" => nil,
-                                      "terms" => nil,
-                                      "appropriateBody" => { "name" => "The Most Fantasic AB Ltd" } }] },
+        "induction" => { "start_date" => 18.months.ago.to_date,
+                         "completion_date" => nil,
+                         "status" => "InProgress" },
       }
     end
 

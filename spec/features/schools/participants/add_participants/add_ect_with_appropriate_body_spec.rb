@@ -3,6 +3,8 @@
 require "rails_helper"
 
 RSpec.describe "Adding ECT with appropriate body", type: :feature, js: true do
+  include DQTHelper
+
   let!(:cohort) { Cohort.current || create(:cohort, start_year: 2022) }
   let!(:school) { create :school, name: "Fip School" }
   let!(:appropriate_body) { create :appropriate_body_national_organisation }
@@ -32,6 +34,8 @@ RSpec.describe "Adding ECT with appropriate body", type: :feature, js: true do
     induction_coordinator_profile
   end
   let!(:schedule) { create :ecf_schedule }
+
+  let(:ect_dob) { "1990-11-22" }
 
   before do
     school_cohort.update! default_induction_programme: induction_programme
@@ -132,7 +136,7 @@ private
   def and_i_fill_in_all_info
     allow(DQTRecordCheck).to receive(:call).and_return(
       DQTRecordCheck::CheckResult.new(
-        valid_dqt_response,
+        valid_dqt_response(participant_data),
         true,
         true,
         true,
@@ -141,29 +145,22 @@ private
       ),
     )
 
-    fill_in "add_participant_wizard[full_name]", with: "George ECT"
+    fill_in "add_participant_wizard[full_name]", with: participant_data[:full_name]
     click_on "Continue"
-    fill_in "add_participant_wizard[trn]", with: "1234456"
+    fill_in "add_participant_wizard[trn]", with: participant_data[:trn]
     click_on "Continue"
-    fill_in_date("What’s George ECT’s date of birth?", with: "1998-11-22")
+    fill_in_date("What’s George ECT’s date of birth?", with: ect_dob)
     click_on "Continue"
     fill_in "add_participant_wizard[email]", with: "ect@email.gov.uk"
     click_on "Continue"
   end
 
-  def valid_dqt_response
-    DQTRecordPresenter.new({
-      "name" => "George ECT",
-      "trn" => "5234457",
-      "state_name" => "Active",
-      "dob" => Date.new(1998, 11, 22),
-      "qualified_teacher_status" => { "qts_date" => 1.year.ago },
-      "induction_start_date" => Date.new(2022, 9, 1),
-      "induction" => {
-        "periods" => [{ "startDate" => 1.month.ago }],
-        "status" => "Active",
-      },
-    })
+  def participant_data
+    {
+      full_name: "George ECT",
+      trn: "5234457",
+      date_of_birth: Date.parse(ect_dob),
+    }
   end
 
   def then_i_am_taken_to_the_confirm_appropriate_body_page
