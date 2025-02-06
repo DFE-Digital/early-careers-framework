@@ -675,10 +675,6 @@ en:
       per_participant: Clawback per participant
     targeted_delivery_funding:
       caption: Targeted delivery funding
-    banding_tracker:
-      providers:
-        show:
-          title: "Banding tracker for %{provider_name}"
     statements:
       payment_authorisations:
         title: "Check %{statement_name} statement details before authorising for payment"
