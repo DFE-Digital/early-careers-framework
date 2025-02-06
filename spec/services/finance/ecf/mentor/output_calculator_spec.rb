@@ -78,7 +78,7 @@ RSpec.describe Finance::ECF::Mentor::OutputCalculator, mid_cohort: true do
       end
     end
 
-    context "when clawbacks present" do
+    context "when clawbacks present in 2 consecutive statements" do
       before do
         declarations = create_list(
           :mentor_participant_declaration, 5,
@@ -135,7 +135,7 @@ RSpec.describe Finance::ECF::Mentor::OutputCalculator, mid_cohort: true do
       end
     end
 
-    context "when clawbacks present" do
+    context "when clawbacks present in 3 consecutive statements" do
       before do
         setup_statement_one
         setup_statement_two

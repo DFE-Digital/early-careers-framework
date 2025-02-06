@@ -64,6 +64,8 @@ class ParticipantDeclaration < ApplicationRecord
 
   scope :ect, -> { where(participant_profile_id: ParticipantProfile::ECT.select(:id)) }
   scope :mentor, -> { where(participant_profile_id: ParticipantProfile::Mentor.select(:id)) }
+  scope :ects, -> { where(type: "ParticipantDeclaration::ECT") }
+  scope :mentors, -> { where(type: "ParticipantDeclaration::Mentor") }
 
   scope :changeable, -> { where(state: %w[eligible submitted]) }
   scope :unique_id, -> { select(:user_id).distinct }

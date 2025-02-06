@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Finance::ECF::StatementCalculator, mid_cohort: true do
+RSpec.describe Finance::ECF::ECT::StatementCalculator do
   it_behaves_like "a Finance ECF statement calculator" do
     describe "#total" do
       let(:uplift_breakdown) do
@@ -11,16 +11,16 @@ RSpec.describe Finance::ECF::StatementCalculator, mid_cohort: true do
           subtractions: 2,
         }
       end
-      let(:output_calculator) { instance_double("Finance::ECF::OutputCalculator", uplift_breakdown:, banding_breakdown: []) }
+      let(:output_calculator) { instance_double("Finance::ECF::ECT::OutputCalculator", uplift_breakdown:, banding_breakdown: []) }
 
       before do
-        allow(Finance::ECF::OutputCalculator).to receive(:new).with(statement:).and_return(output_calculator)
+        allow(Finance::ECF::ECT::OutputCalculator).to receive(:new).with(statement:).and_return(output_calculator)
       end
 
       it "calls OutputCalculator with correct params" do
         subject.total
 
-        expect(Finance::ECF::OutputCalculator).to have_received(:new).with(statement:)
+        expect(Finance::ECF::ECT::OutputCalculator).to have_received(:new).with(statement:)
       end
     end
 
@@ -56,7 +56,7 @@ RSpec.describe Finance::ECF::StatementCalculator, mid_cohort: true do
       end
 
       it "returns all voided declarations" do
-        expect(subject.voided_declarations.size).to eql(10)
+        expect(subject.voided_declarations.size).to eql(5)
         expect(subject.voided_declarations.pluck(:state).uniq).to eql(%w[voided])
       end
     end

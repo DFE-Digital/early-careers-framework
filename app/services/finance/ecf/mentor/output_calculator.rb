@@ -58,7 +58,8 @@ module Finance
           statement
             .billable_statement_line_items
             .joins(:participant_declaration)
-            .where(participant_declarations: { declaration_type:, type: "ParticipantDeclaration::Mentor" })
+            .where(participant_declarations: { declaration_type: })
+            .merge!(ParticipantDeclaration.mentors)
             .count
         end
 
@@ -66,7 +67,8 @@ module Finance
           statement
             .refundable_statement_line_items
             .joins(:participant_declaration)
-            .where(participant_declarations: { declaration_type:, type: "ParticipantDeclaration::Mentor" })
+            .where(participant_declarations: { declaration_type: })
+            .merge!(ParticipantDeclaration.mentors)
             .count
         end
       end

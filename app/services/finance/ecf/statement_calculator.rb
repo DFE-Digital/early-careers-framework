@@ -5,52 +5,46 @@ require "payment_calculator/ecf/service_fees"
 module Finance
   module ECF
     class StatementCalculator
-      COHORT_WITH_NO_MENTOR_FUNDING_DECLARATION_TYPES = ["ParticipantDeclaration::ECT", "ParticipantDeclaration::Mentor"].freeze
-      COHORT_WITH_MENTOR_FUNDING_DECLARATION_TYPES = ["ParticipantDeclaration::ECT"].freeze
-
-      class << self
-        def event_types
-          %i[
-            started
-            retained_1
-            retained_2
-            retained_3
-            retained_4
-            completed
-            extended_1
-            extended_2
-            extended_3
-          ]
-        end
-
-        def event_types_for_display
-          %i[
-            started
-            retained_1
-            retained_2
-            retained_3
-            retained_4
-            completed
-          ]
-        end
-
-        def band_mapping
-          {
-            a: 0,
-            b: 1,
-            c: 2,
-            d: 3,
-          }
-        end
+      def self.event_types
+        %i[
+          started
+          retained_1
+          retained_2
+          retained_3
+          retained_4
+          completed
+          extended_1
+          extended_2
+          extended_3
+        ]
       end
 
-      attr_reader :statement, :participant_declaration_types
+      def self.event_types_for_display
+        %i[
+          started
+          retained_1
+          retained_2
+          retained_3
+          retained_4
+          completed
+        ]
+      end
+
+      def self.band_mapping
+        {
+          a: 0,
+          b: 1,
+          c: 2,
+          d: 3,
+        }
+      end
+
+      attr_reader :statement
 
       delegate :contract, to: :statement
 
-      def initialize(statement:, participant_declaration_types: COHORT_WITH_NO_MENTOR_FUNDING_DECLARATION_TYPES)
+      def initialize(statement:)
         @statement = statement
-        @participant_declaration_types = participant_declaration_types
       end
 
       def bands
@@ -66,7 +60,7 @@ module Finance
       end
 
       def voided_declarations
-        statement.participant_declarations.voided.where(type: participant_declaration_types)
+        statement.participant_declarations.voided
       end
 
       event_types.each do |event_type|
@@ -229,7 +223,7 @@ module Finance
       end
 
       def output_calculator
-        @output_calculator ||= OutputCalculator.new(statement:, participant_declaration_types:)
+        @output_calculator ||= OutputCalculator.new(statement:)
       end
 
       def event_types
