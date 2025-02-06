@@ -24,7 +24,6 @@ class LeadProvider < ApplicationRecord
   has_many :core_induction_programmes, through: :lead_provider_cips
   has_many :partnership_csv_uploads
   has_many :lead_provider_api_tokens
-  has_one :call_off_contract
   has_many :mentor_call_off_contracts
 
   has_many :statements, through: :cpd_lead_provider, class_name: "Finance::Statement::ECF", source: :ecf_statements
