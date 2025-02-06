@@ -145,6 +145,11 @@ variable "azure_cpu_threshold" {
   default = 60
 }
 
+variable "azure_storage_tier" {
+  type    = string
+  default = "P4"
+}
+
 variable "enable_logit" { default = false }
 
 variable "send_traffic_to_maintenance_page" {
