@@ -458,11 +458,6 @@ Rails.application.routes.draw do
       end
     end
 
-    namespace :banding_tracker, path: "banding-tracker" do
-      resources :providers, only: %i[show]
-      resource :provider_choice, only: %i[new create], path: "choose-provider", path_names: { new: "" }
-    end
-
     resource :payment_breakdowns, only: :show, path: "payment-breakdowns", controller: "payment_breakdowns" do
       get "/choose-provider-ecf", to: "payment_breakdowns#select_provider_ecf", as: :select_provider_ecf
       post "/choose-provider-ecf", to: "payment_breakdowns#choose_provider_ecf", as: :choose_provider_ecf
