@@ -21,9 +21,16 @@ RSpec.describe Finance::ECF::StatementCalculator, mid_cohort: true do
       }
     end
     let(:output_calculator) { instance_double("Finance::ECF::OutputCalculator", uplift_breakdown:, banding_breakdown: []) }
+    let(:participant_declaration_types) { described_class::COHORT_WITH_NO_MENTOR_FUNDING_DECLARATION_TYPES }
 
     before do
       allow(Finance::ECF::OutputCalculator).to receive(:new).and_return(output_calculator)
+    end
+
+    it "calls OutputCalculator with correct params" do
+      subject.total
+
+      expect(Finance::ECF::OutputCalculator).to have_received(:new).with(statement:, participant_declaration_types:)
     end
 
     context "when there is a positive reconcile_amount" do
@@ -73,6 +80,18 @@ RSpec.describe Finance::ECF::StatementCalculator, mid_cohort: true do
 
       it "returns default total with no uplifts" do
         expect(subject.total).to eql(default_total - -100)
+      end
+    end
+
+    context "when cohort supports mentor funding" do
+      let(:participant_declaration_types) { described_class::COHORT_WITH_MENTOR_FUNDING_DECLARATION_TYPES }
+
+      subject { described_class.new(statement:, participant_declaration_types:) }
+
+      it "calls OutputCalculator with correct params" do
+        subject.total
+
+        expect(Finance::ECF::OutputCalculator).to have_received(:new).with(statement:, participant_declaration_types:)
       end
     end
   end
@@ -1145,6 +1164,52 @@ RSpec.describe Finance::ECF::StatementCalculator, mid_cohort: true do
             extended
           ],
         )
+      end
+    end
+  end
+
+  describe "#voided_declarations" do
+    let(:cohort) { statement.cohort }
+
+    before do
+      declarations = create_list(
+        :ect_participant_declaration, 5,
+        state: :voided
+      )
+
+      declarations.each do |dec|
+        Finance::StatementLineItem.create!(
+          statement:,
+          participant_declaration: dec,
+          state: dec.state,
+        )
+      end
+
+      declarations = create_list(
+        :mentor_participant_declaration, 5,
+        state: :voided
+      )
+
+      declarations.each do |dec|
+        Finance::StatementLineItem.create!(
+          statement:,
+          participant_declaration: dec,
+          state: dec.state,
+        )
+      end
+    end
+
+    it "returns all voided declarations" do
+      expect(subject.voided_declarations.size).to eql(10)
+      expect(subject.voided_declarations.pluck(:state).uniq).to eql(%w[voided])
+    end
+
+    context "when cohort supports mentor funding" do
+      subject { described_class.new(statement:, participant_declaration_types: described_class::COHORT_WITH_MENTOR_FUNDING_DECLARATION_TYPES) }
+
+      it "returns only voided ECT declarations" do
+        expect(subject.voided_declarations.size).to eql(5)
+        expect(subject.voided_declarations.pluck(:state, :type).uniq.flatten).to eql(["voided", "ParticipantDeclaration::ECT"])
       end
     end
   end
