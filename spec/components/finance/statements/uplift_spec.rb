@@ -8,7 +8,7 @@ RSpec.describe Finance::Statements::Uplift, type: :component do
 
   subject { render_inline(component) }
 
-  it "correct heading" do
+  it "has correct heading" do
     expect(subject).to have_css(".govuk-table > caption", text: "Uplift fees")
     expect(subject).to have_css(".govuk-table__head > .govuk-table__row", count: 1)
 
@@ -17,7 +17,7 @@ RSpec.describe Finance::Statements::Uplift, type: :component do
     is_expected.to have_table_heading("Payments", col: 3)
   end
 
-  it "correct table values" do
+  it "has correct table values" do
     expect(subject).to have_css(".govuk-table__body > .govuk-table__row", count: 1)
 
     is_expected.to have_table_value(99, row: 1, col: 1)
