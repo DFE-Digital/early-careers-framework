@@ -172,21 +172,21 @@ RSpec.describe ParticipantDeclaration, type: :model do
       end
     end
 
-    describe ".ects" do
+    describe ".ect" do
       let!(:ect_participant_declaration) { create(:ect_participant_declaration) }
       let!(:mentor_participant_declaration) { create(:mentor_participant_declaration) }
 
       it "fetches ECTs participant declarations records only" do
-        expect(described_class.ects).to eq([ect_participant_declaration])
+        expect(described_class.ect).to eq([ect_participant_declaration])
       end
     end
 
-    describe ".mentors" do
+    describe ".mentor" do
       let!(:ect_participant_declaration) { create(:ect_participant_declaration) }
       let!(:mentor_participant_declaration) { create(:mentor_participant_declaration) }
 
       it "fetches ECTs participant declarations records only" do
-        expect(described_class.mentors).to eq([mentor_participant_declaration])
+        expect(described_class.mentor).to eq([mentor_participant_declaration])
       end
     end
   end

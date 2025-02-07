@@ -12,7 +12,7 @@ module Finance
             .billable
             .joins(:participant_declaration)
             .where(participant_declarations: { declaration_type: })
-            .merge!(ParticipantDeclaration.ects)
+            .merge!(ParticipantDeclaration.ect)
             .count
 
           refundable = Finance::StatementLineItem
@@ -20,7 +20,7 @@ module Finance
             .refundable
             .joins(:participant_declaration)
             .where(participant_declarations: { declaration_type: })
-            .merge!(ParticipantDeclaration.ects)
+            .merge!(ParticipantDeclaration.ect)
             .count
 
           billable - refundable
@@ -33,7 +33,7 @@ module Finance
             .joins(:participant_declaration)
             .where(participant_declarations: { declaration_type: "started" })
             .where("participant_declarations.sparsity_uplift = true OR participant_declarations.pupil_premium_uplift = true")
-            .merge!(ParticipantDeclaration.ects)
+            .merge!(ParticipantDeclaration.ect)
             .count
 
           refundable = Finance::StatementLineItem
@@ -42,7 +42,7 @@ module Finance
             .joins(:participant_declaration)
             .where(participant_declarations: { declaration_type: "started" })
             .where("participant_declarations.sparsity_uplift = true OR participant_declarations.pupil_premium_uplift = true")
-            .merge!(ParticipantDeclaration.ects)
+            .merge!(ParticipantDeclaration.ect)
             .count
 
           billable - refundable
@@ -53,7 +53,7 @@ module Finance
             .billable_statement_line_items
             .joins(:participant_declaration)
             .where(participant_declarations: { declaration_type: })
-            .merge!(ParticipantDeclaration.ects)
+            .merge!(ParticipantDeclaration.ect)
             .count
         end
 
@@ -62,7 +62,7 @@ module Finance
             .refundable_statement_line_items
             .joins(:participant_declaration)
             .where(participant_declarations: { declaration_type: })
-            .merge!(ParticipantDeclaration.ects)
+            .merge!(ParticipantDeclaration.ect)
             .count
         end
 
@@ -72,7 +72,7 @@ module Finance
             .joins(:participant_declaration)
             .where(participant_declarations: { declaration_type: "started" })
             .where("participant_declarations.sparsity_uplift = true OR participant_declarations.pupil_premium_uplift = true")
-            .merge!(ParticipantDeclaration.ects)
+            .merge!(ParticipantDeclaration.ect)
             .count
         end
 
@@ -82,7 +82,7 @@ module Finance
             .joins(:participant_declaration)
             .where(participant_declarations: { declaration_type: "started" })
             .where("participant_declarations.sparsity_uplift = true OR participant_declarations.pupil_premium_uplift = true")
-            .merge!(ParticipantDeclaration.ects)
+            .merge!(ParticipantDeclaration.ect)
             .count
         end
       end
