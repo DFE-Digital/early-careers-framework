@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Finance
-  module ECF
+  module Statements
     class Contract < BaseComponent
       include FinanceHelper
 
