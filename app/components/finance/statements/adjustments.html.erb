@@ -1,0 +1,53 @@
+<div class="finance-panel finance-panel__adjustments govuk-!-margin-top-5 govuk-!-margin-bottom-5 print-page-break">
+  <h2 class="govuk-heading-m">Adjustments</h2>
+
+  <%= govuk_table do |table| %>
+    <% table.with_caption(size: "s", text: "Clawbacks") %>
+
+    <% table.with_head do |head| %>
+      <% head.with_row do |row| %>
+        <% row.with_cell(header: true, text: "Payment type") %>
+        <% row.with_cell(header: true, text: "Number of participants") %>
+        <% row.with_cell(header: true, text: "Fee per participant", numeric: true) %>
+        <% row.with_cell(header: true, text: "Payments", numeric: true) %>
+      <% end %>
+    <% end %>
+
+    <% table.with_body do |body| %>
+      <% body.with_row do |row| %>
+        <% row.with_cell(text: "Uplift clawbacks") %>
+        <% row.with_cell(text: calculator.uplift_deductions_count) %>
+        <% row.with_cell(text: number_to_pounds(-calculator.uplift_fee_per_declaration), numeric: true) %>
+        <% row.with_cell(text: number_to_pounds(calculator.uplift_clawback_deductions), numeric: true) %>
+      <% end %>
+
+      <% calculator.send(:output_calculator).banding_breakdown.each do |hash| %>
+        <% relevant_hash = hash.select { |k, v| k.match?(/_subtractions/) } %>
+        <% relevant_hash = relevant_hash.transform_keys { |k| k.to_s.gsub("_subtractions", "").to_sym } %>
+
+        <% relevant_hash.each do |name, count| %>
+          <% next if count.zero? %>
+
+          <% body.with_row do |row| %>
+            <% fee = calculator.fee_for_declaration(band_letter: hash[:band], type: name) %>
+
+            <% row.with_cell(text: "Clawback for #{name.to_s.humanize} (Band: #{hash[:band].to_s.upcase})") %>
+            <% row.with_cell(text: count) %>
+            <% row.with_cell(text: number_to_pounds(-fee), numeric: true) %>
+            <% row.with_cell(text: number_to_pounds(-count * fee), numeric: true) %>
+          <% end %>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <div class="govuk-!-text-align-right govuk-heading-s govuk-!-margin-bottom-0">
+    Total
+  </div>
+
+  <div class="govuk-!-text-align-right govuk-heading-s">
+    <%= number_to_pounds(calculator.adjustments_total) %>
+  </div>
+
+  <%= render Finance::AdditionalAdjustments::Table.new(statement: statement) %>
+</div>
