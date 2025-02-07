@@ -4,6 +4,11 @@ module Finance
   module ECF
     module Mentor
       class OutputCalculator
+        DECLARATION_TYPE_FEE_PROPORTIONS = {
+          started: 0.5,
+          completed: 0.5,
+        }.freeze
+
         attr_reader :statement
 
         def initialize(statement:)
@@ -17,31 +22,14 @@ module Finance
         end
 
         def fee_for_declaration(type:)
-          percentage = case type
-                       when :started
-                         started_event_percentage
-                       when :completed
-                         completed_event_percentage
-                       end
-
+          percentage = DECLARATION_TYPE_FEE_PROPORTIONS[type]
           percentage * statement.mentor_contract.payment_per_participant
         end
 
       private
 
-        def started_event_percentage
-          0.5
-        end
-
-        def completed_event_percentage
-          0.5
-        end
-
         def declaration_types
-          %w[
-            started
-            completed
-          ]
+          DECLARATION_TYPE_FEE_PROPORTIONS.stringify_keys.keys
         end
 
         def current_output_for_declaration_type(declaration_type)
