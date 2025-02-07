@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.shared_examples "a Finance ECF output calculator", mid_cohort: true do
+RSpec.shared_examples "a Finance ECF output calculator", mid_cohort: true do |participant_declaration_factory|
   let(:first_statement) { create(:ecf_statement, cpd_lead_provider:, payment_date: 6.months.ago) }
   let(:second_statement) { create(:ecf_statement, cpd_lead_provider:, payment_date: 4.months.ago) }
   let(:third_statement) { create(:ecf_statement, cpd_lead_provider:, payment_date: 2.months.ago) }
@@ -122,7 +122,7 @@ RSpec.shared_examples "a Finance ECF output calculator", mid_cohort: true do
     context "when partially filled bands" do
       let!(:to_be_paid_participant_declaration) do
         travel_to first_statement.deadline_date - 1.day do
-          create(:ect_participant_declaration, :payable, cpd_lead_provider:)
+          create(participant_declaration_factory, :payable, cpd_lead_provider:)
         end
       end
 
@@ -179,7 +179,7 @@ RSpec.shared_examples "a Finance ECF output calculator", mid_cohort: true do
     context "when fully filled bands" do
       let!(:to_be_paid_declarations) do
         travel_to first_statement.deadline_date do
-          create_list(:ect_participant_declaration, 2, :eligible, cpd_lead_provider:)
+          create_list(participant_declaration_factory, 2, :eligible, cpd_lead_provider:)
         end
       end
       before do
@@ -281,7 +281,7 @@ RSpec.shared_examples "a Finance ECF output calculator", mid_cohort: true do
     context "when multiple bands" do
       let!(:to_be_paid_declarations) do
         travel_to first_statement.deadline_date do
-          create_list(:ect_participant_declaration, 7, :eligible, cpd_lead_provider:)
+          create_list(participant_declaration_factory, 7, :eligible, cpd_lead_provider:)
         end
       end
       before do
@@ -336,7 +336,7 @@ RSpec.shared_examples "a Finance ECF output calculator", mid_cohort: true do
     context "when overfilled all bands" do
       let!(:to_be_paid_declarations) do
         travel_to first_statement.deadline_date do
-          create_list(:ect_participant_declaration, 9, :eligible, cpd_lead_provider:)
+          create_list(participant_declaration_factory, 9, :eligible, cpd_lead_provider:)
         end
       end
       before do
@@ -391,7 +391,7 @@ RSpec.shared_examples "a Finance ECF output calculator", mid_cohort: true do
     context "next statement is present" do
       before do
         declarations = create_list(
-          :ect_participant_declaration, 3,
+          participant_declaration_factory, 3,
           state: :paid
         )
 
@@ -404,7 +404,7 @@ RSpec.shared_examples "a Finance ECF output calculator", mid_cohort: true do
         end
 
         declarations = create_list(
-          :ect_participant_declaration, 3,
+          participant_declaration_factory, 3,
           state: :payable
         )
 
@@ -464,7 +464,7 @@ RSpec.shared_examples "a Finance ECF output calculator", mid_cohort: true do
     context "when clawbacks present in 2 consecutive statements" do
       before do
         declarations = create_list(
-          :ect_participant_declaration, 5,
+          participant_declaration_factory, 5,
           state: :paid
         )
 
@@ -575,14 +575,14 @@ RSpec.shared_examples "a Finance ECF output calculator", mid_cohort: true do
 
     context "when clawbacks present in 3 consecutive statements" do
       before do
-        setup_statement_one
-        setup_statement_two
-        setup_statement_three
+        setup_statement_one(participant_declaration_factory)
+        setup_statement_two(participant_declaration_factory)
+        setup_statement_three(participant_declaration_factory)
       end
 
-      def setup_statement_one
+      def setup_statement_one(participant_declaration_factory)
         declarations = create_list(
-          :ect_participant_declaration, 3,
+          participant_declaration_factory, 3,
           state: :paid
         )
 
@@ -595,9 +595,9 @@ RSpec.shared_examples "a Finance ECF output calculator", mid_cohort: true do
         end
       end
 
-      def setup_statement_two
+      def setup_statement_two(participant_declaration_factory)
         declarations = create_list(
-          :ect_participant_declaration, 3,
+          participant_declaration_factory, 3,
           state: :paid
         )
 
@@ -626,9 +626,9 @@ RSpec.shared_examples "a Finance ECF output calculator", mid_cohort: true do
         end
       end
 
-      def setup_statement_three
+      def setup_statement_three(participant_declaration_factory)
         declarations = create_list(
-          :ect_participant_declaration, 3,
+          participant_declaration_factory, 3,
           state: :payable
         )
 
@@ -800,12 +800,12 @@ RSpec.shared_examples "a Finance ECF output calculator", mid_cohort: true do
     end
 
     context "when there is a clawback followed by a declaration again" do
-      let(:participant_profile) { create(:ect, :eligible_for_funding, lead_provider: cpd_lead_provider.lead_provider) }
       let!(:participant_declaration) do
         travel_to first_statement.deadline_date do
-          create(:ect_participant_declaration, :paid, participant_profile:, cpd_lead_provider:)
+          create(participant_declaration_factory, :paid, cpd_lead_provider:)
         end
       end
+      let(:participant_profile) { participant_declaration.participant_profile }
 
       before do
         travel_to second_statement.deadline_date do
@@ -820,7 +820,7 @@ RSpec.shared_examples "a Finance ECF output calculator", mid_cohort: true do
           .clawed_back!
 
         travel_to second_statement.deadline_date do
-          create(:ect_participant_declaration, :payable, participant_profile:, cpd_lead_provider:)
+          create(participant_declaration_factory, :payable, participant_profile:, cpd_lead_provider:)
         end
       end
 
@@ -887,7 +887,7 @@ RSpec.shared_examples "a Finance ECF output calculator", mid_cohort: true do
       context "when there are uplifts" do
         before do
           declarations = create_list(
-            :ect_participant_declaration, 2,
+            participant_declaration_factory, 2,
             state: :paid,
             pupil_premium_uplift: true
           )
@@ -918,7 +918,7 @@ RSpec.shared_examples "a Finance ECF output calculator", mid_cohort: true do
       context "when there are uplifts but not on started declarations" do
         before do
           declarations = create_list(
-            :ect_participant_declaration, 2,
+            participant_declaration_factory, 2,
             state: :paid,
             pupil_premium_uplift: true,
             declaration_type: "retained-1"
@@ -950,7 +950,7 @@ RSpec.shared_examples "a Finance ECF output calculator", mid_cohort: true do
       context "when there is net negative of uplifts on a single statement" do
         before do
           declarations = create_list(
-            :ect_participant_declaration, 2,
+            participant_declaration_factory, 2,
             state: :paid,
             pupil_premium_uplift: true
           )
@@ -997,14 +997,14 @@ RSpec.shared_examples "a Finance ECF output calculator", mid_cohort: true do
 
       context "when there are previous uplifts" do
         before do
-          setup_statement_one
-          setup_statement_two
-          setup_statement_three
+          setup_statement_one(participant_declaration_factory)
+          setup_statement_two(participant_declaration_factory)
+          setup_statement_three(participant_declaration_factory)
         end
 
-        def setup_statement_one
+        def setup_statement_one(participant_declaration_factory)
           declarations = create_list(
-            :ect_participant_declaration, 3,
+            participant_declaration_factory, 3,
             state: :paid,
             pupil_premium_uplift: true
           )
@@ -1018,9 +1018,9 @@ RSpec.shared_examples "a Finance ECF output calculator", mid_cohort: true do
           end
         end
 
-        def setup_statement_two
+        def setup_statement_two(participant_declaration_factory)
           declarations = create_list(
-            :ect_participant_declaration, 3,
+            participant_declaration_factory, 3,
             state: :paid,
             pupil_premium_uplift: true
           )
@@ -1050,9 +1050,9 @@ RSpec.shared_examples "a Finance ECF output calculator", mid_cohort: true do
           end
         end
 
-        def setup_statement_three
+        def setup_statement_three(participant_declaration_factory)
           declarations = create_list(
-            :ect_participant_declaration, 3,
+            participant_declaration_factory, 3,
             state: :payable,
             pupil_premium_uplift: true
           )
@@ -1140,9 +1140,9 @@ RSpec.shared_examples "a Finance ECF output calculator", mid_cohort: true do
 
       let!(:extended_participant_declaration) do
         travel_to first_statement.deadline_date - 1.day do
-          create(:ect_participant_declaration, :extended, declaration_type: "extended-1", cpd_lead_provider:)
-          create(:ect_participant_declaration, :extended, declaration_type: "extended-2", cpd_lead_provider:)
-          create(:ect_participant_declaration, :extended, declaration_type: "extended-3", cpd_lead_provider:)
+          create(participant_declaration_factory, :extended, declaration_type: "extended-1", cpd_lead_provider:)
+          create(participant_declaration_factory, :extended, declaration_type: "extended-2", cpd_lead_provider:)
+          create(participant_declaration_factory, :extended, declaration_type: "extended-3", cpd_lead_provider:)
         end
       end
 
