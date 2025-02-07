@@ -84,7 +84,7 @@ module NewSeeds
           end
 
           def lead_provider_to
-            @lead_provider_to ||= @supplied_lead_provider_to || FactoryBot.create(:seed_lead_provider)
+            @lead_provider_to ||= @supplied_lead_provider_to || LeadProvider.excluding(lead_provider_from).sample || FactoryBot.create(:seed_lead_provider)
           end
 
           def setup

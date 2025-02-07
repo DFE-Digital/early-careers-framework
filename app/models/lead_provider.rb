@@ -2,6 +2,16 @@
 
 # This is actually ECFLeadProvider in all but name. See https://github.com/DFE-Digital/early-careers-framework/issues/698
 class LeadProvider < ApplicationRecord
+  ALL_PROVIDERS = [
+    "Ambition Institute",
+    "Best Practice Network",
+    "Capita",
+    "Education Development Trust",
+    "National Institute of Teaching",
+    "Teach First",
+    "UCL Institute of Education",
+  ].freeze
+
   belongs_to :cpd_lead_provider, optional: true
 
   has_many :participant_declarations, through: :cpd_lead_provider, class_name: "ParticipantDeclaration::ECF"

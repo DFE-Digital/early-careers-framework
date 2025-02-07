@@ -9,7 +9,7 @@ module NewSeeds
         def initialize(user: nil, lead_provider: nil, full_name: nil, email: nil)
           @user = user
           @new_user_attributes = { full_name:, email: }.compact
-          @lead_provider = lead_provider || LeadProvider.all.sample
+          @lead_provider = lead_provider || FactoryBot.create(:seed_lead_provider)
         end
 
         def build

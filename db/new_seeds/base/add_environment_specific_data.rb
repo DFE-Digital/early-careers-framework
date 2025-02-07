@@ -6,13 +6,10 @@ if Rails.env.in?(%w[development staging review])
   delivery_partner_credentials = {
     "Ambition Institute" => "ambition-institute-sit-%d-%d-%d@example.com",
     "Best Practice Network" => "best-practice-network-sit-%d-%d-%d@example.com",
-    "Church of England" => "church-of-england-sit-%d-%d-%d@example.com",
+    "Capita" => "capita-sit-%d-%d-%d@example.com",
     "Education Development Trust" => "education-development-trust-sit-%d-%d-%d@example.com",
-    "LLSE" => "leadership-learning-south-east-sit-%d-%d-%d@example.com",
     "National Institute of Teaching" => "niot-sit-%d-%d-%d@example.com",
-    "School-Led Network" => "school-led-network-sit-%d-%d-%d@example.com",
     "Teach First" => "teach-first-sit-%d-%d-%d@example.com",
-    "Teacher Development Trust" => "teacher-development-trust-sit-%d-%d-%d@example.com",
     "UCL Institute of Education" => "ucl-sit-%d-%d-%d@example.com",
   }
 
@@ -24,7 +21,7 @@ if Rails.env.in?(%w[development staging review])
         NewSeeds::Scenarios::Schools::School
           .new(name: "#{name} Test School #{i} #{cohort.start_year}")
           .build
-          .with_partnership_in(cohort:, delivery_partner:)
+          .with_partnership_in(cohort:, delivery_partner:, lead_provider: LeadProvider.find_by_name(name))
           .with_an_induction_tutor(full_name: "#{name} Test SIT #{i} #{cohort.start_year}", email: email % [Array.wrap(i), cohort.start_year, 0].flatten)
           .with_school_cohort_and_programme(cohort:, programme_type: :fip)
 
@@ -32,7 +29,7 @@ if Rails.env.in?(%w[development staging review])
         school = NewSeeds::Scenarios::Schools::School
           .new(name: "#{name} Test School #{i} #{cohort.start_year} independent gias type 10")
           .build
-          .with_partnership_in(cohort:, delivery_partner:)
+          .with_partnership_in(cohort:, delivery_partner:, lead_provider: LeadProvider.find_by_name(name))
           .with_an_induction_tutor(full_name: "#{name} Test SIT #{i} #{cohort.start_year} school type 10", email: email % [Array.wrap(i), cohort.start_year, 10].flatten)
           .with_school_cohort_and_programme(cohort:, programme_type: :fip)
         school.school.update!(school_type_code: 10)
@@ -41,7 +38,7 @@ if Rails.env.in?(%w[development staging review])
         school = NewSeeds::Scenarios::Schools::School
                    .new(name: "#{name} Test School #{i} #{cohort.start_year} independent gias type 11")
                    .build
-                   .with_partnership_in(cohort:, delivery_partner:)
+                   .with_partnership_in(cohort:, delivery_partner:, lead_provider: LeadProvider.find_by_name(name))
                    .with_an_induction_tutor(full_name: "#{name} Test SIT #{i} #{cohort.start_year} 11", email: email % [Array.wrap(i), cohort.start_year, 11].flatten)
                    .with_school_cohort_and_programme(cohort:, programme_type: :fip)
         school.school.update!(school_type_code: 11)
@@ -50,7 +47,7 @@ if Rails.env.in?(%w[development staging review])
         school = NewSeeds::Scenarios::Schools::School
                    .new(name: "#{name} Test School #{i} #{cohort.start_year} independent gias type 37")
                    .build
-                   .with_partnership_in(cohort:, delivery_partner:)
+                   .with_partnership_in(cohort:, delivery_partner:, lead_provider: LeadProvider.find_by_name(name))
                    .with_an_induction_tutor(full_name: "#{name} Test SIT #{i} #{cohort.start_year} 37", email: email % [Array.wrap(i), cohort.start_year, 37].flatten)
                    .with_school_cohort_and_programme(cohort:, programme_type: :fip)
         school.school.update!(school_type_code: 37)

@@ -9,9 +9,12 @@ RSpec.describe Induction::FindBy do
   # after the start_date but before the end_date of induction_4
   let!(:an_earlier_point_in_time) { Date.new(current_year, 12, 25) }
 
-  let(:school_1) { NewSeeds::Scenarios::Schools::School.new.build.chosen_fip_and_partnered_in(cohort:) }
-  let(:school_2) { NewSeeds::Scenarios::Schools::School.new.build.chosen_fip_and_partnered_in(cohort:) }
-  let(:school_3) { NewSeeds::Scenarios::Schools::School.new.build.chosen_fip_and_partnered_in(cohort:) }
+  let(:lead_provider_1) { create(:lead_provider, name: "Ambition Institute") }
+  let(:school_1) { NewSeeds::Scenarios::Schools::School.new.build.with_partnership_in(cohort:, lead_provider: lead_provider_1).chosen_fip_and_partnered_in(cohort:) }
+  let(:lead_provider_2) { create(:lead_provider, name: "Capita") }
+  let(:school_2) { NewSeeds::Scenarios::Schools::School.new.build.with_partnership_in(cohort:, lead_provider: lead_provider_2).chosen_fip_and_partnered_in(cohort:) }
+  let(:lead_provider_3) { create(:lead_provider, name: "Teach First") }
+  let(:school_3) { NewSeeds::Scenarios::Schools::School.new.build.with_partnership_in(cohort:, lead_provider: lead_provider_3).chosen_fip_and_partnered_in(cohort:) }
   let(:ect) { NewSeeds::Scenarios::Participants::Ects::Ect.new(school_cohort: school_1.school_cohort).build }
 
   let(:appropriate_body_1) { create(:appropriate_body_local_authority) }
