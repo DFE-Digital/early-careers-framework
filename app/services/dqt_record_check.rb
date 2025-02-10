@@ -136,6 +136,9 @@ private
 
       # all matches 24 cohort start date - use 24/1/1900
       24 => CheckResult.new(magic_dqt_record(induction_start_date: Date.new(2024, 9, 1)), true, true, true, true, 4),
+
+      # all matches 25 cohort start date - use 25/1/1900
+      25 => CheckResult.new(magic_dqt_record(induction_start_date: Date.new(2025, 9, 1)), true, true, true, true, 4),
     }
   end
 
