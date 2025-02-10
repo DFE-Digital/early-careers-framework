@@ -7,7 +7,6 @@ RSpec.describe Finance::Statements::PaymentBreakdown::ECF, type: :component do
   let(:cpd_lead_provider) { instance_double(CpdLeadProvider, lead_provider:) }
   let(:statement) { instance_double(Finance::Statement, cpd_lead_provider:, deadline_date: Time.zone.today, payment_date: Time.zone.tomorrow) }
   let(:component) { described_class.new(statement:, calculator:) }
-  let(:output_calculator) { instance_double(Finance::ECF::OutputCalculator, banding_breakdown:) }
   let(:calculator) do
     instance_double(
       Finance::ECF::StatementCalculator,
