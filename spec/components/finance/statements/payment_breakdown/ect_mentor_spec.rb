@@ -5,7 +5,7 @@ require "rails_helper"
 RSpec.describe Finance::Statements::PaymentBreakdown::ECTMentor, type: :component do
   let(:lead_provider) { instance_double(LeadProvider, id: "0512d6f9-e082-471e-aad2-feb9f77ff870") }
   let(:cpd_lead_provider) { instance_double(CpdLeadProvider, lead_provider:) }
-  let(:statement) { instance_double(Finance::Statement, cpd_lead_provider:, deadline_date: Time.zone.today, payment_date: Time.zone.tomorrow) }
+  let(:statement) { instance_double(Finance::Statement, cpd_lead_provider:, deadline_date: Time.zone.today, payment_date: Time.zone.tomorrow, to_param: "08a67c3d-ebc6-4a21-a446-923796a4e15c") }
   let(:component) { described_class.new(statement:, ect_calculator:, mentor_calculator:) }
   let(:ect_calculator) do
     instance_double(
@@ -117,10 +117,19 @@ RSpec.describe Finance::Statements::PaymentBreakdown::ECTMentor, type: :componen
     end
   end
 
-  xit "has link to voided declarations" do
-    within(".finance-panel__summary__meta__counts") do
-      expect(subject).to have_link("View", href: finance_ecf_payment_breakdown_statement_voided_path(ecf_lead_provider.id, statement))
+  it "has link to voided declarations" do
+    links = subject.css(".finance-panel__summary__counts a").map do |link|
+      [link.text.split.join(" "), link[:href]]
     end
+
+    expect(links[0]).to eq([
+      "50 ECT voided declarations",
+      ect_finance_ecf_payment_breakdown_statement_voided_path(lead_provider.id, statement),
+    ])
+    expect(links[1]).to eq([
+      "51 Mentor voided declarations",
+      mentor_finance_ecf_payment_breakdown_statement_voided_path(lead_provider.id, statement),
+    ])
   end
 
   def breakdown_list
