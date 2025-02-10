@@ -211,5 +211,26 @@ RSpec.describe Importers::CreateCallOffContract do
         end
       end
     end
+
+    context "when call off contract has no band D to be created" do
+      let!(:cohort) { create(:cohort, start_year: 2024) }
+      let!(:lead_provider) { create(:lead_provider, name: "Butterfly Institute", cohorts: [cohort]) }
+      before do
+        csv.write "lead-provider-name,cohort-start-year,uplift-target,uplift-amount,recruitment-target,revised-target,set-up-fee,monthly-service-fee,band-a-min,band-a-max,band-a-per-participant,band-b-min,band-b-max,band-b-per-participant,band-c-min,band-c-max,band-c-per-participant,band-d-min,band-d-max,band-d-per-participant"
+        csv.write "\n"
+        csv.write "#{lead_provider.name},#{cohort.start_year},0.44,200,4600,4790,0,2300,0,90,895,91,199,700,200,299,600,,,"
+        csv.write "\n"
+        csv.close
+      end
+
+      it "creates 3 participant bands" do
+        importer.call
+
+        expect(lead_provider.call_off_contract.band_a).to be_present
+        expect(lead_provider.call_off_contract.bands.order(max: :asc).second).to be_present
+        expect(lead_provider.call_off_contract.bands.order(max: :asc).third).to be_present
+        expect(lead_provider.call_off_contract.bands.order(max: :asc).fourth).to be_nil
+      end
+    end
   end
 end
