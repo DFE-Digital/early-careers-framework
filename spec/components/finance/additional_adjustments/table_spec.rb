@@ -58,6 +58,24 @@ RSpec.describe Finance::AdditionalAdjustments::Table, type: :component do
     end
   end
 
+  context "caption size" do
+    context "default" do
+      it "renders caption size s" do
+        expect(subject).to have_css(".govuk-table > caption.govuk-table__caption--s", count: 1)
+        expect(subject).to have_css(".govuk-table > caption.govuk-table__caption--m", count: 0)
+      end
+    end
+
+    context "medium size" do
+      let(:component) { described_class.new statement:, caption_size: "m" }
+
+      it "renders caption size m" do
+        expect(subject).to have_css(".govuk-table > caption.govuk-table__caption--s", count: 0)
+        expect(subject).to have_css(".govuk-table > caption.govuk-table__caption--m", count: 1)
+      end
+    end
+  end
+
   context ".adjustment_editable?" do
     let!(:adjustment1) { create :adjustment, statement:, payment_type: "Big amount", amount: 999.99 }
 

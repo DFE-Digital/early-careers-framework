@@ -5,10 +5,11 @@ module Finance
     class Table < BaseComponent
       include FinanceHelper
 
-      attr_accessor :statement
+      attr_accessor :statement, :caption_size
 
-      def initialize(statement:)
+      def initialize(statement:, caption_size: "s")
         @statement = statement
+        @caption_size = caption_size
       end
 
       delegate :adjustments, :adjustment_editable?,
