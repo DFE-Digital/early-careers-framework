@@ -58,6 +58,7 @@ module "postgres" {
   azure_enable_backup_storage    = var.azure_enable_backup_storage
   use_azure                      = var.deploy_azure_backing_services
   azure_enable_monitoring        = var.enable_monitoring
+  azure_storage_tier             = var.azure_storage_tier
   azure_extensions               = ["citext", "fuzzystrmatch", "pg_stat_statements", "pgcrypto", "plpgsql", "uuid-ossp"]
   azure_maintenance_window       = var.azure_maintenance_window
   server_version                 = "14"
