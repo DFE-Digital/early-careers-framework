@@ -106,7 +106,8 @@ FactoryBot.define do
           :ecf_statement, :next_output_fee,
           deadline_date: previous_statement.deadline_date + 1.month,
           payment_date: previous_statement.payment_date,
-          cpd_lead_provider: previous_statement.cpd_lead_provider
+          cpd_lead_provider: previous_statement.cpd_lead_provider,
+          cohort: participant_declaration.cohort
         )
 
         service = Finance::ClawbackDeclaration.new(participant_declaration)
