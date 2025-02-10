@@ -49,5 +49,5 @@
     <%= number_to_pounds(calculator.adjustments_total) %>
   </div>
 
-  <%= render Finance::AdditionalAdjustments::Table.new(statement: statement) %>
+  <%= render Finance::Statements::AdditionalAdjustments::Table.new(statement: statement) %>
 </div>

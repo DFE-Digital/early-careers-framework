@@ -40,8 +40,8 @@ RSpec.describe Finance::Statements::Adjustments, type: :component do
   subject { render_inline(component) }
 
   before do
-    component = instance_double(Finance::AdditionalAdjustments::Table, render_in: "<h2>Additional adjustments</h2>".html_safe)
-    expect(Finance::AdditionalAdjustments::Table).to receive(:new).with(statement:).and_return(component)
+    component = instance_double(Finance::Statements::AdditionalAdjustments::Table, render_in: "<h2>Additional adjustments</h2>".html_safe)
+    expect(Finance::Statements::AdditionalAdjustments::Table).to receive(:new).with(statement:).and_return(component)
   end
 
   it "renders additional adjustments component" do

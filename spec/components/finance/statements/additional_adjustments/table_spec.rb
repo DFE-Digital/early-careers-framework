@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Finance::AdditionalAdjustments::Table, type: :component do
+RSpec.describe Finance::Statements::AdditionalAdjustments::Table, type: :component do
   let(:statement) { create :ecf_statement }
   let(:component) { described_class.new statement: }
 
