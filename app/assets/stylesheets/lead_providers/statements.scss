@@ -172,6 +172,13 @@
     gap: 2rem;
     grid-template-columns: 1fr;
 
+    .govuk-table__body {
+      .govuk-table__cell, .govuk-table__header {
+        padding-top: 25px;
+        padding-bottom: 25px;
+      }
+    }
+
     @media (min-width: 40.625em) {
       grid-template-columns: auto 1fr;
     }
