@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Finance::Statements::Contract, type: :component do
+RSpec.describe Finance::Statements::Contracts::ECF, type: :component do
   let(:component) { described_class.new(contract:) }
   let(:lead_provider) { instance_double(LeadProvider, name: "Test Provider") }
   let(:contract) do
