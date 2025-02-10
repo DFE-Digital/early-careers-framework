@@ -38,7 +38,7 @@ module Api
                   .joins(left_outer_join_participant_profiles)
                   .joins(left_outer_join_induction_records)
                   .joins("JOIN (#{latest_induction_records_join.to_sql}) AS latest_induction_records ON latest_induction_records.latest_id = induction_records.id")
-                  .joins("INNER JOIN (#{paginated_join.to_sql}) as tmp on tmp.id = users.id")
+                  .where(users: { id: paginated_join.map(&:id) })
                   .group("users.id")
                   .distinct
 
