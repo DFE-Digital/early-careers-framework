@@ -55,6 +55,14 @@ FactoryBot.define do
       service.call
     end
 
+    trait :submitted do
+      state { :submitted }
+    end
+
+    trait :ineligible do
+      state { :ineligible }
+    end
+
     trait :eligible do
       profile_traits { [:eligible_for_funding] }
     end
