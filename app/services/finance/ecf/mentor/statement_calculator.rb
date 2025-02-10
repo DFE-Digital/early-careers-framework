@@ -35,18 +35,20 @@ module Finance
         end
 
         event_types.each do |event_type|
-          define_method "#{event_type}_fee_for_declaration" do
+          define_method "#{event_type}_fee_per_declaration" do
             fee_for_declaration(type: event_type)
           end
 
           define_method "additions_for_#{event_type}" do
-            hash = {}.merge(*output_calculator.output_breakdown)
-            hash[:"#{event_type}_additions"] * output_calculator.fee_for_declaration(type: event_type)
+            output_calculator.output_breakdown.sum do |hash|
+              hash[:"#{event_type}_additions"].to_i * output_calculator.fee_for_declaration(type: event_type)
+            end
           end
 
           define_method "deductions_for_#{event_type}" do
-            hash = {}.merge(*output_calculator.output_breakdown)
-            hash[:"#{event_type}_subtractions"] * output_calculator.fee_for_declaration(type: event_type)
+            output_calculator.output_breakdown.sum do |hash|
+              hash[:"#{event_type}_subtractions"].to_i * output_calculator.fee_for_declaration(type: event_type)
+            end
           end
         end
 
@@ -55,13 +57,15 @@ module Finance
         end
 
         def started_count
-          hash = {}.merge(*output_calculator.output_breakdown)
-          hash[:started_additions]
+          output_calculator.output_breakdown.sum do |hash|
+            hash[:started_additions].to_i
+          end
         end
 
         def completed_count
-          hash = {}.merge(*output_calculator.output_breakdown)
-          hash[:completed_additions]
+          output_calculator.output_breakdown.sum do |hash|
+            hash[:completed_additions].to_i
+          end
         end
 
         def voided_count
