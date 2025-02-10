@@ -2,9 +2,18 @@ name: Backup and Upload production DB
 description: Backup production DB and upload to azure
 
 inputs:
-  azure-credentials:
-    description: Azure credentials
+  azure-client-id:
+    description: Azure Client ID
     required: true
+  azure-tenant-id:
+    description: Azure Tenant ID
+    required: true
+  azure-subscription-id:
+    description: Azure Subscription ID
+    required: true
+  namespace:
+    description: Namespace to deploy to
+    type: string
 
 runs:
   using: composite
@@ -14,13 +23,17 @@ runs:
       uses: actions/checkout@v3
 
     - name: Login
-      uses: azure/login@v1
+      uses: azure/login@v2
       with:
-        creds: ${{ inputs.azure-credentials }}
+        client-id: ${{ inputs.azure-client-id }}
+        tenant-id: ${{ inputs.azure-tenant-id }}
+        subscription-id: ${{ inputs.azure-subscription-id }}
 
     - uses: DFE-Digital/github-actions/set-kubelogin-environment@master
       with:
-        azure-credentials: ${{ inputs.azure-credentials }}
+        azure-client-id: ${{ inputs.azure-client-id }}
+        azure-tenant-id: ${{ inputs.azure-tenant-id }}
+        azure-subscription-id: ${{ inputs.azure-subscription-id }}
 
     - name: Set AKS credentials
       shell: bash
@@ -36,7 +49,7 @@ runs:
     - name: Backup database
       shell: bash
       run: |
-        bin/konduit.sh cpd-ecf-production-web -- pg_dump -E utf8 --compress=1 --clean --if-exists --no-privileges --no-owner --verbose -f backup-production.sql.gz
+        bin/konduit.sh -n ${{ env.namespace }} cpd-ecf-production-web -- pg_dump -E utf8 --compress=1 --clean --if-exists --no-privileges --no-owner --verbose -f backup-production.sql.gz
 
     - name: Set connection string
       shell: bash

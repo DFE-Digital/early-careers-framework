@@ -5,25 +5,45 @@ inputs:
   environment:
     description: The name of the environment
     required: true
-  azure-credentials:
-    description: Azure credentials
+  azure-client-id:
+    description: Azure Client ID
     required: true
+  azure-tenant-id:
+    description: Azure Tenant ID
+    required: true
+  azure-subscription-id:
+    description: Azure Subscription ID
+    required: true
+  namespace:
+    description: Namespace to deploy to
+    type: string
 
 runs:
   using: composite
 
   steps:
+    - name: Set Environment variables
+      id: set_env_var
+      shell: bash
+      run: |
+        tf_vars_file=terraform/application/workspace_variables/${{ inputs.environment }}.tfvars.json
+        echo "NAMESPACE=$(jq -r '.namespace' ${tf_vars_file})" >> $GITHUB_ENV
+
     - name: Checkout code
       uses: actions/checkout@v3
 
     - name: Login
-      uses: azure/login@v1
+      uses: azure/login@v2
       with:
-        creds: ${{ inputs.azure-credentials }}
+        client-id: ${{ inputs.azure-client-id }}
+        tenant-id: ${{ inputs.azure-tenant-id }}
+        subscription-id: ${{ inputs.azure-subscription-id }}
 
     - uses: DFE-Digital/github-actions/set-kubelogin-environment@master
       with:
-        azure-credentials: ${{ inputs.azure-credentials }}
+        azure-client-id: ${{ inputs.azure-client-id }}
+        azure-tenant-id: ${{ inputs.azure-tenant-id }}
+        azure-subscription-id: ${{ inputs.azure-subscription-id }}
 
     - name: Install kubectl
       uses: DFE-Digital/github-actions/set-kubectl@master
@@ -39,8 +59,8 @@ runs:
     - name: Backup production DB
       shell: bash
       run: |
-        bin/konduit.sh cpd-ecf-${{ inputs.environment }}-web -- pg_dump -E utf8 --exclude-table-data api_requests --exclude-table-data versions --compress=1 --clean --if-exists --no-privileges --no-owner --verbose -f backup-${{ inputs.environment }}.sql.gz
+        bin/konduit.sh -n ${{ inputs.namespace }} cpd-ecf-${{ inputs.environment }}-web -- pg_dump -E utf8 --exclude-table-data api_requests --exclude-table-data versions --compress=1 --clean --if-exists --no-privileges --no-owner --verbose -f backup-${{ inputs.environment }}.sql.gz
 
     - name: Restore to migration DB
       shell: bash
-      run: bin/konduit.sh -d s189p01-cpdecf-mg-pg -k s189p01-cpdecf-mg-app-kv -i backup-${{ inputs.environment }}.sql.gz -c -t 7200 cpd-ecf-migration-web -- psql
+      run: bin/konduit.sh -n ${{ inputs.namespace }} -d s189p01-cpdecf-mg-pg -k s189p01-cpdecf-mg-app-kv -i backup-${{ inputs.environment }}.sql.gz -c -t 7200 cpd-ecf-migration-web -- psql

@@ -5,8 +5,14 @@ inputs:
   environment:
     description: The name of the environment
     required: true
-  azure-credentials:
-    description: Azure credentials
+  azure-client-id:
+    description: Azure Client ID
+    required: true
+  azure-tenant-id:
+    description: Azure Tenant ID
+    required: true
+  azure-subscription-id:
+    description: Azure Subscription ID
     required: true
   exclude-versions:
     description: Exclude 'versions' table
@@ -14,6 +20,9 @@ inputs:
   exclude-api-requests:
     description: Exclude 'api_requests' table
     type: boolean
+  namespace:
+    description: Namespace to deploy to
+    type: string
 
 runs:
   using: composite
@@ -23,13 +32,17 @@ runs:
       uses: actions/checkout@v3
 
     - name: Login
-      uses: azure/login@v1
+      uses: azure/login@v2
       with:
-        creds: ${{ inputs.azure-credentials }}
+        client-id: ${{ inputs.azure-client-id }}
+        tenant-id: ${{ inputs.azure-tenant-id }}
+        subscription-id: ${{ inputs.azure-subscription-id }}
 
     - uses: DFE-Digital/github-actions/set-kubelogin-environment@master
       with:
-        azure-credentials: ${{ inputs.azure-credentials }}
+        azure-client-id: ${{ inputs.azure-client-id }}
+        azure-tenant-id: ${{ inputs.azure-tenant-id }}
+        azure-subscription-id: ${{ inputs.azure-subscription-id }}
 
     - name: Set AKS credentials
       shell: bash
@@ -58,8 +71,8 @@ runs:
 
         echo "Excluding tables (if any): $EXCLUDE_ARGS"
 
-        bin/konduit.sh cpd-ecf-${{ inputs.environment }}-web -- pg_dump -E utf8 --compress=1 --clean --if-exists $EXCLUDE_ARGS --no-privileges --no-owner --verbose -f backup-${{ inputs.environment }}.sql.gz
+        bin/konduit.sh -n ${{ inputs.namespace }} cpd-ecf-${{ inputs.environment }}-web -- pg_dump -E utf8 --compress=1 --clean --if-exists $EXCLUDE_ARGS --no-privileges --no-owner --verbose -f backup-${{ inputs.environment }}.sql.gz
 
     - name: Restore snapshot database
       shell: bash
-      run: bin/konduit.sh -d s189p01-cpdecf-pd-pg-snapshot -k s189p01-cpdecf-pd-app-kv -i backup-${{ inputs.environment }}.sql.gz -c -t 7200 cpd-ecf-${{ inputs.environment }}-web -- psql -v ON_ERROR_STOP=1
+      run: bin/konduit.sh -n ${{ inputs.namespace }} -d s189p01-cpdecf-pd-pg-snapshot -k s189p01-cpdecf-pd-app-kv -i backup-${{ inputs.environment }}.sql.gz -c -t 7200 cpd-ecf-${{ inputs.environment }}-web -- psql -v ON_ERROR_STOP=1
