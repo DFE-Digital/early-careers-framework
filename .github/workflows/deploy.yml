@@ -11,7 +11,7 @@ on:
         description: "Deploy environment"
         required: true
         default: review
-        type: environment
+        type: choice
         options:
           - review
   push:
@@ -81,7 +81,9 @@ jobs:
         with:
           environment: review
           docker-image: ${{ needs.docker.outputs.docker-image }}
-          azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
+          azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           pull-request-number: ${{ github.event.pull_request.number }}
           current-commit-sha: ${{ github.event.pull_request.head.sha }}
           statuscake-api-token: ${{ secrets.STATUSCAKE_API_TOKEN }}
@@ -110,7 +112,9 @@ jobs:
         with:
           scenario: smoke-test
           docker-image: ${{ needs.docker.outputs.docker-image }}
-          azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
+          azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
   deploy_staging:
     name: Deploy staging
@@ -129,7 +133,9 @@ jobs:
         with:
           environment: staging
           docker-image: ${{ needs.docker.outputs.docker-image }}
-          azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
+          azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           current-commit-sha: ${{ github.sha }}
           statuscake-api-token: ${{ secrets.STATUSCAKE_API_TOKEN }}
 
@@ -148,7 +154,9 @@ jobs:
         with:
           environment: sandbox
           docker-image: ${{ needs.deploy_staging.outputs.docker-image }}
-          azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
+          azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           current-commit-sha: ${{ github.sha }}
           statuscake-api-token: ${{ secrets.STATUSCAKE_API_TOKEN }}
 
@@ -169,7 +177,9 @@ jobs:
   #       with:
   #         environment: migration
   #         docker-image: ${{ needs.deploy_staging.outputs.docker-image }}
-  #         azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
+  #         azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
+  #         azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+  #         azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
   #         current-commit-sha: ${{ github.sha }}
   #         statuscake-api-token: ${{ secrets.STATUSCAKE_API_TOKEN }}
 
@@ -188,6 +198,8 @@ jobs:
         with:
           environment: production
           docker-image: ${{ needs.deploy_staging.outputs.docker-image }}
-          azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
+          azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           current-commit-sha: ${{ github.sha }}
           statuscake-api-token: ${{ secrets.STATUSCAKE_API_TOKEN }}
