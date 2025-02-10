@@ -1,0 +1,78 @@
+<details class="govuk-details contract-information" data-module="govuk-details">
+  <summary class="govuk-details__summary">
+    <span class="govuk-details__summary-text"><%= t(".link_text") %></span>
+  </summary>
+
+  <div class="govuk-details__text">
+    <dl class="govuk-summary-list govuk-summary-list--no-border">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key"><%= t(".title_ects") %></dt>
+      </div>
+    </dl>
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          <%= t(".ect.recruitment_target") %>
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <%= contract.recruitment_target %>
+        </dd>
+      </div>
+      <% if contract.revised_target.present? %>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            <%= t(".ect.revised_target") %>
+          </dt>
+          <dd class="govuk-summary-list__value">
+            <%= contract.revised_target %>
+          </dd>
+        </div>
+      <% end %>
+    </dl>
+
+    <table class="govuk-table">
+      <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+          <th class="govuk-table__header"><%= t(".band") %></th>
+          <th class="govuk-table__header govuk-table__cell--numeric"><%= t(".bands.min") %></th>
+          <th class="govuk-table__header govuk-table__cell--numeric"><%= t(".bands.max") %></th>
+          <th class="govuk-table__header govuk-table__cell--numeric"><%= t(".per_participant") %></th>
+        </tr>
+      </thead>
+      <tbody class="govuk-table__body">
+        <% contract.bands.each_with_index.map do |band, index| %>
+          <tr class="govuk-table__row">
+            <td class="govuk-table__cell"><%= t(".bands.#{index}") %></td>
+            <td class="govuk-table__cell govuk-table__cell--numeric"><%= band.min || t(".bands.floor") %></td>
+            <td class="govuk-table__cell govuk-table__cell--numeric"><%= band.max || t(".bands.ceiling") %></td>
+            <td class="govuk-table__cell govuk-table__cell--numeric"><%= number_to_pounds band.per_participant %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+    <dl class="govuk-summary-list govuk-summary-list--no-border">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key"><%= t(".title_mentors") %></dt>
+      </div>
+    </dl>
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          <%= t(".mentor.recruitment_target") %>
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <%= mentor_contract.recruitment_target %>
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          <%= t(".per_participant") %>
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <%= number_to_pounds mentor_contract.payment_per_participant %>
+        </dd>
+      </div>
+    </dl>
+  </div>
+</details>

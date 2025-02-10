@@ -2,19 +2,15 @@
 
 require "rails_helper"
 
-RSpec.describe Finance::Statements::Contracts::ECF, type: :component do
-  let(:component) { described_class.new(contract:) }
-  let(:lead_provider) { instance_double(LeadProvider, name: "Test Provider") }
+RSpec.describe Finance::Statements::Contracts::ECTMentor, type: :component do
+  let(:statement) { instance_double(Finance::Statement::ECF, contract:, mentor_contract:) }
+  let(:component) { described_class.new(statement:) }
   let(:contract) do
     instance_double(
       CallOffContract,
-      lead_provider:,
       bands:,
-      uplift_target: 0.4,
-      uplift_amount: 1000,
       recruitment_target: 999,
       revised_target: 1111,
-      set_up_fee: 100,
     )
   end
   let(:bands) do
@@ -25,35 +21,34 @@ RSpec.describe Finance::Statements::Contracts::ECF, type: :component do
       instance_double(ParticipantBand, min: 31, max: 40, per_participant: 2000, output_payment_percentage: 60, service_fee_percentage: 40),
     ]
   end
+  let(:mentor_contract) do
+    instance_double(
+      MentorCallOffContract,
+      recruitment_target: 888,
+      payment_per_participant: 1_000,
+    )
+  end
 
   subject { render_inline(component) }
 
-  it "has correct contract" do
-    expect(summary_list[0][0][0]).to eq("Provider")
-    expect(summary_list[0][0][1]).to eq("Test Provider")
+  it "has correct contract values" do
+    expect(summary_list[0][0]).to eq(%w[ECTs])
 
-    expect(summary_list[1][0][0]).to eq("Recruitment target")
-    expect(summary_list[1][0][1]).to eq("999")
+    expect(summary_list[1][0]).to eq(["ECTs recruitment target", "999"])
+    expect(summary_list[1][1]).to eq(["Revised ECTs recruitment target (+2%)", "1111"])
 
-    expect(summary_list[1][1][0]).to eq("Revised recruitment target (+2%)")
-    expect(summary_list[1][1][1]).to eq("1111")
+    expect(summary_list[2][0]).to eq(%w[Mentors])
 
-    expect(summary_list[1][2][0]).to eq("Uplift target")
-    expect(summary_list[1][2][1]).to eq("40%")
-
-    expect(summary_list[1][3][0]).to eq("Uplift amount")
-    expect(summary_list[1][3][1]).to eq("£1,000.00")
-
-    expect(summary_list[1][4][0]).to eq("Set-up Fee")
-    expect(summary_list[1][4][1]).to eq("£100.00")
+    expect(summary_list[3][0]).to eq(["Mentors recruitment target", "888"])
+    expect(summary_list[3][1]).to eq(["Payment per participant", "£1,000.00"])
   end
 
   it "has correct bands" do
     expect(band_table[0]).to eq([
-      "Band",
+      "ECT payment bands",
       "Min",
       "Max",
-      "Payment amount per participant",
+      "Payment per participant",
     ])
 
     expect(band_table[1]).to eq([
