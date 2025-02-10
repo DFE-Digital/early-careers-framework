@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory(:seed_lead_provider, class: "LeadProvider") do
-    name { LeadProvider::ALL_PROVIDERS.sample }
+    name { NewSeeds::Scenarios::LeadProviders::LeadProvider::ALL_PROVIDERS.sample }
 
     initialize_with do
       LeadProvider.find_or_create_by(name:)
