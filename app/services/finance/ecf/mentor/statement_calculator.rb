@@ -5,14 +5,14 @@ module Finance
     module Mentor
       class StatementCalculator
         class << self
-          def event_types
+          def declaration_types
             %i[
               started
               completed
             ]
           end
 
-          def event_types_for_display
+          def declaration_types_for_display
             %i[
               started
               completed
@@ -31,23 +31,23 @@ module Finance
         end
 
         def voided_declarations
-          statement.participant_declarations.voided.where(type: "ParticipantDeclaration::Mentor")
+          statement.participant_declarations.voided.merge!(ParticipantDeclaration.mentor)
         end
 
-        event_types.each do |event_type|
-          define_method "#{event_type}_fee_per_declaration" do
-            fee_for_declaration(type: event_type)
+        declaration_types.each do |declaration_type|
+          define_method "#{declaration_type}_fee_per_declaration" do
+            fee_for_declaration(type: declaration_type)
           end
 
-          define_method "additions_for_#{event_type}" do
+          define_method "additions_for_#{declaration_type}" do
             output_calculator.output_breakdown.sum do |hash|
-              hash[:"#{event_type}_additions"].to_i * output_calculator.fee_for_declaration(type: event_type)
+              hash[:"#{declaration_type}_additions"].to_i * output_calculator.fee_for_declaration(type: declaration_type)
             end
           end
 
-          define_method "deductions_for_#{event_type}" do
+          define_method "deductions_for_#{declaration_type}" do
             output_calculator.output_breakdown.sum do |hash|
-              hash[:"#{event_type}_subtractions"].to_i * output_calculator.fee_for_declaration(type: event_type)
+              hash[:"#{declaration_type}_subtractions"].to_i * output_calculator.fee_for_declaration(type: declaration_type)
             end
           end
         end
@@ -77,8 +77,8 @@ module Finance
         end
 
         def clawback_deductions
-          event_types.sum do |event_type|
-            public_send(:"deductions_for_#{event_type}")
+          declaration_types.sum do |declaration_type|
+            public_send(:"deductions_for_#{declaration_type}")
           end
         end
 
@@ -89,13 +89,13 @@ module Finance
         end
 
         def output_fee
-          event_types.sum do |event_type|
-            public_send(:"additions_for_#{event_type}")
+          declaration_types.sum do |declaration_type|
+            public_send(:"additions_for_#{declaration_type}")
           end
         end
 
-        def event_types_for_display
-          self.class.event_types_for_display
+        def declaration_types_for_display
+          self.class.declaration_types_for_display
         end
 
       private
@@ -104,8 +104,8 @@ module Finance
           @output_calculator ||= OutputCalculator.new(statement:)
         end
 
-        def event_types
-          self.class.event_types
+        def declaration_types
+          self.class.declaration_types
         end
 
         def vat_rate

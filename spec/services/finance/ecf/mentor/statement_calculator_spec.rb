@@ -117,9 +117,9 @@ RSpec.describe Finance::ECF::Mentor::StatementCalculator, mid_cohort: true do
     end
   end
 
-  describe "#event_types_for_display" do
-    it "returns all event types available for display" do
-      expect(subject.event_types_for_display).to eql(
+  describe "#declaration_types_for_display" do
+    it "returns all declaration types available for display" do
+      expect(subject.declaration_types_for_display).to eql(
         %i[
           started
           completed
