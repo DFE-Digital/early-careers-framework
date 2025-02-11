@@ -141,32 +141,52 @@ RSpec.describe ParticipantDeclaration, type: :model do
     end
   end
 
-  describe "uplift scope" do
-    let(:call_off_contract) { create(:call_off_contract) }
+  describe "scopes" do
+    describe ".uplift" do
+      let(:call_off_contract) { create(:call_off_contract) }
 
-    context "when one profile" do
-      context "for mentor was created" do
-        let(:mentor_participant_declaration) do
-          create(:mentor_participant_declaration,
-                 profile_traits: [:sparsity_uplift],
-                 cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider)
+      context "when one profile" do
+        context "for mentor was created" do
+          let(:mentor_participant_declaration) do
+            create(:mentor_participant_declaration,
+                   profile_traits: [:sparsity_uplift],
+                   cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider)
+          end
+
+          it "includes declaration with mentor profile" do
+            expect(ParticipantDeclaration.uplift).to include(mentor_participant_declaration)
+          end
         end
 
-        it "includes declaration with mentor profile" do
-          expect(ParticipantDeclaration.uplift).to include(mentor_participant_declaration)
+        context "for early career teacher was created" do
+          let(:ect_participant_declaration) do
+            create(:ect_participant_declaration,
+                   profile_traits: [:sparsity_uplift],
+                   cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider)
+          end
+
+          it "includes declaration with mentor profile" do
+            expect(ParticipantDeclaration.uplift).to include(ect_participant_declaration)
+          end
         end
       end
+    end
 
-      context "for early career teacher was created" do
-        let(:ect_participant_declaration) do
-          create(:ect_participant_declaration,
-                 profile_traits: [:sparsity_uplift],
-                 cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider)
-        end
+    describe ".ect" do
+      let!(:ect_participant_declaration) { create(:ect_participant_declaration) }
+      let!(:mentor_participant_declaration) { create(:mentor_participant_declaration) }
 
-        it "includes declaration with mentor profile" do
-          expect(ParticipantDeclaration.uplift).to include(ect_participant_declaration)
-        end
+      it "fetches ECTs participant declarations records only" do
+        expect(described_class.ect).to eq([ect_participant_declaration])
+      end
+    end
+
+    describe ".mentor" do
+      let!(:ect_participant_declaration) { create(:ect_participant_declaration) }
+      let!(:mentor_participant_declaration) { create(:mentor_participant_declaration) }
+
+      it "fetches ECTs participant declarations records only" do
+        expect(described_class.mentor).to eq([mentor_participant_declaration])
       end
     end
   end

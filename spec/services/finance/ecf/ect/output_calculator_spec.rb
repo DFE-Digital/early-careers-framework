@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Finance::ECF::OutputCalculator do
+RSpec.describe Finance::ECF::ECT::OutputCalculator do
   let(:first_statement) { create(:ecf_statement, cpd_lead_provider:, payment_date: 6.months.ago) }
   let(:second_statement) { create(:ecf_statement, cpd_lead_provider:, payment_date: 4.months.ago) }
   let(:third_statement) { create(:ecf_statement, cpd_lead_provider:, payment_date: 2.months.ago) }
@@ -205,8 +205,8 @@ RSpec.describe Finance::ECF::OutputCalculator do
             min: 3,
             max: 4,
             previous_started_count: 0,
-            started_count: 2,
-            started_additions: 2,
+            started_count: 0,
+            started_additions: 0,
             started_subtractions: 0,
           },
           {
@@ -252,8 +252,8 @@ RSpec.describe Finance::ECF::OutputCalculator do
               min: 3,
               max: 4,
               previous_started_count: 0,
-              started_count: 2,
-              started_additions: 2,
+              started_count: 0,
+              started_additions: 0,
               started_subtractions: 0,
             },
             {
@@ -284,7 +284,7 @@ RSpec.describe Finance::ECF::OutputCalculator do
       let!(:to_be_paid_declarations) do
         travel_to first_statement.deadline_date do
           create_list(:ect_participant_declaration, 7, :eligible, cpd_lead_provider:)
-          create(:mentor_participant_declaration, :eligible, cpd_lead_provider:)
+          create_list(:mentor_participant_declaration, 7, :eligible, cpd_lead_provider:)
         end
       end
       before do
@@ -326,8 +326,8 @@ RSpec.describe Finance::ECF::OutputCalculator do
             min: 7,
             max: 8,
             previous_started_count: 0,
-            started_count: 2,
-            started_additions: 2,
+            started_count: 1,
+            started_additions: 1,
             started_subtractions: 0,
           },
         ]
@@ -340,7 +340,7 @@ RSpec.describe Finance::ECF::OutputCalculator do
       let!(:to_be_paid_declarations) do
         travel_to first_statement.deadline_date do
           create_list(:ect_participant_declaration, 9, :eligible, cpd_lead_provider:)
-          create(:mentor_participant_declaration, :eligible, cpd_lead_provider:)
+          create_list(:mentor_participant_declaration, 9, :eligible, cpd_lead_provider:)
         end
       end
       before do
@@ -397,9 +397,9 @@ RSpec.describe Finance::ECF::OutputCalculator do
         declarations = create_list(
           :ect_participant_declaration, 3,
           state: :paid
-        ) << create(
-          :mentor_participant_declaration,
-          state: :paid,
+        ) + create_list(
+          :mentor_participant_declaration, 3,
+          state: :paid
         )
 
         declarations.each do |dec|
@@ -413,9 +413,9 @@ RSpec.describe Finance::ECF::OutputCalculator do
         declarations = create_list(
           :ect_participant_declaration, 3,
           state: :payable
-        ) << create(
-          :mentor_participant_declaration,
-          state: :payable,
+        ) + create_list(
+          :mentor_participant_declaration, 3,
+          state: :payable
         )
 
         declarations.each do |dec|
@@ -442,9 +442,9 @@ RSpec.describe Finance::ECF::OutputCalculator do
             band: :b,
             min: 3,
             max: 4,
-            previous_started_count: 2,
-            started_count: 0,
-            started_additions: 0,
+            previous_started_count: 1,
+            started_count: 1,
+            started_additions: 1,
             started_subtractions: 0,
           },
           {
@@ -461,8 +461,8 @@ RSpec.describe Finance::ECF::OutputCalculator do
             min: 7,
             max: 8,
             previous_started_count: 0,
-            started_count: 2,
-            started_additions: 2,
+            started_count: 0,
+            started_additions: 0,
             started_subtractions: 0,
           },
         ]
@@ -476,9 +476,9 @@ RSpec.describe Finance::ECF::OutputCalculator do
         declarations = create_list(
           :ect_participant_declaration, 5,
           state: :paid
-        ) << create(
-          :mentor_participant_declaration,
-          state: :paid,
+        ) + create_list(
+          :mentor_participant_declaration, 5,
+          state: :paid
         )
 
         declarations.each do |dec|
@@ -489,7 +489,7 @@ RSpec.describe Finance::ECF::OutputCalculator do
           )
         end
 
-        clawback_declarations = declarations.sample(2)
+        clawback_declarations = declarations.first(3).sample(2)
 
         clawback_declarations.each do |dec|
           dec.update!(state: "awaiting_clawback")
@@ -527,8 +527,8 @@ RSpec.describe Finance::ECF::OutputCalculator do
             min: 5,
             max: 6,
             previous_started_count: 0,
-            started_count: 2,
-            started_additions: 2,
+            started_count: 1,
+            started_additions: 1,
             started_subtractions: 0,
           },
           {
@@ -557,18 +557,18 @@ RSpec.describe Finance::ECF::OutputCalculator do
             min: 3,
             max: 4,
             previous_started_count: 2,
-            started_count: 0,
+            started_count: -1,
             started_additions: 0,
-            started_subtractions: 0,
+            started_subtractions: 1,
           },
           {
             band: :c,
             min: 5,
             max: 6,
-            previous_started_count: 2,
-            started_count: -2,
+            previous_started_count: 1,
+            started_count: -1,
             started_additions: 0,
-            started_subtractions: 2,
+            started_subtractions: 1,
           },
           {
             band: :d,
@@ -597,9 +597,9 @@ RSpec.describe Finance::ECF::OutputCalculator do
         declarations = create_list(
           :ect_participant_declaration, 3,
           state: :paid
-        ) << create(
-          :mentor_participant_declaration,
-          state: :payable,
+        ) + create_list(
+          :mentor_participant_declaration, 3,
+          state: :paid
         )
 
         declarations.each do |dec|
@@ -615,9 +615,9 @@ RSpec.describe Finance::ECF::OutputCalculator do
         declarations = create_list(
           :ect_participant_declaration, 3,
           state: :paid
-        ) << create(
-          :mentor_participant_declaration,
-          state: :paid,
+        ) + create_list(
+          :mentor_participant_declaration, 3,
+          state: :paid
         )
 
         declarations.each do |dec|
@@ -632,7 +632,9 @@ RSpec.describe Finance::ECF::OutputCalculator do
           .billable_statement_line_items
           .joins(:participant_declaration)
           .where(participant_declarations: { state: "paid" })
-          .order(Arel.sql("RANDOM()")).limit(1)
+          .order(Arel.sql("RANDOM()"))
+          .merge!(ParticipantDeclaration.ect)
+          .limit(1)
 
         clawback_line_items.each do |line_item|
           Finance::StatementLineItem.create!(
@@ -649,9 +651,9 @@ RSpec.describe Finance::ECF::OutputCalculator do
         declarations = create_list(
           :ect_participant_declaration, 3,
           state: :payable
-        ) << create(
-          :mentor_participant_declaration,
-          state: :payable,
+        ) + create_list(
+          :mentor_participant_declaration, 3,
+          state: :payable
         )
 
         declarations.each do |dec|
@@ -667,6 +669,7 @@ RSpec.describe Finance::ECF::OutputCalculator do
           .joins(:participant_declaration)
           .where(participant_declarations: { state: "paid" })
           .order(Arel.sql("RANDOM()"))
+          .merge!(ParticipantDeclaration.ect)
           .limit(1)
 
         clawback_line_items.each do |line_item|
@@ -684,6 +687,7 @@ RSpec.describe Finance::ECF::OutputCalculator do
           .order(Arel.sql("RANDOM()"))
           .joins(:participant_declaration)
           .where(participant_declarations: { state: "paid" })
+          .merge!(ParticipantDeclaration.ect)
           .limit(1)
 
         clawback_line_items.each do |line_item|
@@ -713,8 +717,8 @@ RSpec.describe Finance::ECF::OutputCalculator do
             min: 3,
             max: 4,
             previous_started_count: 0,
-            started_count: 2,
-            started_additions: 2,
+            started_count: 1,
+            started_additions: 1,
             started_subtractions: 0,
           },
           {
@@ -751,9 +755,9 @@ RSpec.describe Finance::ECF::OutputCalculator do
             band: :b,
             min: 3,
             max: 4,
-            previous_started_count: 2,
-            started_count: 0,
-            started_additions: 0,
+            previous_started_count: 1,
+            started_count: 1,
+            started_additions: 1,
             started_subtractions: 0,
           },
           {
@@ -761,18 +765,18 @@ RSpec.describe Finance::ECF::OutputCalculator do
             min: 5,
             max: 6,
             previous_started_count: 0,
-            started_count: 2,
+            started_count: 1,
             started_additions: 2,
-            started_subtractions: 0,
+            started_subtractions: 1,
           },
           {
             band: :d,
             min: 7,
             max: 8,
             previous_started_count: 0,
-            started_count: 1,
-            started_additions: 2,
-            started_subtractions: 1,
+            started_count: 0,
+            started_additions: 0,
+            started_subtractions: 0,
           },
         ]
 
@@ -799,18 +803,18 @@ RSpec.describe Finance::ECF::OutputCalculator do
             band: :c,
             min: 5,
             max: 6,
-            previous_started_count: 2,
-            started_count: 0,
-            started_additions: 0,
+            previous_started_count: 1,
+            started_count: 1,
+            started_additions: 1,
             started_subtractions: 0,
           },
           {
             band: :d,
             min: 7,
             max: 8,
-            previous_started_count: 1,
-            started_count: -1,
-            started_additions: 1,
+            previous_started_count: 0,
+            started_count: 0,
+            started_additions: 2,
             started_subtractions: 2,
           },
         ]
@@ -930,8 +934,8 @@ RSpec.describe Finance::ECF::OutputCalculator do
         let(:expected) do
           {
             previous_count: 0,
-            count: 4,
-            additions: 4,
+            count: 2,
+            additions: 2,
             subtractions: 0,
           }
         end
@@ -1003,6 +1007,7 @@ RSpec.describe Finance::ECF::OutputCalculator do
             .joins(:participant_declaration)
             .where(participant_declarations: { state: "paid" })
             .order(Arel.sql("RANDOM()"))
+            .merge!(ParticipantDeclaration.ect)
             .limit(1)
 
           clawback_line_items.each do |line_item|
@@ -1018,7 +1023,7 @@ RSpec.describe Finance::ECF::OutputCalculator do
 
         let(:expected) do
           {
-            previous_count: 4,
+            previous_count: 2,
             count: -1,
             additions: 0,
             subtractions: 1,
@@ -1080,7 +1085,9 @@ RSpec.describe Finance::ECF::OutputCalculator do
             .billable_statement_line_items
             .joins(:participant_declaration)
             .where(participant_declarations: { state: "paid" })
-            .order(Arel.sql("RANDOM()")).limit(1)
+            .order(Arel.sql("RANDOM()"))
+            .merge!(ParticipantDeclaration.ect)
+            .limit(1)
 
           clawback_line_items.each do |line_item|
             Finance::StatementLineItem.create!(
@@ -1117,6 +1124,7 @@ RSpec.describe Finance::ECF::OutputCalculator do
             .joins(:participant_declaration)
             .where(participant_declarations: { state: "paid" })
             .order(Arel.sql("RANDOM()"))
+            .merge!(ParticipantDeclaration.ect)
             .limit(1)
 
           clawback_line_items.each do |line_item|
@@ -1134,6 +1142,7 @@ RSpec.describe Finance::ECF::OutputCalculator do
             .order(Arel.sql("RANDOM()"))
             .joins(:participant_declaration)
             .where(participant_declarations: { state: "paid" })
+            .merge!(ParticipantDeclaration.ect)
             .limit(1)
 
           clawback_line_items.each do |line_item|
@@ -1150,26 +1159,26 @@ RSpec.describe Finance::ECF::OutputCalculator do
         let(:statement_one_expectation) do
           {
             previous_count: 0,
-            count: 6,
-            additions: 6,
+            count: 3,
+            additions: 3,
             subtractions: 0,
           }
         end
 
         let(:statement_two_expectation) do
           {
-            previous_count: 6,
-            count: 5,
-            additions: 6,
+            previous_count: 3,
+            count: 2,
+            additions: 3,
             subtractions: 1,
           }
         end
 
         let(:statement_three_expectation) do
           {
-            previous_count: 11,
-            count: 4,
-            additions: 6,
+            previous_count: 5,
+            count: 1,
+            additions: 3,
             subtractions: 2,
           }
         end
@@ -1189,7 +1198,8 @@ RSpec.describe Finance::ECF::OutputCalculator do
         travel_to first_statement.deadline_date - 1.day do
           create(:ect_participant_declaration, :extended, declaration_type: "extended-1", cpd_lead_provider:)
           create(:ect_participant_declaration, :extended, declaration_type: "extended-2", cpd_lead_provider:)
-          create(:mentor_participant_declaration, :extended, declaration_type: "extended-3", cpd_lead_provider:)
+          create(:ect_participant_declaration, :extended, declaration_type: "extended-3", cpd_lead_provider:)
+          create(:mentor_participant_declaration, :extended, declaration_type: "extended-1", cpd_lead_provider:)
         end
       end
 
