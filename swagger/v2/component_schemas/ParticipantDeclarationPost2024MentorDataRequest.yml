@@ -1,0 +1,11 @@
+description: "A participant declaration data request for mentor participants in cohort 2025 and later years"
+type: object
+properties:
+  type:
+    type: string
+    enum:
+      - participant-declaration
+  attributes:
+    anyOf:
+      - $ref: "#/components/schemas/ECFParticipantDeclarationStartedAttributesRequest"
+      - $ref: "#/components/schemas/ECFParticipantDeclarationCompletedAttributesRequest"
