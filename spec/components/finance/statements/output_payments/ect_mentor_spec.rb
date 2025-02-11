@@ -34,7 +34,7 @@ RSpec.describe Finance::Statements::OutputPayments::ECTMentor, type: :component 
   let(:mentor_calculator) do
     instance_double(
       Finance::ECF::Mentor::StatementCalculator,
-      event_types_for_display: %i[started completed],
+      declaration_types_for_display: %i[started completed],
       output_fee: 20_000,
 
       started_count: 21,

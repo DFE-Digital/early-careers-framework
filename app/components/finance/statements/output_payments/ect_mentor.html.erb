@@ -61,7 +61,7 @@
     <% end %>
 
     <% table.with_body do |body| %>
-      <% mentor_calculator.event_types_for_display.each do |event_type| %>
+      <% mentor_calculator.declaration_types_for_display.each do |event_type| %>
         <% body.with_row do |row| %>
           <% row.with_cell(text: t(".#{event_type}"), header: true) %>
           <% row.with_cell(text: mentor_calculator.public_send("#{event_type}_count"), numeric: true) %>
