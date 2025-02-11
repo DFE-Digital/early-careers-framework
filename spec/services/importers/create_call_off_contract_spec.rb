@@ -222,14 +222,15 @@ RSpec.describe Importers::CreateCallOffContract do
         csv.write "\n"
         csv.close
       end
+      let(:created_call_off_contract) { CallOffContract.last }
 
       it "creates 3 participant bands" do
         importer.call
 
-        expect(lead_provider.call_off_contract.band_a).to be_present
-        expect(lead_provider.call_off_contract.bands.order(max: :asc).second).to be_present
-        expect(lead_provider.call_off_contract.bands.order(max: :asc).third).to be_present
-        expect(lead_provider.call_off_contract.bands.order(max: :asc).fourth).to be_nil
+        expect(created_call_off_contract.band_a).to be_present
+        expect(created_call_off_contract.bands.order(max: :asc).second).to be_present
+        expect(created_call_off_contract.bands.order(max: :asc).third).to be_present
+        expect(created_call_off_contract.bands.order(max: :asc).fourth).to be_nil
       end
     end
   end
