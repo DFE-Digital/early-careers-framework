@@ -287,7 +287,7 @@ private
       row.all("th, td").map { |v| v.text.strip.to_s.split.first }
     end
 
-    expect(counts[1]).to eq(["ECTs", "2", "4", "0", "4", "2"])
+    expect(counts[1]).to eq(%w[ECTs 2 4 0 4 2])
     expect(counts[2]).to eq(["Mentors", "2", "-", "0", "-", "0"])
   end
 
