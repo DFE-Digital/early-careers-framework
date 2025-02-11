@@ -138,6 +138,7 @@ RSpec.describe Importers::CreateCallOffContract do
           csv.write "\n"
           csv.close
         end
+        let(:created_call_off_contract) { CallOffContract.last }
 
         it "creates a new call off contract" do
           expect { importer.call }.to change(CallOffContract, :count).by(1)
@@ -145,12 +146,12 @@ RSpec.describe Importers::CreateCallOffContract do
 
         it "sets the call off contract version" do
           importer.call
-          expect(lead_provider.call_off_contract.version).to eq("0.0.1")
+          expect(created_call_off_contract.version).to eq("0.0.1")
         end
 
         it "sets the correct values on the call off contract" do
           importer.call
-          expect(lead_provider.call_off_contract).to have_attributes(
+          expect(created_call_off_contract).to have_attributes(
             cohort:,
             uplift_target: 0.44,
             uplift_amount: 200,
@@ -167,7 +168,7 @@ RSpec.describe Importers::CreateCallOffContract do
 
         it "sets the correct values on band a" do
           importer.call
-          expect(lead_provider.call_off_contract.band_a).to have_attributes(
+          expect(created_call_off_contract.band_a).to have_attributes(
             min: 0,
             max: 90,
             per_participant: 895,
@@ -178,7 +179,7 @@ RSpec.describe Importers::CreateCallOffContract do
 
         it "sets the correct values on band b" do
           importer.call
-          expect(lead_provider.call_off_contract.bands.order(max: :asc).second).to have_attributes(
+          expect(created_call_off_contract.bands.order(max: :asc).second).to have_attributes(
             min: 91,
             max: 199,
             per_participant: 700,
@@ -189,7 +190,7 @@ RSpec.describe Importers::CreateCallOffContract do
 
         it "sets the correct values on band c" do
           importer.call
-          expect(lead_provider.call_off_contract.bands.order(max: :asc).third).to have_attributes(
+          expect(created_call_off_contract.bands.order(max: :asc).third).to have_attributes(
             min: 200,
             max: 299,
             per_participant: 600,
@@ -200,7 +201,7 @@ RSpec.describe Importers::CreateCallOffContract do
 
         it "sets the correct values on band d" do
           importer.call
-          expect(lead_provider.call_off_contract.bands.order(max: :asc).fourth).to have_attributes(
+          expect(created_call_off_contract.bands.order(max: :asc).fourth).to have_attributes(
             min: 300,
             max: 400,
             per_participant: 500,
