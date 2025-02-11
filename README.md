@@ -168,6 +168,7 @@ exactly what and how their test data is configured. These magic values are only 
 | 22/1/1900 | Participant matched and has a 2022 cohort induction start date |
 | 23/1/1900 | Participant matched and has a 2023 cohort induction start date |
 | 24/1/1900 | Participant matched and has a 2024 cohort induction start date |
+| 25/1/1900 | Participant matched and has a 2025 cohort induction start date |
 
 ## Deployment infrastructure
 

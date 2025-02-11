@@ -60,7 +60,7 @@ module Importers
     end
 
     def check_headers!
-      unless %w[start-year registration-start-date academic-year-start-date automatic-assignment-period-end-date payments-frozen-at].all? { |header| rows.headers.include?(header) }
+      unless %w[start-year registration-start-date academic-year-start-date automatic-assignment-period-end-date payments-frozen-at mentor-funding].all? { |header| rows.headers.include?(header) }
         raise NameError, "Invalid headers"
       end
     end
