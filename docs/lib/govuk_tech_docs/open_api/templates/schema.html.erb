@@ -40,12 +40,14 @@
               <% end %>
             <% end %>
 
-            <% schema_location = nested_schema.node_context.source_location.to_s %>
-            <% # Only print a link if it's a referenced schema. %>
-            <% if !schema_location.include?('/properties/') %>
-              <%= "It conforms to #{get_schema_link(nested_schema)} schema." %>
-            <% elsif schema_location.end_with?("data") %>
-              <%= "It conforms to #{get_schema_link_data(nested_schema)} schema." %>
+            <% unless property[1].node_data["anyOf"].node.present? %>
+              <% schema_location = nested_schema.node_context.source_location.to_s %>
+              <% # Only print a link if it's a referenced schema. %>
+              <% if !schema_location.include?('/properties/') %>
+                <%= "It conforms to #{get_schema_link(nested_schema)} schema." %>
+              <% elsif schema_location.end_with?("data") %>
+                <%= "It conforms to #{get_schema_link_data(nested_schema)} schema." %>
+              <% end %>
             <% end %>
 
             <% if property[1].node_data["anyOf"].node.present? %>
