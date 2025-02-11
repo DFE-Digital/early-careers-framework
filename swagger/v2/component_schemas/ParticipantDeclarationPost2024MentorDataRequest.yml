@@ -1,4 +1,4 @@
-description: "A participant declaration data request"
+description: "A participant declaration data request for mentor participants from cohort 2025 onwards"
 type: object
 properties:
   type:
@@ -6,8 +6,7 @@ properties:
     enum:
       - participant-declaration
   attributes:
+    type: object
     anyOf:
       - $ref: "#/components/schemas/ECFParticipantDeclarationStartedAttributesRequest"
-      - $ref: "#/components/schemas/ECFParticipantDeclarationRetainedAttributesRequest"
       - $ref: "#/components/schemas/ECFParticipantDeclarationCompletedAttributesRequest"
-      - $ref: "#/components/schemas/ECFParticipantDeclarationExtendedAttributesRequest"

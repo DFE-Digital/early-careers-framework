@@ -1,0 +1,14 @@
+description: " A participant declaration data request for ECT participants from cohort 2025 onwards"
+type: object
+properties:
+  type:
+    type: string
+    enum:
+      - participant-declaration
+  attributes:
+    type: object
+    anyOf:
+      - $ref: "#/components/schemas/ECFParticipantDeclarationStartedAttributesRequest"
+      - $ref: "#/components/schemas/ECFParticipantDeclarationRetainedAttributesRequest"
+      - $ref: "#/components/schemas/ECFParticipantDeclarationCompletedAttributesRequest"
+      - $ref: "#/components/schemas/ECFParticipantDeclarationExtendedAttributesRequest"

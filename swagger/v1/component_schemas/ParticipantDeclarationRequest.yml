@@ -4,4 +4,8 @@ required:
   - data
 properties:
   data:
-    $ref: "#/components/schemas/ParticipantDeclarationDataRequest"
+    type: object
+    anyOf:
+      - $ref: "#/components/schemas/ParticipantDeclarationPre2025DataRequest"
+      - $ref: "#/components/schemas/ParticipantDeclarationPost2024ECTDataRequest"
+      - $ref: "#/components/schemas/ParticipantDeclarationPost2024MentorDataRequest"
