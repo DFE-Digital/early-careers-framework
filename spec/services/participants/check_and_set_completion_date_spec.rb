@@ -13,8 +13,6 @@ RSpec.describe Participants::CheckAndSetCompletionDate do
       .chosen_fip_and_partnered_in(cohort:)
       .school
   end
-  let(:lead_provider_1) { create(:lead_provider, name: "Capita") }
-  let(:school_1) { NewSeeds::Scenarios::Schools::School.new.build.with_partnership_in(cohort:, lead_provider: lead_provider_1).chosen_fip_and_partnered_in(cohort:) }
   let(:school_cohort) { school.school_cohorts.first }
   let(:induction_programme) { school_cohort.default_induction_programme }
   let(:participant_profile) do
