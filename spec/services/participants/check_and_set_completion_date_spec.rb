@@ -4,10 +4,12 @@ require "rails_helper"
 
 RSpec.describe Participants::CheckAndSetCompletionDate do
   let(:cohort) { Cohort.previous || create(:cohort, :previous) }
+  let(:lead_provider) { create(:lead_provider, name: "Ambition Institute") }
   let(:school) do
     NewSeeds::Scenarios::Schools::School
       .new
       .build
+      .with_partnership_in(cohort:, lead_provider:)
       .chosen_fip_and_partnered_in(cohort:)
       .school
   end

@@ -2,7 +2,11 @@
 
 FactoryBot.define do
   factory(:seed_cpd_lead_provider, class: "CpdLeadProvider") do
-    name { Faker::Company.name }
+    name { NewSeeds::Scenarios::LeadProviders::LeadProvider::ALL_PROVIDERS.sample }
+
+    initialize_with do
+      CpdLeadProvider.find_or_create_by(name:)
+    end
 
     trait(:valid) {}
 

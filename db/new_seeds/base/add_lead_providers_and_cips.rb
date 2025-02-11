@@ -39,7 +39,7 @@ ambition                       = FactoryBot.create(:seed_cpd_lead_provider, name
 best_practice_network          = FactoryBot.create(:seed_cpd_lead_provider, name: "Best Practice Network")
 capita                         = FactoryBot.create(:seed_cpd_lead_provider, name: "Capita")
 education_development_trust    = FactoryBot.create(:seed_cpd_lead_provider, name: "Education Development Trust")
-FactoryBot.create(:seed_cpd_lead_provider, name: "National Institute of Teaching")
+niot                           = FactoryBot.create(:seed_cpd_lead_provider, name: "National Institute of Teaching")
 teach_first                    = FactoryBot.create(:seed_cpd_lead_provider, name: "Teach First")
 ucl_institute_of_education     = FactoryBot.create(:seed_cpd_lead_provider, name: "UCL Institute of Education")
 
@@ -49,12 +49,14 @@ ambition_cip = FactoryBot.create(:seed_core_induction_programme, name: ambition.
 edt_cip = FactoryBot.create(:seed_core_induction_programme, name: education_development_trust.name)
 teach_first_cip = FactoryBot.create(:seed_core_induction_programme, name: teach_first.name)
 ucl_cip = FactoryBot.create(:seed_core_induction_programme, name: ucl_institute_of_education.name)
+niot_cip = FactoryBot.create(:seed_core_induction_programme, name: niot.name)
 
 {
   ambition_cip    => [ambition, capita],
   ucl_cip         => [ucl_institute_of_education, best_practice_network],
   edt_cip         => [education_development_trust],
   teach_first_cip => [teach_first],
+  niot_cip        => [niot],
 }.each do |cip, cpd_lead_providers|
   cpd_lead_providers.each do |cpd_lead_provider|
     FactoryBot.create(:seed_lead_provider, cpd_lead_provider:, name: cpd_lead_provider.name).tap do |lead_provider|

@@ -4,6 +4,16 @@ module NewSeeds
   module Scenarios
     module LeadProviders
       class LeadProvider
+        ALL_PROVIDERS = [
+          "Ambition Institute",
+          "Best Practice Network",
+          "Capita",
+          "Education Development Trust",
+          "National Institute of Teaching",
+          "Teach First",
+          "UCL Institute of Education",
+        ].freeze
+
         attr_reader :name, :lead_provider, :delivery_partners, :user, :cohorts
 
         delegate :cpd_lead_provider, to: :lead_provider

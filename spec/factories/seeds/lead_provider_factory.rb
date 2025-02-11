@@ -2,7 +2,11 @@
 
 FactoryBot.define do
   factory(:seed_lead_provider, class: "LeadProvider") do
-    name { Faker::Company.name }
+    name { NewSeeds::Scenarios::LeadProviders::LeadProvider::ALL_PROVIDERS.sample }
+
+    initialize_with do
+      LeadProvider.find_or_create_by(name:)
+    end
 
     trait(:with_cpd_lead_provider) { association(:cpd_lead_provider, factory: :seed_cpd_lead_provider, name: :name) }
 
