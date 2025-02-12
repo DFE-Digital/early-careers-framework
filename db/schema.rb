@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_01_30_101804) do
+ActiveRecord::Schema[7.1].define(version: 2025_02_11_191336) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "fuzzystrmatch"
@@ -262,6 +262,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_30_101804) do
     t.date "automatic_assignment_period_end_date"
     t.datetime "payments_frozen_at"
     t.boolean "mentor_funding", default: false, null: false
+    t.boolean "detailed_evidence_types", default: false, null: false
     t.index ["start_year"], name: "index_cohorts_on_start_year", unique: true
   end
 
