@@ -11,15 +11,15 @@ RSpec.describe Importers::CreateCohort do
   describe "#call" do
     context "with new cohorts" do
       before do
-        csv.write "start-year,registration-start-date,academic-year-start-date,automatic-assignment-period-end-date,payments-frozen-at,mentor-funding"
+        csv.write "start-year,registration-start-date,academic-year-start-date,automatic-assignment-period-end-date,payments-frozen-at,mentor-funding,detailed-evidence-types"
         csv.write "\n"
-        csv.write "3030,3030/05/10,3030/09/01,,,true"
+        csv.write "3030,3030/05/10,3030/09/01,,,true,false"
         csv.write "\n"
-        csv.write "3031,3031/05/10,3031/09/01,,,false"
+        csv.write "3031,3031/05/10,3031/09/01,,,false,true"
         csv.write "\n"
-        csv.write "3032,3032/05/10,3032/09/01,,,true"
+        csv.write "3032,3032/05/10,3032/09/01,,,true,false"
         csv.write "\n"
-        csv.write "3033,3033/05/10,3033/09/01,,,false"
+        csv.write "3033,3033/05/10,3033/09/01,,,false,true"
         csv.write "\n"
         csv.close
       end
@@ -73,6 +73,18 @@ RSpec.describe Importers::CreateCohort do
           expect(cohort.mentor_funding).to be(false)
         end
       end
+
+      it "sets correctly detailed_evidence_types field" do
+        importer.call
+
+        Cohort.where(start_year: [3030, 3032]).find_each do |cohort|
+          expect(cohort.detailed_evidence_types).to be(false)
+        end
+
+        Cohort.where(start_year: [3031, 3033]).find_each do |cohort|
+          expect(cohort.detailed_evidence_types).to be(true)
+        end
+      end
     end
 
     context "with existing cohorts" do
@@ -81,13 +93,14 @@ RSpec.describe Importers::CreateCohort do
                           start_year: 4041,
                           registration_start_date: Date.new(4041, 5, 1),
                           academic_year_start_date: Date.new(4041, 8, 31),
-                          mentor_funding: true
+                          mentor_funding: true,
+                          detailed_evidence_types: false
       end
 
       before do
-        csv.write "start-year,registration-start-date,academic-year-start-date,automatic-assignment-period-end-date,payments-frozen-at,mentor-funding"
+        csv.write "start-year,registration-start-date,academic-year-start-date,automatic-assignment-period-end-date,payments-frozen-at,mentor-funding,detailed-evidence-types"
         csv.write "\n"
-        csv.write "4041,4041/05/10,4041/09/01,4042/03/31,,false"
+        csv.write "4041,4041/05/10,4041/09/01,4042/03/31,,false,true"
         csv.write "\n"
         csv.close
       end
@@ -101,6 +114,7 @@ RSpec.describe Importers::CreateCohort do
           registration_start_date: Date.new(4041, 5, 10),
           academic_year_start_date: Date.new(4041, 9, 1),
           mentor_funding: false,
+          detailed_evidence_types: true,
         )
       end
     end
