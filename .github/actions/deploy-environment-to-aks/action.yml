@@ -60,9 +60,11 @@ runs:
         DOCKER_IMAGE: ${{ inputs.docker-image }}
         PULL_REQUEST_NUMBER: ${{ inputs.pull-request-number }}
 
-    - uses: Azure/login@v1
+    - uses: Azure/login@v2
       with:
-        creds: ${{ inputs.azure-credentials }}
+        client-id: ${{ fromJSON(inputs.azure-credentials).clientId }}
+        tenant-id: ${{ fromJSON(inputs.azure-credentials).tenantId }}
+        subscription-id: ${{ fromJSON(inputs.azure-credentials).subscriptionId }}
 
     - uses: google-github-actions/auth@v2
       with:
