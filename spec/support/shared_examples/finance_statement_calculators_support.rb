@@ -1092,6 +1092,19 @@ RSpec.shared_examples "a Finance ECF statement calculator", mid_cohort: true do
     end
   end
 
+  describe "#uplift_payment" do
+    before do
+      statement.contract.update!(uplift_amount: 100.0)
+      travel_to statement.deadline_date do
+        create_list(:ect_participant_declaration, 3, :eligible, uplifts: [:pupil_premium_uplift], cpd_lead_provider:)
+      end
+    end
+
+    it "returns correct payment" do
+      expect(subject.uplift_payment.to_f).to eql(300.0)
+    end
+  end
+
   describe "#service_fee" do
     let(:contract) { create(:call_off_contract, lead_provider:) }
 

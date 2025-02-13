@@ -12,9 +12,9 @@
 
     <% table.with_body do |body| %>
       <% body.with_row do |row| %>
-        <% row.with_cell(text: calculator.uplift_additions_count) %>
-        <% row.with_cell(text: number_to_pounds(calculator.uplift_fee_per_declaration), numeric: true) %>
-        <% row.with_cell(text: number_to_pounds(calculator.uplift_additions_count * calculator.uplift_fee_per_declaration), numeric: true) %>
+        <% row.with_cell(text: uplift_additions_count) %>
+        <% row.with_cell(text: number_to_pounds(uplift_fee_per_declaration), numeric: true) %>
+        <% row.with_cell(text: number_to_pounds(uplift_payment), numeric: true) %>
       <% end %>
     <% end %>
   <% end %>

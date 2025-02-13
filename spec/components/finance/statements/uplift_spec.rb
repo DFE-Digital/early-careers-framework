@@ -3,7 +3,14 @@
 require "rails_helper"
 
 RSpec.describe Finance::Statements::Uplift, type: :component do
-  let(:calculator) { instance_double(Finance::ECF::StatementCalculator, uplift_additions_count: 99, uplift_fee_per_declaration: 333.0) }
+  let(:calculator) do
+    instance_double(
+      Finance::ECF::StatementCalculator,
+      uplift_additions_count: 99,
+      uplift_fee_per_declaration: 333.0,
+      uplift_payment: (99 * 333.0),
+    )
+  end
   let(:component) { described_class.new(calculator:) }
 
   subject { render_inline(component) }

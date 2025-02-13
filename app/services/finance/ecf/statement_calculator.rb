@@ -161,6 +161,10 @@ module Finance
         statement.contract.uplift_amount
       end
 
+      def uplift_payment
+        uplift_additions_count * uplift_fee_per_declaration
+      end
+
       def total_for_uplift
         return 0.0 unless statement.contract.include_uplift_fees?
 
