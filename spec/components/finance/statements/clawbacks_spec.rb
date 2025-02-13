@@ -162,4 +162,12 @@ RSpec.describe Finance::Statements::Clawbacks, type: :component do
       expect(subject).to have_css("div.govuk-heading-s", text: "£1,600.00")
     end
   end
+
+  describe "ECF" do
+    let(:calculator) { Finance::ECF::StatementCalculator.new(statement: nil) }
+
+    it "has correct heading" do
+      expect(component.title).to eq("Clawbacks")
+    end
+  end
 end
