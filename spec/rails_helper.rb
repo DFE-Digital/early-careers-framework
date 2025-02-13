@@ -126,7 +126,7 @@ RSpec.configure do |config|
     # Make the app behave how it does in non dev/test environments and use the
     # ErrorsController via config.exceptions_app = routes in config/application.rb
     method = Rails.application.method(:env_config)
-    expect(Rails.application).to receive(:env_config).with(no_args) do
+    allow(Rails.application).to receive(:env_config).with(no_args) do
       method.call.merge(
         "action_dispatch.show_exceptions" => :all,
         "action_dispatch.show_detailed_exceptions" => false,

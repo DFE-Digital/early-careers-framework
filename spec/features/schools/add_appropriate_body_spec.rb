@@ -136,6 +136,21 @@ RSpec.describe "Add a school cohort appropriate body", type: :feature, js: true,
     end
   end
 
+  context "When attempting an unsupported confirmation type on an appropriate body", exceptions_app: true do
+    let!(:appropriate_body) { create(:appropriate_body_teaching_school_hub) }
+
+    scenario "It raises an error" do
+      given_there_is_a_school_and_an_induction_coordinator
+      and_i_have_added_an_ect
+      and_i_am_signed_in_as_an_induction_coordinator
+      then_i_am_on_the_manage_your_training_page
+
+      visit confirm_schools_cohort_path(school_id: @school.slug, cohort_id: @cohort.start_year, confirmation_type: "unsupported_confirmation_type")
+
+      expect(page).to have_content("Page not found")
+    end
+  end
+
 private
 
   def given_there_is_a_school_and_an_induction_coordinator
