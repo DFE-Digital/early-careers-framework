@@ -34,6 +34,8 @@ jobs:
   backup:
     name: Backup database
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
     environment:
       name: ${{ inputs.environment || 'production' }}
     env:
