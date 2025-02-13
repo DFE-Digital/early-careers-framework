@@ -7,6 +7,8 @@ RSpec.describe "Show voided declarations" do
   let(:cpd_lead_provider) { statement.cpd_lead_provider }
   let(:lead_provider) { cpd_lead_provider.lead_provider }
   let(:cohort) { statement.cohort }
+  let!(:contract) { create(:call_off_contract, lead_provider:, version: statement.contract_version, cohort:) }
+  let!(:mentor_contract) { create(:mentor_call_off_contract, lead_provider:, version: statement.contract_version, cohort:) }
 
   before do
     given_i_am_logged_in_as_a_finance_user
@@ -14,7 +16,8 @@ RSpec.describe "Show voided declarations" do
   end
 
   scenario "Voided declarations" do
-    when_i_visit_the_ecf_voided_declarations_page
+    when_i_visit_the_ecf_financial_statements_page
+    click_link("View voided declarations")
 
     then_i_see("Voided declarations")
     and_i_see_ect_declarations
@@ -22,7 +25,10 @@ RSpec.describe "Show voided declarations" do
   end
 
   scenario "ECT voided declarations" do
-    when_i_visit_the_ect_voided_declarations_page
+    given_cohort_has_mentor_funding_enabled
+
+    when_i_visit_the_ecf_financial_statements_page
+    click_link("2 ECT voided declarations")
 
     then_i_see("ECT voided declarations")
     and_i_see_ect_declarations
@@ -30,23 +36,22 @@ RSpec.describe "Show voided declarations" do
   end
 
   scenario "Mentor voided declarations" do
-    when_i_visit_the_mentor_voided_declarations_page
+    given_cohort_has_mentor_funding_enabled
+
+    when_i_visit_the_ecf_financial_statements_page
+    click_link("2 Mentor voided declarations")
 
     then_i_see("Mentor voided declarations")
     and_i_see_mentor_declarations
     and_not_see_ect_declarations
   end
 
-  def when_i_visit_the_ecf_voided_declarations_page
-    visit("/finance/ecf/payment_breakdowns/#{lead_provider.id}/statements/#{statement.id}/voided")
+  def given_cohort_has_mentor_funding_enabled
+    cohort.update!(mentor_funding: true)
   end
 
-  def when_i_visit_the_ect_voided_declarations_page
-    visit("/finance/ecf/payment_breakdowns/#{lead_provider.id}/statements/#{statement.id}/voided/ect")
-  end
-
-  def when_i_visit_the_mentor_voided_declarations_page
-    visit("/finance/ecf/payment_breakdowns/#{lead_provider.id}/statements/#{statement.id}/voided/mentor")
+  def when_i_visit_the_ecf_financial_statements_page
+    visit("/finance/ecf/payment_breakdowns/#{lead_provider.id}/statements/#{statement.id}")
   end
 
   def then_i_see(string)
