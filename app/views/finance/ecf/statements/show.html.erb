@@ -6,7 +6,7 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
-    <h1 class="govuk-heading-l"><%= t(@statement.cohort.mentor_funding? ? ".title_ect_mentor" : ".title") %></h1>
+    <h1 class="govuk-heading-l"><%= t(@mentor_funding_cohort ? ".title_ect_mentor" : ".title") %></h1>
 
     <span class="govuk-caption-l"><%= @ecf_lead_provider.name %></span>
     <h2 class="govuk-heading-m"><%= @statement.name %></h2>
@@ -17,7 +17,7 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
-    <% if @statement.cohort.mentor_funding? %>
+    <% if @mentor_funding_cohort %>
       <%= render Finance::Statements::PaymentBreakdown::ECTMentor.new(statement: @statement, ect_calculator: @ect_calculator, mentor_calculator: @mentor_calculator) %>
     <% else %>
       <%= render Finance::Statements::PaymentBreakdown::ECF.new(statement: @statement, calculator: @calculator) %>
@@ -55,7 +55,7 @@
 
 <div class="govuk-grid-row govuk-!-margin-top-5 print-page-break">
   <div class="govuk-grid-column-full">
-    <% if @statement.cohort.mentor_funding? %>
+    <% if @mentor_funding_cohort %>
       <%= render Finance::Statements::OutputPayments::ECTMentor.new(ect_calculator: @ect_calculator, mentor_calculator: @mentor_calculator) %>
       <%= render Finance::Statements::Clawbacks.new(calculator: @ect_calculator) %>
       <%= render Finance::Statements::Clawbacks.new(calculator: @mentor_calculator) %>
@@ -70,7 +70,7 @@
   </div>
 
   <%= render partial: "finance/statements/calculation_rounding_message" %>
-  <% if @statement.cohort.mentor_funding? %>
+  <% if @mentor_funding_cohort %>
     <%= render partial: "finance/statements/updated_designs_message" %>
   <% end %>
 </div>

@@ -6,8 +6,9 @@ module Finance
       def show
         @ecf_lead_provider = lead_provider_scope.find(params[:payment_breakdown_id])
         @statement = @ecf_lead_provider.statements.find(params[:id])
+        @mentor_funding_cohort = @statement.cohort.mentor_funding?
 
-        if @statement.cohort.mentor_funding?
+        if @mentor_funding_cohort
           @mentor_calculator = Mentor::StatementCalculator.new(statement: @statement)
           @ect_calculator = ECT::StatementCalculator.new(statement: @statement)
         else
