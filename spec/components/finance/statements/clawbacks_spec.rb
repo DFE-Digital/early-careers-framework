@@ -5,6 +5,12 @@ require "rails_helper"
 RSpec.describe Finance::Statements::Clawbacks, type: :component do
   let(:component) { described_class.new(calculator:) }
 
+  let(:table) do
+    subject.css(".govuk-table tr").map do |row|
+      row.css("th, td").map { |v| v.text.strip }
+    end
+  end
+
   subject { render_inline(component) }
 
   describe "ECT" do
@@ -155,12 +161,5 @@ RSpec.describe Finance::Statements::Clawbacks, type: :component do
     it "has correct total" do
       expect(subject).to have_css("div.govuk-heading-s", text: "£1,600.00")
     end
-  end
-
-  def table
-    @table ||=
-      subject.css(".govuk-table tr").map do |row|
-        row.css("th, td").map { |v| v.text.strip }
-      end
   end
 end

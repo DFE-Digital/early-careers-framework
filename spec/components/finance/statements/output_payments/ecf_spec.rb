@@ -32,6 +32,16 @@ RSpec.describe Finance::Statements::OutputPayments::ECF, type: :component do
     )
   end
 
+  let(:ecf_outputs) do
+    subject.css(".govuk-table tr").map do |row|
+      row.css("th, td").map { |v| v.text.strip }
+    end
+  end
+
+  let(:totals) do
+    subject.css("div.govuk-heading-s").map { |v| v.text.strip }
+  end
+
   subject { render_inline(component) }
 
   it "has correct heading" do
@@ -89,16 +99,5 @@ RSpec.describe Finance::Statements::OutputPayments::ECF, type: :component do
   it "has correct total" do
     expect(totals[0]).to eq("Output payment total")
     expect(totals[1]).to eq("£10,000.00")
-  end
-
-  def ecf_outputs
-    @ecf_outputs ||=
-      subject.css(".govuk-table tr").map do |row|
-        row.css("th, td").map { |v| v.text.strip }
-      end
-  end
-
-  def totals
-    @totals ||= subject.css("div.govuk-heading-s").map { |v| v.text.strip }
   end
 end

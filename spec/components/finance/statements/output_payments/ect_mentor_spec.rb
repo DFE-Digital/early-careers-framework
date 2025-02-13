@@ -47,6 +47,22 @@ RSpec.describe Finance::Statements::OutputPayments::ECTMentor, type: :component 
     )
   end
 
+  let(:ect_outputs) do
+    subject.css(".govuk-table")[0].css("tr").map do |row|
+      row.css("th, td").map { |v| v.text.strip }
+    end
+  end
+
+  let(:mentor_outputs) do
+    subject.css(".govuk-table")[1].css("tr").map do |row|
+      row.css("th, td").map { |v| v.text.strip }
+    end
+  end
+
+  let(:totals) do
+    subject.css("div.govuk-heading-s").map { |v| v.text.strip }
+  end
+
   subject { render_inline(component) }
 
   describe "ECT" do
@@ -147,23 +163,5 @@ RSpec.describe Finance::Statements::OutputPayments::ECTMentor, type: :component 
       expect(totals[2]).to eq("Mentors output payment total")
       expect(totals[3]).to eq("£20,000.00")
     end
-  end
-
-  def ect_outputs
-    @ect_outputs ||=
-      subject.css(".govuk-table")[0].css("tr").map do |row|
-        row.css("th, td").map { |v| v.text.strip }
-      end
-  end
-
-  def mentor_outputs
-    @mentor_outputs ||=
-      subject.css(".govuk-table")[1].css("tr").map do |row|
-        row.css("th, td").map { |v| v.text.strip }
-      end
-  end
-
-  def totals
-    @totals ||= subject.css("div.govuk-heading-s").map { |v| v.text.strip }
   end
 end

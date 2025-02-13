@@ -37,6 +37,20 @@ RSpec.describe Finance::Statements::PaymentBreakdown::ECTMentor, type: :componen
   end
   let(:extended_count) { 0 }
 
+  let(:breakdown_list) do
+    subject.css(".finance-panel__summary__total-payment-breakdown p").map do |row|
+      val = row.css("span").text.strip
+      key = row.text.gsub(val, "").strip
+      [key, val]
+    end
+  end
+
+  let(:counts_list) do
+    subject.css(".finance-panel__summary__counts .govuk-table tr").map do |row|
+      row.css("th, td").map { |v| v.text.strip.to_s.split.first }
+    end
+  end
+
   subject { render_inline(component) }
 
   it "has correct breakdown" do
@@ -130,21 +144,5 @@ RSpec.describe Finance::Statements::PaymentBreakdown::ECTMentor, type: :componen
       "51 Mentor voided declarations",
       mentor_finance_ecf_payment_breakdown_statement_voided_path(lead_provider.id, statement),
     ])
-  end
-
-  def breakdown_list
-    @breakdown_list ||=
-      subject.css(".finance-panel__summary__total-payment-breakdown p").map do |row|
-        val = row.css("span").text.strip
-        key = row.text.gsub(val, "").strip
-        [key, val]
-      end
-  end
-
-  def counts_list
-    @counts_list ||=
-      subject.css(".finance-panel__summary__counts .govuk-table tr").map do |row|
-        row.css("th, td").map { |v| v.text.strip.to_s.split.first }
-      end
   end
 end

@@ -26,6 +26,24 @@ RSpec.describe Finance::Statements::PaymentBreakdown::ECF, type: :component do
   end
   let(:extended_count) { 0 }
 
+  let(:breakdown_list) do
+    subject.css(".finance-panel__summary__total-payment-breakdown p").map do |row|
+      val = row.css("span").text.strip
+      key = row.text.gsub(val, "").strip
+      [key, val]
+    end
+  end
+
+  let(:counts_list) do
+    subject.css(".finance-panel__summary__meta__counts div").map { |row|
+      key = row.css("strong").text.strip
+      next if key.blank?
+
+      val = row.css("div").text.strip
+      [key, val]
+    }.compact
+  end
+
   subject { render_inline(component) }
 
   it "has correct breakdown" do
@@ -97,25 +115,5 @@ RSpec.describe Finance::Statements::PaymentBreakdown::ECF, type: :component do
     within(".finance-panel__summary__meta__counts") do
       expect(subject).to have_link("View", href: finance_ecf_payment_breakdown_statement_voided_path(ecf_lead_provider.id, statement))
     end
-  end
-
-  def breakdown_list
-    @breakdown_list ||=
-      subject.css(".finance-panel__summary__total-payment-breakdown p").map do |row|
-        val = row.css("span").text.strip
-        key = row.text.gsub(val, "").strip
-        [key, val]
-      end
-  end
-
-  def counts_list
-    @counts_list ||=
-      subject.css(".finance-panel__summary__meta__counts div").map { |row|
-        key = row.css("strong").text.strip
-        next if key.blank?
-
-        val = row.css("div").text.strip
-        [key, val]
-      }.compact
   end
 end

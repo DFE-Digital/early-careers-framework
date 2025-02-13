@@ -26,6 +26,20 @@ RSpec.describe Finance::Statements::Contracts::ECF, type: :component do
     ]
   end
 
+  let(:summary_list) do
+    subject.css(".contract-information .govuk-summary-list").map do |list|
+      list.css(".govuk-summary-list__row").map do |row|
+        row.css(".govuk-summary-list__key, .govuk-summary-list__value").map { |v| v.text.strip }
+      end
+    end
+  end
+
+  let(:band_table) do
+    subject.css(".contract-information .govuk-table .govuk-table__row").map do |row|
+      row.css(".govuk-table__header, .govuk-table__cell").map { |v| v.text.strip }
+    end
+  end
+
   subject { render_inline(component) }
 
   it "has correct contract" do
@@ -83,21 +97,5 @@ RSpec.describe Finance::Statements::Contracts::ECF, type: :component do
       "40",
       "£2,000.00",
     ])
-  end
-
-  def summary_list
-    @summary_list ||=
-      subject.css(".contract-information .govuk-summary-list").map do |list|
-        list.css(".govuk-summary-list__row").map do |row|
-          row.css(".govuk-summary-list__key, .govuk-summary-list__value").map { |v| v.text.strip }
-        end
-      end
-  end
-
-  def band_table
-    @band_table ||=
-      subject.css(".contract-information .govuk-table .govuk-table__row").map do |row|
-        row.css(".govuk-table__header, .govuk-table__cell").map { |v| v.text.strip }
-      end
   end
 end
