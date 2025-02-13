@@ -26,7 +26,8 @@ class RecordDeclaration
               in: ->(record_declaration) { record_declaration.participant_profile.class::VALID_EVIDENCE_HELD },
               if: :validate_evidence_held?,
               message: I18n.t(:invalid_evidence_type),
-            }
+            }, unless: :cohort_with_detailed_evidence_types?
+  validates :evidence_held, evidence_held: true, if: :cohort_with_detailed_evidence_types?
   validate :output_fee_statement_available
   validate :validate_milestone_exists
   validate :validates_billable_slot_available
@@ -245,5 +246,11 @@ private
       errors.add(:course_identifier, I18n.t(:npq_course_no_longer_supported))
       throw(:abort)
     end
+  end
+
+  def cohort_with_detailed_evidence_types?
+    return unless schedule && cohort
+
+    cohort.detailed_evidence_types?
   end
 end
