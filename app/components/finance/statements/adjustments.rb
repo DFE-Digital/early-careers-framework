@@ -7,6 +7,8 @@ module Finance
 
       attr_reader :statement, :calculator
 
+      delegate :clawbacks_breakdown, to: :calculator
+
       def initialize(statement:, calculator:)
         @statement = statement
         @calculator = calculator

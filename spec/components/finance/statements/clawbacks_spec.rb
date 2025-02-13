@@ -8,36 +8,47 @@ RSpec.describe Finance::Statements::Clawbacks, type: :component do
   subject { render_inline(component) }
 
   describe "ECT" do
-    let(:output_calculator) { instance_double(Finance::ECF::ECT::OutputCalculator, banding_breakdown:) }
     let(:calculator) do
       instance_double(
         Finance::ECF::ECT::StatementCalculator,
-        output_calculator:,
+        clawbacks_breakdown:,
+        mentor?: false,
+        ect?: true,
         adjustments_total: 160,
         fee_for_declaration: 10,
       )
     end
-    let(:banding_breakdown) do
+    let(:clawbacks_breakdown) do
       [
         {
-          band: :a,
-          min: 1,
-          max: 2,
-          started_subtractions: 1,
-          completed_subtractions: 3,
+          declaration_type: "Started",
+          band: "A",
+          count: 1,
+          fee: -10.0,
+          subtotal: -10.0,
         },
         {
-          band: :b,
-          min: 3,
-          max: 4,
-          started_subtractions: 5,
-          completed_subtractions: 7,
+          declaration_type: "Completed",
+          band: "A",
+          count: 3,
+          fee: -10.0,
+          subtotal: -30.0,
+        },
+        {
+          declaration_type: "Started",
+          band: "B",
+          count: 5,
+          fee: -10.0,
+          subtotal: -50.0,
+        },
+        {
+          declaration_type: "Completed",
+          band: "B",
+          count: 7,
+          fee: -10.0,
+          subtotal: -70.0,
         },
       ]
-    end
-
-    before do
-      allow(calculator).to receive(:is_a?).with(Finance::ECF::Mentor::StatementCalculator).and_return(false)
     end
 
     it "has correct heading" do
@@ -87,28 +98,31 @@ RSpec.describe Finance::Statements::Clawbacks, type: :component do
   end
 
   describe "Mentor" do
-    let(:output_calculator) { instance_double(Finance::ECF::Mentor::OutputCalculator, output_breakdown:) }
     let(:calculator) do
       instance_double(
         Finance::ECF::Mentor::StatementCalculator,
-        output_calculator:,
+        mentor?: true,
+        ect?: false,
+        clawbacks_breakdown:,
         adjustments_total: 1_600,
         fee_for_declaration: 20,
       )
     end
-    let(:output_breakdown) do
+    let(:clawbacks_breakdown) do
       [
         {
-          started_subtractions: 10,
+          declaration_type: "Started",
+          count: 10,
+          fee: -20.0,
+          subtotal: -200.0,
         },
         {
-          completed_subtractions: 70,
+          declaration_type: "Completed",
+          count: 70,
+          fee: -20.0,
+          subtotal: -1400.0,
         },
       ]
-    end
-
-    before do
-      allow(calculator).to receive(:is_a?).with(Finance::ECF::Mentor::StatementCalculator).and_return(true)
     end
 
     it "has correct heading" do

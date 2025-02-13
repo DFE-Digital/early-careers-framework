@@ -12,9 +12,9 @@
     <% end %>
 
     <% table.with_body do |body| %>
-      <% clawbacks.each do |hash| %>
+      <% clawbacks_breakdown.each do |hash| %>
         <% body.with_row do |row| %>
-          <% row.with_cell(text: hash[:payment_type]) %>
+          <% row.with_cell(text: "Clawback for #{hash[:declaration_type]}#{" (Band: #{hash[:band]})" if hash[:band].present?}") %>
           <% row.with_cell(text: hash[:count]) %>
           <% row.with_cell(text: number_to_pounds(hash[:fee]), numeric: true) %>
           <% row.with_cell(text: number_to_pounds(hash[:subtotal]), numeric: true) %>

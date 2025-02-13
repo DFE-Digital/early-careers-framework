@@ -21,21 +21,12 @@
         <% row.with_cell(text: number_to_pounds(calculator.uplift_clawback_deductions), numeric: true) %>
       <% end %>
 
-      <% calculator.send(:output_calculator).banding_breakdown.each do |hash| %>
-        <% relevant_hash = hash.select { |k, v| k.match?(/_subtractions/) } %>
-        <% relevant_hash = relevant_hash.transform_keys { |k| k.to_s.gsub("_subtractions", "").to_sym } %>
-
-        <% relevant_hash.each do |name, count| %>
-          <% next if count.zero? %>
-
-          <% body.with_row do |row| %>
-            <% fee = calculator.fee_for_declaration(band_letter: hash[:band], type: name) %>
-
-            <% row.with_cell(text: "Clawback for #{name.to_s.humanize} (Band: #{hash[:band].to_s.upcase})") %>
-            <% row.with_cell(text: count) %>
-            <% row.with_cell(text: number_to_pounds(-fee), numeric: true) %>
-            <% row.with_cell(text: number_to_pounds(-count * fee), numeric: true) %>
-          <% end %>
+      <% clawbacks_breakdown.each do |hash| %>
+        <% body.with_row do |row| %>
+          <% row.with_cell(text: "Clawback for #{hash[:declaration_type]} (Band: #{hash[:band]})") %>
+          <% row.with_cell(text: hash[:count]) %>
+          <% row.with_cell(text: number_to_pounds(hash[:fee]), numeric: true) %>
+          <% row.with_cell(text: number_to_pounds(hash[:subtotal]), numeric: true) %>
         <% end %>
       <% end %>
     <% end %>

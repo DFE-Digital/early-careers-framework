@@ -220,6 +220,39 @@ module Finance
         end
       end
 
+      def clawbacks_breakdown
+        result = []
+
+        output_calculator.banding_breakdown do |hash|
+          relevant_hash = hash.select { |k, _| k.match?(/_subtractions/) }
+          relevant_hash = relevant_hash.transform_keys { |k| k.to_s.gsub("_subtractions", "").to_sym }
+
+          relevant_hash.map do |declaration_type, count|
+            next if count.zero?
+
+            fee = calculator.fee_for_declaration(band_letter: hash[:band], type: declaration_type)
+
+            result << {
+              declaration_type: declaration_type.to_s.humanize,
+              band: hash[:band].to_s.upcase,
+              count:,
+              fee: (-fee),
+              subtotal: (-count * fee),
+            }
+          end
+        end
+
+        result
+      end
+
+      def ect?
+        false
+      end
+
+      def mentor?
+        false
+      end
+
     private
 
       def calculated_service_fee

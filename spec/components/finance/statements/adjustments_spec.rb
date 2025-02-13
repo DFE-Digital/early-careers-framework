@@ -5,11 +5,10 @@ require "rails_helper"
 RSpec.describe Finance::Statements::Adjustments, type: :component do
   let(:statement) { instance_double(Finance::Statement, adjustments: [], adjustment_editable?: false) }
   let(:component) { described_class.new(statement:, calculator:) }
-  let(:output_calculator) { instance_double(Finance::ECF::OutputCalculator, banding_breakdown:) }
   let(:calculator) do
     instance_double(
       Finance::ECF::StatementCalculator,
-      output_calculator:,
+      clawbacks_breakdown:,
       uplift_additions_count: 99,
       uplift_fee_per_declaration: 333.0,
       uplift_deductions_count: 88,
@@ -18,21 +17,35 @@ RSpec.describe Finance::Statements::Adjustments, type: :component do
       fee_for_declaration: 10,
     )
   end
-  let(:banding_breakdown) do
+  let(:clawbacks_breakdown) do
     [
       {
-        band: :a,
-        min: 1,
-        max: 2,
-        started_subtractions: 1,
-        completed_subtractions: 3,
+        declaration_type: "Started",
+        band: "A",
+        count: 1,
+        fee: -10.0,
+        subtotal: -10.0,
       },
       {
-        band: :b,
-        min: 3,
-        max: 4,
-        started_subtractions: 5,
-        completed_subtractions: 7,
+        declaration_type: "Completed",
+        band: "A",
+        count: 3,
+        fee: -10.0,
+        subtotal: -30.0,
+      },
+      {
+        declaration_type: "Started",
+        band: "B",
+        count: 5,
+        fee: -10.0,
+        subtotal: -50.0,
+      },
+      {
+        declaration_type: "Completed",
+        band: "B",
+        count: 7,
+        fee: -10.0,
+        subtotal: -70.0,
       },
     ]
   end
