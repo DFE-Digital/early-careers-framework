@@ -73,6 +73,10 @@ module Finance
             output_calculator.banding_breakdown.find { |e| e[:band] == letter }[:"#{event_type}_additions"]
           end
 
+          define_method "#{event_type}_band_#{letter}_subtractions" do
+            output_calculator.banding_breakdown.find { |e| e[:band] == letter }[:"#{event_type}_subtractions"]
+          end
+
           define_method "#{event_type}_band_#{letter}_fee_per_declaration" do
             output_calculator.fee_for_declaration(band_letter: letter, type: event_type)
           end
@@ -161,6 +165,10 @@ module Finance
         statement.contract.uplift_amount
       end
 
+      def uplift_payment
+        uplift_additions_count * uplift_fee_per_declaration
+      end
+
       def total_for_uplift
         return 0.0 unless statement.contract.include_uplift_fees?
 
@@ -214,6 +222,37 @@ module Finance
         self.class.event_types_for_display.tap do |types|
           types << :extended if extended_count.positive?
         end
+      end
+
+      def clawbacks_breakdown
+        result = []
+
+        band_letters.each do |band_letter|
+          event_types.each do |event_type|
+            count = send("#{event_type}_band_#{band_letter}_subtractions")
+            next if count.zero?
+
+            fee = fee_for_declaration(band_letter:, type: event_type)
+
+            result << {
+              declaration_type: event_type.to_s.humanize,
+              band: band_letter.to_s.upcase,
+              count:,
+              fee: (-fee),
+              subtotal: (-count * fee),
+            }
+          end
+        end
+
+        result
+      end
+
+      def ect?
+        false
+      end
+
+      def mentor?
+        false
       end
 
     private

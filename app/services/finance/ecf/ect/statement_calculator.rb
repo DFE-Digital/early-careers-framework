@@ -10,6 +10,10 @@ module Finance
           statement.participant_declarations.voided.merge!(ParticipantDeclaration.ect)
         end
 
+        def ect?
+          true
+        end
+
       private
 
         def output_calculator

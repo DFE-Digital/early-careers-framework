@@ -156,6 +156,34 @@
     }
   }
 
+  .finance-panel__dates {
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: 1fr;
+    margin-bottom: 10px;
+
+    @media (min-width: 40.625em) {
+      grid-template-columns: auto 1fr;
+    }
+  }
+
+  .finance-panel__summary_and_counts {
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: 1fr;
+
+    .govuk-table__body {
+      .govuk-table__cell, .govuk-table__header {
+        padding-top: 25px;
+        padding-bottom: 25px;
+      }
+    }
+
+    @media (min-width: 40.625em) {
+      grid-template-columns: auto 1fr;
+    }
+  }
+
   .finance-panel__summary__meta {
     flex-grow: 1;
   }
