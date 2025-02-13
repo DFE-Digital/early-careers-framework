@@ -24,7 +24,7 @@ RSpec.describe "Pages for induction tutor materials for existing CIPs", type: :r
     end
 
     it "fails to renders the year one materials template for anything else" do
-      expect { get induction_tutor_materials_path(provider: "harvard-institute", year:) }.to raise_error ActionView::MissingTemplate
+      expect { get induction_tutor_materials_path(provider: "harvard-institute", year:) }.to raise_error ActionController::RoutingError
     end
   end
 
@@ -43,7 +43,7 @@ RSpec.describe "Pages for induction tutor materials for existing CIPs", type: :r
     end
 
     it "fails to renders the year one materials template for anything else" do
-      expect { get induction_tutor_materials_path(provider: "harvard-institute", year:) }.to raise_error ActionView::MissingTemplate
+      expect { get induction_tutor_materials_path(provider: "harvard-institute", year:) }.to raise_error ActionController::RoutingError
     end
   end
 end

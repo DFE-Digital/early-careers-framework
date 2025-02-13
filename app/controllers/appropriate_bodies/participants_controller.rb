@@ -45,7 +45,7 @@ module AppropriateBodies
     end
 
     def filter_params
-      params.permit(:query, :role, :academic_year, :status)
+      params.permit(:query, :status)
     end
   end
 end

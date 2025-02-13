@@ -24,4 +24,12 @@ RSpec.describe "Static pages", type: :request do
       expect(response).to render_template("shared/_roles")
     end
   end
+
+  describe "GET /pages/not-found", exceptions_app: true do
+    it "returns 404 not found" do
+      get "/pages/not-found"
+
+      expect(response).to have_http_status(:not_found)
+    end
+  end
 end

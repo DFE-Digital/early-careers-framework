@@ -1,0 +1,74 @@
+{
+  "ignored_warnings": [
+    {
+      "warning_type": "Mass Assignment",
+      "warning_code": 105,
+      "fingerprint": "2b4fc2a19a28821de681909146012851307438aea2bff28161386e34663bc220",
+      "check_name": "PermitAttributes",
+      "message": "Potentially dangerous key allowed for mass assignment",
+      "file": "app/controllers/choose_roles_controller.rb",
+      "line": 34,
+      "link": "https://brakemanscanner.org/docs/warning_types/mass_assignment/",
+      "code": "params.fetch(:choose_role_form, {}).permit(:role)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "ChooseRolesController",
+        "method": "choose_role_form_params"
+      },
+      "user_input": ":role",
+      "confidence": "Medium",
+      "cwe_id": [
+        915
+      ],
+      "note": "We sanitize the role parameter against known/allowed roles in ChooseRoleForm."
+    },
+    {
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "7147eb4bea81677312e9eeaca2b62a4b937e07bc2458fa7f5e55aed1c673dbb9",
+      "check_name": "Render",
+      "message": "Render path contains parameter value",
+      "file": "app/controllers/schools/participants_controller.rb",
+      "line": 32,
+      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(action => helpers.edit_name_template(params[:reason].to_sym), {})",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Schools::ParticipantsController",
+        "method": "edit_name"
+      },
+      "user_input": "params[:reason].to_sym",
+      "confidence": "Weak",
+      "cwe_id": [
+        22
+      ],
+      "note": "The render path is constrained by the EDIT_NAME_TEMPLATE_BY_REASON hash."
+    },
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "d8f26910bc7b0d4aa383c8e9694992eaf2553e8989af31433a0032403ef65655",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/services/api/v3/ecf/unfunded_mentors_query.rb",
+      "line": 49,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "Arel.sql(\"ROW_NUMBER() OVER (#{latest_induction_record_order}) AS row_number, induction_records.participant_profile_id, induction_records.preferred_identity_id\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Api::V3::ECF::UnfundedMentorsQuery",
+        "method": "latest_induction_records_for_mentor_join"
+      },
+      "user_input": "latest_induction_record_order",
+      "confidence": "Medium",
+      "cwe_id": [
+        89
+      ],
+      "note": "TPO"
+    }
+  ],
+  "brakeman_version": "7.0.0"
+}
