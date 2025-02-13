@@ -31,6 +31,7 @@ module Finance
           "Declaration Created At",
           "Statement Name",
           "Statement ID",
+          "Uplift Payable",
         ].freeze
 
         def initialize(scope, statement)
@@ -82,6 +83,7 @@ module Finance
             record.declaration_created_at.iso8601,
             record.statement_name,
             record.statement_id,
+            record.sparsity_uplift || record.pupil_premium_uplift,
           ]
         end
 
