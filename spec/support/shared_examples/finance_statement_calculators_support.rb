@@ -1161,4 +1161,70 @@ RSpec.shared_examples "a Finance ECF statement calculator", mid_cohort: true do
       end
     end
   end
+
+  describe "#clawbacks_breakdown" do
+    let(:banding_breakdown) do
+      [
+        {
+          band: :a,
+          min: 1,
+          max: 20,
+          started_subtractions: 1,
+          retained_1_subtractions: 2,
+          retained_2_subtractions: 3,
+          retained_3_subtractions: 4,
+          retained_4_subtractions: 5,
+          completed_subtractions: 6,
+          extended_1_subtractions: 7,
+          extended_2_subtractions: 8,
+          extended_3_subtractions: 9,
+        },
+        {
+          band: :b,
+          min: 21,
+          max: 100,
+          started_subtractions: 10,
+          retained_1_subtractions: 11,
+          retained_2_subtractions: 12,
+          retained_3_subtractions: 13,
+          retained_4_subtractions: 14,
+          completed_subtractions: 15,
+          extended_1_subtractions: 16,
+          extended_2_subtractions: 17,
+          extended_3_subtractions: 18,
+        },
+      ]
+    end
+    let(:band_letters) { banding_breakdown.map { |hash| hash[:band] } }
+    let(:output_calculator) { instance_double("Finance::ECF::OutputCalculator", banding_breakdown:, fee_for_declaration: 100.0) }
+
+    before do
+      allow(Finance::ECF::OutputCalculator).to receive(:new).with(statement:).and_return(output_calculator)
+      allow(subject).to receive(:band_letters).and_return(%i[a b])
+    end
+
+    it "returns clawbacks breakdown" do
+      expect(subject.clawbacks_breakdown).to eq([
+        { band: "A", count: 1, declaration_type: "Started", fee: -100.0, subtotal: -100.0 },
+        { band: "A", count: 2, declaration_type: "Retained 1", fee: -100.0, subtotal: -200.0 },
+        { band: "A", count: 3, declaration_type: "Retained 2", fee: -100.0, subtotal: -300.0 },
+        { band: "A", count: 4, declaration_type: "Retained 3", fee: -100.0, subtotal: -400.0 },
+        { band: "A", count: 5, declaration_type: "Retained 4", fee: -100.0, subtotal: -500.0 },
+        { band: "A", count: 6, declaration_type: "Completed", fee: -100.0, subtotal: -600.0 },
+        { band: "A", count: 7, declaration_type: "Extended 1", fee: -100.0, subtotal: -700.0 },
+        { band: "A", count: 8, declaration_type: "Extended 2", fee: -100.0, subtotal: -800.0 },
+        { band: "A", count: 9, declaration_type: "Extended 3", fee: -100.0, subtotal: -900.0 },
+
+        { band: "B", count: 10, declaration_type: "Started", fee: -100.0, subtotal: -1000.0 },
+        { band: "B", count: 11, declaration_type: "Retained 1", fee: -100.0, subtotal: -1100.0 },
+        { band: "B", count: 12, declaration_type: "Retained 2", fee: -100.0, subtotal: -1200.0 },
+        { band: "B", count: 13, declaration_type: "Retained 3", fee: -100.0, subtotal: -1300.0 },
+        { band: "B", count: 14, declaration_type: "Retained 4", fee: -100.0, subtotal: -1400.0 },
+        { band: "B", count: 15, declaration_type: "Completed", fee: -100.0, subtotal: -1500.0 },
+        { band: "B", count: 16, declaration_type: "Extended 1", fee: -100.0, subtotal: -1600.0 },
+        { band: "B", count: 17, declaration_type: "Extended 2", fee: -100.0, subtotal: -1700.0 },
+        { band: "B", count: 18, declaration_type: "Extended 3", fee: -100.0, subtotal: -1800.0 },
+      ])
+    end
+  end
 end

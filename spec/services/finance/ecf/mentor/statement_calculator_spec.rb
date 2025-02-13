@@ -237,4 +237,50 @@ RSpec.describe Finance::ECF::Mentor::StatementCalculator, mid_cohort: true do
       subject.fee_for_declaration(type: "started")
     end
   end
+
+  describe "#clawbacks_breakdown" do
+    let(:output_breakdown) do
+      [
+        {
+          started_additions: 0,
+          started_subtractions: 2,
+        },
+        {
+          completed_additions: 0,
+          completed_subtractions: 3,
+        },
+      ]
+    end
+
+    let(:output_calculator) { instance_double("Finance::ECF::Mentor::OutputCalculator", output_breakdown:, fee_for_declaration: 100.0) }
+
+    before do
+      allow(Finance::ECF::Mentor::OutputCalculator).to receive(:new).with(statement:).and_return(output_calculator)
+    end
+
+    it "returns clawbacks breakdown" do
+      expect(subject.clawbacks_breakdown).to eq([
+        {
+          count: 2,
+          declaration_type: "Started",
+          fee: -100.0,
+          subtotal: -200.0,
+        },
+        {
+          count: 3,
+          declaration_type: "Completed",
+          fee: -100.0,
+          subtotal: -300.0,
+        },
+      ])
+    end
+  end
+
+  describe "#ect?" do
+    it { expect(subject.ect?).to be(false) }
+  end
+
+  describe "#mentor?" do
+    it { expect(subject.mentor?).to be(true) }
+  end
 end

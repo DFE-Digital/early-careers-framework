@@ -61,4 +61,12 @@ RSpec.describe Finance::ECF::ECT::StatementCalculator do
       end
     end
   end
+
+  describe "#ect?" do
+    it { expect(described_class.new(statement: nil).ect?).to be(true) }
+  end
+
+  describe "#mentor?" do
+    it { expect(described_class.new(statement: nil).mentor?).to be(false) }
+  end
 end

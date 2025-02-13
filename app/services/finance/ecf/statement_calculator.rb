@@ -73,6 +73,10 @@ module Finance
             output_calculator.banding_breakdown.find { |e| e[:band] == letter }[:"#{event_type}_additions"]
           end
 
+          define_method "#{event_type}_band_#{letter}_subtractions" do
+            output_calculator.banding_breakdown.find { |e| e[:band] == letter }[:"#{event_type}_subtractions"]
+          end
+
           define_method "#{event_type}_band_#{letter}_fee_per_declaration" do
             output_calculator.fee_for_declaration(band_letter: letter, type: event_type)
           end
@@ -223,18 +227,16 @@ module Finance
       def clawbacks_breakdown
         result = []
 
-        output_calculator.banding_breakdown do |hash|
-          relevant_hash = hash.select { |k, _| k.match?(/_subtractions/) }
-          relevant_hash = relevant_hash.transform_keys { |k| k.to_s.gsub("_subtractions", "").to_sym }
-
-          relevant_hash.map do |declaration_type, count|
+        band_letters.each do |band_letter|
+          event_types.each do |event_type|
+            count = send("#{event_type}_band_#{band_letter}_subtractions")
             next if count.zero?
 
-            fee = calculator.fee_for_declaration(band_letter: hash[:band], type: declaration_type)
+            fee = fee_for_declaration(band_letter:, type: event_type)
 
             result << {
-              declaration_type: declaration_type.to_s.humanize,
-              band: hash[:band].to_s.upcase,
+              declaration_type: event_type.to_s.humanize,
+              band: band_letter.to_s.upcase,
               count:,
               fee: (-fee),
               subtotal: (-count * fee),

@@ -101,22 +101,20 @@ module Finance
         def clawbacks_breakdown
           result = []
 
-          output_calculator.banding_breakdown do |hash|
-            relevant_hash = hash.select { |k, _| k.match?(/_subtractions/) }
-            relevant_hash = relevant_hash.transform_keys { |k| k.to_s.gsub("_subtractions", "").to_sym }
+          declaration_types.each do |declaration_type|
+            hash = output_calculator.output_breakdown.find { |b| b.key?(:"#{declaration_type}_subtractions") }
+            count = hash[:"#{declaration_type}_subtractions"]
 
-            relevant_hash.map do |declaration_type, count|
-              next if count.zero?
+            next if count.zero?
 
-              fee = calculator.fee_for_declaration(type: declaration_type)
+            fee = fee_for_declaration(type: declaration_type)
 
-              result << {
-                declaration_type: declaration_type.to_s.humanize,
-                count:,
-                fee: (-fee),
-                subtotal: (-count * fee),
-              }
-            end
+            result << {
+              declaration_type: declaration_type.to_s.humanize,
+              count:,
+              fee: (-fee),
+              subtotal: (-count * fee),
+            }
           end
 
           result
