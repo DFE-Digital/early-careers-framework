@@ -34,6 +34,7 @@ end
   "add_users.rb",
   "add_transfer_scenarios.rb",
   "add_mentor_scenarios.rb",
+  "add_declarations.rb",
   "add_api_tokens.rb",
   "add_feature_flags.rb",
   "add_sit_nominations.rb",
