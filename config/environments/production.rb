@@ -40,7 +40,6 @@ Rails.application.configure do
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   config.force_ssl = true
-  config.session_store :cookie_store, key: "_early_career_framework_session", secure: true, expire_after: 2.weeks
 
   config.cache_store = :redis_cache_store,
                        {
