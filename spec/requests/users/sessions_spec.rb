@@ -302,4 +302,27 @@ RSpec.describe "Users::Sessions", type: :request do
       end
     end
   end
+
+  describe "Session restore error" do
+    let(:session) { ActiveRecord::SessionStore::Session.last }
+
+    # A marshalled object "MadeUp", this class does not exist
+    let(:bad_data) { "BAh7CUkiDnJldHVybl90bwY6BkVGSSI3aHR0cDovL2xvY2FsaG9zdDozMDAw\nL2ZpbmFuY2UvbWFuYWdlLWNwZC1jb250cmFjdHMGOwBUSSIQX2NzcmZfdG9r\nZW4GOwBGSSIwU2ZFdHZ6c096RmUwMmk5RTFsd1ZkdG5PejVTb3VzdHhoRDZX\nakZwcmxNbwY7AEZJIhl3YXJkZW4udXNlci51c2VyLmtleQY7AFRbB1sGSSIp\nZWEzODM0NTItYzNiMC00ZGMyLWIwMzMtOTUwNzhhYjYwYmE2BjsAVDBJIgl0\nZXN0BjsARm86K0ZpbmFuY2U6OkxhbmRpbmdQYWdlQ29udHJvbGxlcjo6TWFk\nZVVwAA==\n" }
+
+    it "resets session and redirect to login" do
+      # Login normally to create session
+      sign_in user
+      get "/users/sign_in"
+      follow_redirect!
+      expect(response).to redirect_to "/dashboard"
+
+      # Inject bad data into session store
+      ActiveRecord::SessionStore::Session.where(id: session.id).update_all(data: bad_data)
+
+      get "/dashboard"
+      follow_redirect! if response.status == 302
+
+      expect(request.path).to eq "/users/sign_in"
+    end
+  end
 end
