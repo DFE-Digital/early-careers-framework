@@ -7,6 +7,7 @@ module Finance
         @ecf_lead_provider = lead_provider_scope.find(params[:payment_breakdown_id])
         @statement = @ecf_lead_provider.statements.find(params[:id])
         @mentor_funding_cohort = @statement.cohort.mentor_funding?
+        @cohorts = Cohort.where(start_year: 2021..).ordered_by_start_year
 
         if @mentor_funding_cohort
           @mentor_calculator = Mentor::StatementCalculator.new(statement: @statement)

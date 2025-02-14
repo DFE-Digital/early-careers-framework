@@ -11,7 +11,7 @@
     <span class="govuk-caption-l"><%= @ecf_lead_provider.name %></span>
     <h2 class="govuk-heading-m"><%= @statement.name %></h2>
 
-    <%= render Finance::Statements::ECFStatementSelector.new(current_statement: @statement, cohorts: Cohort.where(start_year: 2021..)) %>
+    <%= render Finance::Statements::ECFStatementSelector.new(current_statement: @statement, cohorts: @cohorts) %>
   </div>
 </div>
 

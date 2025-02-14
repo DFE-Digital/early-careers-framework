@@ -7,7 +7,7 @@ RSpec.describe Finance::Statements::ECFStatementSelector, type: :component do
   let!(:ecf_statement) { create(:ecf_statement) }
   let!(:other_ecf_statement) { create(:ecf_statement) }
 
-  let(:cohorts) { Cohort.where(start_year: 2021..) }
+  let(:cohorts) { Cohort.where(start_year: 2021..).ordered_by_start_year }
 
   let(:rendered) { render_inline(described_class.new(current_statement: ecf_statement, cohorts:)) }
 
