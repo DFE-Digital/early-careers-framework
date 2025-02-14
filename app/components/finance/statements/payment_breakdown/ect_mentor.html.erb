@@ -78,7 +78,7 @@
               <% row.with_cell(text: ect_calculator.extended_count) %>
             <% end %>
             <% row.with_cell do %>
-              <%= govuk_link_to ect_finance_ecf_payment_breakdown_statement_voided_path(ecf_lead_provider.id, statement), class: "govuk-body-s" do %>
+              <%= govuk_link_to ect_finance_ecf_payment_breakdown_statement_voided_path(ecf_lead_provider.id, statement) do %>
                 <%= ect_calculator.voided_count %>
                 <span class="govuk-visually-hidden"> ECT voided declarations</span>
               <% end %>
@@ -94,7 +94,7 @@
               <% row.with_cell(text: "-") %>
             <% end %>
             <% row.with_cell do %>
-              <%= govuk_link_to mentor_finance_ecf_payment_breakdown_statement_voided_path(ecf_lead_provider.id, statement), class: "govuk-body-s" do %>
+              <%= govuk_link_to mentor_finance_ecf_payment_breakdown_statement_voided_path(ecf_lead_provider.id, statement) do %>
                 <%= mentor_calculator.voided_count %>
                 <span class="govuk-visually-hidden"> Mentor voided declarations</span>
               <% end %>
