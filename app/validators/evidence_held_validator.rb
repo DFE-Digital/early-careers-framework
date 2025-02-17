@@ -1,67 +1,52 @@
 # frozen_string_literal: true
 
 class EvidenceHeldValidator < ActiveModel::Validator
-  DECLARATION_TYPES = {
-    "started" => 1,
-    "retained-1" => 2,
-    "retained-2" => 3,
-    "retained-3" => 4,
-    "retained-4" => 5,
-    "completed" => 6,
-    "extended-1" => 7,
-    "extended-2" => 8,
-    "extended-3" => 9,
-  }.freeze
+  def mentor_evidences(declaration_type)
+    case declaration_type
+    when "started"
+      %w[
+        training-event-attended
+        self-study-material-completed
+        materials-engaged-with-offline
+        other
+      ]
+    when "completed"
+      %w[
+        75-percent-engagement-met
+        75-percent-engagement-met-reduced-induction
+      ]
+    end
+  end
 
-  VALID_EVIDENCE_HELD = {
-    "training-event-attended" => 1,
-    "self-study-material-completed" => 2,
-    "materials-engaged-with-offline" => 3,
-    "75-percent-engagement-met" => 4,
-    "75-percent-engagement-met-reduced-induction" => 5,
-    "one-term-induction" => 6,
-    "other" => 7,
-  }.freeze
-
-  EVIDENCE_HELD_MAP = {
-    "ParticipantProfile::ECT" => {
-      # started
-      1 => [1, 2, 3, 7],
-      # retained-1
-      2 => [1, 2, 3, 7],
-      # retained-2
-      3 => [4, 5],
-      # retained-3
-      4 => [1, 2, 3, 7],
-      # retained-4
-      5 => [1, 2, 3, 7],
-      # completed
-      6 => [4, 5, 6],
-      # extended-1
-      7 => [1, 2, 3, 7],
-      # extended-2
-      8 => [1, 2, 3, 7],
-      # extended-3
-      9 => [1, 2, 3, 7],
-    },
-      "ParticipantProfile::Mentor" => {
-        # started
-        1 => [1, 2, 3, 7],
-        # completed
-        5 => [4, 5],
-      },
-  }.freeze
-
-  def self.evidence_held_map
-    EVIDENCE_HELD_MAP.map { |sa| { sa.first => sa.last.map { |a| { DECLARATION_TYPES.key(a.first) => a.last.map { |b| VALID_EVIDENCE_HELD.key(b) } } }.reduce(&:merge) } }.reduce(&:merge)
+  def ect_evidences(declaration_type)
+    case declaration_type
+    when "started", "retained-1", "retained-3", "retained-4", "extended-1", "extended-2", "extended-3"
+      %w[
+        training-event-attended
+        self-study-material-completed
+        materials-engaged-with-offline
+        other
+      ]
+    when "retained-2"
+      %w[
+        75-percent-engagement-met
+        75-percent-engagement-met-reduced-induction
+      ]
+    when "completed"
+      %w[
+        75-percent-engagement-met
+        75-percent-engagement-met-reduced-induction
+        one-term-induction
+      ]
+    end
   end
 
   def validate(record)
     return if record.errors.any?
     return unless validate_evidence_held?(record)
 
-    has_evidence_held?(record)
-    has_valid_evidence_held?(record)
+    evidence_held_present?(record)
+    valid_evidence_held?(record)
   end
 
 private
@@ -72,16 +57,18 @@ private
     record.participant_profile && record.participant_profile.is_a?(ParticipantProfile::ECF)
   end
 
-  def has_evidence_held?(record)
+  def evidence_held_present?(record)
     return if record.errors.any?
     return if record.evidence_held.present?
 
     record.errors.add(:evidence_held, I18n.t(:missing_evidence_held))
   end
 
-  def has_valid_evidence_held?(record)
+  def valid_evidence_held?(record)
     return if record.errors.any?
-    return if EvidenceHeldValidator.evidence_held_map.dig(record.participant_profile.type, record.declaration_type)&.include?(record.evidence_held)
+
+    method = record.participant_profile.ect? ? :ect_evidences : :mentor_evidences
+    return if record.evidence_held.in?(send(method, record.declaration_type) || [])
 
     record.errors.add(:evidence_held, I18n.t(:invalid_evidence_type))
   end
