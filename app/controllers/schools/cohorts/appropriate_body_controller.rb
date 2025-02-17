@@ -23,10 +23,19 @@ module Schools
       end
 
       def confirm
-        @confirmation_type = params[:confirmation_type]
+        @confirmation_type = sanitized_confirmation_type
       end
 
     private
+
+      def sanitized_confirmation_type
+        allowed_confirmation_types = %w[add change].freeze
+        confirmation_type = params[:confirmation_type]
+
+        raise ActionController::RoutingError, "Invalid confirmation type" unless confirmation_type.in?(allowed_confirmation_types)
+
+        confirmation_type
+      end
 
       def start_appropriate_body_selection(preconfirmation: false)
         super action_name:,
