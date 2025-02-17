@@ -114,7 +114,7 @@ RSpec.describe EvidenceHeldValidator do
       end
 
       context "when `declaration_type` is started" do
-        let(:declaration) { create(:ect_participant_declaration, declaration_type: "started") }
+        let(:declaration) { create(:mentor_participant_declaration, declaration_type: "started") }
 
         context "when `evidence_held` is not present" do
           let(:evidence_held) { nil }
@@ -133,6 +133,42 @@ RSpec.describe EvidenceHeldValidator do
 
           context "when `evidence_held` is invalid" do
             let(:evidence_held) { "anything" }
+
+            it "has a meaningful error", :aggregate_failures do
+              expect(subject).to be_invalid
+              expect(subject.errors.messages_for(:evidence_held)).to include("Enter an available '#/evidence_held' type for this participant's event and course.")
+            end
+          end
+        end
+      end
+
+      context "when `declaration_type` is completed" do
+        let(:cohort) { Cohort.current || create(:cohort, :current) }
+        let(:schedule) { Finance::Schedule.find_by(schedule_identifier: "ecf-standard-september", cohort:) }
+        let(:declaration) do
+          travel_to schedule.milestones.find_by(declaration_type: "completed").milestone_date do
+            create(:mentor_participant_declaration, declaration_type: "completed", cohort:)
+          end
+        end
+
+        context "when `evidence_held` is not present" do
+          let(:evidence_held) { nil }
+
+          it "has a meaningful error", :aggregate_failures do
+            expect(subject).to be_invalid
+            expect(subject.errors.messages_for(:evidence_held)).to include("Enter a '#/evidence_held' value for this participant.")
+          end
+        end
+
+        context "when `evidence_held` is present" do
+          let(:evidence_held) { "75-percent-engagement-met" }
+
+          it "is valid" do
+            expect(subject).to be_valid
+          end
+
+          context "when `evidence_held` is invalid" do
+            let(:evidence_held) { "one-term-induction" }
 
             it "has a meaningful error", :aggregate_failures do
               expect(subject).to be_invalid
