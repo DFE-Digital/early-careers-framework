@@ -20,14 +20,7 @@ class RecordDeclaration
   validates :declaration_date, presence: { message: I18n.t(:missing_declaration_date) }
   validates :declaration_type, presence: { message: I18n.t(:missing_declaration_type) }
   validates :declaration_date, future_date: true, declaration_date: true, allow_blank: true
-  validates :evidence_held,
-            presence: { message: I18n.t(:missing_evidence_held), if: :validate_evidence_held? },
-            inclusion: {
-              in: ->(record_declaration) { record_declaration.participant_profile.class::VALID_EVIDENCE_HELD },
-              if: :validate_evidence_held?,
-              message: I18n.t(:invalid_evidence_type),
-            }, unless: :cohort_with_detailed_evidence_types?
-  validates :evidence_held, evidence_held: true, if: :cohort_with_detailed_evidence_types?
+  validates :evidence_held, evidence_held: true
   validate :output_fee_statement_available
   validate :validate_milestone_exists
   validate :validates_billable_slot_available
@@ -197,12 +190,6 @@ private
     )
   end
 
-  def validate_evidence_held?
-    return unless participant_profile && participant_profile.is_a?(ParticipantProfile::ECF)
-
-    declaration_type.present? && declaration_type != "started"
-  end
-
   def original_participant_declaration
     @original_participant_declaration ||= participant_declaration.duplicate_declarations.order(created_at: :asc).first
   end
@@ -246,11 +233,5 @@ private
       errors.add(:course_identifier, I18n.t(:npq_course_no_longer_supported))
       throw(:abort)
     end
-  end
-
-  def cohort_with_detailed_evidence_types?
-    return unless schedule && cohort
-
-    cohort.detailed_evidence_types?
   end
 end
