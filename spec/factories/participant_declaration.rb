@@ -41,10 +41,19 @@ FactoryBot.define do
         has_passed:,
       }
 
-      params[:evidence_held] = "other" if declaration_type != "started"
+      cohort = participant_profile.current_induction_record.schedule.cohort
+      params[:evidence_held] = if cohort.detailed_evidence_types?
+                                 case declaration_type
+                                 when "started", "retained-1", "retained-3", "retained-4", "extended-1", "extended-2", "extended-3"
+                                   "other"
+                                 else
+                                   "75-percent-engagement-met"
+                                 end
+                               else
+                                 "other"
+                               end
 
       if participant_profile.is_a?(ParticipantProfile::ECF) && participant_profile.fundable?
-        cohort = participant_profile.current_induction_record.schedule.cohort
         next_output_fee_statement = cpd_lead_provider.lead_provider.next_output_fee_statement(cohort)
         create(:ecf_statement, :next_output_fee, cpd_lead_provider:, cohort:) unless next_output_fee_statement
       end
