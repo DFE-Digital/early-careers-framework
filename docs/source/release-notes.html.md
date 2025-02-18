@@ -7,7 +7,7 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
-## XX February 2025
+## 19 February 2025
 
 We’ve added the schedules and contract data for the 2025/26 intake of early career teachers (ECTs) and mentors to the test (sandbox) environment.
 
