@@ -22,8 +22,6 @@ gem "sentry-sidekiq"
 # Support queries
 gem "zendesk_api"
 
-gem "secure_headers"
-
 gem "rails_semantic_logger"
 
 # Use postgresql as the database for Active Record
