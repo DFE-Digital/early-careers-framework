@@ -1,5 +1,5 @@
 <%= render layout: 'layouts/width_container_wide' do %>
-  <style>
+  <style nonce="<%= content_security_policy_nonce %>">
     .govuk-width-container {
       max-width: 1550px;
     }
