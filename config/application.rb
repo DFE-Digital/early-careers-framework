@@ -58,6 +58,6 @@ module EarlyCareerFramework
       require file
     end
 
-    config.middleware.insert_after ActionDispatch::Cookies, SessionRestoreErrorRescueMiddleware
+    config.middleware.use SessionRestoreErrorRescueMiddleware
   end
 end

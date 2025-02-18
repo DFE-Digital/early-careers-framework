@@ -9,9 +9,9 @@ class SessionRestoreErrorRescueMiddleware
     @app.call(env)
   rescue ActionDispatch::Session::SessionRestoreError
     req = ActionDispatch::Request.new(env)
-    req.cookies.delete(session_key)
-    req.env.delete("rack.session")
-    req.env.delete("rack.session.options")
+    session_id = req.cookies[session_key]
+    private_id = Rack::Session::SessionId.new(session_id).private_id
+    ActiveRecord::SessionStore::Session.where(session_id: private_id).delete_all
 
     @app.call(req.env)
   end
