@@ -70,7 +70,7 @@ private
   end
 
   def validate_evidence_held?(record)
-    return unless record.participant_profile && record.participant_profile.is_a?(ParticipantProfile::ECF)
+    return unless record.participant_profile&.ecf?
 
     record.declaration_type.present? && record.declaration_type != "started"
   end
@@ -78,7 +78,7 @@ private
   def validate_detailed_evidence_held?(record)
     return if record.declaration_type == "started" && record.evidence_held.blank?
 
-    record.participant_profile && record.participant_profile.is_a?(ParticipantProfile::ECF)
+    record.participant_profile&.ecf?
   end
 
   def evidence_held_present?(record)
