@@ -18,10 +18,7 @@ Rails.application.configure do
     policy.style_src   :self
     policy.connect_src :self, "*.google-analytics.com"
     policy.frame_src   :self, "https://www.googletagmanager.com/ns.html"
-
-    # I haven't figured out why yet, but a couple of the feature tests
-    # fail when this is set; its very strange.
-    policy.report_uri  "/csp_reports" unless Rails.env.test?
+    policy.report_uri  "/csp_reports"
   end
 
   # Generate session nonces for permitted importmap, inline scripts, and inline styles.
