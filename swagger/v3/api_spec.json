@@ -3877,8 +3877,8 @@
           }
         }
       },
-      "ParticipantDeclarationDataRequest": {
-        "description": "A participant declaration data request",
+      "ParticipantDeclarationPost2024ECTDataRequest": {
+        "description": " A participant declaration data request for ECT participants from cohort 2025 onwards",
         "type": "object",
         "properties": {
           "type": {
@@ -3888,6 +3888,59 @@
             ]
           },
           "attributes": {
+            "type": "object",
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ECFParticipantDeclarationStartedAttributesRequest"
+              },
+              {
+                "$ref": "#/components/schemas/ECFParticipantDeclarationRetainedAttributesRequest"
+              },
+              {
+                "$ref": "#/components/schemas/ECFParticipantDeclarationCompletedAttributesRequest"
+              },
+              {
+                "$ref": "#/components/schemas/ECFParticipantDeclarationExtendedAttributesRequest"
+              }
+            ]
+          }
+        }
+      },
+      "ParticipantDeclarationPost2024MentorDataRequest": {
+        "description": "A participant declaration data request for mentor participants from cohort 2025 onwards",
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "participant-declaration"
+            ]
+          },
+          "attributes": {
+            "type": "object",
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ECFParticipantDeclarationStartedAttributesRequest"
+              },
+              {
+                "$ref": "#/components/schemas/ECFParticipantDeclarationCompletedAttributesRequest"
+              }
+            ]
+          }
+        }
+      },
+      "ParticipantDeclarationPre2025DataRequest": {
+        "description": "A participant declaration data request for participants in cohort 2024 and previous years",
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "participant-declaration"
+            ]
+          },
+          "attributes": {
+            "type": "object",
             "anyOf": [
               {
                 "$ref": "#/components/schemas/ECFParticipantDeclarationStartedAttributesRequest"
@@ -3913,7 +3966,18 @@
         ],
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/ParticipantDeclarationDataRequest"
+            "type": "object",
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ParticipantDeclarationPre2025DataRequest"
+              },
+              {
+                "$ref": "#/components/schemas/ParticipantDeclarationPost2024ECTDataRequest"
+              },
+              {
+                "$ref": "#/components/schemas/ParticipantDeclarationPost2024MentorDataRequest"
+              }
+            ]
           }
         }
       },
