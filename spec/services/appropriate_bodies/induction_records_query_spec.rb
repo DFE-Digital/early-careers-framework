@@ -6,7 +6,6 @@ RSpec.describe AppropriateBodies::InductionRecordsQuery do
   let(:appropriate_body_user) { create(:user, :appropriate_body) }
   let(:appropriate_body) { appropriate_body_user.appropriate_bodies.first }
   let(:participant_profile) { create(:ect_participant_profile) }
-  let(:mentor_profile) { create(:mentor_participant_profile) }
   let(:partnership) do
     create(
       :partnership,
@@ -18,7 +17,15 @@ RSpec.describe AppropriateBodies::InductionRecordsQuery do
   let(:induction_programme) { create(:induction_programme, partnership:) }
   let!(:induction_record) { create(:induction_record, participant_profile:, appropriate_body:, induction_programme:) }
   let!(:another_induction_record) { create(:induction_record, participant_profile:, induction_programme:) }
+
+  # participants to be ignored
+  let(:mentor_profile) { create(:mentor_participant_profile) }
   let!(:mentor_induction_record) { create(:induction_record, participant_profile: mentor_profile, appropriate_body:, induction_programme:) }
+  let(:older_cohort) { Cohort.find_by(start_year: 2021) }
+  let(:another_participant_profile) { create(:ect_participant_profile, cohort: older_cohort) }
+  let(:another_school_cohort) { create(:school_cohort, cohort: older_cohort) }
+  let(:another_induction_programme) { create(:induction_programme, :fip) }
+  let!(:another_induction_record) { create(:induction_record, participant_profile: another_participant_profile, appropriate_body:, induction_programme: another_induction_programme, school_cohort: another_school_cohort) }
 
   subject { described_class.new(appropriate_body:) }
 
