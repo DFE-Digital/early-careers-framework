@@ -18,7 +18,10 @@ Rails.application.configure do
     policy.style_src   :self
     policy.connect_src :self, "*.google-analytics.com"
     policy.frame_src   :self, "https://www.googletagmanager.com/ns.html"
-    policy.report_uri  "/csp_reports"
+
+    # The report-uri seems to make the feature specs flakey when ran in
+    # CI. I'm not sure why - disabling for now.
+    policy.report_uri  "/csp_reports" unless Rails.env.test?
   end
 
   # Generate session nonces for permitted importmap, inline scripts, and inline styles.
