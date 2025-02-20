@@ -49,7 +49,7 @@ FactoryBot.define do
                                  else
                                    "75-percent-engagement-met"
                                  end
-                               else
+                               elsif declaration_type != "started"
                                  "other"
                                end
 
