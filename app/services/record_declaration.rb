@@ -20,13 +20,13 @@ class RecordDeclaration
   validates :declaration_date, presence: { message: I18n.t(:missing_declaration_date) }
   validates :declaration_type, presence: { message: I18n.t(:missing_declaration_type) }
   validates :declaration_date, future_date: true, declaration_date: true, allow_blank: true
-  validates :evidence_held, evidence_held: true
   validate :output_fee_statement_available
   validate :validate_milestone_exists
   validate :validates_billable_slot_available
   validate :validate_only_started_or_completed_if_mentor
   validates :course_identifier, course: true
   validates :cpd_lead_provider, induction_record: true
+  validates :evidence_held, evidence_held: true
 
   attr_reader :raw_declaration_date
 
