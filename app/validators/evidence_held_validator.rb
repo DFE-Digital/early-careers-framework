@@ -76,7 +76,7 @@ private
   end
 
   def validate_detailed_evidence_held?(record)
-    return if record.declaration_type == "started" && record.evidence_held.blank?
+    return if record.declaration_type.present? && record.declaration_type == "started" && record.evidence_held.blank?
 
     record.participant_profile&.ecf?
   end
