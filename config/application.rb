@@ -57,5 +57,7 @@ module EarlyCareerFramework
     Dir.glob(Rails.root.join("app/middlewares/*.rb")).sort.each do |file|
       require file
     end
+
+    config.middleware.use SessionRestoreErrorRescueMiddleware
   end
 end
