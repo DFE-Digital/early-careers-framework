@@ -1,0 +1,44 @@
+<div class="finance-panel finance-panel__adjustments govuk-!-margin-top-5 govuk-!-margin-bottom-5 print-page-break">
+  <h2 class="govuk-heading-m">Adjustments</h2>
+
+  <%= govuk_table do |table| %>
+    <% table.with_caption(size: "s", text: "Clawbacks") %>
+
+    <% table.with_head do |head| %>
+      <% head.with_row do |row| %>
+        <% row.with_cell(header: true, text: "Payment type") %>
+        <% row.with_cell(header: true, text: "Number of participants") %>
+        <% row.with_cell(header: true, text: "Fee per participant", numeric: true) %>
+        <% row.with_cell(header: true, text: "Payments", numeric: true) %>
+      <% end %>
+    <% end %>
+
+    <% table.with_body do |body| %>
+      <% body.with_row do |row| %>
+        <% row.with_cell(text: "Uplift clawbacks") %>
+        <% row.with_cell(text: calculator.uplift_deductions_count) %>
+        <% row.with_cell(text: number_to_pounds(-calculator.uplift_fee_per_declaration), numeric: true) %>
+        <% row.with_cell(text: number_to_pounds(calculator.uplift_clawback_deductions), numeric: true) %>
+      <% end %>
+
+      <% clawbacks_breakdown.each do |hash| %>
+        <% body.with_row do |row| %>
+          <% row.with_cell(text: "Clawback for #{hash[:declaration_type]} (Band: #{hash[:band]})") %>
+          <% row.with_cell(text: hash[:count]) %>
+          <% row.with_cell(text: number_to_pounds(hash[:fee]), numeric: true) %>
+          <% row.with_cell(text: number_to_pounds(hash[:subtotal]), numeric: true) %>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <div class="govuk-!-text-align-right govuk-heading-s govuk-!-margin-bottom-0">
+    Total
+  </div>
+
+  <div class="govuk-!-text-align-right govuk-heading-s">
+    <%= number_to_pounds(calculator.adjustments_total) %>
+  </div>
+
+  <%= render Finance::Statements::AdditionalAdjustments::Table.new(statement: statement) %>
+</div>

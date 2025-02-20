@@ -61,4 +61,12 @@ RSpec.describe Finance::ECF::StatementCalculator, mid_cohort: true do
       end
     end
   end
+
+  describe "#ect?" do
+    it { expect(described_class.new(statement: nil).ect?).to be(false) }
+  end
+
+  describe "#mentor?" do
+    it { expect(described_class.new(statement: nil).mentor?).to be(false) }
+  end
 end

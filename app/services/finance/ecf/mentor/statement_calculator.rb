@@ -98,6 +98,36 @@ module Finance
           self.class.declaration_types_for_display
         end
 
+        def clawbacks_breakdown
+          result = []
+
+          declaration_types.each do |declaration_type|
+            hash = output_calculator.output_breakdown.find { |b| b.key?(:"#{declaration_type}_subtractions") }
+            count = hash[:"#{declaration_type}_subtractions"]
+
+            next if count.zero?
+
+            fee = fee_for_declaration(type: declaration_type)
+
+            result << {
+              declaration_type: declaration_type.to_s.humanize,
+              count:,
+              fee: (-fee),
+              subtotal: (-count * fee),
+            }
+          end
+
+          result
+        end
+
+        def ect?
+          false
+        end
+
+        def mentor?
+          true
+        end
+
       private
 
         def output_calculator
