@@ -118,19 +118,22 @@ Rails.application.configure do
   # Logging
   config.log_level = (Sidekiq.server?) ? :warn : :info
 
-  # RAILS_LOG_TO_STDOUT is set via https://github.com/DFE-Digital/terraform-modules
+  # Use Semantic_Logger for cleaner logging
+  # # RAILS_LOG_TO_STDOUT is set via https://github.com/DFE-Digital/terraform-modules
   if ENV["RAILS_LOG_TO_STDOUT"].present?
-    config.rails_semantic_logger.add_file_appender = false
-    config.rails_semantic_logger.filter = proc { |log| log.name != "DfE::Analytics::SendEvents" }
-
     $stdout.sync = true
-
-    config.semantic_logger.add_appender(
-      io: $stdout,
-      level: Rails.application.config.log_level,
-      formatter: :json,
-      filter: config.rails_semantic_logger.filter,
-    )
+    config.semantic_logger.application = "" # No need to send the application name as logstash reads it from Cloud Foundry log tags
+    config.rails_semantic_logger.format = :json
+    config.rails_semantic_logger.add_file_appender = false
+    config.rails_semantic_logger.filter = proc do |log|
+      !(log.name == "DfE::Analytics::SendEvents" || log.message&.include?("DfE::Analytics::SendEvents"))
+    end
+    config.active_record.logger = nil # Don't log SQL in production
+    config.semantic_logger.backtrace_level = :error
+    config.semantic_logger.add_appender(io: $stdout,
+                                        level: config.log_level,
+                                        formatter: config.rails_semantic_logger.format,
+                                        filter: config.rails_semantic_logger.filter)
   end
 
   # Do not dump schema after migrations.
