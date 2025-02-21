@@ -123,7 +123,6 @@
   "spec/forms/admin/participants/change_relationship/wizard_steps/reason_for_change_step_spec.rb": 0.02315528400004041,
   "spec/services/privacy_policy/publish_spec.rb": 0.11134130400000686,
   "spec/forms/supplier_user_form_spec.rb": 0.2578839610000614,
-  "spec/services/valid_test_data_generators/sandbox_shared_data_spec.rb": 13.65518241899997,
   "spec/queries/schools/that_have_not_added_participants_query_spec.rb": 0.9028151920000482,
   "spec/services/store_participant_eligibility_spec.rb": 5.576920650000034,
   "spec/models/finance/statement_spec.rb": 0.8553642680000166,
