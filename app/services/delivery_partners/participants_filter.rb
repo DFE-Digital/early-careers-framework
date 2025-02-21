@@ -11,7 +11,7 @@ module DeliveryPartners
     end
 
     def scope
-      scoped = collection
+      scoped = filter_out_post_2024_cohorts(collection)
 
       if params[:query].present?
         scoped = filter_query(scoped, params[:query])
@@ -61,7 +61,13 @@ module DeliveryPartners
       end
     end
 
+    def filter_out_post_2024_cohorts(scoped)
+      scoped.joins(:cohort).where("start_year <= 2024")
+    end
+
     def filter_academic_year(scoped, academic_year)
+      return collection.none unless academic_year.to_i.in?(academic_year_options.map(&:id))
+
       scoped.includes(
         :cohort,
       ).where(cohort: { start_year: academic_year })
@@ -91,7 +97,7 @@ module DeliveryPartners
 
     def academic_year_options
       [OpenStruct.new(id: "", name: "")] +
-        Cohort.order(:start_year).map do |c|
+        Cohort.where("start_year <= ?", 2024).order(:start_year).map do |c|
           OpenStruct.new(id: c.start_year, name: c.start_year)
         end
     end
