@@ -6,6 +6,7 @@ module Api
   class ApiController < ActionController::API
     include ActionController::MimeResponds
     include DfE::Analytics::Requests
+    include ContentSecurityPolicy
 
     before_action :remove_charset
     rescue_from ActionController::ParameterMissing, with: :missing_parameter_response

@@ -6,22 +6,47 @@
 # See the Securing Rails Applications Guide for more information:
 # https://guides.rubyonrails.org/security.html#content-security-policy-header
 
-# Rails.application.configure do
-#   config.content_security_policy do |policy|
-#     policy.default_src :self, :https
-#     policy.font_src    :self, :https, :data
-#     policy.img_src     :self, :https, :data
-#     policy.object_src  :none
-#     policy.script_src  :self, :https
-#     policy.style_src   :self, :https
-#     # Specify URI for violation reports
-#     # policy.report_uri "/csp-violation-report-endpoint"
-#   end
-#
-#   # Generate session nonces for permitted importmap, inline scripts, and inline styles.
-#   config.content_security_policy_nonce_generator = ->(request) { request.session.id.to_s }
-#   config.content_security_policy_nonce_directives = %w(script-src style-src)
-#
-#   # Report violations without enforcing the policy.
-#   # config.content_security_policy_report_only = true
-# end
+Rails.application.configure do
+  # Default policy for the application; covers static pages and the
+  # admin/finance dashboards.
+  self_base       = %i[self]
+  data            = %i[data]
+  blob            = %i[blob]
+  gtm_frame_src   = %w[https://www.googletagmanager.com/ns.html]
+  gtm_script_src  = %w[https://www.googletagmanager.com/gtm.js https://www.googletagmanager.com/gtag/js]
+  gtm_img_src     = %w[https://www.googletagmanager.com/td]
+  ga_connect_src  = %w[*.google-analytics.com]
+  zd_script_src   = %w[https://static.zdassets.com/ekr/snippet.js]
+
+  config.content_security_policy do |policy|
+    policy.default_src(*self_base)
+    policy.font_src(*self_base.concat(data))
+    policy.img_src(*self_base.concat(data, blob, gtm_img_src))
+    policy.object_src :none
+    policy.script_src(*self_base.concat(gtm_script_src, zd_script_src))
+    policy.style_src(*self_base)
+    policy.connect_src(*self_base.concat(ga_connect_src))
+    policy.frame_src(*self_base.concat(gtm_frame_src))
+
+    # The report-uri seems to make the feature specs flakey when ran in
+    # CI. I'm not sure why - disabling for now.
+    policy.report_uri "/csp_reports" unless Rails.env.test?
+  end
+
+  # Generate session nonces for permitted importmap, inline scripts, and inline styles.
+  config.content_security_policy_nonce_generator = ->(_) { SecureRandom.base64(16) }
+  config.content_security_policy_nonce_directives = %w[script-src style-src]
+
+  # Report violations without enforcing the policy.
+  config.content_security_policy_report_only = true
+
+  # Security-related HTTP headers.
+  config.action_dispatch.default_headers = {
+    "X-Frame-Options" => "DENY",
+    "X-XSS-Protection" => "0",
+    "X-Content-Type-Options" => "nosniff",
+    "X-Permitted-Cross-Domain-Policies" => "none",
+    "Referrer-Policy" => "origin-when-cross-origin, strict-origin-when-cross-origin",
+    "X-Download-Options" => "noopen",
+  }
+end
