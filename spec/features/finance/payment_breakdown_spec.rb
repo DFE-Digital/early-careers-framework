@@ -6,15 +6,16 @@ RSpec.feature "Finance users payment breakdowns", type: :feature, js: true do
   include FinanceHelper
   include ActionView::Helpers::NumberHelper
 
-  let!(:lead_provider)         { create(:lead_provider, name: "Test provider", id: "cffd2237-c368-4044-8451-68e4a4f73369") }
-  let(:cpd_lead_provider)      { lead_provider.cpd_lead_provider }
-  let!(:contract)              { create(:call_off_contract, lead_provider:, version: "0.0.1", cohort: Cohort.current) }
-  let!(:mentor_contract)       { create(:mentor_call_off_contract, lead_provider:, version: "0.0.1", cohort: Cohort.current) }
-  let(:current_start_year)     { Cohort.current.start_year }
-  let(:next_start_year)        { Cohort.next.start_year }
-  let(:voided_declarations)    { create_list(:ect_participant_declaration, 2, :eligible, :voided, cpd_lead_provider:) }
+  let!(:lead_provider) { create(:lead_provider, name: "Test provider", id: "cffd2237-c368-4044-8451-68e4a4f73369") }
+  let(:cpd_lead_provider) { lead_provider.cpd_lead_provider }
+  let!(:contract) { create(:call_off_contract, lead_provider:, version: "0.0.1", cohort: Cohort.current) }
+  let!(:mentor_contract) { create(:mentor_call_off_contract, lead_provider:, version: "0.0.1", cohort: Cohort.current) }
+  let(:current_start_year) { Cohort.current.start_year }
+  let(:next_start_year) { Cohort.next.start_year }
+  let(:voided_declarations) { create_list(:ect_participant_declaration, 2, :eligible, :voided, cpd_lead_provider:) }
+  let(:clawed_back_declarations) { create_list(:ect_participant_declaration, 3, :eligible, cpd_lead_provider:).each(&:clawed_back!) }
 
-  let!(:january_statement)  { create(:ecf_statement, name: "January #{next_start_year}", deadline_date: Date.new(next_start_year, 1, 31), cpd_lead_provider:, contract_version: contract.version) }
+  let!(:january_statement) { create(:ecf_statement, name: "January #{next_start_year}", deadline_date: Date.new(next_start_year, 1, 31), cpd_lead_provider:, contract_version: contract.version) }
   let!(:november_statement) { create(:ecf_statement, name: "November #{current_start_year}", deadline_date: Date.new(current_start_year, 11, 30), cpd_lead_provider:, contract_version: contract.version) }
 
   let(:jan_statement_calculator) { Finance::ECF::StatementCalculator.new(statement: january_statement) }
@@ -26,6 +27,7 @@ RSpec.feature "Finance users payment breakdowns", type: :feature, js: true do
     and_there_is_a_schedule
     and_multiple_declarations_are_submitted
     and_voided_payable_declarations_are_submitted
+    and_clawed_back_declarations_exist
     when_i_click_on_payment_breakdown_header
     then_the_page_should_be_accessible
 
@@ -48,6 +50,7 @@ RSpec.feature "Finance users payment breakdowns", type: :feature, js: true do
 
     then_i_should_see_the_total_extended
     then_i_should_see_the_total_voided
+    then_i_should_see_the_total_clawed_back
     click_link("View voided declarations")
     then_i_see_voided_declarations
     and_the_page_should_be_accessible
@@ -77,6 +80,10 @@ private
 
   def then_i_should_see_the_total_voided
     expect(page.find("strong", text: "Total voided")).to have_sibling("div", text: voided_declarations.size)
+  end
+
+  def then_i_should_see_the_total_clawed_back
+    expect(page.find("strong", text: "Total clawed back")).to have_sibling("div", text: clawed_back_declarations.size)
   end
 
   def then_i_should_see_the_total_extended
@@ -173,6 +180,10 @@ private
 
   def and_voided_payable_declarations_are_submitted
     travel_to(november_statement.deadline_date) { voided_declarations }
+  end
+
+  def and_clawed_back_declarations_exist
+    travel_to(november_statement.deadline_date) { clawed_back_declarations }
   end
 
   def create_start_declarations_nov(participant)
