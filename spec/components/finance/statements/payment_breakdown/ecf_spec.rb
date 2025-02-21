@@ -22,6 +22,7 @@ RSpec.describe Finance::Statements::PaymentBreakdown::ECF, type: :component do
       completed_count: 30,
       extended_count:,
       voided_count: 50,
+      clawed_back_count: 12,
     )
   end
   let(:extended_count) { 0 }
@@ -86,29 +87,14 @@ RSpec.describe Finance::Statements::PaymentBreakdown::ECF, type: :component do
     expect(counts_list[2][0]).to eq("Total completed")
     expect(counts_list[2][1]).to eq("30")
 
-    expect(counts_list[3][0]).to eq("Total voided")
-    expect(counts_list[3][1]).to eq("50")
-  end
+    expect(counts_list[3][0]).to eq("Total extended")
+    expect(counts_list[3][1]).to eq("0")
 
-  describe "with extended count" do
-    let(:extended_count) { 40 }
+    expect(counts_list[4][0]).to eq("Total clawed back")
+    expect(counts_list[4][1]).to eq("12")
 
-    it "has correct declaration counts" do
-      expect(counts_list[0][0]).to eq("Total starts")
-      expect(counts_list[0][1]).to eq("10")
-
-      expect(counts_list[1][0]).to eq("Total retained")
-      expect(counts_list[1][1]).to eq("20")
-
-      expect(counts_list[2][0]).to eq("Total completed")
-      expect(counts_list[2][1]).to eq("30")
-
-      expect(counts_list[3][0]).to eq("Total extended")
-      expect(counts_list[3][1]).to eq("40")
-
-      expect(counts_list[4][0]).to eq("Total voided")
-      expect(counts_list[4][1]).to eq("50")
-    end
+    expect(counts_list[5][0]).to eq("Total voided")
+    expect(counts_list[5][1]).to eq("50")
   end
 
   it "has link to voided declarations" do
