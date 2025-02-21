@@ -3,9 +3,8 @@
 require "rails_helper"
 
 RSpec.describe ValidTestDataGenerators::MentorECTGenerator do
-  let(:shared_users_data) { YAML.load_file(Rails.root.join("db/data/sandbox_shared_data.yml")) }
   let(:cohort) { create(:cohort, :current) }
-  let(:lead_provider) { create(:lead_provider, name: shared_users_data.keys.sample) }
+  let(:lead_provider) { create(:lead_provider) }
 
   let(:instance) { described_class.new(name: lead_provider.name, cohort:) }
 

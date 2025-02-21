@@ -665,7 +665,6 @@
   "spec/controllers/concerns/api_auditable_spec.rb": 0.05207954800016523,
   "spec/requests/lead_providers/report_schools/confirm_spec.rb": 0.8447656990001633,
   "spec/services/mentors/create_spec.rb": 2.8476775829999497,
-  "spec/services/valid_test_data_generators/sandbox_shared_data_spec.rb": 13.994518771999992,
   "spec/services/participants/build_completion_candidate_list_spec.rb": 1.328121044999989,
   "spec/features/accessibility_statement_page_spec.rb": 0.9535321210000802,
   "spec/forms/delivery_partners/update_user_form_spec.rb": 0.11450079199994434,
