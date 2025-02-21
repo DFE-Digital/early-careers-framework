@@ -52,7 +52,7 @@ module Finance
 
       def banding
         @banding ||=
-          bands.zip(:a..:z).map do |band, letter|
+          bands.zip(:a..:d).map do |band, letter|
             # minimum band should always be 1 or more, otherwise band a will go over its max limit
             band_min = band.min.to_i.zero? ? 1 : band.min
             {

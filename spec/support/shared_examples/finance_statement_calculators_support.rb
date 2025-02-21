@@ -4,10 +4,60 @@ RSpec.shared_examples "a Finance ECF statement calculator", mid_cohort: true do
   let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
   let(:lead_provider) { cpd_lead_provider.lead_provider }
 
+  let(:letters) { %i[a b c d] }
+  let(:declaration_types) do
+    %w[
+      started
+      retained-1
+      retained-2
+      retained-3
+      retained-4
+      completed
+      extended-1
+      extended-2
+      extended-3
+    ]
+  end
+
   let!(:statement) { create(:ecf_statement, cpd_lead_provider:, payment_date: 1.week.ago) }
   let!(:contract) { create(:call_off_contract, :with_minimal_bands, lead_provider:) }
 
   subject { described_class.new(statement:) }
+
+  before do
+    # Mock banding calculator with mocked methods
+    if defined?(mock_bandings)
+      declaration_types.each do |declaration_type|
+        mock_banding = instance_double(Finance::ECF::BandingCalculator)
+        %i[previous_count count additions subtractions].each do |action|
+          dec_values = mock_bandings[declaration_type] || {}
+          action_values = dec_values[action] || {}
+
+          letters.each do |letter|
+            allow(mock_banding).to receive(action)
+              .with(letter)
+              .and_return(action_values[letter] || 0)
+          end
+        end
+
+        allow(Finance::ECF::BandingCalculator).to receive(:new)
+          .with(statement:, declaration_type:)
+          .and_return(mock_banding)
+      end
+    end
+
+    output_calculator = subject.send(:output_calculator)
+
+    # Mock uplift_breakdown values
+    if defined?(uplift_breakdown)
+      allow(output_calculator).to receive(:uplift_breakdown).and_return(uplift_breakdown)
+    end
+
+    # Mock fee_for_declaration
+    if defined?(mock_fee_for_declaration)
+      allow(output_calculator).to receive(:fee_for_declaration).and_return(*mock_fee_for_declaration)
+    end
+  end
 
   describe "#total" do
     let(:default_total) { BigDecimal("-0.5232793103448275862068965517241379310345e4") }
@@ -19,11 +69,6 @@ RSpec.shared_examples "a Finance ECF statement calculator", mid_cohort: true do
         additions: 4,
         subtractions: 2,
       }
-    end
-    let(:output_calculator) { instance_double("Finance::ECF::OutputCalculator", uplift_breakdown:, banding_breakdown: []) }
-
-    before do
-      allow(Finance::ECF::OutputCalculator).to receive(:new).and_return(output_calculator)
     end
 
     context "when there is a positive reconcile_amount" do
@@ -79,48 +124,29 @@ RSpec.shared_examples "a Finance ECF statement calculator", mid_cohort: true do
 
   describe "#output_fee" do
     context "with extended" do
-      let(:banding_breakdown) do
-        [
-          {
-            band: :a,
-            min: 1,
-            max: 2,
-            started_additions: 0,
-            retained_1_additions: 0,
-            retained_2_additions: 0,
-            retained_3_additions: 0,
-            retained_4_additions: 0,
-            completed_additions: 0,
-            extended_1_additions: 1,
-            extended_2_additions: 2,
-            extended_3_additions: 3,
+      let(:mock_bandings) do
+        {
+          "extended-1" => {
+            additions:  {
+              a: 1,
+              b: 4,
+            },
           },
-          {
-            band: :b,
-            min: 3,
-            max: 4,
-            started_additions: 0,
-            retained_1_additions: 0,
-            retained_2_additions: 0,
-            retained_3_additions: 0,
-            retained_4_additions: 0,
-            completed_additions: 0,
-            extended_1_additions: 4,
-            extended_2_additions: 5,
-            extended_3_additions: 6,
+          "extended-2" => {
+            additions:  {
+              a: 2,
+              b: 5,
+            },
           },
-        ]
+          "extended-3" => {
+            additions:  {
+              a: 3,
+              b: 6,
+            },
+          },
+        }
       end
-
-      let(:output_calculator) { instance_double("Finance::ECF::OutputCalculator") }
-
-      before do
-        allow(Finance::ECF::OutputCalculator).to receive(:new).and_return(output_calculator)
-
-        allow(output_calculator).to receive(:banding_breakdown).and_return(banding_breakdown)
-
-        allow(output_calculator).to receive(:fee_for_declaration).and_return(48)
-      end
+      let(:mock_fee_for_declaration) { 48 }
 
       it "returns correct value across all bands" do
         output_fee =
@@ -134,48 +160,30 @@ RSpec.shared_examples "a Finance ECF statement calculator", mid_cohort: true do
 
   describe "#clawback_deductions" do
     context "with extended" do
-      let(:banding_breakdown) do
-        [
-          {
-            band: :a,
-            min: 1,
-            max: 2,
-            started_subtractions: 0,
-            retained_1_subtractions: 0,
-            retained_2_subtractions: 0,
-            retained_3_subtractions: 0,
-            retained_4_subtractions: 0,
-            completed_subtractions: 0,
-            extended_1_subtractions: 1,
-            extended_2_subtractions: 2,
-            extended_3_subtractions: 3,
+      let(:mock_bandings) do
+        {
+          "extended-1" => {
+            subtractions:  {
+              a: 1,
+              b: 4,
+            },
           },
-          {
-            band: :b,
-            min: 3,
-            max: 4,
-            started_subtractions: 0,
-            retained_1_subtractions: 0,
-            retained_2_subtractions: 0,
-            retained_3_subtractions: 0,
-            retained_4_subtractions: 0,
-            completed_subtractions: 0,
-            extended_1_subtractions: 4,
-            extended_2_subtractions: 5,
-            extended_3_subtractions: 6,
+          "extended-2" => {
+            subtractions:  {
+              a: 2,
+              b: 5,
+            },
           },
-        ]
+          "extended-3" => {
+            subtractions:  {
+              a: 3,
+              b: 6,
+            },
+          },
+        }
       end
 
-      let(:output_calculator) { instance_double("Finance::ECF::OutputCalculator") }
-
-      before do
-        allow(Finance::ECF::OutputCalculator).to receive(:new).and_return(output_calculator)
-
-        allow(output_calculator).to receive(:banding_breakdown).and_return(banding_breakdown)
-
-        allow(output_calculator).to receive(:fee_for_declaration).and_return(48)
-      end
+      let(:mock_fee_for_declaration) { 48 }
 
       it "returns correct value across all bands" do
         deductions =
@@ -198,17 +206,7 @@ RSpec.shared_examples "a Finance ECF statement calculator", mid_cohort: true do
         }
       end
 
-      let(:banding_breakdown) do
-        []
-      end
-
-      let(:output_calculator) { instance_double("Finance::ECF::OutputCalculator", uplift_breakdown:, banding_breakdown:) }
-
       let!(:contract) { create(:call_off_contract, lead_provider:) }
-
-      before do
-        allow(Finance::ECF::OutputCalculator).to receive(:new).and_return(output_calculator)
-      end
 
       it "includes uplift adjustments" do
         expect(subject.adjustments_total).to eql(-200)
@@ -224,8 +222,6 @@ RSpec.shared_examples "a Finance ECF statement calculator", mid_cohort: true do
     end
 
     context "when there are clawbacks" do
-      let(:output_calculator) { instance_double("Finance::ECF::OutputCalculator", banding_breakdown:, uplift_breakdown:) }
-
       let(:uplift_breakdown) do
         {
           previous_count: 0,
@@ -235,115 +231,47 @@ RSpec.shared_examples "a Finance ECF statement calculator", mid_cohort: true do
         }
       end
 
-      let(:banding_breakdown) do
-        [
-          {
-            band: :a,
-            min: 1,
-            max: 2,
-
-            previous_started_count: 1,
-            started_count: 1,
-            started_additions: 1,
-            started_subtractions: 0,
-
-            previous_retained_1_count: 1,
-            retained_1_count: 1,
-            retained_1_additions: 1,
-            retained_1_subtractions: 0,
-
-            previous_retained_2_count: 1,
-            retained_2_count: 1,
-            retained_2_additions: 1,
-            retained_2_subtractions: 0,
-
-            previous_retained_3_count: 1,
-            retained_3_count: 1,
-            retained_3_additions: 1,
-            retained_3_subtractions: 0,
-
-            previous_retained_4_count: 1,
-            retained_4_count: 1,
-            retained_4_additions: 1,
-            retained_4_subtractions: 0,
-
-            previous_completed_count: 1,
-            completed_count: 1,
-            completed_additions: 1,
-            completed_subtractions: 0,
-
-            previous_extended_1_count: 0,
-            extended_1_count: 0,
-            extended_1_additions: 0,
-            extended_1_subtractions: 0,
-
-            previous_extended_2_count: 0,
-            extended_2_count: 0,
-            extended_2_additions: 0,
-            extended_2_subtractions: 0,
-
-            previous_extended_3_count: 0,
-            extended_3_count: 0,
-            extended_3_additions: 0,
-            extended_3_subtractions: 0,
+      let(:mock_bandings) do
+        {
+          "started" => {
+            previous_count: { a: 1, b: 0 },
+            count:          { a: 1, b: 1 },
+            additions:      { a: 1, b: 2 },
+            subtractions:   { a: 0, b: 1 },
           },
-          {
-            band: :b,
-            min: 3,
-            max: 4,
-
-            previous_started_count: 0,
-            started_count: 1,
-            started_additions: 2,
-            started_subtractions: 1,
-
-            previous_retained_1_count: 0,
-            retained_1_count: 1,
-            retained_1_additions: 2,
-            retained_1_subtractions: 1,
-
-            previous_retained_2_count: 0,
-            retained_2_count: 1,
-            retained_2_additions: 2,
-            retained_2_subtractions: 1,
-
-            previous_retained_3_count: 0,
-            retained_3_count: 1,
-            retained_3_additions: 2,
-            retained_3_subtractions: 1,
-
-            previous_retained_4_count: 0,
-            retained_4_count: 1,
-            retained_4_additions: 2,
-            retained_4_subtractions: 1,
-
-            previous_completed_count: 0,
-            completed_count: 1,
-            completed_additions: 2,
-            completed_subtractions: 1,
-
-            previous_extended_1_count: 0,
-            extended_1_count: 0,
-            extended_1_additions: 0,
-            extended_1_subtractions: 0,
-
-            previous_extended_2_count: 0,
-            extended_2_count: 0,
-            extended_2_additions: 0,
-            extended_2_subtractions: 0,
-
-            previous_extended_3_count: 0,
-            extended_3_count: 0,
-            extended_3_additions: 0,
-            extended_3_subtractions: 0,
+          "retained-1" => {
+            previous_count: { a: 1, b: 0 },
+            count:          { a: 1, b: 1 },
+            additions:      { a: 1, b: 2 },
+            subtractions:   { a: 0, b: 1 },
           },
-        ]
+          "retained-2" => {
+            previous_count: { a: 1, b: 0 },
+            count:          { a: 1, b: 1 },
+            additions:      { a: 1, b: 2 },
+            subtractions:   { a: 0, b: 1 },
+          },
+          "retained-3" => {
+            previous_count: { a: 1, b: 0 },
+            count:          { a: 1, b: 1 },
+            additions:      { a: 1, b: 2 },
+            subtractions:   { a: 0, b: 1 },
+          },
+          "retained-4" => {
+            previous_count: { a: 1, b: 0 },
+            count:          { a: 1, b: 1 },
+            additions:      { a: 1, b: 2 },
+            subtractions:   { a: 0, b: 1 },
+          },
+          "completed" => {
+            previous_count: { a: 1, b: 0 },
+            count:          { a: 1, b: 1 },
+            additions:      { a: 1, b: 2 },
+            subtractions:   { a: 0, b: 1 },
+          },
+        }
       end
-
-      before do
-        allow(Finance::ECF::OutputCalculator).to receive(:new).and_return(output_calculator)
-        allow(output_calculator).to receive(:fee_for_declaration).and_return(48)
-      end
+      let(:mock_fee_for_declaration) { 48 }
 
       it "includes clawback adjustments" do
         expect(subject.adjustments_total).to eql(-288)
@@ -360,119 +288,49 @@ RSpec.shared_examples "a Finance ECF statement calculator", mid_cohort: true do
         }
       end
 
-      let(:banding_breakdown) do
-        [
-          {
-            band: :a,
-            min: 1,
-            max: 2,
-
-            previous_started_count: 1,
-            started_count: 1,
-            started_additions: 1,
-            started_subtractions: 0,
-
-            previous_retained_1_count: 1,
-            retained_1_count: 1,
-            retained_1_additions: 1,
-            retained_1_subtractions: 0,
-
-            previous_retained_2_count: 1,
-            retained_2_count: 1,
-            retained_2_additions: 1,
-            retained_2_subtractions: 0,
-
-            previous_retained_3_count: 1,
-            retained_3_count: 1,
-            retained_3_additions: 1,
-            retained_3_subtractions: 0,
-
-            previous_retained_4_count: 1,
-            retained_4_count: 1,
-            retained_4_additions: 1,
-            retained_4_subtractions: 0,
-
-            previous_completed_count: 1,
-            completed_count: 1,
-            completed_additions: 1,
-            completed_subtractions: 0,
-
-            previous_extended_1_count: 0,
-            extended_1_count: 0,
-            extended_1_additions: 0,
-            extended_1_subtractions: 0,
-
-            previous_extended_2_count: 0,
-            extended_2_count: 0,
-            extended_2_additions: 0,
-            extended_2_subtractions: 0,
-
-            previous_extended_3_count: 0,
-            extended_3_count: 0,
-            extended_3_additions: 0,
-            extended_3_subtractions: 0,
+      let(:mock_bandings) do
+        {
+          "started" => {
+            previous_count: { a: 1, b: 0 },
+            count:          { a: 1, b: 1 },
+            additions:      { a: 1, b: 2 },
+            subtractions:   { a: 0, b: 1 },
           },
-          {
-            band: :b,
-            min: 3,
-            max: 4,
-
-            previous_started_count: 0,
-            started_count: 1,
-            started_additions: 2,
-            started_subtractions: 1,
-
-            previous_retained_1_count: 0,
-            retained_1_count: 1,
-            retained_1_additions: 2,
-            retained_1_subtractions: 1,
-
-            previous_retained_2_count: 0,
-            retained_2_count: 1,
-            retained_2_additions: 2,
-            retained_2_subtractions: 1,
-
-            previous_retained_3_count: 0,
-            retained_3_count: 1,
-            retained_3_additions: 2,
-            retained_3_subtractions: 1,
-
-            previous_retained_4_count: 0,
-            retained_4_count: 1,
-            retained_4_additions: 2,
-            retained_4_subtractions: 1,
-
-            previous_completed_count: 0,
-            completed_count: 1,
-            completed_additions: 2,
-            completed_subtractions: 1,
-
-            previous_extended_1_count: 0,
-            extended_1_count: 0,
-            extended_1_additions: 0,
-            extended_1_subtractions: 0,
-
-            previous_extended_2_count: 0,
-            extended_2_count: 0,
-            extended_2_additions: 0,
-            extended_2_subtractions: 0,
-
-            previous_extended_3_count: 0,
-            extended_3_count: 0,
-            extended_3_additions: 0,
-            extended_3_subtractions: 0,
+          "retained-1" => {
+            previous_count: { a: 1, b: 0 },
+            count:          { a: 1, b: 1 },
+            additions:      { a: 1, b: 2 },
+            subtractions:   { a: 0, b: 1 },
           },
-        ]
+          "retained-2" => {
+            previous_count: { a: 1, b: 0 },
+            count:          { a: 1, b: 1 },
+            additions:      { a: 1, b: 2 },
+            subtractions:   { a: 0, b: 1 },
+          },
+          "retained-3" => {
+            previous_count: { a: 1, b: 0 },
+            count:          { a: 1, b: 1 },
+            additions:      { a: 1, b: 2 },
+            subtractions:   { a: 0, b: 1 },
+          },
+          "retained-4" => {
+            previous_count: { a: 1, b: 0 },
+            count:          { a: 1, b: 1 },
+            additions:      { a: 1, b: 2 },
+            subtractions:   { a: 0, b: 1 },
+          },
+          "completed" => {
+            previous_count: { a: 1, b: 0 },
+            count:          { a: 1, b: 1 },
+            additions:      { a: 1, b: 2 },
+            subtractions:   { a: 0, b: 1 },
+          },
+        }
       end
-
-      let(:output_calculator) { instance_double("Finance::ECF::OutputCalculator", uplift_breakdown:, banding_breakdown:) }
 
       let!(:contract) { create(:call_off_contract, lead_provider:) }
-
-      before do
-        allow(Finance::ECF::OutputCalculator).to receive(:new).and_return(output_calculator)
-        allow(output_calculator).to receive(:fee_for_declaration).and_return(48)
-      end
+      let(:mock_fee_for_declaration) { 48 }
 
       it "includes clawback and uplift adjustments" do
         expect(subject.adjustments_total).to eql(-488)
@@ -518,38 +376,17 @@ RSpec.shared_examples "a Finance ECF statement calculator", mid_cohort: true do
   end
 
   describe "#additions_for_started" do
-    let(:banding_breakdown) do
-      [
-        {
-          band: :a,
-          min: 1,
-          max: 2,
-          previous_started_count: 1,
-          started_count: 1,
-          started_additions: 1,
-          started_subtractions: 0,
+    let(:mock_bandings) do
+      {
+        "started" => {
+          previous_count: { a: 1, b: 0 },
+          count:          { a: 1, b: 1 },
+          additions:      { a: 1, b: 2 },
+          subtractions:   { a: 0, b: 1 },
         },
-        {
-          band: :b,
-          min: 3,
-          max: 4,
-          previous_started_count: 0,
-          started_count: 1,
-          started_additions: 2,
-          started_subtractions: 1,
-        },
-      ]
+      }
     end
-
-    let(:output_calculator) { instance_double("Finance::ECF::OutputCalculator") }
-
-    before do
-      allow(Finance::ECF::OutputCalculator).to receive(:new).and_return(output_calculator)
-
-      allow(output_calculator).to receive(:banding_breakdown).and_return(banding_breakdown)
-
-      allow(output_calculator).to receive(:fee_for_declaration).and_return(48, 36, 36)
-    end
+    let(:mock_fee_for_declaration) { [48, 36, 36] }
 
     it "returns correct value across all bands" do
       expect(subject.additions_for_started).to eql(48 + 36 + 36)
@@ -557,36 +394,20 @@ RSpec.shared_examples "a Finance ECF statement calculator", mid_cohort: true do
   end
 
   describe "#additions_for_extended" do
-    let(:banding_breakdown) do
-      [
-        {
-          band: :a,
-          min: 1,
-          max: 2,
-          extended_1_additions: 1,
-          extended_2_additions: 2,
-          extended_3_additions: 3,
+    let(:mock_bandings) do
+      {
+        "extended-1" => {
+          additions: { a: 1, b: 4 },
         },
-        {
-          band: :b,
-          min: 3,
-          max: 4,
-          extended_1_additions: 4,
-          extended_2_additions: 5,
-          extended_3_additions: 6,
+        "extended-2" => {
+          additions: { a: 2, b: 5 },
         },
-      ]
+        "extended-3" => {
+          additions: { a: 3, b: 6 },
+        },
+      }
     end
-
-    let(:output_calculator) { instance_double("Finance::ECF::OutputCalculator") }
-
-    before do
-      allow(Finance::ECF::OutputCalculator).to receive(:new).and_return(output_calculator)
-
-      allow(output_calculator).to receive(:banding_breakdown).and_return(banding_breakdown)
-
-      allow(output_calculator).to receive(:fee_for_declaration).and_return(48)
-    end
+    let(:mock_fee_for_declaration) { 48 }
 
     it "returns correct value across all bands" do
       expect(subject.additions_for_extended_1).to eql((1 * 48) + (4 * 48)) # = 240
@@ -613,13 +434,7 @@ RSpec.shared_examples "a Finance ECF statement calculator", mid_cohort: true do
         }
       end
 
-      let(:output_calculator) { instance_double("Finance::ECF::OutputCalculator", uplift_breakdown:) }
-
       let!(:contract) { create(:call_off_contract, lead_provider:) }
-
-      before do
-        allow(Finance::ECF::OutputCalculator).to receive(:new).and_return(output_calculator)
-      end
 
       it do
         expect(subject.total_for_uplift).to eql(400)
@@ -634,12 +449,6 @@ RSpec.shared_examples "a Finance ECF statement calculator", mid_cohort: true do
           additions: 1,
           subtractions: 4,
         }
-      end
-
-      let(:output_calculator) { instance_double("Finance::ECF::OutputCalculator", uplift_breakdown:) }
-
-      before do
-        allow(Finance::ECF::OutputCalculator).to receive(:new).and_return(output_calculator)
       end
 
       it do
@@ -659,12 +468,6 @@ RSpec.shared_examples "a Finance ECF statement calculator", mid_cohort: true do
         }
       end
 
-      let(:output_calculator) { instance_double("Finance::ECF::OutputCalculator", uplift_breakdown:) }
-
-      before do
-        allow(Finance::ECF::OutputCalculator).to receive(:new).and_return(output_calculator)
-      end
-
       it "matches uplift_cap" do
         expect(subject.total_for_uplift).to eql(statement.contract.uplift_cap)
       end
@@ -680,11 +483,8 @@ RSpec.shared_examples "a Finance ECF statement calculator", mid_cohort: true do
         }
       end
 
-      let(:output_calculator) { instance_double("Finance::ECF::OutputCalculator", uplift_breakdown:) }
-
       before do
         allow_any_instance_of(CallOffContract).to receive(:include_uplift_fees?).and_return(false)
-        allow(Finance::ECF::OutputCalculator).to receive(:new).and_return(output_calculator)
       end
 
       it "returns zero" do
@@ -708,32 +508,15 @@ RSpec.shared_examples "a Finance ECF statement calculator", mid_cohort: true do
   end
 
   describe "#started_count" do
-    let(:banding_breakdown) do
-      [
-        {
-          band: :a,
-          min: 1,
-          max: 2,
-          previous_started_count: 1,
-          started_count: 1,
-          started_additions: 1,
-          started_subtractions: 0,
+    let(:mock_bandings) do
+      {
+        "started" => {
+          previous_count: { a: 1, b: 0 },
+          count:          { a: 1, b: 1 },
+          additions:      { a: 1, b: 2 },
+          subtractions:   { a: 0, b: 1 },
         },
-        {
-          band: :b,
-          min: 3,
-          max: 4,
-          previous_started_count: 0,
-          started_count: 1,
-          started_additions: 2,
-          started_subtractions: 1,
-        },
-      ]
-    end
-    let(:output_calculator) { instance_double("Finance::ECF::OutputCalculator", banding_breakdown:) }
-
-    before do
-      allow(Finance::ECF::OutputCalculator).to receive(:new).and_return(output_calculator)
+      }
     end
 
     it "returns count of all started across bands" do
@@ -742,40 +525,21 @@ RSpec.shared_examples "a Finance ECF statement calculator", mid_cohort: true do
   end
 
   describe "#retained_count" do
-    let(:banding_breakdown) do
-      [
-        {
-          band: :a,
-          min: 1,
-          max: 2,
-          previous_retained_1_count: 1,
-          retained_1_count: 1,
-          retained_1_additions: 1,
-          retained_1_subtractions: 0,
-          previous_started_count: 1,
-          retained_2_count: 1,
-          retained_2_additions: 1,
-          retained_2_subtractions: 0,
+    let(:mock_bandings) do
+      {
+        "retained-1" => {
+          previous_count: { a: 1, b: 0 },
+          count:          { a: 1, b: 1 },
+          additions:      { a: 1, b: 2 },
+          subtractions:   { a: 0, b: 1 },
         },
-        {
-          band: :b,
-          min: 3,
-          max: 4,
-          previous_retained_1_count: 0,
-          retained_1_count: 1,
-          retained_1_additions: 2,
-          retained_1_subtractions: 1,
-          previous_retained_2_count: 0,
-          retained_2_count: 1,
-          retained_2_additions: 2,
-          retained_2_subtractions: 1,
+        "retained-2" => {
+          previous_count: { a: 1, b: 0 },
+          count:          { a: 1, b: 1 },
+          additions:      { a: 1, b: 2 },
+          subtractions:   { a: 0, b: 1 },
         },
-      ]
-    end
-    let(:output_calculator) { instance_double("Finance::ECF::OutputCalculator", banding_breakdown:) }
-
-    before do
-      allow(Finance::ECF::OutputCalculator).to receive(:new).and_return(output_calculator)
+      }
     end
 
     it "returns count of all retained across bands" do
@@ -784,32 +548,27 @@ RSpec.shared_examples "a Finance ECF statement calculator", mid_cohort: true do
   end
 
   describe "#completed_count" do
-    let(:banding_breakdown) do
-      [
-        {
-          band: :a,
-          min: 1,
-          max: 2,
-          previous_completed_count: 1,
-          completed_count: 1,
-          completed_additions: 1,
-          completed_subtractions: 0,
+    let(:mock_bandings) do
+      {
+        "completed" => {
+          previous_count:  {
+            a: 1,
+            b: 0,
+          },
+          count:  {
+            a: 1,
+            b: 1,
+          },
+          additions:  {
+            a: 1,
+            b: 2,
+          },
+          subtractions:  {
+            a: 0,
+            b: 1,
+          },
         },
-        {
-          band: :b,
-          min: 3,
-          max: 4,
-          previous_completed_count: 0,
-          completed_count: 1,
-          completed_additions: 2,
-          completed_subtractions: 1,
-        },
-      ]
-    end
-    let(:output_calculator) { instance_double("Finance::ECF::OutputCalculator", banding_breakdown:) }
-
-    before do
-      allow(Finance::ECF::OutputCalculator).to receive(:new).and_return(output_calculator)
+      }
     end
 
     it "returns count of all completed across bands" do
@@ -818,40 +577,45 @@ RSpec.shared_examples "a Finance ECF statement calculator", mid_cohort: true do
   end
 
   describe "#extended_count" do
-    let(:banding_breakdown) do
-      [
-        {
-          band: :a,
-          min: 1,
-          max: 2,
-          previous_extended_1_count: 1,
-          extended_1_count: 1,
-          extended_1_additions: 1,
-          extended_1_subtractions: 0,
-          previous_started_count: 1,
-          extended_2_count: 1,
-          extended_2_additions: 1,
-          extended_2_subtractions: 0,
+    let(:mock_bandings) do
+      {
+        "extended-1" => {
+          previous_count:  {
+            a: 1,
+            b: 0,
+          },
+          count:  {
+            a: 1,
+            b: 1,
+          },
+          additions:  {
+            a: 1,
+            b: 2,
+          },
+          subtractions:  {
+            a: 0,
+            b: 1,
+          },
         },
-        {
-          band: :b,
-          min: 3,
-          max: 4,
-          previous_extended_1_count: 0,
-          extended_1_count: 1,
-          extended_1_additions: 2,
-          extended_1_subtractions: 1,
-          previous_extended_2_count: 0,
-          extended_2_count: 1,
-          extended_2_additions: 2,
-          extended_2_subtractions: 1,
+        "extended-2" => {
+          previous_count:  {
+            a: 1,
+            b: 0,
+          },
+          count:  {
+            a: 1,
+            b: 1,
+          },
+          additions:  {
+            a: 1,
+            b: 2,
+          },
+          subtractions:  {
+            a: 0,
+            b: 1,
+          },
         },
-      ]
-    end
-    let(:output_calculator) { instance_double("Finance::ECF::OutputCalculator", banding_breakdown:) }
-
-    before do
-      allow(Finance::ECF::OutputCalculator).to receive(:new).and_return(output_calculator)
+      }
     end
 
     it "returns count of all extended across bands" do
@@ -1163,43 +927,67 @@ RSpec.shared_examples "a Finance ECF statement calculator", mid_cohort: true do
   end
 
   describe "#clawbacks_breakdown" do
-    let(:banding_breakdown) do
-      [
-        {
-          band: :a,
-          min: 1,
-          max: 20,
-          started_subtractions: 1,
-          retained_1_subtractions: 2,
-          retained_2_subtractions: 3,
-          retained_3_subtractions: 4,
-          retained_4_subtractions: 5,
-          completed_subtractions: 6,
-          extended_1_subtractions: 7,
-          extended_2_subtractions: 8,
-          extended_3_subtractions: 9,
+    let(:mock_bandings) do
+      {
+        "started" => {
+          subtractions:  {
+            a: 1,
+            b: 10,
+          },
         },
-        {
-          band: :b,
-          min: 21,
-          max: 100,
-          started_subtractions: 10,
-          retained_1_subtractions: 11,
-          retained_2_subtractions: 12,
-          retained_3_subtractions: 13,
-          retained_4_subtractions: 14,
-          completed_subtractions: 15,
-          extended_1_subtractions: 16,
-          extended_2_subtractions: 17,
-          extended_3_subtractions: 18,
+        "retained-1" => {
+          subtractions:  {
+            a: 2,
+            b: 11,
+          },
         },
-      ]
+        "retained-2" => {
+          subtractions:  {
+            a: 3,
+            b: 12,
+          },
+        },
+        "retained-3" => {
+          subtractions:  {
+            a: 4,
+            b: 13,
+          },
+        },
+        "retained-4" => {
+          subtractions:  {
+            a: 5,
+            b: 14,
+          },
+        },
+        "completed" => {
+          subtractions:  {
+            a: 6,
+            b: 15,
+          },
+        },
+        "extended-1" => {
+          subtractions:  {
+            a: 7,
+            b: 16,
+          },
+        },
+        "extended-2" => {
+          subtractions:  {
+            a: 8,
+            b: 17,
+          },
+        },
+        "extended-3" => {
+          subtractions:  {
+            a: 9,
+            b: 18,
+          },
+        },
+      }
     end
-    let(:band_letters) { banding_breakdown.map { |hash| hash[:band] } }
-    let(:output_calculator) { instance_double("Finance::ECF::OutputCalculator", banding_breakdown:, fee_for_declaration: 100.0) }
+    let(:mock_fee_for_declaration) { 100.0 }
 
     before do
-      allow(Finance::ECF::OutputCalculator).to receive(:new).with(statement:).and_return(output_calculator)
       allow(subject).to receive(:band_letters).and_return(%i[a b])
     end
 
