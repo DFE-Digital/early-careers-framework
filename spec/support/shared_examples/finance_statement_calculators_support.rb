@@ -27,8 +27,10 @@ RSpec.shared_examples "a Finance ECF statement calculator", mid_cohort: true do
   before do
     # Mock banding calculator with mocked methods
     if defined?(mock_bandings)
+      banding_calculator_klass = described_class.module_parent::BandingCalculator
+
       declaration_types.each do |declaration_type|
-        mock_banding = instance_double(Finance::ECF::BandingCalculator)
+        mock_banding = instance_double(banding_calculator_klass)
         %i[previous_count count additions subtractions].each do |action|
           dec_values = mock_bandings[declaration_type] || {}
           action_values = dec_values[action] || {}
@@ -40,7 +42,7 @@ RSpec.shared_examples "a Finance ECF statement calculator", mid_cohort: true do
           end
         end
 
-        allow(Finance::ECF::BandingCalculator).to receive(:new)
+        expect(banding_calculator_klass).to receive(:new)
           .with(statement:, declaration_type:)
           .and_return(mock_banding)
       end

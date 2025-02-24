@@ -284,7 +284,7 @@ module Finance
       end
 
       def output_calculator
-        @output_calculator ||= OutputCalculator.new(statement:)
+        @output_calculator ||= self.class.module_parent::OutputCalculator.new(statement:)
       end
 
       def event_types

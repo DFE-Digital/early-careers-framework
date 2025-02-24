@@ -13,12 +13,6 @@ module Finance
         def ect?
           true
         end
-
-      private
-
-        def output_calculator
-          @output_calculator ||= OutputCalculator.new(statement:)
-        end
       end
     end
   end

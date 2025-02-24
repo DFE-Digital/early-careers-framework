@@ -2,25 +2,15 @@
 
 RSpec.describe Finance::ECF::ECT::StatementCalculator do
   it_behaves_like "a Finance ECF statement calculator" do
-    describe "#total" do
-      let(:uplift_breakdown) do
-        {
-          previous_count: 0,
-          count: 2,
-          additions: 4,
-          subtractions: 2,
-        }
-      end
-      let(:output_calculator) { instance_double("Finance::ECF::ECT::OutputCalculator", uplift_breakdown:, banding_breakdown: []) }
+    describe "#output_calculator" do
+      let(:output_calculator) { subject.send(:output_calculator) }
 
-      before do
-        allow(Finance::ECF::ECT::OutputCalculator).to receive(:new).with(statement:).and_return(output_calculator)
+      it "delegates to the correct OutputCalculator" do
+        expect(output_calculator.class).to eq(Finance::ECF::ECT::OutputCalculator)
       end
 
-      it "calls OutputCalculator with correct params" do
-        subject.total
-
-        expect(Finance::ECF::ECT::OutputCalculator).to have_received(:new).with(statement:)
+      it "delegates to the correct BandingCalculator" do
+        expect(output_calculator.banding_for(declaration_type: "started").class).to eq(Finance::ECF::ECT::BandingCalculator)
       end
     end
 
@@ -55,7 +45,7 @@ RSpec.describe Finance::ECF::ECT::StatementCalculator do
         end
       end
 
-      it "returns all voided declarations" do
+      it "returns ECT only voided declarations" do
         expect(subject.voided_declarations.size).to eql(5)
         expect(subject.voided_declarations.pluck(:state).uniq).to eql(%w[voided])
       end
