@@ -18,7 +18,10 @@ RSpec.describe ValidTestDataGenerators::MentorECTGenerator do
     end
 
     context "when the cohort has a default schedule and the lead provider has a school" do
-      before { create(:partnership, cohort:, lead_provider:) }
+      before do
+        create(:local_authority)
+        create(:partnership, cohort:, lead_provider:)
+      end
 
       it { expect { generate }.to change(ParticipantProfile::ECT, :count).by(number) }
       it { expect { generate }.to change(ParticipantProfile::Mentor, :count).by(number) }

@@ -209,6 +209,10 @@ module ValidTestDataGenerators
         s.name = Faker::Company.name
         s.address_line1 = Faker::Address.street_address
         s.postcode = Faker::Address.postcode
+        s.primary_contact_email = "school-info-#{s.urn}@example.com"
+        s.school_status_code = 1
+        s.school_type_code = 1
+        s.administrative_district_code = "E123"
       end
       school_cohort = school_cohort(school:)
       partnership = attach_partnership_to_school(school:)
