@@ -76,7 +76,7 @@ We’ll be making the following changes to the ``induction_programme_choice`` fi
 * ``core-induction-programme`` and ``diy`` will all be known as ``school-led``
 * ``full-induction-programme`` and ``school-funded-full-induction-programme`` will change to ``provider-led``
 
-These changes will initially apply only to the 2025/26 academic year intake, but we will later extend them to all cohorts. We’ll contact providers directly to ensure their integrations can support the new values. 
+> These changes will apply across all cohorts. We’ll contact providers directly to ensure their integrations can support the new values.
 
 ## Seed data for testing 
 
@@ -88,10 +88,10 @@ We plan to have all these changes ready for integration well ahead of registrati
 
 We’ll update the test environment in the following order: 
 
-1. Mentor funding (mid-February 2025).
+1. Mentor funding (late February 2025).
 2. Evidence types (late February 2025).
 3. Induction programme type changes (following provider consultation, spring 2025).
 
-Please refer to our release notes for all the relevant spec changes.
+Refer to our [release notes](https://manage-training-for-early-career-teachers.education.gov.uk/api-reference/release-notes.html) for all the relevant spec changes.
 
 As always, we’d welcome feedback any of these updates before they go into production.
