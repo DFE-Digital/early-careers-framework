@@ -251,7 +251,7 @@ RSpec.describe Finance::ECF::BandingCalculator do
           create_list(:mentor_participant_declaration, 2, :eligible, cpd_lead_provider:, declaration_type:)
         end
         travel_to statement.deadline_date - 1.day do
-          create_list(:mentor_participant_declaration, 1, :eligible, cpd_lead_provider:, declaration_type:)
+          create_list(:ect_participant_declaration, 1, :eligible, cpd_lead_provider:, declaration_type:)
           create_list(:mentor_participant_declaration, 2, :eligible, cpd_lead_provider:, declaration_type:)
         end
       end
