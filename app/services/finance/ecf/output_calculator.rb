@@ -3,6 +3,18 @@
 module Finance
   module ECF
     class OutputCalculator
+      DECLARATION_TYPE_FEE_PROPORTIONS = {
+        started: 0.2,
+        completed: 0.2,
+        retained_1: 0.15,
+        retained_2: 0.15,
+        retained_3: 0.15,
+        retained_4: 0.15,
+        extended_1: 0.15,
+        extended_2: 0.15,
+        extended_3: 0.15,
+      }.freeze
+
       attr_reader :statement
 
       def initialize(statement:)
@@ -23,17 +35,7 @@ module Finance
       end
 
       def fee_for_declaration(band_letter:, type:)
-        percentage = case type
-                     when :started
-                       started_event_percentage
-                     when :completed
-                       completed_event_percentage
-                     when :retained_1, :retained_2, :retained_3, :retained_4
-                       retained_event_percentage
-                     when :extended_1, :extended_2, :extended_3
-                       extended_event_percentage
-                     end
-
+        percentage = DECLARATION_TYPE_FEE_PROPORTIONS[type]
         percentage * band_for_letter(band_letter).output_payment_per_participant
       end
 
@@ -41,29 +43,13 @@ module Finance
 
       def bandings
         @bandings ||= declaration_types.index_with do |declaration_type|
-          BandingCalculator.new(statement:, declaration_type:)
+          self.class.module_parent::BandingCalculator.new(statement:, declaration_type:)
         end
       end
 
       def band_for_letter(letter)
         @band_for_letters ||= bands.zip(:a..:d).each_with_object({}) { |(band, lettr), hash| hash[lettr] = band }
         @band_for_letters[letter]
-      end
-
-      def started_event_percentage
-        0.2
-      end
-
-      def completed_event_percentage
-        0.2
-      end
-
-      def retained_event_percentage
-        0.15
-      end
-
-      def extended_event_percentage
-        0.15
       end
 
       def declaration_types
