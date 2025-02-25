@@ -40,26 +40,26 @@ For the 2025/26 academic year, every `declaration_type` will have its own `evide
 
 ### Declaration and evidence types for ECTs 
 
-| `declaration_type`   | `evidence_held` values |
-| ------------- | ------------- |
-| `started`   |  <li>`training-event-attended`</li> <li>`self-study-material-completed`</li> <li>`other`</li> <li>`materials-engaged-with-offline` (new value)</li> |
-| `retained-1` |  <li>`training-event-attended`</li> <li>`self-study-material-completed`</li> <li>`other`</li> <li>`materials-engaged-with-offline` (new value)</li> |
-| `retained-2` |  <li>`75-percent-engagement-met` (new value)</li> <li>`75-percent-engagement-met-reduced-induction` (new value)</li> |
-| `retained-3` |  <li>`training-event-attended`</li> <li>`self-study-material-completed`</li> <li>`other`</li> <li>`materials-engaged-with-offline` (new value)</li> |
-| `retained-4` |  <li>`training-event-attended`</li> <li>`self-study-material-completed`</li> <li>`other`</li> <li>`materials-engaged-with-offline` (new value)</li> |
-| `extended-1` |  <li>`training-event-attended`</li> <li>`self-study-material-completed`</li> <li>`other`</li> <li>`materials-engaged-with-offline` (new value)</li> |
-| `extended-2` |  <li>`training-event-attended`</li> <li>`self-study-material-completed`</li> <li>`other`</li> <li>`materials-engaged-with-offline` (new value)</li> |
-| `extended-3` |  <li>`training-event-attended`</li> <li>`self-study-material-completed`</li> <li>`other`</li> <li>`materials-engaged-with-offline` (new value)</li> |
-| `completed` |  <li>`75-percent-engagement-met` (new value)</li> <li>`75-percent-engagement-met-reduced-induction` (new value)</li> <li> `one-term-induction` (new value) </li>|
+| Declaration Type   | Evidence held values |
+| -------------------- | ---------------------- |
+| `started`   |  <ul class="govuk-list govuk-list--bullet"><li>`training-event-attended`</li> <li>`self-study-material-completed`</li> <li>`other`</li> <li>`materials-engaged-with-offline` (new value)</li></ul> |
+| `retained-1` |  <ul class="govuk-list govuk-list--bullet"><li>`training-event-attended`</li> <li>`self-study-material-completed`</li> <li>`other`</li> <li>`materials-engaged-with-offline` (new value)</li></ul> |
+| `retained-2` |  <ul class="govuk-list govuk-list--bullet"><li>`75-percent-engagement-met` (new value)</li> <li>`75-percent-engagement-met-reduced-induction` (new value)</li></ul> |
+| `retained-3` |  <ul class="govuk-list govuk-list--bullet"><li>`training-event-attended`</li> <li>`self-study-material-completed`</li> <li>`other`</li> <li>`materials-engaged-with-offline` (new value)</li></ul> |
+| `retained-4` |  <ul class="govuk-list govuk-list--bullet"><li>`training-event-attended`</li> <li>`self-study-material-completed`</li> <li>`other`</li> <li>`materials-engaged-with-offline` (new value)</li></ul> |
+| `extended-1` |  <ul class="govuk-list govuk-list--bullet"><li>`training-event-attended`</li> <li>`self-study-material-completed`</li> <li>`other`</li> <li>`materials-engaged-with-offline` (new value)</li></ul> |
+| `extended-2` |  <ul class="govuk-list govuk-list--bullet"><li>`training-event-attended`</li> <li>`self-study-material-completed`</li> <li>`other`</li> <li>`materials-engaged-with-offline` (new value)</li></ul> |
+| `extended-3` |  <ul class="govuk-list govuk-list--bullet"><li>`training-event-attended`</li> <li>`self-study-material-completed`</li> <li>`other`</li> <li>`materials-engaged-with-offline` (new value)</li></ul> |
+| `completed` |  <ul class="govuk-list govuk-list--bullet"><li>`75-percent-engagement-met` (new value)</li> <li>`75-percent-engagement-met-reduced-induction` (new value)</li> <li> `one-term-induction` (new value) </li></ul>|
 
 ### Declaration and evidence types for mentors 
 
-| `declaration_type`   | `evidence_held` values |
+| Declaration type   | Evidence held values |
 | ------------- | ------------- |
-| `started`   |  <li>`training-event-attended`</li> <li>`self-study-material-completed`</li> <li>`other`</li> <li>`materials-engaged-with-offline` (new value)</li> |
-| `completed` |  <li>`75-percent-engagement-met` (new value)</li> <li>`75-percent-engagement-met-reduced-induction` (new value)</li> |
+| `started`   |  <ul class="govuk-list govuk-list--bullet"><li>`training-event-attended`</li> <li>`self-study-material-completed`</li> <li>`other`</li> <li>`materials-engaged-with-offline` (new value)</li></ul> |
+| `completed` |  <ul class="govuk-list govuk-list--bullet"><li>`75-percent-engagement-met` (new value)</li> <li>`75-percent-engagement-met-reduced-induction` (new value)</li></ul> |
 
-> New evidence types are not compatible with previous cohorts. If providers try using a new evidence type for an older cohort declaration, it will not work and they’ll see a 422-error message.
+<div class="govuk-inset-text">New evidence types are not compatible with previous cohorts. If providers try using a new evidence type for an older cohort declaration, it will not work and they’ll see a 422-error message.</div>
 
 ## What to test ahead of the 2025/26 academic year’s registration opening 
 
@@ -76,7 +76,7 @@ We’ll be making the following changes to the `induction_programme_choice` fiel
 * `core-induction-programme` and `diy` will all be known as `school-led`
 * `full-induction-programme` and `school-funded-full-induction-programme` will change to `provider-led`
 
-> These changes will apply across all cohorts. We’ll contact providers directly to ensure their integrations can support the new values.
+<div class="govuk-inset-text">These changes will apply across all cohorts. We’ll contact providers directly to ensure their integrations can support the new values.</div>
 
 ## Seed data for testing 
 
@@ -92,6 +92,6 @@ We’ll update the test environment in the following order:
 2. Evidence types (late February 2025).
 3. Induction programme type changes (following provider consultation, spring 2025).
 
-Refer to our [release notes](https://manage-training-for-early-career-teachers.education.gov.uk/api-reference/release-notes.html) for all the relevant spec changes.
+Refer to our [release notes](/api-reference/release-notes.html) for all the relevant spec changes.
 
 As always, we’d welcome feedback any of these updates before they go into production.
