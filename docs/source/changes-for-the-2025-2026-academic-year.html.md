@@ -11,20 +11,20 @@ We’ll update this section with any further details providers might need to hel
 
 ## Reduced declarations for mentors starting training in the 2025/26 academic year 
 
-We're removing the following declarations from the ``POST participant-declarations`` endpoint for mentors starting in the 2025/26 academic year:  
+We're removing the following declarations from the `POST participant-declarations` endpoint for mentors starting in the 2025/26 academic year:
 
-* ``retained-1`` 
-* ``retained-2`` 
-* ``retained-3`` 
-* ``retained-4`` 
-* ``extended-1`` 
-* ``extended-2`` 
-* ``extended-3``
+* `retained-1`
+* `retained-2`
+* `retained-3`
+* `retained-4`
+* `extended-1`
+* `extended-2`
+* `extended-3`
 
 This means there’ll be just 2 mentor declarations from the 2025/26 academic year onwards:  
 
-* ``started`` 
-* ``completed``
+* `started`
+* `completed`
 
 Providers will need to update their integrations to support submitting 2 milestones only. 
 
@@ -32,32 +32,32 @@ Providers will see a 422-error message if they try to submit retained or extende
 
 ## Evidence types for the 2025/26 academic year
 
-We'll be updating the ``evidence_held`` values lead providers will be able to use when they submit participant declarations for the 2025/26 academic year intake of ECTs and mentors. 
+We'll be updating the `evidence_held` values lead providers will be able to use when they submit participant declarations for the 2025/26 academic year intake of ECTs and mentors.
 
 These values represent the evidence lead providers hold to show participants have met the retention criteria for the current milestone period. 
 
-For the 2025/26 academic year, every ``declaration_type`` will have its own ``evidence_held`` values (see tables). In previous years we’d applied the ``training-event-attended``, ``self-study-material-completed`` and ``other`` values across all declaration types.  
+For the 2025/26 academic year, every `declaration_type` will have its own `evidence_held` values (see tables). In previous years we’d applied the `training-event-attended`, `self-study-material-completed` and `other` values across all declaration types.
 
 ### Declaration and evidence types for ECTs 
 
-| ``declaration_type``   | ``evidence_held`` values |
+| `declaration_type`   | `evidence_held` values |
 | ------------- | ------------- |
-| ``started``   |  <li>``training-event-attended``</li> <li>``self-study-material-completed``</li> <li>``other``</li> <li>``materials-engaged-with-offline`` (new value)</li> |
-| ``retained-1`` |  <li>``training-event-attended``</li> <li>``self-study-material-completed``</li> <li>``other``</li> <li>``materials-engaged-with-offline`` (new value)</li> |
-| ``retained-2`` |  <li>``75-percent-engagement-met`` (new value)</li> <li>``75-percent-engagement-met-reduced-induction`` (new value)</li> |
-| ``retained-3`` |  <li>``training-event-attended``</li> <li>``self-study-material-completed``</li> <li>``other``</li> <li>``materials-engaged-with-offline`` (new value)</li> |
-| ``retained-4`` |  <li>``training-event-attended``</li> <li>``self-study-material-completed``</li> <li>``other``</li> <li>``materials-engaged-with-offline`` (new value)</li> |
-| ``extended-1`` |  <li>``training-event-attended``</li> <li>``self-study-material-completed``</li> <li>``other``</li> <li>``materials-engaged-with-offline`` (new value)</li> |
-| ``extended-2`` |  <li>``training-event-attended``</li> <li>``self-study-material-completed``</li> <li>``other``</li> <li>``materials-engaged-with-offline`` (new value)</li> |
-| ``extended-3`` |  <li>``training-event-attended``</li> <li>``self-study-material-completed``</li> <li>``other``</li> <li>``materials-engaged-with-offline`` (new value)</li> |
-| ``completed`` |  <li>``75-percent-engagement-met`` (new value)</li> <li>``75-percent-engagement-met-reduced-induction`` (new value)</li> <li> ``one-term-induction`` (new value) </li>|
+| `started`   |  <li>`training-event-attended`</li> <li>`self-study-material-completed`</li> <li>`other`</li> <li>`materials-engaged-with-offline` (new value)</li> |
+| `retained-1` |  <li>`training-event-attended`</li> <li>`self-study-material-completed`</li> <li>`other`</li> <li>`materials-engaged-with-offline` (new value)</li> |
+| `retained-2` |  <li>`75-percent-engagement-met` (new value)</li> <li>`75-percent-engagement-met-reduced-induction` (new value)</li> |
+| `retained-3` |  <li>`training-event-attended`</li> <li>`self-study-material-completed`</li> <li>`other`</li> <li>`materials-engaged-with-offline` (new value)</li> |
+| `retained-4` |  <li>`training-event-attended`</li> <li>`self-study-material-completed`</li> <li>`other`</li> <li>`materials-engaged-with-offline` (new value)</li> |
+| `extended-1` |  <li>`training-event-attended`</li> <li>`self-study-material-completed`</li> <li>`other`</li> <li>`materials-engaged-with-offline` (new value)</li> |
+| `extended-2` |  <li>`training-event-attended`</li> <li>`self-study-material-completed`</li> <li>`other`</li> <li>`materials-engaged-with-offline` (new value)</li> |
+| `extended-3` |  <li>`training-event-attended`</li> <li>`self-study-material-completed`</li> <li>`other`</li> <li>`materials-engaged-with-offline` (new value)</li> |
+| `completed` |  <li>`75-percent-engagement-met` (new value)</li> <li>`75-percent-engagement-met-reduced-induction` (new value)</li> <li> `one-term-induction` (new value) </li>|
 
 ### Declaration and evidence types for mentors 
 
-| ``declaration_type``   | ``evidence_held`` values |
+| `declaration_type`   | `evidence_held` values |
 | ------------- | ------------- |
-| ``started``   |  <li>``training-event-attended``</li> <li>``self-study-material-completed``</li> <li>``other``</li> <li>``materials-engaged-with-offline`` (new value)</li> |
-| ``completed`` |  <li>``75-percent-engagement-met`` (new value)</li> <li>``75-percent-engagement-met-reduced-induction`` (new value)</li> |
+| `started`   |  <li>`training-event-attended`</li> <li>`self-study-material-completed`</li> <li>`other`</li> <li>`materials-engaged-with-offline` (new value)</li> |
+| `completed` |  <li>`75-percent-engagement-met` (new value)</li> <li>`75-percent-engagement-met-reduced-induction` (new value)</li> |
 
 > New evidence types are not compatible with previous cohorts. If providers try using a new evidence type for an older cohort declaration, it will not work and they’ll see a 422-error message.
 
@@ -66,15 +66,15 @@ For the 2025/26 academic year, every ``declaration_type`` will have its own ``ev
 We recommend providers check their integrations can: 
 
 * support all new evidence types  
-* submit ``one-term-induction`` as ``evidence_held`` for ``completed`` ECT declarations 
-* supply evidence types for ``started`` declarations 
+* submit `one-term-induction` as `evidence_held` for `completed` ECT declarations
+* supply evidence types for `started` declarations
 
 ## Changes to induction programme types 
 
-We’ll be making the following changes to the ``induction_programme_choice`` field options in the ``GET schools`` endpoint: 
+We’ll be making the following changes to the `induction_programme_choice` field options in the `GET schools` endpoint:
 
-* ``core-induction-programme`` and ``diy`` will all be known as ``school-led``
-* ``full-induction-programme`` and ``school-funded-full-induction-programme`` will change to ``provider-led``
+* `core-induction-programme` and `diy` will all be known as `school-led`
+* `full-induction-programme` and `school-funded-full-induction-programme` will change to `provider-led`
 
 > These changes will apply across all cohorts. We’ll contact providers directly to ensure their integrations can support the new values.
 
