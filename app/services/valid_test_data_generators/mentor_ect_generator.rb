@@ -51,13 +51,17 @@ module ValidTestDataGenerators
 
     def find_or_create_school_cohort
       school = partnership.school
-      school_cohort = SchoolCohort.find_or_create_by!(school:, cohort:, induction_programme_choice: "full_induction_programme")
-      InductionProgramme.find_or_create_by!(school_cohort:, partnership:, training_programme: "full_induction_programme")
+      school_cohort = SchoolCohort.find_or_create_by!(school:, cohort:) do |sc|
+        sc.induction_programme_choice = "full_induction_programme"
+      end
+      school.school_local_authorities.create!(local_authority: LocalAuthority.all.sample, start_year: cohort.start_year)
+      Induction::SetCohortInductionProgramme.call(school_cohort:,
+                                                  programme_choice: "full_induction_programme")
       school_cohort
     end
 
     def partnership
-      lead_provider.partnerships.find_by(cohort:)
+      lead_provider.partnerships.joins(:school).merge!(School.eligible_or_cip_only).find_by(cohort:)
     end
   end
 end
