@@ -29,7 +29,6 @@ namespace :lead_providers do
       Array.wrap(cohort || Cohort.between_years((Date.current - 2.years + 1.day).year, (Date.current + 1.year).year)).each do |c|
         ValidTestDataGenerators::ECFLeadProviderPopulater.call(name: lp.name, cohort: c, total_schools: args[:total_schools]&.to_i || 5, participants_per_school: 50)
         ValidTestDataGenerators::CompletedMentorGenerator.call(name: lp.name, cohort: c, total_completed_mentors: args[:total_completed_mentors]&.to_i || 30)
-        ValidTestDataGenerators::SandboxSharedData.new(name: lp.name, cohort: c).call
         ValidTestDataGenerators::MentorECTGenerator.call(name: lp.name, cohort: c, number: 20)
       end
     end
