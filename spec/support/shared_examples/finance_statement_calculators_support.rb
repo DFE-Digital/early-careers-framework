@@ -48,15 +48,16 @@ RSpec.shared_examples "a Finance ECF statement calculator", mid_cohort: true do
       end
     end
 
-    output_calculator = subject.send(:output_calculator)
-
-    # Mock uplift_breakdown values
-    if defined?(uplift_breakdown)
-      allow(output_calculator).to receive(:uplift_breakdown).and_return(uplift_breakdown)
+    # Mock uplift values
+    if defined?(mock_uplift)
+      uplift_calculator_klass = described_class.module_parent::UpliftCalculator
+      mock_uplift_double = instance_double(uplift_calculator_klass, **mock_uplift)
+      allow(uplift_calculator_klass).to receive(:new).with(statement:).and_return(mock_uplift_double)
     end
 
     # Mock fee_for_declaration
     if defined?(mock_fee_for_declaration)
+      output_calculator = subject.send(:output_calculator)
       allow(output_calculator).to receive(:fee_for_declaration).and_return(*mock_fee_for_declaration)
     end
   end
@@ -64,7 +65,7 @@ RSpec.shared_examples "a Finance ECF statement calculator", mid_cohort: true do
   describe "#total" do
     let(:default_total) { BigDecimal("-0.5232793103448275862068965517241379310345e4") }
 
-    let(:uplift_breakdown) do
+    let(:mock_uplift) do
       {
         previous_count: 0,
         count: 2,
@@ -199,7 +200,7 @@ RSpec.shared_examples "a Finance ECF statement calculator", mid_cohort: true do
 
   describe "#adjustments_total" do
     context "when there are uplifts" do
-      let(:uplift_breakdown) do
+      let(:mock_uplift) do
         {
           previous_count: 0,
           count: 2,
@@ -224,7 +225,7 @@ RSpec.shared_examples "a Finance ECF statement calculator", mid_cohort: true do
     end
 
     context "when there are clawbacks" do
-      let(:uplift_breakdown) do
+      let(:mock_uplift) do
         {
           previous_count: 0,
           count: 0,
@@ -281,7 +282,7 @@ RSpec.shared_examples "a Finance ECF statement calculator", mid_cohort: true do
     end
 
     context "when there are uplifts and clawbacks" do
-      let(:uplift_breakdown) do
+      let(:mock_uplift) do
         {
           previous_count: 0,
           count: 2,
@@ -427,7 +428,7 @@ RSpec.shared_examples "a Finance ECF statement calculator", mid_cohort: true do
     end
 
     context "when there are uplifts" do
-      let(:uplift_breakdown) do
+      let(:mock_uplift) do
         {
           previous_count: 5,
           count: 2,
@@ -444,7 +445,7 @@ RSpec.shared_examples "a Finance ECF statement calculator", mid_cohort: true do
     end
 
     context "when there is net negative uplifts" do
-      let(:uplift_breakdown) do
+      let(:mock_uplift) do
         {
           previous_count: 5,
           count: -3,
@@ -461,7 +462,7 @@ RSpec.shared_examples "a Finance ECF statement calculator", mid_cohort: true do
     context "when we pass the uplift cap threshold" do
       let!(:contract) { create(:call_off_contract, lead_provider: cpd_lead_provider.lead_provider) }
 
-      let(:uplift_breakdown) do
+      let(:mock_uplift) do
         {
           previous_count: 0,
           count: 100_000,
@@ -476,7 +477,7 @@ RSpec.shared_examples "a Finance ECF statement calculator", mid_cohort: true do
     end
 
     context "when contract does not include uplift fees" do
-      let(:uplift_breakdown) do
+      let(:mock_uplift) do
         {
           previous_count: 5,
           count: 2,
