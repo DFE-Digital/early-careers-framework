@@ -291,7 +291,8 @@ GEM
       csv
       mini_mime (>= 1.0.0)
       multi_xml (>= 0.5.2)
-    httpclient (2.8.3)
+    httpclient (2.9.0)
+      mutex_m
     httpi (4.0.3)
       base64
       mutex_m
@@ -762,7 +763,7 @@ DEPENDENCIES
   friendly_id (~> 5.5)
   govuk-components (~> 5.8.0)
   govuk_design_system_formbuilder (~> 5.8.0)
-  httpclient (~> 2.8, >= 2.8.3)
+  httpclient (~> 2.9)
   jsbundling-rails
   json-diff (~> 0.4.1)
   json-schema (>= 2.8.1)

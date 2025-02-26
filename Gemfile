@@ -62,7 +62,7 @@ gem "govuk-components", "~> 5.8.0"
 gem "govuk_design_system_formbuilder", "~> 5.8.0"
 
 # Fetching from APIs
-gem "httpclient", "~> 2.8", ">= 2.8.3"
+gem "httpclient", "~> 2.9"
 gem "rubyzip", "~> 2.4"
 gem "savon", "~> 2.15"
 
