@@ -29,7 +29,11 @@ module Api
                     .joins("JOIN (#{latest_induction_records_join.to_sql}) AS latest_induction_records ON latest_induction_records.latest_id = induction_records.id")
 
           if updated_since.present?
-            scope.where(users: { updated_at: updated_since.. }).order("users.updated_at ASC")
+            scope.where(users: { updated_at: updated_since.. })
+              .or(scope.where(participant_profile: { updated_at: updated_since.. }))
+              .or(scope.where(participant_identities: { updated_at: updated_since.. }))
+              .or(scope.where(updated_at: updated_since..))
+              .order("users.updated_at ASC")
           else
             scope.order("users.created_at ASC")
           end

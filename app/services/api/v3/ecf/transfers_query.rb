@@ -29,7 +29,9 @@ module Api
             )
 
           if updated_since_filter.present?
-            scope.where(updated_at: updated_since..).order(:updated_at)
+            scope.where(updated_at: updated_since..)
+            .or(scope.where(induction_records: { updated_at: updated_since.. }))
+            .order(:updated_at)
           else
             scope.order(:created_at)
           end

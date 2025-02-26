@@ -23,7 +23,21 @@ module Api
                     .left_joins(:participant_id_changes)
                     .order(sort_order(default: :created_at, model: User))
                     .distinct
-          scope = scope.where(users: { updated_at: updated_since.. }) if updated_since_filter.present?
+
+          if updated_since_filter.present?
+            scope = scope.includes(:participant_identities)
+            scope = scope.where(users: { updated_at: updated_since.. })
+              .or(scope.where(participant_profiles_users: { updated_at: updated_since.. }))
+              .or(scope.where(participant_identities: { updated_at: updated_since.. }))
+              .or(scope.where(participant_profiles: { induction_records: { updated_at: updated_since.. } }))
+
+            # users_updated_since = User.where(updated_at: updated_since..)
+            # participant_profiles_updated_since = User.where(id: TeacherProfile.where(id: ParticipantProfile.where(updated_at: updated_since..).select(:teacher_profile_id)).select(:user_id))
+            # participant_identity_updated_since = User.where(id: ParticipantIdentity.where(updated_at: updated_since..).select(:user_id))
+            # induction_records_updated_since = User.where(id: TeacherProfile.where(id: ParticipantProfile.where(id: InductionRecord.where(updated_at: updated_since..).select(:participant_profile_id)).select(:teacher_profile_id)).select(:user_id))
+            # scope.merge!(users_updated_since.or(participant_profiles_updated_since).or(participant_identity_updated_since).or(induction_records_updated_since))
+          end
+
           scope = scope.where(induction_records: { training_status: }) if training_status.present?
           scope = scope.where(participant_id_changes: { from_participant_id: }) if from_participant_id.present?
 
