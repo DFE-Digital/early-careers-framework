@@ -20,19 +20,13 @@ class RecordDeclaration
   validates :declaration_date, presence: { message: I18n.t(:missing_declaration_date) }
   validates :declaration_type, presence: { message: I18n.t(:missing_declaration_type) }
   validates :declaration_date, future_date: true, declaration_date: true, allow_blank: true
-  validates :evidence_held,
-            presence: { message: I18n.t(:missing_evidence_held), if: :validate_evidence_held? },
-            inclusion: {
-              in: ->(record_declaration) { record_declaration.participant_profile.class::VALID_EVIDENCE_HELD },
-              if: :validate_evidence_held?,
-              message: I18n.t(:invalid_evidence_type),
-            }
   validate :output_fee_statement_available
   validate :validate_milestone_exists
   validate :validates_billable_slot_available
   validate :validate_only_started_or_completed_if_mentor
   validates :course_identifier, course: true
   validates :cpd_lead_provider, induction_record: true
+  validates :evidence_held, evidence_held: true
 
   attr_reader :raw_declaration_date
 
@@ -194,12 +188,6 @@ private
       lead_provider: cpd_lead_provider.lead_provider,
       date_range: ..declaration_date,
     )
-  end
-
-  def validate_evidence_held?
-    return unless participant_profile && participant_profile.is_a?(ParticipantProfile::ECF)
-
-    declaration_type.present? && declaration_type != "started"
   end
 
   def original_participant_declaration

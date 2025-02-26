@@ -79,7 +79,7 @@ RSpec.shared_examples "validates the declaration for a withdrawn participant" do
   end
 end
 
-RSpec.shared_examples "validates the course_identifier, cpd_lead_provider, participant_id" do
+RSpec.shared_examples "validates the course_identifier, cpd_lead_provider, participant_id, evidence_held" do
   context "when user is not a participant" do
     let(:induction_coordinator_profile) { create(:induction_coordinator_profile) }
     before { params[:participant_id] = induction_coordinator_profile.user_id }
@@ -87,15 +87,6 @@ RSpec.shared_examples "validates the course_identifier, cpd_lead_provider, parti
     it "has meaningful error message", :aggregate_failures do
       expect(service).to be_invalid
       expect(service.errors.messages_for(:participant_id)).to eq(["Your update cannot be made as the '#/participant_id' is not recognised. Check participant details and try again."])
-    end
-
-    context "when validating evidence held" do
-      let(:declaration_type) { "retained-1" }
-
-      it "has meaningful error message", :aggregate_failures do
-        expect(service).to be_invalid
-        expect(service.errors.messages_for(:participant_id)).to eq(["Your update cannot be made as the '#/participant_id' is not recognised. Check participant details and try again."])
-      end
     end
   end
 
@@ -160,6 +151,115 @@ RSpec.shared_examples "validates the course_identifier, cpd_lead_provider, parti
       it "has a meaningful error", :aggregate_failures do
         expect(service).to be_invalid
         expect(service.errors.messages_for(:declaration_date)).to include("Enter a valid RCF3339 '#/declaration_date'.")
+      end
+    end
+  end
+
+  context "when validating evidence held" do
+    let(:declaration_type) { "retained-1" }
+
+    context "when `evidence_held` is not present" do
+      let(:evidence_held) { nil }
+
+      it "has meaningful error message", :aggregate_failures do
+        expect(service).to be_invalid
+        expect(service.errors.messages_for(:evidence_held)).to include("Enter a '#/evidence_held' value for this participant.")
+      end
+
+      context "when `declaration_type` is started" do
+        let(:declaration_type) { "started" }
+
+        it { is_expected.to be_valid }
+      end
+
+      context "when `evidence_held` is blank" do
+        let(:evidence_held) { "" }
+
+        it "has meaningful error message", :aggregate_failures do
+          expect(service).to be_invalid
+          expect(service.errors.messages_for(:evidence_held)).to include("Enter a '#/evidence_held' value for this participant.")
+        end
+      end
+    end
+
+    context "when `evidence_held` is present" do
+      let(:evidence_held) { "other" }
+
+      context "when `declaration_type` is started" do
+        let(:declaration_type) { "started" }
+
+        it { is_expected.to be_valid }
+
+        context "when `evidence_held` is invalid" do
+          let(:evidence_held) { "anything" }
+
+          it { is_expected.to be_valid }
+        end
+      end
+
+      context "when `evidence_held` is invalid" do
+        let(:evidence_held) { "anything" }
+
+        it "has meaningful error message", :aggregate_failures do
+          expect(service).to be_invalid
+          expect(service.errors.messages_for(:evidence_held)).to include("Enter an available '#/evidence_held' type for this participant's event and course.")
+        end
+      end
+    end
+
+    context "when cohort has detailed evidence types" do
+      before { schedule.cohort.update!(detailed_evidence_types: true) }
+
+      context "when `evidence_held` is not present" do
+        let(:evidence_held) { nil }
+
+        it "has meaningful error message", :aggregate_failures do
+          expect(service).to be_invalid
+          expect(service.errors.messages_for(:evidence_held)).to include("Enter a '#/evidence_held' value for this participant.")
+        end
+
+        context "when `declaration_type` is started" do
+          let(:declaration_type) { "started" }
+
+          it { is_expected.to be_valid }
+        end
+
+        context "when `evidence_held` is blank" do
+          let(:evidence_held) { "" }
+
+          it "has meaningful error message", :aggregate_failures do
+            expect(service).to be_invalid
+            expect(service.errors.messages_for(:evidence_held)).to include("Enter a '#/evidence_held' value for this participant.")
+          end
+        end
+      end
+
+      context "when `evidence_held` is present" do
+        let(:evidence_held) { "other" }
+
+        context "when `declaration_type` is started" do
+          let(:declaration_type) { "started" }
+
+          it { is_expected.to be_valid }
+
+          context "when `evidence_held` is invalid" do
+            let(:evidence_held) { "anything" }
+
+            it "has meaningful error message", :aggregate_failures do
+              expect(service).to be_invalid
+              expect(service.errors.messages_for(:evidence_held)).to include("Enter an available '#/evidence_held' type for this participant's event and course.")
+            end
+          end
+        end
+
+        context "when `evidence_held` is invalid" do
+          let(:evidence_held) { "anything" }
+
+          it "has meaningful error message", :aggregate_failures do
+            expect(service).to be_invalid
+            expect(service.errors.messages_for(:evidence_held)).to include("Enter an available '#/evidence_held' type for this participant's event and course.")
+          end
+        end
       end
     end
   end
@@ -406,7 +506,7 @@ RSpec.describe RecordDeclaration do
 
       it_behaves_like "validates the next output fee statement is available"
       it_behaves_like "validates the declaration for a withdrawn participant"
-      it_behaves_like "validates the course_identifier, cpd_lead_provider, participant_id"
+      it_behaves_like "validates the course_identifier, cpd_lead_provider, participant_id, evidence_held"
       it_behaves_like "validates existing declarations"
       it_behaves_like "validates the participant milestone"
       it_behaves_like "creates a participant declaration"
@@ -437,7 +537,7 @@ RSpec.describe RecordDeclaration do
 
       it_behaves_like "validates the next output fee statement is available"
       it_behaves_like "validates the declaration for a withdrawn participant"
-      it_behaves_like "validates the course_identifier, cpd_lead_provider, participant_id"
+      it_behaves_like "validates the course_identifier, cpd_lead_provider, participant_id, evidence_held"
       it_behaves_like "validates existing declarations"
       it_behaves_like "validates the participant milestone"
       it_behaves_like "creates a participant declaration"
