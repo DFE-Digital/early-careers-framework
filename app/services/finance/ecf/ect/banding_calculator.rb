@@ -6,42 +6,12 @@ module Finance
       class BandingCalculator < Finance::ECF::BandingCalculator
       private
 
-        def previous_billable_count
-          Finance::StatementLineItem
-            .where(statement: statement.previous_statements)
-            .billable
-            .joins(:participant_declaration)
-            .merge!(ParticipantDeclaration.for_declaration(declaration_type))
-            .merge!(ParticipantDeclaration.ect)
-            .count
+        def previous_statement_line_items
+          super.merge!(ParticipantDeclaration.ect)
         end
 
-        def previous_refundable_count
-          Finance::StatementLineItem
-            .where(statement: statement.previous_statements)
-            .refundable
-            .joins(:participant_declaration)
-            .merge!(ParticipantDeclaration.for_declaration(declaration_type))
-            .merge!(ParticipantDeclaration.ect)
-            .count
-        end
-
-        def current_billable_count
-          statement
-            .billable_statement_line_items
-            .joins(:participant_declaration)
-            .merge!(ParticipantDeclaration.for_declaration(declaration_type))
-            .merge!(ParticipantDeclaration.ect)
-            .count
-        end
-
-        def current_refundable_count
-          statement
-            .refundable_statement_line_items
-            .joins(:participant_declaration)
-            .merge!(ParticipantDeclaration.for_declaration(declaration_type))
-            .merge!(ParticipantDeclaration.ect)
-            .count
+        def current_statement_line_items
+          super.merge!(ParticipantDeclaration.ect)
         end
       end
     end

@@ -11,15 +11,6 @@ module Finance
         calculate
       end
 
-      def calculate
-        add_previous_count
-        add_billables
-        remaining_refundables_count = adjust_for_refundables
-        adjust_remaining_refundables(remaining_refundables_count)
-
-        banding
-      end
-
       def min(letter)
         banding_by_letter(letter)[:min]
       end
@@ -46,6 +37,15 @@ module Finance
 
     private
 
+      def calculate
+        add_previous_count
+        add_billables
+        remaining_refundables_count = adjust_for_refundables
+        adjust_remaining_refundables(remaining_refundables_count)
+
+        banding
+      end
+
       def bands
         @bands ||= statement.contract.bands.order(max: :asc)
       end
@@ -54,7 +54,7 @@ module Finance
         @banding ||=
           bands.zip(:a..:d).map do |band, letter|
             # minimum band should always be 1 or more, otherwise band a will go over its max limit
-            band_min = band.min.to_i.zero? ? 1 : band.min
+            band_min = [1, band.min.to_i].max
             {
               band: letter,
               min: band_min,
@@ -131,37 +131,41 @@ module Finance
         previous_billable_count - previous_refundable_count
       end
 
-      def previous_billable_count
+      def previous_statement_line_items
         Finance::StatementLineItem
           .where(statement: statement.previous_statements)
-          .billable
           .joins(:participant_declaration)
           .merge!(ParticipantDeclaration.for_declaration(declaration_type))
+      end
+
+      def previous_billable_count
+        previous_statement_line_items
+          .billable
           .count
       end
 
       def previous_refundable_count
-        Finance::StatementLineItem
-          .where(statement: statement.previous_statements)
+        previous_statement_line_items
           .refundable
-          .joins(:participant_declaration)
-          .merge!(ParticipantDeclaration.for_declaration(declaration_type))
           .count
       end
 
-      def current_billable_count
+      def current_statement_line_items
         statement
-          .billable_statement_line_items
+          .statement_line_items
           .joins(:participant_declaration)
           .merge!(ParticipantDeclaration.for_declaration(declaration_type))
+      end
+
+      def current_billable_count
+        current_statement_line_items
+          .billable
           .count
       end
 
       def current_refundable_count
-        statement
-          .refundable_statement_line_items
-          .joins(:participant_declaration)
-          .merge!(ParticipantDeclaration.for_declaration(declaration_type))
+        current_statement_line_items
+          .refundable
           .count
       end
     end
