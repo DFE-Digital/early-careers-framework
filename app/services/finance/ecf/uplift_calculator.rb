@@ -27,45 +27,47 @@ module Finance
 
     private
 
-      def previous_billable_count
-        @previous_billable_count ||=
-          Finance::StatementLineItem
+      def previous_statement_line_items
+        Finance::StatementLineItem
           .where(statement: statement.previous_statements)
-          .billable
           .joins(:participant_declaration)
           .merge!(ParticipantDeclaration.for_declaration("started"))
           .merge!(ParticipantDeclaration.uplift)
+      end
+
+      def previous_billable_count
+        @previous_billable_count ||=
+          previous_statement_line_items
+          .billable
           .count
       end
 
       def previous_refundable_count
         @previous_refundable_count ||=
-          Finance::StatementLineItem
-          .where(statement: statement.previous_statements)
+          previous_statement_line_items
           .refundable
-          .joins(:participant_declaration)
-          .merge!(ParticipantDeclaration.for_declaration("started"))
-          .merge!(ParticipantDeclaration.uplift)
           .count
+      end
+
+      def current_statement_line_items
+        statement
+        .statement_line_items
+        .joins(:participant_declaration)
+        .merge!(ParticipantDeclaration.for_declaration("started"))
+        .merge!(ParticipantDeclaration.uplift)
       end
 
       def current_billable_count
         @current_billable_count ||=
-          statement
-          .billable_statement_line_items
-          .joins(:participant_declaration)
-          .merge!(ParticipantDeclaration.for_declaration("started"))
-          .merge!(ParticipantDeclaration.uplift)
+          current_statement_line_items
+          .billable
           .count
       end
 
       def current_refundable_count
         @current_refundable_count ||=
-          statement
-          .refundable_statement_line_items
-          .joins(:participant_declaration)
-          .merge!(ParticipantDeclaration.for_declaration("started"))
-          .merge!(ParticipantDeclaration.uplift)
+          current_statement_line_items
+          .refundable
           .count
       end
     end
