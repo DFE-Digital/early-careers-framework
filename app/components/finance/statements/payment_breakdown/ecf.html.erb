@@ -72,14 +72,19 @@
         </div>
       </div>
 
-      <% if calculator.extended_count.positive? %>
-        <div>
-          <strong class="govuk-body-s govuk-!-margin-bottom-0">Total extended</strong>
-          <div class="govuk-heading-m govuk-!-padding-top-0">
-            <%= calculator.extended_count %>
-          </div>
+      <div>
+        <strong class="govuk-body-s govuk-!-margin-bottom-0">Total extended</strong>
+        <div class="govuk-heading-m govuk-!-padding-top-0">
+          <%= calculator.extended_count %>
         </div>
-      <% end %>
+      </div>
+
+      <div>
+        <strong class="govuk-body-s govuk-!-margin-bottom-0">Total clawed back</strong>
+        <div class="govuk-heading-m govuk-!-padding-top-0">
+          <%= calculator.clawed_back_count %>
+        </div>
+      </div>
 
       <div>
         <strong class="govuk-body-s govuk-!-margin-bottom-0">Total voided</strong>

@@ -139,6 +139,10 @@ module Finance
         end
       end
 
+      def clawed_back_count
+        statement.participant_declarations.clawed_back.count
+      end
+
       def voided_count
         voided_declarations.count
       end
