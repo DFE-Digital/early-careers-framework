@@ -4,7 +4,7 @@
 
 <% content_for :before_content, govuk_back_link(text: "Back", href: wizard_back_link_path) %>
 
-<script>
+<script nonce="<%= content_security_policy_nonce %>">
   function ab_not_listed() {
     var input = document.getElementById('schools-cohorts-setup-wizard-appropriate-body-type-not-listed-field');
     if (input) {

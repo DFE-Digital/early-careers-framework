@@ -4,6 +4,7 @@
     <meta content="IE=edge" http-equiv="X-UA-Compatible">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'">
 
     <title><%= meta_tags.browser_title %></title>
 
@@ -23,8 +24,6 @@
   </head>
 
   <body class="govuk-template__body">
-    <script>document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
-
     <div class="app-pane">
       <div class="app-pane__header toc-open-disabled">
         <a href="#content" class="govuk-skip-link" data-module="govuk-skip-link">Skip to main content</a>

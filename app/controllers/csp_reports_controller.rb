@@ -25,7 +25,7 @@ class CspReportsController < ApplicationController
 
     trace_csp_violation(report) unless report.empty?
 
-    head :ok
+    head :no_content
   end
 
 private

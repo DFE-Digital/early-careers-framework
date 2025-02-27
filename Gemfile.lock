@@ -596,7 +596,6 @@ GEM
       sass (~> 3.5, >= 3.5.5)
     scss_lint-govuk (0.2.0)
       scss_lint
-    secure_headers (6.7.0)
     securerandom (0.4.1)
     selenium-webdriver (4.29.1)
       base64 (~> 0.2)
@@ -806,7 +805,6 @@ DEPENDENCIES
   savon (~> 2.15)
   scenic (~> 1.8)
   scss_lint-govuk
-  secure_headers
   selenium-webdriver
   sentry-rails (~> 5.22)
   sentry-ruby (~> 5.22)
