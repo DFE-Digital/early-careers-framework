@@ -52,7 +52,9 @@ RSpec.describe "participant-declarations endpoint spec", type: :request, mid_coh
                 .and change(ParticipantDeclarationAttempt, :count).by(1)
         expect(ApiRequestAudit.order(created_at: :asc).last.body).to eq(params.to_s)
         expect(response.status).to eq 200
-        expect(parsed_response["data"]["id"]).to eq(ParticipantDeclaration.order(:created_at).last.id)
+
+        declaration = ParticipantDeclaration.order(:created_at).last
+        expect(parsed_response).to eq(expected_single_json_response(declaration:, profile: ect_profile, state: "eligible"))
       end
 
       context "when the participant is eligible" do
@@ -528,14 +530,10 @@ RSpec.describe "participant-declarations endpoint spec", type: :request, mid_coh
     end
 
     it "returns the correct values" do
-      participant_declaration_one_row = parsed_response.find { |row| row["id"] == participant_declaration_one.id }
-      expect(participant_declaration_one_row).not_to be_nil
-      expect(participant_declaration_one_row["course_identifier"]).to eql participant_declaration_one.course_identifier
-      expect(participant_declaration_one_row["declaration_date"]).to eql participant_declaration_one.declaration_date.rfc3339
-      expect(participant_declaration_one_row["declaration_type"]).to eql participant_declaration_one.declaration_type
-      expect(participant_declaration_one_row["state"]).to eql participant_declaration_one.state.to_s
-      expect(participant_declaration_one_row["participant_id"]).to eql participant_declaration_one.participant_profile.user.id
-      expect(participant_declaration_one_row["updated_at"]).to eql participant_declaration_one.updated_at.rfc3339
+      participant_declaration_one_row = parsed_response.find { |row| row["id"] == participant_declaration_one.id }.to_h
+      serialized_declaration = single_json_declaration(declaration: participant_declaration_one, profile: participant_declaration_one.participant_profile)
+      expect(participant_declaration_one_row["id"]).to eq(serialized_declaration["id"])
+      expect(participant_declaration_one_row.excluding("id")).to eq(serialized_declaration["attributes"].transform_values(&:to_s))
     end
 
     it "ignores pagination parameters" do
@@ -563,6 +561,12 @@ RSpec.describe "participant-declarations endpoint spec", type: :request, mid_coh
         put "/api/v2/participant-declarations/#{declaration.id}/void"
         expect(response.status).to eql(200)
       end
+
+      it "returns the correct data" do
+        put "/api/v2/participant-declarations/#{declaration.id}/void"
+        expected_response = expected_single_json_response(declaration:, profile: declaration.participant_profile, state: "voided")
+        expect(JSON.parse(response.body)).to eq(expected_response)
+      end
     end
 
     context "when declaration is payable" do
@@ -577,6 +581,12 @@ RSpec.describe "participant-declarations endpoint spec", type: :request, mid_coh
       it "returns a 200" do
         put "/api/v2/participant-declarations/#{declaration.id}/void"
         expect(response.status).to eql(200)
+      end
+
+      it "returns the correct data" do
+        put "/api/v2/participant-declarations/#{declaration.id}/void"
+        expected_response = expected_single_json_response(declaration:, profile: declaration.participant_profile, state: "voided")
+        expect(JSON.parse(response.body)).to eq(expected_response)
       end
     end
 
@@ -595,6 +605,12 @@ RSpec.describe "participant-declarations endpoint spec", type: :request, mid_coh
       it "returns a 200" do
         put "/api/v2/participant-declarations/#{declaration.id}/void"
         expect(response.status).to eql(200)
+      end
+
+      it "returns the correct data" do
+        put "/api/v2/participant-declarations/#{declaration.id}/void"
+        expected_response = expected_single_json_response(declaration:, profile: declaration.participant_profile, state: "awaiting-clawback")
+        expect(JSON.parse(response.body)).to eq(expected_response)
       end
 
       it "returns 422 when there are no output fee statements available" do
@@ -660,6 +676,17 @@ RSpec.describe "participant-declarations endpoint spec", type: :request, mid_coh
       it "should void new_participant_declaration" do
         put "/api/v2/participant-declarations/#{new_participant_declaration.id}/void"
         expect(response.status).to eql(200)
+      end
+
+      it "returns the correct data" do
+        put "/api/v2/participant-declarations/#{new_participant_declaration.id}/void"
+        expected_response = expected_single_json_response(
+          declaration: new_participant_declaration,
+          profile: new_participant_declaration.participant_profile,
+          declaration_type: "retained-1",
+          state: "voided",
+        )
+        expect(JSON.parse(response.body)).to eq(expected_response)
       end
     end
   end
