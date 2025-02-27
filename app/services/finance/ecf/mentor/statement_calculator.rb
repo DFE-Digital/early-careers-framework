@@ -30,10 +30,6 @@ module Finance
           total * vat_rate
         end
 
-        def voided_declarations
-          statement.participant_declarations.voided.merge!(ParticipantDeclaration.mentor)
-        end
-
         declaration_types.each do |declaration_type|
           define_method "#{declaration_type}_fee_per_declaration" do
             fee_for_declaration(type: declaration_type)
@@ -65,7 +61,7 @@ module Finance
         end
 
         def voided_count
-          voided_declarations.count
+          participant_declarations.voided.count
         end
 
         def adjustments_total
@@ -131,6 +127,10 @@ module Finance
 
         def declaration_types
           self.class.declaration_types
+        end
+
+        def participant_declarations
+          statement.participant_declarations.voided.merge!(ParticipantDeclaration.mentor)
         end
 
         def vat_rate

@@ -14,40 +14,37 @@ RSpec.describe Finance::ECF::ECT::StatementCalculator do
       end
     end
 
-    describe "#voided_declarations" do
-      let(:cohort) { statement.cohort }
-
-      before do
-        declarations = create_list(
-          :ect_participant_declaration, 5,
-          state: :voided
-        )
-
-        declarations.each do |dec|
+    def create_declarations(type, state, count)
+      create_list(type, count, state:).tap do |declarations|
+        declarations.each do |participant_declaration|
           Finance::StatementLineItem.create!(
             statement:,
-            participant_declaration: dec,
-            state: dec.state,
-          )
-        end
-
-        declarations = create_list(
-          :mentor_participant_declaration, 5,
-          state: :voided
-        )
-
-        declarations.each do |dec|
-          Finance::StatementLineItem.create!(
-            statement:,
-            participant_declaration: dec,
-            state: dec.state,
+            participant_declaration:,
+            state:,
           )
         end
       end
+    end
+
+    describe "#clawed_back_count" do
+      before do
+        create_declarations(:ect_participant_declaration, :clawed_back, 3)
+        create_declarations(:mentor_participant_declaration, :clawed_back, 4)
+      end
+
+      it "returns ECT only clawed back declarations" do
+        expect(subject.clawed_back_count).to eql(3)
+      end
+    end
+
+    describe "#voided_count" do
+      before do
+        create_declarations(:ect_participant_declaration, :voided, 5)
+        create_declarations(:mentor_participant_declaration, :voided, 5)
+      end
 
       it "returns ECT only voided declarations" do
-        expect(subject.voided_declarations.size).to eql(5)
-        expect(subject.voided_declarations.pluck(:state).uniq).to eql(%w[voided])
+        expect(subject.voided_count).to eql(5)
       end
     end
   end

@@ -59,10 +59,6 @@ module Finance
         total * vat_rate
       end
 
-      def voided_declarations
-        statement.participant_declarations.voided
-      end
-
       event_types.each do |event_type|
         declaration_type = event_type.to_s.dasherize
 
@@ -158,11 +154,11 @@ module Finance
       end
 
       def clawed_back_count
-        statement.participant_declarations.clawed_back.count
+        participant_declarations.clawed_back.count
       end
 
       def voided_count
-        voided_declarations.count
+        participant_declarations.voided.count
       end
 
       def uplift_count
@@ -278,6 +274,8 @@ module Finance
       end
 
     private
+
+      delegate :participant_declarations, to: :statement
 
       def calculated_service_fee
         PaymentCalculator::ECF::ServiceFees.new(contract:).call.sum { |hash| hash[:monthly] }

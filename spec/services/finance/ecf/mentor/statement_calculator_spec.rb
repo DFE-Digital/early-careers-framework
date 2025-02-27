@@ -125,41 +125,6 @@ RSpec.describe Finance::ECF::Mentor::StatementCalculator, mid_cohort: true do
     end
   end
 
-  describe "#voided_declarations" do
-    before do
-      declarations = create_list(
-        :mentor_participant_declaration, 5,
-        state: :voided
-      )
-
-      declarations.each do |dec|
-        Finance::StatementLineItem.create!(
-          statement:,
-          participant_declaration: dec,
-          state: dec.state,
-        )
-      end
-
-      declarations = create_list(
-        :ect_participant_declaration, 5,
-        state: :voided
-      )
-
-      declarations.each do |dec|
-        Finance::StatementLineItem.create!(
-          statement:,
-          participant_declaration: dec,
-          state: dec.state,
-        )
-      end
-    end
-
-    it "returns only voided mentor declarations" do
-      expect(subject.voided_declarations.size).to eql(5)
-      expect(subject.voided_declarations.pluck(:state, :type).uniq.flatten).to eql(["voided", "ParticipantDeclaration::Mentor"])
-    end
-  end
-
   describe "#voided_count" do
     before do
       declarations = create_list(
