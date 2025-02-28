@@ -154,21 +154,25 @@ RSpec.feature "ECT doing FIP: in training", type: :feature do
     expect(participant_endpoint).to have_schedule_identifier schedule_identifier
   end
 
-  scenario "The current delivery partner can locate a record for the ECT" do
-    given_i_sign_in_as_the_user_with_the_full_name delivery_partner_name
+  context "when the participant cohort is #{DeliveryPartners::ParticipantsFilter::LATEST_COHORT_TO_RETURN} or earlier" do
+    let(:start_year) { DeliveryPartners::ParticipantsFilter::LATEST_COHORT_TO_RETURN }
 
-    delivery_partner_portal = Pages::DeliveryPartnerPortal.loaded
-    delivery_partner_portal.get_participant(participant_full_name)
+    scenario "The current delivery partner can locate a record for the ECT" do
+      given_i_sign_in_as_the_user_with_the_full_name delivery_partner_name
 
-    expect(delivery_partner_portal).to have_full_name participant_full_name
-    expect(delivery_partner_portal).to have_email_address participant_email
-    expect(delivery_partner_portal).to have_teacher_reference_number teacher_reference_number
-    expect(delivery_partner_portal).to have_participant_type long_participant_type
-    expect(delivery_partner_portal).to have_lead_provider_name lead_provider_name
-    expect(delivery_partner_portal).to have_school_name school_name
-    expect(delivery_partner_portal).to have_school_urn school.urn
-    expect(delivery_partner_portal).to have_academic_year start_year
-    expect(delivery_partner_portal).to have_training_record_status delivery_partner_record_state
+      delivery_partner_portal = Pages::DeliveryPartnerPortal.loaded
+      delivery_partner_portal.get_participant(participant_full_name)
+
+      expect(delivery_partner_portal).to have_full_name participant_full_name
+      expect(delivery_partner_portal).to have_email_address participant_email
+      expect(delivery_partner_portal).to have_teacher_reference_number teacher_reference_number
+      expect(delivery_partner_portal).to have_participant_type long_participant_type
+      expect(delivery_partner_portal).to have_lead_provider_name lead_provider_name
+      expect(delivery_partner_portal).to have_school_name school_name
+      expect(delivery_partner_portal).to have_school_urn school.urn
+      expect(delivery_partner_portal).to have_academic_year start_year
+      expect(delivery_partner_portal).to have_training_record_status delivery_partner_record_state
+    end
   end
 
   scenario "The Support for ECTs service can locate a record for the ECT" do

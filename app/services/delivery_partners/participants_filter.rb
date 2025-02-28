@@ -4,6 +4,8 @@ module DeliveryPartners
   class ParticipantsFilter
     attr_reader :collection, :params, :training_record_states
 
+    LATEST_COHORT_TO_RETURN = 2024
+
     def initialize(collection:, params:, training_record_states:)
       @collection = collection
       @params = params
@@ -11,7 +13,7 @@ module DeliveryPartners
     end
 
     def scope
-      scoped = collection
+      scoped = filter_academic_year(collection, params[:academic_year])
 
       if params[:query].present?
         scoped = filter_query(scoped, params[:query])
@@ -19,10 +21,6 @@ module DeliveryPartners
 
       if params[:role].present?
         scoped = filter_role(scoped, params[:role])
-      end
-
-      if params[:academic_year].present?
-        scoped = filter_academic_year(scoped, params[:academic_year])
       end
 
       if params[:status].present?
@@ -62,9 +60,10 @@ module DeliveryPartners
     end
 
     def filter_academic_year(scoped, academic_year)
-      scoped.includes(
-        :cohort,
-      ).where(cohort: { start_year: academic_year })
+      return scoped.joins(:cohort).where("start_year <= ?", LATEST_COHORT_TO_RETURN) if academic_year.blank?
+      return scoped.none unless academic_year.to_i.in?(academic_year_options.map(&:id))
+
+      scoped.includes(:cohort).where(cohort: { start_year: academic_year })
     end
 
     def filter_status(scoped, status)
@@ -91,7 +90,7 @@ module DeliveryPartners
 
     def academic_year_options
       [OpenStruct.new(id: "", name: "")] +
-        Cohort.order(:start_year).map do |c|
+        Cohort.where("start_year <= ?", LATEST_COHORT_TO_RETURN).order(:start_year).map do |c|
           OpenStruct.new(id: c.start_year, name: c.start_year)
         end
     end
