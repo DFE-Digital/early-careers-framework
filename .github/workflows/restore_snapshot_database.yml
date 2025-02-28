@@ -16,6 +16,10 @@ on:
         description: Exclude 'api_requests' table
         type: boolean
 
+permissions:
+  contents: write
+  id-token: write
+
 jobs:
   backup-and-restore-production:
     runs-on: ubuntu-20.04
