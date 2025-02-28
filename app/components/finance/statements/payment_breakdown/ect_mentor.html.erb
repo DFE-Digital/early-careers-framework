@@ -19,45 +19,47 @@
     </div>
   </div>
 
-  <%= govuk_table do |table| %>
-    <% table.with_caption(size: "l", text: "Total #{number_to_pounds(total_amount)}") %>
+  <div class="finance-panel__summary__total-payment-breakdown">
+    <%= govuk_table do |table| %>
+      <% table.with_caption(size: "l", text: "Total #{number_to_pounds(total_amount)}") %>
 
-    <% table.with_head do |head| %>
-      <% head.with_row do |row| %>
-        <% row.with_cell(text: "") %>
-        <% row.with_cell(text: "") %>
+      <% table.with_head do |head| %>
+        <% head.with_row do |row| %>
+          <% row.with_cell(text: "") %>
+          <% row.with_cell(text: "") %>
+        <% end %>
+      <% end %>
+
+      <% table.with_body do |body| %>
+        <% body.with_row do |row| %>
+          <% row.with_cell(text: "ECTs output payment") %>
+          <% row.with_cell(text: number_to_pounds(ect_calculator.output_fee), numeric: true) %>
+        <% end %>
+        <% body.with_row do |row| %>
+          <% row.with_cell(text: "Mentors output payment") %>
+          <% row.with_cell(text: number_to_pounds(mentor_calculator.output_fee), numeric: true) %>
+        <% end %>
+        <% body.with_row do |row| %>
+          <% row.with_cell(text: "Service fee") %>
+          <% row.with_cell(text: number_to_pounds(ect_calculator.service_fee), numeric: true) %>
+        <% end %>
+        <% body.with_row do |row| %>
+          <% row.with_cell(text: "ECT clawbacks") %>
+          <% row.with_cell(text: number_to_pounds(ect_calculator.adjustments_total), numeric: true) %>
+        <% end %>
+        <% body.with_row do |row| %>
+          <% row.with_cell(text: "Mentor clawbacks") %>
+          <% row.with_cell(text: number_to_pounds(mentor_calculator.adjustments_total), numeric: true) %>
+        <% end %>
+              <% body.with_row do |row| %>
+          <% row.with_cell(text: "Additional adjustments") %>
+          <% row.with_cell(text: number_to_pounds(ect_calculator.additional_adjustments_total), numeric: true) %>
+        <% end %>
+        <% body.with_row do |row| %>
+          <% row.with_cell(text: "VAT") %>
+          <% row.with_cell(text: number_to_pounds(total_vat), numeric: true) %>
+        <% end %>
       <% end %>
     <% end %>
-
-    <% table.with_body do |body| %>
-      <% body.with_row do |row| %>
-        <% row.with_cell(text: "ECTs output payment") %>
-        <% row.with_cell(text: number_to_pounds(ect_calculator.output_fee), numeric: true) %>
-      <% end %>
-      <% body.with_row do |row| %>
-        <% row.with_cell(text: "Mentors output payment") %>
-        <% row.with_cell(text: number_to_pounds(mentor_calculator.output_fee), numeric: true) %>
-      <% end %>
-      <% body.with_row do |row| %>
-        <% row.with_cell(text: "Service fee") %>
-        <% row.with_cell(text: number_to_pounds(ect_calculator.service_fee), numeric: true) %>
-      <% end %>
-      <% body.with_row do |row| %>
-        <% row.with_cell(text: "ECT clawbacks") %>
-        <% row.with_cell(text: number_to_pounds(ect_calculator.adjustments_total), numeric: true) %>
-      <% end %>
-      <% body.with_row do |row| %>
-        <% row.with_cell(text: "Mentor clawbacks") %>
-        <% row.with_cell(text: number_to_pounds(mentor_calculator.adjustments_total), numeric: true) %>
-      <% end %>
-            <% body.with_row do |row| %>
-        <% row.with_cell(text: "Additional adjustments") %>
-        <% row.with_cell(text: number_to_pounds(ect_calculator.additional_adjustments_total), numeric: true) %>
-      <% end %>
-      <% body.with_row do |row| %>
-        <% row.with_cell(text: "VAT") %>
-        <% row.with_cell(text: number_to_pounds(total_vat), numeric: true) %>
-      <% end %>
-    <% end %>
-  <% end %>
+  </div>
 </div>
