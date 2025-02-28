@@ -15,7 +15,7 @@ module Api
 
         log_schema_validation_results
 
-        render_from_service(service, ParticipantDeclarationSerializer)
+        render_from_service(service, serializer_class)
       end
 
       def index
