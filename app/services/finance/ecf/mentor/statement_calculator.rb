@@ -60,6 +60,10 @@ module Finance
           output_calculator.additions("completed")
         end
 
+        def clawed_back_count
+          clawed_back_declarations.count
+        end
+
         def voided_count
           participant_declarations.voided.count
         end
