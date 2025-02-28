@@ -59,6 +59,10 @@ module Finance
         total * vat_rate
       end
 
+      def clawed_back_declarations
+        statement.participant_declarations.clawed_back
+      end
+
       def voided_declarations
         statement.participant_declarations.voided
       end
@@ -140,7 +144,7 @@ module Finance
       end
 
       def clawed_back_count
-        statement.participant_declarations.clawed_back.count
+        clawed_back_declarations.count
       end
 
       def voided_count
