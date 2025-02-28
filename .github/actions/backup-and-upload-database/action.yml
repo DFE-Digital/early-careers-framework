@@ -11,14 +11,18 @@ inputs:
   azure-subscription-id:
     description: Azure Subscription ID
     required: true
-  namespace:
-    description: Namespace to deploy to
-    type: string
 
 runs:
   using: composite
 
   steps:
+    - name: Set Environment variables
+      id: set_env_var
+      shell: bash
+      run: |
+        tf_vars_file=terraform/application/workspace_variables/${{ inputs.environment }}.tfvars.json
+        echo "NAMESPACE=$(jq -r '.namespace' ${tf_vars_file})" >> $GITHUB_ENV
+
     - name: Checkout code
       uses: actions/checkout@v3
 
@@ -49,7 +53,7 @@ runs:
     - name: Backup database
       shell: bash
       run: |
-        bin/konduit.sh -n ${{ env.namespace }} cpd-ecf-production-web -- pg_dump -E utf8 --compress=1 --clean --if-exists --no-privileges --no-owner --verbose -f backup-production.sql.gz
+        bin/konduit.sh -n ${{ env.NAMESPACE }} cpd-ecf-production-web -- pg_dump -E utf8 --compress=1 --clean --if-exists --no-privileges --no-owner --verbose -f backup-production.sql.gz
 
     - name: Set connection string
       shell: bash
