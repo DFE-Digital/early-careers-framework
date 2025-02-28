@@ -9,6 +9,8 @@ If you have any questions or comments about these notes, please contact DfE via 
 
 ## 19 February 2025
 
+[#new-feature #sandbox-release]
+
 We’ve added the schedules and contract data for the 2025/26 intake of early career teachers (ECTs) and mentors to the test (sandbox) environment.
 
 Lead providers can either add participants via the ECF interface or by using the seed data we’ve created. This will allow them to test the full end-to-end process and ensure smooth integration for any upcoming changes.
@@ -38,6 +40,8 @@ This is because there’ll only be 2 mentor declarations from the 2025/26 academ
 These changes align with the updated frameworks and payment guidelines shared with lead providers.
 
 ## 8 January 2025
+
+[#bug-fix]
 
 Lead providers getting participant declarations via the API endpoints will now see previous declarations attached to completed participants rather than just active participants.
 

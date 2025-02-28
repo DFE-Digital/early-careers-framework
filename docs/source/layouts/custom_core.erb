@@ -23,7 +23,7 @@
     <%= yield_content :head %>
   </head>
 
-  <body class="govuk-template__body">
+  <body class="govuk-template__body <%= current_page.data.title.parameterize %>">
     <div class="app-pane">
       <div class="app-pane__header toc-open-disabled">
         <a href="#content" class="govuk-skip-link" data-module="govuk-skip-link">Skip to main content</a>
