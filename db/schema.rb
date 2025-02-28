@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_02_11_191336) do
+ActiveRecord::Schema[7.1].define(version: 2025_02_28_135429) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "fuzzystrmatch"
@@ -755,6 +755,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_11_191336) do
     t.uuid "delivery_partner_id"
     t.uuid "mentor_user_id"
     t.uuid "cohort_id", null: false
+    t.datetime "voided_at"
+    t.uuid "voided_by_user_id"
     t.index ["cohort_id"], name: "index_participant_declarations_on_cohort_id"
     t.index ["cpd_lead_provider_id", "participant_profile_id", "declaration_type", "course_identifier", "state"], name: "unique_declaration_index", unique: true, where: "((state)::text = ANY (ARRAY[('submitted'::character varying)::text, ('eligible'::character varying)::text, ('payable'::character varying)::text, ('paid'::character varying)::text]))"
     t.index ["cpd_lead_provider_id"], name: "index_participant_declarations_on_cpd_lead_provider_id"
@@ -765,6 +767,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_11_191336) do
     t.index ["superseded_by_id"], name: "superseded_by_index"
     t.index ["type"], name: "index_participant_declarations_on_type"
     t.index ["user_id"], name: "index_participant_declarations_on_user_id"
+    t.index ["voided_by_user_id"], name: "index_participant_declarations_on_voided_by_user_id"
   end
 
   create_table "participant_id_changes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -1237,6 +1240,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_11_191336) do
   add_foreign_key "participant_declarations", "participant_profiles"
   add_foreign_key "participant_declarations", "users"
   add_foreign_key "participant_declarations", "users", column: "mentor_user_id"
+  add_foreign_key "participant_declarations", "users", column: "voided_by_user_id"
   add_foreign_key "participant_id_changes", "users"
   add_foreign_key "participant_identities", "users"
   add_foreign_key "participant_profile_completion_date_inconsistencies", "participant_profiles"

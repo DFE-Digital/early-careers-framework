@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ParticipantDeclaration < ApplicationRecord
-  self.ignored_columns = %w[statement_type statement_id voided_at temp_type]
+  self.ignored_columns = %w[statement_type statement_id temp_type]
 
   ARCHIVABLE_STATES = %w[ineligible voided submitted].freeze
 
@@ -12,6 +12,7 @@ class ParticipantDeclaration < ApplicationRecord
   belongs_to :superseded_by, class_name: "ParticipantDeclaration", optional: true
   belongs_to :delivery_partner, optional: true
   belongs_to :mentor_user, class_name: "User", optional: true
+  belongs_to :voided_by_user, class_name: "User", optional: true
 
   has_many :declaration_states
   has_many :participant_declaration_attempts, dependent: :destroy
@@ -45,6 +46,8 @@ class ParticipantDeclaration < ApplicationRecord
   delegate :fundable?, to: :participant_profile, allow_nil: true
 
   validates :course_identifier, :user, :cpd_lead_provider, :declaration_date, :declaration_type, :cohort, presence: true
+  validates :voided_by_user, presence: true, if: :voided_at
+  validates :voided_at, presence: true, if: :voided_by_user
 
   scope :for_lead_provider, ->(cpd_lead_provider) { where(cpd_lead_provider:) }
   scope :for_declaration, ->(declaration_type) { where(declaration_type:) }
