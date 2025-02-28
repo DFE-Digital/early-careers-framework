@@ -52,12 +52,12 @@
   }
 
   p {
-     display: flex;
-     justify-content: space-between;
+    display: flex;
+    justify-content: space-between;
 
-     span {
-       margin-left: 15px;
-     }
+    span {
+      margin-left: 15px;
+    }
   }
 
   h4.govuk-heading-l {
@@ -142,10 +142,6 @@
     display: grid;
     gap: 2rem;
     grid-template-columns: 1fr;
-
-    @media (min-width: 40.625em) {
-      grid-template-columns: auto 1fr;
-    }
   }
 
   .finance-panel__summary__total-payment-breakdown {
@@ -173,14 +169,12 @@
     grid-template-columns: 1fr;
 
     .govuk-table__body {
-      .govuk-table__cell, .govuk-table__header {
+
+      .govuk-table__cell,
+      .govuk-table__header {
         padding-top: 25px;
         padding-bottom: 25px;
       }
-    }
-
-    @media (min-width: 40.625em) {
-      grid-template-columns: auto 1fr;
     }
   }
 
@@ -209,6 +203,7 @@
   }
 
   .output-payments tbody tr:nth-of-type(2n - 1) {
+
     th,
     td {
       border-bottom: 0;
@@ -222,6 +217,7 @@
   .govuk-warning-text__icon {
     margin-top: 7px;
   }
+
   .govuk-warning-text__text {
     margin-left: 10px;
   }

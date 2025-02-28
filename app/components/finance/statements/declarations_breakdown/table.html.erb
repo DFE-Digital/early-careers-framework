@@ -40,11 +40,13 @@
       <% row.with_cell(numeric: true) do %>
         <%= govuk_link_to ect_finance_ecf_payment_breakdown_statement_voided_path(ecf_lead_provider.id, statement) do %>
           <%= ect_calculator.voided_count %>
+          <span class="govuk-visually-hidden">ECT voided declarations</span>
         <% end %>
       <% end %>
       <% row.with_cell(numeric: true) do %>
         <%= govuk_link_to mentor_finance_ecf_payment_breakdown_statement_voided_path(ecf_lead_provider.id, statement) do %>
           <%= mentor_calculator.voided_count %>
+          <span class="govuk-visually-hidden">Mentor voided declarations</span>
         <% end %>
       <% end %>
     <% end %>
