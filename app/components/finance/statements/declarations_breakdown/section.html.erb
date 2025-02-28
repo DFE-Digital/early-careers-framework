@@ -1,0 +1,7 @@
+<div class="finance-panel finance-panel__summary_and_counts govuk-!-margin-bottom-5 print-page-break">
+  <%= render Finance::Statements::DeclarationsBreakdown::Table.new(statement: statement, ect_calculator: ect_calculator, mentor_calculator: mentor_calculator) %>
+
+  <p class="govuk-body-s govuk-!-text-align-right">
+    <%= govuk_link_to "Download declarations (CSV)", finance_ecf_statement_assurance_report_path(@statement, format: :csv) %>
+  </p>
+</div>

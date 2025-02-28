@@ -34,6 +34,10 @@ module Finance
           statement.participant_declarations.voided.merge!(ParticipantDeclaration.mentor)
         end
 
+        def clawed_back_declarations
+          statement.participant_declarations.clawed_back.merge!(ParticipantDeclaration.mentor)
+        end
+
         declaration_types.each do |declaration_type|
           define_method "#{declaration_type}_fee_per_declaration" do
             fee_for_declaration(type: declaration_type)
@@ -66,6 +70,10 @@ module Finance
           output_calculator.output_breakdown.sum do |hash|
             hash[:completed_additions].to_i
           end
+        end
+
+        def clawed_back_count
+          clawed_back_declarations.count
         end
 
         def voided_count

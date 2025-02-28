@@ -127,7 +127,7 @@ module Importers
         uplift_target: 0.33,
         uplift_amount: cohort.start_year >= 2025 ? nil : 100,
         recruitment_target: 4500,
-        revised_target: (4500 * 1.02).to_i,
+        revised_target: (4500 * cohort.start_year >= 2025 ? 2.15 : 1.02).to_i,
         set_up_fee: 0,
         monthly_service_fee: 0,
         band_a: {

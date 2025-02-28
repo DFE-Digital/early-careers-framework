@@ -26,7 +26,7 @@
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-full">
         <div class="app-application__panel__actions">
-          <div class="duvet">
+          <div class="<%= @mentor_funding_cohort ? '' : 'duvet' %>">
             <div class="govuk-grid-column-one-half govuk-!-text-align-left">
               <% if authorise_for_payment_button_visible?(@statement) %>
                 <%= button_to t("finance.statements.payment_authorisations.button"), new_finance_statement_payment_authorisation_path(@statement), method: :get, class: "govuk-button govuk-button--primary" %>
@@ -42,9 +42,11 @@
                   print_link("Save as PDF", filename: "#{@ecf_lead_provider.name} #{@statement.name} ECF Statement (#{@statement.cohort.start_year} Cohort)")
                 %>
               </p>
-              <p class="govuk-body-s">
-                <%= govuk_link_to "Download declarations (CSV)", finance_ecf_statement_assurance_report_path(@statement, format: :csv) %>
-              </p>
+              <% unless @mentor_funding_cohort %>
+                <p class="govuk-body-s">
+                  <%= govuk_link_to "Download declarations (CSV)", finance_ecf_statement_assurance_report_path(@statement, format: :csv) %>
+                </p>
+              <% end %>
             </div>
           </div>
         </div>
@@ -56,6 +58,7 @@
 <div class="govuk-grid-row govuk-!-margin-top-5 print-page-break">
   <div class="govuk-grid-column-full">
     <% if @mentor_funding_cohort %>
+      <%= render Finance::Statements::DeclarationsBreakdown::Section.new(statement: @statement, ect_calculator: @ect_calculator, mentor_calculator: @mentor_calculator) %>
       <%= render Finance::Statements::OutputPayments::ECTMentor.new(ect_calculator: @ect_calculator, mentor_calculator: @mentor_calculator) %>
       <%= render Finance::Statements::Clawbacks.new(calculator: @ect_calculator) %>
       <%= render Finance::Statements::Clawbacks.new(calculator: @mentor_calculator) %>
