@@ -14,9 +14,6 @@ inputs:
   azure-subscription-id:
     description: Azure Subscription ID
     required: true
-  namespace:
-    description: Namespace to deploy to
-    type: string
 
 runs:
   using: composite
@@ -27,7 +24,7 @@ runs:
       shell: bash
       run: |
         tf_vars_file=terraform/application/workspace_variables/${{ inputs.environment }}.tfvars.json
-        echo "namespace=$(jq -r '.namespace' ${tf_vars_file})" >> $GITHUB_ENV
+        echo "NAMESPACE=$(jq -r '.namespace' ${tf_vars_file})" >> $GITHUB_ENV
 
     - name: Checkout code
       uses: actions/checkout@v3
@@ -59,8 +56,8 @@ runs:
     - name: Backup production DB
       shell: bash
       run: |
-        bin/konduit.sh -n ${{ env.namespace }} cpd-ecf-${{ inputs.environment }}-web -- pg_dump -E utf8 --exclude-table-data api_requests --exclude-table-data versions --compress=1 --clean --if-exists --no-privileges --no-owner --verbose -f backup-${{ inputs.environment }}.sql.gz
+        bin/konduit.sh -n ${{ env.NAMESPACE }} cpd-ecf-${{ inputs.environment }}-web -- pg_dump -E utf8 --exclude-table-data api_requests --exclude-table-data versions --compress=1 --clean --if-exists --no-privileges --no-owner --verbose -f backup-${{ inputs.environment }}.sql.gz
 
     - name: Restore to migration DB
       shell: bash
-      run: bin/konduit.sh -n ${{ env.namespace }} -d s189p01-cpdecf-mg-pg -k s189p01-cpdecf-mg-app-kv -i backup-${{ inputs.environment }}.sql.gz -c -t 7200 cpd-ecf-migration-web -- psql
+      run: bin/konduit.sh -n ${{ env.NAMESPACE }} -d s189p01-cpdecf-mg-pg -k s189p01-cpdecf-mg-app-kv -i backup-${{ inputs.environment }}.sql.gz -c -t 7200 cpd-ecf-migration-web -- psql
