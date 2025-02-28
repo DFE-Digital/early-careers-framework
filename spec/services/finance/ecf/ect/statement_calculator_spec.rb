@@ -2,62 +2,49 @@
 
 RSpec.describe Finance::ECF::ECT::StatementCalculator do
   it_behaves_like "a Finance ECF statement calculator" do
-    describe "#total" do
-      let(:uplift_breakdown) do
-        {
-          previous_count: 0,
-          count: 2,
-          additions: 4,
-          subtractions: 2,
-        }
-      end
-      let(:output_calculator) { instance_double("Finance::ECF::ECT::OutputCalculator", uplift_breakdown:, banding_breakdown: []) }
+    describe "#output_calculator" do
+      let(:output_calculator) { subject.send(:output_calculator) }
 
-      before do
-        allow(Finance::ECF::ECT::OutputCalculator).to receive(:new).with(statement:).and_return(output_calculator)
+      it "delegates to the correct OutputCalculator" do
+        expect(output_calculator.class).to eq(Finance::ECF::ECT::OutputCalculator)
       end
 
-      it "calls OutputCalculator with correct params" do
-        subject.total
-
-        expect(Finance::ECF::ECT::OutputCalculator).to have_received(:new).with(statement:)
+      it "delegates to the correct BandingCalculator" do
+        expect(output_calculator.banding_for(declaration_type: "started").class).to eq(Finance::ECF::ECT::BandingCalculator)
       end
     end
 
-    describe "#voided_declarations" do
-      let(:cohort) { statement.cohort }
-
-      before do
-        declarations = create_list(
-          :ect_participant_declaration, 5,
-          state: :voided
-        )
-
-        declarations.each do |dec|
+    def create_declarations(type, state, count)
+      create_list(type, count, state:).tap do |declarations|
+        declarations.each do |participant_declaration|
           Finance::StatementLineItem.create!(
             statement:,
-            participant_declaration: dec,
-            state: dec.state,
-          )
-        end
-
-        declarations = create_list(
-          :mentor_participant_declaration, 5,
-          state: :voided
-        )
-
-        declarations.each do |dec|
-          Finance::StatementLineItem.create!(
-            statement:,
-            participant_declaration: dec,
-            state: dec.state,
+            participant_declaration:,
+            state:,
           )
         end
       end
+    end
 
-      it "returns all voided declarations" do
-        expect(subject.voided_declarations.size).to eql(5)
-        expect(subject.voided_declarations.pluck(:state).uniq).to eql(%w[voided])
+    describe "#clawed_back_count" do
+      before do
+        create_declarations(:ect_participant_declaration, :clawed_back, 3)
+        create_declarations(:mentor_participant_declaration, :clawed_back, 4)
+      end
+
+      it "returns ECT only clawed back declarations" do
+        expect(subject.clawed_back_count).to eql(3)
+      end
+    end
+
+    describe "#voided_count" do
+      before do
+        create_declarations(:ect_participant_declaration, :voided, 5)
+        create_declarations(:mentor_participant_declaration, :voided, 5)
+      end
+
+      it "returns ECT only voided declarations" do
+        expect(subject.voided_count).to eql(5)
       end
     end
   end
