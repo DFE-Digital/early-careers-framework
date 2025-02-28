@@ -26,10 +26,15 @@ RSpec.describe Finance::ECF::StatementCalculator, mid_cohort: true do
       end
     end
 
-    describe "#clawed_back_count" do
+    describe "#clawed_back_declarations" do
       before do
         create_declarations(:ect_participant_declaration, :clawed_back, 3)
         create_declarations(:mentor_participant_declaration, :clawed_back, 4)
+      end
+
+      it "returns all clawed back declarations" do
+        expect(subject.clawed_back_count).to eql(7)
+        expect(subject.clawed_back_declarations).to all(be_clawed_back)
       end
 
       it { expect(subject.clawed_back_count).to eql(7) }
