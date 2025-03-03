@@ -4,7 +4,8 @@ require "rails_helper"
 
 RSpec.feature "Delivery partner users participants", type: :feature do
   let(:school) { create(:school) }
-  let(:school_cohort) { create(:school_cohort, school:) }
+  let(:cohort) { create(:cohort, start_year: DeliveryPartners::ParticipantsFilter::LATEST_COHORT_TO_RETURN) }
+  let(:school_cohort) { create(:school_cohort, school:, cohort:) }
   let(:participant_profile) { create(:ect_participant_profile, school_cohort:, training_status: "withdrawn") }
 
   let(:delivery_partner_user) { create(:user, :delivery_partner) }
@@ -40,6 +41,15 @@ RSpec.feature "Delivery partner users participants", type: :feature do
     then_i_see("Participants")
     when_i_click_on("Download (csv)")
     and_i_see_participant_details_csv_export
+  end
+
+  context "when the participant is in a cohort that we exclude" do
+    let(:cohort) { create(:cohort, start_year: DeliveryPartners::ParticipantsFilter::LATEST_COHORT_TO_RETURN + 1) }
+
+    scenario "Visit participants page" do
+      then_i_see("Participants")
+      and_i_see_no_participant_details
+    end
   end
 
   context "Search query" do
@@ -134,6 +144,11 @@ RSpec.feature "Delivery partner users participants", type: :feature do
   def and_i_see_participant_details
     expect(page).to have_content(participant_profile.user.full_name)
     expect(page).to have_content(participant_profile.user.email)
+  end
+
+  def and_i_see_no_participant_details
+    expect(page).not_to have_content(participant_profile.user.full_name)
+    expect(page).not_to have_content(participant_profile.user.email)
   end
 
   def and_i_do_not_see_participant_details
