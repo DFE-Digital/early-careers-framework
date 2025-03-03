@@ -9,14 +9,17 @@
 Rails.application.configure do
   # Default policy for the application; covers static pages and the
   # admin/finance dashboards.
-  self_base          = %i[self]
-  data               = %i[data]
-  blob               = %i[blob]
-  gtm_frame_src      = %w[https://www.googletagmanager.com/ns.html]
-  gtm_script_src     = %w[https://www.googletagmanager.com/gtm.js https://www.googletagmanager.com/gtag/js]
-  gtm_img_src        = %w[https://www.googletagmanager.com/td]
-  ga_connect_src     = %w[*.google-analytics.com]
-  zd_script_src      = %w[https://static.zdassets.com/ekr/snippet.js]
+  self_base       = %i[self]
+  data            = %i[data]
+  blob            = %i[blob]
+  gtm_frame_src   = %w[https://www.googletagmanager.com/ns.html]
+  gtm_script_src  = %w[https://www.googletagmanager.com/gtm.js https://www.googletagmanager.com/gtag/js]
+  gtm_img_src     = %w[https://www.googletagmanager.com/td]
+  ga_connect_src  = %w[*.google-analytics.com]
+  zd_script_src   = %w[https://static.zdassets.com/ekr/snippet.js
+                       https://static.zdassets.com/ekr/sentry-browser.min.js
+                       https://ekr.zdassets.com/compose/
+                       https://static.zdassets.com/web_widget/classic/latest/]
   sentry_connect_src = %w[*.ingest.sentry.io]
 
   config.content_security_policy do |policy|
@@ -28,6 +31,7 @@ Rails.application.configure do
     policy.style_src(*self_base)
     policy.connect_src(*self_base.concat(ga_connect_src, sentry_connect_src))
     policy.frame_src(*self_base.concat(gtm_frame_src))
+    policy.style_src_elem(*self_base.concat(["'unsafe-inline'"]))
 
     # The report-uri seems to make the feature specs flakey when ran in
     # CI. I'm not sure why - disabling for now.
@@ -39,7 +43,7 @@ Rails.application.configure do
   config.content_security_policy_nonce_directives = %w[script-src style-src]
 
   # Report violations without enforcing the policy.
-  config.content_security_policy_report_only = false
+  # config.content_security_policy_report_only = true
 
   # Security-related HTTP headers.
   config.action_dispatch.default_headers = {
