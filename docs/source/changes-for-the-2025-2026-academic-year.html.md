@@ -90,7 +90,7 @@ We plan to have all these changes ready for integration well ahead of registrati
 We’ll update the test environment in the following order: 
 
 1. Mentor funding (late February 2025).
-2. Evidence types (late February 2025).
+2. Evidence types (mid-March 2025).
 3. Induction programme type changes (following provider consultation, spring 2025).
 
 Refer to our [release notes](/api-reference/release-notes.html) for all the relevant spec changes.
