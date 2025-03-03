@@ -18,17 +18,34 @@ RSpec.describe VoidParticipantDeclaration do
   end
 
   describe "#call" do
+    let(:voided_by_user) { nil }
     let(:participant_declaration) do
       create(:ect_participant_declaration, participant_profile:, cpd_lead_provider:)
     end
 
     subject do
-      described_class.new(participant_declaration)
+      described_class.new(participant_declaration, voided_by_user:)
     end
 
     it "voids a participant declaration" do
       subject.call
       expect(participant_declaration.reload).to be_voided
+    end
+
+    context "when the voided_by_user is nil" do
+      it "does not mark as voided by a user" do
+        subject.call
+        expect(participant_declaration.reload).to have_attributes({ voided_by_user: nil, voided_at: nil })
+      end
+    end
+
+    context "when the voided_by_user is specified" do
+      let(:voided_by_user) { create(:user) }
+
+      it "marks the declaration as voided by the user" do
+        subject.call
+        expect(participant_declaration.reload).to have_attributes({ voided_by_user:, voided_at: be_within(5.seconds).of(Time.zone.now) })
+      end
     end
 
     it "does not void a voided declaration" do
@@ -61,17 +78,22 @@ RSpec.describe VoidParticipantDeclaration do
           cpd_lead_provider:,
         )
       end
+      let(:mock_service) { instance_double(Finance::ClawbackDeclaration, call: nil, errors: []) }
+
+      before { allow(Finance::ClawbackDeclaration).to receive(:new).with(participant_declaration, voided_by_user:) { mock_service } }
 
       it "delegates to Finance::ClawbackDeclaration" do
-        mock_service = instance_double(Finance::ClawbackDeclaration)
-
-        allow(Finance::ClawbackDeclaration).to receive(:new).with(participant_declaration).and_return(mock_service)
-        allow(mock_service).to receive(:call)
-        allow(mock_service).to receive(:errors).and_return([])
-
         subject.call
-
         expect(mock_service).to have_received(:call)
+      end
+
+      context "when the voided_by_user is specified" do
+        let(:voided_by_user) { create(:user) }
+
+        it "forwards the user on to the clawback service" do
+          subject.call
+          expect(mock_service).to have_received(:call)
+        end
       end
     end
 

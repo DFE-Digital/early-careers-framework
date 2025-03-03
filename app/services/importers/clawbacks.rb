@@ -25,7 +25,7 @@ module Importers
           next
         end
 
-        service = Finance::ClawbackDeclaration.new(participant_declaration:)
+        service = Finance::ClawbackDeclaration.new(participant_declaration, voided_by_user: nil)
 
         begin
           service.call

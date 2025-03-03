@@ -16,7 +16,7 @@ RSpec.describe Statements::MarkAsPaid do
 
     travel_to statement.deadline_date - 1.day do
       create(:ect_participant_declaration, :eligible, cpd_lead_provider:)
-      VoidParticipantDeclaration.new(create(:ect_participant_declaration, :eligible, cpd_lead_provider:)).call
+      VoidParticipantDeclaration.new(create(:ect_participant_declaration, :eligible, cpd_lead_provider:), voided_by_user: nil).call
     end
 
     Statements::MarkAsPayable.new(statement).call

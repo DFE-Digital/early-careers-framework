@@ -8,14 +8,16 @@ module Finance
     validate :validate_refundable_state
     validate :output_fee_statement_available
 
-    def initialize(participant_declaration)
+    def initialize(participant_declaration, voided_by_user:)
       self.participant_declaration = participant_declaration
+      self.voided_by_user = voided_by_user
     end
 
     def call
       return if invalid?
 
       ApplicationRecord.transaction do
+        track_voiding_user
         DeclarationState.awaiting_clawback!(participant_declaration)
         DeclarationStatementAttacher.new(participant_declaration).call
         ParticipantDeclarations::HandleMentorCompletion.call(participant_declaration:)
@@ -24,7 +26,13 @@ module Finance
 
   private
 
-    attr_accessor :participant_declaration
+    attr_accessor :participant_declaration, :voided_by_user
+
+    def track_voiding_user
+      return unless voided_by_user
+
+      participant_declaration.update!(voided_by_user:, voided_at: Time.zone.now)
+    end
 
     def output_fee_statement_available
       cohort = participant_declaration.cohort

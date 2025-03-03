@@ -45,7 +45,7 @@ RSpec.describe Finance::ECF::ECT::BandingCalculator do
       # Create clawbacks for statement 1 month ago from declarations 2 months ago
       travel_to statement_one_month_ago.deadline_date - 1.day do
         declarations.each do |dec|
-          Finance::ClawbackDeclaration.new(dec.reload).call
+          Finance::ClawbackDeclaration.new(dec.reload, voided_by_user: nil).call
         end
       end
       # Mark statement 1 months ago as paid
@@ -97,7 +97,7 @@ RSpec.describe Finance::ECF::ECT::BandingCalculator do
       # Create clawbacks for statement 1 month ago from declarations 2 months ago
       travel_to statement_one_month_ago.deadline_date - 1.day do
         declarations.each do |dec|
-          Finance::ClawbackDeclaration.new(dec.reload).call
+          Finance::ClawbackDeclaration.new(dec.reload, voided_by_user: nil).call
         end
       end
 
@@ -119,7 +119,7 @@ RSpec.describe Finance::ECF::ECT::BandingCalculator do
 
         # Create clawbacks for this month statement from declarations 1 month ago
         declarations.each do |dec|
-          Finance::ClawbackDeclaration.new(dec.reload).call
+          Finance::ClawbackDeclaration.new(dec.reload, voided_by_user: nil).call
         end
       end
     end
