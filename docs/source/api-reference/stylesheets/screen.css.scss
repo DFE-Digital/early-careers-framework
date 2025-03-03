@@ -14,6 +14,17 @@ $govuk-assets-path: "/api-reference/assets/govuk/assets/";
   padding: 3px 0;
 }
 
+body.release-notes .technical-documentation {
+  .tag-group {
+    margin: -22px 0 22px 0;
+  
+    .govuk-tag {
+      font-size: 0.8em;
+      margin: 0 10px 8px 0;
+    }
+  }
+}
+
 @include govuk-media-query(desktop) {
   .flexbox {
     .app-pane__toc {
