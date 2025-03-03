@@ -7,6 +7,20 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
+## 3 March 2025
+
+[#bug-fix]
+
+We’ve resolved an issue in the API where a v2 declaration endpoint was inadvertently serving the v1 schema.
+
+The fix updates the ``POST`` action to use the correct v2 schema.
+
+The following declaration endpoint has been updated:
+
+- ``POST participant-declarations``
+
+All endpoints now conform to the v2 schema specifications.
+
 ## 19 February 2025
 
 [#new-feature #sandbox-release]
