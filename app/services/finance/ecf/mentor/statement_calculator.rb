@@ -130,7 +130,7 @@ module Finance
         end
 
         def participant_declarations
-          statement.participant_declarations.voided.merge!(ParticipantDeclaration.mentor)
+          statement.participant_declarations.merge!(ParticipantDeclaration.mentor)
         end
 
         def vat_rate
