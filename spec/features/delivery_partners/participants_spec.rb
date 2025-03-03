@@ -35,6 +35,7 @@ RSpec.feature "Delivery partner users participants", type: :feature do
   scenario "Visit participants page" do
     then_i_see("Participants")
     and_i_see_participant_details
+    and_i_see_notification_banner
   end
 
   scenario "Download participants CSV" do
@@ -144,6 +145,13 @@ RSpec.feature "Delivery partner users participants", type: :feature do
   def and_i_see_participant_details
     expect(page).to have_content(participant_profile.user.full_name)
     expect(page).to have_content(participant_profile.user.email)
+  end
+
+  def and_i_see_notification_banner
+    within ".govuk-notification-banner" do
+      expect(page).to have_content("Important")
+      expect(page).to have_content("This service only provides details for participants from the 2024 cohort and earlier. Contact your lead provider if you need information from the 2025/26 academic year onwards")
+    end
   end
 
   def and_i_see_no_participant_details
