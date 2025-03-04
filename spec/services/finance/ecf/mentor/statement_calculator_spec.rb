@@ -208,41 +208,6 @@ RSpec.describe Finance::ECF::Mentor::StatementCalculator, mid_cohort: true do
     it { expect(subject.mentor?).to be(true) }
   end
 
-  describe "#clawed_back_declarations" do
-    before do
-      declarations = create_list(
-        :mentor_participant_declaration, 5,
-        state: :clawed_back
-      )
-
-      declarations.each do |dec|
-        Finance::StatementLineItem.create!(
-          statement:,
-          participant_declaration: dec,
-          state: dec.state,
-        )
-      end
-
-      declarations = create_list(
-        :ect_participant_declaration, 5,
-        state: :clawed_back
-      )
-
-      declarations.each do |dec|
-        Finance::StatementLineItem.create!(
-          statement:,
-          participant_declaration: dec,
-          state: dec.state,
-        )
-      end
-    end
-
-    it "returns only clawed back mentor declarations" do
-      expect(subject.clawed_back_declarations.size).to eql(5)
-      expect(subject.clawed_back_declarations.pluck(:state, :type).uniq.flatten).to eql(["clawed_back", "ParticipantDeclaration::Mentor"])
-    end
-  end
-
   describe "#clawed_back_count" do
     before do
       declarations = create_list(

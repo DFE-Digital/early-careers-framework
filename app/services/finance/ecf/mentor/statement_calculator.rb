@@ -61,7 +61,7 @@ module Finance
         end
 
         def clawed_back_count
-          clawed_back_declarations.count
+          participant_declarations.clawed_back.count
         end
 
         def voided_count

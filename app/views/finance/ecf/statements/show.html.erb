@@ -58,7 +58,7 @@
 <div class="govuk-grid-row govuk-!-margin-top-5 print-page-break">
   <div class="govuk-grid-column-full">
     <% if @mentor_funding_cohort %>
-      <%= render Finance::Statements::DeclarationsBreakdown::Section.new(statement: @statement, ect_calculator: @ect_calculator, mentor_calculator: @mentor_calculator) %>
+      <%= render Finance::Statements::DeclarationsBreakdown::ECTMentor.new(statement: @statement, ect_calculator: @ect_calculator, mentor_calculator: @mentor_calculator) %>
       <%= render Finance::Statements::OutputPayments::ECTMentor.new(ect_calculator: @ect_calculator, mentor_calculator: @mentor_calculator) %>
       <%= render Finance::Statements::Clawbacks.new(calculator: @ect_calculator) %>
       <%= render Finance::Statements::Clawbacks.new(calculator: @mentor_calculator) %>

@@ -3,7 +3,7 @@
 module Finance
   module Statements
     module DeclarationsBreakdown
-      class Table < BaseComponent
+      class ECTMentor < BaseComponent
         include FinanceHelper
 
         attr_accessor :statement, :ect_calculator, :mentor_calculator

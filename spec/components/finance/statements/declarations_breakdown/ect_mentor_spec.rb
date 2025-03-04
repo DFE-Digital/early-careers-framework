@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Finance::Statements::DeclarationsBreakdown::Table, type: :component do
+RSpec.describe Finance::Statements::DeclarationsBreakdown::ECTMentor, type: :component do
   let(:lead_provider) { instance_double(LeadProvider, id: "0512d6f9-e082-471e-aad2-feb9f77ff870") }
   let(:cpd_lead_provider) { instance_double(CpdLeadProvider, lead_provider:) }
   let(:statement) { instance_double(Finance::Statement, cpd_lead_provider:) }
@@ -60,6 +60,9 @@ RSpec.describe Finance::Statements::DeclarationsBreakdown::Table, type: :compone
 
     is_expected
       .to have_link(51, href: mentor_finance_ecf_payment_breakdown_statement_voided_path(lead_provider.id, statement))
+
+    is_expected
+      .to have_link("Download declarations (CSV)", href: finance_ecf_statement_assurance_report_path(statement, format: :csv))
   end
 
   def have_table_text(txt, row:, col:)
