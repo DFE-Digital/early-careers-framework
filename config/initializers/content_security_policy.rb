@@ -16,10 +16,7 @@ Rails.application.configure do
   gtm_script_src     = %w[https://www.googletagmanager.com/gtm.js https://www.googletagmanager.com/gtag/js]
   gtm_img_src        = %w[https://www.googletagmanager.com/td]
   ga_connect_src     = %w[*.google-analytics.com]
-  zd_script_src      = %w[https://static.zdassets.com/ekr/snippet.js
-                          https://static.zdassets.com/ekr/sentry-browser.min.js
-                          https://ekr.zdassets.com/compose/
-                          https://static.zdassets.com/web_widget/classic/latest/]
+  zd_script_src      = %w[*.zdassets.com]
   sentry_connect_src = %w[*.ingest.sentry.io]
 
   config.content_security_policy do |policy|
