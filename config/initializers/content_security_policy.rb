@@ -12,22 +12,22 @@ Rails.application.configure do
   self_base          = %i[self]
   data               = %i[data]
   blob               = %i[blob]
-  gtm_frame_src      = %w[https://www.googletagmanager.com/ns.html]
-  gtm_script_src     = %w[https://www.googletagmanager.com/gtm.js https://www.googletagmanager.com/gtag/js]
-  gtm_img_src        = %w[https://www.googletagmanager.com/td]
+  gtm_src            = %w[*.googletagmanager.com]
   ga_connect_src     = %w[*.google-analytics.com]
   zd_script_src      = %w[*.zdassets.com]
+  gfonts_src         = %w[*.fonts.gstatic.com]
   sentry_connect_src = %w[*.ingest.sentry.io]
 
   config.content_security_policy do |policy|
     policy.default_src(*self_base)
-    policy.font_src(*self_base.concat(data))
-    policy.img_src(*self_base.concat(data, blob, gtm_img_src))
+    policy.font_src(*self_base.concat(data, gfonts_src))
+    policy.img_src(*self_base.concat(data, blob, gtm_src))
     policy.object_src :none
-    policy.script_src(*self_base.concat(gtm_script_src, zd_script_src))
+    policy.script_src(*self_base.concat(gtm_src, zd_script_src))
     policy.style_src(*self_base)
     policy.connect_src(*self_base.concat(ga_connect_src, zd_script_src, sentry_connect_src))
-    policy.frame_src(*self_base.concat(gtm_frame_src))
+    policy.frame_src(*self_base.concat(gtm_src))
+    policy.script_src_elem(*self_base.concat(["'unsafe-inline'"]))
     policy.style_src_elem(*self_base.concat(["'unsafe-inline'"]))
 
     # The report-uri seems to make the feature specs flakey when ran in
