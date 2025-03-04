@@ -30,25 +30,21 @@ module Finance
           total * vat_rate
         end
 
-        def voided_declarations
-          statement.participant_declarations.voided.merge!(ParticipantDeclaration.mentor)
-        end
-
         declaration_types.each do |declaration_type|
           define_method "#{declaration_type}_fee_per_declaration" do
             fee_for_declaration(type: declaration_type)
           end
 
           define_method "additions_for_#{declaration_type}" do
-            output_calculator.output_breakdown.sum do |hash|
-              hash[:"#{declaration_type}_additions"].to_i * output_calculator.fee_for_declaration(type: declaration_type)
-            end
+            additions = output_calculator.additions(declaration_type)
+            fee = output_calculator.fee_for_declaration(type: declaration_type)
+            additions * fee
           end
 
           define_method "deductions_for_#{declaration_type}" do
-            output_calculator.output_breakdown.sum do |hash|
-              hash[:"#{declaration_type}_subtractions"].to_i * output_calculator.fee_for_declaration(type: declaration_type)
-            end
+            subtractions = output_calculator.subtractions(declaration_type)
+            fee = output_calculator.fee_for_declaration(type: declaration_type)
+            subtractions * fee
           end
         end
 
@@ -57,19 +53,15 @@ module Finance
         end
 
         def started_count
-          output_calculator.output_breakdown.sum do |hash|
-            hash[:started_additions].to_i
-          end
+          output_calculator.additions("started")
         end
 
         def completed_count
-          output_calculator.output_breakdown.sum do |hash|
-            hash[:completed_additions].to_i
-          end
+          output_calculator.additions("completed")
         end
 
         def voided_count
-          voided_declarations.count
+          participant_declarations.voided.count
         end
 
         def adjustments_total
@@ -102,8 +94,7 @@ module Finance
           result = []
 
           declaration_types.each do |declaration_type|
-            hash = output_calculator.output_breakdown.find { |b| b.key?(:"#{declaration_type}_subtractions") }
-            count = hash[:"#{declaration_type}_subtractions"]
+            count = output_calculator.subtractions(declaration_type)
 
             next if count.zero?
 
@@ -136,6 +127,10 @@ module Finance
 
         def declaration_types
           self.class.declaration_types
+        end
+
+        def participant_declarations
+          statement.participant_declarations.merge!(ParticipantDeclaration.mentor)
         end
 
         def vat_rate

@@ -2,25 +2,15 @@
 
 RSpec.describe Finance::ECF::StatementCalculator, mid_cohort: true do
   it_behaves_like "a Finance ECF statement calculator" do
-    describe "#total" do
-      let(:uplift_breakdown) do
-        {
-          previous_count: 0,
-          count: 2,
-          additions: 4,
-          subtractions: 2,
-        }
-      end
-      let(:output_calculator) { instance_double("Finance::ECF::OutputCalculator", uplift_breakdown:, banding_breakdown: []) }
+    describe "#output_calculator" do
+      let(:output_calculator) { subject.send(:output_calculator) }
 
-      before do
-        allow(Finance::ECF::OutputCalculator).to receive(:new).with(statement:).and_return(output_calculator)
+      it "delegates to the correct OutputCalculator" do
+        expect(output_calculator.class).to eq(Finance::ECF::OutputCalculator)
       end
 
-      it "calls OutputCalculator with correct params" do
-        subject.total
-
-        expect(Finance::ECF::OutputCalculator).to have_received(:new).with(statement:)
+      it "delegates to the correct BandingCalculator" do
+        expect(output_calculator.banding_for(declaration_type: "started").class).to eq(Finance::ECF::BandingCalculator)
       end
     end
 
@@ -45,7 +35,7 @@ RSpec.describe Finance::ECF::StatementCalculator, mid_cohort: true do
       it { expect(subject.clawed_back_count).to eql(7) }
     end
 
-    describe "#voided_declarations" do
+    describe "#voided_count" do
       before do
         create_declarations(:ect_participant_declaration, :voided, 5)
         create_declarations(:mentor_participant_declaration, :voided, 5)
@@ -53,7 +43,6 @@ RSpec.describe Finance::ECF::StatementCalculator, mid_cohort: true do
 
       it "returns all voided declarations" do
         expect(subject.voided_count).to eql(10)
-        expect(subject.voided_declarations).to all(be_voided)
       end
     end
   end

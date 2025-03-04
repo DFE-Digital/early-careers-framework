@@ -6,18 +6,14 @@ module Finance
   module ECF
     module ECT
       class StatementCalculator < Finance::ECF::StatementCalculator
-        def voided_declarations
-          statement.participant_declarations.voided.merge!(ParticipantDeclaration.ect)
-        end
-
         def ect?
           true
         end
 
       private
 
-        def output_calculator
-          @output_calculator ||= OutputCalculator.new(statement:)
+        def participant_declarations
+          super.merge!(ParticipantDeclaration.ect)
         end
       end
     end

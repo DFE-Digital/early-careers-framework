@@ -21,6 +21,18 @@ FactoryBot.define do
       end
     end
 
+    trait :one_month_ago do
+      name { 1.month.ago.strftime "%B %Y" }
+      deadline_date { 2.months.ago.end_of_month }
+      payment_date { 1.month.ago.end_of_month }
+    end
+
+    trait :two_months_ago do
+      name { 2.months.ago.strftime "%B %Y" }
+      deadline_date { 3.months.ago.end_of_month }
+      payment_date { 2.months.ago.end_of_month }
+    end
+
     trait :output_fee do
       output_fee { true }
     end

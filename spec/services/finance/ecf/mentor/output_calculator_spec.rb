@@ -28,56 +28,33 @@ RSpec.describe Finance::ECF::Mentor::OutputCalculator, mid_cohort: true do
     end
   end
 
-  describe "#output_breakdown" do
+  describe "#additions" do
     context "when no declarations" do
       it "returns empty counts" do
-        expected = [
-          {
-            started_additions: 0,
-            started_subtractions: 0,
-          },
-          {
-            completed_additions: 0,
-            completed_subtractions: 0,
-          },
-        ]
-
-        expect(first_statement_calc.output_breakdown).to eql(expected)
+        expect(first_statement_calc.additions("started")).to eql(0)
+        expect(first_statement_calc.additions("completed")).to eql(0)
       end
     end
 
     context "when some declarations" do
-      let!(:to_be_paid_participant_declaration) do
+      before do
         travel_to first_statement.deadline_date - 1.day do
           create_list(:mentor_participant_declaration, 5, :eligible, declaration_type: "started", cpd_lead_provider:, cohort:)
-        end
-
-        travel_to first_statement.deadline_date - 1.day do
           create_list(:mentor_participant_declaration, 3, :eligible, declaration_type: "completed", cpd_lead_provider:, cohort:)
-        end
-      end
 
-      before do
-        Statements::MarkAsPayable.new(first_statement).call
-        Statements::MarkAsPaid.new(first_statement).call
+          create_list(:ect_participant_declaration, 1, :eligible, declaration_type: "started", cpd_lead_provider:, cohort:)
+          create_list(:ect_participant_declaration, 1, :eligible, declaration_type: "completed", cpd_lead_provider:, cohort:)
+        end
       end
 
       it "returns correct counts" do
-        expected = [
-          {
-            started_additions: 5,
-            started_subtractions: 0,
-          },
-          {
-            completed_additions: 3,
-            completed_subtractions: 0,
-          },
-        ]
-
-        expect(first_statement_calc.output_breakdown).to eql(expected)
+        expect(first_statement_calc.additions("started")).to eql(5)
+        expect(first_statement_calc.additions("completed")).to eql(3)
       end
     end
+  end
 
+  describe "#subtractions" do
     context "when clawbacks present in 2 consecutive statements" do
       before do
         declarations = create_list(
@@ -108,30 +85,15 @@ RSpec.describe Finance::ECF::Mentor::OutputCalculator, mid_cohort: true do
       end
 
       it "can calculate refunds when current statement is empty" do
-        first_statement_expectation = [
-          {
-            started_additions: 5,
-            started_subtractions: 0,
-          },
-          {
-            completed_additions: 0,
-            completed_subtractions: 0,
-          },
-        ]
+        expect(first_statement_calc.additions("started")).to eql(5)
+        expect(first_statement_calc.additions("completed")).to eql(0)
+        expect(first_statement_calc.subtractions("started")).to eql(0)
+        expect(first_statement_calc.subtractions("completed")).to eql(0)
 
-        second_statement_expectation = [
-          {
-            started_additions: 0,
-            started_subtractions: 2,
-          },
-          {
-            completed_additions: 0,
-            completed_subtractions: 0,
-          },
-        ]
-
-        expect(first_statement_calc.output_breakdown).to eql(first_statement_expectation)
-        expect(second_statement_calc.output_breakdown).to eql(second_statement_expectation)
+        expect(second_statement_calc.additions("started")).to eql(0)
+        expect(second_statement_calc.additions("completed")).to eql(0)
+        expect(second_statement_calc.subtractions("started")).to eql(2)
+        expect(second_statement_calc.subtractions("completed")).to eql(0)
       end
     end
 
@@ -240,42 +202,20 @@ RSpec.describe Finance::ECF::Mentor::OutputCalculator, mid_cohort: true do
       end
 
       it "can calculate refunds for typical use case" do
-        first_statement_expectation = [
-          {
-            started_additions: 3,
-            started_subtractions: 0,
-          },
-          {
-            completed_additions: 0,
-            completed_subtractions: 0,
-          },
-        ]
+        expect(first_statement_calc.additions("started")).to eql(3)
+        expect(first_statement_calc.additions("completed")).to eql(0)
+        expect(first_statement_calc.subtractions("started")).to eql(0)
+        expect(first_statement_calc.subtractions("completed")).to eql(0)
 
-        second_statement_expectation = [
-          {
-            started_additions: 3,
-            started_subtractions: 1,
-          },
-          {
-            completed_additions: 0,
-            completed_subtractions: 0,
-          },
-        ]
+        expect(second_statement_calc.additions("started")).to eql(3)
+        expect(second_statement_calc.additions("completed")).to eql(0)
+        expect(second_statement_calc.subtractions("started")).to eql(1)
+        expect(second_statement_calc.subtractions("completed")).to eql(0)
 
-        third_statement_expectation = [
-          {
-            started_additions: 3,
-            started_subtractions: 2,
-          },
-          {
-            completed_additions: 0,
-            completed_subtractions: 0,
-          },
-        ]
-
-        expect(first_statement_calc.output_breakdown).to eql(first_statement_expectation)
-        expect(second_statement_calc.output_breakdown).to eql(second_statement_expectation)
-        expect(third_statement_calc.output_breakdown).to eql(third_statement_expectation)
+        expect(third_statement_calc.additions("started")).to eql(3)
+        expect(third_statement_calc.additions("completed")).to eql(0)
+        expect(third_statement_calc.subtractions("started")).to eql(2)
+        expect(third_statement_calc.subtractions("completed")).to eql(0)
       end
     end
 
@@ -305,18 +245,10 @@ RSpec.describe Finance::ECF::Mentor::OutputCalculator, mid_cohort: true do
       end
 
       it "returns correct counts" do
-        second_statement_expectation = [
-          {
-            started_additions: 1,
-            started_subtractions: 1,
-          },
-          {
-            completed_additions: 0,
-            completed_subtractions: 0,
-          },
-        ]
-
-        expect(second_statement_calc.output_breakdown).to eql(second_statement_expectation)
+        expect(second_statement_calc.additions("started")).to eql(1)
+        expect(second_statement_calc.additions("completed")).to eql(0)
+        expect(second_statement_calc.subtractions("started")).to eql(1)
+        expect(second_statement_calc.subtractions("completed")).to eql(0)
       end
     end
   end

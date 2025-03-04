@@ -59,22 +59,20 @@ module Finance
         total * vat_rate
       end
 
-      def voided_declarations
-        statement.participant_declarations.voided
-      end
-
       event_types.each do |event_type|
+        declaration_type = event_type.to_s.dasherize
+
         band_mapping.each_key do |letter|
           define_method "#{event_type}_band_#{letter}_count" do
-            output_calculator.banding_breakdown.find { |e| e[:band] == letter }[:"#{event_type}_count"]
+            output_calculator.banding_for(declaration_type:).count(letter)
           end
 
           define_method "#{event_type}_band_#{letter}_additions" do
-            output_calculator.banding_breakdown.find { |e| e[:band] == letter }[:"#{event_type}_additions"]
+            output_calculator.banding_for(declaration_type:).additions(letter)
           end
 
           define_method "#{event_type}_band_#{letter}_subtractions" do
-            output_calculator.banding_breakdown.find { |e| e[:band] == letter }[:"#{event_type}_subtractions"]
+            output_calculator.banding_for(declaration_type:).subtractions(letter)
           end
 
           define_method "#{event_type}_band_#{letter}_fee_per_declaration" do
@@ -83,14 +81,18 @@ module Finance
         end
 
         define_method "additions_for_#{event_type}" do
-          output_calculator.banding_breakdown.sum do |hash|
-            hash[:"#{event_type}_additions"] * output_calculator.fee_for_declaration(band_letter: hash[:band], type: event_type)
+          band_letters.sum do |letter|
+            additions = output_calculator.banding_for(declaration_type:).additions(letter)
+            fee = output_calculator.fee_for_declaration(band_letter: letter, type: event_type)
+            additions * fee
           end
         end
 
         define_method "deductions_for_#{event_type}" do
-          output_calculator.banding_breakdown.sum do |hash|
-            hash[:"#{event_type}_subtractions"] * output_calculator.fee_for_declaration(band_letter: hash[:band], type: event_type)
+          band_letters.sum do |letter|
+            subtractions = output_calculator.banding_for(declaration_type:).subtractions(letter)
+            fee = output_calculator.fee_for_declaration(band_letter: letter, type: event_type)
+            subtractions * fee
           end
         end
       end
@@ -116,35 +118,47 @@ module Finance
       end
 
       def started_count
-        output_calculator.banding_breakdown.sum do |hash|
-          hash[:started_additions]
+        band_letters.sum do |letter|
+          output_calculator.banding_for(declaration_type: "started").additions(letter)
         end
       end
 
+      def retained_types
+        event_types.select { |t| t.starts_with?("retained_") }
+      end
+
       def retained_count
-        output_calculator.banding_breakdown.sum do |hash|
-          hash.select { |k, _| k.match(/retained_\d_additions/) }.values.sum
+        band_letters.sum do |letter|
+          retained_types.sum do |event_type|
+            output_calculator.banding_for(declaration_type: event_type.to_s.dasherize).additions(letter)
+          end
         end
       end
 
       def completed_count
-        output_calculator.banding_breakdown.sum do |hash|
-          hash[:completed_additions]
+        band_letters.sum do |letter|
+          output_calculator.banding_for(declaration_type: "completed").additions(letter)
         end
       end
 
+      def extended_types
+        event_types.select { |t| t.starts_with?("extended_") }
+      end
+
       def extended_count
-        output_calculator.banding_breakdown.sum do |hash|
-          hash.select { |k, _| k.match(/extended_\d_additions/) }.values.sum
+        band_letters.sum do |letter|
+          extended_types.sum do |event_type|
+            output_calculator.banding_for(declaration_type: event_type.to_s.dasherize).additions(letter)
+          end
         end
       end
 
       def clawed_back_count
-        statement.participant_declarations.clawed_back.count
+        participant_declarations.clawed_back.count
       end
 
       def voided_count
-        voided_declarations.count
+        participant_declarations.voided.count
       end
 
       def uplift_count
@@ -261,12 +275,14 @@ module Finance
 
     private
 
+      delegate :participant_declarations, to: :statement
+
       def calculated_service_fee
         PaymentCalculator::ECF::ServiceFees.new(contract:).call.sum { |hash| hash[:monthly] }
       end
 
       def output_calculator
-        @output_calculator ||= OutputCalculator.new(statement:)
+        @output_calculator ||= self.class.module_parent::OutputCalculator.new(statement:)
       end
 
       def event_types

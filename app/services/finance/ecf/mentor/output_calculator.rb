@@ -15,10 +15,12 @@ module Finance
           @statement = statement
         end
 
-        def output_breakdown
-          @output_breakdown ||= declaration_types.map do |declaration_type|
-            current_output_for_declaration_type(declaration_type)
-          end
+        def additions(declaration_type)
+          output_breakdown["#{declaration_type}_additions"]
+        end
+
+        def subtractions(declaration_type)
+          output_breakdown["#{declaration_type}_subtractions"]
         end
 
         def fee_for_declaration(type:)
@@ -29,17 +31,17 @@ module Finance
       private
 
         def declaration_types
-          DECLARATION_TYPE_FEE_PROPORTIONS.stringify_keys.keys
+          DECLARATION_TYPE_FEE_PROPORTIONS.keys
         end
 
-        def current_output_for_declaration_type(declaration_type)
-          current_output_count = current_billable_count_for_declaration_type(declaration_type)
-          refundable_output_count = current_refundable_count_declaration_type(declaration_type)
+        def output_breakdown
+          @output_breakdown ||= declaration_types.each_with_object({}) do |declaration_type, hash|
+            current_output_count = current_billable_count_for_declaration_type(declaration_type)
+            refundable_output_count = current_refundable_count_declaration_type(declaration_type)
 
-          hash = {}
-          hash[:"#{declaration_type.underscore}_additions"] = current_output_count
-          hash[:"#{declaration_type.underscore}_subtractions"] = refundable_output_count
-          hash
+            hash["#{declaration_type}_additions"] = current_output_count
+            hash["#{declaration_type}_subtractions"] = refundable_output_count
+          end
         end
 
         def current_billable_count_for_declaration_type(declaration_type)
