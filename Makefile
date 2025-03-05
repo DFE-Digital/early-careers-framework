@@ -72,23 +72,23 @@ validate-domain-resources: set-what-if domain-azure-resources # make validate-do
 deploy-domain-resources: check-auto-approve domain-azure-resources # make deploy-domain-resources AUTO_APPROVE=1
 
 domains-infra-init: load-domain-config set-production-subscription set-azure-account
-	terraform -chdir=terraform/custom_domains/infrastructure init -reconfigure -upgrade \
+	terraform -chdir=terraform/domains/infrastructure init -reconfigure -upgrade \
 		-backend-config=workspace_variables/${DOMAINS_ID}_backend.tfvars
 
 domains-infra-plan: domains-infra-init # make domains-infra-plan
-	terraform -chdir=terraform/custom_domains/infrastructure plan -var-file workspace_variables/${DOMAINS_ID}.tfvars.json
+	terraform -chdir=terraform/domains/infrastructure plan -var-file workspace_variables/${DOMAINS_ID}.tfvars.json
 
 domains-infra-apply: domains-infra-init # make domains-infra-apply
-	terraform -chdir=terraform/custom_domains/infrastructure apply -var-file workspace_variables/${DOMAINS_ID}.tfvars.json ${AUTO_APPROVE}
+	terraform -chdir=terraform/domains/infrastructure apply -var-file workspace_variables/${DOMAINS_ID}.tfvars.json ${AUTO_APPROVE}
 
 domains-init: load-domain-config set-production-subscription set-azure-account
-	terraform -chdir=terraform/custom_domains/environment_domains init -upgrade -reconfigure -backend-config=workspace_variables/${DOMAINS_ID}_${DEPLOY_ENV}_backend.tfvars
+	terraform -chdir=terraform/domains/environment_domains init -upgrade -reconfigure -backend-config=workspace_variables/${DOMAINS_ID}_${DEPLOY_ENV}_backend.tfvars
 
 domains-plan: domains-init  # make dev domains-plan
-	terraform -chdir=terraform/custom_domains/environment_domains plan -var-file workspace_variables/${DOMAINS_ID}_${DEPLOY_ENV}.tfvars.json
+	terraform -chdir=terraform/domains/environment_domains plan -var-file workspace_variables/${DOMAINS_ID}_${DEPLOY_ENV}.tfvars.json
 
 domains-apply: domains-init # make dev domains-apply
-	terraform -chdir=terraform/custom_domains/environment_domains apply -var-file workspace_variables/${DOMAINS_ID}_${DEPLOY_ENV}.tfvars.json ${AUTO_APPROVE}
+	terraform -chdir=terraform/domains/environment_domains apply -var-file workspace_variables/${DOMAINS_ID}_${DEPLOY_ENV}.tfvars.json ${AUTO_APPROVE}
 
 arm-deployment: set-azure-account set-azure-template-tag set-azure-resource-group-tags
 	az deployment sub create --name "resourcedeploy-tsc-$(shell date +%Y%m%d%H%M%S)" \
