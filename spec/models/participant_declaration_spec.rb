@@ -12,6 +12,7 @@ RSpec.describe ParticipantDeclaration, type: :model do
     it { is_expected.to belong_to(:participant_profile) }
     it { is_expected.to have_many(:declaration_states) }
     it { is_expected.to belong_to(:mentor_user).class_name("User").optional }
+    it { is_expected.to belong_to(:voided_by_user).class_name("User").optional }
     it { is_expected.to belong_to(:cohort) }
   end
 
@@ -22,6 +23,21 @@ RSpec.describe ParticipantDeclaration, type: :model do
     it { is_expected.to validate_presence_of(:declaration_date) }
     it { is_expected.to validate_presence_of(:declaration_type) }
     it { is_expected.to validate_presence_of(:cohort) }
+
+    it { is_expected.not_to validate_presence_of(:voided_at) }
+    it { is_expected.not_to validate_presence_of(:voided_by_user) }
+
+    context "when voided_at is present" do
+      before { subject.voided_at = Time.zone.now }
+
+      it { is_expected.to validate_presence_of(:voided_by_user) }
+    end
+
+    context "when voided_by_user is present" do
+      before { subject.voided_by_user = build(:user) }
+
+      it { is_expected.to validate_presence_of(:voided_at) }
+    end
   end
 
   describe "state transitions" do

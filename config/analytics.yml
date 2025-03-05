@@ -72,6 +72,8 @@
   - delivery_partner_id
   - mentor_user_id
   - cohort_id
+  - voided_at
+  - voided_by_user_id
   :induction_records:
   - id
   - induction_programme_id
