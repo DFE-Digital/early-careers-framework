@@ -22,7 +22,7 @@ RSpec.describe Importers::Clawbacks do
       end
 
       it "delegates to service class" do
-        expect(Finance::ClawbackDeclaration).to receive(:new).with(participant_declaration:).and_return(mock_service)
+        expect(Finance::ClawbackDeclaration).to receive(:new).with(participant_declaration, voided_by_user: nil).and_return(mock_service)
 
         subject.call
 

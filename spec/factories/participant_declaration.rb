@@ -83,7 +83,7 @@ FactoryBot.define do
 
     trait :voided do
       after(:create) do |participant_declaration|
-        VoidParticipantDeclaration.new(participant_declaration).call
+        VoidParticipantDeclaration.new(participant_declaration, voided_by_user: nil).call
         participant_declaration.reload
       end
     end
@@ -119,7 +119,7 @@ FactoryBot.define do
           cohort: participant_declaration.cohort
         )
 
-        service = Finance::ClawbackDeclaration.new(participant_declaration)
+        service = Finance::ClawbackDeclaration.new(participant_declaration, voided_by_user: nil)
         raise ArgumentError, service.errors.full_messages unless service.valid?
 
         service.call

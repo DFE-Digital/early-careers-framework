@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 class VoidParticipantDeclaration
-  def initialize(participant_declaration)
+  def initialize(participant_declaration, voided_by_user:)
     self.participant_declaration = participant_declaration
+    self.voided_by_user = voided_by_user
   end
 
   def call
@@ -16,7 +17,7 @@ class VoidParticipantDeclaration
   end
 
   def make_awaiting_clawback
-    clawback = Finance::ClawbackDeclaration.new(participant_declaration)
+    clawback = Finance::ClawbackDeclaration.new(participant_declaration, voided_by_user:)
     clawback.call
 
     if clawback.errors.any?
@@ -31,6 +32,7 @@ class VoidParticipantDeclaration
     raise Api::Errors::InvalidTransitionError, I18n.t(:declaration_not_voidable) unless participant_declaration.voidable?
 
     ApplicationRecord.transaction do
+      track_voiding_user
       participant_declaration.make_voided!
       line_item.voided! if line_item
       ParticipantDeclarations::HandleMentorCompletion.call(participant_declaration:)
@@ -39,7 +41,13 @@ class VoidParticipantDeclaration
 
 private
 
-  attr_accessor :participant_declaration
+  attr_accessor :participant_declaration, :voided_by_user
+
+  def track_voiding_user
+    return unless voided_by_user
+
+    participant_declaration.update!(voided_by_user:, voided_at: Time.zone.now)
+  end
 
   def line_item
     participant_declaration.statement_line_items.find_by(state: %w[eligible payable ineligible])

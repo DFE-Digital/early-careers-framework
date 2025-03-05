@@ -16,7 +16,9 @@ RSpec.describe Finance::ClawbackDeclaration do
   let(:partnership) { create(:partnership, school:, lead_provider:, cohort:) }
   let(:induction_programme) { create(:induction_programme, partnership:) }
 
-  subject { described_class.new(participant_declaration) }
+  let(:voided_by_user) { nil }
+
+  subject { described_class.new(participant_declaration, voided_by_user:) }
 
   before do
     if participant_declaration.ecf?
@@ -39,6 +41,22 @@ RSpec.describe Finance::ClawbackDeclaration do
       expect {
         subject.call
       }.to change { DeclarationState.where(participant_declaration:, state: "awaiting_clawback").count }.by(1)
+    end
+
+    context "when the voided_by_user is nil" do
+      it "does not mark as voided by a user" do
+        subject.call
+        expect(participant_declaration.reload).to have_attributes({ voided_by_user: nil, voided_at: nil })
+      end
+    end
+
+    context "when the voided_by_user is specified" do
+      let(:voided_by_user) { create(:user) }
+
+      it "marks the declaration as voided by the user" do
+        subject.call
+        expect(participant_declaration.reload).to have_attributes({ voided_by_user:, voided_at: be_within(5.seconds).of(Time.zone.now) })
+      end
     end
 
     context "when there are no output fee statements available" do

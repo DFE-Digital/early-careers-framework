@@ -37,7 +37,7 @@ module Api
       end
 
       def void
-        render json: serializer_class.new(VoidParticipantDeclaration.new(participant_declaration_for_lead_provider).call).serializable_hash.to_json
+        render json: serializer_class.new(VoidParticipantDeclaration.new(participant_declaration_for_lead_provider, voided_by_user: nil).call).serializable_hash.to_json
       end
 
     private

@@ -229,7 +229,7 @@ RSpec.describe Finance::ECF::Mentor::OutputCalculator, mid_cohort: true do
 
       before do
         travel_to second_statement.deadline_date do
-          Finance::ClawbackDeclaration.new(participant_declaration.reload).call
+          Finance::ClawbackDeclaration.new(participant_declaration.reload, voided_by_user: nil).call
         end
 
         participant_declaration.clawed_back!

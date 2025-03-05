@@ -613,7 +613,7 @@ RSpec.describe RecordDeclaration do
       service = ParticipantDeclarations::MarkAsPaid.new(statement)
       service.call(participant_declaration)
 
-      Finance::ClawbackDeclaration.new(participant_declaration).call
+      Finance::ClawbackDeclaration.new(participant_declaration, voided_by_user: nil).call
 
       params[:declaration_date] = (declaration_date + 1.second).rfc3339
 

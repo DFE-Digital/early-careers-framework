@@ -233,7 +233,7 @@ private
     return unless declaration.voidable? || declaration.paid?
 
     record_info("Voided declaration: #{declaration.declaration_type}, #{declaration.state} (#{declaration.id}).")
-    VoidParticipantDeclaration.new(declaration).call
+    VoidParticipantDeclaration.new(declaration, voided_by_user: nil).call
   end
 
   def conflicting_declaration(declaration)
