@@ -23,7 +23,7 @@ Rails.application.configure do
     policy.font_src(*self_base.concat(data, gfonts_src))
     policy.img_src(*self_base.concat(data, blob, gtm_src))
     policy.object_src :none
-    policy.script_src(*self_base.concat(gtm_src, zd_script_src))
+    policy.script_src(*self_base.concat(gtm_src, zd_script_src, ["'unsafe-eval'"]))
     policy.style_src(*self_base)
     policy.connect_src(*self_base.concat(ga_connect_src, zd_script_src, sentry_connect_src))
     policy.frame_src(*self_base.concat(gtm_src))
