@@ -57,7 +57,7 @@ RSpec.describe Finance::Statements::OutputPayments::ECF, type: :component do
     ])
 
     expect(ecf_outputs[1]).to eq([
-      "Starts",
+      "Started",
       "1",
       "2",
       "",

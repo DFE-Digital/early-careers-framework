@@ -246,17 +246,17 @@ private
       expect(page).to have_content(november_statement.payment_date.to_fs(:govuk))
     end
 
-    within ".finance-panel__summary__total-payment-breakdown h4" do
+    within ".finance-panel__summary__total-payment-breakdown" do
       total = nov_statement_ect_calculator.total(with_vat: true) +
         nov_statement_mentor_calculator.total(with_vat: true)
       expect(page).to have_content(number_to_pounds(total))
     end
 
-    breakdown = page.all(".finance-panel__summary__total-payment-breakdown p").map do |row|
-      val = row.find("span").text.strip
-      key = row.text.gsub(val, "").strip
-      [key, val]
-    end
+    breakdown = page.all(".finance-panel__summary__total-payment-breakdown .govuk-table").map { |row|
+      row.text.split("\n").map do |v|
+        v.split(/ (?=\S+$)/)
+      end
+    }[0].drop(1)
 
     expect(breakdown[0]).to eq([
       "ECTs output payment",
@@ -294,12 +294,16 @@ private
       number_to_pounds(vat),
     ])
 
-    counts = page.all(".finance-panel__summary__counts .govuk-table tr").map do |row|
+    counts = page.all(".finance-panel__summary_and_counts .govuk-table tr").map do |row|
       row.all("th, td").map { |v| v.text.strip.to_s.split.first }
     end
 
-    expect(counts[1]).to eq(%w[ECTs 2 4 0 4 2])
-    expect(counts[2]).to eq(["Mentors", "2", "-", "0", "-", "0"])
+    expect(counts[1]).to eq(%w[Started 2 2])
+    expect(counts[2]).to eq(%w[Retained 4 -])
+    expect(counts[3]).to eq(%w[Completed 0 0])
+    expect(counts[4]).to eq(%w[Extended 4 -])
+    expect(counts[5]).to eq(%w[Clawed 0 0])
+    expect(counts[6]).to eq(%w[Voided 2 0])
   end
 
   def then_i_should_see_mentor_funding_output_payments
@@ -310,7 +314,7 @@ private
       row.all("th, td").map { |v| v.text.strip }
     end
 
-    expect(ect_outputs[1]).to eq(["Starts", "2", "0", "0", ""])
+    expect(ect_outputs[1]).to eq(["Started", "2", "0", "0", ""])
     expect(ect_outputs[2]).to eq(["Fee per ECT", "£119.40", "£117.48", "£115.92", "£238.80"])
 
     title = page.all(".finance-panel__output-payments .govuk-table")[1].find("caption").text
@@ -320,7 +324,7 @@ private
       row.all("th, td").map { |v| v.text.strip }
     end
 
-    expect(mentor_outputs[1]).to eq(["Starts", "2", ""])
+    expect(mentor_outputs[1]).to eq(["Started", "2", ""])
     expect(mentor_outputs[2]).to eq(["Fee per mentor", "£500.00", "£1,000.00"])
   end
 

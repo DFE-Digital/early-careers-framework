@@ -605,7 +605,7 @@ en:
       content: Due to the way payments per participant are made, there may be rounding errors in some of the individual sub-calculations. The total output fees displayed are correct. Contact your contract manager if you have any queries.
     updated_designs_message:
       title: Updated financial statement design
-      content: We've updated the financial statements from June 2025 onwards to reflect changes to the funding model. We've split out ECT and mentor output payments, removed uplift fees, and deleted Band D from the ECT payment bands.
+      content: We've updated the financial statements from June 2025 onwards to reflect changes to the payment schedules. We've split out ECT and mentor output payments, removed uplift fees, and deleted Band D from the ECT payment bands.
     spring: Spring 2022
     recruitment_target_total: Recruitment target total
     total_completed: Total completed
@@ -688,7 +688,7 @@ en:
           error_message: "Confirm all necessary assurance checks have been done before authorising this statement for payment"
       output_payments:
         ecf:
-          started: Starts
+          started: Started
           retained_1: Retained 1
           retained_2: Retained 2
           retained_3: Retained 3
@@ -696,7 +696,7 @@ en:
           completed: Completed
           extended: Extended
         ect_mentor:
-          started: Starts
+          started: Started
           retained_1: Retained 1
           retained_2: Retained 2
           retained_3: Retained 3
@@ -721,7 +721,7 @@ en:
             "3": New target
           ect:
             recruitment_target: ECTs recruitment target
-            revised_target: Revised ECTs recruitment target (+2%)
+            revised_target: Revised ECTs recruitment target (+115%)
           mentor:
             recruitment_target: Mentors recruitment target
 

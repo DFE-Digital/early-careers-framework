@@ -79,7 +79,7 @@ RSpec.describe Finance::Statements::OutputPayments::ECTMentor, type: :component 
       ])
 
       expect(ect_outputs[1]).to eq([
-        "Starts",
+        "Started",
         "1",
         "2",
         "",
@@ -137,7 +137,7 @@ RSpec.describe Finance::Statements::OutputPayments::ECTMentor, type: :component 
       ])
 
       expect(mentor_outputs[1]).to eq([
-        "Starts",
+        "Started",
         "21",
         "",
       ])
