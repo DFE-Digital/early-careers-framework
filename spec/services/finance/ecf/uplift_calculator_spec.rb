@@ -73,7 +73,7 @@ RSpec.describe Finance::ECF::UpliftCalculator do
       travel_to statement.deadline_date - 1.day do
         # Create clawbacks for this month statement from declarations 1 month ago
         declarations.sample(2).each do |dec|
-          Finance::ClawbackDeclaration.new(dec.reload).call
+          Finance::ClawbackDeclaration.new(dec.reload, voided_by_user: nil).call
         end
       end
     end
@@ -123,7 +123,7 @@ RSpec.describe Finance::ECF::UpliftCalculator do
       declarations_one_month_ago
       # Create 1 clawback for statement 1 month ago from declarations 2 months ago
       travel_to statement_one_month_ago.deadline_date - 1.day do
-        Finance::ClawbackDeclaration.new(declarations_two_months_ago[0].reload).call
+        Finance::ClawbackDeclaration.new(declarations_two_months_ago[0].reload, voided_by_user: nil).call
       end
       # Mark statement 1 months ago as paid
       Statements::MarkAsPayable.new(statement_one_month_ago).call
@@ -135,10 +135,10 @@ RSpec.describe Finance::ECF::UpliftCalculator do
         create_list(:mentor_participant_declaration, 2, :eligible, cpd_lead_provider:, declaration_type:, pupil_premium_uplift: true)
 
         # Create 1 clawback for this month statement from declarations 2 months ago
-        Finance::ClawbackDeclaration.new(declarations_two_months_ago[1].reload).call
+        Finance::ClawbackDeclaration.new(declarations_two_months_ago[1].reload, voided_by_user: nil).call
 
         # Create 1 clawback for this month statement from declarations 1 month ago
-        Finance::ClawbackDeclaration.new(declarations_one_month_ago[0].reload).call
+        Finance::ClawbackDeclaration.new(declarations_one_month_ago[0].reload, voided_by_user: nil).call
       end
     end
 
