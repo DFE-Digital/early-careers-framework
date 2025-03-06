@@ -105,6 +105,14 @@ properties:
       - training-event-attended
       - self-study-material-completed
       - other
+      - "<br>For cohort 2025, depending on the declaration type the new possible values are:"
+      - training-event-attended
+      - self-study-material-completed
+      - other
+      - materials-engaged-with-offline
+      - 75-percent-engagement-met
+      - 75-percent-engagement-met-reduced-induction
+      - one-term-induction
     nullable: true
   has_passed:
     description: Whether the participant has failed or passed
