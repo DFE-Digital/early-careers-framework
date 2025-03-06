@@ -12,6 +12,10 @@ RSpec.describe Finance::ECF::ECT::StatementCalculator do
       it "delegates to the correct BandingCalculator" do
         expect(output_calculator.banding_for(declaration_type: "started").class).to eq(Finance::ECF::ECT::BandingCalculator)
       end
+
+      it "delegates to the correct UpliftCalculator" do
+        expect(output_calculator.uplift.class).to eq(Finance::ECF::ECT::UpliftCalculator)
+      end
     end
 
     def create_declarations(type, state, count)

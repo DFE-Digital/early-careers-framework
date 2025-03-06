@@ -25,13 +25,8 @@ module Finance
         bandings[declaration_type]
       end
 
-      def uplift_breakdown
-        @uplift_breakdown ||= {
-          previous_count: previous_fill_level_for_uplift,
-          count: current_billable_count_for_uplift - current_refundable_count_for_uplift,
-          additions: current_billable_count_for_uplift,
-          subtractions: current_refundable_count_for_uplift,
-        }
+      def uplift
+        @uplift ||= self.class.module_parent::UpliftCalculator.new(statement:)
       end
 
       def fee_for_declaration(band_letter:, type:)
@@ -68,44 +63,6 @@ module Finance
 
       def bands
         statement.contract.bands.order(max: :asc)
-      end
-
-      def previous_fill_level_for_uplift
-        billable = Finance::StatementLineItem
-          .where(statement: statement.previous_statements)
-          .billable
-          .joins(:participant_declaration)
-          .merge!(ParticipantDeclaration.for_declaration("started"))
-          .merge!(ParticipantDeclaration.uplift)
-          .count
-
-        refundable = Finance::StatementLineItem
-          .where(statement: statement.previous_statements)
-          .refundable
-          .joins(:participant_declaration)
-          .merge!(ParticipantDeclaration.for_declaration("started"))
-          .merge!(ParticipantDeclaration.uplift)
-          .count
-
-        billable - refundable
-      end
-
-      def current_billable_count_for_uplift
-        statement
-          .billable_statement_line_items
-          .joins(:participant_declaration)
-          .merge!(ParticipantDeclaration.for_declaration("started"))
-          .merge!(ParticipantDeclaration.uplift)
-          .count
-      end
-
-      def current_refundable_count_for_uplift
-        statement
-          .refundable_statement_line_items
-          .joins(:participant_declaration)
-          .merge!(ParticipantDeclaration.for_declaration("started"))
-          .merge!(ParticipantDeclaration.uplift)
-          .count
       end
     end
   end
