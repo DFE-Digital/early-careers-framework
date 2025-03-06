@@ -3659,7 +3659,7 @@ __metadata:
     nunjucks: "npm:^3.2.4"
     prettier: "npm:^2.8.8"
     sass: "npm:^1.85.1"
-    terser-webpack-plugin: "npm:^5.3.12"
+    terser-webpack-plugin: "npm:^5.3.13"
     webpack: "npm:^5.98"
     webpack-assets-manifest: "npm:^5.2.1"
     webpack-cli: "npm:^5.1.4"
@@ -7546,9 +7546,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"terser-webpack-plugin@npm:^5.3.12":
-  version: 5.3.12
-  resolution: "terser-webpack-plugin@npm:5.3.12"
+"terser-webpack-plugin@npm:^5.3.13":
+  version: 5.3.13
+  resolution: "terser-webpack-plugin@npm:5.3.13"
   dependencies:
     "@jridgewell/trace-mapping": "npm:^0.3.25"
     jest-worker: "npm:^27.4.5"
@@ -7564,7 +7564,7 @@ __metadata:
       optional: true
     uglify-js:
       optional: true
-  checksum: b37e21bf4258603456617a88f81fa123c684f9bcd928719ada94d6b713cb3f7d726d69e642f565f67fac04ba7cab9179ebe5d5b8e2c4961afc9a7a8759ee580e
+  checksum: 87e3f0d1202c7bd6b62aa596ac373541a451cd0bfa0c622797c17be30d2399c791b7719571b39b23252d75460608e2d1ea30071c31e758fea9800cb2e172b744
   languageName: node
   linkType: hard
 
