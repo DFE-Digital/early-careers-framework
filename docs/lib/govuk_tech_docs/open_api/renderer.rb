@@ -260,10 +260,13 @@ module GovukTechDocs
       end
 
       def format_possible_value(possible_value)
-        if possible_value == ""
-          "<em>empty string</em>"
+        case possible_value
+        when ""
+          "<li><em>empty string</em></li>"
+        when /^<br>/
+          "</ul><p>#{possible_value.gsub('<br>', '')}</p><ul>"
         else
-          possible_value
+          "<li>#{possible_value}</li>"
         end
       end
 
