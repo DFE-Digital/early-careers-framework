@@ -13,7 +13,7 @@ module Sections
     end
 
     def has_started_declarations?(band_a_total = 0, band_b_total = 0, band_c_total = 0, band_d_total = 0)
-      element_has_content? output_payments[0], "Starts#{band_a_total}#{band_b_total}#{band_c_total}#{band_d_total}".strip
+      element_has_content? output_payments[0], "Started#{band_a_total}#{band_b_total}#{band_c_total}#{band_d_total}".strip
     end
 
     def has_retained_1_declarations?(band_a_total = 0, band_b_total = 0, band_c_total = 0, band_d_total = 0)

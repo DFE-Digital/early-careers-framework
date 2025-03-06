@@ -314,7 +314,7 @@ private
       row.all("th, td").map { |v| v.text.strip }
     end
 
-    expect(ect_outputs[1]).to eq(["Starts", "2", "0", "0", ""])
+    expect(ect_outputs[1]).to eq(["Started", "2", "0", "0", ""])
     expect(ect_outputs[2]).to eq(["Fee per ECT", "£119.40", "£117.48", "£115.92", "£238.80"])
 
     title = page.all(".finance-panel__output-payments .govuk-table")[1].find("caption").text
@@ -324,7 +324,7 @@ private
       row.all("th, td").map { |v| v.text.strip }
     end
 
-    expect(mentor_outputs[1]).to eq(["Starts", "2", ""])
+    expect(mentor_outputs[1]).to eq(["Started", "2", ""])
     expect(mentor_outputs[2]).to eq(["Fee per mentor", "£500.00", "£1,000.00"])
   end
 

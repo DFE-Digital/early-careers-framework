@@ -688,7 +688,7 @@ en:
           error_message: "Confirm all necessary assurance checks have been done before authorising this statement for payment"
       output_payments:
         ecf:
-          started: Starts
+          started: Started
           retained_1: Retained 1
           retained_2: Retained 2
           retained_3: Retained 3
@@ -696,7 +696,7 @@ en:
           completed: Completed
           extended: Extended
         ect_mentor:
-          started: Starts
+          started: Started
           retained_1: Retained 1
           retained_2: Retained 2
           retained_3: Retained 3
