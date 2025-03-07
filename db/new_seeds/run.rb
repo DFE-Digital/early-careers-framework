@@ -44,6 +44,7 @@ end
   "add_testing_scenarios_for_closing_2021.rb",
   "add_environment_specific_data.rb",
   "add_participants_for_registration_testing.rb",
+  "fix_statements.rb",
 ].each do |file|
   Rails.logger.info("seeding #{file}")
   load_base_file(file)
