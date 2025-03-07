@@ -33,6 +33,10 @@ FactoryBot.define do
       }.to_json
     end
 
+    trait :unused do
+      version { "unused_1.0" }
+    end
+
     trait :with_monthly_service_fee do
       monthly_service_fee { 123.45 }
     end
