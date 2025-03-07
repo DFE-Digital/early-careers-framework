@@ -1,10 +1,14 @@
 # frozen_string_literal: true
 
 class CallOffContract < ApplicationRecord
+  UNUSED_VERSION_PREFIX = "unused_"
+
   belongs_to :lead_provider
   belongs_to :cohort
 
   has_many :participant_bands
+
+  scope :not_flagged_as_unused, -> { where.not("version LIKE ?", "#{UNUSED_VERSION_PREFIX}%") }
 
   def total_contract_value
     participant_bands.map(&:contract_value).sum

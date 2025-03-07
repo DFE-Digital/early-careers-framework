@@ -19,6 +19,18 @@ RSpec.describe CallOffContract, type: :model do
     end
   end
 
+  describe "scopes" do
+    describe ".not_flagged_as_unused" do
+      let!(:call_off_contract) { create(:call_off_contract) }
+
+      before { create(:call_off_contract, :unused) }
+
+      subject { described_class.not_flagged_as_unused }
+
+      it { is_expected.to contain_exactly(call_off_contract) }
+    end
+  end
+
   describe "#uplift_cap" do
     # the following makes the maths much easier
     # as there is no longer half uplifts
