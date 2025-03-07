@@ -16,28 +16,28 @@ module "application_configuration" {
   is_rails_application = true
 
   config_variables = {
-    HOSTING_ENVIRONMENT = local.environment
-    RAILS_ENV           = var.app_environment
-    DB_SSLMODE          = var.db_sslmode
-
-    BIGQUERY_PROJECT_ID = "ecf-bq"
-    BIGQUERY_DATASET    = var.dataset_name
-    BIGQUERY_TABLE_NAME = "events"
-    GIAS_API_SCHEMA     = "https://ea-edubase-api-prod.azurewebsites.net/edubase/schema/service.wsdl"
-    GIAS_EXTRACT_ID     = 13904
-    GIAS_API_USER       = "ecftech"
-    DOMAIN              = local.domain
-    GOVUK_WEBSITE_ROOT  = local.domain
-    GOVUK_APP_DOMAIN    = local.domain
-    SEND_EMAILS_TO      = "cpd-test@digital.education.gov.uk"
+    HOSTING_ENVIRONMENT   = local.environment
+    RAILS_ENV             = var.app_environment
+    DB_SSLMODE            = var.db_sslmode
+    DFE_ANALYTICS_ENABLED = var.enable_dfe_analytics
+    BIGQUERY_PROJECT_ID   = "ecf-bq"
+    BIGQUERY_DATASET      = var.dataset_name
+    BIGQUERY_TABLE_NAME   = "events"
+    GIAS_API_SCHEMA       = "https://ea-edubase-api-prod.azurewebsites.net/edubase/schema/service.wsdl"
+    GIAS_EXTRACT_ID       = 13904
+    GIAS_API_USER         = "ecftech"
+    DOMAIN                = local.domain
+    GOVUK_WEBSITE_ROOT    = local.domain
+    GOVUK_APP_DOMAIN      = local.domain
+    SEND_EMAILS_TO        = "cpd-test@digital.education.gov.uk"
   }
 
   secret_key_vault_short = "app"
   secret_variables = {
-    DATABASE_URL    = module.postgres.url
-    REDIS_URL       = module.redis.url
-    REDIS_CACHE_URL = module.redis-cache.url
-    ANALYTICS_DATABASE_URL = <<URL
+    DATABASE_URL             = module.postgres.url
+    REDIS_URL                = module.redis.url
+    REDIS_CACHE_URL          = module.redis-cache.url
+    ANALYTICS_DATABASE_URL   = <<URL
       postgres://${urlencode(module.postgres.username)}:${urlencode(module.postgres.password)}@${module.postgres.host}:${module.postgres.port}/${try(azurerm_postgresql_flexible_server_database.analytics[0].name, "analytics")}
     URL
     GOOGLE_CLOUD_CREDENTIALS = var.enable_dfe_analytics_federated_auth ? module.dfe_analytics[0].google_cloud_credentials : null
@@ -60,11 +60,11 @@ module "web_application" {
   kubernetes_secret_name     = module.application_configuration.kubernetes_secret_name
 
   docker_image = var.docker_image
-  probe_path = "/check"
-  replicas   = var.webapp_replicas
-  max_memory = var.webapp_memory_max
+  probe_path   = "/check"
+  replicas     = var.webapp_replicas
+  max_memory   = var.webapp_memory_max
 
-  enable_logit = var.enable_logit
+  enable_logit                     = var.enable_logit
   send_traffic_to_maintenance_page = var.send_traffic_to_maintenance_page
 }
 
@@ -90,6 +90,6 @@ module "worker_application" {
   replicas   = var.worker_replicas
   max_memory = var.worker_memory_max
 
-  enable_logit = var.enable_logit
+  enable_logit   = var.enable_logit
   enable_gcp_wif = true
 }
