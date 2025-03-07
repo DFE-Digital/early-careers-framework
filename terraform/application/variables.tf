@@ -105,7 +105,7 @@ variable "redis_cache_sku_name" {
 }
 
 variable "domain" {
-  type = string
+  type    = string
   default = ""
 }
 
@@ -165,4 +165,9 @@ variable "enable_dfe_analytics_federated_auth" {
 variable "dataset_name" {
   description = "dfe analytics dataset name in Google Bigquery"
   default     = null
+}
+
+variable "enable_dfe_analytics" {
+  description = "Enable Dfe analytics events to be sent to Google Bigquery"
+  default     = true
 }
