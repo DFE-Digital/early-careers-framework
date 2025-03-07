@@ -22,7 +22,7 @@ RSpec.describe "Voiding declarations" do
       when_i_visit_the_void_declaration_page
       and_i_click("Void declaration")
       then_i_should_be_on_the_participant_page
-      then_there_should_be_an_important_banner(message: "The declaration may have already been voided")
+      then_there_should_be_an_alert_banner(title: "This declaration may have already been voided", message: "Check its status and try again")
     end
   end
 

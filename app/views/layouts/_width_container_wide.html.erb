@@ -11,8 +11,13 @@
         <% if type == "alert" %>
           <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="govuk-error-summary">
             <h2 class="govuk-error-summary__title" id="error-summary-title">
-              <%= msg %>
+              <%= msg[:title] %>
             </h2>
+            <div class="govuk-error-summary__body">
+              <ul class="govuk-list govuk-error-summary__list">
+                <li><%= msg[:content] %></li>
+              </ul>
+            </div>
           </div>
         <% elsif type == "success" %>
           <%= govuk_notification_banner(

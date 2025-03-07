@@ -12,7 +12,7 @@ module Finance
           VoidParticipantDeclaration.new(@declaration, voided_by_user: current_user).call
           set_success_message(**I18n.t("finance.void_declaration.success"))
         rescue Api::Errors::InvalidTransitionError
-          set_important_message(**I18n.t("finance.void_declaration.failure"))
+          set_alert_message(**I18n.t("finance.void_declaration.failure"))
         ensure
           redirect_to finance_participant_path(@participant_profile.user)
         end

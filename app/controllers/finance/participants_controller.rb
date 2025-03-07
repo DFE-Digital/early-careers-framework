@@ -9,7 +9,7 @@ module Finance
         if @user
           redirect_to finance_participant_path(@user)
         else
-          flash.now[:alert] = "No records found"
+          flash.now[:alert] = { content: "No records found" }
         end
       end
     end
