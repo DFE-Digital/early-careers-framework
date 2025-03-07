@@ -51,6 +51,14 @@ private
     flash[:notice] = { title:, heading:, content: }
   end
 
+  def set_alert_message(title: "There is a problem", content: "", now: false)
+    if now
+      flash.now[:alert] = { title:, content: }
+    else
+      flash[:alert] = { title:, content: }
+    end
+  end
+
 protected
 
   def release_version

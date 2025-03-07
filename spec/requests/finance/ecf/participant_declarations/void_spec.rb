@@ -73,7 +73,6 @@ RSpec.describe "Voiding declarations", exceptions_app: true do
       it "shows an error message" do
         follow_redirect!
 
-        expect(response.body).to include(I18n.t("finance.void_declaration.failure.heading"))
         expect(response.body).to include(I18n.t("finance.void_declaration.failure.content"))
       end
     end

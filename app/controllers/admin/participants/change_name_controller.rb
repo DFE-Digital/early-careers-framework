@@ -28,7 +28,7 @@ module Admin::Participants
 
     def check_gai_status
       if @participant_profile.user.get_an_identity_id.present?
-        flash[:alert] = "Get an Identity registered users must change their names via the Get an Identity service."
+        set_alert_message(content: "Get an Identity registered users must change their names via the Get an Identity service.")
 
         redirect_to admin_participants_path
       end
