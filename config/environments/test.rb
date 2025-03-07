@@ -85,10 +85,6 @@ Rails.application.configure do
   # Raise error when a before_action's only/except options reference missing actions
   config.action_controller.raise_on_missing_callback_actions = true
 
-  config.dqt_access_url = "https://dqtaccess.example.com/oauth2/v2.0/token"
-  config.dqt_access_scope = "https:///dqtaccess.example.com/some-scope"
-  config.dqt_access_client_id = "dqt-access-guid"
-  config.dqt_access_client_secret = "dqt-access-secret"
   config.dqt_api_url = "https://dtqapi.example.com/dqt-crm"
   config.dqt_api_key = "some-apikey-guid"
   config.slack_alerts_webhook_urls = "https://example.com/slack-webhook,https://example.com/slack-webhook"

@@ -73,15 +73,6 @@ Rails.application.configure do
   config.zendesk_username = ENV["ZENDESK_USERNAME"]
   config.zendesk_token = ENV["ZENDESK_TOKEN"]
 
-  config.dqt_client_api_key = Rails.application.credentials.DQT_CLIENT_API_KEY
-  config.dqt_client_host = Rails.application.credentials.DQT_CLIENT_HOST
-  config.dqt_client_params = Rails.application.credentials.DQT_CLIENT_PARAMS
-
-  config.dqt_access_url = Rails.application.credentials.DQT_ACCESS_URL
-  config.dqt_access_scope = Rails.application.credentials.DQT_ACCESS_SCOPE
-  config.dqt_access_client_id = Rails.application.credentials.DQT_ACCESS_CLIENT_ID
-  config.dqt_access_client_secret = Rails.application.credentials.DQT_ACCESS_CLIENT_SECRET
-
   config.dqt_api_url = Rails.application.credentials.DQT_API_URL
   config.dqt_api_key = Rails.application.credentials.DQT_API_KEY
 
