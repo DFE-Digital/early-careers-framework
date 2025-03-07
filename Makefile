@@ -38,8 +38,7 @@ load-domain-config:
 	$(eval include global_config/cpd_ecf_domain.sh)
 
 set-azure-account:
-	echo "Logging on to ${AZURE_SUBSCRIPTION}"
-	az account set -s $(AZURE_SUBSCRIPTION)
+	[[ "${SP_AUTH}" != "true" ]] && az account show && az account set -s $(AZURE_SUBSCRIPTION) || true
 
 set-azure-resource-group-tags: ##Tags that will be added to resource group on its creation in ARM template
 	$(eval RG_TAGS=$(shell echo '{"Portfolio": "Teacher Continuing Professional Development", "Parent Business":"Teacher Training and Qualifications", "Product" : "Early Careers Framework", "Service Line": "Teaching Workforce", "Service": "Teacher services", "Service Offering": "Manage training for early career teachers", "Environment" : "$(ENV_TAG)"}' | jq . ))
