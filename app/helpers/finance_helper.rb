@@ -26,6 +26,24 @@ module FinanceHelper
     end
   end
 
+  def void_declaration_link(declaration, row)
+    return row.with_action(text: :none) unless voidable_declaration?(declaration)
+
+    participant_profile = declaration.participant_profile
+
+    row.with_action(
+      text: "Void",
+      href: new_void_finance_participant_profile_ecf_participant_declarations_path(participant_profile.id, declaration.id),
+      visually_hidden_text: "Void declaration",
+    )
+  end
+
+  def voidable_declaration?(declaration)
+    lead_provider = declaration.cpd_lead_provider.lead_provider
+    cohort = declaration.cohort
+    declaration.voidable? || (declaration.paid? && lead_provider.next_output_fee_statement(cohort))
+  end
+
   def induction_record_participant_api_response(induction_record, participant_profile)
     cpd_lead_provider = induction_record.induction_programme.partnership&.lead_provider&.cpd_lead_provider
     serializer_output = Api::V3::ECF::ParticipantSerializer.new(participant_profile.user, params: { cpd_lead_provider: }).serializable_hash

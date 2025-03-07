@@ -3,11 +3,26 @@
 module PageAssertionsHelper
   include Capybara::DSL
 
-  def then_there_should_be_a_success_banner
+  def then_there_should_be_a_success_banner(message: nil)
     expect(page).to have_selector ".govuk-notification-banner--success"
+    expect(find(".govuk-notification-banner--success")).to have_text(message) if message
   end
 
   alias_method :and_there_should_be_a_success_banner, :then_there_should_be_a_success_banner
+
+  def then_there_should_be_an_important_banner(message: nil)
+    expect(page).to have_selector ".govuk-notification-banner h2", text: "Important"
+    expect(find(".govuk-notification-banner")).to have_text(message) if message
+  end
+
+  alias_method :and_there_should_be_an_important_banner, :then_there_should_be_an_important_banner
+
+  def then_there_should_be_an_alert_banner(title: "There is a problem", message: nil)
+    expect(page).to have_selector ".govuk-error-summary h2", text: title
+    expect(find(".govuk-error-summary__body")).to have_text(message) if message
+  end
+
+  alias_method :and_there_should_be_an_alert_banner, :then_there_should_be_an_alert_banner
 
   def then_i_see_an_error_message(message)
     expect(page).to have_selector(".govuk-error-summary")

@@ -4,6 +4,7 @@ class ParticipantDeclaration < ApplicationRecord
   self.ignored_columns = %w[statement_type statement_id temp_type]
 
   ARCHIVABLE_STATES = %w[ineligible voided submitted].freeze
+  VOIDABLE_STATES = %w[submitted eligible payable ineligible].freeze
 
   belongs_to :cpd_lead_provider
   belongs_to :user
@@ -125,7 +126,7 @@ class ParticipantDeclaration < ApplicationRecord
   end
 
   def voidable?
-    %w[submitted eligible payable ineligible].include?(state)
+    VOIDABLE_STATES.include?(state)
   end
 
   def make_submitted!

@@ -1,0 +1,50 @@
+<% content_for :before_content, govuk_back_link(text: "Back", href: finance_participant_path(@participant_profile.user)) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-l">Void declaration</h1>
+
+    <%= 
+      govuk_summary_list do |summary_list|
+        summary_list.with_row do |row|
+          row.with_key { "Participant ID" }
+          row.with_value { @participant_profile.user_id }
+        end
+        
+        summary_list.with_row do |row|
+          row.with_key { "Declaration ID" }
+          row.with_value { @declaration.id }
+        end
+
+        summary_list.with_row do |row|
+          row.with_key { "Declaration type" }
+          row.with_value { @declaration.declaration_type }
+        end
+
+        summary_list.with_row do |row|
+          row.with_key { "Declaration date" }
+          row.with_value { @declaration.declaration_date.to_fs(:govuk) }
+        end
+
+        summary_list.with_row do |row|
+          row.with_key { "Course identifier" }
+          row.with_value { @declaration.course_identifier }
+        end
+
+        summary_list.with_row do |row|
+          row.with_key { "Lead provider" }
+          row.with_value { @declaration.cpd_lead_provider.name }
+        end
+
+        summary_list.with_row do |row|
+          row.with_key { "State" }
+          row.with_value { @declaration.state }
+        end 
+      end
+    %>
+
+    <%= form_with url: create_void_finance_participant_profile_ecf_participant_declarations_path(@participant_profile, @declaration) do |f| %>
+      <%= f.govuk_submit "Void declaration" %>
+    <% end %>
+  </div>
+</div>

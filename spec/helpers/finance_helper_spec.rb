@@ -75,6 +75,68 @@ RSpec.describe FinanceHelper, type: :helper do
     end
   end
 
+  describe "#voidable_declaration?" do
+    subject { helper }
+
+    ParticipantDeclaration::VOIDABLE_STATES.each do |state|
+      context "when the declaration is #{state}" do
+        let(:declaration) { create(:ect_participant_declaration, state) }
+
+        it { is_expected.to be_voidable_declaration(declaration) }
+      end
+    end
+
+    (ParticipantDeclaration.states.keys - ParticipantDeclaration::VOIDABLE_STATES).each do |state|
+      context "when the declaration is #{state}" do
+        let(:declaration) { create(:ect_participant_declaration, state) }
+
+        it { is_expected.not_to be_voidable_declaration(declaration) }
+      end
+    end
+
+    context "when the declaration is paid and there is a next output fee statement" do
+      let(:declaration) { create(:ect_participant_declaration, :paid) }
+      let(:lead_provider) { declaration.cpd_lead_provider.lead_provider }
+
+      before do
+        create(:ecf_statement,
+               :next_output_fee,
+               cpd_lead_provider: declaration.cpd_lead_provider,
+               cohort: declaration.cohort)
+      end
+
+      it { is_expected.to be_voidable_declaration(declaration) }
+    end
+  end
+
+  describe "#void_declaration_link" do
+    let(:declaration) { create(:ect_participant_declaration) }
+    let(:row) { double }
+
+    before { allow(helper).to receive(:voidable_declaration?).and_return(voidable) }
+    after { helper.void_declaration_link(declaration, row) }
+
+    context "when the declaration is not voidable" do
+      let(:voidable) { false }
+
+      it "returns a none action" do
+        expect(row).to receive(:with_action).with(text: :none)
+      end
+    end
+
+    context "when the declaration is voidable" do
+      let(:voidable) { true }
+
+      it "returns a link to void the declaration" do
+        expect(row).to receive(:with_action).with(
+          text: "Void",
+          href: new_void_finance_participant_profile_ecf_participant_declarations_path(declaration.participant_profile.id, declaration.id),
+          visually_hidden_text: "Void declaration",
+        )
+      end
+    end
+  end
+
   describe "#authorise_for_payment_button_visible?" do
     let!(:participant_declaration) do
       create(

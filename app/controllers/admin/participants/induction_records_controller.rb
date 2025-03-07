@@ -44,7 +44,7 @@ module Admin::Participants
         set_success_message(heading: "The induction records has been updated")
         redirect_to admin_participant_school_path(@participant_profile)
       else
-        flash.now[:alert] = "The induction records could not be updated"
+        flash.now[:alert] = { content: "The induction records could not be updated" }
         render "admin/participants/induction_records/edit_training_status"
       end
     end

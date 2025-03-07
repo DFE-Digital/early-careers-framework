@@ -630,6 +630,12 @@ en:
     current_milestone: Current milestone
     trainees: Trainees
     view: View
+    void_declaration:
+      success:
+        heading: Declaration voided successfully.
+      failure:
+        title: "This declaration may have already been voided"
+        content: Check its status and try again. If the problem continues, contact the lead provider team for help.
     course:
       participants: Participants
       payment_per_participant: Payment per participant
