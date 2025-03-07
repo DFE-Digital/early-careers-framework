@@ -8,5 +8,5 @@ properties:
   attributes:
     type: object
     anyOf:
-      - $ref: "#/components/schemas/ECFParticipantDeclarationStartedAttributesRequest"
-      - $ref: "#/components/schemas/ECFParticipantDeclarationCompletedAttributesRequest"
+      - $ref: "#/components/schemas/ECFParticipantDeclarationPost2024MentorStartedAttributesRequest"
+      - $ref: "#/components/schemas/ECFParticipantDeclarationPost2024MentorCompletedAttributesRequest"
