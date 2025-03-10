@@ -3,6 +3,8 @@
 module Finance
   module ECF
     class StatementsController < BaseController
+      include RelaxedContentSecurityPolicy
+
       def show
         @ecf_lead_provider = lead_provider_scope.find(params[:payment_breakdown_id])
         @statement = @ecf_lead_provider.statements.find(params[:id])

@@ -27,7 +27,6 @@ Rails.application.configure do
     policy.style_src(*self_base)
     policy.connect_src(*self_base.concat(ga_connect_src, zd_script_src, sentry_connect_src))
     policy.frame_src(*self_base.concat(gtm_src))
-    policy.script_src_elem(*self_base.concat(["'unsafe-inline'"]))
     policy.style_src_elem(*self_base.concat(["'unsafe-inline'"]))
 
     # The report-uri seems to make the feature specs flakey when ran in
@@ -40,7 +39,7 @@ Rails.application.configure do
   config.content_security_policy_nonce_directives = %w[script-src style-src]
 
   # Report violations without enforcing the policy.
-  # config.content_security_policy_report_only = true
+  config.content_security_policy_report_only = true
 
   # Security-related HTTP headers.
   config.action_dispatch.default_headers = {
