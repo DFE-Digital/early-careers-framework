@@ -1233,14 +1233,13 @@
             "example": "ecf-induction"
           },
           "evidence_held": {
-            "description": "The type of evidence that the lead provider holds on their platform to demonstrate that the participant has met the retention criteria for the current milestone period",
+            "description": "The type of evidence that the lead provider holds on their platform to demonstrate that the participant has met the retention criteria for the current milestone period. For retained-2 declarations, providers will need to confirm if the engagement threshold has been reached and only accept those possible values: '75-percent-engagement-met' and '75-percent-engagement-met-reduced-induction'.",
             "type": "string",
             "enum": [
               "training-event-attended",
               "self-study-material-completed",
               "materials-engaged-with-offline",
               "other",
-              "<br>For retained-2 declarations, providers will need to confirm if the engagement threshold has been reached:",
               "75-percent-engagement-met",
               "75-percent-engagement-met-reduced-induction"
             ],

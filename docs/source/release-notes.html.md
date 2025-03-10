@@ -11,11 +11,11 @@ If you have any questions or comments about these notes, please contact DfE via 
 
 [#new-feature #sandbox-release]
 
-We've updated the test (sandbox) environment with all the ``evidence_held`` values lead providers will be able to use when they submit participant declarations for the 2025/26 intake of early career teachers (ECTs) and mentors.
+We've updated the test (sandbox) environment with all the `evidence_held` values lead providers will be able to use when they submit participant declarations for the 2025/26 intake of early career teachers (ECTs) and mentors.
 
 These values represent the evidence lead providers hold to show participants have met the retention criteria for the current milestone period.
 
-For 2025/26, every ``declaration_type`` will have its own ``evidence_held`` values (see tables). In previous years we’d applied the ``training-event-attended``, ``self-study-material-completed`` and ``other`` values across all declaration types.
+For 2025/26, every `declaration_type` will have its own `evidence_held` values (see tables). In previous years we’d applied the `training-event-attended`, `self-study-material-completed` and `other` values across all declaration types.
 
 ### Early career teachers
 
@@ -45,8 +45,8 @@ For 2025/26, every ``declaration_type`` will have its own ``evidence_held`` valu
 We advise providers check their integrations can:
 
 - support all new evidence types
-- submit ``one-term-induction`` as ``evidence_held`` for ``completed`` ECT declarations
-- supply evidence types for ``started`` declarations
+- submit `one-term-induction` as `evidence_held` for `completed` ECT declarations
+- supply evidence types for `started` declarations
 
 ## 3 March 2025
 
@@ -54,11 +54,11 @@ We advise providers check their integrations can:
 
 We’ve resolved an issue in the API where a v2 declaration endpoint was inadvertently serving the v1 schema.
 
-The fix updates the ``POST`` action to use the correct v2 schema.
+The fix updates the `POST` action to use the correct v2 schema.
 
 The following declaration endpoint has been updated:
 
-- ``POST participant-declarations``
+- `POST participant-declarations`
 
 All endpoints now conform to the v2 schema specifications.
 
@@ -80,17 +80,17 @@ For mentors, use the following date of birth:
 
 ### Changes to mentor declarations for the 2025/6 intake
 
-We’ve removed the following declarations from the ``POST participant-declarations`` test environment endpoint for mentors starting in 2025/26:
+We’ve removed the following declarations from the `POST participant-declarations` test environment endpoint for mentors starting in 2025/26:
 
-- ``retained-1``
-- ``retained-2``
-- ``retained-3``
-- ``retained-4``
-- ``extended-1``
-- ``extended-2``
-- ``extended-3``
+- `retained-1`
+- `retained-2`
+- `retained-3`
+- `retained-4`
+- `extended-1`
+- `extended-2`
+- `extended-3`
 
-This is because there’ll only be 2 mentor declarations from the 2025/26 academic year onwards, ``started`` and ``completed``.
+This is because there’ll only be 2 mentor declarations from the 2025/26 academic year onwards, `started` and `completed`.
 
 These changes align with the updated frameworks and payment guidelines shared with lead providers.
 
@@ -352,7 +352,7 @@ This will ensure that all participant declarations are consistent.
 
 We’ve fixed a bug that had prevented some providers from changing schedules for participants they are training who have not been registered in a default partnership. In such instances they’d have seen the following 422 error message:
 
-* ‘You cannot change a participant to this cohort as you do not have a partnership with the school for the cohort. Contact the DfE for assistance.’
+* `You cannot change a participant to this cohort as you do not have a partnership with the school for the cohort. Contact the DfE for assistance.`
 
 This error message should now only apply where a lead provider is attempting to the use the [change schedule endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-id-change-schedule-put) to change the participant's cohort.
 

@@ -99,13 +99,9 @@ properties:
     type: boolean
     example: true
   evidence_held:
-    description: The type of evidence that the lead provider holds on their platform to demonstrate that the participant has met the retention criteria for the current milestone period
+    description: The type of evidence that the lead provider holds on their platform to demonstrate that the participant has met the retention criteria for the current milestone period. For cohort 2025, depending on the declaration type, there are different possible values.
     type: string
     enum:
-      - training-event-attended
-      - self-study-material-completed
-      - other
-      - "<br>For cohort 2025, depending on the declaration type the new possible values are:"
       - training-event-attended
       - self-study-material-completed
       - other
