@@ -7,7 +7,7 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
-## 10 March 2025
+## 12 March 2025
 
 [#new-feature #sandbox-release]
 
@@ -352,7 +352,7 @@ This will ensure that all participant declarations are consistent.
 
 We’ve fixed a bug that had prevented some providers from changing schedules for participants they are training who have not been registered in a default partnership. In such instances they’d have seen the following 422 error message:
 
-* `You cannot change a participant to this cohort as you do not have a partnership with the school for the cohort. Contact the DfE for assistance.`
+* ‘You cannot change a participant to this cohort as you do not have a partnership with the school for the cohort. Contact the DfE for assistance.’
 
 This error message should now only apply where a lead provider is attempting to the use the [change schedule endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-id-change-schedule-put) to change the participant's cohort.
 

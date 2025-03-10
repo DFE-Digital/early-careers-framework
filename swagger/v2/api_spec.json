@@ -1125,7 +1125,7 @@
             "example": "ecf-induction"
           },
           "evidence_held": {
-            "description": "The type of evidence that the lead provider holds on their platform to demonstrate that the participant has met the retention criteria for the current milestone period",
+            "description": "The type of evidence the lead provider holds on their platform to demonstrate the participant has met the retention criteria for the current milestone period.",
             "type": "string",
             "enum": [
               "75-percent-engagement-met",
@@ -1177,7 +1177,7 @@
             "example": "ecf-induction"
           },
           "evidence_held": {
-            "description": "The type of evidence that the lead provider holds on their platform to demonstrate that the participant has met the retention criteria for the current milestone period",
+            "description": "The type of evidence the lead provider holds on their platform to demonstrate the participant has met the retention criteria for the current milestone period.",
             "type": "string",
             "enum": [
               "training-event-attended",
@@ -1233,7 +1233,7 @@
             "example": "ecf-induction"
           },
           "evidence_held": {
-            "description": "The type of evidence that the lead provider holds on their platform to demonstrate that the participant has met the retention criteria for the current milestone period. For retained-2 declarations, providers will need to confirm if the engagement threshold has been reached and only accept those possible values: '75-percent-engagement-met' and '75-percent-engagement-met-reduced-induction'.",
+            "description": "The type of evidence the lead provider holds on their platform to demonstrate the participant has met the retention criteria for the current milestone period. For retained-2 declarations, providers will need to confirm if the engagement threshold has been reached and only accept either the '75-percent-engagement-met' or '75-percent-engagement-met-reduced-induction' values.",
             "type": "string",
             "enum": [
               "training-event-attended",
@@ -1285,7 +1285,7 @@
             "example": "ecf-induction"
           },
           "evidence_held": {
-            "description": "The type of evidence that the lead provider holds on their platform to demonstrate that the participant has met the retention criteria for the current milestone period",
+            "description": "The type of evidence the lead provider holds on their platform to demonstrate the participant has met the retention criteria for the current milestone period.",
             "type": "string",
             "enum": [
               "training-event-attended",
@@ -1336,7 +1336,7 @@
             "example": "ecf-mentor"
           },
           "evidence_held": {
-            "description": "The type of evidence that the lead provider holds on their platform to demonstrate that the participant has met the retention criteria for the current milestone period",
+            "description": "The type of evidence the lead provider holds on their platform to demonstrate the participant has met the retention criteria for the current milestone period.",
             "type": "string",
             "enum": [
               "75-percent-engagement-met",
@@ -1384,7 +1384,7 @@
             "example": "ecf-mentor"
           },
           "evidence_held": {
-            "description": "The type of evidence that the lead provider holds on their platform to demonstrate that the participant has met the retention criteria for the current milestone period",
+            "description": "The type of evidence the lead provider holds on their platform to demonstrate the participant has met the retention criteria for the current milestone period.",
             "type": "string",
             "enum": [
               "training-event-attended",
@@ -1436,7 +1436,7 @@
             "example": "ecf-induction"
           },
           "evidence_held": {
-            "description": "The type of evidence that the lead provider holds on their platform to demonstrate that the participant has met the retention criteria for the current milestone period",
+            "description": "The type of evidence the lead provider holds on their platform to demonstrate the participant has met the retention criteria for the current milestone period.",
             "type": "string",
             "enum": [
               "training-event-attended",
@@ -1489,7 +1489,7 @@
             "example": "ecf-induction"
           },
           "evidence_held": {
-            "description": "The type of evidence that the lead provider holds on their platform to demonstrate that the participant has met the retention criteria for the current milestone period",
+            "description": "The type of evidence the lead provider holds on their platform to demonstrate the participant has met the retention criteria for the current milestone period.",
             "type": "string",
             "enum": [
               "training-event-attended",
@@ -1545,7 +1545,7 @@
             "example": "ecf-induction"
           },
           "evidence_held": {
-            "description": "The type of evidence that the lead provider holds on their platform to demonstrate that the participant has met the retention criteria for the current milestone period",
+            "description": "The type of evidence the lead provider holds on their platform to demonstrate the participant has met the retention criteria for the current milestone period.",
             "type": "string",
             "enum": [
               "training-event-attended",
@@ -2128,7 +2128,7 @@
             "example": "ecf-induction"
           },
           "evidence_held": {
-            "description": "The type of evidence that the lead provider holds on their platform to demonstrate that the participant has met the retention criteria for the current milestone period",
+            "description": "The type of evidence the lead provider holds on their platform to demonstrate the participant has met the retention criteria for the current milestone period.",
             "type": "string",
             "enum": [
               "training-event-attended",
