@@ -60,10 +60,18 @@ module DeliveryPartners
     end
 
     def filter_academic_year(scoped, academic_year)
-      return scoped.joins(:cohort).where("start_year <= ?", LATEST_COHORT_TO_RETURN) if academic_year.blank?
+      return scoped.where.not(induction_programme: induction_programmes_to_ignore) if academic_year.blank?
       return scoped.none unless academic_year.to_i.in?(academic_year_options.map(&:id))
 
-      scoped.includes(:cohort).where(cohort: { start_year: academic_year })
+      scoped.where(induction_programme: induction_programmes_to_include(academic_year))
+    end
+
+    def induction_programmes_to_ignore
+      InductionProgramme.joins(school_cohort: :cohort).where("cohorts.start_year > ?", LATEST_COHORT_TO_RETURN)
+    end
+
+    def induction_programmes_to_include(academic_year)
+      InductionProgramme.joins(school_cohort: :cohort).where(cohort: { start_year: academic_year })
     end
 
     def filter_status(scoped, status)
