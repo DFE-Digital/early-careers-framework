@@ -40,5 +40,18 @@ RSpec.describe "DfE Analytics", type: :request do
         expect { get "/api/v3/participants/ecf" }.to have_sent_analytics_event_types(:web_request)
       end
     end
+
+    context "when in the migration environment" do
+      before do
+        allow(Rails.env).to receive(:migration?).and_return(true)
+      end
+
+      it "does not send any DFE Analytics events" do
+        Cohort.create!(start_year: 2005)
+
+        expect(:create_entity).not_to have_been_enqueued_as_analytics_events
+        expect { get root_path }.not_to have_sent_analytics_event_types(:web_request)
+      end
+    end
   end
 end
