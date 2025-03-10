@@ -3,8 +3,6 @@
 class InductionRecord < ApplicationRecord
   has_paper_trail
 
-  self.ignored_columns = %w[status]
-
   enum induction_status: {
     active: "active",
     withdrawn: "withdrawn",

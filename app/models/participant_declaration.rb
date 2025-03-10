@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class ParticipantDeclaration < ApplicationRecord
-  self.ignored_columns = %w[statement_type statement_id temp_type]
-
   ARCHIVABLE_STATES = %w[ineligible voided submitted].freeze
 
   belongs_to :cpd_lead_provider
