@@ -22,7 +22,7 @@
     "govuk-frontend": "^5.8.0",
     "nunjucks": "^3.2.4",
     "sass": "^1.85.1",
-    "terser-webpack-plugin": "^5.3.12",
+    "terser-webpack-plugin": "^5.3.14",
     "webpack": "^5.98",
     "webpack-assets-manifest": "^5.2.1",
     "webpack-cli": "^5.1.4",
