@@ -90,9 +90,9 @@ ENV AUTHORISED_HOSTS=127.0.0.1 \
     COMMIT_SHA=${COMMIT_SHA}
 
 RUN apk -U upgrade && \
-    apk add --update --no-cache tzdata libpq libxml2 libxslt graphviz && \
+    apk add --update --no-cache tzdata libpq libxslt graphviz && \
+    apk add --no-cache "libxml2=2.11.8-r2" && \
     echo "Europe/London" > /etc/timezone && \
-    cp /usr/share/zoneinfo/Europe/London /etc/localtime
 
 COPY --from=assets-precompile /app /app
 COPY --from=assets-precompile /usr/local/bundle/ /usr/local/bundle/
