@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class PrivacyPoliciesController < ApplicationController
+  include RelaxedContentSecurityPolicy
+
   skip_before_action :check_privacy_policy_accepted
 
   def show

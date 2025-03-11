@@ -2,6 +2,8 @@
 
 module Schools
   class CohortSetupController < BaseController
+    include RelaxedContentSecurityPolicy
+
     skip_before_action :redirect_to_setup_cohort
     before_action :initialize_wizard
     before_action :data_check
