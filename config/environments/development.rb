@@ -41,15 +41,6 @@ Rails.application.configure do
   config.zendesk_username = ENV["ZENDESK_USERNAME"]
   config.zendesk_token = ENV["ZENDESK_TOKEN"]
 
-  config.dqt_client_api_key = ENV["DQT_CLIENT_API_KEY"]
-  config.dqt_client_host = ENV["DQT_CLIENT_HOST"]
-  config.dqt_client_params = ENV["DQT_CLIENT_PARAMS"]
-
-  config.dqt_access_url = ENV["DQT_ACCESS_URL"]
-  config.dqt_access_scope = ENV["DQT_ACCESS_SCOPE"]
-  config.dqt_access_client_id = ENV["DQT_ACCESS_CLIENT_ID"]
-  config.dqt_access_client_secret = ENV["DQT_ACCESS_CLIENT_SECRET"]
-
   config.dqt_api_url = ENV["DQT_API_URL"]
   config.dqt_api_key = ENV["DQT_API_KEY"]
 
