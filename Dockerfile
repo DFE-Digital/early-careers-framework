@@ -33,7 +33,7 @@ RUN apk -U upgrade && \
     gem update --system && \
     find / -wholename '*default/bundler-*.gemspec' -delete && \
     rm -rf /usr/local/bin/bundle && \
-    gem install bundler -v 2.6.2 && \
+    gem install bundler -v 2.6.5 && \
     bundler -v && \
     bundle config set no-cache 'true' && \
     bundle config set no-binstubs 'true' && \
