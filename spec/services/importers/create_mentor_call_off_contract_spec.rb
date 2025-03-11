@@ -15,7 +15,9 @@ RSpec.describe Importers::CreateMentorCallOffContract do
       let!(:lead_provider_2) { create(:lead_provider, name: "Apples") }
 
       it "creates seed mentor call off contracts for all lead providers in three cohorts" do
-        expect { importer.call }.to change(MentorCallOffContract, :count).by(6)
+        # Cohorts from 2025 to today, multiplied by 2x providers
+        contracts_count = (Time.zone.today.year - 2025 + 1) * 2
+        expect { importer.call }.to change(MentorCallOffContract, :count).by(contracts_count)
       end
 
       context "when in production env" do
