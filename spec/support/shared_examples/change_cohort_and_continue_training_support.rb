@@ -67,7 +67,7 @@ RSpec.shared_examples "can change cohort and continue training" do |participant_
     context "when the cohort they intend to continue training in is not the active registration cohort" do
       let(:cohort) { Cohort.active_registration_cohort.previous }
 
-      it { is_expected.not_to be_unfinished_with_billable_declaration(cohort:) }
+      it { is_expected.to be_unfinished_with_billable_declaration(cohort:) }
     end
 
     %i[paid payable eligible].each do |billable_declaration_type|

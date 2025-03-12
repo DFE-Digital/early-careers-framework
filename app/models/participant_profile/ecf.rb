@@ -52,17 +52,15 @@ class ParticipantProfile::ECF < ParticipantProfile
     %w[cohort participant_identity school user teacher_profile induction_records]
   end
 
-  def self.unfinished_with_billable_declaration(cohort:, restrict_to_participant_ids: [])
-    billable_states = %w[eligible payable paid].freeze
-
-    return none unless cohort == Cohort.active_registration_cohort
+  def self.unfinished_with_billable_declaration(cohort: Cohort.active_registration_cohort, restrict_to_participant_ids: [])
+    return none if cohort.blank?
 
     completed_billable_declarations = ParticipantDeclaration.billable.for_declaration(:completed)
     completed_billable_declarations = completed_billable_declarations.where(participant_profile_id: restrict_to_participant_ids) if restrict_to_participant_ids.any?
 
     query = joins(:participant_declarations, schedule: :cohort)
       .where.not(cohorts: { payments_frozen_at: nil })
-      .where("participant_declarations.state IN (?) AND declaration_type != ?", billable_states, "completed")
+      .where("participant_declarations.state IN (?) AND declaration_type != ?", Finance::StatementLineItem::BILLABLE_STATES, "completed")
       .where.not(id: completed_billable_declarations.select(:participant_profile_id))
       .distinct
 
