@@ -63,3 +63,8 @@ $govuk-new-link-styles: true;
 .govuk-summary-list__key--align-top {
   vertical-align: top;
 }
+
+.govuk-error-summary__list li {
+  color: #d4351c;
+  font-weight: bold;
+}

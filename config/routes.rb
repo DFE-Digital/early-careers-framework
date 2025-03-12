@@ -449,6 +449,11 @@ Rails.application.routes.draw do
     resources :participants, only: %i[index show]
     resources :participant_profiles, only: [] do
       namespace :ecf do
+        resource :participant_declarations, only: [] do
+          get ":participant_declaration_id/void/new", to: "participant_declarations/void#new", as: :new_void
+          post ":participant_declaration_id/void", to: "participant_declarations/void#create", as: :create_void
+        end
+
         resource :induction_records, only: [] do
           collection do
             get ":induction_record_id/change_training_status/new", to: "change_training_statuses#new", as: :new

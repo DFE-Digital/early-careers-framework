@@ -77,7 +77,7 @@ module Admin::Participants
     def handle_form_error(error)
       clear_session_data
       Sentry.capture_exception(error)
-      flash[:alert] = "There was a problem processing your request. If this problem persists please contact an administrator."
+      set_alert_message(content: "There was a problem processing your request. If this problem persists please contact an administrator.")
       redirect_to admin_participants_path
     end
 
