@@ -345,6 +345,14 @@ RSpec.describe ChangeSchedule do
           let!(:new_schedule) { Finance::Schedule::ECF.find_by(cohort: new_cohort, schedule_identifier:) }
         end
 
+        it_behaves_like "changing cohort and continuing training" do
+          let(:new_cohort) { Cohort.previous }
+        end
+
+        it_behaves_like "changing cohort and continuing training" do
+          let(:new_cohort) { Cohort.next }
+        end
+
         context "when there are no submitted/eligible/payable/paid declarations" do
           context "when changing to another cohort" do
             describe ".call" do
