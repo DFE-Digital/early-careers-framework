@@ -59,6 +59,11 @@ runs:
       shell: bash
       run: make install-konduit
 
+    - name: Get key vault token
+      shell: bash
+      run: |
+        az account get-access-token --scope 'https://vault.azure.net/.default' --output none
+
     - name: Backup database
       shell: bash
       run: |
