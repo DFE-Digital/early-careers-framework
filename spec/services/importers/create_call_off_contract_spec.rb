@@ -16,13 +16,13 @@ RSpec.describe Importers::CreateCallOffContract do
 
       it "creates seed call off contracts for all lead providers in three cohorts" do
         # Cohorts from 2021 to today, multiplied by 2x providers
-        contracts_count = (Time.zone.today.year - 2021 + 1) * 2
+        contracts_count = Cohort.where(start_year: 2021..).count * 2
         expect { importer.call }.to change(CallOffContract, :count).by(contracts_count)
       end
 
       it "creates four bands for each contract" do
         # Cohorts from 2021 to today, multiplied by 2x provider and 4x bands
-        bands_count = (Time.zone.today.year - 2021 + 1) * 2 * 4
+        bands_count = Cohort.where(start_year: 2021..).count * 2 * 4
         expect { importer.call }.to change(ParticipantBand, :count).by(bands_count)
       end
 

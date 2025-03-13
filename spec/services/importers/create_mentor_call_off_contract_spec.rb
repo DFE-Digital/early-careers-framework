@@ -16,7 +16,7 @@ RSpec.describe Importers::CreateMentorCallOffContract do
 
       it "creates seed mentor call off contracts for all lead providers in three cohorts" do
         # Cohorts from 2025 to today, multiplied by 2x providers
-        contracts_count = (Time.zone.today.year - 2025 + 1) * 2
+        contracts_count = Cohort.where(start_year: 2025..).count * 2
         expect { importer.call }.to change(MentorCallOffContract, :count).by(contracts_count)
       end
 
