@@ -21,20 +21,10 @@ class ParticipantProfile::Mentor < ParticipantProfile::ECF
   }
 
   def self.archivable_from_frozen_cohort(restrict_to_participant_ids: [])
-    # Mentors that have no FIP induction records
-    not_fip = InductionRecord.joins(:induction_programme, participant_profile: { schedule: :cohort })
-                             .where.not(cohorts: { payments_frozen_at: nil })
-                             .where(participant_profiles: { mentor_completion_date: nil })
-                             .where(participant_profiles: { type: "ParticipantProfile::Mentor" })
-                             .where.not(induction_programme: { training_programme: :full_induction_programme })
-    not_fip = not_fip.where(participant_profile_id: restrict_to_participant_ids) if restrict_to_participant_ids.any?
-    not_fip_ids = not_fip.pluck(:participant_profile_id).uniq
-
     # Mentors that have at least one non-archivable declaration
     with_unarchivable_declaration = joins(:participant_declarations, schedule: :cohort)
                                       .where.not(cohorts: { payments_frozen_at: nil })
                                       .where(mentor_completion_date: nil)
-                                      .where.not(id: not_fip_ids)
                                       .where(participant_declarations: { state: ParticipantDeclaration.non_archivable_states })
                                       .distinct
     with_unarchivable_declaration = with_unarchivable_declaration.where(id: restrict_to_participant_ids) if restrict_to_participant_ids.any?
@@ -43,7 +33,7 @@ class ParticipantProfile::Mentor < ParticipantProfile::ECF
     # Mentors ever assigned an ECT
     with_mentee = InductionRecord.joins(:induction_programme, mentor_profile: { schedule: :cohort })
                                  .where.not(mentor_profile_id: nil)
-                                 .where.not(mentor_profile_id: not_fip_ids + with_unarchivable_declaration_ids)
+                                 .where.not(mentor_profile_id: with_unarchivable_declaration_ids)
                                  .where.not(cohorts: { payments_frozen_at: nil })
                                  .where(participant_profiles: { mentor_completion_date: nil })
     with_mentee = with_mentee.where(mentor_profile_id: restrict_to_participant_ids) if restrict_to_participant_ids.any?
@@ -53,7 +43,7 @@ class ParticipantProfile::Mentor < ParticipantProfile::ECF
     query = joins(schedule: :cohort)
               .where.not(cohorts: { payments_frozen_at: nil })
               .where(mentor_completion_date: nil)
-              .where.not(id: not_fip_ids + with_unarchivable_declaration_ids + with_mentee_ids)
+              .where.not(id: with_unarchivable_declaration_ids + with_mentee_ids)
     query = query.where(id: restrict_to_participant_ids) if restrict_to_participant_ids.any?
 
     query
