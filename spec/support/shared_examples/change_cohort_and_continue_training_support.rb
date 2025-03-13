@@ -43,6 +43,12 @@ RSpec.shared_examples "can change cohort and continue training" do |participant_
 
       it { is_expected.to contain_exactly(eligible_participants.first) }
     end
+
+    context "when the cohort is not present" do
+      let(:cohort) { nil }
+
+      it { is_expected.to be_none }
+    end
   end
 
   describe "#unfinished_with_billable_declaration?" do
@@ -85,6 +91,27 @@ RSpec.shared_examples "can change cohort and continue training" do |participant_
         end
 
         it { is_expected.not_to be_unfinished_with_billable_declaration(cohort:) }
+      end
+
+      context "when the participant has a not completed, #{billable_declaration_type} declaration" do
+        before do
+          milestone_date = participant_profile.schedule.milestones.find_by(declaration_type: "retained-1").start_date
+          travel_to(milestone_date) do
+            create(declaration_type,
+                   billable_declaration_type,
+                   declaration_type: "retained-1",
+                   participant_profile:,
+                   cpd_lead_provider: participant_profile.lead_provider.cpd_lead_provider)
+          end
+        end
+
+        it { is_expected.to be_unfinished_with_billable_declaration(cohort:) }
+
+        context "when the cohort is not present" do
+          let(:cohort) { nil }
+
+          it { is_expected.not_to be_unfinished_with_billable_declaration(cohort:) }
+        end
       end
     end
 
