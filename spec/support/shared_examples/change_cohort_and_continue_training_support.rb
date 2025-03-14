@@ -9,7 +9,7 @@ RSpec.shared_examples "can change cohort and continue training" do |participant_
     let(:cpd_lead_provider) { eligible_participant.lead_provider.cpd_lead_provider }
     let(:eligible_participants) { create_list(declaration_type, 3, :payable, declaration_type: :started, cohort: Cohort.previous).map(&:participant_profile) }
     let(:eligible_participant) { eligible_participants.first }
-    let(:cohort) { Cohort.active_registration_cohort }
+    let(:cohort) { create(:cohort, start_year: 2024) }
 
     before do
       current_cohort.freeze_payments!
@@ -43,13 +43,25 @@ RSpec.shared_examples "can change cohort and continue training" do |participant_
 
       it { is_expected.to contain_exactly(eligible_participants.first) }
     end
+
+    context "when the cohort is not present" do
+      let(:cohort) { nil }
+
+      it { is_expected.to be_none }
+    end
+
+    context "when the cohort is not 2024" do
+      let(:cohort) { create(:cohort, start_year: 2023) }
+
+      it { is_expected.to be_none }
+    end
   end
 
   describe "#unfinished_with_billable_declaration?" do
     let(:declaration) { create(declaration_type, :paid, declaration_type: :started, cohort: Cohort.previous) }
     let(:participant_profile) { declaration.participant_profile }
     let(:current_cohort) { participant_profile.schedule.cohort }
-    let(:cohort) { Cohort.active_registration_cohort }
+    let(:cohort) { create(:cohort, start_year: 2024) }
 
     before { current_cohort.freeze_payments! }
 
@@ -64,8 +76,8 @@ RSpec.shared_examples "can change cohort and continue training" do |participant_
       it { is_expected.not_to be_unfinished_with_billable_declaration(cohort:) }
     end
 
-    context "when the cohort they intend to continue training in is not the active registration cohort" do
-      let(:cohort) { Cohort.active_registration_cohort.previous }
+    context "when the cohort they intend to continue training in is not 2024" do
+      let(:cohort) { create(:cohort, start_year: 2023) }
 
       it { is_expected.not_to be_unfinished_with_billable_declaration(cohort:) }
     end
@@ -85,6 +97,33 @@ RSpec.shared_examples "can change cohort and continue training" do |participant_
         end
 
         it { is_expected.not_to be_unfinished_with_billable_declaration(cohort:) }
+      end
+
+      context "when the participant has a not completed, #{billable_declaration_type} declaration" do
+        before do
+          milestone_date = participant_profile.schedule.milestones.find_by(declaration_type: "retained-1").start_date
+          travel_to(milestone_date) do
+            create(declaration_type,
+                   billable_declaration_type,
+                   declaration_type: "retained-1",
+                   participant_profile:,
+                   cpd_lead_provider: participant_profile.lead_provider.cpd_lead_provider)
+          end
+        end
+
+        it { is_expected.to be_unfinished_with_billable_declaration(cohort:) }
+
+        context "when the cohort is not present" do
+          let(:cohort) { nil }
+
+          it { is_expected.not_to be_unfinished_with_billable_declaration(cohort:) }
+        end
+
+        context "when the cohort is not 2024" do
+          let(:cohort) { create(:cohort, start_year: 2023) }
+
+          it { is_expected.not_to be_unfinished_with_billable_declaration(cohort:) }
+        end
       end
     end
 
