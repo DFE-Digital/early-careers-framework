@@ -35,7 +35,7 @@ module DeliveryPartners
           :school,
           user: :teacher_profile,
           induction_programme: [partnership: :lead_provider],
-          participant_profile: %i[ecf_participant_eligibility ecf_participant_validation_data],
+          participant_profile: %i[teacher_profile ecf_participant_eligibility ecf_participant_validation_data],
         )
         .select(
           "induction_records.*",
