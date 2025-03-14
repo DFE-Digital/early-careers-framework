@@ -97,6 +97,24 @@ RSpec.describe VoidParticipantDeclaration do
       end
     end
 
+    context "when the declaration is already clawed back" do
+      let(:participant_declaration) { create(:ect_participant_declaration, :clawed_back, participant_profile:, cpd_lead_provider:) }
+
+      it { expect { subject.call }.to raise_error(Api::Errors::InvalidTransitionError, "This declaration has been clawed-back, so you can only view it.") }
+    end
+
+    context "when the declaration is awaiting clawback" do
+      let(:participant_declaration) { create(:ect_participant_declaration, :awaiting_clawback, participant_profile:, cpd_lead_provider:) }
+
+      it { expect { subject.call }.to raise_error(Api::Errors::InvalidTransitionError, "This declaration has been clawed-back, so you can only view it.") }
+    end
+
+    context "when the declaration is already voided" do
+      let(:participant_declaration) { create(:ect_participant_declaration, :voided, participant_profile:, cpd_lead_provider:) }
+
+      it { expect { subject.call }.to raise_error(Api::Errors::InvalidTransitionError, "This declaration has already been voided.") }
+    end
+
     context "when declaration is submitted" do
       let(:participant_declaration) do
         create(:ect_participant_declaration, cpd_lead_provider:, participant_profile:)
