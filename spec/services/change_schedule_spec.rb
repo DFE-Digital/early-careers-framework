@@ -66,7 +66,7 @@ end
 
 RSpec.shared_examples "changing cohort and continuing training" do
   let(:cohort) { new_cohort.previous }
-  let(:new_cohort) { Cohort.active_registration_cohort }
+  let(:new_cohort) { create(:cohort, start_year: 2024) }
 
   it { expect(new_cohort).not_to eq(cohort) }
 
@@ -116,6 +116,12 @@ RSpec.shared_examples "changing cohort and continuing training" do
 
           it { is_expected.to be_valid }
           it { expect { service.call }.to change { participant_profile.reload.cohort_changed_after_payments_frozen }.to(true) }
+
+          context "when new cohort is not 2024" do
+            let(:new_cohort) { create(:cohort, start_year: 2022) }
+
+            it { is_expected.to be_invalid }
+          end
         end
       end
 
@@ -343,14 +349,6 @@ RSpec.describe ChangeSchedule do
 
         it_behaves_like "changing cohort and continuing training" do
           let!(:new_schedule) { Finance::Schedule::ECF.find_by(cohort: new_cohort, schedule_identifier:) }
-        end
-
-        it_behaves_like "changing cohort and continuing training" do
-          let(:new_cohort) { Cohort.previous }
-        end
-
-        it_behaves_like "changing cohort and continuing training" do
-          let(:new_cohort) { Cohort.next }
         end
 
         context "when there are no submitted/eligible/payable/paid declarations" do
