@@ -29,7 +29,7 @@ module Importers
       raise "Do not seed default Call off Contracts in Production!" if Rails.env.production?
 
       LeadProvider.find_each do |lead_provider|
-        [cohort_current, cohort_previous, cohort_next].each do |cohort|
+        Cohort.where(start_year: 2021..).find_each do |cohort|
           create_call_off_contract_and_bands(lead_provider:, cohort:, contract_data: example_contract_data(cohort))
         end
       end
@@ -107,18 +107,6 @@ module Importers
       end
 
       ParticipantBand.create!(**attributes)
-    end
-
-    def cohort_current
-      @cohort_current ||= Cohort.current || FactoryBot.create(:cohort, :current)
-    end
-
-    def cohort_previous
-      @cohort_previous ||= Cohort.previous || FactoryBot.create(:cohort, :previous)
-    end
-
-    def cohort_next
-      @cohort_next ||= Cohort.next || FactoryBot.create(:cohort, :next)
     end
 
     def example_contract_data(cohort)
