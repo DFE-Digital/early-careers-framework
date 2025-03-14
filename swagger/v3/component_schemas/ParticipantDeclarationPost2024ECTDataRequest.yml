@@ -8,7 +8,7 @@ properties:
   attributes:
     type: object
     anyOf:
-      - $ref: "#/components/schemas/ECFParticipantDeclarationStartedAttributesRequest"
-      - $ref: "#/components/schemas/ECFParticipantDeclarationRetainedAttributesRequest"
-      - $ref: "#/components/schemas/ECFParticipantDeclarationCompletedAttributesRequest"
-      - $ref: "#/components/schemas/ECFParticipantDeclarationExtendedAttributesRequest"
+      - $ref: "#/components/schemas/ECFParticipantDeclarationPost2024ECTStartedAttributesRequest"
+      - $ref: "#/components/schemas/ECFParticipantDeclarationPost2024ECTRetainedAttributesRequest"
+      - $ref: "#/components/schemas/ECFParticipantDeclarationPost2024ECTCompletedAttributesRequest"
+      - $ref: "#/components/schemas/ECFParticipantDeclarationPost2024ECTExtendedAttributesRequest"

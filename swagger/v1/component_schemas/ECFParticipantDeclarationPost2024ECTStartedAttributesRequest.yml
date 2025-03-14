@@ -1,11 +1,10 @@
-description: "An ECF completed participant declaration"
+description: "An ECF started participant declaration"
 type: object
 required:
   - participant_id
   - declaration_type
   - declaration_date
   - course_identifier
-  - evidence_held
 properties:
   participant_id:
     description: The unique ID of the participant
@@ -15,8 +14,8 @@ properties:
     description: The event declaration type
     type: string
     enum:
-      - completed
-    example: completed
+      - started
+    example: started
   declaration_date:
     description: The event declaration date
     type: string
@@ -27,13 +26,13 @@ properties:
     type: string
     enum:
       - ecf-induction
-      - ecf-mentor
     example: ecf-induction
   evidence_held:
-    description: "The type of evidence that the lead provider holds on their platform to demonstrate that the participant has met the retention criteria for the current milestone period"
+    description: "The type of evidence the lead provider holds on their platform to demonstrate the participant has met the retention criteria for the current milestone period."
     type: string
     enum:
       - training-event-attended
       - self-study-material-completed
+      - materials-engaged-with-offline
       - other
     example: training-event-attended

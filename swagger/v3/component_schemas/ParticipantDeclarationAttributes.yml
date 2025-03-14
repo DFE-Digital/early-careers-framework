@@ -99,15 +99,19 @@ properties:
     type: boolean
     example: true
   evidence_held:
-    description: The type of evidence that the lead provider holds on their platform to demonstrate that the participant has met the retention criteria for the current milestone period
+    description: "The type of evidence the lead provider holds on their platform to demonstrate the participant has met the retention criteria for the current milestone period. For retained-2 declarations, providers will need to confirm if the engagement threshold has been reached and only accept either the '75-percent-engagement-met' or '75-percent-engagement-met-reduced-induction' values."
     type: string
     enum:
       - training-event-attended
       - self-study-material-completed
       - other
+      - materials-engaged-with-offline
+      - 75-percent-engagement-met
+      - 75-percent-engagement-met-reduced-induction
+      - one-term-induction
     nullable: true
   has_passed:
-    description: Whether the participant has failed or passed
+    description:  Whether the participant has failed or passed
     type: boolean
     example: nil
     nullable: true

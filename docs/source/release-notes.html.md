@@ -7,17 +7,58 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
+## 14 March 2025
+
+[#new-feature #sandbox-release]
+
+We've updated the test (sandbox) environment with all the `evidence_held` values lead providers will be able to use when they submit participant declarations for the 2025/26 intake of early career teachers (ECTs) and mentors.
+
+These values represent the evidence lead providers hold to show participants have met the retention criteria for the current milestone period.
+
+For 2025/26, every `declaration_type` will have its own `evidence_held` values (see tables). In previous years we’d applied the `training-event-attended`, `self-study-material-completed` and `other` values across all declaration types.
+
+### Early career teachers
+
+| Declaration type   | Evidence held values |
+| -------------------- | ---------------------- |
+| `started`   |  <ul class="govuk-list govuk-list--bullet"><li>`training-event-attended`</li> <li>`self-study-material-completed`</li> <li>`other`</li> <li>`materials-engaged-with-offline` (new value for 2025 onwards)</li></ul> |
+| `retained-1` |  <ul class="govuk-list govuk-list--bullet"><li>`training-event-attended`</li> <li>`self-study-material-completed`</li> <li>`other`</li> <li>`materials-engaged-with-offline` (new value for 2025 onwards)</li></ul> |
+| `retained-2` |  <ul class="govuk-list govuk-list--bullet"><li>`75-percent-engagement-met` (new value for 2025 onwards)</li> <li>`75-percent-engagement-met-reduced-induction` (new value for 2025 onwards)</li></ul> |
+| `retained-3` |  <ul class="govuk-list govuk-list--bullet"><li>`training-event-attended`</li> <li>`self-study-material-completed`</li> <li>`other`</li> <li>`materials-engaged-with-offline` (new value for 2025 onwards)</li></ul> |
+| `retained-4` |  <ul class="govuk-list govuk-list--bullet"><li>`training-event-attended`</li> <li>`self-study-material-completed`</li> <li>`other`</li> <li>`materials-engaged-with-offline` (new value for 2025 onwards)</li></ul> |
+| `extended-1` |  <ul class="govuk-list govuk-list--bullet"><li>`training-event-attended`</li> <li>`self-study-material-completed`</li> <li>`other`</li> <li>`materials-engaged-with-offline` (new value for 2025 onwards)</li></ul> |
+| `extended-2` |  <ul class="govuk-list govuk-list--bullet"><li>`training-event-attended`</li> <li>`self-study-material-completed`</li> <li>`other`</li> <li>`materials-engaged-with-offline` (new value for 2025 onwards)</li></ul> |
+| `extended-3` |  <ul class="govuk-list govuk-list--bullet"><li>`training-event-attended`</li> <li>`self-study-material-completed`</li> <li>`other`</li> <li>`materials-engaged-with-offline` (new value for 2025 onwards)</li></ul> |
+| `completed` |  <ul class="govuk-list govuk-list--bullet"><li>`75-percent-engagement-met` (new value for 2025 onwards)</li> <li>`75-percent-engagement-met-reduced-induction` (new value for 2025 onwards)</li> <li> `one-term-induction` (new value for 2025 onwards) </li></ul>|
+
+### Mentors
+
+| Declaration type   | Evidence held values |
+| ------------- | ------------- |
+| `started`   |  <ul class="govuk-list govuk-list--bullet"><li>`training-event-attended`</li> <li>`self-study-material-completed`</li> <li>`other`</li> <li>`materials-engaged-with-offline` (new value for 2025 onwards)</li></ul> |
+| `completed` |  <ul class="govuk-list govuk-list--bullet"><li>`75-percent-engagement-met` (new value for 2025 onwards)</li> <li>`75-percent-engagement-met-reduced-induction` (new value for 2025 onwards)</li></ul> |
+
+> New evidence types are not compatible with previous cohorts. If providers try using a new evidence type for an older cohort declaration, it will not work.
+
+### What to test ahead of 2025 registration opening in June
+
+We advise providers check their integrations can:
+
+- support all new evidence types
+- submit `one-term-induction` as `evidence_held` for `completed` ECT declarations
+- supply evidence types for `started` declarations
+
 ## 3 March 2025
 
 [#bug-fix]
 
 We’ve resolved an issue in the API where a v2 declaration endpoint was inadvertently serving the v1 schema.
 
-The fix updates the ``POST`` action to use the correct v2 schema.
+The fix updates the `POST` action to use the correct v2 schema.
 
 The following declaration endpoint has been updated:
 
-- ``POST participant-declarations``
+- `POST participant-declarations`
 
 All endpoints now conform to the v2 schema specifications.
 
@@ -37,19 +78,19 @@ For mentors, use the following date of birth:
 
 - 1/1/1900
 
-### Changes to mentor declarations for the 2025/6 intake 
+### Changes to mentor declarations for the 2025/6 intake
 
-We’ve removed the following declarations from the ``POST participant-declarations`` test environment endpoint for mentors starting in 2025/26:  
+We’ve removed the following declarations from the `POST participant-declarations` test environment endpoint for mentors starting in 2025/26:
 
-- ``retained-1`` 
-- ``retained-2`` 
-- ``retained-3`` 
-- ``retained-4`` 
-- ``extended-1``
-- ``extended-2``
-- ``extended-3``
+- `retained-1`
+- `retained-2`
+- `retained-3`
+- `retained-4`
+- `extended-1`
+- `extended-2`
+- `extended-3`
 
-This is because there’ll only be 2 mentor declarations from the 2025/26 academic year onwards, ``started`` and ``completed``.  
+This is because there’ll only be 2 mentor declarations from the 2025/26 academic year onwards, `started` and `completed`.
 
 These changes align with the updated frameworks and payment guidelines shared with lead providers.
 

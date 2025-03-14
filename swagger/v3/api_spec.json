@@ -2377,7 +2377,317 @@
           }
         }
       },
-      "ECFParticipantDeclarationCompletedAttributesRequest": {
+      "ECFParticipantDeclarationPost2024ECTCompletedAttributesRequest": {
+        "description": "An ECF completed participant declaration",
+        "type": "object",
+        "required": [
+          "participant_id",
+          "declaration_type",
+          "declaration_date",
+          "course_identifier",
+          "evidence_held"
+        ],
+        "properties": {
+          "participant_id": {
+            "description": "The unique ID of the participant",
+            "type": "string",
+            "example": "3452b1a6-cbaa-422f-9ca9-40afa28583a2"
+          },
+          "declaration_type": {
+            "description": "The event declaration type",
+            "type": "string",
+            "enum": [
+              "completed"
+            ],
+            "example": "completed"
+          },
+          "declaration_date": {
+            "description": "The event declaration date",
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-05-31T02:21:32.000Z"
+          },
+          "course_identifier": {
+            "description": "The type of course the participant is enrolled in",
+            "type": "string",
+            "enum": [
+              "ecf-induction"
+            ],
+            "example": "ecf-induction"
+          },
+          "evidence_held": {
+            "description": "The type of evidence the lead provider holds on their platform to demonstrate the participant has met the retention criteria for the current milestone period.",
+            "type": "string",
+            "enum": [
+              "75-percent-engagement-met",
+              "75-percent-engagement-met-reduced-induction",
+              "one-term-induction"
+            ],
+            "example": "75-percent-engagement-met"
+          }
+        }
+      },
+      "ECFParticipantDeclarationPost2024ECTExtendedAttributesRequest": {
+        "description": "An ECF extended participant declaration",
+        "type": "object",
+        "required": [
+          "participant_id",
+          "declaration_type",
+          "declaration_date",
+          "course_identifier",
+          "evidence_held"
+        ],
+        "properties": {
+          "participant_id": {
+            "description": "The unique ID of the participant",
+            "type": "string",
+            "example": "3452b1a6-cbaa-422f-9ca9-40afa28583a2"
+          },
+          "declaration_type": {
+            "description": "The event declaration type",
+            "type": "string",
+            "enum": [
+              "extended-1",
+              "extended-2",
+              "extended-3"
+            ],
+            "example": "extended-1"
+          },
+          "declaration_date": {
+            "description": "The event declaration date",
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-05-31T02:21:32.000Z"
+          },
+          "course_identifier": {
+            "description": "The type of course the participant is enrolled in",
+            "type": "string",
+            "enum": [
+              "ecf-induction"
+            ],
+            "example": "ecf-induction"
+          },
+          "evidence_held": {
+            "description": "The type of evidence the lead provider holds on their platform to demonstrate the participant has met the retention criteria for the current milestone period.",
+            "type": "string",
+            "enum": [
+              "training-event-attended",
+              "self-study-material-completed",
+              "materials-engaged-with-offline",
+              "other"
+            ],
+            "example": "training-event-attended"
+          }
+        }
+      },
+      "ECFParticipantDeclarationPost2024ECTRetainedAttributesRequest": {
+        "description": "An ECF participant retained declaration",
+        "type": "object",
+        "required": [
+          "participant_id",
+          "declaration_type",
+          "declaration_date",
+          "course_identifier",
+          "evidence_held"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "participant_id": {
+            "description": "The unique ID of the participant",
+            "type": "string",
+            "format": "uuid",
+            "example": "3452b1a6-cbaa-422f-9ca9-40afa28583a2"
+          },
+          "declaration_type": {
+            "description": "The event declaration type",
+            "type": "string",
+            "enum": [
+              "retained-1",
+              "retained-2",
+              "retained-3",
+              "retained-4"
+            ],
+            "example": "retained-1"
+          },
+          "declaration_date": {
+            "description": "The event declaration date",
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-05-31T02:21:32.000Z"
+          },
+          "course_identifier": {
+            "description": "The type of course the participant is enrolled in",
+            "type": "string",
+            "enum": [
+              "ecf-induction"
+            ],
+            "example": "ecf-induction"
+          },
+          "evidence_held": {
+            "description": "The type of evidence the lead provider holds on their platform to demonstrate the participant has met the retention criteria for the current milestone period. For retained-2 declarations, providers will need to confirm if the engagement threshold has been reached and only accept either the '75-percent-engagement-met' or '75-percent-engagement-met-reduced-induction' values.",
+            "type": "string",
+            "enum": [
+              "training-event-attended",
+              "self-study-material-completed",
+              "materials-engaged-with-offline",
+              "other",
+              "75-percent-engagement-met",
+              "75-percent-engagement-met-reduced-induction"
+            ],
+            "example": "training-event-attended"
+          }
+        }
+      },
+      "ECFParticipantDeclarationPost2024ECTStartedAttributesRequest": {
+        "description": "An ECF started participant declaration",
+        "type": "object",
+        "required": [
+          "participant_id",
+          "declaration_type",
+          "declaration_date",
+          "course_identifier"
+        ],
+        "properties": {
+          "participant_id": {
+            "description": "The unique ID of the participant",
+            "type": "string",
+            "example": "3452b1a6-cbaa-422f-9ca9-40afa28583a2"
+          },
+          "declaration_type": {
+            "description": "The event declaration type",
+            "type": "string",
+            "enum": [
+              "started"
+            ],
+            "example": "started"
+          },
+          "declaration_date": {
+            "description": "The event declaration date",
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-05-31T02:21:32.000Z"
+          },
+          "course_identifier": {
+            "description": "The type of course the participant is enrolled in",
+            "type": "string",
+            "enum": [
+              "ecf-induction"
+            ],
+            "example": "ecf-induction"
+          },
+          "evidence_held": {
+            "description": "The type of evidence the lead provider holds on their platform to demonstrate the participant has met the retention criteria for the current milestone period.",
+            "type": "string",
+            "enum": [
+              "training-event-attended",
+              "self-study-material-completed",
+              "materials-engaged-with-offline",
+              "other"
+            ],
+            "example": "training-event-attended"
+          }
+        }
+      },
+      "ECFParticipantDeclarationPost2024MentorCompletedAttributesRequest": {
+        "description": "An ECF completed participant declaration",
+        "type": "object",
+        "required": [
+          "participant_id",
+          "declaration_type",
+          "declaration_date",
+          "course_identifier",
+          "evidence_held"
+        ],
+        "properties": {
+          "participant_id": {
+            "description": "The unique ID of the participant",
+            "type": "string",
+            "example": "3452b1a6-cbaa-422f-9ca9-40afa28583a2"
+          },
+          "declaration_type": {
+            "description": "The event declaration type",
+            "type": "string",
+            "enum": [
+              "completed"
+            ],
+            "example": "completed"
+          },
+          "declaration_date": {
+            "description": "The event declaration date",
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-05-31T02:21:32.000Z"
+          },
+          "course_identifier": {
+            "description": "The type of course the participant is enrolled in",
+            "type": "string",
+            "enum": [
+              "ecf-mentor"
+            ],
+            "example": "ecf-mentor"
+          },
+          "evidence_held": {
+            "description": "The type of evidence the lead provider holds on their platform to demonstrate the participant has met the retention criteria for the current milestone period.",
+            "type": "string",
+            "enum": [
+              "75-percent-engagement-met",
+              "75-percent-engagement-met-reduced-induction"
+            ],
+            "example": "75-percent-engagement-met"
+          }
+        }
+      },
+      "ECFParticipantDeclarationPost2024MentorStartedAttributesRequest": {
+        "description": "An ECF started participant declaration",
+        "type": "object",
+        "required": [
+          "participant_id",
+          "declaration_type",
+          "declaration_date",
+          "course_identifier"
+        ],
+        "properties": {
+          "participant_id": {
+            "description": "The unique ID of the participant",
+            "type": "string",
+            "example": "3452b1a6-cbaa-422f-9ca9-40afa28583a2"
+          },
+          "declaration_type": {
+            "description": "The event declaration type",
+            "type": "string",
+            "enum": [
+              "started"
+            ],
+            "example": "started"
+          },
+          "declaration_date": {
+            "description": "The event declaration date",
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-05-31T02:21:32.000Z"
+          },
+          "course_identifier": {
+            "description": "The type of course the participant is enrolled in",
+            "type": "string",
+            "enum": [
+              "ecf-mentor"
+            ],
+            "example": "ecf-mentor"
+          },
+          "evidence_held": {
+            "description": "The type of evidence the lead provider holds on their platform to demonstrate the participant has met the retention criteria for the current milestone period.",
+            "type": "string",
+            "enum": [
+              "training-event-attended",
+              "self-study-material-completed",
+              "materials-engaged-with-offline",
+              "other"
+            ],
+            "example": "training-event-attended"
+          }
+        }
+      },
+      "ECFParticipantDeclarationPre2025CompletedAttributesRequest": {
         "description": "An ECF completed participant declaration",
         "type": "object",
         "required": [
@@ -2417,7 +2727,7 @@
             "example": "ecf-induction"
           },
           "evidence_held": {
-            "description": "The type of evidence that the lead provider holds on their platform to demonstrate that the participant has met the retention criteria for the current milestone period",
+            "description": "The type of evidence the lead provider holds on their platform to demonstrate the participant has met the retention criteria for the current milestone period.",
             "type": "string",
             "enum": [
               "training-event-attended",
@@ -2428,7 +2738,7 @@
           }
         }
       },
-      "ECFParticipantDeclarationExtendedAttributesRequest": {
+      "ECFParticipantDeclarationPre2025ExtendedAttributesRequest": {
         "description": "An ECF extended participant declaration",
         "type": "object",
         "required": [
@@ -2470,7 +2780,7 @@
             "example": "ecf-induction"
           },
           "evidence_held": {
-            "description": "The type of evidence that the lead provider holds on their platform to demonstrate that the participant has met the retention criteria for the current milestone period",
+            "description": "The type of evidence the lead provider holds on their platform to demonstrate the participant has met the retention criteria for the current milestone period.",
             "type": "string",
             "enum": [
               "training-event-attended",
@@ -2481,7 +2791,7 @@
           }
         }
       },
-      "ECFParticipantDeclarationRetainedAttributesRequest": {
+      "ECFParticipantDeclarationPre2025RetainedAttributesRequest": {
         "description": "An ECF participant retained declaration",
         "type": "object",
         "required": [
@@ -2526,7 +2836,7 @@
             "example": "ecf-induction"
           },
           "evidence_held": {
-            "description": "The type of evidence that the lead provider holds on their platform to demonstrate that the participant has met the retention criteria for the current milestone period",
+            "description": "The type of evidence the lead provider holds on their platform to demonstrate the participant has met the retention criteria for the current milestone period.",
             "type": "string",
             "enum": [
               "training-event-attended",
@@ -2536,7 +2846,7 @@
           }
         }
       },
-      "ECFParticipantDeclarationStartedAttributesRequest": {
+      "ECFParticipantDeclarationPre2025StartedAttributesRequest": {
         "description": "An ECF started participant declaration",
         "type": "object",
         "required": [
@@ -3855,12 +4165,16 @@
             "example": true
           },
           "evidence_held": {
-            "description": "The type of evidence that the lead provider holds on their platform to demonstrate that the participant has met the retention criteria for the current milestone period",
+            "description": "The type of evidence the lead provider holds on their platform to demonstrate the participant has met the retention criteria for the current milestone period. For retained-2 declarations, providers will need to confirm if the engagement threshold has been reached and only accept either the '75-percent-engagement-met' or '75-percent-engagement-met-reduced-induction' values.",
             "type": "string",
             "enum": [
               "training-event-attended",
               "self-study-material-completed",
-              "other"
+              "other",
+              "materials-engaged-with-offline",
+              "75-percent-engagement-met",
+              "75-percent-engagement-met-reduced-induction",
+              "one-term-induction"
             ],
             "nullable": true
           },
@@ -3891,16 +4205,16 @@
             "type": "object",
             "anyOf": [
               {
-                "$ref": "#/components/schemas/ECFParticipantDeclarationStartedAttributesRequest"
+                "$ref": "#/components/schemas/ECFParticipantDeclarationPost2024ECTStartedAttributesRequest"
               },
               {
-                "$ref": "#/components/schemas/ECFParticipantDeclarationRetainedAttributesRequest"
+                "$ref": "#/components/schemas/ECFParticipantDeclarationPost2024ECTRetainedAttributesRequest"
               },
               {
-                "$ref": "#/components/schemas/ECFParticipantDeclarationCompletedAttributesRequest"
+                "$ref": "#/components/schemas/ECFParticipantDeclarationPost2024ECTCompletedAttributesRequest"
               },
               {
-                "$ref": "#/components/schemas/ECFParticipantDeclarationExtendedAttributesRequest"
+                "$ref": "#/components/schemas/ECFParticipantDeclarationPost2024ECTExtendedAttributesRequest"
               }
             ]
           }
@@ -3920,10 +4234,10 @@
             "type": "object",
             "anyOf": [
               {
-                "$ref": "#/components/schemas/ECFParticipantDeclarationStartedAttributesRequest"
+                "$ref": "#/components/schemas/ECFParticipantDeclarationPost2024MentorStartedAttributesRequest"
               },
               {
-                "$ref": "#/components/schemas/ECFParticipantDeclarationCompletedAttributesRequest"
+                "$ref": "#/components/schemas/ECFParticipantDeclarationPost2024MentorCompletedAttributesRequest"
               }
             ]
           }
@@ -3943,16 +4257,16 @@
             "type": "object",
             "anyOf": [
               {
-                "$ref": "#/components/schemas/ECFParticipantDeclarationStartedAttributesRequest"
+                "$ref": "#/components/schemas/ECFParticipantDeclarationPre2025StartedAttributesRequest"
               },
               {
-                "$ref": "#/components/schemas/ECFParticipantDeclarationRetainedAttributesRequest"
+                "$ref": "#/components/schemas/ECFParticipantDeclarationPre2025RetainedAttributesRequest"
               },
               {
-                "$ref": "#/components/schemas/ECFParticipantDeclarationCompletedAttributesRequest"
+                "$ref": "#/components/schemas/ECFParticipantDeclarationPre2025CompletedAttributesRequest"
               },
               {
-                "$ref": "#/components/schemas/ECFParticipantDeclarationExtendedAttributesRequest"
+                "$ref": "#/components/schemas/ECFParticipantDeclarationPre2025ExtendedAttributesRequest"
               }
             ]
           }
