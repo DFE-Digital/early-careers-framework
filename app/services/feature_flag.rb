@@ -24,6 +24,7 @@ class FeatureFlag
     prevent_2023_ect_registrations
     school_participant_status_language
     registration_pilot_school
+    programme_type_changes_2025
   ].freeze
 
   FEATURES = (PERMANENT_SETTINGS + TEMPORARY_FEATURE_FLAGS).index_with { |name|
