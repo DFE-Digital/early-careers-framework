@@ -11,6 +11,7 @@ class ParticipantProfile::ECF < ParticipantProfile
     school-left-fip
     other
   ].freeze
+  DESTINATION_COHORT_WHEN_MOVING_PARTICIPANTS_TO_FROM_A_FROZEN_COHORT = 2024
 
   enum profile_duplicity: {
     single: "single",
@@ -53,16 +54,17 @@ class ParticipantProfile::ECF < ParticipantProfile
   end
 
   def self.unfinished_with_billable_declaration(cohort:, restrict_to_participant_ids: [])
-    billable_states = %w[eligible payable paid].freeze
-
-    return none unless cohort == Cohort.active_registration_cohort
+    # We need to replace Cohort.active_registration_cohort (currently 2024) with hardcoded 2024
+    # because for 2025 registration we still want these participants to continue training in 2024 not 2025
+    # which will be the value of Cohort.active_registration_cohort when we open 2025 registration.
+    return none unless cohort&.start_year == DESTINATION_COHORT_WHEN_MOVING_PARTICIPANTS_TO_FROM_A_FROZEN_COHORT
 
     completed_billable_declarations = ParticipantDeclaration.billable.for_declaration(:completed)
     completed_billable_declarations = completed_billable_declarations.where(participant_profile_id: restrict_to_participant_ids) if restrict_to_participant_ids.any?
 
     query = joins(:participant_declarations, schedule: :cohort)
       .where.not(cohorts: { payments_frozen_at: nil })
-      .where("participant_declarations.state IN (?) AND declaration_type != ?", billable_states, "completed")
+      .where("participant_declarations.state IN (?) AND declaration_type != ?", Finance::StatementLineItem::BILLABLE_STATES, "completed")
       .where.not(id: completed_billable_declarations.select(:participant_profile_id))
       .distinct
 
