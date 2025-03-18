@@ -117,11 +117,8 @@ module Participants
       Participants::SyncDQTInductionStartDate.call(start_date, participant_profile)
     end
 
-    def target_cohort
-      Cohort.active_registration_cohort
+    def target_cohort_start_year
+      Cohort::DESTINATION_START_YEAR_FROM_A_FROZEN_COHORT
     end
-
-    # target_cohort_start_year
-    delegate :start_year, to: :target_cohort, prefix: true
   end
 end

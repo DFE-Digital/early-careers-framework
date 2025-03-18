@@ -23,7 +23,7 @@
 #                                             schedule:).save
 #
 #  - For cohort changes on participants whose current cohort has been payments_frozen and are transferred to
-#    the active registration cohort, it will automatically flag the participant_profile as
+#    the Cohort.destination_from_frozen_cohort, it will automatically flag the participant_profile as
 #    cohort_changed_after_payments_frozen: true
 #
 module Induction
@@ -251,7 +251,7 @@ module Induction
     end
 
     def transfer_from_payments_frozen_cohort?
-      source_cohort&.payments_frozen? && target_cohort == Cohort.active_registration_cohort
+      source_cohort&.payments_frozen? && target_cohort == Cohort.destination_from_frozen_cohort
     end
 
     def cohort_changed_after_payments_frozen

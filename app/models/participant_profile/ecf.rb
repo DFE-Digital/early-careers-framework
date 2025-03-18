@@ -182,7 +182,7 @@ class ParticipantProfile::ECF < ParticipantProfile
     return false unless cohort&.start_year == Cohort::DESTINATION_START_YEAR_FROM_A_FROZEN_COHORT
     return false unless schedule&.cohort&.payments_frozen?
 
-    participant_declarations.none? { |declaration| declaration.billable? }
+    participant_declarations.none?(&:billable?)
   end
 
   def unfinished?(cohort: Cohort.destination_from_frozen_cohort)
