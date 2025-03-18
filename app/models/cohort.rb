@@ -3,6 +3,7 @@
 class Cohort < ApplicationRecord
   has_paper_trail
 
+  DESTINATION_START_YEAR_FROM_A_FROZEN_COHORT = 2024
   START_YEAR_2020 = 2020
 
   INITIAL_COHORT_START_DATE = Date.new(2021, 9, 1)
@@ -29,6 +30,10 @@ class Cohort < ApplicationRecord
 
   def self.current
     starting_within(Date.current - 1.year + 1.day, Date.current)
+  end
+
+  def self.destination_from_frozen_cohort
+    where(start_year: DESTINATION_START_YEAR_FROM_A_FROZEN_COHORT).first
   end
 
   def self.next
