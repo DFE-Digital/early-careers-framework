@@ -90,7 +90,7 @@ gem "activerecord-session_store", "~> 2.1"
 
 gem "active_record_extended"
 
-gem "sidekiq"
+gem "sidekiq", "~> 6.5.12"
 gem "sidekiq-cron"
 
 gem "net-imap", require: false
