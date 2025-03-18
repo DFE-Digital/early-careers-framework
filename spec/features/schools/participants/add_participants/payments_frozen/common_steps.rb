@@ -115,3 +115,7 @@ end
 def and_the_mentor_has_been_added_to_the_active_registration_cohort
   expect(ParticipantProfile::Mentor.last.school_cohort.cohort).to eq(Cohort.active_registration_cohort)
 end
+
+def and_the_mentor_stays_in_their_current_cohort(cohort)
+  expect(ParticipantProfile::Mentor.last.school_cohort.cohort).to eq(cohort)
+end
