@@ -21,7 +21,7 @@
     "file-loader": "^6.2.0",
     "govuk-frontend": "^5.9.0",
     "nunjucks": "^3.2.4",
-    "sass": "^1.85.1",
+    "sass": "^1.86.0",
     "terser-webpack-plugin": "^5.3.14",
     "webpack": "^5.98",
     "webpack-assets-manifest": "^5.2.1",
