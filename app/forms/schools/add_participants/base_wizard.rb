@@ -493,7 +493,7 @@ module Schools
       end
 
       def cohort_for_transfer
-        cohort = Cohort.active_registration_cohort
+        cohort = Cohort.destination_from_frozen_cohort
         return cohort if existing_participant_profile&.unfinished?(cohort:)
 
         existing_participant_cohort || existing_participant_profile&.schedule&.cohort

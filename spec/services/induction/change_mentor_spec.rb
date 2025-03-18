@@ -71,21 +71,22 @@ RSpec.describe Induction::ChangeMentor do
         let(:declaration) { create(:mentor_participant_declaration, :paid, declaration_type: :started, cohort: Cohort.previous) }
         let(:mentor_profile) { declaration.participant_profile }
         let(:current_cohort) { mentor_profile.schedule.cohort }
-        let(:cohort) { Cohort.active_registration_cohort }
+        let(:cohort) { Cohort.destination_from_frozen_cohort }
         let!(:school_cohort) { create(:school_cohort, :fip, :with_induction_programme, cohort:, school: mentor_profile.school) }
 
         before do
           current_cohort.update!(payments_frozen_at: Time.current)
+          allow(mentor_profile).to receive(:unfinished_with_billable_declaration?).and_return(true)
           service.call(induction_record:, mentor_profile:)
         end
 
-        it "places the mentor in the currently active cohort for registration" do
+        it "places the mentor in the destination cohort from frozen cohorts" do
           expect(current_cohort).not_to eq(cohort)
           expect(mentor_profile.reload.schedule.cohort_id).to eq(cohort.id)
         end
       end
 
-      context "when the mentor is not unfinished in a payments-frozen cohort and the mentee not in a payments-frozen one" do
+      context "when the mentor is not unfinished, in a payments-frozen cohort and the mentee not in a payments-frozen one" do
         let(:mentor_school_cohort) do
           NewSeeds::Scenarios::SchoolCohorts::Fip.new(cohort: Cohort.previous).build.with_programme.school_cohort
         end
@@ -104,6 +105,7 @@ RSpec.describe Induction::ChangeMentor do
 
         before do
           mentor_cohort.update!(payments_frozen_at: Time.current)
+          allow(mentor_profile).to receive(:unfinished_with_no_billable_declaration?).and_return(true)
           service.call(induction_record:, mentor_profile:)
         end
 

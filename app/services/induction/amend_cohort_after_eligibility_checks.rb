@@ -18,9 +18,13 @@ module Induction
     def amend_participant_cohort
       Induction::AmendParticipantCohort.new(participant_profile:,
                                             source_cohort_start_year: participant_profile.schedule&.cohort&.start_year,
-                                            target_cohort_start_year: Cohort.active_registration_cohort.start_year,
+                                            target_cohort_start_year:,
                                             force_from_frozen_cohort: true)
                                        .save
+    end
+
+    def target_cohort_start_year
+      Cohort::DESTINATION_START_YEAR_FROM_A_FROZEN_COHORT
     end
 
     def unfinished_eligible_participant?

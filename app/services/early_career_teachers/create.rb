@@ -56,7 +56,7 @@ module EarlyCareerTeachers
     def amend_mentor_cohort
       Induction::AmendParticipantCohort.new(participant_profile: mentor_profile,
                                             source_cohort_start_year: mentor_profile.schedule.cohort.start_year,
-                                            target_cohort_start_year: Cohort.active_registration_cohort.start_year,
+                                            target_cohort_start_year:,
                                             force_from_frozen_cohort: true).save
     end
 
@@ -93,6 +93,10 @@ module EarlyCareerTeachers
 
     def participant_profile_exists?
       teacher_profile.participant_profiles.ects.exists? || user.participant_identities.joins(:participant_profiles).where(participant_profiles: { type: "ParticipantProfile::ECT" }).exists?
+    end
+
+    def target_cohort_start_year
+      Cohort::DESTINATION_START_YEAR_FROM_A_FROZEN_COHORT
     end
   end
 end
