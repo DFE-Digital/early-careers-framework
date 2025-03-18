@@ -33,7 +33,7 @@ class Cohort < ApplicationRecord
   end
 
   def self.destination_from_frozen_cohort
-    where(start_year: DESTINATION_START_YEAR_FROM_A_FROZEN_COHORT).first
+    find_by!(start_year: DESTINATION_START_YEAR_FROM_A_FROZEN_COHORT)
   end
 
   def self.next
