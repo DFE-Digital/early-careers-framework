@@ -92,6 +92,6 @@ RSpec.describe "SIT adding an ECT", js: true, early_in_cohort: true do
     when_i_click_confirm_and_add
     then_i_see_confirmation_that_the_participant_has_been_added
     and_the_participant_has_been_added_to_the_active_registration_cohort
-    and_the_mentor_has_been_added_to_the_active_registration_cohort
+    and_the_mentor_stays_in_their_current_cohort(@mentor_school_cohort.cohort)
   end
 end
