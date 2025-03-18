@@ -31,7 +31,7 @@ gem "pg", "~> 1.5"
 gem "ar-uuid", "~> 0.2.3"
 
 # Use Puma as the app server
-gem "puma", "< 7"
+gem "puma", "~> 6.0"
 
 # Soft delete
 gem "discard", "~> 1.4"
