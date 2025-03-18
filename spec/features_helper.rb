@@ -15,10 +15,13 @@ Capybara.register_driver :chrome_headless do |app|
   http_client.read_timeout = 120
   http_client.open_timeout = 120
 
+  # Pin Chrome version due a possible race condition between newer versions of chromedriver and selenium
+  # causing some specs to fail intermittently on CI with the failure Net::ReadTimeout
+  # See https://github.com/teamcapybara/capybara/issues/2770
   Capybara::Selenium::Driver.new(
     app,
     browser: :chrome,
-    options: Selenium::WebDriver::Options.chrome(args:),
+    options: Selenium::WebDriver::Options.chrome(args:, browser_version: "127.0.6533.119"),
     http_client:,
   )
 end
