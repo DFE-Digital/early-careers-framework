@@ -96,7 +96,7 @@ module ValidTestDataGenerators
         induction_programme = profile.school_cohort.induction_programmes.first
         raise unless induction_programme
 
-        Induction::Enrol.call(participant_profile: profile, induction_programme:)
+        Induction::Enrol.call(participant_profile: profile, induction_programme:, start_date: Time.zone.now)
 
         return unless profile.active_record?
 
@@ -145,7 +145,7 @@ module ValidTestDataGenerators
         induction_programme = profile.school_cohort.induction_programmes.first
         raise unless induction_programme
 
-        Induction::Enrol.call(participant_profile: profile, induction_programme:)
+        Induction::Enrol.call(participant_profile: profile, induction_programme:, start_date: Time.zone.now)
 
         return profile unless profile.active_record?
 
