@@ -64,7 +64,7 @@ describe ParticipantProfile::Mentor, type: :model do
     end
   end
 
-  include_context "can change cohort and continue training", :mentor, :ect, :mentor_completion_date
+  include_context "can't change cohort and continue training", :mentor, :ect, :mentor_completion_date
 
   def build_profile(attrs = {})
     create(:mentor_participant_profile, attrs).tap do |participant_profile|

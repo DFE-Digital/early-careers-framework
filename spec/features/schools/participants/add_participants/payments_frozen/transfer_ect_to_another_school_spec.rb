@@ -104,7 +104,7 @@ RSpec.describe "SIT transfers ECT to another school", js: true, early_in_cohort:
 
     and_the_participant_has_been_transfered_to_another_school
     and_the_participant_has_been_added_to_the_active_registration_cohort
-    and_the_mentor_has_been_added_to_the_active_registration_cohort
+    and_the_mentor_stays_in_their_current_cohort(@mentor_school_cohort.cohort)
   end
 
   def and_i_am_transfering_an_ect_in_a_cohort_with_payments_frozen_between_schools

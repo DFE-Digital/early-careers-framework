@@ -45,7 +45,7 @@ RSpec.describe "SIT transfers mentor to another school", js: true, early_in_coho
     then_i_am_taken_to_mentor_added_confirmation_page
 
     and_the_mentor_has_been_transfered_to_another_school
-    and_the_mentor_has_been_added_to_the_active_registration_cohort
+    and_the_mentor_stays_in_their_current_cohort(earliest_cohort)
   end
 
   def and_i_am_transfering_a_mentor_in_a_cohort_with_payments_frozen_between_schools
