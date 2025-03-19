@@ -14,23 +14,46 @@ RSpec.describe Schools::Cohorts::WizardSteps::HowWillYouRunTrainingStep, type: :
   end
 
   describe "validations" do
-    let(:cip_only_valid) { %w[core_induction_programme school_funded_fip design_our_own] }
-    let(:non_cip_only_valid) { %w[full_induction_programme core_induction_programme design_our_own] }
+    context "when programme type changes for 2025 are not active", with_feature_flags: { programme_type_changes_2025: "inactive" } do
+      let(:cip_only_valid) { %w[core_induction_programme school_funded_fip design_our_own] }
+      let(:non_cip_only_valid) { %w[full_induction_programme core_induction_programme design_our_own] }
 
-    context "when the school is cip-only" do
-      before do
-        allow(wizard).to receive(:school).and_return(double(cip_only?: true))
+      context "when the school is cip-only" do
+        before do
+          allow(wizard).to receive(:school).and_return(double(cip_only?: true))
+        end
+
+        it { is_expected.to validate_inclusion_of(:how_will_you_run_training).in_array(cip_only_valid).with_message("Select how you will run training") }
       end
 
-      it { is_expected.to validate_inclusion_of(:how_will_you_run_training).in_array(cip_only_valid).with_message("Select how you will run training") }
+      context "when the school is not cip-only" do
+        before do
+          allow(wizard).to receive(:school).and_return(double(cip_only?: false))
+        end
+
+        it { is_expected.to validate_inclusion_of(:how_will_you_run_training).in_array(non_cip_only_valid).with_message("Select how you will run training") }
+      end
     end
 
-    context "when the school is not cip-only" do
-      before do
-        allow(wizard).to receive(:school).and_return(double(cip_only?: false))
+    context "when programme type changes for 2025 are active", with_feature_flags: { programme_type_changes_2025: "active" } do
+      let(:cip_only_valid) { %w[core_induction_programme school_funded_fip] }
+      let(:non_cip_only_valid) { %w[full_induction_programme core_induction_programme] }
+
+      context "when the school is cip-only" do
+        before do
+          allow(wizard).to receive(:school).and_return(double(cip_only?: true))
+        end
+
+        it { is_expected.to validate_inclusion_of(:how_will_you_run_training).in_array(cip_only_valid).with_message("Select how you will run training") }
       end
 
-      it { is_expected.to validate_inclusion_of(:how_will_you_run_training).in_array(non_cip_only_valid).with_message("Select how you will run training") }
+      context "when the school is not cip-only" do
+        before do
+          allow(wizard).to receive(:school).and_return(double(cip_only?: false))
+        end
+
+        it { is_expected.to validate_inclusion_of(:how_will_you_run_training).in_array(non_cip_only_valid).with_message("Select how you will run training") }
+      end
     end
 
     context "when option not selected" do
@@ -102,31 +125,83 @@ RSpec.describe Schools::Cohorts::WizardSteps::HowWillYouRunTrainingStep, type: :
   end
 
   describe "#choices" do
-    context "when the school is cip-only" do
-      let(:choices) do
-        programme_choices.except(:full_induction_programme).map { |id, name| OpenStruct.new(id:, name:) }
+    context "when programme type changes for 2025 are not active", with_feature_flags: { programme_type_changes_2025: "inactive" } do
+      context "when the school is cip-only" do
+        let(:choices) do
+          programme_choices.except(:full_induction_programme).map { |id, name| OpenStruct.new(id:, name:) }
+        end
+
+        before do
+          allow(wizard).to receive(:school).and_return(instance_double(School, cip_only?: true))
+        end
+
+        it "returns all choices but full induction programme" do
+          expect(step.choices).to eq(choices)
+        end
       end
 
-      before do
-        allow(wizard).to receive(:school).and_return(instance_double(School, cip_only?: true))
-      end
+      context "when the school is not cip-only" do
+        let(:choices) do
+          programme_choices.except(:school_funded_fip).map { |id, name| OpenStruct.new(id:, name:) }
+        end
 
-      it "returns all choices but full induction programme" do
-        expect(step.choices).to eq(choices)
+        before do
+          allow(wizard).to receive(:school).and_return(instance_double(School, cip_only?: false))
+        end
+
+        it "returns all choices but school funded fip" do
+          expect(step.choices).to eq(choices)
+        end
       end
     end
-
-    context "when the school is not cip-only" do
-      let(:choices) do
-        programme_choices.except(:school_funded_fip).map { |id, name| OpenStruct.new(id:, name:) }
+    context "when programme type changes for 2025 are active", with_feature_flags: { programme_type_changes_2025: "active" } do
+      let(:programme_choices) do
+        {
+          full_induction_programme: {
+            name: "Provider-led",
+            description: "Your school will work with providers who will deliver early career framework based training funded by the Department for Education.",
+          },
+          school_funded_fip: {
+            name: "Provider-led",
+            description: "Your school will fund providers who will deliver early career framework based training.",
+          },
+          core_induction_programme: {
+            name: "School-led",
+            description: "Your school will deliver training based on the early career framework.",
+          },
+        }
       end
 
-      before do
-        allow(wizard).to receive(:school).and_return(instance_double(School, cip_only?: false))
+      context "when the school is cip-only" do
+        let(:choices) do
+          programme_choices.except(:full_induction_programme).map do |k, v|
+            OpenStruct.new(id: k, name: v[:name], description: v[:description])
+          end
+        end
+
+        before do
+          allow(wizard).to receive(:school).and_return(instance_double(School, cip_only?: true))
+        end
+
+        it "returns all choices but full induction programme" do
+          expect(step.choices).to eq(choices)
+        end
       end
 
-      it "returns all choices but school funded fip" do
-        expect(step.choices).to eq(choices)
+      context "when the school is not cip-only" do
+        let(:choices) do
+          programme_choices.except(:school_funded_fip).map do |k, v|
+            OpenStruct.new(id: k, name: v[:name], description: v[:description])
+          end
+        end
+
+        before do
+          allow(wizard).to receive(:school).and_return(instance_double(School, cip_only?: false))
+        end
+
+        it "returns all choices but school funded fip" do
+          expect(step.choices).to eq(choices)
+        end
       end
     end
   end
