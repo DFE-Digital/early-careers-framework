@@ -2,6 +2,7 @@
 
 class ParticipantProfile::ECT < ParticipantProfile::ECF
   COURSE_IDENTIFIERS = %w[ecf-induction].freeze
+  ARCHIVE_UPTO_START_DATE = Date.new(2021, 9, 1).freeze
 
   belongs_to :mentor_profile, class_name: "Mentor", optional: true
   has_one :mentor, through: :mentor_profile, source: :user
@@ -37,7 +38,7 @@ class ParticipantProfile::ECT < ParticipantProfile::ECF
     query = joins(schedule: :cohort)
               .where.not(cohorts: { payments_frozen_at: nil })
               .where(induction_completion_date: nil)
-              .where("induction_start_date IS NULL OR induction_start_date < make_date(cohorts.start_year, 9, 1)")
+              .where("induction_start_date IS NULL OR induction_start_date < :archive_date", archive_date: ARCHIVE_UPTO_START_DATE)
               .where.not(id: not_fip_ids + with_unarchivable_declaration_ids)
     query = query.where(id: restrict_to_participant_ids) if restrict_to_participant_ids.any?
 
