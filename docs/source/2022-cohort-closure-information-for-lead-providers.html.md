@@ -1,5 +1,5 @@
 ---
-title: 2022 cohort closure: information for lead providers
+title: "2022 cohort closure: information for lead providers"
 weight: 4
 ---
 
