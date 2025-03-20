@@ -8,7 +8,19 @@ module Participants
       return unless participant_profile.ect?
 
       complete_induction if complete_induction?
-      continue_training if sync_with_dqt && continue_training?
+
+      # TODO: TEMPORARILY PAUSE MOVING InProgress ECTS OUT OF THEIR FROZEN COHORT TO 2024
+      # because the 'InProgress' status being reported by TRS (old DQT) since a few weeks now is no longer reliable:
+      # old values of InProgress and NotYetCompleted (maybe some more) have been merged into InProgress, so some ECTs are
+      # being now reported as continuing their induction but they have actually paused it (NotYetCompleted).
+      # This trigger has move some of them (erroneously) to 2024.
+      # We pause it to not extend the issue to other ECTs.
+      #
+      # TODO: Swap the comment in the next two lines of code to resume the trigger once TRS has fixed the issue
+
+      # continue_training if sync_with_dqt && continue_training?
+      sync_with_dqt
+
       record_completion_date_mismatch if completion_date_mismatch?
     end
 
