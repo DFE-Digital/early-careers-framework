@@ -42,7 +42,7 @@ module ValidTestDataGenerators
       participant_profile = klass.create!(teacher_profile:, school_cohort:, status: :active, schedule:, participant_identity:)
       ParticipantProfileState.create!(participant_profile:)
       ECFParticipantEligibility.create!(participant_profile:).eligible_status!
-      Induction::Enrol.call(participant_profile:, induction_programme: school_cohort.induction_programmes.first)
+      Induction::Enrol.call(participant_profile:, induction_programme: school_cohort.induction_programmes.first, start_date: Time.zone.now)
     end
 
     def schedule
