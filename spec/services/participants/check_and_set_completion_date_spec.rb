@@ -108,7 +108,10 @@ RSpec.describe Participants::CheckAndSetCompletionDate do
           end
         end
 
-        context "when the ect induction is in progress" do
+        # TODO: TEMPORARILY PAUSE MOVING InProgress ECTS OUT OF THEIR FROZEN COHORT TO 2024
+        # See related comment on the described_class file.
+        # Unskip this example group when the issue has been resolved and the trigger has been resumed.
+        xcontext "when the ect induction is in progress" do
           let(:induction_status) { "InProgress" }
           let(:completion_date) {}
 
