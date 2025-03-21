@@ -417,8 +417,8 @@ RSpec.describe ChangeSchedule do
 
           before { create(:participant_declaration, participant_profile:, state: "payable", course_identifier:, cpd_lead_provider:) }
 
-          context "when changing from 2022 to 2024" do
-            let(:new_cohort) { create(:cohort, start_year: 2024) }
+          context "when changing from 2022 to #{ParticipantProfile::ECF::DESTINATION_COHORT_WHEN_MOVING_PARTICIPANTS_TO_FROM_A_FROZEN_COHORT}" do
+            let(:new_cohort) { create(:cohort, start_year: ParticipantProfile::ECF::DESTINATION_COHORT_WHEN_MOVING_PARTICIPANTS_TO_FROM_A_FROZEN_COHORT) }
 
             it "is valid" do
               is_expected.to be_valid
