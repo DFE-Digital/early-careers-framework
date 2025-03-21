@@ -5,7 +5,7 @@ weight: 4
 
 # 2022 cohort closure: information for lead providers 
 
-Published: 19 March 2025
+Published: 21 March 2025
 
 ## Background 
 
@@ -42,9 +42,7 @@ To help providers identify these ECTs in the API v3 test environment, there’s 
 
 For ECTs who’ve moved to the 2024 cohort, the field will have a `TRUE` value in it. 
 
-When calling the `GET participant` endpoint, the ECT’s `cohort` value will be `2024`. 
-
-When calling the `GET participant-declarations` endpoint, the ECT will have historical declarations in their original cohort. 
+When calling the `GET participant` endpoint, the ECT’s `cohort` value will be `2024`. When calling the `GET participant-declarations` endpoint, the ECT will have historical declarations in their original cohort. 
 
 Providers should use the `cohort_changed_after_payments_frozen` field to identify the ECT. 
 
@@ -72,9 +70,9 @@ If a declaration has already been made in 2024, they must:
 2. Revert to 2022 and make the declaration there.
 3. Restore to 2024 and redeclare there. 
 
-Where this is not possible, providers will have to ask us via the Slack channels to move the participants between cohorts.  
+Where this is not possible, providers must ask us via the Slack channels to move the participants between cohorts.  
 
-<div class="govuk-inset-text">Unlike when we closed the 2021 cohort, mentors who started training in 2022 will not be able to be moved between frozen cohorts. This is because they will be marked as `completed`.</div>
+<div class="govuk-inset-text">Unlike when we closed the 2021 cohort, mentors who started training in 2022 will not be able to be moved between frozen cohorts. This is because they'll be marked as `completed`.</div>
 
 ## Voiding declarations 
 
@@ -90,7 +88,7 @@ For ECTs moved to the new cohort, providers will be able to continue to declare 
 
 ## Test data 
 
-We’ve set up dummy data/contracts and milestones in the [test (sandbox) environment](https://sb.manage-training-for-early-career-teachers.education.gov.uk/) to support providers before registration opens.  
+We’ll set up dummy data/contracts and milestones in the test (sandbox) environment to support providers before registration opens.  
 
 Providers will be able to identify participants with the `cohort_changed_after_payments_frozen` field.  
 
