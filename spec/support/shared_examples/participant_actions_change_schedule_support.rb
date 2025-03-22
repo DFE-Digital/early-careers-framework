@@ -2,6 +2,7 @@
 
 RSpec.shared_examples "JSON Participant Change schedule endpoint" do
   let(:cohort) { Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021) }
+  let(:course_identifier) { "ecf-induction" }
 
   describe "/api/v1/participants/ID/change-schedule" do
     let(:parsed_response) { JSON.parse(response.body) }
@@ -14,7 +15,7 @@ RSpec.shared_examples "JSON Participant Change schedule endpoint" do
       put "/api/v1/participants/#{early_career_teacher_profile.user.id}/change-schedule", params: {
         data: {
           attributes: {
-            course_identifier: "ecf-induction",
+            course_identifier:,
             schedule_identifier: "ecf-january-standard-2021",
             cohort: "2021",
           },
@@ -37,7 +38,7 @@ RSpec.shared_examples "JSON Participant Change schedule endpoint" do
         put "/api/v1/participants/#{early_career_teacher_profile.user.id}/change-schedule", params: {
           data: {
             attributes: {
-              course_identifier: "ecf-induction",
+              course_identifier:,
               schedule_identifier: new_schedule.schedule_identifier,
               cohort: "2021",
             },
@@ -55,22 +56,19 @@ RSpec.shared_examples "JSON Participant Change schedule endpoint" do
 
     let!(:schedule) { early_career_teacher_profile.schedule }
     let(:new_cohort) { Cohort.active_registration_cohort }
-    let(:new_schedule) { create(:ecf_schedule, schedule_identifier: "new-schedule", name: "new schedule", cohort: new_cohort) }
+    let!(:new_schedule) { create(:ecf_schedule, schedule_identifier: "ecf-replacement-april", cohort: new_cohort) }
+    let!(:new_school_cohort) { create(:school_cohort, :fip, :with_induction_programme, cohort: new_cohort, lead_provider: cpd_lead_provider.lead_provider, school: early_career_teacher_profile.school) }
 
     before do
       cohort.freeze_payments!
-      create(:partnership,
-             school: early_career_teacher_profile.school,
-             cohort: new_cohort,
-             lead_provider: early_career_teacher_profile.lead_provider)
-      create(:ect_participant_declaration,
-             participant_profile: early_career_teacher_profile,
-             user: early_career_teacher_profile.user,
-             cohort:,
-             state: :paid,
-             cpd_lead_provider: early_career_teacher_profile.lead_provider.cpd_lead_provider)
-      induction_programme = early_career_teacher_profile.latest_induction_record.induction_programme
-      create(:school_cohort, school: early_career_teacher_profile.school, cohort: new_cohort, default_induction_programme: induction_programme)
+      create(
+        :ect_participant_declaration,
+        participant_profile: early_career_teacher_profile,
+        user: early_career_teacher_profile.user,
+        cohort:,
+        state: :paid,
+        cpd_lead_provider:,
+      )
     end
 
     it "changes participant schedule" do
@@ -78,7 +76,7 @@ RSpec.shared_examples "JSON Participant Change schedule endpoint" do
         put "/api/v1/participants/#{early_career_teacher_profile.user.id}/change-schedule", params: {
           data: {
             attributes: {
-              course_identifier: "ecf-induction",
+              course_identifier:,
               schedule_identifier: new_schedule.schedule_identifier,
               cohort: new_cohort.start_year,
             },
@@ -96,7 +94,7 @@ RSpec.shared_examples "JSON Participant Change schedule endpoint" do
         put "/api/v1/participants/#{early_career_teacher_profile.user.id}/change-schedule", params: {
           data: {
             attributes: {
-              course_identifier: "ecf-induction",
+              course_identifier:,
               schedule_identifier: new_schedule.schedule_identifier,
               cohort: new_cohort.start_year,
             },
@@ -109,7 +107,7 @@ RSpec.shared_examples "JSON Participant Change schedule endpoint" do
           put "/api/v1/participants/#{early_career_teacher_profile.user.id}/change-schedule", params: {
             data: {
               attributes: {
-                course_identifier: "ecf-induction",
+                course_identifier:,
                 schedule_identifier: schedule.schedule_identifier,
                 cohort: cohort.start_year,
               },
@@ -117,6 +115,52 @@ RSpec.shared_examples "JSON Participant Change schedule endpoint" do
           }
         }.to change { early_career_teacher_profile.reload.cohort_changed_after_payments_frozen }.to(false)
         .and change { early_career_teacher_profile.reload.schedule }.to(schedule)
+      end
+    end
+
+    context "when changing from 2022 to 2024" do
+      let(:early_career_teacher_profile) { create(:ect, lead_provider:, cohort:) }
+
+      let!(:cohort) { (Cohort.find_by(start_year: 2022) || create(:cohort, start_year: 2022)).tap(&:freeze_payments!) }
+      let!(:new_cohort) { Cohort.find_by(start_year: 2024) || create(:cohort, start_year: 2024) }
+
+      it "changes participant cohort" do
+        expect {
+          put "/api/v1/participants/#{early_career_teacher_profile.user.id}/change-schedule", params: {
+            data: {
+              attributes: {
+                course_identifier:,
+                schedule_identifier: new_schedule.schedule_identifier,
+                cohort: new_cohort.start_year,
+              },
+            },
+          }
+        }.to change { early_career_teacher_profile.reload.cohort_changed_after_payments_frozen }.to(true)
+
+        expect(response).to be_successful
+        expect(parsed_response.dig("data", "attributes", "cohort")).to eql(new_cohort.start_year.to_s)
+      end
+    end
+
+    context "when changing from 2022 to 2025" do
+      let(:early_career_teacher_profile) { create(:ect, lead_provider:, cohort:) }
+
+      let!(:cohort) { (Cohort.find_by(start_year: 2022) || create(:cohort, start_year: 2022)).tap(&:freeze_payments!) }
+      let!(:new_cohort) { Cohort.find_by(start_year: 2025) || create(:cohort, start_year: 2025) }
+
+      it "returns error" do
+        put "/api/v1/participants/#{early_career_teacher_profile.user.id}/change-schedule", params: {
+          data: {
+            attributes: {
+              course_identifier:,
+              schedule_identifier: new_schedule.schedule_identifier,
+              cohort: new_cohort.start_year,
+            },
+          },
+        }
+
+        expect(response).to_not be_successful
+        expect(parsed_response["errors"].find { |e| e["title"] == "cohort" }["detail"]).to eql("You cannot change the '#/cohort' field")
       end
     end
   end
@@ -132,7 +176,7 @@ RSpec.shared_examples "JSON Participant Change schedule endpoint" do
       put "/api/v1/participants/ecf/#{early_career_teacher_profile.user.id}/change-schedule", params: {
         data: {
           attributes: {
-            course_identifier: "ecf-induction",
+            course_identifier:,
             schedule_identifier: "ecf-january-standard-2021",
             cohort: "2021",
           },
