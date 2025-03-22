@@ -191,8 +191,6 @@ jobs:
       CI: true
       CI_NODE_TOTAL: ${{ matrix.ci_node_total }}
       CI_NODE_INDEX: ${{ matrix.ci_node_index }}
-      DISPLAY: "=:99"
-      CHROME_VERSION: "127.0.6533.119"
 
     services:
       postgres:
@@ -205,23 +203,6 @@ jobs:
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
-      - name: Install Chrome
-        run: |
-          # Download specific Chrome version
-          # due a possible race condition between newer versions of chromedriver and selenium
-          # causing some specs to fail intermittently on CI with the failure Net::ReadTimeout
-          # See https://github.com/teamcapybara/capybara/issues/2770
-          wget https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_${CHROME_VERSION}-1_amd64.deb
-          # Install Chrome
-          sudo apt-get install -y --allow-downgrades ./google-chrome-stable_${CHROME_VERSION}-1_amd64.deb
-
-      - uses: nanasess/setup-chromedriver@v2
-      - name: Start chromedriver
-        run: |
-          set -x
-          chromedriver --url-base=/wd/hub &
-          sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 &
-
       - name: Checkout code
         uses: actions/checkout@v4
 
