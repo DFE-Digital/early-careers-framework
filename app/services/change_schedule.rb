@@ -78,7 +78,7 @@ class ChangeSchedule
 private
 
   def changing_cohort_due_to_payments_frozen?
-    return false unless participant_profile
+    return false unless participant_profile&.ect?
     return false unless allow_change_to_from_frozen_cohort
     return true if participant_profile.unfinished_with_billable_declaration?(cohort:)
 
