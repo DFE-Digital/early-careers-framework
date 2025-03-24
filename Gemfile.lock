@@ -599,7 +599,7 @@ GEM
     scss_lint-govuk (0.2.0)
       scss_lint
     securerandom (0.4.1)
-    selenium-webdriver (4.29.1)
+    selenium-webdriver (4.30.1)
       base64 (~> 0.2)
       logger (~> 1.4)
       rexml (~> 3.2, >= 3.2.5)
