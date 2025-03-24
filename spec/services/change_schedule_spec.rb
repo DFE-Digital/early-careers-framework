@@ -73,6 +73,11 @@ RSpec.shared_examples "changing cohort and continuing training" do
   context "when there are no billable declarations and allow_change_to_from_frozen_cohort is true" do
     let(:allow_change_to_from_frozen_cohort) { true }
 
+    before { cohort.update!(payments_frozen_at: Time.zone.now) }
+
+    it { is_expected.to be_valid }
+    it { expect { service.call }.not_to change { participant_profile.reload.cohort_changed_after_payments_frozen } }
+
     context "when the participant is not associated with the lead provider" do
       let!(:new_school_cohort) { create(:school_cohort, :cip, :with_induction_programme, cohort: new_cohort, lead_provider: other_cpd_lead_provider.lead_provider, school: participant_profile.school) }
       let(:other_cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
@@ -575,8 +580,6 @@ RSpec.describe ChangeSchedule do
         let(:participant_profile) { create(:mentor, :withdrawn, lead_provider: cpd_lead_provider.lead_provider) }
       end
 
-      it_behaves_like "changing schedule after migrating from a payments frozen cohort"
-
       context "when the cohort is changing" do
         let!(:new_school_cohort) { create(:school_cohort, :fip, :with_induction_programme, cohort: new_cohort, lead_provider: cpd_lead_provider.lead_provider, school: participant_profile.school) }
         let!(:new_schedule) { create(:ecf_mentor_schedule, schedule_identifier:, cohort: new_cohort) }
@@ -607,8 +610,22 @@ RSpec.describe ChangeSchedule do
           end
         end
 
-        it_behaves_like "changing cohort and continuing training" do
+        context "when attempting to change from a payments frozen cohort" do
+          let(:allow_change_to_from_frozen_cohort) { true }
           let!(:new_schedule) { create(:ecf_mentor_schedule, cohort: new_cohort, schedule_identifier:) }
+          let(:cohort) { new_cohort.previous.tap { |c| c.update!(payments_frozen_at: Time.zone.now) } }
+          let(:new_cohort) { Cohort.active_registration_cohort }
+
+          context "when there are no billable declarations" do
+            it { is_expected.to be_valid }
+            it { expect { service.call }.not_to change { participant_profile.reload.cohort_changed_after_payments_frozen } }
+          end
+
+          context "when there are billable declarations" do
+            before { create(:participant_declaration, participant_profile:, cohort:, state: :paid, course_identifier:, cpd_lead_provider:) }
+
+            it { is_expected.to be_invalid }
+          end
         end
 
         context "when there are no submitted/eligible/payable/paid declarations" do
