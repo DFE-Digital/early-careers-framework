@@ -5,6 +5,8 @@ weight: 3
 
 # Changes for the 2025/26 academic year  
 
+Published: 25 February 2025
+
 This is a summary of planned changes to API processes lead providers will see when early career teacher (ECT) and mentor registrations open (date to be confirmed). 
 
 We’ll update this section with any further details providers might need to help them test their endpoint integrations in the run up to registrations opening. 
