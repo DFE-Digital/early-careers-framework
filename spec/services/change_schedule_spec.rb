@@ -415,6 +415,31 @@ RSpec.describe ChangeSchedule do
             expect(service.errors.messages_for(:cohort)).to include("You cannot change a participant to this cohort as you do not have a partnership with the school for the cohort. Contact the DfE for assistance.")
           end
         end
+
+        context "when changing from frozen cohort with billable declarations" do
+          let(:allow_change_to_from_frozen_cohort) { true }
+          let(:cohort) { create(:cohort, :payments_frozen, start_year: 2022) }
+
+          before { create(:participant_declaration, participant_profile:, state: "payable", course_identifier:, cpd_lead_provider:) }
+
+          context "when changing from 2022 to #{ParticipantProfile::ECF::DESTINATION_COHORT_WHEN_MOVING_PARTICIPANTS_TO_FROM_A_FROZEN_COHORT}" do
+            let(:new_cohort) { create(:cohort, start_year: ParticipantProfile::ECF::DESTINATION_COHORT_WHEN_MOVING_PARTICIPANTS_TO_FROM_A_FROZEN_COHORT) }
+
+            it "is valid" do
+              is_expected.to be_valid
+            end
+          end
+
+          context "when changing from 2022 to 2025" do
+            let(:new_cohort) { create(:cohort, start_year: 2025) }
+
+            it "is invalid and returns an error message" do
+              is_expected.to be_invalid
+
+              expect(service.errors.messages_for(:cohort)).to include("You cannot change the '#/cohort' field")
+            end
+          end
+        end
       end
 
       context "when the participant does not belong to the CPD lead provider" do
