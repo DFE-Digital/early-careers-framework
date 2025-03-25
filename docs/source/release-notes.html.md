@@ -7,6 +7,47 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
+## 9 April 2025
+
+[#cohort-closure #sandbox-release]
+
+We’ve set up dummy data/contracts and milestones in the [API v3 test (sandbox) environment](https://sb.manage-training-for-early-career-teachers.education.gov.uk/) to support providers ahead of the closure of the 2022 ECF cohort at the end of July.
+
+[View detailed guidance about the closure of the 2022 cohort](/api-reference/2022-cohort-closure-information-for-lead-providers)
+
+### How we’ll handle participants who haven’t completed their training by 31 July
+
+| Training status   | Post-2022 cohort closure |
+| -------------------- | ---------------------- |
+| Partially trained ECTs | We'll move these ECTs to the 2024 cohort if there’s evidence they require training during the 2025/26 academic year |
+| Partially trained mentors | We will not transfer mentors to the 2024 cohort because they’re not eligible for further training. We’ll mark them as `completed` and update their `mentor_funding_end_date` |
+| ECTs and mentors with no `eligible`, `payable`, `paid`, `awaiting_clawback` or `clawed_back` declarations | We’ll archive these participants. Providers should retire their records. If they’re re-registered in the 2025/26 academic year, they’ll have new IDs |
+
+### Identifying ECTs who we’ve moved to the 2024 cohorts
+
+To help providers identify these ECTs in the API v3 test environment, there’s a field in the `GET participant` API endpoints called `cohort_changed_after_payments_frozen`.
+
+For ECTs who’ve moved cohorts, the field will have a `TRUE` value in it.
+
+When calling the `GET participant` endpoint, the ECT’s `cohort` value will be 2024.
+
+When calling the `GET participant-declarations` endpoint, the ECT will have historical declarations in their original cohort.
+
+To simplify this, we recommend using the `cohort_changed_after_payments_frozen` field to identify the ECT.
+
+We’ll also assign these ECTs to the `ecf-extended-september` schedule. This allows providers to submit any required declarations for the 2025/26 academic year.
+
+<div class="govuk-inset-text">Unlike when we closed the 2021 cohort, mentors who started training in 2022 will not be able to be moved between frozen cohorts. This is because they will be marked as <code>completed</code>.</div>
+
+### Provider checklist
+
+We recommend providers use the dummy data we’ve set up in the test environment to:
+
+- check their CRM to make sure they can handle an enrolment in a new cohort with declarations spanning across 2022 and 2024
+- familiarise themselves with the `cohort_changed_after_payments_frozen` field in the `GET participant` endpoint response
+- check they can see historically submitted declarations made in a previous cohort in the `GET participant-declarations` endpoint when using the cohort filter
+- attempt some [future declarations](/api-reference/ecf/guidance/?#test-the-ability-to-submit-declarations-in-sandbox-ahead-of-time) and ensure they’re recorded and handled safely in their CRM
+
 ## 14 March 2025
 
 [#new-feature #sandbox-release]
