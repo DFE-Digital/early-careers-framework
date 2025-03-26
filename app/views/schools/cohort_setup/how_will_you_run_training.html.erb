@@ -13,16 +13,10 @@
         <%= form_with model: @wizard.form, url: url_for(action: :update), scope: @wizard.to_key, method: :put do |f| %>
             <%= f.govuk_error_summary %>
 
-            <%
-                radio_args = [
-                  :how_will_you_run_training,
-                  @wizard.form.choices,
-                  :id,
-                  :name,
-                ]
-                radio_args << :description if FeatureFlag.active?(:programme_type_changes_2025)
-            %>
-            <%= f.govuk_collection_radio_buttons(*radio_args, legend: { text: title, tag: 'h1', size: 'l' }) do %>
+            <%= programme_radio_options(f,
+                                        :how_will_you_run_training,
+                                        @wizard.form.choices,
+                                        title) do %>
 
                 <p class="govuk-body govuk-!-margin-top-4">To learn more about your training options, visit
                     <%= govuk_link_to "How to set up training for early career teachers (opens in new tab)",
