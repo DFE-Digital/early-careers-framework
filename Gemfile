@@ -86,7 +86,7 @@ platform :mswin, :mingw, :x64_mingw do
   gem "wdm", "~> 0.1"
 end
 
-gem "activerecord-session_store", "~> 2.1"
+gem "activerecord-session_store", "~> 2.2"
 
 gem "active_record_extended"
 
