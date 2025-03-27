@@ -20,6 +20,7 @@ module TrainingProgrammeOptions
     core_induction_programme: "Deliver your own programme using DfE-accredited materials",
     school_funded_fip: "Use a training provider funded by your school",
     design_our_own: "Design and deliver your own programme based on the early career framework (ECF)",
+    no_early_career_teachers: "We do not expect any early career teachers to join",
   }.freeze
 
   # NOTE: These are to support 2025 programme type changes
@@ -46,24 +47,30 @@ module TrainingProgrammeOptions
       name: "Provider-led",
       description: "Your school will fund providers who will deliver early career framework based training.",
     },
+    no_early_career_teachers: {
+      name: "We do not expect any early career teachers to join",
+      description: "Your school does not expect any early career teachers this year and we will opt you out of notifications.",
+    },
   }.freeze
 
-  def school_training_options(state_funded: true)
+  def school_training_options(state_funded: true, include_no_ects_option: false)
     if FeatureFlag.active?(:programme_type_changes_2025)
-      school_choices_2025(state_funded)
+      school_choices_2025(state_funded, include_no_ects_option)
     else
-      school_choices_pre_2025(state_funded)
+      school_choices_pre_2025(state_funded, include_no_ects_option)
     end
   end
 
-  def school_choices_pre_2025(state_funded)
-    (state_funded ? NON_CIP_ONLY_SCHOOL_PROGRAMME_CHOICES : CIP_ONLY_SCHOOL_PROGRAMME_CHOICES).map do |id|
-      OpenStruct.new(id:, name: PROGRAMME_CHOICES[id])
-    end
+  def school_choices_pre_2025(state_funded, include_no_ects_option)
+    choices = Array.new(state_funded ? NON_CIP_ONLY_SCHOOL_PROGRAMME_CHOICES : CIP_ONLY_SCHOOL_PROGRAMME_CHOICES)
+    choices << :no_early_career_teachers if include_no_ects_option
+    choices.map { |id| OpenStruct.new(id:, name: PROGRAMME_CHOICES[id]) }
   end
 
-  def school_choices_2025(state_funded)
-    (state_funded ? NON_CIP_ONLY_SCHOOL_PROGRAMME_CHOICES_2025 : CIP_ONLY_SCHOOL_PROGRAMME_CHOICES_2025).map do |id|
+  def school_choices_2025(state_funded, include_no_ects_option)
+    choices = Array.new(state_funded ? NON_CIP_ONLY_SCHOOL_PROGRAMME_CHOICES_2025 : CIP_ONLY_SCHOOL_PROGRAMME_CHOICES_2025)
+    choices << :no_early_career_teachers if include_no_ects_option
+    choices.map do |id|
       OpenStruct.new(id:, name: PROGRAMME_CHOICES_2025[id][:name], description: PROGRAMME_CHOICES_2025[id][:description])
     end
   end
