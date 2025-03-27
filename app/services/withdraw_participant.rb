@@ -19,7 +19,7 @@ class WithdrawParticipant
   validates :reason,
             presence: { message: I18n.t(:missing_reason) },
             inclusion: {
-              in: ->(klass) { klass.participant_profile.class::WITHDRAW_REASONS },
+              in: :withdraw_reason_types,
               message: I18n.t(:invalid_reason),
             }, if: ->(klass) { klass.participant_profile.present? }
   validate :not_already_withdrawn
@@ -103,5 +103,16 @@ private
         training_status: ParticipantProfileState.states[:withdrawn],
       },
     )
+  end
+
+  def withdraw_reason_types
+    types = ParticipantProfile::ECF::WITHDRAW_REASONS.dup
+
+    if FeatureFlag.active?(:new_programme_types)
+      types.delete("school-left-fip")
+      types << "school-left-provider-led"
+    end
+
+    types
   end
 end

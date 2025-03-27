@@ -41,7 +41,7 @@ module Api
                 .find { |pps| pps.state == ParticipantProfileState.states[:withdrawn] && pps.cpd_lead_provider_id == cpd_lead_provider.id }
               if latest_participant_profile_state.present?
                 {
-                  reason: latest_participant_profile_state.reason,
+                  reason: reason_type(latest_participant_profile_state.reason),
                   date: latest_participant_profile_state.created_at.rfc3339,
                 }
               end
@@ -58,10 +58,18 @@ module Api
                 .find { |pps| pps.state == ParticipantProfileState.states[:deferred] && pps.cpd_lead_provider_id == cpd_lead_provider.id }
               if latest_participant_profile_state.present?
                 {
-                  reason: latest_participant_profile_state.reason,
+                  reason: reason_type(latest_participant_profile_state.reason),
                   date: latest_participant_profile_state.created_at.rfc3339,
                 }
               end
+            end
+          end
+
+          def reason_type(reason)
+            if FeatureFlag.active?(:new_programme_types)
+              reason == "school-left-fip" ? "school-left-provider-led" : reason
+            else
+              reason == "school-left-provider-led" ? "school-left-fip" : reason
             end
           end
 
