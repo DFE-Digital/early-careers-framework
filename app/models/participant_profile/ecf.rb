@@ -8,7 +8,7 @@ class ParticipantProfile::ECF < ParticipantProfile
     left-teaching-profession
     moved-school
     mentor-no-longer-being-mentor
-    school-left-fip
+    school-left-provider-led
     other
   ].freeze
   DESTINATION_COHORT_WHEN_MOVING_PARTICIPANTS_TO_FROM_A_FROZEN_COHORT = 2024

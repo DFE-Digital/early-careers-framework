@@ -50,8 +50,9 @@ RSpec.shared_examples "validating a participant to be withdrawn" do
     context "when the reason is 'school-left-provider-led'" do
       let(:reason) { "school-left-provider-led" }
 
-      it "reason is invalid" do
-        is_expected.to be_invalid
+      it "reason is valid" do
+        is_expected.to be_valid
+        expect(service.reason).to eq("school-left-provider-led")
       end
     end
 
@@ -59,8 +60,7 @@ RSpec.shared_examples "validating a participant to be withdrawn" do
       let(:reason) { "school-left-fip" }
 
       it "reason is valid" do
-        is_expected.to be_valid
-        expect(service.reason).to eq("school-left-fip")
+        is_expected.to be_invalid
       end
     end
   end
