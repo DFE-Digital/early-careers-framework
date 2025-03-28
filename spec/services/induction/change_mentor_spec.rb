@@ -76,7 +76,9 @@ RSpec.describe Induction::ChangeMentor do
 
         before do
           current_cohort.update!(payments_frozen_at: Time.current)
-          allow(mentor_profile).to receive(:unfinished_with_billable_declaration?).and_return(true)
+          if FeatureFlag.active?(:closing_2022)
+            allow(mentor_profile).to receive(:unfinished_with_billable_declaration?).and_return(true)
+          end
           service.call(induction_record:, mentor_profile:)
         end
 
@@ -105,7 +107,9 @@ RSpec.describe Induction::ChangeMentor do
 
         before do
           mentor_cohort.update!(payments_frozen_at: Time.current)
-          allow(mentor_profile).to receive(:unfinished_with_no_billable_declaration?).and_return(true)
+          if FeatureFlag.active?(:closing_2022)
+            allow(mentor_profile).to receive(:unfinished_with_no_billable_declaration?).and_return(true)
+          end
           service.call(induction_record:, mentor_profile:)
         end
 

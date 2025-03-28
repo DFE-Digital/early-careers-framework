@@ -55,7 +55,7 @@ private
   def amend_mentor_cohort
     Induction::AmendParticipantCohort.new(participant_profile: mentor_profile,
                                           source_cohort_start_year: mentor_profile.schedule.cohort.start_year,
-                                          target_cohort_start_year:,
+                                          target_cohort_start_year: Cohort::DESTINATION_START_YEAR_FROM_A_FROZEN_COHORT,
                                           force_from_frozen_cohort: true).save
   end
 
@@ -79,9 +79,5 @@ private
     @schedule ||= Induction::ScheduleForNewCohort.call(cohort:,
                                                        induction_record: latest_induction_record,
                                                        extended_schedule: cohort_changed_after_payments_frozen)
-  end
-
-  def target_cohort_start_year
-    Cohort::DESTINATION_START_YEAR_FROM_A_FROZEN_COHORT
   end
 end
