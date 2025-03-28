@@ -60,8 +60,11 @@ module ValidTestDataGenerators
         sc.induction_programme_choice = "full_induction_programme"
       end
       school.school_local_authorities.create!(local_authority: LocalAuthority.all.sample, start_year: cohort.start_year)
-      Induction::SetCohortInductionProgramme.call(school_cohort:,
-                                                  programme_choice: "full_induction_programme")
+
+      unless school_cohort.default_induction_programme
+        Induction::SetCohortInductionProgramme.call(school_cohort:, programme_choice: "full_induction_programme")
+      end
+
       school_cohort
     end
 
@@ -142,7 +145,9 @@ module ValidTestDataGenerators
 
     def migrate_to_2024(participant_profile:, course_identifier:)
       cohort = Cohort.find_by(start_year: 2024)
-      create_partnership(participant_profile:, cohort:)
+      school = participant_profile.school
+      partnership = create_partnership(school:, cohort:)
+      create_school_cohort(school: partnership.school, cohort:)
 
       service = ChangeSchedule.new(
         cpd_lead_provider: lead_provider.cpd_lead_provider,
@@ -156,10 +161,7 @@ module ValidTestDataGenerators
       service.call
     end
 
-    def create_partnership(participant_profile:, cohort:)
-      school = participant_profile.school_cohort.school
-      create_school_cohort(school:, cohort:)
-
+    def create_partnership(school:, cohort:)
       Partnership.find_or_create_by!(
         school:,
         lead_provider:,
