@@ -23,6 +23,48 @@ RSpec.shared_examples "validating a participant to be withdrawn" do
     end
   end
 
+  context "when new_programme_types feature on" do
+    before { FeatureFlag.activate(:new_programme_types) }
+
+    context "when the reason is 'school-left-provider-led'" do
+      let(:reason) { "school-left-provider-led" }
+
+      it "reason is valid" do
+        is_expected.to be_valid
+        expect(service.reason).to eq("school-left-provider-led")
+      end
+    end
+
+    context "when the reason is 'school-left-fip'" do
+      let(:reason) { "school-left-fip" }
+
+      it "reason is invalid" do
+        is_expected.to be_invalid
+      end
+    end
+  end
+
+  context "when new_programme_types feature off" do
+    before { FeatureFlag.deactivate(:new_programme_types) }
+
+    context "when the reason is 'school-left-provider-led'" do
+      let(:reason) { "school-left-provider-led" }
+
+      it "reason is invalid" do
+        is_expected.to be_invalid
+      end
+    end
+
+    context "when the reason is 'school-left-fip'" do
+      let(:reason) { "school-left-fip" }
+
+      it "reason is valid" do
+        is_expected.to be_valid
+        expect(service.reason).to eq("school-left-fip")
+      end
+    end
+  end
+
   context "when the course identifier is missing" do
     let(:course_identifier) {}
 
