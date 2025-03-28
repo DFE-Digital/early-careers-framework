@@ -75,7 +75,7 @@ module Finance
             record.school_urn,
             record.school_name,
             record.training_status,
-            record.training_status_reason,
+            reason_type(record.training_status_reason),
             record.declaration_id,
             record.declaration_status,
             record.declaration_type,
@@ -89,6 +89,14 @@ module Finance
 
         def lead_provider
           statement.lead_provider
+        end
+
+        def reason_type(reason)
+          if FeatureFlag.active?(:new_programme_types)
+            reason == "school-left-fip" ? "school-left-provider-led" : reason
+          else
+            reason == "school-left-provider-led" ? "school-left-fip" : reason
+          end
         end
       end
     end

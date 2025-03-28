@@ -24,7 +24,16 @@ module Finance
       end
 
       def reason_options
-        REASON_OPTIONS.except(current_training_status)
+        options = REASON_OPTIONS.except(current_training_status).dup
+
+        if FeatureFlag.active?(:new_programme_types) && options["withdrawn"]
+          types = options["withdrawn"].dup
+          types.delete("school-left-fip")
+          types << "school-left-provider-led"
+          options["withdrawn"] = types
+        end
+
+        options
       end
 
       def current_training_status
