@@ -19,7 +19,7 @@ module TrainingProgrammeOptions
     full_induction_programme: "Use a training provider, funded by the DfE",
     core_induction_programme: "Deliver your own programme using DfE-accredited materials",
     school_funded_fip: "Use a training provider funded by your school",
-    design_our_own: "Design and deliver your own programme based on the early career framework (ECF)",
+    design_our_own: "Design and deliver your own programme based on the Early Career Framework (ECF)",
     no_early_career_teachers: "We do not expect any early career teachers to join",
   }.freeze
 
