@@ -19,7 +19,7 @@ def when_context(scenario)
 end
 
 RSpec.feature "FIP to CIP - Transfer a participant",
-              with_feature_flags: { eligibility_notifications: "active" },
+              with_feature_flags: { eligibility_notifications: "active", programme_type_changes_2025: "inactive" },
               type: :feature,
               end_to_end_scenario: true do
   include Steps::ChangesOfCircumstanceSteps
