@@ -223,7 +223,7 @@ module ChooseProgrammeSteps
   end
 
   def and_i_see_programme_to_design_and_deliver_own_programme
-    expect(page).to have_summary_row("Programme", "Design and deliver your own programme based on the Early Career Framework (ECF)")
+    expect(page).to have_summary_row("Programme", "Design and deliver your own programme based on the early career framework (ECF)")
   end
 
   def and_i_see_the_school_name
