@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe "Admin::Schools::Cohorts::ChangeProgramme", type: :request do
-  let(:school_cohort) { create(:school_cohort) }
+  let(:school_cohort) { create(:school_cohort, induction_programme_choice: "core_induction_programme") }
   let(:school) { school_cohort.school }
   let(:cohort) { school_cohort.cohort }
 
