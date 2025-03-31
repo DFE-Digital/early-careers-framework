@@ -31,7 +31,7 @@ module Pages
         when :cip
           choose "Deliver your own programme using DfE-accredited materials"
         when :diy
-          choose "Design and deliver your own programme based on the Early Career Framework (ECF)"
+          choose "Design and deliver your own programme based on the early career framework (ECF)"
         end
       end
 
