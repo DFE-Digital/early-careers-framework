@@ -53,7 +53,7 @@ module NewSchoolsSteps
   end
 
   def when_i_choose_deliver_own_programme
-    choose("Deliver your own programme using DfE accredited materials")
+    choose("Deliver your own programme using DfE-accredited materials")
   end
 
   def then_i_see_appropriate_body_appointed_page

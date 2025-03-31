@@ -1502,7 +1502,7 @@ module ManageTrainingSteps
   end
 
   def and_i_see_the_cip_programme
-    expect(page).to have_summary_row("Programme", "DfE accredited materials")
+    expect(page).to have_summary_row("Programme", "DfE-accredited materials")
   end
 
   def and_i_dont_see_the_lead_provider

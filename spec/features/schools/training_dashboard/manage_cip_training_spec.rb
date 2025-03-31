@@ -62,9 +62,9 @@ RSpec.describe "Manage CIP training", js: true do
       and_i_am_signed_in_as_an_induction_coordinator
       then_i_should_see_the_program_and_click_to_change_it(program_label: "Design and deliver your own programme")
       and_see_the_other_programs_before_choosing(labels: ["Use a training provider, funded by the DfE",
-                                                          "Deliver your own programme using DfE accredited materials",
+                                                          "Deliver your own programme using DfE-accredited materials",
                                                           "We do not expect any early career teachers to join"],
-                                                 choice: "Deliver your own programme using DfE accredited materials")
+                                                 choice: "Deliver your own programme using DfE-accredited materials")
 
       expect(page).to have_text "You’ve submitted your training information"
     end
