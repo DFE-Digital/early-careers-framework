@@ -558,7 +558,7 @@ module ManageTrainingSteps
     click_on "Continue"
     click_on("Return to manage your training")
     expect(page).to have_content("Manage your training")
-    expect(page).to have_summary_row("Programme", "Design and deliver your own programme based on the Early Career Framework (ECF)")
+    expect(page).to have_summary_row("Programme", "Design and deliver your own programme based on the early career framework (ECF)")
   end
 
   def and_i_click_on(string)
