@@ -10,7 +10,7 @@ RSpec.describe EvidenceHeldValidator do
 
       validates :evidence_held, evidence_held: true
 
-      attr_reader :participant_profile, :schedule, :cohort, :declaration_type, :evidence_held
+      attr_accessor :participant_profile, :schedule, :cohort, :declaration_type, :evidence_held
 
       def self.model_name
         ActiveModel::Name.new(self, nil, "temp")
@@ -116,6 +116,15 @@ RSpec.describe EvidenceHeldValidator do
 
             it "is valid" do
               expect(subject).to be_valid
+            end
+          end
+
+          context "when `evidence_held` is present" do
+            let(:evidence_held) { "other" }
+
+            it "is valid (sets the `evidence_held` to `nil`)" do
+              expect(subject).to be_valid
+              expect(subject.evidence_held).to be_nil
             end
           end
 

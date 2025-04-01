@@ -394,14 +394,15 @@ RSpec.describe "participant-declarations endpoint spec", type: :request, mid_coh
               .to include({ "title" => "participant_id", "detail" => "Your update cannot be made as the '#/participant_id' is not recognised. Check participant details and try again." })
           end
         end
-        context "with unpermitted parameter" do
+
+        context "with parameter that is not required" do
           before { params[:data][:attributes][:evidence_held] = "test" }
 
-          it "creates the declaration" do
+          it "ignores a parameter that is not required" do
             post "/api/v1/participant-declarations", params: params.to_json
 
             expect(response).to be_successful
-            expect(ParticipantDeclaration.order(created_at: :desc).first.evidence_held).to eq("test")
+            expect(ParticipantDeclaration.order(created_at: :desc).first.evidence_held).to be_nil
           end
         end
 
