@@ -54,21 +54,21 @@ RSpec.feature "FIP to FIP with different provider - Onboard a deferred participa
         end
         let!(:milestone_started) do
           create :milestone,
-            schedule:,
-            name: "Output 1 - Participant Start",
-            start_date: Date.new(2021, 9, 1),
-            milestone_date: Date.new(2021, 11, 30),
-            payment_date: Date.new(2021, 11, 30),
-            declaration_type: "started"
+                 schedule:,
+                 name: "Output 1 - Participant Start",
+                 start_date: Date.new(2021, 9, 1),
+                 milestone_date: Date.new(2021, 11, 30),
+                 payment_date: Date.new(2021, 11, 30),
+                 declaration_type: "started"
         end
         let!(:milestone_retained_1) do
           create :milestone,
-            schedule:,
-            name: "Output 2 - Retention Point 1",
-            start_date: Date.new(2021, 11, 1),
-            milestone_date: Date.new(2022, 1, 31),
-            payment_date: Date.new(2022, 2, 28),
-            declaration_type: "retained-1"
+                 schedule:,
+                 name: "Output 2 - Retention Point 1",
+                 start_date: Date.new(2021, 11, 1),
+                 milestone_date: Date.new(2022, 1, 31),
+                 payment_date: Date.new(2022, 2, 28),
+                 declaration_type: "retained-1"
         end
         let!(:privacy_policy) do
           privacy_policy = create(:privacy_policy)
@@ -95,30 +95,30 @@ RSpec.feature "FIP to FIP with different provider - Onboard a deferred participa
             and_lead_provider_reported_partnership "New Lead Provider", "New SIT"
 
             and_sit_reported_participant "Original SIT",
-              "The Participant",
-              scenario.participant_trn,
-              scenario.participant_dob,
-              scenario.participant_email,
-              scenario.participant_type
+                                         "The Participant",
+                                         scenario.participant_trn,
+                                         scenario.participant_dob,
+                                         scenario.participant_email,
+                                         scenario.participant_type
           end
 
           context when_context(scenario) do
             before do
               scenario.prior_declarations.each do |declaration_type|
                 and_lead_provider_has_made_training_declaration "Original Lead Provider",
-                  scenario.participant_type,
-                  "The Participant",
-                  declaration_type
+                                                                scenario.participant_type,
+                                                                "The Participant",
+                                                                declaration_type
               end
 
               when_developers_transfer_the_deferred_participant "New SIT",
-                "The Participant"
+                                                                "The Participant"
 
               scenario.new_declarations.each do |declaration_type|
                 and_lead_provider_has_made_training_declaration "New Lead Provider",
-                  scenario.participant_type,
-                  "The Participant",
-                  declaration_type
+                                                                scenario.participant_type,
+                                                                "The Participant",
+                                                                declaration_type
               end
 
               and_eligible_training_declarations_are_made_payable
