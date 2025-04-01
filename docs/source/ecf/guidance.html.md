@@ -459,7 +459,8 @@ An example response body is listed below.
 **Providers should note:**
 
 * we’ve [previously advised](/api-reference/release-notes.html#15-march-2023) of the possibility that participants may be registered as duplicates with multiple `participant_ids`. Where we identify duplicates, we’ll fix the error by ‘retiring’ one of the participant IDs and then associating all records and data under the remaining ID. To date, when this has occurred, we’ve informed providers of changes via CSVs
-* providers can check if an ECF participant’s ID has changed using the `participant_id_changes` nested structure in the [ECFEnrolment](/api-reference/reference-v3.html#schema-ecfenrolment), which contains a `from_participant_id` and a `to_participant_id` string fields, as well a `changed_at` date value
+* they can check if a participant’s ID has changed using the `participant_id_changes` nested structure in the [ECFEnrolment](/api-reference/reference-v3.html#schema-ecfenrolment), which contains a `from_participant_id` and a `to_participant_id` string fields, as well a `changed_at` date value
+* if they cannot see a mentor as expected using this endpoint, it's probably because the mentor is not eligible for funding through them. In this case, providers should use the [GET /api/v3/unfunded-mentors/ecf/{id} endpoint](/api-reference/reference-v3.html#api-v3-unfunded-mentors-ecf-id-get) to retrieve the mentor’s details
 
 For more detailed information see the specifications for this [view a single ECF participant endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-id-get).
 
@@ -510,27 +511,17 @@ For more detailed information see the specifications for this [view a single ECF
 }
 ```
 
-### View all unfunded mentor details
+### Retrieve multiple unfunded mentors 
 
-<div class="govuk-inset-text">The following endpoint is only available for systems integrated with API v3 onwards. It will not return data for API v1 or v2.</div>
+``` 
+GET /api/v3/unfunded-mentors/ecf 
+```  
 
-A single mentor can be assigned to multiple ECTs, including ECTs who are training with other providers. Mentors may need access to the learning platforms used by their ECTs.
+<div class="govuk-inset-text">Only available for systems integrated with API v3 onwards. It will not return data for API v1 or v2.</div> 
+ 
+Lead providers can use this endpoint to retrieve the names and email addresses of all mentors who are not eligible for funding through them but are assigned to their ECTs. Typically, these mentors have either completed, or are currently doing, mentor training with a different lead provider than the one delivering training to the ECT they support.
 
-‘Unfunded mentors’ are mentors who are registered with other providers.
-
-A participant will have the same `participant_id` throughout the API.
-
-If a participant is a mentor and linked to an ECT, then the `mentor_id` that appears on the response for their ECT will be the mentor’s `participant_id`.
-
-If the mentor is an unfunded mentor, then the identifier will be their `participant_id`.
-
-```
- GET /api/v3/unfunded-mentors/ecf
-```
-
-An example response body is listed below. Successful requests will return a response body with mentor details.
-
-For more detailed information see the specifications for this [view all unfunded mentors endpoint](/api-reference/reference-v3.html#api-v3-unfunded-mentors-ecf-get).
+For more detailed information, see the [‘Retrieve multiple unfunded mentors’ endpoint documentation](/api-reference/reference-v3.html#api-v3-unfunded-mentors-ecf-get). 
 
 #### Example response body:
 
@@ -554,19 +545,15 @@ For more detailed information see the specifications for this [view all unfunded
 
 ### View details of a specific 'unfunded mentor'
 
-<div class="govuk-inset-text">The following endpoint is only available for systems integrated with API v3 onwards. It will not return data for API v1 or v2.</div>
-
-If providers do not see any details for mentors when using the endpoint `GET /api/v3/participants/ecf` they can check to see whether they are an ‘unfunded mentor’.
-
-Using the unfunded mentors endpoints, providers can view the names and email addresses of ‘unfunded mentors’ assigned to ECTs, and give these mentors appropriate access to learning platforms.
-
 ```
  GET /api/v3/unfunded-mentors/ecf/{id}
 ```
 
-An example response body is listed below. Successful requests will return a response body with mentor details.
+<div class="govuk-inset-text">The following endpoint is only available for systems integrated with API v3 onwards. It will not return data for API v1 or v2.</div>
 
-For more detailed information see the specifications for this [view a specific unfunded mentor endpoint](/api-reference/reference-v3.html#api-v3-unfunded-mentors-ecf-id-get).
+Lead providers can use this endpoint to retrieve the names and email addresses of individual mentors who are not eligible for funding through them but are assigned to their ECTs. Having these details will then enable providers to give these mentors access to the right learning platforms.
+
+For more detailed information,[see the ‘Get a single unfunded mentor’ endpoint documentation](/api-reference/reference-v3.html#api-v3-unfunded-mentors-ecf-id-get).
 
 #### Example response body:
 
