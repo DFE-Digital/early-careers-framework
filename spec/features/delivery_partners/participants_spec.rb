@@ -150,7 +150,7 @@ RSpec.feature "Delivery partner users participants", type: :feature do
   def and_i_see_notification_banner
     within ".govuk-notification-banner" do
       expect(page).to have_content("Important")
-      expect(page).to have_content("This service only provides details for participants from the 2024 cohort and earlier. Contact your lead provider if you need information from the 2025/26 academic year onwards")
+      expect(page).to have_content("This service only provides details for participants from the 2024 cohort and earlier. Contact your lead provider if you need information for the 2025 cohort onwards")
     end
   end
 
