@@ -6,7 +6,6 @@ RSpec.describe AppropriateBodies::InductionRecordsQuery do
   let(:appropriate_body_user) { create(:user, :appropriate_body) }
   let(:appropriate_body) { appropriate_body_user.appropriate_bodies.first }
   let(:participant_profile) { create(:ect_participant_profile) }
-  let(:mentor_profile) { create(:mentor_participant_profile) }
   let(:partnership) do
     create(
       :partnership,
@@ -17,12 +16,26 @@ RSpec.describe AppropriateBodies::InductionRecordsQuery do
   end
   let(:induction_programme) { create(:induction_programme, partnership:) }
   let!(:induction_record) { create(:induction_record, participant_profile:, appropriate_body:, induction_programme:) }
-  let!(:another_induction_record) { create(:induction_record, participant_profile:, induction_programme:) }
-  let!(:mentor_induction_record) { create(:induction_record, participant_profile: mentor_profile, appropriate_body:, induction_programme:) }
 
   subject { described_class.new(appropriate_body:) }
 
   describe "#induction_records" do
+    before do
+      # Later induction record for different appropriate body (should be ignored)
+      create(:induction_record, participant_profile:, induction_programme:)
+
+      # Mentor for same appropriate body (should be excluded)
+      mentor_profile = create(:mentor_participant_profile)
+      create(:induction_record, participant_profile: mentor_profile, appropriate_body:, induction_programme:)
+
+      # ECT not in active registration cohort (should be excluded)
+      other_cohort = Cohort.find_by(start_year: 2021)
+      other_participant_profile = create(:ect_participant_profile, cohort: other_cohort)
+      school_cohort = create(:school_cohort, cohort: other_cohort)
+      other_induction_programme = create(:induction_programme, :fip)
+      create(:induction_record, participant_profile: other_participant_profile, appropriate_body:, induction_programme: other_induction_programme, school_cohort:)
+    end
+
     it_behaves_like "a query optimised for calculating training record states", mentor_optimization: false
 
     it "returns latest induction record for appropriate body" do
