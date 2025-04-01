@@ -31,7 +31,9 @@ RSpec.describe AppropriateBodies::ParticipantsFilter do
   subject { described_class.new(collection:, params:, training_record_states:).scope.to_a }
 
   context "No filter" do
-    it { is_expected.to match_array([induction_record1, induction_record2]) }
+    before { induction_record1.update(updated_at: 1.day.from_now) }
+
+    it { is_expected.to eq([induction_record1, induction_record2]) }
   end
 
   context "Search filter" do

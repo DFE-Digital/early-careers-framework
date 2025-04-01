@@ -13,14 +13,14 @@ module AppropriateBodies
       respond_to do |format|
         format.html do
           @pagy, @induction_records = pagy(
-            @filter.scope.order(updated_at: :desc),
+            @filter.scope,
             page: params[:page],
             limit: 50,
           )
         end
 
         format.csv do
-          serializer = InductionRecordsSerializer.new(@filter.scope.order(updated_at: :desc), params: { training_record_states: @training_record_states })
+          serializer = InductionRecordsSerializer.new(@filter.scope, params: { training_record_states: @training_record_states })
           render body: to_csv(serializer.serializable_hash)
         end
       end

@@ -23,7 +23,7 @@ module AppropriateBodies
         scoped = filter_status(scoped, params[:status])
       end
 
-      scoped
+      scoped.order(updated_at: :desc)
     end
 
     def filter_query(scoped, query)
