@@ -73,96 +73,100 @@ RSpec.feature "ECT doing CIP: no validation", type: :feature, early_in_cohort: t
   let(:participant_profile) { participant_details.participant_profile }
   let(:preferred_identity) { participant_details.participant_identity }
 
-  scenario "The current school induction tutor can locate a record for the ECT" do
-    given_i_sign_in_as_the_user_with_the_full_name sit_full_name
+  %w[active inactive].each do |flag_state|
+    context "when programme type changes for 2025 are #{flag_state}", with_feature_flags: { programme_type_changes_2025: flag_state } do
+      scenario "The current school induction tutor can locate a record for the ECT" do
+        given_i_sign_in_as_the_user_with_the_full_name sit_full_name
 
-    school_dashboard = Pages::SchoolDashboardPage.load(slug: school.slug)
-    school_dashboard.view_ect_dashboard
+        school_dashboard = Pages::SchoolDashboardPage.load(slug: school.slug)
+        school_dashboard.view_ect_dashboard
 
-    participant_dashboard = Pages::SchoolEarlyCareerTeachersDashboardPage.loaded(slug: school.slug)
-    participant_dashboard.view_participant participant_full_name
+        participant_dashboard = Pages::SchoolEarlyCareerTeachersDashboardPage.loaded(slug: school.slug)
+        participant_dashboard.view_participant participant_full_name
 
-    participant_details = Pages::SchoolEarlyCareerTeacherDetailsPage.loaded(slug: school.slug, participant_id: training_record_id)
-    expect(participant_details).to have_participant_name participant_full_name
-    expect(participant_details).to have_email participant_email
-    expect(participant_details).to have_full_name participant_full_name
-    expect(participant_details).to have_status school_record_state
-    expect(participant_details).to have_materials_supplier cip_material_provider
-  end
+        participant_details = Pages::SchoolEarlyCareerTeacherDetailsPage.loaded(slug: school.slug, participant_id: training_record_id)
+        expect(participant_details).to have_participant_name participant_full_name
+        expect(participant_details).to have_email participant_email
+        expect(participant_details).to have_full_name participant_full_name
+        expect(participant_details).to have_status school_record_state
+        expect(participant_details).to have_materials_supplier cip_material_provider
+      end
 
-  scenario "The current appropriate body can locate a record for the ECT", :skip do
-    given_i_sign_in_as_the_user_with_the_full_name ab_full_name
+      scenario "The current appropriate body can locate a record for the ECT", :skip do
+        given_i_sign_in_as_the_user_with_the_full_name ab_full_name
 
-    appropriate_body_portal = Pages::AppropriateBodyPortal.loaded
-    appropriate_body_portal.get_participant(participant_full_name)
+        appropriate_body_portal = Pages::AppropriateBodyPortal.loaded
+        appropriate_body_portal.get_participant(participant_full_name)
 
-    expect(appropriate_body_portal).to have_full_name participant_full_name
-    expect(appropriate_body_portal).to have_email_address participant_email
-    expect(appropriate_body_portal).to have_teacher_reference_number teacher_reference_number
-    expect(appropriate_body_portal).to have_participant_type long_participant_type
-    expect(appropriate_body_portal).to have_lead_provider_name lead_provider_name
-    expect(appropriate_body_portal).to have_school_name school_name
-    expect(appropriate_body_portal).to have_school_urn school.urn
-    expect(appropriate_body_portal).to have_academic_year start_year
-    expect(appropriate_body_portal).to have_training_status training_status
-    expect(appropriate_body_portal).to have_training_record_status appropriate_body_Record_state
-  end
+        expect(appropriate_body_portal).to have_full_name participant_full_name
+        expect(appropriate_body_portal).to have_email_address participant_email
+        expect(appropriate_body_portal).to have_teacher_reference_number teacher_reference_number
+        expect(appropriate_body_portal).to have_participant_type long_participant_type
+        expect(appropriate_body_portal).to have_lead_provider_name lead_provider_name
+        expect(appropriate_body_portal).to have_school_name school_name
+        expect(appropriate_body_portal).to have_school_urn school.urn
+        expect(appropriate_body_portal).to have_academic_year start_year
+        expect(appropriate_body_portal).to have_training_status training_status
+        expect(appropriate_body_portal).to have_training_record_status appropriate_body_Record_state
+      end
 
-  scenario "The Support for ECTs service can locate a record for the CIP ECT" do
-    user_endpoint = APIs::ECFUsersEndpoint.load
-    user_endpoint.get_user participant_id
+      scenario "The Support for ECTs service can locate a record for the CIP ECT" do
+        user_endpoint = APIs::ECFUsersEndpoint.load
+        user_endpoint.get_user participant_id
 
-    expect(user_endpoint).to have_email participant_email
-    expect(user_endpoint).to have_full_name participant_full_name
-    expect(user_endpoint).to have_cohort start_year
-    expect(user_endpoint).to have_core_induction_programme cip_materials
-    expect(user_endpoint).to have_induction_programme_choice programme_type
-    expect(user_endpoint).to have_registration_completed registration_completed
-    expect(user_endpoint).to have_user_type participant_type
-  end
+        expect(user_endpoint).to have_email participant_email
+        expect(user_endpoint).to have_full_name participant_full_name
+        expect(user_endpoint).to have_cohort start_year
+        expect(user_endpoint).to have_core_induction_programme cip_materials
+        expect(user_endpoint).to have_induction_programme_choice programme_type
+        expect(user_endpoint).to have_registration_completed registration_completed
+        expect(user_endpoint).to have_user_type participant_type
+      end
 
-  scenario "A DfE admin user can locate the record for the ECT" do
-    given_i_sign_in_as_an_admin_user
+      scenario "A DfE admin user can locate the record for the ECT" do
+        given_i_sign_in_as_an_admin_user
 
-    participant_list = Pages::AdminSupportParticipantList.load
-    participant_list.view_participant participant_full_name
+        participant_list = Pages::AdminSupportParticipantList.load
+        participant_list.view_participant participant_full_name
 
-    participant_detail = Pages::AdminSupportParticipantDetail.loaded(participant_id: training_record_id)
-    expect(participant_detail).to have_full_name participant_full_name
-    expect(participant_detail).to have_email_address participant_email
-    expect(participant_detail).to have_trn teacher_reference_number
-    expect(participant_detail).to have_cohort start_year
-    expect(participant_detail).to have_training_record_state training_record_state
-    expect(participant_detail).to have_user_id participant_id
-    expect(participant_detail).to have_associated_email_address participant_email
+        participant_detail = Pages::AdminSupportParticipantDetail.loaded(participant_id: training_record_id)
+        expect(participant_detail).to have_full_name participant_full_name
+        expect(participant_detail).to have_email_address participant_email
+        expect(participant_detail).to have_trn teacher_reference_number
+        expect(participant_detail).to have_cohort start_year
+        expect(participant_detail).to have_training_record_state training_record_state
+        expect(participant_detail).to have_user_id participant_id
+        expect(participant_detail).to have_associated_email_address participant_email
 
-    participant_detail.open_training_tab
+        participant_detail.open_training_tab
 
-    participant_training = Pages::AdminSupportParticipantTraining.loaded(participant_id: training_record_id)
-    expect(participant_training).to have_cohort start_year
-    expect(participant_training).to have_school_name school.name
-    expect(participant_training).to have_schedule_identifier schedule_identifier
-  end
+        participant_training = Pages::AdminSupportParticipantTraining.loaded(participant_id: training_record_id)
+        expect(participant_training).to have_cohort start_year
+        expect(participant_training).to have_school_name school.name
+        expect(participant_training).to have_schedule_identifier schedule_identifier
+      end
 
-  scenario "A DfE finance user can locate the record for the ECT" do
-    given_i_sign_in_as_a_finance_user
+      scenario "A DfE finance user can locate the record for the ECT" do
+        given_i_sign_in_as_a_finance_user
 
-    drilldown_search = Pages::FinanceParticipantDrilldownSearch.load
-    drilldown_search.find participant_id
+        drilldown_search = Pages::FinanceParticipantDrilldownSearch.load
+        drilldown_search.find participant_id
 
-    drilldown = Pages::FinanceParticipantDrilldown.loaded(user_id: participant_id)
-    expect(drilldown).to have_participant_id participant_id
-    expect(drilldown).to have_full_name participant_full_name
-    expect(drilldown).to have_lead_provider lead_provider_name
-    expect(drilldown).to have_school_urn school.urn
-    expect(drilldown).to have_status participant_status
-    expect(drilldown).to have_induction_status participant_status
-    expect(drilldown).to have_training_status training_status
-    expect(drilldown).to be_not_eligible_for_funding
-    expect(drilldown).to have_schedule schedule_identifier
-    expect(drilldown).to have_schedule_identifier schedule_identifier
-    expect(drilldown).to have_schedule_cohort start_year
-    expect(drilldown).to have_training_programme programme_name
-    expect(drilldown).to have_participant_class participant_class
+        drilldown = Pages::FinanceParticipantDrilldown.loaded(user_id: participant_id)
+        expect(drilldown).to have_participant_id participant_id
+        expect(drilldown).to have_full_name participant_full_name
+        expect(drilldown).to have_lead_provider lead_provider_name
+        expect(drilldown).to have_school_urn school.urn
+        expect(drilldown).to have_status participant_status
+        expect(drilldown).to have_induction_status participant_status
+        expect(drilldown).to have_training_status training_status
+        expect(drilldown).to be_not_eligible_for_funding
+        expect(drilldown).to have_schedule schedule_identifier
+        expect(drilldown).to have_schedule_identifier schedule_identifier
+        expect(drilldown).to have_schedule_cohort start_year
+        expect(drilldown).to have_training_programme programme_name
+        expect(drilldown).to have_participant_class participant_class
+      end
+    end
   end
 end
