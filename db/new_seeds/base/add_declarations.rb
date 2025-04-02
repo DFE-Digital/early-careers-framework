@@ -12,13 +12,14 @@ ActiveRecord::Base.transaction do
     # the lead provider in all cohorts.
     Cohort.find_each do |cohort|
       Faker::Number.between(from: 1, to: 20).times do
-        # Ensure there is a default finance schedule for the cohort.
-        # find_by(cohort:, schedule_identifier: "ecf-standard-september")
-        schedule_identifier = "ecf-standard-september"
-        FactoryBot.create(:ecf_schedule, cohort:, schedule_identifier:) unless Finance::Schedule::ECF.exists?(cohort:, schedule_identifier:)
+        # Ensure there is a default and extended finance schedules for the cohort.
+        FactoryBot.create(:ecf_schedule, cohort:) unless Finance::Schedule::ECF.exists?(cohort:, schedule_identifier: "ecf-standard-september")
+        FactoryBot.create(:ecf_extended_schedule, cohort:) unless Finance::Schedule::ECF.exists?(cohort:, schedule_identifier: "ecf-extended-september")
 
         FactoryBot.create(:ect, :eligible_for_funding, cohort:, lead_provider:)
         FactoryBot.create(:mentor, :eligible_for_funding, cohort:, lead_provider:)
+        FactoryBot.create(:ect, :eligible_for_funding, :with_extended_schedule, cohort:, lead_provider:)
+        FactoryBot.create(:mentor, :eligible_for_funding, :with_extended_schedule, cohort:, lead_provider:)
       end
     end
 
@@ -42,6 +43,7 @@ ActiveRecord::Base.transaction do
       existing_declaration_types = participant_profile.participant_declarations.pluck(:declaration_type)
       declaration_types.reject! { |type| type.in?(existing_declaration_types) }
       declaration_types.reject! { |type| type.match?(/retained|extended/) } if participant_profile.mentor? && schedule.cohort.mentor_funding?
+      declaration_types.reject! { |type| type.match?(/extended/) } unless schedule.schedule_identifier.match?(/extended/)
 
       declaration_types.each do |declaration_type|
         # Keep creating declarations with a 50% chance.
