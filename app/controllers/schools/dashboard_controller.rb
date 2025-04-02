@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Schools::DashboardController < Schools::BaseController
+  include RelaxedContentSecurityPolicy
+
   before_action :set_school_cohorts, only: :show
   before_action :check_school_cohorts, only: :show
   skip_after_action :verify_authorized
