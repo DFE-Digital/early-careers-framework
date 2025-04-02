@@ -222,11 +222,11 @@ RSpec.describe "participant-declarations endpoint spec", type: :request, mid_coh
           )
       end
 
-      it "ignores an unpermitted parameter" do
+      it "ignores a parameter that is not required" do
         post "/api/v2/participant-declarations", params: build_params(valid_params.merge(evidence_held: "test"))
 
         expect(response.status).to eq 200
-        expect(ParticipantDeclaration.order(created_at: :desc).first.evidence_held).to eq("test")
+        expect(ParticipantDeclaration.order(created_at: :desc).first.evidence_held).to be_nil
       end
 
       it "returns 422 when supplied an incorrect course type" do
