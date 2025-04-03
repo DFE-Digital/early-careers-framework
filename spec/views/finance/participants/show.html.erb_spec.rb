@@ -34,7 +34,26 @@ RSpec.describe "finance/participants/show.html.erb" do
       render
 
       expect(rendered).to have_content("Induction record: #{induction_record.id}")
+    end
+
+    it "renders induction programme" do
+      assign :user, user
+
+      render
+
       expect(rendered).to have_content("Training programmeFull induction programme")
+    end
+
+    context "when the programme_type_changes_2025 feature is enabled" do
+      before { FeatureFlag.activate(:programme_type_changes_2025) }
+
+      it "renders new induction programme" do
+        assign :user, user
+
+        render
+
+        expect(rendered).to have_content("Training programmeProvider led")
+      end
     end
 
     it "renders eligible for funding" do
