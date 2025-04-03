@@ -63,6 +63,19 @@ class InductionProgramme < ApplicationRecord
       core_induction_programme == other.core_induction_programme
   end
 
+  def formatted_training_programme
+    if FeatureFlag.active?(:programme_type_changes_2025)
+      case training_programme
+      when "full_induction_programme", "school_funded_fip"
+        "provider_led"
+      when "core_induction_programme", "design_our_own"
+        "school_led"
+      end
+    else
+      training_programme
+    end.humanize
+  end
+
 private
 
   def touch_induction_records

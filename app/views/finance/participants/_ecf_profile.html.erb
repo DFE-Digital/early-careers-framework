@@ -68,7 +68,7 @@
   <%= govuk_summary_list do |summary_list| %>
     <% summary_list.with_row do |row| %>
       <% row.with_key { "Training programme" } %>
-      <% row.with_value { ir.induction_programme.training_programme.humanize } %>
+      <% row.with_value { ir.induction_programme.formatted_training_programme } %>
       <% row.with_action(text: :none) %>
     <% end %>
 

@@ -104,4 +104,20 @@ RSpec.describe InductionProgramme, type: :model do
       end
     end
   end
+
+  describe "#formatted_training_programme" do
+    let(:induction_programme) { create(:induction_programme, :fip) }
+
+    subject { induction_programme.formatted_training_programme }
+
+    context "when the programme_type_changes_2025 feature is not enabled" do
+      it { is_expected.to eq("Full induction programme") }
+    end
+
+    context "when the programme_type_changes_2025 feature is not enabled" do
+      before { FeatureFlag.activate(:programme_type_changes_2025) }
+
+      it { is_expected.to eq("Provider led") }
+    end
+  end
 end
