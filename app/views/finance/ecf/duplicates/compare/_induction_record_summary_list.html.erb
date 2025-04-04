@@ -37,6 +37,6 @@
   end
   summary_list.with_row(classes: "govuk-body-s") do |row|
     row.with_key    { "Induction Programme Type" }
-    row.with_value  { induction_record.induction_programme.training_programme }
+    row.with_value  { ProgrammeTypeMappings.training_programme(training_programme: induction_record.induction_programme.training_programme).humanize }
   end
 end %>
