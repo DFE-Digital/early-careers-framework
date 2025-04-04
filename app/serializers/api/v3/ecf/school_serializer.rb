@@ -41,7 +41,8 @@ module Api
 
         attribute :induction_programme_choice do |school, params|
           school_cohort = school_cohort_for(school:, cohort: params[:cohort])
-          school_cohort&.induction_programme_choice.presence || "not_yet_known"
+          choice = school_cohort&.induction_programme_choice.presence || "not_yet_known"
+          ProgrammeTypeMappings.training_programme(training_programme: choice)
         end
 
         attribute :created_at do |school|
