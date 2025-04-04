@@ -62,6 +62,38 @@ RSpec.describe Finance::ECF::AssuranceReport::CsvSerializer do
         })
       end
 
+      describe "training status reason" do
+        let(:reason) { "other" }
+        let(:declaration) { create(:ect_participant_declaration, :payable) }
+        let(:parsed_training_status_reason) { parsed_csv.first["Training Status Reason"] }
+
+        before do
+          declaration.participant_profile.participant_profile_states.last.update!(state: :withdrawn, reason:)
+        end
+
+        it { expect(parsed_training_status_reason).to eq("other") }
+
+        context "when the reason is `school-left-fip`" do
+          let(:reason) { "school-left-fip" }
+
+          context "when the programme type mappings are enabled" do
+            before { allow(ProgrammeTypeMappings).to receive(:mappings_enabled?) { true } }
+
+            it "replaces `school-left-fip` with `switched-to-school-led`" do
+              expect(parsed_training_status_reason).to eq("switched-to-school-led")
+            end
+          end
+
+          context "when the programme type mappings are disabled" do
+            before { allow(ProgrammeTypeMappings).to receive(:mappings_enabled?) { false } }
+
+            it "does not replace `school-left-fip` with `switched-to-school-led`" do
+              expect(parsed_training_status_reason).to eq("school-left-fip")
+            end
+          end
+        end
+      end
+
       describe "uplift payable" do
         let(:declaration) { create(:ect_participant_declaration, :payable, profile_traits: profile_traits + %i[eligible_for_funding]) }
         let(:parsed_csv_uplift_payable) { parsed_csv.first["Uplift Payable"] }
