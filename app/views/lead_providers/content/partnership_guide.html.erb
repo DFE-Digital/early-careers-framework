@@ -84,7 +84,9 @@
   end
   component.with_row do |row|
     row.with_key { "School not eligible for funding" }
-    row.with_value { "This school is not eligible to receive funding from the DfE. (Other independent special schools, Welsh establishments, British schools overseas etc.)<br/><br/>They can only use the accredited materials (core induction programme).".html_safe }
+
+    programme = FeatureFlag.active?(:programme_type_changes_2025) ?  "school led" : "core induction programme"
+    row.with_value { "This school is not eligible to receive funding from the DfE. (Other independent special schools, Welsh establishments, British schools overseas etc.)<br/><br/>They can only use the accredited materials (#{programme}).".html_safe }
   end
   component.with_row do |row|
     row.with_key { "School programme not yet confirmed" }
