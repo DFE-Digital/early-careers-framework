@@ -403,8 +403,8 @@ GEM
     pg (1.5.9)
     pp (0.6.2)
       prettyprint
-    pretender (0.5.0)
-      actionpack (>= 6.1)
+    pretender (0.6.0)
+      actionpack (>= 7.1)
     prettyprint (0.2.0)
     pry (0.15.2)
       coderay (~> 1.1)
