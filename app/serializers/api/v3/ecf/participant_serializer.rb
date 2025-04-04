@@ -41,7 +41,7 @@ module Api
                 .find { |pps| pps.state == ParticipantProfileState.states[:withdrawn] && pps.cpd_lead_provider_id == cpd_lead_provider.id }
               if latest_participant_profile_state.present?
                 {
-                  reason: ProgrammeTypeMappings.withdrawl_reason(reason: latest_participant_profile_state.reason),
+                  reason: ProgrammeTypeMappings.withdrawal_reason(reason: latest_participant_profile_state.reason),
                   date: latest_participant_profile_state.created_at.rfc3339,
                 }
               end

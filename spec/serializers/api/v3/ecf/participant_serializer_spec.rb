@@ -127,7 +127,7 @@ module Api
                 expect(ecf_enrolments[0][:withdrawal][:date]).to eql(ect_profile.participant_profile_state.created_at.rfc3339)
               end
 
-              context "when the withdrawl reason is 'school-left-fip'" do
+              context "when the withdrawal reason is 'school-left-fip'" do
                 let(:reason) { "school-left-fip" }
 
                 context "when the programme type mappings are enabled" do
