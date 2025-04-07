@@ -54,7 +54,14 @@ module Api
           context "when 'programme_type_changes_2025' feature is disabled" do
             before { FeatureFlag.deactivate(:programme_type_changes_2025) }
 
-            %w[core_induction_programme full_induction_programme].each do |induction_programme_choice|
+            %w[
+              full_induction_programme
+              core_induction_programme
+              design_our_own
+              school_funded_fip
+              no_early_career_teachers
+              not_yet_known
+            ].each do |induction_programme_choice|
               context "when the school is already in the cohort with '#{induction_programme_choice}'" do
                 let!(:school_cohort) { create(:school_cohort, school:, cohort:, induction_programme_choice:) }
 
@@ -74,19 +81,42 @@ module Api
           context "when 'programme_type_changes_2025' feature is enabled" do
             before { FeatureFlag.activate(:programme_type_changes_2025) }
 
-            context "when the school is already in the cohort with 'core_induction_programme'" do
-              let!(:school_cohort) { create(:school_cohort, school:, cohort:, induction_programme_choice: "core_induction_programme") }
+            %w[
+              full_induction_programme
+              school_funded_fip
+            ].each do |induction_programme_choice|
+              context "when the school is already in the cohort with '#{induction_programme_choice}'" do
+                let!(:school_cohort) { create(:school_cohort, school:, cohort:, induction_programme_choice:) }
 
-              it "returns the updated induction_programme_choice" do
-                expect(subject.serializable_hash[:data][:attributes][:induction_programme_choice]).to eq("school_led")
+                it "returns the updated induction_programme_choice" do
+                  expect(subject.serializable_hash[:data][:attributes][:induction_programme_choice]).to eq("provider_led")
+                end
               end
             end
 
-            context "when the school is already in the cohort with 'full_induction_programme'" do
-              let!(:school_cohort) { create(:school_cohort, school:, cohort:, induction_programme_choice: "full_induction_programme") }
+            %w[
+              core_induction_programme
+              design_our_own
+            ].each do |induction_programme_choice|
+              context "when the school is already in the cohort with '#{induction_programme_choice}'" do
+                let!(:school_cohort) { create(:school_cohort, school:, cohort:, induction_programme_choice:) }
 
-              it "returns the updated induction_programme_choice" do
-                expect(subject.serializable_hash[:data][:attributes][:induction_programme_choice]).to eq("provider_led")
+                it "returns the updated induction_programme_choice" do
+                  expect(subject.serializable_hash[:data][:attributes][:induction_programme_choice]).to eq("school_led")
+                end
+              end
+            end
+
+            %w[
+              no_early_career_teachers
+              not_yet_known
+            ].each do |induction_programme_choice|
+              context "when the school is already in the cohort with '#{induction_programme_choice}'" do
+                let!(:school_cohort) { create(:school_cohort, school:, cohort:, induction_programme_choice:) }
+
+                it "returns the school cohort induction_programme_choice" do
+                  expect(subject.serializable_hash[:data][:attributes][:induction_programme_choice]).to eq(induction_programme_choice)
+                end
               end
             end
 
