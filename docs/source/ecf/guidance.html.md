@@ -779,7 +779,7 @@ View the [‘Get a single participant’s transfers’ endpoint documentation](/
 
 ### Managing transfers between providers 
  
-Providers must notify DfE when a participant withdraws from their training to ensure data accuracy. Once a participant transfers to a new provider and school induction tutors have confirmed the move, the original provider will see the `participant_status` as `left`. They should then update the participant’s `training_status` to `withdrawn`. 
+Providers must notify DfE when a participant withdraws from their training to ensure data accuracy. Once a participant transfers to a new provider and school induction tutors have confirmed the move, the original provider will see the `participant_status` as `left`. They should then update the participant’s `training_status` to `withdrawn`. The transfer record will also appear in `GET transfers` and `GET {id}/transfers` endpoint responses.
 
 ### Why transfer data can appear incomplete 
  
