@@ -20,6 +20,12 @@ RSpec.describe AppropriateBodies::Participants::TableRow, type: :component do
     it { is_expected.to have_text("ECT not currently linked to you") }
     it { is_expected.to have_text("FIP") }
     it { is_expected.to have_text(induction_record.school.contact_email) }
+
+    context "when the programme_type_changes_2025 feature flag is enabled" do
+      before { FeatureFlag.activate(:programme_type_changes_2025) }
+
+      it { is_expected.to have_text("Provider led") }
+    end
   end
 
   context "CIP induction type" do
@@ -31,5 +37,11 @@ RSpec.describe AppropriateBodies::Participants::TableRow, type: :component do
     it { is_expected.to have_text("ECT not currently linked to you") }
     it { is_expected.to have_text("CIP") }
     it { is_expected.to have_text(induction_record.school.contact_email) }
+
+    context "when the programme_type_changes_2025 feature flag is enabled" do
+      before { FeatureFlag.activate(:programme_type_changes_2025) }
+
+      it { is_expected.to have_text("School led") }
+    end
   end
 end
