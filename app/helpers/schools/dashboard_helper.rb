@@ -2,6 +2,8 @@
 
 module Schools
   module DashboardHelper
+    include TrainingProgrammeOptions
+
     def ect_count(school_cohorts)
       school_cohorts.sum { |sc| sc.current_induction_records.ects.count }
     end
@@ -43,6 +45,14 @@ module Schools
         concat govuk_link_to("Assign a mentor",
                              school_participant_edit_mentor_path(participant_id: participant_profile.id),
                              no_visited_state: true)
+      end
+    end
+
+    def training_programme_description(programme_type)
+      if FeatureFlag.active?(:programme_type_changes_2025)
+        PROGRAMME_SHORT_DESCRIPTION_2025[programme_type.to_sym]
+      else
+        PROGRAMME_SHORT_DESCRIPTION[programme_type.to_sym]
       end
     end
   end
