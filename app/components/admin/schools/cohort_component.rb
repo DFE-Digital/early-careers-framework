@@ -22,15 +22,17 @@ module Admin
       end
 
       def training_programme
-        training_programme_description(induction_programme_choice)
-
-        # {
-        #   "core_induction_programme" => "Using DfE-accredited materials",
-        #   "design_our_own"           => "Designing their own training",
-        #   "full_induction_programme" => "Working with a DfE-funded provider",
-        #   "no_early_career_teachers" => "No ECTs this year",
-        #   "school_funded_fip"        => "School-funded full induction programme",
-        # }.fetch(induction_programme_choice, "Not using service")
+        if FeatureFlag.active?(:programme_type_changes_2025)
+          training_programme_description(induction_programme_choice)
+        else
+          {
+            "core_induction_programme" => "Using DfE-accredited materials",
+            "design_our_own"           => "Designing their own training",
+            "full_induction_programme" => "Working with a DfE-funded provider",
+            "no_early_career_teachers" => "No ECTs this year",
+            "school_funded_fip"        => "School-funded full induction programme",
+          }.fetch(induction_programme_choice, "Not using service")
+        end
       end
 
       def materials

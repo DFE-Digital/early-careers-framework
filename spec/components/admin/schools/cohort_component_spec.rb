@@ -60,9 +60,18 @@ RSpec.describe Admin::Schools::CohortComponent, type: :component do
         let(:partnership) { nil }
         let(:relationships) { nil }
 
-        it "displays the training programme" do
-          expect(page).to have_content("Training programme")
-          expect(page).to have_content("Working with a DfE-funded provider")
+        context "when the programme type changes for 2025 flag is inactive", with_feature_flags: { programme_type_changes_2025: "inactive" } do
+          it "displays the training programme" do
+            expect(page).to have_content("Training programme")
+            expect(page).to have_content("Working with a DfE-funded provider")
+          end
+        end
+
+        context "when the programme type changes for 2025 flag is active", with_feature_flags: { programme_type_changes_2025: "active" } do
+          it "displays the training programme" do
+            expect(page).to have_content("Training programme")
+            expect(page).to have_content("Provider-led training funded by the DfE")
+          end
         end
 
         it "contains a link that allows the induction programme to be changed" do
@@ -74,7 +83,13 @@ RSpec.describe Admin::Schools::CohortComponent, type: :component do
     context "when school is CIP" do
       let(:induction_programme_choice) { "core_induction_programme" }
 
-      it("renders the correct description") { expect(page).to have_content("Using DfE-accredited materials") }
+      context "when the programme type changes for 2025 flag is inactive", with_feature_flags: { programme_type_changes_2025: "inactive" } do
+        it("renders the correct description") { expect(page).to have_content("Using DfE-accredited materials") }
+      end
+
+      context "when the programme type changes for 2025 flag is active", with_feature_flags: { programme_type_changes_2025: "active" } do
+        it("renders the correct description") { expect(page).to have_content("School-led training") }
+      end
     end
   end
 
@@ -88,15 +103,28 @@ RSpec.describe Admin::Schools::CohortComponent, type: :component do
     end
 
     describe "#training_programme" do
-      {
-        "core_induction_programme" => "Using DfE-accredited materials",
-        "design_our_own"           => "Designing their own training",
-        "no_early_career_teachers" => "No ECTs this year",
-      }.each do |training_programme, description|
-        describe "training programme '#{training_programme}" do
-          let(:school_cohort) { FactoryBot.create(:seed_school_cohort, :with_cohort, induction_programme_choice: training_programme, school:) }
+      context "when the programme type changes for 2025 flag is inactive", with_feature_flags: { programme_type_changes_2025: "inactive" } do
+        {
+          "core_induction_programme" => "Using DfE-accredited materials",
+          "design_our_own"           => "Designing their own training",
+          "no_early_career_teachers" => "No ECTs this year",
+        }.each do |training_programme, description|
+          describe "training programme '#{training_programme}" do
+            let(:school_cohort) { FactoryBot.create(:seed_school_cohort, :with_cohort, induction_programme_choice: training_programme, school:) }
 
-          it("has description #{description}") { expect(subject.training_programme).to eql(description) }
+            it("has description #{description}") { expect(subject.training_programme).to eql(description) }
+          end
+        end
+      end
+
+      context "when the programme type changes for 2025 flag is active", with_feature_flags: { programme_type_changes_2025: "active" } do
+        %w[core_induction_programme design_our_own no_early_career_teachers].each do |training_programme|
+          describe "training programme '#{training_programme}'" do
+            let(:school_cohort) { FactoryBot.create(:seed_school_cohort, :with_cohort, induction_programme_choice: training_programme, school:) }
+
+            description = TrainingProgrammeOptions::PROGRAMME_SHORT_DESCRIPTION_2025[training_programme.to_sym]
+            it("has description #{description}") { expect(subject.training_programme).to eql(description) }
+          end
         end
       end
     end
