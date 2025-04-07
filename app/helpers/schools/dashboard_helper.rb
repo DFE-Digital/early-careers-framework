@@ -49,6 +49,8 @@ module Schools
     end
 
     def training_programme_description(programme_type)
+      return "Not using service" if programme_type.nil?
+
       if FeatureFlag.active?(:programme_type_changes_2025)
         PROGRAMME_SHORT_DESCRIPTION_2025[programme_type.to_sym]
       else
