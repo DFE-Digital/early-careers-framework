@@ -100,5 +100,113 @@ RSpec.describe ProgrammeTypeMappings do
         end
       end
     end
+
+    describe ".training_programme_friendly_name" do
+      subject { described_class.training_programme_friendly_name(training_programme, short:) }
+
+      context("when short: false") do
+        let(:short) { false }
+
+        context "when mappings are enabled" do
+          let(:mappings_enabled) { true }
+
+          %i[full_induction_programme school_funded_fip].each do |induction_programme_type|
+            context "when training_programme is '#{induction_programme_type}'" do
+              let(:training_programme) { build(:induction_programme, induction_programme_type).training_programme }
+
+              it { is_expected.to eq("Provider led") }
+            end
+          end
+
+          %i[core_induction_programme design_our_own].each do |induction_programme_type|
+            context "when training_programme is '#{induction_programme_type}'" do
+              let(:training_programme) { build(:induction_programme, induction_programme_type).training_programme }
+
+              it { is_expected.to eq("School led") }
+            end
+          end
+        end
+
+        context "when mappings are not enabled" do
+          let(:mappings_enabled) { false }
+
+          context "when training_programme is `full_induction_programme`" do
+            let(:training_programme) { build(:induction_programme, :fip).training_programme }
+
+            it { is_expected.to eq("Full induction programme") }
+          end
+
+          context "when training_programme is `core_induction_programme`" do
+            let(:training_programme) { build(:induction_programme, :cip).training_programme }
+
+            it { is_expected.to eq("Core induction programme") }
+          end
+
+          context "when training_programme is `design_our_own`" do
+            let(:training_programme) { build(:induction_programme, :design_our_own).training_programme }
+
+            it { is_expected.to eq("Design our own") }
+          end
+
+          context "when training_programme is `school_funded_fip`" do
+            let(:training_programme) { build(:induction_programme, :school_funded_fip).training_programme }
+
+            it { is_expected.to eq("School funded full induction programme") }
+          end
+        end
+      end
+
+      context("when short: true") do
+        let(:short) { true }
+
+        context "when mappings are enabled" do
+          let(:mappings_enabled) { true }
+
+          %i[full_induction_programme school_funded_fip].each do |induction_programme_type|
+            context "when training_programme is '#{induction_programme_type}'" do
+              let(:training_programme) { build(:induction_programme, induction_programme_type).training_programme }
+
+              it { is_expected.to eq("Provider led") }
+            end
+          end
+
+          %i[core_induction_programme design_our_own].each do |induction_programme_type|
+            context "when training_programme is '#{induction_programme_type}'" do
+              let(:training_programme) { build(:induction_programme, induction_programme_type).training_programme }
+
+              it { is_expected.to eq("School led") }
+            end
+          end
+        end
+
+        context "when mappings are not enabled" do
+          let(:mappings_enabled) { false }
+
+          context "when training_programme is `full_induction_programme`" do
+            let(:training_programme) { build(:induction_programme, :fip).training_programme }
+
+            it { is_expected.to eq("FIP") }
+          end
+
+          context "when training_programme is `core_induction_programme`" do
+            let(:training_programme) { build(:induction_programme, :cip).training_programme }
+
+            it { is_expected.to eq("CIP") }
+          end
+
+          context "when training_programme is `design_our_own`" do
+            let(:training_programme) { build(:induction_programme, :design_our_own).training_programme }
+
+            it { is_expected.to eq("Design our own") }
+          end
+
+          context "when training_programme is `school_funded_fip`" do
+            let(:training_programme) { build(:induction_programme, :school_funded_fip).training_programme }
+
+            it { is_expected.to eq("School funded FIP") }
+          end
+        end
+      end
+    end
   end
 end
