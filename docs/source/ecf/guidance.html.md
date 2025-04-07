@@ -553,7 +553,7 @@ For more detailed information, see the [‘Retrieve multiple unfunded mentors’
 
 Lead providers can use this endpoint to retrieve the names and email addresses of individual mentors who are not eligible for funding through them but are assigned to their ECTs. Having these details will then enable providers to give these mentors access to the right learning platforms.
 
-For more detailed information,[see the ‘Get a single unfunded mentor’ endpoint documentation](/api-reference/reference-v3.html#api-v3-unfunded-mentors-ecf-id-get).
+For more detailed information, [see the ‘Get a single unfunded mentor’ endpoint documentation](/api-reference/reference-v3.html#api-v3-unfunded-mentors-ecf-id-get).
 
 #### Example response body:
 
