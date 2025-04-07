@@ -249,6 +249,14 @@ class InductionRecord < ApplicationRecord
     update!(induction_status: :withdrawn, end_date: date_of_change)
   end
 
+  def induction_type
+    if enrolled_in_cip?
+      ProgrammeTypeMappings.training_programme_friendly_name("core_induction_programme", short: true)
+    elsif enrolled_in_fip?
+      ProgrammeTypeMappings.training_programme_friendly_name("full_induction_programme", short: true)
+    end
+  end
+
 private
 
   def end_unknown?

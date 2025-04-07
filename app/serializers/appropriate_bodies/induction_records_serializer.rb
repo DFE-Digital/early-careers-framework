@@ -26,13 +26,7 @@ module AppropriateBodies
       StatusTags::AppropriateBodyParticipantStatusTag.new(params[:training_record_states][participant_profile.id]).label
     end
 
-    attribute :induction_type do |induction_record|
-      if induction_record.enrolled_in_cip?
-        "CIP"
-      elsif induction_record.enrolled_in_fip?
-        "FIP"
-      end
-    end
+    attribute :induction_type
 
     attribute :induction_tutor do |induction_record|
       induction_record.school.contact_email
