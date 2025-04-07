@@ -19,13 +19,13 @@ module AppropriateBodies
       InductionRecord.distinct
         .joins("JOIN (#{join.to_sql}) AS latest_induction_records ON latest_induction_records.latest_id = induction_records.id")
         .includes(
-          :induction_programme,
-          :partnership,
-          :lead_provider,
           :user,
-          school: [:induction_coordinators],
+          :cohort,
+          school: %i[induction_coordinators],
+          induction_programme: { partnership: %i[lead_provider] },
           participant_profile: %i[teacher_profile ecf_participant_eligibility ecf_participant_validation_data],
         )
+        .where(cohort: { start_year: Cohort.active_registration_cohort.start_year })
         .select(
           "induction_records.*",
           latest_email_status_per_participant,
