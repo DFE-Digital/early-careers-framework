@@ -7,12 +7,14 @@ module TrainingProgrammeOptions
     core_induction_programme
     school_funded_fip
     design_our_own
+    no_early_career_teachers
   ].freeze
 
   NON_CIP_ONLY_SCHOOL_PROGRAMME_CHOICES = %i[
     full_induction_programme
     core_induction_programme
     design_our_own
+    no_early_career_teachers
   ].freeze
 
   PROGRAMME_CHOICES = {
@@ -23,15 +25,26 @@ module TrainingProgrammeOptions
     no_early_career_teachers: "We do not expect any early career teachers to join",
   }.freeze
 
+  PROGRAMME_SHORT_DESCRIPTION = {
+    full_induction_programme: "Use a training provider funded by the DfE",
+    core_induction_programme: "DfE-accredited materials",
+    design_our_own: "Design and deliver your own programme based on the early career framework (ECF)",
+    school_funded_fip: "Use a training provider funded by your school",
+    no_early_career_teachers: "No early career teachers for this cohort",
+    not_yet_known: "Not yet decided",
+  }.freeze
+
   # NOTE: These are to support 2025 programme type changes
   CIP_ONLY_SCHOOL_PROGRAMME_CHOICES_2025 = %i[
     school_funded_fip
     core_induction_programme
+    no_early_career_teachers
   ].freeze
 
   NON_CIP_ONLY_SCHOOL_PROGRAMME_CHOICES_2025 = %i[
     full_induction_programme
     core_induction_programme
+    no_early_career_teachers
   ].freeze
 
   PROGRAMME_CHOICES_2025 = {
@@ -51,15 +64,6 @@ module TrainingProgrammeOptions
       name: "We do not expect any early career teachers to join",
       description: "Your school does not expect any early career teachers this year and we will opt you out of notifications.",
     },
-  }.freeze
-
-  PROGRAMME_SHORT_DESCRIPTION = {
-    full_induction_programme: "Use a training provider funded by the DfE",
-    core_induction_programme: "DfE-accredited materials",
-    design_our_own: "Design and deliver your own programme based on the early career framework (ECF)",
-    school_funded_fip: "Use a training provider funded by your school",
-    no_early_career_teachers: "No early career teachers for this cohort",
-    not_yet_known: "Not yet decided",
   }.freeze
 
   PROGRAMME_SHORT_DESCRIPTION_2025 = {
