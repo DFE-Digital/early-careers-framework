@@ -19,8 +19,4 @@ When we publish a new API version, only one previous version will remain support
 
 Note, there's an exception to this rule for `v3`. We're supporting `v1` for an extended period while we work with providers on transition plans.
 
-When we make non-breaking updates (sometimes referred to as backwards compatible updates), we will not re-version the API. An example of a non-breaking change would be when we introduce a new attribute without removing an existing one.
-
-If we change the API so it’s no longer able to work with older data or functionality, we’ll publish a new version. This is specified in the URL `/api/v{n}/`. For example, `/api/v1/` or `/api/v2/` and so on. We recommend lead providers use the latest version of the API.
-
 When we make non-breaking updates (sometimes referred to as backwards compatible updates), we will not re-version the API. An example of a non-breaking change would be when we introduce a new attribute without removing an existing one. 
