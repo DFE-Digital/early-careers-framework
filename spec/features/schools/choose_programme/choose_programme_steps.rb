@@ -223,12 +223,16 @@ module ChooseProgrammeSteps
   end
 
   def and_i_see_programme_to_dfe_accredited_materials
-    expect(page).to have_summary_row("Programme", "DfE-accredited materials")
+    if FeatureFlag.active?(:programme_type_changes_2025)
+      expect(page).to have_summary_row("Programme", "School-led training")
+    else
+      expect(page).to have_summary_row("Programme", "DfE-accredited materials")
+    end
   end
 
   def and_i_see_programme_to_design_and_deliver_own_programme
     if FeatureFlag.active?(:programme_type_changes_2025)
-      expect(page).to have_summary_row("Programme", "DfE-accredited materials")
+      expect(page).to have_summary_row("Programme", "School-led training")
     else
       expect(page).to have_summary_row("Programme", "Design and deliver your own programme based on the early career framework (ECF)")
     end
