@@ -22,19 +22,35 @@ module AdminHelper
   end
 
   def induction_programme_friendly_name(name, short: false)
-    long_names = {
-      "full_induction_programme" => "Full induction programme",
-      "core_induction_programme" => "Core induction programme",
-      "design_our_own" => "Design our own",
-      "school_funded_fip" => "School funded full induction programme",
-    }.freeze
+    if FeatureFlag.active?(:programme_type_changes_2025)
+      long_names = {
+        "full_induction_programme" => "Provider-led funded by the DfE",
+        "core_induction_programme" => "School-led",
+        "design_our_own" => "School-led",
+        "school_funded_fip" => "Provider-led funded by the school",
+      }.freeze
 
-    short_names = {
-      "full_induction_programme" => "FIP",
-      "core_induction_programme" => "CIP",
-      "design_our_own" => "Design our own",
-      "school_funded_fip" => "School funded FIP",
-    }.freeze
+      short_names = {
+        "full_induction_programme" => "Provider-led",
+        "core_induction_programme" => "School-led",
+        "design_our_own" => "School-led",
+        "school_funded_fip" => "Provider-led",
+      }.freeze
+    else
+      long_names = {
+        "full_induction_programme" => "Full induction programme",
+        "core_induction_programme" => "Core induction programme",
+        "design_our_own" => "Design our own",
+        "school_funded_fip" => "School funded full induction programme",
+      }.freeze
+
+      short_names = {
+        "full_induction_programme" => "FIP",
+        "core_induction_programme" => "CIP",
+        "design_our_own" => "Design our own",
+        "school_funded_fip" => "School funded FIP",
+      }.freeze
+    end
 
     short ? short_names.fetch(name) : long_names.fetch(name)
   end
