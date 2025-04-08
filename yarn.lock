@@ -3624,7 +3624,7 @@ __metadata:
     prettier: "npm:^2.8.8"
     sass: "npm:^1.86.3"
     terser-webpack-plugin: "npm:^5.3.14"
-    webpack: "npm:^5.98"
+    webpack: "npm:^5.99"
     webpack-assets-manifest: "npm:^5.2.1"
     webpack-cli: "npm:^5.1.4"
     webpack-dev-server: "npm:^4.15.2"
@@ -8035,9 +8035,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"webpack@npm:^5.98":
-  version: 5.98.0
-  resolution: "webpack@npm:5.98.0"
+"webpack@npm:^5.99":
+  version: 5.99.2
+  resolution: "webpack@npm:5.99.2"
   dependencies:
     "@types/eslint-scope": "npm:^3.7.7"
     "@types/estree": "npm:^1.0.6"
@@ -8067,7 +8067,7 @@ __metadata:
       optional: true
   bin:
     webpack: bin/webpack.js
-  checksum: bee4fa77f444802f0beafb2ff30eb5454a606163ad7d3cc9a5dcc9d24033c62407bed04601b25dea49ea3969b352c1b530a86c753246f42560a4a084eefb094e
+  checksum: 9ad89d986f078311f96284862f12323ff0b55ef23065506043ccccbfb06f60fc0d30423b2a41a6db982666fc7c39b80eb687b6c05319ad1cac3b6e3bbf87fde4
   languageName: node
   linkType: hard
 
