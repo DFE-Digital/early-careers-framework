@@ -5,24 +5,18 @@ weight: 1
 
 # About the API
 
-The Department of Education (DfE) has developed an API for the Manage teacher continuing professional development service. 
+Lead providers must use this API to view, submit and update participant data so they receive accurate payments from the Department for Education (DfE) for their ECF-based training.
 
-It lets lead providers view, submit and update data associated with Early Career Framework (ECF) based training. The data submitted is used to facilitate payment from the DfE to providers.
-
-Once an ECF participant has been registered to the service, data associated with them becomes available via the API.
-
-Once integrated with the API, providers can, for example, view and update participant details, or notify DfE that they have completed training by submitting a declaration.
+Once a participant has been registered to the service by their school, data associated with them becomes available to lead providers via the API.
 
 ## API versions and updates
 
-The DfE works to continually improve the API service and new functionality occasionally becomes available. Guidance is reviewed and updated as necessary.
+We regularly make improvements and add new functionality to the API. View our [release notes](/api-reference/release-notes) to find out about the latest updates.
 
-If the API changes in a way that is backwards-incompatible, a new version of the API will be published. This is specified in the URL `/api/v{n}/`. For example, `/api/v1/` or  `/api/v2/` and so on. 
+If we change the API so it’s no longer able to work with older data or functionality, we’ll publish a new version. This is specified in the `URL /api/v{n}/`. For example, `/api/v1/` or `/api/v2/` and so on. We recommend lead providers use the latest version of the API.
 
-When the DfE publishes a new API version, only one previous version will remain supported. For example, when a `v4` is released then `v2` will be discontinued.
+When we publish a new API version, only one previous version will remain supported. For example, when a `v4` is released, `v2` will be discontinued.
 
-Note, there will be an exception to this rule for API `v3`. DfE will support `v1` for an extended period whilst working with providers on transition plans.
+Note, there's an exception to this rule for `v3`. We're supporting `v1` for an extended period while we work with providers on transition plans.
 
-When non-breaking updates (sometimes referred to as backwards compatible updates) are made, the API will not be re-versioned. An example of a non-breaking change would be the introduction of a new attribute without removing an existing attribute. 
-
-Summaries of all API updates can be found in the [API release notes](/api-reference/release-notes).
+When we make non-breaking updates (sometimes referred to as backwards compatible updates), we will not re-version the API. An example of a non-breaking change would be when we introduce a new attribute without removing an existing one. 
