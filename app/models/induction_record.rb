@@ -251,9 +251,9 @@ class InductionRecord < ApplicationRecord
 
   def induction_type
     if enrolled_in_cip?
-      ProgrammeTypeMappings.training_programme_friendly_name("core_induction_programme", short: true)
+      ProgrammeTypeMappings.training_programme_friendly_name("core_induction_programme", length: :short)
     elsif enrolled_in_fip?
-      ProgrammeTypeMappings.training_programme_friendly_name("full_induction_programme", short: true)
+      ProgrammeTypeMappings.training_programme_friendly_name("full_induction_programme", length: :short)
     end
   end
 

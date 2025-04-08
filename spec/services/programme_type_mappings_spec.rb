@@ -102,10 +102,10 @@ RSpec.describe ProgrammeTypeMappings do
     end
 
     describe ".training_programme_friendly_name" do
-      subject { described_class.training_programme_friendly_name(training_programme, short:) }
+      subject { described_class.training_programme_friendly_name(training_programme, length:) }
 
-      context("when short: false") do
-        let(:short) { false }
+      context("when length: :long") do
+        let(:length) { :long }
 
         context "when mappings are enabled" do
           let(:mappings_enabled) { true }
@@ -156,8 +156,8 @@ RSpec.describe ProgrammeTypeMappings do
         end
       end
 
-      context("when short: true") do
-        let(:short) { true }
+      context("when length: :short") do
+        let(:length) { :short }
 
         context "when mappings are enabled" do
           let(:mappings_enabled) { true }

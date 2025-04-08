@@ -473,7 +473,7 @@ RSpec.describe InductionRecord, type: :model do
       let(:induction_record) { Induction::Enrol.call(participant_profile: create(:ect_participant_profile), induction_programme:) }
 
       it "calls ProgrammeTypeMappings with correct params" do
-        expect(ProgrammeTypeMappings).to receive(:training_programme_friendly_name).with("core_induction_programme", short: true)
+        expect(ProgrammeTypeMappings).to receive(:training_programme_friendly_name).with("core_induction_programme", length: :short)
 
         subject
       end
@@ -484,7 +484,7 @@ RSpec.describe InductionRecord, type: :model do
       let(:induction_record) { Induction::Enrol.call(participant_profile: create(:ect_participant_profile), induction_programme:) }
 
       it "calls ProgrammeTypeMappings with correct params" do
-        expect(ProgrammeTypeMappings).to receive(:training_programme_friendly_name).with("full_induction_programme", short: true)
+        expect(ProgrammeTypeMappings).to receive(:training_programme_friendly_name).with("full_induction_programme", length: :short)
 
         subject
       end
