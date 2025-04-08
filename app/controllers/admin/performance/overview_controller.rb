@@ -10,23 +10,55 @@ module Admin::Performance
       @pilot_stats = get_registration_stats
     end
 
+    helper_method :cip_label, :fip_label
+
   private
+
+    def cip_label
+      if FeatureFlag.active?(:programme_type_changes_2025)
+        "Delivering school-led training"
+      else
+        "Delivering their training using DfE materials"
+      end
+    end
+
+    def fip_label
+      if FeatureFlag.active?(:programme_type_changes_2025)
+        "Using provider-led training"
+      else
+        "Using a training provider (full induction programme)"
+      end
+    end
 
     def get_registration_stats
       choices = programme_choices
 
-      OpenStruct.new({
-        cohort:,
-        cip_total: choices.fetch("core_induction_programme", 0),
-        diy_total: choices.fetch("design_our_own", 0),
-        fip_total: choices.fetch("full_induction_programme", 0),
-        no_ects_total: choices.fetch("no_early_career_teachers", 0),
-        total: choices.values.sum,
-        partnership_totals:,
-        ect_count: participants_registered.ects.count,
-        mentors_count: participants_registered.mentors.count,
-        total_participants: participants_registered.count,
-      })
+      if FeatureFlag.active?(:programme_type_changes_2025)
+        OpenStruct.new({
+          cohort:,
+          cip_total: choices.fetch("core_induction_programme", 0) + choices.fetch("design_our_own", 0),
+          fip_total: choices.fetch("full_induction_programme", 0),
+          no_ects_total: choices.fetch("no_early_career_teachers", 0),
+          total: choices.values.sum,
+          partnership_totals:,
+          ect_count: participants_registered.ects.count,
+          mentors_count: participants_registered.mentors.count,
+          total_participants: participants_registered.count,
+        })
+      else
+        OpenStruct.new({
+          cohort:,
+          cip_total: choices.fetch("core_induction_programme", 0),
+          diy_total: choices.fetch("design_our_own", 0),
+          fip_total: choices.fetch("full_induction_programme", 0),
+          no_ects_total: choices.fetch("no_early_career_teachers", 0),
+          total: choices.values.sum,
+          partnership_totals:,
+          ect_count: participants_registered.ects.count,
+          mentors_count: participants_registered.mentors.count,
+          total_participants: participants_registered.count,
+        })
+      end
     end
 
     def programme_choices

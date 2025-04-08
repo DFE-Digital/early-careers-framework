@@ -69,17 +69,37 @@ RSpec.describe AdminHelper, type: :helper do
   end
 
   describe "#induction_programme_friendly_name" do
-    context("when short: false") do
-      it "returns human readable names for induction programmes" do
-        expect(induction_programme_friendly_name("full_induction_programme")).to eql("Full induction programme")
-        expect(induction_programme_friendly_name("school_funded_fip")).to eql("School funded full induction programme")
+    context "when programme type changes for 2025 flag is inactive", with_feature_flags: { programme_type_changes_2025: "inactive" } do
+      context("when short: false") do
+        it "returns human readable names for induction programmes" do
+          expect(induction_programme_friendly_name("full_induction_programme")).to eql("Full induction programme")
+          expect(induction_programme_friendly_name("school_funded_fip")).to eql("School funded full induction programme")
+        end
+      end
+
+      context("when short: false") do
+        it "returns shortened readable names for induction programmes" do
+          expect(induction_programme_friendly_name("full_induction_programme", short: true)).to eql("FIP")
+          expect(induction_programme_friendly_name("school_funded_fip", short: true)).to eql("School funded FIP")
+        end
       end
     end
 
-    context("when short: false") do
-      it "returns shortened readable names for induction programmes" do
-        expect(induction_programme_friendly_name("full_induction_programme", short: true)).to eql("FIP")
-        expect(induction_programme_friendly_name("school_funded_fip", short: true)).to eql("School funded FIP")
+    context "when programme type changes for 2025 flag is active", with_feature_flags: { programme_type_changes_2025: "active" } do
+      context("when short: false") do
+        it "returns human readable names for induction programmes" do
+          expect(induction_programme_friendly_name("full_induction_programme")).to eql("Provider-led funded by the DfE")
+          expect(induction_programme_friendly_name("core_induction_programme")).to eql("School-led")
+          expect(induction_programme_friendly_name("school_funded_fip")).to eql("Provider-led funded by the school")
+        end
+      end
+
+      context("when short: false") do
+        it "returns shortened readable names for induction programmes" do
+          expect(induction_programme_friendly_name("full_induction_programme", short: true)).to eql("Provider-led")
+          expect(induction_programme_friendly_name("core_induction_programme", short: true)).to eql("School-led")
+          expect(induction_programme_friendly_name("school_funded_fip", short: true)).to eql("Provider-led")
+        end
       end
     end
   end
