@@ -472,6 +472,8 @@ RSpec.describe InductionRecord, type: :model do
       let(:induction_programme) { create(:induction_programme, :cip) }
       let(:induction_record) { Induction::Enrol.call(participant_profile: create(:ect_participant_profile), induction_programme:) }
 
+      it { is_expected.to eq("CIP") }
+
       it "calls ProgrammeTypeMappings with correct params" do
         expect(ProgrammeTypeMappings).to receive(:training_programme_friendly_name).with("core_induction_programme", length: :short)
 
@@ -482,6 +484,8 @@ RSpec.describe InductionRecord, type: :model do
     context "when enrolled in fip " do
       let(:induction_programme) { create(:induction_programme, :fip) }
       let(:induction_record) { Induction::Enrol.call(participant_profile: create(:ect_participant_profile), induction_programme:) }
+
+      it { is_expected.to eq("FIP") }
 
       it "calls ProgrammeTypeMappings with correct params" do
         expect(ProgrammeTypeMappings).to receive(:training_programme_friendly_name).with("full_induction_programme", length: :short)

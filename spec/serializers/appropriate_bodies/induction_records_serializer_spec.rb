@@ -39,7 +39,7 @@ module AppropriateBodies
       context "when the programme_type_changes_2025 feature flag is enabled" do
         before { FeatureFlag.activate(:programme_type_changes_2025) }
 
-        it "returns valid hash" do
+        it "returns the correct `induction_type`" do
           expect(subject.serializable_hash[:data][:attributes]).to eq(
             full_name: participant_profile.user.full_name,
             trn: participant_profile.teacher_profile.trn,
