@@ -33,10 +33,13 @@ module Participants
     end
 
     def amend_cohort_to_continue_training
-      @amend_cohort_to_continue_training ||= Induction::AmendParticipantCohort.new(participant_profile:,
-                                                                                   source_cohort_start_year:,
-                                                                                   target_cohort_start_year:,
-                                                                                   force_from_frozen_cohort: true)
+      @amend_cohort_to_continue_training ||=
+        Induction::AmendParticipantCohort.new(participant_profile:,
+                                              source_cohort_start_year:,
+                                              target_cohort_start_year:,
+                                              force_from_frozen_cohort: true).tap do
+          participant_profile.reload
+        end
     end
 
     def clear_participant_continue_training_errors
@@ -44,7 +47,7 @@ module Participants
     end
 
     def complete_induction
-      Induction::Complete.call(participant_profile:, completion_date:)
+      Induction::Complete.call(participant_profile:, completion_date:).tap { participant_profile.reload }
     end
 
     def complete_induction?
@@ -114,7 +117,7 @@ module Participants
     end
 
     def sync_with_dqt
-      Participants::SyncDQTInductionStartDate.call(start_date, participant_profile)
+      Participants::SyncDQTInductionStartDate.call(start_date, participant_profile).tap { participant_profile.reload }
     end
 
     def target_cohort
