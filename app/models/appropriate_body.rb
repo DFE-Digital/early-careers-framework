@@ -28,7 +28,7 @@ class AppropriateBody < ApplicationRecord
   scope :nationals, -> { where(body_type: :national) }
   scope :active_in_year, ->(year) { where("disable_from_year IS NULL OR disable_from_year > ?", year) }
 
-  after_save :update_analytics
+  after_commit :update_analytics
 
   def self.ransackable_attributes(_auth_object = nil)
     %w[name]
@@ -45,6 +45,6 @@ class AppropriateBody < ApplicationRecord
 private
 
   def update_analytics
-    Analytics::UpsertECFAppropriateBodyJob.perform_later(appropriate_body: self) if saved_changes?
+    Analytics::UpsertECFAppropriateBodyJob.perform_later(appropriate_body: self) if transaction_changed_attributes.any?
   end
 end

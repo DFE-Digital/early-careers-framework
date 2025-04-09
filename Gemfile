@@ -33,6 +33,9 @@ gem "ar-uuid", "~> 0.2.3"
 # Use Puma as the app server
 gem "puma", "~> 6.0"
 
+# after_commit track changes
+gem "ar_transaction_changes"
+
 # Soft delete
 gem "discard", "~> 1.4"
 

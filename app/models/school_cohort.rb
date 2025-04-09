@@ -44,7 +44,7 @@ class SchoolCohort < ApplicationRecord
   delegate :description, :academic_year, :start_year, to: :cohort
   delegate :delivery_partner_to_be_confirmed, to: :default_induction_programme
 
-  after_save :update_analytics
+  after_commit :update_analytics
 
   after_save do |school_cohort|
     unless school_cohort.saved_changes.empty?
@@ -119,6 +119,6 @@ class SchoolCohort < ApplicationRecord
 private
 
   def update_analytics
-    Analytics::UpsertECFSchoolCohortJob.perform_later(school_cohort: self) if saved_changes?
+    Analytics::UpsertECFSchoolCohortJob.perform_later(school_cohort: self) if transaction_changed_attributes.any?
   end
 end
