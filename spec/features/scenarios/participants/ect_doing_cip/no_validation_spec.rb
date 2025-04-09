@@ -23,7 +23,6 @@ RSpec.feature "ECT doing CIP: no validation", type: :feature, early_in_cohort: t
   let(:long_participant_type) { "Early career teacher" }
   let(:participant_class) { "ParticipantProfile::ECT" }
   let(:programme_type) { "core_induction_programme" }
-  let(:programme_name) { "Core induction programme" }
   let(:schedule_identifier) { "ecf-standard-september" }
   let(:cip_material_provider) { "Education Development Trust" }
   let(:cip_materials) { "edt" }
@@ -75,6 +74,11 @@ RSpec.feature "ECT doing CIP: no validation", type: :feature, early_in_cohort: t
 
   %w[active inactive].each do |flag_state|
     context "when programme type changes for 2025 are #{flag_state}", with_feature_flags: { programme_type_changes_2025: flag_state } do
+      let(:programme_name) do
+        # FIXME: LPDOB have used "School led" instead of "School-led" so using that until fixed
+        flag_state == "inactive" ? "Core induction programme" : "School led"
+      end
+
       scenario "The current school induction tutor can locate a record for the ECT" do
         given_i_sign_in_as_the_user_with_the_full_name sit_full_name
 
