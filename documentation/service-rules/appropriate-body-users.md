@@ -35,7 +35,7 @@ They can also view their appropriate body ID. This is referred to later as an em
 ---
 ### Individually claim an ECT for their induction status with the TRA
 
-The process of 'claiming' an ECT refers to an AB telling the TRA which ECTs they are quality assuring the induction of. 
+The process of 'claiming' an ECT refers to an AB telling the TRA which ECTs they are quality assuring the induction of.
 
 The appropriate body needs to enter both the date of birth and the TRN number for the ECT record to show up and be claimed.
 
@@ -54,7 +54,7 @@ If the ECT has previously failed induction, they cannot do induction again.
 * 📜 This is due to policy restricting those who have failed from reapplying to practice teaching. [AB
 guidance details this here.](https://assets.publishing.service.gov.uk/media/6629237f3b0122a378a7e6ef/Induction_for_early_career_teachers__England__statutory_guidance_.pdf)
 
---- 
+---
 
 If an early career teacher did their initial teacher training (ITT) through an accredited ITT provider who is also an AB, the school cannot appoint that appropriate body for that teacher.
 
@@ -80,9 +80,9 @@ When the portal pulls up the record for the ECT, it would show:
 
 -   The date they achieved QTS
 
--   Induction, which is the current status of their induction. 
+-   Induction, which is the current status of their induction.
 
-This status would be one of the following: in progress, pass, fail, extended, not yet completed (when they have stopped induction with 
+This status would be one of the following: in progress, pass, fail, extended, not yet completed (when they have stopped induction with
 their current appropriate body but not finished their induction)
 
 #### Teacher details
@@ -170,7 +170,7 @@ The induction history table shows the following:
 -   Number of terms (this must be a whole number, and this is given when the
     ECT is released)
 
--   Induction programme type (FIP/CIP/DIY)
+-   Induction programme type (Provider led or School led)
 
 Below the induction history are 2 more subheadings:
 
@@ -215,7 +215,7 @@ When they are claiming an ECT, the appropriate body user needs to state:
 
 1.  When the induction began for that ECT with that appropriate body
 
-2.  What type of induction programme they are doing (FIP, CIP, DIY)
+2.  What type of induction programme they are doing (Provider led or School led)
 
 On 1, there is validation that makes sure the date given isn't
 before the date QTS was recorded. This is because induction should only
@@ -272,7 +272,7 @@ regardless of reasons for leaving allows their record to be picked up
 from where it was last updated.
 
 ---
-### Pass or fail an ECT's induction 
+### Pass or fail an ECT's induction
 
 This would be under where AB users 5ecord an induction outcome.
 
@@ -365,7 +365,7 @@ be a GDPR breach to show this to users that do not require access.
 this data. This is why it is escalated to policy teams, not just support
 teams. Appropriate bodies are often delivery partners too. The Appropriate
 bodies and regulation team gives information to the policy team on who
-is serving as an appropriate body. 
+is serving as an appropriate body.
 
 ---
 Those users will then receive an email notification that they can sign
@@ -427,7 +427,7 @@ their own data and information on ECTs with what schools had submitted
 in Manage ECTs. This could be useful when submitting other data to the
 Teaching Regulation Agency as well.
 
---- 
+---
 
 It also meant that appropriate bodies could follow up when necessary
 with schools, for example when:
@@ -437,10 +437,10 @@ with schools, for example when:
 * a school has registered an ECT's details directly with them but has
     not registered the ECT correctly on Manage ECTs
 * an appropriate body has concerns that fidelity checks (needed for
-    both CIP and DIY) may be required for an ECT's induction
+    School led) may be required for an ECT's induction
 * an appropriate body may need to use this to double-check they have
     successfully registered for induction any ECTs on the TRA AB portal
-    
+
 ---
 
 There was also a hope that showing this information schools had
@@ -484,7 +484,7 @@ expand to other academic years.
 
 -   Status (defined below)
 
--   Induction type (FIP, CIP or DIY)
+-   Induction type (Provider led or School led)
 
 -   Induction tutor (their email)
 
