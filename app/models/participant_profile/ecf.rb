@@ -40,7 +40,7 @@ class ParticipantProfile::ECF < ParticipantProfile
   scope :ineligible_status, -> { joins(:ecf_participant_eligibility).where(ecf_participant_eligibility: { status: :ineligible }).where.not(ecf_participant_eligibility: { reason: %i[previous_participation duplicate_profile] }) }
 
   # Callbacks
-  after_save :update_analytics
+  after_commit :update_analytics
   after_update :sync_status_with_induction_record
   after_update :update_declaration_types!, if: :saved_change_to_type?
 
@@ -194,7 +194,7 @@ class ParticipantProfile::ECF < ParticipantProfile
 private
 
   def update_analytics
-    Analytics::UpsertECFParticipantProfileJob.perform_later(participant_profile: self) if saved_changes?
+    Analytics::UpsertECFParticipantProfileJob.perform_later(participant_profile: self) if transaction_changed_attributes.any?
   end
 
   def sync_status_with_induction_record

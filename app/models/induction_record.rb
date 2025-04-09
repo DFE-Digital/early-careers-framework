@@ -89,7 +89,7 @@ class InductionRecord < ApplicationRecord
   scope :oldest, -> { oldest_first.first }
 
   # Callbacks
-  after_save :update_analytics
+  after_commit :update_analytics
 
   # Class Methods
   def self.latest
@@ -256,6 +256,6 @@ private
   end
 
   def update_analytics
-    Analytics::UpsertECFInductionJob.perform_later(induction_record: self) if saved_changes?
+    Analytics::UpsertECFInductionJob.perform_later(induction_record: self) if transaction_changed_attributes.any?
   end
 end
