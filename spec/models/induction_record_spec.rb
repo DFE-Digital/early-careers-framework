@@ -460,7 +460,7 @@ RSpec.describe InductionRecord, type: :model do
       expect {
         induction_record.leaving!(1.week.from_now)
       }.to have_enqueued_job(Analytics::UpsertECFInductionJob).with(
-        induction_record:,
+        induction_record_id: induction_record.id,
       )
     end
   end

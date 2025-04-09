@@ -45,6 +45,6 @@ class AppropriateBody < ApplicationRecord
 private
 
   def update_analytics
-    Analytics::UpsertECFAppropriateBodyJob.perform_later(appropriate_body: self) if transaction_changed_attributes.any?
+    Analytics::UpsertECFAppropriateBodyJob.perform_later(appropriate_body_id: id) if transaction_changed_attributes.any?
   end
 end

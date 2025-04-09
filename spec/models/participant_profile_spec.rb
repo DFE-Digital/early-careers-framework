@@ -30,7 +30,7 @@ RSpec.describe ParticipantProfile, type: :model do
     expect {
       profile.save!
     }.to have_enqueued_job(Analytics::UpsertECFParticipantProfileJob).with(
-      participant_profile: profile,
+      participant_profile_id: profile.id,
     )
   end
 
