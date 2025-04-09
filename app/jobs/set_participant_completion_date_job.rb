@@ -20,6 +20,6 @@ class SetParticipantCompletionDateJob < ApplicationJob
 private
 
   def candidates
-    @candidates ||= CompletionCandidate.includes(participant_profile: :teacher_profile).limit(MAX_CANDIDATES)
+    @candidates ||= CompletionCandidate.includes(participant_profile: :teacher_profile).limit(MAX_CANDIDATES).to_a
   end
 end
