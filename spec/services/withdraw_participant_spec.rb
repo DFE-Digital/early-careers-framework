@@ -116,6 +116,7 @@ RSpec.shared_examples "withdrawing a participant" do
     expect(latest_participant_profile_state).to have_attributes(
       participant_profile_id: participant_profile.id,
       state: "withdrawn",
+      reason:,
     )
   end
 
