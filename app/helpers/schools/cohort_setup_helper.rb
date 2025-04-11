@@ -12,5 +12,16 @@ module Schools
     def training_confirmation_template(training_choice)
       TRAINING_CONFIRMATION_TEMPLATES[training_choice.to_sym].to_s
     end
+
+    def programme_radio_options(form, attr_name, choices, legend)
+      args = [
+        attr_name,
+        choices,
+        :id,
+        :name,
+      ]
+      args << :description if FeatureFlag.active?(:programme_type_changes_2025)
+      form.govuk_collection_radio_buttons(*args, legend: { text: legend, tag: "h1", size: "l" })
+    end
   end
 end
