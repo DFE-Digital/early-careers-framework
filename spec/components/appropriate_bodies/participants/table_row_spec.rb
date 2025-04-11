@@ -24,7 +24,7 @@ RSpec.describe AppropriateBodies::Participants::TableRow, type: :component do
     context "when the programme_type_changes_2025 feature flag is enabled" do
       before { FeatureFlag.activate(:programme_type_changes_2025) }
 
-      it { is_expected.to have_text("Provider led") }
+      it { is_expected.to have_text("Provider-led") }
     end
   end
 
@@ -41,7 +41,7 @@ RSpec.describe AppropriateBodies::Participants::TableRow, type: :component do
     context "when the programme_type_changes_2025 feature flag is enabled" do
       before { FeatureFlag.activate(:programme_type_changes_2025) }
 
-      it { is_expected.to have_text("School led") }
+      it { is_expected.to have_text("School-led") }
     end
   end
 end

@@ -25,20 +25,10 @@ en:
     change_to_design_our_own: the school wants to design and deliver their own programme based on the early career framework (ECF)
     change_to_school_funded_fip: the school wants to design and deliver their own programme
   training_programme:
-    short:
-      full_induction_programme: FIP
-      core_induction_programme: CIP
-      design_our_own: Design our own
-      school_funded_fip: School funded FIP
-      provider_led: Provider led
-      school_led: School led
-    long:
-      full_induction_programme: Full induction programme
-      core_induction_programme: Core induction programme
-      design_our_own: Design our own
-      school_funded_fip: School funded full induction programme
-      provider_led: Provider led
-      school_led: School led
+    full_induction_programme: FIP
+    core_induction_programme: CIP
+    provider_led: Provider-led
+    school_led: School-led
 
   # Errors
   fail: "FAIL"

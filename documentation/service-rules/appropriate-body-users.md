@@ -170,7 +170,7 @@ The induction history table shows the following:
 -   Number of terms (this must be a whole number, and this is given when the
     ECT is released)
 
--   Induction programme type (Provider led or School led)
+-   Induction programme type (Provider-led or School-led)
 
 Below the induction history are 2 more subheadings:
 
@@ -215,7 +215,7 @@ When they are claiming an ECT, the appropriate body user needs to state:
 
 1.  When the induction began for that ECT with that appropriate body
 
-2.  What type of induction programme they are doing (Provider led or School led)
+2.  What type of induction programme they are doing (Provider-led or School-led)
 
 On 1, there is validation that makes sure the date given isn't
 before the date QTS was recorded. This is because induction should only
@@ -437,7 +437,7 @@ with schools, for example when:
 * a school has registered an ECT's details directly with them but has
     not registered the ECT correctly on Manage ECTs
 * an appropriate body has concerns that fidelity checks (needed for
-    School led) may be required for an ECT's induction
+    School-led) may be required for an ECT's induction
 * an appropriate body may need to use this to double-check they have
     successfully registered for induction any ECTs on the TRA AB portal
 
@@ -484,7 +484,7 @@ expand to other academic years.
 
 -   Status (defined below)
 
--   Induction type (Provider led or School led)
+-   Induction type (Provider-led or School-led)
 
 -   Induction tutor (their email)
 
