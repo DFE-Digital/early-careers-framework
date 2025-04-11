@@ -475,7 +475,7 @@ RSpec.describe InductionRecord, type: :model do
       it { is_expected.to eq("CIP") }
 
       it "calls ProgrammeTypeMappings with correct params" do
-        expect(ProgrammeTypeMappings).to receive(:training_programme_friendly_name).with("core_induction_programme", length: :short)
+        expect(ProgrammeTypeMappings).to receive(:training_programme_friendly_name).with("core_induction_programme")
 
         subject
       end
@@ -488,7 +488,7 @@ RSpec.describe InductionRecord, type: :model do
       it { is_expected.to eq("FIP") }
 
       it "calls ProgrammeTypeMappings with correct params" do
-        expect(ProgrammeTypeMappings).to receive(:training_programme_friendly_name).with("full_induction_programme", length: :short)
+        expect(ProgrammeTypeMappings).to receive(:training_programme_friendly_name).with("full_induction_programme")
 
         subject
       end

@@ -45,7 +45,7 @@ module AppropriateBodies
             trn: participant_profile.teacher_profile.trn,
             school_urn: induction_record.school.urn,
             status: "ECT not currently linked to you",
-            induction_type: "Provider led",
+            induction_type: "Provider-led",
             induction_tutor: induction_record.school.contact_email,
           )
         end
