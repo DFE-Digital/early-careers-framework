@@ -75,7 +75,7 @@ module Finance
             record.school_urn,
             record.school_name,
             record.training_status,
-            record.training_status_reason,
+            training_status_reason(record),
             record.declaration_id,
             record.declaration_status,
             record.declaration_type,
@@ -85,6 +85,10 @@ module Finance
             record.statement_id,
             record.sparsity_uplift || record.pupil_premium_uplift,
           ]
+        end
+
+        def training_status_reason(record)
+          ProgrammeTypeMappings.withdrawal_reason(reason: record.training_status_reason)
         end
 
         def lead_provider

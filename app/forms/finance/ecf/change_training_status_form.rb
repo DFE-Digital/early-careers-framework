@@ -6,11 +6,6 @@ module Finance
       include ActiveModel::Model
       include ActiveModel::Attributes
 
-      REASON_OPTIONS = {
-        "deferred" => ParticipantProfile::DEFERRAL_REASONS,
-        "withdrawn" => ParticipantProfile::ECF::WITHDRAW_REASONS,
-      }.freeze
-
       attribute :participant_profile
       attribute :training_status
       attribute :reason
@@ -24,7 +19,10 @@ module Finance
       end
 
       def reason_options
-        REASON_OPTIONS.except(current_training_status)
+        {
+          "deferred" => ParticipantProfile::DEFERRAL_REASONS,
+          "withdrawn" => ParticipantProfile::ECF::WITHDRAW_REASONS.map { |reason| ProgrammeTypeMappings.withdrawal_reason(reason:) },
+        }.except(current_training_status)
       end
 
       def current_training_status

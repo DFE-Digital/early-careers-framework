@@ -115,14 +115,36 @@ module Api
             end
 
             context "when the profile is withdrawn" do
+              let(:reason) { "other" }
+
               before do
                 ect_profile.induction_records.latest.update!(training_status: "withdrawn")
-                ect_profile.participant_profile_states.last.update!(state: "withdrawn", reason: "other")
+                ect_profile.participant_profile_states.last.update!(state: "withdrawn", reason:)
               end
 
               it "includes a withdrawal object" do
                 expect(ecf_enrolments[0][:withdrawal][:reason]).to eq("other")
                 expect(ecf_enrolments[0][:withdrawal][:date]).to eql(ect_profile.participant_profile_state.created_at.rfc3339)
+              end
+
+              context "when the withdrawal reason is 'school-left-fip'" do
+                let(:reason) { "school-left-fip" }
+
+                context "when the programme type mappings are enabled" do
+                  before { allow(ProgrammeTypeMappings).to receive(:mappings_enabled?) { true } }
+
+                  it "replaces `school-left-fip` with `switched-to-school-led`" do
+                    expect(ecf_enrolments[0][:withdrawal][:reason]).to eq("switched-to-school-led")
+                  end
+                end
+
+                context "when the programme type mappings are disabled" do
+                  before { allow(ProgrammeTypeMappings).to receive(:mappings_enabled?) { false } }
+
+                  it "does not replace `school-left-fip` with `switched-to-school-led`" do
+                    expect(ecf_enrolments[0][:withdrawal][:reason]).to eq("school-left-fip")
+                  end
+                end
               end
             end
 
