@@ -72,7 +72,7 @@ RSpec.describe "Schools::Participants", type: :request, js: true, with_feature_f
 
       expect {
         put "/schools/#{school.slug}/participants/#{mentor_profile.id}/add-ect", params:
-      }.to have_enqueued_job(Analytics::UpsertECFParticipantProfileJob).with(participant_profile: new_ect)
+      }.to have_enqueued_job(Analytics::UpsertECFParticipantProfileJob).with(participant_profile_id: new_ect.id)
     end
   end
 
@@ -111,7 +111,7 @@ RSpec.describe "Schools::Participants", type: :request, js: true, with_feature_f
       params = { participant_mentor_form: { mentor_id: mentor_user_2.id } }
       expect {
         put "/schools/#{school.slug}/participants/#{ect_profile.id}/update-mentor", params:
-      }.to have_enqueued_job(Analytics::UpsertECFParticipantProfileJob).with(participant_profile: ect_profile)
+      }.to have_enqueued_job(Analytics::UpsertECFParticipantProfileJob).with(participant_profile_id: ect_profile.id)
     end
   end
 

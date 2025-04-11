@@ -30,7 +30,7 @@ RSpec.describe AppropriateBody, type: :model do
 
     expect {
       appropriate_body.update!(name: "Crispy Code")
-    }.to have_enqueued_job(Analytics::UpsertECFAppropriateBodyJob).with(appropriate_body:)
+    }.to have_enqueued_job(Analytics::UpsertECFAppropriateBodyJob).with(appropriate_body_id: appropriate_body.id)
   end
 
   it "filter appropriate bodies disabled in a given year" do
