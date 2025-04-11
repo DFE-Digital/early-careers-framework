@@ -7,7 +7,7 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
-## 9 April 2025
+## 11 April 2025
 
 [#cohort-closure #sandbox-release]
 
