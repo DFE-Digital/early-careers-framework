@@ -4436,19 +4436,19 @@
         }
       },
       "SchoolFundingError": {
-        "description": "School is not eligible for DfE-funded FIP",
+        "description": "The school you have entered has not registered to deliver DfE-funded training. Contact the school for more information.",
         "type": "object",
         "properties": {
           "title": {
             "description": "Title of error message",
             "type": "string",
             "enum": [
-              "School is not eligible for DfE-funded FIP"
+              "The school you have entered has not registered to deliver DfE-funded training. Contact the school for more information."
             ],
-            "example": "School is not eligible for DfE-funded FIP"
+            "example": "The school you have entered has not registered to deliver DfE-funded training. Contact the school for more information."
           },
           "detail": {
-            "description": "Additional info why school is not for DfE-funded FIP if any",
+            "description": "Additional info why school is not for DfE-funded training if any",
             "type": "string"
           }
         }
