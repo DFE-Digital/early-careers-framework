@@ -49,7 +49,7 @@ module EarlyCareerTeachers
     def amend_mentor_cohort
       Induction::AmendParticipantCohort.new(participant_profile: mentor_profile,
                                             source_cohort_start_year: mentor_profile.schedule.cohort.start_year,
-                                            target_cohort_start_year: Cohort.active_registration_cohort.start_year,
+                                            target_cohort_start_year: Cohort::DESTINATION_START_YEAR_FROM_A_FROZEN_COHORT,
                                             force_from_frozen_cohort: true).save
     end
 
