@@ -16,20 +16,13 @@ module AppropriateBodies
       delegate :participant_profile,
                :school,
                :user,
+               :induction_type,
                to: :induction_record,
                allow_nil: true
 
       def initialize(induction_record:, training_record_states:)
         @induction_record = induction_record
         @training_record_states = training_record_states
-      end
-
-      def induction_type
-        if induction_record.enrolled_in_cip?
-          "CIP"
-        elsif induction_record.enrolled_in_fip?
-          "FIP"
-        end
       end
 
       def induction_tutor

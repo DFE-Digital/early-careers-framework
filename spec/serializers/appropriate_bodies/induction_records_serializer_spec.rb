@@ -35,6 +35,21 @@ module AppropriateBodies
           induction_tutor: induction_record.school.contact_email,
         )
       end
+
+      context "when the programme_type_changes_2025 feature flag is enabled" do
+        before { FeatureFlag.activate(:programme_type_changes_2025) }
+
+        it "returns the correct `induction_type`" do
+          expect(subject.serializable_hash[:data][:attributes]).to eq(
+            full_name: participant_profile.user.full_name,
+            trn: participant_profile.teacher_profile.trn,
+            school_urn: induction_record.school.urn,
+            status: "ECT not currently linked to you",
+            induction_type: "Provider-led",
+            induction_tutor: induction_record.school.contact_email,
+          )
+        end
+      end
     end
   end
 end
