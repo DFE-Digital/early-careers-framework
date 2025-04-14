@@ -59,12 +59,11 @@ class ParticipantProfile::ECF < ParticipantProfile
     completed_billable_declarations = completed_billable_declarations.where(participant_profile_id: restrict_to_participant_ids) if restrict_to_participant_ids.any?
 
     query = joins(:participant_declarations, schedule: :cohort)
-      .where(type: "ParticipantProfile::ECT")
       .where.not(cohorts: { payments_frozen_at: nil })
       .where("participant_declarations.state IN (?) AND declaration_type != ?", Finance::StatementLineItem::BILLABLE_STATES, "completed")
       .where.not(id: completed_billable_declarations.select(:participant_profile_id))
       .distinct
-
+    query = query.where(type: "ParticipantProfile::ECT") if FeatureFlag.active?(:closing_2022)
     query = query.where(id: restrict_to_participant_ids) if restrict_to_participant_ids.any?
 
     query
@@ -177,7 +176,7 @@ class ParticipantProfile::ECF < ParticipantProfile
   end
 
   def unfinished_with_no_billable_declaration?(cohort:)
-    return false if mentor?
+    return false if mentor? && FeatureFlag.active?(:closing_2022)
     return false if completed_training?
     return false unless cohort&.start_year == Cohort::DESTINATION_START_YEAR_FROM_A_FROZEN_COHORT
     return false unless schedule&.cohort&.payments_frozen?
