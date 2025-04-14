@@ -25,6 +25,7 @@ class FeatureFlag
     school_participant_status_language
     registration_pilot_school
     programme_type_changes_2025
+    closing_2022
   ].freeze
 
   FEATURES = (PERMANENT_SETTINGS + TEMPORARY_FEATURE_FLAGS).index_with { |name|
