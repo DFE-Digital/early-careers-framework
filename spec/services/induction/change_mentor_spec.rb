@@ -76,11 +76,19 @@ RSpec.describe Induction::ChangeMentor do
 
         before do
           current_cohort.update!(payments_frozen_at: Time.current)
+        end
+
+        it "places the mentor in the destination cohort from frozen cohorts", with_feature_flags: { closing_2022: "active" } do
           allow(mentor_profile).to receive(:unfinished_with_billable_declaration?).and_return(true)
           service.call(induction_record:, mentor_profile:)
+
+          expect(current_cohort).not_to eq(cohort)
+          expect(mentor_profile.reload.schedule.cohort_id).to eq(cohort.id)
         end
 
         it "places the mentor in the destination cohort from frozen cohorts" do
+          service.call(induction_record:, mentor_profile:)
+
           expect(current_cohort).not_to eq(cohort)
           expect(mentor_profile.reload.schedule.cohort_id).to eq(cohort.id)
         end
@@ -105,11 +113,20 @@ RSpec.describe Induction::ChangeMentor do
 
         before do
           mentor_cohort.update!(payments_frozen_at: Time.current)
+        end
+
+        it "places the mentor in the currently active cohort for registration", with_feature_flags: { closing_2022: "active" } do
           allow(mentor_profile).to receive(:unfinished_with_no_billable_declaration?).and_return(true)
+
           service.call(induction_record:, mentor_profile:)
+
+          expect(mentor_cohort).not_to eq(cohort)
+          expect(mentor_profile.reload.schedule.cohort_id).to eq(cohort.id)
         end
 
         it "places the mentor in the currently active cohort for registration" do
+          service.call(induction_record:, mentor_profile:)
+
           expect(mentor_cohort).not_to eq(cohort)
           expect(mentor_profile.reload.schedule.cohort_id).to eq(cohort.id)
         end

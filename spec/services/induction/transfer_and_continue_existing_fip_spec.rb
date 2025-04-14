@@ -140,9 +140,16 @@ RSpec.describe Induction::TransferAndContinueExistingFip do
         frozen_cohort.update!(payments_frozen_at: 1.month.ago)
       end
 
-      it "don't move the mentor from their current cohort" do
+      it "don't move the mentor from their current cohort", with_feature_flags: { closing_2022: "active" } do
         expect { service_call }
           .not_to change { mentor_profile_2.reload.schedule.cohort.start_year }
+      end
+
+      it "moves the mentor to the currently active registration cohort" do
+        expect { service_call }
+          .to change { mentor_profile_2.reload.schedule.cohort.start_year }
+                .from(2021)
+                .to(Cohort.active_registration_cohort.start_year)
       end
     end
 
