@@ -34,8 +34,12 @@ RSpec.describe CourseValidator do
       subject { klass.new(participant_identity:, course_identifier:) }
 
       context "with one identity" do
-        it "is valid" do
-          expect(subject).to be_valid
+        it { is_expected.to be_valid }
+
+        context "when the profile status is not active" do
+          before { profile.withdrawn_record! }
+
+          it { is_expected.to be_invalid }
         end
       end
 
@@ -52,17 +56,13 @@ RSpec.describe CourseValidator do
           )
         end
 
-        it "is valid" do
-          expect(subject).to be_valid
-        end
+        it { is_expected.to be_valid }
       end
 
       context "with different course_identifier" do
         let(:course_identifier) { "incorrect-course-identifier" }
 
-        it "is invalid" do
-          expect(subject).to be_invalid
-        end
+        it { is_expected.to be_invalid }
       end
     end
   end
