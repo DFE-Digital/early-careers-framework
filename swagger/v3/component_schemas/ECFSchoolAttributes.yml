@@ -30,10 +30,8 @@ properties:
     type: string
     example: not_yet_known
     enum:
-      - core_induction_programme
-      - full_induction_programme
-      - design_our_own
-      - school_funded_fip
+      - school_led
+      - provider_led
       - no_early_career_teachers
       - not_yet_known
   created_at:

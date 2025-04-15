@@ -3273,7 +3273,7 @@
               "left-teaching-profession",
               "moved-school",
               "mentor-no-longer-being-mentor",
-              "school-left-fip",
+              "switched-to-school-led",
               "other"
             ],
             "example": "left-teaching-profession"
@@ -3666,10 +3666,8 @@
             "type": "string",
             "example": "not_yet_known",
             "enum": [
-              "core_induction_programme",
-              "full_induction_programme",
-              "design_our_own",
-              "school_funded_fip",
+              "school_led",
+              "provider_led",
               "no_early_career_teachers",
               "not_yet_known"
             ]
@@ -3759,7 +3757,7 @@
               "left-teaching-profession",
               "moved-school",
               "mentor-no-longer-being-mentor",
-              "school-left-fip",
+              "switched-to-school-led",
               "other"
             ]
           },
