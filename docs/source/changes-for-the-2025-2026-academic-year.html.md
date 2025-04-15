@@ -6,6 +6,7 @@ weight: 3
 # Changes for the 2025/26 academic year  
 
 Published: 25 February 2025
+Updated: 15 April 2025
 
 This is a summary of planned changes to API processes lead providers will see when early career teacher (ECT) and mentor registrations open (date to be confirmed). 
 
@@ -81,20 +82,145 @@ We’ll be making the following changes to the `induction_programme_choice` fiel
 
 <div class="govuk-inset-text">These changes will apply across all cohorts. We’ll contact providers directly to ensure their integrations can support the new values.</div>
 
-## Seed data for testing 
+## API testing and integration  
 
-We’ll generate seed data to go with each release to help providers test the new scenarios. Providers should contact us via the usual channels if they need more data or specific formats.  
+The introduction of the 2025 contracts requires updates to the API service. 
 
-## Timelines 
-
-We plan to have all these changes ready for integration well ahead of registration opening for the 2025/26 academic year’s intake.  
-
-We’ll update the test environment in the following order: 
-
-1. Mentor funding (late February 2025).
-2. Evidence types (mid-March 2025).
-3. Induction programme type changes (following provider consultation, spring 2025).
+To help lead providers prepare for the opening of ECF registration, we'll run a testing window throughout May 2025. 
 
 Refer to our [release notes](/api-reference/release-notes.html) for all the relevant spec changes.
 
-As always, we’d welcome feedback any of these updates before they go into production.
+### Timelines 
+
+As set out in the Model Call-off Contract, lead providers must complete testing by 1 June 2025. This is to ensure there’s enough time to resolve any urgent issues or integration challenges ahead of registration opening for the 2025/26 academic year on 30 June 2025. 
+
+#### Timeline overview 
+
+| Date | Activity |  
+| -------- | -------- | 
+| By 22 April | Test data added to test environment (sandbox) 
+| By 30 April | Test scenarios shared with lead providers |  
+| Throughout May | DfE product team will join digital check-ins | 
+| By 16 May | Providers should attempt all test scenarios | 
+| By 1 June | Deadline for providers to submit testing evidence | 
+| By 6 June | Deadline for providers to raise any issues or defects | 
+| By 13 June | DfE will have resolved any identified defects |  
+| 16 June | Soft launch of registration (for selected schools) |  
+| 30 June | Full registration opens |  
+
+### Affected API endpoints 
+
+These changes affect the following endpoints: 
+
+* `GET schools` – affected by induction type changes
+* `GET participants` – affected by induction type changes
+* `PUT participants` and `PUT participants/ecf/{id}/withdraw` – includes new withdrawal reasons
+* `POST participant-declarations` – updated for mentor funding and evidence types
+* `GET participant-declarations` – updated for mentor funding and evidence types 
+
+### Support from DfE 
+
+During testing, we recommend lead providers: 
+
+* use existing Slack channels and check-in sessions to raise questions 
+* review all provided API documentation and guidance 
+
+We will: 
+
+* give timely access to technical support, including one to one sessions (contact digital engagement leads for more details)
+* monitor testing to anticipate provider needs 
+
+### Integration changes to consider 
+
+#### Evidence types 
+
+New values must be added to evidence types to meet 2025 policy requirements. Pay close attention to: 
+
+* `retained-2` declarations for ECTs
+* `completed` declarations for all participants 
+
+#### Mentor declarations 
+
+The API will reject retained or extended declarations for 2025 mentors. Providers must ensure their systems do not submit these declarations. We'll monitor the endpoint but will not run tests to prevent submissions. 
+
+#### School induction types 
+
+Language used in the `GET schools` endpoint will change. This is not expected to affect how the endpoint functions. However, lead providers should: 
+
+* resync with the API
+* review downstream systems for impacts 
+ 
+#### Withdrawal reasons 
+
+We’re adding a new value for participant withdrawals: `school-left-provider-led-programme` 
+
+Providers must ensure their systems can both submit and process this new value. 
+
+### API integration testing 
+
+Lead providers must test to confirm: 
+
+* functionality has not been lost
+* all common journeys work as expected
+* their systems integrate correctly with the updated API 
+
+#### Testing areas 
+
+Providers will be expected to complete and provide evidence for the following: 
+
+##### Updated evidence types 
+
+Test declaration submissions using these values: 
+
+* `started` (ECTs and mentors)
+* `retained-1`, `retained-2`, `retained-3`, `retained-4` (ECTs only)
+* `completed` (ECTs and mentors)
+* `extended` (ECTs only) 
+
+##### Mentor declarations 
+
+We'll provide participant IDs. Providers must demonstrate correct declaration submissions for both ECTs and mentors. 
+
+##### Withdrawal scenarios 
+
+Test withdrawing a participant using the new reason: `school-left-provider-led-programme` 
+
+##### Creating partnerships 
+
+This will not be tested directly. However, to submit declarations, a lead provider must first create a partnership between an eligible school and a delivery partner. 
+
+##### Full sync tests 
+
+Run full syncs on: 
+
+* `GET schools`
+* `GET participants`
+* `GET participant-declarations` 
+
+Providers must check that changes are accepted and that they remain within rate limits. 
+
+### Test data 
+
+We'll add test data to the ECF sandbox by 22 April 2025. This will include: 
+
+* schools with different induction types for the 2024 and 2025 cohorts
+* assigned delivery partners for those cohorts
+* participants attached to each school 
+
+If providers need additional data or encounter issues, they should contact their digital engagement lead with detailed information. 
+
+### Deployment readiness checklist 
+
+Before the registration window opens, lead providers must confirm to us that: 
+
+* integrations have been reviewed and updated 
+* test scenarios have been completed and evidenced
+* full syncs using updated APIs are functioning correctly 
+
+We also welcome providers to share their test plans, feedback and concerns via the DfE Slack channel. 
+
+### Related links 
+
+[ECF test environment (sandbox)](https://sb.manage-training-for-early-career-teachers.education.gov.uk)
+
+[ECF API guidance](https://manage-training-for-early-career-teachers.education.gov.uk/api-reference)
