@@ -80,9 +80,7 @@ We’ll be making the following changes to the `induction_programme_choice` fiel
 * `core-induction-programme` and `diy` will change to `school-led`
 * `full-induction-programme` and `school-funded-full-induction-programme` will change to `provider-led`
 
-<div class="govuk-inset-text">These changes will apply across all cohorts. We’ll contact providers directly to ensure their integrations can support the new values.</div>
-
-## API testing and integration  
+<div class="govuk-inset-text">These changes will apply across all cohorts. We’ll contact providers directly to ensure their integrations can support the new values.</div>  
 
 ### Change to withdrawal reason value to reflect new programme types terminology 
 
@@ -94,7 +92,7 @@ As a result, we’ll update records across all cohorts that have previously used
 
 Records that have already been withdrawn using the old value will surface the new value and have a modified `updated_at` timestamp.  
 
-## Seed data for testing 
+## API testing and integration
 
 The introduction of the 2025 contracts requires updates to the API service. 
 
