@@ -12,7 +12,7 @@ properties:
       - left-teaching-profession
       - moved-school
       - mentor-no-longer-being-mentor
-      - school-left-fip
+      - switched-to-school-led
       - other
   date:
     description: The date and time the participant was withdrawn
