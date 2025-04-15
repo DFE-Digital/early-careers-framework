@@ -49,11 +49,11 @@ private
 
   def then_i_should_see_core_induction_programme
     @guidance_page = Pages::LeadProviderPartnershipGuidancePage.new
-    expect(@guidance_page).to have_content("They can only use the accredited materials (core induction programme).")
+    expect(@guidance_page).to have_content("They can only use the accredited materials (Core induction programme).")
   end
 
   def then_i_should_see_school_led
     @guidance_page = Pages::LeadProviderPartnershipGuidancePage.new
-    expect(@guidance_page).to have_content("They can only use the accredited materials (school led).")
+    expect(@guidance_page).to have_content("They can only use the accredited materials (School-led).")
   end
 end
