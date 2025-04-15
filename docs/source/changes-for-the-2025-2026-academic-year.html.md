@@ -65,14 +65,6 @@ For the 2025/26 academic year, every `declaration_type` will have its own `evide
 
 <div class="govuk-inset-text">New evidence types are not compatible with previous cohorts. If providers try using a new evidence type for an older cohort declaration, it will not work and they’ll see a 422-error message.</div>
 
-## What to test ahead of the 2025/26 academic year’s registration opening 
-
-We recommend providers check their integrations can: 
-
-* support all new evidence types  
-* submit `one-term-induction` as `evidence_held` for `completed` ECT declarations
-* supply evidence types for `started` declarations
-
 ## Changes to induction programme types 
 
 We’ll be making the following changes to the `induction_programme_choice` field options in the `GET schools/ecf` and `GET schools/ecf/{id}` endpoints:
@@ -162,7 +154,7 @@ Language used in the `GET schools` endpoint will change. This is not expected to
  
 #### Withdrawal reasons 
 
-We’re adding a new value for participant withdrawals: `school-left-provider-led-programme` 
+We’re adding a new value for participant withdrawals: `switched-to-school-led` 
 
 Providers must ensure their systems can both submit and process this new value. 
 
@@ -193,7 +185,7 @@ We'll provide participant IDs. Providers must demonstrate correct declaration su
 
 ##### Withdrawal scenarios 
 
-Test withdrawing a participant using the new reason: `school-left-provider-led-programme` 
+Test withdrawing a participant using the new reason: `switched-to-school-led` 
 
 ##### Creating partnerships 
 
