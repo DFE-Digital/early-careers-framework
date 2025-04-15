@@ -102,37 +102,113 @@ RSpec.describe ProgrammeTypeMappings do
     end
 
     describe ".training_programme_friendly_name" do
-      subject { described_class.training_programme_friendly_name(training_programme) }
+      subject { described_class.training_programme_friendly_name(training_programme, length:) }
+
+      it "should default to short length" do
+        allow(described_class).to receive(:training_programme) { "full_induction_programme" }
+        val = described_class.training_programme_friendly_name("full_induction_programme")
+        expect(val).to eq(I18n.t("training_programme.short.full_induction_programme"))
+      end
 
       context "when mappings are enabled" do
         let(:mappings_enabled) { true }
 
-        context "when training_programme is `full_induction_programme`" do
-          let(:training_programme) { build(:induction_programme, :fip).training_programme }
+        context "when length is short" do
+          let(:length) { :short }
 
-          it { is_expected.to eq("Provider-led") }
+          %w[full_induction_programme school_funded_fip].each do |param|
+            context "when training_programme is '#{param}'" do
+              let(:training_programme) { param }
+
+              it { is_expected.to eq("Provider-led") }
+            end
+          end
+
+          %w[core_induction_programme design_our_own].each do |param|
+            context "when training_programme is '#{param}'" do
+              let(:training_programme) { param }
+
+              it { is_expected.to eq("School-led") }
+            end
+          end
+
+          %w[no_early_career_teachers not_yet_known].each do |param|
+            context "when training_programme is '#{param}'" do
+              let(:training_programme) { param }
+
+              it { is_expected.to eq(I18n.t("training_programme.short.#{training_programme}")) }
+            end
+          end
         end
 
-        context "when training_programme is `core_induction_programme`" do
-          let(:training_programme) { build(:induction_programme, :cip).training_programme }
+        context "when length is long" do
+          let(:length) { :long }
 
-          it { is_expected.to eq("School-led") }
+          %w[full_induction_programme school_funded_fip].each do |param|
+            context "when training_programme is '#{param}'" do
+              let(:training_programme) { param }
+
+              it { is_expected.to eq("Provider-led") }
+            end
+          end
+
+          %w[core_induction_programme design_our_own].each do |param|
+            context "when training_programme is '#{param}'" do
+              let(:training_programme) { param }
+
+              it { is_expected.to eq("School-led") }
+            end
+          end
+
+          %w[no_early_career_teachers not_yet_known].each do |param|
+            context "when training_programme is '#{param}'" do
+              let(:training_programme) { param }
+
+              it { is_expected.to eq(I18n.t("training_programme.long.#{training_programme}")) }
+            end
+          end
         end
       end
 
       context "when mappings are not enabled" do
         let(:mappings_enabled) { false }
 
-        context "when training_programme is `full_induction_programme`" do
-          let(:training_programme) { build(:induction_programme, :fip).training_programme }
+        context "when length is short" do
+          let(:length) { :short }
 
-          it { is_expected.to eq("FIP") }
+          %w[
+            full_induction_programme
+            school_funded_fip
+            core_induction_programme
+            design_our_own
+            no_early_career_teachers
+            not_yet_known
+          ].each do |param|
+            context "when training_programme is '#{param}'" do
+              let(:training_programme) { param }
+
+              it { is_expected.to eq(I18n.t("training_programme.short.#{training_programme}")) }
+            end
+          end
         end
 
-        context "when training_programme is `core_induction_programme`" do
-          let(:training_programme) { build(:induction_programme, :cip).training_programme }
+        context "when length is long" do
+          let(:length) { :long }
 
-          it { is_expected.to eq("CIP") }
+          %w[
+            full_induction_programme
+            school_funded_fip
+            core_induction_programme
+            design_our_own
+            no_early_career_teachers
+            not_yet_known
+          ].each do |param|
+            context "when training_programme is '#{param}'" do
+              let(:training_programme) { param }
+
+              it { is_expected.to eq(I18n.t("training_programme.long.#{training_programme}")) }
+            end
+          end
         end
       end
     end

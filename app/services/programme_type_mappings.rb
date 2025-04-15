@@ -30,9 +30,9 @@ class ProgrammeTypeMappings
       end
     end
 
-    def training_programme_friendly_name(training_programme)
+    def training_programme_friendly_name(training_programme, length: :short)
       translation_key = training_programme(training_programme:)
-      I18n.t("training_programme.#{translation_key}")
+      I18n.t("training_programme.#{length}.#{translation_key}")
     end
   end
 end
