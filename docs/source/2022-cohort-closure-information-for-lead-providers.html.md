@@ -7,6 +7,8 @@ weight: 4
 
 Published: 21 March 2025
 
+Updated: 15 April 2025
+
 ## Background 
 
 We’re closing the 2022 cohort at the end of July 2025. This means: 
@@ -85,6 +87,20 @@ ECTs who are still in the 2022 cohort and have not been identified as continuing
 ## Testing future declaration submissions in the 2024 cohort 
 
 For ECTs moved to the new cohort, providers will be able to continue to declare for them in line with the milestones of the 2024 call-off contracts. These will be agreed between providers and their DfE contract manager. 
+
+## Will providers need to differentiate between participants from the 2021 and 2022 cohort closures? 
+
+When providers receive a participant who has moved to the 2024 cohort, we recommend they focus on: 
+
+* understanding how much training the participant has left 
+* when they last engaged with training
+* where they were previously undertaking their training  
+
+Many of these participants will have experienced stop-start or interrupted training journeys, often due to deferrals or other changes.  
+
+There's no automated process to determine their continuation point or how much induction an ECT has left to serve, so it's important for providers to confirm this directly with the participant, the participant’s school or their appropriate body.  
+
+If there are nuances based on a participant's original cohort or schedule, and your approach may vary as a result, we'd welcome providers sharing this with us. This will help improve how we support similar cases in future. 
 
 ## Test data 
 
