@@ -21,20 +21,23 @@ module AdminHelper
     tag.ul(class: list_classes) { safe_join(values.map { |v| tag.li(v) }) }
   end
 
+  PROVIDER_LED_NAME = "Provider-led"
+  SCHOOL_LED_NAME = "School-led"
+
   def induction_programme_friendly_name(name, short: false)
     if FeatureFlag.active?(:programme_type_changes_2025)
       long_names = {
-        "full_induction_programme" => "Provider-led funded by the DfE",
-        "core_induction_programme" => "School-led",
-        "design_our_own" => "School-led",
-        "school_funded_fip" => "Provider-led funded by the school",
+        "full_induction_programme" => "#{PROVIDER_LED_NAME} funded by the DfE",
+        "core_induction_programme" => SCHOOL_LED_NAME,
+        "design_our_own" => SCHOOL_LED_NAME,
+        "school_funded_fip" => "#{PROVIDER_LED_NAME} funded by the school",
       }.freeze
 
       short_names = {
-        "full_induction_programme" => "Provider-led",
-        "core_induction_programme" => "School-led",
-        "design_our_own" => "School-led",
-        "school_funded_fip" => "Provider-led",
+        "full_induction_programme" => PROVIDER_LED_NAME,
+        "core_induction_programme" => SCHOOL_LED_NAME,
+        "design_our_own" => SCHOOL_LED_NAME,
+        "school_funded_fip" => PROVIDER_LED_NAME,
       }.freeze
     else
       long_names = {
