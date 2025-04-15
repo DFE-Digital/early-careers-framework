@@ -72,15 +72,6 @@ private
     errors.add(:participant_profile, I18n.t(:invalid_withdrawal)) if participant_profile.withdrawn_for?(cpd_lead_provider:)
   end
 
-  def any_participant_declarations_started?
-    participant_profile
-      .participant_declarations
-      .where(
-        course_identifier:,
-        declaration_type: "started",
-      ).exists?
-  end
-
   def relevant_induction_record
     @relevant_induction_record ||= participant_profile.latest_induction_record_for(cpd_lead_provider:)
   end
