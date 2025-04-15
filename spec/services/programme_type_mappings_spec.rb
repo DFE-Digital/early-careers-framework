@@ -100,5 +100,41 @@ RSpec.describe ProgrammeTypeMappings do
         end
       end
     end
+
+    describe ".training_programme_friendly_name" do
+      subject { described_class.training_programme_friendly_name(training_programme) }
+
+      context "when mappings are enabled" do
+        let(:mappings_enabled) { true }
+
+        context "when training_programme is `full_induction_programme`" do
+          let(:training_programme) { build(:induction_programme, :fip).training_programme }
+
+          it { is_expected.to eq("Provider-led") }
+        end
+
+        context "when training_programme is `core_induction_programme`" do
+          let(:training_programme) { build(:induction_programme, :cip).training_programme }
+
+          it { is_expected.to eq("School-led") }
+        end
+      end
+
+      context "when mappings are not enabled" do
+        let(:mappings_enabled) { false }
+
+        context "when training_programme is `full_induction_programme`" do
+          let(:training_programme) { build(:induction_programme, :fip).training_programme }
+
+          it { is_expected.to eq("FIP") }
+        end
+
+        context "when training_programme is `core_induction_programme`" do
+          let(:training_programme) { build(:induction_programme, :cip).training_programme }
+
+          it { is_expected.to eq("CIP") }
+        end
+      end
+    end
   end
 end
