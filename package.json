@@ -23,7 +23,7 @@
     "nunjucks": "^3.2.4",
     "sass": "^1.86.3",
     "terser-webpack-plugin": "^5.3.14",
-    "webpack": "^5.98",
+    "webpack": "^5.99",
     "webpack-assets-manifest": "^5.2.1",
     "webpack-cli": "^5.1.4",
     "webpack-merge": "^5.10.0",

@@ -151,15 +151,15 @@ RSpec.describe ::EarlyCareerTeachers::Reactivate do
   end
 
   it "records the profile for analytics" do
-    expect {
-      described_class.call(
-        email: user.email,
-        participant_profile:,
-        school_cohort:,
-        mentor_profile_id: mentor_profile.id,
-      )
-    }.to have_enqueued_job(Analytics::UpsertECFParticipantProfileJob)
-     .with(participant_profile: instance_of(ParticipantProfile::ECT))
+    described_class.call(
+      email: user.email,
+      participant_profile:,
+      school_cohort:,
+      mentor_profile_id: mentor_profile.id,
+    )
+
+    created_participant = ParticipantProfile.order(:created_at).last
+    expect(Analytics::UpsertECFParticipantProfileJob).to have_been_enqueued.with(participant_profile_id: created_participant.id)
   end
 
   def add_and_remove_participant_from_school_cohort(school_cohort)

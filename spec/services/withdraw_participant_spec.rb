@@ -23,6 +23,38 @@ RSpec.shared_examples "validating a participant to be withdrawn" do
     end
   end
 
+  context "when the programme type mappings are enabled" do
+    before { allow(ProgrammeTypeMappings).to receive(:mappings_enabled?) { true } }
+
+    context "when the reason is `school-left-fip`" do
+      let(:reason) { "school-left-fip" }
+
+      it { is_expected.to be_invalid }
+    end
+
+    context "when the reason is `switched-to-school-led`" do
+      let(:reason) { "switched-to-school-led" }
+
+      it { is_expected.to be_valid }
+    end
+  end
+
+  context "when the programme type mappings are disabled" do
+    before { allow(ProgrammeTypeMappings).to receive(:mappings_enabled?) { false } }
+
+    context "when the reason is `school-left-fip`" do
+      let(:reason) { "school-left-fip" }
+
+      it { is_expected.to be_valid }
+    end
+
+    context "when the reason is `switched-to-school-led`" do
+      let(:reason) { "switched-to-school-led" }
+
+      it { is_expected.to be_invalid }
+    end
+  end
+
   context "when the course identifier is missing" do
     let(:course_identifier) {}
 
@@ -84,6 +116,7 @@ RSpec.shared_examples "withdrawing a participant" do
     expect(latest_participant_profile_state).to have_attributes(
       participant_profile_id: participant_profile.id,
       state: "withdrawn",
+      reason:,
     )
   end
 

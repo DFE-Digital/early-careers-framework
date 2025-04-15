@@ -54,7 +54,7 @@ class EvidenceHeldValidator < ActiveModel::Validator
       evidence_held_present?(record)
       valid_detailed_evidence_held?(record)
     else
-      return unless validate_evidence_held?(record)
+      return record.evidence_held = nil unless validate_evidence_held?(record)
 
       evidence_held_present?(record)
       valid_evidence_held?(record)

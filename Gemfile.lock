@@ -118,6 +118,8 @@ GEM
     amazing_print (1.7.2)
     ar-uuid (0.2.3)
       activerecord
+    ar_transaction_changes (1.1.9)
+      activerecord (>= 5.2.0)
     ast (2.4.3)
     auto_strip_attributes (2.6.0)
       activerecord (>= 4.0)
@@ -745,6 +747,7 @@ DEPENDENCIES
   activerecord-session_store (~> 2.2)
   amazing_print
   ar-uuid (~> 0.2.3)
+  ar_transaction_changes
   auto_strip_attributes (~> 2.6)
   axe-core-rspec
   bootsnap (~> 1.18)

@@ -55,7 +55,7 @@ RSpec.describe SchoolCohort, type: :model do
     expect {
       school_cohort.save!
     }.to have_enqueued_job(Analytics::UpsertECFSchoolCohortJob).with(
-      school_cohort:,
+      school_cohort_id: school_cohort.id,
     )
   end
 

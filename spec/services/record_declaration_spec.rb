@@ -170,6 +170,7 @@ RSpec.shared_examples "validates the course_identifier, cpd_lead_provider, parti
         let(:declaration_type) { "started" }
 
         it { is_expected.to be_valid }
+        it { expect(service.call.evidence_held).to eq(evidence_held) }
       end
 
       context "when `evidence_held` is blank" do
@@ -185,15 +186,20 @@ RSpec.shared_examples "validates the course_identifier, cpd_lead_provider, parti
     context "when `evidence_held` is present" do
       let(:evidence_held) { "other" }
 
+      it { is_expected.to be_valid }
+      it { expect(service.call.evidence_held).to eq(evidence_held) }
+
       context "when `declaration_type` is started" do
         let(:declaration_type) { "started" }
 
         it { is_expected.to be_valid }
+        it { expect(service.call.evidence_held).to be_nil }
 
         context "when `evidence_held` is invalid" do
           let(:evidence_held) { "anything" }
 
           it { is_expected.to be_valid }
+          it { expect(service.call.evidence_held).to be_nil }
         end
       end
 
@@ -222,6 +228,7 @@ RSpec.shared_examples "validates the course_identifier, cpd_lead_provider, parti
           let(:declaration_type) { "started" }
 
           it { is_expected.to be_valid }
+          it { expect(service.call.evidence_held).to be_nil }
         end
 
         context "when `evidence_held` is blank" do
@@ -241,6 +248,7 @@ RSpec.shared_examples "validates the course_identifier, cpd_lead_provider, parti
           let(:declaration_type) { "started" }
 
           it { is_expected.to be_valid }
+          it { expect(service.call.evidence_held).to eq(evidence_held) }
 
           context "when `evidence_held` is invalid" do
             let(:evidence_held) { "anything" }
@@ -364,25 +372,39 @@ RSpec.shared_examples "creates a participant declaration" do
   end
 
   it "creates the correct type of declaration" do
-    service.call
+    declaration = service.call
 
     expected_type = participant_profile.mentor? ? "ParticipantDeclaration::Mentor" : "ParticipantDeclaration::ECT"
 
-    declaration = ParticipantDeclaration.last
     expect(declaration.type).to eq(expected_type)
   end
 
   it "stores the correct data" do
-    subject.call
-
-    declaration = ParticipantDeclaration.last
+    declaration = subject.call
 
     expect(declaration.declaration_type).to eq(declaration_type)
     expect(declaration.user_id).to eq(participant_profile.user_id)
     expect(declaration.course_identifier).to eq(course_identifier)
-    expect(declaration.evidence_held).to eq("other")
+    expect(declaration.evidence_held).to eq(nil)
     expect(declaration.cpd_lead_provider).to eq(cpd_lead_provider)
     expect(declaration.cohort).to eq(schedule.cohort)
+  end
+end
+
+RSpec.shared_examples "nullifies the evidence_held if provided but not required" do
+  let(:declaration_type) { "started" }
+  let(:evidence_held) { "should-be-ignored" }
+
+  context "when the cohort does not have detailed evidence types" do
+    before { schedule.cohort.update!(detailed_evidence_types: false) }
+
+    it "returns nil for the evidence_held" do
+      expect(service).to be_valid
+
+      declaration = service.call
+
+      expect(declaration.evidence_held).to be_nil
+    end
   end
 end
 
@@ -393,13 +415,11 @@ RSpec.shared_examples "creates participant declaration attempt" do
     end
 
     it "stores the correct data" do
-      subject.call
-
-      declaration_attempt = ParticipantDeclarationAttempt.last
+      declaration_attempt = subject.call.participant_declaration_attempts.last
       expect(declaration_attempt.declaration_type).to eq(declaration_type)
       expect(declaration_attempt.user_id).to eq(participant_profile.user_id)
       expect(declaration_attempt.course_identifier).to eq(course_identifier)
-      expect(declaration_attempt.evidence_held).to eq("other")
+      expect(declaration_attempt.evidence_held).to eq(nil)
       expect(declaration_attempt.cpd_lead_provider).to eq(cpd_lead_provider)
     end
   end
@@ -428,7 +448,7 @@ RSpec.describe RecordDeclaration do
   let(:another_lead_provider) { create(:cpd_lead_provider, :with_lead_provider, name: "Unknown") }
   let(:declaration_type)      { "started" }
   let(:participant_id) { participant_profile.participant_identity.external_identifier }
-  let(:evidence_held) { "other" }
+  let(:evidence_held) { nil }
   let(:params) do
     {
       participant_id:,
@@ -471,10 +491,7 @@ RSpec.describe RecordDeclaration do
 
       describe "attributes inferred from induction records" do
         let(:relevant_induction_record) { nil }
-        subject(:created_declaration) do
-          service.call
-          ParticipantDeclaration.last
-        end
+        subject(:created_declaration) { service.call }
 
         before do
           allow(Induction::FindBy).to receive(:call).and_call_original
@@ -510,21 +527,23 @@ RSpec.describe RecordDeclaration do
       it_behaves_like "validates existing declarations"
       it_behaves_like "validates the participant milestone"
       it_behaves_like "creates a participant declaration"
+      it_behaves_like "nullifies the evidence_held if provided but not required"
       it_behaves_like "creates participant declaration attempt"
       it_behaves_like "checks for mentor completion event"
 
       %w[retained-1 retained-2 retained-3 retained-4 extended-1 extended-2 extended-3].each do |disallowed_for_mentor_funding_type|
         context "when the declaration_type is #{disallowed_for_mentor_funding_type}" do
           let(:declaration_type) { disallowed_for_mentor_funding_type }
+          let(:evidence_held) { "other" }
 
           before { create(:milestone, schedule:, declaration_type:, start_date: 1.day.ago) }
 
           it "allows #{disallowed_for_mentor_funding_type} declarations when in a mentor_funding cohort" do
             schedule.cohort.update!(mentor_funding: true)
 
-            expect { service.call }.to change { ParticipantDeclaration.count }.by(1)
+            created_declaration = nil
+            expect { created_declaration = service.call }.to change { ParticipantDeclaration.count }.by(1)
 
-            created_declaration = ParticipantDeclaration.last
             expect(created_declaration.declaration_type).to eq(disallowed_for_mentor_funding_type)
           end
         end
@@ -541,23 +560,25 @@ RSpec.describe RecordDeclaration do
       it_behaves_like "validates existing declarations"
       it_behaves_like "validates the participant milestone"
       it_behaves_like "creates a participant declaration"
+      it_behaves_like "nullifies the evidence_held if provided but not required"
       it_behaves_like "creates participant declaration attempt"
       it_behaves_like "checks for mentor completion event"
 
       %w[started completed].each do |allowed_for_mentor_funding_type|
         context "when the declaration_type is #{allowed_for_mentor_funding_type}" do
           let(:declaration_type) { allowed_for_mentor_funding_type }
+          let(:evidence_held) { allowed_for_mentor_funding_type == "completed" ? "other" : nil }
 
           before { create(:milestone, schedule:, declaration_type:, start_date: 1.day.ago) }
 
           it "allows started declarations when in a mentor_funding cohort" do
             schedule.cohort.update!(mentor_funding: true)
 
+            created_declaration = nil
             travel_to(declaration_date + 1.day) do
-              expect { service.call }.to change { ParticipantDeclaration.count }.by(1)
+              expect { created_declaration = service.call }.to change { ParticipantDeclaration.count }.by(1)
             end
 
-            created_declaration = ParticipantDeclaration.last
             expect(created_declaration.declaration_type).to eq(allowed_for_mentor_funding_type)
           end
         end
@@ -566,6 +587,7 @@ RSpec.describe RecordDeclaration do
       %w[retained-1 retained-2 retained-3 retained-4 extended-1 extended-2 extended-3].each do |disallowed_for_mentor_funding_type|
         context "when the declaration_type is #{disallowed_for_mentor_funding_type}" do
           let(:declaration_type) { disallowed_for_mentor_funding_type }
+          let(:evidence_held) { "other" }
 
           before { create(:milestone, schedule:, declaration_type:, start_date: 1.day.ago) }
 
@@ -579,11 +601,11 @@ RSpec.describe RecordDeclaration do
           it "allows #{disallowed_for_mentor_funding_type} declarations when not in a mentor_funding cohort" do
             schedule.cohort.update!(mentor_funding: false)
 
+            created_declaration = nil
             travel_to(declaration_date + 1.day) do
-              expect { service.call }.to change { ParticipantDeclaration.count }.by(1)
+              expect { created_declaration = service.call }.to change { ParticipantDeclaration.count }.by(1)
             end
 
-            created_declaration = ParticipantDeclaration.last
             expect(created_declaration.declaration_type).to eq(disallowed_for_mentor_funding_type)
           end
         end

@@ -460,8 +460,38 @@ RSpec.describe InductionRecord, type: :model do
       expect {
         induction_record.leaving!(1.week.from_now)
       }.to have_enqueued_job(Analytics::UpsertECFInductionJob).with(
-        induction_record:,
+        induction_record_id: induction_record.id,
       )
+    end
+  end
+
+  describe "#induction_type" do
+    subject { induction_record.induction_type }
+
+    context "when enrolled in cip " do
+      let(:induction_programme) { create(:induction_programme, :cip) }
+      let(:induction_record) { Induction::Enrol.call(participant_profile: create(:ect_participant_profile), induction_programme:) }
+
+      it { is_expected.to eq("CIP") }
+
+      it "calls ProgrammeTypeMappings with correct params" do
+        expect(ProgrammeTypeMappings).to receive(:training_programme_friendly_name).with("core_induction_programme")
+
+        subject
+      end
+    end
+
+    context "when enrolled in fip " do
+      let(:induction_programme) { create(:induction_programme, :fip) }
+      let(:induction_record) { Induction::Enrol.call(participant_profile: create(:ect_participant_profile), induction_programme:) }
+
+      it { is_expected.to eq("FIP") }
+
+      it "calls ProgrammeTypeMappings with correct params" do
+        expect(ProgrammeTypeMappings).to receive(:training_programme_friendly_name).with("full_induction_programme")
+
+        subject
+      end
     end
   end
 end

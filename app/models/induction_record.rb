@@ -89,7 +89,7 @@ class InductionRecord < ApplicationRecord
   scope :oldest, -> { oldest_first.first }
 
   # Callbacks
-  after_save :update_analytics
+  after_commit :update_analytics
 
   # Class Methods
   def self.latest
@@ -249,6 +249,14 @@ class InductionRecord < ApplicationRecord
     update!(induction_status: :withdrawn, end_date: date_of_change)
   end
 
+  def induction_type
+    if enrolled_in_cip?
+      ProgrammeTypeMappings.training_programme_friendly_name("core_induction_programme")
+    elsif enrolled_in_fip?
+      ProgrammeTypeMappings.training_programme_friendly_name("full_induction_programme")
+    end
+  end
+
 private
 
   def end_unknown?
@@ -256,6 +264,6 @@ private
   end
 
   def update_analytics
-    Analytics::UpsertECFInductionJob.perform_later(induction_record: self) if saved_changes?
+    Analytics::UpsertECFInductionJob.perform_later(induction_record_id: id) if transaction_changed_attributes.any?
   end
 end

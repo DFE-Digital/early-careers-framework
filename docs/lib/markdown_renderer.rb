@@ -13,7 +13,7 @@ class MarkdownRenderer < GovukTechDocs::TechDocsHTMLRenderer
     "bug-fix" => "yellow",
     "new-field" => "turquoise",
     "data-update" => "blue",
-    "contract-closure" => "orange",
+    "cohort-closure" => "orange",
     "new-course" => "pink",
     "production-release" => "purple",
     "sandbox-release" => "grey",

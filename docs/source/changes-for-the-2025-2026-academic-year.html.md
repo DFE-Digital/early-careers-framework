@@ -75,14 +75,26 @@ We recommend providers check their integrations can:
 
 ## Changes to induction programme types 
 
-We’ll be making the following changes to the `induction_programme_choice` field options in the `GET schools` endpoint:
+We’ll be making the following changes to the `induction_programme_choice` field options in the `GET schools/ecf` and `GET schools/ecf/{id}` endpoints:
 
-* `core-induction-programme` and `diy` will all be known as `school-led`
+* `core-induction-programme` and `diy` will change to `school-led`
 * `full-induction-programme` and `school-funded-full-induction-programme` will change to `provider-led`
 
 <div class="govuk-inset-text">These changes will apply across all cohorts. We’ll contact providers directly to ensure their integrations can support the new values.</div>
 
 ## API testing and integration  
+
+### Change to withdrawal reason value to reflect new programme types terminology 
+
+To align with the new programme types terminology, we’ll be changing one of the options in the `reason` field for the `PUT participants/ecf/{id}/withdraw` endpoint: 
+ 
+* `school-left-fip` will change to `switched-to-school-led`   
+
+As a result, we’ll update records across all cohorts that have previously used the `school-left-fip` value. This is not expected to affect how the endpoint functions. However, lead providers will need to update the options when submitting withdrawal requests to pass through the new value.  
+
+Records that have already been withdrawn using the old value will surface the new value and have a modified `updated_at` timestamp.  
+
+## Seed data for testing 
 
 The introduction of the 2025 contracts requires updates to the API service. 
 

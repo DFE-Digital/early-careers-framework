@@ -169,14 +169,14 @@ RSpec.describe ::EarlyCareerTeachers::Create do
   end
 
   it "records the profile for analytics" do
-    expect {
-      described_class.call(
-        email: user.email,
-        full_name: user.full_name,
-        school_cohort:,
-        mentor_profile_id: mentor_profile.id,
-      )
-    }.to have_enqueued_job(Analytics::UpsertECFParticipantProfileJob)
-           .with(participant_profile: instance_of(ParticipantProfile::ECT))
+    described_class.call(
+      email: user.email,
+      full_name: user.full_name,
+      school_cohort:,
+      mentor_profile_id: mentor_profile.id,
+    )
+
+    created_participant = ParticipantProfile.order(:created_at).last
+    expect(Analytics::UpsertECFParticipantProfileJob).to have_been_enqueued.with(participant_profile_id: created_participant.id)
   end
 end

@@ -19,7 +19,7 @@ class WithdrawParticipant
   validates :reason,
             presence: { message: I18n.t(:missing_reason) },
             inclusion: {
-              in: ->(klass) { klass.participant_profile.class::WITHDRAW_REASONS },
+              in: ->(klass) { klass.participant_profile.class::WITHDRAW_REASONS.map { |reason| ProgrammeTypeMappings.withdrawal_reason(reason:) } },
               message: I18n.t(:invalid_reason),
             }, if: ->(klass) { klass.participant_profile.present? }
   validate :not_already_withdrawn
