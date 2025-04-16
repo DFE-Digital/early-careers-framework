@@ -6,6 +6,7 @@ weight: 3
 # Changes for the 2025/26 academic year  
 
 Published: 25 February 2025
+
 Updated: 15 April 2025
 
 This is a summary of planned changes to API processes lead providers will see when early career teacher (ECT) and mentor registrations open (date to be confirmed). 
@@ -115,8 +116,7 @@ As set out in the Model Call-off Contract, lead providers must complete testing 
 These changes affect the following endpoints: 
 
 * `GET schools` – affected by induction type changes
-* `GET participants` – affected by induction type changes
-* `PUT participants` and `PUT participants/ecf/{id}/withdraw` – includes new withdrawal reasons
+* `GET participants` and `PUT participants/ecf/{id}/withdraw` – includes new withdrawal reasons
 * `POST participant-declarations` – updated for mentor funding and evidence types
 * `GET participant-declarations` – updated for mentor funding and evidence types 
 
@@ -143,7 +143,7 @@ New values must be added to evidence types to meet 2025 policy requirements. Pay
 
 #### Mentor declarations 
 
-The API will reject retained or extended declarations for 2025 mentors. Providers must ensure their systems do not submit these declarations. We'll monitor the endpoint but will not run tests to prevent submissions. 
+Providers will only be able to submit `started` and `completed` declarations for mentors who start training from June 2025 onwards. The API will return a 422 error if providers submit `retained` or `extended` declarations, as these are not accepted.
 
 #### School induction types 
 
@@ -179,9 +179,9 @@ Test declaration submissions using these values:
 * `completed` (ECTs and mentors)
 * `extended` (ECTs only) 
 
-##### Mentor declarations 
+##### Declarations
 
-We'll provide participant IDs. Providers must demonstrate correct declaration submissions for both ECTs and mentors. 
+Providers must demonstrate correct declaration submissions for both ECTs and mentors.
 
 ##### Withdrawal scenarios 
 
