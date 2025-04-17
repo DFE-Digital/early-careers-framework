@@ -7,6 +7,8 @@ weight: 4
 
 Published: 21 March 2025
 
+Updated: 15 April 2025
+
 ## Background 
 
 We’re closing the 2022 cohort at the end of July 2025. This means: 
@@ -40,7 +42,7 @@ Once the participant is in the 2024 cohort and the correct partnership is in pla
 
 To help providers identify these ECTs in the API v3 test environment, there’s a field in the `GET participant` API endpoints called `cohort_changed_after_payments_frozen`. 
 
-For ECTs who’ve moved to the 2024 cohort, the field will have a `TRUE` value in it. 
+For ECTs who’ve moved to the 2024 cohort, the field will have a `true` value in it. 
 
 When calling the `GET participant` endpoint, the ECT’s `cohort` value will be `2024`. When calling the `GET participant-declarations` endpoint, the ECT will have historical declarations in their original cohort. 
 
@@ -85,6 +87,28 @@ ECTs who are still in the 2022 cohort and have not been identified as continuing
 ## Testing future declaration submissions in the 2024 cohort 
 
 For ECTs moved to the new cohort, providers will be able to continue to declare for them in line with the milestones of the 2024 call-off contracts. These will be agreed between providers and their DfE contract manager. 
+
+## Identifying a particpant's training needs 
+
+When providers receive a participant who has moved to the 2024 cohort, we recommend they focus on: 
+
+* understanding how much training the participant has left 
+* when they last engaged with training
+* where they were previously undertaking their training  
+
+Many of these participants will have experienced stop-start or interrupted training journeys, often due to deferrals or other changes.  
+
+There's no automated process to determine their continuation point or how much induction an ECT has left to serve, so it's important for providers to confirm this directly with the participant, the participant’s school or their appropriate body.  
+
+If there are nuances based on a participant's original cohort or schedule, and your approach may vary as a result, we'd welcome providers sharing this with us. This will help improve how we support similar cases in future. 
+
+## How to tell between 2022 and 2021 starters who’ve moved to the 2024 cohort 
+
+Providers can identify which cohort participants have moved from by taking the following steps:  
+
+1. Start by checking the `GET participants/ecf`endpoint for participants who’ve moved to the 2024 cohort after originally starting their training in 2021 or 2022. They’re identified by the `cohort_changed_after_payments_frozen` attribute being `true`.
+2. Then, using the `GET participant-declarations` or `GET participant-declarations/{id}` endpoint and filtering by `participant_id`, find the `statement_id`.
+3. Finally, call `GET statements/{id}`. The `cohort` field in the response shows which cohort each declaration was originally made in. 
 
 ## Test data 
 
