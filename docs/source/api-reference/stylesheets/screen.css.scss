@@ -10,6 +10,10 @@ $govuk-assets-path: "/api-reference/assets/govuk/assets/";
   font-size: 14px;
 }
 
+.technical-documentation td code {
+  white-space: nowrap;
+}
+
 .technical-documentation table ul li {
   padding: 3px 0;
 }
