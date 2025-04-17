@@ -294,7 +294,7 @@ Partnership will not be confirmed if:
 -   School not eligible for inductions as per our GIAS list of
     eligible schools
 
--   School not eligible for funding from DfE (they can only do school led)
+-   School not eligible for funding from DfE (they can only do School-led)
 
 -   School programme not yet confirmed -- SIT has not yet logged into
     the service to confirm if they will deliver training using a

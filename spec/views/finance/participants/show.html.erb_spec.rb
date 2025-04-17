@@ -52,7 +52,7 @@ RSpec.describe "finance/participants/show.html.erb" do
 
         render
 
-        expect(rendered).to have_content("Training programmeProvider led")
+        expect(rendered).to have_content("Training programmeProvider-led")
       end
     end
 
