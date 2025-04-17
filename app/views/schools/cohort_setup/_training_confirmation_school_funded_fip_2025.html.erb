@@ -1,0 +1,16 @@
+<h2 class="govuk-heading-m">What to do next</h2>
+<p class="govuk-body">As soon as possible:</p>
+<ul class="govuk-list govuk-list--bullet govuk-list--spaced">
+  <% unless @wizard.appropriate_body_appointed? %>
+    <li>tell us which appropriate body you’ve appointed for your ECTs</li>
+  <% end %>
+
+  <li><%= govuk_link_to "make your own arrangements with a training provider (opens in a new tab)",
+                                "https://www.gov.uk/guidance/funding-and-eligibility-for-ecf-based-training",
+                                rel: "noreferrer noopener",
+                                target: "_blank",
+                                no_visited_sted: true %>, approved by the DfE.</li>
+
+  <li>add the new ECTs and mentors to this service</li>
+  <li>use this service to tell us which mentor has been assigned to each ECT</li>
+</ul>
