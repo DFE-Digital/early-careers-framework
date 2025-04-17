@@ -130,9 +130,14 @@ RSpec.describe ::EarlyCareerTeachers::Create do
       frozen_cohort.update!(payments_frozen_at: 1.month.ago)
     end
 
+    it "don't move the mentor from their cohort", with_feature_flags: { closing_2022: "active" } do
+      expect { described_class.call(email: user.email, full_name: user.full_name, school_cohort: ect_school_cohort, mentor_profile_id: mentor_profile.id) }
+        .not_to change { mentor_profile.reload.schedule.cohort.start_year }
+    end
+
     it "moves the mentor to the currently active registration cohort" do
       expect { described_class.call(email: user.email, full_name: user.full_name, school_cohort: ect_school_cohort, mentor_profile_id: mentor_profile.id) }
-        .to change { mentor_profile.reload.schedule.cohort.start_year }.from(2021).to(Cohort.active_registration_cohort.start_year)
+        .to change { mentor_profile.reload.schedule.cohort.start_year }.from(2021).to(Cohort::DESTINATION_START_YEAR_FROM_A_FROZEN_COHORT)
     end
   end
 
