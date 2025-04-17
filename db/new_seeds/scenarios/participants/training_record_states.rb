@@ -22,6 +22,7 @@ module NewSeeds
             .new(name: "FIP School for Training Record States")
             .build
             .with_an_induction_tutor(full_name: "FIP School for Training Record States SIT", email: "fip-training-states@example.com")
+            .with_partnership_in(cohort:)
             .chosen_fip_and_partnered_in(cohort:)
         end
 
@@ -38,6 +39,8 @@ module NewSeeds
                                                      .new(name: "FIP School with previous FIP induction programme cohort")
                                                      .build
                                                      .with_an_induction_tutor(full_name: "FIP School with previous FIP induction programme cohort SIT", email: "fip-previous-fip-programme-cohort@example.com")
+                                                     .with_partnership_in(cohort: previous_cohort)
+                                                     .with_partnership_in(cohort:)
                                                      .chosen_fip_and_partnered_in(cohort: previous_cohort)
                                                      .chosen_fip_and_partnered_in(cohort:)
         end
