@@ -106,8 +106,12 @@
   end
 
   sl.with_row do |row|
-    row.with_key(text: "FIP funding eligibility status")
-    row.with_value(text: govuk_tag(text: states.fip_funding_eligibility_state.to_s.humanize, colour: "grey"))
+    if FeatureFlag.active?(:programme_type_changes_2025)
+      row.with_key(text: "Provider-led funding eligibility status")
+    else
+      row.with_key(text: "FIP funding eligibility status")
+    end
+    row.with_value(text: govuk_tag(text: correct_programme_type_text(states.fip_funding_eligibility_state.to_s.humanize), colour: "grey"))
   end
 
   sl.with_row do |row|
@@ -117,7 +121,7 @@
 
   sl.with_row do |row|
     row.with_key(text: "Training status")
-    row.with_value(text: govuk_tag(text: states.training_state.to_s.humanize, colour: "grey"))
+    row.with_value(text: govuk_tag(text: correct_programme_type_text(states.training_state.to_s.humanize), colour: "grey"))
   end
 end %>
 

@@ -58,6 +58,13 @@ module AdminHelper
     short ? short_names.fetch(name) : long_names.fetch(name)
   end
 
+  def correct_programme_type_text(text)
+    return text if text.blank?
+    return text unless FeatureFlag.active?(:programme_type_changes_2025)
+
+    text.gsub(/fip|FIP|cip|CIP/, { "fip" => PROVIDER_LED_NAME.downcase, "FIP" => PROVIDER_LED_NAME, "cip" => SCHOOL_LED_NAME.downcase, "CIP" => SCHOOL_LED_NAME })
+  end
+
   def format_address(*parts)
     return if parts.blank?
 

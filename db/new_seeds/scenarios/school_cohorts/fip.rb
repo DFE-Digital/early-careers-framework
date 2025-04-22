@@ -15,7 +15,7 @@ module NewSeeds
 
         def build
           traits = [
-            :fip,
+            fip_or_school_funded_fip,
           ]
 
           traits << :with_appropriate_body if with_appropriate_body
@@ -79,6 +79,14 @@ module NewSeeds
 
         def school
           @school ||= FactoryBot.create(:seed_school)
+        end
+
+        def fip_or_school_funded_fip
+          if school.cip_only?
+            :school_funded_fip
+          else
+            :fip
+          end
         end
       end
     end
