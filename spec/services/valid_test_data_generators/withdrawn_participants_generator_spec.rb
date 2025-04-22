@@ -11,16 +11,16 @@ RSpec.describe ValidTestDataGenerators::WithdrawnParticipantsGenerator do
   let(:instance) { described_class.new(name: lead_provider.name, cohort:) }
 
   describe "#call" do
-    let(:number) { 1 }
-    subject(:generate) { instance.call(number:) }
+    let(:count) { 1 }
+    subject(:generate) { instance.call(count:) }
 
     before do
       create(:partnership, cohort:, lead_provider:)
       create(:ecf_statement, :next_output_fee, cpd_lead_provider:, cohort:)
     end
 
-    it { expect { generate }.to change(ParticipantProfile::ECT, :count).by(number * programme_types.count) }
-    it { expect { generate }.to change(ParticipantProfile::Mentor, :count).by(number * programme_types.count) }
+    it { expect { generate }.to change(ParticipantProfile::ECT, :count).by(count * programme_types.count) }
+    it { expect { generate }.to change(ParticipantProfile::Mentor, :count).by(count * programme_types.count) }
 
     it "creates a partially trained and withdrawn ECT" do
       generate
@@ -47,10 +47,10 @@ RSpec.describe ValidTestDataGenerators::WithdrawnParticipantsGenerator do
     end
 
     context "when creating multiple participants" do
-      let(:number) { 2 }
+      let(:count) { 2 }
 
-      it { expect { generate }.to change(ParticipantProfile::ECT, :count).by(number * programme_types.count) }
-      it { expect { generate }.to change(ParticipantProfile::Mentor, :count).by(number * programme_types.count) }
+      it { expect { generate }.to change(ParticipantProfile::ECT, :count).by(count * programme_types.count) }
+      it { expect { generate }.to change(ParticipantProfile::Mentor, :count).by(count * programme_types.count) }
     end
   end
 end

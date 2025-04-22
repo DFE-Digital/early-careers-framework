@@ -11,13 +11,13 @@ module ValidTestDataGenerators
     PROGRAMME_TYPES = %i[fip cip design_our_own school_funded_fip].freeze
 
     class << self
-      def call(name:, cohort: Cohort.current, number: 20)
-        new(name:, cohort:).call(number:)
+      def call(name:, cohort: Cohort.current, count: 20)
+        new(name:, cohort:).call(count:)
       end
     end
 
-    def call(number:)
-      number.times do
+    def call(count:)
+      count.times do
         PROGRAMME_TYPES.each do |programme_type|
           create_ect_partially_trained_withdrawn(programme_type:)
           create_mentor_partially_trained_withdrawn(programme_type:)
