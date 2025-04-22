@@ -663,8 +663,9 @@ GEM
       tilt (~> 2.0)
       yard (~> 0.9, >= 0.9.24)
       yard-solargraph (~> 0.1)
-    sprockets (4.2.1)
+    sprockets (4.2.2)
       concurrent-ruby (~> 1.0)
+      logger
       rack (>= 2.2.4, < 4)
     sprockets-rails (3.5.2)
       actionpack (>= 6.1)
@@ -822,7 +823,7 @@ DEPENDENCIES
   simplecov
   site_prism (~> 3.7)
   solargraph
-  sprockets (~> 4.2.1)
+  sprockets (~> 4.2.2)
   sprockets-rails
   stackprof
   strong_migrations (~> 1.8)

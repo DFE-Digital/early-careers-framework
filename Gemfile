@@ -105,7 +105,7 @@ gem "ostruct"
 
 gem "cssbundling-rails", "~> 1.4"
 gem "jsbundling-rails"
-gem "sprockets", "~> 4.2.1"
+gem "sprockets", "~> 4.2.2"
 gem "sprockets-rails", require: "sprockets/railtie"
 
 # Code Highlighter
