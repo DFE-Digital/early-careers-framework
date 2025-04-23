@@ -7,7 +7,7 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
-## XX April 2025
+## 23 April 2025
 
 [#sandbox-release #breaking-change]
 
