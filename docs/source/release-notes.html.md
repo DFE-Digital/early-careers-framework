@@ -13,7 +13,7 @@ If you have any questions or comments about these notes, please contact DfE via 
 
 We’ve updated the field value options in several v3 API test environment (sandbox) endpoints to reflect changes to the names we use for induction programme types. These changes will apply to all cohorts.
 
-### Endpoints: `GET schools` and `GET schools{id}`
+### Endpoints: `GET schools/ecf` and `GET schools/ecf/{id}`
 
 **Field: `induction_programme_choice`**
 
@@ -24,7 +24,7 @@ We’ve updated the field value options in several v3 API test environment (sand
 
 The `no_early_career_teachers` and `not_yet_known` values stay the same.
 
-### Endpoint: `PUT {id}/withdraw`
+### Endpoint: `PUT participants/ecf/{id}/withdraw`
 
 **Field: `reason`**
 
@@ -34,9 +34,9 @@ The `no_early_career_teachers` and `not_yet_known` values stay the same.
 
 The `left-teaching-profession`, `moved-school`, `mentor-no-longer-being-mentor` and `other` values are unchanged.
 
-We’ve updated participant records across all cohorts that have previously used the `school-left-fip` value. This is not expected to affect how the endpoint functions. However, lead providers should resync with the API participants endpoint to ensure their systems integrate correctly. Records for withdrawn participants will surface the new value and have a modified updated_at timestamp.
+We’ve updated participant records across all cohorts that have previously used the `school-left-fip` value. This is not expected to affect how the endpoint functions. However, lead providers should resync with the API participants endpoint to ensure their systems integrate correctly. Records for withdrawn participants will surface the new value and have a modified `updated_at` timestamp.
 
-To keep records up to date following these changes, lead providers should run regular full syncs across all cohorts using the `GET /api/v3/schools/ecf` endpoint. Providers will also need to perform a full sync when these changes go into production. This update aligns with the new `school-led` terminology we’ve introduced for the `induction_programme_choice` field in the `GET schools/ecf` and` GET schools/ecf/{id}` endpoints to replace the `core-induction-programme` and `diy` options.
+To keep records up to date following these changes, lead providers should run regular full syncs across all cohorts using the `GET /api/v3/schools/ecf` endpoint. Providers will also need to perform a full sync when these changes go into production. This update aligns with the new `school-led` terminology we’ve introduced for the `induction_programme_choice` field in the `GET schools/ecf` and `GET schools/ecf/{id}` endpoints to replace the `core-induction-programme` and `diy` options.
 
 We’ll contact providers directly to ensure their integrations can support the new values.
 
