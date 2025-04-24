@@ -51,10 +51,10 @@ cpd_lead_providers.each_slice(LEAD_PROVIDER_BATCH_SIZE) do |cpd_lead_provider_ba
       # Create participants in a single transaction per cohort
       ActiveRecord::Base.transaction do
         participant_count.times do
-          FactoryBot.create(:ect, :eligible_for_funding, cohort:, lead_provider:)
-          FactoryBot.create(:mentor, :eligible_for_funding, cohort:, lead_provider:)
-          FactoryBot.create(:ect, :eligible_for_funding, :with_extended_schedule, cohort:, lead_provider:)
-          FactoryBot.create(:mentor, :eligible_for_funding, :with_extended_schedule, cohort:, lead_provider:)
+          FactoryBot.create(:ect, :eligible_for_funding, cohort:, lead_provider:, user: FactoryBot.create(:user, full_name: Faker::Name.name))
+          FactoryBot.create(:mentor, :eligible_for_funding, cohort:, lead_provider:, user: FactoryBot.create(:user, full_name: Faker::Name.name))
+          FactoryBot.create(:ect, :eligible_for_funding, :with_extended_schedule, cohort:, lead_provider:, user: FactoryBot.create(:user, full_name: Faker::Name.name))
+          FactoryBot.create(:mentor, :eligible_for_funding, :with_extended_schedule, cohort:, lead_provider:, user: FactoryBot.create(:user, full_name: Faker::Name.name))
         end
       end
     end
