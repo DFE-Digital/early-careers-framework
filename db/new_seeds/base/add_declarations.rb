@@ -3,10 +3,10 @@
 require "active_support/testing/time_helpers"
 include ActiveSupport::Testing::TimeHelpers
 
-# Configuration - adjust batch sizes based on your system capabilities
-LEAD_PROVIDER_BATCH_SIZE = 5
-PARTICIPANT_BATCH_SIZE = 100
-COHORT_BATCH_SIZE = 10
+# Configuration
+LEAD_PROVIDER_BATCH_SIZE = 3
+PARTICIPANT_BATCH_SIZE = 50
+COHORT_BATCH_SIZE = 3
 
 # Pre-load all cohorts to avoid repeated queries
 cohorts = Cohort.all.to_a
