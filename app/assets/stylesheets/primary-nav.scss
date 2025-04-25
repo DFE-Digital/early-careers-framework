@@ -60,3 +60,9 @@ $primaryNavHeight: 2.5rem;
     line-height: $primaryNavHeight;
   }
 }
+
+.app-service-navigation {
+  .govuk-width-container {
+    @extend .govuk-width-container__wide;
+  }
+}

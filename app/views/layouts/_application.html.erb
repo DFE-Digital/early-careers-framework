@@ -73,17 +73,9 @@
       end
     end %>
 
-    <section aria-label="Service information" class="govuk-service-navigation" data-module="govuk-service-navigation">
-      <div class="govuk-width-container <%= "govuk-width-container__wide" if wide_container_view? %>">
-        <div class="govuk-service-navigation__container">
-          <span class="govuk-service-navigation__service-name">
-            <a href=<%= root_path%> class="govuk-service-navigation__link">
-              <%= service_name %>
-            </a>
-          </span>
-        </div>
-      </div>
-    </section>
+    <%= govuk_service_navigation(classes: ("app-service-navigation" if wide_container_view?)) do |sn|
+      sn.with_service_name(service_name:, service_url: root_path)
+    end %>
 
     <%= render "layouts/phase_banner" unless params[:controller].starts_with?("admin") %>
 
