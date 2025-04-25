@@ -42,9 +42,12 @@ RSpec.describe Finance::DeclarationStatementAttacher do
       end
 
       context "when the participant has since changed to a later cohort" do
-        before { participant_profile.schedule.update!(cohort: current_cohort) }
+        before do
+          participant_profile.latest_induction_record.induction_programme.school_cohort.update!(cohort: cohort.next)
+          participant_profile.schedule.update!(cohort: cohort.next)
+        end
 
-        it "creates line item against the schedule in the previous cohort" do
+        it "creates line item against the statement in the previous cohort" do
           expect {
             subject.call
           }.to change { statement.reload.statement_line_items.count }.by(1)

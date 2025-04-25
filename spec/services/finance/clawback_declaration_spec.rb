@@ -27,7 +27,7 @@ RSpec.describe Finance::ClawbackDeclaration do
   end
 
   describe "#call" do
-    it "mutates state of delaration to awaiting_clawback" do
+    it "mutates state of declaration to awaiting_clawback" do
       expect { subject.call }.to change { participant_declaration.reload.state }.from("paid").to("awaiting_clawback")
     end
 
@@ -67,6 +67,17 @@ RSpec.describe Finance::ClawbackDeclaration do
 
         cohort = participant_declaration.cohort.start_year
         expect(subject.errors.messages_for(:participant_declaration)).to include(/You cannot submit or void declarations for the #{cohort}/)
+      end
+    end
+
+    context "when the participant has since changed to a later cohort" do
+      before do
+        participant_profile.schedule.update!(cohort: cohort.next)
+        participant_profile.latest_induction_record.induction_programme.school_cohort.update!(cohort: cohort.next)
+      end
+
+      it "will clawback against the statement in the original declaration cohort" do
+        expect { subject.call }.to change { Finance::StatementLineItem.where(state: "awaiting_clawback", participant_declaration:, statement: next_statement).count }.by(1)
       end
     end
 
