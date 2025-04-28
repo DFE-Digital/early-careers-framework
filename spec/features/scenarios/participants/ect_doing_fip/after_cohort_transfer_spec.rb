@@ -97,8 +97,7 @@ RSpec.feature "ECT doing FIP: after cohort transfer", type: :feature do
   %w[active inactive].each do |flag_state|
     context "when programme type changes for 2025 are #{flag_state}", with_feature_flags: { programme_type_changes_2025: flag_state } do
       let(:programme_name) do
-        # FIXME: LPDOB have used "Provider led" instead of "Provider-led" so using that until fixed
-        flag_state == "inactive" ? "Full induction programme" : "Provider led"
+        flag_state == "inactive" ? "Full induction programme" : "Provider-led"
       end
 
       scenario "The current school induction tutor can locate a record for the ECT" do

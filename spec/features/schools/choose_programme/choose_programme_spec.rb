@@ -149,7 +149,8 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
 
         when_i_click_on_the_return_to_your_training_link
         then_i_am_taken_to_the_manage_your_training_page
-        and_i_see_the_choose_training_material_content
+
+        and_i_see_the_choose_training_material_content unless FeatureFlag.active?(:programme_type_changes_2025)
       end
 
       scenario "A school chooses ECTs expected in next academic year and design and deliver own programme" do
