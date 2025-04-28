@@ -66,3 +66,13 @@ $primaryNavHeight: 2.5rem;
     @extend .govuk-width-container__wide;
   }
 }
+
+.govuk-service-navigation {
+  &__container {
+    justify-content: space-between;
+  }
+
+  &__link {
+    font-weight: bold;
+  }
+}
