@@ -87,47 +87,6 @@ cpd_lead_providers.find_each(batch_size: LEAD_PROVIDER_BATCH_SIZE) do |cpd_lead_
 
     # Process each schedule group
     profiles_by_schedule.each do |schedule, profiles|
-      # Pre-create all needed milestones for this schedule in one batch
-      needed_milestone_types = Set.new
-
-      profiles.each do |participant_profile|
-        profile_declaration_types = declaration_types.dup
-
-        # Filter out existing declaration types
-        existing_types = participant_profile.participant_declarations.pluck(:declaration_type)
-        profile_declaration_types.reject! { |type| type.in?(existing_types) }
-
-        # Filter based on mentor/schedule conditions
-        if participant_profile.mentor? && schedule.cohort.mentor_funding?
-          profile_declaration_types.reject! { |type| type.match?(/retained|extended/) }
-        end
-
-        unless schedule.schedule_identifier.match?(/extended/)
-          profile_declaration_types.reject! { |type| type.match?(/extended/) }
-        end
-
-        # Add needed milestone types to the set
-        profile_declaration_types.each do |declaration_type|
-          needed_milestone_types.add(declaration_type)
-        end
-      end
-
-      # Create all needed milestones in a single transaction
-      if needed_milestone_types.any?
-        ActiveRecord::Base.transaction do
-          needed_milestone_types.each do |declaration_type|
-            next if schedule.milestones.exists?(declaration_type:)
-
-            FactoryBot.create(
-              :milestone,
-              schedule:,
-              declaration_type:,
-              start_date: 1.day.ago,
-            )
-          end
-        end
-      end
-
       # Load all milestones for this schedule to avoid repeated queries
       schedule_milestones = schedule.milestones.index_by(&:declaration_type)
 
