@@ -724,6 +724,14 @@ For API v3 onwards, a replacement mentor's schedule, and any associated declarat
 
 Previously for API v1 and v2, a replacement mentor could start mentoring an ECT part way through their training. The provider had already submitted a `start` declaration for the previous mentor (in line with the ECT). If the provider were to submit a `retention-1` declaration for the ECT, then any declaration submitted for the new replacement mentor in the same milestone period would also have to be a retention-1 declaration. This is no longer the case for API v3.
 
+### Offboarding participants  
+
+There are 3 instances lead providers need to account for: 
+
+1. Transfers – when a participant has transferred and providers have finalised any outstanding declaration and offboarding processes, they should withdraw the participant using the `PUT participants/ecf/{id}/withdraw` endpoint. 
+2. Withdrawals – withdraw the participant as above. Any outstanding declarations can be backdated if they are on/before the withdrawal date.  
+3. Completions – once participant profiles have been marked as `completed`, providers should backdate any declarations and remove these participants from their active training lists. Providers **do not have to** withdraw completed participants or mentors whose funding has ended.   
+
 ## Participant transfers (v3 API-only) 
  
 In the v3 API, lead providers can: 
