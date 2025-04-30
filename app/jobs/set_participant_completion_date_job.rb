@@ -6,7 +6,7 @@
 # It runs in batches of 200 as we have a 300 lookup per minute limit on the API
 # This could get adapted later to be a regular running process with a bit more logic
 class SetParticipantCompletionDateJob < ApplicationJob
-  MAX_CANDIDATES = 200
+  MAX_CANDIDATES = 150
 
   def perform
     candidates.each do |candidate|
@@ -20,6 +20,10 @@ class SetParticipantCompletionDateJob < ApplicationJob
 private
 
   def candidates
-    @candidates ||= CompletionCandidate.includes(participant_profile: :teacher_profile).limit(MAX_CANDIDATES)
+    @candidates ||= CompletionCandidate
+                      .includes(participant_profile: :teacher_profile)
+                      .order(:participant_profile_id)
+                      .limit(MAX_CANDIDATES)
+                      .to_a
   end
 end
