@@ -61,7 +61,7 @@ GET /api/v3/schools/ecf?filter[cohort]={year}
 
 View details for schools providing ECTE training in a given cohort. Check details on the type of training programme schools have chosen to deliver, and whether they have confirmed partnerships in place.
 
-<div class="govuk-inset-text"> The `cohort` filter must be included as a parameter. The API will reject requests which do not include the `cohort` filter. </div>
+<div class="govuk-inset-text"> The <code>cohort</code> filter must be included as a parameter. The API will reject requests which do not include the <code>cohort</code> filter. </div>
 
 Providers can also filter results by school URN. For example, `GET /api/v3/schools/ecf?filter[cohort]=2024&filter[urn]=123456`.
 
