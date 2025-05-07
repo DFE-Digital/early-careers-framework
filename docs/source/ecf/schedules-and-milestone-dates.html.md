@@ -5,11 +5,19 @@ weight: 3
 
 # Schedules and milestone dates
 
-The DfE makes payment to providers in line with agreed contractual schedules and training criteria. 
+This section explains the contractual retention periods in which lead providers must submit declarations to show training delivery and participant retention. 
 
-Providers are paid a proportionate sum of money relative to the amount of time they support their participants.
+DfE pays providers based on agreed contractual schedules and training delivery criteria. Payments are proportional to the time providers support their participants. 
 
-Providers must [submit declarations](/api-reference/ecf/guidance/#submit-view-and-void-declarations) ahead of milestone dates (deadlines) to ensure payments are made for a given milestone. 
+<div class="govuk-warning-text"> 
+<span class="govuk-warning-text__icon" aria-hidden="true">!</span> 
+<strong class="govuk-warning-text__text"> 
+<span class="govuk-warning-text__assistive">Warning</span> 
+Providers must submit declarations before each milestone deadline to receive the related payment. 
+</strong> 
+</div> 
+
+Access to training materials should not be tied to a participant’s cohort or schedule.  
 
 ## Key concepts
 
