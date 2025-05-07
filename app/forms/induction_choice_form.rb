@@ -24,7 +24,7 @@ class InductionChoiceForm
   validates :programme_choice, inclusion: { message: "Select how you want to run your training", in: ->(form) { form.programme_choices.map(&:id) } }
 
   def programme_choices
-    school_training_options(state_funded: !school.cip_only?, include_no_ects_option: true)
+    school_training_options(state_funded: !school.cip_only?, include_no_ects_option: true).reject { |opt| opt.id == school_cohort.induction_programme_choice&.to_sym }
   end
 
   def opt_out_choice_selected?
