@@ -1,3 +1,6 @@
+# syntax=docker/dockerfile:1
+# check=skip=SecretsUsedInArgOrEnv
+
 # To use or update to a ruby version, change {BASE_RUBY_IMAGE}
 ARG BASE_RUBY_IMAGE=ruby:3.2.6-alpine3.21
 # BASE_RUBY_IMAGE_WITH_GEMS_AND_NODE_MODULES will default to early-careers-framework-gems-node-modules
