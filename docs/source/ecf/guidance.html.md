@@ -31,9 +31,9 @@ Changes can happen during training; some participants may not complete their tra
 
 ## Confirm, view and update partnerships
 
-Partnerships are the relationships created between schools, delivery partners and providers who work together to deliver ECTE training to participants. 
+Partnerships are the relationships created between schools, delivery partners and providers who work together to deliver early career training programmes to participants. 
 
-Providers must confirm to DfE whenever they agree to enter into new partnerships with a school and delivery partner to deliver ECTE training. 
+Providers must confirm to DfE whenever they agree to enter into new partnerships with a school and delivery partner to deliver training. 
 
 <div class="govuk-inset-text"> The partnerships endpoints are only available for systems integrated with API v3 onwards. They will not return data for API v1 or v2. </div>
 
