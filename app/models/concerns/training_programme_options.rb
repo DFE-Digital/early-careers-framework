@@ -53,25 +53,27 @@ module TrainingProgrammeOptions
     },
   }.freeze
 
-  def school_training_options(state_funded: true, include_no_ects_option: false)
+  def school_training_options(state_funded: true, include_no_ects_option: false, exclude: [])
+    choices = possible_programmes(state_funded, include_no_ects_option, exclude)
+
     if FeatureFlag.active?(:programme_type_changes_2025)
-      school_choices_2025(state_funded, include_no_ects_option)
+      choices.map do |id|
+        OpenStruct.new(id:, name: PROGRAMME_CHOICES_2025[id][:name], description: PROGRAMME_CHOICES_2025[id][:description])
+      end
     else
-      school_choices_pre_2025(state_funded, include_no_ects_option)
+      choices.map { |id| OpenStruct.new(id:, name: PROGRAMME_CHOICES[id]) }
     end
   end
 
-  def school_choices_pre_2025(state_funded, include_no_ects_option)
-    choices = Array.new(state_funded ? NON_CIP_ONLY_SCHOOL_PROGRAMME_CHOICES : CIP_ONLY_SCHOOL_PROGRAMME_CHOICES)
-    choices << :no_early_career_teachers if include_no_ects_option
-    choices.map { |id| OpenStruct.new(id:, name: PROGRAMME_CHOICES[id]) }
-  end
+  def possible_programmes(state_funded, include_no_ects_option, exclude)
+    choices = if FeatureFlag.active?(:programme_type_changes_2025)
+                Array.new(state_funded ? NON_CIP_ONLY_SCHOOL_PROGRAMME_CHOICES_2025 : CIP_ONLY_SCHOOL_PROGRAMME_CHOICES_2025)
+              else
+                Array.new(state_funded ? NON_CIP_ONLY_SCHOOL_PROGRAMME_CHOICES : CIP_ONLY_SCHOOL_PROGRAMME_CHOICES)
+              end
 
-  def school_choices_2025(state_funded, include_no_ects_option)
-    choices = Array.new(state_funded ? NON_CIP_ONLY_SCHOOL_PROGRAMME_CHOICES_2025 : CIP_ONLY_SCHOOL_PROGRAMME_CHOICES_2025)
     choices << :no_early_career_teachers if include_no_ects_option
-    choices.map do |id|
-      OpenStruct.new(id:, name: PROGRAMME_CHOICES_2025[id][:name], description: PROGRAMME_CHOICES_2025[id][:description])
-    end
+    exclusions = exclude.map(&:to_sym)
+    choices.reject { |choice| choice.in? exclusions }
   end
 end
