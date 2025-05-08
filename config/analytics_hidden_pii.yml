@@ -8,3 +8,6 @@
   :emails:
   - to
   - personalisation
+  :users:
+  - id
+  - full_name
