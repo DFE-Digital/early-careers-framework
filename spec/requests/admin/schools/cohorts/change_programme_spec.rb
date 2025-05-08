@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe "Admin::Schools::Cohorts::ChangeProgramme", type: :request do
-  let(:school_cohort) { create(:school_cohort) }
+  let(:school_cohort) { create(:school_cohort, :cip) }
   let(:school) { school_cohort.school }
   let(:cohort) { school_cohort.cohort }
 
@@ -31,6 +31,7 @@ RSpec.describe "Admin::Schools::Cohorts::ChangeProgramme", type: :request do
       post "/admin/schools/#{school.slug}/cohorts/#{cohort.start_year}/change-programme/confirm", params: {
         induction_choice_form: { programme_choice: "full_induction_programme" },
       }
+
       expect(response).to render_template "admin/schools/cohorts/change_programme/confirm"
     end
   end

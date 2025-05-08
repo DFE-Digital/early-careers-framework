@@ -10,13 +10,12 @@
 
         <%= form_for @induction_choice_form, url: schools_choose_programme_path, method: :post do |f| %>
             <%= f.govuk_error_summary %>
-            <%= f.govuk_collection_radio_buttons(
-              :programme_choice,
-              @induction_choice_form.programme_choices,
-              :id,
-              :name,
-              legend: { text: "How do you want to run your training in #{@induction_choice_form.cohort.start_year} to #{@induction_choice_form.cohort.start_year + 1}?", size: "l", tag: "h1" }
-            ) do %>
+
+            <%= programme_radio_options(f,
+                                        :programme_choice,
+                                        @induction_choice_form.programme_choices,
+                                        "How do you want to run your training in #{@induction_choice_form.cohort.description}?") do %>
+
               <p class="govuk-body">To learn more about your training options, visit
                 <%= govuk_link_to "How to set up training for early career teachers (opens in new tab)",
                                   guidance_for_how_to_setup_training_url,
