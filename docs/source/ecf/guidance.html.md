@@ -53,13 +53,13 @@ Every confirmed partnership has a unique identifier, returned as `id` in the `GE
 
 Once a partnership for a cohort is confirmed, any new participants registered for training at that school will be assigned to the ‘default’ training provision. For example, once a provider confirms their partnership for the 2024 cohort, any participants registered by the school's induction tutor will automatically default to training with the agreed provider and delivery partner. 
 
-### Find schools delivering ECTE training in a given cohort
+### Find schools delivering early career training programmes in a given cohort
 
 ```
 GET /api/v3/schools/ecf?filter[cohort]={year}
 ```
 
-View details for schools providing ECTE training in a given cohort. Check details on the type of training programme schools have chosen to deliver, and whether they have confirmed partnerships in place.
+View details for schools providing early career training in a given cohort. Check details on the type of training programme schools have chosen to deliver, and whether they have confirmed partnerships in place.
 
 <div class="govuk-inset-text"> The <code>cohort</code> filter must be included as a parameter. The API will reject requests which do not include the <code>cohort</code> filter. </div>
 
@@ -69,7 +69,7 @@ Successful requests will return a response body with school details.
 
 #### What the API will show 
 
-The API will **only** show schools that are eligible for funded ECTE training programmes within a given cohort. 
+The API will **only** show schools that are eligible for funded early career training programmes within a given cohort. 
 
 For example, if schools are eligible for funding in the 2025/26 academic year, they’ll be visible via the API, and providers can go on to form partnerships with them.
 
@@ -109,7 +109,7 @@ For more detailed information, see the `GET schools` [endpoint documentation](/a
 GET /api/v3/schools/ecf/{id}?filter[cohort]={year}
 ```
 
-Providers can view details for a specific school providing ECTE training in a given cohort. They can check details on the type of training programme the school has chosen to deliver, and whether they have a confirmed partnership in place. 
+Providers can view details for a specific school providing early career training programmes in a given cohort. They can check details on the type of training programme the school has chosen to deliver, and whether they have a confirmed partnership in place. 
 
 <div class="govuk-inset-text"> The cohort filter must be included as a parameter. The API will reject requests which do not include the cohort filter. </div>
 
