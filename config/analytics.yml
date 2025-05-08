@@ -377,3 +377,6 @@
   - status
   - delivered_at
   - tags
+  :users:
+  - created_at
+  - updated_at
