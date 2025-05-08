@@ -5,7 +5,7 @@ weight: 1
 
 # About the API
 
-Lead providers must use this API to view, submit and update participant data so they receive accurate payments from the Department for Education (DfE) for their ECF-based training.
+Lead providers must use this API to view, submit and update participant data so they receive accurate payments from Department for Education (DfE) for their early career training programme.
 
 Once a participant has been registered to the service by their school, data associated with them becomes available to lead providers via the API.
 
