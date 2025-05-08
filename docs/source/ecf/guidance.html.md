@@ -11,21 +11,29 @@ The focus of the following guidance is on business logic only. Critical details 
 
 ## Overview of API requests
 
-1. For a given cohort, providers confirm partnerships with schools via the API, including confirmation who their delivery partners will be. **Note**, this only applies to providers integrated with API v3 onwards
-2. School induction tutors register participants for ECF-based training via the DfE online service
-3. Providers view participant data via the API, using it to onboard participants to their learning management systems. Note, the API will not present any data for participants whose details have not yet been validated by DfE
-4. If necessary, providers will update the participant's training schedule via the API
-5. Providers will train participants as per details set out in their contract
-6. Providers will submit a `started` declaration via the API to notify DfE that training has begun
-7. DfE will pay providers output payments for `started` declarations
-8. Providers will check via the API to see whether any participants have transferred to or from schools they are in partnership with. **Note**, this only applies to providers integrated with API v3 onwards
-9. Providers continue to train participants as per details set out in the contract
-10. Providers will submit `retained` declarations via the API to notify DfE participants have continued in training for a given milestone
-11. DfE will pay providers output payments for `retained` declarations
-12. Providers complete training participants as per details set out in the contract
-13. Providers will submit `completed` declarations via the API to notify DfE the participant has completed training
-14. DfE will pay providers output payments for `completed` declarations
-15. Providers view financial statements via the API
+### Regisration and onboarding
+
+1. For a given cohort, providers confirm partnerships with schools via the API, including confirmation who their delivery partners will be. **Note**, this only applies to providers integrated with API v3 onwards.
+2. School induction tutors register participants for training via the DfE online service.
+3. Providers view participant data via the API, using it to onboard participants to their learning management systems. Note, the API will not present any data for participants whose details have not yet been validated by DfE.
+
+### During training 
+
+1. If necessary, providers will update the participant's training schedule via the API.
+2. Providers will train participants as per details set out in their contract.
+3. Providers will submit a `started` declaration via the API to notify DfE that training has begun.
+4. DfE will pay providers output payments for `started` declarations.
+5. Providers will check via the API to see whether any participants have transferred to or from schools they are in partnership with. **Note**, this only applies to providers integrated with API v3 onwards.
+6. Providers continue to train participants as per details set out in the contract.
+7. Providers will submit `retained` declarations via the API to notify DfE participants have continued in training for a given milestone.
+
+### Once training has been completed
+
+1. DfE will pay providers output payments for `retained` declarations.
+2. Providers complete training participants as per details set out in the contract.
+3. Providers will submit `completed` declarations via the API to notify DfE the participant has completed training.
+4. DfE will pay providers output payments for `completed` declarations.
+5. Providers view financial statements via the API.
 
 Changes can happen during training; some participants may not complete their training within the standard schedule, or at all. Providers must update relevant data using the API.
 
@@ -345,7 +353,7 @@ An example request body is listed below. Request bodies must include a new value
 
 Successful requests will return a response body with updates included.
 
-For more detailed information see the specifications for this [update an ECF partnership endpoint](/api-reference/reference-v3.html#api-v3-partnerships-ecf-id-put).
+For more detailed information see the specifications for this [update a partnership endpoint](/api-reference/reference-v3.html#api-v3-partnerships-ecf-id-put).
 
 #### Example request body:
 
@@ -372,7 +380,7 @@ Providers can view data to find out whether participants:
 * have (if they're ECTs) been assigned [unfunded mentors](/api-reference/ecf/guidance.html#view-all-unfunded-mentor-details)
 * have (if they're ECTs) completed their induction, according to the Database of Qualified Teachers
 
-Note, while participants can enter different email addresses when registering for each training course they apply for, providers will only see the email address associated with a given course registration. For example, a participant may complete their ECF-based training with one associated email address, then register for an NPQ with a different email address, and go on to be an ECT mentor with a third email address. DfE will share the relevant email address with the relevant course provider.
+Note, while participants can enter different email addresses when registering for each training course they apply for, providers will only see the email address associated with a given course registration. For example, a participant may complete their training with one associated email address, then register for an NPQ with a different email address, and go on to be an ECT mentor with a third email address. DfE will share the relevant email address with the relevant course provider.
 
 Providers can then update data to notify DfE that participants have:
 
@@ -394,10 +402,10 @@ An example response body is listed below.
 **Providers should note:**
 
 * DfE has [previously advised](/api-reference/release-notes.html#15-march-2023) of the possibility that participants may be registered as duplicates with multiple participant_ids. Where DfE identifies duplicates, it will fix the error by ‘retiring’ one of the participant IDs, then associating all records and data under the remaining ID
-* providers can check if an ECF participant’s ID has changed using the `participant_id_changes` nested structure in the [ECFEnrolment](/api-reference/reference-v3.html#schema-ecfenrolment), which contains a `from_participant_id` and a `to_participant_id` string fields, as well a `changed_at` date value
+* providers can check if a participant’s ID has changed using the `participant_id_changes` nested structure in the [ECFEnrolment](/api-reference/reference-v3.html#schema-ecfenrolment), which contains a `from_participant_id` and a `to_participant_id` string fields, as well a `changed_at` date value
 * DfE will close the funding contract for the 2021 cohort on 31 July 2024. Schools will start moving ECTs and mentors with partial declarations originally assigned to the 2021 cohort to the 2024 cohort from mid-June  
 
-For more detailed information see the specifications for this [view multiple ECF participants endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-get).
+For more detailed information, see the specifications for this [view multiple participants endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-get).
 
 #### Example response body:
 
@@ -462,7 +470,7 @@ An example response body is listed below.
 * they can check if a participant’s ID has changed using the `participant_id_changes` nested structure in the [ECFEnrolment](/api-reference/reference-v3.html#schema-ecfenrolment), which contains a `from_participant_id` and a `to_participant_id` string fields, as well a `changed_at` date value
 * if they cannot see a mentor as expected using this endpoint, it's probably because the mentor is not eligible for funding through them. In this case, providers should use the [GET /api/v3/unfunded-mentors/ecf/{id} endpoint](/api-reference/reference-v3.html#api-v3-unfunded-mentors-ecf-id-get) to retrieve the mentor’s details
 
-For more detailed information see the specifications for this [view a single ECF participant endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-id-get).
+For more detailed information, see the specifications for the [view a single participant endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-id-get).
 
 #### Example response body:
 
@@ -575,7 +583,7 @@ For more detailed information, [see the ‘Get a single unfunded mentor’ endpo
 
 ### Notify DfE a participant has taken a break (deferred) from training
 
-A participant can choose to take a break from ECF-based training at any time if they plan to resume training at a later date. Providers must notify DfE of this via the API.
+A participant can choose to take a break from training at any time if they plan to resume training at a later date. Providers must notify DfE of this via the API.
 
 ```
  PUT /api/v{n}/participants/ecf/{id}/defer
@@ -585,7 +593,7 @@ An example request body is listed below.
 
 Successful requests will return a response body including updates to the `training_status` attribute.
 
-For more detailed information see the specifications for this [notify DfE that an ECF participant is taking a break from their course endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-id-defer-put).
+For more detailed information, see the specifications for the [notify DfE that a participant is taking a break from their course endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-id-defer-put).
 
 #### Example request body:
 
@@ -603,7 +611,7 @@ For more detailed information see the specifications for this [notify DfE that a
 
 ### Notify DfE a participant has resumed training
 
-A participant can choose to resume their ECF-based training at any time if they had previously deferred. Providers must notify DfE of this via the API.
+A participant can choose to resume their training at any time if they had previously deferred. Providers must notify DfE of this via the API.
 
 ```
  PUT /api/v{n}/participants/ecf/{id}/resume
@@ -613,7 +621,7 @@ An example request body is listed below.
 
 Successful requests will return a response body including updates to the `training_status` attribute.
 
-For more detailed information see the specifications for this [notify DfE that an ECF participant has resumed training endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-id-resume-put).
+For more detailed information see the specifications for this [notify DfE that a participant has resumed training endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-id-resume-put).
 
 #### Example request body:
 
@@ -630,7 +638,7 @@ For more detailed information see the specifications for this [notify DfE that a
 
 ###  Notify DfE a participant has withdrawn from training
 
-A participant can choose to withdraw from ECF-based training at any time. Providers must notify DfE of this via the API.
+A participant can choose to withdraw from training at any time. Providers must notify DfE of this via the API.
 
 ```
  PUT /api/v{n}/participants/ecf/{id}/withdraw
@@ -640,14 +648,14 @@ An example request body is listed below.
 
 Successful requests will return a response body including updates to the `training_status` attribute.
 
-For more detailed information see the specifications for this [notify DfE that an ECF participant has withdrawn from training endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-id-withdraw-put).
+For more detailed information see the specifications for this [notify DfE that a participant has withdrawn from training endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-id-withdraw-put).
 
 #### Providers should note:
 
 * DfE will **only** pay for participants who have had, at a minimum, a `started` declaration submitted against them
 * DfE will pay providers for declarations submitted where the `declaration_date` is before the date of the withdrawal
 
-Providers may see instances where a participant’s `training_status` and `participant_status` do not match. Providers are required to check the `participant_status` is accurate before notifying the DFE that the participant has withdrawn from ECF-based training with them altogether. **For example,** a participant has `"training_status": "active"` while their `"participant_status": "withdrawn"`. This would indicate an induction tutor has entered the DfE service to inform DfE that the participant has withdrawn from training at their school. However, the provider in partnership with that school has not yet withdrawn the participant via the API.  The participant’s `training_status` will remain `active` until the provider investigates (to see if the participant has withdrawn or has transferred to a new school) and notifies DfE a participant has withdrawn from training (`"training_status": "withdrawn"`).
+Providers may see instances where a participant’s `training_status` and `participant_status` do not match. Providers are required to check the `participant_status` is accurate before notifying DFE that the participant has withdrawn from training with them altogether. **For example,** a participant has `"training_status": "active"` while their `"participant_status": "withdrawn"`. This would indicate an induction tutor has entered the DfE service to inform DfE that the participant has withdrawn from training at their school. However, the provider in partnership with that school has not yet withdrawn the participant via the API.  The participant’s `training_status` will remain `active` until the provider investigates (to see if the participant has withdrawn or has transferred to a new school) and notifies DfE a participant has withdrawn from training (`"training_status": "withdrawn"`).
 
 #### Example request body:
 
@@ -665,7 +673,7 @@ Providers may see instances where a participant’s `training_status` and `parti
 
 ### Notify DfE of a participant's training schedule
 
-<div class="govuk-inset-text">All participants will be registered by default to a standard schedule starting in September. Providers must notify the DfE of any other schedule.</div>
+<div class="govuk-inset-text">All participants will be registered by default to a standard schedule starting in September. Providers must notify DfE of any other schedule.</div>
 
 Participants can choose to follow standard or non-standard training schedules.
 
@@ -683,13 +691,13 @@ Milestone validation applies. The API will reject a schedule change if any previ
 
 Where this occurs, providers should:
 
-1. void the existing declarations (where declaration_date does not align with the new schedule)
-2. change the participant’s training schedule
-3. resubmit backdated declarations (where declaration_date aligns with the new schedule)
+1. Void the existing declarations (where `declaration_date` does not align with the new schedule).
+2. Change the participant’s training schedule.
+3. Resubmit backdated declarations (where `declaration_date` aligns with the new schedule).
 
 For replacement mentors, view [guidance on updating a replacement mentor’s schedule.](/api-reference/ecf/guidance.html#update-a-replacement-mentor-s-schedule)
 
-For more detailed information see the specifications for this [notify that an ECF participant has changed their training schedule endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-id-change-schedule-put).
+For more detailed information see the specifications for this [notify that a participant has changed their training schedule endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-id-change-schedule-put).
 
 #### Example request body:
 
@@ -708,11 +716,11 @@ For more detailed information see the specifications for this [notify that an EC
 
 ###  Update a replacement mentor’s schedule
 
-A new mentor can be assigned to an ECT part way through training, replacing the ECT’s original mentor.
+A new mentor can be assigned to an ECT part way through training.
 
-[Providers must notify the DfE of replacement mentors by updating their training schedule.](/api-reference/ecf/guidance.html#notify-dfe-of-a-participant-39-s-training-schedule)
+[Providers must notify DfE of replacement mentors by updating their training schedule.](/api-reference/ecf/guidance.html#notify-dfe-of-a-participant-39-s-training-schedule)
 
-Note, if a replacement mentor is already mentoring another ECT and they replace a mentor for a second ECT, the first ECT takes precedence. In this instance, the provider should not change the mentor’s schedule.
+Note, if a replacement mentor is already mentoring another ECT, and they replace a mentor for a second ECT, the first ECT takes precedence. In this instance, the provider should not change the mentor’s schedule.
 
 Providers must include a `schedule_identifier` reflecting when the replacement mentor starts.
 
@@ -751,7 +759,7 @@ GET /api/v3/participants/ecf/transfers
 
 Lead providers can use this endpoint to view data for participants who’ve transferred from and to schools they’re in partnership with. The data is updated whenever schools report a transfer. 
 
-View the [‘Retrieve multiple ECF participant transfers’ endpoint documentation](/api-reference/reference-v3.html#api-v3-participants-ecf-transfers-get). 
+View the [‘Retrieve multiple participant transfers’ endpoint documentation](/api-reference/reference-v3.html#api-v3-participants-ecf-transfers-get). 
 
 ### View data for a specific participant who has transferred  
 
@@ -845,7 +853,7 @@ Successful requests will return details including:
 
 ## Submit, view and void declarations
 
-Providers must submit declarations in line with ECF contractual [schedules and milestone dates](/api-reference/ecf/schedules-and-milestone-dates).
+Providers must submit declarations in line with contractual [schedules and milestone dates](/api-reference/ecf/schedules-and-milestone-dates).
 
 These declarations will trigger payment from DfE to providers.
 
@@ -872,7 +880,7 @@ X-With-Server-Date: 2025-01-10T10:42:00Z
 
 ### Submit a declaration to notify DfE a participant has started training
 
-Notify the DfE that a participant has started ECF-based training by submitting a `started` declaration in line with [milestone 1 dates](/api-reference/ecf/schedules-and-milestone-dates).
+Notify the DfE that a participant has started training by submitting a `started` declaration in line with [milestone 1 dates](/api-reference/ecf/schedules-and-milestone-dates).
 
 ```
  POST /api/v3/participant-declarations
@@ -884,9 +892,9 @@ An example response body is listed below. Successful requests will return a resp
 
 Any attempts to submit duplicate declarations will return an error message.
 
-<div class="govuk-inset-text">Note, providers should store the returned ECF participant declaration ID for management tasks.</div>
+<div class="govuk-inset-text">Note, providers should store the returned participant declaration ID for management tasks.</div>
 
-For more detailed information see the specifications for this [notify DfE that an ECF participant has started training endpoint](/api-reference/reference-v3.html#api-v3-participant-declarations-post).
+For more detailed information see the specifications for this [notify DfE that a participant has started training endpoint](/api-reference/reference-v3.html#api-v3-participant-declarations-post).
 
 #### Example request body:
 
@@ -933,7 +941,7 @@ For more detailed information see the specifications for this [notify DfE that a
 
 ### Submit a declaration to notify DfE a participant has been retained in training
 
-Notify the DfE that a participant has reached a given retention point in their training by submitting a `retained` declaration in line with [milestone dates](/api-reference/ecf/schedules-and-milestone-dates).
+Notify DfE that a participant has reached a given retention point in their training by submitting a `retained` declaration in line with [milestone dates](/api-reference/ecf/schedules-and-milestone-dates).
 
 ```
 POST /api/v{n}/participant-declarations
@@ -945,9 +953,9 @@ An example response body is listed below. Successful requests will return a resp
 
 Any attempts to submit duplicate declarations will return an error message.
 
-<div class="govuk-inset-text">Note, providers should store the returned ECF participant declaration ID for management tasks.</div>
+<div class="govuk-inset-text">Note, providers should store the returned participant declaration ID for management tasks.</div>
 
-For more detailed information see the specifications for this [notify DfE that an ECF participant has been retained in training endpoint](/api-reference/reference-v3.html#api-v3-participant-declarations-post).
+For more detailed information see the specifications for this [notify DfE that a participant has been retained in training endpoint](/api-reference/reference-v3.html#api-v3-participant-declarations-post).
 
 #### Example request body:
 
@@ -1007,9 +1015,9 @@ An example response body is listed below. Successful requests will return a resp
 
 Any attempts to submit duplicate declarations will return an error message.
 
-<div class="govuk-inset-text">Note, providers should store the returned ECF participant declaration ID for future management tasks.</div>
+<div class="govuk-inset-text">Note, providers should store the returned participant declaration ID for future management tasks.</div>
 
-For more detailed information see the specifications for this [notify DfE that an ECF participant has completed training endpoint](/api-reference/reference-v3.html#api-v3-participant-declarations-post).
+For more detailed information see the specifications for this [notify DfE that a participant has completed training endpoint](/api-reference/reference-v3.html#api-v3-participant-declarations-post).
 
 #### Example request body:
 
