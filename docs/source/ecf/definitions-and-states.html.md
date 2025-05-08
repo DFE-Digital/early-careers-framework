@@ -13,14 +13,14 @@ weight: 1
 | `course_identifier`      | The participant’s training as either an early career teacher (ECT) or mentor       |
 | `declaration`    | The notification submitted by providers via the API as the sole means for triggering output payments from DfE. Declarations are submitted where there is evidence of a participant’s engagement in training for a given milestone period      |
 | `participant`    | An early career teacher (ECT) or mentor registered for training      |
-| `partnership`     | The relationship created between schools, delivery partners and providers who work together to deliver ECF-based training to participants      |
-| `schedule`     | The expected timeframe in which a participant will complete their ECF-based training. Schedules include [defined milestone dates](/api-reference/ecf/schedules-and-milestone-dates) against which DfE validates the declarations submitted by providers      |
+| `partnership`     | The relationship created between schools, delivery partners and providers who work together to deliver early career training to participants      |
+| `schedule`     | The expected timeframe in which a participant will complete their early career training. Schedules include [defined milestone dates](/api-reference/ecf/schedules-and-milestone-dates) against which DfE validates the declarations submitted by providers      |
 | `statement`    | A record of output payments (based on declarations), service fees and any adjustments the DfE may pay lead providers at the end of a contractually agreed payment period. Statements sent to providers by DfE at the end of milestone periods can be used for invoicing purposes     |
 | `unfunded-mentor` | Mentors linked to a provider's ECTs but not eligible for funding through that provider. Typically, these mentors have either completed, or are currently doing, mentor training with a different lead provider than the one delivering training to the ECT they support |
 
 ## Data states
 
-The API service uses a ‘state’ model to reflect the ECF participant journey, meet contractual requirements for how providers should report participants’ training and how the DfE will pay for this training.
+The API service uses a ‘state’ model to reflect the participant journey, meet contractual requirements for how providers should report participants’ training and how DfE will pay for this training.
 
 ### Partnership states
 
@@ -64,7 +64,7 @@ A participant's `participant_status` highlights information given **by school in
 
 Declaration states are defined by the `state` attribute.
 
-Providers must [submit declarations](/api-reference/ecf/guidance/#submit-view-and-void-declarations) to confirm a participant has engaged in training within a given milestone period. A declaration’s `state` value will reflect if and when the DfE will pay providers for the training delivered.
+Providers must [submit declarations](/api-reference/ecf/guidance/#submit-view-and-void-declarations) to confirm a participant has engaged in training within a given milestone period. A declaration’s `state` value will reflect if and when DfE will pay providers for the training delivered.
 
 | state | Definition | Action |
 | -------- | -------- | -------- |
