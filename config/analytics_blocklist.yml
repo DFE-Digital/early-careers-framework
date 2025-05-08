@@ -409,8 +409,6 @@
   - created_at
   - updated_at
   :users:
-  - id
-  - full_name
   - email
   - login_token
   - login_token_valid_until
@@ -420,8 +418,6 @@
   - current_sign_in_ip
   - last_sign_in_ip
   - sign_in_count
-  - created_at
-  - updated_at
   - discarded_at
   - get_an_identity_id
   - archived_email
