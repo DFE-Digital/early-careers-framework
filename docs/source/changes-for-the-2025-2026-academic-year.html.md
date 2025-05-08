@@ -7,7 +7,7 @@ weight: 3
 
 Published: 25 February 2025
 
-Updated: 15 April 2025
+Updated: 12 May 2025
 
 This is a summary of planned changes to API processes lead providers will see when early career teacher (ECT) and mentor registrations open (date to be confirmed). 
 
@@ -89,7 +89,7 @@ Records that have already been withdrawn using the old value will surface the ne
 
 The introduction of the 2025 contracts requires updates to the API service. 
 
-To help lead providers prepare for the opening of ECF registration, we'll run a testing window throughout May 2025. 
+To help lead providers prepare for the opening of registration, we'll run a testing window throughout May 2025. 
 
 Refer to our [release notes](/api-reference/release-notes.html) for all the relevant spec changes.
 
@@ -203,7 +203,7 @@ Providers must check that changes are accepted and that they remain within rate 
 
 ### Test data 
 
-We'll add test data to the ECF sandbox by 22 April 2025. This will include: 
+We'll add test data to the sandbox by 22 April 2025. This will include: 
 
 * schools with different induction types for the 2024 and 2025 cohorts
 * assigned delivery partners for those cohorts
@@ -223,6 +223,6 @@ We also welcome providers to share their test plans, feedback and concerns via t
 
 ### Related links 
 
-[ECF test environment (sandbox)](https://sb.manage-training-for-early-career-teachers.education.gov.uk)
+[Test environment (sandbox)](https://sb.manage-training-for-early-career-teachers.education.gov.uk)
 
-[ECF API guidance](https://manage-training-for-early-career-teachers.education.gov.uk/api-reference)
+[API guidance](https://manage-training-for-early-career-teachers.education.gov.uk/api-reference)
