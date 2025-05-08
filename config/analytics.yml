@@ -380,3 +380,5 @@
   :users:
   - created_at
   - updated_at
+  - id
+  - full_name
