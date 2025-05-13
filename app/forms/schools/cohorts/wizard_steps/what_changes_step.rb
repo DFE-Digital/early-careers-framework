@@ -13,11 +13,18 @@ module Schools
         end
 
         def choices
-          [
-            OpenStruct.new(id: :change_lead_provider,               name: "Form a new partnership"),
-            OpenStruct.new(id: :change_to_core_induction_programme, name: "Deliver your own programme using DfE-accredited materials"),
-            OpenStruct.new(id: :change_to_design_our_own,           name: "Design and deliver your own programme based on the Early Career Framework (ECF)"),
-          ]
+          if FeatureFlag.active?(:programme_type_changes_2025)
+            [
+              OpenStruct.new(id: :change_lead_provider,               name: "Form a new partnership"),
+              OpenStruct.new(id: :change_to_core_induction_programme, name: "Deliver a school-led programme"),
+            ]
+          else
+            [
+              OpenStruct.new(id: :change_lead_provider,               name: "Form a new partnership"),
+              OpenStruct.new(id: :change_to_core_induction_programme, name: "Deliver your own programme using DfE-accredited materials"),
+              OpenStruct.new(id: :change_to_design_our_own,           name: "Design and deliver your own programme based on the early career framework (ECF)"),
+            ]
+          end
         end
 
         def expected?

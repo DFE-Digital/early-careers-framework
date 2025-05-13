@@ -558,7 +558,7 @@ module ManageTrainingSteps
     click_on "Continue"
     click_on("Return to manage your training")
     expect(page).to have_content("Manage your training")
-    expect(page).to have_summary_row("Programme", "Design and deliver your own programme based on the Early Career Framework (ECF)")
+    expect(page).to have_summary_row("Programme", "Design and deliver your own programme based on the early career framework (ECF)")
   end
 
   def and_i_click_on(string)
@@ -1502,7 +1502,7 @@ module ManageTrainingSteps
   end
 
   def and_i_see_the_cip_programme
-    expect(page).to have_summary_row("Programme", "DfE accredited materials")
+    expect(page).to have_summary_row("Programme", "DfE-accredited materials")
   end
 
   def and_i_dont_see_the_lead_provider

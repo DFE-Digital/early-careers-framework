@@ -95,7 +95,7 @@ module ChooseProgrammeSteps
 
   def then_i_am_taken_to_the_change_to_design_own_programme_confirmation_page
     expect(page).to have_content("Confirm your training programme")
-    expect(page).to have_content("You‘ve chosen to deliver your own programme using DfE accredited materials.")
+    expect(page).to have_content("You‘ve chosen to deliver your own programme using DfE-accredited materials.")
   end
 
   def then_i_am_taken_to_the_change_to_design_and_deliver_own_programme_confirmation_page
@@ -219,11 +219,11 @@ module ChooseProgrammeSteps
   end
 
   def and_i_see_programme_to_dfe_accredited_materials
-    expect(page).to have_summary_row("Programme", "DfE accredited materials")
+    expect(page).to have_summary_row("Programme", "DfE-accredited materials")
   end
 
   def and_i_see_programme_to_design_and_deliver_own_programme
-    expect(page).to have_summary_row("Programme", "Design and deliver your own programme based on the Early Career Framework (ECF)")
+    expect(page).to have_summary_row("Programme", "Design and deliver your own programme based on the early career framework (ECF)")
   end
 
   def and_i_see_the_school_name
@@ -323,7 +323,7 @@ module ChooseProgrammeSteps
   end
 
   def when_i_choose_to_design_and_deliver_own_programme
-    choose("Design and deliver your own programme based on the Early Career Framework (ECF)")
+    choose("Design and deliver your own programme based on the early career framework (ECF)")
   end
 
   def when_i_challenge_the_new_cohort_partnership
