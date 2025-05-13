@@ -124,6 +124,9 @@ cpd_lead_providers.find_each(batch_size: LEAD_PROVIDER_BATCH_SIZE) do |cpd_lead_
           milestone = schedule_milestones[declaration_type]
           next unless milestone # Skip if no milestone found
 
+          # Skip if declaration already exists
+          next if participant_profile.participant_declarations.exists?(declaration_type:)
+
           # Determine state for this declaration
           state = profile_states.sample
 
@@ -145,11 +148,13 @@ cpd_lead_providers.find_each(batch_size: LEAD_PROVIDER_BATCH_SIZE) do |cpd_lead_
         ActiveRecord::Base.transaction do
           declarations_to_create.each do |declaration_data|
             milestone_date = declaration_data.delete(:milestone_date)
+            declaration_data[:declaration_date] = milestone_date + 1.day
+
             profile_type = declaration_data.delete(:profile_type)
             state = declaration_data.delete(:state)
 
             # Time travel once per declaration
-            travel_to milestone_date do
+            travel_to milestone_date + 2.days do
               # Create declaration of correct type
               factory_name = "#{profile_type}_participant_declaration"
               FactoryBot.create(factory_name, state, **declaration_data)
