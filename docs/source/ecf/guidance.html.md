@@ -61,13 +61,13 @@ Every confirmed partnership has a unique identifier, returned as `id` in the `GE
 
 Once a partnership for a cohort is confirmed, any new participants registered for training at that school will be assigned to the ‘default’ training provision. For example, once a provider confirms their partnership for the 2024 cohort, any participants registered by the school's induction tutor will automatically default to training with the agreed provider and delivery partner.
 
-### Find schools delivering early career training programmes in a given cohort
+### Find schools delivering training in a given cohort
 
 ```
 GET /api/v3/schools/ecf?filter[cohort]={year}
 ```
 
-View details for schools providing early career training in a given cohort. Check details on the type of training programme schools have chosen to deliver, and whether they have confirmed partnerships in place.
+View details for schools providing training in a given cohort. Check details on the type of training programme schools have chosen to deliver, and whether they have confirmed partnerships in place.
 
 <div class="govuk-inset-text"> The <code>cohort</code> filter must be included as a parameter. The API will reject requests which do not include the <code>cohort</code> filter. </div>
 
@@ -77,15 +77,13 @@ Successful requests will return a response body with school details.
 
 #### What the API will show
 
-The API will **only** show schools that are eligible for funded early career training programmes within a given cohort.
-
-For example, if schools are eligible for funding in the 2025/26 academic year, they’ll be visible via the API, and providers can go on to form partnerships with them.
+The API will **only** show schools that are eligible for funded training programmes within a given cohort. For example, if schools are eligible for funding in the 2024 cohort, they will be visible via the API, and providers can go on to form partnerships with them.
 
 #### What the API will not show
 
-The API will **not show** schools that are ineligible for funding in a given cohort.
+The API will **not** show schools that are ineligible for funding in a given cohort.
 
-If a school’s eligibility changes from one cohort to the next, results will default according to the latest school eligibility. For example, if a school was eligible for funding in the 2024 cohort but becomes ineligible for funding in 2025, the API will not show the school in the 2025 cohort.
+If a school’s eligibility changes from one cohort to the next, results will default according to the latest school eligibility. For example, if a school was eligible for funding in the 2024 cohort but becomes ineligible for funding in 2025, the API will **not** show the school in the 2025 cohort.
 
 For more detailed information, see the `GET schools` [endpoint documentation](/api-reference/reference-v3.html#api-v3-schools-ecf-get).
 
@@ -117,7 +115,7 @@ For more detailed information, see the `GET schools` [endpoint documentation](/a
 GET /api/v3/schools/ecf/{id}?filter[cohort]={year}
 ```
 
-Providers can view details for a specific school providing early career training programmes in a given cohort. They can check details on the type of training programme the school has chosen to deliver, and whether they have a confirmed partnership in place.
+Providers can view details for a specific school providing training in a given cohort. They can check details on the type of training programme the school has chosen to deliver, and whether they have a confirmed partnership in place.
 
 <div class="govuk-inset-text"> The cohort filter must be included as a parameter. The API will reject requests which do not include the cohort filter. </div>
 
@@ -264,6 +262,7 @@ For more detailed information, view the `POST partnerships`[endpoint documentati
 ```
 
 #### Example response body
+
 ```
 {
   "data": {
@@ -333,6 +332,7 @@ GET /api/v3/partnerships/ecf/{id}
 ```
 
 View details for an existing partnership to check information is correct and whether the [partnership status](/api-reference/ecf/definitions-and-states/#partnership-states) has been challenged by the school.
+
 
 For more detailed information, view `GET/ partnerships/ecf/{id}` [endpoint documentation](/api-reference/reference-v3.html#api-v3-partnerships-ecf-id-get).
 
