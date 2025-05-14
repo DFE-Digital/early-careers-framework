@@ -23,13 +23,13 @@ Access to training materials should not be tied to a participant’s cohort or s
 
 | Concept      | Definition| 
 | -------- | --------  |
-| Schedule    | The expected timeframe in which a participant will complete their ECF-based training, which determine the defined milestone dates      |
+| Schedule    | The expected timeframe in which a participant will complete their training, which determine the defined milestone dates      |
 | Standard schedule  | The default training schedule for participants completing a standard 2 year induction, starting in September, January or April  |
 | Extended schedule   | A non-standard training schedule for participants who expect to complete the induction over a period greater than 2 years. Examples include part-time ECTs, or ECTs whose induction period is extended by their appropriate body  |
 | Reduced schedule   | A non-standard training schedule for participants who expect to complete the induction over a period less than 2 years.  Examples include those with previous experience  |
 | Replacement schedule  | A non-standard training schedule for mentors that are replacing a previous mentor for an ECT that is part way through their training  |
-| Milestone   | Contractual retention periods during which providers must submit relevant declarations evidencing ECF-based training delivery and participant retention     |
-| Milestone dates    | The deadline date a valid declaration can be made for a given milestone in order for the DfE to be liable to make a payment the following month. Milestone dates are dependent on the participant’s schedule       |
+| Milestone   | Contractual retention periods during which providers must submit relevant declarations evidencing training delivery and participant retention     |
+| Milestone dates    | The deadline date a valid declaration can be made for a given milestone in order for DfE to be liable to make a payment the following month. Milestone dates are dependent on the participant’s schedule       |
 | Milestone period    | The period of time between the milestone start date and deadline date       |
 | Output payment    | The sum of money paid by DfE to providers per valid declaration     |
 | Payment date    | The date the DfE will make payment for valid declarations submitted by providers for a given milestone     |
@@ -46,14 +46,14 @@ Declarations submitted for participants in standard schedules will be validated 
 
 <div class="govuk-inset-text">Note, all participants will be registered by default to a standard schedule starting in September. </div>
 
-Providers must [notify DfE if the participant is following any other standard or non-standard training schedule](/api-reference/ecf/guidance.html#notify-dfe-of-a-participant-39-s-training-schedule). Contact ECF contract managers via email for additional support or information. 
+Providers must [notify DfE if the participant is following any other standard or non-standard training schedule](/api-reference/ecf/guidance.html#notify-dfe-of-a-participant-39-s-training-schedule). Contact contract managers via email for additional support or information. 
 
 
 ### Dates for standard schedule starting in September
 
 #### 2024 cohort
 
-Participants starting their ECF-based training on or before 31 December 2024, and who are expected to complete their training over 2 academic years, should remain on the default schedule:
+Participants starting their training on or before 31 December 2024, and who are expected to complete their training over 2 academic years, should remain on the default schedule:
 
 ```
  "schedule_identifier": "ecf-standard-september"
@@ -71,7 +71,7 @@ Participants starting their ECF-based training on or before 31 December 2024, an
 
 #### 2023 cohort
 
-Participants starting their ECF-based training on or before 31 December 2023, and who are expected to complete their training over 2 academic years, should remain on the default schedule:
+Participants starting their training on or before 31 December 2023, and who are expected to complete their training over 2 academic years, should remain on the default schedule:
 
 ```
  "schedule_identifier": "ecf-standard-september"
@@ -89,7 +89,7 @@ Participants starting their ECF-based training on or before 31 December 2023, an
 
 #### 2022 cohort
 
-Participants starting their ECF-based training on or before 31 December 2022, and who are expected to complete their training over 2 academic years, should remain on the default schedule:
+Participants starting their training on or before 31 December 2022, and who are expected to complete their training over 2 academic years, should remain on the default schedule:
 
 ```
  "schedule_identifier": "ecf-standard-september"
@@ -106,7 +106,7 @@ Participants starting their ECF-based training on or before 31 December 2022, an
 
 #### 2021 cohort
 
-Participants starting their ECF-based training on or before 30 November 2021, and who are expected to complete their training over 2 academic years, should remain on the default schedule:
+Participants starting their training on or before 30 November 2021, and who are expected to complete their training over 2 academic years, should remain on the default schedule:
 
 ```
  "schedule_identifier": "ecf-standard-september"
@@ -126,7 +126,7 @@ Participants starting their ECF-based training on or before 30 November 2021, an
 
 #### 2024 cohort
 
-Participants starting their ECF-based training between 1 January and 31 March 2025, and who are expected to complete their training over 2 academic years, [should have their schedule updated](/api-reference/ecf/guidance.html#notify-dfe-of-a-participant-39-s-training-schedule) by providers to: 
+Participants starting their training between 1 January and 31 March 2025, and who are expected to complete their training over 2 academic years, [should have their schedule updated](/api-reference/ecf/guidance.html#notify-dfe-of-a-participant-39-s-training-schedule) by providers to: 
 
 ```
  "schedule_identifier": "ecf-standard-january"
@@ -143,7 +143,7 @@ Participants starting their ECF-based training between 1 January and 31 March 20
 
 #### 2023 cohort
 
-Participants starting their ECF-based training between 1 January and 31 March 2024, and who are expected to complete their training over 2 academic years, [should have their schedule updated](/api-reference/ecf/guidance.html#notify-dfe-of-a-participant-39-s-training-schedule) by providers to: 
+Participants starting their training between 1 January and 31 March 2024, and who are expected to complete their training over 2 academic years, [should have their schedule updated](/api-reference/ecf/guidance.html#notify-dfe-of-a-participant-39-s-training-schedule) by providers to: 
 
 ```
  "schedule_identifier": "ecf-standard-january"
@@ -160,7 +160,7 @@ Participants starting their ECF-based training between 1 January and 31 March 20
 
 #### 2022 cohort
 
-Participants starting their ECF-based training between 1 January and 31 March 2023, and who are expected to complete their training over 2 academic years, [should have their schedule updated](/api-reference/ecf/guidance.html#notify-dfe-of-a-participant-39-s-training-schedule) by providers to: 
+Participants starting their training between 1 January and 31 March 2023, and who are expected to complete their training over 2 academic years, [should have their schedule updated](/api-reference/ecf/guidance.html#notify-dfe-of-a-participant-39-s-training-schedule) by providers to: 
 
 ```
  "schedule_identifier": "ecf-standard-january"
@@ -197,7 +197,7 @@ For participants starting their course on or before 1 December 2021, and who are
 
 #### 2024 cohort
 
-Participants starting their ECF-based training between 1 April and 31 July 2025, and who are expected to complete their training over 2 academic years, [should have their schedule updated](/api-reference/ecf/guidance.html#notify-dfe-of-a-participant-39-s-training-schedule) by providers to: 
+Participants starting their training between 1 April and 31 July 2025, and who are expected to complete their training over 2 academic years, [should have their schedule updated](/api-reference/ecf/guidance.html#notify-dfe-of-a-participant-39-s-training-schedule) by providers to: 
 
 ```
  "schedule_identifier": "ecf-standard-april"
@@ -215,7 +215,7 @@ Participants starting their ECF-based training between 1 April and 31 July 2025,
 
 #### 2023 cohort
 
-Participants starting their ECF-based training between 1 April and 31 July 2024, and who are expected to complete their training over 2 academic years, [should have their schedule updated](/api-reference/ecf/guidance.html#notify-dfe-of-a-participant-39-s-training-schedule) by providers to: 
+Participants starting their training between 1 April and 31 July 2024, and who are expected to complete their training over 2 academic years, [should have their schedule updated](/api-reference/ecf/guidance.html#notify-dfe-of-a-participant-39-s-training-schedule) by providers to: 
 
 ```
  "schedule_identifier": "ecf-standard-april"
@@ -232,7 +232,7 @@ Participants starting their ECF-based training between 1 April and 31 July 2024,
 
 #### 2022 cohort
 
-Participants starting their ECF-based training between 1 April and 31 July 2023, and who are expected to complete their training over 2 academic years, [should have their schedule updated](/api-reference/ecf/guidance.html#notify-dfe-of-a-participant-39-s-training-schedule) by providers to: 
+Participants starting their training between 1 April and 31 July 2023, and who are expected to complete their training over 2 academic years, [should have their schedule updated](/api-reference/ecf/guidance.html#notify-dfe-of-a-participant-39-s-training-schedule) by providers to: 
 
 ```
  "schedule_identifier": "ecf-standard-april"
@@ -293,11 +293,11 @@ Declarations submitted for participants in non-standard schedules do not need AP
 
 ### Extended schedules
 
-While the API will accept any declarations submitted after the first milestone start date (1 September, 1 January, 1 April each year), providers must submit declarations according to the terms outlined in the ECF contract payment guidance. 
+While the API will accept any declarations submitted after the first milestone start date (1 September, 1 January, 1 April each year), providers must submit declarations according to the terms outlined in the contract payment guidance. 
 
-Contact ECF contract managers via email for more information on exact dates.
+Contact contract managers via email for more information on exact dates.
 
-Participants who expect to complete their ECF-based training in more than 2 years, should have their [schedule updated](/api-reference/ecf/guidance.html#notify-dfe-of-a-participant-39-s-training-schedule) to one for the following: 
+Participants who expect to complete their training in more than 2 years, should have their [schedule updated](/api-reference/ecf/guidance.html#notify-dfe-of-a-participant-39-s-training-schedule) to one for the following: 
 
 ```
  "schedule_identifier": "ecf-extended-september"
@@ -312,9 +312,9 @@ Participants who expect to complete their ECF-based training in more than 2 year
 ```
 Providers may submit extended declarations for ECTs on an extended schedule, providing they meet certain criteria.
 
-Qualifying ECTs will have had their induction extended as a result of having not yet met the Teachers’ standards, and need additional support to meet the standards. These ECTs must be placed onto one of the available [‘extended schedules’](/api-reference/ecf/schedules-and-milestone-dates.html#extended-schedules) for ECF. 
+Qualifying ECTs will have had their induction extended as a result of having not yet met the Teachers’ standards, and need additional support to meet the standards. These ECTs must be placed onto one of the available [‘extended schedules’](/api-reference/ecf/schedules-and-milestone-dates.html#extended-schedules). 
 
-Providers may submit an extended declaration (subject to meeting the engagement criteria) for each extended term until the ECT has completed their induction, up to a maximum of three extensions. On completing induction, the provider should submit a completion declaration for the final term.
+Providers may submit an extended declaration (subject to meeting the engagement criteria) for each extended term until the ECT has completed their induction, up to a maximum of 3 extensions. On completing induction, the provider should submit a completion declaration for the final term.
 
 Providers may submit extended declarations using the following values in the `declaration_type` field on the [participant declaration request body](/api-reference/reference-v3.html#schema-participantdeclarationrequest):
 
@@ -324,16 +324,16 @@ Providers may submit extended declarations using the following values in the `de
 
 ### Reduced schedules
 
-Reduced schedules apply to participants that expect to complete their ECF-based training in less than 2 years.
+Reduced schedules apply to participants that expect to complete their training in less than 2 years.
 
 Providers should note:
 
 * providers may identify ECTs that have already completed their induction, and so need to be placed on a reduced schedule, via the API. We include details of the date an ECT completed their induction in the v3 [EcfParticipantAttributes](/api-reference/reference-v3.html#schema-ecfparticipantattributes)
-* while the API will accept any declarations submitted after the first milestone start date (1 September, 1 January, 1 April each year), providers must submit declarations according to the terms outlined in the ECF contract payment guidance
+* while the API will accept any declarations submitted after the first milestone start date (1 September, 1 January, 1 April each year), providers must submit declarations according to the terms outlined in the contract payment guidance
 
-Contact ECF contract managers via email for more information on exact dates.
+Contact contract managers via email for more information on exact dates.
 
-Participants who expect to complete their ECF-based training in less than 2 years, should have their [schedule updated](/api-reference/ecf/guidance.html#notify-dfe-of-a-participant-39-s-training-schedule) to one for the following: 
+Participants who expect to complete their training in less than 2 years, should have their [schedule updated](/api-reference/ecf/guidance.html#notify-dfe-of-a-participant-39-s-training-schedule) to one for the following: 
 
 ```
  "schedule_identifier": "ecf-reduced-september"
@@ -349,9 +349,9 @@ Participants who expect to complete their ECF-based training in less than 2 year
 
 ### Replacement schedules 
 
-While the API will accept any declarations submitted after the first milestone start date (1 September, 1 January, 1 April each year), providers must submit declarations according to the terms outlined in the ECF contract payment guidance. 
+While the API will accept any declarations submitted after the first milestone start date (1 September, 1 January, 1 April each year), providers must submit declarations according to the terms outlined in the contract payment guidance. 
 
-Contact ECF contract managers via email for more information on exact dates.
+Contact contract managers via email for more information on exact dates.
 
 #### Providers should note:
 

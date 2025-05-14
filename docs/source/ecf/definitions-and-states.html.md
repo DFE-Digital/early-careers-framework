@@ -13,14 +13,14 @@ weight: 1
 | `course_identifier`      | The participant’s training as either an early career teacher (ECT) or mentor       |
 | `declaration`    | The notification submitted by providers via the API as the sole means for triggering output payments from DfE. Declarations are submitted where there is evidence of a participant’s engagement in training for a given milestone period      |
 | `participant`    | An early career teacher (ECT) or mentor registered for training      |
-| `partnership`     | The relationship created between schools, delivery partners and providers who work together to deliver ECF-based training to participants      |
-| `schedule`     | The expected timeframe in which a participant will complete their ECF-based training. Schedules include [defined milestone dates](/api-reference/ecf/schedules-and-milestone-dates) against which DfE validates the declarations submitted by providers      |
+| `partnership`     | The relationship created between schools, delivery partners and providers who work together to deliver early career training to participants      |
+| `schedule`     | The expected timeframe in which a participant will complete their early career training. Schedules include [defined milestone dates](/api-reference/ecf/schedules-and-milestone-dates) against which DfE validates the declarations submitted by providers      |
 | `statement`    | A record of output payments (based on declarations), service fees and any adjustments the DfE may pay lead providers at the end of a contractually agreed payment period. Statements sent to providers by DfE at the end of milestone periods can be used for invoicing purposes     |
 | `unfunded-mentor` | Mentors linked to a provider's ECTs but not eligible for funding through that provider. Typically, these mentors have either completed, or are currently doing, mentor training with a different lead provider than the one delivering training to the ECT they support |
 
 ## Data states
 
-The API service uses a ‘state’ model to reflect the ECF participant journey, meet contractual requirements for how providers should report participants’ training and how the DfE will pay for this training.
+The API service uses a ‘state’ model to reflect the participant journey, meet contractual requirements for how providers should report participants’ training and how DfE will pay for this training.
 
 ### Partnership states
 
@@ -64,7 +64,7 @@ A participant's `participant_status` highlights information given **by school in
 
 Declaration states are defined by the `state` attribute.
 
-Providers must [submit declarations](/api-reference/ecf/guidance/#submit-view-and-void-declarations) to confirm a participant has engaged in training within a given milestone period. A declaration’s `state` value will reflect if and when the DfE will pay providers for the training delivered.
+Providers must [submit declarations](/api-reference/ecf/guidance/#submit-view-and-void-declarations) to confirm a participant has engaged in training within a given milestone period. A declaration’s `state` value will reflect if and when DfE will pay providers for the training delivered.
 
 | state | Definition | Action |
 | -------- | -------- | -------- |
@@ -91,7 +91,7 @@ We use various unique identifiers (IDs) in the endpoint requests and responses t
 | `mentor_id` | Identifies individual ECT mentors within the API. This ID is used to link mentors to ECTs they’re supporting, and tracks their training status, funding eligibility, and contact information. The same `mentor_id` is used whether the mentor is funded or unfunded, including those trained by a different lead provider than the one supporting their ECT | 
 | `participant_id` | Identifies participants registered for training. This is used for declarations, changing schedules, notifying us of a change in circumstances related to their training as well as other endpoints to monitor training and progress | 
 | `participant_id_changes` | A record of changes where a participant’s ID has been updated, usually to fix a data issue like a duplicate or incorrect registration. In such cases, the `from_participant_id` field is the original ID that has been retired or replaced. The `to_participant_id` is the new ID that should now be used when referring to this participant | 
-| `partnership_id` | Identifies the partnership between schools, delivery partners and providers for a specific cohort who work together to deliver ECF-based training to participants. It’s shown as simply `id` at the top of successful responses in the `partnership` endpoints | 
+| `partnership_id` | Identifies the partnership between schools, delivery partners and providers for a specific cohort who work together to deliver training to participants. It’s shown as simply `id` at the top of successful responses in the `partnership` endpoints | 
 | `statement_id` | Identifies a financial statement we've attached to a lead provider. It acts as a reference for each individual payment cycle or statement and allows lead providers to retrieve financial data using the `GET statements` endpoints | 
 | `school_id` | Identifies schools. Used when providers form partnerships as part of the `POST partnerships` endpoint | 
 | `training_record_id` | Identifies participants with multiple enrolments, such as an ECT who later becomes a mentor. Providers using the `participants` endpoints will see separate records for the same participant, each with a different `training_record_id` based on their role | 
