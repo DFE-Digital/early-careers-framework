@@ -925,7 +925,6 @@ Examples of declaration types include:
 * `started` – training began in a given period
 * `retained-1` / `retained-2` – participant continued training through subsequent milestones
 * `completed` – full programme finished
-* `withdrawn` – participant left the programme early
 * `extended` – when an ECT’s training continues beyond the standard schedule
 
 ### How declarations are submitted
@@ -958,13 +957,7 @@ Duplicate declarations cannot be submitted. If a duplicate is attempted, the API
 
 ### What happens if a declaration gets stuck in a submitted state?
 
-If a declaration gets stuck in a `submitted` state in the API, it usually means the system has received the declaration, but it hasn’t yet been processed or moved into a paid or invalidated state.
-
 #### Possible reasons for a declaration staying in submitted
-
-Missing or incorrect data:
-
-* if the declaration has an issue (for example, invalid course identifier, unknown participant or participant not yet confirmed as eligible for funding), it may not be accepted for payment until the error is resolved
 
 Participant or programme mismatch:
 
