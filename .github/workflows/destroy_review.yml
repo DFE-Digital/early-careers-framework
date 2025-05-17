@@ -1,17 +1,23 @@
-name: Delete review
+name: Delete Review App
 
 on:
   pull_request:
     types: [closed]
-    branches: [main]
 
+  workflow_dispatch:
+    inputs:
+      pr-number:
+        description: PR number for the review app to destroy
+        required: true
 permissions:
   id-token: write
+  pull-requests: write
+  contents: write
 
 jobs:
   delete-review-app:
     name: Delete Review App ${{ github.event.pull_request.number }}
-    concurrency: deploy_review_${{ github.event.pull_request.number }}
+    concurrency: deploy_review_${{ github.event.pull_request.number || github.event.inputs.pr_number }}
     if: ${{ !contains(github.event.pull_request.labels.*.name, 'dependencies') }}
     runs-on: ubuntu-latest
     environment: review
@@ -63,10 +69,25 @@ jobs:
         env:
           TF_VAR_statuscake_api_token: ${{ secrets.STATUSCAKE_API_TOKEN }}
           DOCKER_IMAGE: "ghcr.io/dfe-digital/early-careers-framework:no-tag"
-          PULL_REQUEST_NUMBER: ${{ github.event.pull_request.number }}
+          PULL_REQUEST_NUMBER: ${{ github.event.pull_request.number || github.event.inputs.pr-number }}
 
       - name: Delete Terraform state file
         if: env.TF_STATE_EXISTS == 'true'
         run: |
           az storage blob delete -c cpdecf-tfstate --name ${{ env.TF_STATE_FILE }} \
             --account-name "s189t01cpdecftfstatervsa"
+
+      - name: Delete review app
+        uses: DFE-Digital/github-actions/delete-review-app@master
+        with:
+          azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          pr-number: ${{ github.event.pull_request.number || github.event.inputs.pr-number }}
+          resource-group-name: "s189t01-cpdecf-rv-rg"
+          storage-account-name: "s189t01cpdecftfstatervsa"
+          tf-state-file: "${{ github.event.pull_request.number || github.event.inputs.pr-number }}.tfstate"
+          gcp-project-id: ecf-bq
+          gcp-wip: projects/808138694727/locations/global/workloadIdentityPools/early-careers-framework/providers/early-careers-framework
+        env:
+          PULL_REQUEST_NUMBER: ${{ github.event.pull_request.number || github.event.inputs.pr-number }}
