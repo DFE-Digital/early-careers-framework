@@ -3,6 +3,6 @@ AZURE_SUBSCRIPTION=s189-teacher-services-cloud-test
 CONFIG=staging
 CONFIG_SHORT=st
 CONFIG_LONG=staging
-DEPLOY_ENV=${CONFIG}
+DEPLOY_ENV=staging
 ENV_TAG=Test
 NAMESPACE=cpd-development
