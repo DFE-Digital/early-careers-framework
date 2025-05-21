@@ -23,7 +23,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Ruby
-        uses: ruby/setup-ruby@v1.243.0
+        uses: ruby/setup-ruby@v1.244.0
         with:
           ruby-version: ${{ inputs.ruby-version }}
 
