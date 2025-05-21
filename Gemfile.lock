@@ -277,7 +277,7 @@ GEM
       html-attributes-utils (~> 1.0.0, >= 1.0.0)
       pagy (>= 6, < 10)
       view_component (>= 3.18, < 3.22)
-    govuk_design_system_formbuilder (5.9.0)
+    govuk_design_system_formbuilder (5.10.0)
       actionview (>= 6.1)
       activemodel (>= 6.1)
       activesupport (>= 6.1)
@@ -456,7 +456,7 @@ GEM
       actionpack (>= 5.0.1.rc1)
       actionview (>= 5.0.1.rc1)
       activesupport (>= 5.0.1.rc1)
-    rails-dom-testing (2.2.0)
+    rails-dom-testing (2.3.0)
       activesupport (>= 5.0.0)
       minitest
       nokogiri (>= 1.6)
@@ -769,7 +769,7 @@ DEPENDENCIES
   foreman
   friendly_id (~> 5.5)
   govuk-components (~> 5.10.0)
-  govuk_design_system_formbuilder (~> 5.9.0)
+  govuk_design_system_formbuilder (~> 5.10.0)
   httpclient (~> 2.9)
   jsbundling-rails
   json-diff (~> 0.4.1)
