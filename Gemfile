@@ -15,7 +15,7 @@ gem "pretender", ">= 0.4.0"
 gem "pundit"
 
 # Error monitoring
-gem "sentry-rails", "~> 5.22"
+gem "sentry-rails", "~> 5.24"
 gem "sentry-ruby", "~> 5.22"
 gem "sentry-sidekiq"
 
@@ -60,7 +60,7 @@ gem "mail-notify", "~> 1.2"
 gem "tzinfo-data"
 
 gem "govuk-components", "~> 5.10.0"
-gem "govuk_design_system_formbuilder", "~> 5.9.0"
+gem "govuk_design_system_formbuilder", "~> 5.10.0"
 
 # Fetching from APIs
 gem "httpclient", "~> 2.9"

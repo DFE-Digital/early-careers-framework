@@ -1,3 +1,6 @@
+# syntax=docker/dockerfile:1
+# check=skip=SecretsUsedInArgOrEnv
+
 # To use or update to a ruby version, change {BASE_RUBY_IMAGE}
 ARG BASE_RUBY_IMAGE=ruby:3.2.6-alpine3.21
 # BASE_RUBY_IMAGE_WITH_GEMS_AND_NODE_MODULES will default to early-careers-framework-gems-node-modules
@@ -16,7 +19,7 @@ COPY docs /docs
 COPY public /public
 COPY swagger /swagger
 
-WORKDIR docs
+WORKDIR /docs
 RUN bundle exec middleman build --build-dir=../public/api-reference
 
 # Stage 1: Download gems and node modules.
@@ -121,4 +124,4 @@ WORKDIR /app
 # new code on an old schema (which will be updated a moment later) to running
 # old code on the new schema (which will require another deploy or other manual
 # intervention to correct).
-CMD bundle exec rails db:migrate:ignore_concurrent_migration_exceptions && bundle exec rails server -b 0.0.0.0
+CMD ["/bin/sh", "-c", "bundle exec rails db:migrate:ignore_concurrent_migration_exceptions && bundle exec rails server -b 0.0.0.0"]

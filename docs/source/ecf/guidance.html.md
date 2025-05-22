@@ -908,15 +908,75 @@ Successful requests will return details including:
 
 ## Submit, view and void declarations
 
-Providers must submit declarations in line with contractual [schedules and milestone dates](/api-reference/ecf/schedules-and-milestone-dates).
+### What are declarations?
 
-These declarations will trigger payment from DfE to providers.
+Declarations are formal submissions made by lead providers to confirm that a participant (an early career teacher or mentor) has engaged sufficiently with training during a specific period.
 
-When providers submit declarations, API response bodies will include data about which financial statement the given declaration applies to. Providers can then [view financial statement payment dates](/api-reference/ecf/guidance/#view-financial-statement-payment-dates) to check when the invoicing period, and expected payment date, will be for the given declaration.
+### What declarations do
 
-<div class="govuk-inset-text">DfE will close the funding contract for the 2021 cohort on 31 July 2024. School will start moving ECTs and mentors with partial declarations originally assigned to the 2021 cohort to the 2024 cohort from mid-June. Providers will not be able to submit or void declarations for 2021 after the contract has closed.</div>
+Declarations:
 
-### Test the ability to submit declarations in sandbox ahead of time
+* inform DfE training has taken place
+* record participant progress across date milestones
+* trigger payments from DfE to lead providers
+
+Examples of declaration types include:
+
+* `started` – training began in a given period
+* `retained-1` / `retained-2` – participant continued training through subsequent milestones
+* `completed` – full programme finished
+* `extended` – when an ECT’s training continues beyond the standard schedule
+
+### How declarations are submitted
+
+Declarations are submitted via the API, using endpoints like `POST participant-declarations`.
+
+Each declaration includes:
+
+* participant ID
+* declaration type
+* declaration date (aligned with what’s outlined in the payment guidance)
+* type of evidence a lead provider holds to verify that a participant has engaged in training
+* lead provider and programme type details
+
+### Sample submission flow
+
+1. Participant attends training.
+2. Lead provider records training milestone.
+3. Lead provider submits declaration via API.
+4. API validates and links to relevant financial statement.
+5. Declaration triggers payment (if valid).
+
+### Can declarations be made after a cohort has closed in the service?
+
+No, providers cannot submit or void declarations after a cohort has closed.
+
+### What happens if providers submit duplicate declarations?
+
+Duplicate declarations cannot be submitted. If a duplicate is attempted, the API will return an error message.
+
+### What happens if a declaration gets stuck in a submitted state?
+
+#### Possible reasons for a declaration staying in submitted
+
+Participant or programme mismatch:
+
+* if a participant’s record has been withdrawn, transferred, or misaligned, the declaration may not be linked to a valid funding schedule
+
+System delay or sync issue:
+
+* occasionally, internal system syncing or financial statement generation may cause a delay
+
+#### What providers can do
+
+To solve the issue of declarations being stuck in a `submitted` state, providers should:
+
+1. Check the participant's status via `GET /participants/{id}`.
+2. Check the declaration details via `GET /participant-declarations/{id}`.
+3. Check for errors returned when it was submitted.
+4. Raise a query via their usual DfE support channel or digital engagement lead if it remains stuck for longer than expected (especially past the processing window).
+
+### How providers can test they're able to submit declarations
 
 `X-With-Server-Date` is a custom JSON header supported in the sandbox environment. It lets providers test their integrations and ensure they are able to submit declarations for future milestone dates.
 
