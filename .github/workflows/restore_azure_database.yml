@@ -75,7 +75,7 @@ jobs:
         with:
           storage-account: ${{ env.STORAGE_ACCOUNT_NAME }}
           resource-group: ${{ env.RESOURCE_GROUP_NAME }}
-          app-name: ${{ env.SERVICE_NAME }}-${CONFIG}-web
+          app-name: ${{ env.SERVICE_NAME }}-${{ inputs.environment }}-web
           cluster: ${{ env.CLUSTER }}
           namespace: ${{ env.NAMESPACE }}
           azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
