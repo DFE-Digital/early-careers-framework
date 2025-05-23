@@ -44,6 +44,7 @@ RSpec.feature "CIP to FIP - Transfer a participant",
           allow(Cohort).to receive(:current).and_return(cohort)
           allow(Cohort).to receive(:next).and_return(cohort)
           allow(Cohort).to receive(:active_registration_cohort).and_return(cohort)
+          allow(Cohort).to receive(:destination_from_frozen_cohort).and_return(cohort)
           allow(cohort).to receive(:next).and_return(cohort)
           allow(cohort).to receive(:previous).and_return(cohort)
           cohort
