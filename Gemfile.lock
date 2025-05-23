@@ -115,7 +115,7 @@ GEM
       base64
       gyoku (>= 0.4.0)
       nokogiri
-    amazing_print (1.8.0)
+    amazing_print (1.8.1)
     ar-uuid (0.2.3)
       activerecord
     ar_transaction_changes (1.1.9)
