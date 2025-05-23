@@ -130,14 +130,14 @@ en:
         description: "We’ve confirmed this participant is eligible for this programme. Your training provider will contact them directly."
 
       active_mentoring_ero:
-        id: "training_or_eligible_for_training"
-        label: "Training or eligible for training"
-        description: "We’ve confirmed this participant is eligible for this programme. Your training provider will contact them directly."
+        id: "not_eligible_for_funded_training"
+        label: "Not eligible for funded training"
+        description: "We’ve checked this participant’s details and found they are not eligible for this programme."
 
       not_yet_mentoring_ero:
-        id: "training_or_eligible_for_training"
-        label: "Training or eligible for training"
-        description: "We’ve confirmed this participant is eligible for this programme. Your training provider will contact them directly."
+        id: "not_eligible_for_funded_training"
+        label: "Not eligible for funded training"
+        description: "We’ve checked this participant’s details and found they are not eligible for this programme."
 
       # changes of circumstance
 
