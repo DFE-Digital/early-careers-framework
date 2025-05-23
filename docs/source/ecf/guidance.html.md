@@ -793,7 +793,7 @@ There are 3 instances lead providers need to account for:
 
 1. Transfers – when a participant has transferred and providers have finalised any outstanding declaration and offboarding processes, they should withdraw the participant using the `PUT participants/ecf/{id}/withdraw` endpoint. 
 2. Withdrawals – withdraw the participant as above. Any outstanding declarations can be backdated if they are on/before the withdrawal date.  
-3. Completions – once participant profiles have been marked as `completed`, providers should backdate any declarations and remove these participants from their active training lists. Providers **do not have to** withdraw completed participants or mentors whose funding has ended.   
+3. Completions – when ECTs complete their induction the `induction_end_date` field will be populated on their profiles. Similarly, once providers have submitted a completed declaration for mentors, the `mentor_funding_end_date` field will be populated. Providers should backdate any declarations and remove these participants from their active training lists. Providers **do not have to** withdraw them. 
 
 ## Participant transfers (v3 API-only) 
  
