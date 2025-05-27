@@ -187,7 +187,7 @@ RSpec.feature "Delivery partner users participants", type: :feature do
 
   def and_i_see_the_not_eligible_status
     expect(page).to have_content(mentor_profile.user.full_name)
-    expect(page).to have_content("We’ve checked this participant’s details and found they are not eligible for this programme.")
+    expect(page).to have_content("We’ve checked this participant’s details and found they’re not eligible for this programme.")
   end
 
   def when_i_fill_in(selector, with:)
