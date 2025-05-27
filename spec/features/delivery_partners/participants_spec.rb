@@ -21,8 +21,14 @@ RSpec.feature "Delivery partner users participants", type: :feature do
     )
   end
 
+  let(:mentor_profile) do
+    create(:mentor_participant_profile, :ecf_participant_validation_data, school_cohort:)
+  end
+  let!(:mentor_eligibility) { create(:ecf_participant_eligibility, :previous_participation, participant_profile: mentor_profile) }
+
   let(:induction_programme) { create(:induction_programme, :fip, partnership:, school_cohort:) }
-  let!(:induction_record) { create(:induction_record, participant_profile:, induction_programme:) }
+  let!(:induction_record) { create(:induction_record, participant_profile:, induction_programme:, mentor_profile:) }
+  let!(:mentor_induction_record) { create(:induction_record, participant_profile: mentor_profile, induction_programme:) }
 
   let!(:prev_cohort_year) { Cohort.find_by(start_year: 2020) || create(:cohort, start_year: 2020) }
 
@@ -50,6 +56,13 @@ RSpec.feature "Delivery partner users participants", type: :feature do
     scenario "Visit participants page" do
       then_i_see("Participants")
       and_i_see_no_participant_details
+    end
+  end
+
+  context "when the mentor is an ERO mentor" do
+    scenario "Visit participants page" do
+      then_i_see("Participants")
+      and_i_see_the_not_eligible_status
     end
   end
 
@@ -83,7 +96,7 @@ RSpec.feature "Delivery partner users participants", type: :feature do
     scenario "None existing role" do
       when_i_choose("role", with: "Mentor")
       and_i_click_on("Search")
-      and_i_do_not_see_participant_details
+      and_i_see_mentor_details
     end
 
     scenario "Existing role" do
@@ -130,6 +143,7 @@ RSpec.feature "Delivery partner users participants", type: :feature do
 
   def and_participant_profile_exists
     participant_profile
+    mentor_profile
     delivery_partner_user
     partnership
   end
@@ -147,6 +161,11 @@ RSpec.feature "Delivery partner users participants", type: :feature do
     expect(page).to have_content(participant_profile.user.email)
   end
 
+  def and_i_see_mentor_details
+    expect(page).to have_content(mentor_profile.user.full_name)
+    expect(page).to have_content(mentor_profile.user.email)
+  end
+
   def and_i_see_notification_banner
     within ".govuk-notification-banner" do
       expect(page).to have_content("Important")
@@ -157,11 +176,18 @@ RSpec.feature "Delivery partner users participants", type: :feature do
   def and_i_see_no_participant_details
     expect(page).not_to have_content(participant_profile.user.full_name)
     expect(page).not_to have_content(participant_profile.user.email)
+    expect(page).not_to have_content(mentor_profile.user.full_name)
+    expect(page).not_to have_content(mentor_profile.user.email)
   end
 
   def and_i_do_not_see_participant_details
     expect(page).not_to have_content(participant_profile.user.full_name)
     expect(page).not_to have_content(participant_profile.user.email)
+  end
+
+  def and_i_see_the_not_eligible_status
+    expect(page).to have_content(mentor_profile.user.full_name)
+    expect(page).to have_content("We’ve checked this participant’s details and found they’re not eligible for this programme.")
   end
 
   def when_i_fill_in(selector, with:)
@@ -182,7 +208,7 @@ RSpec.feature "Delivery partner users participants", type: :feature do
 
   def and_i_see_participant_details_csv_export
     data = CSV.parse(page.body).transpose
-    expect(data[0]).to eq(["full_name", participant_profile.user.full_name])
-    expect(data[1]).to eq(["email_address", participant_profile.user.email])
+    expect(data[0]).to match_array(["full_name", participant_profile.user.full_name, mentor_profile.user.full_name])
+    expect(data[1]).to match_array(["email_address", participant_profile.user.email, mentor_profile.user.email])
   end
 end
