@@ -57,5 +57,12 @@ module Schools
         PROGRAMME_SHORT_DESCRIPTION[programme_type.to_sym]
       end
     end
+
+    # description of the selected programme type in use rather than as an option to select
+    def training_programme_description_in_use(programme_type)
+      return "Not using service" if programme_type.nil?
+
+      PROGRAMME_SHORT_DESCRIPTION_IN_USE[programme_type.to_sym]
+    end
   end
 end

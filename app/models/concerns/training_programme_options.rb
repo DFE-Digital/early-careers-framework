@@ -34,6 +34,14 @@ module TrainingProgrammeOptions
     not_yet_known: "Not yet decided",
   }.freeze
 
+  PROGRAMME_SHORT_DESCRIPTION_IN_USE = {
+    core_induction_programme: "Using DfE-accredited materials",
+    design_our_own: "Designing their own training",
+    full_induction_programme: "Working with a DfE-funded provider",
+    no_early_career_teachers: "No ECTs this year",
+    school_funded_fip: "School-funded full induction programme",
+  }.freeze
+
   # NOTE: These are to support 2025 programme type changes
   CIP_ONLY_SCHOOL_PROGRAMME_CHOICES_2025 = %i[
     school_funded_fip
