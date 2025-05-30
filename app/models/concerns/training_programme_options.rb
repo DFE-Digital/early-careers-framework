@@ -7,12 +7,14 @@ module TrainingProgrammeOptions
     core_induction_programme
     school_funded_fip
     design_our_own
+    no_early_career_teachers
   ].freeze
 
   NON_CIP_ONLY_SCHOOL_PROGRAMME_CHOICES = %i[
     full_induction_programme
     core_induction_programme
     design_our_own
+    no_early_career_teachers
   ].freeze
 
   PROGRAMME_CHOICES = {
@@ -23,15 +25,34 @@ module TrainingProgrammeOptions
     no_early_career_teachers: "We do not expect any early career teachers to join",
   }.freeze
 
+  PROGRAMME_SHORT_DESCRIPTION = {
+    full_induction_programme: "Use a training provider funded by the DfE",
+    core_induction_programme: "DfE-accredited materials",
+    design_our_own: "Design and deliver your own programme based on the early career framework (ECF)",
+    school_funded_fip: "Use a training provider funded by your school",
+    no_early_career_teachers: "No early career teachers for this cohort",
+    not_yet_known: "Not yet decided",
+  }.freeze
+
+  PROGRAMME_SHORT_DESCRIPTION_IN_USE = {
+    core_induction_programme: "Using DfE-accredited materials",
+    design_our_own: "Designing their own training",
+    full_induction_programme: "Working with a DfE-funded provider",
+    no_early_career_teachers: "No ECTs this year",
+    school_funded_fip: "School-funded full induction programme",
+  }.freeze
+
   # NOTE: These are to support 2025 programme type changes
   CIP_ONLY_SCHOOL_PROGRAMME_CHOICES_2025 = %i[
     school_funded_fip
     core_induction_programme
+    no_early_career_teachers
   ].freeze
 
   NON_CIP_ONLY_SCHOOL_PROGRAMME_CHOICES_2025 = %i[
     full_induction_programme
     core_induction_programme
+    no_early_career_teachers
   ].freeze
 
   PROGRAMME_CHOICES_2025 = {
@@ -53,8 +74,17 @@ module TrainingProgrammeOptions
     },
   }.freeze
 
-  def school_training_options(state_funded: true, include_no_ects_option: false, exclude: [])
-    choices = possible_programmes(state_funded, include_no_ects_option, exclude)
+  PROGRAMME_SHORT_DESCRIPTION_2025 = {
+    full_induction_programme: "Provider-led training funded by the DfE",
+    core_induction_programme: "School-led training",
+    design_our_own: "School-led training",
+    school_funded_fip: "Provider-led training funded by your school",
+    no_early_career_teachers: "No early career teachers for this cohort",
+    not_yet_known: "Not yet decided",
+  }.freeze
+
+  def school_training_options(state_funded: true, exclude: [])
+    choices = possible_programmes(state_funded:, exclude:)
 
     if FeatureFlag.active?(:programme_type_changes_2025)
       choices.map do |id|
@@ -65,15 +95,13 @@ module TrainingProgrammeOptions
     end
   end
 
-  def possible_programmes(state_funded, include_no_ects_option, exclude)
+  def possible_programmes(state_funded: true, exclude: [])
     choices = if FeatureFlag.active?(:programme_type_changes_2025)
                 Array.new(state_funded ? NON_CIP_ONLY_SCHOOL_PROGRAMME_CHOICES_2025 : CIP_ONLY_SCHOOL_PROGRAMME_CHOICES_2025)
               else
                 Array.new(state_funded ? NON_CIP_ONLY_SCHOOL_PROGRAMME_CHOICES : CIP_ONLY_SCHOOL_PROGRAMME_CHOICES)
               end
 
-    choices << :no_early_career_teachers if include_no_ects_option
-    exclusions = exclude.map(&:to_sym)
-    choices.reject { |choice| choice.in? exclusions }
+    choices.reject { |choice| choice.in? exclude.map(&:to_sym) }
   end
 end

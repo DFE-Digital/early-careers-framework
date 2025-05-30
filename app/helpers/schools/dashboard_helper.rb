@@ -2,6 +2,8 @@
 
 module Schools
   module DashboardHelper
+    include TrainingProgrammeOptions
+
     def ect_count(school_cohorts)
       school_cohorts.sum { |sc| sc.current_induction_records.ects.count }
     end
@@ -44,6 +46,23 @@ module Schools
                              school_participant_edit_mentor_path(participant_id: participant_profile.id),
                              no_visited_state: true)
       end
+    end
+
+    def training_programme_description(programme_type)
+      return "Not using service" if programme_type.nil?
+
+      if FeatureFlag.active?(:programme_type_changes_2025)
+        PROGRAMME_SHORT_DESCRIPTION_2025[programme_type.to_sym]
+      else
+        PROGRAMME_SHORT_DESCRIPTION[programme_type.to_sym]
+      end
+    end
+
+    # description of the selected programme type in use rather than as an option to select
+    def training_programme_description_in_use(programme_type)
+      return "Not using service" if programme_type.nil?
+
+      PROGRAMME_SHORT_DESCRIPTION_IN_USE[programme_type.to_sym]
     end
   end
 end
