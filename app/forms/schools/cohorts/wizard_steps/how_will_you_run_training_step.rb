@@ -15,7 +15,7 @@ module Schools
         end
 
         def choices
-          school_training_options(state_funded: !wizard.school.cip_only?)
+          school_training_options(state_funded: !wizard.school.cip_only?, exclude: [:no_early_career_teachers])
         end
 
         def expected?
