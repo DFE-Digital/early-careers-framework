@@ -7,8 +7,8 @@ on:
         required: true
         type: choice
         options:
-        - migration
         - production
+        - staging
       mode:
         required: true
         type: choice
