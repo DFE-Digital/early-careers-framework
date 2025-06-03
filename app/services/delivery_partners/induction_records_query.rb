@@ -15,16 +15,6 @@ module DeliveryPartners
         .select(Arel.sql("DISTINCT FIRST_VALUE(induction_records.id) OVER (#{latest_induction_record_order}) AS latest_id"))
         .includes(induction_programme: :partnership)
         .joins(:participant_profile)
-        .where(
-          induction_programme: {
-            partnerships: {
-              delivery_partner:,
-              challenged_at: nil,
-              challenge_reason: nil,
-              pending: false,
-            },
-          },
-        )
 
       InductionRecord.distinct
         .joins("JOIN (#{join.to_sql}) AS latest_induction_records ON latest_induction_records.latest_id = induction_records.id")
@@ -42,6 +32,16 @@ module DeliveryPartners
           latest_email_status_per_participant,
           mentees_count,
           current_mentees_count,
+        )
+        .where(
+          induction_programmes: {
+            partnerships: {
+              delivery_partner:,
+              challenged_at: nil,
+              challenge_reason: nil,
+              pending: false,
+            },
+          },
         )
     end
 

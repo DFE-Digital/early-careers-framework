@@ -15,7 +15,7 @@ RSpec.describe DeliveryPartners::InductionRecordsQuery do
     )
   end
   let(:induction_programme) { create(:induction_programme, partnership:) }
-  let!(:another_induction_record) { create(:induction_record, participant_profile:) }
+  let!(:another_induction_record) { create(:induction_record, :with_end_date, participant_profile:) }
   let!(:induction_record) { create(:induction_record, participant_profile:, induction_programme:) }
 
   subject { described_class.new(delivery_partner:) }
@@ -38,8 +38,8 @@ RSpec.describe DeliveryPartners::InductionRecordsQuery do
     context "when there are newer induction records for a different delivery partner" do
       let!(:latest_induction_record) { create(:induction_record, participant_profile:, training_status: "deferred") }
 
-      it "returns correct induction record for the delivery partner" do
-        expect(subject.induction_records).to match_array([induction_record])
+      it "returns no induction record for the delivery partner" do
+        expect(subject.induction_records).to be_empty
       end
     end
   end

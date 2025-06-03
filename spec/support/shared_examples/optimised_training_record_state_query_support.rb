@@ -14,7 +14,7 @@ shared_examples "a query optimised for calculating training record states" do |e
 
     if mentor_optimization
       context "when there are historical mentees associated with the participant" do
-        let(:participant_profile) { create(:mentor) }
+        let(:participant_profile) { create(:mentor_participant_profile) }
         let!(:mentee) { create(:ect, mentor_profile: participant_profile) }
 
         before { mentee.latest_induction_record.update!(induction_status: "completed") }
@@ -26,7 +26,7 @@ shared_examples "a query optimised for calculating training record states" do |e
       end
 
       context "when there are mentees associated with the participant that are leaving" do
-        let(:participant_profile) { create(:mentor) }
+        let(:participant_profile) { create(:mentor_participant_profile) }
         let!(:mentee) { create(:ect, mentor_profile: participant_profile) }
 
         before { mentee.latest_induction_record.update!(induction_status: "leaving", end_date: 1.week.from_now) }
@@ -38,7 +38,7 @@ shared_examples "a query optimised for calculating training record states" do |e
       end
 
       context "when there are mentees associated with the participant that have left" do
-        let(:participant_profile) { create(:mentor) }
+        let(:participant_profile) { create(:mentor_participant_profile) }
         let!(:mentee) { create(:ect, mentor_profile: participant_profile) }
 
         before { mentee.latest_induction_record.update!(induction_status: "leaving", end_date: 1.week.ago) }
@@ -50,7 +50,7 @@ shared_examples "a query optimised for calculating training record states" do |e
       end
 
       context "when there are current mentees associated with the participant" do
-        let(:participant_profile) { create(:mentor) }
+        let(:participant_profile) { create(:mentor_participant_profile) }
         let!(:mentee) { create(:ect, mentor_profile: participant_profile) }
 
         it "populates transient_current_mentees with true" do
