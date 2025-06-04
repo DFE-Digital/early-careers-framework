@@ -99,8 +99,12 @@ module ChooseProgrammeSteps
   end
 
   def then_i_am_taken_to_the_change_to_design_and_deliver_own_programme_confirmation_page
-    expect(page).to have_content("Are you sure you want to run your own training programme?")
-    expect(page).to have_content("You’re choosing to design and deliver your own programme based on the early career framework (ECF).")
+    if FeatureFlag.active?(:programme_type_changes_2025)
+      expect(page).to have_content("You‘ve chosen to deliver your own programme using DfE-accredited materials.")
+    else
+      expect(page).to have_content("Are you sure you want to run your own training programme?")
+      expect(page).to have_content("You’re choosing to design and deliver your own programme based on the early career framework (ECF).")
+    end
   end
 
   def then_i_am_taken_to_the_training_change_submitted_page
@@ -219,11 +223,19 @@ module ChooseProgrammeSteps
   end
 
   def and_i_see_programme_to_dfe_accredited_materials
-    expect(page).to have_summary_row("Programme", "DfE-accredited materials")
+    if FeatureFlag.active?(:programme_type_changes_2025)
+      expect(page).to have_summary_row("Programme", "School-led training")
+    else
+      expect(page).to have_summary_row("Programme", "DfE-accredited materials")
+    end
   end
 
   def and_i_see_programme_to_design_and_deliver_own_programme
-    expect(page).to have_summary_row("Programme", "Design and deliver your own programme based on the early career framework (ECF)")
+    if FeatureFlag.active?(:programme_type_changes_2025)
+      expect(page).to have_summary_row("Programme", "School-led training")
+    else
+      expect(page).to have_summary_row("Programme", "Design and deliver your own programme based on the early career framework (ECF)")
+    end
   end
 
   def and_i_see_the_school_name
@@ -295,19 +307,35 @@ module ChooseProgrammeSteps
   end
 
   def when_i_choose_dfe_funded_training
-    choose("Use a training provider, funded by the DfE")
+    if FeatureFlag.active?(:programme_type_changes_2025)
+      choose("Provider-led")
+    else
+      choose("Use a training provider, funded by the DfE")
+    end
   end
 
   def when_i_choose_deliver_your_own_programme
-    choose("Deliver your own programme using DfE-accredited materials")
+    if FeatureFlag.active?(:programme_type_changes_2025)
+      choose("School-led")
+    else
+      choose("Deliver your own programme using DfE-accredited materials")
+    end
   end
 
   def when_i_choose_design_and_deliver_your_own_material
-    choose("Design and deliver your own programme based on the early career framework (ECF)")
+    if FeatureFlag.active?(:programme_type_changes_2025)
+      choose("School-led")
+    else
+      choose("Design and deliver your own programme based on the early career framework (ECF)")
+    end
   end
 
   def when_i_choose_use_a_training_provider_funded_by_your_school
-    choose("Use a training provider funded by your school")
+    if FeatureFlag.active?(:programme_type_changes_2025)
+      choose("Provider-led")
+    else
+      choose("Use a training provider funded by your school")
+    end
   end
 
   def when_i_choose_to_form_a_new_partnership
@@ -319,11 +347,19 @@ module ChooseProgrammeSteps
   end
 
   def when_i_choose_to_deliver_own_programme
-    choose("Deliver your own programme using DfE-accredited materials")
+    if FeatureFlag.active?(:programme_type_changes_2025)
+      choose("Deliver a school-led programme")
+    else
+      choose("Deliver your own programme using DfE-accredited materials")
+    end
   end
 
   def when_i_choose_to_design_and_deliver_own_programme
-    choose("Design and deliver your own programme based on the early career framework (ECF)")
+    if FeatureFlag.active?(:programme_type_changes_2025)
+      choose("Deliver a school-led programme")
+    else
+      choose("Design and deliver your own programme based on the early career framework (ECF)")
+    end
   end
 
   def when_i_challenge_the_new_cohort_partnership

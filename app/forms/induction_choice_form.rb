@@ -25,7 +25,6 @@ class InductionChoiceForm
 
   def programme_choices
     school_training_options(state_funded: !school.cip_only?,
-                            include_no_ects_option: true,
                             exclude: [school_cohort.induction_programme_choice].compact)
   end
 

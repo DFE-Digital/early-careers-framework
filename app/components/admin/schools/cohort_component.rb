@@ -3,6 +3,8 @@
 module Admin
   module Schools
     class CohortComponent < ViewComponent::Base
+      include ::Schools::DashboardHelper
+
       renders_many :partnership_components, Admin::Schools::PartnershipComponent
       renders_many :relationship_components, Admin::Schools::RelationshipComponent
 
@@ -20,13 +22,11 @@ module Admin
       end
 
       def training_programme
-        {
-          "core_induction_programme" => "Using DfE-accredited materials",
-          "design_our_own"           => "Designing their own training",
-          "full_induction_programme" => "Working with a DfE-funded provider",
-          "no_early_career_teachers" => "No ECTs this year",
-          "school_funded_fip"        => "School-funded full induction programme",
-        }.fetch(induction_programme_choice, "Not using service")
+        if FeatureFlag.active?(:programme_type_changes_2025)
+          training_programme_description(induction_programme_choice)
+        else
+          training_programme_description_in_use(induction_programme_choice)
+        end
       end
 
       def materials

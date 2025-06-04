@@ -53,7 +53,11 @@ module NewSchoolsSteps
   end
 
   def when_i_choose_deliver_own_programme
-    choose("Deliver your own programme using DfE-accredited materials")
+    if FeatureFlag.active?(:programme_type_changes_2025)
+      choose("School-led")
+    else
+      choose("Deliver your own programme using DfE-accredited materials")
+    end
   end
 
   def then_i_see_appropriate_body_appointed_page
