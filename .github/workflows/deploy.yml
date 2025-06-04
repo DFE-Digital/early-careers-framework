@@ -58,6 +58,8 @@ jobs:
           docker-repository: ghcr.io/dfe-digital/early-careers-framework
           github-token: ${{ secrets.GITHUB_TOKEN }}
           snyk-token: ${{ secrets.SNYK_TOKEN }}
+          max-cache: true
+          reuse-cache: true
 
   brakeman:
     name: Run Brakeman vulnerability scanner
