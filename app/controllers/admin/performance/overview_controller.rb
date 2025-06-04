@@ -10,25 +10,7 @@ module Admin::Performance
       @pilot_stats = get_registration_stats
     end
 
-    helper_method :cip_label, :fip_label
-
   private
-
-    def cip_label
-      if FeatureFlag.active?(:programme_type_changes_2025)
-        "Delivering school-led training"
-      else
-        "Delivering their training using DfE materials"
-      end
-    end
-
-    def fip_label
-      if FeatureFlag.active?(:programme_type_changes_2025)
-        "Using provider-led training"
-      else
-        "Using a training provider (full induction programme)"
-      end
-    end
 
     def get_registration_stats
       choices = programme_choices
