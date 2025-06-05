@@ -15,34 +15,24 @@ RSpec.describe AppropriateBodies::InductionRecordsQuery do
     )
   end
   let(:induction_programme) { create(:induction_programme, partnership:) }
-  let!(:induction_record) { create(:induction_record, participant_profile:, appropriate_body:, induction_programme:) }
 
   subject { described_class.new(appropriate_body:) }
 
   describe "#induction_records" do
     before do
       # Later induction record for different appropriate body (should be ignored)
-      create(:induction_record, participant_profile:, induction_programme:)
+      create(:induction_record, :with_end_date, participant_profile:, induction_programme:)
 
       # Mentor for same appropriate body (should be excluded)
       mentor_profile = create(:mentor_participant_profile)
       create(:induction_record, participant_profile: mentor_profile, appropriate_body:, induction_programme:)
 
-      # ECT not in active registration cohort (should be excluded)
-      other_cohort = Cohort.find_by(start_year: 2021)
-      other_participant_profile = create(:ect_participant_profile, cohort: other_cohort)
-      school_cohort = create(:school_cohort, cohort: other_cohort)
-      other_induction_programme = create(:induction_programme, :fip)
-      create(:induction_record, participant_profile: other_participant_profile, appropriate_body:, induction_programme: other_induction_programme, school_cohort:)
+      create(:induction_record, :with_end_date, participant_profile:, appropriate_body:, induction_programme:)
     end
 
     it_behaves_like "a query optimised for calculating training record states", mentor_optimization: false
 
-    it "returns latest induction record for appropriate body" do
-      expect(subject.induction_records).to match_array([induction_record])
-    end
-
-    context "when there are more induction records for the same appropriate body" do
+    context "when the last induction record is linked to the appropriate body" do
       let!(:latest_induction_record) { create(:induction_record, participant_profile:, appropriate_body:, induction_programme:) }
 
       it "returns latest induction record for appropriate body" do
@@ -53,8 +43,8 @@ RSpec.describe AppropriateBodies::InductionRecordsQuery do
     context "when there are newer induction records for a different appropriate body" do
       let!(:latest_induction_record) { create(:induction_record, participant_profile:, induction_programme:, training_status: "deferred") }
 
-      it "returns correct induction record for appropriate body" do
-        expect(subject.induction_records).to match_array([induction_record])
+      it "returns no induction record for appropriate body" do
+        expect(subject.induction_records).to be_empty
       end
     end
   end
