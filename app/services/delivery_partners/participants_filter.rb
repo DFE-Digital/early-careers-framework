@@ -40,12 +40,7 @@ module DeliveryPartners
         school_cohort_school_urn
       ].join("_or_")
 
-      scoped.includes(
-        user: [
-          :teacher_profile,
-        ],
-        induction_programme: { partnership: [:lead_provider] },
-      ).ransack("#{fields}_cont": query).result.distinct
+      scoped.ransack("#{fields}_cont": query).result.distinct
     end
 
     def filter_role(scoped, role)
