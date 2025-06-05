@@ -71,7 +71,7 @@ RSpec.shared_examples "JSON Participant Change schedule endpoint" do
       )
     end
 
-    it "changes participant schedule" do
+    it "changes participant schedule", mid_cohort: true do
       expect {
         put "/api/v1/participants/#{early_career_teacher_profile.user.id}/change-schedule", params: {
           data: {
@@ -102,7 +102,7 @@ RSpec.shared_examples "JSON Participant Change schedule endpoint" do
         }
       end
 
-      it "allows them to change back to their original cohort" do
+      it "allows them to change back to their original cohort", mid_cohort: true do
         expect {
           put "/api/v1/participants/#{early_career_teacher_profile.user.id}/change-schedule", params: {
             data: {

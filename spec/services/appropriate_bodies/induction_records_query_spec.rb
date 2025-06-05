@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe AppropriateBodies::InductionRecordsQuery do
+RSpec.describe AppropriateBodies::InductionRecordsQuery, mid_cohort: true do
   let(:appropriate_body_user) { create(:user, :appropriate_body) }
   let(:appropriate_body) { appropriate_body_user.appropriate_bodies.first }
   let(:participant_profile) { create(:ect_participant_profile) }
@@ -43,7 +43,11 @@ RSpec.describe AppropriateBodies::InductionRecordsQuery do
     end
 
     context "when there are more induction records for the same appropriate body" do
-      let!(:latest_induction_record) { create(:induction_record, participant_profile:, appropriate_body:, induction_programme:) }
+      let!(:latest_induction_record) do
+        travel_to(1.day.from_now) do
+          create(:induction_record, participant_profile:, appropriate_body:, induction_programme:)
+        end
+      end
 
       it "returns latest induction record for appropriate body" do
         expect(subject.induction_records).to match_array([latest_induction_record])

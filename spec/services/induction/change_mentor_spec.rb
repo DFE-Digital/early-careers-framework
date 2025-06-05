@@ -37,7 +37,7 @@ RSpec.describe Induction::ChangeMentor do
       expect(MentorMailer).not_to have_received(:with)
     end
 
-    context "with CIP induction programme" do
+    context "with CIP induction programme", mid_cohort: true do
       let!(:sit) { create(:induction_coordinator_profile, schools: [induction_record.school]).user }
 
       context "with SIT" do
