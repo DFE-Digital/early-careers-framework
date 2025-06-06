@@ -3,10 +3,6 @@ name: "Manually deploy to an environment"
 on:
   workflow_dispatch:
     inputs:
-      branch-name:
-        description: Set branch name
-        required: true
-        type: string
       environment:
         description: "Deploy environment"
         required: true
@@ -17,6 +13,14 @@ on:
           - migration
           - sandbox
           - production
+      build:
+        description: "Build the Docker image"
+        required: true
+        default: false
+        type: boolean
+      sha:
+        description: Commit sha to be deployed
+        required: true
 
 permissions:
   id-token: write
@@ -28,12 +32,11 @@ jobs:
   docker:
     name: Build and push Docker image
     runs-on: ubuntu-latest
+      if ${{ github.event.inputs.build == 'true' }}
     outputs:
       docker-image: ${{ steps.build-docker-image.outputs.image }}
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.branch-name }}
 
       - uses: DFE-Digital/github-actions/build-docker-image@master
         id: build-docker-image
@@ -45,6 +48,7 @@ jobs:
   deploy:
     name: Deploy to environment
     needs: [docker]
+    if: ${{ github.event.inputs.build == 'true' }}
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
     outputs:
@@ -52,7 +56,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.branch-name }}
+          ref: ${{ github.event.inputs.sha }}
 
       - uses: ./.github/actions/deploy-environment-to-aks
         id: deploy
