@@ -13,6 +13,11 @@ on:
           - migration
           - sandbox
           - production
+      build:
+        description: "Build the Docker image"
+        required: true
+        default: false
+        type: boolean
       sha:
         description: Commit sha to be deployed
         required: true
@@ -27,6 +32,7 @@ jobs:
   docker:
     name: Build and push Docker image
     runs-on: ubuntu-latest
+      if ${{ github.event.inputs.build == 'true' }}
     outputs:
       docker-image: ${{ steps.build-docker-image.outputs.image }}
     steps:
@@ -42,6 +48,7 @@ jobs:
   deploy:
     name: Deploy to environment
     needs: [docker]
+    if: needs.docker.result != "skipped"
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
     outputs:
