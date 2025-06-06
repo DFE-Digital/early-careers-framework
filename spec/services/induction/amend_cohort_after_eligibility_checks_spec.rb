@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Induction::AmendCohortAfterEligibilityChecks do
+RSpec.describe Induction::AmendCohortAfterEligibilityChecks, mid_cohort: true do
   describe "#call" do
     let(:participant_profile) { create(:ect, status, cohort: Cohort.previous) }
 

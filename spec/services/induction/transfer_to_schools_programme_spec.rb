@@ -132,7 +132,7 @@ RSpec.describe Induction::TransferToSchoolsProgramme do
           .not_to change { mentor_profile_2.reload.schedule.cohort.start_year }
       end
 
-      it "moves the mentor to the currently active registration cohort" do
+      it "moves the mentor to the currently active registration cohort", mid_cohort: true do
         expect { service_call }
           .to change { mentor_profile_2.reload.schedule.cohort.start_year }
                 .from(2021)
