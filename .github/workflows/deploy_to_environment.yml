@@ -48,7 +48,7 @@ jobs:
   deploy:
     name: Deploy to environment
     needs: [docker]
-    if: needs.docker.result != "skipped"
+    if ${{ github.event.inputs.build == 'true' }}
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
     outputs:
