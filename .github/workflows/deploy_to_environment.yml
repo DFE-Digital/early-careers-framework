@@ -32,8 +32,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.sha }}
-
 
       - uses: DFE-Digital/github-actions/build-docker-image@master
         id: build-docker-image
