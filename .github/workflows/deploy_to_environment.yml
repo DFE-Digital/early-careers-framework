@@ -31,7 +31,6 @@ jobs:
       docker-image: ${{ steps.build-docker-image.outputs.image }}
     steps:
       - uses: actions/checkout@v4
-        with:
 
       - uses: DFE-Digital/github-actions/build-docker-image@master
         id: build-docker-image
