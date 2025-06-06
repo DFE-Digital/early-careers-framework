@@ -32,7 +32,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.sha }}
+          ref: ${{ github.event.inputs.sha }}
 
       - uses: DFE-Digital/github-actions/build-docker-image@master
         id: build-docker-image
@@ -51,7 +51,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.sha }}
+          ref: ${{ github.event.inputs.sha }}
 
       - uses: ./.github/actions/deploy-environment-to-aks
         id: deploy
