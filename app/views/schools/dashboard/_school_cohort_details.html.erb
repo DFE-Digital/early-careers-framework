@@ -1,6 +1,6 @@
 <% latest_partnership = school_cohort.school.partnerships.where(cohort: school_cohort.cohort, relationship: false).order(created_at: :desc).limit(1).first %>
 
-<% if school_cohort.school_chose_cip? && school_cohort.default_induction_programme&.core_induction_programme.blank? %>
+<% if school_cohort.school_chose_cip? && school_cohort.default_induction_programme&.core_induction_programme.blank? && !FeatureFlag.active?(:programme_type_changes_2025) %>
   <h2 class="govuk-heading-m">Choose your training materials</h2>
   <p class="govuk-body"><%= govuk_link_to "Tell us which materials you’ll use", info_schools_core_programme_materials_path(cohort_id: school_cohort.cohort.start_year) %></p>
   <p class="govuk-body">Read our guidance
@@ -14,7 +14,7 @@
     <% row.with_action(text: "Change", href: change_programme_schools_cohort_path(cohort_id: school_cohort.cohort.start_year), visually_hidden_text: "induction programme choice") %>
   <% end %>
 
-  <% if school_cohort.core_induction_programme? %>
+  <% if school_cohort.core_induction_programme? && !FeatureFlag.active?(:programme_type_changes_2025) %>
     <% list.with_row do |row| %>
       <% row.with_key(text: "Materials supplier") %>
       <% row.with_value(text: school_cohort.default_induction_programme&.core_induction_programme&.name) %>
@@ -88,7 +88,7 @@
   <% end %>
 <% end %>
 
-<% if school_cohort.school.cip_only? %>
+<% if school_cohort.school.cip_only? && !FeatureFlag.active?(:programme_type_changes_2025) %>
   <p class="govuk-body">
     You do not need to add information about your ECTs and mentors to this service.
   </p>

@@ -21,22 +21,48 @@ module AdminHelper
     tag.ul(class: list_classes) { safe_join(values.map { |v| tag.li(v) }) }
   end
 
-  def induction_programme_friendly_name(name, short: false)
-    long_names = {
-      "full_induction_programme" => "Full induction programme",
-      "core_induction_programme" => "Core induction programme",
-      "design_our_own" => "Design our own",
-      "school_funded_fip" => "School funded full induction programme",
-    }.freeze
+  PROVIDER_LED_NAME = "Provider-led"
+  SCHOOL_LED_NAME = "School-led"
 
-    short_names = {
-      "full_induction_programme" => "FIP",
-      "core_induction_programme" => "CIP",
-      "design_our_own" => "Design our own",
-      "school_funded_fip" => "School funded FIP",
-    }.freeze
+  def induction_programme_friendly_name(name, short: false)
+    if FeatureFlag.active?(:programme_type_changes_2025)
+      long_names = {
+        "full_induction_programme" => "#{PROVIDER_LED_NAME} funded by the DfE",
+        "core_induction_programme" => SCHOOL_LED_NAME,
+        "design_our_own" => SCHOOL_LED_NAME,
+        "school_funded_fip" => "#{PROVIDER_LED_NAME} funded by the school",
+      }.freeze
+
+      short_names = {
+        "full_induction_programme" => PROVIDER_LED_NAME,
+        "core_induction_programme" => SCHOOL_LED_NAME,
+        "design_our_own" => SCHOOL_LED_NAME,
+        "school_funded_fip" => PROVIDER_LED_NAME,
+      }.freeze
+    else
+      long_names = {
+        "full_induction_programme" => "Full induction programme",
+        "core_induction_programme" => "Core induction programme",
+        "design_our_own" => "Design our own",
+        "school_funded_fip" => "School funded full induction programme",
+      }.freeze
+
+      short_names = {
+        "full_induction_programme" => "FIP",
+        "core_induction_programme" => "CIP",
+        "design_our_own" => "Design our own",
+        "school_funded_fip" => "School funded FIP",
+      }.freeze
+    end
 
     short ? short_names.fetch(name) : long_names.fetch(name)
+  end
+
+  def correct_programme_type_text(text)
+    return text if text.blank?
+    return text unless FeatureFlag.active?(:programme_type_changes_2025)
+
+    text.gsub(/fip|FIP|cip|CIP/, { "fip" => PROVIDER_LED_NAME.downcase, "FIP" => PROVIDER_LED_NAME, "cip" => SCHOOL_LED_NAME.downcase, "CIP" => SCHOOL_LED_NAME })
   end
 
   def format_address(*parts)

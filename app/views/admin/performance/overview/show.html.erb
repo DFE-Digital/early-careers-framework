@@ -15,15 +15,17 @@
       </thead>
       <tbody class="govuk-table__body">
         <tr class="govuk-table__row">
-          <th scope="row" class="govuk-table__header govuk-!-font-weight-regular">Delivering their training using DfE materials</th>
+          <th scope="row" class="govuk-table__header govuk-!-font-weight-regular"><%= programme_label_for(:core_induction_programme) %></th>
           <td class="govuk-table__cell govuk-table__cell--numeric"><%= number_with_delimiter(@pilot_stats.cip_total) %></td>
         </tr>
+        <% unless FeatureFlag.active?(:programme_type_changes_2025) %>
+          <tr class="govuk-table__row">
+            <th scope="row" class="govuk-table__header govuk-!-font-weight-regular">Designing their own programme</th>
+            <td class="govuk-table__cell govuk-table__cell--numeric"><%= number_with_delimiter(@pilot_stats.diy_total) %></td>
+          </tr>
+        <% end %>
         <tr class="govuk-table__row">
-          <th scope="row" class="govuk-table__header govuk-!-font-weight-regular">Designing their own programme</th>
-          <td class="govuk-table__cell govuk-table__cell--numeric"><%= number_with_delimiter(@pilot_stats.diy_total) %></td>
-        </tr>
-        <tr class="govuk-table__row">
-          <th scope="row" class="govuk-table__header govuk-!-font-weight-regular">Using a training provider (full induction programme)</th>
+          <th scope="row" class="govuk-table__header govuk-!-font-weight-regular"><%= programme_label_for(:full_induction_programme) %></th>
           <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-regular"><%= number_with_delimiter(@pilot_stats.fip_total) %></td>
         </tr>
         <% @pilot_stats.partnership_totals.each do |provider| %>
