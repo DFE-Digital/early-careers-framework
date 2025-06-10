@@ -8,24 +8,31 @@
         <h1 class="govuk-heading-l">Are you sure this is how you want to run your training?</h1>
 
         <% if @wizard.how_will_you_run_training == 'full_induction_programme' %>
-            <p class="govuk-body">You‘ve chosen to use a training provider, funded by DfE.</p>
+            <p class="govuk-body">You’ve chosen to use a training provider, funded by DfE.</p>
             <p class="govuk-body">You’ll need to:</p>
             <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-7">
               <li>choose a training provider</li>
               <li>add your ECTs and mentors</li>
             </ul>
         <% elsif @wizard.how_will_you_run_training == 'core_induction_programme' %>
+          <% if FeatureFlag.active?(:programme_type_changes_2025) %>
+            <p class="govuk-body">You’ve chosen to design and deliver your own training programme.</p>
+            <p class="govuk-body">You’ll need to:</p>
+            <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-7">
+              <li>add your ECTs and mentors</li>
+            </ul>
+          <% else %>
             <p class="govuk-body">You‘ve chosen to deliver your own programme using DfE-accredited materials.</p>
             <p class="govuk-body">You’ll need to:</p>
             <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-7">
-              <% unless FeatureFlag.active?(:programme_type_changes_2025) %>
-                <li>choose your training materials</li>
-              <% end %>
+              <li>choose your training materials</li>
               <li>add your ECTs and mentors</li>
             </ul>
+          <% end %>
         <% elsif @wizard.how_will_you_run_training == 'school_funded_fip' %>
             <p class="govuk-body">You‘ve chosen to use a training provider funded by your school.</p>
             <% if FeatureFlag.active?(:programme_type_changes_2025) %>
+              <p class="govuk-body">You’ll need to:</p>
               <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-7">
                 <li>choose a training provider</li>
                 <li>add your ECTs and mentors</li>
