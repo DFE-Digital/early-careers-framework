@@ -9,6 +9,7 @@ on:
         default: migration
         type: choice
         options:
+          - review-5840
           - staging
           - migration
           - sandbox
