@@ -9,6 +9,10 @@
     <li>tell us which appropriate body you’ve appointed for your ECTs</li>
   <% end %>
 
-  <li>add the new ECTs and mentors to this service so we can check their eligibility for DfE funding</li>
+  <% if @wizard.cip_only_school? %>
+    <li>add the new ECTs and mentors to this service</li>
+  <% else %>
+    <li>add the new ECTs and mentors to this service so we can check their eligibility for DfE funding</li>
+  <% end %>
   <li>use this service to tell us which mentor has been assigned to each ECT</li>
 </ol>
