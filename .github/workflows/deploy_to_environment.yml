@@ -22,7 +22,10 @@ on:
       sha:
         description: Commit sha to be deployed
         required: true
-
+      pr-number:
+        description: PR number for the review app
+        required: false
+        default: 0
 env:
   ACTIONS_STEP_DEBUG: true
 
@@ -71,3 +74,5 @@ jobs:
           azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           current-commit-sha: ${{ github.sha }}
           statuscake-api-token: ${{ secrets.STATUSCAKE_API_TOKEN }}
+          pr-number: ${{ github.event.inputs.pr-number }}
+          sha: ${{ inputs.sha }}
