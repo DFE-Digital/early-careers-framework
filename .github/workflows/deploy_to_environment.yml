@@ -21,7 +21,7 @@ on:
         type: boolean
       sha:
         description: Commit sha to be deployed
-        required: true
+        required: false
 
 permissions:
   id-token: write
