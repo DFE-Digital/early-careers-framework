@@ -7,16 +7,6 @@ on:
         description: Set branch name
         required: true
         type: string
-      environment:
-        description: "Deploy environment"
-        required: true
-        default: migration
-        type: choice
-        options:
-          - staging
-          - migration
-          - sandbox
-          - production
 
 
 jobs:
