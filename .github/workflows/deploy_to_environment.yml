@@ -3,7 +3,10 @@ name: "Manually deploy to an environment"
 on:
   workflow_dispatch:
     inputs:
-      environment: review
+      environment:
+        description: "environment"
+        required: true
+        default: "review"
       build:
         description: "Build the Docker image"
         required: true
