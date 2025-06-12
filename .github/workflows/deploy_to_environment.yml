@@ -57,6 +57,12 @@ jobs:
         with:
           ref: ${{ github.event.inputs.sha }}
 
+      - name: Set Environment variables
+        id: set_env_var
+        shell: bash
+        run: |
+          echo "PULL_REQUEST_NUMBER=${{ github.event.pull_request.number }}" >> $GITHUB_ENV
+
       - uses: ./.github/actions/deploy-environment-to-aks
         id: deploy
         with:
