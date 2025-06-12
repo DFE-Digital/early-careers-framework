@@ -10,10 +10,6 @@ on:
         type: choice
         options:
           - review
-          - staging
-          - migration
-          - sandbox
-          - production
       build:
         description: "Build the Docker image"
         required: true
