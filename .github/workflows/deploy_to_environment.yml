@@ -26,8 +26,8 @@ permissions:
 
 jobs:
   docker:
-    name: Build and push Docker image
     runs-on: ubuntu-latest
     steps:
-      run: echo "This job is a placeholder for building and pushing the Docker image. It can be replaced with actual build steps."
+      - name: test
+        run: echo "This job is a placeholder for building and pushing the Docker image. It can be replaced with actual build steps."
 
