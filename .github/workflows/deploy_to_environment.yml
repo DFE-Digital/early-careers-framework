@@ -28,6 +28,9 @@ on:
         default: 0
         type: number
 
+env:
+  PULL_REQUEST_NUMBER: 5840
+
 permissions:
   id-token: write
   pull-requests: write
@@ -38,6 +41,7 @@ jobs:
   docker:
     name: Build and push Docker image
     runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.build == 'true' }}
     outputs:
       docker-image: ${{ steps.build-docker-image.outputs.image }}
     steps:
