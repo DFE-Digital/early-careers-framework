@@ -7,11 +7,10 @@ on:
       build:
         description: "Build the Docker image"
         required: true
-        default: false
         type: boolean
       sha:
         description: Commit sha to be deployed
-        required: false
+        required: true
 
 permissions:
   id-token: write
