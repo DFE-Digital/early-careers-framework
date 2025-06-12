@@ -16,12 +16,12 @@ on:
           - production
       build:
         description: "Build the Docker image"
-        required: true
+        required: false
         default: false
         type: boolean
       sha:
         description: Commit sha to be deployed
-        required: true
+        required: false
       pr-number:
         description: PR number for the review app
         required: false
