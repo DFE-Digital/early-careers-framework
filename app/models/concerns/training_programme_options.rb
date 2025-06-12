@@ -83,6 +83,21 @@ module TrainingProgrammeOptions
     not_yet_known: "Not yet decided",
   }.freeze
 
+  CONFIRMATION_DESCRIPTION = {
+    core_induction_programme: "deliver your own programme using DfE-accredited materials",
+    full_induction_programme: "use a training provider, funded by the DfE",
+    design_our_own: "design and deliver your own programme based on the early career framework (ECF)",
+    school_funded_fip: "use a training provider funded by your school",
+    no_early_career_teachers: "opt out of notifications, because you do not expect any early career teachers to join this academic year",
+  }.freeze
+
+  CONFIRMATION_DESCRIPTION_2025 = {
+    core_induction_programme: "design and deliver your own training programme",
+    full_induction_programme: "use provider-led training, funded by the DfE",
+    school_funded_fip: "use provider-led training, funded by your school",
+    no_early_career_teachers: "opt out of notifications, because you do not expect any early career teachers to join this academic year",
+  }.freeze
+
   def school_training_options(state_funded: true, exclude: [])
     choices = possible_programmes(state_funded:, exclude:)
 
@@ -103,5 +118,13 @@ module TrainingProgrammeOptions
               end
 
     choices.reject { |choice| choice.in? exclude.map(&:to_sym) }
+  end
+
+  def confirmation_description(training_programme:)
+    if FeatureFlag.active?(:programme_type_changes_2025)
+      CONFIRMATION_DESCRIPTION_2025[training_programme.to_sym]
+    else
+      CONFIRMATION_DESCRIPTION[training_programme.to_sym]
+    end
   end
 end
