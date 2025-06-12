@@ -2,11 +2,12 @@ name: "Manually deploy to an environment"
 
 on:
   workflow_dispatch:
-    inputs:
-      branch-name:
-        description: Set branch name
-        required: true
-        type: string
+
+inputs:
+  branch-name:
+    description: Set branch name
+    required: true
+    type: string
 
 
 jobs:
