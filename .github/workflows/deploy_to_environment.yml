@@ -59,3 +59,4 @@ jobs:
           pull-request-number: ${{ github.event.pull_request.number }}
           current-commit-sha: ${{ github.event.pull_request.head.sha }}
           statuscake-api-token: ${{ secrets.STATUSCAKE_API_TOKEN }}
+          pull-request-number: ${{ github.event.inputs.pull_request_number }}
