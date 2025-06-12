@@ -2,30 +2,8 @@ name: "Manually deploy to an environment"
 
 on:
   workflow_dispatch:
-    inputs:
-      environment:
-        description: "Deploy environment"
-        required: true
-        default: migration
-        type: choice
-        options:
-          - review
-          - staging
-          - migration
-          - sandbox
-          - production
-
-
-
-
-permissions:
-  id-token: write
-  pull-requests: write
-  packages: write
-  security-events: write
-
 jobs:
-  docker:
+  myjob:
     runs-on: ubuntu-latest
     steps:
       - name: test
