@@ -3,10 +3,17 @@ name: "Manually deploy to an environment"
 on:
   workflow_dispatch:
     inputs:
-      branch-name:
-        description: Set branch name
-        required: false
-        type: string
+      environment:
+        description: "Deploy environment"
+        required: true
+        default: migration
+        type: choice
+        options:
+          - review
+          - staging
+          - migration
+          - sandbox
+          - production
 
 jobs:
   myjob:
