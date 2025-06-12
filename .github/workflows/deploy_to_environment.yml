@@ -3,13 +3,6 @@ name: "Manually deploy to an environment"
 on:
   workflow_dispatch:
     inputs:
-      environment:
-        description: "Deploy environment"
-        required: true
-        default: migration
-        type: choice
-        options:
-          - review
       build:
         description: "Build the Docker image"
         required: true
@@ -46,14 +39,16 @@ jobs:
   deploy_review:
     name: Deploy review
     concurrency: deploy_review_${{ github.event.pull_request.number }}
+    needs: [docker]
     runs-on: ubuntu-latest
+    environment:
+      name: review
     steps:
       - uses: actions/checkout@v3
 
       - uses: ./.github/actions/deploy-environment-to-aks
         id: deploy
         with:
-          environment: ${{ inputs.environment }}
           docker-image: ${{ needs.docker.outputs.docker-image }}
           azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
           azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
