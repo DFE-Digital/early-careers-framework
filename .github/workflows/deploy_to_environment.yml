@@ -50,7 +50,7 @@ jobs:
 
       - name: setup envt variables
         run: |
-          echo "PULL_REQUEST_NUMBER=${{ github.event.pull_request.number }}" >> $GITHUB_ENV
+          export PULL_REQUEST_NUMBER=${{ github.event.pull_request.number }} >> $GITHUB_ENV
 
       - uses: ./.github/actions/deploy-environment-to-aks
         id: deploy
