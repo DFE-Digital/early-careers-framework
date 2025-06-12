@@ -46,16 +46,17 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           snyk-token: ${{ secrets.SNYK_TOKEN }}
 
-  deploy:
-    name: Deploy to environment
+
+  deploy_review:
+    name: Deploy review
+    concurrency: deploy_review_${{ github.event.pull_request.number }}
+    if: github.actor != 'dependabot[bot]' && github.event_name == 'pull_request'
+    needs: [docker, brakeman]
     runs-on: ubuntu-latest
-    environment: ${{ inputs.environment }}
-    outputs:
-      docker-image: ${{ needs.docker.outputs.docker-image }}
+    environment:
+      name: review
     steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.inputs.sha }}
+      - uses: actions/checkout@v3
 
       - uses: ./.github/actions/deploy-environment-to-aks
         id: deploy
@@ -65,7 +66,6 @@ jobs:
           azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
           azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          current-commit-sha: ${{ github.sha }}
-          statuscake-api-token: ${{ secrets.STATUSCAKE_API_TOKEN }}
-          sha: ${{ inputs.sha }}
           pull-request-number: ${{ github.event.pull_request.number }}
+          current-commit-sha: ${{ github.event.pull_request.head.sha }}
+          statuscake-api-token: ${{ secrets.STATUSCAKE_API_TOKEN }}
