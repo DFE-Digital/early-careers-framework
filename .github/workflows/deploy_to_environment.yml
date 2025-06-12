@@ -14,6 +14,14 @@ on:
           - migration
           - sandbox
           - production
+      build:
+        description: "Build the Docker image"
+        required: true
+        default: false
+        type: boolean
+      sha:
+        description: Commit sha to be deployed
+        required: true
 
 jobs:
   myjob:
