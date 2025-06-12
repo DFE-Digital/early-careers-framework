@@ -52,7 +52,7 @@ jobs:
       - uses: ./.github/actions/deploy-environment-to-aks
         id: deploy
         with:
-          docker-image: ${{ inputs.sha || needs.docker.outputs.docker-image }}
+          docker-image: ${{ inputs.sha }}
           environment: ${{ github.event.inputs.environment }}
           azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
           azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
