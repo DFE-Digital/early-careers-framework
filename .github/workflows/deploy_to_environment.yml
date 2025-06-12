@@ -3,6 +3,7 @@ name: "Manually deploy to an environment"
 on:
   workflow_dispatch:
     inputs:
+      environment: review
       build:
         description: "Build the Docker image"
         required: true
@@ -49,7 +50,8 @@ jobs:
       - uses: ./.github/actions/deploy-environment-to-aks
         id: deploy
         with:
-          docker-image: ${{ needs.docker.outputs.docker-image }}
+          docker-image: ${{ inputs.sha || needs.docker.outputs.docker-image }}
+          environment: ${{ github.event.inputs.environment }}
           azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
           azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
