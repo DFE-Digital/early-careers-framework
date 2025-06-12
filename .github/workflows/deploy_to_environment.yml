@@ -14,18 +14,8 @@ on:
           - migration
           - sandbox
           - production
-      build:
-        description: "Build the Docker image"
-        required: false
-        default: false
-        type: boolean
-      sha:
-        description: Commit sha to be deployed
-        required: false
-      pr-number:
-        description: PR number for the review app
-        required: false
-        default: "unknown"
+
+
 
 
 permissions:
@@ -38,15 +28,6 @@ jobs:
   docker:
     name: Build and push Docker image
     runs-on: ubuntu-latest
-    outputs:
-      docker-image: ${{ steps.build-docker-image.outputs.image }}
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: DFE-Digital/github-actions/build-docker-image@master
-        id: build-docker-image
-        with:
-          docker-repository: ghcr.io/dfe-digital/early-careers-framework
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          snyk-token: ${{ secrets.SNYK_TOKEN }}
+      run: echo "This job is a placeholder for building and pushing the Docker image. It can be replaced with actual build steps."
 
