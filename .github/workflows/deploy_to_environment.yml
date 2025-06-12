@@ -23,10 +23,25 @@ on:
         description: Commit sha to be deployed
         required: true
 
-jobs:
-  myjob:
-    runs-on: ubuntu-latest
-    steps:
-      - name: test
-        run: echo "This job is a placeholder for building and pushing the Docker image. It can be replaced with actual build steps."
+permissions:
+  id-token: write
+  pull-requests: write
+  packages: write
+  security-events: write
 
+jobs:
+  docker:
+    name: Build and push Docker image
+    runs-on: ubuntu-latest
+      if ${{ github.event.inputs.build == 'true' }}
+    outputs:
+      docker-image: ${{ steps.build-docker-image.outputs.image }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: DFE-Digital/github-actions/build-docker-image@master
+        id: build-docker-image
+        with:
+          docker-repository: ghcr.io/dfe-digital/early-careers-framework
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          snyk-token: ${{ secrets.SNYK_TOKEN }}
