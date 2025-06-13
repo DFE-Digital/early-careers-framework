@@ -7,6 +7,14 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
+## 16 June 2025
+
+[#new-feature #production-release #data-update]
+
+Registration is now open for the 2025/26 intake of early career teachers and mentors, so we’ve added the schedules and contract data for this academic year to the production environment.
+
+For more details, [view our guidance on changes for the 2025/26 academic year](/api-reference/changes-for-the-2025-2026-academic-year).
+
 ## 23 April 2025
 
 [#sandbox-release #breaking-change]
