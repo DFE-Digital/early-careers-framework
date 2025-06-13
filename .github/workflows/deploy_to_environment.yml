@@ -14,6 +14,10 @@ on:
       sha:
         description: Commit sha to be deployed
         required: true
+      pr-number:
+        description: "Pull request number"
+        required: true
+        type: number
 
 permissions:
   id-token: write
@@ -56,6 +60,6 @@ jobs:
           azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
           azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          pull-request-number: ${{ github.event.pull_request.number }}
+          pull-request-number: ${{ inputs.pr-number }}
           current-commit-sha: ${{ github.event.pull_request.head.sha }}
           statuscake-api-token: ${{ secrets.STATUSCAKE_API_TOKEN }}
