@@ -15,7 +15,7 @@ gem "pretender", ">= 0.4.0"
 gem "pundit"
 
 # Error monitoring
-gem "sentry-rails", "~> 5.24"
+gem "sentry-rails", "~> 5.25"
 gem "sentry-ruby", "~> 5.22"
 gem "sentry-sidekiq"
 
