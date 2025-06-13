@@ -30,7 +30,7 @@ jobs:
   docker:
     name: Build and push Docker image
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.build != 'false' }}
+    if: ${{ github.event.inputs.build = 'true' }}
     outputs:
       docker-image: ${{ steps.build-docker-image.outputs.image }}
     steps:
@@ -58,7 +58,7 @@ jobs:
 
       - name: setup environment variables
         run: |
-          if [ ${{ inputs.build }} == 'true' ]
+          if [ ${{ inputs.build == 'true' }}]
           then
             echo "IMAGE_TAG=${{ steps.docker.outputs.docker-image }}" >> $GITHUB_ENV
           else
