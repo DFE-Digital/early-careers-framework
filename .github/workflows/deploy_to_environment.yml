@@ -58,7 +58,7 @@ jobs:
         run: |
           if [ ${{ inputs.build }} == 'true' ]
           then
-            echo "IMAGE_TAG=$${{ steps.docker.outputs.docker-image }}" >> $GITHUB_ENV
+            echo "IMAGE_TAG=${{ steps.docker.outputs.docker-image }}" >> $GITHUB_ENV
           else
             echo "IMAGE_TAG=${{ inputs.sha }}" >> $GITHUB_ENV
           fi
