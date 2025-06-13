@@ -30,7 +30,7 @@ jobs:
   docker:
     name: Build and push Docker image
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.build == 'true' }}
+    if: ${{ github.event.inputs.build != 'false' }}
     outputs:
       docker-image: ${{ steps.build-docker-image.outputs.image }}
     steps:
