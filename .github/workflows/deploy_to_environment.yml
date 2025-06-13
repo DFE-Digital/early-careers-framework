@@ -48,7 +48,7 @@ jobs:
     name: Deploy review
     concurrency: deploy_review_${{ github.event.pull_request.number }}
     needs: docker
-    if: ${{ github.event.inputs.build != 'false'}}
+    if: ${{ github.job.docker.status != 'running' }}
     runs-on: ubuntu-latest
     environment:
       name: review
