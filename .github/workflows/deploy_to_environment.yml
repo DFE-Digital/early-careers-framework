@@ -56,7 +56,8 @@ jobs:
 
       - name: setup environment variables
         run: |
-          if [ ${{ inputs.build }} == 'true' ] then
+          if [ ${{ inputs.build }} == 'true' ]
+          then
             echo "IMAGE_TAG=$${{ steps.docker.outputs.docker-image }}" >> $GITHUB_ENV
           else
             echo "IMAGE_TAG=${{ inputs.sha }}" >> $GITHUB_ENV
