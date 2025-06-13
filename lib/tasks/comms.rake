@@ -201,6 +201,47 @@ namespace :comms do
         .deliver_later
     end
   end
+
+  desc "Send comms to SITs from Best Practice Network partnered schools"
+  task :contact_bpn_school_sits, [:path_to_csv] => :environment do |_task, args|
+    logger = Logger.new($stdout)
+
+    rows = CSV.read(args.path_to_csv, headers: true)
+
+    rows.each do |row|
+      school_urn = row["urn"]
+      logger.info "Processing school with URN: #{school_urn}"
+
+      school = School.includes(:induction_coordinators).find_by_urn(school_urn)
+
+      if school.nil?
+        logger.error "Unable to find school"
+        next
+      end
+
+      if school.induction_coordinators.empty?
+        logger.error "Unable to find a SIT"
+        next
+      end
+
+      school.induction_coordinators.each do |sit_user|
+        if Email.tagged_with(:ask_bpn_school_sit_to_report_school_training_details).associated_with(sit_user).where.not(status: Email::FAILED_STATUSES).any?
+          logger.info "The SIT with user id #{sit_user.id} has been already contacted"
+          next
+        end
+
+        logger.info "Sending comms to SIT with user id: #{sit_user.id}"
+        nomination_token = create_nomination_token(school, sit_user.email)
+        SchoolMailer
+          .with(
+            sit_user:,
+            nomination_link: get_sit_nomination_url(token: nomination_token),
+          )
+          .ask_bpn_school_sit_to_report_school_training_details
+          .deliver_now
+      end
+    end
+  end
 end
 
 def get_sit_nomination_url(token:)
