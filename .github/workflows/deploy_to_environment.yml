@@ -11,7 +11,7 @@ on:
         description: "Build the Docker image"
         required: true
         type: boolean
-        default: false
+        default: "false"
       sha:
         description: Commit sha to be deployed
         required: true
@@ -30,7 +30,7 @@ jobs:
   docker:
     name: Build and push Docker image
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.build == 'true' }}
+    if: ${{ github.event.inputs.build != 'false' }}
     outputs:
       docker-image: ${{ steps.build-docker-image.outputs.image }}
     steps:
@@ -56,11 +56,11 @@ jobs:
           ref: ${{ github.event.inputs.sha }}
 
       - name: setup environment variables
-        if: ${{ inputs.build == 'true' }}
+        if: ${{ github.event.inputs.build != 'false' }}
         run: echo "IMAGE_TAG=${{ needs.docker.outputs.docker-image }}" >> $GITHUB_ENV
 
       - name: setup environment variables2
-        if: ${{ inputs.build == 'false' }}
+        if: ${{ github.event.inputs.build == 'false' }}
         run: echo "IMAGE_TAG=${{ inputs.sha }}" >> $GITHUB_ENV
 
 
