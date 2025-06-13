@@ -47,8 +47,9 @@ jobs:
   deploy_review:
     name: Deploy review
     concurrency: deploy_review_${{ github.event.pull_request.number }}
-    if: ${{ github.job.docker.status == 'skipped' || github.job.docker.status == 'success' }}
-    needs: docker
+    if: |
+      always() && 
+      (needs.docker.result == 'skipped' || needs.docker.result == 'success' }}
     runs-on: ubuntu-latest
     environment:
       name: review
