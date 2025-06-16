@@ -62,11 +62,11 @@ jobs:
       - name: setup environment variables
         id: setup-env
         run: |
-          if [ ${{ github.event.inputs.build != 'false' }} ]
+          if [ ${{ github.event.inputs.build == 'false' }} ]
           then
-            echo "IMAGE_TAG=${{ needs.docker.outputs.docker-image }}" >> $GITHUB_ENV
-          else
             echo "IMAGE_TAG=${{ inputs.sha }}" >> $GITHUB_ENV
+          else
+            echo "IMAGE_TAG=${{ needs.docker.outputs.docker-image }}" >> $GITHUB_ENV
           fi
 
       - uses: ./.github/actions/deploy-environment-to-aks
