@@ -60,6 +60,7 @@ jobs:
           ref: ${{ github.event.inputs.sha }}
 
       - name: setup environment variables
+        id: setup-env
         run: |
           if [ ${{ github.event.inputs.build != 'false' }} ]
           then
@@ -71,7 +72,7 @@ jobs:
       - uses: ./.github/actions/deploy-environment-to-aks
         id: deploy
         with:
-          docker-image: ${{ env.IMAGE_TAG }}
+          docker-image: ${{ needs.step.setup-env.outputs.IMAGE_TAG }}
           environment: ${{ github.event.inputs.environment }}
           azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
           azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
