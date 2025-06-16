@@ -64,9 +64,9 @@ jobs:
         run: |
           if [ ${{ github.event.inputs.build != 'false' }} ]
           then
-            echo "IMAGE_TAG=${{ needs.docker.outputs.docker-image }}" >> $GITHUB_ENV
+            echo export "IMAGE_TAG=${{ needs.docker.outputs.docker-image }}" >> $GITHUB_ENV
           else
-            echo "IMAGE_TAG=${{ inputs.sha }}" >> $GITHUB_ENV
+            echo export "IMAGE_TAG=${{ inputs.sha }}" >> $GITHUB_ENV
           fi
 
       - uses: ./.github/actions/deploy-environment-to-aks
