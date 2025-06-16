@@ -11,7 +11,7 @@ on:
         description: "Build the Docker image"
         required: true
         type: boolean
-        default: "false"
+        default: false
       sha:
         description: Commit sha to be deployed (deploy only)
         required: false
