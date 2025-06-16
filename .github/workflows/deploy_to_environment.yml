@@ -11,7 +11,7 @@ on:
         description: "Build the Docker image"
         required: true
         type: boolean
-        default: false
+        default: "false"
       sha:
         description: Commit sha to be deployed (deploy only)
         required: false
@@ -63,7 +63,7 @@ jobs:
       - name: setup environment variables
         id: setup-env
         run: |
-          if [[ ${{ github.event.inputs.build != 'false' }} ]]; then
+          if [[ -n ${{ github.event.inputs.build }} ]]; then
             echo "IMAGE_TAG=${{ needs.docker.outputs.docker-image }}" >> $GITHUB_ENV
           else
             echo "IMAGE_TAG=${{ inputs.sha }}" >> $GITHUB_ENV
