@@ -79,5 +79,5 @@ jobs:
           azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           pull-request-number: ${{ inputs.pr-number }}
           #OVERRIDE CURRENT-COMMIT WITH ANY COMMIT OFF A BRANCH
-          current-commit-sha: ${{ inputs.sha }}
+          current-commit-sha: ${{ env.IMAGE_TAG }}
           statuscake-api-token: ${{ secrets.STATUSCAKE_API_TOKEN }}
