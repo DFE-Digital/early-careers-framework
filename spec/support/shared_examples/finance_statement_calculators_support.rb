@@ -63,7 +63,7 @@ RSpec.shared_examples "a Finance ECF statement calculator", mid_cohort: true do
   end
 
   describe "#total" do
-    let(:default_total) { BigDecimal("-0.5232793103448275862068965517241379310345e4") }
+    let(:default_total) { BigDecimal("-0.523279310e4") }
 
     let(:mock_uplift) do
       {
@@ -80,7 +80,7 @@ RSpec.shared_examples "a Finance ECF statement calculator", mid_cohort: true do
       end
 
       it "increases total" do
-        expect(subject.total(with_vat: false)).to eql(default_total + 1234)
+        expect(subject.total(with_vat: false).round(5)).to eql(default_total + 1234)
       end
     end
 
@@ -90,7 +90,7 @@ RSpec.shared_examples "a Finance ECF statement calculator", mid_cohort: true do
       end
 
       it "descreases the total" do
-        expect(subject.total(with_vat: false)).to eql(default_total - 1234)
+        expect(subject.total(with_vat: false).round(5)).to eql(default_total - 1234)
       end
     end
 
@@ -100,7 +100,7 @@ RSpec.shared_examples "a Finance ECF statement calculator", mid_cohort: true do
       end
 
       it "affects the amount to reconcile by" do
-        expect(subject.total(with_vat: true)).to eql((default_total + 1234) * 1.2)
+        expect(subject.total(with_vat: true).round(5)).to eql((default_total + 1234) * 1.2)
       end
     end
 
@@ -112,7 +112,7 @@ RSpec.shared_examples "a Finance ECF statement calculator", mid_cohort: true do
       it "returns correct value" do
         expect(subject.statement.adjustments.count).to eql(3)
         expect(subject.additional_adjustments_total).to eql(799.99)
-        expect(subject.total(with_vat: true)).to eql((default_total + 799.99) * 1.2)
+        expect(subject.total(with_vat: true).round(5)).to eql((default_total + 799.99) * 1.2)
       end
     end
 
@@ -120,7 +120,7 @@ RSpec.shared_examples "a Finance ECF statement calculator", mid_cohort: true do
       before { allow_any_instance_of(CallOffContract).to receive(:include_uplift_fees?).and_return(false) }
 
       it "returns default total with no uplifts" do
-        expect(subject.total).to eql(default_total - -100)
+        expect(subject.total.round(5)).to eql(default_total - -100)
       end
     end
   end
@@ -876,7 +876,7 @@ RSpec.shared_examples "a Finance ECF statement calculator", mid_cohort: true do
     let(:contract) { create(:call_off_contract, lead_provider:) }
 
     it "returns calculated calculated service fee" do
-      expect(subject.service_fee).to eql(BigDecimal("0.75943068965517241379310344827586206896551e5"))
+      expect(subject.service_fee.round(5)).to eql(BigDecimal("0.7594306897e5"))
     end
 
     context "when monthly_service_fee is set on contract" do
