@@ -765,7 +765,7 @@ en:
       add-participant-dqt-mismatch-mentor: "Contact Support: You cannot add %{teacher_name}"
     message_field:
       unspecified: Your message
-      add-participant-requires-manual-transfer-ect: "Your message and %{possesive_teacher_name} details"
+      add-participant-requires-manual-transfer-ect: "Your message and %{possessive_teacher_name} details"
 
     introduction:
       unspecified_html: "If you have a question about the Manage training for early career teachers service, you can contact the DfE using this form."
@@ -822,7 +822,7 @@ en:
         </ul>
       add-participant-requires-manual-transfer-ect_html: |
         <p class="govuk-body">Make sure you include all the details we need. Registration might take longer if we don’t have them:</p>
-        <p class="govuk-body">Include %{possesive_teacher_name}:</p>
+        <p class="govuk-body">Include %{possessive_teacher_name}:</p>
         <ul class="govuk-list govuk-list--bullet">
           <li>full name</li>
           <li>date of birth</li>
