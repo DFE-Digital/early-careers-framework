@@ -28,6 +28,7 @@ class SupportFormComponent < BaseComponent
       support_email: Rails.application.config.support_email,
       school_name:,
       teacher_name:,
+      possesive_teacher_name:,
     }
   end
 
@@ -37,5 +38,9 @@ private
 
   def cohort_year_range
     Cohort.new(start_year: cohort_year)&.description if cohort_year.present?
+  end
+
+  def possesive_teacher_name
+    ApplicationController.helpers.possessive_name(teacher_name)
   end
 end
