@@ -67,8 +67,7 @@ jobs:
             echo "IMAGE_TAG=${{ needs.docker.outputs.docker-image }}" >> $GITHUB_ENV
           else
             echo "IMAGE_TAG=${{ inputs.sha }}" >> $GITHUB_ENV
-          fi
-
+          f
       - uses: ./.github/actions/deploy-environment-to-aks
         id: deploy
         with:
@@ -79,5 +78,5 @@ jobs:
           azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           pull-request-number: ${{ inputs.pr-number }}
           #OVERRIDE CURRENT-COMMIT WITH ANY COMMIT OFF A BRANCH
-          current-commit-sha: ${{ env.IMAGE_TAG }}
+          current-commit-sha: ${{ github.sha}}
           statuscake-api-token: ${{ secrets.STATUSCAKE_API_TOKEN }}
