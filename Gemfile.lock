@@ -147,7 +147,7 @@ GEM
       erubi (~> 1.4)
       parser (>= 2.4)
       smart_properties
-    bigdecimal (3.1.9)
+    bigdecimal (3.2.2)
     bindex (0.8.1)
     bootsnap (1.18.6)
       msgpack (~> 1.2)
@@ -608,14 +608,14 @@ GEM
       websocket (~> 1.0)
     semantic_logger (4.16.0)
       concurrent-ruby (~> 1.0)
-    sentry-rails (5.24.0)
+    sentry-rails (5.25.0)
       railties (>= 5.0)
-      sentry-ruby (~> 5.24.0)
-    sentry-ruby (5.24.0)
+      sentry-ruby (~> 5.25.0)
+    sentry-ruby (5.25.0)
       bigdecimal
       concurrent-ruby (~> 1.0, >= 1.0.2)
-    sentry-sidekiq (5.24.0)
-      sentry-ruby (~> 5.24.0)
+    sentry-sidekiq (5.25.0)
+      sentry-ruby (~> 5.25.0)
       sidekiq (>= 3.0)
     shoulda-matchers (5.3.0)
       activesupport (>= 5.2.0)
@@ -815,7 +815,7 @@ DEPENDENCIES
   scss_lint-govuk
   selenium-webdriver
   sentry-rails (~> 5.24)
-  sentry-ruby (~> 5.22)
+  sentry-ruby (~> 5.25)
   sentry-sidekiq
   shoulda-matchers (~> 5.3)
   sidekiq (~> 6.5.12)
