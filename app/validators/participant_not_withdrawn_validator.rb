@@ -10,6 +10,7 @@ private
   def validate_withdrawals(record)
     return unless record.participant_profile.present? && (latest_state = latest_participant_state(record))
     return unless latest_state.withdrawn? && latest_state.created_at <= record.declaration_date
+    return if latest_state.withdrawn? && record.relevant_induction_record.training_status_active?
 
     record
       .errors
