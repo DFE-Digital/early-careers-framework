@@ -75,6 +75,14 @@ class RecordDeclaration
     schedule.milestones.find_by(declaration_type:)
   end
 
+  def relevant_induction_record
+    @relevant_induction_record ||= Induction::FindBy.call(
+      participant_profile:,
+      lead_provider: cpd_lead_provider.lead_provider,
+      date_range: ..declaration_date,
+    )
+  end
+
 private
 
   attr_writer :raw_declaration_date
@@ -180,14 +188,6 @@ private
 
   def delivery_partner
     relevant_induction_record&.induction_programme&.partnership&.delivery_partner
-  end
-
-  def relevant_induction_record
-    @relevant_induction_record ||= Induction::FindBy.call(
-      participant_profile:,
-      lead_provider: cpd_lead_provider.lead_provider,
-      date_range: ..declaration_date,
-    )
   end
 
   def original_participant_declaration
