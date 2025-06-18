@@ -277,7 +277,7 @@ GEM
       html-attributes-utils (~> 1.0.0, >= 1.0.0)
       pagy (>= 6, < 10)
       view_component (>= 3.18, < 3.24)
-    govuk_design_system_formbuilder (5.10.0)
+    govuk_design_system_formbuilder (5.10.1)
       actionview (>= 6.1)
       activemodel (>= 6.1)
       activesupport (>= 6.1)
@@ -769,7 +769,7 @@ DEPENDENCIES
   foreman
   friendly_id (~> 5.5)
   govuk-components (~> 5.10.1)
-  govuk_design_system_formbuilder (~> 5.10.0)
+  govuk_design_system_formbuilder (~> 5.10.1)
   httpclient (~> 2.9)
   jsbundling-rails
   json-diff (~> 0.4.1)
