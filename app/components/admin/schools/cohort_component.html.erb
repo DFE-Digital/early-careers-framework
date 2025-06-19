@@ -56,7 +56,7 @@
           end
         end
 
-        if cip?
+        if cip? && !FeatureFlag.active?(:programme_type_changes_2025)
           summary_list.with_row do |row|
             row.with_key(text: "Materials supplier")
             row.with_value(text: materials)
