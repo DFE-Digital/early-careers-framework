@@ -92,6 +92,14 @@ RSpec.shared_examples "validates the declaration for a withdrawn participant" do
       end
 
       it { is_expected.to be_valid }
+
+      context "when latest participant profile state is active but has no `cpd_lead_provider_id`" do
+        before do
+          create(:participant_profile_state, participant_profile:)
+        end
+
+        it { is_expected.to be_valid }
+      end
     end
 
     context "when `relevant_induction_record` is not active" do
