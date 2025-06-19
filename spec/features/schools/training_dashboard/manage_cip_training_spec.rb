@@ -22,8 +22,8 @@ RSpec.describe "Manage CIP training", js: true do
         end
       end
 
-      unless FeatureFlag.active?(:programme_type_changes_2025)
-        scenario "CIP Induction Mentor with materials chosen" do
+      scenario "CIP Induction Mentor with materials chosen" do
+        if flag_state == "inactive"
           given_there_is_a_school_that_has_chosen_cip_for_previous_cohort
 
           inside_auto_assignment_window(cohort: Cohort.previous) do
