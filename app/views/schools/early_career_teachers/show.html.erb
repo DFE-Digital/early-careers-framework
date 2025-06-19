@@ -126,17 +126,19 @@
             Programme
           </dt>
           <dd class="govuk-summary-list__value">
-            DfE-accredited materials
+            <%= training_programme_description(:core_induction_programme) %>
           </dd>
         </div>
-        <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
-          <dt class="govuk-summary-list__key">
-            Materials supplier
-          </dt>
-          <dd class="govuk-summary-list__value">
-            <%= induction_record.core_induction_programme_name %>
-          </dd>
-        </div>
+        <% unless FeatureFlag.active?(:programme_type_changes_2025) %>
+          <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
+            <dt class="govuk-summary-list__key">
+              Materials supplier
+            </dt>
+            <dd class="govuk-summary-list__value">
+              <%= induction_record.core_induction_programme_name %>
+            </dd>
+          </div>
+        <% end %>
       <% end %>
 
       <% if induction_record.enrolled_in_fip? %>
