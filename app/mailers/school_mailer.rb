@@ -29,6 +29,7 @@ class SchoolMailer < ApplicationMailer
   REMIND_SIT_TO_APPOINT_AB_FOR_UNREGISTERED_ECT = "e697e076-a0f6-4738-a421-ae507d804499"
   SIT_PRE_TERM_REMINDER_TO_REPORT_ANY_CHANGES = "59983db6-678f-4a7d-9a3b-80bed4f6ef17"
   REMIND_SIT_TO_REPORT_SCHOOL_TRAINING_DETAILS = "38e2e143-2b11-4acf-b305-26185f28d58c"
+  BPN_SIT_SCHOOL_TRAINING_DETAILS_TEMPLATE = "e7d9149b-0522-46c5-83b5-42e3d7c7338f"
 
   def remind_sit_that_ab_has_not_registered_ect
     school = params[:school]
@@ -589,5 +590,23 @@ class SchoolMailer < ApplicationMailer
         school_name:,
       },
     ).tag(:remind_sit_to_report_school_training_details).associate_with(induction_coordinator, as: :induction_coordinator_profile)
+  end
+
+  # Mailer to contact SITs from Best Practice Network partnered schools
+  def ask_bpn_school_sit_to_report_school_training_details
+    sit_user = params[:sit_user]
+    nomination_link = params[:nomination_link]
+
+    template_mail(
+      BPN_SIT_SCHOOL_TRAINING_DETAILS_TEMPLATE,
+      to: sit_user.email,
+      rails_mailer: mailer_name,
+      rails_mail_template: action_name,
+      personalisation: {
+        name: sit_user.full_name,
+        email_address: sit_user.email,
+        nomination_link:,
+      },
+    ).tag(:ask_bpn_school_sit_to_report_school_training_details).associate_with(sit_user)
   end
 end

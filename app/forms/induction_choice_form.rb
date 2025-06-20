@@ -28,6 +28,10 @@ class InductionChoiceForm
                             exclude: [school_cohort.induction_programme_choice].compact)
   end
 
+  def programme_confirmation_description
+    confirmation_description(training_programme: programme_choice)
+  end
+
   def opt_out_choice_selected?
     programme_choice&.in? %i[school_funded_fip design_our_own no_early_career_teachers]
   end

@@ -606,4 +606,26 @@ RSpec.describe SchoolMailer, type: :mailer do
       mailer
     end
   end
+
+  describe "#ask_bpn_school_sit_to_report_school_training_details" do
+    let(:sit_user) { create(:user, :induction_coordinator) }
+    let(:nomination_link) { "https://ecf-dev.london.cloudapps/nominations/start?token=123" }
+
+    let(:ask_bpn_school_sit_to_report_school_training_details) do
+      SchoolMailer.with(
+        sit_user:,
+        nomination_link:,
+        email_address: sit_user.email,
+      ).ask_bpn_school_sit_to_report_school_training_details.deliver_now
+    end
+
+    it "renders the right headers" do
+      expect(ask_bpn_school_sit_to_report_school_training_details.to).to eq([sit_user.email])
+      expect(ask_bpn_school_sit_to_report_school_training_details.from).to eq(["mail@example.com"])
+    end
+
+    it "uses the correct Notify template" do
+      expect(SchoolMailer::BPN_SIT_SCHOOL_TRAINING_DETAILS_TEMPLATE).to eq("e7d9149b-0522-46c5-83b5-42e3d7c7338f")
+    end
+  end
 end

@@ -10,7 +10,7 @@
     "@babel/plugin-proposal-object-rest-spread": "^7.20.7",
     "@babel/plugin-transform-runtime": "^7.27.4",
     "@babel/preset-env": "^7.27.2",
-    "@babel/runtime": "^7.27.4",
+    "@babel/runtime": "^7.27.6",
     "@sentry/browser": "^7.120.3",
     "@sentry/tracing": "^6.19.7",
     "accessible-autocomplete": "^2.0.3",
@@ -19,16 +19,16 @@
     "compression-webpack-plugin": "^9.2.0",
     "es6-promise": "^4.2.8",
     "file-loader": "^6.2.0",
-    "govuk-frontend": "^5.9.0",
+    "govuk-frontend": "^5.10.2",
     "nunjucks": "^3.2.4",
-    "sass": "^1.89.1",
+    "sass": "^1.89.2",
     "terser-webpack-plugin": "^5.3.14",
     "webpack": "^5.99",
     "webpack-assets-manifest": "^5.2.1",
     "webpack-cli": "^5.1.4",
     "webpack-merge": "^5.10.0",
     "webpack-remove-empty-scripts": "^1.1.1",
-    "webpack-sources": "^3.3.0",
+    "webpack-sources": "^3.3.2",
     "whatwg-fetch": "^3.6.20"
   },
   "devDependencies": {
@@ -39,7 +39,7 @@
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-no-only-tests": "^2.6.0",
     "prettier": "^2.8.8",
-    "webpack-dev-server": "^4.15.2"
+    "webpack-dev-server": "^5.2.1"
   },
   "browserslist": [
     "defaults"

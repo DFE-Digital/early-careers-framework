@@ -16,7 +16,7 @@ gem "pundit"
 
 # Error monitoring
 gem "sentry-rails", "~> 5.24"
-gem "sentry-ruby", "~> 5.22"
+gem "sentry-ruby", "~> 5.25"
 gem "sentry-sidekiq"
 
 # Support queries
@@ -59,8 +59,8 @@ gem "mail-notify", "~> 1.2"
 # do not rely on host's timezone data, which can be inconsistent
 gem "tzinfo-data"
 
-gem "govuk-components", "~> 5.10.0"
-gem "govuk_design_system_formbuilder", "~> 5.10.0"
+gem "govuk-components", "~> 5.10.1"
+gem "govuk_design_system_formbuilder", "~> 5.10.1"
 
 # Fetching from APIs
 gem "httpclient", "~> 2.9"
@@ -113,7 +113,7 @@ gem "rouge"
 
 gem "auto_strip_attributes", "~> 2.6"
 
-gem "dfe-analytics", github: "DFE-Digital/dfe-analytics", tag: "v1.15.4"
+gem "dfe-analytics", github: "DFE-Digital/dfe-analytics", tag: "v1.15.6"
 gem "dfe-wizard", github: "DFE-Digital/dfe-wizard"
 
 group :development, :test do
@@ -149,7 +149,7 @@ group :development, :test do
 end
 
 group :development, :test, :staging, :sandbox, :review, :migration do
-  gem "factory_bot_rails", "~> 6.4.4"
+  gem "factory_bot_rails", "~> 6.5.0"
   gem "faker"
   gem "timecop"
 end

@@ -49,9 +49,9 @@ ActiveRecord::Base.transaction do
     ab = with_appropriate_body ? " - AB" : ""
     pilot = in_pilot ? " - PILOT" : ""
     urn = ValidTestDataGenerators::Helpers::SchoolUrnGenerator.next
-    school = NewSeeds::Scenarios::Schools::School.new(name: "Reg - FIP #{cohort.academic_year} School#{ab}#{pilot} type #{school_type_code}", urn:)
+    school = NewSeeds::Scenarios::Schools::School.new(name: "Reg - Provider-led #{cohort.academic_year} School#{ab}#{pilot} type #{school_type_code}", urn:)
                                                  .build
-                                                 .with_an_induction_tutor(full_name: "#{sit_name} Fip", email: "#{sit_name.downcase}.#{urn}.fip@example.com")
+                                                 .with_an_induction_tutor(full_name: "#{sit_name} Provider-led", email: "#{sit_name.downcase}.#{urn}.provider-led@example.com")
                                                  .chosen_fip_and_partnered_in(cohort:, with_appropriate_body:)
     school.school.update!(school_type_code:)
 
@@ -71,9 +71,9 @@ ActiveRecord::Base.transaction do
     ab = with_appropriate_body ? " - AB" : ""
     pilot = in_pilot ? " - PILOT" : ""
     urn = ValidTestDataGenerators::Helpers::SchoolUrnGenerator.next
-    school = NewSeeds::Scenarios::Schools::School.new(name: "Reg - CIP #{cohort.academic_year} School#{ab}#{pilot} type #{school_type_code}", urn:)
+    school = NewSeeds::Scenarios::Schools::School.new(name: "Reg - School-led #{cohort.academic_year} School#{ab}#{pilot} type #{school_type_code}", urn:)
                                                  .build
-                                                 .with_an_induction_tutor(full_name: "#{sit_name} Cip", email: "#{sit_name.downcase}.#{urn}.cip@example.com")
+                                                 .with_an_induction_tutor(full_name: "#{sit_name} School-led", email: "#{sit_name.downcase}.#{urn}.school-led@example.com")
                                                  .chosen_cip_with_materials_in(cohort:, with_appropriate_body:)
     school.school.update!(school_type_code:)
 
@@ -91,9 +91,9 @@ ActiveRecord::Base.transaction do
     cohort, sit_name, _, in_pilot, school_type_code = row[2]
     pilot = in_pilot ? " - PILOT" : ""
     urn = ValidTestDataGenerators::Helpers::SchoolUrnGenerator.next
-    school = NewSeeds::Scenarios::Schools::School.new(name: "Reg - DIY #{cohort.academic_year} School#{pilot} type #{school_type_code}", urn:)
+    school = NewSeeds::Scenarios::Schools::School.new(name: "Reg - School-led #{cohort.academic_year} School#{pilot} type #{school_type_code}", urn:)
                                                  .build
-                                                 .with_an_induction_tutor(full_name: "#{sit_name} Diy", email: "#{sit_name.downcase}.#{urn}.diy@example.com")
+                                                 .with_an_induction_tutor(full_name: "#{sit_name} School-led", email: "#{sit_name.downcase}.#{urn}.school-led@example.com")
                                                  .chosen_diy_in(cohort:)
     school.school.update!(school_type_code:)
 

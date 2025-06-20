@@ -10,7 +10,11 @@
         <%= t("support_form.introduction.#{subject}_html", **i18n_params) %>
       </p>
 
-      <p class="govuk-body">We’ll automatically include these details for you: </p>
+      <p class="govuk-body">
+        <%= t("support_form.instructions.#{subject}_html", **i18n_params) %>
+      </p>
+
+      <p class="govuk-body">We’ll automatically include the following in your message:</p>
 
       <dl class="govuk-summary-list">
         <div class="govuk-summary-list__row">
@@ -78,10 +82,6 @@
         <% end %>
       </dl>
 
-      <p class="govuk-body">
-        <%= t("support_form.instructions.#{subject}_html", **i18n_params) %>
-      </p>
-
       <%= f.hidden_field :subject %>
       <%= f.hidden_field :participant_profile_id %>
       <%= f.hidden_field :school_id %>
@@ -91,7 +91,7 @@
             :message,
             rows: 5,
             width: "three-quarters",
-            label: { text: "Your message", size: "s" },
+            label: { text: t("support_form.message_field.#{subject}", **i18n_params, default: t("support_form.message_field.unspecified")), size: "s" },
           ) %>
 
       <%= f.govuk_submit "Send message to support" %>
