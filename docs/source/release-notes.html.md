@@ -7,6 +7,16 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
+## 20 June 2025
+
+[#bug-fix]
+
+### Declaration submission error for resumed participants resolved
+
+We’ve fixed an issue that prevented lead providers from submitting training declarations for some participants who’d resumed training after being withdrawn. An incorrect error message said the declaration date must be before the withdrawal date.
+
+Providers can now submit declarations for these participants as expected.
+
 ## 16 June 2025
 
 [#new-feature #production-release #data-update]
