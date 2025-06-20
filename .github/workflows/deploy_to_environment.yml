@@ -3,10 +3,6 @@ name: "Manually deploy to an environment"
 on:
   workflow_dispatch:
     inputs:
-      branch-name:
-        description: Set branch name
-        required: true
-        type: string
       environment:
         description: "Deploy environment"
         required: true
@@ -17,6 +13,14 @@ on:
           - migration
           - sandbox
           - production
+      build:
+        description: "build & deploy new image (leave commit-sha blank)"
+        required: true
+        type: boolean
+        default: "false"
+      sha:
+        description: "deploy from existing commit-sha"
+        required: false
 
 permissions:
   id-token: write
@@ -28,12 +32,12 @@ jobs:
   docker:
     name: Build and push Docker image
     runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.build != 'false' }}
     outputs:
       docker-image: ${{ steps.build-docker-image.outputs.image }}
+      image-tag: ${{ steps.build-docker-image.outputs.tag }}
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.branch-name }}
 
       - uses: DFE-Digital/github-actions/build-docker-image@master
         id: build-docker-image
@@ -42,25 +46,39 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           snyk-token: ${{ secrets.SNYK_TOKEN }}
 
+
   deploy:
     name: Deploy to environment
-    needs: [docker]
+    concurrency: deploy_${{ inputs.environment }}
+    needs: docker
+    if: |
+      always() && 
+      (needs.docker.result == 'skipped' || needs.docker.result == 'success' )
     runs-on: ubuntu-latest
-    environment: ${{ inputs.environment }}
-    outputs:
-      docker-image: ${{ needs.docker.outputs.docker-image }}
+    environment:
+      name: ${{ inputs.environment }}
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.branch-name }}
+
+      - name: setup environment variables
+        id: setup-env
+        run: |
+          if [[ "${{ github.event.inputs.build }}" != "false" ]]; then
+            echo "IMAGE_TAG=${{ needs.docker.outputs.docker-image }}" >> $GITHUB_ENV
+            echo "COMMIT_SHA=${{ needs.docker.outputs.image-tag }}" >> $GITHUB_ENV
+          else
+            echo "IMAGE_TAG=ghcr.io/dfe-digital/early-careers-framework:${{ inputs.sha }}" >> $GITHUB_ENV
+            echo "COMMIT_SHA=${{ inputs.sha }}" >> $GITHUB_ENV
+          fi
 
       - uses: ./.github/actions/deploy-environment-to-aks
         id: deploy
         with:
-          environment: ${{ inputs.environment }}
-          docker-image: ${{ needs.docker.outputs.docker-image }}
+          docker-image: ${{ env.IMAGE_TAG }}
+          environment: ${{ github.event.inputs.environment }}
           azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
           azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          current-commit-sha: ${{ github.sha }}
+          current-commit-sha: ${{ env.COMMIT_SHA }}
           statuscake-api-token: ${{ secrets.STATUSCAKE_API_TOKEN }}
+
