@@ -76,6 +76,48 @@ RSpec.shared_examples "validates the declaration for a withdrawn participant" do
 
       it { is_expected.to be_valid }
     end
+
+    context "when `relevant_induction_record` is active" do
+      let(:withdrawal_time) { declaration_date - 1.second }
+
+      before do
+        travel_to(declaration_date - 1.day) do
+          create(:induction_record,
+                 training_status: :active,
+                 participant_profile:,
+                 induction_programme: participant_profile.latest_induction_record.induction_programme,
+                 start_date: Time.zone.now.end_of_day)
+        end
+        Finance::Milestone.where(declaration_type: "started").update_all(milestone_date: nil)
+      end
+
+      it { is_expected.to be_valid }
+
+      context "when latest participant profile state is active but has no `cpd_lead_provider_id`" do
+        before do
+          create(:participant_profile_state, participant_profile:)
+        end
+
+        it { is_expected.to be_valid }
+      end
+    end
+
+    context "when `relevant_induction_record` is not active" do
+      let(:withdrawal_time) { declaration_date - 1.second }
+
+      before do
+        travel_to(declaration_date - 1.day) do
+          create(:induction_record,
+                 training_status: :withdrawn,
+                 participant_profile:,
+                 induction_programme: participant_profile.latest_induction_record.induction_programme,
+                 start_date: Time.zone.now.end_of_day)
+        end
+        Finance::Milestone.where(declaration_type: "started").update_all(milestone_date: nil)
+      end
+
+      it { is_expected.to be_invalid }
+    end
   end
 end
 
