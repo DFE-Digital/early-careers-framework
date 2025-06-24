@@ -7,7 +7,7 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
-## 20 June 2025
+## 24 June 2025
 
 [#bug-fix]
 
