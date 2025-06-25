@@ -6,7 +6,7 @@
     <span class="govuk-caption-l"><%= @school.name %></span>
     <h1 class="govuk-heading-l"><%= title %></h1>
 
-    <p class="govuk-body">Our records show this person is already registered on an ECF-based training programme at your school</p>
+    <p class="govuk-body">Our records show this person is already registered on an early carrer training programme at your school</p>
 
     <% if @wizard.existing_lead_provider.present? %>
       <p class="govuk-body">If <%= @wizard.full_name %> has been withdrawn by <%= @wizard.existing_lead_provider.name %>, you should contact them to get <%= @wizard.full_name %> reinstated.</p>
