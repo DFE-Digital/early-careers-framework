@@ -1,10 +1,10 @@
 <%
     if @wizard.sit_mentor?
       title = "When will you start mentor training?"
-      hint = "This is when you’ll start ECF-based mentor training"
+      hint = "This is when you’ll start early career teacher entitlement (ECTE) mentor training"
     else
       title = "When will #{@wizard.full_name} start their #{@wizard.ect_participant? ? 'induction' : 'mentor training'}?"
-      hint = "This is when #{@wizard.full_name} will start their #{@wizard.ect_participant? ? 'induction and begin ECF-based training' : 'ECF-based mentor training'} at your school."
+      hint = "This is when #{@wizard.full_name} will start their #{@wizard.ect_participant? ? 'ECTE' : 'ECTE mentor training'} at your school."
     end
 %>
 
