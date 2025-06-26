@@ -299,6 +299,9 @@ class TrainingRecordState
     in { mentoring: false, previous_participation_reason: true }
       :not_yet_mentoring_ero
 
+    in { mentoring: false, transferred: true }
+      :left
+
     else
       :not_yet_mentoring
     end
@@ -520,6 +523,7 @@ private
       mentor: mentor?,
       mentoring: mentoring?,
       previous_participation_reason: previous_participation_reason?,
+      transferred: left_school?,
     }
   end
 
@@ -549,6 +553,7 @@ private
 
   def mentoring?
     return false unless mentor?
+    return false if left_school?
     return induction_record.transient_current_mentees if induction_record.respond_to?(:transient_current_mentees)
 
     @mentoring ||= InductionRecord.current.where(mentor_profile_id: participant_profile.id).exists?
