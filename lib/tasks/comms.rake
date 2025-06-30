@@ -138,7 +138,7 @@ namespace :comms do
 
       school = School.find_by_urn(school["urn"])
 
-      if school.school_cohorts.for_year(2024).first&.induction_programme_choice
+      if school.school_cohorts.for_year(2025).first&.induction_programme_choice
         logger.info "School has reported the training programme"
         next
       end
