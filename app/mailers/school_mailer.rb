@@ -451,7 +451,7 @@ class SchoolMailer < ApplicationMailer
         email_address: sit_user.email,
         nomination_link:,
       },
-    ).tag(:launch_ask_sit_to_report_school_training_details_for_2024).associate_with(sit_user.school, sit_user)
+    ).tag(:launch_ask_sit_to_report_school_training_details_for_2025).associate_with(sit_user.school, sit_user)
   end
 
   def launch_ask_gias_contact_to_report_school_training_details
