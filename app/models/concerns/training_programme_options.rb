@@ -58,15 +58,15 @@ module TrainingProgrammeOptions
   PROGRAMME_CHOICES_2025 = {
     full_induction_programme: {
       name: "Provider-led",
-      description: "Your school will work with providers who will deliver early career framework based training funded by the Department for Education.",
+      description: "Your school will work with providers who will deliver initial teacher training and early career framework based training funded by the Department for Education.",
     },
     core_induction_programme: {
       name: "School-led",
-      description: "Your school will deliver training based on the early career framework.",
+      description: "Your school will deliver training based on the initial teacher training and early career framework.",
     },
     school_funded_fip: {
       name: "Provider-led",
-      description: "Your school will fund providers who will deliver early career framework based training.",
+      description: "Your school will fund providers who will deliver initial teacher training and early career framework based training.",
     },
     no_early_career_teachers: {
       name: "We do not expect any early career teachers to join",

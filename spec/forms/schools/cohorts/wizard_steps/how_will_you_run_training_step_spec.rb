@@ -159,15 +159,15 @@ RSpec.describe Schools::Cohorts::WizardSteps::HowWillYouRunTrainingStep, type: :
         {
           full_induction_programme: {
             name: "Provider-led",
-            description: "Your school will work with providers who will deliver early career framework based training funded by the Department for Education.",
+            description: "Your school will work with providers who will deliver initial teacher training and early career framework based training funded by the Department for Education.",
           },
           school_funded_fip: {
             name: "Provider-led",
-            description: "Your school will fund providers who will deliver early career framework based training.",
+            description: "Your school will fund providers who will deliver initial teacher training and early career framework based training.",
           },
           core_induction_programme: {
             name: "School-led",
-            description: "Your school will deliver training based on the early career framework.",
+            description: "Your school will deliver training based on the initial teacher training and early career framework.",
           },
         }
       end
