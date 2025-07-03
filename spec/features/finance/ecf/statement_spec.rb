@@ -25,7 +25,7 @@ RSpec.describe "Show ECF statement", :js do
 
     when_i_visit_the_ecf_financial_statements_page
 
-    then_i_see("Early career framework (ECF)")
+    then_i_see("Initial teacher training and early career framework (ITTECF)")
     and_i_see_additional_adjustments_table
     and_i_see_additional_adjustments_total
     and_i_see_save_as_pdf_link
@@ -40,7 +40,7 @@ RSpec.describe "Show ECF statement", :js do
 
       when_i_visit_the_ecf_financial_statements_page
 
-      then_i_see("Early career framework (ECF)")
+      then_i_see("Initial teacher training and early career framework (ITTECF)")
 
       and_i_see_authorise_for_payment_button
       when_i_click_the_authorise_for_payment_button
@@ -69,7 +69,7 @@ RSpec.describe "Show ECF statement", :js do
 
       when_i_visit_the_ecf_financial_statements_page
 
-      then_i_see("Early career framework (ECF)")
+      then_i_see("Initial teacher training and early career framework (ITTECF)")
 
       and_i_see_authorise_for_payment_button
       when_i_click_the_authorise_for_payment_button
@@ -92,7 +92,7 @@ RSpec.describe "Show ECF statement", :js do
 
       when_i_visit_the_ecf_financial_statements_page
 
-      then_i_see("Early career framework (ECF)")
+      then_i_see("Initial teacher training and early career framework (ITTECF)")
 
       and_i_see_authorise_for_payment_button
       when_i_click_the_authorise_for_payment_button
