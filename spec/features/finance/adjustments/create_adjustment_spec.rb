@@ -7,7 +7,7 @@ RSpec.describe "Create adjustment for statement", :js do
     given_i_am_logged_in_as_a_finance_user
     and_an_ecf_statement_exists
     when_i_visit_the_ecf_financial_statements_page
-    then_i_see("Early career framework (ECF)")
+    then_i_see("Initial teacher training and early career framework (ITTECF)")
     when_i_click_on_add_adjustment_link
 
     then_i_see("What is the name of the adjustment")
@@ -38,7 +38,7 @@ RSpec.describe "Create adjustment for statement", :js do
     and_a_closed_ecf_statement_exists
 
     when_i_visit_the_ecf_financial_statements_page
-    then_i_see("Early career framework (ECF)")
+    then_i_see("Initial teacher training and early career framework (ITTECF)")
     and_i_should_not_see_adjustment_links
 
     when_i_visit_new_adjustment_page_directly
@@ -50,7 +50,7 @@ RSpec.describe "Create adjustment for statement", :js do
     and_an_ecf_statement_with_false_output_fees_exists
 
     when_i_visit_the_ecf_financial_statements_page
-    then_i_see("Early career framework (ECF)")
+    then_i_see("Initial teacher training and early career framework (ITTECF)")
     and_i_should_not_see_adjustment_links
 
     when_i_visit_new_adjustment_page_directly
@@ -85,7 +85,7 @@ RSpec.describe "Create adjustment for statement", :js do
   end
 
   def then_i_am_redirected_back_to_financial_statements_page
-    then_i_see("Early career framework (ECF)")
+    then_i_see("Initial teacher training and early career framework (ITTECF)")
   end
 
   def and_an_adjustment_is_created
