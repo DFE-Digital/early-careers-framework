@@ -10,7 +10,7 @@ require_relative "../../sections/contract_information_finance_panel"
 module Pages
   class FinancePaymentBreakdownReport < Pages::BasePage
     set_url "/finance/ecf/payment_breakdowns/{lead_provider_id}/statements/{statement_name}"
-    set_primary_heading "Early career framework (ECF)"
+    set_primary_heading "Initial teacher training and early career framework (ITTECF)"
 
     section :statement_selector, Sections::StatementSelector
     section :summary_panel, Sections::SummaryFinancePanel
