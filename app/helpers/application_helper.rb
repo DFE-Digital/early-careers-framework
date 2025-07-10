@@ -49,12 +49,6 @@ module ApplicationHelper
     induction_coordinator_dashboard_path(user)
   end
 
-  def participant_start_path(user)
-    return participants_no_access_path unless post_2020_ecf_participant?(user)
-
-    participants_validation_path
-  end
-
   def service_name
     "Manage training for early career teachers"
   end

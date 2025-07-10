@@ -68,12 +68,6 @@ RSpec.describe ApplicationHelper, type: :helper do
     end
   end
 
-  describe "#participant_start_path" do
-    it "returns the validation start path" do
-      expect(helper.participant_start_path(participant_profile.user)).to eq("/participants/validation")
-    end
-  end
-
   describe "#data_layer" do
     context "when the analytics data does not exist" do
       before do

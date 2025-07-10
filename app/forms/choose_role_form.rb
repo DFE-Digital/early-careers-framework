@@ -11,7 +11,6 @@ class ChooseRoleForm
     "admin" => "DfE admin",
     "finance" => "DfE Finance",
     "induction_coordinator" => "Induction tutor",
-    "teacher" => "Teacher",
   }.freeze
 
   attribute :user
@@ -37,8 +36,6 @@ class ChooseRoleForm
       helpers.appropriate_bodies_path
     when "induction_coordinator"
       helpers.induction_coordinator_dashboard_path(user)
-    when "teacher"
-      helpers.participant_start_path(user)
     when "lead_provider"
       helpers.dashboard_path
     when "no_role"
@@ -63,31 +60,16 @@ class ChooseRoleForm
 private
 
   def rejected_roles
-    %w[induction_coordinator early_career_teacher mentor teacher].freeze
+    %w[early_career_teacher mentor teacher].freeze
   end
 
   def sanitized_user_roles
-    roles = user_roles.reject { |role| rejected_roles.include?(role) }
-
-    # choose either a SIT role or a teacher role to prevent school users from seeing this
-    if sit_role?
-      roles << "induction_coordinator"
-    elsif teacher_role?
-      roles << "teacher"
-    end
-    roles
+    # allow only a SIT role and prevent other school users from seeing this
+    user_roles.reject { |role| rejected_roles.include?(role) }
   end
 
   def user_roles
     @user_roles ||= user.user_roles
-  end
-
-  def sit_role?
-    user_roles.include?("induction_coordinator")
-  end
-
-  def teacher_role?
-    user_roles.include?("teacher")
   end
 
   def role_values
