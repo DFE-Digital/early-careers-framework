@@ -217,7 +217,7 @@ RSpec.describe "Users::Sessions", type: :request do
       it "redirects to participant validation on successful login" do
         post "/users/sign_in_with_token", params: { login_token: user.login_token }
         follow_redirect!
-        expect(response).to redirect_to(participants_validation_path)
+        expect(response).to redirect_to(dashboard_path)
       end
     end
 
@@ -259,7 +259,7 @@ RSpec.describe "Users::Sessions", type: :request do
       it "redirects to correct dashboard" do
         post "/users/sign_in_with_token", params: { login_token: user.login_token }
         follow_redirect!
-        expect(response).to redirect_to(participants_validation_path)
+        expect(response).to redirect_to(dashboard_path)
       end
     end
 

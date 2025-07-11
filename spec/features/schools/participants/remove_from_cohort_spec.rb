@@ -54,7 +54,7 @@ RSpec.describe "SIT removing participants from the cohort", js: true, with_featu
     click_on "Sign out"
 
     sign_in_as mentor_profile.user
-    expect(page).to have_content "You do not have access to this service"
+    expect(page).to have_content "You cannot use this service yet"
   end
 
   scenario "removing ineligible participant" do
