@@ -506,18 +506,6 @@ Rails.application.routes.draw do
 
   get "/finance", to: redirect("/finance/manage-cpd-contracts")
 
-  namespace :participants do
-    resource :no_access, only: :show, controller: "no_access"
-    resource :start_registrations, path: "/start-registration", only: :show do
-      get "get-a-trn", action: :get_a_trn
-    end
-
-    multistep_form :validation, Participants::ParticipantValidationForm, controller: :validations do
-      get :no_trn, as: "no_trn"
-      get :already_completed, as: nil
-    end
-  end
-
   namespace :schools do
     resources :dashboard, controller: :dashboard, only: %i[index show], path: "/", param: :school_id
 
