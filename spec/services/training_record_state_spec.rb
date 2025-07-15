@@ -1227,9 +1227,9 @@ RSpec.describe TrainingRecordState do
                          :valid,
                          :eligible_for_mentor_training,
                          :eligible_for_mentor_funding,
-                         :active_mentoring,
                          :left,
-                         :active_mentoring
+                         :left,
+                         :left
       end
 
       context "and they are transferring from their current school" do
@@ -1251,9 +1251,9 @@ RSpec.describe TrainingRecordState do
                          :valid,
                          :eligible_for_mentor_training,
                          :eligible_for_mentor_funding,
-                         :active_mentoring,
                          :left,
-                         :active_mentoring
+                         :left,
+                         :left
       end
 
       context "and they are joining their current school" do
@@ -1617,9 +1617,9 @@ RSpec.describe TrainingRecordState do
                          :valid,
                          :eligible_for_mentor_training,
                          :eligible_for_mentor_funding,
-                         :active_mentoring,
                          :left,
-                         :active_mentoring
+                         :left,
+                         :left
       end
 
       context "and they are transferring from their current school" do
@@ -1641,9 +1641,9 @@ RSpec.describe TrainingRecordState do
                          :valid,
                          :eligible_for_mentor_training,
                          :eligible_for_mentor_funding,
-                         :active_mentoring,
                          :left,
-                         :active_mentoring
+                         :left,
+                         :left
       end
 
       context "and they are joining their current school" do
