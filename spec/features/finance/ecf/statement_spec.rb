@@ -136,7 +136,7 @@ RSpec.describe "Show ECF statement", :js do
   end
 
   def and_i_see_save_as_pdf_link
-    expected_filename = "#{cpd_lead_provider.name} #{statement.name} ECF Statement (#{cohort.start_year} Cohort)"
+    expected_filename = "#{cpd_lead_provider.name} #{statement.name} ECTE Statement (#{cohort.start_year} Cohort)"
     expect(page).to have_css("a[data-filename='#{expected_filename}']", text: "Save as PDF")
   end
 

@@ -1429,12 +1429,12 @@ module ManageTrainingSteps
 
   def then_i_am_taken_to_the_cannot_add_page_same_school
     expect(page).to have_selector("h1", text: "You cannot add Sally Teacher")
-    expect(page).to have_text("Our records show this person is already registered on an ECF-based training programme at your school")
+    expect(page).to have_text("Our records show this person is already registered on an early career training programme at your school")
   end
 
   def then_i_am_taken_to_the_cannot_add_page_different_school
     expect(page).to have_selector("h1", text: "You cannot add Sally Teacher")
-    expect(page).to have_text("Our records show this person is already registered on an ECF-based training programme at a different school")
+    expect(page).to have_text("Our records show this person is already registered on an early career training programme at a different school")
   end
 
   def then_i_see_i_cannot_add_participant_yet
