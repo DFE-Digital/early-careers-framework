@@ -132,6 +132,9 @@ module Schools
 
         send_added_and_validated_email(profile) if profile && profile.ecf_participant_validation_data.present? && !sit_mentor?
 
+        # trigger an update to analytics so they receive the populated TRN
+        profile.teacher_profile.reload.touch if profile.present?
+
         profile
       end
 
