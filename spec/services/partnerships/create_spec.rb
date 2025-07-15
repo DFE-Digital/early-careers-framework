@@ -141,8 +141,9 @@ RSpec.describe Partnerships::Create do
       end
     end
 
-    context "school already confirmed" do
-      let!(:partnership) { create(:partnership, school:, delivery_partner:, lead_provider:, cohort:) }
+    context "school already confirmed (different delivery partner)" do
+      let(:other_delivery_partner) { create(:delivery_partner) }
+      let!(:partnership) { create(:partnership, school:, delivery_partner: other_delivery_partner, lead_provider:, cohort:) }
 
       it "returns error" do
         expect(service).to be_invalid
