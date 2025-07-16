@@ -103,7 +103,7 @@ module ChooseProgrammeSteps
       expect(page).to have_content("You‘ve chosen to deliver your own programme using DfE-accredited materials.")
     else
       expect(page).to have_content("Are you sure you want to run your own training programme?")
-      expect(page).to have_content("You’re choosing to design and deliver your own programme based on the early career framework (ECF).")
+      expect(page).to have_content("You’re choosing to design and deliver your own programme based on the initial teacher training and early career framework (ITTECF).")
     end
   end
 

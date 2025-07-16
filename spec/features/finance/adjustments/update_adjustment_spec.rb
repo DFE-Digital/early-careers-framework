@@ -9,7 +9,7 @@ RSpec.describe "Update adjustment for statement", :js do
     and_additional_adjustments_exist
 
     when_i_visit_the_ecf_financial_statements_page
-    then_i_see("Early career framework (ECF)")
+    then_i_see("Initial teacher training and early career framework (ITTECF)")
     when_i_click_on_change_or_remove_adjustment_link
 
     then_i_see("Change or remove an adjustment")

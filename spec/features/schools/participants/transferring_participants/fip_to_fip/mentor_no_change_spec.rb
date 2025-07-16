@@ -204,7 +204,7 @@ RSpec.describe "Transferring a mentor weith matching lead provider and delivery 
 
   def then_i_should_be_on_the_complete_page
     expect(page).to have_selector("h2", text: "What happens next")
-    expect(page).to have_text("We’ll let this person know you’ve registered them for ECF-based training at your school")
+    expect(page).to have_text("We’ll let this person know you’ve registered them for early career training at your school")
   end
 
   def then_i_should_see_the_transferring_participant

@@ -143,7 +143,7 @@ RSpec.describe "Transferring participants", type: :feature, js: true, rutabaga: 
   end
 
   def then_i_should_be_on_the_already_enrolled_page
-    expect(page).to have_text("Our records show this person is already registered on an ECF-based training programme at your school")
+    expect(page).to have_text("Our records show this person is already registered on an early career training programme at your school")
   end
 
   # and

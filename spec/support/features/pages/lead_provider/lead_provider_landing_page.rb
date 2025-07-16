@@ -14,7 +14,7 @@ module Pages
     end
 
     def learn_to_manage_ecf_partnerships
-      click_on "How to manage ECF partnerships"
+      click_on "How to manage ECTE partnerships"
 
       Pages::LeadProviderPartnershipGuidancePage.loaded
     end

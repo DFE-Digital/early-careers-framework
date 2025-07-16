@@ -20,7 +20,7 @@
       <h2>What happens next</h2>
       <% if @wizard.transfer? %>
         <p class="govuk-body">
-          We’ll let this person know you’ve registered them for ECF-based training at your school.
+          We’ll let this person know you’ve registered them for early career training at your school.
         </p>
         <% if @wizard.same_provider? && !@wizard.was_withdrawn_participant? %>
           <p class="govuk-body">They’re already training with the same provider used by your school. We’ll let your provider know about the transfer.</p>
@@ -30,7 +30,7 @@
           <p class="govuk-body">We’ll contact your training lead provider, <%= @wizard.lead_provider&.name %>, to let them know that you’ve reported this transfer. We recommend you confirm this with them directly too.</p>
         <% end %>
         <% if @wizard.mentor_participant? %>
-          <h3 class="govuk-heading-s">Continuing induction and ECF-based training</h3>
+          <h3 class="govuk-heading-s">Continuing induction and early career training</h3>
           <p class="govuk-body">Ask <%= @wizard.full_name %> or their previous school to provide records of any assessments and progress reviews completed so far.</p>
           <% if @wizard.join_school_programme? || @wizard.was_withdrawn_participant? %>
             <p class="govuk-body"><%= @wizard.lead_provider&.name %> will advise how <%= @wizard.full_name %> should transfer onto their programme.</p>
@@ -39,7 +39,7 @@
         <% end %>
       <% else %>
         <p class="govuk-body">
-          We’ll let this person know you’ve registered them for ECF-based training at your school.
+          We’ll let this person know you’ve registered them for early career training at your school.
           They do not need to provide us with any more information.
         </p>
 

@@ -11,7 +11,7 @@
       <%= f.govuk_error_summary %>
       <%= f.govuk_radio_buttons_fieldset :participant_type , legend: { text: "Who do you want to add?", tag: 'h1', size: 'l' } do %>
         <p class="govuk-body govuk-!-margin-top-4">
-          This could be a new teacher or a teacher transferring from another school where they’ve started ECF-based training or mentoring.
+          This could be a new teacher or a teacher transferring from another school where they’ve started their early career teacher entitlement (ECTE).
         </p>
         <%= f.govuk_radio_button :participant_type, :ect, label: { text: "ECT" }, link_errors: true %>
         <%= f.govuk_radio_button :participant_type, :mentor, label: { text: "Mentor" } %>

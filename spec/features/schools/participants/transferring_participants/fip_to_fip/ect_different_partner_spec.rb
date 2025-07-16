@@ -280,12 +280,12 @@ RSpec.describe "Transferring ECT is with a different lead provider", type: :feat
 
   def then_i_should_be_on_the_complete_page
     expect(page).to have_selector("h2", text: "What happens next")
-    expect(page).to have_text("We’ll let this person know you’ve registered them for ECF-based training at your school.")
+    expect(page).to have_text("We’ll let this person know you’ve registered them for early career training at your school.")
   end
 
   def then_i_should_be_on_the_complete_page_for_an_existing_induction
     expect(page).to have_selector("h2", text: "What happens next")
-    expect(page).to have_text("We’ll let this person know you’ve registered them for ECF-based training at your school.")
+    expect(page).to have_text("We’ll let this person know you’ve registered them for early career training at your school.")
     expect(page).to have_text("We’ll contact their training lead provider, #{@lead_provider_two.name}, to let them know that you’ve reported their transfer too.")
   end
 

@@ -14,7 +14,7 @@ RSpec.describe "Sandbox landing page", type: :request do
     it "should explain how to get started as an ECF Lead Provider" do
       get sandbox_path
 
-      expect(response.body).to include "Impersonate ECF school induction tutors"
+      expect(response.body).to include "Impersonate ECTE school induction tutors"
     end
 
     it "should signpost visitors to the Lead Provider Guidance" do
