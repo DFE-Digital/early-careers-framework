@@ -11,7 +11,7 @@ The focus of the following guidance is on business logic only. Critical details 
 
 ## Overview of API requests
 
-### Regisration and onboarding
+### Registration and onboarding
 
 1. For a given cohort, providers confirm partnerships with schools via the API, including confirmation who their delivery partners will be. **Note**, this only applies to providers integrated with API v3 onwards.
 2. School induction tutors register participants for training via the DfE online service.
