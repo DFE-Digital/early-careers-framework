@@ -8,6 +8,8 @@ KEY_VAULT_PURGE_PROTECTION=false
 ARM_TEMPLATE_TAG=1.1.6
 TERRAFILE_VERSION=0.8
 
+# test
+
 .PHONY: review
 review: test-cluster ## Specify review environment
 	# PULL_REQUEST_NUMBER is set by the GitHub action
