@@ -56,6 +56,9 @@ RUN apk -U upgrade && \
     echo "Europe/London" > /etc/timezone && \
     cp /usr/share/zoneinfo/Europe/London /etc/localtime
 
+# Create non-root user and group with specific UIDs/GIDs
+RUN addgroup -S appgroup -g 20001 && adduser -S appuser -G appgroup -u 10001
+
 COPY --from=builder /app /app
 COPY --from=builder /usr/local/bundle/ /usr/local/bundle/
 
@@ -97,9 +100,15 @@ RUN apk -U upgrade && \
     echo "Europe/London" > /etc/timezone && \
     cp /usr/share/zoneinfo/Europe/London /etc/localtime
 
+# Create non-root user and group with specific UIDs/GIDs
+RUN addgroup -S appgroup -g 20001 && adduser -S appuser -G appgroup -u 10001
+
 COPY --from=assets-precompile /app /app
 COPY --from=assets-precompile /usr/local/bundle/ /usr/local/bundle/
 COPY --from=middleman /public/ /app/public/
+
+# Change ownership only for directories that need write access
+RUN mkdir -p /app/tmp && chown -R appuser:appgroup /app/tmp /app/public/
 
 RUN echo export PATH=/usr/local/bin:\$PATH > /root/.ashrc
 ENV ENV="/root/.ashrc"
@@ -108,6 +117,9 @@ RUN echo "cd /app && PAGER=more bundle exec rails c" > /root/.ash_history
 RUN echo "IRB.conf[:USE_AUTOCOMPLETE] = false" > /root/.irbrc
 
 WORKDIR /app
+
+# Switch to non-root user
+USER 10001
 
 # Use this for development testing
 # CMD bundle exec rails db:migrate && bundle exec rails server -b 0.0.0.0
