@@ -66,6 +66,7 @@ module "web_application" {
 
   enable_logit = var.enable_logit
   send_traffic_to_maintenance_page = var.send_traffic_to_maintenance_page
+  run_as_non_root = true
 }
 
 module "worker_application" {
@@ -92,4 +93,5 @@ module "worker_application" {
 
   enable_logit = var.enable_logit
   enable_gcp_wif = true
+  run_as_non_root = true
 }
