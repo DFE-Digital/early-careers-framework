@@ -11,7 +11,7 @@
     "@babel/plugin-transform-runtime": "^7.28.0",
     "@babel/preset-env": "^7.28.0",
     "@babel/runtime": "^7.28.2",
-    "@sentry/browser": "^7.120.3",
+    "@sentry/browser": "^7.120.4",
     "@sentry/tracing": "^6.19.7",
     "accessible-autocomplete": "^2.0.3",
     "babel-loader": "^8.4.1",
