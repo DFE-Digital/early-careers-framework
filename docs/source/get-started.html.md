@@ -107,7 +107,7 @@ This limit on requests for each authentication key is calculated on a rolling ba
 
 ### Performing a full sync once a week
 
-We recommend you sync all records in the API twice a week without using the `updated_since` filters. DfE can coordinate ‘windows’ for providers to do this when the service has a low background load. Contact us if you need further details.
+We recommend you sync all records in the API weekly without using the `updated_since` filters. DfE can coordinate ‘windows’ for providers to do this when the service has a low background load. Contact us if you need further details.
 
 ### Regular polling
 
