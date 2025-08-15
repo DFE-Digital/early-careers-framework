@@ -25,7 +25,7 @@ jobs:
         name: Checkout Code
 
       - name: Set up Ruby
-        uses: ruby/setup-ruby@v1.254.0
+        uses: ruby/setup-ruby@v1.255.0
         with:
           ruby-version: ${{ inputs.ruby-version }}
 
@@ -77,7 +77,7 @@ jobs:
         name: Checkout Code
 
       - name: Set up Ruby
-        uses: ruby/setup-ruby@v1.254.0
+        uses: ruby/setup-ruby@v1.255.0
         with:
           ruby-version: ${{ inputs.ruby-version }}
 
@@ -99,7 +99,7 @@ jobs:
         name: Checkout Code
 
       - name: Set up Ruby
-        uses: ruby/setup-ruby@v1.254.0
+        uses: ruby/setup-ruby@v1.255.0
         with:
           ruby-version: ${{ inputs.ruby-version }}
 
@@ -295,7 +295,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up Ruby
-        uses: ruby/setup-ruby@v1.254.0
+        uses: ruby/setup-ruby@v1.255.0
         with:
           ruby-version: ${{ inputs.ruby-version }}
 
