@@ -9,9 +9,8 @@ on:
         options:
           - production
         required: true
-  # Disable nightly refresh until end to end testing is complete for 2025
-  # schedule:
-  #   - cron: "0 0 * * *" # Run at midnight.
+  schedule:
+    - cron: "0 0 * * *" # Run at midnight.
 
 jobs:
   refresh-migration-db:

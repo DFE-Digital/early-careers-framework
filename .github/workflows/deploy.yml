@@ -139,28 +139,26 @@ jobs:
           current-commit-sha: ${{ github.sha }}
           statuscake-api-token: ${{ secrets.STATUSCAKE_API_TOKEN }}
 
-  # Temporarily disabled while we manually deploy and test on the migration environment.
-  #
-  # deploy_migration:
-  #   name: Deploy migration
-  #   needs: [deploy_staging]
-  #   runs-on: ubuntu-latest
-  #   environment:
-  #     name: migration
+  deploy_migration:
+    name: Deploy migration
+    needs: [deploy_staging]
+    runs-on: ubuntu-latest
+    environment:
+      name: migration
 
-  #   steps:
-  #     - uses: actions/checkout@v3
-
-  #     - uses: ./.github/actions/deploy-environment-to-aks
-  #       id: deploy
-  #       with:
-  #         environment: migration
-  #         docker-image: ${{ needs.deploy_staging.outputs.docker-image }}
-  #         azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
-  #         azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-  #         azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-  #         current-commit-sha: ${{ github.sha }}
-  #         statuscake-api-token: ${{ secrets.STATUSCAKE_API_TOKEN }}
+    steps:
+      - uses: actions/checkout@v3
+      
+      - uses: ./.github/actions/deploy-environment-to-aks
+        id: deploy
+        with:
+          environment: migration
+          docker-image: ${{ needs.deploy_staging.outputs.docker-image }}
+          azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          current-commit-sha: ${{ github.sha }}
+          statuscake-api-token: ${{ secrets.STATUSCAKE_API_TOKEN }}
 
   deploy_production:
     name: Deploy production
