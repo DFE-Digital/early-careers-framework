@@ -1,21 +1,28 @@
-<% title =  "You cannot add #{@wizard.full_name}" %>
+<% title =  "You cannot add #{@wizard.full_name} yet" %>
 <% content_for :title, title %>
 
 <% content_for :before_content, govuk_back_link( text: "Back", href: wizard_back_link_path) %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <span class="govuk-caption-l"><%= @school.name %></span>
     <h1 class="govuk-heading-l"><%= title %></h1>
 
-    <p class="govuk-body">Contact our support team to report the training provider for this mentor: <%= render MailToSupportComponent.new %></p>
-    <p class="govuk-body">Include <%= @wizard.possessive_name %>:</p>
+    <p class="govuk-body">Your lead provider has not confirmed your <%= @wizard.current_cohort.description %> partnership with us.</p>
+    <p class="govuk-body">You cannot add <%= @wizard.full_name %> until your partnership is confirmed with us by the lead provider.</p>
+
+    <h2 class="govuk-heading-m">What you need to do</h2>
+
+    <p class="govuk-body">Contact your lead provider and ask them to confirm the partnership with us.</p>
+    <p class="govuk-body">We’ll email you when they’ve done this. You’ll then be able to the mentor.</p>
+
+    <h2 class="govuk-heading-m">If you still have problems</h2>
+
+    <p class="govuk-body">Email us at <%= render MailToSupportComponent.new %>.</p>
+
+    <p class="govuk-body">Include ‘Adding a mentor: blocked by unconfirmed partnership’ in the subject line. In the email tell us your intended:</p>
     <ul class="govuk-list govuk-list--bullet">
-      <li>full name</li>
-      <li>date of birth</li>
-      <li>teacher reference number (TRN)</li>
-      <li>school</li>
-      <li>chosen lead provider and delivery partner</li>
+      <li>lead provider</li>
+      <li>delivery partner</li>
     </ul>
 
     <%= govuk_link_to "Return to your mentors", school_mentors_path, no_visited_state: true %>
