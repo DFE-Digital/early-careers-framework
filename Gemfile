@@ -25,7 +25,7 @@ gem "zendesk_api"
 gem "rails_semantic_logger"
 
 # Use postgresql as the database for Active Record
-gem "pg", "~> 1.5"
+gem "pg", "~> 1.6"
 
 # Use UUIDs as db primary key by default
 gem "ar-uuid", "~> 0.2.3"
