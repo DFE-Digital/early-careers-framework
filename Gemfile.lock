@@ -405,7 +405,9 @@ GEM
     parser (3.3.8.0)
       ast (~> 2.4.1)
       racc
-    pg (1.5.9)
+    pg (1.6.1-arm64-darwin)
+    pg (1.6.1-x86_64-darwin)
+    pg (1.6.1-x86_64-linux)
     pp (0.6.2)
       prettyprint
     pretender (0.6.0)
@@ -797,7 +799,7 @@ DEPENDENCIES
   pagy (~> 9)
   paper_trail
   parallel_tests
-  pg (~> 1.5)
+  pg (~> 1.6)
   pretender (>= 0.4.0)
   pry-byebug
   puma (~> 6.0)
