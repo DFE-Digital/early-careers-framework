@@ -7,18 +7,6 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
-## 13 August 2025 
-
-[#bug-fix #data-update]
-
-### Declarations query bug fixed 
-
-We’ve fixed a bug in the declarations query affecting some participants who transferred to a new lead provider.  
-
-Due to a data issue, the new provider couldn’t see all declarations made by the previous provider. This prevented them from viewing the participant’s full training engagement. 
-
-As a result of this fix, lead providers might notice additional declarations in their next sync. 
-
 ## 24 June 2025
 
 [#bug-fix]
