@@ -19,10 +19,17 @@ migration:
   url: <%= ENV["DATABASE_URL"] %>
 
 test:
-  <<: *default
-  database: early_careers_framework_test<%= ENV['TEST_ENV_NUMBER'] %>
-  variables:
-    idle_in_transaction_session_timeout: 0
+  primary:
+    <<: *default
+    database: early_careers_framework_test<%= ENV['TEST_ENV_NUMBER'] %>
+    variables:
+      idle_in_transaction_session_timeout: 0
+  riab_test:
+    <<: *default
+    database: early_careers_framework_riab_test<%= ENV['TEST_ENV_NUMBER'] %>
+    variables:
+      idle_in_transaction_session_timeout: 0
+      statement_timeout: 0
 
 review:
   <<: *default
