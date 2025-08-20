@@ -6,6 +6,8 @@ services:
     volumes:
       - ../..:/workspaces:cached
     command: sleep infinity
+    environment:
+      RIAB_DATABASE_URL: 'postgresql://postgres:postgres@postgres/riab_development'
   postgres:
     image: postgres:latest
     restart: unless-stopped
