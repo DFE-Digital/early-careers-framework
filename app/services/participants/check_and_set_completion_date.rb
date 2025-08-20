@@ -8,19 +8,7 @@ module Participants
       return unless participant_profile.ect?
 
       complete_induction if complete_induction?
-
-      # TODO: TEMPORARILY PAUSE MOVING InProgress ECTS OUT OF THEIR FROZEN COHORT TO 2024
-      # because the 'InProgress' status being reported by TRS (old DQT) since a few weeks now is no longer reliable:
-      # old values of InProgress and NotYetCompleted (maybe some more) have been merged into InProgress, so some ECTs are
-      # being now reported as continuing their induction but they have actually paused it (NotYetCompleted).
-      # This trigger has move some of them (erroneously) to 2024.
-      # We pause it to not extend the issue to other ECTs.
-      #
-      # TODO: Swap the comment in the next two lines of code to resume the trigger once TRS has fixed the issue
-
-      # continue_training if sync_with_dqt && continue_training?
-      sync_with_dqt
-
+      continue_training if sync_with_dqt && continue_training?
       record_completion_date_mismatch if completion_date_mismatch?
     end
 
@@ -55,7 +43,7 @@ module Participants
     end
 
     def completion_date
-      @completion_date ||= induction&.fetch("endDate", nil)
+      @completion_date ||= riab_teacher.induction_completion_date
     end
 
     def completion_date_mismatch?
@@ -68,19 +56,11 @@ module Participants
     end
 
     def continue_training?
-      in_progress_induction_status? && participant_profile.unfinished? && !esp_or_istip?
+      riab_teacher.induction_in_progress? && participant_profile.unfinished? && !esp_or_istip?
     end
 
     def esp_or_istip?
       [AppropriateBody.esp, AppropriateBody.istip].compact.include?(participant_profile.latest_induction_record.appropriate_body)
-    end
-
-    def induction
-      @induction ||= DQT::GetInductionRecord.call(trn: participant_profile.teacher_profile.trn)
-    end
-
-    def in_progress_induction_status?
-      induction&.dig("status") == IN_PROGRESS_STATUS
     end
 
     def participant_cohort
@@ -102,6 +82,10 @@ module Participants
       )
     end
 
+    def riab_teacher
+      @riab_teacher ||= RIAB::Teacher.find_by_trn(participant_profile.trn)
+    end
+
     def save_error(message)
       ContinueTrainingCohortChangeError.find_or_create_by!(participant_profile:, message:)
 
@@ -113,7 +97,7 @@ module Participants
     end
 
     def start_date
-      @start_date ||= induction&.fetch("startDate", nil)
+      @start_date ||= riab_teacher.induction_start_date
     end
 
     def sync_with_dqt
