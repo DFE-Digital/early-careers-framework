@@ -43,7 +43,7 @@ module Participants
     end
 
     def completion_date
-      @completion_date ||= riab_teacher.induction_completion_date
+      @completion_date ||= riab_teacher&.induction_completion_date
     end
 
     def completion_date_mismatch?
@@ -56,7 +56,7 @@ module Participants
     end
 
     def continue_training?
-      riab_teacher.induction_in_progress? && participant_profile.unfinished? && !esp_or_istip?
+      riab_teacher&.induction_in_progress? && participant_profile.unfinished? && !esp_or_istip?
     end
 
     def esp_or_istip?
@@ -83,7 +83,9 @@ module Participants
     end
 
     def riab_teacher
-      @riab_teacher ||= RIAB::Teacher.find_by_trn(participant_profile.trn)
+      return @riab_teacher if instance_variable_defined?(:@riab_teacher)
+
+      @riab_teacher = RIAB::Teacher.find_by_trn(participant_profile.trn)
     end
 
     def save_error(message)
@@ -97,7 +99,7 @@ module Participants
     end
 
     def start_date
-      @start_date ||= riab_teacher.induction_start_date
+      @start_date ||= riab_teacher&.induction_start_date
     end
 
     def sync_with_dqt
