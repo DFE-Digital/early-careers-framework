@@ -8,7 +8,8 @@ module Participants
       return unless participant_profile.ect?
 
       complete_induction if complete_induction?
-      continue_training if sync_with_dqt && continue_training?
+      # continue_training if sync_with_dqt && continue_training?
+      sync_with_dqt
       record_completion_date_mismatch if completion_date_mismatch?
     end
 
