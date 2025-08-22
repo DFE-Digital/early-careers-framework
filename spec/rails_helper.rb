@@ -96,6 +96,17 @@ RSpec.configure do |config|
   config.before(:each, type: :request) do
     host! Rails.configuration.domain
   end
+
+  config.append_after(:each) do
+    RIAB::ApplicationRecord.connection_pool.with_connection do |conn|
+      # Roll back any lingering transaction
+      if conn.transaction_open?
+        # Safe rollback even if nested count > 0
+        conn.rollback_transaction while conn.transaction_open?
+      end
+    end
+    RIAB::ApplicationRecord.connection_handler.clear_active_connections!(:all)
+  end
 end
 
 Shoulda::Matchers.configure do |config|
