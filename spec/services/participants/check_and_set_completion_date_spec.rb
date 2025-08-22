@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe Participants::CheckAndSetCompletionDate do
-  subject(:service_call) { described_class.call(participant_profile:) }
+  subject(:service_call) { described_class.call(participant_profile:, riab_teacher:) }
 
   let(:cohort) { Cohort.previous || create(:cohort, :previous) }
   let(:lead_provider) { create(:lead_provider, name: "Ambition Institute") }
@@ -30,7 +30,7 @@ RSpec.describe Participants::CheckAndSetCompletionDate do
   let(:outcome) {}
 
   describe "#call" do
-    let!(:riab_teacher) { create(:riab_teacher, trn:, trs_induction_status: induction_status) }
+    let(:riab_teacher) { create(:riab_teacher, trn:, trs_induction_status: induction_status) }
 
     before do
       inside_registration_window(cohort: Cohort.current) do
