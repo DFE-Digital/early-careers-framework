@@ -15,10 +15,11 @@ module Participants
 
   private
 
-    attr_reader :participant_profile
+    attr_reader :participant_profile, :riab_teacher
 
-    def initialize(participant_profile:)
+    def initialize(participant_profile:, riab_teacher:)
       @participant_profile = participant_profile
+      @riab_teacher = riab_teacher
     end
 
     def amend_cohort_to_continue_training
@@ -81,12 +82,6 @@ module Participants
         },
         unique_by: :participant_profile_id,
       )
-    end
-
-    def riab_teacher
-      return @riab_teacher if instance_variable_defined?(:@riab_teacher)
-
-      @riab_teacher = RIAB::Teacher.find_by_trn(participant_profile.trn)
     end
 
     def save_error(message)
