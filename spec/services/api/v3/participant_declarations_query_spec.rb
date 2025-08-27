@@ -55,9 +55,26 @@ RSpec.describe Api::V3::ParticipantDeclarationsQuery do
         end
       end
 
-      (InductionRecord.induction_statuses.keys - described_class::RELEVANT_INDUCTION_STATUS).each do |induction_status|
+      (InductionRecord.induction_statuses.keys.excluding("leaving") - described_class::RELEVANT_INDUCTION_STATUS).each do |induction_status|
         it "is not included in the response when the participant was #{induction_status} for the previous provider" do
           transfer_induction_record.update!(induction_status:)
+          expect(subject.participant_declarations_for_pagination.to_a).not_to include(transferred_declaration)
+        end
+      end
+
+      context "when the participant was leaving for the previous provider" do
+        it "is included in the response when `end_date` is empty" do
+          transfer_induction_record.update!(induction_status: :leaving)
+          expect(subject.participant_declarations_for_pagination.to_a).to include(transferred_declaration)
+        end
+
+        it "is included in the response when `end_date` is ahead of the declaration date" do
+          transfer_induction_record.update!(induction_status: :leaving, end_date: Time.zone.now)
+          expect(subject.participant_declarations_for_pagination.to_a).to include(transferred_declaration)
+        end
+
+        it "is not included in the response when `end_date` is behind of the declaration date" do
+          transfer_induction_record.update!(induction_status: :leaving, end_date: 4.years.ago)
           expect(subject.participant_declarations_for_pagination.to_a).not_to include(transferred_declaration)
         end
       end
