@@ -24,6 +24,7 @@ RSpec.describe Importers::CreateStatement do
 
     context "when contracts for the cohort exists" do
       let!(:ecf_contract) { create(:call_off_contract, lead_provider:, version: "0.0.1", cohort: cohort_2023) }
+      let!(:ecf_mentor_contract) { create(:mentor_call_off_contract, lead_provider:, version: "0.0.1", cohort: cohort_2023) }
 
       it "creates ECF statements idempotently" do
         expect {
@@ -42,6 +43,7 @@ RSpec.describe Importers::CreateStatement do
             deadline_date: Date.new(2023, 12, 31),
             payment_date: Date.new(2024, 1, 25),
             contract_version: "0.0.1",
+            mentor_contract_version: "0.0.1",
             output_fee: true,
           ),
         ).to be_present
@@ -53,6 +55,7 @@ RSpec.describe Importers::CreateStatement do
             deadline_date: Date.new(2024, 1, 31),
             payment_date: Date.new(2024, 2, 25),
             contract_version: "0.0.1",
+            mentor_contract_version: "0.0.1",
             output_fee: false,
           ),
         ).to be_present
@@ -78,6 +81,7 @@ RSpec.describe Importers::CreateStatement do
             statement_attributes.merge({
               cpd_lead_provider: create(:cpd_lead_provider, :with_lead_provider),
               contract_version: "0.0.8",
+              mentor_contract_version: "0.0.9",
             }),
           )
 
@@ -86,6 +90,7 @@ RSpec.describe Importers::CreateStatement do
             statement_attributes.merge({
               cohort: cohort_2023.previous,
               contract_version: "0.0.8",
+              mentor_contract_version: "0.0.9",
             }),
           )
 
@@ -93,6 +98,7 @@ RSpec.describe Importers::CreateStatement do
           statement_type.create!(
             statement_attributes.merge({
               contract_version: "0.0.8",
+              mentor_contract_version: "0.0.9",
               payment_date: "2023-12-24",
             }),
           )
@@ -102,6 +108,7 @@ RSpec.describe Importers::CreateStatement do
         Finance::Statement::ECF.create!(
           statement_attributes.merge({
             contract_version: "0.0.5",
+            mentor_contract_version: "0.0.4",
           }),
         )
       end
@@ -117,6 +124,7 @@ RSpec.describe Importers::CreateStatement do
         )
 
         expect(st.contract_version).to eql("0.0.5")
+        expect(st.mentor_contract_version).to eql("0.0.4")
       end
     end
 

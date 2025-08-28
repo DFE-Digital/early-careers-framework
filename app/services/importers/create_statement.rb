@@ -46,8 +46,13 @@ module Importers
 
           next if statement
 
-          contract_version = Finance::Statement::ECF.where(cpd_lead_provider:, cohort: statement_data.cohort).order(payment_date: :desc).first&.contract_version
+          latest_statement = Finance::Statement::ECF.where(cpd_lead_provider:, cohort: statement_data.cohort).order(payment_date: :desc).first
+
+          contract_version = latest_statement&.contract_version
           contract_version ||= "0.0.1"
+
+          mentor_contract_version = latest_statement&.mentor_contract_version
+          mentor_contract_version ||= "0.0.1"
 
           Finance::Statement::ECF.create!(
             name: statement_data.name,
@@ -58,6 +63,7 @@ module Importers
             output_fee: statement_data.output_fee,
             type: class_for(statement_data, namespace: statement_data.type),
             contract_version:,
+            mentor_contract_version:,
           )
 
           logger.info "CreateStatement: #{statement_data.cohort.start_year} cohort ECF statements for #{cpd_lead_provider.name} successfully created!"

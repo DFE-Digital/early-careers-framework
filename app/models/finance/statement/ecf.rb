@@ -15,7 +15,7 @@ class Finance::Statement::ECF < Finance::Statement
 
   def mentor_contract
     MentorCallOffContract.find_by!(
-      version: contract_version,
+      version: mentor_contract_version,
       cohort:,
       lead_provider:,
     )

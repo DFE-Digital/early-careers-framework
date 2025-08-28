@@ -15,8 +15,8 @@ RSpec.feature "Finance users payment breakdowns", type: :feature, js: true do
   let(:voided_declarations) { create_list(:ect_participant_declaration, 2, :eligible, :voided, cpd_lead_provider:) }
   let(:clawed_back_declarations) { create_list(:ect_participant_declaration, 3, :eligible, cpd_lead_provider:).each(&:clawed_back!) }
 
-  let!(:january_statement) { create(:ecf_statement, name: "January #{next_start_year}", deadline_date: Date.new(next_start_year, 1, 31), cpd_lead_provider:, contract_version: contract.version) }
-  let!(:november_statement) { create(:ecf_statement, name: "November #{current_start_year}", deadline_date: Date.new(current_start_year, 11, 30), cpd_lead_provider:, contract_version: contract.version) }
+  let!(:january_statement) { create(:ecf_statement, name: "January #{next_start_year}", deadline_date: Date.new(next_start_year, 1, 31), cpd_lead_provider:, contract_version: contract.version, mentor_contract_version: mentor_contract.version) }
+  let!(:november_statement) { create(:ecf_statement, name: "November #{current_start_year}", deadline_date: Date.new(current_start_year, 11, 30), cpd_lead_provider:, contract_version: contract.version, mentor_contract_version: mentor_contract.version) }
 
   let(:jan_statement_calculator) { Finance::ECF::StatementCalculator.new(statement: january_statement) }
   let(:nov_statement_ect_calculator) { Finance::ECF::ECT::StatementCalculator.new(statement: november_statement) }
