@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_02_28_135429) do
+ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "fuzzystrmatch"
@@ -1113,6 +1113,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_28_135429) do
     t.string "contract_version", default: "0.0.1"
     t.decimal "reconcile_amount", default: "0.0", null: false
     t.datetime "marked_as_paid_at"
+    t.string "mentor_contract_version", default: "0.0.1"
     t.index ["cohort_id"], name: "index_statements_on_cohort_id"
     t.index ["cpd_lead_provider_id"], name: "index_statements_on_cpd_lead_provider_id"
   end

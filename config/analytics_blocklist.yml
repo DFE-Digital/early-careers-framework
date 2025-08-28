@@ -50,6 +50,7 @@
   :statements:
   - original_value
   - contract_version
+  - mentor_contract_version
   - reconcile_amount
   - marked_as_paid_at
   :schedule_milestones:
