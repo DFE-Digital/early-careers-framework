@@ -8,11 +8,12 @@ RSpec.describe Finance::Statement::ECF do
   let(:lead_provider) { cpd_lead_provider.lead_provider }
 
   let(:contract_version) { "0.0.2" }
-
   let!(:call_off_contract) { create(:call_off_contract, cohort:, lead_provider:, version: contract_version) }
-  let!(:mentor_call_off_contract) { create(:mentor_call_off_contract, cohort:, lead_provider:, version: contract_version) }
 
-  subject { create(:ecf_statement, cpd_lead_provider:, cohort:, contract_version:) }
+  let(:mentor_contract_version) { "0.0.3" }
+  let!(:mentor_call_off_contract) { create(:mentor_call_off_contract, cohort:, lead_provider:, version: mentor_contract_version) }
+
+  subject { create(:ecf_statement, cpd_lead_provider:, cohort:, contract_version:, mentor_contract_version:) }
 
   describe "#payable!" do
     it "transitions the statement to payable" do

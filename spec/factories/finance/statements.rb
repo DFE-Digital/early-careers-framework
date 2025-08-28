@@ -7,6 +7,7 @@ FactoryBot.define do
     payment_date  { Time.zone.today.end_of_month }
     cohort        { Cohort.current || create(:cohort, :current) }
     contract_version { "1.0" }
+    mentor_contract_version { "1.0" }
 
     factory :ecf_statement, class: "Finance::Statement::ECF" do
       cpd_lead_provider { association :cpd_lead_provider, :with_lead_provider }
