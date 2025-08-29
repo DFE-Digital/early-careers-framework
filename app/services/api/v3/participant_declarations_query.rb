@@ -19,7 +19,8 @@ module Api
         filterable_attributes = %i[id created_at user_id updated_at delivery_partner_id type]
         scope = ParticipantDeclaration::ECF.union(
           declarations_scope.select(*filterable_attributes),
-          ecf_previous_declarations_scope.select(*filterable_attributes),
+          previous_declarations_relevant_induction_records_scope.select(*filterable_attributes),
+          previous_declarations_leaving_induction_records_scope.select(*filterable_attributes),
         )
 
         if participant_ids.present?
@@ -55,7 +56,8 @@ module Api
       def participant_declaration(id)
         ParticipantDeclaration::ECF.union(
           declarations_scope,
-          ecf_previous_declarations_scope,
+          previous_declarations_relevant_induction_records_scope,
+          previous_declarations_leaving_induction_records_scope,
         ).find(id)
       end
 
@@ -71,8 +73,8 @@ module Api
         filter_cohorts(scope)
       end
 
-      def ecf_previous_declarations_scope
-        scope = ParticipantDeclaration::ECF
+      def previous_declarations_scope
+        @previous_declarations_scope ||= ParticipantDeclaration::ECF
           .left_outer_joins(
             :cohort,
             participant_profile: [
@@ -83,8 +85,22 @@ module Api
           )
           .where.not(participant_profile: { induction_records: { induction_programmes: { partnership_id: nil } } }) # Exclude any nil partnerships (eg: cip)
           .where(participant_profile: { induction_records: { induction_programme: { partnerships: { lead_provider_id: lead_provider&.id } } } })
-          .where(participant_profile: { induction_records: { induction_status: RELEVANT_INDUCTION_STATUS } }) # only want induction records that are the winning latest ones
           .where(state: %w[submitted eligible payable paid])
+      end
+
+      def previous_declarations_relevant_induction_records_scope
+        scope = previous_declarations_scope
+          .where(participant_profile: { induction_records: { induction_status: RELEVANT_INDUCTION_STATUS } }) # only want induction records that are the winning latest ones
+
+        scope = filter_cohorts(scope) if lead_provider.present?
+
+        scope
+      end
+
+      def previous_declarations_leaving_induction_records_scope
+        scope = previous_declarations_scope
+          .where(participant_profile: { induction_records: { induction_status: :leaving } })
+          .where("induction_records.end_date IS NULL OR participant_declarations.declaration_date <= induction_records.end_date")
 
         scope = filter_cohorts(scope) if lead_provider.present?
 
