@@ -7,7 +7,7 @@ RSpec.shared_examples "can change cohort and continue training" do |participant_
     let(:current_cohort) { eligible_participant.schedule.cohort }
     let(:restrict_to_participant_ids) { [] }
     let(:cpd_lead_provider) { eligible_participant.lead_provider.cpd_lead_provider }
-    let(:eligible_participants) { create_list(declaration_type, 3, :payable, declaration_type: :started, cohort: Cohort.previous).map(&:participant_profile) }
+    let(:eligible_participants) { create_list(declaration_type, 3, :payable, declaration_type: :started, cohort: create(:cohort, start_year: 2023)).map(&:participant_profile) }
     let(:eligible_participant) { eligible_participants.first }
     let(:cohort) { create(:cohort, start_year: 2024) }
 
@@ -58,7 +58,7 @@ RSpec.shared_examples "can change cohort and continue training" do |participant_
   end
 
   describe "#unfinished_with_billable_declaration?" do
-    let(:declaration) { create(declaration_type, :paid, declaration_type: :started, cohort: Cohort.previous) }
+    let(:declaration) { create(declaration_type, :paid, declaration_type: :started, cohort: create(:cohort, start_year: 2023)) }
     let(:participant_profile) { declaration.participant_profile }
     let(:current_cohort) { participant_profile.schedule.cohort }
     let(:cohort) { create(:cohort, start_year: 2024) }
@@ -198,7 +198,7 @@ RSpec.shared_examples "can't change cohort and continue training" do |participan
     let(:current_cohort) { eligible_participant.schedule.cohort }
     let(:restrict_to_participant_ids) { [] }
     let(:cpd_lead_provider) { eligible_participant.lead_provider.cpd_lead_provider }
-    let(:eligible_participants) { create_list(declaration_type, 3, :payable, declaration_type: :started, cohort: Cohort.previous).map(&:participant_profile) }
+    let(:eligible_participants) { create_list(declaration_type, 3, :payable, declaration_type: :started, cohort: create(:cohort, start_year: 2023)).map(&:participant_profile) }
     let(:eligible_participant) { eligible_participants.first }
     let(:cohort) { create(:cohort, start_year: 2024) }
 
@@ -249,7 +249,7 @@ RSpec.shared_examples "can't change cohort and continue training" do |participan
   end
 
   describe "#unfinished_with_billable_declaration?" do
-    let(:declaration) { create(declaration_type, :paid, declaration_type: :started, cohort: Cohort.previous) }
+    let(:declaration) { create(declaration_type, :paid, declaration_type: :started, cohort: create(:cohort, start_year: 2023)) }
     let(:participant_profile) { declaration.participant_profile }
     let(:current_cohort) { participant_profile.schedule.cohort }
     let(:cohort) { create(:cohort, start_year: 2024) }
