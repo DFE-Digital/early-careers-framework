@@ -25,7 +25,7 @@ RSpec.feature "ECT doing FIP: after cohort transfer", type: :feature do
   let(:programme_type) { "full_induction_programme" }
   let(:schedule_identifier) { "ecf-standard-september" }
   let(:cip_materials) { "none" }
-  let(:start_year) { Cohort.next.start_year }
+  let(:start_year) { Cohort.find_by(start_year: 2024) }
   let(:previous_start_year) { start_year - 1 }
   let(:registration_completed) { true }
   let(:participant_status) { "active" }
