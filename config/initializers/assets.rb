@@ -4,6 +4,8 @@
 
 # Because these paths are searched in order, we want the assets to come first
 # Add the GOVUK Frontend images path
+Rails.application.config.assets.paths << Rails.root.join("node_modules/govuk-frontend/dist/govuk/assets")
+
 Rails.application.config.assets.paths << Rails.root.join("node_modules/govuk-frontend/dist/govuk/assets/images")
 
 # Add the GOVUK Frontend fonts path
