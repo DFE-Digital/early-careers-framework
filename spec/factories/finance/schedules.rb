@@ -8,9 +8,9 @@ FactoryBot.define do
         [
           {
             name: "Output 1 - Participant Start",
-            start_date: Date.new(start_year, 9, 1),
-            milestone_date: Date.new(start_year, 11, 30),
-            payment_date: Date.new(start_year, 11, 30),
+            start_date: Date.new(start_year, 10, 1),
+            milestone_date: Date.new(start_year, 12, 30),
+            payment_date: Date.new(start_year, 12, 30),
             declaration_type: "started",
           },
           {
@@ -66,20 +66,20 @@ FactoryBot.define do
         [
           {
             name: "Output 7 - Extended Point 1",
-            start_date: Date.new(start_year, 9, 1),
-            payment_date: Date.new(start_year, 9, 1),
+            start_date: Date.new(start_year, 10, 1),
+            payment_date: Date.new(start_year, 10, 1),
             declaration_type: "extended-1",
           },
           {
             name: "Output 8 - Extended Point 2",
-            start_date: Date.new(start_year, 9, 1),
-            payment_date: Date.new(start_year, 9, 1),
+            start_date: Date.new(start_year, 10, 1),
+            payment_date: Date.new(start_year, 10, 1),
             declaration_type: "extended-2",
           },
           {
             name: "Output 9 - Extended Point 3",
-            start_date: Date.new(start_year, 9, 1),
-            payment_date: Date.new(start_year, 9, 1),
+            start_date: Date.new(start_year, 10, 1),
+            payment_date: Date.new(start_year, 10, 1),
             declaration_type: "extended-3",
           },
         ].each do |hash|
