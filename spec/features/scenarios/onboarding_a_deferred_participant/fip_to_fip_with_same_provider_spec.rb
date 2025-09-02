@@ -57,7 +57,7 @@ RSpec.feature "FIP to FIP with same provider - Onboard a deferred participant",
           create :milestone,
                  schedule:,
                  name: "Output 1 - Participant Start",
-                 start_date: Date.new(2021, 9, 1),
+                 start_date: Date.new(2021, 10, 1),
                  milestone_date: Date.new(2021, 11, 30),
                  payment_date: Date.new(2021, 11, 30),
                  declaration_type: "started"

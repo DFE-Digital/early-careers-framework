@@ -1522,7 +1522,7 @@ module ManageTrainingSteps
       date_of_birth: Date.new(1998, 3, 22),
       email: "sally@school.com",
       nino: "AB123456A",
-      start_date: Date.new(Cohort.current.start_year, 9, 1),
+      start_date: Date.new(Cohort.current.start_year, 10, 1),
       start_term: "summer",
     }
   end
