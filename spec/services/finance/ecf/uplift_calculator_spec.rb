@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Finance::ECF::UpliftCalculator do
+RSpec.describe Finance::ECF::UpliftCalculator, mid_cohort: true do
   let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
   let(:lead_provider) { cpd_lead_provider.lead_provider }
   let!(:call_off_contract) { create(:call_off_contract, :with_minimal_bands, lead_provider:) }
