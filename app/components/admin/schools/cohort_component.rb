@@ -2,7 +2,7 @@
 
 module Admin
   module Schools
-    class CohortComponent < ViewComponent::Base
+    class CohortComponent < ApplicationComponent
       include ::Schools::DashboardHelper
 
       renders_many :partnership_components, Admin::Schools::PartnershipComponent

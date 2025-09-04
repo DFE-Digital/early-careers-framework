@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class PrimaryNavComponent < ViewComponent::Base
+class PrimaryNavComponent < ApplicationComponent
   attr_reader :wide, :reversed
 
   renders_many :nav_items, "NavItemComponent"
@@ -10,7 +10,7 @@ class PrimaryNavComponent < ViewComponent::Base
     @reversed = reversed
   end
 
-  class NavItemComponent < ViewComponent::Base
+  class NavItemComponent < ApplicationComponent
     attr_reader :path
 
     def initialize(path:, selected: nil)

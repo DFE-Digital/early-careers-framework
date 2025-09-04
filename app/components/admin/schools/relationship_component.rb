@@ -2,7 +2,7 @@
 
 module Admin
   module Schools
-    class RelationshipComponent < ViewComponent::Base
+    class RelationshipComponent < ApplicationComponent
       attr_accessor :relationship, :school, :school_cohort, :participants, :superuser
 
       def initialize(relationship:, school:, school_cohort:, superuser:, participants: nil)

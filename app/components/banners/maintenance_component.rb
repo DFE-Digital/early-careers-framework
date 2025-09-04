@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Banners
-  class MaintenanceComponent < ViewComponent::Base
+  class MaintenanceComponent < ApplicationComponent
     HOUR_FORMAT = "%-l%P"
     DAY_FORMAT = "%-d %B"
     MAINTENANCE_WINDOW = Time.zone.local(2024, 11, 27, 19)..Time.zone.local(2024, 11, 27, 22)

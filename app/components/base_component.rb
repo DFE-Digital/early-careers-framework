@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class BaseComponent < ViewComponent::Base
+class BaseComponent < ApplicationComponent
   def self.translation_key
     @translation_key ||= name.snakecase.gsub("/", ".")
   end

@@ -4,7 +4,7 @@
 
 module Admin
   module Participants
-    class AuditTrailItemComponent < ViewComponent::Base
+    class AuditTrailItemComponent < ApplicationComponent
       include AdminHelper
 
       def initialize(audit:)
