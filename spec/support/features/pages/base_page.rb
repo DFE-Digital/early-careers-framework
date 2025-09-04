@@ -53,11 +53,7 @@ module Pages
     end
 
     def element_visible?(elem)
-      if elem.visible?
-        true
-      else
-        raise RSpec::Expectations::ExpectationNotMetError, "expected the element #{elem} to be visible"
-      end
+      elem.visible? || raise(RSpec::Expectations::ExpectationNotMetError, "expected the element #{elem} to be visible")
     end
 
     def element_hidden?(elem)

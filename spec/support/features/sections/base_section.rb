@@ -5,19 +5,11 @@ module Sections
     include RSpec::Matchers
 
     def element_visible?(elem)
-      if elem.visible?
-        true
-      else
-        raise RSpec::Expectations::ExpectationNotMetError, "expected the element #{elem} to be visible"
-      end
+      elem.visible? || raise(RSpec::Expectations::ExpectationNotMetError, "expected the element #{elem} to be visible")
     end
 
     def element_has_content?(elem, expectation)
-      if elem.has_content? expectation
-        true
-      else
-        raise RSpec::Expectations::ExpectationNotMetError, "expected to find \"#{expectation}\" within\n===\n#{elem.text}\n==="
-      end
+      elem.has_content?(expectation) || raise(RSpec::Expectations::ExpectationNotMetError, "expected to find \"#{expectation}\" within\n===\n#{elem.text}\n===")
     end
   end
 end

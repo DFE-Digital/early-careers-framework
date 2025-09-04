@@ -165,7 +165,7 @@ module AppropriateBodySelection
       # TODO: set default ABs
       @appropriate_body_form.default_appropriate_body = if appropriate_body_school&.school_type_code == 37
                                                           default_appropriate_body_for_british_schools_overseas
-                                                        elsif appropriate_body_school&.school_type_code == 10 || appropriate_body_school&.school_type_code == 11
+                                                        elsif [10, 11].include?(appropriate_body_school&.school_type_code)
                                                           default_appropriate_body_for_independent_schools
                                                         end
     end

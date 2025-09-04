@@ -51,6 +51,6 @@ module GiasHelpers
   end
 
   def independent_school?
-    school_type_code == 10 || school_type_code == 11
+    [10, 11].include?(school_type_code)
   end
 end

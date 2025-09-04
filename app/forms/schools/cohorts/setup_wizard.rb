@@ -73,7 +73,7 @@ module Schools
       def appropriate_body_default_selection
         if school.school_type_code == 37
           AppropriateBody.find_by(name: "Educational Success Partners (ESP)")
-        elsif school.school_type_code == 10 || school.school_type_code == 11
+        elsif [10, 11].include?(school.school_type_code)
           AppropriateBody.find_by(name: "Independent Schools Teacher Induction Panel (IStip)")
         end
       end
