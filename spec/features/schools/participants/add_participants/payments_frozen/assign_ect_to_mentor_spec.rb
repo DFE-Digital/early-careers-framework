@@ -48,9 +48,7 @@ RSpec.describe "SIT assigns a mentor to an ECT", js: true, early_in_cohort: true
     Induction::Enrol.call(participant_profile:, induction_programme:)
   end
 
-  def active_registration_cohort
-    Cohort.active_registration_cohort
-  end
+  delegate :active_registration_cohort, to: :Cohort
 
   def active_registration_school_cohort
     SchoolCohort.find_by(cohort: Cohort.active_registration_cohort)
