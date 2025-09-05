@@ -4,7 +4,7 @@
 
 module Admin
   module Participants
-    class AuditTrailComponent < ViewComponent::Base
+    class AuditTrailComponent < ApplicationComponent
       renders_many :audit_table_rows, "Admin::Participants::AuditTrailItemComponent"
 
       Changes = Struct.new(

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ContentListComponent < ViewComponent::Base
+class ContentListComponent < ApplicationComponent
   def initialize(heading:, list:)
     @heading = heading
     @list = list

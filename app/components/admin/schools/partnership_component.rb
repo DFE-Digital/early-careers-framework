@@ -2,7 +2,7 @@
 
 module Admin
   module Schools
-    class PartnershipComponent < ViewComponent::Base
+    class PartnershipComponent < ApplicationComponent
       attr_accessor :partnership, :school, :school_cohort, :training_programme
 
       def initialize(partnership:, school:, school_cohort:, training_programme:)
