@@ -10,6 +10,7 @@ module Schools
 
       class InvalidStep < StandardError; end
 
+      # rubocop:disable Lint/DuplicateMethods
       attr_reader :current_step, :submitted_params, :data_store, :current_user, :participant_profile, :school
 
       delegate :before_render, to: :form
@@ -23,6 +24,8 @@ module Schools
                :ect_mentor?, :join_school_programme, :join_school_programme?, :join_participant_cohort_school_programme?,
                :join_current_cohort_school_programme?, :current_providers?, :previous_providers?, :providers_chosen?,
                :full_name, to: :data_store
+
+      # rubocop:enable Lint/DuplicateMethods
 
       def initialize(current_step:, data_store:, current_user:, school:, submitted_params: {})
         @current_user = current_user

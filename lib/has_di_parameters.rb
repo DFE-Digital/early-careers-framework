@@ -69,9 +69,7 @@ module HasDIParameters
     {}
   end
 
-  def required_params
-    self.class.required_params
-  end
+  delegate :required_params, to: :class
 
 private
 

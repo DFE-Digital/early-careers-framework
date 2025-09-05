@@ -26,7 +26,7 @@ RSpec.configure do |config|
     Dir[Rails.root.join("swagger/v1/component_schemas/*.yml")].map do |path|
       component_name = File.basename(path, ".yml")
       [component_name, YAML.load_file(path)]
-    end
+    end,
   ]
   swagger_v1_template["components"]["schemas"].merge!(additional_component_schemas)
   swagger_v1_template["components"]["schemas"] = swagger_v1_template["components"]["schemas"].sort.to_h
@@ -39,7 +39,7 @@ RSpec.configure do |config|
     Dir[Rails.root.join("swagger/v2/component_schemas/*.yml")].map do |path|
       component_name = File.basename(path, ".yml")
       [component_name, YAML.load_file(path)]
-    end
+    end,
   ]
   swagger_v2_template["components"]["schemas"].merge!(additional_component_schemas)
   swagger_v2_template["components"]["schemas"] = swagger_v2_template["components"]["schemas"].sort.to_h
@@ -52,7 +52,7 @@ RSpec.configure do |config|
     Dir[Rails.root.join("swagger/v3/component_schemas/*.yml")].map do |path|
       component_name = File.basename(path, ".yml")
       [component_name, YAML.load_file(path)]
-    end
+    end,
   ]
   swagger_v3_template["components"]["schemas"].merge!(additional_component_schemas)
   swagger_v3_template["components"]["schemas"] = swagger_v3_template["components"]["schemas"].sort.to_h

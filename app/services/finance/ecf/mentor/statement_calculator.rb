@@ -90,9 +90,7 @@ module Finance
           end
         end
 
-        def declaration_types_for_display
-          self.class.declaration_types_for_display
-        end
+        delegate :declaration_types_for_display, to: :class
 
         def clawbacks_breakdown
           result = []
