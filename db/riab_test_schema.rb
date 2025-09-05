@@ -12,37 +12,37 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 20_250_807_063_339) do
+ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
-  enable_extension "pg_catalog.plpgsql"
-  enable_extension "pgcrypto"
   enable_extension "pg_trgm"
+  enable_extension "pgcrypto"
+  enable_extension "plpgsql"
   enable_extension "unaccent"
 
   # Custom types defined in this database.
   # Note that some types may not work with other database engines. Be careful if changing database.
-  create_enum "appropriate_body_type", %w[local_authority national teaching_school_hub]
-  create_enum "batch_status", %w[pending processing processed completing completed failed]
-  create_enum "batch_type", %w[action claim]
-  create_enum "dfe_role_type", %w[admin super_admin finance]
-  create_enum "event_author_types", %w[appropriate_body_user school_user dfe_staff_user system]
-  create_enum "fee_types", %w[output service]
-  create_enum "funding_eligibility_status", %w[eligible_for_fip eligible_for_cip ineligible]
-  create_enum "gias_school_statuses", %w[open closed proposed_to_close proposed_to_open]
-  create_enum "induction_outcomes", %w[fail pass]
-  create_enum "induction_programme", %w[cip fip diy unknown pre_september_2021]
-  create_enum "induction_programme_choice", %w[not_yet_known provider_led school_led]
-  create_enum "mentor_became_ineligible_for_funding_reason", %w[completed_declaration_received completed_during_early_roll_out started_not_completed]
-  create_enum "parity_check_request_states", %w[pending queued in_progress completed]
-  create_enum "parity_check_run_modes", %w[concurrent sequential]
-  create_enum "parity_check_run_states", %w[pending in_progress completed]
-  create_enum "request_method_types", %w[get post put]
-  create_enum "statement_statuses", %w[open payable paid]
-  create_enum "training_programme", %w[provider_led school_led]
-  create_enum "working_pattern", %w[part_time full_time]
+ create_enum "appropriate_body_type", ["local_authority", "national", "teaching_school_hub"]
+ create_enum "batch_status", ["pending", "processing", "processed", "completing", "completed", "failed"]
+ create_enum "batch_type", ["action", "claim"]
+ create_enum "dfe_role_type", ["admin", "super_admin", "finance"]
+ create_enum "event_author_types", ["appropriate_body_user", "school_user", "dfe_staff_user", "system"]
+ create_enum "fee_types", ["output", "service"]
+ create_enum "funding_eligibility_status", ["eligible_for_fip", "eligible_for_cip", "ineligible"]
+ create_enum "gias_school_statuses", ["open", "closed", "proposed_to_close", "proposed_to_open"]
+ create_enum "induction_outcomes", ["fail", "pass"]
+ create_enum "induction_programme", ["cip", "fip", "diy", "unknown", "pre_september_2021"]
+ create_enum "induction_programme_choice", ["not_yet_known", "provider_led", "school_led"]
+ create_enum "mentor_became_ineligible_for_funding_reason", ["completed_declaration_received", "completed_during_early_roll_out", "started_not_completed"]
+ create_enum "parity_check_request_states", ["pending", "queued", "in_progress", "completed"]
+ create_enum "parity_check_run_modes", ["concurrent", "sequential"]
+ create_enum "parity_check_run_states", ["pending", "in_progress", "completed"]
+ create_enum "request_method_types", ["get", "post", "put"]
+ create_enum "statement_statuses", ["open", "payable", "paid"]
+ create_enum "training_programme", ["provider_led", "school_led"]
+ create_enum "working_pattern", ["part_time", "full_time"]
 
-  create_table "active_lead_providers", id: :bigint, force: :cascade do |t|
+  create_table "active_lead_providers", id: :bigint, default: nil, force: :cascade do |t|
     t.bigint "lead_provider_id", null: false
     t.bigint "contract_period_year", null: false
     t.datetime "created_at", null: false
