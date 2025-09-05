@@ -3,6 +3,8 @@
 require "rails_helper"
 
 RSpec.describe Participants::CheckAndSetCompletionDate do
+  subject(:service_call) { described_class.call(participant_profile:, riab_teacher:) }
+
   let(:cohort) { Cohort.previous || create(:cohort, :previous) }
   let(:lead_provider) { create(:lead_provider, name: "Ambition Institute") }
   let(:school) do
@@ -23,26 +25,25 @@ RSpec.describe Participants::CheckAndSetCompletionDate do
   end
   let(:trn) { participant_profile.trn }
   let(:completion_date) { 1.month.ago.to_date }
-  let(:dqt_start_date) { cohort.academic_year_start_date.to_date }
+  let(:riab_start_date) { cohort.academic_year_start_date.to_date }
   let(:induction_status) { "active" }
-  let(:dqt_induction_record) do
-    {
-      "startDate" => dqt_start_date,
-      "endDate" => completion_date,
-      "status" => induction_status,
-    }
-  end
-
-  subject(:service_call) { described_class.call(participant_profile:) }
+  let(:outcome) {}
 
   describe "#call" do
+    let(:riab_teacher) { create(:riab_teacher, trn:, trs_induction_status: induction_status) }
+
     before do
       inside_registration_window(cohort: Cohort.current) do
-        allow(DQT::GetInductionRecord).to receive(:call).with(trn:).and_return(dqt_induction_record)
+        create(:riab_induction_period,
+               outcome:,
+               started_on: riab_start_date,
+               finished_on: completion_date,
+               teacher: riab_teacher)
       end
     end
 
     context "when the participant already have a completion date" do
+      let(:outcome) { :pass }
       let(:induction_completion_date) { 2.months.ago.to_date }
 
       before do
@@ -55,14 +56,16 @@ RSpec.describe Participants::CheckAndSetCompletionDate do
       end
     end
 
-    context "when DQT provides a completion date" do
+    context "when RIAB provides a completion date" do
+      let(:outcome) { :pass }
+
       it "complete the participant with the induction endDate" do
         service_call
         expect(participant_profile.induction_completion_date).to eq(completion_date)
       end
     end
 
-    context "when DQT does not provide a completion date" do
+    context "when RIAB does not provide a completion date" do
       let(:completion_date) {}
 
       it "does not set a completion date" do
@@ -80,20 +83,20 @@ RSpec.describe Participants::CheckAndSetCompletionDate do
       end
     end
 
-    context "when cohort sync with dqt induction start date fails" do
-      let(:dqt_start_date) { Cohort.current.academic_year_start_date.to_date }
+    context "when cohort sync with RIAB induction start date fails" do
+      let(:riab_start_date) { Cohort.current.academic_year_start_date.to_date }
 
       it "does not change the cohort of the participant" do
         expect { service_call }.not_to change { participant_profile.schedule.cohort }
       end
     end
 
-    context "when cohort sync with dqt induction start date succeeds" do
+    context "when cohort sync with RIAB induction start date succeeds" do
       context "when the synced cohort is payments-frozen" do
         before do
           cohort.update!(payments_frozen_at: Date.yesterday)
           NewSeeds::Scenarios::SchoolCohorts::Fip
-            .new(school:, cohort: Cohort.active_registration_cohort)
+            .new(school:, cohort: Cohort.destination_from_frozen_cohort)
             .build
             .with_programme
         end
@@ -108,9 +111,6 @@ RSpec.describe Participants::CheckAndSetCompletionDate do
           end
         end
 
-        # TODO: TEMPORARILY PAUSE MOVING InProgress ECTS OUT OF THEIR FROZEN COHORT TO 2024
-        # See related comment on the described_class file.
-        # Unskip this example group when the issue has been resolved and the trigger has been resumed.
         xcontext "when the ect induction is in progress" do
           let(:induction_status) { "InProgress" }
           let(:completion_date) {}
@@ -118,11 +118,11 @@ RSpec.describe Participants::CheckAndSetCompletionDate do
           let!(:esp) { create(:appropriate_body, :esp) }
           let!(:istip) { create(:appropriate_body, :istip) }
 
-          context "when the participant is has not ESP or ISTIP appropriate body" do
-            it "sit the participant in the active registration cohort" do
+          context "when the participant has not ESP or ISTIP appropriate body" do
+            it "sit the participant in 2024" do
               expect { service_call }.to change { participant_profile.schedule.cohort }
                                            .from(cohort)
-                                           .to(Cohort.active_registration_cohort)
+                                           .to(Cohort.destination_from_frozen_cohort)
             end
           end
 
@@ -131,7 +131,7 @@ RSpec.describe Participants::CheckAndSetCompletionDate do
               participant_profile.latest_induction_record.update!(appropriate_body: esp)
             end
 
-            it "do not sit the participant in the active registration cohort" do
+            it "do not sit the participant in 2024" do
               expect { service_call }.not_to change { participant_profile.schedule.cohort }
             end
           end
@@ -141,7 +141,7 @@ RSpec.describe Participants::CheckAndSetCompletionDate do
               participant_profile.latest_induction_record.update!(appropriate_body: istip)
             end
 
-            it "do not sit the participant in the active registration cohort" do
+            it "do not sit the participant in 2024" do
               expect { service_call }.not_to change { participant_profile.schedule.cohort }
             end
           end

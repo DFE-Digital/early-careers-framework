@@ -30,7 +30,7 @@ remove_school_mentor_job:
   class: "RemoveSchoolMentorJob"
   queue: default
 build_completion_candidates_list_job:
-  cron: "15 23 * * 1,4"
+  cron: "15 23 * * *"
   class: "BuildCompletionCandidatesListJob"
   queue: default
 set_participant_completion_date_job:
