@@ -108,13 +108,13 @@ COPY --from=assets-precompile /usr/local/bundle/ /usr/local/bundle/
 COPY --from=middleman /public/ /app/public/
 
 # Change ownership only for directories that need write access
-RUN mkdir -p /app/tmp && chown -R appuser:appgroup /app/tmp /app/public/
+RUN echo "PAGER=more bundle exec rails c" > /home/appuser/.ash_history
+RUN echo "IRB.conf[:USE_AUTOCOMPLETE] = false" > /home/appuser/.irbrc
 
-RUN echo export PATH=/usr/local/bin:\$PATH > /root/.ashrc
-ENV ENV="/root/.ashrc"
+RUN mkdir -p /app/tmp && chown -R appuser:appgroup /home/appuser /app/tmp /app/public/
 
-RUN echo "cd /app && PAGER=more bundle exec rails c" > /root/.ash_history
-RUN echo "IRB.conf[:USE_AUTOCOMPLETE] = false" > /root/.irbrc
+RUN echo export PATH=/usr/local/bin:\$PATH > /home/appuser/.ashrc
+ENV ENV="/home/appuser/.ashrc"
 
 WORKDIR /app
 
