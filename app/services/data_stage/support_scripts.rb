@@ -114,12 +114,10 @@ module DataStage
                                                            delivery_partner: partnership.delivery_partner).first
       if existing_partnership.present?
         induction_programme.update!(partnership: existing_partnership)
+      elsif new_school.partnerships.unchallenged.where(cohort: partnership.cohort).any?
+        partnership.update!(school: new_school, relationship: true)
       else
-        if new_school.partnerships.unchallenged.where(cohort: partnership.cohort).any?
-          partnership.update!(school: new_school, relationship: true)
-        else
-          partnership.update!(school: new_school)
-        end
+        partnership.update!(school: new_school)
       end
     end
 

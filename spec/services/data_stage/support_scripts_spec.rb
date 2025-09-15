@@ -136,7 +136,7 @@ RSpec.describe DataStage::SupportScripts do
 
       context "when there is a matching school_cohort and programme" do
         let(:new_school_cohort) { create(:seed_school_cohort, :fip, cohort: school_cohort.cohort, school: new_school) }
-        let(:new_partnership) { partnership.dup.tap { |part| part.update!(school: new_school) }}
+        let(:new_partnership) { partnership.dup.tap { |part| part.update!(school: new_school) } }
         let!(:new_induction_programme) { create(:seed_induction_programme, :fip, school_cohort: new_school_cohort, partnership: new_partnership) }
 
         it "moves the participants to the new programme" do
