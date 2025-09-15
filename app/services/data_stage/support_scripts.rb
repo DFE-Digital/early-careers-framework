@@ -50,6 +50,9 @@ module DataStage
           if successor_cohort.blank?
             # we can just move the whole cohort over
             closing_cohort.update!(school: successor_school)
+            closing_school.partnerships.where(cohort: closing_cohort.cohort).find_each do |partnership|
+              partnership.update!(school: successor_school)
+            end
           else
             # we need to be more surgical and move programmes or participants individually
             closing_cohort.induction_programmes.each do |closing_programme|
@@ -112,7 +115,11 @@ module DataStage
       if existing_partnership.present?
         induction_programme.update!(partnership: existing_partnership)
       else
-        partnership.update!(school: new_school)
+        if new_school.partnerships.unchallenged.where(cohort: partnership.cohort).any?
+          partnership.update!(school: new_school, relationship: true)
+        else
+          partnership.update!(school: new_school)
+        end
       end
     end
 

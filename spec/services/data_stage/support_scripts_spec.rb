@@ -126,11 +126,17 @@ RSpec.describe DataStage::SupportScripts do
           service.migrate_school_to_successor(closing_urn: urn, successor_urn: successor_urn)
           expect(school_cohort.reload.school).to eq new_school
         end
+
+        it "moves the partnership to the new school" do
+          service.migrate_school_to_successor(closing_urn: urn, successor_urn: successor_urn)
+          expect(partnership.reload.school).to eq new_school
+          expect(partnership.relationship).to be false
+        end
       end
 
       context "when there is a matching school_cohort and programme" do
         let(:new_school_cohort) { create(:seed_school_cohort, :fip, cohort: school_cohort.cohort, school: new_school) }
-        let(:new_partnership) { create(:partnership, cohort: new_school_cohort.cohort, school: new_school, lead_provider: partnership.lead_provider, delivery_partner: partnership.delivery_partner) }
+        let(:new_partnership) { partnership.dup.tap { |part| part.update!(school: new_school) }}
         let!(:new_induction_programme) { create(:seed_induction_programme, :fip, school_cohort: new_school_cohort, partnership: new_partnership) }
 
         it "moves the participants to the new programme" do
@@ -138,18 +144,30 @@ RSpec.describe DataStage::SupportScripts do
           expect(ect_profile.latest_induction_record.induction_programme).to eq new_induction_programme
           expect(mentor_profile.latest_induction_record.induction_programme).to eq new_induction_programme
         end
+
+        it "doesn't move the original programme" do
+          service.migrate_school_to_successor(closing_urn: urn, successor_urn: successor_urn)
+          expect(induction_programme.school_cohort.school).to eq closing_school
+        end
+
+        it "doesn't move the original partnership" do
+          service.migrate_school_to_successor(closing_urn: urn, successor_urn: successor_urn)
+          expect(partnership.reload.school).to eq closing_school
+        end
       end
 
       context "when there is a matching school_cohort but different programme" do
         let!(:new_school_cohort) { create(:seed_school_cohort, :fip, cohort: school_cohort.cohort, school: new_school) }
         let(:new_partnership) { create(:partnership, cohort: school_cohort.cohort, school: new_school) }
-        let(:new_induction_programme) { create(:seed_induction_programme, :fip, school_cohort: new_school_cohort, partnership: new_partnership) }
+        let!(:new_induction_programme) { create(:seed_induction_programme, :fip, school_cohort: new_school_cohort, partnership: new_partnership) }
 
         it "moves the entire programme the new school" do
           service.migrate_school_to_successor(closing_urn: urn, successor_urn: successor_urn)
           expect(induction_programme.reload.school_cohort.school).to eq new_school
           expect(ect_profile.latest_induction_record.induction_programme).to eq induction_programme
           expect(mentor_profile.latest_induction_record.induction_programme).to eq induction_programme
+          expect(induction_programme.partnership.school).to eq new_school
+          expect(induction_programme.partnership.relationship).to be true
         end
       end
     end
