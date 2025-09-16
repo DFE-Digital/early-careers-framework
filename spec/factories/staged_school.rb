@@ -17,5 +17,15 @@ FactoryBot.define do
       school_status_code { 2 }
       school_status_name { "Closed" }
     end
+
+    trait :proposed_to_close do
+      school_status_code { 3 }
+      school_status_name { "Open, but proposed to close" }
+    end
+
+    trait :proposed_to_open do
+      school_status_code { 4 }
+      school_status_name { "Proposed to open" }
+    end
   end
 end

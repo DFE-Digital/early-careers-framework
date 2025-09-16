@@ -17,6 +17,16 @@ RSpec.describe DataStage::SupportScripts do
       expect(closing_school.reload).to be_closed
     end
 
+    context "when the school does not have a closed status" do
+      let!(:staged_school) { create(:staged_school, urn:, la_code: local_authority.code, administrative_district_code: local_authority_district.code) }
+
+      it "does not close the school" do
+        service.close_school_with_no_successor(urn:)
+
+        expect(closing_school.reload).to be_open
+      end
+    end
+
     context "when there is an induction coordinator" do
       let!(:induction_coordinator_profile) { create(:induction_coordinator_profile, schools: [closing_school]) }
 
@@ -63,12 +73,32 @@ RSpec.describe DataStage::SupportScripts do
   describe "#migrate_school_to_successor" do
     let(:successor_urn) { "987654" }
     let!(:new_staged_school) { create(:staged_school, urn: successor_urn, la_code: local_authority.code, administrative_district_code: local_authority_district.code) }
-    let!(:new_school) { create(:school, urn: successor_urn, name: new_staged_school.name, school_status_code: 1, school_status_name: "open") }
+    let!(:new_school) { create(:school, urn: successor_urn, name: new_staged_school.name, school_status_code: new_staged_school.school_status_code, school_status_name: new_staged_school.school_status_name) }
 
     it "closes the live school" do
       service.migrate_school_to_successor(closing_urn: urn, successor_urn: successor_urn)
 
       expect(closing_school.reload).to be_closed
+    end
+
+    context "when the closing school does not have a closed status" do
+      let!(:staged_school) { create(:staged_school, urn:, la_code: local_authority.code, administrative_district_code: local_authority_district.code) }
+
+      it "does not close the school" do
+        service.migrate_school_to_successor(closing_urn: urn, successor_urn: successor_urn)
+
+        expect(closing_school.reload).to be_open
+      end
+    end
+
+    context "when the successor school does not have an open status" do
+      let!(:new_staged_school) { create(:staged_school, :proposed_to_open, urn: successor_urn, la_code: local_authority.code, administrative_district_code: local_authority_district.code) }
+
+      it "does not migrate or close the school" do
+        service.migrate_school_to_successor(closing_urn: urn, successor_urn: successor_urn)
+
+        expect(closing_school.reload).to be_open
+      end
     end
 
     context "when there is an induction coordinator but not on the new school" do

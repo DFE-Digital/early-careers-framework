@@ -10,6 +10,10 @@ module DataStage
 
     def close_school_with_no_successor(urn:, leaving_date: Time.zone.now)
       staged_school = DataStage::School.find_by!(urn:)
+
+      # check that the school is actually closed
+      logger.info("School #{urn} is not closed") and return unless staged_school.closed?
+
       live_school = staged_school.counterpart
 
       ActiveRecord::Base.transaction do
@@ -37,8 +41,15 @@ module DataStage
 
     def migrate_school_to_successor(closing_urn:, successor_urn:)
       closing_staged_school = DataStage::School.find_by!(urn: closing_urn)
-      closing_school = closing_staged_school.counterpart
+
+      # check that the closing school is actually closed
+      logger.info("School #{closing_urn} is not closed") and return unless closing_staged_school.closed?
+
       successor_staged_school = DataStage::School.find_by!(urn: successor_urn)
+      # check that the successor school is actually open
+      logger.info("School #{successor_urn} is not open!") and return unless successor_staged_school.open?
+
+      closing_school = closing_staged_school.counterpart
       successor_school = successor_staged_school.counterpart
 
       ActiveRecord::Base.transaction do
