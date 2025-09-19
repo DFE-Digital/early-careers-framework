@@ -30,6 +30,8 @@ namespace :lead_providers do
         ValidTestDataGenerators::ECFLeadProviderPopulater.call(name: lp.name, cohort: c, total_schools: args[:total_schools]&.to_i || 5, participants_per_school: 50)
         ValidTestDataGenerators::CompletedMentorGenerator.call(name: lp.name, cohort: c, total_completed_mentors: args[:total_completed_mentors]&.to_i || 30)
         ValidTestDataGenerators::MentorECTGenerator.call(name: lp.name, cohort: c, number: 20)
+        ValidTestDataGenerators::UnfundedMentorGenerator.call(name: lp.name, cohort: c, number: 33) if c.start_year.in?(2023..2025)
+        ValidTestDataGenerators::TransferParticipants.call(name: lp.name, cohort: c, number: 10) if c.start_year.in?(2023..2025)
       end
     end
   end
