@@ -74,6 +74,6 @@ private
   end
 
   def update_analytics
-    Analytics::UpsertECFPartnershipJob.perform_later(partnership_id: id) if transaction_changed_attributes.any?
+    # Analytics::UpsertECFPartnershipJob.perform_later(partnership_id: id) if transaction_changed_attributes.any?
   end
 end

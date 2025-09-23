@@ -119,6 +119,6 @@ class SchoolCohort < ApplicationRecord
 private
 
   def update_analytics
-    Analytics::UpsertECFSchoolCohortJob.perform_later(school_cohort_id: id) if transaction_changed_attributes.any?
+    # Analytics::UpsertECFSchoolCohortJob.perform_later(school_cohort_id: id) if transaction_changed_attributes.any?
   end
 end

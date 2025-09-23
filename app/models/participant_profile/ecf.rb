@@ -191,7 +191,7 @@ class ParticipantProfile::ECF < ParticipantProfile
 private
 
   def update_analytics
-    Analytics::UpsertECFParticipantProfileJob.perform_later(participant_profile_id: id) if transaction_changed_attributes.any?
+    # Analytics::UpsertECFParticipantProfileJob.perform_later(participant_profile_id: id) if transaction_changed_attributes.any?
   end
 
   def sync_status_with_induction_record
