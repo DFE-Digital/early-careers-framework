@@ -264,6 +264,6 @@ private
   end
 
   def update_analytics
-    Analytics::UpsertECFInductionJob.perform_later(induction_record_id: id) if transaction_changed_attributes.any?
+    # Analytics::UpsertECFInductionJob.perform_later(induction_record_id: id) if transaction_changed_attributes.any?
   end
 end
