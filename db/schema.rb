@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
+ActiveRecord::Schema[7.1].define(version: 2025_09_24_101324) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "fuzzystrmatch"
@@ -1169,6 +1169,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["discarded_at"], name: "index_users_on_discarded_at"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["get_an_identity_id"], name: "index_users_on_get_an_identity_id", unique: true
+    t.index ["updated_at"], name: "index_users_on_updated_at"
   end
 
   create_table "validation_errors", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
