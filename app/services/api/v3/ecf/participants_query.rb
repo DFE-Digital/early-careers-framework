@@ -16,18 +16,52 @@ module Api
         end
 
         def participants_for_pagination
+          cohort_ids = cohorts.map(&:id)
+
           scope = User
                     .select("users.id", "users.created_at", "users.updated_at")
-                    .joins(participant_profiles: { induction_records: :schedule })
-                    .joins("JOIN (#{latest_induction_records_join.to_sql}) AS latest_induction_records_join ON latest_induction_records_join.latest_id = induction_records.id")
+                    .joins(participant_profiles: :schedule)
+                    .joins(
+                      ActiveRecord::Base.send(
+                        :sanitize_sql_array,
+                        [<<~SQL, lead_provider.id],
+                          LEFT JOIN LATERAL (
+                            SELECT induction_records.id AS latest_id
+                            FROM induction_records
+                            INNER JOIN participant_profiles
+                              ON induction_records.participant_profile_id = participant_profiles.id
+                            INNER JOIN teacher_profiles
+                              ON participant_profiles.teacher_profile_id = teacher_profiles.id
+                            INNER JOIN induction_programmes
+                              ON induction_records.induction_programme_id = induction_programmes.id
+                            INNER JOIN partnerships
+                              ON induction_programmes.partnership_id = partnerships.id
+                            WHERE partnerships.lead_provider_id = ?
+                              AND partnerships.challenged_at IS NULL
+                              AND partnerships.challenge_reason IS NULL
+                              AND teacher_profiles.user_id = users.id
+                            ORDER BY
+                              CASE WHEN induction_records.end_date IS NULL THEN 1 ELSE 2 END,
+                              induction_records.start_date DESC,
+                              induction_records.created_at DESC
+                            LIMIT 1
+                          ) latest_induction_record ON true
+                        SQL
+                      ),
+                    )
+                    .joins("INNER JOIN induction_records ON induction_records.id = latest_induction_record.latest_id")
+                    .joins("INNER JOIN schedules ON schedules.id = induction_records.schedule_id")
                     .left_joins(:participant_id_changes)
                     .order(sort_order(default: :created_at, model: User))
                     .distinct
+
+          # Filters
           scope = scope.where(users: { updated_at: updated_since.. }) if updated_since_filter.present?
           scope = scope.where(induction_records: { training_status: }) if training_status.present?
           scope = scope.where(participant_id_changes: { from_participant_id: }) if from_participant_id.present?
+          scope = scope.where("schedules.cohort_id IN (?)", cohort_ids) if cohort_ids.any?
 
-          scope.where(induction_records: { schedules: { cohort_id: cohorts.map(&:id) } })
+          scope
         end
 
         def participants_from(paginated_join)
