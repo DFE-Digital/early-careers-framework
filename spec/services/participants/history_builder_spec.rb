@@ -169,5 +169,34 @@ RSpec.describe Participants::HistoryBuilder, :with_support_for_ect_examples do
 
       expect(reporters).to include console_user_name
     end
+
+    it "users the lead provider as the user when a provider has voided a declaration" do
+      voided_declaration = create(:ect_participant_declaration, :voided)
+
+      event_list = described_class.from_participant_profile(voided_declaration.participant_profile).events
+      voided_event = event_list.select { |event| event.value == "voided" }.sole
+
+      expect(voided_event.user).to eq(voided_declaration.cpd_lead_provider.name)
+    end
+
+    it "users the voided_by_user as the user when a user has voided a declaration" do
+      voided_by_user = create(:user, full_name: "User Name")
+      voided_declaration = create(:ect_participant_declaration, :voided, voided_by_user:, voided_at: Time.zone.now)
+
+      event_list = described_class.from_participant_profile(voided_declaration.participant_profile).events
+      voided_event = event_list.select { |event| event.value == "voided" }.sole
+
+      expect(voided_event.user).to eq(voided_by_user)
+    end
+
+    it "users the voided_by_user as the user when a user has declaration awaiting clawback" do
+      voided_by_user = create(:user, full_name: "User Name")
+      declaration_awaiting_clawback = create(:ect_participant_declaration, :awaiting_clawback, voided_by_user:, voided_at: Time.zone.now)
+
+      event_list = described_class.from_participant_profile(declaration_awaiting_clawback.participant_profile).events
+      voided_event = event_list.select { |event| event.value == "awaiting_clawback" }.sole
+
+      expect(voided_event.user).to eq(voided_by_user)
+    end
   end
 end

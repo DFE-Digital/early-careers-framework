@@ -124,7 +124,10 @@ private
 
       declaration.declaration_states.each do |declaration_state|
         type = "#{declaration.declaration_type.capitalize}Declaration"
-        actor = declaration.cpd_lead_provider.name
+
+        actor = declaration.voided_by_user if declaration.voided? || declaration.awaiting_clawback?
+        actor ||= declaration.cpd_lead_provider.name
+
         value = declaration_state.state
 
         @events.push ParticipantEvent.new(declaration.id, "update", declaration_state.created_at, type, "state", actor, value) if value.present?
