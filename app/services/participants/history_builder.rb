@@ -125,7 +125,7 @@ private
       declaration.declaration_states.each do |declaration_state|
         type = "#{declaration.declaration_type.capitalize}Declaration"
 
-        actor = declaration.voided_by_user if declaration.voided? || declaration.awaiting_clawback?
+        actor = declaration.voided_by_user if declaration_state.voided? || declaration_state.awaiting_clawback?
         actor ||= declaration.cpd_lead_provider.name
 
         value = declaration_state.state
