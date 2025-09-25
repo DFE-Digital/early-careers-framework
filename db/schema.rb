@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
+ActiveRecord::Schema[7.1].define(version: 2025_09_24_142138) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "fuzzystrmatch"
@@ -18,7 +18,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
   enable_extension "plpgsql"
   enable_extension "uuid-ossp"
 
-  create_table "additional_school_emails", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "additional_school_emails", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "school_id", null: false
     t.string "email_address", null: false
     t.datetime "created_at", null: false
@@ -27,7 +27,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["school_id"], name: "index_additional_school_emails_on_school_id"
   end
 
-  create_table "admin_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "admin_profiles", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -164,14 +164,14 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["urn"], name: "index_analytics_schools_on_urn", unique: true
   end
 
-  create_table "api_request_audits", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "api_request_audits", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.string "path"
     t.jsonb "body"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "api_requests", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "api_requests", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.string "request_path"
     t.integer "status_code"
     t.jsonb "request_headers"
@@ -186,7 +186,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["cpd_lead_provider_id"], name: "index_api_requests_on_cpd_lead_provider_id"
   end
 
-  create_table "api_tokens", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "api_tokens", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "lead_provider_id"
     t.string "hashed_token", null: false
     t.datetime "last_used_at", precision: nil
@@ -200,7 +200,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["lead_provider_id"], name: "index_api_tokens_on_lead_provider_id"
   end
 
-  create_table "appropriate_bodies", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "appropriate_bodies", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.string "name", null: false
     t.string "body_type", null: false
     t.datetime "created_at", null: false
@@ -212,7 +212,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["body_type", "name"], name: "index_appropriate_bodies_on_body_type_and_name", unique: true
   end
 
-  create_table "appropriate_body_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "appropriate_body_profiles", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "user_id", null: false
     t.uuid "appropriate_body_id", null: false
     t.datetime "created_at", null: false
@@ -236,7 +236,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["reason"], name: "index_archive_relics_on_reason"
   end
 
-  create_table "call_off_contracts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "call_off_contracts", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.string "version", default: "0.0.1", null: false
     t.jsonb "raw"
     t.decimal "uplift_target"
@@ -245,7 +245,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.decimal "set_up_fee"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.uuid "lead_provider_id", default: -> { "gen_random_uuid()" }, null: false
+    t.uuid "lead_provider_id", default: -> { "public.gen_random_uuid()" }, null: false
     t.integer "revised_target"
     t.uuid "cohort_id", null: false
     t.decimal "monthly_service_fee"
@@ -253,7 +253,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["lead_provider_id"], name: "index_call_off_contracts_on_lead_provider_id"
   end
 
-  create_table "cohorts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "cohorts", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "start_year", limit: 2, null: false
@@ -266,7 +266,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["start_year"], name: "index_cohorts_on_start_year", unique: true
   end
 
-  create_table "cohorts_lead_providers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "cohorts_lead_providers", force: :cascade do |t|
     t.uuid "lead_provider_id", null: false
     t.uuid "cohort_id", null: false
     t.datetime "created_at", null: false
@@ -288,19 +288,19 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["participant_profile_id"], name: "continue_training_error_participant_profile_id"
   end
 
-  create_table "core_induction_programmes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "core_induction_programmes", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "cpd_lead_providers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "cpd_lead_providers", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.text "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "data_stage_school_changes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "data_stage_school_changes", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "data_stage_school_id", null: false
     t.json "attribute_changes"
     t.string "status", default: "changed", null: false
@@ -311,7 +311,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["status"], name: "index_data_stage_school_changes_on_status"
   end
 
-  create_table "data_stage_school_links", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "data_stage_school_links", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "data_stage_school_id", null: false
     t.string "link_urn", null: false
     t.string "link_type", null: false
@@ -321,7 +321,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["data_stage_school_id"], name: "index_data_stage_school_links_on_data_stage_school_id"
   end
 
-  create_table "data_stage_schools", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "data_stage_schools", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.string "urn", null: false
     t.string "name", null: false
     t.string "ukprn"
@@ -347,7 +347,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["urn"], name: "index_data_stage_schools_on_urn", unique: true
   end
 
-  create_table "declaration_states", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "declaration_states", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "participant_declaration_id", null: false
     t.string "state", default: "submitted", null: false
     t.datetime "created_at", null: false
@@ -356,7 +356,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["participant_declaration_id"], name: "index_declaration_states_on_participant_declaration_id"
   end
 
-  create_table "deleted_duplicates", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "deleted_duplicates", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.jsonb "data"
     t.uuid "primary_participant_profile_id", null: false
     t.datetime "created_at", null: false
@@ -364,7 +364,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["primary_participant_profile_id"], name: "index_deleted_duplicates_on_primary_participant_profile_id"
   end
 
-  create_table "delivery_partner_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "delivery_partner_profiles", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "user_id", null: false
     t.uuid "delivery_partner_id", null: false
     t.datetime "created_at", null: false
@@ -373,7 +373,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["user_id"], name: "index_delivery_partner_profiles_on_user_id"
   end
 
-  create_table "delivery_partners", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "delivery_partners", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "name", null: false
@@ -381,7 +381,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["discarded_at"], name: "index_delivery_partners_on_discarded_at"
   end
 
-  create_table "district_sparsities", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "district_sparsities", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "local_authority_district_id", null: false
     t.integer "start_year", limit: 2, null: false
     t.integer "end_year", limit: 2
@@ -390,7 +390,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["local_authority_district_id"], name: "index_district_sparsities_on_local_authority_district_id"
   end
 
-  create_table "ecf_ineligible_participants", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "ecf_ineligible_participants", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.string "trn"
     t.string "reason", null: false
     t.datetime "created_at", null: false
@@ -398,7 +398,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["trn"], name: "index_ecf_ineligible_participants_on_trn", unique: true
   end
 
-  create_table "ecf_participant_eligibilities", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "ecf_participant_eligibilities", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "participant_profile_id", null: false
     t.boolean "qts"
     t.boolean "active_flags"
@@ -415,7 +415,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["participant_profile_id"], name: "index_ecf_participant_eligibilities_on_participant_profile_id", unique: true
   end
 
-  create_table "ecf_participant_validation_data", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "ecf_participant_validation_data", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "participant_profile_id", null: false
     t.string "full_name"
     t.date "date_of_birth"
@@ -456,7 +456,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["urn"], name: "index_ecf_schools_on_urn", unique: true
   end
 
-  create_table "email_associations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "email_associations", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "email_id", null: false
     t.string "object_type", null: false
     t.uuid "object_id", null: false
@@ -476,7 +476,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.integer "emails_sent_count"
   end
 
-  create_table "emails", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "emails", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.string "from"
     t.string "to", array: true
     t.uuid "template_id"
@@ -490,7 +490,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.string "tags", default: [], null: false, array: true
   end
 
-  create_table "event_logs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "event_logs", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.string "owner_type", null: false
     t.uuid "owner_id", null: false
     t.string "event", null: false
@@ -500,7 +500,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["owner_type", "owner_id"], name: "index_event_logs_on_owner"
   end
 
-  create_table "feature_selected_objects", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "feature_selected_objects", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.string "object_type", null: false
     t.uuid "object_id", null: false
     t.uuid "feature_id", null: false
@@ -511,7 +511,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["object_type", "object_id"], name: "index_feature_selected_objects_on_object"
   end
 
-  create_table "features", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "features", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.string "name", null: false
     t.boolean "active", default: false, null: false
     t.datetime "created_at", null: false
@@ -519,7 +519,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["name"], name: "index_features_on_name", unique: true
   end
 
-  create_table "finance_adjustments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "finance_adjustments", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "statement_id", null: false
     t.string "payment_type", null: false
     t.decimal "amount", default: "0.0", null: false
@@ -528,14 +528,14 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["statement_id"], name: "index_finance_adjustments_on_statement_id"
   end
 
-  create_table "finance_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "finance_profiles", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_finance_profiles_on_user_id"
   end
 
-  create_table "friendly_id_slugs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "friendly_id_slugs", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.string "slug", null: false
     t.integer "sluggable_id", null: false
     t.string "sluggable_type", limit: 50
@@ -546,7 +546,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["sluggable_type", "sluggable_id"], name: "index_friendly_id_slugs_on_sluggable_type_and_sluggable_id"
   end
 
-  create_table "induction_coordinator_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "induction_coordinator_profiles", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -556,7 +556,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["user_id"], name: "index_induction_coordinator_profiles_on_user_id"
   end
 
-  create_table "induction_coordinator_profiles_schools", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "induction_coordinator_profiles_schools", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "induction_coordinator_profile_id", null: false
     t.uuid "school_id", null: false
     t.datetime "created_at", null: false
@@ -565,7 +565,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["school_id"], name: "index_icp_schools_on_schools"
   end
 
-  create_table "induction_programmes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "induction_programmes", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "school_cohort_id", null: false
     t.uuid "partnership_id"
     t.uuid "core_induction_programme_id"
@@ -578,7 +578,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["school_cohort_id"], name: "index_induction_programmes_on_school_cohort_id"
   end
 
-  create_table "induction_records", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "induction_records", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "induction_programme_id", null: false
     t.uuid "participant_profile_id", null: false
     t.uuid "schedule_id", null: false
@@ -597,13 +597,14 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["end_date"], name: "index_induction_records_on_end_date"
     t.index ["induction_programme_id"], name: "index_induction_records_on_induction_programme_id"
     t.index ["mentor_profile_id"], name: "index_induction_records_on_mentor_profile_id"
+    t.index ["participant_profile_id", "end_date", "start_date"], name: "idx_on_participant_profile_id_end_date_start_date_37757126c2", order: { start_date: :desc }
     t.index ["participant_profile_id"], name: "index_induction_records_on_participant_profile_id"
     t.index ["preferred_identity_id"], name: "index_induction_records_on_preferred_identity_id"
     t.index ["schedule_id"], name: "index_induction_records_on_schedule_id"
     t.index ["start_date"], name: "index_induction_records_on_start_date"
   end
 
-  create_table "lead_provider_cips", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "lead_provider_cips", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "lead_provider_id", null: false
     t.uuid "cohort_id", null: false
     t.uuid "core_induction_programme_id", null: false
@@ -614,7 +615,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["lead_provider_id"], name: "index_lead_provider_cips_on_lead_provider_id"
   end
 
-  create_table "lead_provider_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "lead_provider_profiles", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "user_id", null: false
     t.uuid "lead_provider_id", null: false
     t.datetime "created_at", null: false
@@ -625,7 +626,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["user_id"], name: "index_lead_provider_profiles_on_user_id"
   end
 
-  create_table "lead_providers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "lead_providers", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "name", null: false
@@ -634,7 +635,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["cpd_lead_provider_id"], name: "index_lead_providers_on_cpd_lead_provider_id"
   end
 
-  create_table "local_authorities", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "local_authorities", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "code"
@@ -642,7 +643,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["code"], name: "index_local_authorities_on_code", unique: true
   end
 
-  create_table "local_authority_districts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "local_authority_districts", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "code"
@@ -662,7 +663,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["lead_provider_id"], name: "index_mentor_call_off_contracts_on_lead_provider_id"
   end
 
-  create_table "milestones", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "milestones", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.text "name", null: false
     t.date "milestone_date"
     t.date "payment_date", null: false
@@ -674,7 +675,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["schedule_id"], name: "index_milestones_on_schedule_id"
   end
 
-  create_table "networks", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "networks", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "name", null: false
@@ -685,7 +686,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.string "secondary_contact_email"
   end
 
-  create_table "nomination_emails", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "nomination_emails", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.string "token", null: false
     t.string "notify_status"
     t.string "sent_to", null: false
@@ -712,7 +713,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.string "dqt_induction_status"
   end
 
-  create_table "participant_bands", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "participant_bands", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "call_off_contract_id", null: false
     t.integer "min"
     t.integer "max"
@@ -724,7 +725,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["call_off_contract_id"], name: "index_participant_bands_on_call_off_contract_id"
   end
 
-  create_table "participant_declaration_attempts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "participant_declaration_attempts", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.string "declaration_type"
     t.datetime "declaration_date", precision: nil
     t.uuid "user_id"
@@ -737,7 +738,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["participant_declaration_id"], name: "index_declaration_attempts_on_declarations"
   end
 
-  create_table "participant_declarations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "participant_declarations", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.string "declaration_type"
     t.datetime "declaration_date", precision: nil
     t.datetime "created_at", null: false
@@ -781,7 +782,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["user_id"], name: "index_participant_id_changes_on_user_id"
   end
 
-  create_table "participant_identities", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "participant_identities", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "user_id", null: false
     t.citext "email", null: false
     t.uuid "external_identifier", null: false
@@ -802,7 +803,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["participant_profile_id"], name: "idx_on_participant_profile_id_b55d68e537", unique: true
   end
 
-  create_table "participant_profile_schedules", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "participant_profile_schedules", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "participant_profile_id", null: false
     t.uuid "schedule_id", null: false
     t.datetime "created_at", null: false
@@ -811,7 +812,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["schedule_id"], name: "index_participant_profile_schedules_on_schedule_id"
   end
 
-  create_table "participant_profile_states", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "participant_profile_states", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "participant_profile_id", null: false
     t.text "state", default: "active"
     t.text "reason"
@@ -824,7 +825,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["participant_profile_id"], name: "index_participant_profile_states_on_participant_profile_id"
   end
 
-  create_table "participant_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "participant_profiles", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.string "type", null: false
     t.uuid "school_id"
     t.uuid "core_induction_programme_id"
@@ -860,7 +861,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["teacher_profile_id"], name: "index_participant_profiles_on_teacher_profile_id"
   end
 
-  create_table "partnership_csv_uploads", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "partnership_csv_uploads", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "lead_provider_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -872,7 +873,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["lead_provider_id"], name: "index_partnership_csv_uploads_on_lead_provider_id"
   end
 
-  create_table "partnership_notification_emails", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "partnership_notification_emails", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.string "token", null: false
     t.string "sent_to", null: false
     t.string "email_type", null: false
@@ -887,7 +888,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["token"], name: "index_partnership_notification_emails_on_token", unique: true
   end
 
-  create_table "partnerships", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "partnerships", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.uuid "school_id", null: false
@@ -903,12 +904,13 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["cohort_id"], name: "index_partnerships_on_cohort_id"
     t.index ["delivery_partner_id"], name: "index_partnerships_on_delivery_partner_id"
     t.index ["lead_provider_id"], name: "index_partnerships_on_lead_provider_id"
+    t.index ["lead_provider_id"], name: "index_partnerships_on_lead_provider_id_where_challenged_is_null", where: "((challenged_at IS NULL) AND (challenge_reason IS NULL))"
     t.index ["pending"], name: "index_partnerships_on_pending"
     t.index ["school_id", "lead_provider_id", "delivery_partner_id", "cohort_id"], name: "unique_partnerships", unique: true
     t.index ["school_id"], name: "index_partnerships_on_school_id"
   end
 
-  create_table "privacy_policies", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "privacy_policies", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.integer "major_version", null: false
     t.integer "minor_version", null: false
     t.text "html", null: false
@@ -917,7 +919,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["major_version", "minor_version"], name: "index_privacy_policies_on_major_version_and_minor_version", unique: true
   end
 
-  create_table "privacy_policy_acceptances", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "privacy_policy_acceptances", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "privacy_policy_id"
     t.uuid "user_id"
     t.datetime "created_at", null: false
@@ -925,7 +927,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["privacy_policy_id", "user_id"], name: "single-acceptance", unique: true
   end
 
-  create_table "profile_validation_decisions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "profile_validation_decisions", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "participant_profile_id", null: false
     t.string "validation_step", null: false
     t.boolean "approved"
@@ -936,7 +938,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["participant_profile_id"], name: "index_profile_validation_decisions_on_participant_profile_id"
   end
 
-  create_table "provider_relationships", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "provider_relationships", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "lead_provider_id", null: false
     t.uuid "delivery_partner_id", null: false
     t.uuid "cohort_id", null: false
@@ -949,7 +951,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["lead_provider_id"], name: "index_provider_relationships_on_lead_provider_id"
   end
 
-  create_table "pupil_premiums", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "pupil_premiums", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "school_id", null: false
     t.integer "start_year", limit: 2, null: false
     t.datetime "created_at", null: false
@@ -959,7 +961,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["school_id"], name: "index_pupil_premiums_on_school_id"
   end
 
-  create_table "schedule_milestones", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "schedule_milestones", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.string "name", null: false
     t.uuid "schedule_id", null: false
     t.uuid "milestone_id", null: false
@@ -970,7 +972,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["schedule_id"], name: "index_schedule_milestones_on_schedule_id"
   end
 
-  create_table "schedules", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "schedules", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.text "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -981,7 +983,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["cohort_id"], name: "index_schedules_on_cohort_id"
   end
 
-  create_table "school_cohorts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "school_cohorts", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.string "induction_programme_choice", null: false
     t.uuid "school_id", null: false
     t.uuid "cohort_id", null: false
@@ -1002,7 +1004,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["updated_at"], name: "index_school_cohorts_on_updated_at"
   end
 
-  create_table "school_links", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "school_links", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "school_id", null: false
     t.string "link_urn", null: false
     t.string "link_type", null: false
@@ -1012,7 +1014,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["school_id"], name: "index_school_links_on_school_id"
   end
 
-  create_table "school_local_authorities", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "school_local_authorities", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "school_id", null: false
     t.uuid "local_authority_id", null: false
     t.integer "start_year", limit: 2, null: false
@@ -1023,7 +1025,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["school_id"], name: "index_school_local_authorities_on_school_id"
   end
 
-  create_table "school_local_authority_districts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "school_local_authority_districts", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "school_id", null: false
     t.uuid "local_authority_district_id", null: false
     t.integer "start_year", limit: 2, null: false
@@ -1034,7 +1036,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["school_id"], name: "index_school_local_authority_districts_on_school_id"
   end
 
-  create_table "school_mentors", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "school_mentors", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "participant_profile_id", null: false
     t.uuid "school_id", null: false
     t.uuid "preferred_identity_id", null: false
@@ -1047,7 +1049,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["school_id"], name: "index_school_mentors_on_school_id"
   end
 
-  create_table "schools", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "schools", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "urn", null: false
@@ -1080,7 +1082,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["urn"], name: "index_schools_on_urn", unique: true
   end
 
-  create_table "sessions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "sessions", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.string "session_id", null: false
     t.jsonb "data"
     t.datetime "created_at", null: false
@@ -1089,7 +1091,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["updated_at"], name: "index_sessions_on_updated_at"
   end
 
-  create_table "statement_line_items", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "statement_line_items", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "statement_id", null: false
     t.uuid "participant_declaration_id", null: false
     t.text "state", null: false
@@ -1099,7 +1101,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["statement_id", "participant_declaration_id", "state"], name: "unique_statement_declaration_state", unique: true
   end
 
-  create_table "statements", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "statements", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.text "type", null: false
     t.text "name", null: false
     t.uuid "cpd_lead_provider_id", null: false
@@ -1109,8 +1111,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.datetime "updated_at", null: false
     t.decimal "original_value"
     t.uuid "cohort_id", null: false
-    t.boolean "output_fee", default: true
     t.string "contract_version", default: "0.0.1"
+    t.boolean "output_fee", default: true
     t.decimal "reconcile_amount", default: "0.0", null: false
     t.datetime "marked_as_paid_at"
     t.string "mentor_contract_version", default: "0.0.1"
@@ -1131,7 +1133,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["user_id"], name: "index_support_queries_on_user_id"
   end
 
-  create_table "sync_dqt_induction_start_date_errors", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "sync_dqt_induction_start_date_errors", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "participant_profile_id", null: false
     t.text "message"
     t.datetime "created_at", null: false
@@ -1139,7 +1141,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["participant_profile_id"], name: "dqt_sync_participant_profile_id"
   end
 
-  create_table "teacher_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "teacher_profiles", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.string "trn"
     t.uuid "school_id"
     t.uuid "user_id", null: false
@@ -1149,7 +1151,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["user_id"], name: "index_teacher_profiles_on_user_id", unique: true
   end
 
-  create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "users", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.string "full_name", null: false
     t.citext "email", default: "", null: false
     t.string "login_token"
@@ -1181,14 +1183,14 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
     t.index ["form_object"], name: "index_validation_errors_on_form_object"
   end
 
-  create_table "versions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "versions", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.string "item_type", null: false
     t.string "event", null: false
     t.string "whodunnit"
     t.json "object"
     t.json "object_changes"
     t.datetime "created_at", precision: nil
-    t.uuid "item_id", default: -> { "gen_random_uuid()" }, null: false
+    t.uuid "item_id", default: -> { "public.gen_random_uuid()" }, null: false
     t.string "reason"
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
   end
@@ -1197,6 +1199,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
   add_foreign_key "admin_profiles", "users"
   add_foreign_key "api_requests", "cpd_lead_providers"
   add_foreign_key "api_tokens", "cpd_lead_providers"
+  add_foreign_key "api_tokens", "lead_providers", on_delete: :cascade
   add_foreign_key "api_tokens", "lead_providers", on_delete: :cascade
   add_foreign_key "appropriate_body_profiles", "appropriate_bodies"
   add_foreign_key "appropriate_body_profiles", "users"
@@ -1250,12 +1253,12 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
   add_foreign_key "participant_profile_states", "participant_profiles"
   add_foreign_key "participant_profiles", "cohorts"
   add_foreign_key "participant_profiles", "core_induction_programmes"
-  add_foreign_key "participant_profiles", "participant_identities"
+  add_foreign_key "participant_profiles", "participant_identities", validate: false
   add_foreign_key "participant_profiles", "participant_profiles", column: "mentor_profile_id"
   add_foreign_key "participant_profiles", "schedules"
   add_foreign_key "participant_profiles", "school_cohorts"
   add_foreign_key "participant_profiles", "schools"
-  add_foreign_key "participant_profiles", "teacher_profiles"
+  add_foreign_key "participant_profiles", "teacher_profiles", validate: false
   add_foreign_key "partnership_notification_emails", "partnerships"
   add_foreign_key "partnerships", "cohorts"
   add_foreign_key "partnerships", "delivery_partners"
@@ -1271,7 +1274,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_28_003324) do
   add_foreign_key "schedules", "cohorts"
   add_foreign_key "school_cohorts", "cohorts"
   add_foreign_key "school_cohorts", "core_induction_programmes"
-  add_foreign_key "school_cohorts", "induction_programmes", column: "default_induction_programme_id"
+  add_foreign_key "school_cohorts", "induction_programmes", column: "default_induction_programme_id", validate: false
   add_foreign_key "school_cohorts", "schools"
   add_foreign_key "school_local_authorities", "local_authorities"
   add_foreign_key "school_local_authorities", "schools"
