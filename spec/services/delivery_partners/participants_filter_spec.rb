@@ -150,11 +150,11 @@ RSpec.describe DeliveryPartners::ParticipantsFilter do
   end
 
   describe "#academic_year_options" do
-    before { expect(Cohort.where(start_year: excluded_start_year)).to be_exists }
+    before { expect(Cohort.where("start_year >= ?", excluded_start_year)).to be_exists }
 
     subject(:options) { instance.academic_year_options }
 
-    let(:expected_values) { [""] + Cohort.order(:start_year).pluck(:start_year).excluding(excluded_start_year) }
+    let(:expected_values) { [""] + Cohort.order(:start_year).pluck(:start_year).excluding(Cohort.where("start_year >= ?", excluded_start_year).pluck(:start_year)) }
 
     it { expect(options.map(&:id)).to eq(expected_values) }
     it { expect(options.map(&:name)).to eq(expected_values) }
