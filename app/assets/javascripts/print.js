@@ -37,12 +37,14 @@ const restoreSummaryDetails = () => {
   });
 };
 
-window.formattedPrint = (target) => {
-  formatSummaryDetails();
-  setPageTitle(target);
+document.querySelectorAll(".print-link").forEach((link) => {
+  link.onclick = () => {
+    formatSummaryDetails();
+    setPageTitle(link);
 
-  window.print();
+    window.print();
 
-  restorePageTitle(target);
-  restoreSummaryDetails();
-};
+    restorePageTitle(link);
+    restoreSummaryDetails();
+  };
+});

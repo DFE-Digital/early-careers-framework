@@ -153,7 +153,7 @@ RSpec.describe ApplicationHelper, type: :helper do
     it "renders a HTML link to print/save via the built-in browser functionality" do
       is_expected.to eq(
         <<~HTML.chomp,
-          <a class="govuk-link" onclick="window.formattedPrint(this)" data-filename="My Document" href="javascript:void(0)">Save as PDF</a>
+          <a class="govuk-link print-link" data-filename="My Document" href="javascript:void(0)">Save as PDF</a>
         HTML
       )
     end
