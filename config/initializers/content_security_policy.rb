@@ -12,10 +12,10 @@ Rails.application.configure do
   self_base          = %i[self]
   data               = %i[data]
   blob               = %i[blob]
-  gtm_src            = %w[*.googletagmanager.com]
+  gtm_src            = %w[*.googletagmanager.com www.googletagmanager.com]
   ga_connect_src     = %w[*.google-analytics.com]
   zd_script_src      = %w[*.zdassets.com]
-  gfonts_src         = %w[*.fonts.gstatic.com]
+  gfonts_src         = %w[fonts.gstatic.com *.fonts.gstatic.com]
   sentry_connect_src = %w[*.ingest.sentry.io]
 
   config.content_security_policy do |policy|
@@ -28,6 +28,7 @@ Rails.application.configure do
     policy.connect_src(*self_base.concat(ga_connect_src, zd_script_src, sentry_connect_src))
     policy.frame_src(*self_base.concat(gtm_src))
     policy.style_src_elem(*self_base.concat(["'unsafe-inline'"]))
+    policy.style_src_attr(*self_base.concat(["'unsafe-inline'"]))
 
     # The report-uri seems to make the feature specs flakey when ran in
     # CI. I'm not sure why - disabling for now.

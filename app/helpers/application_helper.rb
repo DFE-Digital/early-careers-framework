@@ -94,7 +94,7 @@ module ApplicationHelper
   end
 
   def print_link(title, filename:)
-    govuk_link_to title, "javascript:void(0)", onclick: "window.formattedPrint(this)", data: { filename: }
+    govuk_link_to title, "javascript:void(0)", class: "print-link", data: { filename: }
   end
 
 private
