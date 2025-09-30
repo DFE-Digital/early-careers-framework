@@ -47,9 +47,13 @@ RSpec.describe Induction::AmendCohortAfterEligibilityChecks, mid_cohort: true do
       let(:target_cohort_start_year) { Cohort.active_registration_cohort.start_year }
 
       before do
-        participant_profile.schedule.cohort.update!(payments_frozen_at: Date.yesterday)
-        allow(Induction::AmendParticipantCohort).to receive(:new).and_return(double(save: true))
-        subject.call
+        inside_auto_assignment_window(cohort: Cohort.find_by(start_year: Cohort::DESTINATION_START_YEAR_FROM_A_FROZEN_COHORT)) do
+          source_cohort_start_year
+          target_cohort_start_year
+          participant_profile.schedule.cohort.update!(payments_frozen_at: Date.yesterday)
+          allow(Induction::AmendParticipantCohort).to receive(:new).and_return(double(save: true))
+          subject.call
+        end
       end
 
       it "try and place them in the currently active registration cohort" do

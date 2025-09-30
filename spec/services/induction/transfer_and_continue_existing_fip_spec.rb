@@ -149,7 +149,7 @@ RSpec.describe Induction::TransferAndContinueExistingFip do
         expect { service_call }
           .to change { mentor_profile_2.reload.schedule.cohort.start_year }
                 .from(2021)
-                .to(Cohort.active_registration_cohort.start_year)
+                .to(Cohort::DESTINATION_START_YEAR_FROM_A_FROZEN_COHORT)
       end
     end
 

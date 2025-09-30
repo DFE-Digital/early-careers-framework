@@ -3,8 +3,8 @@
 RSpec.describe Induction::AmendParticipantCohort, mid_cohort: true do
   describe "#save" do
     let(:participant_profile) {}
-    let(:source_cohort_start_year) { Cohort.previous.start_year }
-    let(:target_cohort_start_year) { Cohort.current.start_year }
+    let(:source_cohort_start_year) { Cohort::DESTINATION_START_YEAR_FROM_A_FROZEN_COHORT - 1 }
+    let(:target_cohort_start_year) { Cohort::DESTINATION_START_YEAR_FROM_A_FROZEN_COHORT }
     let(:force_from_frozen_cohort) { false }
 
     subject(:form) do
@@ -19,7 +19,7 @@ RSpec.describe Induction::AmendParticipantCohort, mid_cohort: true do
 
       it "returns false and set errors" do
         expect(form.save).to be_falsey
-        expect(form.errors[:source_cohort_start_year]).to include("Invalid value. Must be an integer between 2020 and #{Date.current.year}")
+        expect(form.errors[:source_cohort_start_year]).to include("Invalid value. Must be an integer between 2020 and #{Cohort.current.start_year}")
       end
     end
 
@@ -28,7 +28,7 @@ RSpec.describe Induction::AmendParticipantCohort, mid_cohort: true do
 
       it "returns false and set errors" do
         expect(form.save).to be_falsey
-        expect(form.errors[:source_cohort_start_year]).to include("Invalid value. Must be an integer between 2020 and #{Date.current.year}")
+        expect(form.errors[:source_cohort_start_year]).to include("Invalid value. Must be an integer between 2020 and #{Cohort.current.start_year}")
       end
     end
 
@@ -37,7 +37,7 @@ RSpec.describe Induction::AmendParticipantCohort, mid_cohort: true do
 
       it "returns false and set errors" do
         expect(form.save).to be_falsey
-        expect(form.errors[:source_cohort_start_year]).to include("Invalid value. Must be an integer between 2020 and #{Date.current.year}")
+        expect(form.errors[:source_cohort_start_year]).to include("Invalid value. Must be an integer between 2020 and #{Cohort.current.start_year}")
       end
     end
 
@@ -46,7 +46,7 @@ RSpec.describe Induction::AmendParticipantCohort, mid_cohort: true do
 
       it "returns false and set errors" do
         expect(form.save).to be_falsey
-        expect(form.errors[:target_cohort_start_year]).to include("Invalid value. Must be an integer between 2020 and #{Date.current.year}")
+        expect(form.errors[:target_cohort_start_year]).to include("Invalid value. Must be an integer between 2020 and #{Cohort.current.start_year}")
       end
     end
 
@@ -55,7 +55,7 @@ RSpec.describe Induction::AmendParticipantCohort, mid_cohort: true do
 
       it "returns false and set errors" do
         expect(form.save).to be_falsey
-        expect(form.errors[:target_cohort_start_year]).to include("Invalid value. Must be an integer between 2020 and #{Date.current.year}")
+        expect(form.errors[:target_cohort_start_year]).to include("Invalid value. Must be an integer between 2020 and #{Cohort.current.start_year}")
       end
     end
 
@@ -64,7 +64,7 @@ RSpec.describe Induction::AmendParticipantCohort, mid_cohort: true do
 
       it "returns false and set errors" do
         expect(form.save).to be_falsey
-        expect(form.errors[:target_cohort_start_year]).to include("Invalid value. Must be an integer between 2020 and #{Date.current.year}")
+        expect(form.errors[:target_cohort_start_year]).to include("Invalid value. Must be an integer between 2020 and #{Cohort.current.start_year}")
       end
     end
 
@@ -85,7 +85,7 @@ RSpec.describe Induction::AmendParticipantCohort, mid_cohort: true do
       end
 
       context "when the target_cohort_start_year is not matching that of the schedule" do
-        let(:schedule) { Finance::Schedule::ECF.default_for(cohort: Cohort.previous) }
+        let(:schedule) { Finance::Schedule::ECF.default_for(cohort: Cohort.find_by(start_year: Cohort::DESTINATION_START_YEAR_FROM_A_FROZEN_COHORT - 1)) }
 
         subject(:form) do
           described_class.new(participant_profile:, source_cohort_start_year:, target_cohort_start_year:, schedule:)
@@ -128,7 +128,7 @@ RSpec.describe Induction::AmendParticipantCohort, mid_cohort: true do
       end
 
       context "when the participant is transferred from their payments-frozen cohort to the currently one open for registration" do
-        let(:target_cohort_start_year) { Cohort.active_registration_cohort.start_year }
+        let(:target_cohort_start_year) { Cohort::DESTINATION_START_YEAR_FROM_A_FROZEN_COHORT }
 
         before do
           source_cohort.update!(payments_frozen_at: Time.current)

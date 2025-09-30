@@ -55,7 +55,7 @@ RSpec.shared_examples "JSON Participant Change schedule endpoint" do
     let(:parsed_response) { JSON.parse(response.body) }
 
     let!(:schedule) { early_career_teacher_profile.schedule }
-    let(:new_cohort) { Cohort.active_registration_cohort }
+    let(:new_cohort) { Cohort.find_by(start_year: Cohort::DESTINATION_START_YEAR_FROM_A_FROZEN_COHORT) }
     let!(:new_schedule) { create(:ecf_schedule, schedule_identifier: "ecf-replacement-april", cohort: new_cohort) }
     let!(:new_school_cohort) { create(:school_cohort, :fip, :with_induction_programme, cohort: new_cohort, lead_provider: cpd_lead_provider.lead_provider, school: early_career_teacher_profile.school) }
 
