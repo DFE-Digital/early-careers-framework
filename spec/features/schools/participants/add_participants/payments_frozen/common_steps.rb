@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 def given_there_is_a_school_that_has_chosen_fip_for_four_cohorts_and_partnered
-  (2021..2024).each do |year|
+  (2021..Cohort.current.start_year).each do |year|
     cohort = Cohort.find_or_create_by!(start_year: year)
     school_cohort = SchoolCohort.create!(cohort:, school:, induction_programme_choice: "full_induction_programme")
     induction_programme = create(:induction_programme, :fip, school_cohort:, partnership: nil)

@@ -31,7 +31,7 @@ RSpec.describe Cohort, type: :model do
     describe ".ordered_by_start_year" do
       it "orders the cohorts by year ascending" do
         expect(Cohort.ordered_by_start_year.to_sql).to include(%(ORDER BY "cohorts"."start_year" ASC))
-        expect(Cohort.ordered_by_start_year.map(&:start_year)).to eql([2020, 2021, 2022, 2023, 2024, 2025])
+        expect(Cohort.ordered_by_start_year.map(&:start_year)).to eql([2020, 2021, 2022, 2023, 2024, 2025, 2026])
       end
     end
   end
