@@ -8,18 +8,20 @@ RSpec.describe "SIT assigns a mentor to an ECT", js: true, early_in_cohort: true
   include ManageTrainingSteps
 
   scenario "when payments are frozen for cohort" do
-    given_there_is_a_school_that_has_chosen_fip_for_four_cohorts_and_partnered
-    and_the_earliest_cohort_has_payments_frozen
-    and_there_is_an_ect_in_the_active_registration_cohort
-    and_there_is_a_mentor_in_the_earliest_cohort
-    and_i_am_signed_in_as_an_induction_coordinator
-    and_i_click_on(Cohort.current.description)
+    inside_auto_assignment_window(cohort: Cohort.find_by(start_year: Cohort::DESTINATION_START_YEAR_FROM_A_FROZEN_COHORT)) do
+      given_there_is_a_school_that_has_chosen_fip_for_four_cohorts_and_partnered
+      and_the_earliest_cohort_has_payments_frozen
+      and_there_is_an_ect_in_the_active_registration_cohort
+      and_there_is_a_mentor_in_the_earliest_cohort
+      and_i_am_signed_in_as_an_induction_coordinator
+      and_i_click_on(Cohort.current.description)
 
-    when_i_navigate_to_ect_dashboard
-    and_i_assign_the_ect_a_mentor
-    then_i_see_confirmation_that_the_mentor_has_been_assigned
+      when_i_navigate_to_ect_dashboard
+      and_i_assign_the_ect_a_mentor
+      then_i_see_confirmation_that_the_mentor_has_been_assigned
 
-    and_the_mentor_has_been_assigned_to_the_active_registration_cohort
+      and_the_mentor_has_been_assigned_to_the_active_registration_cohort
+    end
   end
 
   def and_there_is_an_ect_in_the_active_registration_cohort

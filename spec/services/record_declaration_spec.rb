@@ -485,7 +485,7 @@ RSpec.shared_examples "creates participant declaration attempt" do
   end
 end
 
-RSpec.describe RecordDeclaration do
+RSpec.describe RecordDeclaration, mid_cohort: true do
   let(:cpd_lead_provider)     { create(:cpd_lead_provider, :with_lead_provider) }
   let(:another_lead_provider) { create(:cpd_lead_provider, :with_lead_provider, name: "Unknown") }
   let(:declaration_type)      { "started" }

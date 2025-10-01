@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe EvidenceHeldValidator do
+RSpec.describe EvidenceHeldValidator, mid_cohort: true do
   let(:klass) do
     Class.new do
       include ActiveModel::Model

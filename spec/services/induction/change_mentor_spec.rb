@@ -68,7 +68,7 @@ RSpec.describe Induction::ChangeMentor do
       end
 
       context "when the mentor is unfinished and the mentee in a non-frozen for payments cohort" do
-        let(:declaration) { create(:mentor_participant_declaration, :paid, declaration_type: :started, cohort: Cohort.previous) }
+        let(:declaration) { create(:mentor_participant_declaration, :paid, declaration_type: :started, cohort: Cohort.find_by(start_year: Cohort::DESTINATION_START_YEAR_FROM_A_FROZEN_COHORT - 1)) }
         let(:mentor_profile) { declaration.participant_profile }
         let(:current_cohort) { mentor_profile.schedule.cohort }
         let(:cohort) { Cohort.destination_from_frozen_cohort }
@@ -96,7 +96,7 @@ RSpec.describe Induction::ChangeMentor do
 
       context "when the mentor is not unfinished, in a payments-frozen cohort and the mentee not in a payments-frozen one" do
         let(:mentor_school_cohort) do
-          NewSeeds::Scenarios::SchoolCohorts::Fip.new(cohort: Cohort.previous).build.with_programme.school_cohort
+          NewSeeds::Scenarios::SchoolCohorts::Fip.new(cohort: Cohort.find_by(start_year: Cohort::DESTINATION_START_YEAR_FROM_A_FROZEN_COHORT - 1)).build.with_programme.school_cohort
         end
 
         let!(:mentor_profile) do
@@ -108,7 +108,7 @@ RSpec.describe Induction::ChangeMentor do
         end
 
         let(:mentor_cohort) { mentor_profile.schedule.cohort }
-        let(:cohort) { Cohort.active_registration_cohort }
+        let(:cohort) { Cohort.find_by(start_year: Cohort::DESTINATION_START_YEAR_FROM_A_FROZEN_COHORT) }
         let!(:school_cohort) { create(:school_cohort, :fip, :with_induction_programme, cohort:, school: mentor_profile.school) }
 
         before do
