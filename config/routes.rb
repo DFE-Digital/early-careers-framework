@@ -208,21 +208,6 @@ Rails.application.routes.draw do
         get :active
       end
     end
-
-    namespace :report_schools, path: "report-schools" do
-      get :start, to: "base#start"
-      post "", to: "base#create"
-      get :success, to: "base#success"
-
-      resource :delivery_partner, only: %i[show create], path: "delivery-partner"
-      resource :csv, only: %i[show create], controller: "csv" do
-        get :errors
-        post :proceed
-      end
-      resource :confirm, only: %i[show], controller: :confirm do
-        post :remove_school
-      end
-    end
   end
 
   get "admin", to: "admin/performance/overview#show"
