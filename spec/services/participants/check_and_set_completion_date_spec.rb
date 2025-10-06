@@ -111,7 +111,7 @@ RSpec.describe Participants::CheckAndSetCompletionDate do
           end
         end
 
-        xcontext "when the ect induction is in progress" do
+        context "when the ect induction is in progress" do
           let(:induction_status) { "InProgress" }
           let(:completion_date) {}
 
