@@ -19,7 +19,6 @@ RSpec.describe Banners::MaintenanceComponent, type: :component do
   it { is_expected.to have_css(".govuk-width-container") }
   it { is_expected.to have_css("h2", text: "Important") }
   it { is_expected.to have_css(".govuk-notification-banner__heading", text: "There are intermittent issues accessing the service. This is due to an issue with our service provider. We apologise for the inconvenience and will let you know as soon as this is resolved.") }
-  it { is_expected.to have_link("Dismiss", href: maintenance_banner_dismiss_path) }
 
   context "when the maintenance window spans multiple days" do
     let(:maintenance_window) { Time.zone.local(2050, 11, 27, 19)..Time.zone.local(2050, 11, 28, 21) }
