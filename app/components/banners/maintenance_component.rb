@@ -4,7 +4,7 @@ module Banners
   class MaintenanceComponent < ApplicationComponent
     HOUR_FORMAT = "%-l%P"
     DAY_FORMAT = "%-d %B"
-    MAINTENANCE_WINDOW = Time.zone.local(2024, 11, 27, 19)..Time.zone.local(2024, 11, 27, 22)
+    MAINTENANCE_WINDOW = Time.zone.local(2026, 11, 27, 19)..Time.zone.local(2026, 11, 27, 22)
 
     def render?
       FeatureFlag.active?(:maintenance_banner) && maintenance_window_ends_in_future?
@@ -22,7 +22,7 @@ module Banners
     end
 
     def single_day_window_text
-      "This service will be unavailable from #{from_hour} to #{to_hour} on #{from_day}."
+      "There are intermittent issues accessing the service. This is due to an issue with our service provider. We apologise for the inconvenience and will let you know as soon as this is resolved."
     end
 
     def multi_day_window_text
