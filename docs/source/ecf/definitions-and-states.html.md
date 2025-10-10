@@ -18,49 +18,66 @@ weight: 1
 | `statement`    | A record of output payments (based on declarations), service fees and any adjustments the DfE may pay lead providers at the end of a contractually agreed payment period. Statements sent to providers by DfE at the end of milestone periods can be used for invoicing purposes     |
 | `unfunded-mentor` | Mentors linked to a provider's ECTs but not eligible for funding through that provider. Typically, these mentors have either completed, or are currently doing, mentor training with a different lead provider than the one delivering training to the ECT they support |
 
-## Data states
+## API status values 
 
-The API service uses a ‘state’ model to reflect the participant journey, meet contractual requirements for how providers should report participants’ training and how DfE will pay for this training.
+The API uses status values to describe the current state of partnerships, participants, and declarations. 
+ 
+Each status tells providers what actions they can take through the API and what to expect from DfE. 
 
-### Partnership states
+### Partnership statuses  
 
-Partnership states are defined by the `status` attribute.
+Partnership statuses are defined by the `status` attribute in partnership endpoint responses. 
 
-Providers must [confirm their partnerships with schools](/api-reference/ecf/guidance/#confirm-view-and-update-partnerships) for each cohort. Once a partnership has been established the `status` value will become `active` and providers will receive participant information via the API.
+Providers must [confirm their partnerships with schools](/api-reference/ecf/guidance/#confirm-view-and-update-partnerships) for each cohort. Once a partnership has been established the `status` value will become `active` and providers will receive participant information via the API. 
 
-Schools can challenge existing partnerships at any time. Once a partnership `status` becomes `challenged`, providers will no longer be able to update partnership details.
+Schools can challenge existing partnerships at any time. Once a partnership `status` becomes `challenged`, providers will no longer be able to update partnership details. 
 
-| status | Definition | Action |
+| `status` | Definition | Action |
 | -------- | -------- | -------- |
 | `active`     | A partnership between a provider, school and delivery partner has been agreed and confirmed by the provider    | Providers can view, confirm and update `active` partnerships     |
-| `challenged`     | A partnership between a provider, school and delivery partner has been changed or dissolved by the school     | Providers can **only** view `challenged` partnerships    |
+| `challenged`     | A partnership between a provider, school and delivery partner has been changed or dissolved by the school     | Providers can only view `challenged` partnerships    |
 
-[View more detailed specifications for the partnerships schema](/api-reference/reference-v3.html#schema-ecfpartnershipattributes).
+<div class="govuk-inset-text"> The 2025 cohort will be the last to have challenge fields in partnership responses. From 2026, schools will make changes at an individual participant level (for example, moving an ECT to a different provider) rather than challenging a school-wide partnership.</div>
 
-### Participant states
+[View more detailed specifications for the partnerships schema](/api-reference/reference-v3.html#schema-ecfpartnershipattributes)
 
-Participant states are defined by the `training_status` attribute.
+### Participant statuses 
 
-A participant’s `training_status` value will determine whether a provider can:
+The API uses two different status fields to describe a participant’s journey in the participant endpoints: 
 
-* [update their details](/api-reference/ecf/guidance/#view-and-update-participant-data). For example, notifying DfE that a participant has withdrawn from training
-* [submit a declaration](/api-reference/ecf/guidance/#submit-view-and-void-declarations). For example, notifying DfE that a participant has started their training
+* `training_status`, set by providers through the API. It determines what actions you can take, such as updating data or submitting declarations
+* `participant_status`, set by schools through the 'Register early career teachers’ service. It reflects the participant’s position in the school (for example, joining, leaving, or withdrawn). 
 
-| training_status | Definition | Action |
-| -------- | -------- | -------- |
-| `active`     | Participants currently in training     | Providers can update participant data and submit declarations for `active` participants     |
-| `deferred`     | Participants who have deferred training     | Providers **cannot** update participant data or submit declarations for `deferred` participants. Providers must [notify DfE when the participant resumes training](/api-reference/ecf/guidance/#notify-dfe-a-participant-has-resumed-training)     |
-| `withdrawn`     | Participants who have withdrawn from training     | Providers **cannot** update participant data for `withdrawn` participants. Providers can **only** submit declarations for `withdrawn` participants if the `declaration_date` is backdated to before the `withdrawal_date`     |
+Together, these statuses give both providers and schools a shared view of a participant’s training progress. 
 
-[View more detailed specifications for the ECF participant schema](/api-reference/reference-v3.html#schema-ecfparticipantattributes).
+#### Training status field
 
-#### Providers should note:
+| `training_status` | Definition | Notes |
+|-------------------|-------------|--------|
+| `active` | Participant is currently in training | Update participant data and submit declarations |
+| `deferred` | Participant has paused training | Providers must notify DfE when the participant restarts |
+| `withdrawn` | Participant has left training | Cannot update participant data. Can only submit backdated declarations if `declaration_date` is before `withdrawal_date` |
 
-A participant's `training_status` highlights data entered **by providers** via the API. It then determines what onward actions providers can take via the API. Providers should also consider supplementary data available via the API, including the `participant_status`.
+#### Participant status field
 
-A participant's `participant_status` highlights information given **by school induction tutors** via the DfE service. Values include `active`, `joining`, `leaving`, `left` and `withdrawn`, and will update according to the associated transfer or withdrawal dates induction tutors have given. For example, the `participant_status` will change from `leaving` to `left` after the date an induction tutor has given for when a participant is leaving their school. Note, values can occasionally be inaccurate due to induction tutor human error.
+| `participant_status` | Definition | Notes |
+|----------------------|-------------|--------|
+| `active` | Participant is currently training at the school | Matches the school’s latest confirmation |
+| `joining` | Participant is due to join the school | Will update to **active** once the join date is reached |
+| `leaving` | Participant is due to leave the school | Will update to **left** after the leaving date passes |
+| `left` | Participant has left the school | No longer associated with the school |
+| `withdrawn` | School has recorded that the participant has permanently left | May overlap with provider-recorded `training_status` |
 
-### Declaration states
+Example of how the two participant statuses can differ: 
+
+* a provider records a participant as `training_status = active` because they are still completing training
+* at the same time, the school records the participant as `participant_status = leaving`, with a leaving date set for the end of term. 
+
+In this case, the participant is still active in training, but their school has flagged that they are due to leave soon. Once the leaving date passes, the `participant_status` will update to `left`, while the provider will need to update the training record if the participant transfers or withdraws. 
+
+[View more detailed specifications for the ECF participant schema](/api-reference/reference-v3.html#schema-ecfparticipantattributes)
+
+## Declaration states
 
 Declaration states are defined by the `state` attribute.
 
@@ -77,7 +94,7 @@ Providers must [submit declarations](/api-reference/ecf/guidance/#submit-view-an
 | `awaiting_clawback`     | A `paid` declaration that has since been voided by a provider    | Providers can **only** view `awaiting_clawback` declarations     |
 | `clawed_back`     | An `awaiting_clawback` declaration that has since had its value deducted from payment by DfE to a provider     | Providers can **only** view `clawed_back` declarations     |
 
-[View more detailed specifications for the declaration schema](/api-reference/reference-v3.html#schema-participantdeclarationattributes).
+[View more detailed specifications for the declaration schema](/api-reference/reference-v3.html#schema-participantdeclarationattributes)
 
 ## IDs explained 
 
