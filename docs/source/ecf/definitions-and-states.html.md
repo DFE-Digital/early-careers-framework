@@ -26,7 +26,7 @@ Each status tells providers what actions they can take through the API and what 
 
 ### Partnership statuses  
 
-Partnership states are defined by the `status` attribute in partnership endpoint responses. 
+Partnership statuses are defined by the `status` attribute in partnership endpoint responses. 
 
 Providers must [confirm their partnerships with schools](/api-reference/ecf/guidance/#confirm-view-and-update-partnerships) for each cohort. Once a partnership has been established the `status` value will become `active` and providers will receive participant information via the API. 
 
