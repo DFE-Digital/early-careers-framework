@@ -37,6 +37,8 @@ Schools can challenge existing partnerships at any time. Once a partnership `sta
 | `active`     | A partnership between a provider, school and delivery partner has been agreed and confirmed by the provider    | Providers can view, confirm and update `active` partnerships     |
 | `challenged`     | A partnership between a provider, school and delivery partner has been changed or dissolved by the school     | Providers can only view `challenged` partnerships    |
 
+<div class="govuk-inset-text"> The 2025 cohort will be the last to have challenge fields in partnership responses. From 2026, schools will make changes at an individual participant level (for example, moving an ECT to a different provider) rather than challenging a school-wide partnership.</div>
+
 [View more detailed specifications for the partnerships schema](/api-reference/reference-v3.html#schema-ecfpartnershipattributes)
 
 ### Participant statuses 
