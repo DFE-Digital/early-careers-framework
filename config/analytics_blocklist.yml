@@ -410,7 +410,6 @@
   - created_at
   - updated_at
   :users:
-  - email
   - login_token
   - login_token_valid_until
   - remember_created_at
