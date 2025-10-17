@@ -30,4 +30,10 @@ describe "GiasTypes" do
       expect(FakeSchool::INDEPENDENT_SCHOOLS_TYPE_CODES).to match_array([10, 11])
     end
   end
+
+  describe "NO_COMMS_TYPE_CODES" do
+    it "matches the old hardcoded list" do
+      expect(FakeSchool::NO_COMMS_TYPE_CODES).to match_array([47, 48])
+    end
+  end
 end

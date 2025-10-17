@@ -53,4 +53,8 @@ module GiasHelpers
   def independent_school?
     [10, 11].include?(school_type_code)
   end
+
+  def excluded_from_comms?
+    codes_excluded_from_comms?(school_type_code)
+  end
 end
