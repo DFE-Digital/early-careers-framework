@@ -40,6 +40,8 @@ module GiasTypes
     "Academy special converter"                         => 44,
     "Academy 16-19 converter"                           => 45,
     "Academy 16 to 19 sponsor led"                      => 46,
+    "Children's centre"                                 => 47,
+    "Children's centre linked site"                     => 48,
     "Online provider"                                   => 49,
     "Institution funded by other government department" => 56,
     "Academy secure 16 to 19"                           => 57,
