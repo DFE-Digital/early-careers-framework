@@ -113,7 +113,7 @@ gem "rouge"
 
 gem "auto_strip_attributes", "~> 2.6"
 
-gem "dfe-analytics", github: "DFE-Digital/dfe-analytics", tag: "v1.15.8"
+gem "dfe-analytics", github: "DFE-Digital/dfe-analytics", tag: "v1.15.9"
 gem "dfe-wizard", github: "DFE-Digital/dfe-wizard"
 
 group :development, :test do
