@@ -40,6 +40,8 @@ module GiasTypes
     "Academy special converter"                         => 44,
     "Academy 16-19 converter"                           => 45,
     "Academy 16 to 19 sponsor led"                      => 46,
+    "Children's centre"                                 => 47,
+    "Children's centre linked site"                     => 48,
     "Online provider"                                   => 49,
     "Institution funded by other government department" => 56,
     "Academy secure 16 to 19"                           => 57,
@@ -60,6 +62,12 @@ module GiasTypes
     "Online provider",
     "Institution funded by other government department",
   ).values.freeze
+
+  # Types that *are* eligible but we would prefer not to send communications to.
+  NO_COMMS_TYPE_CODES = ALL_TYPES.values_at(
+    "Children's centre",
+    "Children's centre linked site",
+  ).freeze
 
   CIP_ONLY_TYPE_CODES = ALL_TYPES.values_at(
     "Other independent special school",
@@ -110,5 +118,9 @@ module GiasTypes
     # expanded to include the 9999 code which seems to have crept in and is preventing a couple of schools onboarding
     # the establishment codes should filter out any that should not come in that are 9999 district
     district_code.to_s.match?(/^([Ee]|9999)/)
+  end
+
+  def codes_excluded_from_comms?(establishment_type)
+    NO_COMMS_TYPE_CODES.include?(establishment_type)
   end
 end

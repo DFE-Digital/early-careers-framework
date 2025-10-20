@@ -19,6 +19,11 @@ namespace :comms do
         next
       end
 
+      if school.excluded_from_comms?
+        logger.error "School is excluded from receiving comms"
+        next
+      end
+
       if school.induction_coordinators.any?
         school.induction_coordinators.each do |sit_user|
           if Email.tagged_with(:pilot_ask_sit_to_report_school_training_details_for_2024).associated_with(sit_user).where.not(status: Email::FAILED_STATUSES).any?
@@ -75,6 +80,11 @@ namespace :comms do
 
       if school.nil?
         logger.error "Unable to find the school"
+        next
+      end
+
+      if school.excluded_from_comms?
+        logger.error "School is excluded from receiving comms"
         next
       end
 
@@ -138,6 +148,11 @@ namespace :comms do
 
       school = School.find_by_urn(school["urn"])
 
+      if school&.excluded_from_comms?
+        logger.error "School is excluded from receiving comms"
+        next
+      end
+
       if school.school_cohorts.for_year(2025).first&.induction_programme_choice
         logger.info "School has reported the training programme"
         next
@@ -172,6 +187,11 @@ namespace :comms do
       logger.info "Processing school with URN: #{school['urn']}"
 
       school = School.find_by_urn(school["urn"])
+
+      if school&.excluded_from_comms?
+        logger.error "School is excluded from receiving comms"
+        next
+      end
 
       if school.induction_coordinators.any?
         logger.info "The GIAS contact has already nominated a SIT"
@@ -216,6 +236,11 @@ namespace :comms do
 
       if school.nil?
         logger.error "Unable to find school"
+        next
+      end
+
+      if school.excluded_from_comms?
+        logger.error "School is excluded from receiving comms"
         next
       end
 

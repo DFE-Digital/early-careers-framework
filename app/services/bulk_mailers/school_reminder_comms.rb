@@ -29,6 +29,8 @@ module BulkMailers
           lead_provider_name = induction_record.lead_provider_name
           delivery_partner_name = induction_record.delivery_partner_name
 
+          next if school.excluded_from_comms?
+
           school.induction_coordinator_profiles.each do |induction_coordinator|
             email_count += 1
 
@@ -56,6 +58,8 @@ module BulkMailers
           school = induction_record.school
           lead_provider_name = induction_record.lead_provider_name
           delivery_partner_name = induction_record.delivery_partner_name
+
+          next if school.excluded_from_comms?
 
           school.induction_coordinator_profiles.each do |induction_coordinator|
             email_count += 1
