@@ -206,7 +206,7 @@ GEM
       railties (>= 3.2)
     drb (2.2.3)
     dumb_delegator (1.1.0)
-    erb (5.0.2)
+    erb (5.1.1)
     erb_lint (0.9.0)
       activesupport
       better_html (>= 2.0.1)
@@ -411,7 +411,7 @@ GEM
     pg (1.6.2-arm64-darwin)
     pg (1.6.2-x86_64-darwin)
     pg (1.6.2-x86_64-linux)
-    pp (0.6.2)
+    pp (0.6.3)
       prettyprint
     pretender (0.6.0)
       actionpack (>= 7.1)
@@ -495,9 +495,10 @@ GEM
       ffi (~> 1.0)
     rbs (3.9.5)
       logger
-    rdoc (6.14.2)
+    rdoc (6.15.0)
       erb
       psych (>= 4.0.0)
+      tsort
     redis (4.8.1)
     regexp_parser (2.11.3)
     reline (0.6.2)
@@ -619,9 +620,9 @@ GEM
       websocket (~> 1.0)
     semantic_logger (4.17.0)
       concurrent-ruby (~> 1.0)
-    sentry-rails (5.28.0)
+    sentry-rails (5.28.1)
       railties (>= 5.0)
-      sentry-ruby (~> 5.28.0)
+      sentry-ruby (~> 5.28.1)
     sentry-ruby (5.28.1)
       bigdecimal
       concurrent-ruby (~> 1.0, >= 1.0.2)
@@ -694,6 +695,7 @@ GEM
     timecop (0.9.10)
     timeout (0.4.3)
     trailblazer-option (0.1.2)
+    tsort (0.2.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     tzinfo-data (1.2025.2)
@@ -830,7 +832,7 @@ DEPENDENCIES
   scenic (~> 1.9)
   scss_lint-govuk
   selenium-webdriver
-  sentry-rails (~> 5.27)
+  sentry-rails (~> 5.28)
   sentry-ruby (~> 5.28)
   sentry-sidekiq
   shoulda-matchers (~> 5.3)
