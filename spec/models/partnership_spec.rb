@@ -117,4 +117,33 @@ RSpec.describe Partnership, type: :model do
       end
     end
   end
+
+  describe "partnership validation" do
+    context "when the cohort has an applicable provider_relationship" do
+      it "is valid" do
+        expect(partnership).to be_valid
+      end
+    end
+
+    context "when the cohort does not have an applicable provider_relationship" do
+      context "on create" do
+        let(:partnership) { build(:partnership, :without_provider_relationship) }
+
+        it "is invalid" do
+          expect(partnership).to be_invalid
+          expect(partnership.errors.full_messages).to include("Cohort does not have an applicable provider relationship")
+        end
+      end
+
+      context "on update" do
+        let(:partnership) { create(:partnership) }
+
+        before { partnership.cohort = create(:cohort) }
+
+        it "is valid" do
+          expect(partnership).to be_valid
+        end
+      end
+    end
+  end
 end
