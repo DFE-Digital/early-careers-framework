@@ -123,6 +123,8 @@ RSpec.describe SchoolCohort, type: :model do
       let(:delivery_partner) { create(:delivery_partner) }
 
       before do
+        create(:provider_relationship, cohort: school_cohort.cohort, lead_provider:, delivery_partner:)
+
         Partnership.create!(
           cohort: school_cohort.cohort,
           lead_provider:,
@@ -141,6 +143,8 @@ RSpec.describe SchoolCohort, type: :model do
       let(:delivery_partner) { create(:delivery_partner, name: "Wunderbar Partner") }
 
       before do
+        create(:provider_relationship, cohort: school_cohort.cohort, lead_provider:, delivery_partner:)
+
         Induction::CreateRelationship.call(school_cohort:,
                                            lead_provider:,
                                            delivery_partner:)
@@ -173,6 +177,8 @@ RSpec.describe SchoolCohort, type: :model do
       let(:delivery_partner) { create(:delivery_partner) }
 
       before do
+        create(:provider_relationship, cohort: school_cohort.cohort, lead_provider:, delivery_partner:)
+
         Partnership.create!(
           cohort: school_cohort.cohort,
           lead_provider:,
@@ -191,6 +197,8 @@ RSpec.describe SchoolCohort, type: :model do
       let(:delivery_partner) { create(:delivery_partner, name: "Wunderbar Partner") }
 
       before do
+        create(:provider_relationship, cohort: school_cohort.cohort, lead_provider:, delivery_partner:)
+
         Induction::CreateRelationship.call(school_cohort:,
                                            lead_provider:,
                                            delivery_partner:)

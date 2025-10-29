@@ -70,6 +70,7 @@ module ManageTrainingSteps
     @cohort2 = Cohort.previous || create(:cohort, :previous)
     @partnership2 = @partnership.dup
     @partnership2.cohort = @cohort2
+    create(:provider_relationship, cohort: @partnership2.cohort, lead_provider: @partnership2.lead_provider, delivery_partner: @partnership2.delivery_partner)
     @partnership2.save!
     @school_cohort2 = create(:school_cohort, :fip, school: @school, cohort: @cohort2)
     @induction_programme2 = create(:induction_programme, :fip, school_cohort: @school_cohort2, partnership: @partnership2)
@@ -81,6 +82,7 @@ module ManageTrainingSteps
     @cohort_current = Cohort.current || create(:cohort, :current)
     @partnership_current = @partnership.dup
     @partnership_current.cohort = @cohort_current
+    create(:provider_relationship, cohort: @partnership_current.cohort, lead_provider: @partnership_current.lead_provider, delivery_partner: @partnership_current.delivery_partner)
     @partnership_current.save!
     @school_cohort_current = create(:school_cohort, :fip, school: @school, cohort: @cohort_current)
     @induction_programme_current = create(:induction_programme, :fip, school_cohort: @school_cohort_current, partnership: @partnership_current)
