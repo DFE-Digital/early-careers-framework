@@ -164,7 +164,7 @@ module Participants
     def store_validation_result!(save_validation_data_without_match: true)
       return unless dqt_response || save_validation_data_without_match
 
-      StoreValidationResult.call(
+      store_validation_result = StoreValidationResult.call(
         participant_profile:,
         validation_data: {
           trn: formatted_trn,
@@ -174,6 +174,11 @@ module Participants
         },
         dqt_response:,
       )
+
+      # trigger an update to analytics so they receive the populated TRN
+      participant_profile.teacher_profile.reload.touch if participant_profile.present?
+
+      store_validation_result
     end
 
     def change_participant_cohort_and_induction_start_date!
