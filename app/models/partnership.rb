@@ -30,6 +30,8 @@ class Partnership < ApplicationRecord
 
   after_commit :update_analytics
 
+  validate :cohort_provider_relationship_exists, on: :create
+
   scope :in_year, ->(year) { joins(:cohort).where(cohort: { start_year: year }) }
   scope :unchallenged, -> { where(challenged_at: nil, challenge_reason: nil) }
   scope :active, -> { unchallenged.where(pending: false) }
@@ -75,5 +77,13 @@ private
 
   def update_analytics
     Analytics::UpsertECFPartnershipJob.perform_later(partnership_id: id) if transaction_changed_attributes.any?
+  end
+
+  def cohort_provider_relationship_exists
+    return unless delivery_partner.present? && lead_provider.present? && cohort.present?
+
+    unless delivery_partner.provider_relationships.where(cohort:, lead_provider:, delivery_partner:).exists?
+      errors.add(:base, "Cohort does not have an applicable provider relationship")
+    end
   end
 end

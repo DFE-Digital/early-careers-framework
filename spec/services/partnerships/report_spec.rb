@@ -17,7 +17,10 @@ RSpec.describe Partnerships::Report do
 
   subject(:result) { service_instance.call }
 
-  before { freeze_time }
+  before do
+    freeze_time
+    create(:provider_relationship, cohort:, lead_provider:, delivery_partner:)
+  end
 
   it "creates a new partnership with expected attributes" do
     outside_auto_assignment_window do

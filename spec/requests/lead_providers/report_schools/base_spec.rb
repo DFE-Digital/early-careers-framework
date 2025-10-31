@@ -51,6 +51,10 @@ RSpec.describe "Lead Provider school reporting", type: :request do
     let(:lead_provider) { lead_provider_user.lead_provider }
 
     before do
+      create(:provider_relationship, cohort:, lead_provider:, delivery_partner:)
+    end
+
+    before do
       set_session(LeadProviders::ReportSchools::BaseController::SESSION_KEY, {
         source: :csv,
         school_ids: schools.map(&:id),

@@ -52,6 +52,8 @@ RSpec.describe PartnershipCsvUpload, type: :model do
     it "finds schools already in a partnership with the lead provider" do
       partnered_school = create(:school)
       @subject = create(:partnership_csv_upload, cohort:, uploaded_urns: [partnered_school.urn])
+      create(:provider_relationship, cohort:, lead_provider: @subject.lead_provider, delivery_partner: @subject.delivery_partner)
+
       Partnership.create!(
         school: partnered_school,
         lead_provider: @subject.lead_provider,
