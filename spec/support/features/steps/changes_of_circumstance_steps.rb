@@ -52,12 +52,13 @@ module Steps
 
       next_ideal_time Time.zone.local(2021, 5, 1, 9, 0, 0)
       travel_to(@timestamp) do
-        given_i_sign_in_as_the_user_with_the_full_name lead_provider_name
-
-        Pages::LeadProviderDashboard.loaded
-                                    .confirm_schools
-                                    .complete(delivery_partner.name, [school&.urn])
-        sign_out
+        # The CSV upload functionality has been removed, the API should be used
+        # but I'm not sure that's what we're really testing here so create the partnership here
+        lead_provider = LeadProvider.find_by(name: lead_provider_name)
+        Partnerships::Report.call(cohort_id: Cohort.current.id,
+                                  school_id: school.id,
+                                  lead_provider_id: lead_provider.id,
+                                  delivery_partner_id: delivery_partner.id)
 
         travel_to 1.minute.from_now
       end

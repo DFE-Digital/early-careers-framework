@@ -39,10 +39,6 @@ RSpec.feature "Lead Provider Dashboard", type: :feature, js: true, rutabaga: fal
     expect(page).to have_title "Manage training for early career teachers"
   end
 
-  def when_i_confirm_schools_from_the_lead_provider_dashboard
-    click_on "Confirm your schools for the 2021 to 2022 academic year"
-  end
-
   def and_a_school_has_been_already_confirmed_for_the_current_cohort
     school_cohort = create(:school_cohort, school:, cohort: current_cohort, induction_programme_choice: "full_induction_programme")
     partnership = create(:partnership, school:, lead_provider: ecf_lead_provider, delivery_partner:, cohort: current_cohort)
@@ -94,25 +90,12 @@ RSpec.feature "Lead Provider Dashboard", type: :feature, js: true, rutabaga: fal
     then_i_am_on_the_lead_provider_dashboard
   end
 
-  scenario "Confirming schools" do
-    travel_to cohort.registration_start_date + 1.day
-
-    given_i_sign_in_as_the_user_with_the_email email_address
-    and_i_am_on_the_lead_provider_dashboard
-    and_i_do_not_see_next_cohort_schools_confirmation
-
-    when_i_confirm_schools_from_the_lead_provider_dashboard
-
-    then_i_am_on_the_confirm_schools_wizard
-  end
-
   scenario "Checking schools" do
     given_i_sign_in_as_the_user_with_the_email email_address
     and_a_school_has_been_already_confirmed_for_the_current_cohort
 
     when_i_visit_the_schools_page
     then_i_should_see "Your schools"
-    and_i_should_see "Confirm more schools"
     and_i_should_see "Download schools for"
     and_i_should_see "2021 cohort"
     and_i_should_see "2022 cohort"
