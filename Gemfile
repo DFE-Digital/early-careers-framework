@@ -60,7 +60,7 @@ gem "mail-notify", "~> 1.2"
 gem "tzinfo-data"
 
 gem "govuk-components", "~> 5.11.3"
-gem "govuk_design_system_formbuilder", "~> 5.11.0"
+gem "govuk_design_system_formbuilder", "~> 5.13.0"
 
 # Fetching from APIs
 gem "httpclient", "~> 2.9"
