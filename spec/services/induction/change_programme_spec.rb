@@ -66,4 +66,6 @@ RSpec.describe Induction::ChangeProgramme do
       end
     end
   end
+
+  # ✅ CORRECT BEHAVIOR: This service does NOT create multiple open InductionRecords
 end

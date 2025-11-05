@@ -179,4 +179,6 @@ RSpec.describe Induction::TransferToSchoolsProgramme do
       end
     end
   end
+
+  # ✅ CORRECT BEHAVIOR: This service does NOT create multiple open InductionRecords
 end

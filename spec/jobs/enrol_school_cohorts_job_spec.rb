@@ -56,5 +56,57 @@ RSpec.describe EnrolSchoolCohortsJob do
         expect { job_run }.not_to change { school_cohort.induction_programmes.count }
       end
     end
+
+    describe "BUG: Multiple open InductionRecords" do
+      it "creates multiple open IRs when EnrolSchoolCohortsJob runs for participants with existing IRs" do
+        # ❌ BUG: This test proves that when EnrolSchoolCohortsJob runs for a school cohort
+        # where participants already have open InductionRecords, it creates multiple open IRs
+
+        # Setup: School cohort with programme choice but NO programmes (makes it eligible for the job)
+        cohort = create(:cohort, :current)
+        school = create(:school, name: "Test School")
+
+        # Create partnership FIRST (required for FIP programme creation at line 15 of the job)
+        create(:partnership, school:, cohort:)
+
+        test_school_cohort = create(:school_cohort,
+                                    school:,
+                                    cohort:,
+                                    induction_programme_choice: "full_induction_programme")
+
+        ect_profile = create(:ect_participant_profile, school_cohort: test_school_cohort)
+
+        # Create a second school cohort with a programme for the existing IR
+        # (Simulating a participant who was previously enrolled elsewhere)
+        other_school = create(:school, name: "Other School")
+        other_school_cohort = create(:school_cohort, school: other_school, cohort:)
+        existing_programme = create(:induction_programme, :fip, school_cohort: other_school_cohort)
+
+        Induction::Enrol.call(
+          participant_profile: ect_profile,
+          induction_programme: existing_programme,
+          start_date: 1.year.ago,
+        )
+
+        # Verify participant has 1 open IR and test_school_cohort has no programmes (eligible for job)
+        expect(ect_profile.induction_records.where(end_date: nil).count).to eq(1)
+        expect(test_school_cohort.reload.induction_programmes.count).to eq(0)
+
+        # Run the actual job (this is what runs at 3am daily via cron)
+        EnrolSchoolCohortsJob.new.perform
+
+        # ❌ BUG: Now we have 2 open IRs at DIFFERENT schools
+        ect_profile.reload
+        open_records = ect_profile.induction_records.where(end_date: nil)
+        expect(open_records.count).to eq(2)
+
+        # At different schools with different programmes
+        schools = open_records.map(&:school)
+        expect(schools).to contain_exactly(school, other_school)
+        programmes = open_records.map(&:induction_programme)
+        expect(programmes.count).to eq(2)
+        expect(programmes).to all(be_a(InductionProgramme))
+      end
+    end
   end
 end

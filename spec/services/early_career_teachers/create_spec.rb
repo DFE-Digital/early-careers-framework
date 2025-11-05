@@ -184,4 +184,24 @@ RSpec.describe ::EarlyCareerTeachers::Create do
     created_participant = ParticipantProfile.order(:created_at).last
     expect(Analytics::UpsertECFParticipantProfileJob).to have_been_enqueued.with(participant_profile_id: created_participant.id)
   end
+
+  # NOTE: Why there's no "multiple open InductionRecords bug" test for EarlyCareerTeachers::Create:
+  #
+  # The Create service has validation (line 16 in app/services/early_career_teachers/create.rb) that prevents
+  # creating duplicate ECT profiles:
+  #
+  # raise ParticipantProfileExistsError if participant_profile_exists?
+  #
+  # The participant_profile_exists? method (line 94-96) checks BOTH:
+  # 1. teacher_profile.participant_profiles.ects.exists?
+  # 2. user.participant_identities.joins(:participant_profiles).where(participant_profiles: { type: "ParticipantProfile::ECT" }).exists?
+  #
+  # This validation prevents the service from being called multiple times for the same participant.
+  #
+  # HOWEVER, the Create service DOES call Induction::Enrol (line 27-31), which is the low-level service
+  # that CAN create multiple open InductionRecords if called directly without proper validation.
+  # The bug exists when other code paths call Induction::Enrol directly, bypassing the Create service's validation.
+  #
+  # See the e2e tests in spec/features/schools/participants/add_participants/bug_multiple_open_induction_periods_spec.rb
+  # for real-world scenarios where this bug manifests through the UI.
 end

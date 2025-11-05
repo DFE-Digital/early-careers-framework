@@ -187,4 +187,21 @@ RSpec.describe Mentors::Create do
       )
     }.to have_enqueued_job(Analytics::UpsertECFParticipantProfileJob)
   end
+
+  # NOTE: Why there's no "multiple open InductionRecords bug" test for Mentors::Create:
+  #
+  # The Create service has validation (line 15 in app/services/mentors/create.rb) that prevents
+  # creating duplicate Mentor profiles:
+  #
+  # raise ParticipantProfileExistsError if participant_profile_exists?
+  #
+  # The participant_profile_exists? method (line 76-78) checks BOTH:
+  # 1. teacher_profile.participant_profiles.mentors.exists?
+  # 2. user.participant_identities.joins(:participant_profiles).where(participant_profiles: { type: "ParticipantProfile::Mentor" }).exists?
+  #
+  # This validation prevents the service from being called multiple times for the same participant.
+  #
+  # HOWEVER, the Create service DOES call Induction::Enrol (line 26-28), which is the low-level service
+  # that CAN create multiple open InductionRecords if called directly without proper validation.
+  # The bug exists when other code paths call Induction::Enrol directly, bypassing the Create service's validation.
 end

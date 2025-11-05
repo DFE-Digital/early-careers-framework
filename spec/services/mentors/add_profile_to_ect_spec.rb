@@ -134,4 +134,22 @@ RSpec.describe Mentors::AddProfileToECT do
     # creates and updates to ect and mentor profiles are recorded
     expect { service_call }.to have_enqueued_job(Analytics::UpsertECFParticipantProfileJob).at_least(2).times
   end
+
+  # NOTE: Why there's no "multiple open InductionRecords bug" test for AddProfileToEct:
+  #
+  # This service converts an ECT into a Mentor (creates a NEW Mentor profile for the same teacher).
+  # It DOES call Induction::Enrol (app/services/mentors/add_profile_to_ect.rb:26), but it's for enrolling
+  # a newly created Mentor profile, not re-enrolling an existing participant.
+  #
+  # The service has built-in validation preventing the bug:
+  # - Line 8: check_no_mentor_profiles_exist!
+  # - Line 63: Raises "Mentor profile exists" if ect_profile.teacher_profile.ecf_profiles.mentors.any?
+  #
+  # Therefore, AddProfileToEct cannot create multiple open InductionRecords because:
+  # 1. It only creates a NEW Mentor profile (line 13)
+  # 2. It validates no Mentor profile already exists before proceeding
+  # 3. It only calls Induction::Enrol once for the newly created profile
+  #
+  # If you tried calling AddProfileToEct multiple times, it would fail on the second call
+  # with "Mentor profile exists" error, preventing the bug scenario entirely.
 end
