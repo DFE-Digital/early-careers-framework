@@ -569,6 +569,60 @@ RSpec.describe Induction::AmendParticipantCohort, mid_cohort: true do
           end
         end
       end
+
+      context "when moving a completed mentor to 2025 cohort" do
+        let(:source_cohort_start_year) { 2022 }
+        let(:target_cohort_start_year) { 2025 }
+        let!(:source_cohort) { create(:cohort, start_year: source_cohort_start_year) }
+        let!(:target_cohort) { Cohort.find_by_start_year(target_cohort_start_year) || create(:cohort, start_year: target_cohort_start_year) }
+        let!(:participant_profile) { create(:mentor, cohort: source_cohort, mentor_completion_date: Date.new(2022, 6, 1)) }
+        let(:school) { participant_profile.school }
+
+        before do
+          create(:school_cohort, :fip, :with_induction_programme, school:, cohort: target_cohort)
+        end
+
+        it "returns false and sets an error" do
+          expect(form.save).to be_falsey
+          expect(form.errors[:participant_profile]).to include("Mentors who have completed their training cannot be moved to the 2025 cohort")
+        end
+      end
+
+      context "when moving a mentor without completion date to 2025 cohort" do
+        let(:source_cohort_start_year) { 2024 }
+        let(:target_cohort_start_year) { 2025 }
+        let!(:source_cohort) { create(:cohort, start_year: source_cohort_start_year) }
+        let!(:target_cohort) { Cohort.find_by_start_year(target_cohort_start_year) || create(:cohort, start_year: target_cohort_start_year) }
+        let!(:participant_profile) { create(:mentor, cohort: source_cohort) }
+        let(:school) { participant_profile.school }
+
+        before do
+          create(:school_cohort, :fip, :with_induction_programme, school:, cohort: target_cohort)
+        end
+
+        it "returns true and allows the transfer" do
+          expect(form.save).to be_truthy
+          expect(form.errors).to be_empty
+        end
+      end
+
+      context "when moving a completed mentor to a cohort other than 2025" do
+        let(:source_cohort_start_year) { 2023 }
+        let(:target_cohort_start_year) { 2024 }
+        let!(:source_cohort) { create(:cohort, start_year: source_cohort_start_year) }
+        let!(:target_cohort) { Cohort.find_by_start_year(target_cohort_start_year) || create(:cohort, start_year: target_cohort_start_year) }
+        let!(:participant_profile) { create(:mentor, cohort: source_cohort, mentor_completion_date: Date.new(2023, 6, 1)) }
+        let(:school) { participant_profile.school }
+
+        before do
+          create(:school_cohort, :fip, :with_induction_programme, school:, cohort: target_cohort)
+        end
+
+        it "returns true and allows the transfer" do
+          expect(form.save).to be_truthy
+          expect(form.errors).to be_empty
+        end
+      end
     end
   end
 end

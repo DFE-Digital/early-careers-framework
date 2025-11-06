@@ -7,12 +7,23 @@ FactoryBot.define do
       uplifts { [] }
       trn { user.teacher_profile&.trn || sprintf("%07i", Random.random_number(9_999_999)) }
       cohort { Cohort.current || create(:cohort, :current) }
+      mentor_completion_date { nil }
+      mentor_completion_reason { nil }
     end
 
     user            { create(:user) }
     school_cohort   { create(:school_cohort, :fip, :with_induction_programme, *uplifts, lead_provider:, cohort:) }
     full_name       { user.full_name }
     email           { user.email }
+
+    after(:create) do |mentor, evaluator|
+      if evaluator.mentor_completion_date.present?
+        mentor.update!(
+          mentor_completion_date: evaluator.mentor_completion_date,
+          mentor_completion_reason: evaluator.mentor_completion_reason || :completed_declaration_received,
+        )
+      end
+    end
 
     trait :sparsity_uplift do
       uplifts { %i[sparsity_uplift] }
