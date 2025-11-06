@@ -31,6 +31,10 @@ RSpec.describe Induction::TransferAndContinueExistingFip do
 
     let!(:original_induction) { participant_profile.reload.induction_records.order(created_at: :asc).first }
 
+    before do
+      create(:provider_relationship, cohort: Cohort.next, lead_provider:, delivery_partner: original_induction.delivery_partner)
+    end
+
     it "creates a new identity with the given email" do
       expect { service_call }.to change { participant_profile.user.participant_identities.count }.by 1
     end

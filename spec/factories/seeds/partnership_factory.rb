@@ -24,10 +24,15 @@ FactoryBot.define do
       with_lead_provider
     end
 
-    after(:build) do |p|
-      if p.school && p.lead_provider
+    after(:build) do |partnership|
+      provider_relationship_attrs = { cohort: partnership.cohort, lead_provider: partnership.lead_provider, delivery_partner: partnership.delivery_partner }
+      if provider_relationship_attrs.values.all?(&:present?) && !ProviderRelationship.where(provider_relationship_attrs).exists?
+        create(:provider_relationship, provider_relationship_attrs)
+      end
+
+      if partnership.school && partnership.lead_provider
         Rails.logger.debug(<<~MSG)
-          seeded partnership between #{p.school.name} and lead provider #{p.lead_provider.name} with delivery partner #{p.delivery_partner.name}
+          seeded partnership between #{partnership.school.name} and lead provider #{partnership.lead_provider.name} with delivery partner #{partnership.delivery_partner.name}
         MSG
       else
         Rails.logger.debug("seeded incomplete partnership")

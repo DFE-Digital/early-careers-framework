@@ -9,6 +9,10 @@ RSpec.describe Induction::CreateRelationship do
 
     subject(:service_call) { described_class.call(school_cohort:, lead_provider:, delivery_partner:, treat_as_partnership:) }
 
+    before do
+      create(:provider_relationship, cohort: school_cohort.cohort, lead_provider:, delivery_partner:)
+    end
+
     it "adds a new Partnership record" do
       expect { service_call }.to change { school_cohort.school.partnerships.count }.by 1
     end

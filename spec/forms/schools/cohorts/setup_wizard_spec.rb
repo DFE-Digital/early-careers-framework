@@ -36,6 +36,13 @@ RSpec.describe Schools::Cohorts::SetupWizard, type: :model do
 
   shared_context "sending the pilot survey" do
     context "when the school is in the pilot", travel_to: Date.new(2023, 7, 1) do
+      before do
+        if (psc = school.school_cohorts.previous)
+          partnership = psc.default_induction_programme.partnership
+          create(:provider_relationship, cohort:, lead_provider: partnership.lead_provider, delivery_partner: partnership.delivery_partner)
+        end
+      end
+
       it "sends the pilot survey" do
         expect {
           wizard.success
