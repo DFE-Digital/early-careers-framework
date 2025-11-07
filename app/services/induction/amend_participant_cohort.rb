@@ -328,7 +328,7 @@ module Induction
 
     def completed_mentor_cannot_move_to_2025
       return unless participant_profile&.mentor?
-      return unless participant_profile.mentor_completion_date.present?
+      return if participant_profile.mentor_completion_date.blank?
       return unless target_cohort_start_year == 2025
 
       errors.add(:participant_profile, :completed_mentor_cannot_move_to_2025)
