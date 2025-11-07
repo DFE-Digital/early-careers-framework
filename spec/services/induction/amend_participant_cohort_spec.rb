@@ -584,7 +584,7 @@ RSpec.describe Induction::AmendParticipantCohort, mid_cohort: true do
 
         it "returns false and sets an error" do
           expect(form.save).to be_falsey
-          expect(form.errors[:participant_profile]).to include("Mentors who have completed their training cannot be moved to the 2025 cohort")
+          expect(form.errors[:participant_profile]).to include("The Mentor has completed their training and cannot be moved to the 2025 cohort")
         end
       end
 
