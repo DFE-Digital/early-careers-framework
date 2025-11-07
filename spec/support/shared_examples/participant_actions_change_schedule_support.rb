@@ -159,8 +159,8 @@ RSpec.shared_examples "JSON Participant Change schedule endpoint" do
           },
         }
 
-        expect(response).to_not be_successful
-        expect(parsed_response["errors"].find { |e| e["title"] == "cohort" }["detail"]).to eql("You cannot change the '#/cohort' field")
+        expect(response).to be_successful
+        expect(parsed_response.dig("data", "attributes", "cohort")).to eql(new_cohort.start_year.to_s)
       end
     end
   end

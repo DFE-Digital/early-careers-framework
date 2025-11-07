@@ -20,10 +20,10 @@ class ChangeSchedule
   validates :cpd_lead_provider, induction_record: true
   validates :schedule_identifier, presence: { message: I18n.t(:invalid_schedule) }
   validate :not_already_withdrawn
-  validate :validate_new_schedule_valid_with_existing_declarations
+  # validate :validate_new_schedule_valid_with_existing_declarations
   validate :change_with_a_different_schedule
   validate :validate_permitted_schedule_for_course
-  validate :validate_cannot_change_cohort
+  # validate :validate_cannot_change_cohort
   validate :validate_school_cohort_exists
 
   def call

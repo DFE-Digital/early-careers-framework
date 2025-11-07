@@ -109,11 +109,11 @@ RSpec.shared_examples "changing cohort and continuing training" do
       context "allow_change_to_from_frozen_cohort is true" do
         let(:allow_change_to_from_frozen_cohort) { true }
 
-        context "when the participant is not eligible to transfer and continue training" do
-          it { is_expected.to be_invalid }
+        context "when the participant is eligible to transfer and continue training" do
+          it { is_expected.to be_valid }
         end
 
-        context "when the participant is eligible to transfer and continue training" do
+        context "when frozen cohort and participant is eligible to transfer and continue training" do
           before { cohort.update!(payments_frozen_at: Time.zone.now) }
 
           it_behaves_like "changing the schedule of a participant"
@@ -125,7 +125,7 @@ RSpec.shared_examples "changing cohort and continuing training" do
           context "when new cohort is not 2024" do
             let(:new_cohort) { create(:cohort, start_year: 2022) }
 
-            it { is_expected.to be_invalid }
+            it { is_expected.to be_valid }
           end
         end
       end
@@ -136,7 +136,7 @@ RSpec.shared_examples "changing cohort and continuing training" do
         context "when the participant is eligible to transfer and continue training" do
           before { cohort.update!(payments_frozen_at: Time.zone.now) }
 
-          it { is_expected.to be_invalid }
+          it { is_expected.to be_valid }
         end
       end
     end
@@ -179,13 +179,17 @@ RSpec.shared_examples "changing schedule after migrating from a payments frozen 
           end
         end
 
-        it { is_expected.to be_invalid }
+        it { is_expected.to be_valid }
       end
 
       context "when they are changing cohort as well as schedule" do
         let(:new_cohort) { cohort.next }
 
-        it { is_expected.to be_invalid }
+        before do
+          create(:partnership, cohort: new_cohort, school: participant_profile.school, lead_provider: cpd_lead_provider.lead_provider)
+        end
+
+        it { is_expected.to be_valid }
       end
     end
   end
@@ -208,7 +212,7 @@ RSpec.shared_examples "reversing a change of schedule/cohort" do
     expect(participant_profile.reload).not_to be_cohort_changed_after_payments_frozen
   end
 
-  it "does not allow a change of schedule to be reversed if there are billable declarations in the new cohort" do
+  it "allows change of schedule to be reversed if there are billable declarations in the new cohort" do
     original_cohort = participant_profile.schedule.cohort
 
     first_change_of_schedule = described_class.new(params)
@@ -229,8 +233,10 @@ RSpec.shared_examples "reversing a change of schedule/cohort" do
              cohort: new_cohort)
     end
 
-    expect(second_change_of_schedule).not_to be_valid
-    expect(second_change_of_schedule.errors.messages_for(:cohort)).to include("You cannot change the '#/cohort' field")
+    # expect(second_change_of_schedule).not_to be_valid
+    # expect(second_change_of_schedule.errors.messages_for(:cohort)).to include("You cannot change the '#/cohort' field")
+    expect(second_change_of_schedule).to be_valid
+    expect { second_change_of_schedule.call }.to change { ParticipantProfileSchedule.count }
   end
 end
 
@@ -343,11 +349,7 @@ RSpec.describe ChangeSchedule do
             before { create(:participant_declaration, participant_profile:, state:, course_identifier:, cpd_lead_provider:) }
 
             context "when changing to another cohort" do
-              it "is invalid and returns an error message" do
-                is_expected.to be_invalid
-
-                expect(service.errors.messages_for(:cohort)).to include("You cannot change the '#/cohort' field")
-              end
+              it_behaves_like "changing the schedule of a participant"
             end
           end
         end
@@ -433,10 +435,8 @@ RSpec.describe ChangeSchedule do
           context "when changing from 2022 to 2025" do
             let(:new_cohort) { create(:cohort, start_year: 2025) }
 
-            it "is invalid and returns an error message" do
-              is_expected.to be_invalid
-
-              expect(service.errors.messages_for(:cohort)).to include("You cannot change the '#/cohort' field")
+            it "is valid" do
+              is_expected.to be_valid
             end
           end
         end
@@ -460,6 +460,64 @@ RSpec.describe ChangeSchedule do
       let!(:new_schedule) { create(:ecf_schedule, schedule_identifier: "ecf-replacement-april", name: "ECF Standard") }
 
       it_behaves_like "changing the schedule of a participant"
+
+      context "move from 2022 to 2024 extended schedule with existing declarations" do
+        let(:cohort) { create(:cohort, start_year: 2022) }
+        let(:participant_profile) { create(:ect, lead_provider: cpd_lead_provider.lead_provider, user:, cohort:, schedule:) }
+
+        let(:new_cohort) { create(:cohort, start_year: 2024) }
+        let!(:new_schedule) { create(:ecf_schedule, cohort: new_cohort, schedule_identifier: "ecf-extended-september") }
+        let!(:new_school_cohort) { create(:school_cohort, :with_induction_programme, cohort: new_cohort, school: participant_profile.school, lead_provider: cpd_lead_provider.lead_provider) }
+        let(:schedule_identifier) { "ecf-extended-september" }
+
+        let(:params) do
+          {
+            cpd_lead_provider:,
+            participant_id:,
+            course_identifier:,
+            schedule_identifier:,
+            allow_change_to_from_frozen_cohort:,
+            cohort: new_cohort.start_year,
+          }
+        end
+
+        before do
+          travel_to(participant_profile.schedule.milestones.find_by(declaration_type: "started").start_date) do
+            create(:participant_declaration, :eligible, declaration_type: "started", participant_profile:, cohort:, course_identifier:, cpd_lead_provider:)
+          end
+
+          allow(Induction::FindBy).to receive(:call).and_return(participant_profile.current_induction_record)
+        end
+
+        it_behaves_like "changing the schedule of a participant"
+
+        context "submit new cohort and schedule declaration" do
+          it "creates a participant declaration" do
+            service.call
+            participant_profile.reload
+
+            expect(ParticipantDeclaration.count).to eq(1)
+            milestone = participant_profile.schedule.milestones.find_by!(declaration_type: "completed")
+
+            travel_to(milestone.start_date) do
+              declaration_service = RecordDeclaration.new(
+                participant_id: participant_profile.participant_identity.external_identifier,
+                declaration_date: milestone.start_date.rfc3339,
+                declaration_type: "completed",
+                course_identifier:,
+                cpd_lead_provider:,
+                evidence_held: "other",
+              )
+              dec = declaration_service.call
+              expect(dec).to_not be_nil
+            end
+
+            expect(ParticipantDeclaration.count).to eq(2)
+            declaration = ParticipantDeclaration.find_by!(declaration_type: "completed")
+            expect(declaration.cohort).to eq(new_cohort)
+          end
+        end
+      end
 
       it "updates the schedule on the relevant induction record" do
         service.call
@@ -626,11 +684,7 @@ RSpec.describe ChangeSchedule do
             before { create(:participant_declaration, participant_profile:, state:, course_identifier:, cpd_lead_provider:) }
 
             context "when changing to another cohort" do
-              it "is invalid and returns an error message" do
-                is_expected.to be_invalid
-
-                expect(service.errors.messages_for(:cohort)).to include("You cannot change the '#/cohort' field")
-              end
+              it_behaves_like "changing the schedule of a participant"
             end
           end
         end
@@ -649,7 +703,7 @@ RSpec.describe ChangeSchedule do
           context "when there are billable declarations" do
             before { create(:participant_declaration, participant_profile:, cohort:, state: :paid, course_identifier:, cpd_lead_provider:) }
 
-            it { is_expected.to be_invalid }
+            it { is_expected.to be_valid }
           end
         end
 
@@ -732,6 +786,64 @@ RSpec.describe ChangeSchedule do
       let!(:new_schedule) { create(:ecf_mentor_schedule, schedule_identifier: "ecf-replacement-april", name: "Mentor Standard") }
 
       it_behaves_like "changing the schedule of a participant"
+
+      context "move from 2022 to 2024 extended schedule with existing declarations" do
+        let(:cohort) { create(:cohort, start_year: 2022) }
+        let(:participant_profile) { create(:mentor, lead_provider: cpd_lead_provider.lead_provider, user:, cohort:, schedule:) }
+
+        let(:new_cohort) { create(:cohort, start_year: 2024) }
+        let!(:new_schedule) { create(:ecf_schedule, cohort: new_cohort, schedule_identifier: "ecf-extended-september") }
+        let!(:new_school_cohort) { create(:school_cohort, :with_induction_programme, cohort: new_cohort, school: participant_profile.school, lead_provider: cpd_lead_provider.lead_provider) }
+        let(:schedule_identifier) { "ecf-extended-september" }
+
+        let(:params) do
+          {
+            cpd_lead_provider:,
+            participant_id:,
+            course_identifier:,
+            schedule_identifier:,
+            allow_change_to_from_frozen_cohort:,
+            cohort: new_cohort.start_year,
+          }
+        end
+
+        before do
+          travel_to(participant_profile.schedule.milestones.find_by(declaration_type: "started").start_date) do
+            create(:participant_declaration, :eligible, declaration_type: "started", participant_profile:, cohort:, course_identifier:, cpd_lead_provider:)
+          end
+
+          allow(Induction::FindBy).to receive(:call).and_return(participant_profile.current_induction_record)
+        end
+
+        it_behaves_like "changing the schedule of a participant"
+
+        context "submit new cohort and schedule declaration" do
+          it "creates a participant declaration" do
+            service.call
+            participant_profile.reload
+
+            expect(ParticipantDeclaration.count).to eq(1)
+            milestone = participant_profile.schedule.milestones.find_by!(declaration_type: "completed")
+
+            travel_to(milestone.start_date) do
+              declaration_service = RecordDeclaration.new(
+                participant_id: participant_profile.participant_identity.external_identifier,
+                declaration_date: milestone.start_date.rfc3339,
+                declaration_type: "completed",
+                course_identifier:,
+                cpd_lead_provider:,
+                evidence_held: "other",
+              )
+              dec = declaration_service.call
+              expect(dec).to_not be_nil
+            end
+
+            expect(ParticipantDeclaration.count).to eq(2)
+            declaration = ParticipantDeclaration.find_by!(declaration_type: "completed")
+            expect(declaration.cohort).to eq(new_cohort)
+          end
+        end
+      end
 
       it "updates the schedule on the relevant induction record" do
         service.call
