@@ -11,3 +11,5 @@
   :users:
   - full_name
   - email
+  :participant_identities:
+  - email

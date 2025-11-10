@@ -206,9 +206,6 @@
   - created_at
   - updated_at
   :participant_identities:
-  - id
-  - user_id
-  - email
   - external_identifier
   - origin
   - created_at
