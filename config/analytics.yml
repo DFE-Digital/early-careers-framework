@@ -383,3 +383,7 @@
   - id
   - full_name
   - email
+  :participant_identities:
+  - id
+  - user_id
+  - email
