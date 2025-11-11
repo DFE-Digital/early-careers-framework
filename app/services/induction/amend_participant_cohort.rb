@@ -91,6 +91,9 @@ module Induction
     validate :niot_exception,
              on: :after_in_target_check
 
+    validate :completed_mentor_cannot_move_to_2025,
+             on: :after_in_target_check
+
     validates :target_school_cohort,
               presence: {
                 message: ->(form, _) { I18n.t("errors.cohort.not_setup", year: form.target_cohort_start_year, where: form.school&.name) },
@@ -321,6 +324,14 @@ module Induction
       return @unfinished_with_no_billable_declaration if instance_variable_defined?(:@unfinished_with_no_billable_declaration)
 
       @unfinished_with_no_billable_declaration ||= participant_profile.unfinished_with_no_billable_declaration?(cohort: target_cohort)
+    end
+
+    def completed_mentor_cannot_move_to_2025
+      return unless participant_profile&.mentor?
+      return if participant_profile.mentor_completion_date.blank?
+      return unless target_cohort_start_year == 2025
+
+      errors.add(:participant_profile, :completed_mentor_cannot_move_to_2025)
     end
   end
 end

@@ -309,6 +309,7 @@ en:
             participant_profile:
               billable_declarations_in_cohort: "The participant has billable declarations in their current cohort"
               completion_date: "The participant has completion date"
+              completed_mentor_cannot_move_to_2025: "The Mentor has completed their training and cannot be moved to the 2025 cohort"
               no_billable_declarations_in_cohort: "The participant has no billable declarations in destination cohort"
               blank: "Not registered"
               not_active: "The participant is not active"
