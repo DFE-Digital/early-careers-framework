@@ -7,8 +7,6 @@ FactoryBot.define do
       uplifts { [] }
       trn { user.teacher_profile&.trn || sprintf("%07i", Random.random_number(9_999_999)) }
       cohort { Cohort.current || create(:cohort, :current) }
-      mentor_completion_date { nil }
-      mentor_completion_reason { nil }
     end
 
     user            { create(:user) }
