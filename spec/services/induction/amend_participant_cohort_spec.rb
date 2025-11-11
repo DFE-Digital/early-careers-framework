@@ -574,12 +574,12 @@ RSpec.describe Induction::AmendParticipantCohort, mid_cohort: true do
         let!(:source_cohort) { create(:cohort, start_year: source_cohort_start_year) }
         let!(:target_cohort) { Cohort.find_by_start_year(target_cohort_start_year) || create(:cohort, start_year: target_cohort_start_year) }
         let(:school) { participant_profile.school }
-        let!(:participant_profile) { create(:mentor, cohort: source_cohort, mentor_completion_date:) }        
-       
+        let!(:participant_profile) { create(:mentor, cohort: source_cohort, mentor_completion_date:) }
+
         before do
           create(:school_cohort, :fip, :with_induction_programme, school:, cohort: target_cohort)
-        end                                
-                                                                                  
+        end
+
         context "with completion date to 2025 cohort" do
           let(:source_cohort_start_year) { 2022 }
           let(:target_cohort_start_year) { 2025 }
