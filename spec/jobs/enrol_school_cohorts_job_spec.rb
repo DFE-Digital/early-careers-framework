@@ -56,5 +56,21 @@ RSpec.describe EnrolSchoolCohortsJob do
         expect { job_run }.not_to change { school_cohort.induction_programmes.count }
       end
     end
+
+    context "when a participant already has an open induction record" do
+      let!(:previous_induction_record) do
+        create(:induction_record, participant_profile: ect, start_date: 6.months.ago, end_date: nil)
+      end
+
+      it "closes the previous induction record after adding a new one" do
+        job_run
+        expect(previous_induction_record.reload.end_date).not_to be_nil
+      end
+
+      it "does not create multiple induction records with empty end date" do
+        job_run
+        expect(ect.induction_records.where(end_date: nil).count).to eq 1
+      end
+    end
   end
 end
