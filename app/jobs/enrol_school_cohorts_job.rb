@@ -19,10 +19,16 @@ class EnrolSchoolCohortsJob < ApplicationJob
         programme.save!
 
         sc.ecf_participant_profiles.each do |profile|
+          previous_induction_record = profile.latest_induction_record
+
           induction_record = Induction::Enrol.call(participant_profile: profile, induction_programme: programme)
           induction_record.update!(induction_status: profile.status,
                                    training_status: profile.training_status,
                                    mentor_profile_id: profile.mentor_profile_id)
+
+          # must set an end_date for the previous induction record
+          previous_induction_record&.changing!
+
           Mentors::AddToSchool.call(school: sc.school, mentor_profile: profile) if profile.mentor?
         end
         sc.update!(default_induction_programme: programme)
