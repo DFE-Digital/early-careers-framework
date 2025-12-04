@@ -14,10 +14,6 @@ class CallOffContract < ApplicationRecord
     participant_bands.map(&:contract_value).sum
   end
 
-  def uplift_cap
-    (total_contract_value * 0.05).ceil(-2)
-  end
-
   def band_a
     bands.first
   end
