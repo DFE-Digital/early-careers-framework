@@ -15,7 +15,9 @@ class CallOffContract < ApplicationRecord
   end
 
   def uplift_cap
-    (total_contract_value * 0.05).ceil(-2)
+    # NOTE: changed from 5% above total contract value to
+    # 100x the contract value as a hacky way of removing uplift caps.
+    (total_contract_value * 100).ceil(-2)
   end
 
   def band_a
