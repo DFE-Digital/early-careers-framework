@@ -3991,7 +3991,7 @@ __metadata:
     govuk-frontend: "npm:^5.13.0"
     nunjucks: "npm:^3.2.4"
     prettier: "npm:^2.8.8"
-    sass: "npm:^1.93.2"
+    sass: "npm:^1.95.1"
     terser-webpack-plugin: "npm:^5.3.14"
     webpack: "npm:^5.102"
     webpack-assets-manifest: "npm:^5.2.1"
@@ -7714,9 +7714,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sass@npm:^1.93.2":
-  version: 1.93.2
-  resolution: "sass@npm:1.93.2"
+"sass@npm:^1.95.1":
+  version: 1.95.1
+  resolution: "sass@npm:1.95.1"
   dependencies:
     "@parcel/watcher": "npm:^2.4.1"
     chokidar: "npm:^4.0.0"
@@ -7727,7 +7727,7 @@ __metadata:
       optional: true
   bin:
     sass: sass.js
-  checksum: 5a19f12dbe8c142e40c1e0473d1e624898242b1c21010301e169b528be8c580df6356329c798522b525eb11eda4b04b9b77422badc55c47889600f8477201d2b
+  checksum: 458c65e961eb67a64b15c9e78897543f5af98b40ecd3a6a4f10d12fcf8fc17af029602ce9897ad48b1a4404083969575db28b78249e11ecdf54dbe9ea7fda594
   languageName: node
   linkType: hard
 
