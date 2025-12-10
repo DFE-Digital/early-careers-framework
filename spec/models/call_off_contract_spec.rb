@@ -31,17 +31,6 @@ RSpec.describe CallOffContract, type: :model do
     end
   end
 
-  describe "#uplift_cap" do
-    # the following makes the maths much easier
-    # as there is no longer half uplifts
-    # especially when dealing with clawbacks
-    it "is rounded up to nearest uplift_amount" do
-      allow(call_off_contract).to receive(:total_contract_value).and_return(3_000)
-
-      expect(call_off_contract.uplift_cap).to eq(200)
-    end
-  end
-
   describe "#include_uplift_fees?" do
     context "when `uplift_amount` is present" do
       it "returns true" do

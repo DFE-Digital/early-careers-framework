@@ -63,7 +63,7 @@ RSpec.shared_examples "a Finance ECF statement calculator", mid_cohort: true do
   end
 
   describe "#total" do
-    let(:default_total) { BigDecimal("-0.523279310e4") }
+    let(:default_total) { BigDecimal("-4932.7931") }
 
     let(:mock_uplift) do
       {
@@ -120,7 +120,7 @@ RSpec.shared_examples "a Finance ECF statement calculator", mid_cohort: true do
       before { allow_any_instance_of(CallOffContract).to receive(:include_uplift_fees?).and_return(false) }
 
       it "returns default total with no uplifts" do
-        expect(subject.total.round(5)).to eql(default_total - -100)
+        expect(subject.total.round(5)).to eql(default_total - 200)
       end
     end
   end
@@ -455,24 +455,7 @@ RSpec.shared_examples "a Finance ECF statement calculator", mid_cohort: true do
       end
 
       it do
-        expect(subject.total_for_uplift).to eql(0)
-      end
-    end
-
-    context "when we pass the uplift cap threshold" do
-      let!(:contract) { create(:call_off_contract, lead_provider: cpd_lead_provider.lead_provider) }
-
-      let(:mock_uplift) do
-        {
-          previous_count: 0,
-          count: 100_000,
-          additions: 100_000,
-          subtractions: 0,
-        }
-      end
-
-      it "matches uplift_cap" do
-        expect(subject.total_for_uplift).to eql(statement.contract.uplift_cap)
+        expect(subject.total_for_uplift).to eql(100)
       end
     end
 
