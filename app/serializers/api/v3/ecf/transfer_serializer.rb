@@ -30,7 +30,7 @@ module Api
               joining_induction_record&.start_date,
             ].compact.max
 
-            if transfer_date > Time.zone.today
+            if transfer_date.nil? || transfer_date > Time.zone.today
               "incomplete"
             else
               "complete"

@@ -32,6 +32,14 @@ module Api
             expect(transfer[:status]).to eq("complete")
           end
         end
+
+        context "when leaving date is nil" do
+          let(:end_date) { nil }
+
+          it "sets the status to incomplete" do
+            expect(transfer[:status]).to eq("incomplete")
+          end
+        end
       end
 
       RSpec.shared_examples "sets a leaving and joining transfer" do
