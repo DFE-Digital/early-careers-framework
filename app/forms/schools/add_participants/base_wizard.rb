@@ -378,7 +378,7 @@ module Schools
 
       # set after add or transfer completed
       def set_participant_profile(profile)
-        data_store.set(:participant_profile, profile)
+        data_store.set(:participant_profile, profile&.id)
       end
 
       def form_scope

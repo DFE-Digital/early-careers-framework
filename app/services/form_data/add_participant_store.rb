@@ -122,7 +122,11 @@ module FormData
     end
 
     def participant_profile
-      get(:participant_profile)
+      value = get(:participant_profile)
+      return value if value.is_a?(ParticipantProfile)
+      return if value.blank?
+
+      ParticipantProfile.find_by(id: value)
     end
 
     def providers
