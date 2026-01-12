@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "payment_calculator/ecf/service_fees"
-
 module Finance
   module ECF
     module ECT
