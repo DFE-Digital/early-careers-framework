@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "payment_calculator/ecf/service_fees"
-
 module Finance
   module ECF
     class StatementCalculator
@@ -270,8 +268,10 @@ module Finance
 
       delegate :participant_declarations, to: :statement
 
+      NUMBER_OF_SERVICE_FEE_PAYMENTS = 29
+
       def calculated_service_fee
-        PaymentCalculator::ECF::ServiceFees.new(contract:).call.sum { |hash| hash[:monthly] }
+        bands.sum { |band| band.service_fee_total / NUMBER_OF_SERVICE_FEE_PAYMENTS }
       end
 
       def output_calculator
