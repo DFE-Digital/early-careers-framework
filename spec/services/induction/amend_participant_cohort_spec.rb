@@ -19,7 +19,7 @@ RSpec.describe Induction::AmendParticipantCohort, mid_cohort: true do
 
       it "returns false and set errors" do
         expect(form.save).to be_falsey
-        expect(form.errors[:source_cohort_start_year]).to include("Invalid value. Must be an integer between 2020 and #{Cohort.current.start_year}")
+        expect(form.errors[:source_cohort_start_year]).to include("Invalid value. Must be an integer between 2020 and #{Date.current.year}")
       end
     end
 
@@ -28,7 +28,7 @@ RSpec.describe Induction::AmendParticipantCohort, mid_cohort: true do
 
       it "returns false and set errors" do
         expect(form.save).to be_falsey
-        expect(form.errors[:source_cohort_start_year]).to include("Invalid value. Must be an integer between 2020 and #{Cohort.current.start_year}")
+        expect(form.errors[:source_cohort_start_year]).to include("Invalid value. Must be an integer between 2020 and #{Date.current.year}")
       end
     end
 
@@ -37,7 +37,7 @@ RSpec.describe Induction::AmendParticipantCohort, mid_cohort: true do
 
       it "returns false and set errors" do
         expect(form.save).to be_falsey
-        expect(form.errors[:source_cohort_start_year]).to include("Invalid value. Must be an integer between 2020 and #{Cohort.current.start_year}")
+        expect(form.errors[:source_cohort_start_year]).to include("Invalid value. Must be an integer between 2020 and #{Date.current.year}")
       end
     end
 
@@ -46,7 +46,7 @@ RSpec.describe Induction::AmendParticipantCohort, mid_cohort: true do
 
       it "returns false and set errors" do
         expect(form.save).to be_falsey
-        expect(form.errors[:target_cohort_start_year]).to include("Invalid value. Must be an integer between 2020 and #{Cohort.current.start_year}")
+        expect(form.errors[:target_cohort_start_year]).to include("Invalid value. Must be an integer between 2020 and #{Date.current.year}")
       end
     end
 
@@ -55,7 +55,7 @@ RSpec.describe Induction::AmendParticipantCohort, mid_cohort: true do
 
       it "returns false and set errors" do
         expect(form.save).to be_falsey
-        expect(form.errors[:target_cohort_start_year]).to include("Invalid value. Must be an integer between 2020 and #{Cohort.current.start_year}")
+        expect(form.errors[:target_cohort_start_year]).to include("Invalid value. Must be an integer between 2020 and #{Date.current.year}")
       end
     end
 
@@ -64,7 +64,7 @@ RSpec.describe Induction::AmendParticipantCohort, mid_cohort: true do
 
       it "returns false and set errors" do
         expect(form.save).to be_falsey
-        expect(form.errors[:target_cohort_start_year]).to include("Invalid value. Must be an integer between 2020 and #{Cohort.current.start_year}")
+        expect(form.errors[:target_cohort_start_year]).to include("Invalid value. Must be an integer between 2020 and #{Date.current.year}")
       end
     end
 
