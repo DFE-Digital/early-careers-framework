@@ -667,7 +667,7 @@ en:
       uplift_target: Uplift target
       uplift_amount: Uplift amount
       recruitment_target: Recruitment target
-      revised_target: Revised recruitment target (+2%)
+      revised_target: Revised recruitment target (+%{default_revised_recruitment_target_percentage})
       set_up_fee: Set-up Fee
       course_identifier: Course Identifier
       band: Band
@@ -748,7 +748,7 @@ en:
             "3": New target
           ect:
             recruitment_target: ECTs recruitment target
-            revised_target: Revised ECTs recruitment target (+115%)
+            revised_target: Revised ECTs recruitment target (+%{default_revised_recruitment_target_percentage})
           mentor:
             recruitment_target: Mentors recruitment target
 

@@ -2,6 +2,7 @@
 
 class CallOffContract < ApplicationRecord
   UNUSED_VERSION_PREFIX = "unused_"
+  DEFAULT_REVISED_RECRUITMENT_TARGET_PERCENTAGE = 1.5
 
   belongs_to :lead_provider
   belongs_to :cohort

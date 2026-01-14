@@ -9,8 +9,7 @@ module Finance
         attr_accessor :contract
 
         delegate :uplift_target, :uplift_amount, :recruitment_target,
-                 :revised_target, :set_up_fee, :bands,
-                 to: :contract
+                 :set_up_fee, :bands, to: :contract
 
         def initialize(contract:)
           @contract = contract
@@ -18,6 +17,10 @@ module Finance
 
         def name
           contract.lead_provider.name
+        end
+
+        def revised_target
+          contract.recruitment_target&.*(CallOffContract::DEFAULT_REVISED_RECRUITMENT_TARGET_PERCENTAGE)&.round
         end
       end
     end
