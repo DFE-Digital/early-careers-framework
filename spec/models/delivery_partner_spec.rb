@@ -13,6 +13,14 @@ RSpec.describe DeliveryPartner, type: :model do
     }.to change { DeliveryPartner.count }.by(1)
   end
 
+  describe "name normalization" do
+    it "squishes whitespaces" do
+      delivery_partner = create(:delivery_partner, name: "  Delivery   Partner  ")
+
+      expect(delivery_partner.name).to eq("Delivery Partner")
+    end
+  end
+
   describe "associations" do
     it { is_expected.to have_many(:provider_relationships) }
     it { is_expected.to have_many(:lead_providers).through(:provider_relationships) }

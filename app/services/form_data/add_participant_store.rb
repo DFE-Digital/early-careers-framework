@@ -122,7 +122,15 @@ module FormData
     end
 
     def participant_profile
-      get(:participant_profile)
+      value = get(:participant_profile)
+      return if value.blank?
+
+      id = value.is_a?(ParticipantProfile) ? value.id : value
+
+      # Ensure legacy sessions self-heal to avoid Marshal session errors
+      set(:participant_profile, id) if value.is_a?(ParticipantProfile)
+
+      ParticipantProfile.find_by(id:)
     end
 
     def providers

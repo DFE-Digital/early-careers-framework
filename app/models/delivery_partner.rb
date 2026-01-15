@@ -21,6 +21,8 @@ class DeliveryPartner < DiscardableRecord
 
   scope :name_order, -> { order("UPPER(name)") }
 
+  normalizes :name, with: ->(name) { name.squish }
+
   after_discard do
     provider_relationships.discard_all
   end
