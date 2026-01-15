@@ -14,6 +14,10 @@ module Finance
         def initialize(statement:)
           @statement = statement
         end
+
+        def revised_target
+          contract.recruitment_target&.*(CallOffContract::DEFAULT_REVISED_RECRUITMENT_TARGET_PERCENTAGE)&.round
+        end
       end
     end
   end

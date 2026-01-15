@@ -49,7 +49,7 @@ RSpec.describe Finance::Statements::Contracts::ECTMentor, type: :component do
     expect(summary_list[0][0]).to eq(%w[ECTs])
 
     expect(summary_list[1][0]).to eq(["ECTs recruitment target", "999"])
-    expect(summary_list[1][1]).to eq(["Revised ECTs recruitment target (+115%)", "1111"])
+    expect(summary_list[1][1]).to eq(["Revised ECTs recruitment target (+150%)", "1499"])
 
     expect(summary_list[2][0]).to eq(%w[Mentors])
 

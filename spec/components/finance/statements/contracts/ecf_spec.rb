@@ -49,8 +49,8 @@ RSpec.describe Finance::Statements::Contracts::ECF, type: :component do
     expect(summary_list[1][0][0]).to eq("Recruitment target")
     expect(summary_list[1][0][1]).to eq("999")
 
-    expect(summary_list[1][1][0]).to eq("Revised recruitment target (+2%)")
-    expect(summary_list[1][1][1]).to eq("1111")
+    expect(summary_list[1][1][0]).to eq("Revised recruitment target (+150%)")
+    expect(summary_list[1][1][1]).to eq("1499")
 
     expect(summary_list[1][2][0]).to eq("Uplift target")
     expect(summary_list[1][2][1]).to eq("40%")

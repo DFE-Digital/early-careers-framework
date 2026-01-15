@@ -18,13 +18,13 @@
           <%= contract.recruitment_target %>
         </dd>
       </div>
-      <% if contract.revised_target.present? %>
+      <% if revised_target.present? %>
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key">
-            <%= t(".ect.revised_target") %>
+            <%= t(".ect.revised_target", default_revised_recruitment_target_percentage: number_to_percentage(CallOffContract::DEFAULT_REVISED_RECRUITMENT_TARGET_PERCENTAGE * 100, strip_insignificant_zeros: true, precision: 0)) %>
           </dt>
           <dd class="govuk-summary-list__value">
-            <%= contract.revised_target %>
+            <%= revised_target %>
           </dd>
         </div>
       <% end %>
