@@ -19,7 +19,6 @@ RSpec.describe Oneoffs::UpdateContracts do
       uplift_target: "0.4",
       uplift_amount: "100",
       recruitment_target: "11500",
-      revised_target: "11500",
       set_up_fee: "0",
       monthly_service_fee: "224464",
       version: "0.0.7",
@@ -120,7 +119,6 @@ RSpec.describe Oneoffs::UpdateContracts do
           expect(new_contract.uplift_target).to eq(0.5)
           expect(new_contract.uplift_amount).to eq(200)
           expect(new_contract.recruitment_target).to eq(11_500)
-          expect(new_contract.revised_target).to eq(11_500)
           expect(new_contract.set_up_fee).to eq(0)
           expect(new_contract.monthly_service_fee).to eq(224_464)
           expect(new_contract.bands.count).to eq(3)
@@ -189,7 +187,6 @@ RSpec.describe Oneoffs::UpdateContracts do
         uplift_target: "0.4",
         uplift_amount: "100",
         recruitment_target: "11500",
-        revised_target: "11500",
         set_up_fee: "0",
         monthly_service_fee: "224464",
         band_a: { min: "0", max: "2000", per_participant: "1355" },
@@ -218,11 +215,6 @@ RSpec.describe Oneoffs::UpdateContracts do
 
       it "returns false when recruitment_target differs" do
         contract_data[:recruitment_target] = "12000"
-        expect(subject.existing_contract_matches_contract_data?(existing_contract:, contract_data:)).to be false
-      end
-
-      it "returns false when revised_target differs" do
-        contract_data[:revised_target] = "12000"
         expect(subject.existing_contract_matches_contract_data?(existing_contract:, contract_data:)).to be false
       end
 

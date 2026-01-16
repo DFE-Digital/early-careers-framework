@@ -160,7 +160,6 @@ RSpec.describe Importers::CreateCallOffContract do
             uplift_target: 0.44,
             uplift_amount: 200,
             recruitment_target: 4600,
-            revised_target: 4790,
             set_up_fee: 0,
             monthly_service_fee: 2300,
           )

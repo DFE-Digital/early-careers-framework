@@ -5,7 +5,6 @@ FactoryBot.define do
     uplift_target { 0.33 }
     uplift_amount { 100 }
     recruitment_target { 6000 }
-    revised_target { nil }
     set_up_fee { 149_651 }
     lead_provider { build(:lead_provider, cpd_lead_provider: build(:cpd_lead_provider)) }
     cohort { Cohort.current || create(:cohort, :current) }
@@ -66,12 +65,7 @@ FactoryBot.define do
       unless evaluator.with_minimal_bands
         create(:participant_band, :band_a, call_off_contract: contract)
         create(:participant_band, :band_b, call_off_contract: contract)
-        if contract.revised_target.present?
-          create(:participant_band, :band_c_with_additional, max: contract.recruitment_target, call_off_contract: contract)
-          create(:participant_band, :additional, min: contract.recruitment_target + 1, max: contract.revised_target, call_off_contract: contract)
-        else
-          create(:participant_band, :band_c, max: contract.recruitment_target, call_off_contract: contract)
-        end
+        create(:participant_band, :band_c, max: contract.recruitment_target, call_off_contract: contract)
       end
     end
   end

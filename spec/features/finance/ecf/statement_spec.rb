@@ -5,7 +5,7 @@ require "rails_helper"
 RSpec.describe "Show ECF statement", :js do
   let!(:cpd_lead_provider) do
     create(:cpd_lead_provider, :with_lead_provider, name: "Lead provider name").tap do |cpd_lead_provider|
-      create(:call_off_contract, lead_provider: cpd_lead_provider.lead_provider, revised_target: 65).tap do |call_off_contract|
+      create(:call_off_contract, lead_provider: cpd_lead_provider.lead_provider).tap do |call_off_contract|
         band_a, band_b, band_c, band_d = call_off_contract.bands
         band_a.update!(min: nil, max: 2)
         band_b.update!(min: 3,  max: 5)

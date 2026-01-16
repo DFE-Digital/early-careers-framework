@@ -93,11 +93,9 @@ RSpec.describe Oneoffs::AddBandC do
       expect(new_call_off_contract1.uplift_amount).to eql(call_off_contract1.uplift_amount)
       expect(new_call_off_contract1.set_up_fee).to eql(call_off_contract1.set_up_fee)
       expect(new_call_off_contract1.monthly_service_fee).to eql(call_off_contract1.monthly_service_fee)
-
       expect(new_call_off_contract1.recruitment_target).to eql(455)
-      expect(new_call_off_contract1.revised_target).to eql(455)
-
       expect(new_call_off_contract1.bands.count).to eql(3)
+
       band_a, band_b, band_c = new_call_off_contract1.bands
 
       expect(band_a.min).to eql(0)
