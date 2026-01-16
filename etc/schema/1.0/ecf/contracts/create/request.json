@@ -4,7 +4,6 @@
   "uplift_target": 0.33,
   "uplift_amount": 100,
   "recruitment_target": 4500,
-  "revised_target": 4590,
   "set-up_fees": 149861,
   "band_a": {
     "max": 2000,

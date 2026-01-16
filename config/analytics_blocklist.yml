@@ -359,7 +359,6 @@
   - created_at
   - updated_at
   - lead_provider_id
-  - revised_target
   - cohort_id
   - monthly_service_fee
   :mentor_call_off_contracts:

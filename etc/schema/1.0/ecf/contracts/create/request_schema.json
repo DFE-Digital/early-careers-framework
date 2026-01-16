@@ -15,9 +15,6 @@
     "recruitment_target": {
       "type": "integer"
     },
-    "revised_target": {
-      "type": "integer"
-    },
     "set-up_fees": {
       "type": "number"
     },
@@ -102,7 +99,6 @@
     "uplift_target",
     "uplift_amount",
     "recruitment_target",
-    "revised_target",
     "set-up_fees",
     "band_a",
     "band_b",
