@@ -85,7 +85,6 @@ module Importers
         uplift_target: contract_data[:uplift_target],
         uplift_amount: contract_data[:uplift_amount],
         recruitment_target: contract_data[:recruitment_target],
-        revised_target: contract_data[:revised_target],
         set_up_fee: contract_data[:set_up_fee],
         monthly_service_fee: contract_data[:monthly_service_fee],
         raw: contract_data.to_json,
@@ -115,7 +114,6 @@ module Importers
         uplift_target: 0.33,
         uplift_amount: cohort.start_year >= 2025 ? nil : 100,
         recruitment_target: 4500,
-        revised_target: (4500 * CallOffContract::DEFAULT_REVISED_RECRUITMENT_TARGET_PERCENTAGE).to_i,
         set_up_fee: 0,
         monthly_service_fee: 0,
         band_a: {
@@ -146,7 +144,6 @@ module Importers
         uplift_target: row["uplift-target"],
         uplift_amount: row["uplift-amount"],
         recruitment_target: row["recruitment-target"],
-        revised_target: row["revised-target"],
         set_up_fee: row["set-up-fee"],
         monthly_service_fee: row["monthly-service-fee"],
         band_a: {

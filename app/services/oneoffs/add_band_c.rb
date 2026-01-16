@@ -34,7 +34,6 @@ module Oneoffs
           new_contract = old_contract.dup
           new_contract.version = new_version
           new_contract.recruitment_target = band_c_params[:max]
-          new_contract.revised_target = band_c_params[:max]
           new_contract.save!
 
           old_contract.participant_bands.each do |old_band|

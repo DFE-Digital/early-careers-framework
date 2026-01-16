@@ -67,7 +67,6 @@ module Oneoffs
         uplift_target: contract_data[:uplift_target],
         uplift_amount: contract_data[:uplift_amount],
         recruitment_target: contract_data[:recruitment_target],
-        revised_target: contract_data[:revised_target],
         set_up_fee: contract_data[:set_up_fee],
         monthly_service_fee: contract_data[:monthly_service_fee],
         raw: contract_data.to_json,
@@ -98,7 +97,6 @@ module Oneoffs
       existing_contract.uplift_target.to_s == contract_data[:uplift_target].to_f.to_s &&
         existing_contract.uplift_amount.to_s == contract_data[:uplift_amount].to_f.to_s &&
         existing_contract.recruitment_target == contract_data[:recruitment_target].to_i &&
-        existing_contract.revised_target == contract_data[:revised_target].to_i &&
         existing_contract.set_up_fee.to_s == contract_data[:set_up_fee].to_f.to_s &&
         existing_contract.monthly_service_fee.to_s == contract_data[:monthly_service_fee].to_f.to_s &&
 
@@ -142,7 +140,6 @@ module Oneoffs
         uplift_target: row["uplift-target"],
         uplift_amount: row["uplift-amount"],
         recruitment_target: row["recruitment-target"],
-        revised_target: row["revised-target"],
         set_up_fee: row["set-up-fee"],
         monthly_service_fee: row["monthly-service-fee"],
         band_a: {
