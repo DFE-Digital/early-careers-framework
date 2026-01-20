@@ -10,7 +10,6 @@ RSpec.describe Finance::Statements::Contracts::ECTMentor, type: :component do
       CallOffContract,
       bands:,
       recruitment_target: 999,
-      revised_target: 1111,
     )
   end
   let(:bands) do

@@ -13,7 +13,6 @@ RSpec.describe Finance::Statements::Contracts::ECF, type: :component do
       uplift_target: 0.4,
       uplift_amount: 1000,
       recruitment_target: 999,
-      revised_target: 1111,
       set_up_fee: 100,
     )
   end
