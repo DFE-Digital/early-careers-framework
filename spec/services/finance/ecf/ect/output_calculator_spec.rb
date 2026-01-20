@@ -35,7 +35,6 @@ RSpec.describe Finance::ECF::ECT::OutputCalculator do
       declaration_types.each do |declaration_type|
         mock_banding = instance_double(
           Finance::ECF::ECT::BandingCalculator,
-          previous_count: 5,
           count: 10,
           additions: 15,
           subtractions: 5,
@@ -50,7 +49,6 @@ RSpec.describe Finance::ECF::ECT::OutputCalculator do
     it "correctly delegates to ECT banding calculator" do
       declaration_types.each do |declaration_type|
         letters.each do |letter|
-          expect(subject.banding_for(declaration_type:).previous_count(letter)).to eq(5)
           expect(subject.banding_for(declaration_type:).count(letter)).to eq(10)
           expect(subject.banding_for(declaration_type:).additions(letter)).to eq(15)
           expect(subject.banding_for(declaration_type:).subtractions(letter)).to eq(5)
@@ -107,7 +105,6 @@ RSpec.describe Finance::ECF::ECT::OutputCalculator do
     before do
       mock_uplift = instance_double(
         Finance::ECF::ECT::UpliftCalculator,
-        previous_count: 5,
         count: 10,
         additions: 15,
         subtractions: 5,
@@ -119,7 +116,6 @@ RSpec.describe Finance::ECF::ECT::OutputCalculator do
     end
 
     it "correctly delegates to uplift calculator" do
-      expect(subject.uplift.previous_count).to eq(5)
       expect(subject.uplift.count).to eq(10)
       expect(subject.uplift.additions).to eq(15)
       expect(subject.uplift.subtractions).to eq(5)

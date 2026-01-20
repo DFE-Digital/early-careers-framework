@@ -30,22 +30,39 @@ module Finance
           total * vat_rate
         end
 
-        declaration_types.each do |declaration_type|
-          define_method "#{declaration_type}_fee_per_declaration" do
-            fee_for_declaration(type: declaration_type)
-          end
+        # Fee per declaration methods
+        def started_fee_per_declaration
+          fee_for_declaration(type: :started)
+        end
 
-          define_method "additions_for_#{declaration_type}" do
-            additions = output_calculator.additions(declaration_type)
-            fee = output_calculator.fee_for_declaration(type: declaration_type)
-            additions * fee
-          end
+        def completed_fee_per_declaration
+          fee_for_declaration(type: :completed)
+        end
 
-          define_method "deductions_for_#{declaration_type}" do
-            subtractions = output_calculator.subtractions(declaration_type)
-            fee = output_calculator.fee_for_declaration(type: declaration_type)
-            subtractions * fee
-          end
+        # Additions methods
+        def additions_for_started
+          additions = output_calculator.additions(:started)
+          fee = output_calculator.fee_for_declaration(type: :started)
+          additions * fee
+        end
+
+        def additions_for_completed
+          additions = output_calculator.additions(:completed)
+          fee = output_calculator.fee_for_declaration(type: :completed)
+          additions * fee
+        end
+
+        # Deductions methods
+        def deductions_for_started
+          subtractions = output_calculator.subtractions(:started)
+          fee = output_calculator.fee_for_declaration(type: :started)
+          subtractions * fee
+        end
+
+        def deductions_for_completed
+          subtractions = output_calculator.subtractions(:completed)
+          fee = output_calculator.fee_for_declaration(type: :completed)
+          subtractions * fee
         end
 
         def fee_for_declaration(type:)

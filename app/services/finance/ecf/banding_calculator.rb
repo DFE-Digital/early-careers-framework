@@ -11,18 +11,6 @@ module Finance
         calculate
       end
 
-      def min(letter)
-        banding_by_letter(letter)[:min]
-      end
-
-      def max(letter)
-        banding_by_letter(letter)[:max]
-      end
-
-      def previous_count(letter)
-        banding_by_letter(letter)[:previous_count]
-      end
-
       def count(letter)
         banding_by_letter(letter)[:count]
       end

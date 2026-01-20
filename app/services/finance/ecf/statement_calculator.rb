@@ -57,54 +57,622 @@ module Finance
         total * vat_rate
       end
 
-      event_types.each do |event_type|
-        declaration_type = event_type.to_s.dasherize
+      # started band methods
+      def started_band_a_additions
+        output_calculator.banding_for(declaration_type: "started").additions(:a)
+      end
 
-        band_mapping.each_key do |letter|
-          define_method "#{event_type}_band_#{letter}_count" do
-            output_calculator.banding_for(declaration_type:).count(letter)
-          end
+      def started_band_a_subtractions
+        output_calculator.banding_for(declaration_type: "started").subtractions(:a)
+      end
 
-          define_method "#{event_type}_band_#{letter}_additions" do
-            output_calculator.banding_for(declaration_type:).additions(letter)
-          end
+      def started_band_a_fee_per_declaration
+        output_calculator.fee_for_declaration(band_letter: :a, type: :started)
+      end
 
-          define_method "#{event_type}_band_#{letter}_subtractions" do
-            output_calculator.banding_for(declaration_type:).subtractions(letter)
-          end
+      def started_band_b_additions
+        output_calculator.banding_for(declaration_type: "started").additions(:b)
+      end
 
-          define_method "#{event_type}_band_#{letter}_fee_per_declaration" do
-            output_calculator.fee_for_declaration(band_letter: letter, type: event_type)
-          end
-        end
+      def started_band_b_subtractions
+        output_calculator.banding_for(declaration_type: "started").subtractions(:b)
+      end
 
-        define_method "additions_for_#{event_type}" do
-          band_letters.sum do |letter|
-            additions = output_calculator.banding_for(declaration_type:).additions(letter)
-            fee = output_calculator.fee_for_declaration(band_letter: letter, type: event_type)
-            additions * fee
-          end
-        end
+      def started_band_b_fee_per_declaration
+        output_calculator.fee_for_declaration(band_letter: :b, type: :started)
+      end
 
-        define_method "deductions_for_#{event_type}" do
-          band_letters.sum do |letter|
-            subtractions = output_calculator.banding_for(declaration_type:).subtractions(letter)
-            fee = output_calculator.fee_for_declaration(band_letter: letter, type: event_type)
-            subtractions * fee
-          end
+      def started_band_c_additions
+        output_calculator.banding_for(declaration_type: "started").additions(:c)
+      end
+
+      def started_band_c_subtractions
+        output_calculator.banding_for(declaration_type: "started").subtractions(:c)
+      end
+
+      def started_band_c_fee_per_declaration
+        output_calculator.fee_for_declaration(band_letter: :c, type: :started)
+      end
+
+      def started_band_d_additions
+        output_calculator.banding_for(declaration_type: "started").additions(:d)
+      end
+
+      def started_band_d_subtractions
+        output_calculator.banding_for(declaration_type: "started").subtractions(:d)
+      end
+
+      def started_band_d_fee_per_declaration
+        output_calculator.fee_for_declaration(band_letter: :d, type: :started)
+      end
+
+      def additions_for_started
+        band_letters.sum do |letter|
+          additions = output_calculator.banding_for(declaration_type: "started").additions(letter)
+          fee = output_calculator.fee_for_declaration(band_letter: letter, type: :started)
+          additions * fee
         end
       end
 
-      band_mapping.each_key do |letter|
-        define_method "extended_band_#{letter}_additions" do
-          send("extended_1_band_#{letter}_additions") +
-            send("extended_2_band_#{letter}_additions") +
-            send("extended_3_band_#{letter}_additions")
+      def deductions_for_started
+        band_letters.sum do |letter|
+          subtractions = output_calculator.banding_for(declaration_type: "started").subtractions(letter)
+          fee = output_calculator.fee_for_declaration(band_letter: letter, type: :started)
+          subtractions * fee
         end
+      end
 
-        define_method "extended_band_#{letter}_fee_per_declaration" do
-          send("extended_1_band_#{letter}_fee_per_declaration")
+      # retained_1 band methods
+      def retained_1_band_a_additions
+        output_calculator.banding_for(declaration_type: "retained-1").additions(:a)
+      end
+
+      def retained_1_band_a_subtractions
+        output_calculator.banding_for(declaration_type: "retained-1").subtractions(:a)
+      end
+
+      def retained_1_band_a_fee_per_declaration
+        output_calculator.fee_for_declaration(band_letter: :a, type: :retained_1)
+      end
+
+      def retained_1_band_b_additions
+        output_calculator.banding_for(declaration_type: "retained-1").additions(:b)
+      end
+
+      def retained_1_band_b_subtractions
+        output_calculator.banding_for(declaration_type: "retained-1").subtractions(:b)
+      end
+
+      def retained_1_band_b_fee_per_declaration
+        output_calculator.fee_for_declaration(band_letter: :b, type: :retained_1)
+      end
+
+      def retained_1_band_c_additions
+        output_calculator.banding_for(declaration_type: "retained-1").additions(:c)
+      end
+
+      def retained_1_band_c_subtractions
+        output_calculator.banding_for(declaration_type: "retained-1").subtractions(:c)
+      end
+
+      def retained_1_band_c_fee_per_declaration
+        output_calculator.fee_for_declaration(band_letter: :c, type: :retained_1)
+      end
+
+      def retained_1_band_d_additions
+        output_calculator.banding_for(declaration_type: "retained-1").additions(:d)
+      end
+
+      def retained_1_band_d_subtractions
+        output_calculator.banding_for(declaration_type: "retained-1").subtractions(:d)
+      end
+
+      def retained_1_band_d_fee_per_declaration
+        output_calculator.fee_for_declaration(band_letter: :d, type: :retained_1)
+      end
+
+      def additions_for_retained_1
+        band_letters.sum do |letter|
+          additions = output_calculator.banding_for(declaration_type: "retained-1").additions(letter)
+          fee = output_calculator.fee_for_declaration(band_letter: letter, type: :retained_1)
+          additions * fee
         end
+      end
+
+      def deductions_for_retained_1
+        band_letters.sum do |letter|
+          subtractions = output_calculator.banding_for(declaration_type: "retained-1").subtractions(letter)
+          fee = output_calculator.fee_for_declaration(band_letter: letter, type: :retained_1)
+          subtractions * fee
+        end
+      end
+
+      # retained_2 band methods
+      def retained_2_band_a_additions
+        output_calculator.banding_for(declaration_type: "retained-2").additions(:a)
+      end
+
+      def retained_2_band_a_subtractions
+        output_calculator.banding_for(declaration_type: "retained-2").subtractions(:a)
+      end
+
+      def retained_2_band_a_fee_per_declaration
+        output_calculator.fee_for_declaration(band_letter: :a, type: :retained_2)
+      end
+
+      def retained_2_band_b_additions
+        output_calculator.banding_for(declaration_type: "retained-2").additions(:b)
+      end
+
+      def retained_2_band_b_subtractions
+        output_calculator.banding_for(declaration_type: "retained-2").subtractions(:b)
+      end
+
+      def retained_2_band_b_fee_per_declaration
+        output_calculator.fee_for_declaration(band_letter: :b, type: :retained_2)
+      end
+
+      def retained_2_band_c_additions
+        output_calculator.banding_for(declaration_type: "retained-2").additions(:c)
+      end
+
+      def retained_2_band_c_subtractions
+        output_calculator.banding_for(declaration_type: "retained-2").subtractions(:c)
+      end
+
+      def retained_2_band_c_fee_per_declaration
+        output_calculator.fee_for_declaration(band_letter: :c, type: :retained_2)
+      end
+
+      def retained_2_band_d_additions
+        output_calculator.banding_for(declaration_type: "retained-2").additions(:d)
+      end
+
+      def retained_2_band_d_subtractions
+        output_calculator.banding_for(declaration_type: "retained-2").subtractions(:d)
+      end
+
+      def retained_2_band_d_fee_per_declaration
+        output_calculator.fee_for_declaration(band_letter: :d, type: :retained_2)
+      end
+
+      def additions_for_retained_2
+        band_letters.sum do |letter|
+          additions = output_calculator.banding_for(declaration_type: "retained-2").additions(letter)
+          fee = output_calculator.fee_for_declaration(band_letter: letter, type: :retained_2)
+          additions * fee
+        end
+      end
+
+      def deductions_for_retained_2
+        band_letters.sum do |letter|
+          subtractions = output_calculator.banding_for(declaration_type: "retained-2").subtractions(letter)
+          fee = output_calculator.fee_for_declaration(band_letter: letter, type: :retained_2)
+          subtractions * fee
+        end
+      end
+
+      # retained_3 band methods
+      def retained_3_band_a_additions
+        output_calculator.banding_for(declaration_type: "retained-3").additions(:a)
+      end
+
+      def retained_3_band_a_subtractions
+        output_calculator.banding_for(declaration_type: "retained-3").subtractions(:a)
+      end
+
+      def retained_3_band_a_fee_per_declaration
+        output_calculator.fee_for_declaration(band_letter: :a, type: :retained_3)
+      end
+
+      def retained_3_band_b_additions
+        output_calculator.banding_for(declaration_type: "retained-3").additions(:b)
+      end
+
+      def retained_3_band_b_subtractions
+        output_calculator.banding_for(declaration_type: "retained-3").subtractions(:b)
+      end
+
+      def retained_3_band_b_fee_per_declaration
+        output_calculator.fee_for_declaration(band_letter: :b, type: :retained_3)
+      end
+
+      def retained_3_band_c_additions
+        output_calculator.banding_for(declaration_type: "retained-3").additions(:c)
+      end
+
+      def retained_3_band_c_subtractions
+        output_calculator.banding_for(declaration_type: "retained-3").subtractions(:c)
+      end
+
+      def retained_3_band_c_fee_per_declaration
+        output_calculator.fee_for_declaration(band_letter: :c, type: :retained_3)
+      end
+
+      def retained_3_band_d_additions
+        output_calculator.banding_for(declaration_type: "retained-3").additions(:d)
+      end
+
+      def retained_3_band_d_subtractions
+        output_calculator.banding_for(declaration_type: "retained-3").subtractions(:d)
+      end
+
+      def retained_3_band_d_fee_per_declaration
+        output_calculator.fee_for_declaration(band_letter: :d, type: :retained_3)
+      end
+
+      def additions_for_retained_3
+        band_letters.sum do |letter|
+          additions = output_calculator.banding_for(declaration_type: "retained-3").additions(letter)
+          fee = output_calculator.fee_for_declaration(band_letter: letter, type: :retained_3)
+          additions * fee
+        end
+      end
+
+      def deductions_for_retained_3
+        band_letters.sum do |letter|
+          subtractions = output_calculator.banding_for(declaration_type: "retained-3").subtractions(letter)
+          fee = output_calculator.fee_for_declaration(band_letter: letter, type: :retained_3)
+          subtractions * fee
+        end
+      end
+
+      # retained_4 band methods
+      def retained_4_band_a_additions
+        output_calculator.banding_for(declaration_type: "retained-4").additions(:a)
+      end
+
+      def retained_4_band_a_subtractions
+        output_calculator.banding_for(declaration_type: "retained-4").subtractions(:a)
+      end
+
+      def retained_4_band_a_fee_per_declaration
+        output_calculator.fee_for_declaration(band_letter: :a, type: :retained_4)
+      end
+
+      def retained_4_band_b_additions
+        output_calculator.banding_for(declaration_type: "retained-4").additions(:b)
+      end
+
+      def retained_4_band_b_subtractions
+        output_calculator.banding_for(declaration_type: "retained-4").subtractions(:b)
+      end
+
+      def retained_4_band_b_fee_per_declaration
+        output_calculator.fee_for_declaration(band_letter: :b, type: :retained_4)
+      end
+
+      def retained_4_band_c_additions
+        output_calculator.banding_for(declaration_type: "retained-4").additions(:c)
+      end
+
+      def retained_4_band_c_subtractions
+        output_calculator.banding_for(declaration_type: "retained-4").subtractions(:c)
+      end
+
+      def retained_4_band_c_fee_per_declaration
+        output_calculator.fee_for_declaration(band_letter: :c, type: :retained_4)
+      end
+
+      def retained_4_band_d_additions
+        output_calculator.banding_for(declaration_type: "retained-4").additions(:d)
+      end
+
+      def retained_4_band_d_subtractions
+        output_calculator.banding_for(declaration_type: "retained-4").subtractions(:d)
+      end
+
+      def retained_4_band_d_fee_per_declaration
+        output_calculator.fee_for_declaration(band_letter: :d, type: :retained_4)
+      end
+
+      def additions_for_retained_4
+        band_letters.sum do |letter|
+          additions = output_calculator.banding_for(declaration_type: "retained-4").additions(letter)
+          fee = output_calculator.fee_for_declaration(band_letter: letter, type: :retained_4)
+          additions * fee
+        end
+      end
+
+      def deductions_for_retained_4
+        band_letters.sum do |letter|
+          subtractions = output_calculator.banding_for(declaration_type: "retained-4").subtractions(letter)
+          fee = output_calculator.fee_for_declaration(band_letter: letter, type: :retained_4)
+          subtractions * fee
+        end
+      end
+
+      # completed band methods
+      def completed_band_a_additions
+        output_calculator.banding_for(declaration_type: "completed").additions(:a)
+      end
+
+      def completed_band_a_subtractions
+        output_calculator.banding_for(declaration_type: "completed").subtractions(:a)
+      end
+
+      def completed_band_a_fee_per_declaration
+        output_calculator.fee_for_declaration(band_letter: :a, type: :completed)
+      end
+
+      def completed_band_b_additions
+        output_calculator.banding_for(declaration_type: "completed").additions(:b)
+      end
+
+      def completed_band_b_subtractions
+        output_calculator.banding_for(declaration_type: "completed").subtractions(:b)
+      end
+
+      def completed_band_b_fee_per_declaration
+        output_calculator.fee_for_declaration(band_letter: :b, type: :completed)
+      end
+
+      def completed_band_c_additions
+        output_calculator.banding_for(declaration_type: "completed").additions(:c)
+      end
+
+      def completed_band_c_subtractions
+        output_calculator.banding_for(declaration_type: "completed").subtractions(:c)
+      end
+
+      def completed_band_c_fee_per_declaration
+        output_calculator.fee_for_declaration(band_letter: :c, type: :completed)
+      end
+
+      def completed_band_d_additions
+        output_calculator.banding_for(declaration_type: "completed").additions(:d)
+      end
+
+      def completed_band_d_subtractions
+        output_calculator.banding_for(declaration_type: "completed").subtractions(:d)
+      end
+
+      def completed_band_d_fee_per_declaration
+        output_calculator.fee_for_declaration(band_letter: :d, type: :completed)
+      end
+
+      def additions_for_completed
+        band_letters.sum do |letter|
+          additions = output_calculator.banding_for(declaration_type: "completed").additions(letter)
+          fee = output_calculator.fee_for_declaration(band_letter: letter, type: :completed)
+          additions * fee
+        end
+      end
+
+      def deductions_for_completed
+        band_letters.sum do |letter|
+          subtractions = output_calculator.banding_for(declaration_type: "completed").subtractions(letter)
+          fee = output_calculator.fee_for_declaration(band_letter: letter, type: :completed)
+          subtractions * fee
+        end
+      end
+
+      # extended_1 band methods
+      def extended_1_band_a_additions
+        output_calculator.banding_for(declaration_type: "extended-1").additions(:a)
+      end
+
+      def extended_1_band_a_subtractions
+        output_calculator.banding_for(declaration_type: "extended-1").subtractions(:a)
+      end
+
+      def extended_1_band_a_fee_per_declaration
+        output_calculator.fee_for_declaration(band_letter: :a, type: :extended_1)
+      end
+
+      def extended_1_band_b_additions
+        output_calculator.banding_for(declaration_type: "extended-1").additions(:b)
+      end
+
+      def extended_1_band_b_subtractions
+        output_calculator.banding_for(declaration_type: "extended-1").subtractions(:b)
+      end
+
+      def extended_1_band_b_fee_per_declaration
+        output_calculator.fee_for_declaration(band_letter: :b, type: :extended_1)
+      end
+
+      def extended_1_band_c_additions
+        output_calculator.banding_for(declaration_type: "extended-1").additions(:c)
+      end
+
+      def extended_1_band_c_subtractions
+        output_calculator.banding_for(declaration_type: "extended-1").subtractions(:c)
+      end
+
+      def extended_1_band_c_fee_per_declaration
+        output_calculator.fee_for_declaration(band_letter: :c, type: :extended_1)
+      end
+
+      def extended_1_band_d_additions
+        output_calculator.banding_for(declaration_type: "extended-1").additions(:d)
+      end
+
+      def extended_1_band_d_subtractions
+        output_calculator.banding_for(declaration_type: "extended-1").subtractions(:d)
+      end
+
+      def extended_1_band_d_fee_per_declaration
+        output_calculator.fee_for_declaration(band_letter: :d, type: :extended_1)
+      end
+
+      def additions_for_extended_1
+        band_letters.sum do |letter|
+          additions = output_calculator.banding_for(declaration_type: "extended-1").additions(letter)
+          fee = output_calculator.fee_for_declaration(band_letter: letter, type: :extended_1)
+          additions * fee
+        end
+      end
+
+      def deductions_for_extended_1
+        band_letters.sum do |letter|
+          subtractions = output_calculator.banding_for(declaration_type: "extended-1").subtractions(letter)
+          fee = output_calculator.fee_for_declaration(band_letter: letter, type: :extended_1)
+          subtractions * fee
+        end
+      end
+
+      # extended_2 band methods
+      def extended_2_band_a_additions
+        output_calculator.banding_for(declaration_type: "extended-2").additions(:a)
+      end
+
+      def extended_2_band_a_subtractions
+        output_calculator.banding_for(declaration_type: "extended-2").subtractions(:a)
+      end
+
+      def extended_2_band_a_fee_per_declaration
+        output_calculator.fee_for_declaration(band_letter: :a, type: :extended_2)
+      end
+
+      def extended_2_band_b_additions
+        output_calculator.banding_for(declaration_type: "extended-2").additions(:b)
+      end
+
+      def extended_2_band_b_subtractions
+        output_calculator.banding_for(declaration_type: "extended-2").subtractions(:b)
+      end
+
+      def extended_2_band_b_fee_per_declaration
+        output_calculator.fee_for_declaration(band_letter: :b, type: :extended_2)
+      end
+
+      def extended_2_band_c_additions
+        output_calculator.banding_for(declaration_type: "extended-2").additions(:c)
+      end
+
+      def extended_2_band_c_subtractions
+        output_calculator.banding_for(declaration_type: "extended-2").subtractions(:c)
+      end
+
+      def extended_2_band_c_fee_per_declaration
+        output_calculator.fee_for_declaration(band_letter: :c, type: :extended_2)
+      end
+
+      def extended_2_band_d_additions
+        output_calculator.banding_for(declaration_type: "extended-2").additions(:d)
+      end
+
+      def extended_2_band_d_subtractions
+        output_calculator.banding_for(declaration_type: "extended-2").subtractions(:d)
+      end
+
+      def extended_2_band_d_fee_per_declaration
+        output_calculator.fee_for_declaration(band_letter: :d, type: :extended_2)
+      end
+
+      def additions_for_extended_2
+        band_letters.sum do |letter|
+          additions = output_calculator.banding_for(declaration_type: "extended-2").additions(letter)
+          fee = output_calculator.fee_for_declaration(band_letter: letter, type: :extended_2)
+          additions * fee
+        end
+      end
+
+      def deductions_for_extended_2
+        band_letters.sum do |letter|
+          subtractions = output_calculator.banding_for(declaration_type: "extended-2").subtractions(letter)
+          fee = output_calculator.fee_for_declaration(band_letter: letter, type: :extended_2)
+          subtractions * fee
+        end
+      end
+
+      # extended_3 band methods
+      def extended_3_band_a_additions
+        output_calculator.banding_for(declaration_type: "extended-3").additions(:a)
+      end
+
+      def extended_3_band_a_subtractions
+        output_calculator.banding_for(declaration_type: "extended-3").subtractions(:a)
+      end
+
+      def extended_3_band_a_fee_per_declaration
+        output_calculator.fee_for_declaration(band_letter: :a, type: :extended_3)
+      end
+
+      def extended_3_band_b_additions
+        output_calculator.banding_for(declaration_type: "extended-3").additions(:b)
+      end
+
+      def extended_3_band_b_subtractions
+        output_calculator.banding_for(declaration_type: "extended-3").subtractions(:b)
+      end
+
+      def extended_3_band_b_fee_per_declaration
+        output_calculator.fee_for_declaration(band_letter: :b, type: :extended_3)
+      end
+
+      def extended_3_band_c_additions
+        output_calculator.banding_for(declaration_type: "extended-3").additions(:c)
+      end
+
+      def extended_3_band_c_subtractions
+        output_calculator.banding_for(declaration_type: "extended-3").subtractions(:c)
+      end
+
+      def extended_3_band_c_fee_per_declaration
+        output_calculator.fee_for_declaration(band_letter: :c, type: :extended_3)
+      end
+
+      def extended_3_band_d_additions
+        output_calculator.banding_for(declaration_type: "extended-3").additions(:d)
+      end
+
+      def extended_3_band_d_subtractions
+        output_calculator.banding_for(declaration_type: "extended-3").subtractions(:d)
+      end
+
+      def extended_3_band_d_fee_per_declaration
+        output_calculator.fee_for_declaration(band_letter: :d, type: :extended_3)
+      end
+
+      def additions_for_extended_3
+        band_letters.sum do |letter|
+          additions = output_calculator.banding_for(declaration_type: "extended-3").additions(letter)
+          fee = output_calculator.fee_for_declaration(band_letter: letter, type: :extended_3)
+          additions * fee
+        end
+      end
+
+      def deductions_for_extended_3
+        band_letters.sum do |letter|
+          subtractions = output_calculator.banding_for(declaration_type: "extended-3").subtractions(letter)
+          fee = output_calculator.fee_for_declaration(band_letter: letter, type: :extended_3)
+          subtractions * fee
+        end
+      end
+
+      # extended aggregate methods (combines extended_1, extended_2, extended_3)
+      def extended_band_a_additions
+        extended_1_band_a_additions + extended_2_band_a_additions + extended_3_band_a_additions
+      end
+
+      def extended_band_a_fee_per_declaration
+        extended_1_band_a_fee_per_declaration
+      end
+
+      def extended_band_b_additions
+        extended_1_band_b_additions + extended_2_band_b_additions + extended_3_band_b_additions
+      end
+
+      def extended_band_b_fee_per_declaration
+        extended_1_band_b_fee_per_declaration
+      end
+
+      def extended_band_c_additions
+        extended_1_band_c_additions + extended_2_band_c_additions + extended_3_band_c_additions
+      end
+
+      def extended_band_c_fee_per_declaration
+        extended_1_band_c_fee_per_declaration
+      end
+
+      def extended_band_d_additions
+        extended_1_band_d_additions + extended_2_band_d_additions + extended_3_band_d_additions
+      end
+
+      def extended_band_d_fee_per_declaration
+        extended_1_band_d_fee_per_declaration
       end
 
       def additions_for_extended

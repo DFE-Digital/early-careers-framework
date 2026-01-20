@@ -15,33 +15,12 @@ RSpec.describe Finance::ECF::BandingCalculator, mid_cohort: true do
   let(:calculator_two_months_ago) { described_class.new(statement: statement_two_months_ago, declaration_type:) }
   subject { described_class.new(statement:, declaration_type:) }
 
-  describe "#min" do
-    it "returns min for all the bands" do
-      expect(subject.min(:a)).to eq(1)
-      expect(subject.min(:b)).to eq(bands[1].min)
-      expect(subject.min(:c)).to eq(bands[2].min)
-      expect(subject.min(:d)).to eq(bands[3].min)
-      expect(subject.min(:e)).to be_nil
-    end
-  end
-
-  describe "#max" do
-    it "returns max for all the bands" do
-      expect(subject.max(:a)).to eq(bands[0].max)
-      expect(subject.max(:b)).to eq(bands[1].max)
-      expect(subject.max(:c)).to eq(bands[2].max)
-      expect(subject.max(:d)).to eq(bands[3].max)
-      expect(subject.max(:e)).to be_nil
-    end
-  end
-
   describe "#calculate" do
     let(:letters) { %i[a b c d] }
 
     context "when there are no declarations" do
       it "returns zero" do
         letters.each do |letter|
-          expect(subject.previous_count(letter)).to eq(0)
           expect(subject.count(letter)).to eq(0)
           expect(subject.additions(letter)).to eq(0)
           expect(subject.subtractions(letter)).to eq(0)
@@ -64,7 +43,6 @@ RSpec.describe Finance::ECF::BandingCalculator, mid_cohort: true do
 
       it "returns zero" do
         letters.each do |letter|
-          expect(subject.previous_count(letter)).to eq(0)
           expect(subject.count(letter)).to eq(0)
           expect(subject.additions(letter)).to eq(0)
           expect(subject.subtractions(letter)).to eq(0)
@@ -80,13 +58,11 @@ RSpec.describe Finance::ECF::BandingCalculator, mid_cohort: true do
       end
 
       it "returns the number of declarations" do
-        expect(subject.previous_count(:a)).to eq(0)
         expect(subject.count(:a)).to eq(1)
         expect(subject.additions(:a)).to eq(1)
         expect(subject.subtractions(:a)).to eq(0)
 
         (letters - [:a]).each do |letter|
-          expect(subject.previous_count(letter)).to eq(0)
           expect(subject.count(letter)).to eq(0)
           expect(subject.additions(letter)).to eq(0)
           expect(subject.subtractions(letter)).to eq(0)
@@ -103,18 +79,15 @@ RSpec.describe Finance::ECF::BandingCalculator, mid_cohort: true do
       end
 
       it "returns the maximum number allowed in the band" do
-        expect(subject.previous_count(:a)).to eq(0)
         expect(subject.count(:a)).to eq(2)
         expect(subject.additions(:a)).to eq(2)
         expect(subject.subtractions(:a)).to eq(0)
 
-        expect(subject.previous_count(:b)).to eq(0)
         expect(subject.count(:b)).to eq(1)
         expect(subject.additions(:b)).to eq(1)
         expect(subject.subtractions(:b)).to eq(0)
 
         (letters - %i[a b]).each do |letter|
-          expect(subject.previous_count(letter)).to eq(0)
           expect(subject.count(letter)).to eq(0)
           expect(subject.additions(letter)).to eq(0)
           expect(subject.subtractions(letter)).to eq(0)
@@ -132,7 +105,6 @@ RSpec.describe Finance::ECF::BandingCalculator, mid_cohort: true do
 
       it "returns the maximum fill for all bands" do
         letters.each do |letter|
-          expect(subject.previous_count(letter)).to eq(0)
           expect(subject.count(letter)).to eq(2)
           expect(subject.additions(letter)).to eq(2)
           expect(subject.subtractions(letter)).to eq(0)
@@ -148,14 +120,12 @@ RSpec.describe Finance::ECF::BandingCalculator, mid_cohort: true do
       end
 
       context "there are no declarations on this statement" do
-        it "returns previous count" do
-          expect(subject.previous_count(:a)).to eq(1)
+        it "returns count for this statement" do
           expect(subject.count(:a)).to eq(0)
           expect(subject.additions(:a)).to eq(0)
           expect(subject.subtractions(:a)).to eq(0)
 
           (letters - %i[a]).each do |letter|
-            expect(subject.previous_count(letter)).to eq(0)
             expect(subject.count(letter)).to eq(0)
             expect(subject.additions(letter)).to eq(0)
             expect(subject.subtractions(letter)).to eq(0)
@@ -170,14 +140,12 @@ RSpec.describe Finance::ECF::BandingCalculator, mid_cohort: true do
           end
         end
 
-        it "returns previous count and current count" do
-          expect(subject.previous_count(:a)).to eq(1)
+        it "returns current count" do
           expect(subject.count(:a)).to eq(1)
           expect(subject.additions(:a)).to eq(1)
           expect(subject.subtractions(:a)).to eq(0)
 
           (letters - %i[a]).each do |letter|
-            expect(subject.previous_count(letter)).to eq(0)
             expect(subject.count(letter)).to eq(0)
             expect(subject.additions(letter)).to eq(0)
             expect(subject.subtractions(letter)).to eq(0)
@@ -192,19 +160,16 @@ RSpec.describe Finance::ECF::BandingCalculator, mid_cohort: true do
           end
         end
 
-        it "returns previous count and current count, filling into band B" do
-          expect(subject.previous_count(:a)).to eq(1)
+        it "returns current count, filling into band B" do
           expect(subject.count(:a)).to eq(1)
           expect(subject.additions(:a)).to eq(1)
           expect(subject.subtractions(:a)).to eq(0)
 
-          expect(subject.previous_count(:b)).to eq(0)
           expect(subject.count(:b)).to eq(1)
           expect(subject.additions(:b)).to eq(1)
           expect(subject.subtractions(:b)).to eq(0)
 
           (letters - %i[a b]).each do |letter|
-            expect(subject.previous_count(letter)).to eq(0)
             expect(subject.count(letter)).to eq(0)
             expect(subject.additions(letter)).to eq(0)
             expect(subject.subtractions(letter)).to eq(0)
@@ -224,19 +189,16 @@ RSpec.describe Finance::ECF::BandingCalculator, mid_cohort: true do
         end
       end
 
-      it "returns previous count filled and current count overflows to band B" do
-        expect(subject.previous_count(:a)).to eq(2)
+      it "returns current count overflows to band B" do
         expect(subject.count(:a)).to eq(0)
         expect(subject.additions(:a)).to eq(0)
         expect(subject.subtractions(:a)).to eq(0)
 
-        expect(subject.previous_count(:b)).to eq(0)
         expect(subject.count(:b)).to eq(1)
         expect(subject.additions(:b)).to eq(1)
         expect(subject.subtractions(:b)).to eq(0)
 
         (letters - %i[a b]).each do |letter|
-          expect(subject.previous_count(letter)).to eq(0)
           expect(subject.count(letter)).to eq(0)
           expect(subject.additions(letter)).to eq(0)
           expect(subject.subtractions(letter)).to eq(0)
@@ -257,22 +219,18 @@ RSpec.describe Finance::ECF::BandingCalculator, mid_cohort: true do
       end
 
       it "returns band values" do
-        expect(subject.previous_count(:a)).to eq(2)
         expect(subject.count(:a)).to eq(0)
         expect(subject.additions(:a)).to eq(0)
         expect(subject.subtractions(:a)).to eq(0)
 
-        expect(subject.previous_count(:b)).to eq(2)
         expect(subject.count(:b)).to eq(0)
         expect(subject.additions(:b)).to eq(0)
         expect(subject.subtractions(:b)).to eq(0)
 
-        expect(subject.previous_count(:c)).to eq(0)
         expect(subject.count(:c)).to eq(2)
         expect(subject.additions(:c)).to eq(2)
         expect(subject.subtractions(:c)).to eq(0)
 
-        expect(subject.previous_count(:d)).to eq(0)
         expect(subject.count(:d)).to eq(1)
         expect(subject.additions(:d)).to eq(1)
         expect(subject.subtractions(:d)).to eq(0)
@@ -316,18 +274,15 @@ RSpec.describe Finance::ECF::BandingCalculator, mid_cohort: true do
         end
 
         it "returns values for statement 1 month ago" do
-          expect(calculator_one_month_ago.previous_count(:a)).to eq(0)
           expect(calculator_one_month_ago.count(:a)).to eq(2)
           expect(calculator_one_month_ago.additions(:a)).to eq(2)
           expect(calculator_one_month_ago.subtractions(:a)).to eq(0)
 
-          expect(calculator_one_month_ago.previous_count(:b)).to eq(0)
           expect(calculator_one_month_ago.count(:b)).to eq(2)
           expect(calculator_one_month_ago.additions(:b)).to eq(2)
           expect(calculator_one_month_ago.subtractions(:b)).to eq(0)
 
           (letters - %i[a b]).each do |letter|
-            expect(calculator_one_month_ago.previous_count(letter)).to eq(0)
             expect(calculator_one_month_ago.count(letter)).to eq(0)
             expect(calculator_one_month_ago.additions(letter)).to eq(0)
             expect(calculator_one_month_ago.subtractions(letter)).to eq(0)
@@ -335,18 +290,15 @@ RSpec.describe Finance::ECF::BandingCalculator, mid_cohort: true do
         end
 
         it "returns values with clawbacks for this month statement" do
-          expect(subject.previous_count(:a)).to eq(2)
           expect(subject.count(:a)).to eq(0)
           expect(subject.additions(:a)).to eq(0)
           expect(subject.subtractions(:a)).to eq(0)
 
-          expect(subject.previous_count(:b)).to eq(2)
           expect(subject.count(:b)).to eq(-2)
           expect(subject.additions(:b)).to eq(0)
           expect(subject.subtractions(:b)).to eq(2)
 
           (letters - %i[a b]).each do |letter|
-            expect(subject.previous_count(letter)).to eq(0)
             expect(subject.count(letter)).to eq(0)
             expect(subject.additions(letter)).to eq(0)
             expect(subject.subtractions(letter)).to eq(0)
@@ -375,18 +327,15 @@ RSpec.describe Finance::ECF::BandingCalculator, mid_cohort: true do
         end
 
         it "returns values for statement 1 month ago" do
-          expect(calculator_one_month_ago.previous_count(:a)).to eq(0)
           expect(calculator_one_month_ago.count(:a)).to eq(2)
           expect(calculator_one_month_ago.additions(:a)).to eq(2)
           expect(calculator_one_month_ago.subtractions(:a)).to eq(0)
 
-          expect(calculator_one_month_ago.previous_count(:b)).to eq(0)
           expect(calculator_one_month_ago.count(:b)).to eq(2)
           expect(calculator_one_month_ago.additions(:b)).to eq(2)
           expect(calculator_one_month_ago.subtractions(:b)).to eq(0)
 
           (letters - %i[a b]).each do |letter|
-            expect(calculator_one_month_ago.previous_count(letter)).to eq(0)
             expect(calculator_one_month_ago.count(letter)).to eq(0)
             expect(calculator_one_month_ago.additions(letter)).to eq(0)
             expect(calculator_one_month_ago.subtractions(letter)).to eq(0)
@@ -394,22 +343,18 @@ RSpec.describe Finance::ECF::BandingCalculator, mid_cohort: true do
         end
 
         it "returns values with clawbacks for this month statement" do
-          expect(subject.previous_count(:a)).to eq(2)
           expect(subject.count(:a)).to eq(0)
           expect(subject.additions(:a)).to eq(0)
           expect(subject.subtractions(:a)).to eq(0)
 
-          expect(subject.previous_count(:b)).to eq(2)
           expect(subject.count(:b)).to eq(0)
           expect(subject.additions(:b)).to eq(0)
           expect(subject.subtractions(:b)).to eq(0)
 
-          expect(subject.previous_count(:c)).to eq(0)
           expect(subject.count(:c)).to eq(1)
           expect(subject.additions(:c)).to eq(2)
           expect(subject.subtractions(:c)).to eq(1)
 
-          expect(subject.previous_count(:d)).to eq(0)
           expect(subject.count(:d)).to eq(0)
           expect(subject.additions(:d)).to eq(1)
           expect(subject.subtractions(:d)).to eq(1)
@@ -446,18 +391,15 @@ RSpec.describe Finance::ECF::BandingCalculator, mid_cohort: true do
         end
 
         it "returns values for statement 2 months ago" do
-          expect(calculator_two_months_ago.previous_count(:a)).to eq(0)
           expect(calculator_two_months_ago.count(:a)).to eq(2)
           expect(calculator_two_months_ago.additions(:a)).to eq(2)
           expect(calculator_two_months_ago.subtractions(:a)).to eq(0)
 
-          expect(calculator_two_months_ago.previous_count(:b)).to eq(0)
           expect(calculator_two_months_ago.count(:b)).to eq(2)
           expect(calculator_two_months_ago.additions(:b)).to eq(2)
           expect(calculator_two_months_ago.subtractions(:b)).to eq(0)
 
           (letters - %i[a b]).each do |letter|
-            expect(calculator_two_months_ago.previous_count(letter)).to eq(0)
             expect(calculator_two_months_ago.count(letter)).to eq(0)
             expect(calculator_two_months_ago.additions(letter)).to eq(0)
             expect(calculator_two_months_ago.subtractions(letter)).to eq(0)
@@ -465,44 +407,36 @@ RSpec.describe Finance::ECF::BandingCalculator, mid_cohort: true do
         end
 
         it "returns values for statement 1 month ago" do
-          expect(calculator_one_month_ago.previous_count(:a)).to eq(2)
           expect(calculator_one_month_ago.count(:a)).to eq(0)
           expect(calculator_one_month_ago.additions(:a)).to eq(0)
           expect(calculator_one_month_ago.subtractions(:a)).to eq(0)
 
-          expect(calculator_one_month_ago.previous_count(:b)).to eq(2)
           expect(calculator_one_month_ago.count(:b)).to eq(0)
           expect(calculator_one_month_ago.additions(:b)).to eq(0)
           expect(calculator_one_month_ago.subtractions(:b)).to eq(0)
 
-          expect(calculator_one_month_ago.previous_count(:c)).to eq(0)
           expect(calculator_one_month_ago.count(:c)).to eq(2)
           expect(calculator_one_month_ago.additions(:c)).to eq(2)
           expect(calculator_one_month_ago.subtractions(:c)).to eq(0)
 
-          expect(calculator_one_month_ago.previous_count(:d)).to eq(0)
           expect(calculator_one_month_ago.count(:d)).to eq(1)
           expect(calculator_one_month_ago.additions(:d)).to eq(2)
           expect(calculator_one_month_ago.subtractions(:d)).to eq(1)
         end
 
         it "returns values for this month statement" do
-          expect(subject.previous_count(:a)).to eq(2)
           expect(subject.count(:a)).to eq(0)
           expect(subject.additions(:a)).to eq(0)
           expect(subject.subtractions(:a)).to eq(0)
 
-          expect(subject.previous_count(:b)).to eq(2)
           expect(subject.count(:b)).to eq(0)
           expect(subject.additions(:b)).to eq(0)
           expect(subject.subtractions(:b)).to eq(0)
 
-          expect(subject.previous_count(:c)).to eq(2)
           expect(subject.count(:c)).to eq(0)
           expect(subject.additions(:c)).to eq(0)
           expect(subject.subtractions(:c)).to eq(0)
 
-          expect(subject.previous_count(:d)).to eq(1)
           expect(subject.count(:d)).to eq(-1)
           expect(subject.additions(:d)).to eq(1)
           expect(subject.subtractions(:d)).to eq(2)
@@ -538,13 +472,11 @@ RSpec.describe Finance::ECF::BandingCalculator, mid_cohort: true do
         end
 
         it "returns values for statement 2 months ago" do
-          expect(calculator_two_months_ago.previous_count(:a)).to eq(0)
           expect(calculator_two_months_ago.count(:a)).to eq(1)
           expect(calculator_two_months_ago.additions(:a)).to eq(1)
           expect(calculator_two_months_ago.subtractions(:a)).to eq(0)
 
           (letters - %i[a]).each do |letter|
-            expect(calculator_two_months_ago.previous_count(letter)).to eq(0)
             expect(calculator_two_months_ago.count(letter)).to eq(0)
             expect(calculator_two_months_ago.additions(letter)).to eq(0)
             expect(calculator_two_months_ago.subtractions(letter)).to eq(0)
@@ -552,13 +484,11 @@ RSpec.describe Finance::ECF::BandingCalculator, mid_cohort: true do
         end
 
         it "returns values for statement 1 month ago" do
-          expect(calculator_one_month_ago.previous_count(:a)).to eq(1)
           expect(calculator_one_month_ago.count(:a)).to eq(-1)
           expect(calculator_one_month_ago.additions(:a)).to eq(0)
           expect(calculator_one_month_ago.subtractions(:a)).to eq(1)
 
           (letters - %i[a]).each do |letter|
-            expect(calculator_one_month_ago.previous_count(letter)).to eq(0)
             expect(calculator_one_month_ago.count(letter)).to eq(0)
             expect(calculator_one_month_ago.additions(letter)).to eq(0)
             expect(calculator_one_month_ago.subtractions(letter)).to eq(0)
@@ -566,13 +496,11 @@ RSpec.describe Finance::ECF::BandingCalculator, mid_cohort: true do
         end
 
         it "returns values for this month statement" do
-          expect(subject.previous_count(:a)).to eq(0)
           expect(subject.count(:a)).to eq(1)
           expect(subject.additions(:a)).to eq(1)
           expect(subject.subtractions(:a)).to eq(0)
 
           (letters - %i[a]).each do |letter|
-            expect(subject.previous_count(letter)).to eq(0)
             expect(subject.count(letter)).to eq(0)
             expect(subject.additions(letter)).to eq(0)
             expect(subject.subtractions(letter)).to eq(0)
@@ -595,13 +523,11 @@ RSpec.describe Finance::ECF::BandingCalculator, mid_cohort: true do
           end
 
           it "returns values for this month statement" do
-            expect(subject.previous_count(:a)).to eq(0)
             expect(subject.count(:a)).to eq(2)
             expect(subject.additions(:a)).to eq(2)
             expect(subject.subtractions(:a)).to eq(0)
 
             (letters - %i[a]).each do |letter|
-              expect(subject.previous_count(letter)).to eq(0)
               expect(subject.count(letter)).to eq(0)
               expect(subject.additions(letter)).to eq(0)
               expect(subject.subtractions(letter)).to eq(0)
@@ -623,13 +549,11 @@ RSpec.describe Finance::ECF::BandingCalculator, mid_cohort: true do
           end
 
           it "returns values for this month statement" do
-            expect(subject.previous_count(:a)).to eq(0)
             expect(subject.count(:a)).to eq(2)
             expect(subject.additions(:a)).to eq(2)
             expect(subject.subtractions(:a)).to eq(0)
 
             (letters - %i[a]).each do |letter|
-              expect(subject.previous_count(letter)).to eq(0)
               expect(subject.count(letter)).to eq(0)
               expect(subject.additions(letter)).to eq(0)
               expect(subject.subtractions(letter)).to eq(0)
