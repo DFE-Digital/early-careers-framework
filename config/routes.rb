@@ -56,6 +56,8 @@ Rails.application.routes.draw do
     root "start#index"
   end
 
+  get "/contracts", to: "contracts#show"
+
   get "/check-account", to: "check_account#show"
 
   resource :csp_reports, only: %i[create]
