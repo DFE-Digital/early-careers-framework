@@ -16,8 +16,7 @@ RSpec.describe Finance::ECF::ECT::UpliftCalculator, mid_cohort: true do
   subject { described_class.new(statement:) }
 
   context "when there an no uplifts" do
-    it "returns zero current and previous uplifts" do
-      expect(subject.previous_count).to eq(0)
+    it "returns zero current uplifts" do
       expect(subject.count).to eq(0)
       expect(subject.additions).to eq(0)
       expect(subject.subtractions).to eq(0)
@@ -33,7 +32,6 @@ RSpec.describe Finance::ECF::ECT::UpliftCalculator, mid_cohort: true do
     end
 
     it "returns current uplifts" do
-      expect(subject.previous_count).to eq(0)
       expect(subject.count).to eq(2)
       expect(subject.additions).to eq(2)
       expect(subject.subtractions).to eq(0)
@@ -51,7 +49,6 @@ RSpec.describe Finance::ECF::ECT::UpliftCalculator, mid_cohort: true do
     end
 
     it "does not count them" do
-      expect(subject.previous_count).to eq(0)
       expect(subject.count).to eq(0)
       expect(subject.additions).to eq(0)
       expect(subject.subtractions).to eq(0)
@@ -79,14 +76,12 @@ RSpec.describe Finance::ECF::ECT::UpliftCalculator, mid_cohort: true do
     end
 
     it "returns uplifts for statement one month ago" do
-      expect(calculator_one_month_ago.previous_count).to eq(0)
       expect(calculator_one_month_ago.count).to eq(2)
       expect(calculator_one_month_ago.additions).to eq(2)
       expect(calculator_one_month_ago.subtractions).to eq(0)
     end
 
     it "returns uplifts for this month statement" do
-      expect(subject.previous_count).to eq(2)
       expect(subject.count).to eq(-1)
       expect(subject.additions).to eq(0)
       expect(subject.subtractions).to eq(1)
@@ -143,21 +138,18 @@ RSpec.describe Finance::ECF::ECT::UpliftCalculator, mid_cohort: true do
     end
 
     it "returns uplifts for statement two months ago" do
-      expect(calculator_two_months_ago.previous_count).to eq(0)
       expect(calculator_two_months_ago.count).to eq(2)
       expect(calculator_two_months_ago.additions).to eq(2)
       expect(calculator_two_months_ago.subtractions).to eq(0)
     end
 
     it "returns uplifts for statement one month ago" do
-      expect(calculator_one_month_ago.previous_count).to eq(2)
       expect(calculator_one_month_ago.count).to eq(1)
       expect(calculator_one_month_ago.additions).to eq(2)
       expect(calculator_one_month_ago.subtractions).to eq(1)
     end
 
     it "returns uplifts for this month statement" do
-      expect(subject.previous_count).to eq(3)
       expect(subject.count).to eq(0)
       expect(subject.additions).to eq(2)
       expect(subject.subtractions).to eq(2)

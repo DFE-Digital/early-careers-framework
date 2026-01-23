@@ -9,10 +9,6 @@ module Finance
         @statement = statement
       end
 
-      def previous_count
-        previous_billable_count - previous_refundable_count
-      end
-
       def count
         current_billable_count - current_refundable_count
       end

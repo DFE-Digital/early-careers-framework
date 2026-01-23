@@ -31,7 +31,7 @@ RSpec.shared_examples "a Finance ECF statement calculator", mid_cohort: true do
 
       declaration_types.each do |declaration_type|
         mock_banding = instance_double(banding_calculator_klass)
-        %i[previous_count count additions subtractions].each do |action|
+        %i[count additions subtractions].each do |action|
           dec_values = mock_bandings[declaration_type] || {}
           action_values = dec_values[action] || {}
 
@@ -67,7 +67,6 @@ RSpec.shared_examples "a Finance ECF statement calculator", mid_cohort: true do
 
     let(:mock_uplift) do
       {
-        previous_count: 0,
         count: 2,
         additions: 4,
         subtractions: 2,
@@ -202,7 +201,6 @@ RSpec.shared_examples "a Finance ECF statement calculator", mid_cohort: true do
     context "when there are uplifts" do
       let(:mock_uplift) do
         {
-          previous_count: 0,
           count: 2,
           additions: 4,
           subtractions: 2,
@@ -227,7 +225,6 @@ RSpec.shared_examples "a Finance ECF statement calculator", mid_cohort: true do
     context "when there are clawbacks" do
       let(:mock_uplift) do
         {
-          previous_count: 0,
           count: 0,
           additions: 0,
           subtractions: 0,
@@ -284,7 +281,6 @@ RSpec.shared_examples "a Finance ECF statement calculator", mid_cohort: true do
     context "when there are uplifts and clawbacks" do
       let(:mock_uplift) do
         {
-          previous_count: 0,
           count: 2,
           additions: 4,
           subtractions: 2,
@@ -430,7 +426,6 @@ RSpec.shared_examples "a Finance ECF statement calculator", mid_cohort: true do
     context "when there are uplifts" do
       let(:mock_uplift) do
         {
-          previous_count: 5,
           count: 2,
           additions: 4,
           subtractions: 2,
@@ -447,7 +442,6 @@ RSpec.shared_examples "a Finance ECF statement calculator", mid_cohort: true do
     context "when there is net negative uplifts" do
       let(:mock_uplift) do
         {
-          previous_count: 5,
           count: -3,
           additions: 1,
           subtractions: 4,
@@ -462,7 +456,6 @@ RSpec.shared_examples "a Finance ECF statement calculator", mid_cohort: true do
     context "when contract does not include uplift fees" do
       let(:mock_uplift) do
         {
-          previous_count: 5,
           count: 2,
           additions: 4,
           subtractions: 2,
@@ -609,168 +602,6 @@ RSpec.shared_examples "a Finance ECF statement calculator", mid_cohort: true do
     end
   end
 
-  describe "#started_band_a_count" do
-    context "when there are no declarations" do
-      it "returns zero" do
-        expect(subject.started_band_a_count).to be_zero
-      end
-    end
-
-    context "when there are declarations attached to another statement for different provider" do
-      let(:other_cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
-
-      let!(:other_statement) { create(:ecf_statement, cpd_lead_provider: other_cpd_lead_provider, payment_date: 1.week.ago) }
-
-      before do
-        create(:call_off_contract, :with_minimal_bands, lead_provider: other_cpd_lead_provider.lead_provider)
-
-        travel_to other_statement.deadline_date - 1.day do
-          create(:ect_participant_declaration, :eligible, cpd_lead_provider: other_cpd_lead_provider)
-        end
-      end
-
-      it "returns zero" do
-        expect(subject.started_band_a_count).to be_zero
-      end
-    end
-
-    context "when band is partially populated" do
-      before do
-        travel_to statement.deadline_date do
-          create(:ect_participant_declaration, :eligible, cpd_lead_provider:)
-        end
-      end
-
-      it "returns the number of declarations" do
-        expect(subject.started_band_a_count).to eql(1)
-      end
-    end
-
-    context "when the band had overflowed" do
-      before do
-        travel_to statement.deadline_date - 1.day do
-          create_list(:ect_participant_declaration, 3, :eligible, cpd_lead_provider:)
-        end
-      end
-
-      it "returns the maximum number allowed in the band" do
-        expect(subject.started_band_a_count).to eq(2)
-      end
-    end
-
-    context "when there is a previous statement partially filling the band" do
-      let!(:previous_statement) { create(:ecf_statement, cpd_lead_provider:, payment_date: 5.weeks.ago) }
-
-      before do
-        declarations = create_list(
-          :ect_participant_declaration, 1,
-          cpd_lead_provider:,
-          state: "eligible"
-        )
-
-        declarations.each do |declaration|
-          Finance::StatementLineItem.create!(
-            statement: previous_statement,
-            participant_declaration: declaration,
-            state: declaration.state,
-          )
-        end
-      end
-
-      context "there are no declarations on this statement" do
-        it "returns zero" do
-          expect(subject.started_band_a_count).to be_zero
-        end
-      end
-
-      context "there are declarations on this statement, partly filling it" do
-        before do
-          declarations = create_list(
-            :ect_participant_declaration, 1,
-            cpd_lead_provider:,
-            state: "eligible"
-          )
-
-          declarations.each do |declaration|
-            Finance::StatementLineItem.create!(
-              statement:,
-              participant_declaration: declaration,
-              state: declaration.state,
-            )
-          end
-        end
-
-        it "returns number of permitted declarations" do
-          expect(subject.started_band_a_count).to eql(1)
-        end
-      end
-
-      context "there are declarations on this statement, over filling it" do
-        before do
-          declarations = create_list(
-            :ect_participant_declaration, 2,
-            cpd_lead_provider:,
-            state: "eligible"
-          )
-
-          declarations.each do |declaration|
-            Finance::StatementLineItem.create!(
-              statement:,
-              participant_declaration: declaration,
-              state: declaration.state,
-            )
-          end
-        end
-
-        it "returns max number of permitted declarations" do
-          expect(subject.started_band_a_count).to eql(1)
-        end
-      end
-    end
-
-    context "when there is a previous statement totally filling the band" do
-      let!(:previous_statement) { create(:ecf_statement, cpd_lead_provider:, payment_date: 5.weeks.ago) }
-
-      before do
-        declarations = create_list(
-          :ect_participant_declaration, 2,
-          cpd_lead_provider:,
-          state: "eligible"
-        )
-
-        declarations.each do |declaration|
-          Finance::StatementLineItem.create!(
-            statement: previous_statement,
-            participant_declaration: declaration,
-            state: declaration.state,
-          )
-        end
-
-        declarations = create_list(
-          :ect_participant_declaration, 1,
-          cpd_lead_provider:,
-          state: "eligible"
-        )
-
-        declarations.each do |declaration|
-          Finance::StatementLineItem.create!(
-            statement:,
-            participant_declaration: declaration,
-            state: declaration.state,
-          )
-        end
-      end
-
-      it "returns zero" do
-        expect(subject.started_band_a_count).to be_zero
-      end
-
-      it "returns declaration in next band" do
-        expect(subject.started_band_b_count).to eql(1)
-      end
-    end
-  end
-
   describe "#uplift_count" do
     context "when uplift is not applicable" do
       before do
@@ -793,51 +624,6 @@ RSpec.shared_examples "a Finance ECF statement calculator", mid_cohort: true do
 
       it "does count it" do
         expect(subject.uplift_count).to eql(1)
-      end
-    end
-
-    context "paid declaration transitions to awaiting_clawback" do
-      let(:old_statement) { create(:ecf_statement, cpd_lead_provider:, payment_date: 2.months.ago) }
-      let(:new_statement) { create(:ecf_statement, cpd_lead_provider:, payment_date: 2.months.from_now) }
-
-      let(:declaration) do
-        create(
-          :ect_participant_declaration,
-          cpd_lead_provider:,
-          state: "paid",
-        )
-      end
-
-      before do
-        Finance::StatementLineItem.create!(
-          participant_declaration: declaration,
-          statement: old_statement,
-          state: declaration.state,
-        )
-
-        Finance::StatementLineItem.create!(
-          participant_declaration: declaration,
-          statement: new_statement,
-          state: "awaiting_clawback",
-        )
-      end
-
-      describe "#started_band_a_count" do
-        context "for old statement" do
-          subject { described_class.new(statement: old_statement) }
-
-          it "continues to count declaration" do
-            expect(subject.started_band_a_count).to eql(1)
-          end
-        end
-
-        context "for new statement" do
-          subject { described_class.new(statement: new_statement) }
-
-          it "counts the declaration" do
-            expect(subject.started_band_a_count).to eql(-1)
-          end
-        end
       end
     end
   end

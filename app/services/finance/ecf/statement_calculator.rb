@@ -61,10 +61,6 @@ module Finance
         declaration_type = event_type.to_s.dasherize
 
         band_mapping.each_key do |letter|
-          define_method "#{event_type}_band_#{letter}_count" do
-            output_calculator.banding_for(declaration_type:).count(letter)
-          end
-
           define_method "#{event_type}_band_#{letter}_additions" do
             output_calculator.banding_for(declaration_type:).additions(letter)
           end
