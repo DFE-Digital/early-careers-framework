@@ -171,7 +171,7 @@ RSpec.describe Importers::CreateCallOffContract do
 
         it "sets the correct values on band a" do
           importer.call
-          expect(created_call_off_contract.band_a).to have_attributes(
+          expect(created_call_off_contract.bands.order(max: :asc).first).to have_attributes(
             min: 0,
             max: 90,
             per_participant: 895,
@@ -230,7 +230,7 @@ RSpec.describe Importers::CreateCallOffContract do
       it "creates 3 participant bands" do
         importer.call
 
-        expect(created_call_off_contract.band_a).to be_present
+        expect(created_call_off_contract.bands.order(max: :asc).first).to be_present
         expect(created_call_off_contract.bands.order(max: :asc).second).to be_present
         expect(created_call_off_contract.bands.order(max: :asc).third).to be_present
         expect(created_call_off_contract.bands.order(max: :asc).fourth).to be_nil

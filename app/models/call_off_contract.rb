@@ -11,14 +11,6 @@ class CallOffContract < ApplicationRecord
 
   scope :not_flagged_as_unused, -> { where.not("version LIKE ?", "#{UNUSED_VERSION_PREFIX}%") }
 
-  def total_contract_value
-    participant_bands.map(&:contract_value).sum
-  end
-
-  def band_a
-    bands.first
-  end
-
   def bands
     participant_bands.min_nulls_first
   end
@@ -26,6 +18,4 @@ class CallOffContract < ApplicationRecord
   def include_uplift_fees?
     !uplift_amount.nil?
   end
-
-  delegate :set_up_recruitment_basis, to: :band_a
 end
