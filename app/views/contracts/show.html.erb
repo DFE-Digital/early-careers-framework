@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<body style="margin:0; overflow:auto;">
+    <script type="module">
+      import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
+
+      const isEmptyVersionNode = d =>
+        typeof d.data.name === "string" &&
+        d.data.name.startsWith("Version") &&
+        (!d.children || d.children.length === 0) &&
+        (!d._children || d._children.length === 0);
+
+      // dimensions
+      const width = 1500;
+      const margin = {
+        top: 10,
+        right: 10,
+        bottom: 10,
+        left: 40
+      };
+
+      // append SVG
+      const svg = d3.select("body")
+        .append("svg")
+        .attr("width", width)
+        .attr("style", "font: 10px sans-serif; user-select: none;")
+        .append("g")
+        .attr("transform", `translate(${margin.left},${margin.top})`);
+
+      // collapse layout
+      const dx = 10;
+      const dy = (width - margin.left - margin.right) / 6;
+      const tree = d3.tree()
+        .nodeSize([dx, dy])
+        .separation((a, b) => {
+          return (a.nodeHeight + b.nodeHeight) / dx;
+        });
+      const diagonal = d3.linkHorizontal().x(d => d.y).y(d => d.x);
+
+      // load JSON file
+      const root = d3.hierarchy(JSON.parse('<%= @json.html_safe %>'));
+      let duration = 250;
+
+      root.x0 = 0;
+      root.y0 = 0;
+
+      // collapse all nodes initially
+      root.descendants().forEach((d, i) => {
+        d.id = i;
+        d._children = d.children;
+        if (d.depth > 2) d.children = null; // collapse beyond root & x levels
+      });
+
+      update(root);
+
+      function update(source) {
+        root.each(d => {
+          const lineCount =
+            1 + (Array.isArray(d.data.details) ? d.data.details.length : 0);
+
+          d.nodeHeight = lineCount * 14; // px per line
+        });
+
+        // recompute layout
+        tree(root);
+
+        let nodes = root.descendants().reverse();
+        let links = root.links();
+
+        let left = root;
+        let right = root;
+
+        root.eachBefore(d => {
+          if (d.x < left.x) left = d;
+          if (d.x > right.x) right = d;
+        });
+
+        const height = right.x - left.x + margin.top + margin.bottom;
+
+        // Shift the whole tree DOWN so min x is visible
+        svg.transition()
+          .duration(duration)
+          .attr("transform", `translate(${margin.left},${margin.top - left.x})`);
+
+        d3.select("svg")
+          .transition()
+          .duration(duration)
+          .attr("height", height);
+
+        // **************** NODES ******************
+        const node = svg.selectAll("g")
+          .data(nodes, d => d.id);
+
+        const nodeEnter = node.enter().append("g")
+          .attr("transform", d => `translate(${source.y0},${source.x0})`)
+          .attr("fill-opacity", 0)
+          .attr("stroke-opacity", 0)
+          .style("cursor", "pointer")
+          .on("click", (event, d) => {
+            d.children = d.children ? null : d._children;
+            update(d);
+          });
+
+        nodeEnter.append("circle")
+          .attr("r", 2.5)
+          .attr("fill", d => d._children ? "#555" : "#999");
+
+
+
+        const textEnter = nodeEnter.append("text")
+          .attr("x", d => d._children ? -6 : 6)
+          .attr("text-anchor", d => d._children ? "end" : "start")
+          .attr("fill", d => isEmptyVersionNode(d) || (d.data.name && d.data.name.includes("OUT OF ORDER!")) ? "red" : "black");
+
+        // Build lines: name + details[]
+        textEnter.selectAll("tspan")
+          .data(d => {
+            const lines = [d.data.name];
+            if (Array.isArray(d.data.details)) {
+              lines.push(...d.data.details);
+            }
+            return lines;
+          })
+          .join("tspan")
+          .attr("x", function() {
+            return d3.select(this.parentNode).attr("x");
+          })
+          .attr("dy", (d, i) => i === 0 ? "0.31em" : "1.2em")
+          .text(d => d);
+
+        // white outline for readability
+        textEnter.clone(true).lower()
+          .attr("stroke-linejoin", "round")
+          .attr("stroke-width", 3)
+          .attr("stroke", "white");
+
+        const nodeUpdate = node.merge(nodeEnter).transition()
+          .duration(duration)
+          .attr("transform", d => `translate(${d.y},${d.x})`)
+          .attr("fill-opacity", 1)
+          .attr("stroke-opacity", 1);
+
+        node.exit().transition()
+          .duration(duration)
+          .remove()
+          .attr("transform", d => `translate(${source.y},${source.x})`)
+          .attr("fill-opacity", 0)
+          .attr("stroke-opacity", 0);
+
+        // **************** LINKS ******************
+        const link = svg.selectAll("path")
+          .data(links, d => d.target.id);
+
+        const linkEnter = link.enter().insert("path", "g")
+          .attr("fill", "none")
+          .attr("stroke", "#555")
+          .attr("stroke-opacity", 0.4)
+          .attr("stroke-width", 1.5)
+          .attr("d", d => {
+            const o = {
+              x: source.x0,
+              y: source.y0
+            };
+            return diagonal({
+              source: o,
+              target: o
+            });
+          });
+
+        link.merge(linkEnter).transition()
+          .duration(duration)
+          .attr("d", diagonal);
+
+        link.exit().transition()
+          .duration(duration)
+          .remove()
+          .attr("d", d => {
+            const o = {
+              x: source.x,
+              y: source.y
+            };
+            return diagonal({
+              source: o,
+              target: o
+            });
+          });
+
+        // stash positions
+        root.eachBefore(d => {
+          d.x0 = d.x;
+          d.y0 = d.y;
+        });
+      }
+    </script>
+  </body>
+</html>

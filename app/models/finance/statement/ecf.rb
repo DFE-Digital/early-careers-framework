@@ -6,7 +6,7 @@ class Finance::Statement::ECF < Finance::Statement
   STATEMENT_TYPE = "ecf"
 
   def contract
-    CallOffContract.find_by!(
+    CallOffContract.find_by(
       version: contract_version,
       cohort:,
       lead_provider:,
@@ -14,7 +14,7 @@ class Finance::Statement::ECF < Finance::Statement
   end
 
   def mentor_contract
-    MentorCallOffContract.find_by!(
+    MentorCallOffContract.find_by(
       version: mentor_contract_version,
       cohort:,
       lead_provider:,
