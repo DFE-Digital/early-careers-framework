@@ -29,7 +29,7 @@ module StatusTags
   private
 
     def induction_completion_date
-      training_record_state.participant_profile.induction_completion_date&.strftime("%-e %B %Y")
+      training_record_state&.participant_profile&.induction_completion_date&.strftime("%-e %B %Y")
     end
 
     def translation_scope
