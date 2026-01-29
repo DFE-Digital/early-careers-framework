@@ -73,6 +73,16 @@
     end
 
     sl.with_row do |row|
+      row.with_key(text: "Preferred identity id")
+      row.with_value(text: (induction_record.preferred_identity_id).to_s)
+    end
+
+    sl.with_row do |row|
+      row.with_key(text: "Preferred identity email")
+      row.with_value(text: (induction_record.preferred_identity&.email).to_s)
+    end
+
+    sl.with_row do |row|
       row.with_key(text: "Schedule")
       row.with_value(text: induction_record.schedule_identifier)
     end
