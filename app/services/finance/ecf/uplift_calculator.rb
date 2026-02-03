@@ -23,28 +23,6 @@ module Finance
 
     private
 
-      def previous_statement_line_items
-        Finance::StatementLineItem
-          .where(statement: statement.previous_statements)
-          .joins(:participant_declaration)
-          .merge!(ParticipantDeclaration.for_declaration("started"))
-          .merge!(ParticipantDeclaration.uplift)
-      end
-
-      def previous_billable_count
-        @previous_billable_count ||=
-          previous_statement_line_items
-          .billable
-          .count
-      end
-
-      def previous_refundable_count
-        @previous_refundable_count ||=
-          previous_statement_line_items
-          .refundable
-          .count
-      end
-
       def current_statement_line_items
         statement
         .statement_line_items
