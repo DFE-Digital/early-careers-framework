@@ -1,5 +1,5 @@
 module "redis-cache" {
-  source = "git::https://github.com/DFE-Digital/terraform-modules.git//aks/redis?ref=testing"
+  source = "git::https://github.com/DFE-Digital/terraform-modules.git//aks/redis?ref=testing-azurerm-v4"
 
   namespace                 = var.namespace
   environment               = local.environment
@@ -21,7 +21,7 @@ module "redis-cache" {
 }
 
 module "redis" {
-  source = "git::https://github.com/DFE-Digital/terraform-modules.git//aks/redis?ref=testing"
+  source = "git::https://github.com/DFE-Digital/terraform-modules.git//aks/redis?ref=testing-azurerm-v4"
 
   namespace             = var.namespace
   environment           = local.environment
@@ -40,7 +40,7 @@ module "redis" {
 }
 
 module "postgres" {
-  source = "git::https://github.com/DFE-Digital/terraform-modules.git//aks/postgres?ref=testing"
+  source = "git::https://github.com/DFE-Digital/terraform-modules.git//aks/postgres?ref=testing-azurerm-v4"
 
   namespace             = var.namespace
   environment           = local.environment
@@ -65,7 +65,7 @@ module "postgres" {
 }
 
 module "postgres-snapshot" {
-  source = "git::https://github.com/DFE-Digital/terraform-modules.git//aks/postgres?ref=testing"
+  source = "git::https://github.com/DFE-Digital/terraform-modules.git//aks/postgres?ref=testing-azurerm-v4"
 
   count                 = var.deploy_snapshot_database ? 1 : 0
   name                  = "snapshot"
