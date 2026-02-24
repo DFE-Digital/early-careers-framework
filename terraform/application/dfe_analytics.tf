@@ -4,7 +4,7 @@ provider "google" {
 
 module "dfe_analytics" {
   count  = var.enable_dfe_analytics_federated_auth ? 1 : 0
-  source = "git::https://github.com/DFE-Digital/terraform-modules.git//aks/dfe_analytics?ref=stable"
+  source = "git::https://github.com/DFE-Digital/terraform-modules.git//aks/dfe_analytics?ref=stable-azurerm-v4"
 
   azure_resource_prefix = var.azure_resource_prefix
   cluster               = var.cluster
