@@ -5,7 +5,7 @@ locals {
 }
 
 module "application_configuration" {
-  source = "git::https://github.com/DFE-Digital/terraform-modules.git//aks/application_configuration?ref=testing"
+  source = "git::https://github.com/DFE-Digital/terraform-modules.git//aks/application_configuration?ref=testing-azurerm-v4"
 
   namespace             = var.namespace
   environment           = local.environment
@@ -45,7 +45,7 @@ module "application_configuration" {
 }
 
 module "web_application" {
-  source = "git::https://github.com/DFE-Digital/terraform-modules.git//aks/application?ref=testing"
+  source = "git::https://github.com/DFE-Digital/terraform-modules.git//aks/application?ref=testing-azurerm-v4"
 
   name   = "web"
   is_web = true
@@ -70,7 +70,7 @@ module "web_application" {
 }
 
 module "worker_application" {
-  source = "git::https://github.com/DFE-Digital/terraform-modules.git//aks/application?ref=testing"
+  source = "git::https://github.com/DFE-Digital/terraform-modules.git//aks/application?ref=testing-azurerm-v4"
 
   name   = "worker"
   is_web = false
