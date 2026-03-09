@@ -41,6 +41,7 @@ Rails/UnknownEnv:
     - review
     - sandbox
     - migration
+    - paritycheck
     - staging
     - test
 

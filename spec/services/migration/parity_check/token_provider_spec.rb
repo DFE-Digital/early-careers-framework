@@ -17,37 +17,39 @@ RSpec.describe Migration::ParityCheck::TokenProvider do
   describe "#generate!" do
     subject(:generate) { instance.generate! }
 
-    context "when running in migration" do
-      let(:environment) { "migration" }
+    %w[paritycheck migration].each do |env|
+      context "when running in #{env}" do
+        let(:environment) { env }
 
-      context "when the keys are not present" do
-        let(:keys) { nil }
+        context "when the keys are not present" do
+          let(:keys) { nil }
 
-        it { expect { generate }.not_to change(ApiToken, :count) }
-      end
-
-      context "when the keys are present" do
-        let(:keys) do
-          LeadProvider.all.each_with_object({}) do |lead_provider, hash|
-            hash[lead_provider.id] = SecureRandom.uuid
-          end
+          it { expect { generate }.not_to change(ApiToken, :count) }
         end
 
-        it { expect { generate }.to change(ApiToken, :count).by(LeadProvider.count) }
+        context "when the keys are present" do
+          let(:keys) do
+            LeadProvider.all.each_with_object({}) do |lead_provider, hash|
+              hash[lead_provider.id] = SecureRandom.uuid
+            end
+          end
 
-        it "generates valid tokens for each lead provider" do
-          generate
+          it { expect { generate }.to change(ApiToken, :count).by(LeadProvider.count) }
 
-          LeadProvider.find_each do |lead_provider|
-            cpd_lead_provider = lead_provider.cpd_lead_provider
-            token = keys[lead_provider.id]
-            expect(ApiToken.find_by_unhashed_token(token).cpd_lead_provider).to eq(cpd_lead_provider)
+          it "generates valid tokens for each lead provider" do
+            generate
+
+            LeadProvider.find_each do |lead_provider|
+              cpd_lead_provider = lead_provider.cpd_lead_provider
+              token = keys[lead_provider.id]
+              expect(ApiToken.find_by_unhashed_token(token).cpd_lead_provider).to eq(cpd_lead_provider)
+            end
           end
         end
       end
     end
 
-    context "when not running in migration" do
+    context "when not running in migration or paritycheck environments" do
       let(:environment) { "production" }
       let(:keys) { {} }
 

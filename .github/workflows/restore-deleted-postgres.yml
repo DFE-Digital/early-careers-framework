@@ -12,6 +12,7 @@ on:
         - staging
         - sandbox
         - migration
+        - paritycheck
         - production
       confirm-production:
         description: Must be set to true if restoring production

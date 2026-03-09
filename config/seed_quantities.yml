@@ -25,6 +25,9 @@ sandbox:
 migration:
   <<: *default
 
+paritycheck:
+  <<: *default
+
 test:
   <<: *default
   local_authorities: 1

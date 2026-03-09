@@ -18,6 +18,10 @@ migration:
   <<: *default
   url: <%= ENV["DATABASE_URL"] %>
 
+paritycheck:
+  <<: *default
+  url: <%= ENV["DATABASE_URL"] %>
+
 test:
   primary:
     <<: *default

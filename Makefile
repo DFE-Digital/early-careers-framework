@@ -29,6 +29,10 @@ sandbox: production-cluster
 migration: production-cluster
 	$(eval include global_config/migration.sh)
 
+.PHONY: paritycheck
+paritycheck: production-cluster
+	$(eval include global_config/paritycheck.sh)
+
 .PHONY: production
 production: production-cluster
 	$(eval include global_config/production.sh)
