@@ -33,7 +33,6 @@ COPY Gemfile Gemfile.lock package.json yarn.lock .ruby-version ./
 
 RUN apk -U upgrade && \
     apk add --update --no-cache --virtual .gem-installdeps $BUILD_DEPS && \
-    gem update --system && \
     find / -wholename '*default/bundler-*.gemspec' -delete && \
     rm -rf /usr/local/bin/bundle && \
     gem install bundler -v 2.6.5 && \
