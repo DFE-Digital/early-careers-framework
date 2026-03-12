@@ -9,14 +9,21 @@ class SetParticipantCompletionDateJob < ApplicationJob
   MAX_CANDIDATES = 2000
 
   def perform
-    candidates.each do |candidate|
-      participant_profile = candidate.participant_profile
-      Participants::CheckAndSetCompletionDate.call(participant_profile:,
-                                                   riab_teacher: riab_teachers[participant_profile.trn])
-      candidate.destroy!
-    end
-  rescue StandardError => e
-    Rails.logger.error("SetParticipantCompletionDateJob: #{e.message}")
+    # NOTE: We have a load of jobs stuck in Sidekiq that are hanging because this job
+    #       is hanging as the snapshot database is currently out of action
+    #
+    #       This will make the job return instantly without trying to establish any
+    #       database connection and (hopefully) allow the queue to clear
+    true
+
+    # candidates.each do |candidate|
+    #   participant_profile = candidate.participant_profile
+    #   Participants::CheckAndSetCompletionDate.call(participant_profile:,
+    #                                                riab_teacher: riab_teachers[participant_profile.trn])
+    #   candidate.destroy!
+    # end
+    # rescue StandardError => e
+    #   Rails.logger.error("SetParticipantCompletionDateJob: #{e.message}")
   end
 
 private
