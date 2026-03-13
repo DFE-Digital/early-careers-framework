@@ -28,25 +28,10 @@ test:
     database: early_careers_framework_test<%= ENV['TEST_ENV_NUMBER'] %>
     variables:
       idle_in_transaction_session_timeout: 0
-  riab_test:
-    <<: *default
-    database: early_careers_framework_riab_test<%= ENV['TEST_ENV_NUMBER'] %>
-    # Setting a different migrations path for riab in test env
-    # as Rails was trying to run migrations created for the primary db also in the riab db
-    migrations_paths: db/riab_migrate
-    variables:
-      idle_in_transaction_session_timeout: 0
-      statement_timeout: 0
 
 review:
   <<: *default
   sslmode: <%= ENV.fetch("DB_SSLMODE") { "require" } %>
-
-riab:
-  adapter: postgresql
-  encoding: unicode
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  url: <%= ENV.fetch("RIAB_DATABASE_URL", "postgres://localhost:5432") %>
 
 staging:
   <<: *default
