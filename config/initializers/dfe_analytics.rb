@@ -63,6 +63,4 @@ DfE::Analytics.configure do |config|
   # which should not be used. Each model is passed to bloc and if bloc returns true for the model,
   # it wont be used by the application. Eg: proc { |x| x.to_s =~ /Namespace::/ } will exclude all
   # models namespaced with Namespace
-  #
-  config.excluded_models_proc = proc { |model| model.module_parent == RIAB }
 end
