@@ -12,6 +12,7 @@ on:
           - staging
           - production
           - migration
+          - paritycheck
       backup-file:
         description: |
           Backup file name (without extension). Default is ecf_[env]_adhoc_YYYY-MM-DD. Set it explicitly when backing up a point-in-time (PTR) server. (Optional)

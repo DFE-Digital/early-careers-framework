@@ -11,6 +11,7 @@ on:
         options:
           - staging
           - migration
+          - paritycheck
           - sandbox
           - production
       build:

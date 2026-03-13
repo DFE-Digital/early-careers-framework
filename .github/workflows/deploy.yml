@@ -160,6 +160,27 @@ jobs:
           current-commit-sha: ${{ github.sha }}
           statuscake-api-token: ${{ secrets.STATUSCAKE_API_TOKEN }}
 
+  deploy_paritycheck:
+    name: Deploy paritycheck
+    needs: [deploy_staging]
+    runs-on: ubuntu-latest
+    environment:
+      name: paritycheck
+
+    steps:
+      - uses: actions/checkout@v3
+      
+      - uses: ./.github/actions/deploy-environment-to-aks
+        id: deploy
+        with:
+          environment: paritycheck
+          docker-image: ${{ needs.deploy_staging.outputs.docker-image }}
+          azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          current-commit-sha: ${{ github.sha }}
+          statuscake-api-token: ${{ secrets.STATUSCAKE_API_TOKEN }}
+
   deploy_production:
     name: Deploy production
     needs: [deploy_staging]
@@ -211,7 +232,7 @@ jobs:
     strategy:
       max-parallel: 1
       matrix:
-        domain_environment: [staging, migration, sandbox, production]
+        domain_environment: [staging, migration, paritycheck, sandbox, production]
     environment:
       name: production
     permissions:

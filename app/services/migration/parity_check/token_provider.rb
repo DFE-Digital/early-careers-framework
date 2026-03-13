@@ -26,7 +26,7 @@ module Migration
     end
 
     def enabled?
-      Rails.env.migration?
+      Rails.env.migration? || Rails.env.paritycheck?
     end
   end
 end

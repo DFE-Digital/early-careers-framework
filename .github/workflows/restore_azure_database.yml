@@ -10,6 +10,7 @@ on:
         type: choice
         options:
           - migration
+          - paritycheck
           - staging
           - production
       confirm-production:

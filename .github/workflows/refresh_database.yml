@@ -1,4 +1,4 @@
-name: Refresh migration DB from production DB
+name: Refresh DB from production DB
 on:
   workflow_dispatch:
     inputs:
@@ -9,11 +9,19 @@ on:
         options:
           - production
         required: true
+      target_environment:
+        description: GitHub environment to refresh to
+        type: choice
+        default: migration
+        options:
+          - migration
+          - paritycheck
+        required: true
   schedule:
     - cron: "0 0 * * *" # Run at midnight.
 
 jobs:
-  refresh-migration-db:
+  refresh-db:
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -23,10 +31,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Refresh migration DB
-        uses: ./.github/actions/refresh-migration-database
+      - name: Refresh DB
+        uses: ./.github/actions/refresh-database
         with:
           environment: production
+          target_environment: ${{ inputs.target_environment || 'migration' }}
           azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
           azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
@@ -47,16 +56,18 @@ jobs:
       - name: Install kubectl
         uses: DFE-Digital/github-actions/set-kubectl@master
 
-      - name: Set AKS credentials (migration)
+      - name: Set AKS credentials
         shell: bash
-        run: make ci migration get-cluster-credentials
+        run: make ci ${{ inputs.target_environment || 'migration' }} get-cluster-credentials
 
       - name: Generate known keys
         shell: bash
         run: |
-          kubectl -n cpd-production exec -ti --tty deployment/cpd-ecf-migration-web -- /bin/sh -c "cd /app && bundle exec rails runner \"PaperTrail.request.whodunnit = %{CI}; Migration::ParityCheck::TokenProvider.new.generate!\""
+          kubectl -n cpd-production exec deployment/cpd-ecf-${{ inputs.target_environment || 'migration' }}-web -- /bin/sh -c "cd /app && bundle exec rails runner \"PaperTrail.request.whodunnit = %{CI}; Migration::ParityCheck::TokenProvider.new.generate!\""
+
 
       - name: Turn off DfE analytics feature flag
         shell: bash
         run: |
-          kubectl -n cpd-production exec -ti --tty deployment/cpd-ecf-migration-web -- /bin/sh -c "cd /app && bundle exec rails runner \"FeatureFlag.deactivate(:dfe_analytics)\""
+          kubectl -n cpd-production exec -ti --tty deployment/cpd-ecf-${{ inputs.target_environment || 'migration' }}-web -- /bin/sh -c "cd /app && bundle exec rails runner \"FeatureFlag.deactivate(:dfe_analytics)\""
+
