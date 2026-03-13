@@ -16,7 +16,7 @@ class SetParticipantCompletionDateJob < ApplicationJob
     #                                                riab_teacher: riab_teachers[participant_profile.trn])
     #   candidate.destroy!
     # end
-  # rescue StandardError => e
+    # rescue StandardError => e
     # Rails.logger.error("SetParticipantCompletionDateJob: #{e.message}")
   end
 
