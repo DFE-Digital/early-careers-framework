@@ -9,14 +9,15 @@ class SetParticipantCompletionDateJob < ApplicationJob
   MAX_CANDIDATES = 2000
 
   def perform
-    candidates.each do |candidate|
-      participant_profile = candidate.participant_profile
-      Participants::CheckAndSetCompletionDate.call(participant_profile:,
-                                                   riab_teacher: riab_teachers[participant_profile.trn])
-      candidate.destroy!
-    end
-  rescue StandardError => e
-    Rails.logger.error("SetParticipantCompletionDateJob: #{e.message}")
+    true
+    # candidates.each do |candidate|
+    #   participant_profile = candidate.participant_profile
+    #   Participants::CheckAndSetCompletionDate.call(participant_profile:,
+    #                                                riab_teacher: riab_teachers[participant_profile.trn])
+    #   candidate.destroy!
+    # end
+  # rescue StandardError => e
+    # Rails.logger.error("SetParticipantCompletionDateJob: #{e.message}")
   end
 
 private
