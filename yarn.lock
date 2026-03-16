@@ -2766,12 +2766,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"accessible-autocomplete@npm:^2.0.3":
-  version: 2.0.4
-  resolution: "accessible-autocomplete@npm:2.0.4"
-  dependencies:
-    preact: "npm:^8.3.1"
-  checksum: 29ac86c2bc891c154871fc36e78995cd1b6a6d8c4f2af21d0caa3c75873440717c3f237d7e4ba479de6a381260153f08fe8670349451b476019a09bc79c8f311
+"accessible-autocomplete@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "accessible-autocomplete@npm:3.0.1"
+  peerDependencies:
+    preact: ^8.0.0
+  peerDependenciesMeta:
+    preact:
+      optional: true
+  checksum: a90d76f29940cd7c5cb0795f2062d32f8f4904bae3acfc89eab717c56f2b18ce3fd07a4035ec5e30643119cdfe56be3a4bc260eb80e39eeb4009ea5dc09b163c
   languageName: node
   linkType: hard
 
@@ -4094,7 +4097,7 @@ __metadata:
     "@babel/runtime": "npm:^7.28.4"
     "@sentry/browser": "npm:^7.120.4"
     "@sentry/tracing": "npm:^6.19.7"
-    accessible-autocomplete: "npm:^2.0.3"
+    accessible-autocomplete: "npm:^3.0.1"
     axe-core: "npm:^4.11.0"
     babel-loader: "npm:^8.4.1"
     babel-plugin-macros: "npm:^3.1.0"
@@ -7299,13 +7302,6 @@ __metadata:
   version: 1.0.0
   resolution: "possible-typed-array-names@npm:1.0.0"
   checksum: d9aa22d31f4f7680e20269db76791b41c3a32c01a373e25f8a4813b4d45f7456bfc2b6d68f752dc4aab0e0bb0721cb3d76fb678c9101cb7a16316664bc2c73fd
-  languageName: node
-  linkType: hard
-
-"preact@npm:^8.3.1":
-  version: 8.5.3
-  resolution: "preact@npm:8.5.3"
-  checksum: 4db04521a654e7897d13f8c3106d9cb113585f4c13e914d5de92aa65772841cefcd98b0e2485ef902c8af8174f700c19071eb83111b44e01de00bdc12add3894
   languageName: node
   linkType: hard
 
