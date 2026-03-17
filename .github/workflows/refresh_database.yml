@@ -18,7 +18,7 @@ on:
           - paritycheck
         required: true
   schedule:
-    - cron: "0 3 * * *" # Run at midnight.
+    - cron: "0 0 * * *" # Run at midnight.
 
 jobs:
   refresh-db:
