@@ -50,7 +50,7 @@ gem "knapsack"
 # Canonical meta tag
 gem "canonical-rails", "~> 0.2.17"
 
-gem "listen", "~> 3.9"
+gem "listen", "~> 3.10"
 gem "rack-attack", "~> 6.8"
 
 # GOV.UK Notify
