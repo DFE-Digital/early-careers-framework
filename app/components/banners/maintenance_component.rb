@@ -4,7 +4,7 @@ module Banners
   class MaintenanceComponent < ApplicationComponent
     HOUR_FORMAT = "%-l%P"
     DAY_FORMAT = "%-d %B"
-    MAINTENANCE_WINDOW = Time.zone.local(2024, 11, 27, 19)..Time.zone.local(2024, 11, 27, 22)
+    MAINTENANCE_WINDOW = Time.zone.local(2026, 4, 27, 12)..Time.zone.local(2026, 4, 28, 9)
 
     def render?
       FeatureFlag.active?(:maintenance_banner) && maintenance_window_ends_in_future?
