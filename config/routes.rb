@@ -262,6 +262,7 @@ Rails.application.routes.draw do
     resources :participants, only: %i[index destroy] do
       get "/", to: redirect("/admin/participants/%{participant_id}/details")
       resource :details, only: :show, controller: "participants/details"
+      resource :gantt, only: :show, controller: "participants/gantt"
       resource :school, only: :show, controller: "participants/school"
       resource :history, only: :show, controller: "participants/history"
       resource :induction_records, only: :show, controller: "participants/induction_records" do
