@@ -4120,7 +4120,7 @@ __metadata:
     webpack-dev-server: "npm:^5.2.1"
     webpack-merge: "npm:^5.10.0"
     webpack-remove-empty-scripts: "npm:^1.1.1"
-    webpack-sources: "npm:^3.3.3"
+    webpack-sources: "npm:^3.4.1"
     whatwg-fetch: "npm:^3.6.20"
   languageName: unknown
   linkType: soft
@@ -9284,6 +9284,13 @@ __metadata:
   version: 3.3.3
   resolution: "webpack-sources@npm:3.3.3"
   checksum: ab732f6933b513ba4d505130418995ddef6df988421fccf3289e53583c6a39e205c4a0739cee98950964552d3006604912679c736031337fb4a9d78d8576ed40
+  languageName: node
+  linkType: hard
+
+"webpack-sources@npm:^3.4.1":
+  version: 3.4.1
+  resolution: "webpack-sources@npm:3.4.1"
+  checksum: 5943f3d98670f640bc96bb734a47da46938eb1d8788ed7ef175cc9a1bd8d822be684ad985a7d88eb8a50db084fa391ef84f073ffae4dbf01ef3095615517a8e5
   languageName: node
   linkType: hard
 
