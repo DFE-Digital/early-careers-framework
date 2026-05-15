@@ -1,4 +1,5 @@
-![Tests](https://github.com/DFE-Digital/early-careers-framework/workflows/Test/badge.svg)
+> [!CAUTION]
+> This repository is archived. The application has been replaced by [register early career teachers](https://github.com/DFE-Digital/register-early-career-teachers-public).
 
 # Early careers framework
 
