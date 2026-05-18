@@ -95,7 +95,7 @@ ENV AUTHORISED_HOSTS=127.0.0.1 \
     COMMIT_SHA=${COMMIT_SHA}
 
 RUN apk -U upgrade && \
-    apk add --update --no-cache tzdata libpq libxml2 libxslt graphviz && \
+    apk add --update --no-cache tzdata libpq libxml2 libxslt graphviz plantuml && \
     echo "Europe/London" > /etc/timezone && \
     cp /usr/share/zoneinfo/Europe/London /etc/localtime
 
